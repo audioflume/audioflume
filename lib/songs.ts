@@ -15,7 +15,13 @@ export async function getSongs() {
     theme: (record.get('Theme') as string[] || []).join(', '),
     bpm: record.get('BPM') as number,
     key: record.get('Key') as string,
-    duration: record.get('Duration') as number,
+    duration: (() => {
+      const d = record.get('Duration')
+      if (!d) return 0
+      if (typeof d === 'number') return d
+      const parts = String(d).split(':')
+      return parseInt(parts[0]) * 60 + parseInt(parts[1])
+    })(),
     audioUrl: record.get('R2 Audio URL') as string,
     vocals: record.get('Vocals') as string,
     instrumental: record.get('Instrumental') as boolean,

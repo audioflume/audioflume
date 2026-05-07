@@ -1,8 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-primary: #111111;
+  --bg-secondary: #111111;
+  --bg-tertiary: #171717;
+  --bg-tertiary-hover: #1e1e1e;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-hover: rgba(255, 255, 255, 0.02);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.03);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.5);
+  --text-muted: rgba(255, 255, 255, 0.3);
+  --waveform-color: rgba(255, 255, 255, 0.3);
+  --waveform-progress: #ffffff;
+  --icon-color: rgba(255, 255, 255, 0.4);
+  --text-subtle: rgba(255, 255, 255, 0.4);
+  --bg-elevated: rgba(255, 255, 255, 0.08);
+  --accent: #ddff43;
+  --accent-2: #fb8f61;
+}
+
+.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f2f2f2;
+  --bg-tertiary-hover: #e5e5e5;
+  --bg-card: rgba(0, 0, 0, 0.04);
+  --bg-hover: rgba(0, 0, 0, 0.02);
+  --border: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --text-primary: #111111;
+  --text-secondary: rgba(17, 17, 17, 0.5);
+  --text-muted: rgba(17, 17, 17, 0.3);
+  --waveform-color: rgba(17, 17, 17, 0.3);
+  --waveform-progress: #111111;
+  --icon-color: rgba(17, 17, 17, 0.4);
+  --text-subtle: rgba(17, 17, 17, 0.5);
+  --bg-elevated: rgba(0, 0, 0, 0.06);
+  --accent: #ddff43;
+  --accent-2: #fb8f61;
 }
 
 @theme inline {
@@ -12,15 +49,24 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+html,
+body {
+  overscroll-behavior-x: none;
+  overflow-x: hidden;
+}
+
+* {
+  overscroll-behavior-x: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+

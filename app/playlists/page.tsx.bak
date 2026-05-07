@@ -239,7 +239,7 @@ export default function MusicPage() {
               if (tags.length === 0) return null
 
               return (
-                <div className="flex items-center gap-1 flex-1 flex-wrap justify-end">
+                <div className="flex items-center gap-1.5 flex-1 flex-wrap justify-end">
                   {tags.map((tag) => (
                     <span
                       key={tag.label}

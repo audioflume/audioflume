@@ -1,6 +1,12 @@
 import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, Instrument_Sans } from 'next/font/google'
+import { PlayerProvider } from '@/context/PlayerContext'
+import { ThemeProvider } from '@/context/ThemeContext'
+import { UserPreferencesProvider } from '@/context/UserPreferencesContext'
+import MusicPlayer from '@/components/MusicPlayer'
+import Header from '@/components/Header'
+import Sidebar from '@/components/Sidebar'
 import './globals.css'
 
 const geistSans = Geist({
@@ -11,6 +17,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+})
+
+const instrumentSans = Instrument_Sans({
+  variable: '--font-instrument-sans',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -26,8 +38,19 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          {children}
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} ${instrumentSans.variable} antialiased`}
+        >
+          <UserPreferencesProvider>
+            <ThemeProvider>
+              <PlayerProvider>
+                <Header />
+                <Sidebar />
+                {children}
+                <MusicPlayer />
+              </PlayerProvider>
+            </ThemeProvider>
+          </UserPreferencesProvider>
         </body>
       </html>
     </ClerkProvider>
