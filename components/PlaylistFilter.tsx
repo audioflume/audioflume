@@ -1,96 +1,304 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { useAuth } from '@clerk/nextjs'
-import { supabase } from '@/lib/supabase'
-
-type Playlist = {
-  id: number
-  name: string
-}
+import type { PlaylistRef } from "@/lib/types";
+import { useEffect, useRef, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { supabase } from "@/lib/supabase";
+import {
+  filterClearButtonClass,
+  filterDropdownHeaderClass,
+  filterDropdownTitleClass,
+  filterRowButtonActiveClass,
+  filterRowButtonClass,
+  filterRowButtonInactiveClass,
+  filterTriggerActiveClass,
+  filterTriggerBaseClass,
+  filterTriggerInactiveClass,
+} from "@/components/filterUiClasses";
 
 type PlaylistFilterProps = {
-  selected: { id: number; name: string } | null
-  onChange: (selected: { id: number; name: string } | null) => void
+  selected: PlaylistRef | null;
+  onChange: (selected: PlaylistRef | null) => void;
+};
+
+function PlaylistIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5 7H19"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5 12H15"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5 17H11"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 }
 
-export default function PlaylistFilter({ selected, onChange }: PlaylistFilterProps) {
-  const [open, setOpen] = useState(false)
-  const [playlists, setPlaylists] = useState<Playlist[]>([])
-  const [loading, setLoading] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-  const { userId } = useAuth()
+function CheckIcon() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M20 6L9 17L4 12"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 5V19"
+        stroke="currentColor"
+        strokeWidth="2.3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5 12H19"
+        stroke="currentColor"
+        strokeWidth="2.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function PlaylistFilterSkeleton() {
+  return (
+    <div className="grid gap-1.5">
+      {Array.from({ length: 5 }).map((_, index) => (
+        <div
+          key={index}
+          className="flex h-9 items-center gap-2.5 rounded-lg px-2.5"
+        >
+          <div className="h-5 w-5 rounded-md bg-[var(--bg-tertiary)]" />
+          <div className="h-2.5 w-28 bg-[var(--bg-tertiary)]" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function PlaylistFilter({
+  selected,
+  onChange,
+}: PlaylistFilterProps) {
+  const [open, setOpen] = useState(false);
+  const [playlists, setPlaylists] = useState<PlaylistRef[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [playlistsLoaded, setPlaylistsLoaded] = useState(false);
+  const [loadError, setLoadError] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+  const { userId } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
-    if (!open || !userId || playlists.length > 0) return
-    async function load() {
-      setLoading(true)
-      const { data } = await supabase
-        .from('playlists')
-        .select('id, name')
-        .eq('clerk_user_id', userId!)
-        .order('name')
-      setPlaylists(data ?? [])
-      setLoading(false)
-    }
-    load()
-  }, [open, userId, playlists.length])
+    if (!open || playlistsLoaded) return;
 
-  function toggle(id: number, name: string) {
-    onChange(selected?.id === id ? null : { id, name })
+    if (!userId) {
+      setLoading(false);
+      setPlaylistsLoaded(true);
+      setPlaylists([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function load() {
+      setLoading(true);
+      setLoadError("");
+
+      const { data, error } = await supabase
+        .from("playlists")
+        .select("id, name")
+        .eq("clerk_user_id", userId)
+        .order("name");
+
+      if (cancelled) return;
+
+      if (error) {
+        setLoadError(error.message);
+        setPlaylists([]);
+      } else {
+        setPlaylists(data ?? []);
+      }
+
+      setLoading(false);
+      setPlaylistsLoaded(true);
+    }
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, userId, playlistsLoaded]);
+
+  function toggle(playlist: PlaylistRef) {
+    onChange(selected?.id === playlist.id ? null : playlist);
   }
 
-  const hasActive = selected !== null
+  function clear() {
+    onChange(null);
+  }
+
+  const hasActive = selected !== null;
+  const showSkeleton = loading || !playlistsLoaded;
 
   return (
     <div ref={ref} className="relative">
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
-        className={`flex items-center gap-1 cursor-pointer py-1 rounded-md border text-xs font-medium transition-colors ${hasActive ? 'pl-3 pr-2' : 'px-3'} border-[var(--border)] text-[var(--text-primary)] hover:opacity-70`}
+        className={`${filterTriggerBaseClass} ${
+          open || hasActive
+            ? filterTriggerActiveClass
+            : filterTriggerInactiveClass
+        }`}
       >
-        Playlists
+        <span>Playlists</span>
+
         {hasActive && (
-          <span className="w-1.75 h-1.75 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }} />
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--bg-elevated)] px-1.5 text-[10px] font-medium text-[var(--text-primary)]">
+            1
+          </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-64 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)] shadow-2xl z-50 overflow-hidden">
-          <div className="max-h-[360px] overflow-y-auto py-1.5">
-            {loading ? (
-              <div className="px-4 py-3 text-xs text-[var(--text-muted)]">Loading...</div>
+        <div className="absolute left-0 top-full z-50 mt-2 w-[300px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]">
+          <div className={filterDropdownHeaderClass}>
+            <div className={filterDropdownTitleClass}>Playlists</div>
+
+            {hasActive && (
+              <button
+                type="button"
+                onClick={clear}
+                className={filterClearButtonClass}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          <div className="p-1.5">
+            {showSkeleton ? (
+              <PlaylistFilterSkeleton />
+            ) : loadError ? (
+              <div className="rounded-lg bg-[var(--bg-primary)] px-3 py-3">
+                <div className="text-xs font-medium text-[var(--danger)]">
+                  Couldn&apos;t load playlists
+                </div>
+
+                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+                  {loadError}
+                </div>
+              </div>
             ) : playlists.length === 0 ? (
-              <div className="px-4 py-3 text-xs text-[var(--text-muted)]">No playlists found</div>
+              <div className="rounded-lg bg-[var(--bg-primary)] px-3 py-3">
+                <div className="text-xs font-medium text-[var(--text-primary)]">
+                  No playlists found
+                </div>
+
+                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+                  Create a playlist first, then use this filter to narrow your
+                  library.
+                </div>
+              </div>
             ) : (
-              playlists.map((playlist) => {
-                const isSelected = selected?.id === playlist.id
-                return (
-                  <button
-                    key={playlist.id}
-                    onClick={() => toggle(playlist.id, playlist.name)}
-                    className={`w-full flex items-center justify-between px-4 py-1.5 text-sm transition-colors ${
-                      isSelected
-                        ? 'bg-[var(--bg-elevated)] text-[var(--text-primary)]'
-                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]'
-                    }`}
-                  >
-                    <span className={isSelected ? 'font-medium' : ''}>{playlist.name}</span>
-                    <span className={`text-lg leading-none ${isSelected ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'}`}>+</span>
-                  </button>
-                )
-              })
+              <div className="max-h-[340px] overflow-y-auto">
+                {playlists.map((playlist) => {
+                  const isSelected = selected?.id === playlist.id;
+
+                  return (
+                    <button
+                      key={playlist.id}
+                      type="button"
+                      onClick={() => toggle(playlist)}
+                      className={`group ${filterRowButtonClass} h-9 ${
+                        isSelected
+                          ? filterRowButtonActiveClass
+                          : filterRowButtonInactiveClass
+                      }`}
+                    >
+                      <span className="flex min-w-0 items-center gap-2.5">
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
+                            isSelected
+                              ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                              : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                          }`}
+                        >
+                          <PlaylistIcon />
+                        </span>
+
+                        <span className="min-w-0 truncate">
+                          {playlist.name}
+                        </span>
+                      </span>
+
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
+                          isSelected
+                            ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                            : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                        }`}
+                      >
+                        {isSelected ? <CheckIcon /> : <PlusIcon />}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

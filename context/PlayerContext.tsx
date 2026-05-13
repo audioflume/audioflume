@@ -1,5 +1,6 @@
-'use client'
+"use client";
 
+import type { Song } from "@/lib/types";
 import {
   createContext,
   useContext,
@@ -8,255 +9,530 @@ import {
   useCallback,
   useEffect,
   ReactNode,
-} from 'react'
-
-type Song = {
-  id: string
-  title: string
-  artist: string
-  audioUrl: string
-  coverArt: string | null
-  waveformPeaks: string
-  duration: number
-  key: string
-  bpm: number
-}
+} from "react";
 
 type WaveformHandle = {
-  seekTo: (progress: number) => void
-}
+  seekTo: (progress: number) => void;
+};
+
+type StoredPlayerState = {
+  currentSong: Song;
+  currentTime: number;
+  duration: number;
+};
 
 type PlayerContextType = {
-  currentSong: Song | null
-  isPlaying: boolean
-  currentTime: number
-  duration: number
-  togglePlayPause: (song: Song) => void
-  seekTo: (song: Song, progress: number, shouldPlay: boolean) => void
-  registerWaveform: (songId: string, handle: WaveformHandle) => void
-  unregisterWaveform: (songId: string) => void
-  setQueue: (songs: Song[]) => void
-  navigateTrack: (direction: 'prev' | 'next') => void
+  currentSong: Song | null;
+  isPlaying: boolean;
+  currentTime: number;
+  duration: number;
+  togglePlayPause: (song: Song) => void;
+  seekTo: (song: Song, progress: number, shouldPlay: boolean) => void;
+  registerWaveform: (songId: string, handle: WaveformHandle) => void;
+  unregisterWaveform: (songId: string) => void;
+  setQueue: (songs: Song[]) => void;
+  navigateTrack: (direction: "prev" | "next") => void;
+  closePlayer: () => void;
+};
+
+const PlayerContext = createContext<PlayerContextType | null>(null);
+
+const PLAYER_STORAGE_KEY = "filmwave-player-state";
+
+function isInterruptedPlayError(err: unknown) {
+  if (!(err instanceof DOMException)) return false;
+
+  return (
+    err.name === "AbortError" ||
+    err.message.includes("interrupted by a call to pause") ||
+    err.message.includes("interrupted by a new load request")
+  );
 }
 
-const PlayerContext = createContext<PlayerContextType | null>(null)
+function isValidStoredSong(value: unknown): value is Song {
+  if (!value || typeof value !== "object") return false;
+
+  const song = value as Partial<Song>;
+
+  return (
+    typeof song.id === "string" &&
+    typeof song.title === "string" &&
+    typeof song.artist === "string" &&
+    typeof song.audioUrl === "string" &&
+    Array.isArray(song.stems) &&
+    typeof song.waveformPeaks === "string"
+  );
+}
+
+function readStoredPlayerState() {
+  try {
+    const saved = window.localStorage.getItem(PLAYER_STORAGE_KEY);
+
+    if (!saved) return null;
+
+    const parsed = JSON.parse(saved) as Partial<StoredPlayerState>;
+
+    if (!isValidStoredSong(parsed.currentSong)) return null;
+
+    return {
+      currentSong: parsed.currentSong,
+      currentTime: Number.isFinite(parsed.currentTime)
+        ? Number(parsed.currentTime)
+        : 0,
+      duration: Number.isFinite(parsed.duration)
+        ? Number(parsed.duration)
+        : parsed.currentSong.duration || 0,
+    };
+  } catch {
+    window.localStorage.removeItem(PLAYER_STORAGE_KEY);
+    return null;
+  }
+}
+
+function writeStoredPlayerState({
+  currentSong,
+  currentTime,
+  duration,
+}: {
+  currentSong: Song;
+  currentTime: number;
+  duration: number;
+}) {
+  try {
+    window.localStorage.setItem(
+      PLAYER_STORAGE_KEY,
+      JSON.stringify({
+        currentSong,
+        currentTime,
+        duration,
+      }),
+    );
+  } catch {
+    // Ignore storage failures.
+  }
+}
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const waveformsRef = useRef<Map<string, WaveformHandle>>(new Map())
-  const currentSongRef = useRef<Song | null>(null)
-  const queueRef = useRef<Song[]>([])
-  const navigateTrackRef = useRef<
-    (direction: 'prev' | 'next', forcePlay?: boolean) => void
-  >(() => {})
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const waveformsRef = useRef<Map<string, WaveformHandle>>(new Map());
+  const currentSongRef = useRef<Song | null>(null);
+  const currentTimeRef = useRef(0);
+  const durationRef = useRef(0);
+  const queueRef = useRef<Song[]>([]);
+  const playRequestIdRef = useRef(0);
 
-  const [currentSong, setCurrentSong] = useState<Song | null>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
+  const playSongDirectlyRef = useRef<
+    (song: Song, shouldPlay?: boolean) => void
+  >(() => {});
+
+  const navigateTrackRef = useRef<
+    (direction: "prev" | "next", forcePlay?: boolean) => void
+  >(() => {});
+
+  const [currentSong, setCurrentSong] = useState<Song | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const setCurrentTimeState = useCallback((value: number) => {
+    currentTimeRef.current = value;
+    setCurrentTime(value);
+  }, []);
+
+  const setDurationState = useCallback((value: number) => {
+    durationRef.current = value;
+    setDuration(value);
+  }, []);
 
   function getAudio(): HTMLAudioElement {
     if (!audioRef.current) {
-      const audio = new Audio()
+      const audio = new Audio();
+      audio.preload = "auto";
 
-      audio.addEventListener('play', () => setIsPlaying(true))
+      audio.addEventListener("play", () => setIsPlaying(true));
 
-      audio.addEventListener('pause', () => setIsPlaying(false))
+      audio.addEventListener("pause", () => setIsPlaying(false));
 
-      audio.addEventListener('ended', () => {
-        const currentId = currentSongRef.current?.id
+      audio.addEventListener("ended", () => {
+        const current = currentSongRef.current;
+        const queue = queueRef.current;
 
-        if (currentId) {
-          waveformsRef.current.get(currentId)?.seekTo(0)
+        if (!current || !queue.length) {
+          setCurrentTimeState(0);
+          setIsPlaying(false);
+          return;
         }
 
-        setCurrentTime(0)
-        setIsPlaying(false)
+        const currentIndex = queue.findIndex((song) => song.id === current.id);
+        const nextSong = currentIndex >= 0 ? queue[currentIndex + 1] : null;
 
-        navigateTrackRef.current('next', true)
-      })
+        waveformsRef.current.get(current.id)?.seekTo(0);
+        setCurrentTimeState(0);
 
-      audio.addEventListener('timeupdate', () => {
-        if (!audio.duration || !isFinite(audio.duration)) return
+        if (!nextSong) {
+          setIsPlaying(false);
 
-        const progress = audio.currentTime / audio.duration
-        const id = currentSongRef.current?.id
+          writeStoredPlayerState({
+            currentSong: current,
+            currentTime: 0,
+            duration: durationRef.current || current.duration || 0,
+          });
+
+          return;
+        }
+
+        playSongDirectlyRef.current(nextSong, true);
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        if (!audio.duration || !isFinite(audio.duration)) return;
+
+        const progress = audio.currentTime / audio.duration;
+        const id = currentSongRef.current?.id;
 
         if (id) {
-          waveformsRef.current.get(id)?.seekTo(progress)
+          waveformsRef.current.get(id)?.seekTo(progress);
         }
 
-        setCurrentTime(audio.currentTime)
-        setDuration(audio.duration)
-      })
+        setCurrentTimeState(audio.currentTime);
+        setDurationState(audio.duration);
 
-      audio.addEventListener('loadedmetadata', () => {
+        if (currentSongRef.current) {
+          writeStoredPlayerState({
+            currentSong: currentSongRef.current,
+            currentTime: audio.currentTime,
+            duration: audio.duration,
+          });
+        }
+      });
+
+      audio.addEventListener("loadedmetadata", () => {
         if (isFinite(audio.duration)) {
-          setDuration(audio.duration)
+          setDurationState(audio.duration);
         }
-      })
+      });
 
-      audioRef.current = audio
+      audio.addEventListener("error", () => {
+        setIsPlaying(false);
+      });
+
+      audioRef.current = audio;
     }
 
-    return audioRef.current
+    return audioRef.current;
   }
 
-  const playSongDirectly = useCallback((song: Song, shouldPlay?: boolean) => {
-    const audio = getAudio()
-    const wasPlaying = shouldPlay !== undefined ? shouldPlay : !audio.paused
+  const restoreStoredPlayer = useCallback(() => {
+    if (currentSongRef.current) return;
 
-    if (currentSongRef.current) {
-      waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0)
+    const storedState = readStoredPlayerState();
+
+    if (!storedState) return;
+
+    const audio = getAudio();
+
+    audio.src = storedState.currentSong.audioUrl;
+
+    currentSongRef.current = storedState.currentSong;
+    setCurrentSong(storedState.currentSong);
+    setCurrentTimeState(storedState.currentTime);
+    setDurationState(
+      storedState.duration || storedState.currentSong.duration || 0,
+    );
+    setIsPlaying(false);
+
+    const applyStoredTime = () => {
+      if (!audio.duration || !isFinite(audio.duration)) return;
+
+      const safeTime = Math.max(
+        0,
+        Math.min(storedState.currentTime, audio.duration),
+      );
+
+      audio.currentTime = safeTime;
+      setCurrentTimeState(safeTime);
+      setDurationState(audio.duration);
+    };
+
+    if (audio.duration && isFinite(audio.duration)) {
+      applyStoredTime();
+    } else {
+      audio.addEventListener("loadedmetadata", applyStoredTime, { once: true });
+    }
+  }, [setCurrentTimeState, setDurationState]);
+
+  const safePlay = useCallback(() => {
+    const audio = getAudio();
+    const requestId = ++playRequestIdRef.current;
+
+    audio.play().catch((err) => {
+      if (requestId !== playRequestIdRef.current) return;
+      if (isInterruptedPlayError(err)) return;
+
+      console.error(err);
+      setIsPlaying(false);
+    });
+  }, []);
+
+  const safePause = useCallback(() => {
+    playRequestIdRef.current += 1;
+
+    const audio = getAudio();
+    audio.pause();
+    setIsPlaying(false);
+  }, []);
+
+  const closePlayer = useCallback(() => {
+    playRequestIdRef.current += 1;
+
+    const audio = audioRef.current;
+    const current = currentSongRef.current;
+
+    if (audio) {
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
     }
 
-    audio.src = song.audioUrl
-    audio.currentTime = 0
-
-    currentSongRef.current = song
-    setCurrentSong(song)
-    setCurrentTime(0)
-    setDuration(song.duration || 0)
-
-    if (wasPlaying) {
-      audio.play().catch(console.error)
+    if (current) {
+      waveformsRef.current.get(current.id)?.seekTo(0);
     }
-  }, [])
+
+    currentSongRef.current = null;
+    currentTimeRef.current = 0;
+    durationRef.current = 0;
+
+    setCurrentSong(null);
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+
+    window.localStorage.removeItem(PLAYER_STORAGE_KEY);
+  }, []);
+
+  const playSongDirectly = useCallback(
+    (song: Song, shouldPlay?: boolean) => {
+      const audio = getAudio();
+      const wasPlaying = shouldPlay !== undefined ? shouldPlay : !audio.paused;
+
+      playRequestIdRef.current += 1;
+
+      if (currentSongRef.current) {
+        waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0);
+      }
+
+      audio.src = song.audioUrl;
+      audio.currentTime = 0;
+
+      currentSongRef.current = song;
+      setCurrentSong(song);
+      setCurrentTimeState(0);
+      setDurationState(song.duration || 0);
+
+      writeStoredPlayerState({
+        currentSong: song,
+        currentTime: 0,
+        duration: song.duration || 0,
+      });
+
+      if (wasPlaying) {
+        safePlay();
+      }
+    },
+    [safePlay, setCurrentTimeState, setDurationState],
+  );
+
+  playSongDirectlyRef.current = playSongDirectly;
 
   const togglePlayPause = useCallback(
     (song: Song) => {
-      const audio = getAudio()
+      const audio = getAudio();
 
       if (currentSongRef.current?.id === song.id) {
         if (audio.paused) {
-          audio.play().catch(console.error)
+          safePlay();
         } else {
-          audio.pause()
+          safePause();
         }
-      } else {
-        playSongDirectly(song, true)
+
+        return;
       }
+
+      playSongDirectly(song, true);
     },
-    [playSongDirectly]
-  )
+    [playSongDirectly, safePause, safePlay],
+  );
 
   const seekTo = useCallback(
     (song: Song, progress: number, shouldPlay: boolean) => {
-      const audio = getAudio()
+      const audio = getAudio();
 
       const safeProgress = Number.isFinite(progress)
         ? Math.max(0, Math.min(1, progress))
-        : 0
+        : 0;
 
       if (currentSongRef.current?.id !== song.id) {
+        playRequestIdRef.current += 1;
+
         if (currentSongRef.current) {
-          waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0)
+          waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0);
         }
 
-        audio.src = song.audioUrl
-        currentSongRef.current = song
-        setCurrentSong(song)
-        setDuration(song.duration || 0)
+        audio.src = song.audioUrl;
+        currentSongRef.current = song;
+        setCurrentSong(song);
+        setDurationState(song.duration || 0);
+
+        writeStoredPlayerState({
+          currentSong: song,
+          currentTime: 0,
+          duration: song.duration || 0,
+        });
       }
 
       const applySeek = () => {
-        if (!audio.duration || !isFinite(audio.duration)) return
+        if (!audio.duration || !isFinite(audio.duration)) return;
 
-        audio.currentTime = safeProgress * audio.duration
-        setCurrentTime(audio.currentTime)
+        audio.currentTime = safeProgress * audio.duration;
+        setCurrentTimeState(audio.currentTime);
+        setDurationState(audio.duration);
+
+        writeStoredPlayerState({
+          currentSong: song,
+          currentTime: audio.currentTime,
+          duration: audio.duration,
+        });
 
         if (shouldPlay) {
-          audio.play().catch(console.error)
+          safePlay();
         }
-      }
+      };
 
       if (audio.duration && isFinite(audio.duration)) {
-        applySeek()
+        applySeek();
       } else {
-        audio.addEventListener('loadedmetadata', applySeek, { once: true })
+        audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    []
-  )
+    [safePlay, setCurrentTimeState, setDurationState],
+  );
 
   const registerWaveform = useCallback(
     (songId: string, handle: WaveformHandle) => {
-      waveformsRef.current.set(songId, handle)
+      waveformsRef.current.set(songId, handle);
     },
-    []
-  )
+    [],
+  );
 
   const unregisterWaveform = useCallback((songId: string) => {
-    waveformsRef.current.delete(songId)
-  }, [])
+    waveformsRef.current.delete(songId);
+  }, []);
 
   const setQueue = useCallback((songs: Song[]) => {
-    queueRef.current = songs
-  }, [])
+    queueRef.current = songs;
+  }, []);
 
   const navigateTrack = useCallback(
-    (direction: 'prev' | 'next', forcePlay = false) => {
-      const queue = queueRef.current
-      const current = currentSongRef.current
+    (direction: "prev" | "next", forcePlay = false) => {
+      const queue = queueRef.current;
+      const current = currentSongRef.current;
 
-      if (!queue.length || !current) return
+      if (!queue.length || !current) return;
 
-      const idx = queue.findIndex((song) => song.id === current.id)
-      if (idx === -1) return
+      const idx = queue.findIndex((song) => song.id === current.id);
+      if (idx === -1) return;
 
-      const nextIdx = direction === 'next' ? idx + 1 : idx - 1
+      const nextIdx = direction === "next" ? idx + 1 : idx - 1;
 
       if (nextIdx < 0 || nextIdx >= queue.length) {
-        setIsPlaying(false)
-        return
+        setIsPlaying(false);
+        return;
       }
 
-      const shouldPlay = forcePlay || !audioRef.current?.paused
+      const shouldPlay = forcePlay || !audioRef.current?.paused;
 
-      playSongDirectly(queue[nextIdx], shouldPlay)
+      playSongDirectly(queue[nextIdx], shouldPlay);
     },
-    [playSongDirectly]
-  )
+    [playSongDirectly],
+  );
 
-  navigateTrackRef.current = navigateTrack
+  navigateTrackRef.current = navigateTrack;
+
+  useEffect(() => {
+    window.localStorage.removeItem(PLAYER_STORAGE_KEY);
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible") return;
+      if (!currentSongRef.current) return;
+
+      const audio = audioRef.current;
+
+      if (!audio) return;
+
+      setCurrentTimeState(audio.currentTime || currentTimeRef.current);
+      setDurationState(
+        audio.duration && isFinite(audio.duration)
+          ? audio.duration
+          : durationRef.current,
+      );
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [setCurrentTimeState, setDurationState]);
+
+  useEffect(() => {
+    if (!currentSong) return;
+
+    writeStoredPlayerState({
+      currentSong,
+      currentTime: currentTimeRef.current,
+      duration: durationRef.current || currentSong.duration || 0,
+    });
+  }, [currentSong]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement).tagName
+      const tag = (e.target as HTMLElement).tagName;
 
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
 
-      if (e.code === 'Space') {
-        e.preventDefault()
+      if (e.code === "Space") {
+        e.preventDefault();
 
-        const audio = getAudio()
+        const audio = getAudio();
 
         if (currentSongRef.current) {
           if (audio.paused) {
-            audio.play().catch(console.error)
+            safePlay();
           } else {
-            audio.pause()
+            safePause();
           }
         }
       }
 
-      if (e.code === 'ArrowDown') {
-        e.preventDefault()
-        navigateTrackRef.current('next')
+      if (e.code === "ArrowDown") {
+        e.preventDefault();
+        navigateTrackRef.current("next");
       }
 
-      if (e.code === 'ArrowUp') {
-        e.preventDefault()
-        navigateTrackRef.current('prev')
+      if (e.code === "ArrowUp") {
+        e.preventDefault();
+        navigateTrackRef.current("prev");
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [])
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [safePause, safePlay]);
 
   return (
     <PlayerContext.Provider
@@ -271,19 +547,20 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         unregisterWaveform,
         setQueue,
         navigateTrack,
+        closePlayer,
       }}
     >
       {children}
     </PlayerContext.Provider>
-  )
+  );
 }
 
 export function usePlayer() {
-  const ctx = useContext(PlayerContext)
+  const ctx = useContext(PlayerContext);
 
   if (!ctx) {
-    throw new Error('usePlayer must be used within PlayerProvider')
+    throw new Error("usePlayer must be used within PlayerProvider");
   }
 
-  return ctx
+  return ctx;
 }

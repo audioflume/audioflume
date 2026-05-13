@@ -1,18 +1,18 @@
 export default function LoadingSpinner({
   size = 28,
   stroke = 9,
-  color = 'var(--text-primary)',
-  trackColor = 'transparent',
+  color = "var(--text-primary)",
+  trackColor = "transparent",
 }: {
-  size?: number
-  stroke?: number
-  color?: string
-  trackColor?: string
+  size?: number;
+  stroke?: number;
+  color?: string;
+  trackColor?: string;
 }) {
-  const radius = 50 - stroke * 2
-  const circumference = 2 * Math.PI * radius
-  const visibleArc = circumference * 0.72
-  const gapArc = circumference - visibleArc
+  const radius = 50 - stroke * 2;
+  const circumference = 2 * Math.PI * radius;
+  const visibleArc = circumference * 0.72;
+  const gapArc = circumference - visibleArc;
 
   return (
     <>
@@ -30,9 +30,9 @@ export default function LoadingSpinner({
         style={{
           width: `${size}px`,
           height: `${size}px`,
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <svg
@@ -40,11 +40,11 @@ export default function LoadingSpinner({
           width={size}
           height={size}
           style={{
-            animation: 'loading-spinner-rotate 0.8s linear infinite',
-            overflow: 'visible',
+            animation: "loading-spinner-rotate 0.8s linear infinite",
+            overflow: "visible",
           }}
         >
-          {trackColor !== 'transparent' && (
+          {trackColor !== "transparent" && (
             <circle
               cx="50"
               cy="50"
@@ -69,5 +69,5 @@ export default function LoadingSpinner({
         </svg>
       </div>
     </>
-  )
+  );
 }

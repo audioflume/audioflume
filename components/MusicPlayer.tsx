@@ -1,45 +1,79 @@
-'use client'
+"use client";
 
-import { usePlayer } from '@/context/PlayerContext'
-import Image from 'next/image'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { usePlayer } from "@/context/PlayerContext";
+import Image from "next/image";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import AddToPlaylistModal from "@/components/AddToPlaylistModal";
+import HeartIcon from "@/components/icons/HeartIcon";
+import MoreIcon from "@/components/icons/MoreIcon";
+import DownloadIcon from "@/components/icons/DownloadIcon";
+import { iconButtonClass } from "@/components/uiClasses";
 
-const WAVEFORM_HIDE_WIDTH = 80
-const BAR_WIDTH = 2
-const BAR_GAP = 1
-const BAR_TOTAL = BAR_WIDTH + BAR_GAP
+const BAR_WIDTH = 2;
+const BAR_GAP = 1;
+const BAR_TOTAL = BAR_WIDTH + BAR_GAP;
+
+const WAVEFORM_MIN_WIDTH = 780;
+const FULL_COMPACT_TIME_MIN_WIDTH = 620;
+const COMPACT_TIME_MIN_WIDTH = 500;
+const KEY_MIN_WIDTH = 560;
+const BPM_MIN_WIDTH = 700;
 
 function formatTime(s: number) {
-  if (!s || !isFinite(s)) return '0:00'
-  const m = Math.floor(s / 60)
-  const sec = Math.floor(s % 60)
-  return `${m}:${sec.toString().padStart(2, '0')}`
+  if (!s || !isFinite(s)) return "0:00";
+
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+}
+
+function clampNumber(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
 }
 
 function normalizePeaks(peaks: number[]) {
-  let maxVal = 0
+  let maxVal = 0;
+
   for (let i = 0; i < peaks.length; i++) {
-    const v = Math.abs(Number(peaks[i]) || 0)
-    if (v > maxVal) maxVal = v
+    const v = Math.abs(Number(peaks[i]) || 0);
+    if (v > maxVal) maxVal = v;
   }
-  if (maxVal <= 0) return peaks.map(() => 0)
-  return peaks.map((peak) => Math.abs(Number(peak) || 0) / maxVal)
+
+  if (maxVal <= 0) return peaks.map(() => 0);
+
+  return peaks.map((peak) => Math.abs(Number(peak) || 0) / maxVal);
 }
 
 function buildWaveformBars(peaks: number[], width: number) {
-  if (!peaks.length || width <= 0) return []
-  const barCount = Math.max(1, Math.floor(width / BAR_TOTAL))
-  const normalizedPeaks = normalizePeaks(peaks)
-  const samplesPerBar = normalizedPeaks.length / barCount
+  if (!peaks.length || width <= 0) return [];
+
+  const barCount = Math.max(1, Math.floor(width / BAR_TOTAL));
+  const normalizedPeaks = normalizePeaks(peaks);
+  const samplesPerBar = normalizedPeaks.length / barCount;
+
   return Array.from({ length: barCount }, (_, i) => {
-    const start = Math.floor(i * samplesPerBar)
-    const end = Math.min(normalizedPeaks.length, Math.floor((i + 1) * samplesPerBar))
-    let barPeak = 0
+    const start = Math.floor(i * samplesPerBar);
+    const end = Math.min(
+      normalizedPeaks.length,
+      Math.floor((i + 1) * samplesPerBar),
+    );
+
+    let barPeak = 0;
+
     for (let j = start; j < end; j++) {
-      if (normalizedPeaks[j] > barPeak) barPeak = normalizedPeaks[j]
+      if (normalizedPeaks[j] > barPeak) barPeak = normalizedPeaks[j];
     }
-    return Math.max(2, Math.min(20, barPeak * 20))
-  })
+
+    return Math.max(2, Math.min(20, barPeak * 20));
+  });
 }
 
 const PrevIcon = () => (
@@ -47,199 +81,657 @@ const PrevIcon = () => (
     <polygon points="19,20 9,12 19,4" />
     <rect x="5" y="4" width="2" height="16" />
   </svg>
-)
+);
 
 const NextIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <polygon points="5,4 15,12 5,20" />
     <rect x="17" y="4" width="2" height="16" />
   </svg>
-)
+);
 
 const PlayIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <polygon points="5,3 19,12 5,21" />
   </svg>
-)
+);
 
 const PauseIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <rect x="6" y="4" width="4" height="16" />
     <rect x="14" y="4" width="4" height="16" />
   </svg>
-)
+);
+
+function CloseIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M6 6L18 18"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M18 6L6 18"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function IconButton({
+  children,
+  label,
+  onClick,
+}: {
+  children: React.ReactNode;
+  label: string;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className={iconButtonClass}
+    >
+      {children}
+    </button>
+  );
+}
 
 export default function MusicPlayer() {
-  const { currentSong, isPlaying, currentTime, duration, togglePlayPause, navigateTrack, seekTo } = usePlayer()
+  const {
+    currentSong,
+    isPlaying,
+    currentTime,
+    duration,
+    togglePlayPause,
+    navigateTrack,
+    seekTo,
+    closePlayer,
+  } = usePlayer();
 
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [peaks, setPeaks] = useState<number[]>([])
-  const [waveformWidth, setWaveformWidth] = useState(0)
+  const playerRef = useRef<HTMLDivElement>(null);
+  const waveformRef = useRef<HTMLDivElement>(null);
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
 
-  const progress = duration > 0 && isFinite(duration)
-    ? Math.max(0, Math.min(1, currentTime / duration))
-    : 0
+  const [playerWidth, setPlayerWidth] = useState(0);
+  const [waveformWidth, setWaveformWidth] = useState(0);
+  const [peaks, setPeaks] = useState<number[]>([]);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [addToPlaylistOpen, setAddToPlaylistOpen] = useState(false);
+  const [moreMenuPosition, setMoreMenuPosition] = useState({
+    top: 0,
+    left: 0,
+  });
 
-  const isWaveformCompact = waveformWidth <= WAVEFORM_HIDE_WIDTH
-  const waveformBars = useMemo(() => buildWaveformBars(peaks, waveformWidth), [peaks, waveformWidth])
+  const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
+  const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
+  const showCompactTime =
+    !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
+  const showKey = playerWidth >= KEY_MIN_WIDTH;
+  const showBpm = playerWidth >= BPM_MIN_WIDTH;
+  const showRightMeta = showKey || showBpm;
+
+  const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
+
+  const mainGap = 22 + compressionProgress * 24;
+  const controlsToProgressGap = 18 + compressionProgress * 18;
+  const metaGap = 24 + compressionProgress * 30;
+  const progressToMetaGap = 22 + compressionProgress * 24;
+  const metaToActionsGap = 18 + compressionProgress * 18;
+  const songInfoWidth = clampNumber(
+    150 + ((playerWidth - 620) / 580) * 50,
+    150,
+    200,
+  );
+
+  const waveformMaxWidth = 390 + compressionProgress * 260;
+  const progressGroupMaxWidth = waveformMaxWidth + 112;
+
+  const progress =
+    duration > 0 && isFinite(duration)
+      ? Math.max(0, Math.min(1, currentTime / duration))
+      : 0;
+
+  const waveformBars = useMemo(
+    () => buildWaveformBars(peaks, waveformWidth),
+    [peaks, waveformWidth],
+  );
+
+  const gridTemplateColumns = [
+    `${songInfoWidth}px`,
+    "auto",
+    showWaveform
+      ? `minmax(192px, ${progressGroupMaxWidth}px)`
+      : showCompactTime
+        ? "auto"
+        : "",
+    showRightMeta ? "auto" : "",
+    "auto",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const updateMoreMenuPosition = useCallback(() => {
+    const trigger = moreButtonRef.current;
+    const menu = moreMenuRef.current;
+
+    if (!trigger || !menu) return;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const menuRect = menu.getBoundingClientRect();
+
+    const viewportPadding = 16;
+    const playerGap = 6;
+
+    const left = clampNumber(
+      triggerRect.right - menuRect.width,
+      viewportPadding,
+      window.innerWidth - menuRect.width - viewportPadding,
+    );
+
+    const top = Math.max(
+      viewportPadding,
+      triggerRect.top - menuRect.height - playerGap,
+    );
+
+    setMoreMenuPosition({
+      top,
+      left,
+    });
+  }, []);
 
   useEffect(() => {
-    if (!currentSong) { setPeaks([]); return }
-    try {
-      const parsed = JSON.parse(currentSong.waveformPeaks)
-      setPeaks(Array.isArray(parsed) ? parsed.map((v) => { const n = Number(v); return Number.isFinite(n) ? n : 0 }) : [])
-    } catch { setPeaks([]) }
-  }, [currentSong?.id])
+    const player = playerRef.current;
+    if (!player) return;
 
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-    const updateWidth = () => setWaveformWidth(Math.floor(container.getBoundingClientRect().width))
-    updateWidth()
-    const ro = new ResizeObserver(updateWidth)
-    ro.observe(container)
-    window.addEventListener('resize', updateWidth)
-    const t1 = window.setTimeout(updateWidth, 0)
-    const t2 = window.setTimeout(updateWidth, 100)
-    const t3 = window.setTimeout(updateWidth, 300)
+    const updateWidth = () => {
+      setPlayerWidth(Math.floor(player.getBoundingClientRect().width));
+    };
+
+    updateWidth();
+
+    const ro = new ResizeObserver(updateWidth);
+
+    ro.observe(player);
+    window.addEventListener("resize", updateWidth);
+
+    const t1 = window.setTimeout(updateWidth, 0);
+    const t2 = window.setTimeout(updateWidth, 100);
+    const t3 = window.setTimeout(updateWidth, 300);
+
     return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', updateWidth)
-      window.clearTimeout(t1)
-      window.clearTimeout(t2)
-      window.clearTimeout(t3)
-    }
-  }, [currentSong?.id])
+      ro.disconnect();
+      window.removeEventListener("resize", updateWidth);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, [currentSong?.id]);
 
-  if (!currentSong) return null
+  useEffect(() => {
+    if (!currentSong) {
+      setPeaks([]);
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(currentSong.waveformPeaks);
+
+      setPeaks(
+        Array.isArray(parsed)
+          ? parsed.map((v) => {
+              const n = Number(v);
+              return Number.isFinite(n) ? n : 0;
+            })
+          : [],
+      );
+    } catch {
+      setPeaks([]);
+    }
+  }, [currentSong?.id, currentSong?.waveformPeaks]);
+
+  useEffect(() => {
+    if (!showWaveform) {
+      setWaveformWidth(0);
+      return;
+    }
+
+    const waveform = waveformRef.current;
+    if (!waveform) return;
+
+    const updateWidth = () => {
+      setWaveformWidth(Math.floor(waveform.getBoundingClientRect().width));
+    };
+
+    updateWidth();
+
+    const ro = new ResizeObserver(updateWidth);
+
+    ro.observe(waveform);
+    window.addEventListener("resize", updateWidth);
+
+    const t1 = window.setTimeout(updateWidth, 0);
+    const t2 = window.setTimeout(updateWidth, 100);
+    const t3 = window.setTimeout(updateWidth, 300);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateWidth);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, [currentSong?.id, showWaveform]);
+
+  useLayoutEffect(() => {
+    if (!moreOpen) return;
+
+    updateMoreMenuPosition();
+
+    const frame = window.requestAnimationFrame(updateMoreMenuPosition);
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [moreOpen, updateMoreMenuPosition]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+
+    const handlePositionUpdate = () => {
+      updateMoreMenuPosition();
+    };
+
+    window.addEventListener("resize", handlePositionUpdate);
+    window.addEventListener("scroll", handlePositionUpdate, true);
+
+    return () => {
+      window.removeEventListener("resize", handlePositionUpdate);
+      window.removeEventListener("scroll", handlePositionUpdate, true);
+    };
+  }, [moreOpen, updateMoreMenuPosition]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+
+      if (
+        moreButtonRef.current?.contains(target) ||
+        moreMenuRef.current?.contains(target)
+      ) {
+        return;
+      }
+
+      setMoreOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMoreOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [moreOpen]);
+
+  if (!currentSong) return null;
 
   const handleWaveformClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isWaveformCompact) return
-    const rect = e.currentTarget.getBoundingClientRect()
-    if (!rect.width) return
-    const nextProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
-    seekTo(currentSong, nextProgress, isPlaying)
-  }
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (!rect.width) return;
+
+    const nextProgress = Math.max(
+      0,
+      Math.min(1, (e.clientX - rect.left) / rect.width),
+    );
+
+    seekTo(currentSong, nextProgress, isPlaying);
+  };
+
+  const handleClosePlayer = () => {
+    setMoreOpen(false);
+    setAddToPlaylistOpen(false);
+    closePlayer();
+  };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex h-[72px] items-center border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4">
-      {/* Left - Cover + Info */}
-      <div className="flex w-[clamp(185px,22vw,320px)] flex-shrink-0 items-center gap-3">
-        {currentSong.coverArt ? (
-          <div className="relative h-10 w-10 flex-shrink-0">
-            <Image src={currentSong.coverArt} alt={currentSong.title} fill sizes="40px" className="rounded object-cover" />
-          </div>
-        ) : (
-          <div className="h-10 w-10 flex-shrink-0 rounded bg-[var(--bg-hover)]" />
-        )}
-        <div className="min-w-0">
-          <div className="truncate text-sm font-medium text-[var(--text-primary)]">{currentSong.title}</div>
-          <div className="truncate text-xs text-[var(--text-secondary)]">{currentSong.artist}</div>
-        </div>
-      </div>
+    <>
+      <style>{`
+        .music-player-more-menu {
+          z-index: 95;
+          width: 230px;
+          overflow: hidden;
+          border-radius: 14px;
+          border: 1px solid var(--border);
+          background: color-mix(in srgb, var(--bg-primary) 94%, transparent);
+          box-shadow: var(--shadow-ui);
+          backdrop-filter: blur(18px);
+          padding: 6px;
+          color: var(--text-primary);
+        }
 
-      {/* Center - Controls + Waveform */}
-      <div className="ml-[clamp(12px,2vw,24px)] mr-[40px] flex min-w-0 flex-1 items-center justify-center gap-[clamp(12px,2vw,24px)]">
-        <button onClick={() => navigateTrack('prev')} className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]">
-          <PrevIcon />
-        </button>
+        .light .music-player-more-menu {
+          background: color-mix(in srgb, var(--bg-primary) 98%, transparent);
+        }
 
-        <button onClick={() => togglePlayPause(currentSong)} className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]">
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </button>
+        .music-player-more-menu button,
+        .music-player-more-menu a {
+          display: flex;
+          min-height: 38px;
+          width: 100%;
+          cursor: pointer;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          border-radius: 9px;
+          padding: 0 12px;
+          text-align: left;
+          font-size: 12px;
+          font-weight: 500;
+          color: var(--text-secondary);
+          transition:
+            background 0.15s ease,
+            color 0.15s ease,
+            opacity 0.15s ease;
+        }
 
-        <button onClick={() => navigateTrack('next')} className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]">
-          <NextIcon />
-        </button>
+        .music-player-more-menu button:hover,
+        .music-player-more-menu a:hover {
+          background: var(--bg-hover-strong);
+          color: var(--text-primary);
+        }
 
-        <div className="flex min-w-0 flex-1 items-center justify-center">
-          <div className="flex h-[24px] w-[86px] flex-shrink-0 items-center justify-center whitespace-nowrap text-xs text-[var(--icon-color)] min-[791px]:hidden">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </div>
+        .music-player-more-menu button:disabled {
+          cursor: default;
+          opacity: 0.45;
+        }
 
-          <div className="hidden min-w-0 flex-1 items-center gap-4 min-[791px]:flex">
-            <span className={`${isWaveformCompact ? 'invisible' : ''} w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]`}>
-              {formatTime(currentTime)}
-            </span>
+        .music-player-more-menu button:disabled:hover {
+          background: transparent;
+          color: var(--text-secondary);
+        }
 
-            <div
-              ref={containerRef}
-              data-player-waveform-slot
-              className="relative flex h-[24px] min-w-0 max-w-[500px] flex-1 cursor-pointer items-center"
-              onClick={handleWaveformClick}
-            >
-              {!isWaveformCompact && (
-                <div className="flex h-full w-full items-center">
-                  {waveformBars.map((barHeight, index) => {
-                    const barProgress = waveformBars.length > 0 ? index / waveformBars.length : 0
-                    const isActive = barProgress <= progress
-                    return (
-                      <div
-                        key={index}
-                        className="flex-shrink-0 rounded-full"
-                        style={{
-                          width: `${BAR_WIDTH}px`,
-                          height: `${barHeight}px`,
-                          marginRight: `${BAR_GAP}px`,
-                          backgroundColor: isActive ? 'var(--waveform-progress)' : 'var(--waveform-color)',
-                        }}
-                      />
-                    )
-                  })}
-                </div>
-              )}
+        .music-player-more-menu-divider {
+          height: 1px;
+          margin: 6px 4px;
+          background: var(--border-subtle);
+        }
 
-              {isWaveformCompact && (
-                <div className="absolute inset-0 flex items-center justify-center whitespace-nowrap text-xs text-[var(--icon-color)]">
-                  {formatTime(currentTime)} / {formatTime(duration)}
-                </div>
-              )}
+        .music-player-more-menu-close {
+          color: var(--danger) !important;
+        }
+
+        .music-player-more-menu-close:hover {
+          color: var(--danger) !important;
+        }
+      `}</style>
+
+      <div
+        ref={playerRef}
+        className="fixed bottom-0 left-0 right-0 z-[45] grid h-[72px] items-center justify-between border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4"
+        style={{
+          gridTemplateColumns,
+          columnGap: `${mainGap}px`,
+        }}
+      >
+        <div className="flex min-w-0 items-center gap-3">
+          {currentSong.coverArt ? (
+            <div className="relative h-10 w-10 flex-shrink-0">
+              <Image
+                src={currentSong.coverArt}
+                alt={currentSong.title}
+                fill
+                sizes="40px"
+                className="rounded object-cover"
+              />
+            </div>
+          ) : (
+            <div className="h-10 w-10 flex-shrink-0 rounded bg-[var(--bg-hover)]" />
+          )}
+
+          <div className="min-w-0">
+            <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+              {currentSong.title}
             </div>
 
-            <span className={`${isWaveformCompact ? 'invisible' : ''} w-10 flex-shrink-0 text-xs text-[var(--icon-color)]`}>
-              {formatTime(duration)}
-            </span>
+            <div className="truncate text-xs text-[var(--text-subtle)]">
+              {currentSong.artist}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Right - Meta + Actions */}
-      <div className="ml-auto flex flex-shrink-0 -translate-x-4 items-center">
-        <div className="mr-[clamp(24px,5vw,48px)] flex items-center gap-[clamp(24px,5vw,40px)] text-xs text-[var(--text-secondary)] max-[600px]:hidden">
-          <span>{currentSong.key}</span>
-          <span className="max-[645px]:hidden">{currentSong.bpm} BPM</span>
-        </div>
-
-        <div className="ml-auto flex flex-shrink-0 items-center justify-end gap-0">
-          <button className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-[6px] text-[var(--icon-color)] transition-colors hover:bg-[rgba(255,255,255,0.18)] hover:text-[var(--text-primary)]">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
+        <div className="flex flex-shrink-0 items-center justify-center gap-[clamp(12px,2vw,24px)]">
+          <button
+            type="button"
+            onClick={() => navigateTrack("prev")}
+            className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
+            aria-label="Previous song"
+          >
+            <PrevIcon />
           </button>
 
-          <button className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-[6px] text-[var(--icon-color)] transition-colors hover:bg-[rgba(255,255,255,0.18)] hover:text-[var(--text-primary)]">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="5" cy="12" r="2" />
-              <circle cx="12" cy="12" r="2" />
-              <circle cx="19" cy="12" r="2" />
-            </svg>
+          <button
+            type="button"
+            onClick={() => togglePlayPause(currentSong)}
+            className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
+            aria-label={isPlaying ? "Pause song" : "Play song"}
+          >
+            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigateTrack("next")}
+            className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
+            aria-label="Next song"
+          >
+            <NextIcon />
+          </button>
+        </div>
+
+        {(showWaveform || showCompactTime) && (
+          <div
+            className="relative z-10 flex min-w-0 items-center justify-center overflow-hidden"
+            style={{
+              marginLeft: `${controlsToProgressGap - mainGap}px`,
+              marginRight: `${progressToMetaGap - mainGap}px`,
+            }}
+          >
+            {showWaveform ? (
+              <div className="flex w-full min-w-0 items-center gap-4 overflow-hidden">
+                <span className="w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]">
+                  {formatTime(currentTime)}
+                </span>
+
+                <div
+                  ref={waveformRef}
+                  data-player-waveform-slot
+                  className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-hidden"
+                  onClick={handleWaveformClick}
+                >
+                  <div className="relative z-10 flex h-full w-full items-center overflow-hidden">
+                    {waveformBars.map((barHeight, index) => {
+                      const barProgress =
+                        waveformBars.length > 0
+                          ? index / waveformBars.length
+                          : 0;
+
+                      const isActive = barProgress <= progress;
+
+                      return (
+                        <div
+                          key={index}
+                          className="relative z-10 flex-shrink-0 rounded-full"
+                          style={{
+                            width: `${BAR_WIDTH}px`,
+                            height: `${barHeight}px`,
+                            marginRight: `${BAR_GAP}px`,
+                            backgroundColor: isActive
+                              ? "var(--waveform-progress)"
+                              : "var(--waveform-color)",
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <span className="w-10 flex-shrink-0 text-xs text-[var(--icon-color)]">
+                  {formatTime(duration)}
+                </span>
+              </div>
+            ) : (
+              <div className="whitespace-nowrap text-xs text-[var(--icon-color)]">
+                {showFullCompactTime
+                  ? `${formatTime(currentTime)} / ${formatTime(duration)}`
+                  : formatTime(currentTime)}
+              </div>
+            )}
+          </div>
+        )}
+
+        {showRightMeta && (
+          <div
+            className="flex flex-shrink-0 items-center text-xs text-[var(--text-secondary)]"
+            style={{
+              gap: `${metaGap}px`,
+            }}
+          >
+            {showKey && (
+              <span className="whitespace-nowrap">
+                {currentSong.key || "—"}
+              </span>
+            )}
+
+            {showBpm && (
+              <span className="whitespace-nowrap">
+                {currentSong.bpm ? `${currentSong.bpm} BPM` : "—"}
+              </span>
+            )}
+          </div>
+        )}
+
+        <div
+          className="flex flex-shrink-0 items-center justify-end gap-0.5"
+          style={{
+            marginLeft: `${metaToActionsGap - mainGap}px`,
+          }}
+        >
+          <IconButton label="Favorite song">
+            <HeartIcon />
+          </IconButton>
+
+          <button
+            ref={moreButtonRef}
+            type="button"
+            aria-label="Song options"
+            aria-expanded={moreOpen}
+            onClick={(e) => {
+              e.stopPropagation();
+              setMoreOpen((open) => !open);
+            }}
+            className={`${iconButtonClass} ${
+              moreOpen
+                ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)]"
+                : ""
+            }`}
+          >
+            <MoreIcon />
           </button>
 
           {currentSong.audioUrl && (
             <a
               href={currentSong.audioUrl}
               download
-              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-[6px] text-[var(--icon-color)] transition-colors hover:bg-[rgba(255,255,255,0.18)] hover:text-[var(--text-primary)]"
+              aria-label="Download song"
+              className={iconButtonClass}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7,10 12,15 17,10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
+              <DownloadIcon />
             </a>
           )}
         </div>
       </div>
-    </div>
-  )
+
+      {moreOpen && (
+        <div
+          ref={moreMenuRef}
+          className="music-player-more-menu fixed"
+          style={{
+            top: `${moreMenuPosition.top}px`,
+            left: `${moreMenuPosition.left}px`,
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setMoreOpen(false);
+              setAddToPlaylistOpen(true);
+            }}
+          >
+            <span>Add to Playlist</span>
+          </button>
+
+          <button type="button" disabled>
+            <span>Add to Project</span>
+          </button>
+
+          <button type="button" disabled>
+            <span>Create New Playlist</span>
+          </button>
+
+          <button type="button" disabled>
+            <span>Share Song</span>
+          </button>
+
+          {currentSong.audioUrl ? (
+            <a href={currentSong.audioUrl} download>
+              <span>Download Song</span>
+              <DownloadIcon />
+            </a>
+          ) : (
+            <button type="button" disabled>
+              <span>Download Song</span>
+            </button>
+          )}
+
+          <div className="music-player-more-menu-divider" />
+
+          <button
+            type="button"
+            onClick={handleClosePlayer}
+            className="music-player-more-menu-close"
+          >
+            <span>Close Player</span>
+            <CloseIcon />
+          </button>
+        </div>
+      )}
+
+      <AddToPlaylistModal
+        isOpen={addToPlaylistOpen}
+        song={currentSong}
+        onClose={() => setAddToPlaylistOpen(false)}
+      />
+    </>
+  );
 }

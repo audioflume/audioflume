@@ -1,34 +1,78 @@
-'use client'
+"use client";
 
+import { useState } from "react";
 import ModalShell, {
-  modalCancelButtonClass,
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
   modalTextareaClass,
-} from '@/components/ModalShell'
+} from "@/components/ModalShell";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type CreateProjectModalProps = {
-  isOpen: boolean
-  onClose: () => void
-}
+  isOpen: boolean;
+  onClose: () => void;
+};
 
-export default function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps) {
-  if (!isOpen) return null
+export default function CreateProjectModal({
+  isOpen,
+  onClose,
+}: CreateProjectModalProps) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  if (!isOpen) return null;
+
+  function clearAndClose() {
+    if (isCreating) return;
+
+    setName("");
+    setDescription("");
+    onClose();
+  }
+
+  function handleCreate() {
+    if (!name.trim() || isCreating) return;
+
+    setIsCreating(true);
+
+    window.setTimeout(() => {
+      setIsCreating(false);
+      setName("");
+      setDescription("");
+      onClose();
+    }, 400);
+  }
 
   return (
     <ModalShell
       isOpen={isOpen}
-      title="Create Project"
-      onClose={onClose}
+      title="New Project"
+      onClose={clearAndClose}
       closeLabel="Close create project modal"
+      maxHeight="520px"
+      footer={
+        <button
+          type="button"
+          onClick={handleCreate}
+          disabled={isCreating || !name.trim()}
+          className={modalPrimaryButtonClass}
+        >
+          {isCreating ? (
+            <LoadingSpinner size={18} stroke={9} color="var(--bg-primary)" />
+          ) : (
+            "Create"
+          )}
+        </button>
+      }
     >
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          onClose()
+          e.preventDefault();
+          handleCreate();
         }}
-        className="space-y-5"
+        className="space-y-4"
       >
         <div>
           <label htmlFor="project-name" className={modalFieldLabelClass}>
@@ -38,6 +82,9 @@ export default function CreateProjectModal({ isOpen, onClose }: CreateProjectMod
           <input
             id="project-name"
             type="text"
+            value={name}
+            disabled={isCreating}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Example: Pacific Sunday"
             className={modalInputClass}
           />
@@ -45,34 +92,20 @@ export default function CreateProjectModal({ isOpen, onClose }: CreateProjectMod
 
         <div>
           <label htmlFor="project-description" className={modalFieldLabelClass}>
-            Description
+            Notes
           </label>
 
           <textarea
             id="project-description"
+            value={description}
+            disabled={isCreating}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional project notes..."
             rows={4}
             className={modalTextareaClass}
           />
         </div>
-
-        <div className="flex justify-end gap-1.5 pt-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className={modalCancelButtonClass}
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            className={modalPrimaryButtonClass}
-          >
-            Create Project
-          </button>
-        </div>
       </form>
     </ModalShell>
-  )
+  );
 }

@@ -1,43 +1,63 @@
-'use client'
+"use client";
 
-import { useRef } from 'react'
+import { useRef } from "react";
 import ModalShell, {
-  modalCancelButtonClass,
-  modalCoverButtonClass,
   modalDeleteButtonClass,
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
-} from '@/components/ModalShell'
-import LoadingSpinner from '@/components/LoadingSpinner'
+} from "@/components/ModalShell";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type Playlist = {
-  id: number
-  name: string
-  cover_image_url: string | null
-}
+  id: number;
+  name: string;
+  cover_image_url: string | null;
+};
 
 type EditPlaylistModalProps = {
-  isOpen: boolean
-  playlist: Playlist | null
-  name: string
-  coverPreview: string | null
-  isSaving: boolean
-  onNameChange: (value: string) => void
-  onCoverPreviewChange: (value: string | null) => void
-  onSave: () => void
-  onDelete: () => void
-  onClose: () => void
-}
+  isOpen: boolean;
+  playlist: Playlist | null;
+  name: string;
+  coverPreview: string | null;
+  isSaving: boolean;
+  onNameChange: (value: string) => void;
+  onCoverPreviewChange: (value: string | null) => void;
+  onSave: () => void;
+  onDelete: () => void;
+  onClose: () => void;
+};
 
 function UploadIcon() {
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" y1="3" x2="12" y2="15" />
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 16V4"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M7.5 8.5L12 4L16.5 8.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5 20H19"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
-  )
+  );
 }
 
 export default function EditPlaylistModal({
@@ -52,33 +72,37 @@ export default function EditPlaylistModal({
   onDelete,
   onClose,
 }: EditPlaylistModalProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (!isOpen || !playlist) return null
+  if (!isOpen || !playlist) return null;
 
   function clearFileInput() {
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+      fileInputRef.current.value = "";
     }
   }
 
   function removeCoverImage() {
-    if (isSaving) return
+    if (isSaving) return;
 
-    onCoverPreviewChange(null)
-    clearFileInput()
+    onCoverPreviewChange(null);
+    clearFileInput();
   }
 
   function handleCoverChange(file: File) {
-    const reader = new FileReader()
+    const reader = new FileReader();
 
     reader.onloadend = () => {
-      if (typeof reader.result === 'string') {
-        onCoverPreviewChange(reader.result)
+      if (typeof reader.result === "string") {
+        onCoverPreviewChange(reader.result);
       }
-    }
+    };
 
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(file);
+  }
+
+  function handleSubmit() {
+    if (!isSaving) onSave();
   }
 
   return (
@@ -87,19 +111,42 @@ export default function EditPlaylistModal({
       title="Edit Playlist"
       onClose={isSaving ? () => {} : onClose}
       closeLabel="Close edit playlist modal"
+      maxHeight="520px"
+      footer={
+        <div className="flex w-full items-center justify-between gap-3">
+          <button
+            type="button"
+            disabled={isSaving}
+            onClick={onDelete}
+            className={modalDeleteButtonClass}
+          >
+            Delete
+          </button>
+
+          <button
+            type="button"
+            disabled={isSaving || !name.trim()}
+            onClick={handleSubmit}
+            className={modalPrimaryButtonClass}
+          >
+            {isSaving ? (
+              <LoadingSpinner size={18} stroke={9} color="var(--bg-primary)" />
+            ) : (
+              "Save"
+            )}
+          </button>
+        </div>
+      }
     >
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          if (!isSaving) onSave()
+          e.preventDefault();
+          handleSubmit();
         }}
-        className="space-y-5"
+        className="space-y-4"
       >
         <div>
-          <label
-            htmlFor="playlist-name"
-            className={modalFieldLabelClass}
-          >
+          <label htmlFor="playlist-name" className={modalFieldLabelClass}>
             Playlist Name
           </label>
 
@@ -115,18 +162,7 @@ export default function EditPlaylistModal({
         </div>
 
         <div>
-          <div className={modalFieldLabelClass}>
-            Cover Image
-          </div>
-
-          <button
-            type="button"
-            disabled={isSaving}
-            onClick={() => fileInputRef.current?.click()}
-            className={modalCoverButtonClass}
-          >
-            {coverPreview ? 'Change Cover Image' : 'Add Cover Image'}
-          </button>
+          <div className={modalFieldLabelClass}>Cover Image</div>
 
           <input
             ref={fileInputRef}
@@ -135,22 +171,22 @@ export default function EditPlaylistModal({
             disabled={isSaving}
             className="hidden"
             onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (!file) return
-              handleCoverChange(file)
+              const file = e.target.files?.[0];
+              if (!file) return;
+              handleCoverChange(file);
             }}
           />
 
           {coverPreview ? (
-            <div className="relative mt-4 aspect-square w-24 overflow-visible">
+            <div className="group relative mt-2 h-[112px] w-[112px] overflow-visible">
               <button
                 type="button"
                 disabled={isSaving}
                 onClick={(e) => {
-                  e.stopPropagation()
-                  removeCoverImage()
+                  e.stopPropagation();
+                  removeCoverImage();
                 }}
-                className="absolute right-1 top-1 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black/70 text-[14px] font-medium leading-none text-white transition hover:bg-black/90 disabled:cursor-default disabled:opacity-70"
+                className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
                 aria-label="Remove cover image"
               >
                 ×
@@ -158,81 +194,55 @@ export default function EditPlaylistModal({
 
               <div
                 onClick={() => {
-                  if (!isSaving) fileInputRef.current?.click()
+                  if (!isSaving) fileInputRef.current?.click();
                 }}
-                className="h-full w-full cursor-pointer overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-primary)]"
+                className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--text-secondary)]"
               >
                 <img
                   src={coverPreview}
                   alt="Playlist cover preview"
                   className="h-full w-full object-cover"
                 />
+
+                <div className="absolute inset-0 flex items-center justify-center bg-transparent p-2 opacity-0 transition group-hover:bg-[var(--media-overlay-preview)] group-hover:opacity-100">
+                  <span className="whitespace-nowrap rounded-md bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-medium leading-none text-[var(--media-overlay-contrast)] shadow-[var(--shadow-ui)]">
+                    Change image
+                  </span>
+                </div>
               </div>
             </div>
           ) : (
             <div
               onClick={() => {
-                if (!isSaving) fileInputRef.current?.click()
+                if (!isSaving) fileInputRef.current?.click();
               }}
               onDrop={(e) => {
-                e.preventDefault()
-                if (isSaving) return
-                const file = e.dataTransfer.files?.[0]
-                if (!file) return
-                handleCoverChange(file)
+                e.preventDefault();
+                if (isSaving) return;
+                const file = e.dataTransfer.files?.[0];
+                if (!file) return;
+                handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="relative mt-4 flex h-24 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)]"
+              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
             >
-              <span className="text-[var(--text-muted)]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
                 <UploadIcon />
-              </span>
+              </div>
 
-              <span className="text-[13px] text-[var(--text-muted)]">
-                Drop image here
-              </span>
+              <div className="min-w-0">
+                <div className="text-xs font-medium text-[var(--text-primary)]">
+                  Drop image here
+                </div>
+
+                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+                  Click to upload a playlist cover.
+                </div>
+              </div>
             </div>
           )}
         </div>
-
-        <div className="flex justify-between gap-3 pt-2">
-          <button
-            type="button"
-            disabled={isSaving}
-            onClick={onDelete}
-            className={modalDeleteButtonClass}
-          >
-            Delete
-          </button>
-
-          <div className="flex gap-1.5">
-            <button
-              type="button"
-              disabled={isSaving}
-              onClick={onClose}
-              className={modalCancelButtonClass}
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={isSaving}
-              className={modalPrimaryButtonClass}
-            >
-              {isSaving ? (
-                <LoadingSpinner
-                  size={20}
-                  stroke={9}
-                  color="var(--bg-primary)"
-                />
-              ) : (
-                'Save Changes'
-              )}
-            </button>
-          </div>
-        </div>
       </form>
     </ModalShell>
-  )
+  );
 }

@@ -57,33 +57,36 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
   useEffect(() => {
-    const localPlaylistViewMode = window.localStorage.getItem(LOCAL_PLAYLIST_VIEW_MODE_KEY);
-    const localPlaylistSortMode = window.localStorage.getItem(LOCAL_PLAYLIST_SORT_MODE_KEY);
-    const localThemeMode = window.localStorage.getItem(LOCAL_THEME_MODE_KEY);
-
-    if (isPlaylistViewMode(localPlaylistViewMode)) {
-      setPlaylistViewModeState(localPlaylistViewMode);
-    }
-
-    if (isPlaylistSortMode(localPlaylistSortMode)) {
-      setPlaylistSortModeState(localPlaylistSortMode);
-    }
-
-    if (isThemeMode(localThemeMode)) {
-      setThemeModeState(localThemeMode);
-    }
+    let cancelled = false;
 
     async function loadPreferences() {
       try {
+        const localPlaylistViewMode = window.localStorage.getItem(LOCAL_PLAYLIST_VIEW_MODE_KEY);
+        const localPlaylistSortMode = window.localStorage.getItem(LOCAL_PLAYLIST_SORT_MODE_KEY);
+        const localThemeMode = window.localStorage.getItem(LOCAL_THEME_MODE_KEY);
+
+        if (!cancelled && isPlaylistViewMode(localPlaylistViewMode)) {
+          setPlaylistViewModeState(localPlaylistViewMode);
+        }
+
+        if (!cancelled && isPlaylistSortMode(localPlaylistSortMode)) {
+          setPlaylistSortModeState(localPlaylistSortMode);
+        }
+
+        if (!cancelled && isThemeMode(localThemeMode)) {
+          setThemeModeState(localThemeMode);
+        }
+
+        if (!cancelled) {
+          setPreferencesLoaded(true);
+        }
+
         const res = await fetch('/api/user-preferences', {
           method: 'GET',
           cache: 'no-store',
         });
 
-        if (!res.ok) {
-          setPreferencesLoaded(true);
-          return;
-        }
+        if (!res.ok || cancelled) return;
 
         const data = await res.json() as UserPreferencesResponse;
 
@@ -103,12 +106,18 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
         }
       } catch (err) {
         console.error('Failed to load user preferences:', err);
-      } finally {
-        setPreferencesLoaded(true);
+
+        if (!cancelled) {
+          setPreferencesLoaded(true);
+        }
       }
     }
 
     loadPreferences();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const patchPreferences = async (updates: Partial<UserPreferencesResponse>) => {

@@ -1,50 +1,171 @@
 @import "tailwindcss";
 
 :root {
+  /* Base surfaces */
   --bg-primary: #111111;
   --bg-secondary: #111111;
   --bg-tertiary: #171717;
   --bg-tertiary-hover: #1e1e1e;
   --bg-card: rgba(255, 255, 255, 0.04);
-  --bg-hover: rgba(255, 255, 255, 0.02);
+  --bg-elevated: rgba(255, 255, 255, 0.08);
+
+  /* Interactive states */
+  --bg-hover: rgba(255, 255, 255, 0.04);
+  --bg-hover-strong: rgba(255, 255, 255, 0.08);
+  --icon-button-hover: rgba(255, 255, 255, 0.18);
+
+  /* Borders */
   --border: rgba(255, 255, 255, 0.1);
   --border-subtle: rgba(255, 255, 255, 0.03);
+  --border-hover: rgba(255, 255, 255, 0.2);
+
+  /* Text */
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.5);
+  --text-secondary: #808080;
   --text-muted: rgba(255, 255, 255, 0.3);
+  --text-subtle: rgba(255, 255, 255, 0.4);
+
+  /* Icons */
+  --icon-color: rgba(255, 255, 255, 0.4);
+
+  /* Waveforms */
   --waveform-color: rgba(255, 255, 255, 0.3);
   --waveform-progress: #ffffff;
-  --icon-color: rgba(255, 255, 255, 0.4);
-  --text-subtle: rgba(255, 255, 255, 0.4);
-  --bg-elevated: rgba(255, 255, 255, 0.08);
+
+  /* Shadows */
+  --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.15);
+
+  /* Edit points */
+  --edit-point-marker: #ddff43;
+  --edit-point-marker-secondary: #ddff43;
+  --edit-point-range: rgba(221, 255, 67, 0.2);
+  --edit-point-range-strong: rgba(251, 143, 97, 0.16);
+
+  /* Layout */
+  --sidebar-width-expanded: 280px;
+  --sidebar-width-collapsed: 76px;
+  --sidebar-width: var(--sidebar-width-expanded);
+}
+
+/* ─── Shared brand / utility colours ─────────────────────────── */
+
+:root {
   --accent: #ddff43;
   --accent-2: #fb8f61;
+  --accent-contrast: #111111;
+  --accent-2-contrast: #ffffff;
+
+  --danger: #dc584f;
+  --danger-hover: #e4665d;
+  --danger-contrast: #ffffff;
+}
+
+/* ─── Shared media overlay colours ─────────────────────────── */
+
+:root {
+  --media-overlay-solid: #000000;
+  --media-overlay-contrast: #ffffff;
+
+  --media-overlay-faint: rgba(0, 0, 0, 0.04);
+  --media-overlay-soft: rgba(0, 0, 0, 0.16);
+  --media-overlay-medium: rgba(0, 0, 0, 0.36);
+  --media-overlay-strong: rgba(0, 0, 0, 0.46);
+  --media-overlay-heavy: rgba(0, 0, 0, 0.52);
+
+  --media-overlay-highlight: rgba(255, 255, 255, 0.04);
+  --media-overlay-white-tint: rgba(255, 255, 255, 0.08);
+
+  --media-overlay-text: rgba(255, 255, 255, 0.78);
+  --media-overlay-text-strong: rgba(255, 255, 255, 0.86);
+  --media-overlay-icon: rgba(255, 255, 255, 0.75);
+
+  --media-overlay-button: rgba(0, 0, 0, 0.18);
+  --media-overlay-button-hover: rgba(255, 255, 255, 0.18);
+
+  --media-overlay-control: rgba(0, 0, 0, 0.38);
+  --media-overlay-control-hover: rgba(0, 0, 0, 0.75);
+  --media-overlay-preview: rgba(0, 0, 0, 0.3);
+  --media-overlay-label: rgba(0, 0, 0, 0.6);
+}
+
+/* ─── Shared status colours ─────────────────────────── */
+
+:root {
+  --status-success: #48b571;
+  --status-warning: #d9a441;
+  --status-error: var(--danger);
+  --status-contrast: #ffffff;
+
+  --status-success-soft: rgba(72, 181, 113, 0.12);
+  --status-warning-soft: rgba(217, 164, 65, 0.12);
+  --status-error-soft: rgba(220, 88, 79, 0.12);
+
+  --status-warning-faint: rgba(217, 164, 65, 0.08);
+  --status-error-faint: rgba(220, 88, 79, 0.08);
+
+  --status-success-hover: rgba(72, 181, 113, 0.075);
+  --status-warning-hover: rgba(217, 164, 65, 0.12);
+  --status-error-hover: rgba(220, 88, 79, 0.12);
+}
+
+/* ─── Shared modal colours ─────────────────────────── */
+
+:root {
+  --modal-backdrop: rgba(0, 0, 0, 0.6);
 }
 
 .light {
+  /* Base surfaces */
   --bg-primary: #ffffff;
   --bg-secondary: #ffffff;
   --bg-tertiary: #f2f2f2;
   --bg-tertiary-hover: #e5e5e5;
   --bg-card: rgba(0, 0, 0, 0.04);
-  --bg-hover: rgba(0, 0, 0, 0.02);
-  --border: rgba(0, 0, 0, 0.08);
+  --bg-elevated: rgba(0, 0, 0, 0.06);
+
+  /* Interactive states */
+  --bg-hover: rgba(0, 0, 0, 0.05);
+  --bg-hover-strong: rgba(0, 0, 0, 0.05);
+  --icon-button-hover: rgba(0, 0, 0, 0.08);
+
+  /* Borders */
+  --border: rgba(0, 0, 0, 0.1);
   --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-hover: rgba(17, 17, 17, 0.2);
+
+  /* Text */
   --text-primary: #111111;
-  --text-secondary: rgba(17, 17, 17, 0.5);
+  --text-secondary: #111111;
   --text-muted: rgba(17, 17, 17, 0.3);
+  --text-subtle: rgba(17, 17, 17, 0.5);
+
+  /* Icons */
+  --icon-color: rgba(17, 17, 17, 0.4);
+
+  /* Waveforms */
   --waveform-color: rgba(17, 17, 17, 0.3);
   --waveform-progress: #111111;
-  --icon-color: rgba(17, 17, 17, 0.4);
-  --text-subtle: rgba(17, 17, 17, 0.5);
-  --bg-elevated: rgba(0, 0, 0, 0.06);
-  --accent: #ddff43;
-  --accent-2: #fb8f61;
+
+  /* Shadows */
+  --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.1);
+
+  /* Edit points */
+  --edit-point-marker: #c4e62d;
+  --edit-point-marker-secondary: #c4e62d;
+  --edit-point-range: rgba(155, 179, 0, 0.2);
+  --edit-point-range-strong: rgba(224, 111, 63, 0.14);
 }
 
+/* ─── Admin ─────────────────────────── */
+
+.admin-batch-delete-btn:hover {
+  background: var(--danger-hover) !important;
+  color: var(--danger-contrast) !important;
+}
+
+/* ─── Global ─────────────────────────── */
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -57,16 +178,74 @@ body {
 
 html,
 body {
-  overscroll-behavior-x: none;
-  overflow-x: hidden;
-}
-
-* {
-  overscroll-behavior-x: none;
+  overflow-x: clip;
 }
 
 button:focus {
   outline: none;
 }
 
+body.sidebar-collapsed {
+  --sidebar-width: var(--sidebar-width-collapsed);
+}
 
+/* ─── Skeleton loader shared styles ─────────────────────────── */
+
+.skeleton-block {
+  background: var(--bg-elevated);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-block::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -250%;
+  width: 500%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.015) 44%,
+    rgba(255, 255, 255, 0.035) 50%,
+    rgba(255, 255, 255, 0.015) 56%,
+    transparent 65%,
+    transparent 100%
+  );
+  animation: shimmer 2.8s ease-in-out infinite;
+}
+
+.light .skeleton-block::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(0, 0, 0, 0.012) 44%,
+    rgba(0, 0, 0, 0.032) 50%,
+    rgba(0, 0, 0, 0.012) 56%,
+    transparent 65%,
+    transparent 100%
+  );
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-35%);
+  }
+  100% {
+    transform: translateX(35%);
+  }
+}
+
+@keyframes skeleton-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

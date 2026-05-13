@@ -1,60 +1,74 @@
-'use client'
+"use client";
 
-import Logo from '@/components/Logo'
-import { usePlayer } from '@/context/PlayerContext'
+import Logo from "@/components/Logo";
+
+const productLinks = ["Music", "SFX", "VFX", "Colour", "Curated"];
+const companyLinks = ["Home", "Support", "About", "Partnerships", "Contact"];
+
+const footerHeaderClass =
+  "text-[9px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]";
+
+const footerLinkClass =
+  "cursor-pointer leading-none transition hover:text-[var(--text-primary)]";
 
 export default function Footer() {
-  const { currentSong } = usePlayer()
-  const playerVisible = !!currentSong
-
   return (
     <footer
-      className="text-[11px] font-medium leading-none text-[var(--text-muted)]"
+      className="text-[11px] font-medium text-[var(--text-muted)]"
       style={{
-        paddingBottom: playerVisible ? '80px' : '8px',
+        paddingBottom: "8px",
       }}
     >
-      <div className="grid grid-cols-[1fr_auto_auto_auto] items-start gap-10">
-        {/* Logo */}
-        <div className="flex items-start">
-          <div className="w-[100px] text-[var(--text-muted)]">
+      <div className="grid gap-8 pb-6 md:grid-cols-[minmax(160px,1fr)_auto_auto_minmax(150px,auto)] md:gap-10">
+        <div className="flex -translate-y-1 flex-col gap-3">
+          <div className="w-[92px] text-[var(--text-muted)]">
             <Logo />
           </div>
+
+          <span className="max-w-[180px] text-[11px] leading-4 text-[var(--text-muted)]">
+            Music and creative assets for filmmakers.
+          </span>
         </div>
 
-        {/* Column 1 */}
-        <div className="flex min-w-[56px] translate-y-[11px] flex-col space-y-3">
-          <span className="transition hover:text-[var(--text-secondary)]">Music</span>
-          <span className="transition hover:text-[var(--text-secondary)]">SFX</span>
-          <span className="transition hover:text-[var(--text-secondary)]">VFX</span>
-          <span className="transition hover:text-[var(--text-secondary)]">Colour</span>
-          <span className="transition hover:text-[var(--text-secondary)]">Curated</span>
+        <div className="grid gap-2.5">
+          <span className={footerHeaderClass}>Library</span>
+
+          <div className="grid gap-2.5">
+            {productLinks.map((link) => (
+              <span key={link} className={footerLinkClass}>
+                {link}
+              </span>
+            ))}
+          </div>
         </div>
 
-        {/* Column 2 */}
-        <div className="flex min-w-[82px] translate-y-[11px] flex-col space-y-3">
-          <span className="transition hover:text-[var(--text-secondary)]">Home</span>
-          <span className="transition hover:text-[var(--text-secondary)]">Support</span>
-          <span className="transition hover:text-[var(--text-secondary)]">About</span>
-          <span className="transition hover:text-[var(--text-secondary)]">Partnerships</span>
-          <span className="transition hover:text-[var(--text-secondary)]">Contact</span>
+        <div className="grid gap-2.5">
+          <span className={footerHeaderClass}>Company</span>
+
+          <div className="grid gap-2.5">
+            {companyLinks.map((link) => (
+              <span key={link} className={footerLinkClass}>
+                {link}
+              </span>
+            ))}
+          </div>
         </div>
 
-        {/* Contact */}
-        <div className="flex min-w-[130px] translate-y-[11px] flex-col space-y-3">
-          <span>Get in Touch:</span>
+        <div className="grid grid-rows-[auto_1fr] gap-2.5">
+          <span className={footerHeaderClass}>Contact</span>
 
-          <div className="flex flex-col space-y-3">
-            <span>+1 (250) 667-0766</span>
-            <span>hello@filmwave.io</span>
-            <span>Made in Canada</span>
+          <div className="grid content-end gap-2.5">
+            <span className="leading-none">+1 (250) 667-0766</span>
+            <span className="leading-none">hello@filmwave.io</span>
+            <span className="leading-none">Made in Canada</span>
           </div>
         </div>
       </div>
 
-      <div className="mt-10 text-center text-[10px] font-medium leading-none text-[var(--text-muted)]">
-        © Copyright 2026 Filmwave. All rights reserved.
+      <div className="flex min-h-9 items-center justify-between border-t border-[var(--border-subtle)] text-[10px] leading-none text-[var(--text-muted)]">
+        <span>© 2026 Filmwave</span>
+        <span>All rights reserved</span>
       </div>
     </footer>
-  )
+  );
 }

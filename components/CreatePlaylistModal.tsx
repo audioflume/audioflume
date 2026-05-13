@@ -1,43 +1,73 @@
-'use client'
+"use client";
 
-import { useRef } from 'react'
+import { useRef } from "react";
 import ModalShell, {
-  modalCancelButtonClass,
-  modalCoverButtonClass,
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
-} from '@/components/ModalShell'
-import LoadingSpinner from '@/components/LoadingSpinner'
+} from "@/components/ModalShell";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type CreatePlaylistModalProps = {
-  isOpen: boolean
-  name: string
-  coverPreview: string | null
-  isCreating: boolean
-  onNameChange: (value: string) => void
-  onCoverPreviewChange: (value: string | null) => void
-  onCreate: () => void
-  onClose: () => void
-}
+  isOpen: boolean;
+  name: string;
+  coverPreview: string | null;
+  isCreating: boolean;
+  onNameChange: (value: string) => void;
+  onCoverPreviewChange: (value: string | null) => void;
+  onCreate: () => void;
+  onClose: () => void;
+};
 
 function UploadIcon() {
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" y1="3" x2="12" y2="15" />
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 16V4"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M7.5 8.5L12 4L16.5 8.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5 20H19"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
-  )
+  );
 }
 
 function SearchIcon() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 38.31 38.31"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="shrink-0"
+      aria-hidden="true"
+    >
+      <path
+        d="M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z"
+        fill="currentColor"
+      />
     </svg>
-  )
+  );
 }
 
 export default function CreatePlaylistModal({
@@ -50,42 +80,46 @@ export default function CreatePlaylistModal({
   onCreate,
   onClose,
 }: CreatePlaylistModalProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   function clearFileInput() {
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+      fileInputRef.current.value = "";
     }
   }
 
   function clearFormAndClose() {
-    if (isCreating) return
+    if (isCreating) return;
 
-    onNameChange('')
-    onCoverPreviewChange(null)
-    clearFileInput()
-    onClose()
+    onNameChange("");
+    onCoverPreviewChange(null);
+    clearFileInput();
+    onClose();
   }
 
   function removeCoverImage() {
-    if (isCreating) return
+    if (isCreating) return;
 
-    onCoverPreviewChange(null)
-    clearFileInput()
+    onCoverPreviewChange(null);
+    clearFileInput();
   }
 
   function handleCoverChange(file: File) {
-    const reader = new FileReader()
+    const reader = new FileReader();
 
     reader.onloadend = () => {
-      if (typeof reader.result === 'string') {
-        onCoverPreviewChange(reader.result)
+      if (typeof reader.result === "string") {
+        onCoverPreviewChange(reader.result);
       }
-    }
+    };
 
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(file);
+  }
+
+  function handleSubmit() {
+    if (!isCreating) onCreate();
   }
 
   return (
@@ -94,13 +128,39 @@ export default function CreatePlaylistModal({
       title="New Playlist"
       onClose={clearFormAndClose}
       closeLabel="Close new playlist modal"
+      maxHeight="520px"
+      footer={
+        <div className="flex w-full items-center justify-between gap-3">
+          <button
+            type="button"
+            disabled={isCreating}
+            className="flex h-8 cursor-pointer items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
+          >
+            Unsplash
+            <SearchIcon />
+          </button>
+
+          <button
+            type="button"
+            disabled={isCreating || !name.trim()}
+            onClick={handleSubmit}
+            className={modalPrimaryButtonClass}
+          >
+            {isCreating ? (
+              <LoadingSpinner size={18} stroke={9} color="var(--bg-primary)" />
+            ) : (
+              "Create"
+            )}
+          </button>
+        </div>
+      }
     >
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          if (!isCreating) onCreate()
+          e.preventDefault();
+          handleSubmit();
         }}
-        className="space-y-5"
+        className="space-y-4"
       >
         <div>
           <label htmlFor="playlist-name" className={modalFieldLabelClass}>
@@ -113,24 +173,13 @@ export default function CreatePlaylistModal({
             value={name}
             disabled={isCreating}
             onChange={(e) => onNameChange(e.target.value)}
-            placeholder="Example: Cinematic Favorites"
+            placeholder="Example: Cinematic"
             className={modalInputClass}
           />
         </div>
 
         <div>
-          <div className={modalFieldLabelClass}>
-            Cover Image
-          </div>
-
-          <button
-            type="button"
-            disabled={isCreating}
-            onClick={() => fileInputRef.current?.click()}
-            className={modalCoverButtonClass}
-          >
-            Add cover image
-          </button>
+          <div className={modalFieldLabelClass}>Cover Image</div>
 
           <input
             ref={fileInputRef}
@@ -139,22 +188,22 @@ export default function CreatePlaylistModal({
             className="hidden"
             disabled={isCreating}
             onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (!file) return
-              handleCoverChange(file)
+              const file = e.target.files?.[0];
+              if (!file) return;
+              handleCoverChange(file);
             }}
           />
 
           {coverPreview ? (
-            <div className="relative mt-4 aspect-square w-24 overflow-visible">
+            <div className="group relative mt-2 h-[112px] w-[112px] overflow-visible">
               <button
                 type="button"
                 disabled={isCreating}
                 onClick={(e) => {
-                  e.stopPropagation()
-                  removeCoverImage()
+                  e.stopPropagation();
+                  removeCoverImage();
                 }}
-                className="absolute right-1 top-1 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black/70 text-[14px] font-medium leading-none text-white transition hover:bg-black/90 disabled:cursor-default disabled:opacity-70"
+                className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
                 aria-label="Remove cover image"
               >
                 ×
@@ -162,81 +211,55 @@ export default function CreatePlaylistModal({
 
               <div
                 onClick={() => {
-                  if (!isCreating) fileInputRef.current?.click()
+                  if (!isCreating) fileInputRef.current?.click();
                 }}
-                className="h-full w-full cursor-pointer overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-primary)]"
+                className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--text-secondary)]"
               >
                 <img
                   src={coverPreview}
                   alt="Playlist cover preview"
                   className="h-full w-full object-cover"
                 />
+
+                <div className="absolute inset-0 flex items-center justify-center bg-transparent p-2 opacity-0 transition group-hover:bg-[var(--media-overlay-preview)] group-hover:opacity-100">
+                  <span className="whitespace-nowrap rounded-md bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-medium leading-none text-[var(--media-overlay-contrast)] shadow-[var(--shadow-ui)]">
+                    Change image
+                  </span>
+                </div>
               </div>
             </div>
           ) : (
             <div
               onClick={() => {
-                if (!isCreating) fileInputRef.current?.click()
+                if (!isCreating) fileInputRef.current?.click();
               }}
               onDrop={(e) => {
-                e.preventDefault()
-                if (isCreating) return
-                const file = e.dataTransfer.files?.[0]
-                if (!file) return
-                handleCoverChange(file)
+                e.preventDefault();
+                if (isCreating) return;
+                const file = e.dataTransfer.files?.[0];
+                if (!file) return;
+                handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="relative mt-4 flex h-24 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)]"
+              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
             >
-              <span className="text-[var(--text-muted)]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
                 <UploadIcon />
-              </span>
+              </div>
 
-              <span className="text-[13px] text-[var(--text-muted)]">
-                Drop image here
-              </span>
+              <div className="min-w-0">
+                <div className="text-xs font-medium text-[var(--text-primary)]">
+                  Drop image here
+                </div>
+
+                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+                  Click to upload a playlist cover.
+                </div>
+              </div>
             </div>
           )}
         </div>
-
-        <div className="flex justify-between gap-3 pt-2">
-          <button
-            type="button"
-            disabled={isCreating}
-            className="flex cursor-pointer items-center gap-1 border-none bg-transparent text-[13px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
-          >
-            Unsplash
-            <SearchIcon />
-          </button>
-
-          <div className="flex gap-1.5">
-            <button
-              type="button"
-              disabled={isCreating}
-              onClick={clearFormAndClose}
-              className={modalCancelButtonClass}
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={isCreating}
-              className={modalPrimaryButtonClass}
-            >
-              {isCreating ? (
-                <LoadingSpinner
-                  size={20}
-                  stroke={9}
-                  color="var(--bg-primary)"
-                />
-              ) : (
-                'Create'
-              )}
-            </button>
-          </div>
-        </div>
       </form>
     </ModalShell>
-  )
+  );
 }

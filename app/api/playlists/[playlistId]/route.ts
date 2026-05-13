@@ -1,57 +1,112 @@
-import { auth } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
-import { supabaseServer } from '@/lib/supabaseServer'
+import { auth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { supabaseServer } from "@/lib/supabaseServer";
+import type { Playlist } from "@/lib/types";
 
 type RouteContext = {
-  params: Promise<{ playlistId: string }> | { playlistId: string }
+  params: Promise<{ playlistId: string }> | { playlistId: string };
+};
+
+function normalizePlaylist(value: unknown): Playlist {
+  const playlist = value as Partial<Playlist>;
+
+  return {
+    id: Number(playlist.id),
+    clerk_user_id: String(playlist.clerk_user_id || ""),
+    name: String(playlist.name || "").trim(),
+    cover_image_url:
+      typeof playlist.cover_image_url === "string" &&
+      playlist.cover_image_url.trim()
+        ? playlist.cover_image_url
+        : null,
+    position:
+      typeof playlist.position === "number" &&
+      Number.isFinite(playlist.position)
+        ? playlist.position
+        : 0,
+  };
 }
 
 export async function PATCH(req: Request, context: RouteContext) {
-  const { userId } = await auth()
+  const { userId } = await auth();
 
   if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { playlistId } = await context.params
-  const body = await req.json()
+  try {
+    const { playlistId } = await context.params;
+    const body = await req.json();
 
-  const { data, error } = await supabaseServer
-    .from('playlists')
-    .update({
-     name: body.name,
-    cover_image_url: body.cover_image_url ?? null,
-    })
-    .eq('id', playlistId)
-    .eq('clerk_user_id', userId)
-    .select()
-    .single()
+    const cleanName = typeof body.name === "string" ? body.name.trim() : "";
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    if (!cleanName) {
+      return NextResponse.json(
+        { error: "Missing playlist name" },
+        { status: 400 },
+      );
+    }
+
+    const { data, error } = await supabaseServer
+      .from("playlists")
+      .update({
+        name: cleanName,
+        cover_image_url: body.cover_image_url || null,
+      })
+      .eq("id", playlistId)
+      .eq("clerk_user_id", userId)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json(normalizePlaylist(data));
+  } catch (err) {
+    console.error("Playlist update failed:", err);
+
+    return NextResponse.json(
+      {
+        error: err instanceof Error ? err.message : "Failed to update playlist",
+      },
+      { status: 500 },
+    );
   }
-
-  return NextResponse.json(data)
 }
 
 export async function DELETE(_req: Request, context: RouteContext) {
-  const { userId } = await auth()
+  const { userId } = await auth();
 
   if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { playlistId } = await context.params
+  try {
+    const { playlistId } = await context.params;
 
-  const { error } = await supabaseServer
-    .from('playlists')
-    .delete()
-    .eq('id', playlistId)
-    .eq('clerk_user_id', userId)
+    const { error } = await supabaseServer
+      .from("playlists")
+      .delete()
+      .eq("id", playlistId)
+      .eq("clerk_user_id", userId);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json({
+      success: true,
+      id: Number(playlistId),
+    });
+  } catch (err) {
+    console.error("Playlist delete failed:", err);
+
+    return NextResponse.json(
+      {
+        error: err instanceof Error ? err.message : "Failed to delete playlist",
+      },
+      { status: 500 },
+    );
   }
-
-  return NextResponse.json({ success: true })
 }

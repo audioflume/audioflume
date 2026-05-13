@@ -1,77 +1,172 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from "react";
+import {
+  filterClearButtonClass,
+  filterDropdownHeaderClass,
+  filterDropdownPanelClass,
+  filterDropdownTitleClass,
+  filterRowButtonActiveClass,
+  filterRowButtonClass,
+  filterRowButtonInactiveClass,
+  filterTriggerActiveClass,
+  filterTriggerBaseClass,
+  filterTriggerInactiveClass,
+} from "@/components/filterUiClasses";
 
 type FilterDropdownProps = {
-  label: string
-  options: string[]
-  selected: string[]
-  onChange: (selected: string[]) => void
+  label: string;
+  options: string[];
+  selected: string[];
+  onChange: (selected: string[]) => void;
+};
+
+function PlusIcon() {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 5V19"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5 12H19"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 }
 
-export default function FilterDropdown({ label, options, selected, onChange }: FilterDropdownProps) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+function CheckIcon() {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M20 6L9 17L4 12"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export default function FilterDropdown({
+  label,
+  options,
+  selected,
+  onChange,
+}: FilterDropdownProps) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false)
+        setOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function toggle(option: string) {
     onChange(
       selected.includes(option)
         ? selected.filter((s) => s !== option)
-        : [...selected, option]
-    )
+        : [...selected, option],
+    );
   }
 
-  const hasActive = selected.length > 0
+  const hasActive = selected.length > 0;
 
   return (
     <div ref={ref} className="relative">
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
-        className={`flex items-center gap-1 cursor-pointer ${hasActive ? 'pl-3 pr-2' : 'px-3'} py-1 rounded-md border text-xs font-medium transition-colors ${
-          open
-            ? 'border-[var(--border)] text-[var(--text-primary)] opacity-100'
-            : 'border-[var(--border)] text-[var(--text-primary)] hover:opacity-70'
+        className={`${filterTriggerBaseClass} ${
+          open || hasActive
+            ? filterTriggerActiveClass
+            : filterTriggerInactiveClass
         }`}
       >
-        {label}
+        <span>{label}</span>
+
         {hasActive && (
-          <span className="w-1.75 h-1.75 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }} />
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--bg-elevated)] px-1.5 text-[10px] font-medium text-[var(--text-primary)]">
+            {selected.length}
+          </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-64 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)] shadow-2xl z-50 overflow-hidden">
-          <div className="max-h-[360px] overflow-y-auto py-1.5">
+        <div
+          className={`absolute left-0 top-full z-50 mt-2 overflow-hidden ${filterDropdownPanelClass}`}
+        >
+          <div className={filterDropdownHeaderClass}>
+            <div className={filterDropdownTitleClass}>{label}</div>
+
+            {hasActive && (
+              <button
+                type="button"
+                onClick={() => onChange([])}
+                className={filterClearButtonClass}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          <div className="max-h-[340px] overflow-y-auto p-1.5">
             {options.map((option) => {
-              const isSelected = selected.includes(option)
+              const isSelected = selected.includes(option);
+
               return (
                 <button
                   key={option}
+                  type="button"
                   onClick={() => toggle(option)}
-                  className={`w-full flex items-center justify-between px-4 py-1.5 text-sm transition-colors ${
+                  className={`group ${filterRowButtonClass} ${
                     isSelected
-                      ? 'bg-[var(--bg-elevated)] text-[var(--text-primary)]'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]'
+                      ? filterRowButtonActiveClass
+                      : filterRowButtonInactiveClass
                   }`}
                 >
-                  <span className={isSelected ? 'font-medium' : ''}>{option}</span>
-                  <span className={`text-lg leading-none ${isSelected ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'}`}>+</span>
+                  <span className="min-w-0 truncate">{option}</span>
+
+                  <span
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
+                      isSelected
+                        ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                        : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                    }`}
+                  >
+                    {isSelected ? <CheckIcon /> : <PlusIcon />}
+                  </span>
                 </button>
-              )
+              );
             })}
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

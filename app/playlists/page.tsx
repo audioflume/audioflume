@@ -1,116 +1,250 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import EditPlaylistModal from '@/components/EditPlaylistModal';
-import CreatePlaylistModal from '@/components/CreatePlaylistModal';
-import Toast from '@/components/Toast';
-import DropdownShell from '@/components/DropdownShell';
-import { usePlayer } from '@/context/PlayerContext';
+import type { Playlist, Song } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import Footer from "@/components/Footer";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import EditPlaylistModal from "@/components/EditPlaylistModal";
+import CreatePlaylistModal from "@/components/CreatePlaylistModal";
+import Toast from "@/components/Toast";
+import DropdownShell from "@/components/DropdownShell";
+import MoreIcon from "@/components/icons/MoreIcon";
+import {
+  dangerButtonClass,
+  iconButtonActiveClass,
+  smallIconButtonClass,
+} from "@/components/uiClasses";
+import { usePlayer } from "@/context/PlayerContext";
 import {
   useUserPreferences,
   type PlaylistViewMode,
-} from '@/context/UserPreferencesContext';
-import { useState, useEffect, useMemo } from 'react';
-import { useUser } from '@clerk/nextjs';
-import { motion, AnimatePresence } from 'framer-motion';
+} from "@/context/UserPreferencesContext";
+import { usePlaylists } from "@/hooks/usePlaylists";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useUser } from "@clerk/nextjs";
 import {
   DndContext,
   closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
-  DragStartEvent,
+  type DragEndEvent,
+  type DragStartEvent,
   DragOverlay,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   SortableContext,
   useSortable,
   rectSortingStrategy,
   arrayMove,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-
-interface Playlist {
-  id: number;
-  clerk_user_id: string;
-  name: string;
-  cover_image_url: string | null;
-  position: number;
-}
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const GRADIENTS = [
-  'linear-gradient(160deg,#1a3a2a,#2d5a3d)',
-  'linear-gradient(160deg,#111827,#1f2937)',
-  'linear-gradient(160deg,#7f1d1d,#b91c1c)',
-  'linear-gradient(160deg,#1c1c2e,#2d2d44)',
-  'linear-gradient(160deg,#003d40,#006064)',
-  'linear-gradient(160deg,#4a0e0e,#7b1515)',
-  'linear-gradient(160deg,#1a2535,#2c3e50)',
-  'linear-gradient(160deg,#0f172a,#1e3a5f)',
-  'linear-gradient(160deg,#2d0a3a,#4a1258)',
-  'linear-gradient(160deg,#0f1a0f,#1a2e1a)',
-  'linear-gradient(160deg,#1a0a2e,#2d1554)',
-  'linear-gradient(160deg,#003344,#00516b)',
-  'linear-gradient(160deg,#3d2800,#6b4500)',
-  'linear-gradient(160deg,#121212,#2a2a2a)',
-  'linear-gradient(160deg,#001a4d,#002b80)',
-  'linear-gradient(160deg,#0a2e0a,#145214)',
-  'linear-gradient(160deg,#3d1200,#6b2100)',
-  'linear-gradient(160deg,#0a2233,#0d3352)',
-  'linear-gradient(160deg,#1f0a3d,#36146b)',
+  "linear-gradient(160deg,#1a3a2a,#2d5a3d)",
+  "linear-gradient(160deg,#111827,#1f2937)",
+  "linear-gradient(160deg,#7f1d1d,#b91c1c)",
+  "linear-gradient(160deg,#1c1c2e,#2d2d44)",
+  "linear-gradient(160deg,#003d40,#006064)",
+  "linear-gradient(160deg,#4a0e0e,#7b1515)",
+  "linear-gradient(160deg,#1a2535,#2c3e50)",
+  "linear-gradient(160deg,#0f172a,#1e3a5f)",
+  "linear-gradient(160deg,#2d0a3a,#4a1258)",
+  "linear-gradient(160deg,#0f1a0f,#1a2e1a)",
+  "linear-gradient(160deg,#1a0a2e,#2d1554)",
+  "linear-gradient(160deg,#003344,#00516b)",
+  "linear-gradient(160deg,#3d2800,#6b4500)",
+  "linear-gradient(160deg,#121212,#2a2a2a)",
+  "linear-gradient(160deg,#001a4d,#002b80)",
+  "linear-gradient(160deg,#0a2e0a,#145214)",
+  "linear-gradient(160deg,#3d1200,#6b2100)",
+  "linear-gradient(160deg,#0a2233,#0d3352)",
+  "linear-gradient(160deg,#1f0a3d,#36146b)",
 ];
 
-function MoreIcon() {
+const PLAYLIST_SKELETON_VIEW_MODE_KEY = "filmwave-playlist-skeleton-view-mode";
+
+type PlaylistStats = {
+  songCount: number;
+  topGenres: string[];
+};
+
+function getTopGenresFromSongs(songs: Song[]) {
+  const counts = new Map<string, number>();
+
+  songs.forEach((song) => {
+    song.genres.forEach((genre) => {
+      counts.set(genre, (counts.get(genre) || 0) + 1);
+    });
+  });
+
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([genre]) => genre);
+}
+
+function getPlaylistCover(playlist: Playlist) {
+  return typeof playlist.cover_image_url === "string" &&
+    playlist.cover_image_url.trim()
+    ? playlist.cover_image_url
+    : null;
+}
+
+function formatSongCount(count: number) {
+  return `${count} song${count === 1 ? "" : "s"}`;
+}
+
+function formatGenres(genres: string[]) {
+  return genres.length > 0 ? genres.join(" · ") : "No genres yet";
+}
+
+function PlusIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <circle cx="12" cy="5" r="2" />
-      <circle cx="12" cy="12" r="2" />
-      <circle cx="12" cy="19" r="2" />
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 5V19"
+        stroke="currentColor"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5 12H19"
+        stroke="currentColor"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
 function SortIcon() {
   return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M7 5V19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M4.5 16.5L7 19L9.5 16.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M13 7H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M13 12H18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M13 17H16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M7 5V19"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.5 16.5L7 19L9.5 16.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M13 7H20"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M13 12H18"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M13 17H16"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
-function ListIcon() {
+function GalleryIcon() {
   return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M9 7H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M9 12H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M9 17H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M4.5 7H4.51" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-      <path d="M4.5 12H4.51" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-      <path d="M4.5 17H4.51" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect
+        x="4"
+        y="4"
+        width="6.5"
+        height="6.5"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="13.5"
+        y="4"
+        width="6.5"
+        height="6.5"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="4"
+        y="13.5"
+        width="6.5"
+        height="6.5"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="13.5"
+        y="13.5"
+        width="6.5"
+        height="6.5"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
     </svg>
   );
 }
 
-function GridIcon() {
+function IndexIcon() {
   return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="4" y="4" width="6.5" height="6.5" rx="1.5" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" strokeWidth="1.8" />
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M8 7H20"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 12H20"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 17H20"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4 7H4.01"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4 12H4.01"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4 17H4.01"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
 function ReorderHandleIcon() {
   return (
-    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden="true">
+    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden>
       <circle cx="2" cy="2.5" r="1" fill="currentColor" />
       <circle cx="8" cy="2.5" r="1" fill="currentColor" />
       <circle cx="2" cy="8" r="1" fill="currentColor" />
@@ -121,76 +255,176 @@ function ReorderHandleIcon() {
   );
 }
 
-function PlaylistCardContent({
+function PlaylistArtwork({
   playlist,
   index,
-  isOverlay = false,
+  className,
 }: {
   playlist: Playlist;
   index: number;
-  isOverlay?: boolean;
+  className: string;
 }) {
+  const cover = getPlaylistCover(playlist);
+
   return (
     <div
-      className="playlist-card-inner"
+      className={className}
       style={{
-        background: playlist.cover_image_url ? '#000' : GRADIENTS[index % GRADIENTS.length],
-        opacity: isOverlay ? 0.95 : 1,
+        background: cover
+          ? "var(--media-overlay-solid)"
+          : GRADIENTS[index % GRADIENTS.length],
       }}
     >
-      {playlist.cover_image_url && (
-        <img src={playlist.cover_image_url} alt={playlist.name} className="playlist-card-img" />
-      )}
-
-      <div className="playlist-card-overlay">
-        <div className="playlist-card-text-block">
-          <div className="playlist-card-name">{playlist.name}</div>
-          <div className="playlist-card-desc">0 songs</div>
-        </div>
-      </div>
+      {cover && <img src={cover} alt={playlist.name} />}
     </div>
   );
 }
 
-function PlaylistListContent({
-  playlist,
-  index,
-  isOverlay = false,
-  showReorderHandle = false,
+function SkeletonBlock({ className = "" }: { className?: string }) {
+  return <div className={`playlist-skeleton-block ${className}`} />;
+}
+
+function SkeletonLibrary({ viewMode }: { viewMode: PlaylistViewMode }) {
+  if (viewMode === "list") {
+    return (
+      <div className="playlist-skeleton-list">
+        {Array.from({ length: 8 }, (_, index) => (
+          <div key={index} className="playlist-skeleton-index-row">
+            <SkeletonBlock className="playlist-skeleton-number" />
+            <SkeletonBlock className="playlist-skeleton-row-cover" />
+
+            <div className="playlist-skeleton-row-copy">
+              <SkeletonBlock className="playlist-skeleton-row-title" />
+              <SkeletonBlock className="playlist-skeleton-row-meta" />
+            </div>
+
+            <SkeletonBlock className="playlist-skeleton-row-count" />
+            <SkeletonBlock className="playlist-skeleton-row-menu" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="playlist-skeleton-grid">
+      {Array.from({ length: 9 }, (_, index) => (
+        <div key={index} className="playlist-skeleton-gallery-card">
+          <div className="playlist-skeleton-gallery-art">
+            <div className="playlist-skeleton-gallery-number" />
+          </div>
+
+          <div className="playlist-skeleton-gallery-copy">
+            <SkeletonBlock className="playlist-skeleton-gallery-title" />
+            <SkeletonBlock className="playlist-skeleton-gallery-count" />
+          </div>
+
+          <SkeletonBlock className="playlist-skeleton-gallery-genres" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CreatePlaylistTile({
+  viewMode,
+  onClick,
 }: {
-  playlist: Playlist;
-  index: number;
-  isOverlay?: boolean;
-  showReorderHandle?: boolean;
+  viewMode: PlaylistViewMode;
+  onClick: () => void;
 }) {
   return (
-    <div className="playlist-list-inner" style={{ opacity: isOverlay ? 0.95 : 1 }}>
-      {showReorderHandle && (
-        <div className="playlist-reorder-handle" aria-hidden="true">
-          <ReorderHandleIcon />
-        </div>
-      )}
+    <button
+      type="button"
+      className={
+        viewMode === "grid"
+          ? "playlist-create-card"
+          : "playlist-create-row playlist-index-row"
+      }
+      onClick={onClick}
+    >
+      <div className="playlist-create-mark">
+        <PlusIcon />
+      </div>
 
-      <div
-        className="playlist-list-cover"
-        style={{
-          background: playlist.cover_image_url ? '#000' : GRADIENTS[index % GRADIENTS.length],
+      <div className="playlist-create-copy">
+        <span>Create Playlist</span>
+        <small>Build a new collection</small>
+      </div>
+    </button>
+  );
+}
+
+function PlaylistMenu({
+  playlist,
+  open,
+  onOpenChange,
+  onEdit,
+  onReorder,
+  onDelete,
+  playerVisible,
+  viewMode,
+}: {
+  playlist: Playlist;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onEdit: () => void;
+  onReorder: () => void;
+  onDelete: () => void;
+  playerVisible: boolean;
+  viewMode: PlaylistViewMode;
+}) {
+  return (
+    <div data-playlist-menu className="playlist-card-menu-wrap">
+      <DropdownShell
+        open={open}
+        onOpenChange={onOpenChange}
+        placement="bottom-end"
+        className="playlist-dropdown"
+        offsetAmount={5}
+        flippedOffsetAmount={5}
+        crossAxisOffset={0}
+        collisionPadding={{
+          top: 68,
+          right: 16,
+          bottom: playerVisible ? 85 : 13,
+          left: 16,
         }}
-      >
-        {playlist.cover_image_url && (
-          <img src={playlist.cover_image_url} alt={playlist.name} className="playlist-list-img" />
+        trigger={({ open }) => (
+          <button
+            type="button"
+            className={
+              viewMode === "grid"
+                ? `playlist-menu-btn playlist-menu-btn-grid ${
+                    open ? "is-open" : ""
+                  }`
+                : `playlist-menu-btn ${smallIconButtonClass} ${
+                    open ? `is-open ${iconButtonActiveClass}` : ""
+                  }`
+            }
+            aria-label={`${playlist.name} options`}
+          >
+            <MoreIcon />
+          </button>
         )}
-      </div>
+      >
+        <button type="button" onClick={onEdit}>
+          Edit Details
+        </button>
 
-      <div className="playlist-list-text-block">
-        <div className="playlist-list-name">{playlist.name}</div>
-        <div className="playlist-list-desc">0 songs</div>
-      </div>
+        <button type="button" onClick={onReorder}>
+          Reorder
+        </button>
+
+        <button type="button" className={dangerButtonClass} onClick={onDelete}>
+          Delete
+        </button>
+      </DropdownShell>
     </div>
   );
 }
 
-function SortableCard({
+function SortablePlaylistItem({
   playlist,
   index,
   isEditing,
@@ -202,6 +436,7 @@ function SortableCard({
   handleDeletePlaylist,
   playerVisible,
   viewMode,
+  playlistStats,
 }: {
   playlist: Playlist;
   index: number;
@@ -214,8 +449,30 @@ function SortableCard({
   handleDeletePlaylist: (p: Playlist) => void;
   playerVisible: boolean;
   viewMode: PlaylistViewMode;
+  playlistStats: Record<number, PlaylistStats>;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const router = useRouter();
+  const stats = playlistStats[playlist.id];
+  const cover = getPlaylistCover(playlist);
+
+  function openPlaylistPage(event: MouseEvent<HTMLDivElement>) {
+    if (isEditing) return;
+
+    const target = event.target as HTMLElement;
+
+    if (target.closest("[data-playlist-menu]")) return;
+
+    router.push(`/playlists/${playlist.id}`);
+  }
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: playlist.id,
     disabled: !isEditing,
   });
@@ -224,91 +481,206 @@ function SortableCard({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.35 : 1,
-    cursor: isEditing ? 'grab' : 'pointer',
-    ...(viewMode === 'grid'
-      ? {
-          background: playlist.cover_image_url
-            ? '#000'
-            : GRADIENTS[index % GRADIENTS.length],
-        }
-      : {}),
+    cursor: isEditing ? "grab" : "pointer",
   };
 
-  return (
-    <div
-      ref={setNodeRef}
-      className={viewMode === 'grid' ? 'playlist-card' : 'playlist-list-item'}
-      style={style}
-      {...(isEditing ? { ...attributes, ...listeners } : {})}
-    >
-      {viewMode === 'grid' ? (
-        <PlaylistCardContent playlist={playlist} index={index} />
-      ) : (
-        <PlaylistListContent
+  if (viewMode === "list") {
+    return (
+      <div
+        ref={setNodeRef}
+        className={`playlist-index-row ${isEditing ? "is-reordering" : ""}`}
+        style={style}
+        onClick={openPlaylistPage}
+        {...(isEditing ? { ...attributes, ...listeners } : {})}
+      >
+        {isEditing && (
+          <div className="playlist-row-handle">
+            <ReorderHandleIcon />
+          </div>
+        )}
+
+        <div className="playlist-row-number">
+          {String(index + 1).padStart(2, "0")}
+        </div>
+
+        <PlaylistArtwork
           playlist={playlist}
           index={index}
-          showReorderHandle={isEditing}
+          className="playlist-row-cover"
         />
-      )}
 
-      {isDeleting && (
-        <div className="playlist-deleting-overlay">
-          <LoadingSpinner size={24} stroke={7} color="#fff" />
+        <div className="playlist-row-main">
+          <span>{playlist.name}</span>
+          <small>{formatGenres(stats?.topGenres ?? [])}</small>
         </div>
-      )}
 
-      {!isEditing && (
-        <div className={viewMode === 'grid' ? 'playlist-card-menu-wrap' : 'playlist-list-menu-wrap'}>
-          <DropdownShell
+        <div className="playlist-row-count">
+          {formatSongCount(stats?.songCount ?? 0)}
+        </div>
+
+        {isDeleting && (
+          <div className="playlist-deleting-overlay">
+            <LoadingSpinner
+              size={24}
+              stroke={7}
+              color="var(--media-overlay-contrast)"
+            />
+          </div>
+        )}
+
+        {!isEditing && (
+          <PlaylistMenu
+            playlist={playlist}
+            viewMode={viewMode}
             open={openMenuId === playlist.id}
             onOpenChange={(nextOpen) => {
               setOpenMenuId(nextOpen ? playlist.id : null);
             }}
-            placement="bottom-end"
-            className="playlist-dropdown"
-            offsetAmount={5}
-            flippedOffsetAmount={5}
-            crossAxisOffset={-5}
-            collisionPadding={{
-              top: 112,
-              right: 16,
-              bottom: playerVisible ? 96 : 24,
-              left: 16,
+            onEdit={() => openEdit(playlist)}
+            onReorder={() => {
+              setOpenMenuId(null);
+              startReorder();
             }}
-            trigger={({ open }) => (
-              <button
-                type="button"
-                className={'playlist-menu-btn' + (open ? ' is-open' : '')}
-                aria-label="Playlist options"
-              >
-                <MoreIcon />
-              </button>
-            )}
-          >
-            <button type="button" onClick={() => openEdit(playlist)}>
-              Edit Details
-            </button>
+            onDelete={() => handleDeletePlaylist(playlist)}
+            playerVisible={playerVisible}
+          />
+        )}
+      </div>
+    );
+  }
 
-            <button
-              type="button"
-              onClick={() => {
-                setOpenMenuId(null);
-                startReorder();
-              }}
-            >
-              Reorder
-            </button>
+  return (
+    <div
+      ref={setNodeRef}
+      className={`playlist-gallery-card ${
+        openMenuId === playlist.id ? "is-menu-open" : ""
+      }`}
+      style={style}
+      onClick={openPlaylistPage}
+      {...(isEditing ? { ...attributes, ...listeners } : {})}
+    >
+      <div className="playlist-gallery-art-wrap">
+        <PlaylistArtwork
+          playlist={playlist}
+          index={index}
+          className="playlist-gallery-art"
+        />
 
-            <button
-              type="button"
-              className="danger"
-              onClick={() => handleDeletePlaylist(playlist)}
-            >
-              Delete
-            </button>
-          </DropdownShell>
+        {!cover && (
+          <div className="playlist-gallery-letters">
+            {playlist.name.slice(0, 2).toUpperCase()}
+          </div>
+        )}
+
+        <div className="playlist-gallery-number">
+          {String(index + 1).padStart(2, "0")}
         </div>
-      )}
+
+        {isEditing && (
+          <div className="playlist-gallery-handle">
+            <ReorderHandleIcon />
+          </div>
+        )}
+
+        {!isEditing && (
+          <PlaylistMenu
+            playlist={playlist}
+            viewMode={viewMode}
+            open={openMenuId === playlist.id}
+            onOpenChange={(nextOpen) => {
+              setOpenMenuId(nextOpen ? playlist.id : null);
+            }}
+            onEdit={() => openEdit(playlist)}
+            onReorder={() => {
+              setOpenMenuId(null);
+              startReorder();
+            }}
+            onDelete={() => handleDeletePlaylist(playlist)}
+            playerVisible={playerVisible}
+          />
+        )}
+
+        {isDeleting && (
+          <div className="playlist-deleting-overlay">
+            <LoadingSpinner
+              size={24}
+              stroke={7}
+              color="var(--media-overlay-contrast)"
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="playlist-gallery-copy">
+        <span>{playlist.name}</span>
+        <small>{formatSongCount(stats?.songCount ?? 0)}</small>
+      </div>
+
+      <div className="playlist-gallery-genres">
+        {formatGenres(stats?.topGenres ?? [])}
+      </div>
+    </div>
+  );
+}
+
+function DragPreview({
+  playlist,
+  index,
+  viewMode,
+  stats,
+}: {
+  playlist: Playlist;
+  index: number;
+  viewMode: PlaylistViewMode;
+  stats?: PlaylistStats;
+}) {
+  if (viewMode === "list") {
+    return (
+      <div className="playlist-index-row is-reordering drag-preview-row">
+        <div className="playlist-row-handle">
+          <ReorderHandleIcon />
+        </div>
+
+        <div className="playlist-row-number">
+          {String(index + 1).padStart(2, "0")}
+        </div>
+
+        <PlaylistArtwork
+          playlist={playlist}
+          index={index}
+          className="playlist-row-cover"
+        />
+
+        <div className="playlist-row-main">
+          <span>{playlist.name}</span>
+          <small>{formatGenres(stats?.topGenres ?? [])}</small>
+        </div>
+
+        <div className="playlist-row-count">
+          {formatSongCount(stats?.songCount ?? 0)}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="playlist-gallery-card drag-preview-card">
+      <div className="playlist-gallery-art-wrap">
+        <PlaylistArtwork
+          playlist={playlist}
+          index={index}
+          className="playlist-gallery-art"
+        />
+
+        <div className="playlist-gallery-number">
+          {String(index + 1).padStart(2, "0")}
+        </div>
+      </div>
+
+      <div className="playlist-gallery-copy">
+        <span>{playlist.name}</span>
+        <small>{formatSongCount(stats?.songCount ?? 0)}</small>
+      </div>
     </div>
   );
 }
@@ -322,68 +694,153 @@ export default function PlaylistsPage() {
     setPlaylistViewMode: setViewMode,
     playlistSortMode: sortMode,
     setPlaylistSortMode: setSortMode,
+    preferencesLoaded,
   } = useUserPreferences();
+
+  const {
+    playlists,
+    setPlaylists,
+    loading,
+    error: playlistsError,
+    refetchPlaylists,
+  } = usePlaylists();
 
   const playerVisible = !!currentSong;
 
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [reorderSnapshot, setReorderSnapshot] = useState<Playlist[] | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [playlistStats, setPlaylistStats] = useState<
+    Record<number, PlaylistStats>
+  >({});
+  const [reorderSnapshot, setReorderSnapshot] = useState<Playlist[] | null>(
+    null,
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [editingPlaylist, setEditingPlaylist] = useState<Playlist | null>(null);
   const [showNewModal, setShowNewModal] = useState(false);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const [isSavingPlaylist, setIsSavingPlaylist] = useState(false);
-  const [deletingPlaylistId, setDeletingPlaylistId] = useState<number | null>(null);
+  const [deletingPlaylistId, setDeletingPlaylistId] = useState<number | null>(
+    null,
+  );
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [openSortMenu, setOpenSortMenu] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
-  const [editName, setEditName] = useState('');
+  const [editName, setEditName] = useState("");
   const [editCoverPreview, setEditCoverPreview] = useState<string | null>(null);
-  const [newName, setNewName] = useState('');
+  const [newName, setNewName] = useState("");
   const [newCoverPreview, setNewCoverPreview] = useState<string | null>(null);
+  const [skeletonViewMode, setSkeletonViewMode] =
+    useState<PlaylistViewMode>("grid");
+  const [skeletonViewModeLoaded, setSkeletonViewModeLoaded] = useState(false);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
 
   const displayedPlaylists = useMemo(() => {
-    if (sortMode === 'alphabetical') {
+    if (sortMode === "alphabetical") {
       return [...playlists].sort((a, b) =>
-        a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
       );
     }
 
     return playlists;
   }, [playlists, sortMode]);
 
+  const totalSongs = useMemo(() => {
+    return Object.values(playlistStats).reduce(
+      (total, stats) => total + stats.songCount,
+      0,
+    );
+  }, [playlistStats]);
+
+  const allGenres = useMemo(() => {
+    const genres = new Set<string>();
+
+    Object.values(playlistStats).forEach((stats) => {
+      stats.topGenres.forEach((genre) => genres.add(genre));
+    });
+
+    return [...genres].slice(0, 4);
+  }, [playlistStats]);
+
   useEffect(() => {
-    if (!user) return;
+    const savedViewMode = window.localStorage.getItem(
+      PLAYLIST_SKELETON_VIEW_MODE_KEY,
+    );
+
+    if (savedViewMode === "grid" || savedViewMode === "list") {
+      setSkeletonViewMode(savedViewMode);
+    }
+
+    setSkeletonViewModeLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!preferencesLoaded) return;
+
+    setSkeletonViewMode(viewMode);
+    setSkeletonViewModeLoaded(true);
+    localStorage.setItem(PLAYLIST_SKELETON_VIEW_MODE_KEY, viewMode);
+  }, [preferencesLoaded, viewMode]);
+
+  useEffect(() => {
+    if (!playlists.length) {
+      setPlaylistStats({});
+      return;
+    }
 
     let cancelled = false;
 
-    async function loadPlaylists() {
-      try {
-        const res = await fetch('/api/playlists');
-        const data = await res.json();
+    async function loadPlaylistStats() {
+      const entries = await Promise.all(
+        playlists.map(async (playlist) => {
+          try {
+            const res = await fetch(`/api/playlists/${playlist.id}/songs`);
 
-        if (!cancelled && res.ok) {
-          setPlaylists(data);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+            if (!res.ok) {
+              return [
+                playlist.id,
+                {
+                  songCount: 0,
+                  topGenres: [],
+                },
+              ] as const;
+            }
+
+            const data = await res.json();
+            const songs = Array.isArray(data) ? (data as Song[]) : [];
+
+            return [
+              playlist.id,
+              {
+                songCount: songs.length,
+                topGenres: getTopGenresFromSongs(songs),
+              },
+            ] as const;
+          } catch {
+            return [
+              playlist.id,
+              {
+                songCount: 0,
+                topGenres: [],
+              },
+            ] as const;
+          }
+        }),
+      );
+
+      if (!cancelled) {
+        setPlaylistStats(Object.fromEntries(entries));
       }
     }
 
-    loadPlaylists();
+    loadPlaylistStats();
 
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [playlists]);
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -393,7 +850,7 @@ export default function PlaylistsPage() {
   const startReorder = () => {
     setOpenMenuId(null);
     setOpenSortMenu(false);
-    setSortMode('custom');
+    setSortMode("custom");
     setReorderSnapshot(playlists);
     setIsEditing(true);
   };
@@ -408,7 +865,7 @@ export default function PlaylistsPage() {
     setOpenSortMenu(false);
     setReorderSnapshot(null);
     setIsEditing(false);
-    showToast('Reorder cancelled');
+    showToast("Reorder cancelled");
   };
 
   const handleSaveReorder = async () => {
@@ -420,13 +877,13 @@ export default function PlaylistsPage() {
     setPlaylists(reordered);
 
     try {
-      const res = await fetch('/api/playlists/reorder', {
-        method: 'PATCH',
+      const res = await fetch("/api/playlists/reorder", {
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          playlists: reordered.map(p => ({
+          playlists: reordered.map((p) => ({
             id: p.id,
             position: p.position,
           })),
@@ -434,7 +891,7 @@ export default function PlaylistsPage() {
       });
 
       if (!res.ok) {
-        console.error('Failed to save playlist order:', res.statusText);
+        console.error("Failed to save playlist order:", res.statusText);
         return;
       }
 
@@ -442,9 +899,9 @@ export default function PlaylistsPage() {
       setOpenSortMenu(false);
       setReorderSnapshot(null);
       setIsEditing(false);
-      showToast('Order saved');
+      showToast("Order saved");
     } catch (err) {
-      console.error('Failed to save playlist order:', err);
+      console.error("Failed to save playlist order:", err);
     }
   };
 
@@ -453,7 +910,7 @@ export default function PlaylistsPage() {
     setOpenSortMenu(false);
     setEditingPlaylist(playlist);
     setEditName(playlist.name);
-    setEditCoverPreview(playlist.cover_image_url);
+    setEditCoverPreview(playlist.cover_image_url ?? null);
   };
 
   const handleSaveEdit = async () => {
@@ -463,9 +920,9 @@ export default function PlaylistsPage() {
 
     try {
       const res = await fetch(`/api/playlists/${editingPlaylist.id}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: editName,
@@ -477,21 +934,23 @@ export default function PlaylistsPage() {
       const data = text ? JSON.parse(text) : null;
 
       if (!res.ok) {
-        console.error('Failed to save playlist:', data || res.statusText);
+        console.error("Failed to save playlist:", data || res.statusText);
         return;
       }
 
-      setPlaylists(prev => prev.map(p =>
-        p.id === editingPlaylist.id
-          ? data || {
-              ...p,
-              name: editName,
-              cover_image_url: editCoverPreview,
-            }
-          : p
-      ));
+      setPlaylists((prev) =>
+        prev.map((p) =>
+          p.id === editingPlaylist.id
+            ? data || {
+                ...p,
+                name: editName,
+                cover_image_url: editCoverPreview,
+              }
+            : p,
+        ),
+      );
 
-      showToast('Changes saved');
+      showToast("Changes saved");
       setEditingPlaylist(null);
     } finally {
       setIsSavingPlaylist(false);
@@ -502,7 +961,7 @@ export default function PlaylistsPage() {
     if (!editingPlaylist || deletingPlaylistId) return;
 
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${editingPlaylist.name}"? This cannot be undone.`
+      `Are you sure you want to delete "${editingPlaylist.name}"? This cannot be undone.`,
     );
 
     if (!confirmed) return;
@@ -514,12 +973,12 @@ export default function PlaylistsPage() {
 
     try {
       const res = await fetch(`/api/playlists/${playlistId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (res.ok) {
-        setPlaylists(prev => prev.filter(p => p.id !== playlistId));
-        showToast('Playlist deleted');
+        setPlaylists((prev) => prev.filter((p) => p.id !== playlistId));
+        showToast("Playlist deleted");
       }
     } finally {
       setDeletingPlaylistId(null);
@@ -530,7 +989,7 @@ export default function PlaylistsPage() {
     if (deletingPlaylistId) return;
 
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${playlist.name}"? This cannot be undone.`
+      `Are you sure you want to delete "${playlist.name}"? This cannot be undone.`,
     );
 
     if (!confirmed) return;
@@ -541,12 +1000,12 @@ export default function PlaylistsPage() {
 
     try {
       const res = await fetch(`/api/playlists/${playlist.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (res.ok) {
-        setPlaylists(prev => prev.filter(p => p.id !== playlist.id));
-        showToast('Playlist deleted');
+        setPlaylists((prev) => prev.filter((p) => p.id !== playlist.id));
+        showToast("Playlist deleted");
       }
     } finally {
       setDeletingPlaylistId(null);
@@ -559,10 +1018,10 @@ export default function PlaylistsPage() {
     setIsCreatingPlaylist(true);
 
     try {
-      const res = await fetch('/api/playlists', {
-        method: 'POST',
+      const res = await fetch("/api/playlists", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: newName,
@@ -575,16 +1034,16 @@ export default function PlaylistsPage() {
       const data = text ? JSON.parse(text) : null;
 
       if (!res.ok) {
-        console.error('Failed to create playlist:', data || res.statusText);
+        console.error("Failed to create playlist:", data || res.statusText);
         return;
       }
 
       if (data) {
-        setPlaylists(prev => [...prev, data]);
-        showToast('Playlist created');
+        setPlaylists((prev) => [...prev, data]);
+        showToast("Playlist created");
       }
 
-      setNewName('');
+      setNewName("");
       setNewCoverPreview(null);
       setShowNewModal(false);
     } finally {
@@ -603,8 +1062,8 @@ export default function PlaylistsPage() {
 
     if (!over || active.id === over.id) return;
 
-    const oldIndex = playlists.findIndex(p => p.id === active.id);
-    const newIndex = playlists.findIndex(p => p.id === over.id);
+    const oldIndex = playlists.findIndex((p) => p.id === active.id);
+    const newIndex = playlists.findIndex((p) => p.id === over.id);
 
     const reordered = arrayMove(playlists, oldIndex, newIndex).map((p, i) => ({
       ...p,
@@ -614,320 +1073,471 @@ export default function PlaylistsPage() {
     setPlaylists(reordered);
   };
 
-  const activePlaylist = playlists.find(p => p.id === activeId);
-  const activeIndex = playlists.findIndex(p => p.id === activeId);
-
-  if (loading) {
-    return (
-      <>
-        <style>{`
-          .playlists-loading-page {
-            margin-left: 0;
-            margin-top: 56px;
-            padding: 0 32px;
-          }
-
-          @media (min-width: 768px) {
-            .playlists-loading-page {
-              margin-left: 280px;
-            }
-          }
-        `}</style>
-
-        <div className="playlists-loading-page">
-          <div
-            style={{
-              minHeight: 'calc(100vh - 56px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transform: playerVisible
-                ? 'translateY(calc(-20px - 32px))'
-                : 'translateY(-20px)',
-            }}
-          >
-            <LoadingSpinner />
-          </div>
-        </div>
-      </>
-    );
-  }
+  const activePlaylist = playlists.find((p) => p.id === activeId);
+  const activeIndex = playlists.findIndex((p) => p.id === activeId);
+  const showSkeleton = loading || !preferencesLoaded;
+  const resolvedSkeletonViewMode = preferencesLoaded
+    ? viewMode
+    : skeletonViewMode;
 
   return (
     <>
       <style>{`
         .playlists-page {
-          margin-left: 0;
+          position: relative;
+          margin-left: var(--sidebar-width);
           margin-top: 56px;
-          padding: 0 32px;
           min-height: calc(100vh - 56px);
-          display: flex;
-          flex-direction: column;
+          overflow-x: hidden;
+          overflow-y: visible;
+          background: var(--bg-primary);
+          color: var(--text-primary);
+          transition: margin-left 0.2s ease;
         }
 
-        @media (min-width: 768px) {
-          .playlists-page {
-            margin-left: 280px;
-          }
-        }
-
-        .playlist-header-actions {
-          display: flex;
-          align-items: center;
-          gap: 0;
-        }
-
-        .playlist-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-          gap: 16px;
-          width: 100%;
-        }
-
-        .playlist-list {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-          width: calc(100% + 65px);
-          margin-left: -33px;
-          margin-right: -32px;
-        }
-
-        .playlist-list.is-reordering {
-          width: calc(100% + 32px);
-          margin-left: -16px;
-          margin-right: -16px;
-        }
-
-        .playlist-card {
+        .playlists-shell {
           position: relative;
-          border-radius: 20px;
-          overflow: visible;
-          aspect-ratio: 1;
-          background: #111;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          z-index: 1;
+          padding: 0 32px;
         }
 
-        .playlist-card:hover {
-          transform: none;
+        .playlists-hero {
+          display: block;
+          padding: 88px 0 0;
         }
 
-        .playlist-card-inner {
-          position: absolute;
-          inset: 0;
-          border-radius: 20px;
-          overflow: hidden;
-        }
-
-        .playlist-card-img {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        .playlist-card:hover .playlist-card-img {
-          transform: scale(1.05);
-        }
-
-        .playlist-card-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0) 100%);
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          padding: 12px;
-          padding-bottom: 14px;
-          box-sizing: border-box;
-          min-height: 0;
-        }
-
-        .playlist-card-text-block {
-          min-height: 32px;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-        }
-
-        .playlist-card-name {
-          font-size: 12px;
-          font-weight: 600;
-          color: #fff;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          line-height: 1.3;
-          letter-spacing: -0.01em;
-        }
-
-        .playlist-card-desc {
+        .playlists-kicker {
           font-size: 10px;
-          color: rgba(255,255,255,0.5);
-          margin-top: 2px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .playlist-list-item {
-          position: relative;
-          height: 72px;
-          overflow: visible;
-          border-radius: 0;
-          border-bottom: 1px solid var(--border-subtle);
-          background: transparent;
-          transition: background 0.15s ease;
-        }
-
-        .playlist-list-item:hover {
-          background: var(--bg-hover);
-        }
-
-        .playlist-list-inner {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          padding: 16px 46px 16px 32px;
-          box-sizing: border-box;
-        }
-
-        .playlist-list.is-reordering .playlist-list-inner {
-          padding-left: 22px;
-        }
-
-        .playlist-reorder-handle {
-          width: 16px;
-          flex: 0 0 16px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--text-muted);
-          pointer-events: none;
-        }
-
-        .playlist-list-cover {
-          width: 40px;
-          height: 40px;
-          flex: 0 0 40px;
-          border-radius: 4px;
-          overflow: hidden;
-          position: relative;
-        }
-
-        .playlist-list-img {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .playlist-list-text-block {
-          min-width: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-
-        .playlist-list-name {
-          font-size: 14px;
           font-weight: 500;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+
+        .playlists-title {
+          margin-top: 8px;
+          max-width: 640px;
+          font-family: var(--font-instrument-sans);
+          font-size: 56px;
+          font-weight: 500;
+          line-height: 0.94;
+          letter-spacing: -0.055em;
           color: var(--text-primary);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          line-height: 1.3;
-          letter-spacing: -0.01em;
         }
 
-        .playlist-list-desc {
-          font-size: 12px;
+        .playlists-meta {
+          margin-top: 16px;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 8px;
+          font-size: 11px;
           color: var(--text-secondary);
-          margin-top: 2px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
 
-        .playlist-card-menu-wrap {
-          position: absolute;
-          top: 8px;
-          right: 8px;
-          z-index: 10;
+        .playlists-dot {
+          color: var(--text-muted);
         }
 
-        .playlist-list-menu-wrap {
-          position: absolute;
-          top: 50%;
-          right: 18px;
-          z-index: 10;
-          transform: translateY(-50%);
-        }
-
-        .playlist-menu-btn {
-          width: 28px;
-          height: 28px;
-          border-radius: 6px;
+        .playlists-control-bar {
+          min-height: 34px;
           display: flex;
           align-items: center;
-          justify-content: center;
-          background: none;
-          border: none;
-          color: white;
-          cursor: pointer;
-          opacity: 0;
-          transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+          justify-content: flex-end;
+          gap: 8px;
+          margin-top: -34px;
+          margin-bottom: 32px;
         }
 
-        .playlist-list-item .playlist-menu-btn {
-          color: var(--icon-color);
+        .playlists-control-left {
+          display: none;
         }
 
-        .playlist-card:hover .playlist-menu-btn,
-        .playlist-list-item:hover .playlist-menu-btn,
-        .playlist-menu-btn.is-open {
-          opacity: 1;
+        .playlists-control-right {
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
 
-        .playlist-menu-btn:hover {
-          background: rgba(255,255,255,0.18);
-          color: var(--text-primary);
+        .playlists-control-label {
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+
+        .playlist-action-btn {
+          display: none;
         }
 
         .playlist-icon-btn {
-          width: 28px;
-          height: 28px;
-          border-radius: 6px;
+          width: 34px;
+          height: 34px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: transparent;
-          border: none;
+          border-radius: 9px;
+          border: 1px solid var(--border);
+          background: var(--bg-secondary);
           color: var(--icon-color);
           cursor: pointer;
-          transition: background 0.15s ease, color 0.15s ease;
+          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
         }
 
         .playlist-icon-btn:hover,
         .playlist-icon-btn.is-open {
-          background: rgba(255,255,255,0.18);
+          background: var(--icon-button-hover);
+          border-color: var(--text-muted);
+          color: var(--text-primary);
+        }
+
+        .playlist-edit-banner {
+          min-height: 54px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          margin-top: 16px;
+          margin-bottom: 24px;
+          padding: 0 16px;
+          border: 1px dashed var(--border);
+          border-radius: 16px;
+          background: var(--bg-secondary);
+        }
+
+        .playlist-edit-banner span {
+          font-size: 13px;
+          color: var(--text-secondary);
+        }
+
+        .playlist-edit-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .playlist-edit-actions button {
+          height: 30px;
+          border-radius: 999px;
+          padding: 0 15px;
+          border: none;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: opacity 0.15s ease, background 0.15s ease;
+        }
+
+        .playlist-edit-cancel {
+          background: var(--bg-tertiary);
+          color: var(--text-primary);
+        }
+
+        .playlist-edit-cancel:hover {
+          background: var(--bg-hover);
+        }
+
+        .playlist-edit-save {
+          background: var(--text-primary);
+          color: var(--bg-primary);
+        }
+
+        .playlist-edit-save:hover {
+          opacity: 0.82;
+        }
+
+        .playlist-library {
+          padding-top: 0;
+        }
+
+        .playlist-gallery {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+          gap: 22px 20px;
+        }
+
+        .playlist-gallery-card {
+          position: relative;
+          min-width: 0;
+          cursor: pointer;
+        }
+
+        .playlist-gallery-art-wrap {
+          position: relative;
+          aspect-ratio: 1 / 1.08;
+          border-radius: 18px;
+          overflow: hidden;
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-subtle);
+          transition: transform 0.18s ease, border-color 0.18s ease;
+        }
+
+        .playlist-gallery-card:hover .playlist-gallery-art-wrap,
+        .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap {
+          transform: translateY(-2px);
+          border-color: var(--text-muted);
+        }
+
+        .playlist-gallery-art {
+          position: absolute;
+          inset: 0;
+        }
+
+        .playlist-gallery-art::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(to top, var(--media-overlay-strong), var(--media-overlay-faint) 58%, var(--media-overlay-soft)),
+            linear-gradient(to bottom, var(--media-overlay-highlight), transparent);
+          pointer-events: none;
+        }
+
+        .playlist-gallery-art img,
+        .playlist-row-cover img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .playlist-gallery-letters {
+          position: absolute;
+          left: 14px;
+          bottom: 14px;
+          font-family: var(--font-instrument-sans);
+          font-size: 36px;
+          font-weight: 500;
+          letter-spacing: -0.06em;
+          color: var(--media-overlay-text-strong);
+          z-index: 2;
+        }
+
+        .playlist-gallery-number {
+          position: absolute;
+          left: 10px;
+          top: 10px;
+          z-index: 3;
+          display: flex;
+          height: 26px;
+          min-width: 32px;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          background: var(--media-overlay-white-tint);
+          color: var(--media-overlay-contrast);
+          font-size: 10px;
+          font-weight: 600;
+          backdrop-filter: blur(12px);
+        }
+
+        .playlist-gallery-handle {
+          position: absolute;
+          right: 12px;
+          top: 12px;
+          z-index: 5;
+          color: var(--media-overlay-icon);
+        }
+
+        .playlist-gallery-copy {
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+          margin-top: 8px;
+          min-width: 0;
+        }
+
+        .playlist-gallery-copy span {
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .playlist-gallery-copy small {
+          flex: 0 0 auto;
+          font-size: 10px;
+          color: var(--text-secondary);
+        }
+
+        .playlist-gallery-genres {
+          margin-top: 5px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 10px;
+          color: var(--text-muted);
+        }
+
+        .playlist-index {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .playlist-index-row {
+          position: relative;
+          min-height: 76px;
+          display: grid;
+          grid-template-columns: 40px 50px minmax(0, 1fr) minmax(84px, 120px);
+          gap: 14px;
+          align-items: center;
+          border: 1px solid var(--border-subtle);
+          border-radius: 16px;
+          background: var(--bg-card);
+          padding: 11px 50px 11px 13px;
+          cursor: pointer;
+          transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .playlist-index-row.is-reordering {
+          grid-template-columns: 16px 40px 50px minmax(0, 1fr) minmax(84px, 120px);
+          padding-right: 18px;
+        }
+
+        .playlist-index-row:hover {
+          background: var(--bg-hover);
+          border-color: var(--border);
+          transform: translateY(-1px);
+        }
+
+        .playlist-row-handle {
+          width: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-muted);
+        }
+
+        .playlist-row-number {
+          font-size: 10px;
+          font-weight: 600;
+          color: var(--text-muted);
+          letter-spacing: 0.05em;
+        }
+
+        .playlist-row-cover {
+          position: relative;
+          width: 50px;
+          height: 50px;
+          border-radius: 10px;
+          overflow: hidden;
+          background: var(--bg-secondary);
+        }
+
+        .playlist-row-main {
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        }
+
+        .playlist-row-main span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .playlist-row-main small {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 11px;
+          color: var(--text-muted);
+        }
+
+        .playlist-row-count {
+          text-align: right;
+          font-size: 11px;
+          color: var(--text-secondary);
+        }
+
+        .playlist-card-menu-wrap {
+          position: absolute;
+          z-index: 10;
+          top: 10px;
+          right: 10px;
+        }
+
+        .playlist-index-row .playlist-card-menu-wrap {
+          top: 50%;
+          right: 12px;
+          transform: translateY(-50%);
+        }
+
+        .playlist-menu-btn {
+          opacity: 0;
+          transition:
+            opacity 0.15s ease,
+            background-color 0.15s ease,
+            color 0.15s ease,
+            box-shadow 0.15s ease;
+        }
+
+        .playlist-menu-btn-grid {
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          border-radius: 6px;
+          background-color: transparent;
+          color: var(--media-overlay-contrast);
+          cursor: pointer;
+        }
+
+        .playlist-gallery-card:hover .playlist-menu-btn-grid,
+        .playlist-menu-btn-grid.is-open {
+          opacity: 1;
+        }
+
+        .playlist-gallery-card:hover .playlist-menu-btn-grid:not(:hover):not(.is-open) {
+          background-color: transparent;
+          color: var(--media-overlay-contrast);
+          box-shadow: none;
+        }
+
+        .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid:hover,
+        .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid.is-open {
+          background-color: var(--media-overlay-white-tint);
+          color: var(--media-overlay-contrast);
+          backdrop-filter: blur(10px);
+        }
+
+        .playlist-index-row .playlist-menu-btn {
+          background: transparent;
+          color: var(--icon-color);
+          backdrop-filter: none;
+        }
+
+        .playlist-index-row:hover .playlist-menu-btn,
+        .playlist-index-row .playlist-menu-btn.is-open {
+          opacity: 1;
+        }
+
+        .playlist-index-row .playlist-menu-btn:hover,
+        .playlist-index-row .playlist-menu-btn.is-open {
+          background: var(--icon-button-hover);
           color: var(--text-primary);
         }
 
         .playlist-dropdown,
         .playlist-sort-dropdown {
           z-index: 25;
-          width: 138px;
-          margin-left: 5px;
+          width: 146px;
           background: var(--bg-secondary);
           border: 1px solid var(--border);
-          border-radius: 8px;
+          border-radius: 10px;
           overflow: hidden;
-          box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+          box-shadow: var(--shadow-ui);
           backdrop-filter: blur(12px);
         }
 
@@ -947,122 +1557,102 @@ export default function PlaylistsPage() {
         }
 
         .playlist-dropdown button:hover,
-        .playlist-sort-dropdown button:hover {
-          background: var(--bg-elevated);
+        .playlist-sort-dropdown button:hover,
+        .playlist-sort-dropdown button.is-active,
+        .playlist-sort-dropdown button.is-active:hover {
+          background: var(--bg-hover-strong);
           color: var(--text-primary);
         }
 
-        .playlist-sort-dropdown button.is-active {
-          color: var(--text-primary);
+        .playlist-dropdown .danger-action {
+          color: var(--danger);
         }
 
-        .playlist-dropdown button.danger {
-          color: var(--accent-2);
+        .playlist-dropdown .danger-action:hover {
+          color: var(--danger);
         }
 
-        .create-card {
+        .playlist-create-card {
           position: relative;
-          border-radius: 20px;
-          aspect-ratio: 1;
-          border: 1.5px dashed var(--border);
-          background: var(--bg-tertiary);
+          aspect-ratio: 1 / 1.08;
+          width: 100%;
           display: flex;
           flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
+          justify-content: flex-end;
+          gap: 12px;
+          border-radius: 18px;
+          border: 1px dashed var(--border);
+          background: var(--bg-card);
+          padding: 16px;
           cursor: pointer;
-          transition: border-color 0.2s, background 0.2s;
-          box-sizing: border-box;
+          text-align: left;
+          transition: background 0.15s ease, transform 0.15s ease;
         }
 
-        .create-card:hover {
-          border-color: var(--text-muted);
-          background: var(--bg-tertiary-hover);
+        .playlist-create-card:hover {
+          border-color: var(--border-hover);
+          background: var(--bg-hover);
+          transform: translateY(-1px);
         }
 
-        .create-list-item {
-          height: 72px;
-          border-radius: 0;
-          border: none;
-          border-bottom: 1px solid var(--border-subtle);
-          background: transparent;
+        .playlist-create-row {
+          grid-template-columns: 34px minmax(0, 1fr) 34px;
+          padding: 11px 46px 11px 18px;
+          border: 1px dashed var(--border);
+          background: var(--bg-card);
+        }
+
+        .playlist-create-row .playlist-create-mark {
+          width: 34px;
+          height: 34px;
+          grid-column: 1;
+        }
+
+        .playlist-create-row .playlist-create-copy {
+          grid-column: 2;
+          align-items: center;
+          text-align: center;
+        }
+
+        .playlist-create-row:hover {
+          border-color: var(--border-hover);
+          background: var(--bg-hover);
+          transform: translateY(-1px);
+        }
+
+        .playlist-create-mark {
+          width: 38px;
+          height: 38px;
+          border-radius: 11px;
           display: flex;
           align-items: center;
-          gap: 16px;
-          padding: 16px 32px;
-          cursor: pointer;
+          justify-content: center;
+          background: var(--bg-card);
+          color: var(--text-primary);
           transition: background 0.15s ease;
-          box-sizing: border-box;
         }
 
-        .create-list-item:hover {
-          background: var(--bg-hover);
+        .playlist-create-card:hover .playlist-create-mark,
+        .playlist-create-row:hover .playlist-create-mark {
+          background: var(--bg-hover-strong);
         }
 
-        .create-list-plus-wrap {
-          width: 40px;
-          height: 40px;
-          border-radius: 4px;
+        .playlist-create-copy {
           display: flex;
-          align-items: center;
-          justify-content: center;
-          background: var(--bg-hover);
-          flex: 0 0 40px;
+          flex-direction: column;
+          gap: 5px;
+          min-width: 0;
         }
 
-        .create-card-plus {
-          font-size: 22px;
-          color: var(--text-muted);
-          line-height: 1;
-          transition: color 0.2s;
-        }
-
-        .create-card:hover .create-card-plus,
-        .create-list-item:hover .create-card-plus {
-          color: var(--text-secondary);
-        }
-
-        .create-card-label {
-          font-size: 12px;
-          color: var(--text-muted);
-          font-weight: 500;
-          transition: color 0.2s;
-        }
-
-        .create-list-item .create-card-label {
+        .playlist-create-copy span {
           font-size: 14px;
           font-weight: 500;
+          color: var(--text-primary);
         }
 
-        .create-card:hover .create-card-label,
-        .create-list-item:hover .create-card-label {
+        .playlist-create-copy small {
+          font-size: 11px;
           color: var(--text-secondary);
-        }
-
-        .reorder-wrapper {
-          border-radius: 16px;
-          transition: padding 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
-        }
-
-        .drag-overlay-card {
-          border-radius: 10px;
-          overflow: hidden;
-          aspect-ratio: 1;
-          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-          transform: scale(1.06);
-          cursor: grabbing;
-        }
-
-        .drag-overlay-list {
-          height: 72px;
-          border-radius: 0;
-          overflow: hidden;
-          border-bottom: 1px solid var(--border-subtle);
-          background: var(--bg-hover);
-          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-          transform: scale(1.02);
-          cursor: grabbing;
         }
 
         .playlist-deleting-overlay {
@@ -1072,114 +1662,374 @@ export default function PlaylistsPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 10px;
-          background: rgba(0,0,0,0.45);
+          border-radius: inherit;
+          background: var(--media-overlay-strong);
           pointer-events: none;
         }
 
-        .playlist-list-item .playlist-deleting-overlay {
-          border-radius: 0;
+        .drag-preview-card {
+          width: 210px;
+          transform: scale(1.04);
+          box-shadow: 0 24px 80px var(--media-overlay-heavy);
+        }
+
+        .drag-preview-row {
+          width: calc(100vw - var(--sidebar-width) - 64px);
+          box-shadow: 0 24px 80px var(--media-overlay-heavy);
+        }
+
+        .playlist-skeleton-reserve {
+  min-height: 280px;
+}
+
+        .playlist-skeleton-block {
+          position: relative;
+          overflow: hidden;
+          background: var(--bg-tertiary);
+        }
+
+        .playlist-skeleton-block::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transform: translateX(-100%);
+          background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--bg-hover) 72%, transparent),
+            transparent
+          );
+          animation: playlist-skeleton-shimmer 1.6s ease-in-out infinite;
+        }
+
+        @keyframes playlist-skeleton-shimmer {
+          100% {
+            transform: translateX(100%);
+          }
+        }
+
+        .playlist-skeleton-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+          gap: 22px 20px;
+        }
+
+        .playlist-skeleton-gallery-card {
+          min-width: 0;
+          animation: skeleton-fade-in 0.3s ease-out both;
+        }
+
+        .playlist-skeleton-gallery-art {
+          position: relative;
+          aspect-ratio: 1 / 1.08;
+          border-radius: 18px;
+          border: 0px solid var(--border-subtle);
+          background: var(--bg-card);
+          overflow: hidden;
+        }
+
+        .playlist-skeleton-gallery-art::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transform: translateX(-100%);
+          background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--bg-hover) 48%, transparent),
+            transparent
+          );
+          animation: playlist-skeleton-shimmer 1.6s ease-in-out infinite;
+        }
+
+        .playlist-skeleton-gallery-copy {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          margin-top: 8px;
+        }
+
+        .playlist-skeleton-gallery-title {
+          width: 62%;
+          height: 9px;
+        }
+
+        .playlist-skeleton-gallery-count {
+          width: 42px;
+          height: 8px;
+        }
+
+        .playlist-skeleton-gallery-genres {
+          width: 46%;
+          height: 8px;
+          margin-top: 8px;
+        }
+
+        .playlist-skeleton-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .playlist-skeleton-index-row {
+          position: relative;
+          min-height: 76px;
+          display: grid;
+          grid-template-columns: 40px 50px minmax(0, 1fr) minmax(84px, 120px) 28px;
+          gap: 14px;
+          align-items: center;
+          border: 1px solid var(--border-subtle);
+          border-radius: 16px;
+          background: transparent;
+          padding: 11px 13px;
+          animation: skeleton-fade-in 0.3s ease-out both;
+        }
+
+        .playlist-skeleton-number {
+          width: 22px;
+          height: 8px;
+        }
+
+        .playlist-skeleton-row-cover {
+          width: 50px;
+          height: 50px;
+          border-radius: 10px;
+        }
+
+        .playlist-skeleton-row-copy {
+          display: flex;
+          min-width: 0;
+          flex-direction: column;
+          gap: 9px;
+        }
+
+        .playlist-skeleton-row-title {
+          width: min(220px, 58%);
+          height: 9px;
+        }
+
+        .playlist-skeleton-row-meta {
+          width: min(300px, 42%);
+          height: 8px;
+        }
+
+        .playlist-skeleton-row-count {
+          justify-self: end;
+          width: 58px;
+          height: 8px;
+        }
+
+        .playlist-skeleton-row-menu {
+          justify-self: end;
+          width: 28px;
+          height: 28px;
+        }
+
+        @media (max-width: 980px) {
+          .playlists-control-bar {
+            margin-top: -34px;
+          }
+        }
+
+        @media (max-width: 720px) {
+          .playlists-hero {
+            padding-top: 88px;
+          }
+
+          .playlists-control-bar {
+            margin-top: -34px;
+            margin-bottom: 32px;
+          }
+
+          .playlist-gallery,
+          .playlist-skeleton-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 18px 14px;
+          }
+
+          .drag-preview-row {
+            width: calc(100vw - var(--sidebar-width) - 36px);
+          }
+        }
+
+        @media (max-width: 520px) {
+          .playlist-index-row {
+            grid-template-columns: 18px 50px minmax(0, 1fr) minmax(70px, 96px);
+            gap: 12px;
+            padding: 11px 46px 11px 13px;
+          }
+
+          .playlist-index-row.is-reordering {
+            grid-template-columns: 16px 34px 50px minmax(0, 1fr) minmax(70px, 96px);
+            gap: 12px;
+            padding-right: 18px;
+          }
+
+          .playlist-create-row {
+            grid-template-columns: 50px minmax(0, 1fr) 50px;
+            padding: 11px 18px;
+          }
+
+          .playlist-create-row .playlist-create-mark {
+            grid-column: 1;
+          }
+
+          .playlist-create-row .playlist-create-copy {
+            grid-column: 2;
+            align-items: center;
+            text-align: center;
+          }
+
+          .playlist-create-row .playlist-create-copy span,
+          .playlist-create-row .playlist-create-copy small {
+            white-space: normal;
+          }
+
+          .playlist-skeleton-index-row {
+            grid-template-columns: 18px 50px minmax(0, 1fr) minmax(70px, 96px) 28px;
+            gap: 12px;
+            padding: 11px 13px;
+          }
+
+          .playlist-skeleton-row-title {
+            width: 68%;
+          }
+
+          .playlist-skeleton-row-meta {
+            width: 50%;
+          }
         }
       `}</style>
 
-      <div className="playlists-page">
-        <div className="flex items-center justify-between pt-8 pb-8">
-          <h1 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium text-[var(--text-primary)]">
-            Playlists
-          </h1>
+      <main className="playlists-page">
+        <div className="playlists-shell">
+          <section className="playlists-hero">
+            <div className="playlists-kicker">Playlist Library</div>
 
-          {!isEditing && (
-            <div className="playlist-header-actions">
-              <button
-                type="button"
-                className="playlist-icon-btn"
-                aria-label={viewMode === 'grid' ? 'Switch to list view' : 'Switch to grid view'}
-                onClick={() => {
-                  setViewMode(viewMode === 'grid' ? 'list' : 'grid');
-                  setOpenSortMenu(false);
-                }}
-              >
-                {viewMode === 'grid' ? <ListIcon /> : <GridIcon />}
-              </button>
+            <h1 className="playlists-title">Playlists</h1>
 
-              <DropdownShell
-                open={openSortMenu}
-                onOpenChange={setOpenSortMenu}
-                placement="bottom-end"
-                className="playlist-sort-dropdown"
-                offsetAmount={6}
-                flippedOffsetAmount={6}
-                collisionPadding={{
-                  top: 112,
-                  right: 16,
-                  bottom: playerVisible ? 96 : 24,
-                  left: 16,
-                }}
-                trigger={({ open }) => (
+            <div className="playlists-meta">
+              <span>{playlists.length} playlists</span>
+              <span className="playlists-dot">·</span>
+              <span>{formatSongCount(totalSongs)}</span>
+
+              {allGenres.length > 0 && (
+                <>
+                  <span className="playlists-dot">·</span>
+                  <span>{allGenres.join(" · ")}</span>
+                </>
+              )}
+            </div>
+          </section>
+
+          <section className="playlists-control-bar">
+            <div className="playlists-control-left">
+              <span className="playlists-control-label">
+                {isEditing ? "Reorder mode" : "Collection index"}
+              </span>
+            </div>
+
+            {!isEditing && preferencesLoaded && (
+              <div className="playlists-control-right">
+                <button
+                  type="button"
+                  className="playlist-action-btn"
+                  onClick={() => setShowNewModal(true)}
+                >
+                  <PlusIcon />
+                  New Playlist
+                </button>
+
+                <button
+                  type="button"
+                  className="playlist-icon-btn"
+                  aria-label={
+                    viewMode === "grid"
+                      ? "Switch to index view"
+                      : "Switch to gallery view"
+                  }
+                  onClick={() => {
+                    const nextViewMode = viewMode === "grid" ? "list" : "grid";
+
+                    setViewMode(nextViewMode);
+                    setSkeletonViewMode(nextViewMode);
+                    localStorage.setItem(
+                      PLAYLIST_SKELETON_VIEW_MODE_KEY,
+                      nextViewMode,
+                    );
+                    setOpenSortMenu(false);
+                  }}
+                >
+                  {viewMode === "grid" ? <IndexIcon /> : <GalleryIcon />}
+                </button>
+
+                <DropdownShell
+                  open={openSortMenu}
+                  onOpenChange={setOpenSortMenu}
+                  placement="bottom-end"
+                  className="playlist-sort-dropdown"
+                  offsetAmount={6}
+                  flippedOffsetAmount={6}
+                  collisionPadding={{
+                    top: 112,
+                    right: 16,
+                    bottom: playerVisible ? 96 : 24,
+                    left: 16,
+                  }}
+                  trigger={({ open }) => (
+                    <button
+                      type="button"
+                      className={"playlist-icon-btn" + (open ? " is-open" : "")}
+                      aria-label="Sort playlists"
+                    >
+                      <SortIcon />
+                    </button>
+                  )}
+                >
                   <button
                     type="button"
-                    className={'playlist-icon-btn' + (open ? ' is-open' : '')}
-                    aria-label="Sort playlists"
+                    className={sortMode === "custom" ? "is-active" : ""}
+                    onClick={() => {
+                      setSortMode("custom");
+                      setOpenSortMenu(false);
+                    }}
                   >
-                    <SortIcon />
+                    Custom
                   </button>
-                )}
-              >
-                <button
-                  type="button"
-                  className={sortMode === 'custom' ? 'is-active' : ''}
-                  onClick={() => {
-                    setSortMode('custom');
-                    setOpenSortMenu(false);
-                  }}
-                >
-                  Custom
-                </button>
 
-                <button
-                  type="button"
-                  className={sortMode === 'alphabetical' ? 'is-active' : ''}
-                  onClick={() => {
-                    setSortMode('alphabetical');
-                    setOpenSortMenu(false);
-                  }}
-                >
-                  Alphabetical
-                </button>
-              </DropdownShell>
-            </div>
-          )}
-        </div>
+                  <button
+                    type="button"
+                    className={sortMode === "alphabetical" ? "is-active" : ""}
+                    onClick={() => {
+                      setSortMode("alphabetical");
+                      setOpenSortMenu(false);
+                    }}
+                  >
+                    Alphabetical
+                  </button>
+                </DropdownShell>
+              </div>
+            )}
+          </section>
 
-        <div
-          className="reorder-wrapper relative"
-          style={{
-            padding: isEditing
-              ? viewMode === 'list'
-                ? '16px 16px 0 16px'
-                : '16px'
-              : '0',
-            border: isEditing ? '1.5px dashed var(--border)' : '1.5px dashed transparent',
-            backgroundColor: isEditing ? 'var(--bg-tertiary)' : 'transparent',
-          }}
-        >
           {isEditing && (
-            <div className="mb-4 flex items-center justify-between">
-              <span className="pl-2 text-sm font-medium text-[var(--text-secondary)]">
-                Drag to reorder
-              </span>
+            <div className="playlist-edit-banner">
+              <span>Drag playlists into the order you want.</span>
 
-              <div className="flex items-center gap-1">
+              <div className="playlist-edit-actions">
                 <button
+                  type="button"
+                  className="playlist-edit-cancel"
                   onClick={handleCancelReorder}
-                  className="font-[family-name:var(--font-instrument-sans)] cursor-pointer rounded-full bg-[var(--bg-tertiary)] px-5 py-2 text-xs font-[500] text-[var(--text-primary)] transition hover:bg-[var(--bg-tertiary-hover)]"
                 >
                   Cancel
                 </button>
 
                 <button
+                  type="button"
+                  className="playlist-edit-save"
                   onClick={handleSaveReorder}
-                  className="font-[family-name:var(--font-instrument-sans)] cursor-pointer rounded-full bg-[var(--text-primary)] px-5 py-2 text-xs font-[600] text-[var(--bg-primary)] transition hover:opacity-80"
                 >
                   Save
                 </button>
@@ -1187,103 +2037,104 @@ export default function PlaylistsPage() {
             </div>
           )}
 
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext items={displayedPlaylists.map(p => p.id)} strategy={rectSortingStrategy}>
-              <div
-                className={
-                  viewMode === 'grid'
-                    ? 'playlist-grid'
-                    : 'playlist-list' + (isEditing ? ' is-reordering' : '')
-                }
-              >
-                <AnimatePresence mode="popLayout">
-                  {!isEditing && (
-                    <motion.div
-                      key="create-card"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className={viewMode === 'grid' ? 'create-card' : 'create-list-item'}
-                      onClick={() => setShowNewModal(true)}
-                    >
-                      {viewMode === 'grid' ? (
-                        <>
-                          <span className="create-card-plus">+</span>
-                          <span className="create-card-label">Create Playlist</span>
-                        </>
-                      ) : (
-                        <>
-                          <div className="create-list-plus-wrap">
-                            <span className="create-card-plus">+</span>
-                          </div>
-                          <span className="create-card-label">Create Playlist</span>
-                        </>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {displayedPlaylists.map((playlist, index) => (
-                  <SortableCard
-                    key={playlist.id}
-                    playlist={playlist}
-                    index={index}
-                    isEditing={isEditing}
-                    isDeleting={deletingPlaylistId === playlist.id}
-                    openMenuId={openMenuId}
-                    setOpenMenuId={setOpenMenuId}
-                    startReorder={startReorder}
-                    openEdit={openEdit}
-                    handleDeletePlaylist={handleDeletePlaylist}
-                    playerVisible={playerVisible}
-                    viewMode={viewMode}
-                  />
-                ))}
+          {playlistsError && !showSkeleton ? (
+            <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 text-center">
+              <div className="text-sm font-medium text-[var(--text-primary)]">
+                Couldn&apos;t load playlists
               </div>
-            </SortableContext>
 
-            <DragOverlay>
-              {activePlaylist && (
-                viewMode === 'grid' ? (
+              <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
+                {playlistsError}
+              </div>
+
+              <button
+                type="button"
+                onClick={refetchPlaylists}
+                className="playlist-icon-btn"
+              >
+                Try
+              </button>
+            </div>
+          ) : showSkeleton ? (
+            skeletonViewModeLoaded ? (
+              <SkeletonLibrary viewMode={resolvedSkeletonViewMode} />
+            ) : (
+              <div className="playlist-skeleton-reserve" />
+            )
+          ) : (
+            <section className="playlist-library">
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={displayedPlaylists.map((p) => p.id)}
+                  strategy={rectSortingStrategy}
+                >
                   <div
-                    className="drag-overlay-card"
-                    style={{
-                      background: activePlaylist.cover_image_url
-                        ? '#000'
-                        : GRADIENTS[activeIndex % GRADIENTS.length],
-                    }}
+                    className={
+                      viewMode === "grid"
+                        ? "playlist-gallery"
+                        : "playlist-index"
+                    }
                   >
-                    <PlaylistCardContent playlist={activePlaylist} index={activeIndex} isOverlay />
-                  </div>
-                ) : (
-                  <div className="drag-overlay-list">
-                    <PlaylistListContent
-                      playlist={activePlaylist}
-                      index={activeIndex}
-                      isOverlay
-                      showReorderHandle
-                    />
-                  </div>
-                )
-              )}
-            </DragOverlay>
-          </DndContext>
-        </div>
+                    {!isEditing && (
+                      <CreatePlaylistTile
+                        viewMode={viewMode}
+                        onClick={() => setShowNewModal(true)}
+                      />
+                    )}
 
-        <div style={{ marginTop: 'auto', paddingTop: '32px' }}>
-          <Footer />
+                    {displayedPlaylists.map((playlist, index) => (
+                      <SortablePlaylistItem
+                        key={playlist.id}
+                        playlist={playlist}
+                        index={index}
+                        isEditing={isEditing}
+                        isDeleting={deletingPlaylistId === playlist.id}
+                        openMenuId={openMenuId}
+                        setOpenMenuId={setOpenMenuId}
+                        startReorder={startReorder}
+                        openEdit={openEdit}
+                        handleDeletePlaylist={handleDeletePlaylist}
+                        playerVisible={playerVisible}
+                        viewMode={viewMode}
+                        playlistStats={playlistStats}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+
+                <DragOverlay>
+                  {activePlaylist && (
+                    <DragPreview
+                      playlist={activePlaylist}
+                      index={Math.max(activeIndex, 0)}
+                      viewMode={viewMode}
+                      stats={playlistStats[activePlaylist.id]}
+                    />
+                  )}
+                </DragOverlay>
+              </DndContext>
+            </section>
+          )}
+
+          <div
+            className="pt-12 pb-1"
+            style={{
+              paddingBottom: playerVisible ? "72px" : "8px",
+            }}
+          >
+            <Footer />
+          </div>
         </div>
-      </div>
+      </main>
 
       <Toast
         message={toastMessage}
-        bottomOffset={playerVisible ? '88px' : '24px'}
+        bottomOffset={playerVisible ? "88px" : "24px"}
       />
 
       <EditPlaylistModal
