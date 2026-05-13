@@ -482,7 +482,7 @@ export default function FavoritesPage() {
           <section className="favorites-hero">
             <div className="favorites-kicker">Favorites</div>
 
-            <h1 className="favorites-title">Favorites</h1>
+            <h1 className="favorites-title">Favourites</h1>
 
             <div className="favorites-meta">
               <span>{formatSongCount(displayedSongs.length)}</span>
