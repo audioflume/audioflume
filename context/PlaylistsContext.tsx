@@ -9,6 +9,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -22,64 +23,110 @@ type PlaylistsContextValue = {
 
 const PlaylistsContext = createContext<PlaylistsContextValue | null>(null);
 
+let cachedUserId: string | null = null;
+let cachedPlaylists: Playlist[] | null = null;
+let pendingPlaylistsRequest: Promise<Playlist[]> | null = null;
+
+async function requestPlaylists() {
+  const res = await fetch("/api/playlists");
+  const text = await res.text();
+  const data = text ? JSON.parse(text) : null;
+
+  if (!res.ok) {
+    throw new Error(data?.error || "Failed to load playlists");
+  }
+
+  if (!Array.isArray(data)) {
+    throw new Error("Invalid playlists response");
+  }
+
+  return data as Playlist[];
+}
+
 export function PlaylistsProvider({ children }: { children: ReactNode }) {
   const { user, isLoaded } = useUser();
+  const userId = user?.id ?? null;
 
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasLoaded, setHasLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mountedRef = useRef(true);
 
-  const fetchPlaylists = useCallback(async () => {
-    if (!isLoaded) return;
+  const fetchPlaylists = useCallback(
+    async ({ force = false }: { force?: boolean } = {}) => {
+      if (!isLoaded) return;
 
-    if (!user) {
-      setPlaylists([]);
-      setLoading(false);
-      setHasLoaded(true);
-      setError(null);
-      return;
-    }
+      if (!userId) {
+        cachedUserId = null;
+        cachedPlaylists = null;
+        pendingPlaylistsRequest = null;
 
-    if (!hasLoaded) {
-      setLoading(true);
-    }
+        if (!mountedRef.current) return;
 
-    setError(null);
-
-    try {
-      const res = await fetch("/api/playlists");
-      const text = await res.text();
-      const data = text ? JSON.parse(text) : null;
-
-      if (!res.ok) {
-        throw new Error(data?.error || "Failed to load playlists");
-      }
-
-      if (!Array.isArray(data)) {
-        throw new Error("Invalid playlists response");
-      }
-
-      setPlaylists(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load playlists");
-
-      if (!hasLoaded) {
         setPlaylists([]);
+        setLoading(false);
+        setError(null);
+        return;
       }
-    } finally {
-      setLoading(false);
-      setHasLoaded(true);
-    }
-  }, [isLoaded, user, hasLoaded]);
+
+      if (!force && cachedUserId === userId && cachedPlaylists) {
+        setPlaylists(cachedPlaylists);
+        setLoading(false);
+        setError(null);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        if (force || cachedUserId !== userId || !pendingPlaylistsRequest) {
+          pendingPlaylistsRequest = requestPlaylists();
+        }
+
+        const nextPlaylists = await pendingPlaylistsRequest;
+
+        cachedUserId = userId;
+        cachedPlaylists = nextPlaylists;
+        pendingPlaylistsRequest = null;
+
+        if (!mountedRef.current) return;
+
+        setPlaylists(nextPlaylists);
+      } catch (err) {
+        pendingPlaylistsRequest = null;
+
+        if (!mountedRef.current) return;
+
+        setError(
+          err instanceof Error ? err.message : "Failed to load playlists",
+        );
+
+        if (!cachedPlaylists || cachedUserId !== userId) {
+          setPlaylists([]);
+        }
+      } finally {
+        if (mountedRef.current) {
+          setLoading(false);
+        }
+      }
+    },
+    [isLoaded, userId],
+  );
+
+  const refetchPlaylists = useCallback(async () => {
+    cachedPlaylists = null;
+    pendingPlaylistsRequest = null;
+    await fetchPlaylists({ force: true });
+  }, [fetchPlaylists]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    mountedRef.current = true;
 
-    setHasLoaded(false);
-    setPlaylists([]);
-    setError(null);
-  }, [isLoaded, user?.id]);
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     fetchPlaylists();
@@ -91,9 +138,9 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
       setPlaylists,
       loading,
       error,
-      refetchPlaylists: fetchPlaylists,
+      refetchPlaylists,
     }),
-    [playlists, loading, error, fetchPlaylists],
+    [playlists, loading, error, refetchPlaylists],
   );
 
   return (

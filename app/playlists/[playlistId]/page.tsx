@@ -10,6 +10,7 @@ import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
 } from "@/components/uiClasses";
+import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import type { Playlist, Song } from "@/lib/types";
@@ -28,6 +29,23 @@ const GRADIENTS = [
   "linear-gradient(160deg,#2d0a3a,#4a1258)",
   "linear-gradient(160deg,#0f1a0f,#1a2e1a)",
 ];
+
+const QUICK_FILTERS = [
+  { label: "Newest", value: "newest" },
+  { label: "Oldest", value: "oldest" },
+  { label: "Alphabetical", value: "alphabetical" },
+  { label: "Liked", value: "liked" },
+] as const;
+
+type QuickFilterValue = (typeof QUICK_FILTERS)[number]["value"];
+
+type PlaylistSong = Song & {
+  created_at?: string;
+  playlist_song_id?: number;
+  playlist_id?: number;
+  song_id?: string;
+  position?: number;
+};
 
 function BackIcon() {
   return (
@@ -208,19 +226,62 @@ function formatSongCount(count: number) {
   return `${count} song${count === 1 ? "" : "s"}`;
 }
 
+function getSongAddedTime(song: PlaylistSong) {
+  if (!song.created_at) return 0;
+
+  const time = new Date(song.created_at).getTime();
+
+  return Number.isFinite(time) ? time : 0;
+}
+
+function shuffleSongList<T>(songs: T[]) {
+  if (songs.length < 2) return [...songs];
+
+  let bestShuffle = [...songs];
+  let bestMovedCount = -1;
+
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const shuffled = [...songs];
+
+    for (let i = shuffled.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = shuffled[i];
+      shuffled[i] = shuffled[j];
+      shuffled[j] = temp;
+    }
+
+    const movedCount = shuffled.filter(
+      (song, index) => song !== songs[index],
+    ).length;
+
+    if (movedCount > bestMovedCount) {
+      bestShuffle = shuffled;
+      bestMovedCount = movedCount;
+    }
+
+    if (movedCount >= Math.floor(songs.length * 0.85)) {
+      break;
+    }
+  }
+
+  return bestShuffle;
+}
+
 export default function PlaylistDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { currentSong, setQueue } = usePlayer();
+  const { favoriteIdSet } = useFavorites();
   const { playlists, setPlaylists, loading: playlistsLoading } = usePlaylists();
 
   const playlistId = String(params.playlistId || "");
   const playerVisible = !!currentSong;
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const [songs, setSongs] = useState<Song[]>([]);
+  const [songs, setSongs] = useState<PlaylistSong[]>([]);
   const [songsLoading, setSongsLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [quickFilter, setQuickFilter] = useState<QuickFilterValue>("newest");
   const [error, setError] = useState("");
   const [editingPlaylist, setEditingPlaylist] = useState<Playlist | null>(null);
   const [editName, setEditName] = useState("");
@@ -230,6 +291,7 @@ export default function PlaylistDetailPage() {
     null,
   );
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
 
   const playlist = useMemo(
     () => playlists.find((item) => String(item.id) === playlistId),
@@ -241,7 +303,7 @@ export default function PlaylistDetailPage() {
     return index >= 0 ? index : 0;
   }, [playlists, playlistId]);
 
-  const filteredSongs = useMemo(() => {
+  const searchedSongs = useMemo(() => {
     const query = search.trim().toLowerCase();
 
     if (!query) return songs;
@@ -263,6 +325,56 @@ export default function PlaylistDetailPage() {
       return searchableText.includes(query);
     });
   }, [songs, search]);
+
+  const filteredSongs = useMemo(() => {
+    const indexedSongs = searchedSongs.map((song, index) => ({
+      song,
+      index,
+    }));
+
+    const nextSongs =
+      quickFilter === "liked"
+        ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
+        : indexedSongs;
+
+    const sortedSongs = [...nextSongs].sort((a, b) => {
+      if (quickFilter === "alphabetical") {
+        return a.song.title.localeCompare(b.song.title, undefined, {
+          sensitivity: "base",
+        });
+      }
+
+      const aTime = getSongAddedTime(a.song);
+      const bTime = getSongAddedTime(b.song);
+
+      if (aTime !== bTime) {
+        return quickFilter === "oldest" ? aTime - bTime : bTime - aTime;
+      }
+
+      return quickFilter === "oldest" ? a.index - b.index : b.index - a.index;
+    });
+
+    if (!shuffleOrderIds) {
+      return sortedSongs.map(({ song }) => song);
+    }
+
+    const orderMap = new Map(
+      shuffleOrderIds.map((songId, index) => [songId, index]),
+    );
+
+    return sortedSongs
+      .map(({ song }) => song)
+      .sort((a, b) => {
+        const aOrder = orderMap.get(a.id);
+        const bOrder = orderMap.get(b.id);
+
+        if (aOrder === undefined && bOrder === undefined) return 0;
+        if (aOrder === undefined) return 1;
+        if (bOrder === undefined) return -1;
+
+        return aOrder - bOrder;
+      });
+  }, [searchedSongs, quickFilter, favoriteIdSet, shuffleOrderIds]);
 
   const topGenres = useMemo(() => getTopGenres(songs), [songs]);
 
@@ -294,7 +406,7 @@ export default function PlaylistDetailPage() {
 
         if (cancelled) return;
 
-        setSongs(loadedSongs.filter((song: Song) => song.id));
+        setSongs(loadedSongs.filter((song: PlaylistSong) => song.id));
       } catch (err) {
         if (cancelled) return;
 
@@ -320,6 +432,10 @@ export default function PlaylistDetailPage() {
     setQueue(filteredSongs.filter((song) => song.audioUrl));
   }, [filteredSongs, setQueue]);
 
+  useEffect(() => {
+    setShuffleOrderIds(null);
+  }, [quickFilter, search]);
+
   function playFirstSong() {
     const firstSong = filteredSongs[0];
 
@@ -335,7 +451,9 @@ export default function PlaylistDetailPage() {
   function shufflePlaylist() {
     if (filteredSongs.length < 2) return;
 
-    const shuffled = [...filteredSongs].sort(() => Math.random() - 0.5);
+    const shuffled = shuffleSongList(filteredSongs);
+
+    setShuffleOrderIds(shuffled.map((song) => song.id));
     setQueue(shuffled.filter((song) => song.audioUrl));
   }
 
@@ -573,6 +691,36 @@ export default function PlaylistDetailPage() {
           color: var(--text-muted);
         }
 
+        .playlist-detail-quick-row {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px;
+          margin-left: -28px;
+          margin-right: -28px;
+          background: var(--bg-primary);
+          padding: 16px 28px;
+        }
+
+        .playlist-detail-quick-pill {
+          cursor: pointer;
+          border-radius: 6px;
+          background: var(--bg-elevated);
+          padding: 2px 8px;
+          font-size: 11px;
+          font-weight: 500;
+          color: var(--text-muted);
+          transition:
+            background-color 0.15s ease,
+            color 0.15s ease;
+        }
+
+        .playlist-detail-quick-pill:hover,
+        .playlist-detail-quick-pill.is-active {
+          background: var(--bg-hover);
+          color: var(--text-primary);
+        }
+
         .playlist-detail-section {
           margin-left: -28px;
           margin-right: -28px;
@@ -663,12 +811,14 @@ export default function PlaylistDetailPage() {
           }
 
           .playlist-detail-search-sticky,
-          .playlist-detail-section {
+          .playlist-detail-section,
+          .playlist-detail-quick-row {
             margin-left: -18px;
             margin-right: -18px;
           }
 
-          .playlist-detail-search-row {
+          .playlist-detail-search-row,
+          .playlist-detail-quick-row {
             padding-left: 18px;
             padding-right: 18px;
           }
@@ -740,7 +890,7 @@ export default function PlaylistDetailPage() {
                   </h1>
 
                   <div className="playlist-detail-meta">
-                    <span>{formatSongCount(songs.length)}</span>
+                    <span>{formatSongCount(filteredSongs.length)}</span>
 
                     {topGenres.length > 0 && (
                       <>
@@ -787,11 +937,36 @@ export default function PlaylistDetailPage() {
                       type="text"
                       placeholder="Search Playlist"
                       value={search}
-                      onChange={(event) => setSearch(event.target.value)}
+                      onChange={(event) => {
+                        setSearch(event.target.value);
+                        setShuffleOrderIds(null);
+                      }}
                       className="playlist-detail-search-input"
                     />
                   </label>
                 </div>
+              </div>
+
+              <div className="playlist-detail-quick-row">
+                {QUICK_FILTERS.map((filter) => {
+                  const isActive = quickFilter === filter.value;
+
+                  return (
+                    <button
+                      key={filter.value}
+                      type="button"
+                      onClick={() => {
+                        setQuickFilter(filter.value);
+                        setShuffleOrderIds(null);
+                      }}
+                      className={`playlist-detail-quick-pill ${
+                        isActive ? "is-active" : ""
+                      }`}
+                    >
+                      {filter.label}
+                    </button>
+                  );
+                })}
               </div>
 
               <section className="playlist-detail-section">
@@ -808,7 +983,7 @@ export default function PlaylistDetailPage() {
                     <h2>No songs found</h2>
                     <p>
                       Try searching for a different title, artist, genre, mood,
-                      or tag.
+                      tag, or filter.
                     </p>
                   </div>
                 ) : (

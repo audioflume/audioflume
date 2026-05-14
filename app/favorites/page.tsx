@@ -13,12 +13,13 @@ import { useSongs } from "@/hooks/useSongs";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const QUICK_FILTERS = [
-  "Cinematic",
-  "YouTube",
-  "Background",
-  "Ambient",
-  "Hip Hop",
-];
+  { label: "Newest", value: "newest" },
+  { label: "Oldest", value: "oldest" },
+  { label: "Alphabetical", value: "alphabetical" },
+  { label: "Liked", value: "liked" },
+] as const;
+
+type QuickFilterValue = (typeof QUICK_FILTERS)[number]["value"];
 
 function SearchIcon() {
   return (
@@ -171,9 +172,7 @@ export default function FavoritesPage() {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [search, setSearch] = useState("");
-  const [selectedQuickFilters, setSelectedQuickFilters] = useState<string[]>(
-    [],
-  );
+  const [quickFilter, setQuickFilter] = useState<QuickFilterValue>("newest");
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
 
   const favoriteSongs = useMemo(() => {
@@ -184,37 +183,52 @@ export default function FavoritesPage() {
       .filter((song): song is (typeof songs)[number] => Boolean(song));
   }, [songs, favoriteIds]);
 
-  const filteredSongs = useMemo(() => {
+  const searchedSongs = useMemo(() => {
     return favoriteSongs.filter((song) => {
       const query = search.trim().toLowerCase();
 
-      if (query) {
-        const searchableText = [
-          song.title,
-          song.artist,
-          song.key,
-          ...song.genres,
-          ...song.moods,
-          ...song.instruments,
-          ...song.builds,
-          ...song.vocals,
-        ]
-          .join(" ")
-          .toLowerCase();
+      if (!query) return true;
 
-        if (!searchableText.includes(query)) return false;
-      }
+      const searchableText = [
+        song.title,
+        song.artist,
+        song.key,
+        ...song.genres,
+        ...song.moods,
+        ...song.instruments,
+        ...song.builds,
+        ...song.vocals,
+      ]
+        .join(" ")
+        .toLowerCase();
 
-      if (
-        selectedQuickFilters.length > 0 &&
-        !selectedQuickFilters.every((filter) => song.genres.includes(filter))
-      ) {
-        return false;
-      }
-
-      return true;
+      return searchableText.includes(query);
     });
-  }, [favoriteSongs, search, selectedQuickFilters]);
+  }, [favoriteSongs, search]);
+
+  const filteredSongs = useMemo(() => {
+    const indexedSongs = searchedSongs.map((song, index) => ({
+      song,
+      index,
+    }));
+
+    const nextSongs =
+      quickFilter === "liked"
+        ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
+        : indexedSongs;
+
+    const sortedSongs = [...nextSongs].sort((a, b) => {
+      if (quickFilter === "alphabetical") {
+        return a.song.title.localeCompare(b.song.title, undefined, {
+          sensitivity: "base",
+        });
+      }
+
+      return quickFilter === "oldest" ? b.index - a.index : a.index - b.index;
+    });
+
+    return sortedSongs.map(({ song }) => song);
+  }, [searchedSongs, quickFilter, favoriteIdSet]);
 
   const displayedSongs = useMemo(() => {
     if (!shuffleOrderIds) return filteredSongs;
@@ -249,7 +263,7 @@ export default function FavoritesPage() {
 
   useEffect(() => {
     setShuffleOrderIds(null);
-  }, [favoriteIds]);
+  }, [favoriteIds, quickFilter, search]);
 
   function playFirstSong() {
     const firstSong = displayedSongs[0];
@@ -269,15 +283,6 @@ export default function FavoritesPage() {
     const shuffledSongs = shuffleSongList(displayedSongs);
     setShuffleOrderIds(shuffledSongs.map((song) => song.id));
     setQueue(shuffledSongs.filter((song) => song.audioUrl));
-  }
-
-  function toggleQuickFilter(filter: string) {
-    setSelectedQuickFilters((current) =>
-      current.includes(filter)
-        ? current.filter((item) => item !== filter)
-        : [...current, filter],
-    );
-    setShuffleOrderIds(null);
   }
 
   return (
@@ -398,7 +403,7 @@ export default function FavoritesPage() {
           margin-left: -32px;
           margin-right: -32px;
           background: var(--bg-primary);
-          padding: 16px 32px;
+          padding: 16px 28px;
         }
 
         .favorites-quick-pill {
@@ -536,18 +541,21 @@ export default function FavoritesPage() {
 
           <div className="favorites-quick-row">
             {QUICK_FILTERS.map((filter) => {
-              const isActive = selectedQuickFilters.includes(filter);
+              const isActive = quickFilter === filter.value;
 
               return (
                 <button
-                  key={filter}
+                  key={filter.value}
                   type="button"
-                  onClick={() => toggleQuickFilter(filter)}
+                  onClick={() => {
+                    setQuickFilter(filter.value);
+                    setShuffleOrderIds(null);
+                  }}
                   className={`favorites-quick-pill ${
                     isActive ? "is-active" : ""
                   }`}
                 >
-                  {filter}
+                  {filter.label}
                 </button>
               );
             })}
@@ -585,7 +593,7 @@ export default function FavoritesPage() {
                       <h2>No songs found</h2>
                       <p>
                         Try searching for a different title, artist, genre,
-                        mood, or tag.
+                        mood, tag, or filter.
                       </p>
                     </>
                   ) : (

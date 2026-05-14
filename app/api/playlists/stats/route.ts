@@ -1,50 +1,23 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import base from "@/lib/airtable";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { getSongs } from "@/lib/songs";
 
 type PlaylistSongRow = {
   playlist_id: number;
   song_id: string;
 };
 
-type AirtableSongFields = {
-  Genre?: string[] | string;
-  Genres?: string[] | string;
+type PlaylistStats = {
+  songCount: number;
+  topGenres: string[];
 };
-
-function getStringArray(value: unknown): string[] {
-  if (Array.isArray(value)) {
-    return value
-      .flatMap((item: unknown) => getStringArray(item))
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  if (typeof value === "string") {
-    return value
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-}
 
 export async function GET() {
   const { userId } = await auth();
 
   if (!userId) {
     return NextResponse.json({ stats: {} });
-  }
-
-  const tableId = process.env.AIRTABLE_SONGS_TABLE_ID;
-
-  if (!tableId) {
-    return NextResponse.json(
-      { error: "Missing AIRTABLE_SONGS_TABLE_ID" },
-      { status: 500 },
-    );
   }
 
   const { data: playlists, error: playlistsError } = await supabaseServer
@@ -64,7 +37,9 @@ export async function GET() {
     );
   }
 
-  const playlistIds = (playlists ?? []).map((playlist) => playlist.id);
+  const playlistIds = (playlists ?? [])
+    .map((playlist) => Number(playlist.id))
+    .filter((id) => Number.isFinite(id));
 
   if (playlistIds.length === 0) {
     return NextResponse.json({ stats: {} });
@@ -89,25 +64,11 @@ export async function GET() {
   }
 
   const rows = (playlistSongs ?? []) as PlaylistSongRow[];
-  const uniqueSongIds = [...new Set(rows.map((row) => row.song_id))];
-
-  const songGenreEntries: Array<[string, string[]]> = await Promise.all(
-    uniqueSongIds.map(async (songId): Promise<[string, string[]]> => {
-      try {
-        const record = await base(tableId).find(songId);
-        const fields = record.fields as AirtableSongFields;
-
-        return [songId, getStringArray(fields.Genres ?? fields.Genre)];
-      } catch {
-        return [songId, []];
-      }
-    }),
-  );
-
-  const genresBySongId = new Map<string, string[]>(songGenreEntries);
+  const songs = await getSongs();
+  const songsById = new Map(songs.map((song) => [song.id, song]));
 
   const stats = Object.fromEntries(
-    playlistIds.map((playlistId) => {
+    playlistIds.map((playlistId): [number, PlaylistStats] => {
       const rowsForPlaylist = rows.filter(
         (row) => row.playlist_id === playlistId,
       );
@@ -115,9 +76,11 @@ export async function GET() {
       const genreCounts = new Map<string, number>();
 
       rowsForPlaylist.forEach((row) => {
-        const genres = genresBySongId.get(row.song_id) ?? [];
+        const song = songsById.get(row.song_id);
 
-        genres.forEach((genre) => {
+        if (!song) return;
+
+        song.genres.forEach((genre) => {
           genreCounts.set(genre, (genreCounts.get(genre) || 0) + 1);
         });
       });
