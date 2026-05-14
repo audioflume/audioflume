@@ -54,6 +54,15 @@ export type PlaylistRef = {
   name: string;
 };
 
+export type Project = {
+  id: number;
+  clerk_user_id: string;
+  name: string;
+  description: string | null;
+  position: number;
+  created_at: string;
+};
+
 export type EditPointMarker = {
   id: string;
   label: string;
