@@ -1,31 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import type { Playlist } from "@/lib/types";
+import { normalizePlaylist } from "@/lib/playlists";
 
 type RouteContext = {
   params: Promise<{ playlistId: string }> | { playlistId: string };
 };
-
-function normalizePlaylist(value: unknown): Playlist {
-  const playlist = value as Partial<Playlist>;
-
-  return {
-    id: Number(playlist.id),
-    clerk_user_id: String(playlist.clerk_user_id || ""),
-    name: String(playlist.name || "").trim(),
-    cover_image_url:
-      typeof playlist.cover_image_url === "string" &&
-      playlist.cover_image_url.trim()
-        ? playlist.cover_image_url
-        : null,
-    position:
-      typeof playlist.position === "number" &&
-      Number.isFinite(playlist.position)
-        ? playlist.position
-        : 0,
-  };
-}
 
 export async function PATCH(req: Request, context: RouteContext) {
   const { userId } = await auth();

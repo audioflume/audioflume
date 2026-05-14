@@ -1,6 +1,13 @@
 "use client";
 
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
+import {
+  includesAll,
+  matchesDurationFilter,
+  matchesBpmFilter,
+  matchesKeyFilter,
+} from "@/lib/filterUtils";
+import { getRecord, getStringFromRecord } from "@/lib/utils";
 import SongCard from "@/components/SongCard";
 import Footer from "@/components/Footer";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -23,236 +30,17 @@ import {
   filterTriggerBaseClass,
   filterTriggerInactiveClass,
 } from "@/components/filterUiClasses";
-
-const MOOD_OPTIONS = [
-  "Adventurous",
-  "Aggressive",
-  "Anthemic",
-  "Bright",
-  "Burdened",
-  "Chill",
-  "Dark",
-  "Dramatic",
-  "Dreamy",
-  "Eerie",
-  "Emotional",
-  "Empowering",
-  "Energetic",
-  "Epic",
-  "Feel Good",
-  "Fun",
-  "Gritty",
-  "Happy",
-  "Heroic",
-  "Hopeful",
-  "Horror",
-  "Inspirational",
-  "Loving",
-  "Mysterious",
-  "Nostalgic",
-  "Peaceful",
-  "Playful",
-  "Powerful",
-  "Quirky",
-  "Reflective",
-  "Rebellious",
-  "Romantic",
-  "Sinister",
-  "Sorrowful",
-  "Soothing",
-  "Spiritual",
-  "Suspenseful",
-  "Tense",
-  "Triumphant",
-  "Upbeat",
-  "Uplifting",
-  "Vintage",
-  "Whimsical",
-];
-
-const GENRE_OPTIONS = [
-  "Acoustic",
-  "Ambient",
-  "Background",
-  "Blues",
-  "Christmas",
-  "Cinematic",
-  "Classical",
-  "Corporate",
-  "Country",
-  "Eastern",
-  "Electronic",
-  "Faith",
-  "Film",
-  "Folk",
-  "Hip Hop",
-  "Indie",
-  "Jazz",
-  "Lo-Fi",
-  "Orchestral",
-  "Pop",
-  "R&B",
-  "Rock",
-  "Score",
-  "Soul",
-  "Trap",
-  "World",
-  "YouTube",
-];
-
-const INSTRUMENT_OPTIONS = [
-  "Acoustic Guitar",
-  "Banjo",
-  "Bass",
-  "Bells",
-  "Cello",
-  "Claps",
-  "Drums",
-  "Electronic",
-  "Electric Guitar",
-  "Flute",
-  "Guitar",
-  "Harp",
-  "Horns",
-  "Organ",
-  "Percussion",
-  "Piano",
-  "Saxophone",
-  "Snaps",
-  "Snare",
-  "Strings",
-  "Synth",
-  "Trumpet",
-  "Violin",
-  "Whistling",
-  "Woodwinds",
-  "World",
-];
-
-const BUILD_OPTIONS = [
-  "Steady",
-  "Ascending",
-  "Middle Crescendo",
-  "Descending",
-  "Multiple Crescendo",
-];
-
-const VOCALS_OPTIONS = ["Male", "Female", "Acapella", "Choir", "Harmony"];
-
-const QUICK_FILTERS = [
-  "Cinematic",
-  "YouTube",
-  "Background",
-  "Ambient",
-  "Hip Hop",
-];
-
-const MUSIC_FILTER_STORAGE_KEY_PREFIX = "filmwave-music-filters";
-
-function includesAll(values: string[], selected: string[]) {
-  if (selected.length === 0) return true;
-
-  return selected.every((selectedValue) => values.includes(selectedValue));
-}
-
-function matchesDurationFilter(duration: number, selectedDurations: string[]) {
-  if (selectedDurations.length === 0) return true;
-
-  return selectedDurations.some((selectedDuration) => {
-    if (selectedDuration === "< 1:00") return duration < 60;
-    if (selectedDuration === "0:00 - 1:00") {
-      return duration >= 0 && duration <= 60;
-    }
-    if (selectedDuration === "1:00 - 2:00") {
-      return duration >= 60 && duration <= 120;
-    }
-    if (selectedDuration === "2:00 - 3:00") {
-      return duration >= 120 && duration <= 180;
-    }
-    if (selectedDuration === "3:00 - 4:00") {
-      return duration >= 180 && duration <= 240;
-    }
-    if (selectedDuration === "4:00+") return duration >= 240;
-
-    const rangeMatch = selectedDuration.match(
-      /^(\d+):(\d{2}) - (\d+):(\d{2})$/,
-    );
-
-    if (rangeMatch) {
-      const [, lowMinutes, lowSeconds, highMinutes, highSeconds] = rangeMatch;
-      const low = Number(lowMinutes) * 60 + Number(lowSeconds);
-      const high = Number(highMinutes) * 60 + Number(highSeconds);
-
-      return duration >= low && duration <= high;
-    }
-
-    const plusMatch = selectedDuration.match(/^(\d+):(\d{2})\+$/);
-
-    if (plusMatch) {
-      const [, minutes, seconds] = plusMatch;
-      const low = Number(minutes) * 60 + Number(seconds);
-
-      return duration >= low;
-    }
-
-    return true;
-  });
-}
-
-function matchesBpmFilter(bpm: number, bpmValue: BpmFilterValue | null) {
-  if (!bpmValue) return true;
-
-  if (bpmValue.mode === "exact") {
-    return bpm === bpmValue.exact;
-  }
-
-  return bpm >= bpmValue.low && bpm <= bpmValue.high;
-}
-
-function normalizeKeyText(value: string) {
-  return value.trim().replaceAll("♯", "#").replaceAll("♭", "b").toLowerCase();
-}
-
-function matchesKeyFilter(songKey: string, keyValue: KeyFilterValue | null) {
-  if (!keyValue?.note) return true;
-
-  const normalizedSongKey = normalizeKeyText(songKey);
-  const normalizedNote = normalizeKeyText(keyValue.note);
-
-  const songNote = normalizedSongKey.match(/^([a-g](?:#|b)?)/)?.[1];
-
-  if (songNote !== normalizedNote) return false;
-
-  if (!keyValue.scale) return true;
-
-  const normalizedScale = keyValue.scale.toLowerCase();
-
-  if (normalizedScale === "major") {
-    return normalizedSongKey.includes("maj");
-  }
-
-  if (normalizedScale === "minor") {
-    return normalizedSongKey.includes("min");
-  }
-
-  return true;
-}
-
-function getRecord(value: unknown) {
-  return value as Record<string, unknown>;
-}
-
-function getStringFromRecord(record: Record<string, unknown>, keys: string[]) {
-  for (const key of keys) {
-    const value = record[key];
-
-    if (typeof value === "string" && value.trim()) {
-      return value.trim();
-    }
-  }
-
-  return "";
-}
+import { useFilterPersistence } from "@/hooks/useFilterPersistence";
+import FilterTags from "@/components/FilterTags";
+import {
+  MOOD_OPTIONS,
+  GENRE_OPTIONS,
+  INSTRUMENT_OPTIONS,
+  BUILD_OPTIONS,
+  VOCALS_OPTIONS,
+  QUICK_FILTERS,
+  MUSIC_FILTER_STORAGE_KEY_PREFIX,
+} from "@/lib/constants";
 
 function getSongIdentityValues(song: unknown) {
   const record = getRecord(song);
@@ -397,25 +185,54 @@ export default function MusicPage() {
   const musicFilterStorageKey = userId
     ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${userId}`
     : null;
+
+  const {
+    filters,
+    setFilters,
+    hydrated: filtersHydrated,
+  } = useFilterPersistence({
+    storageKey: musicFilterStorageKey,
+    authLoaded,
+  });
+
+  const {
+    search,
+    selectedMoods,
+    selectedGenres,
+    selectedInstruments,
+    selectedBuilds,
+    selectedVocals,
+    selectedDurations,
+    instrumental,
+    bpmValue,
+    keyValue,
+    selectedPlaylist,
+  } = filters;
+
+  const setSearch = (v: string) => setFilters((f) => ({ ...f, search: v }));
+  const setSelectedMoods = (v: string[]) =>
+    setFilters((f) => ({ ...f, selectedMoods: v }));
+  const setSelectedGenres = (v: string[]) =>
+    setFilters((f) => ({ ...f, selectedGenres: v }));
+  const setSelectedInstruments = (v: string[]) =>
+    setFilters((f) => ({ ...f, selectedInstruments: v }));
+  const setSelectedBuilds = (v: string[]) =>
+    setFilters((f) => ({ ...f, selectedBuilds: v }));
+  const setSelectedVocals = (v: string[]) =>
+    setFilters((f) => ({ ...f, selectedVocals: v }));
+  const setSelectedDurations = (v: string[]) =>
+    setFilters((f) => ({ ...f, selectedDurations: v }));
+  const setInstrumental = (v: boolean) =>
+    setFilters((f) => ({ ...f, instrumental: v }));
+  const setBpmValue = (v: BpmFilterValue | null) =>
+    setFilters((f) => ({ ...f, bpmValue: v }));
+  const setKeyValue = (v: KeyFilterValue | null) =>
+    setFilters((f) => ({ ...f, keyValue: v }));
+  const setSelectedPlaylist = (v: PlaylistRef | null) =>
+    setFilters((f) => ({ ...f, selectedPlaylist: v }));
+
   const playlistSongIdCacheRef = useRef<Record<string, string[]>>({});
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [filtersHydrated, setFiltersHydrated] = useState(false);
-  const [hydratedStorageKey, setHydratedStorageKey] = useState<string | null>(
-    null,
-  );
-  const [search, setSearch] = useState("");
-  const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [selectedInstruments, setSelectedInstruments] = useState<string[]>([]);
-  const [selectedBuilds, setSelectedBuilds] = useState<string[]>([]);
-  const [selectedVocals, setSelectedVocals] = useState<string[]>([]);
-  const [bpmValue, setBpmValue] = useState<BpmFilterValue | null>(null);
-  const [keyValue, setKeyValue] = useState<KeyFilterValue | null>(null);
-  const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
-  const [instrumental, setInstrumental] = useState(false);
-  const [selectedPlaylist, setSelectedPlaylist] = useState<PlaylistRef | null>(
-    null,
-  );
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
@@ -432,108 +249,6 @@ export default function MusicPage() {
   } = useSongs();
   const { currentSong, setQueue } = usePlayer();
   const playerVisible = !!currentSong;
-
-  useEffect(() => {
-    if (!authLoaded) return;
-
-    setFiltersHydrated(false);
-    setHydratedStorageKey(null);
-
-    sessionStorage.removeItem("filmwave-music-filters");
-
-    function resetFilters() {
-      setSearch("");
-      setSelectedMoods([]);
-      setSelectedGenres([]);
-      setSelectedInstruments([]);
-      setSelectedBuilds([]);
-      setSelectedVocals([]);
-      setSelectedDurations([]);
-      setInstrumental(false);
-      setBpmValue(null);
-      setKeyValue(null);
-      setSelectedPlaylist(null);
-      setSelectedPlaylistSongIds(null);
-      setShuffleOrderIds(null);
-    }
-
-    if (!musicFilterStorageKey) {
-      resetFilters();
-      setFiltersHydrated(true);
-      setHydratedStorageKey(null);
-      return;
-    }
-
-    const saved = sessionStorage.getItem(musicFilterStorageKey);
-
-    if (!saved) {
-      resetFilters();
-      setFiltersHydrated(true);
-      setHydratedStorageKey(musicFilterStorageKey);
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(saved);
-
-      setSearch(parsed.search ?? "");
-      setSelectedMoods(parsed.selectedMoods ?? []);
-      setSelectedGenres(parsed.selectedGenres ?? []);
-      setSelectedInstruments(parsed.selectedInstruments ?? []);
-      setSelectedBuilds(parsed.selectedBuilds ?? []);
-      setSelectedVocals(parsed.selectedVocals ?? []);
-      setSelectedDurations(parsed.selectedDurations ?? []);
-      setInstrumental(parsed.instrumental ?? false);
-      setBpmValue(parsed.bpmValue ?? null);
-      setKeyValue(parsed.keyValue ?? null);
-      setSelectedPlaylist(parsed.selectedPlaylist ?? null);
-      setShuffleOrderIds(null);
-    } catch {
-      sessionStorage.removeItem(musicFilterStorageKey);
-      resetFilters();
-    } finally {
-      setFiltersHydrated(true);
-      setHydratedStorageKey(musicFilterStorageKey);
-    }
-  }, [authLoaded, musicFilterStorageKey]);
-
-  useEffect(() => {
-    if (!filtersHydrated) return;
-    if (!musicFilterStorageKey) return;
-    if (hydratedStorageKey !== musicFilterStorageKey) return;
-
-    sessionStorage.setItem(
-      musicFilterStorageKey,
-      JSON.stringify({
-        search,
-        selectedMoods,
-        selectedGenres,
-        selectedInstruments,
-        selectedBuilds,
-        selectedVocals,
-        selectedDurations,
-        instrumental,
-        bpmValue,
-        keyValue,
-        selectedPlaylist,
-      }),
-    );
-  }, [
-    filtersHydrated,
-    hydratedStorageKey,
-    musicFilterStorageKey,
-    search,
-    selectedMoods,
-    selectedGenres,
-    selectedInstruments,
-    selectedBuilds,
-    selectedVocals,
-    selectedDurations,
-    instrumental,
-    bpmValue,
-    keyValue,
-    selectedPlaylist,
-  ]);
 
   useEffect(() => {
     if (!selectedPlaylistId) {
@@ -711,175 +426,46 @@ export default function MusicPage() {
               />
             </div>
 
-            {(() => {
-              const tags: {
-                id: string;
-                label: string;
-                onRemove: () => void;
-                type?: "playlist";
-              }[] = [
-                ...selectedMoods.map((value) => ({
-                  id: `mood-${value}`,
-                  label: value,
-                  onRemove: () =>
-                    setSelectedMoods(
-                      selectedMoods.filter((item) => item !== value),
-                    ),
-                })),
-                ...selectedGenres.map((value) => ({
-                  id: `genre-${value}`,
-                  label: value,
-                  onRemove: () =>
-                    setSelectedGenres(
-                      selectedGenres.filter((item) => item !== value),
-                    ),
-                })),
-                ...selectedInstruments.map((value) => ({
-                  id: `instrument-${value}`,
-                  label: value,
-                  onRemove: () =>
-                    setSelectedInstruments(
-                      selectedInstruments.filter((item) => item !== value),
-                    ),
-                })),
-                ...selectedBuilds.map((value) => ({
-                  id: `build-${value}`,
-                  label: value,
-                  onRemove: () =>
-                    setSelectedBuilds(
-                      selectedBuilds.filter((item) => item !== value),
-                    ),
-                })),
-                ...selectedVocals.map((value) => ({
-                  id: `vocals-${value}`,
-                  label: value,
-                  onRemove: () =>
-                    setSelectedVocals(
-                      selectedVocals.filter((item) => item !== value),
-                    ),
-                })),
-                ...selectedDurations.map((value) => ({
-                  id: `duration-${value}`,
-                  label: value,
-                  onRemove: () =>
-                    setSelectedDurations(
-                      selectedDurations.filter((item) => item !== value),
-                    ),
-                })),
-                ...(instrumental
-                  ? [
-                      {
-                        id: "instrumental",
-                        label: "Instrumental",
-                        onRemove: () => setInstrumental(false),
-                      },
-                    ]
-                  : []),
-                ...(bpmValue
-                  ? [
-                      {
-                        id: "bpm",
-                        label:
-                          bpmValue.mode === "exact"
-                            ? `${bpmValue.exact} BPM`
-                            : `${bpmValue.low}–${bpmValue.high} BPM`,
-                        onRemove: () => setBpmValue(null),
-                      },
-                    ]
-                  : []),
-                ...(keyValue
-                  ? [
-                      {
-                        id: "key",
-                        label: [
-                          keyValue.note,
-                          keyValue.scale
-                            ? keyValue.scale.charAt(0).toUpperCase() +
-                              keyValue.scale.slice(1)
-                            : "",
-                        ]
-                          .filter(Boolean)
-                          .join(" "),
-                        onRemove: () => setKeyValue(null),
-                      },
-                    ]
-                  : []),
-                ...(selectedPlaylist
-                  ? [
-                      {
-                        id: `playlist-${selectedPlaylist.id}`,
-                        label: selectedPlaylist.name,
-                        type: "playlist" as const,
-                        onRemove: () => setSelectedPlaylist(null),
-                      },
-                    ]
-                  : []),
-                ...(shuffleActive
-                  ? [
-                      {
-                        id: "shuffle",
-                        label: "Shuffle",
-                        onRemove: () => setShuffleOrderIds(null),
-                      },
-                    ]
-                  : []),
-              ];
-
-              if (tags.length === 0) return null;
-
-              return (
-                <div className="relative z-10 flex flex-1 pointer-events-none flex-wrap items-center justify-end gap-1">
-                  {tags.map((tag) => (
-                    <span
-                      key={tag.id}
-                      className="pointer-events-auto flex cursor-default items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium text-black"
-                      style={{ backgroundColor: "var(--accent)" }}
-                      onClick={(event) => event.stopPropagation()}
-                    >
-                      {tag.type === "playlist" && (
-                        <svg
-                          width="11"
-                          height="11"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          aria-hidden="true"
-                          className="shrink-0"
-                        >
-                          <path
-                            d="M5 7H19"
-                            stroke="currentColor"
-                            strokeWidth="2.4"
-                            strokeLinecap="round"
-                          />
-                          <path
-                            d="M5 12H15"
-                            stroke="currentColor"
-                            strokeWidth="2.4"
-                            strokeLinecap="round"
-                          />
-                          <path
-                            d="M5 17H11"
-                            stroke="currentColor"
-                            strokeWidth="2.4"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                      )}
-
-                      {tag.label}
-
-                      <button
-                        type="button"
-                        onClick={tag.onRemove}
-                        className="flex cursor-pointer items-center text-sm leading-none transition-opacity hover:opacity-60"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              );
-            })()}
+            <FilterTags
+              selectedMoods={selectedMoods}
+              selectedGenres={selectedGenres}
+              selectedInstruments={selectedInstruments}
+              selectedBuilds={selectedBuilds}
+              selectedVocals={selectedVocals}
+              selectedDurations={selectedDurations}
+              instrumental={instrumental}
+              bpmValue={bpmValue}
+              keyValue={keyValue}
+              selectedPlaylist={selectedPlaylist}
+              shuffleActive={shuffleActive}
+              onRemoveMood={(v) =>
+                setSelectedMoods(selectedMoods.filter((item) => item !== v))
+              }
+              onRemoveGenre={(v) =>
+                setSelectedGenres(selectedGenres.filter((item) => item !== v))
+              }
+              onRemoveInstrument={(v) =>
+                setSelectedInstruments(
+                  selectedInstruments.filter((item) => item !== v),
+                )
+              }
+              onRemoveBuild={(v) =>
+                setSelectedBuilds(selectedBuilds.filter((item) => item !== v))
+              }
+              onRemoveVocal={(v) =>
+                setSelectedVocals(selectedVocals.filter((item) => item !== v))
+              }
+              onRemoveDuration={(v) =>
+                setSelectedDurations(
+                  selectedDurations.filter((item) => item !== v),
+                )
+              }
+              onRemoveInstrumental={() => setInstrumental(false)}
+              onRemoveBpm={() => setBpmValue(null)}
+              onRemoveKey={() => setKeyValue(null)}
+              onRemovePlaylist={() => setSelectedPlaylist(null)}
+              onRemoveShuffle={() => setShuffleOrderIds(null)}
+            />
           </div>
 
           <div className="-mx-7 flex min-h-[49px] flex-wrap items-center gap-2 border-t border-b border-[var(--border)] px-7 py-2">
@@ -929,7 +515,7 @@ export default function MusicPage() {
 
             <button
               type="button"
-              onClick={() => setInstrumental((value) => !value)}
+              onClick={() => setInstrumental(!instrumental)}
               className={`${filterTriggerBaseClass} ${
                 instrumental
                   ? filterTriggerActiveClass

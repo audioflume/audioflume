@@ -282,7 +282,7 @@ export default function DropdownShell({
     if (!open) return;
 
     function handleScroll() {
-      schedulePositionUpdate({ refreeze: false });
+      schedulePositionUpdate({ refreeze: true });
     }
 
     function handleResize() {
@@ -385,9 +385,8 @@ export default function DropdownShell({
           overflow-x: hidden;
           border-radius: 14px;
           border: 1px solid var(--border);
-          background: color-mix(in srgb, var(--bg-primary) 92%, transparent);
+          background: var(--bg-tertiary);
           box-shadow: var(--shadow-ui);
-          backdrop-filter: blur(18px);
           padding: 6px;
           color: var(--text-primary);
           overscroll-behavior: contain;
@@ -467,7 +466,7 @@ export default function DropdownShell({
         }
 
         .light .filmwave-dropdown-shell {
-          background: color-mix(in srgb, var(--bg-primary) 96%, transparent);
+          background: var(--bg-tertiary);
         }
       `}</style>
 

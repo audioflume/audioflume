@@ -6,6 +6,9 @@ export async function GET() {
   const { userId } = await auth();
 
   if (!userId) {
+    // Intentionally returns 200 with empty array rather than 401,
+    // so the UI can render gracefully for unauthenticated users
+    // without needing to handle an error state.
     return NextResponse.json({ favorites: [] });
   }
 

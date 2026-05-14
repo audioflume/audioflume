@@ -15,6 +15,7 @@ import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
+import IconButton from "@/components/IconButton";
 import { iconButtonClass } from "@/components/uiClasses";
 
 const BAR_WIDTH = 2;
@@ -126,31 +127,6 @@ function CloseIcon() {
         strokeLinecap="round"
       />
     </svg>
-  );
-}
-
-function IconButton({
-  children,
-  label,
-  onClick,
-  active = false,
-}: {
-  children: React.ReactNode;
-  label: string;
-  onClick?: () => void;
-  active?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onClick={onClick}
-      className={`${iconButtonClass} ${
-        active ? "text-[var(--text-primary)]" : ""
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 
@@ -276,16 +252,12 @@ export default function MusicPlayer() {
     ro.observe(player);
     window.addEventListener("resize", updateWidth);
 
-    const t1 = window.setTimeout(updateWidth, 0);
-    const t2 = window.setTimeout(updateWidth, 100);
-    const t3 = window.setTimeout(updateWidth, 300);
+    const t = window.setTimeout(updateWidth, 50);
 
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", updateWidth);
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-      window.clearTimeout(t3);
+      window.clearTimeout(t);
     };
   }, [currentSong?.id]);
 
@@ -331,16 +303,12 @@ export default function MusicPlayer() {
     ro.observe(waveform);
     window.addEventListener("resize", updateWidth);
 
-    const t1 = window.setTimeout(updateWidth, 0);
-    const t2 = window.setTimeout(updateWidth, 100);
-    const t3 = window.setTimeout(updateWidth, 300);
+    const t = window.setTimeout(updateWidth, 50);
 
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", updateWidth);
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-      window.clearTimeout(t3);
+      window.clearTimeout(t);
     };
   }, [currentSong?.id, showWaveform]);
 
@@ -423,76 +391,6 @@ export default function MusicPlayer() {
 
   return (
     <>
-      <style>{`
-        .music-player-more-menu {
-          z-index: 95;
-          width: 230px;
-          overflow: hidden;
-          border-radius: 14px;
-          border: 1px solid var(--border);
-          background: color-mix(in srgb, var(--bg-primary) 94%, transparent);
-          box-shadow: var(--shadow-ui);
-          backdrop-filter: blur(18px);
-          padding: 6px;
-          color: var(--text-primary);
-        }
-
-        .light .music-player-more-menu {
-          background: color-mix(in srgb, var(--bg-primary) 98%, transparent);
-        }
-
-        .music-player-more-menu button,
-        .music-player-more-menu a {
-          display: flex;
-          min-height: 38px;
-          width: 100%;
-          cursor: pointer;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-          border-radius: 9px;
-          padding: 0 12px;
-          text-align: left;
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--text-secondary);
-          transition:
-            background 0.15s ease,
-            color 0.15s ease,
-            opacity 0.15s ease;
-        }
-
-        .music-player-more-menu button:hover,
-        .music-player-more-menu a:hover {
-          background: var(--bg-hover-strong);
-          color: var(--text-primary);
-        }
-
-        .music-player-more-menu button:disabled {
-          cursor: default;
-          opacity: 0.45;
-        }
-
-        .music-player-more-menu button:disabled:hover {
-          background: transparent;
-          color: var(--text-secondary);
-        }
-
-        .music-player-more-menu-divider {
-          height: 1px;
-          margin: 6px 4px;
-          background: var(--border-subtle);
-        }
-
-        .music-player-more-menu-close {
-          color: var(--danger) !important;
-        }
-
-        .music-player-more-menu-close:hover {
-          color: var(--danger) !important;
-        }
-      `}</style>
-
       <div
         ref={playerRef}
         className="fixed bottom-0 left-0 right-0 z-[45] grid h-[72px] items-center justify-between border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4"

@@ -11,7 +11,8 @@ import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import DropdownShell from "@/components/DropdownShell";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
-import { iconButtonClass } from "@/components/uiClasses";
+import IconButton from "@/components/IconButton";
+import { getRecord } from "@/lib/utils";
 
 type StemItem = {
   name: string;
@@ -25,10 +26,6 @@ function formatDuration(seconds: number) {
   const s = Math.floor(seconds % 60);
 
   return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
-function getRecord(value: unknown) {
-  return value as Record<string, unknown>;
 }
 
 function getStemNameFromUrl(url: string, index: number) {
@@ -159,31 +156,6 @@ function PauseIcon() {
       <path d="M7 5H10.5V19H7V5Z" />
       <path d="M13.5 5H17V19H13.5V5Z" />
     </svg>
-  );
-}
-
-function IconButton({
-  children,
-  label,
-  onClick,
-  active = false,
-}: {
-  children: React.ReactNode;
-  label: string;
-  onClick?: () => void;
-  active?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onClick={onClick}
-      className={`${iconButtonClass} ${
-        active ? "text-[var(--text-primary)]" : ""
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 
