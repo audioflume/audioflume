@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
+import { useFavorites } from "@/context/FavoritesContext";
 import Waveform from "./Waveform";
 import Image from "next/image";
 import type { Song } from "@/lib/types";
@@ -164,12 +165,23 @@ function PauseIcon() {
 function IconButton({
   children,
   label,
+  onClick,
+  active = false,
 }: {
   children: React.ReactNode;
   label: string;
+  onClick?: () => void;
+  active?: boolean;
 }) {
   return (
-    <button type="button" aria-label={label} className={iconButtonClass}>
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className={`${iconButtonClass} ${
+        active ? "text-[var(--text-primary)]" : ""
+      }`}
+    >
       {children}
     </button>
   );
@@ -189,6 +201,8 @@ export default function SongCard({
   onRemoveFromPlaylist?: (songId: string) => void;
 }) {
   const { togglePlayPause, currentSong, isPlaying } = usePlayer();
+  const { isFavorite, toggleFavorite } = useFavorites();
+
   const [cardWidth, setCardWidth] = useState(0);
   const [moreOpen, setMoreOpen] = useState(false);
   const [stemsOpen, setStemsOpen] = useState(false);
@@ -204,6 +218,7 @@ export default function SongCard({
   const showGenreSlot = cardWidth > 1180;
   const stems = getSongStems(song);
   const hasStems = stems.length > 0;
+  const favorited = isFavorite(song.id);
 
   async function handleRemoveFromPlaylist() {
     if (!playlistId || !onRemoveFromPlaylist) return;
@@ -383,8 +398,12 @@ export default function SongCard({
           </div>
 
           <div className="flex items-center justify-end gap-0.5">
-            <IconButton label="Favorite song">
-              <HeartIcon />
+            <IconButton
+              label={favorited ? "Remove song from favorites" : "Favorite song"}
+              active={favorited}
+              onClick={() => toggleFavorite(song)}
+            >
+              <HeartIcon filled={favorited} />
             </IconButton>
 
             <SongMoreDropdown

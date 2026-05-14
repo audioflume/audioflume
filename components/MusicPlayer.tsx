@@ -1,6 +1,7 @@
 "use client";
 
 import { usePlayer } from "@/context/PlayerContext";
+import { useFavorites } from "@/context/FavoritesContext";
 import Image from "next/image";
 import {
   useCallback,
@@ -132,17 +133,21 @@ function IconButton({
   children,
   label,
   onClick,
+  active = false,
 }: {
   children: React.ReactNode;
   label: string;
   onClick?: () => void;
+  active?: boolean;
 }) {
   return (
     <button
       type="button"
       aria-label={label}
       onClick={onClick}
-      className={iconButtonClass}
+      className={`${iconButtonClass} ${
+        active ? "text-[var(--text-primary)]" : ""
+      }`}
     >
       {children}
     </button>
@@ -160,6 +165,8 @@ export default function MusicPlayer() {
     seekTo,
     closePlayer,
   } = usePlayer();
+
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const playerRef = useRef<HTMLDivElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
@@ -183,6 +190,7 @@ export default function MusicPlayer() {
   const showKey = playerWidth >= KEY_MIN_WIDTH;
   const showBpm = playerWidth >= BPM_MIN_WIDTH;
   const showRightMeta = showKey || showBpm;
+  const favorited = currentSong ? isFavorite(currentSong.id) : false;
 
   const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
 
@@ -636,8 +644,12 @@ export default function MusicPlayer() {
             marginLeft: `${metaToActionsGap - mainGap}px`,
           }}
         >
-          <IconButton label="Favorite song">
-            <HeartIcon />
+          <IconButton
+            label={favorited ? "Remove song from favorites" : "Favorite song"}
+            active={favorited}
+            onClick={() => toggleFavorite(currentSong)}
+          >
+            <HeartIcon filled={favorited} />
           </IconButton>
 
           <button

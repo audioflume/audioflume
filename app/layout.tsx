@@ -5,9 +5,9 @@ import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { UserPreferencesProvider } from "@/context/UserPreferencesContext";
 import { PlaylistsProvider } from "@/context/PlaylistsContext";
+import { FavoritesProvider } from "@/context/FavoritesContext";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
-import ScrollToTop from "@/components/ScrollToTop";
 import Header from "@/components/Header";
 import "./globals.css";
 
@@ -46,13 +46,14 @@ export default function RootLayout({
           <UserPreferencesProvider>
             <ThemeProvider>
               <PlayerProvider>
-                <PlaylistsProvider>
-                  <ScrollToTop />
-                  <Header />
-                  <SidebarRenderer />
-                  {children}
-                  <PlayerRenderer />
-                </PlaylistsProvider>
+                <FavoritesProvider>
+                  <PlaylistsProvider>
+                    <Header />
+                    <SidebarRenderer />
+                    {children}
+                    <PlayerRenderer />
+                  </PlaylistsProvider>
+                </FavoritesProvider>
               </PlayerProvider>
             </ThemeProvider>
           </UserPreferencesProvider>

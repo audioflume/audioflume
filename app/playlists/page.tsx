@@ -1,7 +1,7 @@
 "use client";
 
-import type { Playlist, Song } from "@/lib/types";
-import { useRouter } from "next/navigation";
+import type { Playlist } from "@/lib/types";
+import Link from "next/link";
 import Footer from "@/components/Footer";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import EditPlaylistModal from "@/components/EditPlaylistModal";
@@ -20,7 +20,7 @@ import {
   type PlaylistViewMode,
 } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import {
   DndContext,
@@ -68,21 +68,6 @@ type PlaylistStats = {
   songCount: number;
   topGenres: string[];
 };
-
-function getTopGenresFromSongs(songs: Song[]) {
-  const counts = new Map<string, number>();
-
-  songs.forEach((song) => {
-    song.genres.forEach((genre) => {
-      counts.set(genre, (counts.get(genre) || 0) + 1);
-    });
-  });
-
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([genre]) => genre);
-}
 
 function getPlaylistCover(playlist: Playlist) {
   return typeof playlist.cover_image_url === "string" &&
@@ -288,7 +273,7 @@ function SkeletonLibrary({ viewMode }: { viewMode: PlaylistViewMode }) {
   if (viewMode === "list") {
     return (
       <div className="playlist-skeleton-list">
-        {Array.from({ length: 8 }, (_, index) => (
+        {Array.from({ length: 18 }, (_, index) => (
           <div key={index} className="playlist-skeleton-index-row">
             <SkeletonBlock className="playlist-skeleton-number" />
             <SkeletonBlock className="playlist-skeleton-row-cover" />
@@ -308,7 +293,7 @@ function SkeletonLibrary({ viewMode }: { viewMode: PlaylistViewMode }) {
 
   return (
     <div className="playlist-skeleton-grid">
-      {Array.from({ length: 9 }, (_, index) => (
+      {Array.from({ length: 18 }, (_, index) => (
         <div key={index} className="playlist-skeleton-gallery-card">
           <div className="playlist-skeleton-gallery-art">
             <div className="playlist-skeleton-gallery-number" />
@@ -381,6 +366,8 @@ function PlaylistMenu({
         onOpenChange={onOpenChange}
         placement="bottom-end"
         className="playlist-dropdown"
+        strategy="fixed"
+        usePortal
         offsetAmount={5}
         flippedOffsetAmount={5}
         crossAxisOffset={0}
@@ -451,19 +438,9 @@ function SortablePlaylistItem({
   viewMode: PlaylistViewMode;
   playlistStats: Record<number, PlaylistStats>;
 }) {
-  const router = useRouter();
   const stats = playlistStats[playlist.id];
   const cover = getPlaylistCover(playlist);
-
-  function openPlaylistPage(event: MouseEvent<HTMLDivElement>) {
-    if (isEditing) return;
-
-    const target = event.target as HTMLElement;
-
-    if (target.closest("[data-playlist-menu]")) return;
-
-    router.push(`/playlists/${playlist.id}`);
-  }
+  const playlistHref = `/playlists/${playlist.id}`;
 
   const {
     attributes,
@@ -485,38 +462,63 @@ function SortablePlaylistItem({
   };
 
   if (viewMode === "list") {
-    return (
-      <div
-        ref={setNodeRef}
-        className={`playlist-index-row ${isEditing ? "is-reordering" : ""}`}
-        style={style}
-        onClick={openPlaylistPage}
-        {...(isEditing ? { ...attributes, ...listeners } : {})}
-      >
-        {isEditing && (
+    if (isEditing) {
+      return (
+        <div
+          ref={setNodeRef}
+          className="playlist-index-row is-reordering"
+          style={style}
+          {...attributes}
+          {...listeners}
+        >
           <div className="playlist-row-handle">
             <ReorderHandleIcon />
           </div>
-        )}
 
-        <div className="playlist-row-number">
-          {String(index + 1).padStart(2, "0")}
+          <div className="playlist-row-number">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+
+          <PlaylistArtwork
+            playlist={playlist}
+            index={index}
+            className="playlist-row-cover"
+          />
+
+          <div className="playlist-row-main">
+            <span>{playlist.name}</span>
+            <small>{formatGenres(stats?.topGenres ?? [])}</small>
+          </div>
+
+          <div className="playlist-row-count">
+            {formatSongCount(stats?.songCount ?? 0)}
+          </div>
         </div>
+      );
+    }
 
-        <PlaylistArtwork
-          playlist={playlist}
-          index={index}
-          className="playlist-row-cover"
-        />
+    return (
+      <div ref={setNodeRef} className="playlist-index-row-shell" style={style}>
+        <Link href={playlistHref} className="playlist-index-row">
+          <div className="playlist-row-number">
+            {String(index + 1).padStart(2, "0")}
+          </div>
 
-        <div className="playlist-row-main">
-          <span>{playlist.name}</span>
-          <small>{formatGenres(stats?.topGenres ?? [])}</small>
-        </div>
+          <PlaylistArtwork
+            playlist={playlist}
+            index={index}
+            className="playlist-row-cover"
+          />
 
-        <div className="playlist-row-count">
-          {formatSongCount(stats?.songCount ?? 0)}
-        </div>
+          <div className="playlist-row-main">
+            <span>{playlist.name}</span>
+            <small>{formatGenres(stats?.topGenres ?? [])}</small>
+          </div>
+
+          <div className="playlist-row-count">
+            {formatSongCount(stats?.songCount ?? 0)}
+          </div>
+        </Link>
 
         {isDeleting && (
           <div className="playlist-deleting-overlay">
@@ -528,23 +530,64 @@ function SortablePlaylistItem({
           </div>
         )}
 
-        {!isEditing && (
-          <PlaylistMenu
+        <PlaylistMenu
+          playlist={playlist}
+          viewMode={viewMode}
+          open={openMenuId === playlist.id}
+          onOpenChange={(nextOpen) => {
+            setOpenMenuId(nextOpen ? playlist.id : null);
+          }}
+          onEdit={() => openEdit(playlist)}
+          onReorder={() => {
+            setOpenMenuId(null);
+            startReorder();
+          }}
+          onDelete={() => handleDeletePlaylist(playlist)}
+          playerVisible={playerVisible}
+        />
+      </div>
+    );
+  }
+
+  if (isEditing) {
+    return (
+      <div
+        ref={setNodeRef}
+        className="playlist-gallery-card"
+        style={style}
+        {...attributes}
+        {...listeners}
+      >
+        <div className="playlist-gallery-art-wrap">
+          <PlaylistArtwork
             playlist={playlist}
-            viewMode={viewMode}
-            open={openMenuId === playlist.id}
-            onOpenChange={(nextOpen) => {
-              setOpenMenuId(nextOpen ? playlist.id : null);
-            }}
-            onEdit={() => openEdit(playlist)}
-            onReorder={() => {
-              setOpenMenuId(null);
-              startReorder();
-            }}
-            onDelete={() => handleDeletePlaylist(playlist)}
-            playerVisible={playerVisible}
+            index={index}
+            className="playlist-gallery-art"
           />
-        )}
+
+          {!cover && (
+            <div className="playlist-gallery-letters">
+              {playlist.name.slice(0, 2).toUpperCase()}
+            </div>
+          )}
+
+          <div className="playlist-gallery-number">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+
+          <div className="playlist-gallery-handle">
+            <ReorderHandleIcon />
+          </div>
+        </div>
+
+        <div className="playlist-gallery-copy">
+          <span>{playlist.name}</span>
+          <small>{formatSongCount(stats?.songCount ?? 0)}</small>
+        </div>
+
+        <div className="playlist-gallery-genres">
+          {formatGenres(stats?.topGenres ?? [])}
+        </div>
       </div>
     );
   }
@@ -556,69 +599,61 @@ function SortablePlaylistItem({
         openMenuId === playlist.id ? "is-menu-open" : ""
       }`}
       style={style}
-      onClick={openPlaylistPage}
-      {...(isEditing ? { ...attributes, ...listeners } : {})}
     >
-      <div className="playlist-gallery-art-wrap">
-        <PlaylistArtwork
-          playlist={playlist}
-          index={index}
-          className="playlist-gallery-art"
-        />
+      <Link href={playlistHref} className="playlist-gallery-link">
+        <div className="playlist-gallery-art-wrap">
+          <PlaylistArtwork
+            playlist={playlist}
+            index={index}
+            className="playlist-gallery-art"
+          />
 
-        {!cover && (
-          <div className="playlist-gallery-letters">
-            {playlist.name.slice(0, 2).toUpperCase()}
+          {!cover && (
+            <div className="playlist-gallery-letters">
+              {playlist.name.slice(0, 2).toUpperCase()}
+            </div>
+          )}
+
+          <div className="playlist-gallery-number">
+            {String(index + 1).padStart(2, "0")}
           </div>
-        )}
-
-        <div className="playlist-gallery-number">
-          {String(index + 1).padStart(2, "0")}
         </div>
 
-        {isEditing && (
-          <div className="playlist-gallery-handle">
-            <ReorderHandleIcon />
-          </div>
-        )}
+        <div className="playlist-gallery-copy">
+          <span>{playlist.name}</span>
+          <small>{formatSongCount(stats?.songCount ?? 0)}</small>
+        </div>
 
-        {!isEditing && (
-          <PlaylistMenu
-            playlist={playlist}
-            viewMode={viewMode}
-            open={openMenuId === playlist.id}
-            onOpenChange={(nextOpen) => {
-              setOpenMenuId(nextOpen ? playlist.id : null);
-            }}
-            onEdit={() => openEdit(playlist)}
-            onReorder={() => {
-              setOpenMenuId(null);
-              startReorder();
-            }}
-            onDelete={() => handleDeletePlaylist(playlist)}
-            playerVisible={playerVisible}
+        <div className="playlist-gallery-genres">
+          {formatGenres(stats?.topGenres ?? [])}
+        </div>
+      </Link>
+
+      {isDeleting && (
+        <div className="playlist-deleting-overlay">
+          <LoadingSpinner
+            size={24}
+            stroke={7}
+            color="var(--media-overlay-contrast)"
           />
-        )}
+        </div>
+      )}
 
-        {isDeleting && (
-          <div className="playlist-deleting-overlay">
-            <LoadingSpinner
-              size={24}
-              stroke={7}
-              color="var(--media-overlay-contrast)"
-            />
-          </div>
-        )}
-      </div>
-
-      <div className="playlist-gallery-copy">
-        <span>{playlist.name}</span>
-        <small>{formatSongCount(stats?.songCount ?? 0)}</small>
-      </div>
-
-      <div className="playlist-gallery-genres">
-        {formatGenres(stats?.topGenres ?? [])}
-      </div>
+      <PlaylistMenu
+        playlist={playlist}
+        viewMode={viewMode}
+        open={openMenuId === playlist.id}
+        onOpenChange={(nextOpen) => {
+          setOpenMenuId(nextOpen ? playlist.id : null);
+        }}
+        onEdit={() => openEdit(playlist)}
+        onReorder={() => {
+          setOpenMenuId(null);
+          startReorder();
+        }}
+        onDelete={() => handleDeletePlaylist(playlist)}
+        playerVisible={playerVisible}
+      />
     </div>
   );
 }
@@ -747,6 +782,11 @@ export default function PlaylistsPage() {
     return playlists;
   }, [playlists, sortMode]);
 
+  const playlistIdsKey = useMemo(
+    () => playlists.map((playlist) => playlist.id).join(","),
+    [playlists],
+  );
+
   const totalSongs = useMemo(() => {
     return Object.values(playlistStats).reduce(
       (total, stats) => total + stats.songCount,
@@ -793,45 +833,25 @@ export default function PlaylistsPage() {
     let cancelled = false;
 
     async function loadPlaylistStats() {
-      const entries = await Promise.all(
-        playlists.map(async (playlist) => {
-          try {
-            const res = await fetch(`/api/playlists/${playlist.id}/songs`);
+      try {
+        const res = await fetch("/api/playlists/stats", {
+          cache: "no-store",
+        });
 
-            if (!res.ok) {
-              return [
-                playlist.id,
-                {
-                  songCount: 0,
-                  topGenres: [],
-                },
-              ] as const;
-            }
+        if (!res.ok) {
+          if (!cancelled) setPlaylistStats({});
+          return;
+        }
 
-            const data = await res.json();
-            const songs = Array.isArray(data) ? (data as Song[]) : [];
+        const data = await res.json();
 
-            return [
-              playlist.id,
-              {
-                songCount: songs.length,
-                topGenres: getTopGenresFromSongs(songs),
-              },
-            ] as const;
-          } catch {
-            return [
-              playlist.id,
-              {
-                songCount: 0,
-                topGenres: [],
-              },
-            ] as const;
-          }
-        }),
-      );
-
-      if (!cancelled) {
-        setPlaylistStats(Object.fromEntries(entries));
+        if (!cancelled) {
+          setPlaylistStats(data?.stats ?? {});
+        }
+      } catch {
+        if (!cancelled) {
+          setPlaylistStats({});
+        }
       }
     }
 
@@ -840,7 +860,7 @@ export default function PlaylistsPage() {
     return () => {
       cancelled = true;
     };
-  }, [playlists]);
+  }, [playlistIdsKey, playlists.length]);
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -1262,6 +1282,12 @@ export default function PlaylistsPage() {
           cursor: pointer;
         }
 
+        .playlist-gallery-link {
+          display: block;
+          color: inherit;
+          text-decoration: none;
+        }
+
         .playlist-gallery-art-wrap {
           position: relative;
           aspect-ratio: 1 / 1.08;
@@ -1379,6 +1405,11 @@ export default function PlaylistsPage() {
           gap: 8px;
         }
 
+        .playlist-index-row-shell {
+          position: relative;
+          cursor: pointer;
+        }
+
         .playlist-index-row {
           position: relative;
           min-height: 76px;
@@ -1390,6 +1421,8 @@ export default function PlaylistsPage() {
           border-radius: 16px;
           background: var(--bg-card);
           padding: 11px 50px 11px 13px;
+          color: inherit;
+          text-decoration: none;
           cursor: pointer;
           transition: background 0.15s ease, transform 0.15s ease;
         }
@@ -1399,7 +1432,8 @@ export default function PlaylistsPage() {
           padding-right: 18px;
         }
 
-        .playlist-index-row:hover {
+        .playlist-index-row:hover,
+        .playlist-index-row-shell:hover .playlist-index-row {
           background: var(--bg-hover);
           border-color: var(--border);
           transform: translateY(-1px);
@@ -1466,7 +1500,7 @@ export default function PlaylistsPage() {
           right: 10px;
         }
 
-        .playlist-index-row .playlist-card-menu-wrap {
+        .playlist-index-row-shell .playlist-card-menu-wrap {
           top: 50%;
           right: 12px;
           transform: translateY(-50%);
@@ -1512,19 +1546,19 @@ export default function PlaylistsPage() {
           backdrop-filter: blur(10px);
         }
 
-        .playlist-index-row .playlist-menu-btn {
+        .playlist-index-row-shell .playlist-menu-btn {
           background: transparent;
           color: var(--icon-color);
           backdrop-filter: none;
         }
 
-        .playlist-index-row:hover .playlist-menu-btn,
-        .playlist-index-row .playlist-menu-btn.is-open {
+        .playlist-index-row-shell:hover .playlist-menu-btn,
+        .playlist-index-row-shell .playlist-menu-btn.is-open {
           opacity: 1;
         }
 
-        .playlist-index-row .playlist-menu-btn:hover,
-        .playlist-index-row .playlist-menu-btn.is-open {
+        .playlist-index-row-shell .playlist-menu-btn:hover,
+        .playlist-index-row-shell .playlist-menu-btn.is-open {
           background: var(--icon-button-hover);
           color: var(--text-primary);
         }
@@ -1679,8 +1713,8 @@ export default function PlaylistsPage() {
         }
 
         .playlist-skeleton-reserve {
-  min-height: 280px;
-}
+          min-height: 280px;
+        }
 
         .playlist-skeleton-block {
           position: relative;

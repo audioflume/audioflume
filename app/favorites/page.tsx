@@ -7,6 +7,7 @@ import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
 } from "@/components/uiClasses";
+import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -162,6 +163,8 @@ export default function FavoritesPage() {
     error: songsError,
     refetchSongs,
   } = useSongs();
+
+  const { favoriteIds, favoriteIdSet } = useFavorites();
   const { currentSong, setQueue } = usePlayer();
   const playerVisible = !!currentSong;
 
@@ -173,8 +176,16 @@ export default function FavoritesPage() {
   );
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
 
+  const favoriteSongs = useMemo(() => {
+    const songsById = new Map(songs.map((song) => [song.id, song]));
+
+    return favoriteIds
+      .map((songId) => songsById.get(songId))
+      .filter((song): song is (typeof songs)[number] => Boolean(song));
+  }, [songs, favoriteIds]);
+
   const filteredSongs = useMemo(() => {
-    return songs.filter((song) => {
+    return favoriteSongs.filter((song) => {
       const query = search.trim().toLowerCase();
 
       if (query) {
@@ -203,18 +214,16 @@ export default function FavoritesPage() {
 
       return true;
     });
-  }, [songs, search, selectedQuickFilters]);
+  }, [favoriteSongs, search, selectedQuickFilters]);
 
   const displayedSongs = useMemo(() => {
-    const placeholderFavorites = [...filteredSongs].reverse();
-
-    if (!shuffleOrderIds) return placeholderFavorites;
+    if (!shuffleOrderIds) return filteredSongs;
 
     const orderMap = new Map(
       shuffleOrderIds.map((songId, index) => [songId, index]),
     );
 
-    return [...placeholderFavorites].sort((a, b) => {
+    return [...filteredSongs].sort((a, b) => {
       const aOrder = orderMap.get(a.id);
       const bOrder = orderMap.get(b.id);
 
@@ -232,10 +241,15 @@ export default function FavoritesPage() {
   );
 
   const showSongSkeleton = !songsError && songsLoading && songs.length === 0;
+  const hasAnyFavorites = favoriteIdSet.size > 0;
 
   useEffect(() => {
     setQueue(displayedSongs.filter((song) => song.audioUrl));
   }, [displayedSongs, setQueue]);
+
+  useEffect(() => {
+    setShuffleOrderIds(null);
+  }, [favoriteIds]);
 
   function playFirstSong() {
     const firstSong = displayedSongs[0];
@@ -284,7 +298,7 @@ export default function FavoritesPage() {
         .favorites-shell {
           position: relative;
           z-index: 1;
-          padding: 0 28px;
+          padding: 0 32px;
         }
 
         .favorites-hero {
@@ -337,8 +351,8 @@ export default function FavoritesPage() {
           position: sticky;
           top: 55px;
           z-index: 90;
-          margin-left: -28px;
-          margin-right: -28px;
+          margin-left: -32px;
+          margin-right: -32px;
           background: var(--bg-primary);
         }
 
@@ -381,10 +395,10 @@ export default function FavoritesPage() {
           flex-wrap: wrap;
           align-items: center;
           gap: 6px;
-          margin-left: -28px;
-          margin-right: -28px;
+          margin-left: -32px;
+          margin-right: -32px;
           background: var(--bg-primary);
-          padding: 16px 28px;
+          padding: 16px 32px;
         }
 
         .favorites-quick-pill {
@@ -407,8 +421,8 @@ export default function FavoritesPage() {
         }
 
         .favorites-section {
-          margin-left: -28px;
-          margin-right: -28px;
+          margin-left: -32px;
+          margin-right: -32px;
         }
 
         .favorites-empty {
@@ -449,27 +463,6 @@ export default function FavoritesPage() {
         }
 
         @media (max-width: 760px) {
-          .favorites-shell {
-            padding: 0 18px;
-          }
-
-          .favorites-search-sticky,
-          .favorites-quick-row,
-          .favorites-section {
-            margin-left: -18px;
-            margin-right: -18px;
-          }
-
-          .favorites-search-row {
-            padding-left: 18px;
-            padding-right: 18px;
-          }
-
-          .favorites-quick-row {
-            padding-left: 18px;
-            padding-right: 18px;
-          }
-
           .favorites-search-inner {
             width: 100%;
             padding-right: 0;
@@ -493,9 +486,6 @@ export default function FavoritesPage() {
                   <span>{topGenres.join(" · ")}</span>
                 </>
               )}
-
-              <span className="favorites-dot">·</span>
-              <span>Temporary master list</span>
             </div>
 
             <div className="favorites-actions">
@@ -590,11 +580,23 @@ export default function FavoritesPage() {
               !showSongSkeleton &&
               displayedSongs.length === 0 && (
                 <div className="favorites-empty">
-                  <h2>No songs found</h2>
-                  <p>
-                    Try searching for a different title, artist, genre, mood, or
-                    tag.
-                  </p>
+                  {hasAnyFavorites ? (
+                    <>
+                      <h2>No songs found</h2>
+                      <p>
+                        Try searching for a different title, artist, genre,
+                        mood, or tag.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h2>No favorites yet</h2>
+                      <p>
+                        Click the heart icon on any song to add it to your
+                        favorites.
+                      </p>
+                    </>
+                  )}
                 </div>
               )}
 

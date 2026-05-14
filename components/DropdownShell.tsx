@@ -282,7 +282,7 @@ export default function DropdownShell({
     if (!open) return;
 
     function handleScroll() {
-      updateFloatingPosition({ refreeze: false });
+      schedulePositionUpdate({ refreeze: false });
     }
 
     function handleResize() {
