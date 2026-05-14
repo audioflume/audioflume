@@ -41,10 +41,32 @@
   --edit-point-range: rgba(221, 255, 67, 0.2);
   --edit-point-range-strong: rgba(251, 143, 97, 0.16);
 
+  /* ─── Sidebar width ─────────────────────────── */
+
+  aside[data-sidebar] {
+    width: var(--sidebar-width-expanded);
+  }
+
+  body.sidebar-collapsed aside[data-sidebar] {
+    width: var(--sidebar-width-collapsed);
+  }
+
+  /* ─── Sidebar expanded ─────────────────────────── */
+
   /* Layout */
   --sidebar-width-expanded: 280px;
   --sidebar-width-collapsed: 76px;
   --sidebar-width: var(--sidebar-width-expanded);
+}
+
+/* ─── Sidebar collapse ─────────────────────────── */
+
+body:not(.sidebar-collapsed) aside[data-sidebar] {
+  width: var(--sidebar-width-expanded);
+}
+
+body.sidebar-collapsed aside[data-sidebar] {
+  width: var(--sidebar-width-collapsed);
 }
 
 /* ─── Shared brand / utility colours ─────────────────────────── */

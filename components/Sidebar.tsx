@@ -369,9 +369,7 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
       viewBox="0 0 7 10"
       fill="none"
       aria-hidden="true"
-      className={`transition-transform duration-200 ${
-        collapsed ? "rotate-180" : ""
-      }`}
+      className={`transition-transform duration-200 ${collapsed ? "rotate-180" : ""}`}
     >
       <path d="M6.2 1L1.8 5L6.2 9V1Z" fill="currentColor" />
     </svg>
@@ -392,17 +390,19 @@ function MainIcon({ icon }: { icon: string }) {
 function SectionHeading({
   label,
   collapsed,
+  ready,
   icon,
 }: {
   label: string;
   collapsed: boolean;
+  ready: boolean;
   icon: "library" | "ai";
 }) {
   return (
     <div className="mb-2 flex h-[16px] items-center justify-center overflow-hidden">
       <div className="relative flex h-[16px] w-full items-center justify-center">
         <span
-          className={`absolute left-2.5 text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] transition-[opacity,transform] duration-150 ${
+          className={`absolute left-2.5 text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] ${ready ? "transition-[opacity,transform] duration-150" : ""} ${
             collapsed
               ? "pointer-events-none -translate-x-1 opacity-0"
               : "translate-x-0 opacity-100"
@@ -412,7 +412,7 @@ function SectionHeading({
         </span>
 
         <span
-          className={`absolute left-1/2 flex h-4 w-4 -translate-x-1/2 items-center justify-center text-[var(--text-muted)] transition-[opacity,transform] duration-150 ${
+          className={`absolute left-1/2 flex h-4 w-4 -translate-x-1/2 items-center justify-center text-[var(--text-muted)] ${ready ? "transition-[opacity,transform] duration-150" : ""} ${
             collapsed
               ? "scale-100 opacity-[0.3]"
               : "pointer-events-none scale-90 opacity-0"
@@ -431,11 +431,13 @@ function SidebarLink({
   href,
   icon,
   collapsed,
+  ready,
 }: {
   label: string;
   href: string;
   icon?: string;
   collapsed: boolean;
+  ready: boolean;
 }) {
   const pathname = usePathname();
 
@@ -468,7 +470,7 @@ function SidebarLink({
       )}
 
       <span
-        className={`ml-2.5 min-w-0 truncate transition-[opacity,transform,width] duration-150 ${
+        className={`ml-2.5 min-w-0 truncate ${ready ? "transition-[opacity,transform,width] duration-150" : ""} ${
           collapsed
             ? "w-0 translate-x-1 opacity-0"
             : "w-auto translate-x-0 opacity-100"
@@ -483,10 +485,12 @@ function SidebarLink({
 function ProjectLink({
   project,
   collapsed,
+  ready,
   onTooltipChange,
 }: {
   project: string;
   collapsed: boolean;
+  ready: boolean;
   onTooltipChange: (tooltip: SidebarTooltip) => void;
 }) {
   const pathname = usePathname();
@@ -495,13 +499,8 @@ function ProjectLink({
 
   function showTooltip(element: HTMLElement) {
     if (!collapsed) return;
-
     const rect = element.getBoundingClientRect();
-
-    onTooltipChange({
-      label: project,
-      top: rect.top + rect.height / 2,
-    });
+    onTooltipChange({ label: project, top: rect.top + rect.height / 2 });
   }
 
   function hideTooltip() {
@@ -534,7 +533,7 @@ function ProjectLink({
       </span>
 
       <span
-        className={`ml-2.5 min-w-0 truncate transition-[opacity,transform,width] duration-150 ${
+        className={`ml-2.5 min-w-0 truncate ${ready ? "transition-[opacity,transform,width] duration-150" : ""} ${
           collapsed
             ? "w-0 translate-x-1 opacity-0"
             : "w-auto translate-x-0 opacity-100"
@@ -546,25 +545,28 @@ function ProjectLink({
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({
+  initialCollapsed = false,
+}: {
+  initialCollapsed?: boolean;
+}) {
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const [projectTooltip, setProjectTooltip] = useState<SidebarTooltip>(null);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [forceCollapsed, setForceCollapsed] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
-  const sidebarCollapsed = mounted ? collapsed || forceCollapsed : false;
+  const sidebarCollapsed = collapsed || forceCollapsed;
 
   useEffect(() => {
-    setMounted(true);
-    setCollapsed(localStorage.getItem("filmwave-sidebar-collapsed") === "true");
+    requestAnimationFrame(() => {
+      setReady(true);
+    });
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
-
     function handleResize() {
       setForceCollapsed(window.innerWidth < 768);
     }
@@ -573,14 +575,13 @@ export default function Sidebar() {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [mounted]);
+  }, []);
 
   useEffect(() => {
-    if (!mounted) return;
-
     document.body.classList.toggle("sidebar-collapsed", sidebarCollapsed);
     localStorage.setItem("filmwave-sidebar-collapsed", String(collapsed));
-  }, [collapsed, sidebarCollapsed, mounted]);
+    document.cookie = `filmwave-sidebar-collapsed=${collapsed};path=/;max-age=31536000`;
+  }, [collapsed, sidebarCollapsed]);
 
   useEffect(() => {
     return () => {
@@ -592,16 +593,14 @@ export default function Sidebar() {
   return (
     <>
       <aside
-        className={`group/sidebar fixed left-0 z-30 flex flex-col border-r border-[var(--border)] bg-[var(--bg-primary)] transition-[width] duration-200 ${
-          sidebarCollapsed
-            ? "w-[var(--sidebar-width-collapsed)]"
-            : "w-[var(--sidebar-width-expanded)]"
-        }`}
+        className={`group/sidebar fixed left-0 z-30 flex flex-col border-r border-[var(--border)] bg-[var(--bg-primary)] ${ready ? "transition-[width] duration-200" : ""}`}
+        data-sidebar
         style={{ top: "56px", bottom: playerVisible ? "64px" : "0px" }}
       >
         <div className="absolute top-0 right-0 bottom-0 z-20 flex w-4 items-center justify-center">
           <div className="group/collapse-zone flex h-full w-4 items-center justify-center">
             <button
+              suppressHydrationWarning
               type="button"
               onClick={() => {
                 setCollapsed((value) => !value);
@@ -618,15 +617,12 @@ export default function Sidebar() {
           </div>
         </div>
 
-        <div
-          className={`flex flex-1 flex-col overflow-y-auto pt-6 pb-6 transition-[padding] duration-200 ${
-            sidebarCollapsed ? "px-5" : "px-5"
-          }`}
-        >
+        <div className="flex flex-1 flex-col overflow-y-auto pt-6 pb-6 px-5">
           <div className="border-b border-[var(--border)] pb-5">
             <SectionHeading
               label="Library"
               collapsed={sidebarCollapsed}
+              ready={ready}
               icon="library"
             />
 
@@ -638,6 +634,7 @@ export default function Sidebar() {
                   href={link.href}
                   icon={link.icon}
                   collapsed={sidebarCollapsed}
+                  ready={ready}
                 />
               ))}
             </div>
@@ -647,6 +644,7 @@ export default function Sidebar() {
             <SectionHeading
               label="AI Tools"
               collapsed={sidebarCollapsed}
+              ready={ready}
               icon="ai"
             />
 
@@ -658,6 +656,7 @@ export default function Sidebar() {
                   href={link.href}
                   icon={link.icon}
                   collapsed={sidebarCollapsed}
+                  ready={ready}
                 />
               ))}
             </div>
@@ -665,14 +664,14 @@ export default function Sidebar() {
 
           <div className="mt-5 flex flex-col">
             <div
-              className={`relative mb-2 flex h-[24px] items-center rounded-md transition-[padding] duration-200 ${
+              className={`relative mb-2 flex h-[24px] items-center rounded-md ${ready ? "transition-[padding] duration-200" : ""} ${
                 sidebarCollapsed
                   ? "justify-center px-0"
                   : "justify-between px-2.5"
               }`}
             >
               <span
-                className={`text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] transition-[opacity,transform] duration-150 ${
+                className={`text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] ${ready ? "transition-[opacity,transform] duration-150" : ""} ${
                   sidebarCollapsed
                     ? "pointer-events-none absolute -translate-x-2 opacity-0"
                     : "relative translate-x-0 opacity-100"
@@ -700,6 +699,7 @@ export default function Sidebar() {
                   key={project}
                   project={project}
                   collapsed={sidebarCollapsed}
+                  ready={ready}
                   onTooltipChange={setProjectTooltip}
                 />
               ))}

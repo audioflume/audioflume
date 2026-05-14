@@ -1,6 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Sans } from "next/font/google";
+import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { UserPreferencesProvider } from "@/context/UserPreferencesContext";
@@ -32,24 +33,34 @@ export const metadata: Metadata = {
   description: "Royalty-free music for filmmakers",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const sidebarCollapsed =
+    cookieStore.get("filmwave-sidebar-collapsed")?.value === "true";
+
   return (
     <ClerkProvider>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${instrumentSans.variable} antialiased`}
+          suppressHydrationWarning
         >
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){try{if(localStorage.getItem('filmwave-sidebar-collapsed')==='true')document.body.classList.add('sidebar-collapsed')}catch(e){}})();`,
+            }}
+          />
           <UserPreferencesProvider>
             <ThemeProvider>
               <PlayerProvider>
                 <FavoritesProvider>
                   <PlaylistsProvider>
                     <Header />
-                    <SidebarRenderer />
+                    <SidebarRenderer initialCollapsed={sidebarCollapsed} />
                     {children}
                     <PlayerRenderer />
                   </PlaylistsProvider>
