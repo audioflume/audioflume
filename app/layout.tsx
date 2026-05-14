@@ -44,14 +44,14 @@ export default async function RootLayout({
 
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${instrumentSans.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${instrumentSans.variable} antialiased${sidebarCollapsed ? " sidebar-collapsed" : ""}`}
           suppressHydrationWarning
         >
           <script
             dangerouslySetInnerHTML={{
-              __html: `(function(){try{if(localStorage.getItem('filmwave-sidebar-collapsed')==='true')document.body.classList.add('sidebar-collapsed')}catch(e){}})();`,
+              __html: `(function(){try{var t=document.cookie.match(/filmwave-theme-mode=([^;]+)/);if(t&&t[1]==='light')document.documentElement.classList.add('light')}catch(e){}})();`,
             }}
           />
           <UserPreferencesProvider>

@@ -387,6 +387,36 @@ function MainIcon({ icon }: { icon: string }) {
   return <WaveformIcon />;
 }
 
+function SidebarTooltipEl({ label, top }: { label: string; top: number }) {
+  return (
+    <div
+      className="pointer-events-none fixed z-[140]"
+      style={{
+        left: "calc(var(--sidebar-width-collapsed) - 11px)",
+        top,
+        transform: "translateY(-50%)",
+      }}
+    >
+      <div
+        className="rounded-md bg-[var(--border)] p-px"
+        style={{
+          clipPath: "polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%)",
+        }}
+      >
+        <div
+          className="rounded-md px-3.5 py-1.5 pl-5 text-[12px] font-medium whitespace-nowrap text-[var(--text-primary)] shadow-[var(--shadow-ui)]"
+          style={{
+            backgroundColor: "var(--bg-primary)",
+            clipPath: "polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%)",
+          }}
+        >
+          {label}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SectionHeading({
   label,
   collapsed,
@@ -432,12 +462,14 @@ function SidebarLink({
   icon,
   collapsed,
   ready,
+  onTooltipChange,
 }: {
   label: string;
   href: string;
   icon?: string;
   collapsed: boolean;
   ready: boolean;
+  onTooltipChange: (tooltip: SidebarTooltip) => void;
 }) {
   const pathname = usePathname();
 
@@ -446,11 +478,24 @@ function SidebarLink({
       ? pathname === "/music"
       : pathname === href || pathname.startsWith(`${href}/`);
 
+  function showTooltip(element: HTMLElement) {
+    if (!collapsed) return;
+    const rect = element.getBoundingClientRect();
+    onTooltipChange({ label, top: rect.top + rect.height / 2 });
+  }
+
+  function hideTooltip() {
+    onTooltipChange(null);
+  }
+
   return (
     <Link
       href={href}
-      title={collapsed ? label : undefined}
       aria-label={label}
+      onMouseEnter={(e) => showTooltip(e.currentTarget)}
+      onMouseLeave={hideTooltip}
+      onFocus={(e) => showTooltip(e.currentTarget)}
+      onBlur={hideTooltip}
       className={`group flex h-8 items-center rounded-md px-2.5 text-[13px] font-medium transition ${
         active
           ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
@@ -510,7 +555,6 @@ function ProjectLink({
   return (
     <Link
       href={href}
-      title={collapsed ? project : undefined}
       aria-label={project}
       onMouseEnter={(event) => showTooltip(event.currentTarget)}
       onMouseLeave={hideTooltip}
@@ -551,7 +595,7 @@ export default function Sidebar({
   initialCollapsed?: boolean;
 }) {
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
-  const [projectTooltip, setProjectTooltip] = useState<SidebarTooltip>(null);
+  const [tooltip, setTooltip] = useState<SidebarTooltip>(null);
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [forceCollapsed, setForceCollapsed] = useState(false);
   const [ready, setReady] = useState(false);
@@ -586,7 +630,7 @@ export default function Sidebar({
   useEffect(() => {
     return () => {
       document.body.classList.remove("sidebar-collapsed");
-      setProjectTooltip(null);
+      setTooltip(null);
     };
   }, []);
 
@@ -604,13 +648,12 @@ export default function Sidebar({
               type="button"
               onClick={() => {
                 setCollapsed((value) => !value);
-                setProjectTooltip(null);
+                setTooltip(null);
               }}
               className="flex h-14 w-4 cursor-pointer items-center justify-center text-[var(--text-muted)] opacity-0 transition-opacity duration-150 group-hover/collapse-zone:opacity-35 hover:opacity-55 hover:text-[var(--text-secondary)]"
               aria-label={
                 sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
               }
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <CollapseIcon collapsed={sidebarCollapsed} />
             </button>
@@ -635,6 +678,7 @@ export default function Sidebar({
                   icon={link.icon}
                   collapsed={sidebarCollapsed}
                   ready={ready}
+                  onTooltipChange={setTooltip}
                 />
               ))}
             </div>
@@ -657,6 +701,7 @@ export default function Sidebar({
                   icon={link.icon}
                   collapsed={sidebarCollapsed}
                   ready={ready}
+                  onTooltipChange={setTooltip}
                 />
               ))}
             </div>
@@ -683,11 +728,19 @@ export default function Sidebar({
               <button
                 type="button"
                 onClick={() => setIsCreateProjectOpen(true)}
+                onMouseEnter={(e) => {
+                  if (!sidebarCollapsed) return;
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setTooltip({
+                    label: "New Project",
+                    top: rect.top + rect.height / 2,
+                  });
+                }}
+                onMouseLeave={() => setTooltip(null)}
                 className={`flex cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] ${
                   sidebarCollapsed ? "h-7 w-full" : "h-6 w-6"
                 }`}
                 aria-label="Create new project"
-                title="Create new project"
               >
                 <PlusIcon />
               </button>
@@ -700,7 +753,7 @@ export default function Sidebar({
                   project={project}
                   collapsed={sidebarCollapsed}
                   ready={ready}
-                  onTooltipChange={setProjectTooltip}
+                  onTooltipChange={setTooltip}
                 />
               ))}
             </div>
@@ -708,33 +761,8 @@ export default function Sidebar({
         </div>
       </aside>
 
-      {projectTooltip && sidebarCollapsed && (
-        <div
-          className="pointer-events-none fixed z-[140]"
-          style={{
-            left: "calc(var(--sidebar-width-collapsed) - 11px)",
-            top: projectTooltip.top,
-            transform: "translateY(-50%)",
-          }}
-        >
-          <div
-            className="rounded-md bg-[var(--border)] p-px"
-            style={{
-              clipPath: "polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%)",
-            }}
-          >
-            <div
-              className="rounded-md px-3.5 py-1.5 pl-5 text-[12px] font-medium whitespace-nowrap text-[var(--text-primary)] shadow-[var(--shadow-ui)]"
-              style={{
-                backgroundColor: "var(--bg-primary)",
-                clipPath:
-                  "polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%)",
-              }}
-            >
-              {projectTooltip.label}
-            </div>
-          </div>
-        </div>
+      {tooltip && sidebarCollapsed && (
+        <SidebarTooltipEl label={tooltip.label} top={tooltip.top} />
       )}
 
       <CreateProjectModal
