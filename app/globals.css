@@ -319,3 +319,110 @@ body.sidebar-collapsed {
 .music-player-more-menu-close:hover {
   color: var(--danger) !important;
 }
+
+/* ─── Dropdown shell ─────────────────────────── */
+
+.filmwave-dropdown-shell {
+  z-index: 160;
+  width: max-content;
+  min-width: 180px;
+  max-width: calc(100vw - 32px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-ui);
+  padding: 6px;
+  color: var(--text-primary);
+  overscroll-behavior: contain;
+  will-change: transform;
+}
+
+.filmwave-dropdown-shell::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filmwave-dropdown-shell::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filmwave-dropdown-shell::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-primary) 14%, transparent);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.filmwave-dropdown-shell button,
+.filmwave-dropdown-shell a {
+  display: flex;
+  min-height: 38px;
+  width: 100%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  padding: 0 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    opacity 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.filmwave-dropdown-shell button:hover,
+.filmwave-dropdown-shell a:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.filmwave-dropdown-shell button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.filmwave-dropdown-shell button:disabled:hover {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.filmwave-dropdown-shell button.danger,
+.filmwave-dropdown-shell a.danger {
+  color: var(--danger);
+}
+
+.filmwave-dropdown-shell button.danger:hover,
+.filmwave-dropdown-shell a.danger:hover {
+  color: var(--danger);
+}
+
+.filmwave-dropdown-shell .dropdown-divider {
+  height: 1px;
+  margin: 6px 4px;
+  background: var(--border-subtle);
+}
+
+.light .filmwave-dropdown-shell {
+  background: var(--bg-tertiary);
+}
+
+/* ─── Add to playlist modal ─────────────────────────── */
+
+.add-playlist-row:hover .add-playlist-action {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.add-playlist-row.is-selected .add-playlist-action {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}

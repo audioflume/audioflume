@@ -1,6 +1,18 @@
 "use client";
 
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
+import {
+  MOOD_OPTIONS,
+  GENRE_OPTIONS,
+  INSTRUMENT_OPTIONS,
+  BUILD_OPTIONS,
+  VOCALS_OPTIONS,
+  QUICK_FILTERS,
+  MUSIC_FILTER_STORAGE_KEY_PREFIX,
+} from "@/lib/constants";
 import {
   includesAll,
   matchesDurationFilter,
@@ -8,18 +20,21 @@ import {
   matchesKeyFilter,
 } from "@/lib/filterUtils";
 import { getRecord, getStringFromRecord } from "@/lib/utils";
-import SongCard from "@/components/SongCard";
-import Footer from "@/components/Footer";
-import { useEffect, useMemo, useRef, useState } from "react";
+
+import { useFilterPersistence } from "@/hooks/useFilterPersistence";
 import { useSongs } from "@/hooks/useSongs";
-import FilterDropdown from "@/components/FilterDropdown";
+
+import { usePlayer } from "@/context/PlayerContext";
+
 import BPMFilter from "@/components/BPMFilter";
-import KeyFilter from "@/components/KeyFilter";
 import DurationFilter from "@/components/DurationFilter";
+import FilterDropdown from "@/components/FilterDropdown";
+import FilterTags from "@/components/FilterTags";
+import Footer from "@/components/Footer";
+import KeyFilter from "@/components/KeyFilter";
 import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
-import { usePlayer } from "@/context/PlayerContext";
-import { useAuth } from "@clerk/nextjs";
+import SongCard from "@/components/SongCard";
 import {
   iconButtonClass,
   primaryPillButtonClass,
@@ -30,17 +45,6 @@ import {
   filterTriggerBaseClass,
   filterTriggerInactiveClass,
 } from "@/components/filterUiClasses";
-import { useFilterPersistence } from "@/hooks/useFilterPersistence";
-import FilterTags from "@/components/FilterTags";
-import {
-  MOOD_OPTIONS,
-  GENRE_OPTIONS,
-  INSTRUMENT_OPTIONS,
-  BUILD_OPTIONS,
-  VOCALS_OPTIONS,
-  QUICK_FILTERS,
-  MUSIC_FILTER_STORAGE_KEY_PREFIX,
-} from "@/lib/constants";
 
 function getSongIdentityValues(song: unknown) {
   const record = getRecord(song);

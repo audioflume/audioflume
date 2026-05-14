@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import ModalShell, {
+import ModalShell from "@/components/ModalShell";
+import {
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
   modalTextareaClass,
-} from "@/components/ModalShell";
+} from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 type CreateProjectModalProps = {

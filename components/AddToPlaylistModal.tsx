@@ -6,7 +6,8 @@ import Image from "next/image";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import Toast from "@/components/Toast";
-import ModalShell, { modalPrimaryButtonClass } from "@/components/ModalShell";
+import ModalShell from "@/components/ModalShell";
+import { modalPrimaryButtonClass } from "@/components/uiClasses";
 
 const RECENT_PLAYLIST_IDS_KEY = "filmwaveRecentPlaylistIds";
 const RECENT_PLAYLIST_LIMIT = 3;
@@ -386,18 +387,6 @@ export default function AddToPlaylistModal({
           </button>
         }
       >
-        <style>{`
-          .add-playlist-row:hover .add-playlist-action {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-          }
-
-          .add-playlist-row.is-selected .add-playlist-action {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-          }
-        `}</style>
-
         <div className="mb-3 flex flex-shrink-0 items-center gap-2.5 rounded-lg bg-[var(--bg-primary)] pl-2 pb-1.5">
           <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
             {song.coverArt && (
@@ -423,21 +412,24 @@ export default function AddToPlaylistModal({
         </div>
 
         <div className="-mx-4 min-h-0 flex-1 overflow-y-auto border-t border-[var(--border)] px-4 pt-3">
-          {loading && (
+          {(loading || selectedLoading) && (
             <div className="grid gap-1.5">
-              {Array.from({ length: 6 }).map((_, index) => (
+              {Array.from({ length: playlists.length || 6 }).map((_, index) => (
                 <div
                   key={index}
-                  className="flex h-9 items-center gap-2.5 rounded-lg px-2.5"
+                  className="flex h-9 items-center justify-between gap-2.5 rounded-lg px-2.5"
                 >
+                  <div className="flex items-center gap-2.5">
+                    <div className="h-5 w-5 rounded-md bg-[var(--bg-tertiary)]" />
+                    <div className="h-2.5 w-32 bg-[var(--bg-tertiary)]" />
+                  </div>
                   <div className="h-5 w-5 rounded-md bg-[var(--bg-tertiary)]" />
-                  <div className="h-2.5 w-32 bg-[var(--bg-tertiary)]" />
                 </div>
               ))}
             </div>
           )}
 
-          {!loading && displayedError && (
+          {!loading && !selectedLoading && displayedError && (
             <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 rounded-lg bg-[var(--bg-primary)] px-4 text-center">
               <div className="text-xs font-medium text-[var(--danger)]">
                 {displayedError}
@@ -455,13 +447,17 @@ export default function AddToPlaylistModal({
             </div>
           )}
 
-          {!loading && !displayedError && displayedPlaylists.length === 0 && (
-            <div className="flex min-h-[180px] items-center justify-center rounded-lg bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-secondary)]">
-              You don&apos;t have any playlists yet.
-            </div>
-          )}
+          {!loading &&
+            !selectedLoading &&
+            !displayedError &&
+            displayedPlaylists.length === 0 && (
+              <div className="flex min-h-[180px] items-center justify-center rounded-lg bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-secondary)]">
+                You don&apos;t have any playlists yet.
+              </div>
+            )}
 
           {!loading &&
+            !selectedLoading &&
             !displayedError &&
             displayedPlaylists.length > 0 &&
             displayedPlaylists.map((playlist) => {

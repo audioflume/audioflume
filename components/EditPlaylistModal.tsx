@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import ModalShell, {
+import ModalShell from "@/components/ModalShell";
+import {
   modalDeleteButtonClass,
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
-} from "@/components/ModalShell";
+} from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 type Playlist = {
