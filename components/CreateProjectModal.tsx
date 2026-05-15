@@ -9,41 +9,75 @@ import {
   modalTextareaClass,
 } from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import type { Project } from "@/lib/types";
 
 type CreateProjectModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  onProjectCreated?: (project: Project) => void;
 };
 
 export default function CreateProjectModal({
   isOpen,
   onClose,
+  onProjectCreated,
 }: CreateProjectModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState("");
 
   if (!isOpen) return null;
+
+  function resetForm() {
+    setName("");
+    setDescription("");
+    setError("");
+  }
 
   function clearAndClose() {
     if (isCreating) return;
 
-    setName("");
-    setDescription("");
+    resetForm();
     onClose();
   }
 
-  function handleCreate() {
-    if (!name.trim() || isCreating) return;
+  async function handleCreate() {
+    const cleanName = name.trim();
+
+    if (!cleanName || isCreating) return;
 
     setIsCreating(true);
+    setError("");
 
-    window.setTimeout(() => {
-      setIsCreating(false);
-      setName("");
-      setDescription("");
+    try {
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: cleanName,
+          description: description.trim() || null,
+        }),
+      });
+
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to create project");
+      }
+
+      onProjectCreated?.(data as Project);
+
+      resetForm();
       onClose();
-    }, 400);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create project");
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   return (
@@ -106,6 +140,10 @@ export default function CreateProjectModal({
             className={modalTextareaClass}
           />
         </div>
+
+        {error && (
+          <p className="text-xs font-medium text-[var(--danger)]">{error}</p>
+        )}
       </form>
     </ModalShell>
   );

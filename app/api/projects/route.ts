@@ -16,7 +16,7 @@ export async function GET() {
       .from("projects")
       .select("*")
       .eq("clerk_user_id", userId)
-      .order("position", { ascending: true });
+      .order("name", { ascending: true });
 
     if (error) throw error;
 

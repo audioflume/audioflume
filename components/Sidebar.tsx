@@ -6,17 +6,8 @@ import { useEffect, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import CreateProjectModal from "@/components/CreateProjectModal";
 import HeartIcon from "@/components/icons/HeartIcon";
-
-const placeholderProjects = [
-  "Anian",
-  "Brass Monkey Brewing",
-  "Luxewell",
-  "LYF",
-  "Maxwell",
-  "Nootka Lodge",
-  "Pacific Sunday",
-  "WCCH",
-];
+import { useProjects } from "@/hooks/useProjects";
+import type { Project } from "@/lib/types";
 
 const mainLinks = [
   { label: "Discover", href: "/music", icon: "music" },
@@ -35,10 +26,6 @@ type SidebarTooltip = {
   label: string;
   top: number;
 } | null;
-
-function slugifyProject(project: string) {
-  return project.toLowerCase().replaceAll(" ", "-").replaceAll("/", "-");
-}
 
 function MusicIcon() {
   return (
@@ -369,7 +356,9 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
       viewBox="0 0 7 10"
       fill="none"
       aria-hidden="true"
-      className={`transition-transform duration-200 ${collapsed ? "rotate-180" : ""}`}
+      className={`transition-transform duration-200 ${
+        collapsed ? "rotate-180" : ""
+      }`}
     >
       <path d="M6.2 1L1.8 5L6.2 9V1Z" fill="currentColor" />
     </svg>
@@ -432,7 +421,9 @@ function SectionHeading({
     <div className="mb-2 flex h-[16px] items-center justify-center overflow-hidden">
       <div className="relative flex h-[16px] w-full items-center justify-center">
         <span
-          className={`absolute left-2.5 text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] ${ready ? "transition-[opacity,transform] duration-150" : ""} ${
+          className={`absolute left-2.5 text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] ${
+            ready ? "transition-[opacity,transform] duration-150" : ""
+          } ${
             collapsed
               ? "pointer-events-none -translate-x-1 opacity-0"
               : "translate-x-0 opacity-100"
@@ -442,7 +433,9 @@ function SectionHeading({
         </span>
 
         <span
-          className={`absolute left-1/2 flex h-4 w-4 -translate-x-1/2 items-center justify-center text-[var(--text-muted)] ${ready ? "transition-[opacity,transform] duration-150" : ""} ${
+          className={`absolute left-1/2 flex h-4 w-4 -translate-x-1/2 items-center justify-center text-[var(--text-muted)] ${
+            ready ? "transition-[opacity,transform] duration-150" : ""
+          } ${
             collapsed
               ? "scale-100 opacity-[0.3]"
               : "pointer-events-none scale-90 opacity-0"
@@ -480,7 +473,9 @@ function SidebarLink({
 
   function showTooltip(element: HTMLElement) {
     if (!collapsed) return;
+
     const rect = element.getBoundingClientRect();
+
     onTooltipChange({ label, top: rect.top + rect.height / 2 });
   }
 
@@ -515,7 +510,9 @@ function SidebarLink({
       )}
 
       <span
-        className={`ml-2.5 min-w-0 truncate ${ready ? "transition-[opacity,transform,width] duration-150" : ""} ${
+        className={`ml-2.5 min-w-0 truncate ${
+          ready ? "transition-[opacity,transform,width] duration-150" : ""
+        } ${
           collapsed
             ? "w-0 translate-x-1 opacity-0"
             : "w-auto translate-x-0 opacity-100"
@@ -533,19 +530,21 @@ function ProjectLink({
   ready,
   onTooltipChange,
 }: {
-  project: string;
+  project: Project;
   collapsed: boolean;
   ready: boolean;
   onTooltipChange: (tooltip: SidebarTooltip) => void;
 }) {
   const pathname = usePathname();
-  const href = `/projects/${slugifyProject(project)}`;
+  const href = `/projects/${project.id}`;
   const active = pathname === href;
 
   function showTooltip(element: HTMLElement) {
     if (!collapsed) return;
+
     const rect = element.getBoundingClientRect();
-    onTooltipChange({ label: project, top: rect.top + rect.height / 2 });
+
+    onTooltipChange({ label: project.name, top: rect.top + rect.height / 2 });
   }
 
   function hideTooltip() {
@@ -555,7 +554,7 @@ function ProjectLink({
   return (
     <Link
       href={href}
-      aria-label={project}
+      aria-label={project.name}
       onMouseEnter={(event) => showTooltip(event.currentTarget)}
       onMouseLeave={hideTooltip}
       onFocus={(event) => showTooltip(event.currentTarget)}
@@ -577,13 +576,15 @@ function ProjectLink({
       </span>
 
       <span
-        className={`ml-2.5 min-w-0 truncate ${ready ? "transition-[opacity,transform,width] duration-150" : ""} ${
+        className={`ml-2.5 min-w-0 truncate ${
+          ready ? "transition-[opacity,transform,width] duration-150" : ""
+        } ${
           collapsed
             ? "w-0 translate-x-1 opacity-0"
             : "w-auto translate-x-0 opacity-100"
         }`}
       >
-        {project}
+        {project.name}
       </span>
     </Link>
   );
@@ -601,6 +602,8 @@ export default function Sidebar({
   const [ready, setReady] = useState(false);
 
   const { currentSong } = usePlayer();
+  const { projects, setProjects } = useProjects();
+
   const playerVisible = !!currentSong;
   const sidebarCollapsed = collapsed || forceCollapsed;
 
@@ -637,7 +640,9 @@ export default function Sidebar({
   return (
     <>
       <aside
-        className={`group/sidebar fixed left-0 z-30 flex flex-col border-r border-[var(--border)] bg-[var(--bg-primary)] ${ready ? "transition-[width] duration-200" : ""}`}
+        className={`group/sidebar fixed left-0 z-30 flex flex-col border-r border-[var(--border)] bg-[var(--bg-primary)] ${
+          ready ? "transition-[width] duration-200" : ""
+        }`}
         data-sidebar
         style={{ top: "56px", bottom: playerVisible ? "64px" : "0px" }}
       >
@@ -709,14 +714,18 @@ export default function Sidebar({
 
           <div className="mt-5 flex flex-col">
             <div
-              className={`relative mb-2 flex h-[24px] items-center rounded-md ${ready ? "transition-[padding] duration-200" : ""} ${
+              className={`relative mb-2 flex h-[24px] items-center rounded-md ${
+                ready ? "transition-[padding] duration-200" : ""
+              } ${
                 sidebarCollapsed
                   ? "justify-center px-0"
                   : "justify-between px-2.5"
               }`}
             >
               <span
-                className={`text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] ${ready ? "transition-[opacity,transform] duration-150" : ""} ${
+                className={`text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] ${
+                  ready ? "transition-[opacity,transform] duration-150" : ""
+                } ${
                   sidebarCollapsed
                     ? "pointer-events-none absolute -translate-x-2 opacity-0"
                     : "relative translate-x-0 opacity-100"
@@ -730,7 +739,9 @@ export default function Sidebar({
                 onClick={() => setIsCreateProjectOpen(true)}
                 onMouseEnter={(e) => {
                   if (!sidebarCollapsed) return;
+
                   const rect = e.currentTarget.getBoundingClientRect();
+
                   setTooltip({
                     label: "New Project",
                     top: rect.top + rect.height / 2,
@@ -747,9 +758,9 @@ export default function Sidebar({
             </div>
 
             <div className="space-y-[2px]">
-              {placeholderProjects.map((project) => (
+              {projects.map((project) => (
                 <ProjectLink
-                  key={project}
+                  key={project.id}
                   project={project}
                   collapsed={sidebarCollapsed}
                   ready={ready}
@@ -768,6 +779,15 @@ export default function Sidebar({
       <CreateProjectModal
         isOpen={isCreateProjectOpen}
         onClose={() => setIsCreateProjectOpen(false)}
+        onProjectCreated={(project) => {
+          setProjects((current) =>
+            [...current, project].sort((a, b) =>
+              a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+            ),
+          );
+
+          setIsCreateProjectOpen(false);
+        }}
       />
     </>
   );

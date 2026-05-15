@@ -1,12 +1,30 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabaseServer";
-import type { Project } from "@/lib/types";
 import { normalizeProject } from "@/lib/projects";
+import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
   params: Promise<{ projectId: string }> | { projectId: string };
 };
+
+async function getProjectId(context: RouteContext) {
+  const params = await context.params;
+  return params.projectId;
+}
+
+function getErrorResponse(error: {
+  message?: string;
+  details?: string;
+  hint?: string;
+  code?: string;
+}) {
+  return {
+    error: error.message || "Request failed",
+    details: error.details,
+    hint: error.hint,
+    code: error.code,
+  };
+}
 
 export async function PATCH(req: Request, context: RouteContext) {
   const { userId } = await auth();
@@ -16,7 +34,7 @@ export async function PATCH(req: Request, context: RouteContext) {
   }
 
   try {
-    const { projectId } = await context.params;
+    const projectId = await getProjectId(context);
     const body = await req.json();
 
     const cleanName = typeof body.name === "string" ? body.name.trim() : "";
@@ -42,15 +60,20 @@ export async function PATCH(req: Request, context: RouteContext) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json(normalizeProject(data));
   } catch (err) {
     console.error("Project update error:", err);
+
     return NextResponse.json(
-      {
-        error: err instanceof Error ? err.message : "Failed to update project",
-      },
+      getErrorResponse(
+        err instanceof Error
+          ? { message: err.message }
+          : { message: "Failed to update project" },
+      ),
       { status: 500 },
     );
   }
@@ -64,7 +87,7 @@ export async function DELETE(_req: Request, context: RouteContext) {
   }
 
   try {
-    const { projectId } = await context.params;
+    const projectId = await getProjectId(context);
 
     const { error } = await supabaseServer
       .from("projects")
@@ -72,15 +95,20 @@ export async function DELETE(_req: Request, context: RouteContext) {
       .eq("id", projectId)
       .eq("clerk_user_id", userId);
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({ success: true, id: Number(projectId) });
   } catch (err) {
     console.error("Project delete error:", err);
+
     return NextResponse.json(
-      {
-        error: err instanceof Error ? err.message : "Failed to delete project",
-      },
+      getErrorResponse(
+        err instanceof Error
+          ? { message: err.message }
+          : { message: "Failed to delete project" },
+      ),
       { status: 500 },
     );
   }

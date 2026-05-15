@@ -8,6 +8,7 @@ import Image from "next/image";
 import type { Song } from "@/lib/types";
 import SongMoreDropdown from "@/components/SongMoreDropdown";
 import AddToPlaylistModal from "@/components/AddToPlaylistModal";
+import AddToProjectModal from "@/components/AddToProjectModal";
 import DropdownShell from "@/components/DropdownShell";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
@@ -164,13 +165,17 @@ export default function SongCard({
   isFirst = false,
   isLast = false,
   playlistId,
+  projectId,
   onRemoveFromPlaylist,
+  onRemoveFromProject,
 }: {
   song: Song;
   isFirst?: boolean;
   isLast?: boolean;
   playlistId?: string;
+  projectId?: string;
   onRemoveFromPlaylist?: (songId: string) => void;
+  onRemoveFromProject?: (songId: string) => void;
 }) {
   const { togglePlayPause, currentSong, isPlaying } = usePlayer();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -179,6 +184,7 @@ export default function SongCard({
   const [moreOpen, setMoreOpen] = useState(false);
   const [stemsOpen, setStemsOpen] = useState(false);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
+  const [projectModalOpen, setProjectModalOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const playerVisible = !!currentSong;
@@ -210,6 +216,32 @@ export default function SongCard({
     }
 
     onRemoveFromPlaylist(song.id);
+    setMoreOpen(false);
+  }
+
+  async function handleRemoveFromProject() {
+    if (!projectId || !onRemoveFromProject) return;
+
+    const res = await fetch(
+      `/api/songs/${encodeURIComponent(song.id)}/projects`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          project_id: Number(projectId),
+          selected: false,
+        }),
+      },
+    );
+
+    if (!res.ok) {
+      console.error("Failed to remove song from project");
+      return;
+    }
+
+    onRemoveFromProject(song.id);
     setMoreOpen(false);
   }
 
@@ -384,8 +416,14 @@ export default function SongCard({
               onAddToPlaylist={() => {
                 setPlaylistModalOpen(true);
               }}
+              onAddToProject={() => {
+                setProjectModalOpen(true);
+              }}
               onRemoveFromPlaylist={
                 playlistId ? handleRemoveFromPlaylist : undefined
+              }
+              onRemoveFromProject={
+                projectId ? handleRemoveFromProject : undefined
               }
               collisionPadding={{
                 top: 163,
@@ -406,6 +444,12 @@ export default function SongCard({
         isOpen={playlistModalOpen}
         song={song}
         onClose={() => setPlaylistModalOpen(false)}
+      />
+
+      <AddToProjectModal
+        isOpen={projectModalOpen}
+        song={song}
+        onClose={() => setProjectModalOpen(false)}
       />
     </>
   );

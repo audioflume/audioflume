@@ -1,7 +1,15 @@
 "use client";
 
-import { usePlayer } from "@/context/PlayerContext";
+import AddToPlaylistModal from "@/components/AddToPlaylistModal";
+import AddToProjectModal from "@/components/AddToProjectModal";
+import CreatePlaylistModal from "@/components/CreatePlaylistModal";
+import IconButton from "@/components/IconButton";
+import DownloadIcon from "@/components/icons/DownloadIcon";
+import HeartIcon from "@/components/icons/HeartIcon";
+import MoreIcon from "@/components/icons/MoreIcon";
+import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
+import { usePlayer } from "@/context/PlayerContext";
 import Image from "next/image";
 import {
   useCallback,
@@ -11,12 +19,6 @@ import {
   useRef,
   useState,
 } from "react";
-import AddToPlaylistModal from "@/components/AddToPlaylistModal";
-import HeartIcon from "@/components/icons/HeartIcon";
-import MoreIcon from "@/components/icons/MoreIcon";
-import DownloadIcon from "@/components/icons/DownloadIcon";
-import IconButton from "@/components/IconButton";
-import { iconButtonClass } from "@/components/uiClasses";
 
 const BAR_WIDTH = 2;
 const BAR_GAP = 1;
@@ -154,6 +156,13 @@ export default function MusicPlayer() {
   const [peaks, setPeaks] = useState<number[]>([]);
   const [moreOpen, setMoreOpen] = useState(false);
   const [addToPlaylistOpen, setAddToPlaylistOpen] = useState(false);
+  const [addToProjectOpen, setAddToProjectOpen] = useState(false);
+  const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
+  const [newPlaylistName, setNewPlaylistName] = useState("");
+  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<
+    string | null
+  >(null);
+  const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const [moreMenuPosition, setMoreMenuPosition] = useState({
     top: 0,
     left: 0,
@@ -383,9 +392,43 @@ export default function MusicPlayer() {
     seekTo(currentSong, nextProgress, isPlaying);
   };
 
+  async function handleCreatePlaylist() {
+    if (!newPlaylistName.trim() || isCreatingPlaylist) return;
+
+    setIsCreatingPlaylist(true);
+
+    try {
+      const res = await fetch("/api/playlists", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newPlaylistName,
+          cover_image_url: newPlaylistCoverPreview,
+        }),
+      });
+
+      if (!res.ok) {
+        console.error("Failed to create playlist");
+        return;
+      }
+
+      setNewPlaylistName("");
+      setNewPlaylistCoverPreview(null);
+      setCreatePlaylistOpen(false);
+    } finally {
+      setIsCreatingPlaylist(false);
+    }
+  }
+
   const handleClosePlayer = () => {
     setMoreOpen(false);
     setAddToPlaylistOpen(false);
+    setAddToProjectOpen(false);
+    setCreatePlaylistOpen(false);
+    setNewPlaylistName("");
+    setNewPlaylistCoverPreview(null);
     closePlayer();
   };
 
@@ -601,11 +644,23 @@ export default function MusicPlayer() {
             <span>Add to Playlist</span>
           </button>
 
-          <button type="button" disabled>
+          <button
+            type="button"
+            onClick={() => {
+              setMoreOpen(false);
+              setAddToProjectOpen(true);
+            }}
+          >
             <span>Add to Project</span>
           </button>
 
-          <button type="button" disabled>
+          <button
+            type="button"
+            onClick={() => {
+              setMoreOpen(false);
+              setCreatePlaylistOpen(true);
+            }}
+          >
             <span>Create New Playlist</span>
           </button>
 
@@ -641,6 +696,29 @@ export default function MusicPlayer() {
         isOpen={addToPlaylistOpen}
         song={currentSong}
         onClose={() => setAddToPlaylistOpen(false)}
+      />
+
+      <AddToProjectModal
+        isOpen={addToProjectOpen}
+        song={currentSong}
+        onClose={() => setAddToProjectOpen(false)}
+      />
+
+      <CreatePlaylistModal
+        isOpen={createPlaylistOpen}
+        name={newPlaylistName}
+        coverPreview={newPlaylistCoverPreview}
+        isCreating={isCreatingPlaylist}
+        onNameChange={setNewPlaylistName}
+        onCoverPreviewChange={setNewPlaylistCoverPreview}
+        onCreate={handleCreatePlaylist}
+        onClose={() => {
+          if (isCreatingPlaylist) return;
+
+          setNewPlaylistName("");
+          setNewPlaylistCoverPreview(null);
+          setCreatePlaylistOpen(false);
+        }}
       />
     </>
   );

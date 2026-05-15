@@ -353,7 +353,7 @@ body.sidebar-collapsed {
   overflow-x: hidden;
   border-radius: 14px;
   border: 1px solid var(--border);
-  background: var(--bg-tertiary);
+  background: var(--bg-primary);
   box-shadow: var(--shadow-ui);
   padding: 6px;
   color: var(--text-primary);
@@ -434,7 +434,7 @@ body.sidebar-collapsed {
 }
 
 .light .filmwave-dropdown-shell {
-  background: var(--bg-tertiary);
+  background: var(--bg-primary);
 }
 
 /* ─── Add to playlist modal ─────────────────────────── */

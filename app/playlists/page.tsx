@@ -1289,20 +1289,20 @@ export default function PlaylistsPage() {
         }
 
         .playlist-gallery-art-wrap {
-          position: relative;
-          aspect-ratio: 1 / 1.08;
-          border-radius: 18px;
-          overflow: hidden;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-subtle);
-          transition: transform 0.18s ease, border-color 0.18s ease;
-        }
+  position: relative;
+  aspect-ratio: 1 / 1.08;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  transition: transform 0.18s ease;
+}
 
-        .playlist-gallery-card:hover .playlist-gallery-art-wrap,
-        .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap {
-          transform: translateY(-2px);
-          border-color: var(--text-muted);
-        }
+.playlist-gallery-card:hover .playlist-gallery-art-wrap,
+.playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap {
+  transform: translateY(-2px);
+  border-color: var(--border);
+}
 
         .playlist-gallery-art {
           position: absolute;

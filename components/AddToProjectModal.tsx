@@ -4,29 +4,29 @@ import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { usePlayer } from "@/context/PlayerContext";
-import { usePlaylists } from "@/hooks/usePlaylists";
+import { useProjects } from "@/hooks/useProjects";
 import Toast from "@/components/Toast";
 import ModalShell from "@/components/ModalShell";
 import { modalPrimaryButtonClass } from "@/components/uiClasses";
 
-const RECENT_PLAYLIST_IDS_KEY = "filmwaveRecentPlaylistIds";
-const RECENT_PLAYLIST_LIMIT = 3;
+const RECENT_PROJECT_IDS_KEY = "filmwaveRecentProjectIds";
+const RECENT_PROJECT_LIMIT = 3;
 
-type AddToPlaylistModalProps = {
+type AddToProjectModalProps = {
   isOpen: boolean;
   song: Song | null;
   onClose: () => void;
 };
 
-function formatPlaylistNames(names: string[]) {
+function formatProjectNames(names: string[]) {
   return names.map((name) => `"${name}"`).join(", ");
 }
 
-function readRecentPlaylistIds() {
+function readRecentProjectIds() {
   if (typeof window === "undefined") return [];
 
   try {
-    const raw = window.localStorage.getItem(RECENT_PLAYLIST_IDS_KEY);
+    const raw = window.localStorage.getItem(RECENT_PROJECT_IDS_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
 
     if (!Array.isArray(parsed)) return [];
@@ -37,10 +37,10 @@ function readRecentPlaylistIds() {
   }
 }
 
-function writeRecentPlaylistIds(ids: number[]) {
+function writeRecentProjectIds(ids: number[]) {
   if (typeof window === "undefined") return;
 
-  window.localStorage.setItem(RECENT_PLAYLIST_IDS_KEY, JSON.stringify(ids));
+  window.localStorage.setItem(RECENT_PROJECT_IDS_KEY, JSON.stringify(ids));
 }
 
 function CheckIcon() {
@@ -88,7 +88,7 @@ function PlusIcon() {
   );
 }
 
-function PlaylistIcon() {
+function ProjectIcon() {
   return (
     <svg
       width="13"
@@ -98,43 +98,31 @@ function PlaylistIcon() {
       aria-hidden="true"
     >
       <path
-        d="M5 7H19"
+        d="M4 7.5C4 6.67157 4.67157 6 5.5 6H9.4L11.1 8H18.5C19.3284 8 20 8.67157 20 9.5V17.5C20 18.3284 19.3284 19 18.5 19H5.5C4.67157 19 4 18.3284 4 17.5V7.5Z"
         stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H15"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 17H11"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
+        strokeWidth="1.9"
+        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-export default function AddToPlaylistModal({
+export default function AddToProjectModal({
   isOpen,
   song,
   onClose,
-}: AddToPlaylistModalProps) {
+}: AddToProjectModalProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
 
   const {
-    playlists,
-    loading: playlistsLoading,
-    error: playlistsError,
-    refetchPlaylists,
-  } = usePlaylists();
+    projects,
+    loading: projectsLoading,
+    error: projectsError,
+    refetchProjects,
+  } = useProjects();
 
-  const [recentPlaylistIds, setRecentPlaylistIds] = useState<number[]>([]);
+  const [recentProjectIds, setRecentProjectIds] = useState<number[]>([]);
   const [initialSelectedIds, setInitialSelectedIds] = useState<Set<number>>(
     new Set(),
   );
@@ -147,7 +135,7 @@ export default function AddToPlaylistModal({
   useEffect(() => {
     if (!isOpen) return;
 
-    setRecentPlaylistIds(readRecentPlaylistIds());
+    setRecentProjectIds(readRecentProjectIds());
   }, [isOpen]);
 
   useEffect(() => {
@@ -166,29 +154,29 @@ export default function AddToPlaylistModal({
     const activeSong = song;
     let cancelled = false;
 
-    async function loadSelectedPlaylists() {
+    async function loadSelectedProjects() {
       setSelectedLoading(true);
       setError(null);
 
       try {
         const res = await fetch(
-          `/api/songs/${encodeURIComponent(activeSong.id)}/playlists`,
+          `/api/songs/${encodeURIComponent(activeSong.id)}/projects`,
         );
         const text = await res.text();
         const data = text ? JSON.parse(text) : null;
 
         if (!res.ok) {
-          throw new Error(data?.error || "Failed to load playlist selections");
+          throw new Error(data?.error || "Failed to load project selections");
         }
 
-        if (!Array.isArray(data?.selected_playlist_ids)) {
-          throw new Error("Invalid playlist selections response");
+        if (!Array.isArray(data?.selected_project_ids)) {
+          throw new Error("Invalid project selections response");
         }
 
         if (cancelled) return;
 
         const selected = new Set<number>(
-          data.selected_playlist_ids.map((id: number | string) => Number(id)),
+          data.selected_project_ids.map((id: number | string) => Number(id)),
         );
 
         setInitialSelectedIds(selected);
@@ -198,7 +186,7 @@ export default function AddToPlaylistModal({
           setError(
             err instanceof Error
               ? err.message
-              : "Failed to load playlist selections",
+              : "Failed to load project selections",
           );
           setInitialSelectedIds(new Set());
           setSelectedIds(new Set());
@@ -210,31 +198,31 @@ export default function AddToPlaylistModal({
       }
     }
 
-    loadSelectedPlaylists();
+    loadSelectedProjects();
 
     return () => {
       cancelled = true;
     };
   }, [isOpen, song]);
 
-  const displayedPlaylists = useMemo(() => {
-    const recentIdSet = new Set(recentPlaylistIds);
+  const displayedProjects = useMemo(() => {
+    const recentIdSet = new Set(recentProjectIds);
 
-    const recent = playlists
-      .filter((playlist) => recentIdSet.has(playlist.id))
+    const recent = projects
+      .filter((project) => recentIdSet.has(project.id))
       .sort(
         (a, b) =>
-          recentPlaylistIds.indexOf(a.id) - recentPlaylistIds.indexOf(b.id),
+          recentProjectIds.indexOf(a.id) - recentProjectIds.indexOf(b.id),
       );
 
-    const remaining = playlists
-      .filter((playlist) => !recentIdSet.has(playlist.id))
+    const remaining = projects
+      .filter((project) => !recentIdSet.has(project.id))
       .sort((a, b) =>
         a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
       );
 
     return [...recent, ...remaining];
-  }, [playlists, recentPlaylistIds]);
+  }, [projects, recentProjectIds]);
 
   const hasChanges = useMemo(() => {
     if (initialSelectedIds.size !== selectedIds.size) return true;
@@ -246,34 +234,34 @@ export default function AddToPlaylistModal({
     return false;
   }, [initialSelectedIds, selectedIds]);
 
-  function togglePlaylist(playlistId: number) {
+  function toggleProject(projectId: number) {
     if (selectedLoading) return;
 
     setSelectedIds((prev) => {
       const next = new Set(prev);
 
-      if (next.has(playlistId)) {
-        next.delete(playlistId);
+      if (next.has(projectId)) {
+        next.delete(projectId);
       } else {
-        next.add(playlistId);
+        next.add(projectId);
       }
 
       return next;
     });
   }
 
-  function updateRecentPlaylists(addedPlaylistIds: number[]) {
-    if (addedPlaylistIds.length === 0) return;
+  function updateRecentProjects(addedProjectIds: number[]) {
+    if (addedProjectIds.length === 0) return;
 
-    const current = readRecentPlaylistIds();
+    const current = readRecentProjectIds();
 
     const next = [
-      ...addedPlaylistIds,
-      ...current.filter((id) => !addedPlaylistIds.includes(id)),
-    ].slice(0, RECENT_PLAYLIST_LIMIT);
+      ...addedProjectIds,
+      ...current.filter((id) => !addedProjectIds.includes(id)),
+    ].slice(0, RECENT_PROJECT_LIMIT);
 
-    writeRecentPlaylistIds(next);
-    setRecentPlaylistIds(next);
+    writeRecentProjectIds(next);
+    setRecentProjectIds(next);
   }
 
   async function handleSave() {
@@ -285,37 +273,37 @@ export default function AddToPlaylistModal({
     setError(null);
 
     try {
-      const addedPlaylistIds: number[] = [];
-      const addedPlaylistNames: string[] = [];
-      const removedPlaylistNames: string[] = [];
+      const addedProjectIds: number[] = [];
+      const addedProjectNames: string[] = [];
+      const removedProjectNames: string[] = [];
 
-      const updates = playlists
-        .map((playlist) => {
-          const wasSelected = initialSelectedIds.has(playlist.id);
-          const isSelected = selectedIds.has(playlist.id);
+      const updates = projects
+        .map((project) => {
+          const wasSelected = initialSelectedIds.has(project.id);
+          const isSelected = selectedIds.has(project.id);
 
           if (wasSelected === isSelected) return null;
 
           if (isSelected) {
-            addedPlaylistIds.push(playlist.id);
-            addedPlaylistNames.push(playlist.name);
+            addedProjectIds.push(project.id);
+            addedProjectNames.push(project.name);
           } else {
-            removedPlaylistNames.push(playlist.name);
+            removedProjectNames.push(project.name);
           }
 
           return {
-            playlist_id: playlist.id,
+            project_id: project.id,
             selected: isSelected,
           };
         })
         .filter(
-          (update): update is { playlist_id: number; selected: boolean } =>
+          (update): update is { project_id: number; selected: boolean } =>
             update !== null,
         );
 
       for (const update of updates) {
         const res = await fetch(
-          `/api/songs/${encodeURIComponent(activeSong.id)}/playlists`,
+          `/api/songs/${encodeURIComponent(activeSong.id)}/projects`,
           {
             method: "PATCH",
             headers: {
@@ -329,31 +317,31 @@ export default function AddToPlaylistModal({
         const data = text ? JSON.parse(text) : null;
 
         if (!res.ok) {
-          throw new Error(data?.error || "Failed to update playlist");
+          throw new Error(data?.error || "Failed to update project");
         }
       }
 
       setInitialSelectedIds(new Set(selectedIds));
-      updateRecentPlaylists(addedPlaylistIds);
+      updateRecentProjects(addedProjectIds);
 
-      if (addedPlaylistNames.length > 0 && removedPlaylistNames.length > 0) {
+      if (addedProjectNames.length > 0 && removedProjectNames.length > 0) {
         setToastMessage(
-          `Added to ${formatPlaylistNames(
-            addedPlaylistNames,
-          )} · Removed from ${formatPlaylistNames(removedPlaylistNames)}`,
+          `Added to ${formatProjectNames(
+            addedProjectNames,
+          )} · Removed from ${formatProjectNames(removedProjectNames)}`,
         );
-      } else if (addedPlaylistNames.length > 0) {
-        setToastMessage(`Added to ${formatPlaylistNames(addedPlaylistNames)}`);
-      } else if (removedPlaylistNames.length > 0) {
+      } else if (addedProjectNames.length > 0) {
+        setToastMessage(`Added to ${formatProjectNames(addedProjectNames)}`);
+      } else if (removedProjectNames.length > 0) {
         setToastMessage(
-          `Removed from ${formatPlaylistNames(removedPlaylistNames)}`,
+          `Removed from ${formatProjectNames(removedProjectNames)}`,
         );
       }
 
       onClose();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to save playlist changes",
+        err instanceof Error ? err.message : "Failed to save project changes",
       );
     } finally {
       setSaving(false);
@@ -362,16 +350,16 @@ export default function AddToPlaylistModal({
 
   if (!song) return null;
 
-  const loading = playlistsLoading;
-  const displayedError = error || playlistsError;
+  const loading = projectsLoading;
+  const displayedError = error || projectsError;
 
   return (
     <>
       <ModalShell
         isOpen={isOpen}
-        title="Add to Playlist"
+        title="Add to Project"
         onClose={onClose}
-        closeLabel="Close add to playlist modal"
+        closeLabel="Close add to project modal"
         centerTitle
         maxHeight="462px"
         bodyScroll
@@ -414,7 +402,7 @@ export default function AddToPlaylistModal({
         <div className="-mx-4 min-h-[234px] flex-1 overflow-y-auto border-t border-[var(--border)] px-4 pt-3 pb-3">
           {(loading || selectedLoading) && (
             <div className="grid gap-1.5">
-              {Array.from({ length: playlists.length || 6 }).map((_, index) => (
+              {Array.from({ length: projects.length || 6 }).map((_, index) => (
                 <div
                   key={index}
                   className="flex h-9 items-center justify-between gap-2.5 rounded-lg px-2.5"
@@ -434,10 +422,10 @@ export default function AddToPlaylistModal({
                 {displayedError}
               </div>
 
-              {playlistsError && (
+              {projectsError && (
                 <button
                   type="button"
-                  onClick={refetchPlaylists}
+                  onClick={refetchProjects}
                   className="h-8 rounded-md bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
                 >
                   Try Again
@@ -448,25 +436,25 @@ export default function AddToPlaylistModal({
           {!loading &&
             !selectedLoading &&
             !displayedError &&
-            displayedPlaylists.length === 0 && (
+            displayedProjects.length === 0 && (
               <div className="flex min-h-[180px] items-center justify-center rounded-lg bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-secondary)]">
-                You don&apos;t have any playlists yet.
+                You don&apos;t have any projects yet.
               </div>
             )}
           {!loading &&
             !selectedLoading &&
             !displayedError &&
-            displayedPlaylists.length > 0 &&
-            displayedPlaylists.map((playlist) => {
-              const isSelected = selectedIds.has(playlist.id);
+            displayedProjects.length > 0 &&
+            displayedProjects.map((project) => {
+              const isSelected = selectedIds.has(project.id);
 
               return (
                 <button
-                  key={playlist.id}
+                  key={project.id}
                   type="button"
-                  onClick={() => togglePlaylist(playlist.id)}
+                  onClick={() => toggleProject(project.id)}
                   disabled={selectedLoading}
-                  className={`add-playlist-row group flex h-9 w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-2.5 text-left text-xs font-medium transition-colors disabled:cursor-default disabled:opacity-70 ${
+                  className={`add-project-row group flex h-9 w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-2.5 text-left text-xs font-medium transition-colors disabled:cursor-default disabled:opacity-70 ${
                     isSelected
                       ? "is-selected bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
                       : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
@@ -480,14 +468,14 @@ export default function AddToPlaylistModal({
                           : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                       }`}
                     >
-                      <PlaylistIcon />
+                      <ProjectIcon />
                     </span>
 
-                    <span className="min-w-0 truncate">{playlist.name}</span>
+                    <span className="min-w-0 truncate">{project.name}</span>
                   </span>
 
                   <span
-                    className={`add-playlist-action flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
+                    className={`add-project-action flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
                       isSelected
                         ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
                         : "text-[var(--text-muted)]"

@@ -9,7 +9,9 @@ type SongMoreDropdownProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddToPlaylist: () => void;
+  onAddToProject: () => void;
   onRemoveFromPlaylist?: () => void;
+  onRemoveFromProject?: () => void;
   dropdownClassName?: string;
   strategy?: Strategy;
   usePortal?: boolean;
@@ -27,7 +29,9 @@ export default function SongMoreDropdown({
   open,
   onOpenChange,
   onAddToPlaylist,
+  onAddToProject,
   onRemoveFromPlaylist,
+  onRemoveFromProject,
   dropdownClassName = "song-more-dropdown",
   strategy = "absolute",
   usePortal = false,
@@ -66,7 +70,13 @@ export default function SongMoreDropdown({
           Add to Playlist
         </button>
 
-        <button type="button" disabled>
+        <button
+          type="button"
+          onClick={() => {
+            onOpenChange(false);
+            onAddToProject();
+          }}
+        >
           Add to Project
         </button>
 
@@ -92,6 +102,19 @@ export default function SongMoreDropdown({
             }}
           >
             Remove from Playlist
+          </button>
+        )}
+
+        {onRemoveFromProject && (
+          <button
+            type="button"
+            className="danger"
+            onClick={() => {
+              onOpenChange(false);
+              onRemoveFromProject();
+            }}
+          >
+            Remove from Project
           </button>
         )}
       </DropdownShell>
