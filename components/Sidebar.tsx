@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import CreateProjectModal from "@/components/CreateProjectModal";
 import HeartIcon from "@/components/icons/HeartIcon";
-import { useProjects } from "@/hooks/useProjects";
+import { useProjectsContext } from "@/context/ProjectsContext";
 import type { Project } from "@/lib/types";
 
 const mainLinks = [
@@ -602,7 +602,7 @@ export default function Sidebar({
   const [ready, setReady] = useState(false);
 
   const { currentSong } = usePlayer();
-  const { projects, setProjects } = useProjects();
+  const { projects, setProjects } = useProjectsContext();
 
   const playerVisible = !!currentSong;
   const sidebarCollapsed = collapsed || forceCollapsed;

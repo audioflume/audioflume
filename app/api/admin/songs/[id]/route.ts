@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
-import base from "@/lib/airtable";
+import { supabaseServer } from "@/lib/supabaseServer";
 import { deleteFilesFromR2 } from "@/lib/r2";
 
 export const runtime = "nodejs";
@@ -28,32 +28,43 @@ type SaveSongPayload = {
   editPoints: string;
 };
 
-type AirtableRecord = {
-  id: string;
-  fields?: Record<string, unknown>;
-  get: (fieldName: string) => unknown;
-};
+function durationToSeconds(duration: string) {
+  const trimmed = duration.trim();
 
-function getString(value: unknown) {
-  if (typeof value === "string") return value.trim();
+  if (!trimmed) return 0;
 
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return String(value);
+  if (!trimmed.includes(":")) {
+    const numeric = Number(trimmed);
+    return Number.isFinite(numeric) ? numeric : 0;
   }
 
-  return "";
+  const parts = trimmed.split(":").map((part) => Number(part));
+
+  if (parts.some((part) => !Number.isFinite(part))) return 0;
+
+  if (parts.length === 2) {
+    const [minutes, seconds] = parts;
+    return minutes * 60 + seconds;
+  }
+
+  if (parts.length === 3) {
+    const [hours, minutes, seconds] = parts;
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+
+  return 0;
 }
 
-function getBoolean(value: unknown) {
-  if (typeof value === "boolean") return value;
+function formatDuration(seconds: number) {
+  if (!Number.isFinite(seconds) || seconds <= 0) return "";
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
 
-  if (typeof value === "string") {
-    return ["true", "yes", "1", "instrumental"].includes(
-      value.trim().toLowerCase(),
-    );
-  }
-
-  return false;
+function cleanStringArray(value: unknown) {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => String(item).trim()).filter(Boolean);
 }
 
 function getR2KeyFromUrl(value: unknown) {
@@ -67,127 +78,13 @@ function getR2KeyFromUrl(value: unknown) {
   }
 }
 
-function getStemUrls(value: unknown) {
-  if (Array.isArray(value)) {
-    return value.map((url) => String(url).trim()).filter(Boolean);
-  }
-
-  if (typeof value !== "string") return [];
+function getStemUrls(value: string | null): string[] {
+  if (!value) return [];
 
   return value
     .split("\n")
     .map((url) => url.trim())
     .filter(Boolean);
-}
-
-function normalizeArrayField(value: unknown): string[] {
-  if (Array.isArray(value)) {
-    return value
-      .flatMap((item: unknown) => normalizeArrayField(item))
-      .map((item: string) => item.trim())
-      .filter(Boolean);
-  }
-
-  if (typeof value === "string") {
-    return value
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-}
-
-function normalizeStemUrls(value: unknown) {
-  return getStemUrls(value);
-}
-
-function parseDurationForAirtable(value: string) {
-  const trimmed = value.trim();
-
-  if (!trimmed) return undefined;
-
-  if (!trimmed.includes(":")) {
-    const numeric = Number(trimmed);
-    return Number.isFinite(numeric) ? numeric : undefined;
-  }
-
-  const parts = trimmed.split(":").map((part) => Number(part));
-
-  if (parts.some((part) => !Number.isFinite(part))) {
-    return undefined;
-  }
-
-  if (parts.length === 2) {
-    const [minutes, seconds] = parts;
-    return minutes * 60 + seconds;
-  }
-
-  if (parts.length === 3) {
-    const [hours, minutes, seconds] = parts;
-    return hours * 3600 + minutes * 60 + seconds;
-  }
-
-  return undefined;
-}
-
-function formatDurationForForm(value: unknown) {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    const minutes = Math.floor(value / 60);
-    const seconds = Math.round(value % 60);
-
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  }
-
-  return getString(value);
-}
-
-function getRecordPayload(record: AirtableRecord) {
-  return {
-    id: record.id,
-    title: getString(record.get("Song Title")),
-    artist: getString(record.get("Artist")),
-    bpm: getString(record.get("BPM")),
-    key: getString(record.get("Key")),
-    duration: formatDurationForForm(record.get("Duration")),
-    audioUrl: getString(record.get("Audio URL") || record.get("R2 Audio URL")),
-    coverUrl: getString(record.get("Cover URL")),
-    stemUrls: normalizeStemUrls(record.get("Stems")),
-    waveformPeaks: getString(record.get("Waveform Peaks")) || "[]",
-    genres: normalizeArrayField(record.get("Genre")),
-    moods: normalizeArrayField(record.get("Mood")),
-    instruments: normalizeArrayField(record.get("Instrument")),
-    builds: normalizeArrayField(record.get("Build")),
-    vocals: normalizeArrayField(record.get("Vocals")),
-    instrumental: getBoolean(record.get("Instrumental")),
-    editPoints:
-      getString(record.get("Edit Points")) ||
-      `{
-"markers": [],
-"ranges": []
-}`,
-  };
-}
-
-function buildAirtableFields(payload: SaveSongPayload) {
-  return {
-    "Song Title": payload.title,
-    Artist: payload.artist,
-    BPM: payload.bpm ? Number(payload.bpm) : undefined,
-    Key: payload.key,
-    Duration: parseDurationForAirtable(payload.duration),
-    "Audio URL": payload.audioUrl,
-    "Cover URL": payload.coverUrl || "",
-    Stems: payload.stemUrls?.length ? payload.stemUrls.join("\n") : "",
-    "Waveform Peaks": payload.waveformPeaks || "[]",
-    Genre: payload.genres,
-    Mood: payload.moods,
-    Instrument: payload.instruments,
-    Build: payload.builds,
-    Vocals: payload.vocals,
-    Instrumental: payload.instrumental,
-    "Edit Points": payload.editPoints || '{"markers":[],"ranges":[]}',
-  };
 }
 
 export async function GET(_req: Request, context: RouteContext) {
@@ -198,31 +95,47 @@ export async function GET(_req: Request, context: RouteContext) {
   }
 
   try {
-    const tableId = process.env.AIRTABLE_SONGS_TABLE_ID;
-
-    if (!tableId) {
-      return NextResponse.json(
-        { error: "Missing AIRTABLE_SONGS_TABLE_ID" },
-        { status: 500 },
-      );
-    }
-
     const { id } = await context.params;
 
     if (!id) {
       return NextResponse.json({ error: "Missing song ID" }, { status: 400 });
     }
 
-    const record = await base(tableId).find(id);
+    const { data, error } = await supabaseServer
+      .from("songs")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-    return NextResponse.json(getRecordPayload(record));
+    if (error || !data) {
+      return NextResponse.json({ error: "Song not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      id: data.id,
+      title: data.title,
+      artist: data.artist,
+      bpm: data.bpm ? String(data.bpm) : "",
+      key: data.key || "",
+      duration: formatDuration(Number(data.duration)),
+      audioUrl: data.audio_url,
+      coverUrl: data.cover_url || "",
+      stemUrls: getStemUrls(data.stems),
+      waveformPeaks: data.waveform_peaks || "[]",
+      genres: data.genres || [],
+      moods: data.moods || [],
+      instruments: data.instruments || [],
+      builds: data.builds || [],
+      vocals: data.vocals || [],
+      instrumental: Boolean(data.instrumental),
+      editPoints: data.edit_points || '{"markers":[],"ranges":[]}',
+      status: data.status,
+    });
   } catch (err) {
     console.error("Song load failed:", err);
 
     return NextResponse.json(
-      {
-        error: err instanceof Error ? err.message : "Failed to load song",
-      },
+      { error: err instanceof Error ? err.message : "Failed to load song" },
       { status: 500 },
     );
   }
@@ -236,15 +149,6 @@ export async function PATCH(req: Request, context: RouteContext) {
   }
 
   try {
-    const tableId = process.env.AIRTABLE_SONGS_TABLE_ID;
-
-    if (!tableId) {
-      return NextResponse.json(
-        { error: "Missing AIRTABLE_SONGS_TABLE_ID" },
-        { status: 500 },
-      );
-    }
-
     const { id } = await context.params;
 
     if (!id) {
@@ -252,13 +156,20 @@ export async function PATCH(req: Request, context: RouteContext) {
     }
 
     const payload = (await req.json()) as SaveSongPayload;
-    const currentRecord = await base(tableId).find(id);
 
-    const previousAudioKey = getR2KeyFromUrl(
-      currentRecord.get("Audio URL") || currentRecord.get("R2 Audio URL"),
-    );
-    const previousCoverKey = getR2KeyFromUrl(currentRecord.get("Cover URL"));
-    const previousStemKeys = getStemUrls(currentRecord.get("Stems"))
+    const { data: current, error: fetchError } = await supabaseServer
+      .from("songs")
+      .select("audio_url, cover_url, stems")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !current) {
+      return NextResponse.json({ error: "Song not found" }, { status: 404 });
+    }
+
+    const previousAudioKey = getR2KeyFromUrl(current.audio_url);
+    const previousCoverKey = getR2KeyFromUrl(current.cover_url);
+    const previousStemKeys = getStemUrls(current.stems)
       .map(getR2KeyFromUrl)
       .filter((key): key is string => Boolean(key));
 
@@ -278,27 +189,46 @@ export async function PATCH(req: Request, context: RouteContext) {
       ...previousStemKeys.filter((key) => !nextStemKeys.includes(key)),
     ].filter((key): key is string => Boolean(key));
 
-    const updatedRecord = await base(tableId).update(
-      id,
-      buildAirtableFields(payload),
-    );
+    const { data, error } = await supabaseServer
+      .from("songs")
+      .update({
+        title: payload.title.trim(),
+        artist: payload.artist.trim(),
+        audio_url: payload.audioUrl.trim(),
+        cover_url: payload.coverUrl || null,
+        stems: payload.stemUrls?.length ? payload.stemUrls.join("\n") : null,
+        waveform_peaks: payload.waveformPeaks || "[]",
+        duration: durationToSeconds(payload.duration),
+        bpm: payload.bpm ? Number(payload.bpm) : null,
+        key: payload.key || null,
+        genres: cleanStringArray(payload.genres),
+        moods: cleanStringArray(payload.moods),
+        instruments: cleanStringArray(payload.instruments),
+        builds: cleanStringArray(payload.builds),
+        vocals: cleanStringArray(payload.vocals),
+        instrumental: Boolean(payload.instrumental),
+        edit_points: payload.editPoints || '{"markers":[],"ranges":[]}',
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
 
     if (keysToDelete.length > 0) {
       await deleteFilesFromR2(keysToDelete);
     }
 
     return NextResponse.json({
-      id: updatedRecord.id,
-      fields: updatedRecord.fields,
+      id: data.id,
+      fields: data,
       deletedR2Keys: keysToDelete,
     });
   } catch (err) {
     console.error("Song update failed:", err);
 
     return NextResponse.json(
-      {
-        error: err instanceof Error ? err.message : "Failed to update song",
-      },
+      { error: err instanceof Error ? err.message : "Failed to update song" },
       { status: 500 },
     );
   }
@@ -312,28 +242,25 @@ export async function DELETE(_req: Request, context: RouteContext) {
   }
 
   try {
-    const tableId = process.env.AIRTABLE_SONGS_TABLE_ID;
-
-    if (!tableId) {
-      return NextResponse.json(
-        { error: "Missing AIRTABLE_SONGS_TABLE_ID" },
-        { status: 500 },
-      );
-    }
-
     const { id } = await context.params;
 
     if (!id) {
       return NextResponse.json({ error: "Missing song ID" }, { status: 400 });
     }
 
-    const record = await base(tableId).find(id);
+    const { data: current, error: fetchError } = await supabaseServer
+      .from("songs")
+      .select("audio_url, cover_url, stems")
+      .eq("id", id)
+      .single();
 
-    const audioKey = getR2KeyFromUrl(
-      record.get("Audio URL") || record.get("R2 Audio URL"),
-    );
-    const coverKey = getR2KeyFromUrl(record.get("Cover URL"));
-    const stemKeys = getStemUrls(record.get("Stems"))
+    if (fetchError || !current) {
+      return NextResponse.json({ error: "Song not found" }, { status: 404 });
+    }
+
+    const audioKey = getR2KeyFromUrl(current.audio_url);
+    const coverKey = getR2KeyFromUrl(current.cover_url);
+    const stemKeys = getStemUrls(current.stems)
       .map(getR2KeyFromUrl)
       .filter((key): key is string => Boolean(key));
 
@@ -341,11 +268,13 @@ export async function DELETE(_req: Request, context: RouteContext) {
       (key): key is string => Boolean(key),
     );
 
+    const { error } = await supabaseServer.from("songs").delete().eq("id", id);
+
+    if (error) throw error;
+
     if (keysToDelete.length > 0) {
       await deleteFilesFromR2(keysToDelete);
     }
-
-    await base(tableId).destroy(id);
 
     return NextResponse.json({
       id,
@@ -356,9 +285,7 @@ export async function DELETE(_req: Request, context: RouteContext) {
     console.error("Song delete failed:", err);
 
     return NextResponse.json(
-      {
-        error: err instanceof Error ? err.message : "Failed to delete song",
-      },
+      { error: err instanceof Error ? err.message : "Failed to delete song" },
       { status: 500 },
     );
   }

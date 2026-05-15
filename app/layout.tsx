@@ -6,6 +6,7 @@ import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { UserPreferencesProvider } from "@/context/UserPreferencesContext";
 import { PlaylistsProvider } from "@/context/PlaylistsContext";
+import { ProjectsProvider } from "@/context/ProjectsContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
@@ -59,10 +60,12 @@ export default async function RootLayout({
               <PlayerProvider>
                 <FavoritesProvider>
                   <PlaylistsProvider>
-                    <Header />
-                    <SidebarRenderer initialCollapsed={sidebarCollapsed} />
-                    {children}
-                    <PlayerRenderer />
+                    <ProjectsProvider>
+                      <Header />
+                      <SidebarRenderer initialCollapsed={sidebarCollapsed} />
+                      {children}
+                      <PlayerRenderer />
+                    </ProjectsProvider>
                   </PlaylistsProvider>
                 </FavoritesProvider>
               </PlayerProvider>

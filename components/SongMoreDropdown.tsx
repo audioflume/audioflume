@@ -10,6 +10,7 @@ type SongMoreDropdownProps = {
   onOpenChange: (open: boolean) => void;
   onAddToPlaylist: () => void;
   onAddToProject: () => void;
+  onCreatePlaylist: () => void;
   onRemoveFromPlaylist?: () => void;
   onRemoveFromProject?: () => void;
   dropdownClassName?: string;
@@ -30,6 +31,7 @@ export default function SongMoreDropdown({
   onOpenChange,
   onAddToPlaylist,
   onAddToProject,
+  onCreatePlaylist,
   onRemoveFromPlaylist,
   onRemoveFromProject,
   dropdownClassName = "song-more-dropdown",
@@ -80,7 +82,13 @@ export default function SongMoreDropdown({
           Add to Project
         </button>
 
-        <button type="button" disabled>
+        <button
+          type="button"
+          onClick={() => {
+            onOpenChange(false);
+            onCreatePlaylist();
+          }}
+        >
           Create New Playlist
         </button>
 

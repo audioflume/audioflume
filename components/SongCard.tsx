@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import { useFavorites } from "@/context/FavoritesContext";
+import { usePlaylists } from "@/hooks/usePlaylists";
 import Waveform from "./Waveform";
 import Image from "next/image";
 import type { Song } from "@/lib/types";
 import SongMoreDropdown from "@/components/SongMoreDropdown";
 import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import AddToProjectModal from "@/components/AddToProjectModal";
+import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import DropdownShell from "@/components/DropdownShell";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
@@ -179,12 +181,19 @@ export default function SongCard({
 }) {
   const { togglePlayPause, currentSong, isPlaying } = usePlayer();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { playlists, setPlaylists } = usePlaylists();
 
   const [cardWidth, setCardWidth] = useState(0);
   const [moreOpen, setMoreOpen] = useState(false);
   const [stemsOpen, setStemsOpen] = useState(false);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
   const [projectModalOpen, setProjectModalOpen] = useState(false);
+  const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
+  const [newPlaylistName, setNewPlaylistName] = useState("");
+  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<
+    string | null
+  >(null);
+  const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const playerVisible = !!currentSong;
@@ -197,6 +206,44 @@ export default function SongCard({
   const stems = getSongStems(song);
   const hasStems = stems.length > 0;
   const favorited = isFavorite(song.id);
+
+  async function handleCreatePlaylist() {
+    if (!newPlaylistName.trim() || isCreatingPlaylist) return;
+
+    setIsCreatingPlaylist(true);
+
+    try {
+      const res = await fetch("/api/playlists", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newPlaylistName,
+          cover_image_url: newPlaylistCoverPreview,
+          position: playlists.length,
+        }),
+      });
+
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        console.error("Failed to create playlist:", data || res.statusText);
+        return;
+      }
+
+      if (data) {
+        setPlaylists((current) => [...current, data]);
+      }
+
+      setNewPlaylistName("");
+      setNewPlaylistCoverPreview(null);
+      setCreatePlaylistOpen(false);
+    } finally {
+      setIsCreatingPlaylist(false);
+    }
+  }
 
   async function handleRemoveFromPlaylist() {
     if (!playlistId || !onRemoveFromPlaylist) return;
@@ -419,6 +466,9 @@ export default function SongCard({
               onAddToProject={() => {
                 setProjectModalOpen(true);
               }}
+              onCreatePlaylist={() => {
+                setCreatePlaylistOpen(true);
+              }}
               onRemoveFromPlaylist={
                 playlistId ? handleRemoveFromPlaylist : undefined
               }
@@ -450,6 +500,23 @@ export default function SongCard({
         isOpen={projectModalOpen}
         song={song}
         onClose={() => setProjectModalOpen(false)}
+      />
+
+      <CreatePlaylistModal
+        isOpen={createPlaylistOpen}
+        name={newPlaylistName}
+        coverPreview={newPlaylistCoverPreview}
+        isCreating={isCreatingPlaylist}
+        onNameChange={setNewPlaylistName}
+        onCoverPreviewChange={setNewPlaylistCoverPreview}
+        onCreate={handleCreatePlaylist}
+        onClose={() => {
+          if (isCreatingPlaylist) return;
+
+          setNewPlaylistName("");
+          setNewPlaylistCoverPreview(null);
+          setCreatePlaylistOpen(false);
+        }}
       />
     </>
   );

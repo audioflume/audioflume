@@ -4,7 +4,7 @@ import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { usePlayer } from "@/context/PlayerContext";
-import { useProjects } from "@/hooks/useProjects";
+import { useProjectsContext } from "@/context/ProjectsContext";
 import Toast from "@/components/Toast";
 import ModalShell from "@/components/ModalShell";
 import { modalPrimaryButtonClass } from "@/components/uiClasses";
@@ -120,7 +120,7 @@ export default function AddToProjectModal({
     loading: projectsLoading,
     error: projectsError,
     refetchProjects,
-  } = useProjects();
+  } = useProjectsContext();
 
   const [recentProjectIds, setRecentProjectIds] = useState<number[]>([]);
   const [initialSelectedIds, setInitialSelectedIds] = useState<Set<number>>(

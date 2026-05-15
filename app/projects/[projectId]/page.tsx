@@ -14,7 +14,7 @@ import {
 } from "@/components/filterUiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
-import { useProjects } from "@/hooks/useProjects";
+import { useProjectsContext } from "@/context/ProjectsContext";
 import type { Project, Song } from "@/lib/types";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -228,7 +228,7 @@ export default function ProjectDetailPage() {
 
   const { currentSong, setQueue } = usePlayer();
   const { favoriteIdSet } = useFavorites();
-  const { projects, setProjects, loading, error } = useProjects();
+  const { projects, setProjects, loading, error } = useProjectsContext();
 
   const projectId = String(params.projectId || "");
   const playerVisible = !!currentSong;

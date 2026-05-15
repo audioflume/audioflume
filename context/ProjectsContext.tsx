@@ -2,9 +2,18 @@
 
 import type { Project } from "@/lib/types";
 import { useUser } from "@clerk/nextjs";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-type UseProjectsValue = {
+type ProjectsContextValue = {
   projects: Project[];
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
   loading: boolean;
@@ -12,35 +21,11 @@ type UseProjectsValue = {
   refetchProjects: () => Promise<void>;
 };
 
-const PROJECTS_UPDATED_EVENT = "filmwave-projects-updated";
+const ProjectsContext = createContext<ProjectsContextValue | null>(null);
 
 let cachedUserId: string | null = null;
 let cachedProjects: Project[] | null = null;
 let pendingProjectsRequest: Promise<Project[]> | null = null;
-
-function normalizeProjects(projects: Project[]) {
-  const projectMap = new Map<number, Project>();
-
-  projects.forEach((project) => {
-    projectMap.set(project.id, project);
-  });
-
-  return [...projectMap.values()].sort((a, b) =>
-    a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
-  );
-}
-
-function notifyProjectsUpdated(projects: Project[]) {
-  if (typeof window === "undefined") return;
-
-  window.setTimeout(() => {
-    window.dispatchEvent(
-      new CustomEvent<Project[]>(PROJECTS_UPDATED_EVENT, {
-        detail: projects,
-      }),
-    );
-  }, 0);
-}
 
 async function requestProjects() {
   const res = await fetch("/api/projects");
@@ -58,37 +43,14 @@ async function requestProjects() {
   return data as Project[];
 }
 
-export function useProjects(): UseProjectsValue {
+export function ProjectsProvider({ children }: { children: ReactNode }) {
   const { user, isLoaded } = useUser();
   const userId = user?.id ?? null;
 
-  const [projects, setProjectsState] = useState<Project[]>(() =>
-    cachedUserId === userId && cachedProjects ? cachedProjects : [],
-  );
-  const [loading, setLoading] = useState(() => !cachedProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mountedRef = useRef(true);
-
-  const setProjects = useCallback<
-    React.Dispatch<React.SetStateAction<Project[]>>
-  >(
-    (nextValue) => {
-      setProjectsState((current) => {
-        const nextProjects =
-          typeof nextValue === "function" ? nextValue(current) : nextValue;
-
-        const normalizedProjects = normalizeProjects(nextProjects);
-
-        cachedUserId = userId;
-        cachedProjects = normalizedProjects;
-
-        notifyProjectsUpdated(normalizedProjects);
-
-        return normalizedProjects;
-      });
-    },
-    [userId],
-  );
 
   const fetchProjects = useCallback(
     async ({ force = false }: { force?: boolean } = {}) => {
@@ -101,15 +63,14 @@ export function useProjects(): UseProjectsValue {
 
         if (!mountedRef.current) return;
 
-        setProjectsState([]);
+        setProjects([]);
         setLoading(false);
         setError(null);
-        notifyProjectsUpdated([]);
         return;
       }
 
       if (!force && cachedUserId === userId && cachedProjects) {
-        setProjectsState(cachedProjects);
+        setProjects(cachedProjects);
         setLoading(false);
         setError(null);
         return;
@@ -123,7 +84,7 @@ export function useProjects(): UseProjectsValue {
           pendingProjectsRequest = requestProjects();
         }
 
-        const nextProjects = normalizeProjects(await pendingProjectsRequest);
+        const nextProjects = await pendingProjectsRequest;
 
         cachedUserId = userId;
         cachedProjects = nextProjects;
@@ -131,8 +92,7 @@ export function useProjects(): UseProjectsValue {
 
         if (!mountedRef.current) return;
 
-        setProjectsState(nextProjects);
-        notifyProjectsUpdated(nextProjects);
+        setProjects(nextProjects);
       } catch (err) {
         pendingProjectsRequest = null;
 
@@ -143,8 +103,7 @@ export function useProjects(): UseProjectsValue {
         );
 
         if (!cachedProjects || cachedUserId !== userId) {
-          setProjectsState([]);
-          notifyProjectsUpdated([]);
+          setProjects([]);
         }
       } finally {
         if (mountedRef.current) {
@@ -170,22 +129,6 @@ export function useProjects(): UseProjectsValue {
   }, []);
 
   useEffect(() => {
-    function handleProjectsUpdated(event: Event) {
-      const customEvent = event as CustomEvent<Project[]>;
-
-      if (!Array.isArray(customEvent.detail)) return;
-
-      setProjectsState(normalizeProjects(customEvent.detail));
-    }
-
-    window.addEventListener(PROJECTS_UPDATED_EVENT, handleProjectsUpdated);
-
-    return () => {
-      window.removeEventListener(PROJECTS_UPDATED_EVENT, handleProjectsUpdated);
-    };
-  }, []);
-
-  useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
 
@@ -197,8 +140,22 @@ export function useProjects(): UseProjectsValue {
       error,
       refetchProjects,
     }),
-    [projects, setProjects, loading, error, refetchProjects],
+    [projects, loading, error, refetchProjects],
   );
 
-  return value;
+  return (
+    <ProjectsContext.Provider value={value}>
+      {children}
+    </ProjectsContext.Provider>
+  );
+}
+
+export function useProjectsContext() {
+  const context = useContext(ProjectsContext);
+
+  if (!context) {
+    throw new Error("useProjectsContext must be used inside ProjectsProvider");
+  }
+
+  return context;
 }

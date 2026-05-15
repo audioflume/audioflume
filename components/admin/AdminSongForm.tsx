@@ -701,7 +701,7 @@ async function uploadAdminFile({
   return data as UploadResponse;
 }
 
-async function saveSongToAirtable({
+async function saveSongToSupabase({
   payload,
   signal,
 }: {
@@ -720,13 +720,13 @@ async function saveSongToAirtable({
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data?.error || "Failed to save song to Airtable");
+    throw new Error(data?.error || "Failed to save song");
   }
 
   return data as SaveSongResponse;
 }
 
-async function updateSongInAirtable({
+async function updateSongInSupabase({
   songId,
   payload,
   signal,
@@ -1030,9 +1030,7 @@ function UploadStatusIcon({
   if (
     status.toLowerCase().includes("saved") ||
     status.toLowerCase().includes("successfully") ||
-    status
-      .toLowerCase()
-      .includes("uploaded to cloudflare and saved to airtable")
+    status.toLowerCase().includes("uploaded and saved")
   ) {
     return (
       <div
@@ -1761,11 +1759,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         stems: stemUploads,
       });
 
-      setSaveStatus(
-        isEditMode
-          ? "Saving changes to Airtable..."
-          : "Saving song to Airtable...",
-      );
+      setSaveStatus(isEditMode ? "Saving changes..." : "Saving song...");
 
       const payload: SaveSongPayload = {
         title: cleanTitle,
@@ -1788,12 +1782,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
       const savedSong =
         isEditMode && songId
-          ? await updateSongInAirtable({
+          ? await updateSongInSupabase({
               songId,
               payload,
               signal: abortController.signal,
             })
-          : await saveSongToAirtable({
+          : await saveSongToSupabase({
               payload,
               signal: abortController.signal,
             });
@@ -1805,9 +1799,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
       setOriginalWaveformPeaks(waveformPeaks);
       setWarningsOpen(false);
       setSaveStatus(
-        isEditMode
-          ? "Song changes saved."
-          : "Song uploaded to Cloudflare and saved to Airtable.",
+        isEditMode ? "Song changes saved." : "Song uploaded and saved.",
       );
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
@@ -2044,7 +2036,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     </div>
 
                     {isEditMode && existingAudioUrl && !audioFile && (
-                      <a
+                      
                         href={existingAudioUrl}
                         target="_blank"
                         rel="noreferrer"
@@ -2223,7 +2215,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       stemFiles.length === 0 && (
                         <div className="mt-2 grid gap-1 text-[11px] text-[var(--text-muted)]">
                           {existingStemUrls.slice(0, 3).map((url) => (
-                            <a
+                            
                               key={url}
                               href={url}
                               target="_blank"
@@ -2371,7 +2363,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               <div className="p-4">
                 <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)]">
                   {isEditMode
-                    ? "Existing peak data is loaded from Airtable. Re-analyze only when needed."
+                    ? "Existing peak data is loaded from Supabase. Re-analyze only when needed."
                     : "Generated automatically from the selected audio file using the same 1,500-point peak format."}
                 </p>
 
@@ -2564,7 +2556,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
                   {savedRecordId && (
                     <p className="truncate text-[11px] text-[var(--text-muted)]">
-                      Airtable: {savedRecordId}
+                      Song ID: {savedRecordId}
                     </p>
                   )}
 
@@ -2573,7 +2565,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     uploadedFiles.stems.length > 0) && (
                     <div className="grid gap-2 text-[11px] text-[var(--text-secondary)]">
                       {uploadedFiles.audio && (
-                        <a
+                        
                           href={uploadedFiles.audio.url}
                           target="_blank"
                           rel="noreferrer"
@@ -2584,7 +2576,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       )}
 
                       {uploadedFiles.cover && (
-                        <a
+                        
                           href={uploadedFiles.cover.url}
                           target="_blank"
                           rel="noreferrer"

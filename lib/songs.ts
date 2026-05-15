@@ -1,205 +1,97 @@
 import type { Song } from "@/lib/types";
-import base from "./airtable";
-
-type AirtableRecord = {
-  id: string;
-  get: (fieldName: string) => unknown;
-};
+import { supabaseServer } from "@/lib/supabaseServer";
 
 type StemItem = {
   name: string;
   url: string;
 };
 
-export function getString(value: unknown) {
-  return typeof value === "string" ? value.trim() : "";
-}
+function getStemNameFromUrl(url: string, index: number) {
+  const decodedUrl = decodeURIComponent(url);
+  const filename =
+    decodedUrl
+      .split("/")
+      .pop()
+      ?.replace(/\.[^/.]+$/, "") || "";
 
-export function getNumber(value: unknown) {
-  if (typeof value === "number" && Number.isFinite(value)) return value;
-
-  const parsed = Number(value);
-
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-export function getBoolean(value: unknown) {
-  if (typeof value === "boolean") return value;
-
-  if (typeof value === "string") {
-    return ["true", "yes", "1", "instrumental"].includes(
-      value.trim().toLowerCase(),
-    );
+  if (filename) {
+    return filename
+      .replaceAll("-", " ")
+      .replaceAll("_", " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
-  return false;
+  return `Stem ${index + 1}`;
 }
 
-export function getStringArray(value: unknown): string[] {
-  if (Array.isArray(value)) {
-    return value
-      .flatMap((item: unknown) => getStringArray(item))
-      .map((item: string) => item.trim())
-      .filter(Boolean);
-  }
-
-  if (typeof value === "string") {
-    return value
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-}
-
-export function getStems(value: unknown): StemItem[] {
+function parseStems(value: string | null): StemItem[] {
   if (!value) return [];
 
-  if (typeof value === "string") {
-    try {
-      return getStems(JSON.parse(value));
-    } catch {
-      return value
-        .split("\n")
-        .map((url, index) => {
-          const cleanUrl = url.trim();
-
-          if (!cleanUrl) return null;
-
-          return {
-            name: `Stem ${index + 1}`,
-            url: cleanUrl,
-          };
-        })
-        .filter((item): item is StemItem => Boolean(item));
-    }
-  }
-
-  if (!Array.isArray(value)) return [];
-
   return value
-    .map((item, index) => {
-      if (typeof item === "string") {
-        const url = item.trim();
-
-        if (!url) return null;
-
-        return {
-          name: `Stem ${index + 1}`,
-          url,
-        };
-      }
-
-      if (!item || typeof item !== "object") return null;
-
-      const record = item as Record<string, unknown>;
-
-      const name =
-        typeof record.name === "string" && record.name.trim()
-          ? record.name.trim()
-          : `Stem ${index + 1}`;
-
-      const url =
-        typeof record.url === "string" && record.url.trim()
-          ? record.url.trim()
-          : "";
-
-      if (!url) return null;
-
-      return { name, url };
+    .split("\n")
+    .map((url, index) => {
+      const cleanUrl = url.trim();
+      if (!cleanUrl) return null;
+      return {
+        name: getStemNameFromUrl(cleanUrl, index),
+        url: cleanUrl,
+      };
     })
     .filter((item): item is StemItem => Boolean(item));
 }
 
-export function getDurationSeconds(value: unknown) {
-  if (!value) return 0;
-
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
-  }
-
-  const raw = String(value).trim();
-
-  if (!raw) return 0;
-
-  if (!raw.includes(":")) {
-    const parsed = Number(raw);
-    return Number.isFinite(parsed) ? parsed : 0;
-  }
-
-  const parts = raw.split(":").map((part) => Number(part));
-
-  if (parts.some((part) => !Number.isFinite(part))) {
-    return 0;
-  }
-
-  if (parts.length === 2) {
-    const [minutes, seconds] = parts;
-    return minutes * 60 + seconds;
-  }
-
-  if (parts.length === 3) {
-    const [hours, minutes, seconds] = parts;
-    return hours * 3600 + minutes * 60 + seconds;
-  }
-
-  return 0;
+function formatDuration(seconds: number) {
+  if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export function getCoverArt(record: AirtableRecord) {
-  const coverUrl = record.get("Cover URL");
-
-  if (typeof coverUrl === "string" && coverUrl.trim()) {
-    return coverUrl;
-  }
-
-  const coverArt = record.get("Cover Art");
-
-  if (Array.isArray(coverArt)) {
-    return (coverArt[0] as { url?: string })?.url ?? null;
-  }
-
-  if (typeof coverArt === "string" && coverArt.trim()) {
-    return coverArt;
-  }
-
-  return null;
-}
-
-export function normalizeSongRecord(record: AirtableRecord): Song {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normalizeSongRow(row: any): Song {
   return {
-    id: record.id,
-    title: getString(record.get("Song Title")),
-    artist: getString(record.get("Artist")),
-    audioUrl: getString(record.get("Audio URL") || record.get("R2 Audio URL")),
-    stems: getStems(record.get("Stems")),
-    coverArt: getCoverArt(record),
-    waveformPeaks: getString(record.get("Waveform Peaks")) || "[]",
-    duration: getDurationSeconds(record.get("Duration")),
-    key: getString(record.get("Key")),
-    bpm: getNumber(record.get("BPM")),
-    genres: getStringArray(record.get("Genre") || record.get("Genres")),
-    moods: getStringArray(record.get("Mood") || record.get("Moods")),
-    instruments: getStringArray(
-      record.get("Instrument") || record.get("Instruments"),
-    ),
-    builds: getStringArray(record.get("Build") || record.get("Builds")),
-    vocals: getStringArray(record.get("Vocals")),
-    instrumental: getBoolean(record.get("Instrumental")),
-    editPoints:
-      getString(record.get("Edit Points")) || '{"markers":[],"ranges":[]}',
+    id: String(row.id),
+    title: String(row.title || ""),
+    artist: String(row.artist || ""),
+    audioUrl: String(row.audio_url || ""),
+    coverArt: row.cover_url ? String(row.cover_url) : null,
+    stems: parseStems(row.stems),
+    waveformPeaks: String(row.waveform_peaks || "[]"),
+    duration: Number(row.duration || 0),
+    key: String(row.key || ""),
+    bpm: Number(row.bpm || 0),
+    genres: Array.isArray(row.genres) ? row.genres : [],
+    moods: Array.isArray(row.moods) ? row.moods : [],
+    instruments: Array.isArray(row.instruments) ? row.instruments : [],
+    builds: Array.isArray(row.builds) ? row.builds : [],
+    vocals: Array.isArray(row.vocals) ? row.vocals : [],
+    instrumental: Boolean(row.instrumental),
+    editPoints: String(row.edit_points || '{"markers":[],"ranges":[]}'),
   };
 }
 
 export async function getSongs(): Promise<Song[]> {
-  const tableId = process.env.AIRTABLE_SONGS_TABLE_ID || "Music Library";
+  const { data, error } = await supabaseServer
+    .from("songs")
+    .select("*")
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
 
-  const records = await base(tableId)
-    .select({
-      view: "Grid view",
-    })
-    .all();
+  if (error) {
+    throw new Error(error.message);
+  }
 
-  return records.map(normalizeSongRecord);
+  return (data ?? []).map(normalizeSongRow);
+}
+
+export async function getSongById(id: string): Promise<Song | null> {
+  const { data, error } = await supabaseServer
+    .from("songs")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) return null;
+
+  return normalizeSongRow(data);
 }
