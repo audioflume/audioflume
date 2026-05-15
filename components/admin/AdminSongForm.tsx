@@ -255,7 +255,7 @@ function getSongTitleFromFileName(fileName: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function downsamplePeaks(peaks: number[], targetLength = 1500) {
+function downsamplePeaks(peaks: number[], targetLength = 300) {
   if (peaks.length <= targetLength) {
     return peaks;
   }
@@ -2036,7 +2036,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     </div>
 
                     {isEditMode && existingAudioUrl && !audioFile && (
-                      
+                      <a
                         href={existingAudioUrl}
                         target="_blank"
                         rel="noreferrer"
@@ -2215,7 +2215,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       stemFiles.length === 0 && (
                         <div className="mt-2 grid gap-1 text-[11px] text-[var(--text-muted)]">
                           {existingStemUrls.slice(0, 3).map((url) => (
-                            
+                            <a
                               key={url}
                               href={url}
                               target="_blank"
@@ -2364,7 +2364,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)]">
                   {isEditMode
                     ? "Existing peak data is loaded from Supabase. Re-analyze only when needed."
-                    : "Generated automatically from the selected audio file using the same 1,500-point peak format."}
+                    : "Generated automatically from the selected audio file using the same 300-point peak format."}
                 </p>
 
                 <TextArea
@@ -2565,7 +2565,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     uploadedFiles.stems.length > 0) && (
                     <div className="grid gap-2 text-[11px] text-[var(--text-secondary)]">
                       {uploadedFiles.audio && (
-                        
+                        <a
                           href={uploadedFiles.audio.url}
                           target="_blank"
                           rel="noreferrer"
@@ -2576,7 +2576,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       )}
 
                       {uploadedFiles.cover && (
-                        
+                        <a
                           href={uploadedFiles.cover.url}
                           target="_blank"
                           rel="noreferrer"

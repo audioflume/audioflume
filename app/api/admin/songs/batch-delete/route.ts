@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
-import base from "@/lib/airtable";
+import { supabaseServer } from "@/lib/supabaseServer";
 import { deleteFilesFromR2 } from "@/lib/r2";
 
 export const runtime = "nodejs";
+
+type SupabaseSongRow = {
+  id: string | number;
+  audio_url: string | null;
+  cover_url: string | null;
+  stems: string | null;
+};
 
 function getR2KeyFromUrl(value: unknown) {
   if (typeof value !== "string" || !value.trim()) return null;
@@ -29,12 +36,10 @@ function getStemUrls(value: unknown) {
     .filter(Boolean);
 }
 
-function getRecordR2Keys(record: { get: (fieldName: string) => unknown }) {
-  const audioKey = getR2KeyFromUrl(
-    record.get("Audio URL") || record.get("R2 Audio URL"),
-  );
-  const coverKey = getR2KeyFromUrl(record.get("Cover URL"));
-  const stemKeys = getStemUrls(record.get("Stems"))
+function getSongR2Keys(song: SupabaseSongRow) {
+  const audioKey = getR2KeyFromUrl(song.audio_url);
+  const coverKey = getR2KeyFromUrl(song.cover_url);
+  const stemKeys = getStemUrls(song.stems)
     .map(getR2KeyFromUrl)
     .filter((key): key is string => Boolean(key));
 
@@ -51,16 +56,8 @@ export async function DELETE(req: Request) {
   }
 
   try {
-    const tableId = process.env.AIRTABLE_SONGS_TABLE_ID;
-
-    if (!tableId) {
-      return NextResponse.json(
-        { error: "Missing AIRTABLE_SONGS_TABLE_ID" },
-        { status: 500 },
-      );
-    }
-
     const body = await req.json();
+
     const songIds = Array.isArray(body.songIds)
       ? body.songIds.map((id: unknown) => String(id).trim()).filter(Boolean)
       : [];
@@ -69,18 +66,60 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "No songs selected" }, { status: 400 });
     }
 
-    const records = await Promise.all(
-      songIds.map((id: string) => base(tableId).find(id)),
-    );
+    const { data: songs, error: songsFetchError } = await supabaseServer
+      .from("songs")
+      .select("id,audio_url,cover_url,stems")
+      .in("id", songIds);
 
-    const keysToDelete = records.flatMap(getRecordR2Keys);
+    if (songsFetchError) {
+      throw songsFetchError;
+    }
+
+    const rows = (songs ?? []) as SupabaseSongRow[];
+
+    const keysToDelete = rows.flatMap(getSongR2Keys);
     const uniqueKeysToDelete = Array.from(new Set(keysToDelete));
 
     if (uniqueKeysToDelete.length > 0) {
       await deleteFilesFromR2(uniqueKeysToDelete);
     }
 
-    await Promise.all(songIds.map((id: string) => base(tableId).destroy(id)));
+    const { error: playlistSongsError } = await supabaseServer
+      .from("playlist_songs")
+      .delete()
+      .in("song_id", songIds);
+
+    if (playlistSongsError) {
+      throw playlistSongsError;
+    }
+
+    const { error: favoritesError } = await supabaseServer
+      .from("favorites")
+      .delete()
+      .in("song_id", songIds);
+
+    if (favoritesError) {
+      throw favoritesError;
+    }
+
+    const { error: projectAssetsError } = await supabaseServer
+      .from("project_assets")
+      .delete()
+      .eq("asset_type", "song")
+      .in("asset_id", songIds);
+
+    if (projectAssetsError) {
+      throw projectAssetsError;
+    }
+
+    const { error: songsDeleteError } = await supabaseServer
+      .from("songs")
+      .delete()
+      .in("id", songIds);
+
+    if (songsDeleteError) {
+      throw songsDeleteError;
+    }
 
     return NextResponse.json({
       deleted: true,

@@ -73,13 +73,13 @@ export async function GET() {
         (row) => row.playlist_id === playlistId,
       );
 
+      const validSongsForPlaylist = rowsForPlaylist
+        .map((row) => songsById.get(row.song_id))
+        .filter((song): song is NonNullable<typeof song> => Boolean(song));
+
       const genreCounts = new Map<string, number>();
 
-      rowsForPlaylist.forEach((row) => {
-        const song = songsById.get(row.song_id);
-
-        if (!song) return;
-
+      validSongsForPlaylist.forEach((song) => {
         song.genres.forEach((genre) => {
           genreCounts.set(genre, (genreCounts.get(genre) || 0) + 1);
         });
@@ -93,7 +93,7 @@ export async function GET() {
       return [
         playlistId,
         {
-          songCount: rowsForPlaylist.length,
+          songCount: validSongsForPlaylist.length,
           topGenres,
         },
       ];

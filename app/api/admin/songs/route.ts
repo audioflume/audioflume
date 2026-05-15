@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
-import base from "@/lib/airtable";
+import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
 
@@ -30,17 +30,17 @@ function requiredString(value: unknown) {
 function durationToSeconds(duration: string) {
   const trimmed = duration.trim();
 
-  if (!trimmed) return undefined;
+  if (!trimmed) return 0;
 
   if (!trimmed.includes(":")) {
     const numeric = Number(trimmed);
-    return Number.isFinite(numeric) ? numeric : undefined;
+    return Number.isFinite(numeric) ? numeric : 0;
   }
 
   const parts = trimmed.split(":").map((part) => Number(part));
 
   if (parts.some((part) => !Number.isFinite(part))) {
-    return undefined;
+    return 0;
   }
 
   if (parts.length === 2) {
@@ -53,7 +53,7 @@ function durationToSeconds(duration: string) {
     return hours * 3600 + minutes * 60 + seconds;
   }
 
-  return undefined;
+  return 0;
 }
 
 function cleanStringArray(value: unknown) {
@@ -62,48 +62,25 @@ function cleanStringArray(value: unknown) {
   return value.map((item) => String(item).trim()).filter(Boolean);
 }
 
-async function getNextOrder(tableId: string) {
-  const records = await base(tableId)
-    .select({
-      maxRecords: 1,
-      fields: ["Order"],
-      sort: [
-        {
-          field: "Order",
-          direction: "desc",
-        },
-      ],
-    })
-    .firstPage();
-
-  const highestOrder = records[0]?.get("Order");
-
-  if (typeof highestOrder === "number" && Number.isFinite(highestOrder)) {
-    return highestOrder + 1;
-  }
-
-  return 1;
-}
-
-function buildAirtableFields(body: SaveSongPayload, order: number) {
+function buildSupabaseSongRow(body: SaveSongPayload) {
   return {
-    Order: order,
-    "Song Title": body.title.trim(),
-    Artist: body.artist.trim(),
-    BPM: body.bpm ? Number(body.bpm) : undefined,
-    Key: body.key || undefined,
-    Duration: durationToSeconds(body.duration),
-    "Audio URL": body.audioUrl.trim(),
-    "Cover URL": body.coverUrl || "",
-    Stems: body.stemUrls?.length ? body.stemUrls.join("\n") : "",
-    "Waveform Peaks": body.waveformPeaks || "[]",
-    Genre: cleanStringArray(body.genres),
-    Mood: cleanStringArray(body.moods),
-    Instrument: cleanStringArray(body.instruments),
-    Build: cleanStringArray(body.builds),
-    Vocals: cleanStringArray(body.vocals),
-    Instrumental: Boolean(body.instrumental),
-    "Edit Points": body.editPoints || '{"markers":[],"ranges":[]}',
+    title: body.title.trim(),
+    artist: body.artist.trim(),
+    bpm: body.bpm ? Number(body.bpm) : null,
+    key: body.key || null,
+    duration: durationToSeconds(body.duration),
+    audio_url: body.audioUrl.trim(),
+    cover_url: body.coverUrl || null,
+    stems: body.stemUrls?.length ? body.stemUrls.join("\n") : null,
+    waveform_peaks: body.waveformPeaks || "[]",
+    genres: cleanStringArray(body.genres),
+    moods: cleanStringArray(body.moods),
+    instruments: cleanStringArray(body.instruments),
+    builds: cleanStringArray(body.builds),
+    vocals: cleanStringArray(body.vocals),
+    instrumental: Boolean(body.instrumental),
+    edit_points: body.editPoints || '{"markers":[],"ranges":[]}',
+    status: "published",
   };
 }
 
@@ -115,15 +92,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    const tableId = process.env.AIRTABLE_SONGS_TABLE_ID;
-
-    if (!tableId) {
-      return NextResponse.json(
-        { error: "Missing AIRTABLE_SONGS_TABLE_ID" },
-        { status: 500 },
-      );
-    }
-
     const body = (await req.json()) as SaveSongPayload;
 
     if (!requiredString(body.title)) {
@@ -148,19 +116,24 @@ export async function POST(req: Request) {
       );
     }
 
-    const nextOrder = await getNextOrder(tableId);
-    const fields = buildAirtableFields(body, nextOrder);
+    const songRow = buildSupabaseSongRow(body);
 
-    const record = await base(tableId).create(fields, {
-      typecast: true,
-    });
+    const { data, error } = await supabaseServer
+      .from("songs")
+      .insert(songRow)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({
-      id: record.id,
-      fields: record.fields,
+      id: String(data.id),
+      fields: data,
     });
   } catch (err) {
-    console.error("Airtable save failed:", err);
+    console.error("Supabase song save failed:", err);
 
     return NextResponse.json(
       {

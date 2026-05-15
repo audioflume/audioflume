@@ -1,6 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import base from "@/lib/airtable";
 import { supabaseServer } from "@/lib/supabaseServer";
 import type { Song } from "@/lib/types";
 
@@ -13,39 +12,32 @@ type StemItem = {
   url: string;
 };
 
-type AirtableSongFields = {
-  "Song Title"?: string;
-  Artist?: string;
-  Genre?: string[] | string;
-  Genres?: string[] | string;
-  Mood?: string[] | string;
-  Moods?: string[] | string;
-  Instrument?: string[] | string;
-  Instruments?: string[] | string;
-  Build?: string[] | string;
-  Builds?: string[] | string;
-  Vocals?: string[] | string;
-  Instrumental?: boolean | string;
-  Stems?: unknown;
-  "Stem Files"?: unknown;
-  "Cover Art"?: unknown;
-  "Cover URL"?: string;
-  "Audio URL"?: string;
-  "R2 Audio URL"?: string;
-  "Waveform Peaks"?: string;
-  waveformPeaks?: string;
-  Key?: string;
-  BPM?: number | string;
-  Duration?: string | number;
-  "Edit Points"?: string;
-};
-
 type PlaylistSongRow = {
   id: number;
   playlist_id: number;
   song_id: string;
   position: number;
   created_at: string;
+};
+
+type SupabaseSongRow = {
+  id: string | number;
+  title: string | null;
+  artist: string | null;
+  audio_url: string | null;
+  cover_url: string | null;
+  stems: string | null;
+  waveform_peaks: string | null;
+  duration: number | null;
+  key: string | null;
+  bpm: number | null;
+  genres: string[] | null;
+  moods: string[] | null;
+  instruments: string[] | null;
+  builds: string[] | null;
+  vocals: string[] | null;
+  instrumental: boolean | null;
+  edit_points: string | null;
 };
 
 type PlaylistSong = Song & {
@@ -69,208 +61,73 @@ async function verifyPlaylistOwner(playlistId: string, userId: string) {
   return true;
 }
 
-function getString(value: unknown) {
-  return typeof value === "string" ? value.trim() : "";
+async function verifySongExists(songId: string) {
+  const { data, error } = await supabaseServer
+    .from("songs")
+    .select("id")
+    .eq("id", songId)
+    .maybeSingle();
+
+  if (error || !data) return false;
+
+  return true;
 }
 
-function getNumber(value: unknown) {
-  if (typeof value === "number" && Number.isFinite(value)) return value;
+function getStemNameFromUrl(url: string, index: number) {
+  const decodedUrl = decodeURIComponent(url);
+  const filename =
+    decodedUrl
+      .split("/")
+      .pop()
+      ?.replace(/\.[^/.]+$/, "") || "";
 
-  const parsed = Number(value);
-
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function getBoolean(value: unknown) {
-  if (typeof value === "boolean") return value;
-
-  if (typeof value === "string") {
-    return ["true", "yes", "1", "instrumental"].includes(
-      value.trim().toLowerCase(),
-    );
+  if (filename) {
+    return filename
+      .replaceAll("-", " ")
+      .replaceAll("_", " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
-  return false;
+  return `Stem ${index + 1}`;
 }
 
-function getStringArray(value: unknown): string[] {
-  if (Array.isArray(value)) {
-    return value
-      .flatMap((item: unknown) => getStringArray(item))
-      .map((item: string) => item.trim())
-      .filter(Boolean);
-  }
-
-  if (typeof value === "string") {
-    return value
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-}
-
-function getStems(value: unknown): StemItem[] {
+function parseStems(value: string | null): StemItem[] {
   if (!value) return [];
 
-  if (typeof value === "string") {
-    try {
-      return getStems(JSON.parse(value));
-    } catch {
-      return value
-        .split("\n")
-        .map((url, index) => {
-          const cleanUrl = url.trim();
-
-          if (!cleanUrl) return null;
-
-          return {
-            name: `Stem ${index + 1}`,
-            url: cleanUrl,
-          };
-        })
-        .filter((item): item is StemItem => Boolean(item));
-    }
-  }
-
-  if (!Array.isArray(value)) return [];
-
   return value
-    .map((item, index) => {
-      if (typeof item === "string") {
-        const url = item.trim();
+    .split("\n")
+    .map((url, index) => {
+      const cleanUrl = url.trim();
 
-        if (!url) return null;
+      if (!cleanUrl) return null;
 
-        return {
-          name: `Stem ${index + 1}`,
-          url,
-        };
-      }
-
-      if (!item || typeof item !== "object") return null;
-
-      const record = item as Record<string, unknown>;
-
-      const name =
-        typeof record.name === "string" && record.name.trim()
-          ? record.name.trim()
-          : `Stem ${index + 1}`;
-
-      const url =
-        typeof record.url === "string" && record.url.trim()
-          ? record.url.trim()
-          : "";
-
-      if (!url) return null;
-
-      return { name, url };
+      return {
+        name: getStemNameFromUrl(cleanUrl, index),
+        url: cleanUrl,
+      };
     })
     .filter((item): item is StemItem => Boolean(item));
 }
 
-function getDurationSeconds(value: unknown) {
-  if (!value) return 0;
-
-  if (typeof value === "number") {
-    return value;
-  }
-
-  const parts = String(value)
-    .split(":")
-    .map((part) => Number(part));
-
-  if (parts.some((part) => !Number.isFinite(part))) {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : 0;
-  }
-
-  if (parts.length === 2) {
-    const [minutes, seconds] = parts;
-    return minutes * 60 + seconds;
-  }
-
-  if (parts.length === 3) {
-    const [hours, minutes, seconds] = parts;
-    return hours * 3600 + minutes * 60 + seconds;
-  }
-
-  const parsed = Number(value);
-
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function getCoverArt(fields: AirtableSongFields) {
-  if (typeof fields["Cover URL"] === "string" && fields["Cover URL"].trim()) {
-    return fields["Cover URL"];
-  }
-
-  const coverArt = fields["Cover Art"];
-
-  if (Array.isArray(coverArt)) {
-    return (coverArt[0] as { url?: string })?.url ?? null;
-  }
-
-  if (typeof coverArt === "string" && coverArt.trim()) {
-    return coverArt;
-  }
-
-  return null;
-}
-
-function normalizeAirtableSong(
-  recordId: string,
-  fields: AirtableSongFields,
-): Song {
+function normalizeSongRow(row: SupabaseSongRow): Song {
   return {
-    id: recordId,
-    title: getString(fields["Song Title"]),
-    artist: getString(fields.Artist),
-    audioUrl: getString(fields["Audio URL"] || fields["R2 Audio URL"]),
-    stems: getStems(fields.Stems || fields["Stem Files"]),
-    coverArt: getCoverArt(fields),
-    waveformPeaks:
-      getString(fields["Waveform Peaks"] || fields.waveformPeaks) || "[]",
-    duration: getDurationSeconds(fields.Duration),
-    key: getString(fields.Key),
-    bpm: getNumber(fields.BPM),
-    genres: getStringArray(fields.Genres || fields.Genre),
-    moods: getStringArray(fields.Moods || fields.Mood),
-    instruments: getStringArray(fields.Instruments || fields.Instrument),
-    builds: getStringArray(fields.Builds || fields.Build),
-    vocals: getStringArray(fields.Vocals),
-    instrumental: getBoolean(fields.Instrumental),
-    editPoints:
-      getString(fields["Edit Points"]) || '{"markers":[],"ranges":[]}',
-  };
-}
-
-function getFallbackPlaylistSong(playlistSong: PlaylistSongRow): PlaylistSong {
-  return {
-    playlist_song_id: playlistSong.id,
-    playlist_id: playlistSong.playlist_id,
-    song_id: playlistSong.song_id,
-    position: playlistSong.position,
-    created_at: playlistSong.created_at,
-
-    id: playlistSong.song_id,
-    title: "",
-    artist: "",
-    audioUrl: "",
-    stems: [],
-    coverArt: null,
-    waveformPeaks: "[]",
-    duration: 0,
-    key: "",
-    bpm: 0,
-    genres: [],
-    moods: [],
-    instruments: [],
-    builds: [],
-    vocals: [],
-    instrumental: false,
-    editPoints: '{"markers":[],"ranges":[]}',
+    id: String(row.id),
+    title: String(row.title || ""),
+    artist: String(row.artist || ""),
+    audioUrl: String(row.audio_url || ""),
+    coverArt: row.cover_url ? String(row.cover_url) : null,
+    stems: parseStems(row.stems),
+    waveformPeaks: String(row.waveform_peaks || "[]"),
+    duration: Number(row.duration || 0),
+    key: String(row.key || ""),
+    bpm: Number(row.bpm || 0),
+    genres: Array.isArray(row.genres) ? row.genres : [],
+    moods: Array.isArray(row.moods) ? row.moods : [],
+    instruments: Array.isArray(row.instruments) ? row.instruments : [],
+    builds: Array.isArray(row.builds) ? row.builds : [],
+    vocals: Array.isArray(row.vocals) ? row.vocals : [],
+    instrumental: Boolean(row.instrumental),
+    editPoints: String(row.edit_points || '{"markers":[],"ranges":[]}'),
   };
 }
 
@@ -306,46 +163,58 @@ export async function GET(_req: Request, context: RouteContext) {
       );
     }
 
-    const tableId = process.env.AIRTABLE_SONGS_TABLE_ID;
+    const { data: playlistSongs, error: playlistSongsError } =
+      await supabaseServer
+        .from("playlist_songs")
+        .select("*")
+        .eq("playlist_id", playlistId)
+        .order("position", { ascending: true });
 
-    if (!tableId) {
-      return NextResponse.json(
-        { error: "Missing AIRTABLE_SONGS_TABLE_ID" },
-        { status: 500 },
-      );
+    if (playlistSongsError) {
+      throw playlistSongsError;
     }
 
-    const { data: playlistSongs, error } = await supabaseServer
-      .from("playlist_songs")
-      .select("*")
-      .eq("playlist_id", playlistId)
-      .order("position", { ascending: true });
+    const rows = (playlistSongs ?? []) as PlaylistSongRow[];
 
-    if (error) {
-      throw error;
-    }
-
-    if (!playlistSongs?.length) {
+    if (!rows.length) {
       return NextResponse.json([]);
     }
 
-    const songs = await Promise.all(
-      (playlistSongs as PlaylistSongRow[]).map(async (playlistSong) => {
-        try {
-          const record = await base(tableId).find(playlistSong.song_id);
-          const normalizedSong = normalizeAirtableSong(
-            record.id,
-            record.fields as AirtableSongFields,
-          );
+    const songIds = [
+      ...new Set(rows.map((row) => row.song_id).filter(Boolean)),
+    ];
 
-          return mergePlaylistSong(playlistSong, normalizedSong);
-        } catch {
-          return getFallbackPlaylistSong(playlistSong);
-        }
-      }),
+    if (!songIds.length) {
+      return NextResponse.json([]);
+    }
+
+    const { data: songs, error: songsError } = await supabaseServer
+      .from("songs")
+      .select("*")
+      .in("id", songIds);
+
+    if (songsError) {
+      throw songsError;
+    }
+
+    const songsById = new Map(
+      ((songs ?? []) as SupabaseSongRow[]).map((song) => [
+        String(song.id),
+        normalizeSongRow(song),
+      ]),
     );
 
-    return NextResponse.json(songs);
+    const playlistSongResults = rows
+      .map((playlistSong) => {
+        const song = songsById.get(playlistSong.song_id);
+
+        if (!song) return null;
+
+        return mergePlaylistSong(playlistSong, song);
+      })
+      .filter((song): song is PlaylistSong => Boolean(song));
+
+    return NextResponse.json(playlistSongResults);
   } catch (err) {
     console.error("Failed to load playlist songs:", err);
 
@@ -384,6 +253,12 @@ export async function POST(req: Request, context: RouteContext) {
         { error: "Playlist not found" },
         { status: 404 },
       );
+    }
+
+    const songExists = await verifySongExists(songId);
+
+    if (!songExists) {
+      return NextResponse.json({ error: "Song not found" }, { status: 404 });
     }
 
     const { data: existingSong, error: existingError } = await supabaseServer
