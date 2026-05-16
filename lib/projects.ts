@@ -14,7 +14,7 @@ export function normalizeProject(value: unknown): Project {
     position:
       typeof project.position === "number" && Number.isFinite(project.position)
         ? project.position
-        : 0,
+        : null,
     created_at: String(project.created_at || ""),
   };
 }

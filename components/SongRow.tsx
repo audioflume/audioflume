@@ -9,6 +9,7 @@ import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
+import Waveform from "@/components/Waveform";
 import {
   iconButtonActiveClass,
   smallIconButtonClass,
@@ -39,6 +40,7 @@ type SongRowProps = {
   isLast?: boolean;
   playlistId?: string;
   projectId?: string;
+  showWaveform?: boolean;
   onRemoveFromPlaylist?: (songId: string) => void;
   onRemoveFromProject?: (songId: string) => void;
 };
@@ -48,6 +50,7 @@ export default function SongRow({
   isLast = false,
   playlistId,
   projectId,
+  showWaveform = false,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: SongRowProps) {
@@ -176,7 +179,11 @@ export default function SongRow({
   return (
     <>
       <div
-        className={`song-row-compact group/song-row relative grid min-h-[46px] cursor-pointer grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(112px,140px)_64px_76px_92px] items-center gap-3 px-6 text-xs ${
+        className={`song-row-compact group/song-row relative grid min-h-[46px] cursor-pointer ${
+          showWaveform
+            ? "grid-cols-[48px_minmax(180px,240px)_minmax(150px,210px)_minmax(250px,1fr)_minmax(150px,190px)_64px_76px_92px]"
+            : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(112px,140px)_64px_76px_92px]"
+        } items-center gap-3 px-6 text-xs ${
           isLast ? "is-last" : ""
         } ${isCurrentSong ? "bg-[var(--bg-hover)]" : ""}`}
         onClick={handlePlayClick}
@@ -236,18 +243,29 @@ export default function SongRow({
           {safeSong.artist}
         </div>
 
+        {showWaveform && (
+          <div
+            className="min-w-0 pr-7"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="h-[14px] overflow-hidden">
+              <Waveform song={safeSong} compact />
+            </div>
+          </div>
+        )}
+
         <div
           title={visibleGenres.join(", ")}
-          className="truncate text-[var(--text-secondary)]"
+          className="truncate pl-2 text-[var(--text-secondary)]"
         >
           {visibleGenres.length > 0 ? visibleGenres.join(", ") : "—"}
         </div>
 
-        <div className="text-[var(--text-secondary)]">
+        <div className="text-left text-[var(--text-secondary)]">
           {safeSong.key || "—"}
         </div>
 
-        <div className="text-[var(--text-secondary)]">
+        <div className="text-left text-[var(--text-secondary)]">
           {safeSong.bpm ? `${safeSong.bpm} BPM` : "—"}
         </div>
 

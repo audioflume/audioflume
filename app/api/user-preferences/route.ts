@@ -4,17 +4,20 @@ import { supabaseServer } from "@/lib/supabaseServer";
 
 type PlaylistViewMode = "grid" | "list";
 type PlaylistSortMode = "custom" | "alphabetical";
+type SidebarProjectSortMode = "custom" | "alphabetical";
 type ThemeMode = "light" | "dark";
 
 type UserPreferencesPatch = {
   playlist_view_mode?: PlaylistViewMode;
   playlist_sort_mode?: PlaylistSortMode;
+  sidebar_project_sort_mode?: SidebarProjectSortMode;
   theme_mode?: ThemeMode;
 };
 
 const defaultPreferences = {
   playlist_view_mode: "grid" as PlaylistViewMode,
   playlist_sort_mode: "custom" as PlaylistSortMode,
+  sidebar_project_sort_mode: "alphabetical" as SidebarProjectSortMode,
   theme_mode: "dark" as ThemeMode,
 };
 
@@ -23,6 +26,12 @@ function isValidPlaylistViewMode(value: unknown): value is PlaylistViewMode {
 }
 
 function isValidPlaylistSortMode(value: unknown): value is PlaylistSortMode {
+  return value === "custom" || value === "alphabetical";
+}
+
+function isValidSidebarProjectSortMode(
+  value: unknown,
+): value is SidebarProjectSortMode {
   return value === "custom" || value === "alphabetical";
 }
 
@@ -39,7 +48,9 @@ export async function GET() {
 
   const { data, error } = await supabaseServer
     .from("user_preferences")
-    .select("playlist_view_mode, playlist_sort_mode, theme_mode")
+    .select(
+      "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, theme_mode",
+    )
     .eq("clerk_user_id", userId)
     .maybeSingle();
 
@@ -58,7 +69,9 @@ export async function GET() {
         clerk_user_id: userId,
         ...defaultPreferences,
       })
-      .select("playlist_view_mode, playlist_sort_mode, theme_mode")
+      .select(
+        "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, theme_mode",
+      )
       .single();
 
     if (createError) {
@@ -108,6 +121,17 @@ export async function PATCH(request: Request) {
     updates.playlist_sort_mode = body.playlist_sort_mode;
   }
 
+  if ("sidebar_project_sort_mode" in body) {
+    if (!isValidSidebarProjectSortMode(body.sidebar_project_sort_mode)) {
+      return NextResponse.json(
+        { error: "Invalid sidebar_project_sort_mode" },
+        { status: 400 },
+      );
+    }
+
+    updates.sidebar_project_sort_mode = body.sidebar_project_sort_mode;
+  }
+
   if ("theme_mode" in body) {
     if (!isValidThemeMode(body.theme_mode)) {
       return NextResponse.json(
@@ -135,7 +159,9 @@ export async function PATCH(request: Request) {
       },
       { onConflict: "clerk_user_id" },
     )
-    .select("playlist_view_mode, playlist_sort_mode, theme_mode")
+    .select(
+      "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, theme_mode",
+    )
     .single();
 
   if (error) {

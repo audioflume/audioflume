@@ -59,7 +59,7 @@ export type Project = {
   clerk_user_id: string;
   name: string;
   description: string | null;
-  position: number;
+  position: number | null;
   created_at: string;
 };
 

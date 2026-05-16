@@ -50,6 +50,14 @@ function isProjectTab(value: string | null): value is ProjectTab {
   return TABS.some((tab) => tab.value === value);
 }
 
+function getDownloadLabel(activeTab: ProjectTab) {
+  if (activeTab === "sound-fx") return "Download all sound FX";
+  if (activeTab === "visual-fx") return "Download all visual FX";
+  if (activeTab === "colour-grading") return "Download all colour grading";
+
+  return "Download all music";
+}
+
 function EditIcon() {
   return (
     <svg
@@ -203,7 +211,8 @@ function ProjectAssetTableShell({
             <div />
             <div>Song</div>
             <div>Artist</div>
-            <div>Genre</div>
+            <div>Waveform</div>
+            <div className="pl-2">Genre</div>
             <div>Key</div>
             <div>BPM</div>
             <div />
@@ -214,7 +223,7 @@ function ProjectAssetTableShell({
               {Array.from({ length: 5 }, (_, index) => (
                 <div
                   key={index}
-                  className="grid min-h-[46px] grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(112px,140px)_64px_76px_64px] items-center gap-3 px-6"
+                  className="grid min-h-[46px] grid-cols-[48px_minmax(180px,240px)_minmax(150px,210px)_minmax(250px,1fr)_minmax(150px,190px)_64px_76px_92px] items-center gap-3 px-6"
                   style={{
                     borderBottom:
                       index === 4 ? "none" : "1px solid var(--border-subtle)",
@@ -223,6 +232,7 @@ function ProjectAssetTableShell({
                   <div className="h-8 w-8 rounded bg-[var(--bg-tertiary)]" />
                   <div className="h-2 w-[60%] bg-[var(--bg-tertiary)]" />
                   <div className="h-2 w-[50%] bg-[var(--bg-tertiary)]" />
+                  <div className="h-2 w-[88px] bg-[var(--bg-tertiary)]" />
                   <div className="h-2 w-[68px] bg-[var(--bg-tertiary)]" />
                   <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
                   <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
@@ -292,6 +302,7 @@ function MusicAssetTable({
           song={song}
           isLast={index === songs.length - 1}
           projectId={projectId}
+          showWaveform
           onRemoveFromProject={onRemoveFromProject}
         />
       ))}
@@ -427,6 +438,7 @@ export default function ProjectDetailPage() {
 
   const tabParam = searchParams.get("tab");
   const activeTab: ProjectTab = isProjectTab(tabParam) ? tabParam : "overview";
+  const activeDownloadLabel = getDownloadLabel(activeTab);
 
   const project = useMemo(
     () => projects.find((item) => String(item.id) === projectId) ?? null,
@@ -576,8 +588,28 @@ export default function ProjectDetailPage() {
     );
   }
 
-  function handleDownloadAllMusic() {
-    downloadFiles(projectSongs, "No music files to download");
+  function handleDownloadActiveTab() {
+    if (activeTab === "music") {
+      downloadFiles(projectSongs, "No music files to download");
+      return;
+    }
+
+    if (activeTab === "sound-fx") {
+      showToast("No sound FX files to download yet");
+      return;
+    }
+
+    if (activeTab === "visual-fx") {
+      showToast("No visual FX files to download yet");
+      return;
+    }
+
+    if (activeTab === "colour-grading") {
+      showToast("No colour grading files to download yet");
+      return;
+    }
+
+    handleDownloadAllProjectFiles();
   }
 
   function handleDownloadAllProjectFiles() {
@@ -783,19 +815,19 @@ export default function ProjectDetailPage() {
         }
 
         .song-row-compact::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background: var(--border-subtle);
-  pointer-events: none;
-}
+          content: "";
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          height: 1px;
+          background: var(--border-subtle);
+          pointer-events: none;
+        }
 
-.song-row-compact.is-last::after {
-  display: none;
-}
+        .song-row-compact.is-last::after {
+          display: none;
+        }
 
         .project-sort-pill {
           cursor: pointer;
@@ -823,8 +855,8 @@ export default function ProjectDetailPage() {
 
         .project-overview-grid {
           display: grid;
-          gap: 12px;
-          padding: 12px 32px 0;
+          gap: 32px;
+          padding: 32px 32px 0;
         }
 
         .project-asset-table {
@@ -862,13 +894,13 @@ export default function ProjectDetailPage() {
         }
 
         .project-asset-table-inner {
-          min-width: 790px;
+          min-width: 1030px;
         }
 
         .project-asset-table-head {
           display: grid;
           height: 32px;
-          grid-template-columns: 48px minmax(160px,1.4fr) minmax(120px,1fr) minmax(112px,140px) 64px 76px 64px;
+          grid-template-columns: 48px minmax(180px,240px) minmax(150px,210px) minmax(250px,1fr) minmax(150px,190px) 64px 76px 92px;
           align-items: center;
           gap: 12px;
           border-bottom: 1px solid var(--border);
@@ -876,8 +908,14 @@ export default function ProjectDetailPage() {
           font-size: 10px;
           font-weight: 500;
           letter-spacing: 0.08em;
+          text-align: left;
           text-transform: uppercase;
           color: var(--text-muted);
+        }
+
+        .project-asset-table-head > * {
+          justify-self: start;
+          text-align: left;
         }
 
         .project-asset-table-empty {
@@ -1150,15 +1188,17 @@ export default function ProjectDetailPage() {
                       </button>
                     )}
                   >
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setDownloadMenuOpen(false);
-                        handleDownloadAllMusic();
-                      }}
-                    >
-                      Download all music
-                    </button>
+                    {activeTab !== "overview" && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDownloadMenuOpen(false);
+                          handleDownloadActiveTab();
+                        }}
+                      >
+                        {activeDownloadLabel}
+                      </button>
+                    )}
 
                     <button
                       type="button"
@@ -1173,7 +1213,7 @@ export default function ProjectDetailPage() {
                 </div>
               </div>
 
-              {(activeTab === "music" || activeTab === "overview") && (
+              {activeTab !== "overview" && (
                 <div className="project-sort-row">
                   {SORT_OPTIONS.map((option) => (
                     <button

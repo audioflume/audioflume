@@ -24,6 +24,7 @@ import EditProjectModal from "@/components/EditProjectModal";
 import HeartIcon from "@/components/icons/HeartIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
+import { useUserPreferences } from "@/context/UserPreferencesContext";
 import type { Project } from "@/lib/types";
 
 const mainLinks = [
@@ -39,15 +40,10 @@ const aiLinks = [
   { label: "Story Match", href: "/scene-mood-finder", icon: "scene" },
 ];
 
-const PROJECT_ORDER_STORAGE_KEY = "filmwave-sidebar-project-order";
-const PROJECT_SORT_STORAGE_KEY = "filmwave-sidebar-project-sort";
-
 type SidebarTooltip = {
   label: string;
   top: number;
 } | null;
-
-type ProjectSortMode = "alphabetical" | "custom";
 
 type ProjectMenuState = {
   project: Project;
@@ -477,6 +473,17 @@ function sortProjectsByName(projects: Project[]) {
   );
 }
 
+function sortProjectsByPosition(projects: Project[]) {
+  return [...projects].sort((a, b) => {
+    const aPosition = typeof a.position === "number" ? a.position : Infinity;
+    const bPosition = typeof b.position === "number" ? b.position : Infinity;
+
+    if (aPosition !== bPosition) return aPosition - bPosition;
+
+    return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+  });
+}
+
 function SidebarTooltipEl({ label, top }: { label: string; top: number }) {
   return (
     <div
@@ -854,8 +861,6 @@ export default function Sidebar({
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [forceCollapsed, setForceCollapsed] = useState(false);
   const [ready, setReady] = useState(false);
-  const [projectSortMode, setProjectSortMode] =
-    useState<ProjectSortMode>("alphabetical");
   const [projectOrder, setProjectOrder] = useState<number[]>([]);
   const [reorderMode, setReorderMode] = useState(false);
   const [projectMenu, setProjectMenu] = useState<ProjectMenuState>(null);
@@ -872,6 +877,8 @@ export default function Sidebar({
 
   const { currentSong } = usePlayer();
   const { projects, setProjects } = useProjectsContext();
+  const { sidebarProjectSortMode, setSidebarProjectSortMode } =
+    useUserPreferences();
 
   const playerVisible = !!currentSong;
   const sidebarCollapsed = collapsed || forceCollapsed;
@@ -889,20 +896,24 @@ export default function Sidebar({
       projects.map((project) => [project.id, project]),
     );
 
-    if (projectSortMode === "custom" && projectOrder.length > 0) {
-      const orderedProjects = projectOrder
-        .map((projectId) => projectMap.get(projectId))
-        .filter((project): project is Project => Boolean(project));
+    if (sidebarProjectSortMode === "custom") {
+      if (projectOrder.length > 0) {
+        const orderedProjects = projectOrder
+          .map((projectId) => projectMap.get(projectId))
+          .filter((project): project is Project => Boolean(project));
 
-      const missingProjects = projects.filter(
-        (project) => !projectOrder.includes(project.id),
-      );
+        const missingProjects = projects.filter(
+          (project) => !projectOrder.includes(project.id),
+        );
 
-      return [...orderedProjects, ...sortProjectsByName(missingProjects)];
+        return [...orderedProjects, ...sortProjectsByPosition(missingProjects)];
+      }
+
+      return sortProjectsByPosition(projects);
     }
 
     return sortProjectsByName(projects);
-  }, [projectOrder, projectSortMode, projects]);
+  }, [projectOrder, projects, sidebarProjectSortMode]);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -911,35 +922,30 @@ export default function Sidebar({
   }, []);
 
   useEffect(() => {
-    const savedSortMode = localStorage.getItem(PROJECT_SORT_STORAGE_KEY);
-    const savedOrder = localStorage.getItem(PROJECT_ORDER_STORAGE_KEY);
+    setProjectOrder((current) => {
+      const projectIds = projects.map((project) => project.id);
+      const projectIdSet = new Set(projectIds);
 
-    if (savedSortMode === "custom" || savedSortMode === "alphabetical") {
-      setProjectSortMode(savedSortMode);
-    }
+      const nextOrder = current.filter((projectId) =>
+        projectIdSet.has(projectId),
+      );
 
-    if (savedOrder) {
-      try {
-        const parsedOrder = JSON.parse(savedOrder);
-
-        if (Array.isArray(parsedOrder)) {
-          setProjectOrder(
-            parsedOrder
-              .map((item) => Number(item))
-              .filter((item) => Number.isFinite(item)),
-          );
+      for (const projectId of projectIds) {
+        if (!nextOrder.includes(projectId)) {
+          nextOrder.push(projectId);
         }
-      } catch {
-        setProjectOrder([]);
       }
-    }
-  }, []);
 
-  useEffect(() => {
-    if (projectOrder.length > 0) return;
+      if (
+        nextOrder.length === current.length &&
+        nextOrder.every((projectId, index) => projectId === current[index])
+      ) {
+        return current;
+      }
 
-    setProjectOrder(projects.map((project) => project.id));
-  }, [projectOrder.length, projects]);
+      return nextOrder;
+    });
+  }, [projects]);
 
   useEffect(() => {
     function handleResize() {
@@ -970,9 +976,7 @@ export default function Sidebar({
     const nextOrder = nextProjects.map((project) => project.id);
 
     setProjectOrder(nextOrder);
-    setProjectSortMode("custom");
-    localStorage.setItem(PROJECT_SORT_STORAGE_KEY, "custom");
-    localStorage.setItem(PROJECT_ORDER_STORAGE_KEY, JSON.stringify(nextOrder));
+    setSidebarProjectSortMode("custom");
   }
 
   function saveProjectOrder(nextProjects: Project[]) {
@@ -998,13 +1002,8 @@ export default function Sidebar({
 
     setProjectMenu(null);
     setReorderMode(true);
-    setProjectSortMode("custom");
+    setSidebarProjectSortMode("custom");
     setProjectOrder(currentOrder);
-    localStorage.setItem(PROJECT_SORT_STORAGE_KEY, "custom");
-    localStorage.setItem(
-      PROJECT_ORDER_STORAGE_KEY,
-      JSON.stringify(currentOrder),
-    );
   }
 
   function finishReorderMode() {
@@ -1019,13 +1018,8 @@ export default function Sidebar({
 
     setReorderMode(false);
     setActiveDragProjectId(null);
-    setProjectSortMode("alphabetical");
+    setSidebarProjectSortMode("alphabetical");
     setProjectOrder(alphabeticalOrder);
-    localStorage.setItem(PROJECT_SORT_STORAGE_KEY, "alphabetical");
-    localStorage.setItem(
-      PROJECT_ORDER_STORAGE_KEY,
-      JSON.stringify(alphabeticalOrder),
-    );
   }
 
   function handleProjectDragStart(event: DragStartEvent) {
@@ -1152,18 +1146,9 @@ export default function Sidebar({
         current.filter((currentProject) => currentProject.id !== project.id),
       );
 
-      setProjectOrder((current) => {
-        const nextOrder = current.filter(
-          (projectId) => projectId !== project.id,
-        );
-
-        localStorage.setItem(
-          PROJECT_ORDER_STORAGE_KEY,
-          JSON.stringify(nextOrder),
-        );
-
-        return nextOrder;
-      });
+      setProjectOrder((current) =>
+        current.filter((projectId) => projectId !== project.id),
+      );
 
       if (pathname === `/projects/${project.id}`) {
         router.push("/music");
@@ -1375,26 +1360,22 @@ export default function Sidebar({
         isOpen={isCreateProjectOpen}
         onClose={() => setIsCreateProjectOpen(false)}
         onProjectCreated={(project) => {
-          setProjects((current) =>
-            [...current, project].sort((a, b) =>
-              a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
-            ),
-          );
+          setProjects((current) => {
+            const nextProjects = [...current, project];
+
+            return sidebarProjectSortMode === "custom"
+              ? sortProjectsByPosition(nextProjects)
+              : sortProjectsByName(nextProjects);
+          });
 
           setProjectOrder((current) => {
-            const nextOrder =
-              projectSortMode === "custom"
-                ? [...current, project.id]
-                : sortProjectsByName([...projects, project]).map(
-                    (item) => item.id,
-                  );
+            if (sidebarProjectSortMode === "custom") {
+              return [...current, project.id];
+            }
 
-            localStorage.setItem(
-              PROJECT_ORDER_STORAGE_KEY,
-              JSON.stringify(nextOrder),
+            return sortProjectsByName([...projects, project]).map(
+              (item) => item.id,
             );
-
-            return nextOrder;
           });
 
           setIsCreateProjectOpen(false);

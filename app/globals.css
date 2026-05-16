@@ -82,6 +82,24 @@ body.sidebar-collapsed aside[data-sidebar] {
   --danger-contrast: #ffffff;
 }
 
+.danger-hover {
+  color: var(--danger, #ff5d57);
+}
+
+.danger-hover:hover {
+  background: rgba(255, 93, 87, 0.1);
+  color: #ff5d57;
+}
+
+.danger-icon-hover {
+  color: var(--text-muted);
+}
+
+.danger-icon-hover:hover {
+  background: rgba(255, 93, 87, 0.1);
+  color: #ff5d57;
+}
+
 /* ─── Shared media overlay colours ─────────────────────────── */
 
 :root {

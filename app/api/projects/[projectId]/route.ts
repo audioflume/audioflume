@@ -37,24 +37,48 @@ export async function PATCH(req: Request, context: RouteContext) {
     const projectId = await getProjectId(context);
     const body = await req.json();
 
-    const cleanName = typeof body.name === "string" ? body.name.trim() : "";
+    const updates: {
+      name?: string;
+      description?: string | null;
+      position?: number | null;
+    } = {};
 
-    if (!cleanName) {
+    if ("name" in body) {
+      const cleanName = typeof body.name === "string" ? body.name.trim() : "";
+
+      if (!cleanName) {
+        return NextResponse.json(
+          { error: "Missing project name" },
+          { status: 400 },
+        );
+      }
+
+      updates.name = cleanName;
+    }
+
+    if ("description" in body) {
+      updates.description =
+        typeof body.description === "string" && body.description.trim()
+          ? body.description.trim()
+          : null;
+    }
+
+    if ("position" in body) {
+      const nextPosition = Number(body.position);
+
+      updates.position = Number.isFinite(nextPosition) ? nextPosition : null;
+    }
+
+    if (Object.keys(updates).length === 0) {
       return NextResponse.json(
-        { error: "Missing project name" },
+        { error: "Missing project updates" },
         { status: 400 },
       );
     }
 
     const { data, error } = await supabaseServer
       .from("projects")
-      .update({
-        name: cleanName,
-        description:
-          typeof body.description === "string" && body.description.trim()
-            ? body.description.trim()
-            : null,
-      })
+      .update(updates)
       .eq("id", projectId)
       .eq("clerk_user_id", userId)
       .select()

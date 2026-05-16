@@ -98,7 +98,13 @@ function drawWaveform(
   }
 }
 
-export default function Waveform({ song }: { song: Song }) {
+export default function Waveform({
+  song,
+  compact = false,
+}: {
+  song: Song;
+  compact?: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
@@ -208,7 +214,9 @@ export default function Waveform({ song }: { song: Song }) {
   return (
     <div
       ref={containerRef}
-      className="relative h-6 flex-1 cursor-pointer overflow-visible"
+      className={`relative flex-1 cursor-pointer overflow-visible ${
+        compact ? "h-[14px]" : "h-6"
+      }`}
       onPointerDown={handlePointerDown}
     >
       {editPoints.ranges?.map((range) => {
@@ -228,7 +236,7 @@ export default function Waveform({ song }: { song: Song }) {
             className="pointer-events-none absolute z-10"
             style={{
               top: "50%",
-              height: "34px",
+              height: compact ? "18px" : "34px",
               transform: "translateY(-50%)",
               left: `${left}%`,
               width: `${width}%`,

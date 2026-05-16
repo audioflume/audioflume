@@ -2,6 +2,7 @@
 
 import {
   ReactNode,
+  type SyntheticEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -298,7 +299,7 @@ export default function DropdownShell({
       window.removeEventListener("resize", handleResize);
       window.visualViewport?.removeEventListener("resize", handleResize);
     };
-  }, [open, schedulePositionUpdate, updateFloatingPosition]);
+  }, [open, schedulePositionUpdate]);
 
   useEffect(() => {
     if (!open) return;
@@ -353,6 +354,10 @@ export default function DropdownShell({
     };
   }, []);
 
+  const stopDropdownEvent = (event: SyntheticEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   const dropdown = (
     <div
       ref={floatingRef}
@@ -360,14 +365,16 @@ export default function DropdownShell({
         position: "fixed",
         top: 0,
         left: 0,
+        zIndex: 9999,
         transform: "translate3d(0px, 0px, 0)",
         visibility: "hidden",
+        pointerEvents: "auto",
       }}
       className={`filmwave-dropdown-shell ${className}`}
       data-placement={frozenSideRef.current}
-      onClick={(event) => {
-        event.stopPropagation();
-      }}
+      onClick={stopDropdownEvent}
+      onPointerDown={stopDropdownEvent}
+      onMouseDown={stopDropdownEvent}
     >
       {children}
     </div>
@@ -377,9 +384,16 @@ export default function DropdownShell({
     <>
       <div
         ref={referenceRef}
+        data-dropdown-open={open ? "true" : "false"}
+        className={open ? "is-dropdown-open" : ""}
         style={{
           display: "inline-flex",
           width: "fit-content",
+          position: "relative",
+          zIndex: open ? 10000 : undefined,
+        }}
+        onPointerDown={(event) => {
+          event.stopPropagation();
         }}
         onClick={(event) => {
           event.stopPropagation();
