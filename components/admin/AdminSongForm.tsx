@@ -14,122 +14,13 @@ import {
   estimateBpmWithEssentia,
   estimateKeyWithEssentia,
 } from "@/lib/essentiaAnalysis";
-
-const moodOptions = [
-  "Adventurous",
-  "Aggressive",
-  "Anthemic",
-  "Bright",
-  "Burdened",
-  "Chill",
-  "Dark",
-  "Dramatic",
-  "Dreamy",
-  "Eerie",
-  "Emotional",
-  "Empowering",
-  "Energetic",
-  "Epic",
-  "Feel Good",
-  "Fun",
-  "Gritty",
-  "Happy",
-  "Heroic",
-  "Hopeful",
-  "Horror",
-  "Inspirational",
-  "Loving",
-  "Mysterious",
-  "Nostalgic",
-  "Peaceful",
-  "Playful",
-  "Powerful",
-  "Quirky",
-  "Reflective",
-  "Rebellious",
-  "Romantic",
-  "Sinister",
-  "Sorrowful",
-  "Soothing",
-  "Spiritual",
-  "Suspenseful",
-  "Tense",
-  "Triumphant",
-  "Upbeat",
-  "Uplifting",
-  "Vintage",
-  "Whimsical",
-];
-
-const genreOptions = [
-  "Acoustic",
-  "Ambient",
-  "Background",
-  "Blues",
-  "Christmas",
-  "Cinematic",
-  "Classical",
-  "Corporate",
-  "Country",
-  "Eastern",
-  "Electronic",
-  "Faith",
-  "Film",
-  "Folk",
-  "Hip Hop",
-  "Indie",
-  "Jazz",
-  "Lo-Fi",
-  "Orchestral",
-  "Pop",
-  "R&B",
-  "Rock",
-  "Score",
-  "Soul",
-  "Trap",
-  "World",
-  "YouTube",
-];
-
-const instrumentOptions = [
-  "Acoustic Guitar",
-  "Banjo",
-  "Bass",
-  "Bells",
-  "Cello",
-  "Claps",
-  "Drums",
-  "Electronic",
-  "Electric Guitar",
-  "Flute",
-  "Guitar",
-  "Harp",
-  "Horns",
-  "Humming",
-  "Organ",
-  "Percussion",
-  "Piano",
-  "Saxophone",
-  "Snaps",
-  "Snare",
-  "Strings",
-  "Synth",
-  "Trumpet",
-  "Violin",
-  "Whistling",
-  "Woodwinds",
-  "World",
-];
-
-const buildOptions = [
-  "Steady",
-  "Ascending",
-  "Middle Crescendo",
-  "Descending",
-  "Multiple Crescendo",
-];
-
-const vocalsOptions = ["Male", "Female", "Acapella", "Choir", "Harmony"];
+import {
+  MOOD_OPTIONS,
+  GENRE_OPTIONS,
+  INSTRUMENT_OPTIONS,
+  BUILD_OPTIONS,
+  VOCALS_OPTIONS,
+} from "@/lib/constants";
 
 const keyOptions = [
   "Cmaj",
@@ -2391,7 +2282,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     </span>
                   </div>
                   <MultiSelectPills
-                    options={genreOptions}
+                    options={GENRE_OPTIONS}
                     selected={selectedGenres}
                     onChange={setSelectedGenres}
                   />
@@ -2405,7 +2296,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     </span>
                   </div>
                   <MultiSelectPills
-                    options={moodOptions}
+                    options={MOOD_OPTIONS}
                     selected={selectedMoods}
                     onChange={setSelectedMoods}
                   />
@@ -2419,7 +2310,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     </span>
                   </div>
                   <MultiSelectPills
-                    options={instrumentOptions}
+                    options={INSTRUMENT_OPTIONS}
                     selected={selectedInstruments}
                     onChange={setSelectedInstruments}
                   />
@@ -2434,7 +2325,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       </span>
                     </div>
                     <MultiSelectPills
-                      options={buildOptions}
+                      options={BUILD_OPTIONS}
                       selected={selectedBuilds}
                       onChange={setSelectedBuilds}
                     />
@@ -2448,7 +2339,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       </span>
                     </div>
                     <MultiSelectPills
-                      options={vocalsOptions}
+                      options={VOCALS_OPTIONS}
                       selected={selectedVocals}
                       onChange={setSelectedVocals}
                     />

@@ -5,6 +5,7 @@ import EditProjectModal from "@/components/EditProjectModal";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import SongRow from "@/components/SongRow";
 import Toast from "@/components/Toast";
 import { borderedIconButtonClass } from "@/components/uiClasses";
 import {
@@ -17,9 +18,10 @@ import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
 import type { Project, Song } from "@/lib/types";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 const TABS = [
+  { label: "Overview", value: "overview" },
   { label: "Music", value: "music" },
   { label: "Sound FX", value: "sound-fx" },
   { label: "Visual FX", value: "visual-fx" },
@@ -144,9 +146,11 @@ function ProjectPageSkeleton() {
       </div>
 
       <section className="project-tab-panel">
-        <div className="project-empty">
-          <div className="project-empty-skeleton-title project-skeleton-block" />
-          <div className="project-empty-skeleton-copy project-skeleton-block" />
+        <div className="project-overview-grid">
+          <ProjectAssetTableShell title="Music" isLoading />
+          <ProjectAssetTableShell title="Sound FX" />
+          <ProjectAssetTableShell title="Visual FX" />
+          <ProjectAssetTableShell title="Colour Grading" />
         </div>
       </section>
     </>
@@ -163,6 +167,178 @@ function EmptyTabState({ activeTab }: { activeTab: ProjectTab }) {
         This section will hold the {tab?.label.toLowerCase() || "project"} media
         connected to this project.
       </p>
+    </div>
+  );
+}
+
+function ProjectAssetTableShell({
+  title,
+  count = 0,
+  children,
+  emptyTitle,
+  emptyCopy,
+  isLoading = false,
+}: {
+  title: string;
+  count?: number;
+  children?: ReactNode;
+  emptyTitle?: string;
+  emptyCopy?: string;
+  isLoading?: boolean;
+}) {
+  return (
+    <section className="project-asset-table">
+      <div className="project-asset-table-top">
+        <div>
+          <h2>{title}</h2>
+          <p>
+            {count} {count === 1 ? "asset" : "assets"}
+          </p>
+        </div>
+      </div>
+
+      <div className="project-asset-table-scroll">
+        <div className="project-asset-table-inner">
+          <div className="project-asset-table-head">
+            <div />
+            <div>Song</div>
+            <div>Artist</div>
+            <div>Genre</div>
+            <div>Key</div>
+            <div>BPM</div>
+            <div />
+          </div>
+
+          {isLoading ? (
+            <div className="grid gap-0">
+              {Array.from({ length: 5 }, (_, index) => (
+                <div
+                  key={index}
+                  className="grid min-h-[46px] grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(112px,140px)_64px_76px_64px] items-center gap-3 px-6"
+                  style={{
+                    borderBottom:
+                      index === 4 ? "none" : "1px solid var(--border-subtle)",
+                  }}
+                >
+                  <div className="h-8 w-8 rounded bg-[var(--bg-tertiary)]" />
+                  <div className="h-2 w-[60%] bg-[var(--bg-tertiary)]" />
+                  <div className="h-2 w-[50%] bg-[var(--bg-tertiary)]" />
+                  <div className="h-2 w-[68px] bg-[var(--bg-tertiary)]" />
+                  <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
+                  <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
+                  <div className="h-2 w-[18px] bg-[var(--bg-tertiary)]" />
+                </div>
+              ))}
+            </div>
+          ) : children ? (
+            <div>{children}</div>
+          ) : (
+            <div className="project-asset-table-empty">
+              <h3>{emptyTitle || `No ${title.toLowerCase()} yet`}</h3>
+              <p>
+                {emptyCopy ||
+                  `Assets added to this project will appear in this table.`}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MusicAssetTable({
+  projectId,
+  songs,
+  loading,
+  error,
+  onRemoveFromProject,
+}: {
+  projectId: string;
+  songs: ProjectSong[];
+  loading: boolean;
+  error: string | null;
+  onRemoveFromProject: (songId: string) => void;
+}) {
+  if (loading) {
+    return <ProjectAssetTableShell title="Music" isLoading />;
+  }
+
+  if (error) {
+    return (
+      <ProjectAssetTableShell
+        title="Music"
+        emptyTitle="Couldn't load project songs"
+        emptyCopy={error}
+      />
+    );
+  }
+
+  if (songs.length === 0) {
+    return (
+      <ProjectAssetTableShell
+        title="Music"
+        emptyTitle="No songs yet"
+        emptyCopy="Add songs from the music library, then they will appear here in this project."
+      />
+    );
+  }
+
+  return (
+    <ProjectAssetTableShell title="Music" count={songs.length}>
+      {songs.map((song, index) => (
+        <SongRow
+          key={song.id}
+          song={song}
+          isLast={index === songs.length - 1}
+          projectId={projectId}
+          onRemoveFromProject={onRemoveFromProject}
+        />
+      ))}
+    </ProjectAssetTableShell>
+  );
+}
+
+function OverviewTabState({
+  projectId,
+  songs,
+  loading,
+  error,
+  onRemoveFromProject,
+}: {
+  projectId: string;
+  songs: ProjectSong[];
+  loading: boolean;
+  error: string | null;
+  onRemoveFromProject: (songId: string) => void;
+}) {
+  return (
+    <div className="project-overview-grid">
+      <MusicAssetTable
+        projectId={projectId}
+        songs={songs}
+        loading={loading}
+        error={error}
+        onRemoveFromProject={onRemoveFromProject}
+      />
+
+      <ProjectAssetTableShell
+        title="Sound FX"
+        emptyTitle="No sound FX yet"
+        emptyCopy="Sound effects connected to this project will appear here."
+      />
+
+      <ProjectAssetTableShell
+        title="Visual FX"
+        emptyTitle="No visual FX yet"
+        emptyCopy="Visual effects connected to this project will appear here."
+      />
+
+      <ProjectAssetTableShell
+        title="Colour Grading"
+        emptyTitle="No colour grading assets yet"
+        emptyCopy="Colour grading assets connected to this project will appear here."
+      />
     </div>
   );
 }
@@ -250,7 +426,7 @@ export default function ProjectDetailPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const tabParam = searchParams.get("tab");
-  const activeTab: ProjectTab = isProjectTab(tabParam) ? tabParam : "music";
+  const activeTab: ProjectTab = isProjectTab(tabParam) ? tabParam : "overview";
 
   const project = useMemo(
     () => projects.find((item) => String(item.id) === projectId) ?? null,
@@ -347,7 +523,7 @@ export default function ProjectDetailPage() {
   }, [projectId]);
 
   useEffect(() => {
-    if (activeTab !== "music") return;
+    if (activeTab !== "music" && activeTab !== "overview") return;
 
     setQueue(displayedProjectSongs.filter((song) => song.audioUrl));
   }, [activeTab, displayedProjectSongs, setQueue]);
@@ -365,6 +541,11 @@ export default function ProjectDetailPage() {
   function showToast(message: string) {
     setToastMessage(message);
     window.setTimeout(() => setToastMessage(null), 1800);
+  }
+
+  function handleRemoveFromProject(songId: string) {
+    setProjectSongs((current) => current.filter((song) => song.id !== songId));
+    showToast("Song removed from project");
   }
 
   function downloadFiles(songs: ProjectSong[], emptyMessage: string) {
@@ -601,6 +782,21 @@ export default function ProjectDetailPage() {
           padding: 16px 32px;
         }
 
+        .song-row-compact::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--border-subtle);
+  pointer-events: none;
+}
+
+.song-row-compact.is-last::after {
+  display: none;
+}
+
         .project-sort-pill {
           cursor: pointer;
           border-radius: 6px;
@@ -623,6 +819,88 @@ export default function ProjectDetailPage() {
         .project-tab-panel {
           margin-left: -32px;
           margin-right: -32px;
+        }
+
+        .project-overview-grid {
+          display: grid;
+          gap: 12px;
+          padding: 12px 32px 0;
+        }
+
+        .project-asset-table {
+          overflow: hidden;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          background: var(--bg-secondary);
+        }
+
+        .project-asset-table-top {
+          display: flex;
+          height: 58px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          border-bottom: 1px solid var(--border);
+          padding: 0 16px;
+        }
+
+        .project-asset-table-top h2 {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .project-asset-table-top p {
+          margin-top: 4px;
+          font-size: 11px;
+          color: var(--text-secondary);
+        }
+
+        .project-asset-table-scroll {
+          overflow-x: auto;
+          overflow-y: hidden;
+        }
+
+        .project-asset-table-inner {
+          min-width: 790px;
+        }
+
+        .project-asset-table-head {
+          display: grid;
+          height: 32px;
+          grid-template-columns: 48px minmax(160px,1.4fr) minmax(120px,1fr) minmax(112px,140px) 64px 76px 64px;
+          align-items: center;
+          gap: 12px;
+          border-bottom: 1px solid var(--border);
+          padding: 0 24px;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+
+        .project-asset-table-empty {
+          display: flex;
+          min-height: 120px;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          color: var(--text-secondary);
+        }
+
+        .project-asset-table-empty h3 {
+          font-size: 13px;
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .project-asset-table-empty p {
+          margin-top: 6px;
+          max-width: 320px;
+          font-size: 12px;
+          line-height: 1.6;
         }
 
         .project-empty {
@@ -729,17 +1007,6 @@ export default function ProjectDetailPage() {
           width: 140px;
         }
 
-        .project-empty-skeleton-title {
-          width: 120px;
-          height: 10px;
-        }
-
-        .project-empty-skeleton-copy {
-          width: 260px;
-          height: 8px;
-          margin-top: 12px;
-        }
-
         @media (max-width: 720px) {
           .project-detail-hero {
             padding-top: 88px;
@@ -768,6 +1035,10 @@ export default function ProjectDetailPage() {
 
           .project-sort-row {
             padding: 16px 18px;
+          }
+
+          .project-overview-grid {
+            padding: 12px 18px 0;
           }
 
           .project-detail-skeleton-title {
@@ -902,7 +1173,7 @@ export default function ProjectDetailPage() {
                 </div>
               </div>
 
-              {activeTab === "music" && (
+              {(activeTab === "music" || activeTab === "overview") && (
                 <div className="project-sort-row">
                   {SORT_OPTIONS.map((option) => (
                     <button
@@ -920,18 +1191,21 @@ export default function ProjectDetailPage() {
               )}
 
               <section className="project-tab-panel">
-                {activeTab === "music" ? (
+                {activeTab === "overview" ? (
+                  <OverviewTabState
+                    projectId={projectId}
+                    songs={displayedProjectSongs}
+                    loading={projectSongsLoading}
+                    error={projectSongsError}
+                    onRemoveFromProject={handleRemoveFromProject}
+                  />
+                ) : activeTab === "music" ? (
                   <MusicTabState
                     projectId={projectId}
                     songs={displayedProjectSongs}
                     loading={projectSongsLoading}
                     error={projectSongsError}
-                    onRemoveFromProject={(songId) => {
-                      setProjectSongs((current) =>
-                        current.filter((song) => song.id !== songId),
-                      );
-                      showToast("Song removed from project");
-                    }}
+                    onRemoveFromProject={handleRemoveFromProject}
                   />
                 ) : (
                   <EmptyTabState activeTab={activeTab} />

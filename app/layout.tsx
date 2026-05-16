@@ -40,21 +40,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
+
   const sidebarCollapsed =
     cookieStore.get("filmwave-sidebar-collapsed")?.value === "true";
 
+  const themeMode = cookieStore.get("filmwave-theme-mode")?.value;
+  const htmlClassName = themeMode === "light" ? "light" : undefined;
+
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" className={htmlClassName} suppressHydrationWarning>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${instrumentSans.variable} antialiased${sidebarCollapsed ? " sidebar-collapsed" : ""}`}
+          className={`${geistSans.variable} ${geistMono.variable} ${instrumentSans.variable} antialiased${
+            sidebarCollapsed ? " sidebar-collapsed" : ""
+          }`}
           suppressHydrationWarning
         >
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(function(){try{var t=document.cookie.match(/filmwave-theme-mode=([^;]+)/);if(t&&t[1]==='light')document.documentElement.classList.add('light')}catch(e){}})();`,
-            }}
-          />
           <UserPreferencesProvider>
             <ThemeProvider>
               <PlayerProvider>

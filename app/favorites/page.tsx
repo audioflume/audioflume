@@ -11,6 +11,7 @@ import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import { useEffect, useMemo, useRef, useState } from "react";
+import FilterTags from "@/components/FilterTags";
 
 const QUICK_FILTERS = [
   { label: "Newest", value: "newest" },
@@ -256,6 +257,7 @@ export default function FavoritesPage() {
 
   const showSongSkeleton = !songsError && songsLoading && songs.length === 0;
   const hasAnyFavorites = favoriteIdSet.size > 0;
+  const shuffleActive = shuffleOrderIds !== null;
 
   useEffect(() => {
     setQueue(displayedSongs.filter((song) => song.audioUrl));
@@ -536,12 +538,37 @@ export default function FavoritesPage() {
                   className="favorites-search-input"
                 />
               </label>
+
+              <FilterTags
+                selectedMoods={[]}
+                selectedGenres={[]}
+                selectedInstruments={[]}
+                selectedBuilds={[]}
+                selectedVocals={[]}
+                selectedDurations={[]}
+                instrumental={false}
+                bpmValue={null}
+                keyValue={null}
+                selectedPlaylist={null}
+                shuffleActive={shuffleActive}
+                onRemoveMood={() => {}}
+                onRemoveGenre={() => {}}
+                onRemoveInstrument={() => {}}
+                onRemoveBuild={() => {}}
+                onRemoveVocal={() => {}}
+                onRemoveDuration={() => {}}
+                onRemoveInstrumental={() => {}}
+                onRemoveBpm={() => {}}
+                onRemoveKey={() => {}}
+                onRemovePlaylist={() => {}}
+                onRemoveShuffle={() => setShuffleOrderIds(null)}
+              />
             </div>
           </div>
 
           <div className="favorites-quick-row">
             {QUICK_FILTERS.map((filter) => {
-              const isActive = quickFilter === filter.value;
+              const isActive = !shuffleActive && quickFilter === filter.value;
 
               return (
                 <button

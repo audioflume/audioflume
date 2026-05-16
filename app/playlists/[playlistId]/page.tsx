@@ -16,6 +16,7 @@ import { usePlaylists } from "@/hooks/usePlaylists";
 import type { Playlist, Song } from "@/lib/types";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import FilterTags from "@/components/FilterTags";
 
 const GRADIENTS = [
   "linear-gradient(160deg,#1a3a2a,#2d5a3d)",
@@ -292,6 +293,7 @@ export default function PlaylistDetailPage() {
   );
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
+  const shuffleActive = shuffleOrderIds !== null;
 
   const playlist = useMemo(
     () => playlists.find((item) => String(item.id) === playlistId),
@@ -944,12 +946,38 @@ export default function PlaylistDetailPage() {
                       className="playlist-detail-search-input"
                     />
                   </label>
+
+                  <FilterTags
+                    selectedMoods={[]}
+                    selectedGenres={[]}
+                    selectedInstruments={[]}
+                    selectedBuilds={[]}
+                    selectedVocals={[]}
+                    selectedDurations={[]}
+                    instrumental={false}
+                    bpmValue={null}
+                    keyValue={null}
+                    selectedPlaylist={null}
+                    shuffleActive={shuffleActive}
+                    onRemoveMood={() => {}}
+                    onRemoveGenre={() => {}}
+                    onRemoveInstrument={() => {}}
+                    onRemoveBuild={() => {}}
+                    onRemoveVocal={() => {}}
+                    onRemoveDuration={() => {}}
+                    onRemoveInstrumental={() => {}}
+                    onRemoveBpm={() => {}}
+                    onRemoveKey={() => {}}
+                    onRemovePlaylist={() => {}}
+                    onRemoveShuffle={() => setShuffleOrderIds(null)}
+                  />
                 </div>
               </div>
 
               <div className="playlist-detail-quick-row">
                 {QUICK_FILTERS.map((filter) => {
-                  const isActive = quickFilter === filter.value;
+                  const isActive =
+                    !shuffleActive && quickFilter === filter.value;
 
                   return (
                     <button

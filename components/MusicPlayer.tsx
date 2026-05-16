@@ -458,11 +458,17 @@ export default function MusicPlayer() {
           )}
 
           <div className="min-w-0">
-            <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+            <div
+              title={currentSong.title}
+              className="truncate text-sm font-medium text-[var(--text-primary)]"
+            >
               {currentSong.title}
             </div>
 
-            <div className="truncate text-xs text-[var(--text-subtle)]">
+            <div
+              title={currentSong.artist}
+              className="truncate text-xs text-[var(--text-subtle)]"
+            >
               {currentSong.artist}
             </div>
           </div>

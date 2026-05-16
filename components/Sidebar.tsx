@@ -1,11 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { usePlayer } from "@/context/PlayerContext";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import CreateProjectModal from "@/components/CreateProjectModal";
+import EditProjectModal from "@/components/EditProjectModal";
 import HeartIcon from "@/components/icons/HeartIcon";
+import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
 import type { Project } from "@/lib/types";
 
@@ -22,9 +39,20 @@ const aiLinks = [
   { label: "Story Match", href: "/scene-mood-finder", icon: "scene" },
 ];
 
+const PROJECT_ORDER_STORAGE_KEY = "filmwave-sidebar-project-order";
+const PROJECT_SORT_STORAGE_KEY = "filmwave-sidebar-project-sort";
+
 type SidebarTooltip = {
   label: string;
   top: number;
+} | null;
+
+type ProjectSortMode = "alphabetical" | "custom";
+
+type ProjectMenuState = {
+  project: Project;
+  top: number;
+  left: number;
 } | null;
 
 function MusicIcon() {
@@ -317,6 +345,26 @@ function PlusIcon() {
   );
 }
 
+function CheckIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5 12.5L9.5 17L19 7"
+        stroke="currentColor"
+        strokeWidth="2.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function LibrarySectionIcon() {
   return (
     <svg
@@ -365,6 +413,53 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
   );
 }
 
+function DragHandleIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 7H16"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 12H16"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 17H16"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function HorizontalMoreIcon() {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <circle cx="5" cy="12" r="1.8" />
+      <circle cx="12" cy="12" r="1.8" />
+      <circle cx="19" cy="12" r="1.8" />
+    </svg>
+  );
+}
+
 function MainIcon({ icon }: { icon: string }) {
   if (icon === "music") return <MusicIcon />;
   if (icon === "playlist") return <PlaylistIcon />;
@@ -374,6 +469,12 @@ function MainIcon({ icon }: { icon: string }) {
   if (icon === "marker") return <MarkerIcon />;
   if (icon === "scene") return <SceneIcon />;
   return <WaveformIcon />;
+}
+
+function sortProjectsByName(projects: Project[]) {
+  return [...projects].sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+  );
 }
 
 function SidebarTooltipEl({ label, top }: { label: string; top: number }) {
@@ -487,9 +588,9 @@ function SidebarLink({
     <Link
       href={href}
       aria-label={label}
-      onMouseEnter={(e) => showTooltip(e.currentTarget)}
+      onMouseEnter={(event) => showTooltip(event.currentTarget)}
       onMouseLeave={hideTooltip}
-      onFocus={(e) => showTooltip(e.currentTarget)}
+      onFocus={(event) => showTooltip(event.currentTarget)}
       onBlur={hideTooltip}
       className={`group flex h-8 items-center rounded-md px-2.5 text-[13px] font-medium transition ${
         active
@@ -524,15 +625,87 @@ function SidebarLink({
   );
 }
 
+function ProjectMenu({
+  menu,
+  onEdit,
+  onStartReorder,
+  onDelete,
+  onClose,
+}: {
+  menu: ProjectMenuState;
+  onEdit: (project: Project) => void;
+  onStartReorder: () => void;
+  onDelete: (project: Project) => void;
+  onClose: () => void;
+}) {
+  if (!menu) return null;
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-label="Close project menu"
+        className="fixed inset-0 z-[149] cursor-default bg-transparent"
+        onClick={onClose}
+      />
+
+      <div
+        className="fixed z-[150] w-[190px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-1 shadow-[var(--shadow-ui)]"
+        style={{
+          top: menu.top,
+          left: menu.left,
+        }}
+      >
+        <button
+          type="button"
+          className="flex h-9 w-full cursor-pointer items-center rounded-lg px-3 text-left text-[12px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+          onClick={() => {
+            onClose();
+            onEdit(menu.project);
+          }}
+        >
+          Edit details
+        </button>
+
+        <button
+          type="button"
+          className="flex h-9 w-full cursor-pointer items-center rounded-lg px-3 text-left text-[12px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+          onClick={() => {
+            onClose();
+            onStartReorder();
+          }}
+        >
+          Reorder
+        </button>
+
+        <button
+          type="button"
+          className="flex h-9 w-full cursor-pointer items-center rounded-lg px-3 text-left text-[12px] font-medium text-[#ff5d57] transition hover:bg-[rgba(255,93,87,0.1)]"
+          onClick={() => {
+            onClose();
+            onDelete(menu.project);
+          }}
+        >
+          Delete Project
+        </button>
+      </div>
+    </>
+  );
+}
+
 function ProjectLink({
   project,
   collapsed,
   ready,
+  menuOpen,
+  onOpenMenu,
   onTooltipChange,
 }: {
   project: Project;
   collapsed: boolean;
   ready: boolean;
+  menuOpen: boolean;
+  onOpenMenu: (project: Project, element: HTMLElement) => void;
   onTooltipChange: (tooltip: SidebarTooltip) => void;
 }) {
   const pathname = usePathname();
@@ -552,41 +725,119 @@ function ProjectLink({
   }
 
   return (
-    <Link
-      href={href}
-      aria-label={project.name}
-      onMouseEnter={(event) => showTooltip(event.currentTarget)}
-      onMouseLeave={hideTooltip}
-      onFocus={(event) => showTooltip(event.currentTarget)}
-      onBlur={hideTooltip}
-      className={`group flex h-7 items-center rounded-md px-2.5 text-[13px] font-medium transition ${
+    <div
+      className={`group/project-row flex h-7 items-center rounded-md px-2.5 text-[13px] font-medium transition ${
         active
           ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
           : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
       }`}
+      onMouseEnter={(event) => showTooltip(event.currentTarget)}
+      onMouseLeave={hideTooltip}
+      onFocus={(event) => showTooltip(event.currentTarget)}
+      onBlur={hideTooltip}
+    >
+      <Link
+        href={href}
+        aria-label={project.name}
+        className="flex min-w-0 flex-1 items-center"
+      >
+        <span
+          className={`flex h-4 w-4 shrink-0 items-center justify-center transition ${
+            active
+              ? "text-[var(--text-primary)]"
+              : "text-[var(--text-muted)] group-hover/project-row:text-[var(--text-primary)]"
+          }`}
+        >
+          <FolderIcon />
+        </span>
+
+        <span
+          className={`ml-2.5 min-w-0 truncate ${
+            ready ? "transition-[opacity,transform,width] duration-150" : ""
+          } ${
+            collapsed
+              ? "w-0 translate-x-1 opacity-0"
+              : "w-auto translate-x-0 opacity-100"
+          }`}
+        >
+          {project.name}
+        </span>
+      </Link>
+
+      {!collapsed && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onOpenMenu(project, event.currentTarget);
+          }}
+          className={`ml-1 flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center text-[var(--text-muted)] opacity-0 transition group-hover/project-row:opacity-100 hover:text-[var(--text-primary)] ${
+            menuOpen ? "text-[var(--text-primary)] opacity-100" : ""
+          }`}
+          aria-label={`${project.name} options`}
+          aria-expanded={menuOpen}
+        >
+          <HorizontalMoreIcon />
+        </button>
+      )}
+    </div>
+  );
+}
+
+function SortableProjectLink({
+  project,
+  ready,
+  dragActive,
+}: {
+  project: Project;
+  ready: boolean;
+  dragActive: boolean;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: project.id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={`group/project-row flex h-7 cursor-grab touch-none items-center rounded-md px-2.5 text-[13px] font-medium text-[var(--text-secondary)] transition active:cursor-grabbing ${
+        dragActive
+          ? ""
+          : "hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+      } ${isDragging ? "relative z-50 opacity-45" : "opacity-100"}`}
     >
       <span
-        className={`flex h-4 w-4 shrink-0 items-center justify-center transition ${
-          active
-            ? "text-[var(--text-primary)]"
-            : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+        className={`flex h-4 w-4 shrink-0 items-center justify-center text-[var(--text-muted)] ${
+          dragActive ? "" : "group-hover/project-row:text-[var(--text-primary)]"
         }`}
       >
-        <FolderIcon />
+        <DragHandleIcon />
       </span>
 
       <span
-        className={`ml-2.5 min-w-0 truncate ${
+        className={`ml-2.5 min-w-0 flex-1 truncate ${
           ready ? "transition-[opacity,transform,width] duration-150" : ""
-        } ${
-          collapsed
-            ? "w-0 translate-x-1 opacity-0"
-            : "w-auto translate-x-0 opacity-100"
         }`}
       >
         {project.name}
       </span>
-    </Link>
+    </div>
   );
 }
 
@@ -595,17 +846,63 @@ export default function Sidebar({
 }: {
   initialCollapsed?: boolean;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const [tooltip, setTooltip] = useState<SidebarTooltip>(null);
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [forceCollapsed, setForceCollapsed] = useState(false);
   const [ready, setReady] = useState(false);
+  const [projectSortMode, setProjectSortMode] =
+    useState<ProjectSortMode>("alphabetical");
+  const [projectOrder, setProjectOrder] = useState<number[]>([]);
+  const [reorderMode, setReorderMode] = useState(false);
+  const [projectMenu, setProjectMenu] = useState<ProjectMenuState>(null);
+  const [activeDragProjectId, setActiveDragProjectId] = useState<number | null>(
+    null,
+  );
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [isSavingProject, setIsSavingProject] = useState(false);
+  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(
+    null,
+  );
 
   const { currentSong } = usePlayer();
   const { projects, setProjects } = useProjectsContext();
 
   const playerVisible = !!currentSong;
   const sidebarCollapsed = collapsed || forceCollapsed;
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 6,
+      },
+    }),
+  );
+
+  const displayedProjects = useMemo(() => {
+    const projectMap = new Map(
+      projects.map((project) => [project.id, project]),
+    );
+
+    if (projectSortMode === "custom" && projectOrder.length > 0) {
+      const orderedProjects = projectOrder
+        .map((projectId) => projectMap.get(projectId))
+        .filter((project): project is Project => Boolean(project));
+
+      const missingProjects = projects.filter(
+        (project) => !projectOrder.includes(project.id),
+      );
+
+      return [...orderedProjects, ...sortProjectsByName(missingProjects)];
+    }
+
+    return sortProjectsByName(projects);
+  }, [projectOrder, projectSortMode, projects]);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -614,8 +911,40 @@ export default function Sidebar({
   }, []);
 
   useEffect(() => {
+    const savedSortMode = localStorage.getItem(PROJECT_SORT_STORAGE_KEY);
+    const savedOrder = localStorage.getItem(PROJECT_ORDER_STORAGE_KEY);
+
+    if (savedSortMode === "custom" || savedSortMode === "alphabetical") {
+      setProjectSortMode(savedSortMode);
+    }
+
+    if (savedOrder) {
+      try {
+        const parsedOrder = JSON.parse(savedOrder);
+
+        if (Array.isArray(parsedOrder)) {
+          setProjectOrder(
+            parsedOrder
+              .map((item) => Number(item))
+              .filter((item) => Number.isFinite(item)),
+          );
+        }
+      } catch {
+        setProjectOrder([]);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (projectOrder.length > 0) return;
+
+    setProjectOrder(projects.map((project) => project.id));
+  }, [projectOrder.length, projects]);
+
+  useEffect(() => {
     function handleResize() {
       setForceCollapsed(window.innerWidth < 768);
+      setProjectMenu(null);
     }
 
     handleResize();
@@ -637,6 +966,213 @@ export default function Sidebar({
     };
   }, []);
 
+  function updateProjectOrder(nextProjects: Project[]) {
+    const nextOrder = nextProjects.map((project) => project.id);
+
+    setProjectOrder(nextOrder);
+    setProjectSortMode("custom");
+    localStorage.setItem(PROJECT_SORT_STORAGE_KEY, "custom");
+    localStorage.setItem(PROJECT_ORDER_STORAGE_KEY, JSON.stringify(nextOrder));
+  }
+
+  function saveProjectOrder(nextProjects: Project[]) {
+    updateProjectOrder(nextProjects);
+
+    void Promise.all(
+      nextProjects.map((project, index) =>
+        fetch(`/api/projects/${project.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            position: index,
+          }),
+        }).catch(() => null),
+      ),
+    );
+  }
+
+  function startReorderMode() {
+    const currentOrder = displayedProjects.map((project) => project.id);
+
+    setProjectMenu(null);
+    setReorderMode(true);
+    setProjectSortMode("custom");
+    setProjectOrder(currentOrder);
+    localStorage.setItem(PROJECT_SORT_STORAGE_KEY, "custom");
+    localStorage.setItem(
+      PROJECT_ORDER_STORAGE_KEY,
+      JSON.stringify(currentOrder),
+    );
+  }
+
+  function finishReorderMode() {
+    saveProjectOrder(displayedProjects);
+    setReorderMode(false);
+    setActiveDragProjectId(null);
+  }
+
+  function restoreAlphabeticalOrder() {
+    const alphabeticalProjects = sortProjectsByName(projects);
+    const alphabeticalOrder = alphabeticalProjects.map((project) => project.id);
+
+    setReorderMode(false);
+    setActiveDragProjectId(null);
+    setProjectSortMode("alphabetical");
+    setProjectOrder(alphabeticalOrder);
+    localStorage.setItem(PROJECT_SORT_STORAGE_KEY, "alphabetical");
+    localStorage.setItem(
+      PROJECT_ORDER_STORAGE_KEY,
+      JSON.stringify(alphabeticalOrder),
+    );
+  }
+
+  function handleProjectDragStart(event: DragStartEvent) {
+    setActiveDragProjectId(Number(event.active.id));
+  }
+
+  function handleProjectDragEnd(event: DragEndEvent) {
+    setActiveDragProjectId(null);
+
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = displayedProjects.findIndex(
+      (project) => project.id === active.id,
+    );
+    const newIndex = displayedProjects.findIndex(
+      (project) => project.id === over.id,
+    );
+
+    if (oldIndex < 0 || newIndex < 0) return;
+
+    const nextProjects = arrayMove(displayedProjects, oldIndex, newIndex);
+
+    updateProjectOrder(nextProjects);
+  }
+
+  function handleProjectDragCancel() {
+    setActiveDragProjectId(null);
+  }
+
+  function openProjectMenu(project: Project, element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+    const menuWidth = 190;
+
+    const left = Math.min(rect.right + 12, window.innerWidth - menuWidth - 12);
+    const top = Math.min(rect.top - 4, window.innerHeight - 150);
+
+    setTooltip(null);
+    setProjectMenu({
+      project,
+      left,
+      top,
+    });
+  }
+
+  function openEditProject(project: Project) {
+    setEditingProject(project);
+    setEditName(project.name);
+    setEditDescription(project.description ?? "");
+  }
+
+  async function handleSaveProject() {
+    if (!editingProject || isSavingProject) return;
+
+    const cleanName = editName.trim();
+
+    if (!cleanName) return;
+
+    setIsSavingProject(true);
+
+    try {
+      const res = await fetch(`/api/projects/${editingProject.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: cleanName,
+          description: editDescription.trim() || null,
+        }),
+      });
+
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        console.error("Failed to update project:", data || res.statusText);
+        return;
+      }
+
+      setProjects((current) =>
+        current.map((project) =>
+          project.id === editingProject.id
+            ? data || {
+                ...project,
+                name: cleanName,
+                description: editDescription.trim() || null,
+              }
+            : project,
+        ),
+      );
+
+      setEditingProject(null);
+    } finally {
+      setIsSavingProject(false);
+    }
+  }
+
+  async function handleDeleteProject(project: Project) {
+    if (deletingProjectId) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
+    );
+
+    if (!confirmed) return;
+
+    setDeletingProjectId(project.id);
+
+    try {
+      const res = await fetch(`/api/projects/${project.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+        console.error("Failed to delete project:", data || res.statusText);
+        return;
+      }
+
+      setProjects((current) =>
+        current.filter((currentProject) => currentProject.id !== project.id),
+      );
+
+      setProjectOrder((current) => {
+        const nextOrder = current.filter(
+          (projectId) => projectId !== project.id,
+        );
+
+        localStorage.setItem(
+          PROJECT_ORDER_STORAGE_KEY,
+          JSON.stringify(nextOrder),
+        );
+
+        return nextOrder;
+      });
+
+      if (pathname === `/projects/${project.id}`) {
+        router.push("/music");
+      }
+    } finally {
+      setDeletingProjectId(null);
+    }
+  }
+
   return (
     <>
       <aside
@@ -654,6 +1190,7 @@ export default function Sidebar({
               onClick={() => {
                 setCollapsed((value) => !value);
                 setTooltip(null);
+                setProjectMenu(null);
               }}
               className="flex h-14 w-4 cursor-pointer items-center justify-center text-[var(--text-muted)] opacity-0 transition-opacity duration-150 group-hover/collapse-zone:opacity-35 hover:opacity-55 hover:text-[var(--text-secondary)]"
               aria-label={
@@ -665,7 +1202,7 @@ export default function Sidebar({
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col overflow-y-auto pt-6 pb-6 px-5">
+        <div className="flex flex-1 flex-col overflow-y-auto px-5 pt-6 pb-6">
           <div className="border-b border-[var(--border)] pb-5">
             <SectionHeading
               label="Library"
@@ -734,43 +1271,101 @@ export default function Sidebar({
                 Projects
               </span>
 
-              <button
-                type="button"
-                onClick={() => setIsCreateProjectOpen(true)}
-                onMouseEnter={(e) => {
-                  if (!sidebarCollapsed) return;
+              <div className="flex items-center gap-1">
+                {!sidebarCollapsed && reorderMode && (
+                  <button
+                    type="button"
+                    onClick={restoreAlphabeticalOrder}
+                    className="h-6 cursor-pointer rounded-md px-2 text-[10px] font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+                  >
+                    Alphabetical
+                  </button>
+                )}
 
-                  const rect = e.currentTarget.getBoundingClientRect();
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (reorderMode) {
+                      finishReorderMode();
+                      return;
+                    }
 
-                  setTooltip({
-                    label: "New Project",
-                    top: rect.top + rect.height / 2,
-                  });
-                }}
-                onMouseLeave={() => setTooltip(null)}
-                className={`flex cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] ${
-                  sidebarCollapsed ? "h-7 w-full" : "h-6 w-6"
-                }`}
-                aria-label="Create new project"
+                    setProjectMenu(null);
+                    setIsCreateProjectOpen(true);
+                  }}
+                  onMouseEnter={(event) => {
+                    if (!sidebarCollapsed) return;
+
+                    const rect = event.currentTarget.getBoundingClientRect();
+
+                    setTooltip({
+                      label: reorderMode ? "Save Order" : "New Project",
+                      top: rect.top + rect.height / 2,
+                    });
+                  }}
+                  onMouseLeave={() => setTooltip(null)}
+                  className={`flex cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] ${
+                    sidebarCollapsed ? "h-7 w-full" : "h-6 w-6"
+                  }`}
+                  aria-label={
+                    reorderMode ? "Save project order" : "Create new project"
+                  }
+                >
+                  {reorderMode ? <CheckIcon /> : <PlusIcon />}
+                </button>
+              </div>
+            </div>
+
+            {reorderMode && !sidebarCollapsed ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleProjectDragStart}
+                onDragEnd={handleProjectDragEnd}
+                onDragCancel={handleProjectDragCancel}
               >
-                <PlusIcon />
-              </button>
-            </div>
-
-            <div className="space-y-[2px]">
-              {projects.map((project) => (
-                <ProjectLink
-                  key={project.id}
-                  project={project}
-                  collapsed={sidebarCollapsed}
-                  ready={ready}
-                  onTooltipChange={setTooltip}
-                />
-              ))}
-            </div>
+                <SortableContext
+                  items={displayedProjects.map((project) => project.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-[2px]">
+                    {displayedProjects.map((project) => (
+                      <SortableProjectLink
+                        key={project.id}
+                        project={project}
+                        ready={ready}
+                        dragActive={activeDragProjectId !== null}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            ) : (
+              <div className="space-y-[2px]">
+                {displayedProjects.map((project) => (
+                  <ProjectLink
+                    key={project.id}
+                    project={project}
+                    collapsed={sidebarCollapsed}
+                    ready={ready}
+                    menuOpen={projectMenu?.project.id === project.id}
+                    onOpenMenu={openProjectMenu}
+                    onTooltipChange={setTooltip}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </aside>
+
+      <ProjectMenu
+        menu={projectMenu}
+        onClose={() => setProjectMenu(null)}
+        onEdit={openEditProject}
+        onStartReorder={startReorderMode}
+        onDelete={handleDeleteProject}
+      />
 
       {tooltip && sidebarCollapsed && (
         <SidebarTooltipEl label={tooltip.label} top={tooltip.top} />
@@ -786,8 +1381,41 @@ export default function Sidebar({
             ),
           );
 
+          setProjectOrder((current) => {
+            const nextOrder =
+              projectSortMode === "custom"
+                ? [...current, project.id]
+                : sortProjectsByName([...projects, project]).map(
+                    (item) => item.id,
+                  );
+
+            localStorage.setItem(
+              PROJECT_ORDER_STORAGE_KEY,
+              JSON.stringify(nextOrder),
+            );
+
+            return nextOrder;
+          });
+
           setIsCreateProjectOpen(false);
         }}
+      />
+
+      <EditProjectModal
+        isOpen={!!editingProject}
+        project={editingProject}
+        name={editName}
+        description={editDescription}
+        isSaving={isSavingProject}
+        onNameChange={setEditName}
+        onDescriptionChange={setEditDescription}
+        onSave={handleSaveProject}
+        onDelete={() => {
+          if (!editingProject) return;
+          handleDeleteProject(editingProject);
+          setEditingProject(null);
+        }}
+        onClose={() => setEditingProject(null)}
       />
     </>
   );

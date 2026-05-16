@@ -48,3 +48,9 @@ export const modalPrimaryButtonClass = `${modalActionButtonClass} font-[family-n
 export const modalDeleteButtonClass = `${modalActionButtonClass} ${dangerButtonClass} px-0`;
 
 export const modalIconCloseButtonClass = iconButtonClass;
+
+export const squareButtonClass =
+  "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--border)] bg-transparent px-2.5 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40";
+
+export const primarySquareButtonClass =
+  "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--text-primary)] bg-[var(--text-primary)] px-2.5 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40";

@@ -365,15 +365,15 @@ export default function MusicPage() {
   ]);
 
   const displayedSongs = useMemo(() => {
-    const reversedSongs = [...filteredSongs].reverse();
+    const orderedSongs = [...filteredSongs];
 
-    if (!shuffleOrderIds) return reversedSongs;
+    if (!shuffleOrderIds) return orderedSongs;
 
     const orderMap = new Map(
       shuffleOrderIds.map((songId, index) => [songId, index]),
     );
 
-    return [...reversedSongs].sort((a, b) => {
+    return [...orderedSongs].sort((a, b) => {
       const aOrder = orderMap.get(getSongStableId(a));
       const bOrder = orderMap.get(getSongStableId(b));
 
@@ -539,8 +539,7 @@ export default function MusicPage() {
             <button
               type="button"
               onClick={() => {
-                const reversedSongs = [...filteredSongs].reverse();
-                const shuffledSongs = shuffleSongList(reversedSongs);
+                const shuffledSongs = shuffleSongList(filteredSongs);
 
                 setShuffleOrderIds(
                   shuffledSongs.map((song, index) =>

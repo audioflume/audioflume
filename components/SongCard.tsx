@@ -309,26 +309,11 @@ export default function SongCard({
     return () => ro.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!isCurrentSong) return;
-    if (!cardRef.current) return;
-
-    if (isFirst) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    cardRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: isLast ? "end" : "nearest",
-    });
-  }, [isCurrentSong, isFirst, isLast]);
-
   return (
     <>
       <div
         ref={cardRef}
-        className={`group flex w-full scroll-mt-48 scroll-mb-40 cursor-pointer items-center gap-4 px-8 py-4 ${
+        className={`group flex w-full scroll-mt-48 scroll-mb-40 cursor-pointer items-center gap-4 pl-8 pr-4 py-4 ${
           isCurrentSong ? "bg-[var(--bg-hover)]" : ""
         }`}
         style={{
@@ -440,9 +425,9 @@ export default function SongCard({
             </div>
           )}
 
-          <div className="mr-[clamp(28px,4vw,56px)] flex items-center gap-3 text-xs text-[var(--text-secondary)]">
+          <div className="mr-[clamp(0px,3vw,43px)] flex items-center gap-6 text-xs text-[var(--text-secondary)]">
+            {" "}
             <span className="w-[56px] text-right">{song.key || "—"}</span>
-
             <span className="w-[72px] text-right tabular-nums max-[645px]:hidden">
               {song.bpm ? `${song.bpm} BPM` : "—"}
             </span>

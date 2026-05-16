@@ -70,6 +70,7 @@ export const GENRE_OPTIONS = [
   "Score",
   "Soul",
   "Trap",
+  "Travel",
   "World",
   "YouTube",
 ];
