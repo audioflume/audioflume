@@ -690,7 +690,7 @@ export default function MusicPlayer() {
           <button
             type="button"
             onClick={handleClosePlayer}
-            className="music-player-more-menu-close"
+            className="music-player-more-menu-close danger-hover"
           >
             <span>Close Player</span>
             <CloseIcon />

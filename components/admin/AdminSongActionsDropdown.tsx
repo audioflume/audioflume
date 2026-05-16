@@ -138,7 +138,7 @@ export default function AdminSongActionsDropdown({
           type="button"
           onClick={deleteSong}
           disabled={isDeleting}
-          className="danger"
+          className="danger-hover"
         >
           {isDeleting ? "Deleting..." : "Delete Song"}
         </button>

@@ -103,7 +103,7 @@ export default function SongMoreDropdown({
         {onRemoveFromPlaylist && (
           <button
             type="button"
-            className="danger"
+            className="danger-hover"
             onClick={() => {
               onOpenChange(false);
               onRemoveFromPlaylist();
@@ -116,7 +116,7 @@ export default function SongMoreDropdown({
         {onRemoveFromProject && (
           <button
             type="button"
-            className="danger"
+            className="danger-hover"
             onClick={() => {
               onOpenChange(false);
               onRemoveFromProject();

@@ -83,7 +83,7 @@ body.sidebar-collapsed aside[data-sidebar] {
 }
 
 .danger-hover {
-  color: var(--danger, #ff5d57);
+  color: #ff5d57;
 }
 
 .danger-hover:hover {

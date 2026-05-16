@@ -687,7 +687,7 @@ function ProjectMenu({
 
         <button
           type="button"
-          className="flex h-9 w-full cursor-pointer items-center rounded-lg px-3 text-left text-[12px] font-medium text-[#ff5d57] transition hover:bg-[rgba(255,93,87,0.1)]"
+          className="danger-hover flex h-9 w-full cursor-pointer items-center rounded-lg px-3 text-left text-[12px] font-medium transition"
           onClick={() => {
             onClose();
             onDelete(menu.project);

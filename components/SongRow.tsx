@@ -353,7 +353,7 @@ export default function SongRow({
             {playlistId && onRemoveFromPlaylist && (
               <button
                 type="button"
-                className="danger"
+                className="danger-hover"
                 onClick={() => {
                   setMoreOpen(false);
                   handleRemoveFromPlaylist();
@@ -366,7 +366,7 @@ export default function SongRow({
             {projectId && onRemoveFromProject && (
               <button
                 type="button"
-                className="danger"
+                className="danger-hover"
                 onClick={() => {
                   setMoreOpen(false);
                   handleRemoveFromProject();
