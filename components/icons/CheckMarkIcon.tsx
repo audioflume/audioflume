@@ -1,14 +1,14 @@
-type CheckIconProps = {
+type CheckMarkIconProps = {
   size?: number;
   className?: string;
   strokeWidth?: number;
 };
 
-export default function CheckIcon({
-  size = 13,
+export default function CheckMarkIcon({
+  size = 12,
   className,
-  strokeWidth = 2.6,
-}: CheckIconProps) {
+  strokeWidth = 2.7,
+}: CheckMarkIconProps) {
   return (
     <svg
       width={size}
@@ -19,7 +19,7 @@ export default function CheckIcon({
       className={className}
     >
       <path
-        d="M5 12.5L9.5 17L19 7"
+        d="M20 6L9 17L4 12"
         stroke="currentColor"
         strokeWidth={strokeWidth}
         strokeLinecap="round"

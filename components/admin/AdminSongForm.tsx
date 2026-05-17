@@ -4,7 +4,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUser } from "@clerk/nextjs";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
+import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
+import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
+import CopyIcon from "@/components/icons/CopyIcon";
+import FailedIcon from "@/components/icons/FailedIcon";
+import RefreshIcon from "@/components/icons/RefreshIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
+import WarningIcon from "@/components/icons/WarningIcon";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 import {
@@ -694,15 +701,7 @@ function TextInput({
             className="flex h-3.5 w-5 items-center justify-center text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
             aria-label="Increase value"
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M6 15L12 9L18 15"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <ChevronUpIcon />
           </button>
 
           <button
@@ -711,15 +710,7 @@ function TextInput({
             className="-mt-0.5 flex h-3.5 w-5 items-center justify-center text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
             aria-label="Decrease value"
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M6 9L12 15L18 9"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <ChevronDownIcon />
           </button>
         </div>
       </div>
@@ -758,22 +749,10 @@ function SelectInput({
         {children}
       </select>
 
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
+      <ChevronDownIcon
+        size={16}
         className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
-      >
-        <path
-          d="M6 9L12 15L18 9"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      />
     </div>
   );
 }
@@ -801,22 +780,11 @@ function CheckboxInput({
       />
 
       <span className="flex h-3.5 w-3.5 items-center justify-center rounded-[4px] border border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
-        <svg
-          width="10"
-          height="10"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
+        <CheckMarkIcon
+          size={10}
+          strokeWidth={3}
           className="opacity-0 text-[var(--bg-primary)] transition"
-        >
-          <path
-            d="M20 6L9 17L4 12"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        />
       </span>
 
       {label}
@@ -905,16 +873,12 @@ function UploadStatusIcon({
     return (
       <div
         className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full"
-        style={{ backgroundColor: "var(--status-error, #dc584f)" }}
+        style={{
+          backgroundColor: "var(--status-error, #dc584f)",
+          color: "var(--status-contrast)",
+        }}
       >
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M6 6L18 18M18 6L6 18"
-            stroke="var(--status-contrast)"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        </svg>
+        <FailedIcon size={10} strokeWidth={3} />
       </div>
     );
   }
@@ -927,111 +891,17 @@ function UploadStatusIcon({
     return (
       <div
         className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full"
-        style={{ backgroundColor: "var(--status-success, #48b571)" }}
+        style={{
+          backgroundColor: "var(--status-success, #48b571)",
+          color: "var(--status-contrast)",
+        }}
       >
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M20 6L9 17L4 12"
-            stroke="var(--status-contrast)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <CheckMarkIcon size={11} strokeWidth={3} />
       </div>
     );
   }
 
   return null;
-}
-
-function CopyIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="13"
-      height="13"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
-      />
-    </svg>
-  );
-}
-
-function RefreshIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M20 12C20 16.4183 16.4183 20 12 20C9.61061 20 7.46589 18.9525 6 17.2916"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 12C4 7.58172 7.58172 4 12 4C14.3894 4 16.5341 5.04753 18 6.70838"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 3V7H14"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M6 21V17H10"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function WarningIcon() {
-  return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      className="shrink-0"
-    >
-      <path
-        d="M12 8V13"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 17H12.01"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M10.29 4.86L2.82 18C2.31 18.89 2.95 20 3.98 20H20.02C21.05 20 21.69 18.89 21.18 18L13.71 4.86C13.2 3.95 10.8 3.95 10.29 4.86Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
 }
 
 export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {

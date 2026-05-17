@@ -3,6 +3,13 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import AlertIcon from "@/components/icons/AlertIcon";
+import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
+import DownloadArrowIcon from "@/components/icons/DownloadArrowIcon";
+import FailedIcon from "@/components/icons/FailedIcon";
+import FunnelIcon from "@/components/icons/FunnelIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import UserIcon from "@/components/icons/UserIcon";
 import { pillButtonClass } from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 
@@ -584,171 +591,6 @@ function getPercentValue(value: string) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function DownloadIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 4V15"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M7.5 10.5L12 15L16.5 10.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5 20H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M8 5V19L19 12L8 5Z" />
-    </svg>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-      />
-      <path
-        d="M5 20C5.8 17.2 8.4 15.5 12 15.5C15.6 15.5 18.2 17.2 19 20"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function FunnelIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 5H20L14 12V18L10 20V12L4 5Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function AlertIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 4L21 20H3L12 4Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12 9V13"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 16.5H12.01"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M20 6L9 17L4 12"
-        stroke="currentColor"
-        strokeWidth="2.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function FailedIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 6L18 18"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 6L6 18"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 function SeverityIcon({ status }: { status: StatusTone }) {
   return (
     <div
@@ -758,7 +600,7 @@ function SeverityIcon({ status }: { status: StatusTone }) {
         color: STATUS_COLORS[status],
       }}
     >
-      {status === "success" && <CheckIcon />}
+      {status === "success" && <CheckMarkIcon />}
       {status === "warning" && <AlertIcon />}
       {status === "error" && <FailedIcon />}
     </div>
@@ -942,9 +784,9 @@ function MetricCardBlock({
 }) {
   const Icon =
     index === 0
-      ? DownloadIcon
+      ? DownloadArrowIcon
       : index === 1
-        ? PlayIcon
+        ? PlayIconSmall
         : index === 2
           ? UserIcon
           : FunnelIcon;
@@ -957,7 +799,7 @@ function MetricCardBlock({
         </div>
 
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
-          <Icon />
+          <Icon size={13} />
         </div>
       </div>
 
