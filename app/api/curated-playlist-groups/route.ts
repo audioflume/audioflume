@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const { data, error } = await supabaseServer
       .from("curated_playlist_groups")
-      .select("id, name, position, description")
+      .select("*")
       .order("position", { ascending: true });
 
     if (error) throw error;
