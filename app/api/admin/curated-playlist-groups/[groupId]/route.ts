@@ -4,25 +4,8 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   getCuratedPlaylistError,
+  normalizeCuratedPlaylistGroup,
 } from "@/lib/curatedPlaylists";
-
-type CuratedPlaylistGroupRow = {
-  id: string | number;
-  name: string | null;
-  position: number | null;
-  created_at?: string | null;
-  playlist_count?: number | null;
-};
-
-function normalizeCuratedPlaylistGroup(row: CuratedPlaylistGroupRow) {
-  return {
-    id: Number(row.id),
-    name: String(row.name || DEFAULT_CURATED_PLAYLIST_GROUP),
-    position: Number(row.position || 0),
-    created_at: row.created_at ? String(row.created_at) : undefined,
-    playlist_count: Number(row.playlist_count || 0),
-  };
-}
 
 type RouteContext = {
   params: Promise<{ groupId: string }> | { groupId: string };
