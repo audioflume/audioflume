@@ -1,14 +1,12 @@
-type CheckIconProps = {
+type ChevronDownIconProps = {
   size?: number;
   className?: string;
-  strokeWidth?: number;
 };
 
-export default function CheckIcon({
-  size = 13,
+export default function ChevronDownIcon({
+  size = 15,
   className,
-  strokeWidth = 2.6,
-}: CheckIconProps) {
+}: ChevronDownIconProps) {
   return (
     <svg
       width={size}
@@ -19,9 +17,9 @@ export default function CheckIcon({
       className={className}
     >
       <path
-        d="M5 12.5L9.5 17L19 7"
+        d="M6 9L12 15L18 9"
         stroke="currentColor"
-        strokeWidth={strokeWidth}
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

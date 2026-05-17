@@ -5,6 +5,12 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import AlertIcon from "@/components/icons/AlertIcon";
+import CheckIcon from "@/components/icons/CheckIcon";
+import FailedIcon from "@/components/icons/FailedIcon";
+import SearchIcon from "@/components/icons/SearchIcon";
+import TrashIcon from "@/components/icons/TrashIcon";
+import UploadIcon from "@/components/icons/UploadIcon";
 import AdminSongRow from "@/components/admin/AdminSongRow";
 import Toast from "@/components/Toast";
 import {
@@ -45,159 +51,6 @@ const STATUS_BACKGROUNDS = {
   warning: "var(--status-warning-soft, rgba(217, 164, 65, 0.12))",
   error: "var(--status-error-soft, rgba(220, 88, 79, 0.12))",
 };
-
-function UploadIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 16V4"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M7.5 8.5L12 4L16.5 8.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5 20H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 7H20"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M10 11V17"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M14 11V17"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 7L7 21H17L18 7"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9 7V4H15V7"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M20 6L9 17L4 12"
-        stroke="currentColor"
-        strokeWidth="2.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function AlertIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 4L21 20H3L12 4Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12 9V13"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 16.5H12.01"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function FailedIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 6L18 18"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 6L6 18"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 function StatusIcon({ status }: { status: HealthStatus }) {
   return (
@@ -741,7 +594,7 @@ export default function AdminMusicLibraryPage() {
             href="/admin/songs/new"
             className={`${primaryPillButtonClass} hidden md:flex`}
           >
-            <UploadIcon />
+            <UploadIcon size={13} />
             <span>Upload Song</span>
           </Link>
         </div>
@@ -777,20 +630,10 @@ export default function AdminMusicLibraryPage() {
               </div>
             ) : (
               <div className="flex w-[320px] flex-shrink-0 items-center gap-2 py-3 pr-4">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 38.31 38.31"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                <SearchIcon
+                  size={16}
                   className="shrink-0 text-[var(--text-muted)]"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z"
-                    fill="currentColor"
-                  />
-                </svg>
+                />
 
                 <input
                   type="text"
@@ -890,21 +733,7 @@ export default function AdminMusicLibraryPage() {
                       />
 
                       <span className="admin-song-select-box">
-                        <svg
-                          width="11"
-                          height="11"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M20 6L9 17L4 12"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                        <CheckIcon size={11} strokeWidth={3} />
                       </span>
                     </label>
                   </div>
