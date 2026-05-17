@@ -2,12 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Toast from "@/components/Toast";
-import TrashIcon from "@/components/icons/TrashIcon";
+import DropdownShell from "@/components/DropdownShell";
+import MoreIcon from "@/components/icons/MoreIcon";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   type CuratedPlaylistGroup,
 } from "@/lib/curatedPlaylists";
 import {
+  iconButtonActiveClass,
   primaryPillButtonClass,
   secondaryPillButtonClass,
   smallIconButtonClass,
@@ -30,6 +32,7 @@ export default function AdminPlaylistGroupManager({
   const [editingGroupName, setEditingGroupName] = useState("");
   const [savingGroupId, setSavingGroupId] = useState<number | null>(null);
   const [creating, setCreating] = useState(false);
+  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
 
   const sortedGroups = useMemo(
@@ -69,7 +72,9 @@ export default function AdminPlaylistGroupManager({
         if (!cancelled) setGroups(data);
       } catch (err) {
         if (!cancelled)
-          setError(err instanceof Error ? err.message : "Failed to load groups");
+          setError(
+            err instanceof Error ? err.message : "Failed to load groups",
+          );
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -114,6 +119,7 @@ export default function AdminPlaylistGroupManager({
   }
 
   function beginEditing(group: CuratedPlaylistGroup) {
+    setOpenDropdownId(null);
     setEditingGroupId(group.id);
     setEditingGroupName(group.name);
   }
@@ -139,9 +145,7 @@ export default function AdminPlaylistGroupManager({
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to update group");
       setGroups((prev) =>
-        prev.map((g) =>
-          g.id === group.id ? { ...g, name: data.name } : g,
-        ),
+        prev.map((g) => (g.id === group.id ? { ...g, name: data.name } : g)),
       );
       cancelEditing();
       setToastMessage("Playlist group updated");
@@ -156,6 +160,7 @@ export default function AdminPlaylistGroupManager({
   }
 
   async function deleteGroup(group: CuratedPlaylistGroup) {
+    setOpenDropdownId(null);
     const confirmed = window.confirm(
       group.playlist_count && group.playlist_count > 0
         ? `Delete "${group.name}"? ${group.playlist_count} playlist${
@@ -185,12 +190,161 @@ export default function AdminPlaylistGroupManager({
     }
   }
 
+  function renderGroupRow(
+    group: CuratedPlaylistGroup,
+    index: number,
+    total: number,
+    compact: boolean,
+  ) {
+    const editing = editingGroupId === group.id;
+    const saving = savingGroupId === group.id;
+    const isDefaultGroup = group.name === DEFAULT_CURATED_PLAYLIST_GROUP;
+    const dropdownOpen = openDropdownId === group.id;
+
+    const moreButton = (
+      <DropdownShell
+        open={dropdownOpen}
+        onOpenChange={(o) => setOpenDropdownId(o ? group.id : null)}
+        placement="bottom-end"
+        trigger={({ open }) => (
+          <button
+            type="button"
+            className={`${smallIconButtonClass} ${open ? iconButtonActiveClass : ""}`}
+            aria-label="More options"
+            disabled={saving}
+          >
+            <MoreIcon size={14} />
+          </button>
+        )}
+      >
+        <button type="button" onClick={() => beginEditing(group)}>
+          Edit Group
+        </button>
+        <button
+          type="button"
+          className="danger-hover"
+          onClick={() => deleteGroup(group)}
+          disabled={isDefaultGroup}
+          title={isDefaultGroup ? "Default group cannot be deleted" : undefined}
+        >
+          Delete Group
+        </button>
+      </DropdownShell>
+    );
+
+    if (compact) {
+      return (
+        <div
+          key={group.id}
+          className="flex items-center gap-2 px-4 py-2.5 transition hover:bg-[var(--bg-hover)]"
+          style={{
+            borderBottom:
+              index < total - 1 ? "1px solid var(--border-subtle)" : "none",
+          }}
+        >
+          {editing ? (
+            <>
+              <input
+                value={editingGroupName}
+                onChange={(e) => setEditingGroupName(e.target.value)}
+                className="h-7 min-w-0 flex-1 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
+                autoFocus
+              />
+              <button
+                type="button"
+                className="h-7 shrink-0 rounded-full border border-[var(--border)] px-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                onClick={cancelEditing}
+                disabled={saving}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="h-7 shrink-0 rounded-full border border-[var(--border)] px-2 text-xs font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)] disabled:opacity-50"
+                onClick={() => saveGroup(group)}
+                disabled={saving}
+              >
+                {saving ? "..." : "Save"}
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+                  {group.name}
+                </div>
+                <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
+                  {group.playlist_count || 0} playlist
+                  {group.playlist_count === 1 ? "" : "s"}
+                  {isDefaultGroup ? " · Default" : ""}
+                </div>
+              </div>
+              {moreButton}
+            </>
+          )}
+        </div>
+      );
+    }
+
+    // Standalone style
+    return (
+      <div
+        key={group.id}
+        className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2"
+      >
+        <div className="min-w-0 flex-1">
+          {editing ? (
+            <input
+              value={editingGroupName}
+              onChange={(e) => setEditingGroupName(e.target.value)}
+              className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+              autoFocus
+            />
+          ) : (
+            <>
+              <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+                {group.name}
+              </div>
+              <div className="mt-0.5 text-xs text-[var(--text-muted)]">
+                {group.playlist_count || 0} playlist
+                {group.playlist_count === 1 ? "" : "s"}
+                {isDefaultGroup ? " · Default" : ""}
+              </div>
+            </>
+          )}
+        </div>
+
+        {editing ? (
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              className={secondaryPillButtonClass}
+              onClick={cancelEditing}
+              disabled={saving}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className={primaryPillButtonClass}
+              onClick={() => saveGroup(group)}
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Save"}
+            </button>
+          </div>
+        ) : (
+          moreButton
+        )}
+      </div>
+    );
+  }
+
   // ─── Embedded panel mode ──────────────────────────────────────────────────
 
   if (embedded) {
     return (
       <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
-        {/* Header */}
         <div className="flex h-[58px] items-center border-b border-[var(--border)] px-4">
           <div>
             <h2 className="text-sm font-medium text-[var(--text-primary)]">
@@ -204,7 +358,6 @@ export default function AdminPlaylistGroupManager({
           </div>
         </div>
 
-        {/* Add form */}
         <form
           onSubmit={createGroup}
           className="flex gap-2 border-b border-[var(--border)] px-4 py-3"
@@ -224,7 +377,6 @@ export default function AdminPlaylistGroupManager({
           </button>
         </form>
 
-        {/* Loading */}
         {loading && (
           <div className="grid gap-2 px-4 py-3">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -236,103 +388,21 @@ export default function AdminPlaylistGroupManager({
           </div>
         )}
 
-        {/* Error */}
         {!loading && error && (
           <div className="px-4 py-3 text-sm text-[var(--danger)]">{error}</div>
         )}
 
-        {/* Empty */}
         {!loading && !error && sortedGroups.length === 0 && (
           <div className="flex min-h-[100px] items-center justify-center px-4 text-sm text-[var(--text-secondary)]">
             No groups yet.
           </div>
         )}
 
-        {/* Group rows */}
         {!loading && !error && sortedGroups.length > 0 && (
           <div>
-            {sortedGroups.map((group, index) => {
-              const editing = editingGroupId === group.id;
-              const saving = savingGroupId === group.id;
-              const isDefaultGroup =
-                group.name === DEFAULT_CURATED_PLAYLIST_GROUP;
-
-              return (
-                <div
-                  key={group.id}
-                  className="flex items-center gap-2 px-4 py-2.5 transition hover:bg-[var(--bg-hover)]"
-                  style={{
-                    borderBottom:
-                      index < sortedGroups.length - 1
-                        ? "1px solid var(--border-subtle)"
-                        : "none",
-                  }}
-                >
-                  {editing ? (
-                    <>
-                      <input
-                        value={editingGroupName}
-                        onChange={(e) => setEditingGroupName(e.target.value)}
-                        className="h-7 min-w-0 flex-1 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
-                        autoFocus
-                      />
-                      <button
-                        type="button"
-                        className="h-7 shrink-0 rounded-full border border-[var(--border)] px-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
-                        onClick={cancelEditing}
-                        disabled={saving}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        className="h-7 shrink-0 rounded-full border border-[var(--border)] px-2 text-xs font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)] disabled:opacity-50"
-                        onClick={() => saveGroup(group)}
-                        disabled={saving}
-                      >
-                        {saving ? "..." : "Save"}
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                          {group.name}
-                        </div>
-                        <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
-                          {group.playlist_count || 0} playlist
-                          {group.playlist_count === 1 ? "" : "s"}
-                          {isDefaultGroup ? " · Default" : ""}
-                        </div>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-1">
-                        <button
-                          type="button"
-                          className="h-6 rounded-full border border-[var(--border)] px-2 text-[11px] font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:opacity-50"
-                          onClick={() => beginEditing(group)}
-                          disabled={saving}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
-                          className={smallIconButtonClass}
-                          onClick={() => deleteGroup(group)}
-                          disabled={saving || isDefaultGroup}
-                          title={
-                            isDefaultGroup
-                              ? "Default group cannot be deleted"
-                              : undefined
-                          }
-                        >
-                          <TrashIcon size={13} />
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
+            {sortedGroups.map((group, index) =>
+              renderGroupRow(group, index, sortedGroups.length, true),
+            )}
           </div>
         )}
 
@@ -399,86 +469,9 @@ export default function AdminPlaylistGroupManager({
 
       {!loading && !error && sortedGroups.length > 0 && (
         <div className="grid gap-2">
-          {sortedGroups.map((group) => {
-            const editing = editingGroupId === group.id;
-            const saving = savingGroupId === group.id;
-            const isDefaultGroup =
-              group.name === DEFAULT_CURATED_PLAYLIST_GROUP;
-
-            return (
-              <div
-                key={group.id}
-                className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2"
-              >
-                <div className="min-w-0 flex-1">
-                  {editing ? (
-                    <input
-                      value={editingGroupName}
-                      onChange={(e) => setEditingGroupName(e.target.value)}
-                      className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                      autoFocus
-                    />
-                  ) : (
-                    <>
-                      <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                        {group.name}
-                      </div>
-                      <div className="mt-0.5 text-xs text-[var(--text-muted)]">
-                        {group.playlist_count || 0} playlist
-                        {group.playlist_count === 1 ? "" : "s"}
-                        {isDefaultGroup ? " · Default" : ""}
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                {editing ? (
-                  <div className="flex shrink-0 items-center gap-2">
-                    <button
-                      type="button"
-                      className={secondaryPillButtonClass}
-                      onClick={cancelEditing}
-                      disabled={saving}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className={primaryPillButtonClass}
-                      onClick={() => saveGroup(group)}
-                      disabled={saving}
-                    >
-                      {saving ? "Saving..." : "Save"}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex shrink-0 items-center gap-1">
-                    <button
-                      type="button"
-                      className="h-8 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                      onClick={() => beginEditing(group)}
-                      disabled={saving}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      className={smallIconButtonClass}
-                      onClick={() => deleteGroup(group)}
-                      disabled={saving || isDefaultGroup}
-                      title={
-                        isDefaultGroup
-                          ? "Default group cannot be deleted"
-                          : undefined
-                      }
-                    >
-                      <TrashIcon size={14} />
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {sortedGroups.map((group, index) =>
+            renderGroupRow(group, index, sortedGroups.length, false),
+          )}
         </div>
       )}
 
