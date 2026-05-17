@@ -5,14 +5,23 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminPlaylistGroupManager from "@/components/admin/AdminPlaylistGroupManager";
+import DropdownShell from "@/components/DropdownShell";
+import EditIcon from "@/components/icons/EditIcon";
+import MoreIcon from "@/components/icons/MoreIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
-import { primaryPillButtonClass } from "@/components/uiClasses";
+import {
+  iconButtonActiveClass,
+  primaryPillButtonClass,
+  smallIconButtonClass,
+} from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 export default function PlaylistManagerPage() {
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,7 +37,9 @@ export default function PlaylistManagerPage() {
         if (!cancelled) setPlaylists(data);
       } catch (err) {
         if (!cancelled)
-          setError(err instanceof Error ? err.message : "Failed to load playlists");
+          setError(
+            err instanceof Error ? err.message : "Failed to load playlists",
+          );
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -39,6 +50,27 @@ export default function PlaylistManagerPage() {
       cancelled = true;
     };
   }, []);
+
+  async function deletePlaylist(playlist: CuratedPlaylist) {
+    const confirmed = window.confirm(`Delete "${playlist.name}"?`);
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(playlist.id);
+      const res = await fetch(`/api/admin/curated-playlists/${playlist.id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to delete playlist");
+      setPlaylists((prev) => prev.filter((p) => p.id !== playlist.id));
+    } catch (err) {
+      window.alert(
+        err instanceof Error ? err.message : "Failed to delete playlist",
+      );
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
@@ -118,10 +150,9 @@ export default function PlaylistManagerPage() {
           {!loading && !error && playlists.length > 0 && (
             <div>
               {playlists.map((playlist, index) => (
-                <Link
+                <div
                   key={playlist.id}
-                  href={`/admin/playlist-manager/${playlist.id}/edit`}
-                  className="group flex items-center gap-3 px-4 py-2.5 transition hover:bg-[var(--bg-hover)]"
+                  className="group flex items-center"
                   style={{
                     borderBottom:
                       index < playlists.length - 1
@@ -129,32 +160,81 @@ export default function PlaylistManagerPage() {
                         : "none",
                   }}
                 >
-                  <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
-                    {playlist.cover_image_url && (
-                      <Image
-                        src={playlist.cover_image_url}
-                        alt={playlist.name}
-                        fill
-                        sizes="32px"
-                        className="object-cover"
-                        unoptimized
-                      />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                      {playlist.name}
+                  <Link
+                    href={`/admin/playlist-manager/${playlist.id}/edit`}
+                    className="flex flex-1 items-center gap-3 py-2.5 pl-4 transition hover:bg-[var(--bg-hover)]"
+                  >
+                    <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
+                      {playlist.cover_image_url && (
+                        <Image
+                          src={playlist.cover_image_url}
+                          alt={playlist.name}
+                          fill
+                          sizes="32px"
+                          className="object-cover"
+                          unoptimized
+                        />
+                      )}
                     </div>
-                    <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-[var(--text-muted)]">
-                      <span>{playlist.playlist_group}</span>
-                      <span>·</span>
-                      <span>{playlist.song_count || 0} songs</span>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+                        {playlist.name}
+                      </div>
+                      <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-[var(--text-muted)]">
+                        <span>{playlist.playlist_group}</span>
+                        <span>·</span>
+                        <span>{playlist.song_count || 0} songs</span>
+                      </div>
                     </div>
+                  </Link>
+
+                  <div className="flex shrink-0 items-center gap-1 pr-2">
+                    <Link
+                      href={`/admin/playlist-manager/${playlist.id}/edit`}
+                      className={smallIconButtonClass}
+                      title="Edit playlist"
+                    >
+                      <EditIcon size={14} />
+                    </Link>
+
+                    <DropdownShell
+                      open={openDropdownId === playlist.id}
+                      onOpenChange={(o) =>
+                        setOpenDropdownId(o ? playlist.id : null)
+                      }
+                      placement="bottom-end"
+                      trigger={({ open }) => (
+                        <button
+                          type="button"
+                          className={`${smallIconButtonClass} ${open ? iconButtonActiveClass : ""}`}
+                          aria-label="More options"
+                        >
+                          <MoreIcon size={14} />
+                        </button>
+                      )}
+                    >
+                      <Link
+                        href={`/admin/playlist-manager/${playlist.id}/edit`}
+                        onClick={() => setOpenDropdownId(null)}
+                      >
+                        Edit Playlist
+                      </Link>
+                      <button
+                        type="button"
+                        className="danger-hover"
+                        disabled={deletingId === playlist.id}
+                        onClick={() => {
+                          setOpenDropdownId(null);
+                          deletePlaylist(playlist);
+                        }}
+                      >
+                        {deletingId === playlist.id
+                          ? "Deleting..."
+                          : "Delete Playlist"}
+                      </button>
+                    </DropdownShell>
                   </div>
-                  <div className="text-[11px] font-medium text-[var(--text-muted)] opacity-0 transition group-hover:opacity-100">
-                    Edit
-                  </div>
-                </Link>
+                </div>
               ))}
             </div>
           )}
