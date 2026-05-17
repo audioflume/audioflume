@@ -1,14 +1,12 @@
-type CheckIconProps = {
+type ArrowUpRightIconProps = {
   size?: number;
   className?: string;
-  strokeWidth?: number;
 };
 
-export default function CheckIcon({
+export default function ArrowUpRightIcon({
   size = 13,
   className,
-  strokeWidth = 2.6,
-}: CheckIconProps) {
+}: ArrowUpRightIconProps) {
   return (
     <svg
       width={size}
@@ -19,9 +17,15 @@ export default function CheckIcon({
       className={className}
     >
       <path
-        d="M5 12.5L9.5 17L19 7"
+        d="M7 17L17 7"
         stroke="currentColor"
-        strokeWidth={strokeWidth}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M9 7H17V15"
+        stroke="currentColor"
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

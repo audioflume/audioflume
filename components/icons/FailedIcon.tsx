@@ -1,14 +1,14 @@
-type CheckIconProps = {
+type FailedIconProps = {
   size?: number;
   className?: string;
   strokeWidth?: number;
 };
 
-export default function CheckIcon({
-  size = 13,
+export default function FailedIcon({
+  size = 12,
   className,
   strokeWidth = 2.6,
-}: CheckIconProps) {
+}: FailedIconProps) {
   return (
     <svg
       width={size}
@@ -19,11 +19,16 @@ export default function CheckIcon({
       className={className}
     >
       <path
-        d="M5 12.5L9.5 17L19 7"
+        d="M6 6L18 18"
         stroke="currentColor"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
-        strokeLinejoin="round"
+      />
+      <path
+        d="M18 6L6 18"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
       />
     </svg>
   );

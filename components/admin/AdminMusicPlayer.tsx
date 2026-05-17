@@ -11,7 +11,12 @@ import {
   useState,
 } from "react";
 import { usePlayer } from "@/context/PlayerContext";
+import FailedIcon from "@/components/icons/FailedIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
+import NextTrackIcon from "@/components/icons/NextTrackIcon";
+import PlayerPauseIcon from "@/components/icons/PlayerPauseIcon";
+import PlayerPlayIcon from "@/components/icons/PlayerPlayIcon";
+import PreviousTrackIcon from "@/components/icons/PreviousTrackIcon";
 import Toast from "@/components/Toast";
 import { iconButtonActiveClass, iconButtonClass } from "@/components/uiClasses";
 
@@ -75,66 +80,6 @@ function buildWaveformBars(peaks: number[], width: number) {
 
     return Math.max(2, Math.min(20, barPeak * 20));
   });
-}
-
-function PrevIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-      <polygon points="19,20 9,12 19,4" />
-      <rect x="5" y="4" width="2" height="16" />
-    </svg>
-  );
-}
-
-function NextIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-      <polygon points="5,4 15,12 5,20" />
-      <rect x="17" y="4" width="2" height="16" />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <polygon points="5,3 19,12 5,21" />
-    </svg>
-  );
-}
-
-function PauseIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <rect x="6" y="4" width="4" height="16" />
-      <rect x="14" y="4" width="4" height="16" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 6L18 18"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 6L6 18"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
 }
 
 export default function AdminMusicPlayer() {
@@ -453,7 +398,7 @@ export default function AdminMusicPlayer() {
             className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
             aria-label="Previous song"
           >
-            <PrevIcon />
+            <PreviousTrackIcon />
           </button>
 
           <button
@@ -462,7 +407,7 @@ export default function AdminMusicPlayer() {
             className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
             aria-label={isPlaying ? "Pause song" : "Play song"}
           >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+            {isPlaying ? <PlayerPauseIcon /> : <PlayerPlayIcon />}
           </button>
 
           <button
@@ -471,7 +416,7 @@ export default function AdminMusicPlayer() {
             className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
             aria-label="Next song"
           >
-            <NextIcon />
+            <NextTrackIcon />
           </button>
 
           <div className="flex min-w-0 flex-1 items-center justify-center">
@@ -608,7 +553,7 @@ export default function AdminMusicPlayer() {
             className="music-player-more-menu-close"
           >
             <span>Close Player</span>
-            <CloseIcon />
+            <FailedIcon size={13} strokeWidth={2.4} />
           </button>
         </div>
       )}
