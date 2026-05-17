@@ -8,65 +8,92 @@ import WaveformIcon from "@/components/icons/WaveformIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import { usePlayer } from "@/context/PlayerContext";
 
+type GroupMeta = {
+  name: string;
+  position: number;
+  description: string | null;
+};
+
 export default function CuratedPlaylistsPage() {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
+  const [groups, setGroups] = useState<GroupMeta[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
 
-    async function loadPlaylists() {
+    async function load() {
       try {
         setLoading(true);
         setError("");
-        const res = await fetch("/api/curated-playlists");
-        const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data?.error || "Failed to load curated playlists");
-        }
+        const [playlistRes, groupRes] = await Promise.all([
+          fetch("/api/curated-playlists"),
+          fetch("/api/curated-playlist-groups"),
+        ]);
 
-        if (!Array.isArray(data)) {
-          throw new Error("Invalid curated playlist response");
-        }
+        const [playlistData, groupData] = await Promise.all([
+          playlistRes.json(),
+          groupRes.json(),
+        ]);
 
-        if (!cancelled) setPlaylists(data);
-      } catch (err) {
+        if (!playlistRes.ok)
+          throw new Error(playlistData?.error || "Failed to load playlists");
+        if (!groupRes.ok)
+          throw new Error(groupData?.error || "Failed to load groups");
+
         if (!cancelled) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : "Failed to load curated playlists",
+          setPlaylists(Array.isArray(playlistData) ? playlistData : []);
+          setGroups(
+            Array.isArray(groupData)
+              ? [...groupData].sort((a, b) => a.position - b.position)
+              : [],
           );
         }
+      } catch (err) {
+        if (!cancelled)
+          setError(
+            err instanceof Error ? err.message : "Failed to load curated playlists",
+          );
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
-    loadPlaylists();
-
+    load();
     return () => {
       cancelled = true;
     };
   }, []);
 
+  // Group playlists by group name, preserving group position order
   const groupedPlaylists = useMemo(() => {
-    const groups = new Map<string, CuratedPlaylist[]>();
+    const playlistMap = new Map<string, CuratedPlaylist[]>();
+    for (const p of playlists) {
+      const key = p.playlist_group || "Editor Picks";
+      if (!playlistMap.has(key)) playlistMap.set(key, []);
+      playlistMap.get(key)!.push(p);
+    }
 
-    playlists.forEach((playlist) => {
-      const group = playlist.playlist_group || "Editor Picks";
-      groups.set(group, [...(groups.get(group) || []), playlist]);
-    });
+    // Use groups order if available, otherwise fall back to insertion order
+    const orderedGroupNames =
+      groups.length > 0
+        ? groups.map((g) => g.name).filter((name) => playlistMap.has(name))
+        : [...playlistMap.keys()];
 
-    return [...groups.entries()].map(([group, groupPlaylists]) => ({
-      group,
-      playlists: groupPlaylists.sort((a, b) => a.position - b.position),
-    }));
-  }, [playlists]);
+    return orderedGroupNames
+      .map((name) => ({
+        name,
+        description: groups.find((g) => g.name === name)?.description ?? null,
+        playlists: (playlistMap.get(name) ?? []).sort(
+          (a, b) => a.position - b.position,
+        ),
+      }))
+      .filter((g) => g.playlists.length > 0);
+  }, [playlists, groups]);
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -124,15 +151,11 @@ export default function CuratedPlaylistsPage() {
 
           {!loading &&
             !error &&
-            groupedPlaylists.map(({ group, playlists: groupPlaylists }, index) => (
+            groupedPlaylists.map(({ name, description, playlists: groupPlaylists }) => (
               <CuratedPlaylistShelf
-                key={group}
-                title={group}
-                description={
-                  index === 0
-                    ? "Freshly curated starting points for current edits."
-                    : undefined
-                }
+                key={name}
+                title={name}
+                description={description ?? undefined}
                 playlists={groupPlaylists}
                 className="mt-10"
               />
