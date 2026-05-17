@@ -71,11 +71,11 @@ function SortablePlaylistRow({
         position: "relative",
         zIndex: isDragging ? 1 : "auto",
       }}
-      className="group flex items-center bg-[var(--bg-secondary)]"
+      className="group flex items-center bg-[var(--bg-secondary)] transition hover:bg-[var(--bg-hover)]"
     >
       <button
         type="button"
-        className="flex h-full cursor-grab items-center py-2.5 pl-3 pr-1 text-[var(--border)] hover:text-[var(--text-muted)] active:cursor-grabbing"
+        className="flex h-full cursor-grab items-center py-2.5 pl-4 pr-2 text-[var(--text-muted)] opacity-0 transition-opacity group-hover:opacity-40 active:cursor-grabbing"
         aria-label="Drag to reorder"
         {...attributes}
         {...listeners}
@@ -85,7 +85,7 @@ function SortablePlaylistRow({
 
       <Link
         href={`/admin/playlist-manager/${playlist.id}/edit`}
-        className="flex flex-1 items-center gap-3 py-2.5 transition hover:bg-[var(--bg-hover)]"
+        className="flex flex-1 items-center gap-3 py-2.5"
       >
         <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
           {playlist.cover_image_url && (
@@ -160,7 +160,7 @@ function SortablePlaylistRow({
 function DragOverlayRow({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <div className="flex items-center rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] shadow-xl">
-      <div className="flex items-center py-2.5 pl-3 pr-1 text-[var(--text-muted)]">
+      <div className="flex items-center py-2.5 pl-4 pr-2 text-[var(--text-muted)] opacity-40">
         <DragIconSmall />
       </div>
       <div className="flex flex-1 items-center gap-3 py-2.5 pr-4">
@@ -249,23 +249,19 @@ export default function PlaylistManagerPage() {
     };
   }, []);
 
-  // Group playlists by group name, preserving group display order
   const playlistsByGroup = useMemo(() => {
     const map = new Map<string, CuratedPlaylist[]>();
 
-    // Seed with all known groups in position order
     for (const g of groups) {
       map.set(g.name, []);
     }
 
-    // Assign playlists
     for (const p of playlists) {
       const key = p.playlist_group;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(p);
     }
 
-    // Sort within each group by position
     for (const pls of map.values()) {
       pls.sort((a, b) => a.position - b.position);
     }
@@ -273,7 +269,6 @@ export default function PlaylistManagerPage() {
     return map;
   }, [playlists, groups]);
 
-  // Only groups that have at least one playlist
   const orderedGroupNames = useMemo(
     () =>
       [...playlistsByGroup.keys()].filter(
@@ -297,7 +292,6 @@ export default function PlaylistManagerPage() {
 
     if (!over || active.id === over.id) return;
 
-    // Find the group containing the dragged item
     let groupName: string | null = null;
     for (const [name, pls] of playlistsByGroup) {
       if (pls.some((p) => p.id === active.id)) {
@@ -316,14 +310,12 @@ export default function PlaylistManagerPage() {
 
     const reordered = arrayMove(groupPlaylists, oldIndex, newIndex);
 
-    // Optimistic state update
     setPlaylists((prev) => {
       const others = prev.filter((p) => p.playlist_group !== groupName);
       const updated = reordered.map((p, i) => ({ ...p, position: i }));
       return [...others, ...updated];
     });
 
-    // Persist to Supabase
     const updates = reordered.map((p, i) => ({ id: p.id, position: i }));
     fetch("/api/admin/curated-playlists/reorder", {
       method: "POST",
@@ -380,7 +372,6 @@ export default function PlaylistManagerPage() {
       </div>
 
       <div className="grid gap-3 px-8 pb-8 lg:grid-cols-[minmax(0,1fr)_300px]">
-        {/* Playlists panel */}
         <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
           <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
             <div>
@@ -401,7 +392,6 @@ export default function PlaylistManagerPage() {
             </Link>
           </div>
 
-          {/* Loading skeleton */}
           {loading && (
             <div>
               {Array.from({ length: 6 }).map((_, i) => (
@@ -433,7 +423,6 @@ export default function PlaylistManagerPage() {
             </div>
           )}
 
-          {/* Grouped + sortable list */}
           {!loading && !error && totalPlaylists > 0 && (
             <DndContext
               sensors={sensors}
@@ -447,7 +436,6 @@ export default function PlaylistManagerPage() {
 
                 return (
                   <div key={groupName}>
-                    {/* Group header */}
                     <div
                       className="flex h-8 items-center px-4"
                       style={{
@@ -498,7 +486,6 @@ export default function PlaylistManagerPage() {
           )}
         </div>
 
-        {/* Groups panel */}
         <AdminPlaylistGroupManager embedded />
       </div>
     </main>
