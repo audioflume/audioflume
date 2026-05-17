@@ -30,20 +30,24 @@ export default function CuratedPlaylistsPage() {
         setLoading(true);
         setError("");
 
+        // Fetch playlists (required) and groups (optional — used for ordering + descriptions)
         const [playlistRes, groupRes] = await Promise.all([
           fetch("/api/curated-playlists"),
-          fetch("/api/curated-playlist-groups"),
+          fetch("/api/curated-playlist-groups").catch(() => null),
         ]);
 
-        const [playlistData, groupData] = await Promise.all([
-          playlistRes.json(),
-          groupRes.json(),
-        ]);
-
+        const playlistData = await playlistRes.json();
         if (!playlistRes.ok)
           throw new Error(playlistData?.error || "Failed to load playlists");
-        if (!groupRes.ok)
-          throw new Error(groupData?.error || "Failed to load groups");
+
+        let groupData: GroupMeta[] = [];
+        if (groupRes?.ok) {
+          try {
+            groupData = await groupRes.json();
+          } catch {
+            groupData = [];
+          }
+        }
 
         if (!cancelled) {
           setPlaylists(Array.isArray(playlistData) ? playlistData : []);
@@ -78,11 +82,16 @@ export default function CuratedPlaylistsPage() {
       playlistMap.get(key)!.push(p);
     }
 
-    // Use groups order if available, otherwise fall back to insertion order
+    // Use groups order if available, otherwise fall back to insertion order from API
     const orderedGroupNames =
       groups.length > 0
         ? groups.map((g) => g.name).filter((name) => playlistMap.has(name))
         : [...playlistMap.keys()];
+
+    // Include any groups not in the groups list (orphans)
+    for (const key of playlistMap.keys()) {
+      if (!orderedGroupNames.includes(key)) orderedGroupNames.push(key);
+    }
 
     return orderedGroupNames
       .map((name) => ({
@@ -138,10 +147,10 @@ export default function CuratedPlaylistsPage() {
 
           {!loading && !error && groupedPlaylists.length === 0 && (
             <div className="mt-8 rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-8 text-[var(--text-secondary)]">
-              No curated playlists have been published yet. Visit the admin
+              No curated playlists have been published yet. Visit the admin{" "}
               <Link
                 href="/admin/playlist-manager"
-                className="ml-1 font-medium text-[var(--text-primary)] underline"
+                className="font-medium text-[var(--text-primary)] underline"
               >
                 Playlist Manager
               </Link>
