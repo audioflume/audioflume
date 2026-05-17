@@ -15,6 +15,7 @@ import {
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
@@ -570,7 +571,7 @@ function VisualDiscoverySection() {
       <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
         <div>
           <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-            <WaveformIcon size={13} />
+            <MusicIcon size={13} />
             Discover by scene
           </div>
 
