@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import WaveformIcon from "@/components/icons/WaveformIcon";
+import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import { usePlayer } from "@/context/PlayerContext";
 
@@ -30,7 +30,6 @@ export default function CuratedPlaylistsPage() {
         setLoading(true);
         setError("");
 
-        // Fetch playlists (required) and groups (optional — used for ordering + descriptions)
         const [playlistRes, groupRes] = await Promise.all([
           fetch("/api/curated-playlists"),
           fetch("/api/curated-playlist-groups").catch(() => null),
@@ -73,7 +72,6 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
-  // Group playlists by group name, preserving group position order
   const groupedPlaylists = useMemo(() => {
     const playlistMap = new Map<string, CuratedPlaylist[]>();
     for (const p of playlists) {
@@ -82,13 +80,11 @@ export default function CuratedPlaylistsPage() {
       playlistMap.get(key)!.push(p);
     }
 
-    // Use groups order if available, otherwise fall back to insertion order from API
     const orderedGroupNames =
       groups.length > 0
         ? groups.map((g) => g.name).filter((name) => playlistMap.has(name))
         : [...playlistMap.keys()];
 
-    // Include any groups not in the groups list (orphans)
     for (const key of playlistMap.keys()) {
       if (!orderedGroupNames.includes(key)) orderedGroupNames.push(key);
     }
@@ -108,25 +104,26 @@ export default function CuratedPlaylistsPage() {
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="ml-[var(--sidebar-width)] min-h-screen pt-14 transition-[margin-left] duration-200">
         <div className="px-5 py-6 md:px-8 lg:px-10">
-          <section className="relative overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--bg-secondary)] p-6 md:p-8">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(117,100,154,0.26),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(77,140,123,0.2),transparent_30%)]" />
-            <div className="relative z-10 max-w-[780px]">
+
+          {/* Header — matches discover page layout */}
+          <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
+            <div>
               <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                <WaveformIcon size={13} />
-                Curated playlists
+                <PlaylistIcon size={13} />
+                Made for you
               </div>
 
-              <h1 className="font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,78px)] font-medium leading-[0.9] tracking-[-0.07em]">
-                Netflix-style rows for finding a cue faster.
+              <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,78px)] font-medium leading-[0.9] tracking-[-0.07em]">
+                Playlists built around the scenes you&rsquo;re cutting.
               </h1>
-
-              <p className="mt-5 max-w-[560px] text-sm leading-6 text-[var(--text-secondary)]">
-                Browse hand-built playlist lanes by mood, scene, and production
-                style. Pick a collection to open its track list and start
-                auditioning immediately.
-              </p>
             </div>
-          </section>
+
+            <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">
+              Every collection is hand-picked for a specific mood, tone, or
+              production style — so you can skip the search and go straight to
+              auditioning.
+            </p>
+          </div>
 
           {loading && (
             <div className="mt-8 grid gap-4">
