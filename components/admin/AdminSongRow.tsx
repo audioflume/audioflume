@@ -235,6 +235,7 @@ export default function AdminSongRow({
           songId={song.id}
           songTitle={song.title}
           audioUrl={song.audioUrl}
+          song={song}
           onDeleted={onDeleted}
           placement="bottom-end"
           className="song-more-dropdown"
