@@ -56,6 +56,7 @@ const navGroups: AdminNavGroup[] = [
     title: "Database",
     links: [
       { label: "Music Library", href: "/admin/music-library" },
+      { label: "Playlist Manager", href: "/admin/playlist-manager" },
       { label: "Edit Points", href: "/admin/edit-points", status: "soon" },
     ],
   },

@@ -18,6 +18,7 @@ import PlayerPauseIcon from "@/components/icons/PlayerPauseIcon";
 import PlayerPlayIcon from "@/components/icons/PlayerPlayIcon";
 import PreviousTrackIcon from "@/components/icons/PreviousTrackIcon";
 import Toast from "@/components/Toast";
+import AdminAddToPlaylistModal from "@/components/admin/AdminAddToPlaylistModal";
 import { iconButtonActiveClass, iconButtonClass } from "@/components/uiClasses";
 
 const WAVEFORM_HIDE_WIDTH = 80;
@@ -98,10 +99,10 @@ export default function AdminMusicPlayer() {
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
-  const [peaks, setPeaks] = useState<number[]>([]);
   const [waveformWidth, setWaveformWidth] = useState(0);
   const [moreOpen, setMoreOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
   const [moreMenuPosition, setMoreMenuPosition] = useState({
     top: 0,
     left: 0,
@@ -113,6 +114,23 @@ export default function AdminMusicPlayer() {
       : 0;
 
   const isWaveformCompact = waveformWidth <= WAVEFORM_HIDE_WIDTH;
+
+  const peaks = useMemo(() => {
+    if (!currentSong) return [];
+
+    try {
+      const parsed = JSON.parse(currentSong.waveformPeaks);
+
+      return Array.isArray(parsed)
+        ? parsed.map((value) => {
+            const numberValue = Number(value);
+            return Number.isFinite(numberValue) ? numberValue : 0;
+          })
+        : [];
+    } catch {
+      return [];
+    }
+  }, [currentSong]);
 
   const waveformBars = useMemo(
     () => buildWaveformBars(peaks, waveformWidth),
@@ -147,28 +165,6 @@ export default function AdminMusicPlayer() {
       left,
     });
   }, []);
-
-  useEffect(() => {
-    if (!currentSong) {
-      setPeaks([]);
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(currentSong.waveformPeaks);
-
-      setPeaks(
-        Array.isArray(parsed)
-          ? parsed.map((value) => {
-              const numberValue = Number(value);
-              return Number.isFinite(numberValue) ? numberValue : 0;
-            })
-          : [],
-      );
-    } catch {
-      setPeaks([]);
-    }
-  }, [currentSong?.id, currentSong?.waveformPeaks]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -545,6 +541,16 @@ export default function AdminMusicPlayer() {
             <span>Copy Audio URL</span>
           </button>
 
+          <button
+            type="button"
+            onClick={() => {
+              setMoreOpen(false);
+              setPlaylistModalOpen(true);
+            }}
+          >
+            <span>Add to Playlist</span>
+          </button>
+
           <div className="music-player-more-menu-divider" />
 
           <button
@@ -557,6 +563,12 @@ export default function AdminMusicPlayer() {
           </button>
         </div>
       )}
+
+      <AdminAddToPlaylistModal
+        isOpen={playlistModalOpen}
+        song={currentSong}
+        onClose={() => setPlaylistModalOpen(false)}
+      />
 
       <Toast message={toastMessage} bottomOffset="88px" />
     </>

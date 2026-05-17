@@ -13,6 +13,8 @@ import {
   useState,
 } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
@@ -38,14 +40,6 @@ type ProductionStyle = {
   title: string;
   kicker: string;
   description: string;
-  href: string;
-  image: string;
-};
-
-type CuratedPlaylist = {
-  title: string;
-  kicker: string;
-  trackCount: string;
   href: string;
   image: string;
 };
@@ -136,54 +130,66 @@ const productionStyles: ProductionStyle[] = [
   },
 ];
 
-const curatedPlaylists: CuratedPlaylist[] = [
+const fallbackCuratedPlaylists: CuratedPlaylist[] = [
   {
-    title: "Docu beds",
+    id: 1,
+    name: "Docu beds",
     kicker: "Human stories",
-    trackCount: "18 tracks",
-    href: "/playlists",
-    image:
+    song_count: 18,
+    cover_image_url:
       "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Documentary",
+    position: 0,
   },
   {
-    title: "Brand polish",
+    id: 2,
+    name: "Brand polish",
     kicker: "Commercial cuts",
-    trackCount: "24 tracks",
-    href: "/playlists",
-    image:
+    song_count: 24,
+    cover_image_url:
       "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Commercial",
+    position: 1,
   },
   {
-    title: "After hours",
+    id: 3,
+    name: "After hours",
     kicker: "Dark tension",
-    trackCount: "15 tracks",
-    href: "/playlists",
-    image:
+    song_count: 15,
+    cover_image_url:
       "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Tension",
+    position: 2,
   },
   {
-    title: "Open roads",
+    id: 4,
+    name: "Open roads",
     kicker: "Travel motion",
-    trackCount: "21 tracks",
-    href: "/playlists",
-    image:
+    song_count: 21,
+    cover_image_url:
       "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Travel",
+    position: 3,
   },
   {
-    title: "Soft focus",
+    id: 5,
+    name: "Soft focus",
     kicker: "Ambient texture",
-    trackCount: "12 tracks",
-    href: "/playlists",
-    image:
+    song_count: 12,
+    cover_image_url:
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Ambient",
+    position: 4,
   },
   {
-    title: "First pass",
+    id: 6,
+    name: "First pass",
     kicker: "Fast selects",
-    trackCount: "30 tracks",
-    href: "/playlists",
-    image:
+    song_count: 30,
+    cover_image_url:
       "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Editor Picks",
+    position: 5,
   },
 ];
 
@@ -639,47 +645,6 @@ function ProductionStyleCard({ style }: { style: ProductionStyle }) {
   );
 }
 
-function CuratedPlaylistCard({ playlist }: { playlist: CuratedPlaylist }) {
-  return (
-    <Link
-      href={playlist.href}
-      className="group relative min-h-[210px] min-w-[250px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] transition hover:border-[var(--text-muted)] sm:min-w-[285px] lg:min-w-[320px]"
-    >
-      <Image
-        src={playlist.image}
-        alt={playlist.title}
-        fill
-        sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
-        className="object-cover transition duration-700 group-hover:scale-[1.05]"
-      />
-
-      <div className="absolute inset-0 bg-gradient-to-t from-black/62 via-black/18 to-transparent" />
-
-      <div className="relative z-10 flex min-h-[210px] flex-col justify-between p-4">
-        <div className="flex justify-end">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black">
-            <ArrowUpRightIcon />
-          </div>
-        </div>
-
-        <div>
-          <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/52">
-            {playlist.kicker}
-          </div>
-
-          <h3 className="mt-2 font-[family-name:var(--font-instrument-sans)] text-[25px] font-medium leading-[0.95] tracking-[-0.055em] text-white">
-            {playlist.title}
-          </h3>
-
-          <p className="mt-3 text-[11px] font-medium text-white/58">
-            {playlist.trackCount}
-          </p>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 function ProductionStylesSection() {
   return (
     <section className="mt-12">
@@ -712,134 +677,39 @@ function ProductionStylesSection() {
 }
 
 function CuratedPlaylistsSection() {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-
-  function updateScrollState() {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-
-    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
-
-    setCanScrollPrev(scroller.scrollLeft > 4);
-    setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
-  }
-
-  function scrollPlaylists(direction: "prev" | "next") {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-
-    const amount = Math.max(scroller.clientWidth * 0.82, 320);
-
-    scroller.scrollBy({
-      left: direction === "next" ? amount : -amount,
-      behavior: "smooth",
-    });
-  }
+  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>(
+    fallbackCuratedPlaylists,
+  );
 
   useEffect(() => {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
+    let cancelled = false;
 
-    updateScrollState();
+    async function loadCuratedPlaylists() {
+      try {
+        const res = await fetch("/api/curated-playlists");
+        const data = await res.json();
 
-    scroller.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
+        if (!res.ok || !Array.isArray(data) || data.length === 0) return;
+        if (!cancelled) setPlaylists(data);
+      } catch {
+        // Keep the hand-picked fallback set if the API is unavailable.
+      }
+    }
+
+    loadCuratedPlaylists();
 
     return () => {
-      scroller.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
+      cancelled = true;
     };
   }, []);
 
   return (
-    <section className="mt-12">
-      <div className="mb-4 flex items-end justify-between gap-4">
-        <div>
-          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
-            Curated playlists
-          </h2>
-
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Built for faster starting points, rough cuts, and client-facing
-            treatments.
-          </p>
-        </div>
-
-        <div className="hidden items-center gap-2 sm:flex">
-          <button
-            type="button"
-            onClick={() => scrollPlaylists("prev")}
-            disabled={!canScrollPrev}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
-            aria-label="Scroll playlists left"
-          >
-            <span className="rotate-180">
-              <ArrowUpRightIcon />
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => scrollPlaylists("next")}
-            disabled={!canScrollNext}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
-            aria-label="Scroll playlists right"
-          >
-            <ArrowUpRightIcon />
-          </button>
-
-          <Link
-            href="/playlists"
-            className="ml-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-          >
-            View playlists
-          </Link>
-        </div>
-      </div>
-
-      <div className="relative -mx-5 overflow-hidden md:-mx-8 lg:-mx-10">
-        {canScrollPrev && (
-          <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 hidden w-12 bg-gradient-to-r from-[var(--bg-primary)] to-transparent opacity-60 sm:block" />
-        )}
-
-        {canScrollNext && (
-          <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 hidden w-16 bg-gradient-to-l from-[var(--bg-primary)] to-transparent opacity-60 sm:block" />
-        )}
-
-        <button
-          type="button"
-          onClick={() => scrollPlaylists("prev")}
-          disabled={!canScrollPrev}
-          className="absolute left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex md:left-8 lg:left-10"
-          aria-label="Scroll playlists left"
-        >
-          <span className="rotate-180">
-            <ArrowUpRightIcon />
-          </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => scrollPlaylists("next")}
-          disabled={!canScrollNext}
-          className="absolute right-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex md:right-8 lg:right-10"
-          aria-label="Scroll playlists right"
-        >
-          <ArrowUpRightIcon />
-        </button>
-
-        <div
-          ref={scrollerRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth pl-5 pr-20 [scrollbar-width:none] md:pl-8 lg:pl-10 [&::-webkit-scrollbar]:hidden"
-        >
-          {curatedPlaylists.map((playlist) => (
-            <CuratedPlaylistCard key={playlist.title} playlist={playlist} />
-          ))}
-        </div>
-      </div>
-    </section>
+    <CuratedPlaylistShelf
+      title="Curated playlists"
+      description="Built for faster starting points, rough cuts, and client-facing treatments."
+      playlists={playlists}
+      viewAllHref="/curated-playlists"
+    />
   );
 }
 
