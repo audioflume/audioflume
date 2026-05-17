@@ -51,14 +51,8 @@ function SortablePlaylistRow({
   deletingId: number | null;
   onDelete: (playlist: CuratedPlaylist) => void;
 }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: playlist.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: playlist.id });
 
   return (
     <div
@@ -83,38 +77,20 @@ function SortablePlaylistRow({
         <DragIconSmall />
       </button>
 
-      <Link
-        href={`/admin/playlist-manager/${playlist.id}/edit`}
-        className="flex flex-1 items-center gap-3 py-2.5"
-      >
+      <Link href={`/admin/playlist-manager/${playlist.id}/edit`} className="flex flex-1 items-center gap-3 py-2.5">
         <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
           {playlist.cover_image_url && (
-            <Image
-              src={playlist.cover_image_url}
-              alt={playlist.name}
-              fill
-              sizes="32px"
-              className="object-cover"
-              unoptimized
-            />
+            <Image src={playlist.cover_image_url} alt={playlist.name} fill sizes="32px" className="object-cover" unoptimized />
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-            {playlist.name}
-          </div>
-          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
-            {playlist.song_count || 0} songs
-          </div>
+          <div className="truncate text-sm font-medium text-[var(--text-primary)]">{playlist.name}</div>
+          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">{playlist.song_count || 0} songs</div>
         </div>
       </Link>
 
       <div className="flex shrink-0 items-center gap-1 pr-2">
-        <Link
-          href={`/admin/playlist-manager/${playlist.id}/edit`}
-          className={smallIconButtonClass}
-          title="Edit playlist"
-        >
+        <Link href={`/admin/playlist-manager/${playlist.id}/edit`} className={smallIconButtonClass} title="Edit playlist">
           <EditIcon size={14} />
         </Link>
 
@@ -123,29 +99,17 @@ function SortablePlaylistRow({
           onOpenChange={(o) => setOpenDropdownId(o ? playlist.id : null)}
           placement="bottom-end"
           trigger={({ open }) => (
-            <button
-              type="button"
-              className={`${smallIconButtonClass} ${open ? iconButtonActiveClass : ""}`}
-              aria-label="More options"
-            >
+            <button type="button" className={`${smallIconButtonClass} ${open ? iconButtonActiveClass : ""}`} aria-label="More options">
               <MoreIcon size={14} />
             </button>
           )}
         >
-          <Link
-            href={`/admin/playlist-manager/${playlist.id}/edit`}
-            onClick={() => setOpenDropdownId(null)}
-          >
-            Edit Playlist
-          </Link>
+          <Link href={`/admin/playlist-manager/${playlist.id}/edit`} onClick={() => setOpenDropdownId(null)}>Edit Playlist</Link>
           <button
             type="button"
             className="danger-hover"
             disabled={deletingId === playlist.id}
-            onClick={() => {
-              setOpenDropdownId(null);
-              onDelete(playlist);
-            }}
+            onClick={() => { setOpenDropdownId(null); onDelete(playlist); }}
           >
             {deletingId === playlist.id ? "Deleting..." : "Delete Playlist"}
           </button>
@@ -155,34 +119,19 @@ function SortablePlaylistRow({
   );
 }
 
-// ─── Drag overlay ─────────────────────────────────────────────────────────────
-
 function DragOverlayRow({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <div className="flex items-center rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] shadow-xl">
-      <div className="flex items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40">
-        <DragIconSmall />
-      </div>
+      <div className="flex items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40"><DragIconSmall /></div>
       <div className="flex flex-1 items-center gap-3 py-2.5 pr-4">
         <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
           {playlist.cover_image_url && (
-            <Image
-              src={playlist.cover_image_url}
-              alt={playlist.name}
-              fill
-              sizes="32px"
-              className="object-cover"
-              unoptimized
-            />
+            <Image src={playlist.cover_image_url} alt={playlist.name} fill sizes="32px" className="object-cover" unoptimized />
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-            {playlist.name}
-          </div>
-          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
-            {playlist.song_count || 0} songs
-          </div>
+          <div className="truncate text-sm font-medium text-[var(--text-primary)]">{playlist.name}</div>
+          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">{playlist.song_count || 0} songs</div>
         </div>
       </div>
     </div>
@@ -200,53 +149,33 @@ export default function PlaylistManagerPage() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-  );
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   useEffect(() => {
     let cancelled = false;
-
     async function load() {
       try {
         setLoading(true);
         setError("");
-
         const [playlistRes, groupRes] = await Promise.all([
           fetch("/api/admin/curated-playlists"),
           fetch("/api/admin/curated-playlist-groups"),
         ]);
-
-        const [playlistData, groupData] = await Promise.all([
-          playlistRes.json(),
-          groupRes.json(),
-        ]);
-
-        if (!playlistRes.ok)
-          throw new Error(playlistData?.error || "Failed to load playlists");
-        if (!groupRes.ok)
-          throw new Error(groupData?.error || "Failed to load groups");
-
+        const [playlistData, groupData] = await Promise.all([playlistRes.json(), groupRes.json()]);
+        if (!playlistRes.ok) throw new Error(playlistData?.error || "Failed to load playlists");
+        if (!groupRes.ok) throw new Error(groupData?.error || "Failed to load groups");
         if (!cancelled) {
           setPlaylists(Array.isArray(playlistData) ? playlistData : []);
-          setGroups(
-            Array.isArray(groupData)
-              ? [...groupData].sort((a, b) => a.position - b.position)
-              : [],
-          );
+          setGroups(Array.isArray(groupData) ? [...groupData].sort((a, b) => a.position - b.position) : []);
         }
       } catch (err) {
-        if (!cancelled)
-          setError(err instanceof Error ? err.message : "Failed to load");
+        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load");
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
-
     load();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   const playlistsByGroup = useMemo(() => {
@@ -262,10 +191,7 @@ export default function PlaylistManagerPage() {
   }, [playlists, groups]);
 
   const orderedGroupNames = useMemo(
-    () =>
-      [...playlistsByGroup.keys()].filter(
-        (name) => (playlistsByGroup.get(name)?.length ?? 0) > 0,
-      ),
+    () => [...playlistsByGroup.keys()].filter((name) => (playlistsByGroup.get(name)?.length ?? 0) > 0),
     [playlistsByGroup],
   );
 
@@ -274,22 +200,16 @@ export default function PlaylistManagerPage() {
     [activeId, playlists],
   );
 
-  function handleDragStart(event: DragStartEvent) {
-    setActiveId(event.active.id as number);
-  }
+  function handleDragStart(event: DragStartEvent) { setActiveId(event.active.id as number); }
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     setActiveId(null);
-
     if (!over || active.id === over.id) return;
 
     let groupName: string | null = null;
     for (const [name, pls] of playlistsByGroup) {
-      if (pls.some((p) => p.id === active.id)) {
-        groupName = name;
-        break;
-      }
+      if (pls.some((p) => p.id === active.id)) { groupName = name; break; }
     }
     if (!groupName) return;
 
@@ -299,12 +219,10 @@ export default function PlaylistManagerPage() {
     if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
 
     const reordered = arrayMove(groupPlaylists, oldIndex, newIndex);
-
     setPlaylists((prev) => {
       const others = prev.filter((p) => p.playlist_group !== groupName);
       return [...others, ...reordered.map((p, i) => ({ ...p, position: i }))];
     });
-
     fetch("/api/admin/curated-playlists/reorder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -339,13 +257,10 @@ export default function PlaylistManagerPage() {
           <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
             Playlist Manager
           </h1>
-          <p className="mt-2 text-sm text-[var(--text-secondary)]">
-            Manage curated playlists and their groups.
-          </p>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">Manage curated playlists and their groups.</p>
         </div>
         <Link href="/admin/playlist-manager/new" className={`${primaryPillButtonClass} hidden md:flex`}>
-          <PlusIcon />
-          <span>New Playlist</span>
+          <PlusIcon /><span>New Playlist</span>
         </Link>
       </div>
 
@@ -358,9 +273,7 @@ export default function PlaylistManagerPage() {
                 {loading ? "Loading..." : `${totalPlaylists} playlist${totalPlaylists === 1 ? "" : "s"}`}
               </p>
             </div>
-            <Link href="/admin/playlist-manager/new" className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">
-              + New
-            </Link>
+            <Link href="/admin/playlist-manager/new" className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">+ New</Link>
           </div>
 
           {loading && (
@@ -376,9 +289,7 @@ export default function PlaylistManagerPage() {
               ))}
             </div>
           )}
-
           {!loading && error && <div className="p-4 text-sm text-[var(--danger)]">{error}</div>}
-
           {!loading && !error && totalPlaylists === 0 && (
             <div className="flex min-h-[140px] items-center justify-center px-4 text-sm text-[var(--text-secondary)]">No playlists yet.</div>
           )}
@@ -424,7 +335,13 @@ export default function PlaylistManagerPage() {
           )}
         </div>
 
-        <AdminPlaylistGroupManager embedded />
+        {/* Groups panel — onGroupsReordered keeps left panel in sync */}
+        <AdminPlaylistGroupManager
+          embedded
+          onGroupsReordered={(reordered) =>
+            setGroups([...reordered].sort((a, b) => a.position - b.position))
+          }
+        />
       </div>
     </main>
   );
