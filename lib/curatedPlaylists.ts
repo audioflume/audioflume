@@ -70,6 +70,7 @@ export type CuratedPlaylistGroup = {
   position: number;
   created_at?: string;
   playlist_count: number;
+  description: string | null;
 };
 
 type CuratedPlaylistGroupRow = {
@@ -78,6 +79,7 @@ type CuratedPlaylistGroupRow = {
   position: number | null;
   created_at?: string | null;
   playlist_count?: number | null;
+  description?: string | null;
 };
 
 export function normalizeCuratedPlaylistGroup(
@@ -89,5 +91,6 @@ export function normalizeCuratedPlaylistGroup(
     position: Number(row.position || 0),
     created_at: row.created_at ? String(row.created_at) : undefined,
     playlist_count: Number(row.playlist_count || 0),
+    description: row.description ? String(row.description) : null,
   };
 }
