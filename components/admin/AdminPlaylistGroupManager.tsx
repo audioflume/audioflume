@@ -22,16 +22,100 @@ import Toast from "@/components/Toast";
 import DropdownShell from "@/components/DropdownShell";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import MoreIcon from "@/components/icons/MoreIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   type CuratedPlaylistGroup,
 } from "@/lib/curatedPlaylists";
 import {
   iconButtonActiveClass,
+  modalCancelButtonClass,
+  modalFieldLabelClass,
+  modalInputClass,
+  modalPrimaryButtonClass,
+  modalTextareaClass,
+  modalTitleClass,
   primaryPillButtonClass,
   secondaryPillButtonClass,
   smallIconButtonClass,
 } from "@/components/uiClasses";
+
+// ─── Group modal ──────────────────────────────────────────────────────────────
+
+function GroupModal({
+  mode,
+  initialName,
+  initialDescription,
+  saving,
+  onSave,
+  onClose,
+}: {
+  mode: "create" | "edit";
+  initialName: string;
+  initialDescription: string;
+  saving: boolean;
+  onSave: (name: string, description: string) => void;
+  onClose: () => void;
+}) {
+  const [name, setName] = useState(initialName);
+  const [description, setDescription] = useState(initialDescription);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || saving) return;
+    onSave(name.trim(), description.trim());
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className={`${modalTitleClass} mb-5`}>
+          {mode === "create" ? "New Playlist Group" : "Edit Playlist Group"}
+        </h2>
+
+        <form onSubmit={handleSubmit} className="grid gap-4">
+          <label className="grid gap-1.5">
+            <span className={modalFieldLabelClass}>Group name</span>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={modalInputClass}
+              placeholder="e.g. Documentary"
+              autoFocus
+              required
+            />
+          </label>
+
+          <label className="grid gap-1.5">
+            <span className={modalFieldLabelClass}>Description</span>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={`${modalTextareaClass} min-h-[72px]`}
+              placeholder="Short description shown under the group heading…"
+              rows={3}
+            />
+          </label>
+
+          <div className="mt-1 flex items-center justify-end gap-2">
+            <button type="button" className={modalCancelButtonClass} onClick={onClose} disabled={saving}>
+              Cancel
+            </button>
+            <button type="submit" className={modalPrimaryButtonClass} disabled={saving || !name.trim()}>
+              {saving ? "Saving…" : mode === "create" ? "Create Group" : "Save Changes"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 // ─── Sortable group row (embedded mode) ───────────────────────────────────────
 
@@ -39,29 +123,19 @@ function SortableGroupRow({
   group,
   index,
   total,
-  editingGroupId,
-  editingGroupName,
-  setEditingGroupName,
   savingGroupId,
   openDropdownId,
   setOpenDropdownId,
   onBeginEditing,
-  onCancelEditing,
-  onSaveGroup,
   onDeleteGroup,
 }: {
   group: CuratedPlaylistGroup;
   index: number;
   total: number;
-  editingGroupId: number | null;
-  editingGroupName: string;
-  setEditingGroupName: (v: string) => void;
   savingGroupId: number | null;
   openDropdownId: number | null;
   setOpenDropdownId: (id: number | null) => void;
   onBeginEditing: (group: CuratedPlaylistGroup) => void;
-  onCancelEditing: () => void;
-  onSaveGroup: (group: CuratedPlaylistGroup) => void;
   onDeleteGroup: (group: CuratedPlaylistGroup) => void;
 }) {
   const {
@@ -73,7 +147,6 @@ function SortableGroupRow({
     isDragging,
   } = useSortable({ id: group.id });
 
-  const editing = editingGroupId === group.id;
   const saving = savingGroupId === group.id;
   const isDefaultGroup = group.name === DEFAULT_CURATED_PLAYLIST_GROUP;
   const dropdownOpen = openDropdownId === group.id;
@@ -89,91 +162,59 @@ function SortableGroupRow({
       }}
       className="flex items-center bg-[var(--bg-secondary)] transition hover:bg-[var(--bg-hover)]"
     >
-      {editing ? (
-        <div className="flex flex-1 items-center gap-2 px-4 py-2">
-          <input
-            value={editingGroupName}
-            onChange={(e) => setEditingGroupName(e.target.value)}
-            className="h-7 min-w-0 flex-1 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
-            autoFocus
-          />
-          <button
-            type="button"
-            className="h-7 shrink-0 rounded-full border border-[var(--border)] px-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
-            onClick={onCancelEditing}
-            disabled={saving}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="h-7 shrink-0 rounded-full border border-[var(--border)] px-2 text-xs font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)] disabled:opacity-50"
-            onClick={() => onSaveGroup(group)}
-            disabled={saving}
-          >
-            {saving ? "..." : "Save"}
-          </button>
+      <button
+        type="button"
+        className="flex h-full cursor-grab items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40 active:cursor-grabbing"
+        aria-label="Drag to reorder"
+        {...attributes}
+        {...listeners}
+      >
+        <DragIconSmall />
+      </button>
+
+      <div className="min-w-0 flex-1 py-2">
+        <div className="truncate text-sm font-medium text-[var(--text-primary)]">{group.name}</div>
+        <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
+          {group.playlist_count || 0} playlist{group.playlist_count === 1 ? "" : "s"}
+          {isDefaultGroup ? " · Default" : ""}
         </div>
-      ) : (
-        <>
+      </div>
+
+      <div className="shrink-0 pr-2">
+        <DropdownShell
+          open={dropdownOpen}
+          onOpenChange={(o) => setOpenDropdownId(o ? group.id : null)}
+          placement="bottom-end"
+          trigger={({ open }) => (
+            <button
+              type="button"
+              className={`${smallIconButtonClass} ${open ? iconButtonActiveClass : ""}`}
+              aria-label="More options"
+              disabled={saving}
+            >
+              <MoreIcon size={14} />
+            </button>
+          )}
+        >
+          <button type="button" onClick={() => { setOpenDropdownId(null); onBeginEditing(group); }}>
+            Edit Group
+          </button>
           <button
             type="button"
-            className="flex h-full cursor-grab items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40 active:cursor-grabbing"
-            aria-label="Drag to reorder"
-            {...attributes}
-            {...listeners}
+            className="danger-hover"
+            onClick={() => { setOpenDropdownId(null); onDeleteGroup(group); }}
+            disabled={isDefaultGroup}
+            title={isDefaultGroup ? "Default group cannot be deleted" : undefined}
           >
-            <DragIconSmall />
+            Delete Group
           </button>
-
-          <div className="min-w-0 flex-1 py-2">
-            <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-              {group.name}
-            </div>
-            <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
-              {group.playlist_count || 0} playlist
-              {group.playlist_count === 1 ? "" : "s"}
-              {isDefaultGroup ? " · Default" : ""}
-            </div>
-          </div>
-
-          <div className="shrink-0 pr-2">
-            <DropdownShell
-              open={dropdownOpen}
-              onOpenChange={(o) => setOpenDropdownId(o ? group.id : null)}
-              placement="bottom-end"
-              trigger={({ open }) => (
-                <button
-                  type="button"
-                  className={`${smallIconButtonClass} ${open ? iconButtonActiveClass : ""}`}
-                  aria-label="More options"
-                  disabled={saving}
-                >
-                  <MoreIcon size={14} />
-                </button>
-              )}
-            >
-              <button type="button" onClick={() => onBeginEditing(group)}>
-                Edit Group
-              </button>
-              <button
-                type="button"
-                className="danger-hover"
-                onClick={() => onDeleteGroup(group)}
-                disabled={isDefaultGroup}
-                title={isDefaultGroup ? "Default group cannot be deleted" : undefined}
-              >
-                Delete Group
-              </button>
-            </DropdownShell>
-          </div>
-        </>
-      )}
+        </DropdownShell>
+      </div>
     </div>
   );
 }
 
-// ─── Drag overlay (embedded mode) ─────────────────────────────────────────────
+// ─── Drag overlay ─────────────────────────────────────────────────────────────
 
 function GroupDragOverlayRow({ group }: { group: CuratedPlaylistGroup }) {
   return (
@@ -182,9 +223,7 @@ function GroupDragOverlayRow({ group }: { group: CuratedPlaylistGroup }) {
         <DragIconSmall />
       </div>
       <div className="min-w-0 flex-1 py-2 pr-4">
-        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-          {group.name}
-        </div>
+        <div className="truncate text-sm font-medium text-[var(--text-primary)]">{group.name}</div>
         <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
           {group.playlist_count || 0} playlist{group.playlist_count === 1 ? "" : "s"}
         </div>
@@ -197,24 +236,28 @@ function GroupDragOverlayRow({ group }: { group: CuratedPlaylistGroup }) {
 
 type AdminPlaylistGroupManagerProps = {
   onGroupsChanged?: () => void;
+  onGroupsReordered?: (groups: CuratedPlaylistGroup[]) => void;
   embedded?: boolean;
 };
 
 export default function AdminPlaylistGroupManager({
   onGroupsChanged,
+  onGroupsReordered,
   embedded = false,
 }: AdminPlaylistGroupManagerProps) {
   const [groups, setGroups] = useState<CuratedPlaylistGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [newGroupName, setNewGroupName] = useState("");
-  const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
-  const [editingGroupName, setEditingGroupName] = useState("");
   const [savingGroupId, setSavingGroupId] = useState<number | null>(null);
-  const [creating, setCreating] = useState(false);
+  const [creatingModal, setCreatingModal] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [activeGroupId, setActiveGroupId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
+
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+  const [modalTargetGroup, setModalTargetGroup] = useState<CuratedPlaylistGroup | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -237,7 +280,7 @@ export default function AdminPlaylistGroupManager({
       const res = await fetch("/api/admin/curated-playlist-groups");
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to load groups");
-      if (!Array.isArray(data)) throw new Error("Invalid playlist groups response");
+      if (!Array.isArray(data)) throw new Error("Invalid response");
       setGroups(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load groups");
@@ -248,14 +291,14 @@ export default function AdminPlaylistGroupManager({
 
   useEffect(() => {
     let cancelled = false;
-    async function loadInitialGroups() {
+    async function init() {
       try {
         setLoading(true);
         setError("");
         const res = await fetch("/api/admin/curated-playlist-groups");
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || "Failed to load groups");
-        if (!Array.isArray(data)) throw new Error("Invalid playlist groups response");
+        if (!Array.isArray(data)) throw new Error("Invalid response");
         if (!cancelled) setGroups(data);
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load groups");
@@ -263,76 +306,76 @@ export default function AdminPlaylistGroupManager({
         if (!cancelled) setLoading(false);
       }
     }
-    loadInitialGroups();
+    init();
     return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
     if (!toastMessage) return;
-    const timeout = window.setTimeout(() => setToastMessage(""), 2400);
-    return () => window.clearTimeout(timeout);
+    const t = window.setTimeout(() => setToastMessage(""), 2400);
+    return () => window.clearTimeout(t);
   }, [toastMessage]);
 
-  async function createGroup(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const cleanName = newGroupName.trim();
-    if (!cleanName || creating) return;
-    try {
-      setCreating(true);
-      const res = await fetch("/api/admin/curated-playlist-groups", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: cleanName }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Failed to create group");
-      setGroups((prev) => [...prev, data]);
-      setNewGroupName("");
-      setToastMessage("Playlist group created");
-      onGroupsChanged?.();
-    } catch (err) {
-      setToastMessage(err instanceof Error ? err.message : "Failed to create group");
-    } finally {
-      setCreating(false);
-    }
+  // Modal helpers
+  function openCreateModal() {
+    setModalMode("create");
+    setModalTargetGroup(null);
+    setModalOpen(true);
   }
 
-  function beginEditing(group: CuratedPlaylistGroup) {
-    setOpenDropdownId(null);
-    setEditingGroupId(group.id);
-    setEditingGroupName(group.name);
+  function openEditModal(group: CuratedPlaylistGroup) {
+    setModalMode("edit");
+    setModalTargetGroup(group);
+    setModalOpen(true);
   }
 
-  function cancelEditing() {
-    setEditingGroupId(null);
-    setEditingGroupName("");
-  }
-
-  async function saveGroup(group: CuratedPlaylistGroup) {
-    const cleanName = editingGroupName.trim();
-    if (!cleanName || savingGroupId) return;
-    try {
-      setSavingGroupId(group.id);
-      const res = await fetch(`/api/admin/curated-playlist-groups/${group.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: cleanName }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Failed to update group");
-      setGroups((prev) => prev.map((g) => (g.id === group.id ? { ...g, name: data.name } : g)));
-      cancelEditing();
-      setToastMessage("Playlist group updated");
-      onGroupsChanged?.();
-    } catch (err) {
-      setToastMessage(err instanceof Error ? err.message : "Failed to update group");
-    } finally {
-      setSavingGroupId(null);
+  async function handleModalSave(name: string, description: string) {
+    if (modalMode === "create") {
+      try {
+        setCreatingModal(true);
+        const res = await fetch("/api/admin/curated-playlist-groups", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, description }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || "Failed to create group");
+        setGroups((prev) => [...prev, data]);
+        setToastMessage("Playlist group created");
+        onGroupsChanged?.();
+        setModalOpen(false);
+      } catch (err) {
+        setToastMessage(err instanceof Error ? err.message : "Failed to create group");
+      } finally {
+        setCreatingModal(false);
+      }
+    } else if (modalTargetGroup) {
+      try {
+        setSavingGroupId(modalTargetGroup.id);
+        const res = await fetch(`/api/admin/curated-playlist-groups/${modalTargetGroup.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, description }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || "Failed to update group");
+        setGroups((prev) =>
+          prev.map((g) =>
+            g.id === modalTargetGroup.id ? { ...g, name: data.name, description: data.description } : g,
+          ),
+        );
+        setToastMessage("Playlist group updated");
+        onGroupsChanged?.();
+        setModalOpen(false);
+      } catch (err) {
+        setToastMessage(err instanceof Error ? err.message : "Failed to update group");
+      } finally {
+        setSavingGroupId(null);
+      }
     }
   }
 
   async function deleteGroup(group: CuratedPlaylistGroup) {
-    setOpenDropdownId(null);
     const confirmed = window.confirm(
       group.playlist_count && group.playlist_count > 0
         ? `Delete "${group.name}"? ${group.playlist_count} playlist${group.playlist_count === 1 ? "" : "s"} will move to ${DEFAULT_CURATED_PLAYLIST_GROUP}.`
@@ -368,171 +411,151 @@ export default function AdminPlaylistGroupManager({
     const newIndex = sortedGroups.findIndex((g) => g.id === over.id);
     if (oldIndex === -1 || newIndex === -1) return;
 
-    const reordered = arrayMove(sortedGroups, oldIndex, newIndex);
-    setGroups(reordered.map((g, i) => ({ ...g, position: i })));
+    const reordered = arrayMove(sortedGroups, oldIndex, newIndex).map(
+      (g, i) => ({ ...g, position: i }),
+    );
+    setGroups(reordered);
+    onGroupsReordered?.(reordered);
 
     fetch("/api/admin/curated-playlist-groups/reorder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ updates: reordered.map((g, i) => ({ id: g.id, position: i })) }),
+      body: JSON.stringify({ updates: reordered.map((g) => ({ id: g.id, position: g.position })) }),
     }).catch(console.error);
   }
 
-  // ─── Embedded panel mode ────────────────────────────────────────────────────
+  // ─── Embedded panel mode ──────────────────────────────────────────────────
 
   if (embedded) {
     return (
-      <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="flex h-[58px] items-center border-b border-[var(--border)] px-4">
-          <div>
-            <h2 className="text-sm font-medium text-[var(--text-primary)]">Playlist Groups</h2>
-            <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
-              {loading ? "Loading..." : `${sortedGroups.length} group${sortedGroups.length === 1 ? "" : "s"}`}
-            </p>
+      <>
+        <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
+          <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
+            <div>
+              <h2 className="text-sm font-medium text-[var(--text-primary)]">Playlist Groups</h2>
+              <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
+                {loading ? "Loading..." : `${sortedGroups.length} group${sortedGroups.length === 1 ? "" : "s"}`}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={openCreateModal}
+              className="flex items-center gap-1 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+            >
+              <PlusIcon />
+              New
+            </button>
           </div>
+
+          {loading && (
+            <div className="grid gap-2 px-4 py-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-[46px] animate-pulse rounded-lg bg-[var(--bg-tertiary)]" />
+              ))}
+            </div>
+          )}
+
+          {!loading && error && <div className="px-4 py-3 text-sm text-[var(--danger)]">{error}</div>}
+
+          {!loading && !error && sortedGroups.length === 0 && (
+            <div className="flex min-h-[100px] items-center justify-center px-4 text-sm text-[var(--text-secondary)]">
+              No groups yet.
+            </div>
+          )}
+
+          {!loading && !error && sortedGroups.length > 0 && (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext items={sortedGroups.map((g) => g.id)} strategy={verticalListSortingStrategy}>
+                {sortedGroups.map((group, index) => (
+                  <SortableGroupRow
+                    key={group.id}
+                    group={group}
+                    index={index}
+                    total={sortedGroups.length}
+                    savingGroupId={savingGroupId}
+                    openDropdownId={openDropdownId}
+                    setOpenDropdownId={setOpenDropdownId}
+                    onBeginEditing={openEditModal}
+                    onDeleteGroup={deleteGroup}
+                  />
+                ))}
+              </SortableContext>
+
+              <DragOverlay dropAnimation={null}>
+                {activeGroup ? <GroupDragOverlayRow group={activeGroup} /> : null}
+              </DragOverlay>
+            </DndContext>
+          )}
+
+          <Toast message={toastMessage} bottomOffset="24px" />
         </div>
 
-        <form onSubmit={createGroup} className="flex gap-2 border-b border-[var(--border)] px-4 py-3">
-          <input
-            value={newGroupName}
-            onChange={(e) => setNewGroupName(e.target.value)}
-            className="h-8 min-w-0 flex-1 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-            placeholder="New group name"
+        {modalOpen && (
+          <GroupModal
+            mode={modalMode}
+            initialName={modalTargetGroup?.name ?? ""}
+            initialDescription={modalTargetGroup?.description ?? ""}
+            saving={creatingModal || savingGroupId === modalTargetGroup?.id}
+            onSave={handleModalSave}
+            onClose={() => setModalOpen(false)}
           />
-          <button
-            type="submit"
-            className="h-8 shrink-0 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:opacity-50"
-            disabled={creating}
-          >
-            {creating ? "Adding..." : "Add"}
+        )}
+      </>
+    );
+  }
+
+  // ─── Standalone page mode ─────────────────────────────────────────────────
+
+  return (
+    <>
+      <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+        <div className="mb-5 flex items-start justify-between gap-4">
+          <div>
+            <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">Groups</div>
+            <h2 className="mt-2 font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Playlist Groups</h2>
+            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">Create, rename, and delete the row headers used on the Curated Playlists page.</p>
+          </div>
+          <button type="button" className={primaryPillButtonClass} onClick={openCreateModal}>
+            <PlusIcon />
+            New Group
           </button>
-        </form>
+        </div>
 
         {loading && (
-          <div className="grid gap-2 px-4 py-3">
+          <div className="grid gap-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-[46px] animate-pulse rounded-lg bg-[var(--bg-tertiary)]" />
+              <div key={i} className="h-[54px] animate-pulse rounded-xl bg-[var(--bg-tertiary)]" />
             ))}
           </div>
         )}
 
-        {!loading && error && <div className="px-4 py-3 text-sm text-[var(--danger)]">{error}</div>}
+        {!loading && error && (
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--danger)]">{error}</div>
+        )}
 
         {!loading && !error && sortedGroups.length === 0 && (
-          <div className="flex min-h-[100px] items-center justify-center px-4 text-sm text-[var(--text-secondary)]">
-            No groups yet.
-          </div>
+          <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--text-secondary)]">No groups yet.</div>
         )}
 
         {!loading && !error && sortedGroups.length > 0 && (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext items={sortedGroups.map((g) => g.id)} strategy={verticalListSortingStrategy}>
-              {sortedGroups.map((group, index) => (
-                <SortableGroupRow
-                  key={group.id}
-                  group={group}
-                  index={index}
-                  total={sortedGroups.length}
-                  editingGroupId={editingGroupId}
-                  editingGroupName={editingGroupName}
-                  setEditingGroupName={setEditingGroupName}
-                  savingGroupId={savingGroupId}
-                  openDropdownId={openDropdownId}
-                  setOpenDropdownId={setOpenDropdownId}
-                  onBeginEditing={beginEditing}
-                  onCancelEditing={cancelEditing}
-                  onSaveGroup={saveGroup}
-                  onDeleteGroup={deleteGroup}
-                />
-              ))}
-            </SortableContext>
-
-            <DragOverlay dropAnimation={null}>
-              {activeGroup ? <GroupDragOverlayRow group={activeGroup} /> : null}
-            </DragOverlay>
-          </DndContext>
-        )}
-
-        <Toast message={toastMessage} bottomOffset="24px" />
-      </div>
-    );
-  }
-
-  // ─── Standalone page mode ───────────────────────────────────────────────────
-
-  return (
-    <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-      <div className="mb-5">
-        <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">Groups</div>
-        <h2 className="mt-2 font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Playlist Groups</h2>
-        <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">Create, rename, and delete the row headers used on the Curated Playlists page.</p>
-      </div>
-
-      <form onSubmit={createGroup} className="mb-4 flex gap-2">
-        <input
-          value={newGroupName}
-          onChange={(e) => setNewGroupName(e.target.value)}
-          className="h-10 min-w-0 flex-1 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-          placeholder="New group name"
-        />
-        <button type="submit" className={primaryPillButtonClass} disabled={creating}>
-          {creating ? "Adding..." : "Add Group"}
-        </button>
-      </form>
-
-      {loading && (
-        <div className="grid gap-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-[54px] animate-pulse rounded-xl bg-[var(--bg-tertiary)]" />
-          ))}
-        </div>
-      )}
-
-      {!loading && error && (
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--danger)]">{error}</div>
-      )}
-
-      {!loading && !error && sortedGroups.length === 0 && (
-        <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--text-secondary)]">No groups yet.</div>
-      )}
-
-      {!loading && !error && sortedGroups.length > 0 && (
-        <div className="grid gap-2">
-          {sortedGroups.map((group) => {
-            const editing = editingGroupId === group.id;
-            const saving = savingGroupId === group.id;
-            const isDefaultGroup = group.name === DEFAULT_CURATED_PLAYLIST_GROUP;
-            return (
-              <div key={group.id} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2">
-                <div className="min-w-0 flex-1">
-                  {editing ? (
-                    <input
-                      value={editingGroupName}
-                      onChange={(e) => setEditingGroupName(e.target.value)}
-                      className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                      autoFocus
-                    />
-                  ) : (
-                    <>
-                      <div className="truncate text-sm font-medium text-[var(--text-primary)]">{group.name}</div>
-                      <div className="mt-0.5 text-xs text-[var(--text-muted)]">
-                        {group.playlist_count || 0} playlist{group.playlist_count === 1 ? "" : "s"}
-                        {isDefaultGroup ? " · Default" : ""}
-                      </div>
-                    </>
-                  )}
-                </div>
-                {editing ? (
-                  <div className="flex shrink-0 items-center gap-2">
-                    <button type="button" className={secondaryPillButtonClass} onClick={cancelEditing} disabled={saving}>Cancel</button>
-                    <button type="button" className={primaryPillButtonClass} onClick={() => saveGroup(group)} disabled={saving}>{saving ? "Saving..." : "Save"}</button>
+          <div className="grid gap-2">
+            {sortedGroups.map((group) => {
+              const saving = savingGroupId === group.id;
+              const isDefaultGroup = group.name === DEFAULT_CURATED_PLAYLIST_GROUP;
+              return (
+                <div key={group.id} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-medium text-[var(--text-primary)]">{group.name}</div>
+                    <div className="mt-0.5 text-xs text-[var(--text-muted)]">
+                      {group.playlist_count || 0} playlist{group.playlist_count === 1 ? "" : "s"}
+                      {isDefaultGroup ? " · Default" : ""}
+                    </div>
                   </div>
-                ) : (
                   <DropdownShell
                     open={openDropdownId === group.id}
                     onOpenChange={(o) => setOpenDropdownId(o ? group.id : null)}
@@ -543,17 +566,28 @@ export default function AdminPlaylistGroupManager({
                       </button>
                     )}
                   >
-                    <button type="button" onClick={() => beginEditing(group)}>Edit Group</button>
-                    <button type="button" className="danger-hover" onClick={() => deleteGroup(group)} disabled={isDefaultGroup} title={isDefaultGroup ? "Default group cannot be deleted" : undefined}>Delete Group</button>
+                    <button type="button" onClick={() => { setOpenDropdownId(null); openEditModal(group); }}>Edit Group</button>
+                    <button type="button" className="danger-hover" onClick={() => { setOpenDropdownId(null); deleteGroup(group); }} disabled={isDefaultGroup} title={isDefaultGroup ? "Default group cannot be deleted" : undefined}>Delete Group</button>
                   </DropdownShell>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
-      <Toast message={toastMessage} bottomOffset="24px" />
-    </section>
+        <Toast message={toastMessage} bottomOffset="24px" />
+      </section>
+
+      {modalOpen && (
+        <GroupModal
+          mode={modalMode}
+          initialName={modalTargetGroup?.name ?? ""}
+          initialDescription={modalTargetGroup?.description ?? ""}
+          saving={creatingModal || savingGroupId === modalTargetGroup?.id}
+          onSave={handleModalSave}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </>
   );
 }
