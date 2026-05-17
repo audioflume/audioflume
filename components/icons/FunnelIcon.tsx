@@ -1,14 +1,9 @@
-type CheckIconProps = {
+type FunnelIconProps = {
   size?: number;
   className?: string;
-  strokeWidth?: number;
 };
 
-export default function CheckIcon({
-  size = 13,
-  className,
-  strokeWidth = 2.6,
-}: CheckIconProps) {
+export default function FunnelIcon({ size = 13, className }: FunnelIconProps) {
   return (
     <svg
       width={size}
@@ -19,10 +14,9 @@ export default function CheckIcon({
       className={className}
     >
       <path
-        d="M5 12.5L9.5 17L19 7"
+        d="M4 5H20L14 12V18L10 20V12L4 5Z"
         stroke="currentColor"
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
+        strokeWidth="1.9"
         strokeLinejoin="round"
       />
     </svg>

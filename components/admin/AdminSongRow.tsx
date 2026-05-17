@@ -4,7 +4,11 @@ import type { Song } from "@/lib/types";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
 import AdminSongActionsDropdown from "@/components/admin/AdminSongActionsDropdown";
+import CheckIcon from "@/components/icons/CheckIcon";
+import EditIcon from "@/components/icons/EditIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import {
   iconButtonActiveClass,
   smallIconButtonClass,
@@ -15,62 +19,6 @@ import {
   getSongIssues,
   type SongHealthStatus,
 } from "@/lib/songHealth";
-
-function EditIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 20H8.25L19.5 8.75C20.3284 7.92157 20.3284 6.57843 19.5 5.75L18.25 4.5C17.4216 3.67157 16.0784 3.67157 15.25 4.5L4 15.75V20Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 5.75L18.25 10"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M8 5V19L19 12L8 5Z" />
-    </svg>
-  );
-}
-
-function PauseIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M7 5H10V19H7V5Z" />
-      <path d="M14 5H17V19H14V5Z" />
-    </svg>
-  );
-}
 
 function StatusDot({ health }: { health: SongHealthStatus }) {
   const color =
@@ -202,21 +150,7 @@ export default function AdminSongRow({
             />
 
             <span className="admin-song-select-box">
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M20 6L9 17L4 12"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <CheckIcon size={11} strokeWidth={3} />
             </span>
           </label>
         </div>
@@ -248,7 +182,7 @@ export default function AdminSongRow({
                 : "opacity-0 group-hover/admin-song-row:opacity-100"
             }`}
           >
-            {rowIsPlaying ? <PauseIcon /> : <PlayIcon />}
+            {rowIsPlaying ? <PauseIcon /> : <PlayIconSmall />}
           </span>
         </button>
       </div>

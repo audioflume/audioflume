@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import EngagementIcon from "@/components/icons/EngagementIcon";
+import SearchIcon from "@/components/icons/SearchIcon";
 import { usePlayer } from "@/context/PlayerContext";
 
 type AdminNavItem = {
@@ -125,23 +126,6 @@ function mapSystemHealthToConsole(statuses: SystemHealthItem[]) {
       tone: analyzer?.tone || "warning",
     },
   ];
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 38.31 38.31"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
 }
 
 function PrimaryIcon({ icon }: { icon: PrimaryNavItem["icon"] }) {
@@ -345,7 +329,7 @@ export default function AdminSidebar() {
             type="button"
             className="flex h-9 w-full items-center gap-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-left text-[13px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
           >
-            <SearchIcon />
+            <SearchIcon size={14} />
 
             <span className="min-w-0 flex-1 truncate">Quick search...</span>
 

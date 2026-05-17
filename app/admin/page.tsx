@@ -6,7 +6,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import { usePlayer } from "@/context/PlayerContext";
+import AlertIcon from "@/components/icons/AlertIcon";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
+import FailedIcon from "@/components/icons/FailedIcon";
 import EngagementIcon from "@/components/icons/EngagementIcon";
 import FolderIcon from "@/components/icons/FolderIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
@@ -117,88 +120,6 @@ const quickActions: QuickAction[] = [
     icon: "folder",
   },
 ];
-
-function ArrowIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M7 17L17 7"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9 7H17V15"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function AlertIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 4L21 20H3L12 4Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12 9V13"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 16.5H12.01"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function FailedIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 6L18 18"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 6L6 18"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 function StatusIcon({
   tone,
@@ -375,7 +296,7 @@ function ActionCard({ label, href, description, icon }: QuickAction) {
         <div
           className={`${iconButtonClass} group-hover:bg-[var(--icon-button-hover)] group-hover:text-[var(--text-primary)]`}
         >
-          <ArrowIcon />
+          <ArrowUpRightIcon />
         </div>
       </div>
 
