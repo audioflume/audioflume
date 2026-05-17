@@ -10,6 +10,8 @@ import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
+  quickFilterButtonClass,
+  quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
@@ -327,25 +329,6 @@ export default function FavoritesPage() {
           padding: 16px 28px;
         }
 
-        .favorites-quick-pill {
-          cursor: pointer;
-          border-radius: 6px;
-          background: var(--bg-elevated);
-          padding: 2px 8px;
-          font-size: 11px;
-          font-weight: 500;
-          color: var(--text-muted);
-          transition:
-            background-color 0.15s ease,
-            color 0.15s ease;
-        }
-
-        .favorites-quick-pill:hover,
-        .favorites-quick-pill.is-active {
-          background: var(--bg-hover);
-          color: var(--text-primary);
-        }
-
         .favorites-section {
           margin-left: -32px;
           margin-right: -32px;
@@ -497,8 +480,8 @@ export default function FavoritesPage() {
                     setQuickFilter(filter.value);
                     setShuffleOrderIds(null);
                   }}
-                  className={`favorites-quick-pill ${
-                    isActive ? "is-active" : ""
+                  className={`${quickFilterButtonClass} ${
+                    isActive ? quickFilterButtonActiveClass : ""
                   }`}
                 >
                   {filter.label}

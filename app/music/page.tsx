@@ -35,10 +35,13 @@ import KeyFilter from "@/components/KeyFilter";
 import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import MusicIcon from "@/components/icons/MusicIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
   iconButtonClass,
   primaryPillButtonClass,
+  quickFilterButtonClass,
+  quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
 import {
   filterDotClass,
@@ -238,20 +241,24 @@ export default function MusicPage() {
 
   const playlistSongIdCacheRef = useRef<Record<string, string[]>>({});
   const searchInputRef = useRef<HTMLInputElement>(null);
+
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
+
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
   const shuffleActive = shuffleOrderIds !== null;
   const searchPlaceholder = selectedPlaylist?.name
     ? `Search "${selectedPlaylist.name}"`
     : "Search Music Library";
+
   const {
     songs,
     loading: songsLoading,
     error: songsError,
     refetchSongs,
   } = useSongs();
+
   const { currentSong, setQueue } = usePlayer();
   const playerVisible = !!currentSong;
 
@@ -576,10 +583,8 @@ export default function MusicPage() {
                       : [...selectedGenres, filter],
                   )
                 }
-                className={`cursor-pointer rounded-md bg-[var(--bg-elevated)] px-2 py-0.5 text-[11px] font-medium transition-colors ${
-                  isActive
-                    ? "text-[var(--text-primary)]"
-                    : "text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                className={`${quickFilterButtonClass} ${
+                  isActive ? quickFilterButtonActiveClass : ""
                 }`}
               >
                 {filter}
@@ -589,15 +594,26 @@ export default function MusicPage() {
         </div>
 
         <div className="px-8 pt-[38px] pb-[42px]">
-          <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-[var(--text-muted)]">
-            Music Library
+          <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
+            <div>
+              <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                <MusicIcon size={13} />
+                Music Library
+              </div>
+
+              <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,78px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
+                Find the cue that fits the cut.
+              </h1>
+            </div>
+
+            <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">
+              Move through the library like a visual treatment — documentary
+              warmth, after-dark tension, open travel cues, and polished brand
+              motion.
+            </p>
           </div>
 
-          <h1 className="mt-2 max-w-[640px] font-[family-name:var(--font-instrument-sans)] text-[56px] font-medium leading-[0.94] tracking-[-0.055em] text-[var(--text-primary)]">
-            Discover
-          </h1>
-
-          <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px] text-[var(--text-secondary)]">
+          <div className="flex flex-wrap items-center gap-2 text-[11px] text-[var(--text-secondary)]">
             <span>{displayedSongs.length} shown</span>
             <span className="text-[var(--text-muted)]">·</span>
             <span>{songs.length} songs</span>

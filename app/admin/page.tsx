@@ -772,7 +772,7 @@ export default function AdminDashboardPage() {
 
   if (!isLoaded) {
     return (
-      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
         <div className="px-8 pt-8 text-sm text-[var(--text-secondary)]">
           Loading...
         </div>
@@ -782,7 +782,7 @@ export default function AdminDashboardPage() {
 
   if (!isAdmin) {
     return (
-      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
         <div className="px-8 pt-14">
           <h1 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium text-[var(--text-primary)]">
             Admin
@@ -797,7 +797,7 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <style>{`
         .admin-action-card:hover {
           background: var(--bg-hover);

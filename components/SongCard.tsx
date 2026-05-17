@@ -14,6 +14,8 @@ import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import DropdownShell from "@/components/DropdownShell";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import IconButton from "@/components/IconButton";
 import { getRecord } from "@/lib/utils";
 
@@ -145,23 +147,6 @@ function getSongStems(song: Song) {
   );
 }
 
-function PlayIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M8 5V19L19 12L8 5Z" />
-    </svg>
-  );
-}
-
-function PauseIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M7 5H10.5V19H7V5Z" />
-      <path d="M13.5 5H17V19H13.5V5Z" />
-    </svg>
-  );
-}
-
 export default function SongCard({
   song,
   isFirst = false,
@@ -199,7 +184,11 @@ export default function SongCard({
   const playerVisible = !!currentSong;
   const isCurrentSong = currentSong?.id === song.id;
   const actuallyPlaying = isCurrentSong && isPlaying;
-  const displayIcon = actuallyPlaying ? <PauseIcon /> : <PlayIcon />;
+  const displayIcon = actuallyPlaying ? (
+    <PauseIcon size={15} />
+  ) : (
+    <PlayIconSmall size={15} />
+  );
   const showWaveform = cardWidth > 600;
   const visibleGenres = song.genres.slice(0, 3);
   const showGenreSlot = cardWidth > 1180;
@@ -313,8 +302,10 @@ export default function SongCard({
     <>
       <div
         ref={cardRef}
-        className={`group flex w-full scroll-mt-48 scroll-mb-40 cursor-pointer items-center gap-4 pl-8 pr-4 py-4 ${
-          isCurrentSong ? "bg-[var(--bg-hover)]" : ""
+        className={`group flex w-full scroll-mt-48 scroll-mb-40 cursor-pointer items-center gap-4 pl-8 pr-4 py-4 transition-colors ${
+          isCurrentSong
+            ? "bg-[var(--bg-hover)]"
+            : "hover:bg-[color-mix(in_srgb,var(--bg-hover)_30%,transparent)]"
         }`}
         style={{
           borderBottom: "1px solid var(--border-subtle)",
@@ -339,13 +330,15 @@ export default function SongCard({
           )}
 
           <div
-            className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition-opacity ${
+            className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] transition-opacity ${
               isCurrentSong
                 ? "opacity-100"
                 : "opacity-0 group-hover:opacity-100"
             }`}
           >
-            {isCurrentSong ? displayIcon : <PlayIcon />}
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(0,0,0,0.22)]">
+              {displayIcon}
+            </span>
           </div>
         </button>
 
@@ -426,7 +419,6 @@ export default function SongCard({
           )}
 
           <div className="mr-[clamp(0px,3vw,43px)] flex items-center gap-6 text-xs text-[var(--text-secondary)]">
-            {" "}
             <span className="w-[56px] text-right">{song.key || "—"}</span>
             <span className="w-[72px] text-right tabular-nums max-[645px]:hidden">
               {song.bpm ? `${song.bpm} BPM` : "—"}

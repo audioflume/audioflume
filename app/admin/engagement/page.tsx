@@ -1019,7 +1019,7 @@ export default function AdminEngagementPage() {
   const data = useMemo(() => DATASETS[range], [range]);
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AdminSidebar />
 
       <style>{`

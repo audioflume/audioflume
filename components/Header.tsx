@@ -58,11 +58,11 @@ export default function Header() {
 
         <div className="relative flex h-full items-center gap-3" ref={menuRef}>
           <Link
-            href="/dashboard"
+            href="/discover"
             className="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
           >
             <DashboardIcon />
-            Dashboard
+            Discover
           </Link>
 
           <button

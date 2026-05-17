@@ -430,7 +430,7 @@ export default function AdminMusicLibraryPage() {
   const showSkeleton = songsLoading && songs.length === 0 && !songsError;
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AdminSidebar />
 
       <style>{`

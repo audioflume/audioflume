@@ -41,7 +41,7 @@ import { useUserPreferences } from "@/context/UserPreferencesContext";
 import type { Project } from "@/lib/types";
 
 const mainLinks = [
-  { label: "Discover", href: "/music", icon: "music" },
+  { label: "Music Library", href: "/music", icon: "music" },
   { label: "Playlists", href: "/playlists", icon: "playlist" },
   { label: "Favorites", href: "/favorites", icon: "heart" },
   { label: "Sound FX", href: "/sound-fx", icon: "waveform" },
@@ -830,7 +830,13 @@ export default function Sidebar({
           ready ? "transition-[width] duration-200" : ""
         }`}
         data-sidebar
-        style={{ top: "56px", bottom: playerVisible ? "64px" : "0px" }}
+        style={{
+          top: "56px",
+          bottom: playerVisible ? "64px" : "0px",
+          width: sidebarCollapsed
+            ? "var(--sidebar-width-collapsed)"
+            : "var(--sidebar-width-expanded)",
+        }}
       >
         <div className="absolute top-0 right-0 bottom-0 z-20 flex w-4 items-center justify-center">
           <div className="group/collapse-zone flex h-full w-4 items-center justify-center">

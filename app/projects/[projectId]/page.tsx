@@ -9,7 +9,11 @@ import SongRow from "@/components/SongRow";
 import Toast from "@/components/Toast";
 import DownloadIconSmall from "@/components/icons/DownloadIconSmall";
 import EditIcon from "@/components/icons/EditIcon";
-import { borderedIconButtonClass } from "@/components/uiClasses";
+import {
+  borderedIconButtonClass,
+  quickFilterButtonClass,
+  quickFilterButtonActiveClass,
+} from "@/components/uiClasses";
 import {
   filterTriggerActiveClass,
   filterTriggerBaseClass,
@@ -792,25 +796,6 @@ export default function ProjectDetailPage() {
           display: none;
         }
 
-        .project-sort-pill {
-          cursor: pointer;
-          border-radius: 6px;
-          background: var(--bg-elevated);
-          padding: 2px 8px;
-          font-size: 11px;
-          font-weight: 500;
-          color: var(--text-muted);
-          transition:
-            background-color 0.15s ease,
-            color 0.15s ease;
-        }
-
-        .project-sort-pill:hover,
-        .project-sort-pill.is-active {
-          background: var(--bg-hover);
-          color: var(--text-primary);
-        }
-
         .project-tab-panel {
           margin-left: -32px;
           margin-right: -32px;
@@ -1183,8 +1168,10 @@ export default function ProjectDetailPage() {
                       key={option.value}
                       type="button"
                       onClick={() => setProjectSort(option.value)}
-                      className={`project-sort-pill ${
-                        projectSort === option.value ? "is-active" : ""
+                      className={`${quickFilterButtonClass} ${
+                        projectSort === option.value
+                          ? quickFilterButtonActiveClass
+                          : ""
                       }`}
                     >
                       {option.label}

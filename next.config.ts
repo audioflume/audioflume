@@ -1,25 +1,29 @@
-import type { NextConfig } from 'next'
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'v5.airtableusercontent.com',
+        protocol: "https",
+        hostname: "v5.airtableusercontent.com",
       },
       {
-        protocol: 'https',
-        hostname: 'music-library.filmwave.io',
+        protocol: "https",
+        hostname: "music-library.filmwave.io",
       },
       {
-        protocol: 'https',
-        hostname: 'pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev',
+        protocol: "https",
+        hostname: "pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },
   experimental: {
-    proxyClientMaxBodySize: '250mb',
+    proxyClientMaxBodySize: "250mb",
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

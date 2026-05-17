@@ -1,7 +1,7 @@
 // components/filterUiClasses.ts
 
 export const filterTriggerBaseClass =
-  "flex h-7 cursor-pointer items-center gap-2 rounded-md border border-[var(--border)] px-2.5 text-xs font-medium transition-colors";
+  "flex h-7 cursor-pointer items-center gap-2 rounded-full border border-[var(--border)] px-2.5 text-xs font-medium transition-colors";
 
 export const filterTriggerActiveClass =
   "bg-[var(--bg-secondary)] text-[var(--text-primary)]";

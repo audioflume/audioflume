@@ -1549,7 +1549,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
   if (!isLoaded) {
     return (
-      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
         <div className="px-8 pt-8 text-sm text-[var(--text-secondary)]">
           Loading...
         </div>
@@ -1559,7 +1559,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
   if (!isAdmin) {
     return (
-      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
         <div className="px-8 pt-14">
           <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
             Not authorized
@@ -1575,7 +1575,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
   if (isEditMode && isLoadingSong) {
     return (
-      <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+      <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
         <div className="flex min-h-[calc(100vh-56px)] items-center justify-center">
           <LoadingSpinner size={32} stroke={7} color="var(--text-primary)" />
         </div>
@@ -1585,7 +1585,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
   if (isEditMode && loadError) {
     return (
-      <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+      <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
         <div className="px-8 pt-14">
           <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
             Edit Song
@@ -1598,7 +1598,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   }
 
   return (
-    <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[280px]">
+    <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <style>{`
         .admin-song-form-card {
           overflow: hidden;

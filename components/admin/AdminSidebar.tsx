@@ -320,7 +320,7 @@ export default function AdminSidebar() {
 
   return (
     <aside
-      className="fixed left-0 z-30 hidden w-[280px] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col"
+      className="fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col"
       style={{ top: "56px", bottom: playerVisible ? "64px" : "0px" }}
     >
       <div className="flex flex-1 flex-col overflow-y-auto px-5 pt-6 pb-6">
