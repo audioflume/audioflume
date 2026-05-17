@@ -25,6 +25,10 @@ export async function PATCH(req: Request, context: RouteContext) {
     const { groupId } = await context.params;
     const body = await req.json();
     const name = cleanGroupName(body.name);
+    const description =
+      typeof body.description === "string"
+        ? body.description.trim() || null
+        : null;
 
     if (!name) {
       return NextResponse.json({ error: "Missing group name" }, { status: 400 });
@@ -42,7 +46,7 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     const { data, error } = await supabaseServer
       .from("curated_playlist_groups")
-      .update({ name })
+      .update({ name, description })
       .eq("id", groupId)
       .select()
       .single();
@@ -58,7 +62,9 @@ export async function PATCH(req: Request, context: RouteContext) {
       if (playlistUpdateError) throw playlistUpdateError;
     }
 
-    return NextResponse.json(normalizeCuratedPlaylistGroup(data));
+    return NextResponse.json(
+      normalizeCuratedPlaylistGroup({ ...data, playlist_count: 0 }),
+    );
   } catch (err) {
     console.error("Admin curated playlist group update failed:", err);
     return NextResponse.json(
