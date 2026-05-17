@@ -40,15 +40,8 @@ function parseStems(value: string | null): StemItem[] {
     .filter((item): item is StemItem => Boolean(item));
 }
 
-function formatDuration(seconds: number) {
-  if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
-  const m = Math.floor(seconds / 60);
-  const s = Math.round(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function normalizeSongRow(row: any): Song {
+export function normalizeSongRow(row: any): Song {
   return {
     id: String(row.id),
     title: String(row.title || ""),

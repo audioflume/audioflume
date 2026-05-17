@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { ReactNode, useState } from "react";
+import AdminAddToPlaylistModal from "@/components/admin/AdminAddToPlaylistModal";
+import type { Song } from "@/lib/types";
 import DropdownShell from "@/components/DropdownShell";
 import type { Padding, Placement, Strategy } from "@floating-ui/react";
 
@@ -11,6 +13,7 @@ type AdminSongActionsDropdownProps = {
   songId: string;
   songTitle?: string;
   audioUrl?: string | null;
+  song?: Song | null;
   trigger: (props: { open: boolean }) => ReactNode;
   placement?: Placement;
   className?: string;
@@ -37,6 +40,7 @@ export default function AdminSongActionsDropdown({
   songId,
   songTitle = "this song",
   audioUrl,
+  song,
   trigger,
   placement = "bottom-end",
   className = "song-more-dropdown",
@@ -49,6 +53,7 @@ export default function AdminSongActionsDropdown({
   showDelete = true,
 }: AdminSongActionsDropdownProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
 
   const copyAudioUrl = async () => {
     if (!audioUrl) return;
@@ -95,7 +100,8 @@ export default function AdminSongActionsDropdown({
   };
 
   return (
-    <DropdownShell
+    <>
+      <DropdownShell
       open={open}
       onOpenChange={onOpenChange}
       placement={placement}
@@ -133,6 +139,17 @@ export default function AdminSongActionsDropdown({
         Copy Audio URL
       </button>
 
+      <button
+        type="button"
+        onClick={() => {
+          onOpenChange(false);
+          setPlaylistModalOpen(true);
+        }}
+        disabled={!song}
+      >
+        Add to Playlist
+      </button>
+
       {showDelete && (
         <button
           type="button"
@@ -143,6 +160,13 @@ export default function AdminSongActionsDropdown({
           {isDeleting ? "Deleting..." : "Delete Song"}
         </button>
       )}
-    </DropdownShell>
+      </DropdownShell>
+
+      <AdminAddToPlaylistModal
+        isOpen={playlistModalOpen}
+        song={song || null}
+        onClose={() => setPlaylistModalOpen(false)}
+      />
+    </>
   );
 }
