@@ -75,7 +75,7 @@ function SortablePlaylistRow({
     >
       <button
         type="button"
-        className="flex h-full cursor-grab items-center py-2.5 pl-4 pr-2 text-[var(--text-muted)] opacity-0 transition-opacity group-hover:opacity-40 active:cursor-grabbing"
+        className="flex h-full cursor-grab items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40 active:cursor-grabbing"
         aria-label="Drag to reorder"
         {...attributes}
         {...listeners}
@@ -155,12 +155,12 @@ function SortablePlaylistRow({
   );
 }
 
-// ─── Drag overlay (static preview while dragging) ─────────────────────────────
+// ─── Drag overlay ─────────────────────────────────────────────────────────────
 
 function DragOverlayRow({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <div className="flex items-center rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] shadow-xl">
-      <div className="flex items-center py-2.5 pl-4 pr-2 text-[var(--text-muted)] opacity-40">
+      <div className="flex items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40">
         <DragIconSmall />
       </div>
       <div className="flex flex-1 items-center gap-3 py-2.5 pr-4">
@@ -251,21 +251,13 @@ export default function PlaylistManagerPage() {
 
   const playlistsByGroup = useMemo(() => {
     const map = new Map<string, CuratedPlaylist[]>();
-
-    for (const g of groups) {
-      map.set(g.name, []);
-    }
-
+    for (const g of groups) map.set(g.name, []);
     for (const p of playlists) {
       const key = p.playlist_group;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(p);
     }
-
-    for (const pls of map.values()) {
-      pls.sort((a, b) => a.position - b.position);
-    }
-
+    for (const pls of map.values()) pls.sort((a, b) => a.position - b.position);
     return map;
   }, [playlists, groups]);
 
@@ -299,49 +291,38 @@ export default function PlaylistManagerPage() {
         break;
       }
     }
-
     if (!groupName) return;
 
     const groupPlaylists = playlistsByGroup.get(groupName) ?? [];
     const oldIndex = groupPlaylists.findIndex((p) => p.id === active.id);
     const newIndex = groupPlaylists.findIndex((p) => p.id === over.id);
-
     if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
 
     const reordered = arrayMove(groupPlaylists, oldIndex, newIndex);
 
     setPlaylists((prev) => {
       const others = prev.filter((p) => p.playlist_group !== groupName);
-      const updated = reordered.map((p, i) => ({ ...p, position: i }));
-      return [...others, ...updated];
+      return [...others, ...reordered.map((p, i) => ({ ...p, position: i }))];
     });
 
-    const updates = reordered.map((p, i) => ({ id: p.id, position: i }));
     fetch("/api/admin/curated-playlists/reorder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ updates }),
-    }).catch((err) => {
-      console.error("Failed to persist playlist reorder:", err);
-    });
+      body: JSON.stringify({ updates: reordered.map((p, i) => ({ id: p.id, position: i })) }),
+    }).catch(console.error);
   }
 
   async function deletePlaylist(playlist: CuratedPlaylist) {
     const confirmed = window.confirm(`Delete "${playlist.name}"?`);
     if (!confirmed) return;
-
     try {
       setDeletingId(playlist.id);
-      const res = await fetch(`/api/admin/curated-playlists/${playlist.id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/admin/curated-playlists/${playlist.id}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to delete playlist");
       setPlaylists((prev) => prev.filter((p) => p.id !== playlist.id));
     } catch (err) {
-      window.alert(
-        err instanceof Error ? err.message : "Failed to delete playlist",
-      );
+      window.alert(err instanceof Error ? err.message : "Failed to delete playlist");
     } finally {
       setDeletingId(null);
     }
@@ -362,10 +343,7 @@ export default function PlaylistManagerPage() {
             Manage curated playlists and their groups.
           </p>
         </div>
-        <Link
-          href="/admin/playlist-manager/new"
-          className={`${primaryPillButtonClass} hidden md:flex`}
-        >
+        <Link href="/admin/playlist-manager/new" className={`${primaryPillButtonClass} hidden md:flex`}>
           <PlusIcon />
           <span>New Playlist</span>
         </Link>
@@ -375,19 +353,12 @@ export default function PlaylistManagerPage() {
         <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
           <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
             <div>
-              <h2 className="text-sm font-medium text-[var(--text-primary)]">
-                Curated Playlists
-              </h2>
+              <h2 className="text-sm font-medium text-[var(--text-primary)]">Curated Playlists</h2>
               <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
-                {loading
-                  ? "Loading..."
-                  : `${totalPlaylists} playlist${totalPlaylists === 1 ? "" : "s"}`}
+                {loading ? "Loading..." : `${totalPlaylists} playlist${totalPlaylists === 1 ? "" : "s"}`}
               </p>
             </div>
-            <Link
-              href="/admin/playlist-manager/new"
-              className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-            >
+            <Link href="/admin/playlist-manager/new" className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">
               + New
             </Link>
           </div>
@@ -395,14 +366,7 @@ export default function PlaylistManagerPage() {
           {loading && (
             <div>
               {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="flex h-[52px] animate-pulse items-center gap-3 px-4"
-                  style={{
-                    borderBottom:
-                      i < 5 ? "1px solid var(--border-subtle)" : "none",
-                  }}
-                >
+                <div key={i} className="flex h-[52px] animate-pulse items-center gap-3 px-4" style={{ borderBottom: i < 5 ? "1px solid var(--border-subtle)" : "none" }}>
                   <div className="h-8 w-8 shrink-0 rounded bg-[var(--bg-tertiary)]" />
                   <div className="flex-1">
                     <div className="h-2 w-[45%] rounded bg-[var(--bg-tertiary)]" />
@@ -413,59 +377,36 @@ export default function PlaylistManagerPage() {
             </div>
           )}
 
-          {!loading && error && (
-            <div className="p-4 text-sm text-[var(--danger)]">{error}</div>
-          )}
+          {!loading && error && <div className="p-4 text-sm text-[var(--danger)]">{error}</div>}
 
           {!loading && !error && totalPlaylists === 0 && (
-            <div className="flex min-h-[140px] items-center justify-center px-4 text-sm text-[var(--text-secondary)]">
-              No playlists yet.
-            </div>
+            <div className="flex min-h-[140px] items-center justify-center px-4 text-sm text-[var(--text-secondary)]">No playlists yet.</div>
           )}
 
           {!loading && !error && totalPlaylists > 0 && (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-            >
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
               {orderedGroupNames.map((groupName, groupIndex) => {
                 const groupPlaylists = playlistsByGroup.get(groupName) ?? [];
                 const isLastGroup = groupIndex === orderedGroupNames.length - 1;
-
                 return (
                   <div key={groupName}>
                     <div
                       className="flex h-8 items-center px-4"
                       style={{
-                        borderTop:
-                          groupIndex > 0
-                            ? "1px solid var(--border)"
-                            : undefined,
+                        borderTop: groupIndex > 0 ? "1px solid var(--border)" : undefined,
                         borderBottom: "1px solid var(--border-subtle)",
                         background: "var(--bg-tertiary)",
                       }}
                     >
-                      <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                        {groupName}
-                      </span>
-                      <span className="ml-2 text-[11px] text-[var(--text-muted)] opacity-60">
-                        {groupPlaylists.length}
-                      </span>
+                      <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">{groupName}</span>
+                      <span className="ml-2 text-[11px] text-[var(--text-muted)] opacity-60">{groupPlaylists.length}</span>
                     </div>
-
-                    <SortableContext
-                      items={groupPlaylists.map((p) => p.id)}
-                      strategy={verticalListSortingStrategy}
-                    >
+                    <SortableContext items={groupPlaylists.map((p) => p.id)} strategy={verticalListSortingStrategy}>
                       {groupPlaylists.map((playlist, index) => (
                         <SortablePlaylistRow
                           key={playlist.id}
                           playlist={playlist}
-                          isLastInGroup={
-                            index === groupPlaylists.length - 1 && isLastGroup
-                          }
+                          isLastInGroup={index === groupPlaylists.length - 1 && isLastGroup}
                           openDropdownId={openDropdownId}
                           setOpenDropdownId={setOpenDropdownId}
                           deletingId={deletingId}
@@ -476,11 +417,8 @@ export default function PlaylistManagerPage() {
                   </div>
                 );
               })}
-
               <DragOverlay dropAnimation={null}>
-                {activePlaylist ? (
-                  <DragOverlayRow playlist={activePlaylist} />
-                ) : null}
+                {activePlaylist ? <DragOverlayRow playlist={activePlaylist} /> : null}
               </DragOverlay>
             </DndContext>
           )}
