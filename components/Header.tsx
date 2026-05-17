@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
+import DashboardIcon from "@/components/icons/DashboardIcon";
 import Logo from "@/components/Logo";
 import UserMenu from "@/components/UserMenu";
 
@@ -22,55 +23,6 @@ function ChevronIcon({ open }: { open: boolean }) {
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function DashboardIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <rect
-        x="4"
-        y="4"
-        width="6.5"
-        height="6.5"
-        rx="1.4"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <rect
-        x="13.5"
-        y="4"
-        width="6.5"
-        height="6.5"
-        rx="1.4"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <rect
-        x="4"
-        y="13.5"
-        width="6.5"
-        height="6.5"
-        rx="1.4"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <rect
-        x="13.5"
-        y="13.5"
-        width="6.5"
-        height="6.5"
-        rx="1.4"
-        stroke="currentColor"
-        strokeWidth="1.8"
       />
     </svg>
   );

@@ -3,6 +3,10 @@
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import FilterTags from "@/components/FilterTags";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import SearchIcon from "@/components/icons/SearchIcon";
+import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
@@ -11,7 +15,6 @@ import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import { useEffect, useMemo, useRef, useState } from "react";
-import FilterTags from "@/components/FilterTags";
 
 const QUICK_FILTERS = [
   { label: "Newest", value: "newest" },
@@ -21,90 +24,6 @@ const QUICK_FILTERS = [
 ] as const;
 
 type QuickFilterValue = (typeof QUICK_FILTERS)[number]["value"];
-
-function SearchIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 38.31 38.31"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="shrink-0 text-[var(--text-muted)]"
-      aria-hidden="true"
-    >
-      <path
-        d="M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M8 5V19L19 12L8 5Z" />
-    </svg>
-  );
-}
-
-function ShuffleIcon() {
-  return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 7H7.2C9.2 7 10.6 8.2 12 10.2L12.8 11.4"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M17 5L20 8L17 11"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.5 8H20"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 17H7.2C9.2 17 10.6 15.8 12 13.8L12.8 12.6"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M17 13L20 16L17 19"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.5 16H20"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 function formatSongCount(count: number) {
   return `${count} song${count === 1 ? "" : "s"}`;
@@ -502,7 +421,7 @@ export default function FavoritesPage() {
                 disabled={displayedSongs.length === 0}
                 className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
               >
-                <PlayIcon />
+                <PlayIconSmall />
                 Play
               </button>
 
@@ -512,7 +431,7 @@ export default function FavoritesPage() {
                 disabled={displayedSongs.length < 2}
                 className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
               >
-                <ShuffleIcon />
+                <ShuffleIconSmall />
                 Shuffle
               </button>
             </div>
@@ -524,7 +443,7 @@ export default function FavoritesPage() {
               onClick={() => searchInputRef.current?.focus()}
             >
               <label className="favorites-search-inner">
-                <SearchIcon />
+                <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
 
                 <input
                   ref={searchInputRef}

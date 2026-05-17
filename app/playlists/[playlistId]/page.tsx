@@ -5,6 +5,11 @@ import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
+import FilterTags from "@/components/FilterTags";
+import EditIcon from "@/components/icons/EditIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import SearchIcon from "@/components/icons/SearchIcon";
+import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
   borderedIconButtonClass,
   primaryPillButtonClass,
@@ -16,7 +21,6 @@ import { usePlaylists } from "@/hooks/usePlaylists";
 import type { Playlist, Song } from "@/lib/types";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import FilterTags from "@/components/FilterTags";
 
 const GRADIENTS = [
   "linear-gradient(160deg,#1a3a2a,#2d5a3d)",
@@ -63,117 +67,6 @@ function BackIcon() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function EditIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 20H8.25L19.5 8.75C20.3284 7.92157 20.3284 6.57843 19.5 5.75L18.25 4.5C17.4216 3.67157 16.0784 3.67157 15.25 4.5L4 15.75V20Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 5.75L18.25 10"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 38.31 38.31"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="shrink-0 text-[var(--text-muted)]"
-      aria-hidden="true"
-    >
-      <path
-        d="M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M8 5V19L19 12L8 5Z" />
-    </svg>
-  );
-}
-
-function ShuffleIcon() {
-  return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 7H7.2C9.2 7 10.6 8.2 12 10.2L12.8 11.4"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M17 5L20 8L17 11"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.5 8H20"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 17H7.2C9.2 17 10.6 15.8 12 13.8L12.8 12.6"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M17 13L20 16L17 19"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.5 16H20"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
       />
     </svg>
   );
@@ -909,7 +802,7 @@ export default function PlaylistDetailPage() {
                       disabled={filteredSongs.length === 0}
                       className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
                     >
-                      <PlayIcon />
+                      <PlayIconSmall />
                       Play
                     </button>
 
@@ -919,7 +812,7 @@ export default function PlaylistDetailPage() {
                       disabled={filteredSongs.length < 2}
                       className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
                     >
-                      <ShuffleIcon />
+                      <ShuffleIconSmall />
                       Shuffle
                     </button>
                   </div>
@@ -932,7 +825,7 @@ export default function PlaylistDetailPage() {
                   onClick={() => searchInputRef.current?.focus()}
                 >
                   <label className="playlist-detail-search-inner">
-                    <SearchIcon />
+                    <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
 
                     <input
                       ref={searchInputRef}

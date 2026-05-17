@@ -6,6 +6,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import { usePlayer } from "@/context/PlayerContext";
+import CheckIcon from "@/components/icons/CheckIcon";
+import EngagementIcon from "@/components/icons/EngagementIcon";
+import FolderIcon from "@/components/icons/FolderIcon";
+import MusicIcon from "@/components/icons/MusicIcon";
+import UploadIcon from "@/components/icons/UploadIcon";
+import WaveformIcon from "@/components/icons/WaveformIcon";
 import {
   iconButtonClass,
   primaryPillButtonClass,
@@ -112,167 +118,6 @@ const quickActions: QuickAction[] = [
   },
 ];
 
-function UploadIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 16V4"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M7.5 8.5L12 4L16.5 8.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5 20H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function MusicIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M9 18.5C9 19.8807 7.65685 21 6 21C4.34315 21 3 19.8807 3 18.5C3 17.1193 4.34315 16 6 16C7.65685 16 9 17.1193 9 18.5Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-      />
-      <path
-        d="M21 16.5C21 17.8807 19.6569 19 18 19C16.3431 19 15 17.8807 15 16.5C15 15.1193 16.3431 14 18 14C19.6569 14 21 15.1193 21 16.5Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-      />
-      <path
-        d="M9 18.5V5.5L21 3.5V16.5"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9 9L21 7"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function QualityScoreIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 19V12"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 19V5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 19V9"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function WaveformIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 13V11"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 17V7"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 20V4"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M16 16V8"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M20 13V11"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function FolderIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 7.5C4 6.67157 4.67157 6 5.5 6H9.4L11.1 8H18.5C19.3284 8 20 8.67157 20 9.5V17.5C20 18.3284 19.3284 19 18.5 19H5.5C4.67157 19 4 18.3284 4 17.5V7.5Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function ArrowIcon() {
   return (
     <svg
@@ -292,26 +137,6 @@ function ArrowIcon() {
         d="M9 7H17V15"
         stroke="currentColor"
         strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M20 6L9 17L4 12"
-        stroke="currentColor"
-        strokeWidth="2.7"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -392,7 +217,7 @@ function StatusIcon({
         color,
       }}
     >
-      {icon === "check" && <CheckIcon />}
+      {icon === "check" && <CheckIcon size={12} />}
       {icon === "alert" && <AlertIcon />}
       {icon === "failed" && <FailedIcon />}
     </div>
@@ -429,7 +254,7 @@ function HealthStatusIcon({ status }: { status: StatusTone }) {
         color,
       }}
     >
-      {status === "success" && <CheckIcon />}
+      {status === "success" && <CheckIcon size={12} />}
       {status === "warning" && <AlertIcon />}
       {status === "error" && <FailedIcon />}
     </div>
@@ -437,10 +262,10 @@ function HealthStatusIcon({ status }: { status: StatusTone }) {
 }
 
 function ActionIcon({ icon }: { icon: QuickAction["icon"] }) {
-  if (icon === "upload") return <UploadIcon />;
-  if (icon === "music") return <MusicIcon />;
-  if (icon === "waveform") return <WaveformIcon />;
-  return <FolderIcon />;
+  if (icon === "upload") return <UploadIcon size={13} />;
+  if (icon === "music") return <MusicIcon size={13} />;
+  if (icon === "waveform") return <WaveformIcon size={13} />;
+  return <FolderIcon size={13} />;
 }
 
 function getProgressColor(progress: number) {
@@ -606,7 +431,7 @@ function LibraryQualityCard({
         </div>
 
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
-          <QualityScoreIcon />
+          <EngagementIcon size={13} />
         </div>
       </div>
 
@@ -818,17 +643,29 @@ function NextBestActionCard({
 
   const actionText =
     missingCoverArt > 0
-      ? `Add cover art to ${missingCoverArt} song${missingCoverArt === 1 ? "" : "s"} to complete library artwork.`
+      ? `Add cover art to ${missingCoverArt} song${
+          missingCoverArt === 1 ? "" : "s"
+        } to complete library artwork.`
       : missingSongInfo > 0
-        ? `Add missing song info to ${missingSongInfo} song${missingSongInfo === 1 ? "" : "s"} to complete library metadata.`
+        ? `Add missing song info to ${missingSongInfo} song${
+            missingSongInfo === 1 ? "" : "s"
+          } to complete library metadata.`
         : missingWaveformPeaks > 0
-          ? `Generate waveform peak data for ${missingWaveformPeaks} song${missingWaveformPeaks === 1 ? "" : "s"}.`
+          ? `Generate waveform peak data for ${missingWaveformPeaks} song${
+              missingWaveformPeaks === 1 ? "" : "s"
+            }.`
           : missingTags > 0
-            ? `Add missing tags to ${missingTags} song${missingTags === 1 ? "" : "s"} to improve filtering.`
+            ? `Add missing tags to ${missingTags} song${
+                missingTags === 1 ? "" : "s"
+              } to improve filtering.`
             : missingEditPoints > 0
-              ? `Add edit point data to ${missingEditPoints} song${missingEditPoints === 1 ? "" : "s"} to improve waveform filtering.`
+              ? `Add edit point data to ${missingEditPoints} song${
+                  missingEditPoints === 1 ? "" : "s"
+                } to improve waveform filtering.`
               : totalIssues > 0
-                ? `Clean up ${totalIssues} remaining library issue${totalIssues === 1 ? "" : "s"}.`
+                ? `Clean up ${totalIssues} remaining library issue${
+                    totalIssues === 1 ? "" : "s"
+                  }.`
                 : "Your music library is looking clean. Upload the next track when ready.";
 
   return (
@@ -1119,7 +956,7 @@ export default function AdminDashboardPage() {
             href="/admin/songs/new"
             className={`${primaryPillButtonClass} hidden md:flex`}
           >
-            <UploadIcon />
+            <UploadIcon size={13} />
             <span>Upload Song</span>
           </Link>
         </div>

@@ -7,6 +7,8 @@ import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import SongRow from "@/components/SongRow";
 import Toast from "@/components/Toast";
+import DownloadIconSmall from "@/components/icons/DownloadIconSmall";
+import EditIcon from "@/components/icons/EditIcon";
 import { borderedIconButtonClass } from "@/components/uiClasses";
 import {
   filterTriggerActiveClass,
@@ -21,7 +23,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 const TABS = [
-  { label: "Overview", value: "overview" },
+  { label: "All Files", value: "overview" },
   { label: "Music", value: "music" },
   { label: "Sound FX", value: "sound-fx" },
   { label: "Visual FX", value: "visual-fx" },
@@ -56,65 +58,6 @@ function getDownloadLabel(activeTab: ProjectTab) {
   if (activeTab === "colour-grading") return "Download all colour grading";
 
   return "Download all music";
-}
-
-function EditIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 20H8.25L19.5 8.75C20.3284 7.92157 20.3284 6.57843 19.5 5.75L18.25 4.5C17.4216 3.67157 16.0784 3.67157 15.25 4.5L4 15.75V20Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 5.75L18.25 10"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function DownloadArrowIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 4V15"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M7.5 10.5L12 15L16.5 10.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5 20H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
 }
 
 function formatProjectDate(project: Project | null) {
@@ -622,10 +565,18 @@ export default function ProjectDetailPage() {
     setEditingProject(project);
     setEditName(project.name);
     setEditDescription(project.description ?? "");
+    showToast("Editing project");
   }
 
   async function handleSaveEdit() {
     if (!editingProject || isSavingProject) return;
+
+    const cleanName = editName.trim();
+
+    if (!cleanName) {
+      showToast("Project name required");
+      return;
+    }
 
     setIsSavingProject(true);
 
@@ -636,8 +587,8 @@ export default function ProjectDetailPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: editName,
-          description: editDescription,
+          name: cleanName,
+          description: editDescription.trim() || null,
         }),
       });
 
@@ -646,6 +597,7 @@ export default function ProjectDetailPage() {
 
       if (!res.ok) {
         console.error("Failed to save project:", data || res.statusText);
+        showToast("Couldn’t save project");
         return;
       }
 
@@ -654,15 +606,18 @@ export default function ProjectDetailPage() {
           item.id === editingProject.id
             ? data || {
                 ...item,
-                name: editName,
+                name: cleanName,
                 description: editDescription.trim() || null,
               }
             : item,
         ),
       );
 
-      showToast("Changes saved");
+      showToast("Project saved");
       setEditingProject(null);
+    } catch (err) {
+      console.error("Failed to save project:", err);
+      showToast("Couldn’t save project");
     } finally {
       setIsSavingProject(false);
     }
@@ -675,7 +630,10 @@ export default function ProjectDetailPage() {
       `Are you sure you want to delete "${editingProject.name}"? This cannot be undone.`,
     );
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      showToast("Delete cancelled");
+      return;
+    }
 
     const projectIdToDelete = editingProject.id;
 
@@ -693,7 +651,12 @@ export default function ProjectDetailPage() {
         );
         showToast("Project deleted");
         router.push("/music");
+      } else {
+        showToast("Couldn’t delete project");
       }
+    } catch (err) {
+      console.error("Failed to delete project:", err);
+      showToast("Couldn’t delete project");
     } finally {
       setDeletingProjectId(null);
     }
@@ -856,7 +819,7 @@ export default function ProjectDetailPage() {
         .project-overview-grid {
           display: grid;
           gap: 32px;
-          padding: 32px 32px 0;
+          padding: 32px 32px 32px;
         }
 
         .project-asset-table {
@@ -1076,7 +1039,7 @@ export default function ProjectDetailPage() {
           }
 
           .project-overview-grid {
-            padding: 12px 18px 0;
+            padding: 18px 18px 18px;
           }
 
           .project-detail-skeleton-title {
@@ -1184,7 +1147,7 @@ export default function ProjectDetailPage() {
                         aria-expanded={open}
                       >
                         <span>Download</span>
-                        <DownloadArrowIcon />
+                        <DownloadIconSmall />
                       </button>
                     )}
                   >

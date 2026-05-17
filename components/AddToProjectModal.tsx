@@ -8,6 +8,8 @@ import { useProjectsContext } from "@/context/ProjectsContext";
 import Toast from "@/components/Toast";
 import ModalShell from "@/components/ModalShell";
 import { modalPrimaryButtonClass } from "@/components/uiClasses";
+import CheckIcon from "@/components/icons/CheckIcon";
+import FolderIcon from "@/components/icons/FolderIcon";
 
 const RECENT_PROJECT_IDS_KEY = "filmwaveRecentProjectIds";
 const RECENT_PROJECT_LIMIT = 3;
@@ -43,26 +45,6 @@ function writeRecentProjectIds(ids: number[]) {
   window.localStorage.setItem(RECENT_PROJECT_IDS_KEY, JSON.stringify(ids));
 }
 
-function CheckIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M20 6L9 17L4 12"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function PlusIcon() {
   return (
     <svg
@@ -83,25 +65,6 @@ function PlusIcon() {
         stroke="currentColor"
         strokeWidth="2.3"
         strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function ProjectIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 7.5C4 6.67157 4.67157 6 5.5 6H9.4L11.1 8H18.5C19.3284 8 20 8.67157 20 9.5V17.5C20 18.3284 19.3284 19 18.5 19H5.5C4.67157 19 4 18.3284 4 17.5V7.5Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinejoin="round"
       />
     </svg>
   );
@@ -468,7 +431,7 @@ export default function AddToProjectModal({
                           : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                       }`}
                     >
-                      <ProjectIcon />
+                      <FolderIcon size={13} />
                     </span>
 
                     <span className="min-w-0 truncate">{project.name}</span>
@@ -481,7 +444,7 @@ export default function AddToProjectModal({
                         : "text-[var(--text-muted)]"
                     }`}
                   >
-                    {isSelected ? <CheckIcon /> : <PlusIcon />}
+                    {isSelected ? <CheckIcon size={12} /> : <PlusIcon />}
                   </span>
                 </button>
               );

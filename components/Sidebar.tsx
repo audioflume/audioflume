@@ -21,7 +21,20 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import CreateProjectModal from "@/components/CreateProjectModal";
 import EditProjectModal from "@/components/EditProjectModal";
+import Toast from "@/components/Toast";
+import AiIcon from "@/components/icons/AiIcon";
+import CheckIcon from "@/components/icons/CheckIcon";
+import DragIconSmall from "@/components/icons/DragIconSmall";
+import EditPointsIcon from "@/components/icons/EditPointsIcon";
+import FolderIcon from "@/components/icons/FolderIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
+import LibraryIcon from "@/components/icons/LibraryIcon";
+import MusicIcon from "@/components/icons/MusicIcon";
+import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
+import SongMatchIcon from "@/components/icons/SongMatchIcon";
+import StoryMatchIcon from "@/components/icons/StoryMatchIcon";
+import WaveformIcon from "@/components/icons/WaveformIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
@@ -51,347 +64,6 @@ type ProjectMenuState = {
   left: number;
 } | null;
 
-function MusicIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M9 18.5C9 19.8807 7.65685 21 6 21C4.34315 21 3 19.8807 3 18.5C3 17.1193 4.34315 16 6 16C7.65685 16 9 17.1193 9 18.5Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-      />
-      <path
-        d="M21 16.5C21 17.8807 19.6569 19 18 19C16.3431 19 15 17.8807 15 16.5C15 15.1193 16.3431 14 18 14C19.6569 14 21 15.1193 21 16.5Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-      />
-      <path
-        d="M9 18.5V5.5L21 3.5V16.5"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9 9L21 7"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function WaveformIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 13V11"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 17V7"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 20V4"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M16 16V8"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M20 13V11"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function PlaylistIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 7H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H15"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 17H12"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function SparkIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 3L13.8 8.2L19 10L13.8 11.8L12 17L10.2 11.8L5 10L10.2 8.2L12 3Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M18 15L18.8 17.2L21 18L18.8 18.8L18 21L17.2 18.8L15 18L17.2 17.2L18 15Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SongMatchIcon() {
-  return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M9.1 17.35C9.1 18.66 7.92 19.7 6.45 19.7C4.98 19.7 3.8 18.66 3.8 17.35C3.8 16.04 4.98 15 6.45 15C7.92 15 9.1 16.04 9.1 17.35Z"
-        stroke="currentColor"
-        strokeWidth="1.75"
-      />
-      <path
-        d="M9.1 17.35V6.15L15.85 5V7"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.1 8.75L15.85 7.6"
-        stroke="currentColor"
-        strokeWidth="1.55"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18.8 12.2L19.9 14.8L22.5 15.9L19.9 17L18.8 19.6L17.7 17L15.1 15.9L17.7 14.8L18.8 12.2Z"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function MarkerIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 5V19"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 5V19"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9 8.5H15"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9 15.5H15"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 10.5V13.5"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function SceneIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 7.5C4 6.67157 4.67157 6 5.5 6H18.5C19.3284 6 20 6.67157 20 7.5V16.5C20 17.3284 19.3284 18 18.5 18H5.5C4.67157 18 4 17.3284 4 16.5V7.5Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M7 15L10 12L12.25 14.25L15.5 10.5L17 12"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8.5 9H8.51"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function FolderIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 7.5C4 6.67157 4.67157 6 5.5 6H9.4L11.1 8H18.5C19.3284 8 20 8.67157 20 9.5V17.5C20 18.3284 19.3284 19 18.5 19H5.5C4.67157 19 4 18.3284 4 17.5V7.5Z"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 5V19"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H19"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 12.5L9.5 17L19 7"
-        stroke="currentColor"
-        strokeWidth="2.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function LibrarySectionIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 6H18"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 11H18"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 16H18"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 function CollapseIcon({ collapsed }: { collapsed: boolean }) {
   return (
     <svg
@@ -405,37 +77,6 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
       }`}
     >
       <path d="M6.2 1L1.8 5L6.2 9V1Z" fill="currentColor" />
-    </svg>
-  );
-}
-
-function DragHandleIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M8 7H16"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 12H16"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 17H16"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
     </svg>
   );
 }
@@ -458,12 +99,11 @@ function HorizontalMoreIcon() {
 
 function MainIcon({ icon }: { icon: string }) {
   if (icon === "music") return <MusicIcon />;
-  if (icon === "playlist") return <PlaylistIcon />;
+  if (icon === "playlist") return <PlaylistIcon size={14} />;
   if (icon === "heart") return <HeartIcon />;
-  if (icon === "spark") return <SparkIcon />;
   if (icon === "song-match") return <SongMatchIcon />;
-  if (icon === "marker") return <MarkerIcon />;
-  if (icon === "scene") return <SceneIcon />;
+  if (icon === "marker") return <EditPointsIcon />;
+  if (icon === "scene") return <StoryMatchIcon />;
   return <WaveformIcon />;
 }
 
@@ -550,7 +190,7 @@ function SectionHeading({
           }`}
           aria-hidden="true"
         >
-          {icon === "library" ? <LibrarySectionIcon /> : <SparkIcon />}
+          {icon === "library" ? <LibraryIcon /> : <AiIcon />}
         </span>
       </div>
     </div>
@@ -733,7 +373,7 @@ function ProjectLink({
 
   return (
     <div
-      className={`group/project-row flex h-7 items-center rounded-md px-2.5 text-[13px] font-medium transition ${
+      className={`group/project-row flex h-8 items-center rounded-md px-2.5 text-[13px] font-medium transition ${
         active
           ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
           : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
@@ -823,7 +463,7 @@ function SortableProjectLink({
       style={style}
       {...attributes}
       {...listeners}
-      className={`group/project-row flex h-7 cursor-grab touch-none items-center rounded-md px-2.5 text-[13px] font-medium text-[var(--text-secondary)] transition active:cursor-grabbing ${
+      className={`group/project-row flex h-8 cursor-grab touch-none items-center rounded-md px-2.5 text-[13px] font-medium text-[var(--text-secondary)] transition active:cursor-grabbing ${
         dragActive
           ? ""
           : "hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
@@ -834,7 +474,7 @@ function SortableProjectLink({
           dragActive ? "" : "group-hover/project-row:text-[var(--text-primary)]"
         }`}
       >
-        <DragHandleIcon />
+        <DragIconSmall />
       </span>
 
       <span
@@ -874,6 +514,7 @@ export default function Sidebar({
   const [deletingProjectId, setDeletingProjectId] = useState<number | null>(
     null,
   );
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const { currentSong } = usePlayer();
   const { projects, setProjects } = useProjectsContext();
@@ -972,6 +613,11 @@ export default function Sidebar({
     };
   }, []);
 
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
+
   function updateProjectOrder(nextProjects: Project[]) {
     const nextOrder = nextProjects.map((project) => project.id);
 
@@ -1010,6 +656,7 @@ export default function Sidebar({
     saveProjectOrder(displayedProjects);
     setReorderMode(false);
     setActiveDragProjectId(null);
+    showToast("Project order saved");
   }
 
   function restoreAlphabeticalOrder() {
@@ -1020,6 +667,7 @@ export default function Sidebar({
     setActiveDragProjectId(null);
     setSidebarProjectSortMode("alphabetical");
     setProjectOrder(alphabeticalOrder);
+    showToast("Projects sorted alphabetically");
   }
 
   function handleProjectDragStart(event: DragStartEvent) {
@@ -1077,7 +725,10 @@ export default function Sidebar({
 
     const cleanName = editName.trim();
 
-    if (!cleanName) return;
+    if (!cleanName) {
+      showToast("Project name required");
+      return;
+    }
 
     setIsSavingProject(true);
 
@@ -1098,6 +749,7 @@ export default function Sidebar({
 
       if (!res.ok) {
         console.error("Failed to update project:", data || res.statusText);
+        showToast("Couldn’t save project");
         return;
       }
 
@@ -1114,6 +766,10 @@ export default function Sidebar({
       );
 
       setEditingProject(null);
+      showToast("Project saved");
+    } catch (err) {
+      console.error("Failed to update project:", err);
+      showToast("Couldn’t save project");
     } finally {
       setIsSavingProject(false);
     }
@@ -1126,7 +782,10 @@ export default function Sidebar({
       `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
     );
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      showToast("Delete cancelled");
+      return;
+    }
 
     setDeletingProjectId(project.id);
 
@@ -1137,8 +796,9 @@ export default function Sidebar({
 
       if (!res.ok) {
         const text = await res.text();
-        const data = text ? JSON.parse(text) : null;
-        console.error("Failed to delete project:", data || res.statusText);
+
+        console.error("Failed to delete project:", text || res.statusText);
+        showToast("Couldn’t delete project");
         return;
       }
 
@@ -1153,6 +813,11 @@ export default function Sidebar({
       if (pathname === `/projects/${project.id}`) {
         router.push("/music");
       }
+
+      showToast("Project deleted");
+    } catch (err) {
+      console.error("Failed to delete project:", err);
+      showToast("Couldn’t delete project");
     } finally {
       setDeletingProjectId(null);
     }
@@ -1290,7 +955,7 @@ export default function Sidebar({
                   }}
                   onMouseLeave={() => setTooltip(null)}
                   className={`flex cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] ${
-                    sidebarCollapsed ? "h-7 w-full" : "h-6 w-6"
+                    sidebarCollapsed ? "h-8 w-full px-2.5" : "h-6 w-6"
                   }`}
                   aria-label={
                     reorderMode ? "Save project order" : "Create new project"
@@ -1379,7 +1044,13 @@ export default function Sidebar({
           });
 
           setIsCreateProjectOpen(false);
+          showToast("Project created");
         }}
+      />
+
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
       />
 
       <EditProjectModal

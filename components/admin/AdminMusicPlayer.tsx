@@ -12,6 +12,7 @@ import {
 } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import MoreIcon from "@/components/icons/MoreIcon";
+import Toast from "@/components/Toast";
 import { iconButtonActiveClass, iconButtonClass } from "@/components/uiClasses";
 
 const WAVEFORM_HIDE_WIDTH = 80;
@@ -155,6 +156,7 @@ export default function AdminMusicPlayer() {
   const [peaks, setPeaks] = useState<number[]>([]);
   const [waveformWidth, setWaveformWidth] = useState(0);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [moreMenuPosition, setMoreMenuPosition] = useState({
     top: 0,
     left: 0,
@@ -326,11 +328,17 @@ export default function AdminMusicPlayer() {
     seekTo(currentSong, nextProgress, isPlaying);
   };
 
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  };
+
   const copyAudioUrl = async () => {
     if (!currentSong.audioUrl) return;
 
     await navigator.clipboard.writeText(currentSong.audioUrl);
     setMoreOpen(false);
+    showToast("Copied");
   };
 
   const handleClosePlayer = () => {
@@ -604,6 +612,8 @@ export default function AdminMusicPlayer() {
           </button>
         </div>
       )}
+
+      <Toast message={toastMessage} bottomOffset="88px" />
     </>
   );
 }

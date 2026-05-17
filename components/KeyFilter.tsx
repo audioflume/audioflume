@@ -5,7 +5,6 @@ import {
   filterClearButtonClass,
   filterDropdownHeaderClass,
   filterDropdownTitleClass,
-  filterIntentButtonActiveClass,
   filterIntentButtonInactiveClass,
   filterSegmentButtonActiveClass,
   filterSegmentButtonClass,
@@ -223,7 +222,7 @@ export default function KeyFilter({ value, onChange }: KeyFilterProps) {
                   onClick={() => toggleScale(mode)}
                   className={`flex h-8 items-center justify-center rounded-lg border border-[var(--border)] text-xs font-medium capitalize transition-colors ${
                     scaleMode === mode
-                      ? filterIntentButtonActiveClass
+                      ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                       : filterIntentButtonInactiveClass
                   }`}
                 >

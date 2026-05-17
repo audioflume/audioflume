@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUser } from "@clerk/nextjs";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
+import UploadIcon from "@/components/icons/UploadIcon";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 import {
@@ -1028,39 +1029,6 @@ function WarningIcon() {
         stroke="currentColor"
         strokeWidth="2"
         strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function UploadIcon() {
-  return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      className="shrink-0"
-    >
-      <path
-        d="M12 16V4"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M7 9L12 4L17 9"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5 20H19"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
       />
     </svg>
   );
@@ -2513,7 +2481,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   disabled={isSaving || isGeneratingPeaks}
                   className={`w-full ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
                 >
-                  {!isSaving && <UploadIcon />}
+                  {!isSaving && <UploadIcon size={15} />}
                   <span>{submitLabel}</span>
                 </button>
               </div>

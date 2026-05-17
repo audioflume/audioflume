@@ -7,6 +7,8 @@ import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import Toast from "@/components/Toast";
 import ModalShell from "@/components/ModalShell";
+import CheckIcon from "@/components/icons/CheckIcon";
+import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import { modalPrimaryButtonClass } from "@/components/uiClasses";
 
 const RECENT_PLAYLIST_IDS_KEY = "filmwaveRecentPlaylistIds";
@@ -43,26 +45,6 @@ function writeRecentPlaylistIds(ids: number[]) {
   window.localStorage.setItem(RECENT_PLAYLIST_IDS_KEY, JSON.stringify(ids));
 }
 
-function CheckIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M20 6L9 17L4 12"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function PlusIcon() {
   return (
     <svg
@@ -82,37 +64,6 @@ function PlusIcon() {
         d="M5 12H19"
         stroke="currentColor"
         strokeWidth="2.3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function PlaylistIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 7H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H15"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 17H11"
-        stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
       />
     </svg>
@@ -428,6 +379,7 @@ export default function AddToPlaylistModal({
               ))}
             </div>
           )}
+
           {!loading && !selectedLoading && displayedError && (
             <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 rounded-lg bg-[var(--bg-primary)] px-4 text-center">
               <div className="text-xs font-medium text-[var(--danger)]">
@@ -445,6 +397,7 @@ export default function AddToPlaylistModal({
               )}
             </div>
           )}
+
           {!loading &&
             !selectedLoading &&
             !displayedError &&
@@ -453,6 +406,7 @@ export default function AddToPlaylistModal({
                 You don&apos;t have any playlists yet.
               </div>
             )}
+
           {!loading &&
             !selectedLoading &&
             !displayedError &&
@@ -480,7 +434,7 @@ export default function AddToPlaylistModal({
                           : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                       }`}
                     >
-                      <PlaylistIcon />
+                      <PlaylistIcon size={13} />
                     </span>
 
                     <span className="min-w-0 truncate">{playlist.name}</span>
@@ -493,7 +447,7 @@ export default function AddToPlaylistModal({
                         : "text-[var(--text-muted)]"
                     }`}
                   >
-                    {isSelected ? <CheckIcon /> : <PlusIcon />}
+                    {isSelected ? <CheckIcon size={12} /> : <PlusIcon />}
                   </span>
                 </button>
               );

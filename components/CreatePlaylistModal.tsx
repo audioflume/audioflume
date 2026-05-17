@@ -8,6 +8,8 @@ import {
   modalPrimaryButtonClass,
 } from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import SearchIconSmall from "@/components/icons/SearchIconSmall";
+import UploadIcon from "@/components/icons/UploadIcon";
 
 type CreatePlaylistModalProps = {
   isOpen: boolean;
@@ -19,57 +21,6 @@ type CreatePlaylistModalProps = {
   onCreate: () => void;
   onClose: () => void;
 };
-
-function UploadIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 16V4"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M7.5 8.5L12 4L16.5 8.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5 20H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 38.31 38.31"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="shrink-0"
-      aria-hidden="true"
-    >
-      <path
-        d="M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
 
 export default function CreatePlaylistModal({
   isOpen,
@@ -138,7 +89,7 @@ export default function CreatePlaylistModal({
             className="flex h-8 cursor-pointer items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
           >
             Unsplash
-            <SearchIcon />
+            <SearchIconSmall />
           </button>
 
           <button

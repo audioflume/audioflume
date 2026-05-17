@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import DashboardIcon from "@/components/icons/DashboardIcon";
+import EngagementIcon from "@/components/icons/EngagementIcon";
 import { usePlayer } from "@/context/PlayerContext";
 
 type AdminNavItem = {
@@ -142,74 +144,10 @@ function SearchIcon() {
   );
 }
 
-function DashboardIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 5.5C4 4.67157 4.67157 4 5.5 4H9.5C10.3284 4 11 4.67157 11 5.5V9.5C11 10.3284 10.3284 11 9.5 11H5.5C4.67157 11 4 10.3284 4 9.5V5.5Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M13 5.5C13 4.67157 13.6716 4 14.5 4H18.5C19.3284 4 20 4.67157 20 5.5V9.5C20 10.3284 19.3284 11 18.5 11H14.5C13.6716 11 13 10.3284 13 9.5V5.5Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M4 14.5C4 13.6716 4.67157 13 5.5 13H9.5C10.3284 13 11 13.6716 11 14.5V18.5C11 19.3284 10.3284 20 9.5 20H5.5C4.67157 20 4 19.3284 4 18.5V14.5Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M13 14.5C13 13.6716 13.6716 13 14.5 13H18.5C19.3284 13 20 13.6716 20 14.5V18.5C20 19.3284 19.3284 20 18.5 20H14.5C13.6716 20 13 19.3284 13 18.5V14.5Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-    </svg>
-  );
-}
-
-function EngagementIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 19V12"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 19V5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 19V9"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 function PrimaryIcon({ icon }: { icon: PrimaryNavItem["icon"] }) {
-  if (icon === "dashboard") return <DashboardIcon />;
+  if (icon === "dashboard") return <DashboardIcon size={14} />;
 
-  return <EngagementIcon />;
+  return <EngagementIcon size={14} />;
 }
 
 function AdminNavLink({ label, href, status }: AdminNavItem) {

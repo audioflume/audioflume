@@ -8,9 +8,12 @@ import EditPlaylistModal from "@/components/EditPlaylistModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import Toast from "@/components/Toast";
 import DropdownShell from "@/components/DropdownShell";
+import GridViewIcon from "@/components/icons/GridViewIcon";
+import ListViewIcon from "@/components/icons/ListViewIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
+import SortIcon from "@/components/icons/SortIcon";
 import {
-  dangerButtonClass,
   iconButtonActiveClass,
   smallIconButtonClass,
 } from "@/components/uiClasses";
@@ -82,149 +85,6 @@ function formatSongCount(count: number) {
 
 function formatGenres(genres: string[]) {
   return genres.length > 0 ? genres.join(" · ") : "No genres yet";
-}
-
-function PlusIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M12 5V19"
-        stroke="currentColor"
-        strokeWidth="2.1"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H19"
-        stroke="currentColor"
-        strokeWidth="2.1"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function SortIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M7 5V19"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4.5 16.5L7 19L9.5 16.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13 7H20"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M13 12H18"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M13 17H16"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function GalleryIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect
-        x="4"
-        y="4"
-        width="6.5"
-        height="6.5"
-        rx="1.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <rect
-        x="13.5"
-        y="4"
-        width="6.5"
-        height="6.5"
-        rx="1.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <rect
-        x="4"
-        y="13.5"
-        width="6.5"
-        height="6.5"
-        rx="1.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <rect
-        x="13.5"
-        y="13.5"
-        width="6.5"
-        height="6.5"
-        rx="1.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-    </svg>
-  );
-}
-
-function IndexIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M8 7H20"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 12H20"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 17H20"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 7H4.01"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 12H4.01"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 17H4.01"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
 }
 
 function ReorderHandleIcon() {
@@ -329,7 +189,7 @@ function CreatePlaylistTile({
       onClick={onClick}
     >
       <div className="playlist-create-mark">
-        <PlusIcon />
+        <PlusIcon size={16} />
       </div>
 
       <div className="playlist-create-copy">
@@ -403,7 +263,7 @@ function PlaylistMenu({
           Reorder
         </button>
 
-        <button type="button" className={dangerButtonClass} onClick={onDelete}>
+        <button type="button" className="danger-hover" onClick={onDelete}>
           Delete
         </button>
       </DropdownShell>
@@ -1971,7 +1831,7 @@ export default function PlaylistsPage() {
                   className="playlist-action-btn"
                   onClick={() => setShowNewModal(true)}
                 >
-                  <PlusIcon />
+                  <PlusIcon size={16} />
                   New Playlist
                 </button>
 
@@ -1995,7 +1855,7 @@ export default function PlaylistsPage() {
                     setOpenSortMenu(false);
                   }}
                 >
-                  {viewMode === "grid" ? <IndexIcon /> : <GalleryIcon />}
+                  {viewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
                 </button>
 
                 <DropdownShell

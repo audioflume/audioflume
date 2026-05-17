@@ -35,6 +35,7 @@ import KeyFilter from "@/components/KeyFilter";
 import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import SearchIcon from "@/components/icons/SearchIcon";
 import {
   iconButtonClass,
   primaryPillButtonClass,
@@ -405,20 +406,7 @@ export default function MusicPage() {
             onClick={() => searchInputRef.current?.focus()}
           >
             <div className="flex w-[320px] flex-shrink-0 items-center gap-2 py-3 pr-4">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 38.31 38.31"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="shrink-0 text-[var(--text-muted)]"
-                aria-hidden="true"
-              >
-                <path
-                  d="M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z"
-                  fill="currentColor"
-                />
-              </svg>
+              <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
 
               <input
                 ref={searchInputRef}

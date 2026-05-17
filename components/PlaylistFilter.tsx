@@ -4,6 +4,9 @@ import type { PlaylistRef } from "@/lib/types";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { supabase } from "@/lib/supabase";
+import CheckIcon from "@/components/icons/CheckIcon";
+import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
 import {
   filterClearButtonClass,
   filterDropdownHeaderClass,
@@ -20,82 +23,6 @@ type PlaylistFilterProps = {
   selected: PlaylistRef | null;
   onChange: (selected: PlaylistRef | null) => void;
 };
-
-function PlaylistIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 7H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H15"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 17H11"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M20 6L9 17L4 12"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 5V19"
-        stroke="currentColor"
-        strokeWidth="2.3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H19"
-        stroke="currentColor"
-        strokeWidth="2.3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 function PlaylistFilterSkeleton() {
   return (
@@ -201,6 +128,8 @@ export default function PlaylistFilter({
             : filterTriggerInactiveClass
         }`}
       >
+        <PlaylistIcon size={13} className="shrink-0" />
+
         <span>Playlists</span>
 
         {hasActive && (
@@ -274,7 +203,7 @@ export default function PlaylistFilter({
                               : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                           }`}
                         >
-                          <PlaylistIcon />
+                          <PlaylistIcon size={13} />
                         </span>
 
                         <span className="min-w-0 truncate">
@@ -289,7 +218,11 @@ export default function PlaylistFilter({
                             : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                         }`}
                       >
-                        {isSelected ? <CheckIcon /> : <PlusIcon />}
+                        {isSelected ? (
+                          <CheckIcon size={12} />
+                        ) : (
+                          <PlusIcon size={12} />
+                        )}
                       </span>
                     </button>
                   );

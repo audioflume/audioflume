@@ -77,18 +77,18 @@ body.sidebar-collapsed aside[data-sidebar] {
   --accent-contrast: #111111;
   --accent-2-contrast: #ffffff;
 
-  --danger: #dc584f;
-  --danger-hover: #e4665d;
+  --danger: #ff5d57;
+  --danger-hover: rgba(255, 93, 87, 0.1);
   --danger-contrast: #ffffff;
 }
 
 .danger-hover {
-  color: #ff5d57;
+  color: var(--danger);
 }
 
 .danger-hover:hover {
-  background: rgba(255, 93, 87, 0.1);
-  color: #ff5d57;
+  background: var(--danger-hover);
+  color: var(--danger);
 }
 
 .danger-icon-hover {
@@ -96,8 +96,8 @@ body.sidebar-collapsed aside[data-sidebar] {
 }
 
 .danger-icon-hover:hover {
-  background: rgba(255, 93, 87, 0.1);
-  color: #ff5d57;
+  background: var(--danger-hover);
+  color: var(--danger);
 }
 
 /* ─── Shared media overlay colours ─────────────────────────── */
@@ -138,14 +138,14 @@ body.sidebar-collapsed aside[data-sidebar] {
 
   --status-success-soft: rgba(72, 181, 113, 0.12);
   --status-warning-soft: rgba(217, 164, 65, 0.12);
-  --status-error-soft: rgba(220, 88, 79, 0.12);
+  --status-error-soft: rgba(255, 93, 87, 0.12);
 
   --status-warning-faint: rgba(217, 164, 65, 0.08);
-  --status-error-faint: rgba(220, 88, 79, 0.08);
+  --status-error-faint: rgba(255, 93, 87, 0.08);
 
   --status-success-hover: rgba(72, 181, 113, 0.075);
   --status-warning-hover: rgba(217, 164, 65, 0.12);
-  --status-error-hover: rgba(220, 88, 79, 0.12);
+  --status-error-hover: rgba(255, 93, 87, 0.12);
 }
 
 /* ─── Shared modal colours ─────────────────────────── */
@@ -200,7 +200,7 @@ body.sidebar-collapsed aside[data-sidebar] {
 
 .admin-batch-delete-btn:hover {
   background: var(--danger-hover) !important;
-  color: var(--danger-contrast) !important;
+  color: var(--danger) !important;
 }
 
 /* ─── Global ─────────────────────────── */
@@ -352,11 +352,20 @@ body.sidebar-collapsed {
   background: var(--border-subtle);
 }
 
-.music-player-more-menu-close {
+.music-player-more-menu-close,
+.music-player-more-menu button.danger,
+.music-player-more-menu a.danger,
+.music-player-more-menu button.danger-hover,
+.music-player-more-menu a.danger-hover {
   color: var(--danger) !important;
 }
 
-.music-player-more-menu-close:hover {
+.music-player-more-menu-close:hover,
+.music-player-more-menu button.danger:hover,
+.music-player-more-menu a.danger:hover,
+.music-player-more-menu button.danger-hover:hover,
+.music-player-more-menu a.danger-hover:hover {
+  background: var(--danger-hover) !important;
   color: var(--danger) !important;
 }
 
@@ -436,12 +445,17 @@ body.sidebar-collapsed {
 }
 
 .filmwave-dropdown-shell button.danger,
-.filmwave-dropdown-shell a.danger {
+.filmwave-dropdown-shell a.danger,
+.filmwave-dropdown-shell button.danger-hover,
+.filmwave-dropdown-shell a.danger-hover {
   color: var(--danger);
 }
 
 .filmwave-dropdown-shell button.danger:hover,
-.filmwave-dropdown-shell a.danger:hover {
+.filmwave-dropdown-shell a.danger:hover,
+.filmwave-dropdown-shell button.danger-hover:hover,
+.filmwave-dropdown-shell a.danger-hover:hover {
+  background: var(--danger-hover);
   color: var(--danger);
 }
 
