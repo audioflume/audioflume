@@ -19,14 +19,6 @@ export type CuratedPlaylistSong = Song & {
   created_at: string;
 };
 
-export type CuratedPlaylistGroup = {
-  id: number;
-  name: string;
-  position: number;
-  created_at?: string;
-  playlist_count?: number;
-};
-
 type CuratedPlaylistRow = {
   id: string | number;
   name: string | null;
@@ -38,17 +30,9 @@ type CuratedPlaylistRow = {
   song_count?: number | null;
 };
 
-type CuratedPlaylistGroupRow = {
-  id: string | number;
-  name: string | null;
-  position: number | null;
-  created_at?: string | null;
-  playlist_count?: number | null;
-};
-
 export const DEFAULT_CURATED_PLAYLIST_GROUP = "Editor Picks";
 
-export const FALLBACK_CURATED_PLAYLIST_GROUPS = [
+export const CURATED_PLAYLIST_GROUPS = [
   "Editor Picks",
   "Documentary",
   "Commercial",
@@ -69,18 +53,6 @@ export function normalizeCuratedPlaylist(
     position: Number(row.position || 0),
     created_at: row.created_at ? String(row.created_at) : undefined,
     song_count: Number(row.song_count || 0),
-  };
-}
-
-export function normalizeCuratedPlaylistGroup(
-  row: CuratedPlaylistGroupRow,
-): CuratedPlaylistGroup {
-  return {
-    id: Number(row.id),
-    name: String(row.name || DEFAULT_CURATED_PLAYLIST_GROUP),
-    position: Number(row.position || 0),
-    created_at: row.created_at ? String(row.created_at) : undefined,
-    playlist_count: Number(row.playlist_count || 0),
   };
 }
 

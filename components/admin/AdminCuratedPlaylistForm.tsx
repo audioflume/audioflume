@@ -6,11 +6,7 @@ import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
 import TrashIcon from "@/components/icons/TrashIcon";
 import type { CuratedPlaylist, CuratedPlaylistSong } from "@/lib/curatedPlaylists";
-import {
-  DEFAULT_CURATED_PLAYLIST_GROUP,
-  FALLBACK_CURATED_PLAYLIST_GROUPS,
-  type CuratedPlaylistGroup,
-} from "@/lib/curatedPlaylists";
+import { CURATED_PLAYLIST_GROUPS, DEFAULT_CURATED_PLAYLIST_GROUP } from "@/lib/curatedPlaylists";
 import { primaryPillButtonClass, secondaryPillButtonClass, smallIconButtonClass } from "@/components/uiClasses";
 
 type Props = {
@@ -24,45 +20,10 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [playlistGroup, setPlaylistGroup] = useState(DEFAULT_CURATED_PLAYLIST_GROUP);
-  const [playlistGroups, setPlaylistGroups] = useState<CuratedPlaylistGroup[]>([]);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
   const [loading, setLoading] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-
-  const availableGroupNames = [
-    ...new Set(
-      [
-        ...(playlistGroups.length > 0
-          ? playlistGroups.map((group) => group.name)
-          : FALLBACK_CURATED_PLAYLIST_GROUPS),
-        playlistGroup,
-      ].filter(Boolean),
-    ),
-  ];
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadPlaylistGroups() {
-      try {
-        const res = await fetch("/api/admin/curated-playlist-groups");
-        const data = await res.json();
-
-        if (!res.ok || !Array.isArray(data)) return;
-
-        if (!cancelled) setPlaylistGroups(data);
-      } catch {
-        // Keep fallback groups available if the group API is unavailable.
-      }
-    }
-
-    loadPlaylistGroups();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     if (mode !== "edit" || !playlistId) return;
@@ -223,7 +184,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   onChange={(event) => setPlaylistGroup(event.target.value)}
                   className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                 >
-                  {availableGroupNames.map((group) => (
+                  {CURATED_PLAYLIST_GROUPS.map((group) => (
                     <option key={group} value={group}>
                       {group}
                     </option>
