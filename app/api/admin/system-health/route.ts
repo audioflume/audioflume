@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
+import { supabaseServer } from "@/lib/supabaseServer";
 
 export const dynamic = "force-dynamic";
 
@@ -17,78 +18,47 @@ type HealthItem = {
 function getEnv(...keys: string[]) {
   for (const key of keys) {
     const value = process.env[key];
-
     if (value) return value;
   }
-
   return "";
 }
 
-async function checkAirtable(): Promise<HealthItem> {
-  const apiKey = getEnv("AIRTABLE_PERSONAL_ACCESS_TOKEN", "AIRTABLE_API_KEY");
-  const baseId = getEnv("AIRTABLE_BASE_ID");
-  const tableId = getEnv("AIRTABLE_SONGS_TABLE_ID");
-
-  if (!apiKey || !baseId || !tableId) {
-    return {
-      key: "airtable",
-      label: "Airtable connected",
-      tone: "error",
-      message: "Missing Airtable environment variables.",
-    };
-  }
-
+async function checkSupabase(): Promise<HealthItem> {
   try {
-    const res = await fetch(
-      `https://api.airtable.com/v0/${baseId}/${tableId}?maxRecords=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-        cache: "no-store",
-      },
-    );
+    const { error } = await supabaseServer
+      .from("songs")
+      .select("id", { count: "exact", head: true });
 
-    if (!res.ok) {
-      return {
-        key: "airtable",
-        label: "Airtable connected",
-        tone: "error",
-        message: `Airtable returned ${res.status}.`,
-      };
-    }
+    if (error) throw error;
 
     return {
-      key: "airtable",
-      label: "Airtable connected",
+      key: "supabase",
+      label: "Supabase connected",
       tone: "success",
-      message: "Airtable is reachable.",
+      message: "Supabase is reachable.",
     };
   } catch (err) {
     return {
-      key: "airtable",
-      label: "Airtable connected",
+      key: "supabase",
+      label: "Supabase connected",
       tone: "error",
-      message: err instanceof Error ? err.message : "Airtable check failed.",
+      message: err instanceof Error ? err.message : "Supabase check failed.",
     };
   }
 }
 
-async function checkR2(): Promise<HealthItem> {
-  const accountId = getEnv("CLOUDFLARE_R2_ACCOUNT_ID", "R2_ACCOUNT_ID");
-  const accessKeyId = getEnv("CLOUDFLARE_R2_ACCESS_KEY_ID", "R2_ACCESS_KEY_ID");
-  const secretAccessKey = getEnv(
-    "CLOUDFLARE_R2_SECRET_ACCESS_KEY",
-    "R2_SECRET_ACCESS_KEY",
-  );
-  const bucketName = getEnv("CLOUDFLARE_R2_BUCKET_NAME", "R2_BUCKET_NAME");
+async function checkR2Bucket(bucketEnvKey: string, labelKey: string, label: string): Promise<HealthItem> {
+  const accountId = getEnv("CLOUDFLARE_R2_ACCOUNT_ID");
+  const accessKeyId = getEnv("CLOUDFLARE_R2_ACCESS_KEY_ID");
+  const secretAccessKey = getEnv("CLOUDFLARE_R2_SECRET_ACCESS_KEY");
+  const bucketName = getEnv(bucketEnvKey);
 
   if (!accountId || !accessKeyId || !secretAccessKey || !bucketName) {
     return {
-      key: "r2",
-      label: "Cloudflare R2 ready",
+      key: labelKey,
+      label,
       tone: "error",
-      message: "Missing R2 environment variables.",
+      message: `Missing R2 environment variables for ${label}.`,
     };
   }
 
@@ -96,31 +66,23 @@ async function checkR2(): Promise<HealthItem> {
     const client = new S3Client({
       region: "auto",
       endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-      credentials: {
-        accessKeyId,
-        secretAccessKey,
-      },
+      credentials: { accessKeyId, secretAccessKey },
     });
 
-    await client.send(
-      new ListObjectsV2Command({
-        Bucket: bucketName,
-        MaxKeys: 1,
-      }),
-    );
+    await client.send(new ListObjectsV2Command({ Bucket: bucketName, MaxKeys: 1 }));
 
     return {
-      key: "r2",
-      label: "Cloudflare R2 ready",
+      key: labelKey,
+      label,
       tone: "success",
-      message: "R2 bucket is reachable.",
+      message: `${label} bucket is reachable.`,
     };
   } catch (err) {
     return {
-      key: "r2",
-      label: "Cloudflare R2 ready",
+      key: labelKey,
+      label,
       tone: "error",
-      message: err instanceof Error ? err.message : "R2 check failed.",
+      message: err instanceof Error ? err.message : `${label} check failed.`,
     };
   }
 }
@@ -143,8 +105,9 @@ export async function GET() {
   }
 
   const statuses = await Promise.all([
-    checkAirtable(),
-    checkR2(),
+    checkSupabase(),
+    checkR2Bucket("CLOUDFLARE_R2_BUCKET_NAME", "r2_music", "Music library"),
+    checkR2Bucket("CLOUDFLARE_R2_IMAGES_BUCKET_NAME", "r2_images", "Image storage"),
     checkAnalyzer(),
   ]);
 
