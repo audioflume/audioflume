@@ -55,8 +55,6 @@ function playlistToDiscoveryScene(playlist: CuratedPlaylist, layout: DiscoverySc
     href: `/curated-playlists/${playlist.id}`,
     image: playlist.cover_image_url || "",
     layout,
-    ctaEnabled: playlist.discover_button_enabled,
-    ctaText: playlist.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT,
   };
 }
 
@@ -153,6 +151,93 @@ const productionStyles: ProductionStyle[] = [
     href: "/music?mood=Feel%20Good",
     image:
       "https://images.unsplash.com/photo-1761926872117-f3112e63c940?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+];
+
+const fallbackCuratedPlaylists: CuratedPlaylist[] = [
+  {
+    id: 1,
+    name: "Docu beds",
+    kicker: "Human stories",
+    song_count: 18,
+    cover_image_url:
+      "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Documentary",
+    position: 0,
+    description: "Soft movement, subtle pulse, and grounded tracks for voice-led edits.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 0,
+  },
+  {
+    id: 2,
+    name: "Brand polish",
+    kicker: "Commercial cuts",
+    song_count: 24,
+    cover_image_url:
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Commercial",
+    position: 1,
+    description: "Polished, confident, and energetic tracks for commercial cuts.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 1,
+  },
+  {
+    id: 3,
+    name: "After hours",
+    kicker: "Dark tension",
+    song_count: 15,
+    cover_image_url:
+      "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Tension",
+    position: 2,
+    description: "Slow pressure, negative space, low rhythm, and moody builds.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 2,
+  },
+  {
+    id: 4,
+    name: "Open roads",
+    kicker: "Travel motion",
+    song_count: 21,
+    cover_image_url:
+      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Travel",
+    position: 3,
+    description: "Airy guitars, soft percussion, and moving landscape cues.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 3,
+  },
+  {
+    id: 5,
+    name: "Soft focus",
+    kicker: "Ambient texture",
+    song_count: 12,
+    cover_image_url:
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Ambient",
+    position: 4,
+    description: "Ambient texture and soft-focus cue options.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 4,
+  },
+  {
+    id: 6,
+    name: "First pass",
+    kicker: "Fast selects",
+    song_count: 30,
+    cover_image_url:
+      "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=900&q=80",
+    playlist_group: "Editor Picks",
+    position: 5,
+    description: "Fast selects for finding a first pass quickly.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 5,
   },
 ];
 
@@ -872,7 +957,7 @@ export default function DashboardPage() {
       .filter((playlist) => playlist.show_on_discover)
       .sort((a, b) => a.discover_position - b.discover_position);
 
-    return selected;
+    return selected.length > 0 ? selected : fallbackCuratedPlaylists;
   }, [discoverPlaylists]);
 
   useEffect(() => {
@@ -886,7 +971,7 @@ export default function DashboardPage() {
         if (!res.ok || !Array.isArray(data)) return;
         if (!cancelled) setDiscoverPlaylists(data);
       } catch {
-        // Leave Discover-managed playlist shelves empty if the API is unavailable.
+        // Keep the hand-picked fallback content if the API is unavailable.
       }
     }
 

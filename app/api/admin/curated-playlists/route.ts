@@ -3,7 +3,6 @@ import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
-  DEFAULT_DISCOVER_BUTTON_TEXT,
   DISCOVER_SECTION_OPTIONS,
   getCuratedPlaylistError,
   normalizeCuratedPlaylist,
@@ -71,8 +70,6 @@ export async function POST(req: Request) {
     const description = cleanString(body.description);
     const discoverSection = cleanDiscoverSection(body.discover_section);
     const showOnDiscover = cleanBoolean(body.show_on_discover);
-    const discoverButtonText = cleanString(body.discover_button_text) || DEFAULT_DISCOVER_BUTTON_TEXT;
-    const discoverButtonEnabled = body.discover_button_enabled !== false;
 
     if (!name) {
       return NextResponse.json({ error: "Missing playlist name" }, { status: 400 });
@@ -119,8 +116,6 @@ export async function POST(req: Request) {
         discover_section: discoverSection,
         show_on_discover: showOnDiscover,
         discover_position: nextDiscoverPosition,
-        discover_button_enabled: discoverButtonEnabled,
-        discover_button_text: discoverButtonText,
         position: nextPosition,
       })
       .select()

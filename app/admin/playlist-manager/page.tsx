@@ -167,17 +167,6 @@ function getDiscoverSortPosition(playlist: CuratedPlaylist) {
   return playlist.discover_position ?? playlist.position ?? 0;
 }
 
-function getDiscoverNewHref(groupName?: string) {
-  const section = DISCOVER_SECTION_OPTIONS.find((option) => option.label === groupName)?.value ?? "discover_block_1";
-  return `/admin/playlist-manager/discover/new?discoverSection=${section}`;
-}
-
-function getEditHref(playlist: CuratedPlaylist, activeTab: ManagerTab) {
-  return activeTab === "discover" && playlist.discover_section
-    ? `/admin/playlist-manager/discover/${playlist.id}/edit`
-    : `/admin/playlist-manager/${playlist.id}/edit`;
-}
-
 export default function PlaylistManagerPage() {
   const [activeTab, setActiveTab] = useState<ManagerTab>("playlists");
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
@@ -313,7 +302,7 @@ export default function PlaylistManagerPage() {
 
   const totalPlaylists = activeTab === "discover"
     ? playlists.filter((playlist) => getDiscoverGroupName(playlist)).length
-    : playlists.filter((playlist) => !playlist.discover_section).length;
+    : playlists.length;
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
@@ -326,7 +315,7 @@ export default function PlaylistManagerPage() {
           </h1>
           <p className="mt-2 text-sm text-[var(--text-secondary)]">Manage curated playlists and the content blocks on Discover.</p>
         </div>
-        <Link href={activeTab === "discover" ? getDiscoverNewHref() : "/admin/playlist-manager/new"} className={`${primaryPillButtonClass} hidden md:flex`}>
+        <Link href={activeTab === "discover" ? "/admin/playlist-manager/new?discoverSection=discover_block_1" : "/admin/playlist-manager/new"} className={`${primaryPillButtonClass} hidden md:flex`}>
           <PlusIcon /><span>{activeTab === "discover" ? "New Discover Block" : "New Playlist"}</span>
         </Link>
       </div>
@@ -359,7 +348,7 @@ export default function PlaylistManagerPage() {
                 {loading ? "Loading..." : `${totalPlaylists} item${totalPlaylists === 1 ? "" : "s"}`}
               </p>
             </div>
-            <Link href={activeTab === "discover" ? getDiscoverNewHref() : "/admin/playlist-manager/new"} className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">+ New</Link>
+            <Link href={activeTab === "discover" ? "/admin/playlist-manager/new?discoverSection=discover_block_1" : "/admin/playlist-manager/new"} className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">+ New</Link>
           </div>
 
           {loading && (
@@ -403,7 +392,7 @@ export default function PlaylistManagerPage() {
                         <span>No item assigned.</span>
                         {activeTab === "discover" && groupName !== DISCOVER_CURATED_GROUP && (
                           <Link
-                            href={getDiscoverNewHref(groupName)}
+                            href={`/admin/playlist-manager/new?discoverSection=${DISCOVER_SECTION_OPTIONS.find((option) => option.label === groupName)?.value ?? "discover_block_1"}`}
                             className="font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
                           >
                             Add block
