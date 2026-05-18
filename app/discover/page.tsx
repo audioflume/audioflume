@@ -14,7 +14,7 @@ import {
 } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
-import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import { DEFAULT_DISCOVER_BUTTON_TEXT, type CuratedPlaylist } from "@/lib/curatedPlaylists";
 import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -35,6 +35,8 @@ type DiscoveryScene = {
   href: string;
   image: string;
   layout: "hero" | "wide" | "small";
+  ctaEnabled?: boolean;
+  ctaText?: string;
 };
 
 type ProductionStyle = {
@@ -45,46 +47,42 @@ type ProductionStyle = {
   image: string;
 };
 
-const discoveryScenes: DiscoveryScene[] = [
-  {
-    title: "Quiet documentary beds",
-    kicker: "Human / Minimal / Warm",
-    description:
-      "Soft movement, subtle pulse, and grounded tracks for voice-led edits.",
-    href: "/music?genre=Documentary",
-    image:
-      "https://images.unsplash.com/photo-1704564552264-ca74a6e46fbc?q=80&w=2751&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    layout: "hero",
-  },
-  {
-    title: "After-dark tension",
-    kicker: "Dark / cinematic",
-    description: "Slow pressure, negative space, low rhythm, and moody builds.",
-    href: "/music?mood=Dark",
-    image:
-      "https://images.unsplash.com/photo-1654206399380-87b22188e01b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    layout: "wide",
-  },
-  {
-    title: "Travel light",
-    kicker: "Organic / open",
-    description: "Airy guitars, soft percussion, and moving landscape cues.",
-    href: "/music?genre=Travel",
-    image:
-      "https://images.unsplash.com/photo-1732294650830-93cfc322aa62?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    layout: "small",
-  },
-  {
-    title: "Brand motion",
-    kicker: "Clean / modern",
-    description:
-      "Polished, confident, and energetic tracks for commercial cuts.",
-    href: "/music?genre=Commercial",
-    image:
-      "https://images.unsplash.com/photo-1777996625750-b934896792b9?q=80&w=1069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    layout: "small",
-  },
-];
+function playlistToDiscoveryScene(playlist: CuratedPlaylist, layout: DiscoveryScene["layout"]): DiscoveryScene {
+  return {
+    title: playlist.name,
+    kicker: playlist.kicker,
+    description: playlist.description || `${playlist.song_count || 0} tracks selected for this Discover block.`,
+    href: `/curated-playlists/${playlist.id}`,
+    image: playlist.cover_image_url || "",
+    layout,
+    ctaEnabled: playlist.discover_button_enabled,
+    ctaText: playlist.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT,
+  };
+}
+
+function playlistToProductionStyle(playlist: CuratedPlaylist): ProductionStyle {
+  return {
+    title: playlist.name,
+    kicker: playlist.kicker,
+    description: playlist.description || `${playlist.song_count || 0} tracks selected for this production style.`,
+    href: `/curated-playlists/${playlist.id}`,
+    image: playlist.cover_image_url || "",
+  };
+}
+
+const DISCOVER_BLOCK_SECTIONS = [
+  "discover_block_1",
+  "discover_block_2",
+  "discover_block_3",
+  "discover_block_4",
+] as const;
+
+const PRODUCTION_STYLE_SECTIONS = [
+  "production_style_1",
+  "production_style_2",
+  "production_style_3",
+  "production_style_4",
+] as const;
 
 const searchPrompts = [
   "Cinematic",
@@ -93,105 +91,6 @@ const searchPrompts = [
   "Piano",
   "Travel",
   "Dark",
-];
-
-const productionStyles: ProductionStyle[] = [
-  {
-    title: "Slow travel films",
-    kicker: "Open / atmospheric",
-    description: "Movement, landscapes, soft rhythm, and warm horizon energy.",
-    href: "/music?genre=Travel",
-    image:
-      "https://images.unsplash.com/photo-1668620858961-7f87a791a520?q=80&w=3185&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Intimate interviews",
-    kicker: "Subtle / emotional",
-    description: "Minimal beds that leave space for voice, story, and silence.",
-    href: "/music?genre=Documentary",
-    image:
-      "https://images.unsplash.com/photo-1565288971009-a6db8844c687?q=80&w=1626&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Premium brand edits",
-    kicker: "Polished / modern",
-    description: "Clean pulse, confident builds, and refined commercial tone.",
-    href: "/music?genre=Commercial",
-    image:
-      "https://images.unsplash.com/photo-1678585056636-323de5098c58?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Feel good moments",
-    kicker: "Warm / uplifting",
-    description:
-      "Bright rhythm, easy movement, and optimistic cues for lighthearted edits.",
-    href: "/music?mood=Feel%20Good",
-    image:
-      "https://images.unsplash.com/photo-1761926872117-f3112e63c940?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
-
-const fallbackCuratedPlaylists: CuratedPlaylist[] = [
-  {
-    id: 1,
-    name: "Docu beds",
-    kicker: "Human stories",
-    song_count: 18,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Documentary",
-    position: 0,
-  },
-  {
-    id: 2,
-    name: "Brand polish",
-    kicker: "Commercial cuts",
-    song_count: 24,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Commercial",
-    position: 1,
-  },
-  {
-    id: 3,
-    name: "After hours",
-    kicker: "Dark tension",
-    song_count: 15,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Tension",
-    position: 2,
-  },
-  {
-    id: 4,
-    name: "Open roads",
-    kicker: "Travel motion",
-    song_count: 21,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Travel",
-    position: 3,
-  },
-  {
-    id: 5,
-    name: "Soft focus",
-    kicker: "Ambient texture",
-    song_count: 12,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Ambient",
-    position: 4,
-  },
-  {
-    id: 6,
-    name: "First pass",
-    kicker: "Fast selects",
-    song_count: 30,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Editor Picks",
-    position: 5,
-  },
 ];
 
 function formatDuration(seconds: number) {
@@ -499,10 +398,12 @@ function DiscoveryHeroCard({ scene }: { scene: DiscoveryScene }) {
             {scene.description}
           </p>
 
-          <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
-            Explore this mood
-            <ArrowUpRightIcon />
-          </div>
+          {scene.ctaEnabled !== false && (
+            <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
+              {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
+              <ArrowUpRightIcon />
+            </div>
+          )}
         </div>
       </div>
     </Link>
@@ -532,6 +433,13 @@ function DiscoverySideCard({ scene }: { scene: DiscoveryScene }) {
           <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
             {scene.description}
           </p>
+
+          {scene.ctaEnabled !== false && (
+            <div className="mt-4 inline-flex h-9 w-fit items-center gap-2 rounded-full bg-white px-3 text-xs font-medium text-black transition group-hover:scale-[1.02]">
+              {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
+              <ArrowUpRightIcon />
+            </div>
+          )}
         </div>
       </div>
     </Link>
@@ -556,15 +464,24 @@ function DiscoveryMiniCard({ scene }: { scene: DiscoveryScene }) {
         <h3 className="mt-1 font-[family-name:var(--font-instrument-sans)] text-[24px] font-medium leading-none tracking-[-0.05em] text-white">
           {scene.title}
         </h3>
+
+        {scene.ctaEnabled !== false && (
+          <div className="mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full bg-white px-3 text-[11px] font-medium text-black transition group-hover:scale-[1.02]">
+            {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
+            <ArrowUpRightIcon />
+          </div>
+        )}
       </div>
     </Link>
   );
 }
 
-function VisualDiscoverySection() {
-  const heroScene = discoveryScenes[0];
-  const sideScene = discoveryScenes[1];
-  const miniScenes = discoveryScenes.slice(2);
+function VisualDiscoverySection({ scenes }: { scenes: DiscoveryScene[] }) {
+  if (scenes.length === 0) return null;
+
+  const heroScene = scenes[0];
+  const sideScene = scenes[1];
+  const miniScenes = scenes.slice(2);
 
   return (
     <section>
@@ -589,17 +506,21 @@ function VisualDiscoverySection() {
       <FullWidthSearchBar />
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
-        <DiscoveryHeroCard scene={heroScene} />
+        {heroScene && <DiscoveryHeroCard scene={heroScene} />}
 
-        <div className="grid gap-4">
-          <DiscoverySideCard scene={sideScene} />
+        {(sideScene || miniScenes.length > 0) && (
+          <div className="grid gap-4">
+            {sideScene && <DiscoverySideCard scene={sideScene} />}
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {miniScenes.map((scene) => (
-              <DiscoveryMiniCard key={scene.title} scene={scene} />
-            ))}
+            {miniScenes.length > 0 && (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {miniScenes.map((scene) => (
+                  <DiscoveryMiniCard key={scene.title} scene={scene} />
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
@@ -611,13 +532,18 @@ function ProductionStyleCard({ style }: { style: ProductionStyle }) {
       href={style.href}
       className="group relative min-h-[245px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] transition hover:border-[var(--text-muted)]"
     >
-      <Image
-        src={style.image}
-        alt={style.title}
-        fill
-        sizes="(min-width: 1280px) 25vw, 100vw"
-        className="object-cover transition duration-700 group-hover:scale-[1.04]"
-      />
+      {style.image ? (
+        <Image
+          src={style.image}
+          alt={style.title}
+          fill
+          sizes="(min-width: 1280px) 25vw, 100vw"
+          className="object-cover transition duration-700 group-hover:scale-[1.04]"
+          unoptimized
+        />
+      ) : (
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,#25364f_0%,#111111_52%,#6287c4_100%)]" />
+      )}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/36 to-black/8" />
 
@@ -646,7 +572,9 @@ function ProductionStyleCard({ style }: { style: ProductionStyle }) {
   );
 }
 
-function ProductionStylesSection() {
+function ProductionStylesSection({ styles }: { styles: ProductionStyle[] }) {
+  if (styles.length === 0) return null;
+
   return (
     <section className="mt-12">
       <div className="mb-4 flex items-end justify-between gap-4">
@@ -669,7 +597,7 @@ function ProductionStylesSection() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {productionStyles.map((style) => (
+        {styles.map((style) => (
           <ProductionStyleCard key={style.title} style={style} />
         ))}
       </div>
@@ -677,33 +605,7 @@ function ProductionStylesSection() {
   );
 }
 
-function CuratedPlaylistsSection() {
-  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>(
-    fallbackCuratedPlaylists,
-  );
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadCuratedPlaylists() {
-      try {
-        const res = await fetch("/api/curated-playlists");
-        const data = await res.json();
-
-        if (!res.ok || !Array.isArray(data) || data.length === 0) return;
-        if (!cancelled) setPlaylists(data);
-      } catch {
-        // Keep the hand-picked fallback set if the API is unavailable.
-      }
-    }
-
-    loadCuratedPlaylists();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+function CuratedPlaylistsSection({ playlists }: { playlists: CuratedPlaylist[] }) {
   return (
     <CuratedPlaylistShelf
       title="Curated playlists"
@@ -897,6 +799,7 @@ function LoadingCard() {
 export default function DashboardPage() {
   const { songs, loading, error } = useSongs();
   const { currentSong, setQueue } = usePlayer();
+  const [discoverPlaylists, setDiscoverPlaylists] = useState<CuratedPlaylist[]>([]);
 
   const playableSongs = useMemo(() => sortSongsForVisuals(songs), [songs]);
 
@@ -904,6 +807,57 @@ export default function DashboardPage() {
   const fastScanSongs = getFastScanSongs(playableSongs);
 
   const playerVisible = !!currentSong;
+
+  const dynamicScenes = useMemo(() => {
+    const layouts: DiscoveryScene["layout"][] = ["hero", "wide", "small", "small"];
+
+    return DISCOVER_BLOCK_SECTIONS
+      .map((section, index) => {
+        const playlist = discoverPlaylists.find((item) => item.discover_section === section);
+        return playlist ? playlistToDiscoveryScene(playlist, layouts[index]) : null;
+      })
+      .filter((scene): scene is DiscoveryScene => scene !== null);
+  }, [discoverPlaylists]);
+
+  const dynamicProductionStyles = useMemo(() =>
+    PRODUCTION_STYLE_SECTIONS
+      .map((section) => {
+        const playlist = discoverPlaylists.find((item) => item.discover_section === section);
+        return playlist ? playlistToProductionStyle(playlist) : null;
+      })
+      .filter((style): style is ProductionStyle => style !== null),
+    [discoverPlaylists],
+  );
+
+  const discoverCuratedPlaylists = useMemo(() => {
+    const selected = discoverPlaylists
+      .filter((playlist) => playlist.show_on_discover)
+      .sort((a, b) => a.discover_position - b.discover_position);
+
+    return selected;
+  }, [discoverPlaylists]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadDiscoverPlaylists() {
+      try {
+        const res = await fetch("/api/curated-playlists");
+        const data = await res.json();
+
+        if (!res.ok || !Array.isArray(data)) return;
+        if (!cancelled) setDiscoverPlaylists(data);
+      } catch {
+        // Leave Discover-managed playlist shelves empty if the API is unavailable.
+      }
+    }
+
+    loadDiscoverPlaylists();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     setQueue(playableSongs);
@@ -922,13 +876,13 @@ export default function DashboardPage() {
             </div>
           ) : (
             <>
-              <VisualDiscoverySection />
+              <VisualDiscoverySection scenes={dynamicScenes} />
               <CompactSongsSection songs={compactSongs} />
             </>
           )}
 
-          <ProductionStylesSection />
-          <CuratedPlaylistsSection />
+          <ProductionStylesSection styles={dynamicProductionStyles} />
+          <CuratedPlaylistsSection playlists={discoverCuratedPlaylists} />
           <FastScanSection songs={fastScanSongs} />
 
           {!loading && (

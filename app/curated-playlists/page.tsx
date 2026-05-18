@@ -49,7 +49,11 @@ export default function CuratedPlaylistsPage() {
         }
 
         if (!cancelled) {
-          setPlaylists(Array.isArray(playlistData) ? playlistData : []);
+          setPlaylists(
+            Array.isArray(playlistData)
+              ? playlistData.filter((playlist) => !playlist.discover_section)
+              : [],
+          );
           setGroups(
             Array.isArray(groupData)
               ? [...groupData].sort((a, b) => a.position - b.position)
