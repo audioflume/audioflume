@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import {
   DndContext,
   DragOverlay,
@@ -172,15 +171,8 @@ function getEditHref(playlist: CuratedPlaylist, activeTab: ManagerTab): string {
   return `/admin/playlist-manager/${playlist.id}/edit`;
 }
 
-function useInitialTab(): ManagerTab {
-  const searchParams = useSearchParams();
-  const tab = searchParams.get("tab");
-  return tab === "discover" ? "discover" : "playlists";
-}
-
 export default function PlaylistManagerPage() {
-  const initialTab = useInitialTab();
-  const [activeTab, setActiveTab] = useState<ManagerTab>(initialTab);
+  const [activeTab, setActiveTab] = useState<ManagerTab>("playlists");
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [groups, setGroups] = useState<CuratedPlaylistGroup[]>([]);
   const [loading, setLoading] = useState(true);
@@ -188,6 +180,14 @@ export default function PlaylistManagerPage() {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
+
+  // Read ?tab=discover from URL on mount — avoids useSearchParams Suspense requirement
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab") === "discover") {
+      setActiveTab("discover");
+    }
+  }, []);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
