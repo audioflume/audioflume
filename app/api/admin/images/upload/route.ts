@@ -5,9 +5,6 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 export const runtime = "nodejs";
 
-// Separate bucket for images — set CLOUDFLARE_R2_IMAGES_BUCKET_NAME and
-// CLOUDFLARE_R2_IMAGES_PUBLIC_URL in .env.local. Falls back to the main
-// music bucket if not set (backwards compatible).
 const BUCKET =
   process.env.CLOUDFLARE_R2_IMAGES_BUCKET_NAME ||
   process.env.CLOUDFLARE_R2_BUCKET_NAME!;
@@ -66,6 +63,8 @@ export async function POST(req: Request) {
     const baseFolder = target === "playlist" ? "images/playlists" : "images/discover";
     const key = `${baseFolder}/${safeSlug}/${variant}-${Date.now()}.webp`;
 
+    console.log(`[image-upload] bucket="${BUCKET}" key="${key}" public_url="${PUBLIC_URL}"`);
+
     const sharp = (await import("sharp")).default;
     const arrayBuffer = await file.arrayBuffer();
     const inputBuffer = Buffer.from(arrayBuffer);
@@ -77,7 +76,7 @@ export async function POST(req: Request) {
       .webp({ quality: 82 })
       .toBuffer();
 
-    await r2Client.send(
+    const r2Response = await r2Client.send(
       new PutObjectCommand({
         Bucket: BUCKET,
         Key: key,
@@ -87,7 +86,10 @@ export async function POST(req: Request) {
       }),
     );
 
+    console.log(`[image-upload] R2 response httpStatusCode=${r2Response.$metadata.httpStatusCode}`);
+
     const imageUrl = `${PUBLIC_URL}/${key}`;
+    console.log(`[image-upload] success url="${imageUrl}"`);
     return NextResponse.json({ imageUrl, imageKey: key });
   } catch (err) {
     console.error("Image upload failed:", err);
