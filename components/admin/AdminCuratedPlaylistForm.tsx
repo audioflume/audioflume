@@ -57,6 +57,11 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         if (!playlistRes.ok) throw new Error("Failed to load playlist");
         if (!songsRes.ok) throw new Error("Failed to load playlist songs");
 
+        if (playlistData.discover_section) {
+          router.replace(`/admin/playlist-manager/discover/${playlistId}/edit`);
+          return;
+        }
+
         if (!cancelled) {
           setName(playlistData.name);
           setKicker(playlistData.kicker);
@@ -81,7 +86,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [mode, playlistId]);
+  }, [mode, playlistId, router]);
 
   useEffect(() => {
     if (!toastMessage) return;
