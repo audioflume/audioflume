@@ -11,15 +11,17 @@ export default function EditPlaylistPage() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AdminSidebar />
-      <div className="px-5 py-6 md:px-8 lg:px-10">
-        <div className="mb-6">
-          <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">
-            Playlist Manager
-          </div>
-          <h1 className="mt-2 font-[family-name:var(--font-instrument-sans)] text-[clamp(34px,5vw,58px)] font-medium leading-none tracking-[-0.07em]">
+      <div className="flex items-end justify-between gap-4 px-8 pt-14 pb-8">
+        <div>
+          <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
             Edit Playlist
           </h1>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
+            Update metadata, cover image, group, or song list.
+          </p>
         </div>
+      </div>
+      <div className="px-8 pb-8">
         <AdminCuratedPlaylistForm mode="edit" playlistId={playlistId} />
       </div>
     </main>

@@ -14,11 +14,11 @@ import {
 } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
-import { DEFAULT_DISCOVER_BUTTON_TEXT, type CuratedPlaylist } from "@/lib/curatedPlaylists";
-import MusicIcon from "@/components/icons/MusicIcon";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
+import MusicIcon from "@/components/icons/MusicIcon";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import Footer from "@/components/Footer";
 import { usePlayer } from "@/context/PlayerContext";
@@ -27,95 +27,6 @@ import type { Song } from "@/lib/types";
 
 const COMPACT_SONG_COUNT = 9;
 const FAST_SCAN_SONG_COUNT = 24;
-const DISCOVER_BUTTON_FALLBACK_TEXT = "Explore this mood";
-
-type DiscoveryScene = {
-  title: string;
-  kicker: string;
-  description: string;
-  href: string;
-  image: string;
-  layout: "hero" | "wide" | "small";
-  ctaEnabled?: boolean;
-  ctaText?: string;
-};
-
-type ProductionStyle = {
-  title: string;
-  kicker: string;
-  description: string;
-  href: string;
-  image: string;
-};
-
-function playlistToDiscoveryScene(
-  playlist: CuratedPlaylist,
-  layout: DiscoveryScene["layout"],
-): DiscoveryScene {
-  return {
-    title: playlist.name,
-    kicker: playlist.kicker,
-    description:
-      playlist.description ||
-      `${playlist.song_count || 0} tracks selected for this Discover block.`,
-    href: `/curated-playlists/${playlist.id}`,
-    image: playlist.cover_image_url || "",
-    layout,
-  };
-}
-
-function playlistToProductionStyle(playlist: CuratedPlaylist): ProductionStyle {
-  return {
-    title: playlist.name,
-    kicker: playlist.kicker,
-    description:
-      playlist.description ||
-      `${playlist.song_count || 0} tracks selected for this production style.`,
-    href: `/curated-playlists/${playlist.id}`,
-    image: playlist.cover_image_url || "",
-  };
-}
-
-const discoveryScenes: DiscoveryScene[] = [
-  {
-    title: "Quiet documentary beds",
-    kicker: "Human / Minimal / Warm",
-    description:
-      "Soft movement, subtle pulse, and grounded tracks for voice-led edits.",
-    href: "/music?genre=Documentary",
-    image:
-      "https://images.unsplash.com/photo-1704564552264-ca74a6e46fbc?q=80&w=2751&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    layout: "hero",
-  },
-  {
-    title: "After-dark tension",
-    kicker: "Dark / cinematic",
-    description: "Slow pressure, negative space, low rhythm, and moody builds.",
-    href: "/music?mood=Dark",
-    image:
-      "https://images.unsplash.com/photo-1654206399380-87b22188e01b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    layout: "wide",
-  },
-  {
-    title: "Travel light",
-    kicker: "Organic / open",
-    description: "Airy guitars, soft percussion, and moving landscape cues.",
-    href: "/music?genre=Travel",
-    image:
-      "https://images.unsplash.com/photo-1732294650830-93cfc322aa62?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    layout: "small",
-  },
-  {
-    title: "Brand motion",
-    kicker: "Clean / modern",
-    description:
-      "Polished, confident, and energetic tracks for commercial cuts.",
-    href: "/music?genre=Commercial",
-    image:
-      "https://images.unsplash.com/photo-1777996625750-b934896792b9?q=80&w=1069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    layout: "small",
-  },
-];
 
 const searchPrompts = [
   "Cinematic",
@@ -126,137 +37,10 @@ const searchPrompts = [
   "Dark",
 ];
 
-const productionStyles: ProductionStyle[] = [
-  {
-    title: "Slow travel films",
-    kicker: "Open / atmospheric",
-    description: "Movement, landscapes, soft rhythm, and warm horizon energy.",
-    href: "/music?genre=Travel",
-    image:
-      "https://images.unsplash.com/photo-1668620858961-7f87a791a520?q=80&w=3185&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Intimate interviews",
-    kicker: "Subtle / emotional",
-    description: "Minimal beds that leave space for voice, story, and silence.",
-    href: "/music?genre=Documentary",
-    image:
-      "https://images.unsplash.com/photo-1565288971009-a6db8844c687?q=80&w=1626&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Premium brand edits",
-    kicker: "Polished / modern",
-    description: "Clean pulse, confident builds, and refined commercial tone.",
-    href: "/music?genre=Commercial",
-    image:
-      "https://images.unsplash.com/photo-1678585056636-323de5098c58?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Feel good moments",
-    kicker: "Warm / uplifting",
-    description:
-      "Bright rhythm, easy movement, and optimistic cues for lighthearted edits.",
-    href: "/music?mood=Feel%20Good",
-    image:
-      "https://images.unsplash.com/photo-1761926872117-f3112e63c940?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
-
-const fallbackCuratedPlaylists: CuratedPlaylist[] = [
-  {
-    id: 1,
-    name: "Docu beds",
-    kicker: "Human stories",
-    song_count: 18,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Documentary",
-    position: 0,
-    description:
-      "Soft movement, subtle pulse, and grounded tracks for voice-led edits.",
-    discover_section: null,
-    show_on_discover: true,
-    discover_position: 0,
-  },
-  {
-    id: 2,
-    name: "Brand polish",
-    kicker: "Commercial cuts",
-    song_count: 24,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Commercial",
-    position: 1,
-    description:
-      "Polished, confident, and energetic tracks for commercial cuts.",
-    discover_section: null,
-    show_on_discover: true,
-    discover_position: 1,
-  },
-  {
-    id: 3,
-    name: "After hours",
-    kicker: "Dark tension",
-    song_count: 15,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Tension",
-    position: 2,
-    description: "Slow pressure, negative space, low rhythm, and moody builds.",
-    discover_section: null,
-    show_on_discover: true,
-    discover_position: 2,
-  },
-  {
-    id: 4,
-    name: "Open roads",
-    kicker: "Travel motion",
-    song_count: 21,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Travel",
-    position: 3,
-    description: "Airy guitars, soft percussion, and moving landscape cues.",
-    discover_section: null,
-    show_on_discover: true,
-    discover_position: 3,
-  },
-  {
-    id: 5,
-    name: "Soft focus",
-    kicker: "Ambient texture",
-    song_count: 12,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Ambient",
-    position: 4,
-    description: "Ambient texture and soft-focus cue options.",
-    discover_section: null,
-    show_on_discover: true,
-    discover_position: 4,
-  },
-  {
-    id: 6,
-    name: "First pass",
-    kicker: "Fast selects",
-    song_count: 30,
-    cover_image_url:
-      "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=900&q=80",
-    playlist_group: "Editor Picks",
-    position: 5,
-    description: "Fast selects for finding a first pass quickly.",
-    discover_section: null,
-    show_on_discover: true,
-    discover_position: 5,
-  },
-];
-
 function formatDuration(seconds: number) {
   if (!seconds || !Number.isFinite(seconds)) return "0:00";
-
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.floor(seconds % 60);
-
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
@@ -268,7 +52,6 @@ function getFallbackGradient(index: number) {
     "linear-gradient(135deg, #25364f 0%, #111111 52%, #6287c4 100%)",
     "linear-gradient(135deg, #45233d 0%, #111111 52%, #b75d91 100%)",
   ];
-
   return gradients[index % gradients.length];
 }
 
@@ -278,29 +61,21 @@ function sortSongsForVisuals(songs: Song[]) {
     .sort((a, b) => {
       const aScore = (a.coverArt ? 2 : 0) + a.genres.length + a.moods.length;
       const bScore = (b.coverArt ? 2 : 0) + b.genres.length + b.moods.length;
-
       if (bScore !== aScore) return bScore - aScore;
-
       return a.title.localeCompare(b.title);
     });
 }
 
 function getFastScanSongs(playableSongs: Song[]) {
   if (playableSongs.length === 0) return [];
-
   const nextBatch = playableSongs.slice(
     COMPACT_SONG_COUNT,
     COMPACT_SONG_COUNT + FAST_SCAN_SONG_COUNT,
   );
-
-  if (nextBatch.length >= FAST_SCAN_SONG_COUNT) {
-    return nextBatch;
-  }
-
+  if (nextBatch.length >= FAST_SCAN_SONG_COUNT) return nextBatch;
   const fallbackBatch = playableSongs
     .filter((song) => !nextBatch.some((nextSong) => nextSong.id === song.id))
     .slice(0, FAST_SCAN_SONG_COUNT - nextBatch.length);
-
   return [...nextBatch, ...fallbackBatch].slice(0, FAST_SCAN_SONG_COUNT);
 }
 
@@ -328,9 +103,7 @@ function CoverImage({
   return (
     <div
       className={`relative overflow-hidden bg-[var(--bg-tertiary)] ${className}`}
-      style={{
-        background: song.coverArt ? undefined : getFallbackGradient(index),
-      }}
+      style={{ background: song.coverArt ? undefined : getFallbackGradient(index) }}
     >
       {song.coverArt ? (
         <Image
@@ -346,19 +119,12 @@ function CoverImage({
           <WaveformIcon size={34} />
         </div>
       )}
-
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
     </div>
   );
 }
 
-function PlayButton({
-  song,
-  size = "small",
-}: {
-  song: Song;
-  size?: "large" | "small";
-}) {
+function PlayButton({ song, size = "small" }: { song: Song; size?: "large" | "small" }) {
   const { currentSong, isPlaying, togglePlayPause } = usePlayer();
   const active = currentSong?.id === song.id;
   const playing = active && isPlaying;
@@ -368,14 +134,10 @@ function PlayButton({
     size === "large"
       ? "shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
       : "shadow-[0_8px_24px_rgba(0,0,0,0.22)]";
-
   return (
     <button
       type="button"
-      onClick={(event) => {
-        stopPlaybackMouseEvent(event);
-        togglePlayPause(song);
-      }}
+      onClick={(event) => { stopPlaybackMouseEvent(event); togglePlayPause(song); }}
       onKeyDown={(event) => {
         if (event.key !== "Enter" && event.key !== " ") return;
         stopPlaybackKeyEvent(event);
@@ -389,65 +151,34 @@ function PlayButton({
       disabled={!song.audioUrl}
       aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
     >
-      {playing ? (
-        <PauseIcon size={iconSize} />
-      ) : (
-        <PlayIconSmall size={iconSize} />
-      )}
+      {playing ? <PauseIcon size={iconSize} /> : <PlayIconSmall size={iconSize} />}
     </button>
   );
 }
 
 function usePlayableCard(song: Song) {
   const { togglePlayPause } = usePlayer();
-
   function playCard() {
     if (!song.audioUrl) return;
     togglePlayPause(song);
   }
-
-  function handleClick(event: MouseEvent<HTMLElement>) {
-    stopPlaybackMouseEvent(event);
-    playCard();
-  }
-
-  function handleKeyDown(event: KeyboardEvent<HTMLElement>) {
-    if (event.key !== "Enter" && event.key !== " ") return;
-
-    stopPlaybackKeyEvent(event);
-
-    if (!event.repeat) {
-      playCard();
-    }
-  }
-
-  function handleKeyUp(event: KeyboardEvent<HTMLElement>) {
-    if (event.key !== "Enter" && event.key !== " ") return;
-
-    stopPlaybackKeyEvent(event);
-  }
-
   return {
     role: "button",
     tabIndex: song.audioUrl ? 0 : -1,
-    onClick: handleClick,
-    onKeyDown: handleKeyDown,
-    onKeyUp: handleKeyUp,
+    onClick: (event: MouseEvent<HTMLElement>) => { stopPlaybackMouseEvent(event); playCard(); },
+    onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      stopPlaybackKeyEvent(event);
+      if (!event.repeat) playCard();
+    },
+    onKeyUp: (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      stopPlaybackKeyEvent(event);
+    },
   };
 }
 
-function DiscoveryImage({ scene }: { scene: DiscoveryScene }) {
-  return (
-    <Image
-      src={scene.image}
-      alt={scene.title}
-      fill
-      sizes="(min-width: 1280px) 50vw, (min-width: 768px) 50vw, 100vw"
-      className="object-cover transition duration-700 group-hover:scale-[1.04]"
-      priority={scene.layout === "hero"}
-    />
-  );
-}
+// ─── Search bar ─────────────────────────────────────────────────────────────────
 
 function FullWidthSearchBar() {
   const router = useRouter();
@@ -456,14 +187,8 @@ function FullWidthSearchBar() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     const cleanSearch = search.trim();
-
-    if (!cleanSearch) {
-      router.push("/music");
-      return;
-    }
-
+    if (!cleanSearch) { router.push("/music"); return; }
     router.push(`/music?search=${encodeURIComponent(cleanSearch)}`);
   }
 
@@ -481,7 +206,6 @@ function FullWidthSearchBar() {
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-focus-within:text-[var(--text-primary)]">
           <SearchIcon size={15} />
         </div>
-
         <input
           ref={searchInputRef}
           type="text"
@@ -490,23 +214,18 @@ function FullWidthSearchBar() {
           placeholder="Search by scene, mood, artist, genre, instrument, or title..."
           className="h-full min-w-0 flex-1 bg-transparent text-sm font-light text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
         />
-
         <div className="hidden items-center gap-1.5 lg:flex">
           {searchPrompts.slice(0, 4).map((prompt) => (
             <button
               key={prompt}
               type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                searchPrompt(prompt);
-              }}
+              onClick={(event) => { event.stopPropagation(); searchPrompt(prompt); }}
               className="h-7 cursor-pointer rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
             >
               {prompt}
             </button>
           ))}
         </div>
-
         <button
           type="submit"
           onClick={(event) => event.stopPropagation()}
@@ -515,7 +234,6 @@ function FullWidthSearchBar() {
           Search
         </button>
       </form>
-
       <div className="mt-3 flex flex-wrap gap-2 lg:hidden">
         {searchPrompts.map((prompt) => (
           <button
@@ -532,33 +250,41 @@ function FullWidthSearchBar() {
   );
 }
 
-function DiscoveryHeroCard({ scene }: { scene: DiscoveryScene }) {
+// ─── Discovery block cards ───────────────────────────────────────────────────
+
+function DiscoveryHeroCard({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <Link
-      href={scene.href}
+      href={`/curated-playlists/${playlist.id}`}
       className="group relative min-h-[420px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]"
     >
-      <DiscoveryImage scene={scene} />
-
+      {playlist.cover_image_url && (
+        <Image
+          src={playlist.cover_image_url}
+          alt={playlist.name}
+          fill
+          sizes="(min-width: 1280px) 50vw, 100vw"
+          className="object-cover transition duration-700 group-hover:scale-[1.04]"
+          priority
+        />
+      )}
       <div className="absolute inset-0 bg-black/35" />
-
       <div className="relative z-10 flex min-h-[420px] flex-col justify-between p-6 md:p-8">
         <div className="inline-flex w-fit rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium text-white/76 backdrop-blur">
-          {scene.kicker}
+          {playlist.kicker}
         </div>
-
         <div className="max-w-[520px]">
           <h1 className="font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
-            {scene.title}
+            {playlist.name}
           </h1>
-
-          <p className="mt-4 max-w-[420px] text-sm leading-6 text-white/72">
-            {scene.description}
-          </p>
-
-          {scene.ctaEnabled !== false && (
+          {playlist.description && (
+            <p className="mt-4 max-w-[420px] text-sm leading-6 text-white/72">
+              {playlist.description}
+            </p>
+          )}
+          {playlist.discover_button_enabled && (
             <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
-              {scene.ctaText || "Explore this mood"}
+              {playlist.discover_button_text || "Explore this mood"}
               <ArrowUpRightIcon />
             </div>
           )}
@@ -568,35 +294,34 @@ function DiscoveryHeroCard({ scene }: { scene: DiscoveryScene }) {
   );
 }
 
-function DiscoverySideCard({ scene }: { scene: DiscoveryScene }) {
+function DiscoverySideCard({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <Link
-      href={scene.href}
+      href={`/curated-playlists/${playlist.id}`}
       className="group relative min-h-[204px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]"
     >
-      <DiscoveryImage scene={scene} />
-
+      {playlist.cover_image_url && (
+        <Image
+          src={playlist.cover_image_url}
+          alt={playlist.name}
+          fill
+          sizes="(min-width: 1280px) 30vw, 100vw"
+          className="object-cover transition duration-700 group-hover:scale-[1.04]"
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/46 to-black/10" />
-
       <div className="relative z-10 flex min-h-[204px] flex-col justify-between p-5">
         <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/58">
-          {scene.kicker}
+          {playlist.kicker}
         </div>
-
         <div>
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-[30px] font-medium leading-[0.92] tracking-[-0.055em] text-white">
-            {scene.title}
+            {playlist.name}
           </h2>
-
-          <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
-            {scene.description}
-          </p>
-
-          {scene.ctaEnabled !== false && (
-            <div className="mt-4 inline-flex h-9 w-fit items-center gap-2 rounded-full bg-white px-3 text-xs font-medium text-black transition group-hover:scale-[1.02]">
-              {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
-              <ArrowUpRightIcon />
-            </div>
+          {playlist.description && (
+            <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
+              {playlist.description}
+            </p>
           )}
         </div>
       </div>
@@ -604,40 +329,72 @@ function DiscoverySideCard({ scene }: { scene: DiscoveryScene }) {
   );
 }
 
-function DiscoveryMiniCard({ scene }: { scene: DiscoveryScene }) {
+function DiscoveryMiniCard({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <Link
-      href={scene.href}
+      href={`/curated-playlists/${playlist.id}`}
       className="group relative min-h-[188px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]"
     >
-      <DiscoveryImage scene={scene} />
-
+      {playlist.cover_image_url && (
+        <Image
+          src={playlist.cover_image_url}
+          alt={playlist.name}
+          fill
+          sizes="(min-width: 1280px) 20vw, 50vw"
+          className="object-cover transition duration-700 group-hover:scale-[1.04]"
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/22 to-black/8" />
-
       <div className="relative z-10 flex min-h-[188px] flex-col justify-end p-4">
         <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/58">
-          {scene.kicker}
+          {playlist.kicker}
         </div>
-
         <h3 className="mt-1 font-[family-name:var(--font-instrument-sans)] text-[24px] font-medium leading-none tracking-[-0.05em] text-white">
-          {scene.title}
+          {playlist.name}
         </h3>
-
-        {scene.ctaEnabled !== false && (
-          <div className="mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full bg-white px-3 text-[11px] font-medium text-black transition group-hover:scale-[1.02]">
-            {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
-            <ArrowUpRightIcon />
-          </div>
-        )}
       </div>
     </Link>
   );
 }
 
-function VisualDiscoverySection({ scenes }: { scenes: DiscoveryScene[] }) {
-  const heroScene = scenes[0];
-  const sideScene = scenes[1];
-  const miniScenes = scenes.slice(2);
+// ─── Visual discovery section ──────────────────────────────────────────────
+
+function VisualDiscoverySkeleton() {
+  return (
+    <section>
+      <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
+        <div>
+          <div className="mb-3 h-3 w-32 animate-pulse rounded bg-[var(--bg-secondary)]" />
+          <div className="h-20 w-[80%] animate-pulse rounded-xl bg-[var(--bg-secondary)]" />
+        </div>
+        <div className="h-14 animate-pulse rounded-xl bg-[var(--bg-secondary)] xl:justify-self-end xl:w-[80%]" />
+      </div>
+      <div className="h-[58px] animate-pulse rounded-full bg-[var(--bg-secondary)]" />
+      <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
+        <div className="min-h-[420px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
+        <div className="grid gap-4">
+          <div className="min-h-[204px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="min-h-[188px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
+            <div className="min-h-[188px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function VisualDiscoverySection({
+  blocks,
+  loading,
+}: {
+  blocks: CuratedPlaylist[];
+  loading: boolean;
+}) {
+  if (loading) return <VisualDiscoverySkeleton />;
+  if (blocks.length === 0) return null;
+
+  const [hero, side, ...minis] = blocks;
 
   return (
     <section>
@@ -647,12 +404,10 @@ function VisualDiscoverySection({ scenes }: { scenes: DiscoveryScene[] }) {
             <MusicIcon size={13} />
             Discover by scene
           </div>
-
           <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,78px)] font-medium leading-[0.9] tracking-[-0.07em]">
             Start with the feeling, then find the track.
           </h1>
         </div>
-
         <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">
           Move through the library like a visual treatment — documentary warmth,
           after-dark tension, open travel cues, and polished brand motion.
@@ -662,73 +417,90 @@ function VisualDiscoverySection({ scenes }: { scenes: DiscoveryScene[] }) {
       <FullWidthSearchBar />
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
-        {heroScene && <DiscoveryHeroCard scene={heroScene} />}
-
-        {(sideScene || miniScenes.length > 0) && (
-          <div className="grid gap-4">
-            {sideScene && <DiscoverySideCard scene={sideScene} />}
-
-            {miniScenes.length > 0 && (
-              <div className="grid gap-4 sm:grid-cols-2">
-                {miniScenes.map((scene) => (
-                  <DiscoveryMiniCard key={scene.title} scene={scene} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {hero && <DiscoveryHeroCard playlist={hero} />}
+        <div className="grid gap-4">
+          {side && <DiscoverySideCard playlist={side} />}
+          {minis.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {minis.slice(0, 2).map((playlist) => (
+                <DiscoveryMiniCard key={playlist.id} playlist={playlist} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
 }
 
-function ProductionStyleCard({ style }: { style: ProductionStyle }) {
+// ─── Production style section ───────────────────────────────────────────────
+
+function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <Link
-      href={style.href}
+      href={`/curated-playlists/${playlist.id}`}
       className="group relative min-h-[245px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] transition hover:border-[var(--text-muted)]"
     >
-      {style.image ? (
+      {playlist.cover_image_url && (
         <Image
-          src={style.image}
-          alt={style.title}
+          src={playlist.cover_image_url}
+          alt={playlist.name}
           fill
           sizes="(min-width: 1280px) 25vw, 100vw"
           className="object-cover transition duration-700 group-hover:scale-[1.04]"
-          unoptimized
         />
-      ) : (
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,#25364f_0%,#111111_52%,#6287c4_100%)]" />
       )}
-
       <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/36 to-black/8" />
-
       <div className="relative z-10 flex min-h-[245px] flex-col justify-between p-4">
         <div className="flex items-center justify-between gap-3">
           <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/58">
-            {style.kicker}
+            {playlist.kicker}
           </div>
-
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black">
             <ArrowUpRightIcon />
           </div>
         </div>
-
         <div>
           <h3 className="font-[family-name:var(--font-instrument-sans)] text-[28px] font-medium leading-[0.95] tracking-[-0.055em] text-white">
-            {style.title}
+            {playlist.name}
           </h3>
-
-          <p className="mt-3 max-w-[320px] text-xs leading-5 text-white/68">
-            {style.description}
-          </p>
+          {playlist.description && (
+            <p className="mt-3 max-w-[320px] text-xs leading-5 text-white/68">
+              {playlist.description}
+            </p>
+          )}
         </div>
       </div>
     </Link>
   );
 }
 
-function ProductionStylesSection({ styles }: { styles: ProductionStyle[] }) {
+function ProductionStylesSkeleton() {
+  return (
+    <section className="mt-12">
+      <div className="mb-4">
+        <div className="h-5 w-52 animate-pulse rounded bg-[var(--bg-secondary)]" />
+        <div className="mt-1.5 h-3 w-72 animate-pulse rounded bg-[var(--bg-secondary)]" />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="min-h-[245px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProductionStylesSection({
+  blocks,
+  loading,
+}: {
+  blocks: CuratedPlaylist[];
+  loading: boolean;
+}) {
+  if (loading) return <ProductionStylesSkeleton />;
+  if (blocks.length === 0) return null;
+
   return (
     <section className="mt-12">
       <div className="mb-4 flex items-end justify-between gap-4">
@@ -736,12 +508,10 @@ function ProductionStylesSection({ styles }: { styles: ProductionStyle[] }) {
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
             Browse by production style
           </h2>
-
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
             Visual entry points for common edits, pacing, and film tone.
           </p>
         </div>
-
         <Link
           href="/music"
           className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
@@ -749,10 +519,32 @@ function ProductionStylesSection({ styles }: { styles: ProductionStyle[] }) {
           View library
         </Link>
       </div>
-
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {styles.map((style) => (
-          <ProductionStyleCard key={style.title} style={style} />
+        {blocks.map((playlist) => (
+          <ProductionStyleCard key={playlist.id} playlist={playlist} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Curated playlists section ───────────────────────────────────────────────
+
+function CuratedPlaylistsSkeleton() {
+  return (
+    <section className="mt-10">
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <div>
+          <div className="h-5 w-40 animate-pulse rounded bg-[var(--bg-secondary)]" />
+          <div className="mt-1.5 h-3 w-64 animate-pulse rounded bg-[var(--bg-secondary)]" />
+        </div>
+      </div>
+      <div className="flex gap-3 overflow-hidden">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div
+            key={i}
+            className="min-h-[210px] w-[200px] shrink-0 animate-pulse rounded-[18px] bg-[var(--bg-secondary)]"
+          />
         ))}
       </div>
     </section>
@@ -761,9 +553,14 @@ function ProductionStylesSection({ styles }: { styles: ProductionStyle[] }) {
 
 function CuratedPlaylistsSection({
   playlists,
+  loading,
 }: {
   playlists: CuratedPlaylist[];
+  loading: boolean;
 }) {
+  if (loading) return <CuratedPlaylistsSkeleton />;
+  if (playlists.length === 0) return null;
+
   return (
     <CuratedPlaylistShelf
       title="Curated playlists"
@@ -774,26 +571,19 @@ function CuratedPlaylistsSection({
   );
 }
 
+// ─── Song sections (unchanged) ──────────────────────────────────────────────
+
 function CompactSongCard({ song, index }: { song: Song; index: number }) {
   const cardPlayProps = usePlayableCard(song);
-
   return (
     <article
       {...cardPlayProps}
       className="group flex h-[54px] cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-2 transition hover:bg-[var(--bg-hover)] focus:outline-none focus-visible:border-[var(--text-muted)]"
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
-      <CoverImage
-        song={song}
-        index={index}
-        className="h-9 w-9 shrink-0 rounded-md"
-      />
-
+      <CoverImage song={song} index={index} className="h-9 w-9 shrink-0 rounded-md" />
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
-          {song.title}
-        </h3>
-
+        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">{song.title}</h3>
         <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
           <span className="truncate">{song.artist}</span>
           <span>•</span>
@@ -802,7 +592,6 @@ function CompactSongCard({ song, index }: { song: Song; index: number }) {
           <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
         </div>
       </div>
-
       <PlayButton song={song} size="small" />
     </article>
   );
@@ -812,7 +601,6 @@ function FastScanPlayIcon({ song }: { song: Song }) {
   const { currentSong, isPlaying } = usePlayer();
   const active = currentSong?.id === song.id;
   const playing = active && isPlaying;
-
   return (
     <span
       className={`flex h-5 w-5 items-center justify-center rounded-full transition ${
@@ -831,7 +619,6 @@ function FastScanSongCard({ song, index }: { song: Song; index: number }) {
   const cardPlayProps = usePlayableCard(song);
   const number = String(index + 1).padStart(2, "0");
   const active = currentSong?.id === song.id;
-
   return (
     <article
       {...cardPlayProps}
@@ -840,35 +627,17 @@ function FastScanSongCard({ song, index }: { song: Song; index: number }) {
       }`}
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
-      <span className="text-[9px] font-medium tabular-nums text-[var(--text-muted)] transition group-hover:text-[var(--text-secondary)]">
-        {number}
-      </span>
-
+      <span className="text-[9px] font-medium tabular-nums text-[var(--text-muted)] transition group-hover:text-[var(--text-secondary)]">{number}</span>
       <div className="min-w-0">
         <div className="flex min-w-0 items-center gap-2">
-          <h3 className="truncate text-[12px] font-medium leading-none text-[var(--text-primary)]">
-            {song.title}
-          </h3>
-
-          <span className="hidden shrink-0 text-[9px] text-[var(--text-muted)] sm:inline">
-            {song.key || "—"}
-          </span>
+          <h3 className="truncate text-[12px] font-medium leading-none text-[var(--text-primary)]">{song.title}</h3>
+          <span className="hidden shrink-0 text-[9px] text-[var(--text-muted)] sm:inline">{song.key || "—"}</span>
         </div>
-
-        <div className="mt-1 truncate text-[9px] leading-none text-[var(--text-muted)]">
-          {song.artist}
-        </div>
+        <div className="mt-1 truncate text-[9px] leading-none text-[var(--text-muted)]">{song.artist}</div>
       </div>
-
       <div className="flex items-center gap-2">
-        <span className="hidden text-[9px] tabular-nums text-[var(--text-muted)] sm:inline">
-          {song.bpm ? `${song.bpm}` : "—"}
-        </span>
-
-        <span className="text-[9px] tabular-nums text-[var(--text-muted)]">
-          {formatDuration(song.duration)}
-        </span>
-
+        <span className="hidden text-[9px] tabular-nums text-[var(--text-muted)] sm:inline">{song.bpm ? `${song.bpm}` : "—"}</span>
+        <span className="text-[9px] tabular-nums text-[var(--text-muted)]">{formatDuration(song.duration)}</span>
         <FastScanPlayIcon song={song} />
       </div>
     </article>
@@ -877,33 +646,17 @@ function FastScanSongCard({ song, index }: { song: Song; index: number }) {
 
 function CompactSongsSection({ songs }: { songs: Song[] }) {
   if (songs.length === 0) return null;
-
   return (
     <section className="mt-10">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
-            Ready-to-cut tracks
-          </h2>
-
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Quick options for pacing out a scene, testing a tone, or finding a
-            first pass.
-          </p>
+          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Ready-to-cut tracks</h2>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">Quick options for pacing out a scene, testing a tone, or finding a first pass.</p>
         </div>
-
-        <Link
-          href="/music"
-          className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
-        >
-          Open music
-        </Link>
+        <Link href="/music" className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block">Open music</Link>
       </div>
-
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {songs.map((song, index) => (
-          <CompactSongCard key={song.id} song={song} index={index + 30} />
-        ))}
+        {songs.map((song, index) => <CompactSongCard key={song.id} song={song} index={index + 30} />)}
       </div>
     </section>
   );
@@ -911,122 +664,84 @@ function CompactSongsSection({ songs }: { songs: Song[] }) {
 
 function FastScanSection({ songs }: { songs: Song[] }) {
   if (songs.length === 0) return null;
-
   return (
     <section className="mt-12">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
-            Fast scan selects
-          </h2>
-
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            A denser list for quick auditioning when you already know the lane.
-          </p>
+          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Fast scan selects</h2>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">A denser list for quick auditioning when you already know the lane.</p>
         </div>
-
-        <Link
-          href="/music"
-          className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
-        >
-          Browse all
-        </Link>
+        <Link href="/music" className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block">Browse all</Link>
       </div>
-
       <div className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-2">
         <div className="grid gap-x-2 gap-y-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {songs.map((song, index) => (
-            <FastScanSongCard
-              key={`${song.id}-${index}`}
-              song={song}
-              index={index}
-            />
-          ))}
+          {songs.map((song, index) => <FastScanSongCard key={`${song.id}-${index}`} song={song} index={index} />)}
         </div>
       </div>
     </section>
   );
 }
 
-function LoadingCard() {
+function SongsSkeleton() {
   return (
-    <div className="min-h-[420px] animate-pulse rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]" />
+    <section className="mt-10">
+      <div className="mb-4">
+        <div className="h-5 w-40 animate-pulse rounded bg-[var(--bg-secondary)]" />
+        <div className="mt-1.5 h-3 w-72 animate-pulse rounded bg-[var(--bg-secondary)]" />
+      </div>
+      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <div key={i} className="h-[54px] animate-pulse rounded-lg bg-[var(--bg-secondary)]" />
+        ))}
+      </div>
+    </section>
   );
 }
 
+// ─── Page ────────────────────────────────────────────────────────────────────
+
 export default function DashboardPage() {
-  const { songs, loading, error } = useSongs();
+  const { songs, loading: songsLoading } = useSongs();
   const { currentSong, setQueue } = usePlayer();
-  const [discoverPlaylists, setDiscoverPlaylists] = useState<CuratedPlaylist[]>(
-    [],
-  );
 
-  const playableSongs = useMemo(() => sortSongsForVisuals(songs), [songs]);
-
-  const compactSongs = playableSongs.slice(0, COMPACT_SONG_COUNT);
-  const fastScanSongs = getFastScanSongs(playableSongs);
-
-  const playerVisible = !!currentSong;
-
-  const dynamicScenes = useMemo(() => {
-    const layouts: DiscoveryScene["layout"][] = [
-      "hero",
-      "wide",
-      "small",
-      "small",
-    ];
-    return discoveryScenes.map((fallback, index) => {
-      const section = `discover_block_${index + 1}`;
-      const playlist = discoverPlaylists.find(
-        (item) => item.discover_section === section,
-      );
-      return playlist
-        ? playlistToDiscoveryScene(playlist, layouts[index])
-        : fallback;
-    });
-  }, [discoverPlaylists]);
-
-  const dynamicProductionStyles = useMemo(
-    () =>
-      productionStyles.map((fallback, index) => {
-        const section = `production_style_${index + 1}`;
-        const playlist = discoverPlaylists.find(
-          (item) => item.discover_section === section,
-        );
-        return playlist ? playlistToProductionStyle(playlist) : fallback;
-      }),
-    [discoverPlaylists],
-  );
-
-  const discoverCuratedPlaylists = useMemo(() => {
-    const selected = discoverPlaylists
-      .filter((playlist) => playlist.show_on_discover)
-      .sort((a, b) => a.discover_position - b.discover_position);
-
-    return selected.length > 0 ? selected : fallbackCuratedPlaylists;
-  }, [discoverPlaylists]);
+  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
+  const [playlistsLoading, setPlaylistsLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
-
-    async function loadDiscoverPlaylists() {
-      try {
-        const res = await fetch("/api/curated-playlists");
-        const data = await res.json();
-
-        if (!res.ok || !Array.isArray(data)) return;
-        if (!cancelled) setDiscoverPlaylists(data);
-      } catch {
-        // Keep the hand-picked fallback content if the API is unavailable.
-      }
-    }
-
-    loadDiscoverPlaylists();
-
-    return () => {
-      cancelled = true;
-    };
+    fetch("/api/curated-playlists")
+      .then((r) => r.json())
+      .then((data) => { if (!cancelled && Array.isArray(data)) setPlaylists(data); })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setPlaylistsLoading(false); });
+    return () => { cancelled = true; };
   }, []);
+
+  const discoverBlocks = useMemo(
+    () =>
+      playlists
+        .filter((p) => p.discover_section?.startsWith("discover_block_"))
+        .sort((a, b) => (a.discover_section ?? "").localeCompare(b.discover_section ?? "")),
+    [playlists],
+  );
+
+  const productionBlocks = useMemo(
+    () =>
+      playlists
+        .filter((p) => p.discover_section?.startsWith("production_style_"))
+        .sort((a, b) => (a.discover_section ?? "").localeCompare(b.discover_section ?? "")),
+    [playlists],
+  );
+
+  const discoverCuratedPlaylists = useMemo(
+    () => playlists.filter((p) => p.show_on_discover && !p.discover_section),
+    [playlists],
+  );
+
+  const playableSongs = useMemo(() => sortSongsForVisuals(songs), [songs]);
+  const compactSongs = playableSongs.slice(0, COMPACT_SONG_COUNT);
+  const fastScanSongs = getFastScanSongs(playableSongs);
+  const playerVisible = !!currentSong;
 
   useEffect(() => {
     setQueue(playableSongs);
@@ -1036,34 +751,26 @@ export default function DashboardPage() {
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
         <div className="px-5 py-6 md:px-8 lg:px-10">
-          {loading && playableSongs.length === 0 ? (
-            <LoadingCard />
-          ) : error ? (
-            <div className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-8 text-[var(--text-secondary)]">
-              Could not load songs right now. Please try the music library again
-              in a moment.
-            </div>
+          <VisualDiscoverySection blocks={discoverBlocks} loading={playlistsLoading} />
+
+          {songsLoading && playableSongs.length === 0 ? (
+            <SongsSkeleton />
           ) : (
-            <>
-              <VisualDiscoverySection scenes={dynamicScenes} />
-              <CompactSongsSection songs={compactSongs} />
-            </>
+            <CompactSongsSection songs={compactSongs} />
           )}
 
-          <ProductionStylesSection styles={dynamicProductionStyles} />
-          <CuratedPlaylistsSection playlists={discoverCuratedPlaylists} />
+          <ProductionStylesSection blocks={productionBlocks} loading={playlistsLoading} />
+
+          <CuratedPlaylistsSection playlists={discoverCuratedPlaylists} loading={playlistsLoading} />
+
           <FastScanSection songs={fastScanSongs} />
 
-          {!loading && (
-            <div
-              className="pt-10"
-              style={{
-                paddingBottom: playerVisible ? "72px" : "8px",
-              }}
-            >
-              <Footer />
-            </div>
-          )}
+          <div
+            className="pt-10"
+            style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
+          >
+            <Footer />
+          </div>
         </div>
       </section>
     </main>
