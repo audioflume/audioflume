@@ -5,17 +5,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
 import TrashIcon from "@/components/icons/TrashIcon";
+import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import type { CuratedPlaylist, CuratedPlaylistSong } from "@/lib/curatedPlaylists";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   DEFAULT_DISCOVER_BUTTON_TEXT,
   DISCOVER_SECTION_OPTIONS,
 } from "@/lib/curatedPlaylists";
-import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-  smallIconButtonClass,
-} from "@/components/uiClasses";
+import { primaryPillButtonClass, secondaryPillButtonClass, smallIconButtonClass } from "@/components/uiClasses";
 
 const DEFAULT_DISCOVER_SECTION = DISCOVER_SECTION_OPTIONS[0].value;
 
@@ -27,9 +24,7 @@ type Props = {
 
 function getSafeDiscoverSection(value: string | null | undefined): string {
   if (!value) return DEFAULT_DISCOVER_SECTION;
-  return DISCOVER_SECTION_OPTIONS.some((option) => option.value === value)
-    ? value
-    : DEFAULT_DISCOVER_SECTION;
+  return DISCOVER_SECTION_OPTIONS.some((o) => o.value === value) ? value : DEFAULT_DISCOVER_SECTION;
 }
 
 export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSection }: Props) {
@@ -38,9 +33,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [description, setDescription] = useState("");
-  const [discoverSection, setDiscoverSection] = useState(
-    getSafeDiscoverSection(initialSection),
-  );
+  const [discoverSection, setDiscoverSection] = useState(getSafeDiscoverSection(initialSection));
   const [buttonEnabled, setButtonEnabled] = useState(true);
   const [buttonText, setButtonText] = useState(DEFAULT_DISCOVER_BUTTON_TEXT);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
@@ -50,9 +43,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
 
   useEffect(() => {
     if (mode !== "edit" || !playlistId) return;
-
     let cancelled = false;
-
     async function loadPlaylist() {
       try {
         setLoading(true);
@@ -62,79 +53,59 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
         ]);
         const playlistData = (await playlistRes.json()) as CuratedPlaylist;
         const songsData = await songsRes.json();
-
         if (!playlistRes.ok) throw new Error("Failed to load Discover block");
         if (!songsRes.ok) throw new Error("Failed to load Discover block songs");
-
         if (!cancelled) {
           setName(playlistData.name);
           setKicker(playlistData.kicker);
           setCoverImageUrl(playlistData.cover_image_url || "");
           setDescription(playlistData.description || "");
           setDiscoverSection(getSafeDiscoverSection(playlistData.discover_section));
-          // Explicit boolean check so unchecked (false) is preserved correctly
           setButtonEnabled(playlistData.discover_button_enabled !== false);
           setButtonText(playlistData.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT);
           setSongs(Array.isArray(songsData) ? songsData : []);
         }
       } catch (err) {
-        if (!cancelled) {
-          setToastMessage(err instanceof Error ? err.message : "Failed to load Discover block");
-        }
+        if (!cancelled) setToastMessage(err instanceof Error ? err.message : "Failed to load Discover block");
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
-
     loadPlaylist();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [mode, playlistId]);
 
   useEffect(() => {
     if (!toastMessage) return;
-    const timeout = window.setTimeout(() => setToastMessage(""), 2400);
-    return () => window.clearTimeout(timeout);
+    const t = window.setTimeout(() => setToastMessage(""), 2400);
+    return () => window.clearTimeout(t);
   }, [toastMessage]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (saving) return;
-
     try {
       setSaving(true);
-      const endpoint =
-        mode === "edit" && playlistId
-          ? `/api/admin/curated-playlists/${playlistId}`
-          : "/api/admin/curated-playlists";
+      const endpoint = mode === "edit" && playlistId
+        ? `/api/admin/curated-playlists/${playlistId}`
+        : "/api/admin/curated-playlists";
       const method = mode === "edit" ? "PATCH" : "POST";
-
       const res = await fetch(endpoint, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          kicker,
-          cover_image_url: coverImageUrl,
+          name, kicker, cover_image_url: coverImageUrl,
           playlist_group: DEFAULT_CURATED_PLAYLIST_GROUP,
-          description,
-          discover_section: discoverSection,
+          description, discover_section: discoverSection,
           show_on_discover: false,
           discover_button_enabled: buttonEnabled,
           discover_button_text: buttonText,
         }),
       });
       const data = await res.json();
-
       if (!res.ok) throw new Error(data?.error || "Failed to save Discover block");
-
       setToastMessage(mode === "edit" ? "Discover block updated" : "Discover block created");
-
-      if (mode === "create") {
-        router.push(`/admin/playlist-manager/discover/${data.id}/edit`);
-      }
+      if (mode === "create") router.push(`/admin/playlist-manager/discover/${data.id}/edit`);
     } catch (err) {
       setToastMessage(err instanceof Error ? err.message : "Failed to save Discover block");
     } finally {
@@ -144,16 +115,10 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
 
   async function removeSong(songId: string) {
     if (!playlistId) return;
-
     try {
-      const res = await fetch(
-        `/api/admin/curated-playlists/${playlistId}/songs/${encodeURIComponent(songId)}`,
-        { method: "DELETE" },
-      );
+      const res = await fetch(`/api/admin/curated-playlists/${playlistId}/songs/${encodeURIComponent(songId)}`, { method: "DELETE" });
       const data = await res.json();
-
       if (!res.ok) throw new Error(data?.error || "Failed to remove song");
-
       setSongs((current) => current.filter((song) => song.id !== songId));
       setToastMessage("Song removed");
     } catch (err) {
@@ -161,17 +126,15 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
     }
   }
 
+  const nameSlug = name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "untitled";
+
   return (
     <>
       <form onSubmit={handleSubmit} className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
         <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-5">
-            <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
-              Discover block details
-            </h2>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Manage the title, copy, artwork, and button used on the Discover page.
-            </p>
+            <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Discover block details</h2>
+            <p className="mt-1 text-sm text-[var(--text-secondary)]">Manage the title, copy, artwork, and button used on the Discover page.</p>
           </div>
 
           {loading ? (
@@ -180,58 +143,26 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
             <div className="grid gap-4">
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
                 Title
-                <input
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Quiet documentary beds"
-                  required
-                />
+                <input value={name} onChange={(e) => setName(e.target.value)} className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]" placeholder="Quiet documentary beds" required />
               </label>
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
                 Kicker text
-                <input
-                  value={kicker}
-                  onChange={(event) => setKicker(event.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Human / Minimal / Warm"
-                />
+                <input value={kicker} onChange={(e) => setKicker(e.target.value)} className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]" placeholder="Human / Minimal / Warm" />
               </label>
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
                 Description text
-                <textarea
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
-                  className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Describe what this Discover block is for."
-                />
-              </label>
-
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Image link
-                <input
-                  value={coverImageUrl}
-                  onChange={(event) => setCoverImageUrl(event.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="https://images.unsplash.com/..."
-                />
+                <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]" placeholder="Describe what this Discover block is for." />
               </label>
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
                 Discover page placement
-                <select
-                  value={discoverSection}
-                  onChange={(event) => setDiscoverSection(event.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                >
-                  {Array.from(new Set(DISCOVER_SECTION_OPTIONS.map((option) => option.category))).map((category) => (
+                <select value={discoverSection} onChange={(e) => setDiscoverSection(e.target.value)} className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]">
+                  {Array.from(new Set(DISCOVER_SECTION_OPTIONS.map((o) => o.category))).map((category) => (
                     <optgroup key={category} label={category}>
-                      {DISCOVER_SECTION_OPTIONS.filter((option) => option.category === category).map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
+                      {DISCOVER_SECTION_OPTIONS.filter((o) => o.category === category).map((o) => (
+                        <option key={o.value} value={o.value}>{o.label}</option>
                       ))}
                     </optgroup>
                   ))}
@@ -239,12 +170,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
               </label>
 
               <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
-                <input
-                  type="checkbox"
-                  checked={buttonEnabled}
-                  onChange={(event) => setButtonEnabled(event.target.checked)}
-                  className="mt-0.5 h-4 w-4 accent-[var(--text-primary)]"
-                />
+                <input type="checkbox" checked={buttonEnabled} onChange={(e) => setButtonEnabled(e.target.checked)} className="mt-0.5 h-4 w-4 accent-[var(--text-primary)]" />
                 <span>
                   <span className="block font-medium text-[var(--text-primary)]">Show white pill button</span>
                   <span className="mt-1 block text-xs text-[var(--text-muted)]">Controls the hero-style CTA button for this Discover block.</span>
@@ -253,24 +179,14 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
                 Button text
-                <input
-                  value={buttonText}
-                  onChange={(event) => setButtonText(event.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)] disabled:opacity-50"
-                  placeholder={DEFAULT_DISCOVER_BUTTON_TEXT}
-                  disabled={!buttonEnabled}
-                />
+                <input value={buttonText} onChange={(e) => setButtonText(e.target.value)} className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)] disabled:opacity-50" placeholder={DEFAULT_DISCOVER_BUTTON_TEXT} disabled={!buttonEnabled} />
               </label>
 
               <div className="flex flex-wrap gap-3 pt-2">
                 <button type="submit" className={primaryPillButtonClass} disabled={saving}>
                   {saving ? "Saving..." : mode === "edit" ? "Save changes" : "Create Discover block"}
                 </button>
-                <button
-                  type="button"
-                  className={secondaryPillButtonClass}
-                  onClick={() => router.push("/admin/playlist-manager?tab=discover")}
-                >
+                <button type="button" className={secondaryPillButtonClass} onClick={() => router.push("/admin/playlist-manager?tab=discover")}>
                   Back to manager
                 </button>
               </div>
@@ -278,33 +194,36 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
           )}
         </section>
 
-        <aside className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-          <h3 className="font-[family-name:var(--font-instrument-sans)] text-xl font-medium tracking-[-0.05em]">
-            Card preview
-          </h3>
+        <aside className="grid gap-6">
+          {/* Image upload */}
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+            <AdminImageUpload
+              currentUrl={coverImageUrl}
+              onUploaded={setCoverImageUrl}
+              target="discover"
+              slug={nameSlug}
+              variant="card"
+            />
+          </div>
 
-          <div className="relative mt-4 min-h-[320px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
-            {coverImageUrl && (
-              <Image src={coverImageUrl} alt={name || "Discover preview"} fill sizes="360px" className="object-cover" unoptimized />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/28 to-black/8" />
-            <div className="relative z-10 flex min-h-[320px] flex-col justify-end p-5 text-white">
-              <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55">
-                {kicker || "Kicker text"}
-              </div>
-              <div className="mt-2 font-[family-name:var(--font-instrument-sans)] text-3xl font-medium leading-none tracking-[-0.055em]">
-                {name || "Discover block title"}
-              </div>
-              {description && (
-                <p className="mt-3 line-clamp-3 text-xs leading-5 text-white/68">
-                  {description}
-                </p>
+          {/* Card preview */}
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+            <h3 className="font-[family-name:var(--font-instrument-sans)] text-xl font-medium tracking-[-0.05em]">Card preview</h3>
+            <div className="relative mt-4 min-h-[320px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
+              {coverImageUrl && (
+                <Image src={coverImageUrl} alt={name || "Discover preview"} fill sizes="360px" className="object-cover" unoptimized />
               )}
-              {buttonEnabled && (
-                <div className="mt-5 inline-flex h-10 w-fit items-center rounded-full bg-white px-4 text-xs font-medium text-black">
-                  {buttonText || DEFAULT_DISCOVER_BUTTON_TEXT}
-                </div>
-              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/28 to-black/8" />
+              <div className="relative z-10 flex min-h-[320px] flex-col justify-end p-5 text-white">
+                <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55">{kicker || "Kicker text"}</div>
+                <div className="mt-2 font-[family-name:var(--font-instrument-sans)] text-3xl font-medium leading-none tracking-[-0.055em]">{name || "Discover block title"}</div>
+                {description && <p className="mt-3 line-clamp-3 text-xs leading-5 text-white/68">{description}</p>}
+                {buttonEnabled && (
+                  <div className="mt-5 inline-flex h-10 w-fit items-center rounded-full bg-white px-4 text-xs font-medium text-black">
+                    {buttonText || DEFAULT_DISCOVER_BUTTON_TEXT}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </aside>
@@ -314,20 +233,13 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
         <section className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
-                Songs
-              </h2>
-              <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                Songs linked to this Discover block. Add via the admin music player.
-              </p>
+              <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Songs</h2>
+              <p className="mt-1 text-sm text-[var(--text-secondary)]">Songs linked to this Discover block. Add via the admin music player.</p>
             </div>
             <span className="text-xs font-medium text-[var(--text-muted)]">{songs.length} songs</span>
           </div>
-
           {songs.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm text-[var(--text-secondary)]">
-              No songs yet. Open a song in the admin music player and choose Add to Playlist.
-            </div>
+            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm text-[var(--text-secondary)]">No songs yet. Open a song in the admin music player and choose Add to Playlist.</div>
           ) : (
             <div className="grid gap-2">
               {songs.map((song) => (
