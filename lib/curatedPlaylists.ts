@@ -11,6 +11,8 @@ export type CuratedPlaylist = {
   discover_section: string | null;
   show_on_discover: boolean;
   discover_position: number;
+  discover_button_enabled: boolean;
+  discover_button_text: string;
   created_at?: string;
   song_count?: number;
 };
@@ -34,11 +36,15 @@ type CuratedPlaylistRow = {
   discover_section?: string | null;
   show_on_discover?: boolean | null;
   discover_position?: number | null;
+  discover_button_enabled?: boolean | null;
+  discover_button_text?: string | null;
   created_at?: string | null;
   song_count?: number | null;
 };
 
 export const DEFAULT_CURATED_PLAYLIST_GROUP = "Editor Picks";
+
+export const DEFAULT_DISCOVER_BUTTON_TEXT = "Explore this mood";
 
 export const CURATED_PLAYLIST_GROUPS = [
   "Editor Picks",
@@ -83,6 +89,8 @@ export function normalizeCuratedPlaylist(
     discover_section: row.discover_section ? String(row.discover_section) : null,
     show_on_discover: Boolean(row.show_on_discover),
     discover_position: Number(row.discover_position || 0),
+    discover_button_enabled: row.discover_button_enabled !== false,
+    discover_button_text: String(row.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT),
     created_at: row.created_at ? String(row.created_at) : undefined,
     song_count: Number(row.song_count || 0),
   };

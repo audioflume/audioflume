@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
 import TrashIcon from "@/components/icons/TrashIcon";
 import type { CuratedPlaylist, CuratedPlaylistSong } from "@/lib/curatedPlaylists";
@@ -22,25 +22,24 @@ const DEFAULT_DISCOVER_SECTION = DISCOVER_SECTION_OPTIONS[0].value;
 type Props = {
   mode: "create" | "edit";
   playlistId?: string;
+  initialSection?: string;
 };
 
-function getSafeDiscoverSection(value: string | null): string {
+function getSafeDiscoverSection(value: string | null | undefined): string {
   if (!value) return DEFAULT_DISCOVER_SECTION;
-
   return DISCOVER_SECTION_OPTIONS.some((option) => option.value === value)
     ? value
     : DEFAULT_DISCOVER_SECTION;
 }
 
-export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
+export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSection }: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [description, setDescription] = useState("");
   const [discoverSection, setDiscoverSection] = useState(
-    getSafeDiscoverSection(searchParams.get("discoverSection")),
+    getSafeDiscoverSection(initialSection),
   );
   const [buttonEnabled, setButtonEnabled] = useState(true);
   const [buttonText, setButtonText] = useState(DEFAULT_DISCOVER_BUTTON_TEXT);
@@ -170,7 +169,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
               Discover block details
             </h2>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Manage the title, copy, artwork, playlist link, and optional button used on Discover.
+              Manage the title, copy, artwork, and button used on the Discover page.
             </p>
           </div>
 
@@ -252,7 +251,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
               </label>
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                White pill button text
+                Button text
                 <input
                   value={buttonText}
                   onChange={(event) => setButtonText(event.target.value)}
@@ -318,7 +317,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
                 Songs
               </h2>
               <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                Add songs from the admin music player dropdown. Remove songs here while editing.
+                Songs linked to this Discover block. Add via the admin music player.
               </p>
             </div>
             <span className="text-xs font-medium text-[var(--text-muted)]">{songs.length} songs</span>
