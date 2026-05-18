@@ -2,11 +2,16 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Toast from "@/components/Toast";
 import TrashIcon from "@/components/icons/TrashIcon";
 import type { CuratedPlaylist, CuratedPlaylistSong } from "@/lib/curatedPlaylists";
-import { CURATED_PLAYLIST_GROUPS, DEFAULT_CURATED_PLAYLIST_GROUP } from "@/lib/curatedPlaylists";
+import {
+  CURATED_PLAYLIST_GROUPS,
+  DEFAULT_CURATED_PLAYLIST_GROUP,
+  DISCOVER_SECTION_NONE,
+  DISCOVER_SECTION_OPTIONS,
+} from "@/lib/curatedPlaylists";
 import { primaryPillButtonClass, secondaryPillButtonClass, smallIconButtonClass } from "@/components/uiClasses";
 
 type Props = {
@@ -16,10 +21,18 @@ type Props = {
 
 export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialDiscoverSection = searchParams.get("discoverSection") || DISCOVER_SECTION_NONE;
   const [name, setName] = useState("");
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [description, setDescription] = useState("");
   const [playlistGroup, setPlaylistGroup] = useState(DEFAULT_CURATED_PLAYLIST_GROUP);
+  const [discoverSection, setDiscoverSection] = useState(
+    DISCOVER_SECTION_OPTIONS.some((option) => option.value === initialDiscoverSection)
+      ? initialDiscoverSection
+      : DISCOVER_SECTION_NONE,
+  );
   const [showOnDiscover, setShowOnDiscover] = useState(false);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
   const [loading, setLoading] = useState(mode === "edit");
@@ -48,7 +61,9 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           setName(playlistData.name);
           setKicker(playlistData.kicker);
           setCoverImageUrl(playlistData.cover_image_url || "");
+          setDescription(playlistData.description || "");
           setPlaylistGroup(playlistData.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP);
+          setDiscoverSection(playlistData.discover_section || DISCOVER_SECTION_NONE);
           setShowOnDiscover(Boolean(playlistData.show_on_discover));
           setSongs(Array.isArray(songsData) ? songsData : []);
         }
@@ -94,6 +109,8 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           kicker,
           cover_image_url: coverImageUrl,
           playlist_group: playlistGroup,
+          description,
+          discover_section: discoverSection || null,
           show_on_discover: showOnDiscover,
         }),
       });
@@ -171,6 +188,16 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               </label>
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+                Description text
+                <textarea
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  placeholder="Describe what this playlist or discover block is for."
+                />
+              </label>
+
+              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
                 Unsplash photo link
                 <input
                   value={coverImageUrl}
@@ -191,6 +218,26 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                     <option key={group} value={group}>
                       {group}
                     </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+                Discover page placement
+                <select
+                  value={discoverSection}
+                  onChange={(event) => setDiscoverSection(event.target.value)}
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                >
+                  <option value={DISCOVER_SECTION_NONE}>Not placed on a main block</option>
+                  {Array.from(new Set(DISCOVER_SECTION_OPTIONS.map((option) => option.category))).map((category) => (
+                    <optgroup key={category} label={category}>
+                      {DISCOVER_SECTION_OPTIONS.filter((option) => option.category === category).map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </optgroup>
                   ))}
                 </select>
               </label>
@@ -241,6 +288,14 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               <div className="mt-2 font-[family-name:var(--font-instrument-sans)] text-3xl font-medium leading-none tracking-[-0.055em]">
                 {name || "Playlist name"}
               </div>
+              <div className="mt-3 text-[11px] font-medium text-white/58">
+                {discoverSection ? DISCOVER_SECTION_OPTIONS.find((option) => option.value === discoverSection)?.label : playlistGroup}
+              </div>
+              {description && (
+                <p className="mt-3 line-clamp-3 text-xs leading-5 text-white/68">
+                  {description}
+                </p>
+              )}
             </div>
           </div>
         </aside>

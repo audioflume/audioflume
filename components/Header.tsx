@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import DashboardIcon from "@/components/icons/DashboardIcon";
+import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import Logo from "@/components/Logo";
 import UserMenu from "@/components/UserMenu";
 
@@ -56,13 +57,21 @@ export default function Header() {
           <Logo className="h-[22px] w-auto text-[var(--text-primary)]" />
         </Link>
 
-        <div className="relative flex h-full items-center gap-3" ref={menuRef}>
+        <div className="relative flex h-full items-center gap-1" ref={menuRef}>
           <Link
             href="/discover"
             className="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
           >
             <DashboardIcon />
             Discover
+          </Link>
+
+          <Link
+            href="/curated-playlists"
+            className="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+          >
+            <PlaylistIcon size={13} />
+            Playlists
           </Link>
 
           <button
