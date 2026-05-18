@@ -35,8 +35,6 @@ import {
 import type { CuratedPlaylist, CuratedPlaylistGroup } from "@/lib/curatedPlaylists";
 import { DISCOVER_SECTION_OPTIONS } from "@/lib/curatedPlaylists";
 
-// ─── Sortable playlist row ────────────────────────────────────────────────────
-
 function SortablePlaylistRow({
   playlist,
   isLastInGroup,
@@ -146,8 +144,6 @@ function DragOverlayRow({ playlist }: { playlist: CuratedPlaylist }) {
   );
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
-
 type ManagerTab = "playlists" | "discover";
 
 const DISCOVER_CURATED_GROUP = "Curated Playlists";
@@ -181,12 +177,9 @@ export default function PlaylistManagerPage() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
 
-  // Read ?tab=discover from URL on mount — avoids useSearchParams Suspense requirement
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("tab") === "discover") {
-      setActiveTab("discover");
-    }
+    if (params.get("tab") === "discover") setActiveTab("discover");
   }, []);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
@@ -220,7 +213,6 @@ export default function PlaylistManagerPage() {
 
   const playlistsByGroup = useMemo(() => {
     const map = new Map<string, CuratedPlaylist[]>();
-
     if (activeTab === "discover") {
       for (const name of DISCOVER_GROUPS) map.set(name, []);
       for (const p of playlists) {
@@ -230,7 +222,6 @@ export default function PlaylistManagerPage() {
       for (const pls of map.values()) pls.sort((a, b) => a.discover_position - b.discover_position);
       return map;
     }
-
     for (const g of groups) map.set(g.name, []);
     for (const p of playlists) {
       if (p.discover_section) continue;
@@ -261,36 +252,27 @@ export default function PlaylistManagerPage() {
     const { active, over } = event;
     setActiveId(null);
     if (!over || active.id === over.id) return;
-
     let groupName: string | null = null;
     for (const [name, pls] of playlistsByGroup) {
       if (pls.some((p) => p.id === active.id)) { groupName = name; break; }
     }
     if (!groupName) return;
-
     const groupPlaylists = playlistsByGroup.get(groupName) ?? [];
     const oldIndex = groupPlaylists.findIndex((p) => p.id === active.id);
     const newIndex = groupPlaylists.findIndex((p) => p.id === over.id);
     if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-
     const reordered = arrayMove(groupPlaylists, oldIndex, newIndex);
     setPlaylists((prev) =>
       prev.map((pl) => {
         const idx = reordered.findIndex((r) => r.id === pl.id);
         if (idx === -1) return pl;
-        return activeTab === "discover"
-          ? { ...pl, discover_position: idx }
-          : { ...pl, position: idx };
+        return activeTab === "discover" ? { ...pl, discover_position: idx } : { ...pl, position: idx };
       }),
     );
-
     fetch("/api/admin/curated-playlists/reorder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        mode: activeTab,
-        updates: reordered.map((p, i) => ({ id: p.id, position: i })),
-      }),
+      body: JSON.stringify({ mode: activeTab, updates: reordered.map((p, i) => ({ id: p.id, position: i })) }),
     }).catch(console.error);
   }
 
@@ -319,25 +301,17 @@ export default function PlaylistManagerPage() {
     <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AdminSidebar />
 
-      <div className="flex items-end justify-between gap-4 px-8 pt-14 pb-8">
-        <div>
-          <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-            Playlist Manager
-          </h1>
-          <p className="mt-2 text-sm text-[var(--text-secondary)]">
-            Manage curated playlists and the content blocks on Discover.
-          </p>
-        </div>
-        <Link
-          href={activeTab === "discover" ? "/admin/playlist-manager/discover/new" : "/admin/playlist-manager/new"}
-          className={`${primaryPillButtonClass} hidden md:flex`}
-        >
-          <PlusIcon />
-          <span>{activeTab === "discover" ? "New Discover Block" : "New Playlist"}</span>
-        </Link>
+      <div className="px-8 pt-14 pb-6">
+        <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+          Playlist Manager
+        </h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
+          Manage curated playlists and the content blocks on Discover.
+        </p>
       </div>
 
-      <div className="px-8 pb-4">
+      {/* Tabs + New button inline */}
+      <div className="flex items-center justify-between px-8 pb-4">
         <div className="inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] p-1">
           {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
             <button
@@ -354,6 +328,14 @@ export default function PlaylistManagerPage() {
             </button>
           ))}
         </div>
+
+        <Link
+          href={activeTab === "discover" ? "/admin/playlist-manager/discover/new" : "/admin/playlist-manager/new"}
+          className={primaryPillButtonClass}
+        >
+          <PlusIcon />
+          <span>{activeTab === "discover" ? "New Discover Block" : "New Playlist"}</span>
+        </Link>
       </div>
 
       <div className="grid gap-3 px-8 pb-8 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -417,12 +399,7 @@ export default function PlaylistManagerPage() {
                       <div className="flex min-h-[52px] items-center justify-between gap-4 px-4 py-3 text-xs text-[var(--text-muted)]">
                         <span>No item assigned.</span>
                         {activeTab === "discover" && groupName !== DISCOVER_CURATED_GROUP && (
-                          <Link
-                            href="/admin/playlist-manager/discover/new"
-                            className="font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-                          >
-                            Add block
-                          </Link>
+                          <Link href="/admin/playlist-manager/discover/new" className="font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">Add block</Link>
                         )}
                       </div>
                     ) : (
@@ -461,9 +438,7 @@ export default function PlaylistManagerPage() {
           />
         ) : (
           <aside className="rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-            <h2 className="font-[family-name:var(--font-instrument-sans)] text-xl font-medium tracking-[-0.05em]">
-              Discover sections
-            </h2>
+            <h2 className="font-[family-name:var(--font-instrument-sans)] text-xl font-medium tracking-[-0.05em]">Discover sections</h2>
             <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
               Create a Discover Block and assign it to one of the 4 main cards or 4 production style cards. Use the checkbox on a curated playlist to add it to the shelf.
             </p>

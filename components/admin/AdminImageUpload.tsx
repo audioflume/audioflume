@@ -7,17 +7,28 @@ type Props = {
   currentUrl: string;
   onUploaded: (url: string) => void;
   onDeleted?: () => void;
-  imageKey?: string;
   target: "playlist" | "discover";
   slug: string;
   variant?: "card" | "hero" | "thumb";
 };
 
+// Extract R2 key from a URL, e.g.
+// https://assets.filmwave.io/images/playlists/foo/card-123.webp
+// → images/playlists/foo/card-123.webp
+function extractImageKey(url: string): string | null {
+  try {
+    const path = new URL(url).pathname.replace(/^\//, "");
+    if (path.startsWith("images/")) return path;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export default function AdminImageUpload({
   currentUrl,
   onUploaded,
   onDeleted,
-  imageKey,
   target,
   slug,
   variant = "card",
@@ -27,7 +38,6 @@ export default function AdminImageUpload({
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
   const [preview, setPreview] = useState(currentUrl);
-  const [currentKey, setCurrentKey] = useState(imageKey ?? "");
 
   async function handleFile(file: File) {
     setError("");
@@ -50,7 +60,6 @@ export default function AdminImageUpload({
       if (!res.ok) throw new Error(data?.error || "Upload failed");
 
       setPreview(data.imageUrl);
-      setCurrentKey(data.imageKey ?? "");
       onUploaded(data.imageUrl);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -61,21 +70,28 @@ export default function AdminImageUpload({
   }
 
   async function handleDelete() {
-    if (!window.confirm("Remove this image? This will delete it from storage.")) return;
+    if (!preview || deleting) return;
+    const confirmed = window.confirm("Remove this image? It will be deleted from storage.");
+    if (!confirmed) return;
+
+    const imageKey = extractImageKey(preview);
     setDeleting(true);
     setError("");
+
     try {
-      if (currentKey) {
+      // Only call the delete API if this is an R2-hosted image
+      if (imageKey) {
         const res = await fetch("/api/admin/images/delete", {
-          method: "POST",
+          method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageKey: currentKey }),
+          body: JSON.stringify({ imageKey }),
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Delete failed");
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data?.error || "Delete failed");
+        }
       }
       setPreview("");
-      setCurrentKey("");
       onUploaded("");
       onDeleted?.();
     } catch (err) {
@@ -97,15 +113,11 @@ export default function AdminImageUpload({
     if (file) handleFile(file);
   }
 
-  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-  }
-
   return (
     <div className="grid gap-2">
       <div className="flex items-center justify-between">
         <span className="text-xs font-medium text-[var(--text-secondary)]">Cover image</span>
-        {preview && !uploading && (
+        {preview && (
           <button
             type="button"
             onClick={handleDelete}
@@ -117,12 +129,13 @@ export default function AdminImageUpload({
         )}
       </div>
 
-      {/* Drop zone — fixed max-width to match the sidebar card preview */}
+      {/* Drop zone — capped at 360px to match the sidebar column */}
       <div
         onClick={() => inputRef.current?.click()}
         onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        className="relative min-h-[200px] w-full max-w-[360px] cursor-pointer overflow-hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--text-muted)] hover:bg-[var(--bg-tertiary)]"
+        onDragOver={(e) => e.preventDefault()}
+        className="relative w-full max-w-[360px] cursor-pointer overflow-hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--text-muted)] hover:bg-[var(--bg-tertiary)]"
+        style={{ minHeight: preview ? 180 : 140 }}
       >
         {preview ? (
           <>
@@ -142,18 +155,16 @@ export default function AdminImageUpload({
             </div>
           </>
         ) : (
-          <div className="flex min-h-[200px] flex-col items-center justify-center gap-2 p-6 text-center">
+          <div className="flex min-h-[140px] flex-col items-center justify-center gap-2 p-6 text-center">
             <div className="text-2xl text-[var(--text-muted)]">↑</div>
             <p className="text-sm font-medium text-[var(--text-secondary)]">
               {uploading ? "Uploading…" : "Click or drag an image"}
             </p>
-            <p className="text-xs text-[var(--text-muted)]">
-              JPG, PNG, WEBP — auto-converted to .webp
-            </p>
+            <p className="text-xs text-[var(--text-muted)]">JPG, PNG, WEBP — auto-converted to .webp</p>
           </div>
         )}
 
-        {(uploading || deleting) && (
+        {uploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50">
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/20 border-t-white" />
           </div>
@@ -162,24 +173,16 @@ export default function AdminImageUpload({
 
       {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
 
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleInputChange}
-      />
+      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleInputChange} />
 
+      {/* URL fallback */}
       <label className="grid gap-1.5 text-xs font-medium text-[var(--text-muted)]">
-        Or paste image URL directly
+        Or paste image URL
         <input
           type="url"
           value={preview}
-          onChange={(e) => {
-            setPreview(e.target.value);
-            onUploaded(e.target.value);
-          }}
-          placeholder="https://..."
+          onChange={(e) => { setPreview(e.target.value); onUploaded(e.target.value); }}
+          placeholder="https://…"
           className="h-9 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
         />
       </label>

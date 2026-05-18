@@ -1,40 +1,35 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
+import { r2Client } from "@/lib2/r2";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { r2Client } from "@/lib/r2";
 
 export const runtime = "nodejs";
 
-// Uses the dedicated images bucket if configured, falls back to the main bucket
-const IMAGES_BUCKET =
+const BUCKET =
   process.env.CLOUDFLARE_R2_IMAGES_BUCKET_NAME ||
   process.env.CLOUDFLARE_R2_BUCKET_NAME!;
 
-export async function POST(req: Request) {
+export async function DELETE(req: Request) {
   const admin = await requireAdmin();
   if (!admin.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
   try {
-    const body = await req.json();
-    const imageKey = typeof body.imageKey === "string" ? body.imageKey.trim() : "";
+    const { imageKey } = await req.json();
 
-    if (!imageKey) {
+    if (!imageKey || typeof imageKey !== "string") {
       return NextResponse.json({ error: "Missing imageKey" }, { status: 400 });
     }
 
-    // Safety: only allow deleting from the images/ prefix
+    // Safety: only allow deletion of image keys
     if (!imageKey.startsWith("images/")) {
-      return NextResponse.json(
-        { error: "Can only delete from the images/ prefix" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid image key" }, { status: 400 });
     }
 
     await r2Client.send(
       new DeleteObjectCommand({
-        Bucket: IMAGES_BUCKET,
+        Bucket: BUCKET,
         Key: imageKey,
       }),
     );
