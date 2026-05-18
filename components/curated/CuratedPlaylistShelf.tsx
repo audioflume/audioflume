@@ -111,11 +111,7 @@ export function CuratedPlaylistCard({
   }
 
   return (
-    <div
-      className={`group relative min-h-[210px] min-w-[250px] sm:min-w-[285px] lg:min-w-[320px] ${
-        isMenuOpen ? "is-menu-open" : ""
-      }`}
-    >
+    <div className="group relative min-h-[210px] min-w-[250px] sm:min-w-[285px] lg:min-w-[320px]">
       <Link href={href} className="block">
         <div className="relative min-h-[210px] overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--border)]">
           {playlist.cover_image_url ? (
@@ -154,7 +150,7 @@ export function CuratedPlaylistCard({
         </div>
       </Link>
 
-      {/* More button — top left, frosted glass pill, hidden until hover */}
+      {/* More button — top left, frosted glass, hidden until hover */}
       <div className="absolute left-4 top-4 z-[12]">
         <DropdownShell
           open={isMenuOpen}
@@ -186,16 +182,14 @@ export function CuratedPlaylistCard({
             </button>
           )}
         >
-          <div className="w-[160px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] py-1 shadow-[var(--shadow-ui)]">
-            <button
-              type="button"
-              className="w-full px-3 py-2.5 text-left text-[12px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:opacity-50"
-              onClick={handleAddToMyPlaylists}
-              disabled={saving}
-            >
-              {saving ? "Adding…" : "Add to My Playlists"}
-            </button>
-          </div>
+          {/* Children render directly inside filmwave-dropdown-shell which handles all styling */}
+          <button
+            type="button"
+            onClick={handleAddToMyPlaylists}
+            disabled={saving}
+          >
+            {saving ? "Adding…" : "Add to My Playlists"}
+          </button>
         </DropdownShell>
       </div>
     </div>
