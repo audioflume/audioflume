@@ -36,6 +36,24 @@ import {
 import type { CuratedPlaylist, CuratedPlaylistGroup } from "@/lib/curatedPlaylists";
 import { DISCOVER_SECTION_OPTIONS } from "@/lib/curatedPlaylists";
 
+const COLLAPSED_STORAGE_KEY = "filmwave-playlist-manager-collapsed";
+
+function loadCollapsed(): Set<string> {
+  try {
+    const raw = localStorage.getItem(COLLAPSED_STORAGE_KEY);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return new Set<string>(parsed);
+  } catch {}
+  return new Set();
+}
+
+function saveCollapsed(collapsed: Set<string>) {
+  try {
+    localStorage.setItem(COLLAPSED_STORAGE_KEY, JSON.stringify([...collapsed]));
+  } catch {}
+}
+
 function SortablePlaylistRow({
   playlist,
   isLastInGroup,
@@ -177,7 +195,7 @@ export default function PlaylistManagerPage() {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(() => loadCollapsed());
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -218,6 +236,7 @@ export default function PlaylistManagerPage() {
       const next = new Set(prev);
       if (next.has(groupName)) next.delete(groupName);
       else next.add(groupName);
+      saveCollapsed(next);
       return next;
     });
   }
@@ -397,7 +416,7 @@ export default function PlaylistManagerPage() {
                     <button
                       type="button"
                       onClick={() => toggleGroup(groupName)}
-                      className="flex h-8 w-full cursor-pointer items-center px-4 text-left transition hover:bg-[var(--bg-hover)]"
+                      className="flex h-8 w-full cursor-pointer items-center px-4 text-left transition hover:brightness-95"
                       style={{
                         borderTop: groupIndex > 0 ? "1px solid var(--border)" : undefined,
                         borderBottom: isCollapsed ? "none" : "1px solid var(--border-subtle)",
