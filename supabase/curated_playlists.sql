@@ -27,3 +27,19 @@ create index if not exists curated_playlist_songs_playlist_position_idx
 
 create index if not exists curated_playlist_songs_song_id_idx
   on public.curated_playlist_songs (song_id);
+
+-- Discover page management fields.
+alter table public.curated_playlists
+  add column if not exists description text not null default '',
+  add column if not exists discover_section text,
+  add column if not exists show_on_discover boolean not null default false,
+  add column if not exists discover_position integer not null default 0,
+  add column if not exists discover_button_enabled boolean not null default true,
+  add column if not exists discover_button_text text not null default 'Explore this mood';
+
+create index if not exists curated_playlists_discover_section_position_idx
+  on public.curated_playlists (discover_section, discover_position);
+
+create index if not exists curated_playlists_show_on_discover_position_idx
+  on public.curated_playlists (show_on_discover, discover_position)
+  where show_on_discover = true;

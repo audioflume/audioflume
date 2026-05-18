@@ -2,25 +2,48 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Toast from "@/components/Toast";
 import TrashIcon from "@/components/icons/TrashIcon";
 import type { CuratedPlaylist, CuratedPlaylistSong } from "@/lib/curatedPlaylists";
-import { CURATED_PLAYLIST_GROUPS, DEFAULT_CURATED_PLAYLIST_GROUP } from "@/lib/curatedPlaylists";
-import { primaryPillButtonClass, secondaryPillButtonClass, smallIconButtonClass } from "@/components/uiClasses";
+import {
+  DEFAULT_CURATED_PLAYLIST_GROUP,
+  DEFAULT_DISCOVER_BUTTON_TEXT,
+  DISCOVER_SECTION_OPTIONS,
+} from "@/lib/curatedPlaylists";
+import {
+  primaryPillButtonClass,
+  secondaryPillButtonClass,
+  smallIconButtonClass,
+} from "@/components/uiClasses";
+
+const DEFAULT_DISCOVER_SECTION = DISCOVER_SECTION_OPTIONS[0].value;
 
 type Props = {
   mode: "create" | "edit";
   playlistId?: string;
 };
 
-export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
+function getSafeDiscoverSection(value: string | null): string {
+  if (!value) return DEFAULT_DISCOVER_SECTION;
+
+  return DISCOVER_SECTION_OPTIONS.some((option) => option.value === value)
+    ? value
+    : DEFAULT_DISCOVER_SECTION;
+}
+
+export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
-  const [playlistGroup, setPlaylistGroup] = useState(DEFAULT_CURATED_PLAYLIST_GROUP);
-  const [showOnDiscover, setShowOnDiscover] = useState(false);
+  const [description, setDescription] = useState("");
+  const [discoverSection, setDiscoverSection] = useState(
+    getSafeDiscoverSection(searchParams.get("discoverSection")),
+  );
+  const [buttonEnabled, setButtonEnabled] = useState(true);
+  const [buttonText, setButtonText] = useState(DEFAULT_DISCOVER_BUTTON_TEXT);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
   const [loading, setLoading] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
@@ -41,20 +64,22 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         const playlistData = (await playlistRes.json()) as CuratedPlaylist;
         const songsData = await songsRes.json();
 
-        if (!playlistRes.ok) throw new Error("Failed to load playlist");
-        if (!songsRes.ok) throw new Error("Failed to load playlist songs");
+        if (!playlistRes.ok) throw new Error("Failed to load Discover block");
+        if (!songsRes.ok) throw new Error("Failed to load Discover block songs");
 
         if (!cancelled) {
           setName(playlistData.name);
           setKicker(playlistData.kicker);
           setCoverImageUrl(playlistData.cover_image_url || "");
-          setPlaylistGroup(playlistData.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP);
-          setShowOnDiscover(Boolean(playlistData.show_on_discover));
+          setDescription(playlistData.description || "");
+          setDiscoverSection(getSafeDiscoverSection(playlistData.discover_section));
+          setButtonEnabled(playlistData.discover_button_enabled !== false);
+          setButtonText(playlistData.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT);
           setSongs(Array.isArray(songsData) ? songsData : []);
         }
       } catch (err) {
         if (!cancelled) {
-          setToastMessage(err instanceof Error ? err.message : "Failed to load playlist");
+          setToastMessage(err instanceof Error ? err.message : "Failed to load Discover block");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -93,21 +118,25 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           name,
           kicker,
           cover_image_url: coverImageUrl,
-          playlist_group: playlistGroup,
-          show_on_discover: showOnDiscover,
+          playlist_group: DEFAULT_CURATED_PLAYLIST_GROUP,
+          description,
+          discover_section: discoverSection,
+          show_on_discover: false,
+          discover_button_enabled: buttonEnabled,
+          discover_button_text: buttonText,
         }),
       });
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data?.error || "Failed to save playlist");
+      if (!res.ok) throw new Error(data?.error || "Failed to save Discover block");
 
-      setToastMessage(mode === "edit" ? "Playlist updated" : "Playlist created");
+      setToastMessage(mode === "edit" ? "Discover block updated" : "Discover block created");
 
       if (mode === "create") {
-        router.push(`/admin/playlist-manager/${data.id}/edit`);
+        router.push(`/admin/playlist-manager/discover/${data.id}/edit`);
       }
     } catch (err) {
-      setToastMessage(err instanceof Error ? err.message : "Failed to save playlist");
+      setToastMessage(err instanceof Error ? err.message : "Failed to save Discover block");
     } finally {
       setSaving(false);
     }
@@ -138,24 +167,24 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-5">
             <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
-              Playlist details
+              Discover block details
             </h2>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Add the public metadata used on Curated Playlists cards and rows.
+              Manage the title, copy, artwork, playlist link, and optional button used on Discover.
             </p>
           </div>
 
           {loading ? (
-            <div className="h-72 animate-pulse rounded-xl bg-[var(--bg-tertiary)]" />
+            <div className="h-96 animate-pulse rounded-xl bg-[var(--bg-tertiary)]" />
           ) : (
             <div className="grid gap-4">
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Playlist name
+                Title
                 <input
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Docu beds"
+                  placeholder="Quiet documentary beds"
                   required
                 />
               </label>
@@ -166,12 +195,22 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   value={kicker}
                   onChange={(event) => setKicker(event.target.value)}
                   className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Human stories"
+                  placeholder="Human / Minimal / Warm"
                 />
               </label>
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Unsplash photo link
+                Description text
+                <textarea
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  placeholder="Describe what this Discover block is for."
+                />
+              </label>
+
+              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+                Image link
                 <input
                   value={coverImageUrl}
                   onChange={(event) => setCoverImageUrl(event.target.value)}
@@ -181,16 +220,20 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               </label>
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Playlist group
+                Discover page placement
                 <select
-                  value={playlistGroup}
-                  onChange={(event) => setPlaylistGroup(event.target.value)}
+                  value={discoverSection}
+                  onChange={(event) => setDiscoverSection(event.target.value)}
                   className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                 >
-                  {CURATED_PLAYLIST_GROUPS.map((group) => (
-                    <option key={group} value={group}>
-                      {group}
-                    </option>
+                  {Array.from(new Set(DISCOVER_SECTION_OPTIONS.map((option) => option.category))).map((category) => (
+                    <optgroup key={category} label={category}>
+                      {DISCOVER_SECTION_OPTIONS.filter((option) => option.category === category).map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </optgroup>
                   ))}
                 </select>
               </label>
@@ -198,19 +241,30 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               <label className="flex items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
                 <input
                   type="checkbox"
-                  checked={showOnDiscover}
-                  onChange={(event) => setShowOnDiscover(event.target.checked)}
+                  checked={buttonEnabled}
+                  onChange={(event) => setButtonEnabled(event.target.checked)}
                   className="mt-0.5 h-4 w-4 accent-[var(--text-primary)]"
                 />
                 <span>
-                  <span className="block font-medium text-[var(--text-primary)]">Show in Discover curated playlists</span>
-                  <span className="mt-1 block text-xs text-[var(--text-muted)]">Adds this playlist to the Curated Playlists shelf on the main Discover page.</span>
+                  <span className="block font-medium text-[var(--text-primary)]">Show white pill button</span>
+                  <span className="mt-1 block text-xs text-[var(--text-muted)]">Controls the hero-style CTA button for this Discover block.</span>
                 </span>
+              </label>
+
+              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+                White pill button text
+                <input
+                  value={buttonText}
+                  onChange={(event) => setButtonText(event.target.value)}
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)] disabled:opacity-50"
+                  placeholder={DEFAULT_DISCOVER_BUTTON_TEXT}
+                  disabled={!buttonEnabled}
+                />
               </label>
 
               <div className="flex flex-wrap gap-3 pt-2">
                 <button type="submit" className={primaryPillButtonClass} disabled={saving}>
-                  {saving ? "Saving..." : mode === "edit" ? "Save changes" : "Create playlist"}
+                  {saving ? "Saving..." : mode === "edit" ? "Save changes" : "Create Discover block"}
                 </button>
                 <button
                   type="button"
@@ -229,18 +283,28 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
             Card preview
           </h3>
 
-          <div className="relative mt-4 min-h-[260px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
+          <div className="relative mt-4 min-h-[320px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
             {coverImageUrl && (
-              <Image src={coverImageUrl} alt={name || "Playlist preview"} fill sizes="360px" className="object-cover" unoptimized />
+              <Image src={coverImageUrl} alt={name || "Discover preview"} fill sizes="360px" className="object-cover" unoptimized />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            <div className="relative z-10 flex min-h-[260px] flex-col justify-end p-4 text-white">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/28 to-black/8" />
+            <div className="relative z-10 flex min-h-[320px] flex-col justify-end p-5 text-white">
               <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55">
                 {kicker || "Kicker text"}
               </div>
               <div className="mt-2 font-[family-name:var(--font-instrument-sans)] text-3xl font-medium leading-none tracking-[-0.055em]">
-                {name || "Playlist name"}
+                {name || "Discover block title"}
               </div>
+              {description && (
+                <p className="mt-3 line-clamp-3 text-xs leading-5 text-white/68">
+                  {description}
+                </p>
+              )}
+              {buttonEnabled && (
+                <div className="mt-5 inline-flex h-10 w-fit items-center rounded-full bg-white px-4 text-xs font-medium text-black">
+                  {buttonText || DEFAULT_DISCOVER_BUTTON_TEXT}
+                </div>
+              )}
             </div>
           </div>
         </aside>

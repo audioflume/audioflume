@@ -7,6 +7,12 @@ export type CuratedPlaylist = {
   cover_image_url: string | null;
   playlist_group: string;
   position: number;
+  description: string;
+  discover_section: string | null;
+  show_on_discover: boolean;
+  discover_position: number;
+  discover_button_enabled: boolean;
+  discover_button_text: string;
   created_at?: string;
   song_count?: number;
 };
@@ -26,6 +32,12 @@ type CuratedPlaylistRow = {
   cover_image_url: string | null;
   playlist_group: string | null;
   position: number | null;
+  description?: string | null;
+  discover_section?: string | null;
+  show_on_discover?: boolean | null;
+  discover_position?: number | null;
+  discover_button_enabled?: boolean | null;
+  discover_button_text?: string | null;
   created_at?: string | null;
   song_count?: number | null;
 };
@@ -41,6 +53,25 @@ export const CURATED_PLAYLIST_GROUPS = [
   "Ambient",
 ];
 
+export const DISCOVER_SECTION_NONE = "";
+export const DISCOVER_SECTION_CURATED = "curated_playlists";
+export const DEFAULT_DISCOVER_BUTTON_TEXT = "Explore this mood";
+
+export const DISCOVER_SECTION_OPTIONS = [
+  { value: "discover_block_1", label: "Discover Block 1", category: "Main Blocks" },
+  { value: "discover_block_2", label: "Discover Block 2", category: "Main Blocks" },
+  { value: "discover_block_3", label: "Discover Block 3", category: "Main Blocks" },
+  { value: "discover_block_4", label: "Discover Block 4", category: "Main Blocks" },
+  { value: "production_style_1", label: "Production Style 1", category: "Production Style Blocks" },
+  { value: "production_style_2", label: "Production Style 2", category: "Production Style Blocks" },
+  { value: "production_style_3", label: "Production Style 3", category: "Production Style Blocks" },
+  { value: "production_style_4", label: "Production Style 4", category: "Production Style Blocks" },
+] as const;
+
+export const DISCOVER_SECTION_LABELS = new Map(
+  DISCOVER_SECTION_OPTIONS.map((option) => [option.value, option.label]),
+);
+
 export function normalizeCuratedPlaylist(
   row: CuratedPlaylistRow,
 ): CuratedPlaylist {
@@ -53,6 +84,12 @@ export function normalizeCuratedPlaylist(
       row.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP,
     ),
     position: Number(row.position || 0),
+    description: String(row.description || ""),
+    discover_section: row.discover_section ? String(row.discover_section) : null,
+    show_on_discover: Boolean(row.show_on_discover),
+    discover_position: Number(row.discover_position || 0),
+    discover_button_enabled: row.discover_button_enabled !== false,
+    discover_button_text: String(row.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT),
     created_at: row.created_at ? String(row.created_at) : undefined,
     song_count: Number(row.song_count || 0),
   };

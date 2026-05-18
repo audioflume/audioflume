@@ -4,6 +4,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import { getCuratedPlaylistError } from "@/lib/curatedPlaylists";
 
 type PositionUpdate = { id: number; position: number };
+type ReorderMode = "playlist" | "discover";
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
@@ -14,6 +15,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const updates: PositionUpdate[] = body.updates;
+    const mode: ReorderMode = body.mode === "discover" ? "discover" : "playlist";
+    const column = mode === "discover" ? "discover_position" : "position";
 
     if (!Array.isArray(updates) || updates.length === 0) {
       return NextResponse.json({ error: "Invalid updates format" }, { status: 400 });
@@ -23,7 +26,7 @@ export async function POST(req: Request) {
       updates.map(({ id, position }) =>
         supabaseServer
           .from("curated_playlists")
-          .update({ position })
+          .update({ [column]: position })
           .eq("id", id),
       ),
     );
