@@ -103,7 +103,9 @@ function CoverImage({
   return (
     <div
       className={`relative overflow-hidden bg-[var(--bg-tertiary)] ${className}`}
-      style={{ background: song.coverArt ? undefined : getFallbackGradient(index) }}
+      style={{
+        background: song.coverArt ? undefined : getFallbackGradient(index),
+      }}
     >
       {song.coverArt ? (
         <Image
@@ -124,7 +126,13 @@ function CoverImage({
   );
 }
 
-function PlayButton({ song, size = "small" }: { song: Song; size?: "large" | "small" }) {
+function PlayButton({
+  song,
+  size = "small",
+}: {
+  song: Song;
+  size?: "large" | "small";
+}) {
   const { currentSong, isPlaying, togglePlayPause } = usePlayer();
   const active = currentSong?.id === song.id;
   const playing = active && isPlaying;
@@ -137,7 +145,10 @@ function PlayButton({ song, size = "small" }: { song: Song; size?: "large" | "sm
   return (
     <button
       type="button"
-      onClick={(event) => { stopPlaybackMouseEvent(event); togglePlayPause(song); }}
+      onClick={(event) => {
+        stopPlaybackMouseEvent(event);
+        togglePlayPause(song);
+      }}
       onKeyDown={(event) => {
         if (event.key !== "Enter" && event.key !== " ") return;
         stopPlaybackKeyEvent(event);
@@ -151,7 +162,11 @@ function PlayButton({ song, size = "small" }: { song: Song; size?: "large" | "sm
       disabled={!song.audioUrl}
       aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
     >
-      {playing ? <PauseIcon size={iconSize} /> : <PlayIconSmall size={iconSize} />}
+      {playing ? (
+        <PauseIcon size={iconSize} />
+      ) : (
+        <PlayIconSmall size={iconSize} />
+      )}
     </button>
   );
 }
@@ -165,7 +180,10 @@ function usePlayableCard(song: Song) {
   return {
     role: "button",
     tabIndex: song.audioUrl ? 0 : -1,
-    onClick: (event: MouseEvent<HTMLElement>) => { stopPlaybackMouseEvent(event); playCard(); },
+    onClick: (event: MouseEvent<HTMLElement>) => {
+      stopPlaybackMouseEvent(event);
+      playCard();
+    },
     onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
       if (event.key !== "Enter" && event.key !== " ") return;
       stopPlaybackKeyEvent(event);
@@ -188,7 +206,10 @@ function FullWidthSearchBar() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const cleanSearch = search.trim();
-    if (!cleanSearch) { router.push("/music"); return; }
+    if (!cleanSearch) {
+      router.push("/music");
+      return;
+    }
     router.push(`/music?search=${encodeURIComponent(cleanSearch)}`);
   }
 
@@ -219,7 +240,10 @@ function FullWidthSearchBar() {
             <button
               key={prompt}
               type="button"
-              onClick={(event) => { event.stopPropagation(); searchPrompt(prompt); }}
+              onClick={(event) => {
+                event.stopPropagation();
+                searchPrompt(prompt);
+              }}
               className="h-7 cursor-pointer rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
             >
               {prompt}
@@ -484,7 +508,10 @@ function ProductionStylesSkeleton() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="min-h-[245px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
+          <div
+            key={i}
+            className="min-h-[245px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]"
+          />
         ))}
       </div>
     </section>
@@ -581,9 +608,15 @@ function CompactSongCard({ song, index }: { song: Song; index: number }) {
       className="group flex h-[54px] cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-2 transition hover:bg-[var(--bg-hover)] focus:outline-none focus-visible:border-[var(--text-muted)]"
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
-      <CoverImage song={song} index={index} className="h-9 w-9 shrink-0 rounded-md" />
+      <CoverImage
+        song={song}
+        index={index}
+        className="h-9 w-9 shrink-0 rounded-md"
+      />
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">{song.title}</h3>
+        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
+          {song.title}
+        </h3>
         <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
           <span className="truncate">{song.artist}</span>
           <span>•</span>
@@ -627,17 +660,29 @@ function FastScanSongCard({ song, index }: { song: Song; index: number }) {
       }`}
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
-      <span className="text-[9px] font-medium tabular-nums text-[var(--text-muted)] transition group-hover:text-[var(--text-secondary)]">{number}</span>
+      <span className="text-[9px] font-medium tabular-nums text-[var(--text-muted)] transition group-hover:text-[var(--text-secondary)]">
+        {number}
+      </span>
       <div className="min-w-0">
         <div className="flex min-w-0 items-center gap-2">
-          <h3 className="truncate text-[12px] font-medium leading-none text-[var(--text-primary)]">{song.title}</h3>
-          <span className="hidden shrink-0 text-[9px] text-[var(--text-muted)] sm:inline">{song.key || "—"}</span>
+          <h3 className="truncate text-[12px] font-medium leading-none text-[var(--text-primary)]">
+            {song.title}
+          </h3>
+          <span className="hidden shrink-0 text-[9px] text-[var(--text-muted)] sm:inline">
+            {song.key || "—"}
+          </span>
         </div>
-        <div className="mt-1 truncate text-[9px] leading-none text-[var(--text-muted)]">{song.artist}</div>
+        <div className="mt-1 truncate text-[9px] leading-none text-[var(--text-muted)]">
+          {song.artist}
+        </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="hidden text-[9px] tabular-nums text-[var(--text-muted)] sm:inline">{song.bpm ? `${song.bpm}` : "—"}</span>
-        <span className="text-[9px] tabular-nums text-[var(--text-muted)]">{formatDuration(song.duration)}</span>
+        <span className="hidden text-[9px] tabular-nums text-[var(--text-muted)] sm:inline">
+          {song.bpm ? `${song.bpm}` : "—"}
+        </span>
+        <span className="text-[9px] tabular-nums text-[var(--text-muted)]">
+          {formatDuration(song.duration)}
+        </span>
         <FastScanPlayIcon song={song} />
       </div>
     </article>
@@ -650,13 +695,25 @@ function CompactSongsSection({ songs }: { songs: Song[] }) {
     <section className="mt-10">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Ready-to-cut tracks</h2>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">Quick options for pacing out a scene, testing a tone, or finding a first pass.</p>
+          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
+            Ready-to-cut tracks
+          </h2>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            Quick options for pacing out a scene, testing a tone, or finding a
+            first pass.
+          </p>
         </div>
-        <Link href="/music" className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block">Open music</Link>
+        <Link
+          href="/music"
+          className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
+        >
+          Open music
+        </Link>
       </div>
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {songs.map((song, index) => <CompactSongCard key={song.id} song={song} index={index + 30} />)}
+        {songs.map((song, index) => (
+          <CompactSongCard key={song.id} song={song} index={index + 30} />
+        ))}
       </div>
     </section>
   );
@@ -668,14 +725,29 @@ function FastScanSection({ songs }: { songs: Song[] }) {
     <section className="mt-12">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Fast scan selects</h2>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">A denser list for quick auditioning when you already know the lane.</p>
+          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
+            Fast scan selects
+          </h2>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            A denser list for quick auditioning when you already know the lane.
+          </p>
         </div>
-        <Link href="/music" className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block">Browse all</Link>
+        <Link
+          href="/music"
+          className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
+        >
+          Browse all
+        </Link>
       </div>
       <div className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-2">
         <div className="grid gap-x-2 gap-y-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {songs.map((song, index) => <FastScanSongCard key={`${song.id}-${index}`} song={song} index={index} />)}
+          {songs.map((song, index) => (
+            <FastScanSongCard
+              key={`${song.id}-${index}`}
+              song={song}
+              index={index}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -691,7 +763,10 @@ function SongsSkeleton() {
       </div>
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 9 }).map((_, i) => (
-          <div key={i} className="h-[54px] animate-pulse rounded-lg bg-[var(--bg-secondary)]" />
+          <div
+            key={i}
+            className="h-[54px] animate-pulse rounded-lg bg-[var(--bg-secondary)]"
+          />
         ))}
       </div>
     </section>
@@ -711,17 +786,25 @@ export default function DashboardPage() {
     let cancelled = false;
     fetch("/api/curated-playlists")
       .then((r) => r.json())
-      .then((data) => { if (!cancelled && Array.isArray(data)) setPlaylists(data); })
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) setPlaylists(data);
+      })
       .catch(() => {})
-      .finally(() => { if (!cancelled) setPlaylistsLoading(false); });
-    return () => { cancelled = true; };
+      .finally(() => {
+        if (!cancelled) setPlaylistsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const discoverBlocks = useMemo(
     () =>
       playlists
         .filter((p) => p.discover_section?.startsWith("discover_block_"))
-        .sort((a, b) => (a.discover_section ?? "").localeCompare(b.discover_section ?? "")),
+        .sort((a, b) =>
+          (a.discover_section ?? "").localeCompare(b.discover_section ?? ""),
+        ),
     [playlists],
   );
 
@@ -729,7 +812,9 @@ export default function DashboardPage() {
     () =>
       playlists
         .filter((p) => p.discover_section?.startsWith("production_style_"))
-        .sort((a, b) => (a.discover_section ?? "").localeCompare(b.discover_section ?? "")),
+        .sort((a, b) =>
+          (a.discover_section ?? "").localeCompare(b.discover_section ?? ""),
+        ),
     [playlists],
   );
 
@@ -751,7 +836,10 @@ export default function DashboardPage() {
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
         <div className="px-5 py-6 md:px-8 lg:px-10">
-          <VisualDiscoverySection blocks={discoverBlocks} loading={playlistsLoading} />
+          <VisualDiscoverySection
+            blocks={discoverBlocks}
+            loading={playlistsLoading}
+          />
 
           {songsLoading && playableSongs.length === 0 ? (
             <SongsSkeleton />
@@ -759,9 +847,15 @@ export default function DashboardPage() {
             <CompactSongsSection songs={compactSongs} />
           )}
 
-          <ProductionStylesSection blocks={productionBlocks} loading={playlistsLoading} />
+          <ProductionStylesSection
+            blocks={productionBlocks}
+            loading={playlistsLoading}
+          />
 
-          <CuratedPlaylistsSection playlists={discoverCuratedPlaylists} loading={playlistsLoading} />
+          <CuratedPlaylistsSection
+            playlists={discoverCuratedPlaylists}
+            loading={playlistsLoading}
+          />
 
           <FastScanSection songs={fastScanSongs} />
 
