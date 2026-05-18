@@ -5,13 +5,17 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 export const runtime = "nodejs";
 
-const BUCKET =
-  process.env.CLOUDFLARE_R2_IMAGES_BUCKET_NAME ||
-  process.env.CLOUDFLARE_R2_BUCKET_NAME!;
-const PUBLIC_URL = (
-  process.env.CLOUDFLARE_R2_IMAGES_PUBLIC_URL ||
-  process.env.CLOUDFLARE_R2_PUBLIC_URL!
-).replace(/\/$/, "");
+// Read env vars inside the handler so they're evaluated fresh on each request
+// (avoids module-level caching issues with Next.js Turbopack)
+function getBucket() {
+  return process.env.CLOUDFLARE_R2_IMAGES_BUCKET_NAME || process.env.CLOUDFLARE_R2_BUCKET_NAME!;
+}
+
+function getPublicUrl() {
+  return (
+    process.env.CLOUDFLARE_R2_IMAGES_PUBLIC_URL || process.env.CLOUDFLARE_R2_PUBLIC_URL!
+  ).replace(/\/$/, "");
+}
 
 function slugify(value: string) {
   return (
@@ -35,6 +39,11 @@ export async function POST(req: Request) {
   if (!admin.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
+
+  const BUCKET = getBucket();
+  const PUBLIC_URL = getPublicUrl();
+
+  console.log(`[image-upload] BUCKET="${BUCKET}" PUBLIC_URL="${PUBLIC_URL}"`);
 
   try {
     const formData = await req.formData();
@@ -63,8 +72,6 @@ export async function POST(req: Request) {
     const baseFolder = target === "playlist" ? "images/playlists" : "images/discover";
     const key = `${baseFolder}/${safeSlug}/${variant}-${Date.now()}.webp`;
 
-    console.log(`[image-upload] bucket="${BUCKET}" key="${key}" public_url="${PUBLIC_URL}"`);
-
     const sharp = (await import("sharp")).default;
     const arrayBuffer = await file.arrayBuffer();
     const inputBuffer = Buffer.from(arrayBuffer);
@@ -86,10 +93,9 @@ export async function POST(req: Request) {
       }),
     );
 
-    console.log(`[image-upload] R2 response httpStatusCode=${r2Response.$metadata.httpStatusCode}`);
+    console.log(`[image-upload] R2 httpStatusCode=${r2Response.$metadata.httpStatusCode} key="${key}"`);
 
     const imageUrl = `${PUBLIC_URL}/${key}`;
-    console.log(`[image-upload] success url="${imageUrl}"`);
     return NextResponse.json({ imageUrl, imageKey: key });
   } catch (err) {
     console.error("Image upload failed:", err);
