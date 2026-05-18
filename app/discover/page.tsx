@@ -14,7 +14,7 @@ import {
 } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
-import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import { DEFAULT_DISCOVER_BUTTON_TEXT, type CuratedPlaylist } from "@/lib/curatedPlaylists";
 import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -590,6 +590,13 @@ function DiscoverySideCard({ scene }: { scene: DiscoveryScene }) {
           <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
             {scene.description}
           </p>
+
+          {scene.ctaEnabled !== false && (
+            <div className="mt-4 inline-flex h-9 w-fit items-center gap-2 rounded-full bg-white px-3 text-xs font-medium text-black transition group-hover:scale-[1.02]">
+              {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
+              <ArrowUpRightIcon />
+            </div>
+          )}
         </div>
       </div>
     </Link>
@@ -614,6 +621,13 @@ function DiscoveryMiniCard({ scene }: { scene: DiscoveryScene }) {
         <h3 className="mt-1 font-[family-name:var(--font-instrument-sans)] text-[24px] font-medium leading-none tracking-[-0.05em] text-white">
           {scene.title}
         </h3>
+
+        {scene.ctaEnabled !== false && (
+          <div className="mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full bg-white px-3 text-[11px] font-medium text-black transition group-hover:scale-[1.02]">
+            {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
+            <ArrowUpRightIcon />
+          </div>
+        )}
       </div>
     </Link>
   );
@@ -647,17 +661,21 @@ function VisualDiscoverySection({ scenes }: { scenes: DiscoveryScene[] }) {
       <FullWidthSearchBar />
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
-        <DiscoveryHeroCard scene={heroScene} />
+        {heroScene && <DiscoveryHeroCard scene={heroScene} />}
 
-        <div className="grid gap-4">
-          <DiscoverySideCard scene={sideScene} />
+        {(sideScene || miniScenes.length > 0) && (
+          <div className="grid gap-4">
+            {sideScene && <DiscoverySideCard scene={sideScene} />}
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {miniScenes.map((scene) => (
-              <DiscoveryMiniCard key={scene.title} scene={scene} />
-            ))}
+            {miniScenes.length > 0 && (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {miniScenes.map((scene) => (
+                  <DiscoveryMiniCard key={scene.title} scene={scene} />
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
