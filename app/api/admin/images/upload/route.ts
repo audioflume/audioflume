@@ -5,8 +5,6 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 export const runtime = "nodejs";
 
-// Read env vars inside the handler so they're evaluated fresh on each request
-// (avoids module-level caching issues with Next.js Turbopack)
 function getBucket() {
   return process.env.CLOUDFLARE_R2_IMAGES_BUCKET_NAME || process.env.CLOUDFLARE_R2_BUCKET_NAME!;
 }
@@ -42,8 +40,6 @@ export async function POST(req: Request) {
 
   const BUCKET = getBucket();
   const PUBLIC_URL = getPublicUrl();
-
-  console.log(`[image-upload] BUCKET="${BUCKET}" PUBLIC_URL="${PUBLIC_URL}"`);
 
   try {
     const formData = await req.formData();
@@ -83,7 +79,7 @@ export async function POST(req: Request) {
       .webp({ quality: 82 })
       .toBuffer();
 
-    const r2Response = await r2Client.send(
+    await r2Client.send(
       new PutObjectCommand({
         Bucket: BUCKET,
         Key: key,
@@ -92,8 +88,6 @@ export async function POST(req: Request) {
         CacheControl: "public, max-age=31536000",
       }),
     );
-
-    console.log(`[image-upload] R2 httpStatusCode=${r2Response.$metadata.httpStatusCode} key="${key}"`);
 
     const imageUrl = `${PUBLIC_URL}/${key}`;
     return NextResponse.json({ imageUrl, imageKey: key });
