@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
+import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 export type CuratedPlaylistCardItem = Pick<
@@ -151,9 +153,7 @@ export default function CuratedPlaylistShelf({
             className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
             aria-label={`Scroll ${title} left`}
           >
-            <span className="rotate-180">
-              <ArrowUpRightIcon />
-            </span>
+            <ChevronLeftIcon size={16} />
           </button>
 
           <button
@@ -163,7 +163,7 @@ export default function CuratedPlaylistShelf({
             className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
             aria-label={`Scroll ${title} right`}
           >
-            <ArrowUpRightIcon />
+            <ChevronRightIcon size={16} />
           </button>
 
           {viewAllHref && (
@@ -193,9 +193,7 @@ export default function CuratedPlaylistShelf({
           className="absolute left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex md:left-8 lg:left-10"
           aria-label={`Scroll ${title} left`}
         >
-          <span className="rotate-180">
-            <ArrowUpRightIcon />
-          </span>
+          <ChevronLeftIcon size={18} />
         </button>
 
         <button
@@ -205,12 +203,12 @@ export default function CuratedPlaylistShelf({
           className="absolute right-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex md:right-8 lg:right-10"
           aria-label={`Scroll ${title} right`}
         >
-          <ArrowUpRightIcon />
+          <ChevronRightIcon size={18} />
         </button>
 
         <div
           ref={scrollerRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth pl-5 pr-20 [scrollbar-width:none] md:pl-8 lg:pl-10 [&::-webkit-scrollbar]:hidden"
+          className="flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain pl-5 pr-20 [scrollbar-width:none] md:pl-8 lg:pl-10 [&::-webkit-scrollbar]:hidden"
         >
           {playlists.map((playlist) => (
             <CuratedPlaylistCard key={playlist.id} playlist={playlist} />
