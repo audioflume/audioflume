@@ -45,6 +45,27 @@ type ProductionStyle = {
   image: string;
 };
 
+function playlistToDiscoveryScene(playlist: CuratedPlaylist, layout: DiscoveryScene["layout"]): DiscoveryScene {
+  return {
+    title: playlist.name,
+    kicker: playlist.kicker,
+    description: playlist.description || `${playlist.song_count || 0} tracks selected for this Discover block.`,
+    href: `/curated-playlists/${playlist.id}`,
+    image: playlist.cover_image_url || "",
+    layout,
+  };
+}
+
+function playlistToProductionStyle(playlist: CuratedPlaylist): ProductionStyle {
+  return {
+    title: playlist.name,
+    kicker: playlist.kicker,
+    description: playlist.description || `${playlist.song_count || 0} tracks selected for this production style.`,
+    href: `/curated-playlists/${playlist.id}`,
+    image: playlist.cover_image_url || "",
+  };
+}
+
 const discoveryScenes: DiscoveryScene[] = [
   {
     title: "Quiet documentary beds",
@@ -141,6 +162,10 @@ const fallbackCuratedPlaylists: CuratedPlaylist[] = [
       "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=80",
     playlist_group: "Documentary",
     position: 0,
+    description: "Soft movement, subtle pulse, and grounded tracks for voice-led edits.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 0,
   },
   {
     id: 2,
@@ -151,6 +176,10 @@ const fallbackCuratedPlaylists: CuratedPlaylist[] = [
       "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80",
     playlist_group: "Commercial",
     position: 1,
+    description: "Polished, confident, and energetic tracks for commercial cuts.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 1,
   },
   {
     id: 3,
@@ -161,6 +190,10 @@ const fallbackCuratedPlaylists: CuratedPlaylist[] = [
       "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80",
     playlist_group: "Tension",
     position: 2,
+    description: "Slow pressure, negative space, low rhythm, and moody builds.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 2,
   },
   {
     id: 4,
@@ -171,6 +204,10 @@ const fallbackCuratedPlaylists: CuratedPlaylist[] = [
       "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
     playlist_group: "Travel",
     position: 3,
+    description: "Airy guitars, soft percussion, and moving landscape cues.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 3,
   },
   {
     id: 5,
@@ -181,6 +218,10 @@ const fallbackCuratedPlaylists: CuratedPlaylist[] = [
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
     playlist_group: "Ambient",
     position: 4,
+    description: "Ambient texture and soft-focus cue options.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 4,
   },
   {
     id: 6,
@@ -191,6 +232,10 @@ const fallbackCuratedPlaylists: CuratedPlaylist[] = [
       "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=900&q=80",
     playlist_group: "Editor Picks",
     position: 5,
+    description: "Fast selects for finding a first pass quickly.",
+    discover_section: null,
+    show_on_discover: true,
+    discover_position: 5,
   },
 ];
 
@@ -561,10 +606,10 @@ function DiscoveryMiniCard({ scene }: { scene: DiscoveryScene }) {
   );
 }
 
-function VisualDiscoverySection() {
-  const heroScene = discoveryScenes[0];
-  const sideScene = discoveryScenes[1];
-  const miniScenes = discoveryScenes.slice(2);
+function VisualDiscoverySection({ scenes }: { scenes: DiscoveryScene[] }) {
+  const heroScene = scenes[0];
+  const sideScene = scenes[1];
+  const miniScenes = scenes.slice(2);
 
   return (
     <section>
@@ -611,13 +656,18 @@ function ProductionStyleCard({ style }: { style: ProductionStyle }) {
       href={style.href}
       className="group relative min-h-[245px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] transition hover:border-[var(--text-muted)]"
     >
-      <Image
-        src={style.image}
-        alt={style.title}
-        fill
-        sizes="(min-width: 1280px) 25vw, 100vw"
-        className="object-cover transition duration-700 group-hover:scale-[1.04]"
-      />
+      {style.image ? (
+        <Image
+          src={style.image}
+          alt={style.title}
+          fill
+          sizes="(min-width: 1280px) 25vw, 100vw"
+          className="object-cover transition duration-700 group-hover:scale-[1.04]"
+          unoptimized
+        />
+      ) : (
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,#25364f_0%,#111111_52%,#6287c4_100%)]" />
+      )}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/36 to-black/8" />
 
@@ -646,7 +696,7 @@ function ProductionStyleCard({ style }: { style: ProductionStyle }) {
   );
 }
 
-function ProductionStylesSection() {
+function ProductionStylesSection({ styles }: { styles: ProductionStyle[] }) {
   return (
     <section className="mt-12">
       <div className="mb-4 flex items-end justify-between gap-4">
@@ -669,7 +719,7 @@ function ProductionStylesSection() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {productionStyles.map((style) => (
+        {styles.map((style) => (
           <ProductionStyleCard key={style.title} style={style} />
         ))}
       </div>
@@ -677,33 +727,7 @@ function ProductionStylesSection() {
   );
 }
 
-function CuratedPlaylistsSection() {
-  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>(
-    fallbackCuratedPlaylists,
-  );
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadCuratedPlaylists() {
-      try {
-        const res = await fetch("/api/curated-playlists");
-        const data = await res.json();
-
-        if (!res.ok || !Array.isArray(data) || data.length === 0) return;
-        if (!cancelled) setPlaylists(data);
-      } catch {
-        // Keep the hand-picked fallback set if the API is unavailable.
-      }
-    }
-
-    loadCuratedPlaylists();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+function CuratedPlaylistsSection({ playlists }: { playlists: CuratedPlaylist[] }) {
   return (
     <CuratedPlaylistShelf
       title="Curated playlists"
@@ -897,6 +921,7 @@ function LoadingCard() {
 export default function DashboardPage() {
   const { songs, loading, error } = useSongs();
   const { currentSong, setQueue } = usePlayer();
+  const [discoverPlaylists, setDiscoverPlaylists] = useState<CuratedPlaylist[]>([]);
 
   const playableSongs = useMemo(() => sortSongsForVisuals(songs), [songs]);
 
@@ -904,6 +929,54 @@ export default function DashboardPage() {
   const fastScanSongs = getFastScanSongs(playableSongs);
 
   const playerVisible = !!currentSong;
+
+  const dynamicScenes = useMemo(() => {
+    const layouts: DiscoveryScene["layout"][] = ["hero", "wide", "small", "small"];
+    return discoveryScenes.map((fallback, index) => {
+      const section = `discover_block_${index + 1}`;
+      const playlist = discoverPlaylists.find((item) => item.discover_section === section);
+      return playlist ? playlistToDiscoveryScene(playlist, layouts[index]) : fallback;
+    });
+  }, [discoverPlaylists]);
+
+  const dynamicProductionStyles = useMemo(() =>
+    productionStyles.map((fallback, index) => {
+      const section = `production_style_${index + 1}`;
+      const playlist = discoverPlaylists.find((item) => item.discover_section === section);
+      return playlist ? playlistToProductionStyle(playlist) : fallback;
+    }),
+    [discoverPlaylists],
+  );
+
+  const discoverCuratedPlaylists = useMemo(() => {
+    const selected = discoverPlaylists
+      .filter((playlist) => playlist.show_on_discover)
+      .sort((a, b) => a.discover_position - b.discover_position);
+
+    return selected.length > 0 ? selected : fallbackCuratedPlaylists;
+  }, [discoverPlaylists]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadDiscoverPlaylists() {
+      try {
+        const res = await fetch("/api/curated-playlists");
+        const data = await res.json();
+
+        if (!res.ok || !Array.isArray(data)) return;
+        if (!cancelled) setDiscoverPlaylists(data);
+      } catch {
+        // Keep the hand-picked fallback content if the API is unavailable.
+      }
+    }
+
+    loadDiscoverPlaylists();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     setQueue(playableSongs);
@@ -922,13 +995,13 @@ export default function DashboardPage() {
             </div>
           ) : (
             <>
-              <VisualDiscoverySection />
+              <VisualDiscoverySection scenes={dynamicScenes} />
               <CompactSongsSection songs={compactSongs} />
             </>
           )}
 
-          <ProductionStylesSection />
-          <CuratedPlaylistsSection />
+          <ProductionStylesSection styles={dynamicProductionStyles} />
+          <CuratedPlaylistsSection playlists={discoverCuratedPlaylists} />
           <FastScanSection songs={fastScanSongs} />
 
           {!loading && (
