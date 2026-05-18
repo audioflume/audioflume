@@ -27,6 +27,7 @@ import type { Song } from "@/lib/types";
 
 const COMPACT_SONG_COUNT = 9;
 const FAST_SCAN_SONG_COUNT = 24;
+const DISCOVER_BUTTON_FALLBACK_TEXT = "Explore this mood";
 
 type DiscoveryScene = {
   title: string;
