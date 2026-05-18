@@ -48,7 +48,6 @@ type PlaylistSong = Song & {
   created_at: string;
 };
 
-// Use maybeSingle() — single() throws PGRST116 on 0 rows which falsely fails ownership check
 async function verifyPlaylistOwner(playlistId: string, userId: string) {
   const { data, error } = await supabaseServer
     .from("playlists")
@@ -184,10 +183,12 @@ export async function GET(_req: Request, context: RouteContext) {
 
     if (!songIds.length) return NextResponse.json([]);
 
+    // songs.id is stored as text (Airtable rec IDs) — use filter on cast to avoid
+    // uuid type mismatch when song_id contains Airtable record IDs like "recXXX"
     const { data: songs, error: songsError } = await supabaseServer
       .from("songs")
       .select("*")
-      .in("id", songIds);
+      .filter("id", "in", `(${songIds.map((id) => `"${id}"`).join(",")})`);
 
     if (songsError) throw songsError;
 
@@ -210,7 +211,7 @@ export async function GET(_req: Request, context: RouteContext) {
   } catch (err) {
     console.error("Failed to load playlist songs:", err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Failed to load playlist songs" },
+      { error: err instanceof Error ? err.message : JSON.stringify(err) },
       { status: 500 },
     );
   }
