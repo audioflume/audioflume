@@ -14,7 +14,7 @@ import {
 } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
-import { DEFAULT_DISCOVER_BUTTON_TEXT, type CuratedPlaylist } from "@/lib/curatedPlaylists";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -47,11 +47,16 @@ type ProductionStyle = {
   image: string;
 };
 
-function playlistToDiscoveryScene(playlist: CuratedPlaylist, layout: DiscoveryScene["layout"]): DiscoveryScene {
+function playlistToDiscoveryScene(
+  playlist: CuratedPlaylist,
+  layout: DiscoveryScene["layout"],
+): DiscoveryScene {
   return {
     title: playlist.name,
     kicker: playlist.kicker,
-    description: playlist.description || `${playlist.song_count || 0} tracks selected for this Discover block.`,
+    description:
+      playlist.description ||
+      `${playlist.song_count || 0} tracks selected for this Discover block.`,
     href: `/curated-playlists/${playlist.id}`,
     image: playlist.cover_image_url || "",
     layout,
@@ -62,7 +67,9 @@ function playlistToProductionStyle(playlist: CuratedPlaylist): ProductionStyle {
   return {
     title: playlist.name,
     kicker: playlist.kicker,
-    description: playlist.description || `${playlist.song_count || 0} tracks selected for this production style.`,
+    description:
+      playlist.description ||
+      `${playlist.song_count || 0} tracks selected for this production style.`,
     href: `/curated-playlists/${playlist.id}`,
     image: playlist.cover_image_url || "",
   };
@@ -164,7 +171,8 @@ const fallbackCuratedPlaylists: CuratedPlaylist[] = [
       "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=80",
     playlist_group: "Documentary",
     position: 0,
-    description: "Soft movement, subtle pulse, and grounded tracks for voice-led edits.",
+    description:
+      "Soft movement, subtle pulse, and grounded tracks for voice-led edits.",
     discover_section: null,
     show_on_discover: true,
     discover_position: 0,
@@ -178,7 +186,8 @@ const fallbackCuratedPlaylists: CuratedPlaylist[] = [
       "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80",
     playlist_group: "Commercial",
     position: 1,
-    description: "Polished, confident, and energetic tracks for commercial cuts.",
+    description:
+      "Polished, confident, and energetic tracks for commercial cuts.",
     discover_section: null,
     show_on_discover: true,
     discover_position: 1,
@@ -548,7 +557,7 @@ function DiscoveryHeroCard({ scene }: { scene: DiscoveryScene }) {
 
           {scene.ctaEnabled !== false && (
             <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
-              {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
+              {scene.ctaText || "Explore this mood"}
               <ArrowUpRightIcon />
             </div>
           )}
@@ -731,7 +740,11 @@ function ProductionStylesSection({ styles }: { styles: ProductionStyle[] }) {
   );
 }
 
-function CuratedPlaylistsSection({ playlists }: { playlists: CuratedPlaylist[] }) {
+function CuratedPlaylistsSection({
+  playlists,
+}: {
+  playlists: CuratedPlaylist[];
+}) {
   return (
     <CuratedPlaylistShelf
       title="Curated playlists"
@@ -925,7 +938,9 @@ function LoadingCard() {
 export default function DashboardPage() {
   const { songs, loading, error } = useSongs();
   const { currentSong, setQueue } = usePlayer();
-  const [discoverPlaylists, setDiscoverPlaylists] = useState<CuratedPlaylist[]>([]);
+  const [discoverPlaylists, setDiscoverPlaylists] = useState<CuratedPlaylist[]>(
+    [],
+  );
 
   const playableSongs = useMemo(() => sortSongsForVisuals(songs), [songs]);
 
@@ -935,20 +950,32 @@ export default function DashboardPage() {
   const playerVisible = !!currentSong;
 
   const dynamicScenes = useMemo(() => {
-    const layouts: DiscoveryScene["layout"][] = ["hero", "wide", "small", "small"];
+    const layouts: DiscoveryScene["layout"][] = [
+      "hero",
+      "wide",
+      "small",
+      "small",
+    ];
     return discoveryScenes.map((fallback, index) => {
       const section = `discover_block_${index + 1}`;
-      const playlist = discoverPlaylists.find((item) => item.discover_section === section);
-      return playlist ? playlistToDiscoveryScene(playlist, layouts[index]) : fallback;
+      const playlist = discoverPlaylists.find(
+        (item) => item.discover_section === section,
+      );
+      return playlist
+        ? playlistToDiscoveryScene(playlist, layouts[index])
+        : fallback;
     });
   }, [discoverPlaylists]);
 
-  const dynamicProductionStyles = useMemo(() =>
-    productionStyles.map((fallback, index) => {
-      const section = `production_style_${index + 1}`;
-      const playlist = discoverPlaylists.find((item) => item.discover_section === section);
-      return playlist ? playlistToProductionStyle(playlist) : fallback;
-    }),
+  const dynamicProductionStyles = useMemo(
+    () =>
+      productionStyles.map((fallback, index) => {
+        const section = `production_style_${index + 1}`;
+        const playlist = discoverPlaylists.find(
+          (item) => item.discover_section === section,
+        );
+        return playlist ? playlistToProductionStyle(playlist) : fallback;
+      }),
     [discoverPlaylists],
   );
 

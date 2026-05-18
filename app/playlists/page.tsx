@@ -8,6 +8,7 @@ import EditPlaylistModal from "@/components/EditPlaylistModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import Toast from "@/components/Toast";
 import DropdownShell from "@/components/DropdownShell";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
@@ -44,25 +45,16 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 const GRADIENTS = [
-  "linear-gradient(160deg,#1a3a2a,#2d5a3d)",
-  "linear-gradient(160deg,#111827,#1f2937)",
-  "linear-gradient(160deg,#7f1d1d,#b91c1c)",
-  "linear-gradient(160deg,#1c1c2e,#2d2d44)",
-  "linear-gradient(160deg,#003d40,#006064)",
-  "linear-gradient(160deg,#4a0e0e,#7b1515)",
-  "linear-gradient(160deg,#1a2535,#2c3e50)",
-  "linear-gradient(160deg,#0f172a,#1e3a5f)",
-  "linear-gradient(160deg,#2d0a3a,#4a1258)",
-  "linear-gradient(160deg,#0f1a0f,#1a2e1a)",
-  "linear-gradient(160deg,#1a0a2e,#2d1554)",
-  "linear-gradient(160deg,#003344,#00516b)",
-  "linear-gradient(160deg,#3d2800,#6b4500)",
-  "linear-gradient(160deg,#121212,#2a2a2a)",
-  "linear-gradient(160deg,#001a4d,#002b80)",
-  "linear-gradient(160deg,#0a2e0a,#145214)",
-  "linear-gradient(160deg,#3d1200,#6b2100)",
-  "linear-gradient(160deg,#0a2233,#0d3352)",
-  "linear-gradient(160deg,#1f0a3d,#36146b)",
+  "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
+  "linear-gradient(135deg,#1f3d3a 0%,#111111 52%,#4d8c7b 100%)",
+  "linear-gradient(135deg,#4f3529 0%,#111111 50%,#b66c45 100%)",
+  "linear-gradient(135deg,#25364f 0%,#111111 52%,#6287c4 100%)",
+  "linear-gradient(135deg,#45233d 0%,#111111 52%,#b75d91 100%)",
+  "linear-gradient(135deg,#0f172a 0%,#111111 52%,#1e3a5f 100%)",
+  "linear-gradient(135deg,#003344 0%,#111111 52%,#00516b 100%)",
+  "linear-gradient(135deg,#3d2800 0%,#111111 52%,#6b4500 100%)",
+  "linear-gradient(135deg,#1a0a2e 0%,#111111 52%,#2d1554 100%)",
+  "linear-gradient(135deg,#0a2e0a 0%,#111111 52%,#145214 100%)",
 ];
 
 const PLAYLIST_SKELETON_VIEW_MODE_KEY = "filmwave-playlist-skeleton-view-mode";
@@ -80,7 +72,7 @@ function getPlaylistCover(playlist: Playlist) {
 }
 
 function formatSongCount(count: number) {
-  return `${count} song${count === 1 ? "" : "s"}`;
+  return `${count} track${count === 1 ? "" : "s"}`;
 }
 
 function formatGenres(genres: string[]) {
@@ -156,15 +148,8 @@ function SkeletonLibrary({ viewMode }: { viewMode: PlaylistViewMode }) {
       {Array.from({ length: 18 }, (_, index) => (
         <div key={index} className="playlist-skeleton-gallery-card">
           <div className="playlist-skeleton-gallery-art">
-            <div className="playlist-skeleton-gallery-number" />
+            <div className="playlist-skeleton-gallery-arrow" />
           </div>
-
-          <div className="playlist-skeleton-gallery-copy">
-            <SkeletonBlock className="playlist-skeleton-gallery-title" />
-            <SkeletonBlock className="playlist-skeleton-gallery-count" />
-          </div>
-
-          <SkeletonBlock className="playlist-skeleton-gallery-genres" />
         </div>
       ))}
     </div>
@@ -224,7 +209,7 @@ function PlaylistMenu({
       <DropdownShell
         open={open}
         onOpenChange={onOpenChange}
-        placement="bottom-end"
+        placement="bottom-start"
         className="playlist-dropdown"
         strategy="fixed"
         usePortal
@@ -413,7 +398,7 @@ function SortablePlaylistItem({
     return (
       <div
         ref={setNodeRef}
-        className="playlist-gallery-card"
+        className="playlist-gallery-card is-reordering"
         style={style}
         {...attributes}
         {...listeners}
@@ -431,22 +416,17 @@ function SortablePlaylistItem({
             </div>
           )}
 
-          <div className="playlist-gallery-number">
-            {String(index + 1).padStart(2, "0")}
+          <div className="playlist-gallery-top-row">
+            <div className="playlist-gallery-handle">
+              <ReorderHandleIcon />
+            </div>
           </div>
 
-          <div className="playlist-gallery-handle">
-            <ReorderHandleIcon />
+          <div className="playlist-gallery-content">
+            <h3>{playlist.name}</h3>
+
+            <p>{formatSongCount(stats?.songCount ?? 0)}</p>
           </div>
-        </div>
-
-        <div className="playlist-gallery-copy">
-          <span>{playlist.name}</span>
-          <small>{formatSongCount(stats?.songCount ?? 0)}</small>
-        </div>
-
-        <div className="playlist-gallery-genres">
-          {formatGenres(stats?.topGenres ?? [])}
         </div>
       </div>
     );
@@ -474,18 +454,17 @@ function SortablePlaylistItem({
             </div>
           )}
 
-          <div className="playlist-gallery-number">
-            {String(index + 1).padStart(2, "0")}
+          <div className="playlist-gallery-top-row">
+            <div className="playlist-gallery-arrow">
+              <ArrowUpRightIcon />
+            </div>
           </div>
-        </div>
 
-        <div className="playlist-gallery-copy">
-          <span>{playlist.name}</span>
-          <small>{formatSongCount(stats?.songCount ?? 0)}</small>
-        </div>
+          <div className="playlist-gallery-content">
+            <h3>{playlist.name}</h3>
 
-        <div className="playlist-gallery-genres">
-          {formatGenres(stats?.topGenres ?? [])}
+            <p>{formatSongCount(stats?.songCount ?? 0)}</p>
+          </div>
         </div>
       </Link>
 
@@ -567,14 +546,15 @@ function DragPreview({
           className="playlist-gallery-art"
         />
 
-        <div className="playlist-gallery-number">
-          {String(index + 1).padStart(2, "0")}
-        </div>
-      </div>
+        <div className="playlist-gallery-content">
+          <div className="playlist-gallery-kicker">
+            {formatGenres(stats?.topGenres ?? [])}
+          </div>
 
-      <div className="playlist-gallery-copy">
-        <span>{playlist.name}</span>
-        <small>{formatSongCount(stats?.songCount ?? 0)}</small>
+          <h3>{playlist.name}</h3>
+
+          <p>{formatSongCount(stats?.songCount ?? 0)}</p>
+        </div>
       </div>
     </div>
   );
@@ -1131,10 +1111,10 @@ export default function PlaylistsPage() {
         }
 
         .playlist-gallery {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-          gap: 22px 20px;
-        }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
 
         .playlist-gallery-card {
           position: relative;
@@ -1150,17 +1130,16 @@ export default function PlaylistsPage() {
 
         .playlist-gallery-art-wrap {
   position: relative;
-  aspect-ratio: 1 / 1.08;
+  min-height: 210px;
   border-radius: 18px;
   overflow: hidden;
   background: var(--bg-secondary);
   border: 1px solid var(--border-subtle);
-  transition: transform 0.18s ease;
+  transition: none;
 }
 
-.playlist-gallery-card:hover .playlist-gallery-art-wrap,
+        .playlist-gallery-card:hover .playlist-gallery-art-wrap,
 .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap {
-  transform: translateY(-2px);
   border-color: var(--border);
 }
 
@@ -1173,9 +1152,7 @@ export default function PlaylistsPage() {
           content: "";
           position: absolute;
           inset: 0;
-          background:
-            linear-gradient(to top, var(--media-overlay-strong), var(--media-overlay-faint) 58%, var(--media-overlay-soft)),
-            linear-gradient(to bottom, var(--media-overlay-highlight), transparent);
+          background: linear-gradient(to top, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.18) 58%, transparent);
           pointer-events: none;
         }
 
@@ -1190,73 +1167,100 @@ export default function PlaylistsPage() {
 
         .playlist-gallery-letters {
           position: absolute;
-          left: 14px;
-          bottom: 14px;
+          left: 18px;
+          bottom: 18px;
+          z-index: 1;
           font-family: var(--font-instrument-sans);
-          font-size: 36px;
+          font-size: 44px;
           font-weight: 500;
-          letter-spacing: -0.06em;
-          color: var(--media-overlay-text-strong);
-          z-index: 2;
+          line-height: 0.9;
+          letter-spacing: -0.07em;
+          color: rgba(255, 255, 255, 0.12);
+          pointer-events: none;
         }
 
-        .playlist-gallery-number {
-          position: absolute;
-          left: 10px;
-          top: 10px;
-          z-index: 3;
+        .playlist-gallery-top-row {
+          position: relative;
+          z-index: 4;
           display: flex;
-          height: 26px;
-          min-width: 32px;
+          justify-content: flex-end;
+          padding: 16px;
+        }
+
+        .playlist-gallery-arrow {
+          display: flex;
+          width: 32px;
+          height: 32px;
+          flex-shrink: 0;
           align-items: center;
           justify-content: center;
           border-radius: 999px;
-          background: var(--media-overlay-white-tint);
-          color: var(--media-overlay-contrast);
-          font-size: 10px;
-          font-weight: 600;
+          background: rgba(255, 255, 255, 0.12);
+          color: white;
           backdrop-filter: blur(12px);
+          transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+        }
+
+        .playlist-gallery-card:hover .playlist-gallery-arrow,
+        .playlist-gallery-card.is-menu-open .playlist-gallery-arrow {
+          background: white;
+          color: black;
+        }
+
+        .playlist-gallery-content {
+          position: absolute;
+          left: 16px;
+          right: 16px;
+          bottom: 16px;
+          z-index: 4;
+        }
+
+        .playlist-gallery-kicker {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.52);
+        }
+
+        .playlist-gallery-content h3 {
+          margin-top: 8px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-family: var(--font-instrument-sans);
+          font-size: 25px;
+          font-weight: 500;
+          line-height: 0.95;
+          letter-spacing: -0.055em;
+          color: white;
+        }
+
+        .playlist-gallery-content p {
+          margin-top: 12px;
+          font-size: 11px;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 0.58);
         }
 
         .playlist-gallery-handle {
-          position: absolute;
-          right: 12px;
-          top: 12px;
-          z-index: 5;
-          color: var(--media-overlay-icon);
-        }
-
-        .playlist-gallery-copy {
           display: flex;
-          justify-content: space-between;
-          gap: 10px;
-          margin-top: 8px;
-          min-width: 0;
+          width: 32px;
+          height: 32px;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          background: rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.72);
+          backdrop-filter: blur(12px);
         }
 
-        .playlist-gallery-copy span {
-          min-width: 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--text-primary);
-        }
-
-        .playlist-gallery-copy small {
-          flex: 0 0 auto;
-          font-size: 10px;
-          color: var(--text-secondary);
-        }
-
-        .playlist-gallery-genres {
-          margin-top: 5px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 10px;
-          color: var(--text-muted);
+        .playlist-gallery-card.is-reordering .playlist-gallery-art-wrap {
+          border-style: dashed;
         }
 
         .playlist-index {
@@ -1355,13 +1359,14 @@ export default function PlaylistsPage() {
 
         .playlist-card-menu-wrap {
           position: absolute;
-          z-index: 10;
-          top: 10px;
-          right: 10px;
+          z-index: 12;
+          top: 16px;
+          left: 16px;
         }
 
         .playlist-index-row-shell .playlist-card-menu-wrap {
           top: 50%;
+          left: auto;
           right: 12px;
           transform: translateY(-50%);
         }
@@ -1376,16 +1381,17 @@ export default function PlaylistsPage() {
         }
 
         .playlist-menu-btn-grid {
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border: none;
-          border-radius: 6px;
-          background-color: transparent;
-          color: var(--media-overlay-contrast);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          border-radius: 999px;
+          background-color: rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.72);
           cursor: pointer;
+          backdrop-filter: blur(12px);
         }
 
         .playlist-gallery-card:hover .playlist-menu-btn-grid,
@@ -1394,16 +1400,15 @@ export default function PlaylistsPage() {
         }
 
         .playlist-gallery-card:hover .playlist-menu-btn-grid:not(:hover):not(.is-open) {
-          background-color: transparent;
-          color: var(--media-overlay-contrast);
+          background-color: rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.72);
           box-shadow: none;
         }
 
         .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid:hover,
         .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid.is-open {
-          background-color: var(--media-overlay-white-tint);
-          color: var(--media-overlay-contrast);
-          backdrop-filter: blur(10px);
+          background-color: white;
+          color: black;
         }
 
         .playlist-index-row-shell .playlist-menu-btn {
@@ -1468,7 +1473,7 @@ export default function PlaylistsPage() {
 
         .playlist-create-card {
           position: relative;
-          aspect-ratio: 1 / 1.08;
+          min-height: 210px;
           width: 100%;
           display: flex;
           flex-direction: column;
@@ -1480,13 +1485,12 @@ export default function PlaylistsPage() {
           padding: 16px;
           cursor: pointer;
           text-align: left;
-          transition: background 0.15s ease, transform 0.15s ease;
+          transition: background 0.15s ease, border-color 0.15s ease;
         }
 
         .playlist-create-card:hover {
           border-color: var(--border-hover);
           background: var(--bg-hover);
-          transform: translateY(-1px);
         }
 
         .playlist-create-row {
@@ -1562,10 +1566,17 @@ export default function PlaylistsPage() {
         }
 
         .drag-preview-card {
-          width: 210px;
-          transform: scale(1.04);
-          box-shadow: 0 24px 80px var(--media-overlay-heavy);
-        }
+  width: 320px;
+  overflow: hidden;
+  border-radius: 18px;
+  transform: scale(1.04);
+  box-shadow: 0 24px 80px var(--media-overlay-heavy);
+}
+
+.drag-preview-card .playlist-gallery-art-wrap {
+  overflow: hidden;
+  border-radius: 18px;
+}
 
         .drag-preview-row {
           width: calc(100vw - var(--sidebar-width) - 64px);
@@ -1603,10 +1614,10 @@ export default function PlaylistsPage() {
         }
 
         .playlist-skeleton-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-          gap: 22px 20px;
-        }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
 
         .playlist-skeleton-gallery-card {
           min-width: 0;
@@ -1615,9 +1626,9 @@ export default function PlaylistsPage() {
 
         .playlist-skeleton-gallery-art {
           position: relative;
-          aspect-ratio: 1 / 1.08;
+          min-height: 210px;
           border-radius: 18px;
-          border: 0px solid var(--border-subtle);
+          border: 1px solid var(--border-subtle);
           background: var(--bg-card);
           overflow: hidden;
         }
@@ -1636,28 +1647,14 @@ export default function PlaylistsPage() {
           animation: playlist-skeleton-shimmer 1.6s ease-in-out infinite;
         }
 
-        .playlist-skeleton-gallery-copy {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-          margin-top: 8px;
-        }
-
-        .playlist-skeleton-gallery-title {
-          width: 62%;
-          height: 9px;
-        }
-
-        .playlist-skeleton-gallery-count {
-          width: 42px;
-          height: 8px;
-        }
-
-        .playlist-skeleton-gallery-genres {
-          width: 46%;
-          height: 8px;
-          margin-top: 8px;
+        .playlist-skeleton-gallery-arrow {
+          position: absolute;
+          right: 16px;
+          top: 16px;
+          width: 32px;
+          height: 32px;
+          border-radius: 999px;
+          background: var(--bg-tertiary);
         }
 
         .playlist-skeleton-list {
@@ -1737,9 +1734,19 @@ export default function PlaylistsPage() {
           }
 
           .playlist-gallery,
-          .playlist-skeleton-grid {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 18px 14px;
+.playlist-skeleton-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+          .playlist-gallery-art-wrap,
+          .playlist-create-card,
+          .playlist-skeleton-gallery-art {
+            min-height: 188px;
+          }
+
+          .playlist-gallery-content h3 {
+            font-size: 23px;
           }
 
           .drag-preview-row {
