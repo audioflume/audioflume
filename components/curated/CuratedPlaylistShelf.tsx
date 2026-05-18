@@ -34,8 +34,7 @@ function formatSongCount(count?: number) {
 
 async function addCuratedPlaylistToMyPlaylists(
   playlist: CuratedPlaylistCardItem,
-): Promise<string> {
-  // 1. Create the new user playlist
+): Promise<void> {
   const createRes = await fetch("/api/playlists", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -54,34 +53,28 @@ async function addCuratedPlaylistToMyPlaylists(
   const newPlaylist = await createRes.json();
   const newPlaylistId = newPlaylist.id;
 
-  // 2. Fetch the curated playlist songs
   const songsRes = await fetch(
     `/api/curated-playlists/${encodeURIComponent(String(playlist.id))}/songs`,
   );
+  if (!songsRes.ok) return;
 
-  if (!songsRes.ok) {
-    // Playlist created but couldn't add songs — still a partial success
-    return newPlaylistId;
-  }
+  const songs = await songsRes.json();
+  if (!Array.isArray(songs) || songs.length === 0) return;
 
-  const songs: Array<{ id: string }> = await songsRes.json();
-
-  if (!Array.isArray(songs) || songs.length === 0) {
-    return newPlaylistId;
-  }
-
-  // 3. Add each song (in order, fire-and-forget failures)
-  await Promise.allSettled(
-    songs.map((song, index) =>
-      fetch(`/api/playlists/${newPlaylistId}/songs`, {
+  for (let i = 0; i < songs.length; i++) {
+    const song = songs[i];
+    const songId = song.song_id ?? song.id;
+    if (!songId) continue;
+    try {
+      await fetch(`/api/playlists/${newPlaylistId}/songs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ song_id: song.id, position: index }),
-      }),
-    ),
-  );
-
-  return newPlaylistId;
+        body: JSON.stringify({ song_id: songId, position: i }),
+      });
+    } catch (err) {
+      console.warn(`Error adding song ${songId}:`, err);
+    }
+  }
 }
 
 export function CuratedPlaylistCard({
@@ -119,19 +112,19 @@ export function CuratedPlaylistCard({
 
   return (
     <div
-      className={`playlist-gallery-card group relative min-h-[210px] min-w-[250px] overflow-hidden rounded-[18px] sm:min-w-[285px] lg:min-w-[320px] ${
+      className={`group relative min-h-[210px] min-w-[250px] sm:min-w-[285px] lg:min-w-[320px] ${
         isMenuOpen ? "is-menu-open" : ""
       }`}
     >
-      <Link href={href} className="playlist-gallery-link">
-        <div className="playlist-gallery-art-wrap relative min-h-[210px] overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-secondary)] transition">
+      <Link href={href} className="block">
+        <div className="relative min-h-[210px] overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--border)]">
           {playlist.cover_image_url ? (
             <Image
               src={playlist.cover_image_url}
               alt={playlist.name}
               fill
               sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
-              className="playlist-gallery-art absolute inset-0 object-cover transition duration-700 group-hover:scale-[1.025]"
+              className="object-cover transition duration-700 group-hover:scale-[1.025]"
               unoptimized
             />
           ) : (
@@ -140,13 +133,14 @@ export function CuratedPlaylistCard({
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/62 via-black/18 to-transparent" />
 
-          <div className="playlist-gallery-top-row relative z-[4] flex justify-end p-4">
-            <div className="playlist-gallery-arrow flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black">
+          {/* Arrow — top right */}
+          <div className="relative z-[4] flex justify-end p-4">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black">
               <ArrowUpRightIcon />
             </div>
           </div>
 
-          <div className="playlist-gallery-content absolute bottom-4 left-4 right-4 z-[4]">
+          <div className="absolute bottom-4 left-4 right-4 z-[4]">
             <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/52">
               {playlist.kicker}
             </div>
@@ -160,13 +154,12 @@ export function CuratedPlaylistCard({
         </div>
       </Link>
 
-      {/* Menu button — top-left, matches playlist card style */}
-      <div className="playlist-card-menu-wrap absolute left-4 top-4 z-[12]">
+      {/* More button — top left, frosted glass pill, hidden until hover */}
+      <div className="absolute left-4 top-4 z-[12]">
         <DropdownShell
           open={isMenuOpen}
           onOpenChange={(o) => setOpenMenuId(o ? playlist.id : null)}
           placement="bottom-start"
-          className="playlist-dropdown"
           strategy="fixed"
           usePortal
           offsetAmount={5}
@@ -181,17 +174,28 @@ export function CuratedPlaylistCard({
           trigger={({ open }) => (
             <button
               type="button"
-              className={`playlist-menu-btn playlist-menu-btn-grid ${open ? "is-open" : ""}`}
               aria-label={`${playlist.name} options`}
               disabled={saving}
+              className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/15 text-white/72 backdrop-blur transition disabled:opacity-50 ${
+                open
+                  ? "bg-white text-black opacity-100"
+                  : "bg-white/10 opacity-0 group-hover:opacity-100 hover:bg-white hover:text-black"
+              }`}
             >
               <MoreIcon />
             </button>
           )}
         >
-          <button type="button" onClick={handleAddToMyPlaylists} disabled={saving}>
-            {saving ? "Adding…" : "Add to My Playlists"}
-          </button>
+          <div className="w-[160px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] py-1 shadow-[var(--shadow-ui)]">
+            <button
+              type="button"
+              className="w-full px-3 py-2.5 text-left text-[12px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:opacity-50"
+              onClick={handleAddToMyPlaylists}
+              disabled={saving}
+            >
+              {saving ? "Adding…" : "Add to My Playlists"}
+            </button>
+          </div>
         </DropdownShell>
       </div>
     </div>
@@ -215,7 +219,7 @@ export default function CuratedPlaylistShelf({
 
   function showToast(msg: string) {
     setToastMessage(msg);
-    window.setTimeout(() => setToastMessage(null), 2000);
+    window.setTimeout(() => setToastMessage(null), 2400);
   }
 
   function updateScrollState() {
