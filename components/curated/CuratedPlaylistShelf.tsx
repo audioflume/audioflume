@@ -110,7 +110,6 @@ function CuratedPlaylistMenu({
         open={open}
         onOpenChange={onOpenChange}
         placement="bottom-start"
-        className="playlist-dropdown"
         strategy="fixed"
         usePortal
         offsetAmount={5}
@@ -490,36 +489,6 @@ export default function CuratedPlaylistShelf({
         .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid.is-open {
           background-color: white;
           color: black;
-        }
-
-        .playlist-dropdown {
-          z-index: 25;
-          width: 146px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border);
-          border-radius: 10px;
-          overflow: hidden;
-          box-shadow: var(--shadow-ui);
-          backdrop-filter: blur(12px);
-        }
-
-        .playlist-dropdown button {
-          display: block;
-          width: 100%;
-          padding: 9px 12px;
-          text-align: left;
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--text-secondary);
-          background: none;
-          border: none;
-          cursor: pointer;
-          transition: background 0.1s, color 0.1s;
-        }
-
-        .playlist-dropdown button:hover {
-          background: var(--bg-hover-strong);
-          color: var(--text-primary);
         }
       `}</style>
 

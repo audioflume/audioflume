@@ -210,7 +210,6 @@ function PlaylistMenu({
         open={open}
         onOpenChange={onOpenChange}
         placement="bottom-start"
-        className="playlist-dropdown"
         strategy="fixed"
         usePortal
         offsetAmount={5}
@@ -1435,49 +1434,6 @@ export default function PlaylistsPage() {
         .playlist-index-row-shell .playlist-menu-btn.is-open {
           background: var(--icon-button-hover);
           color: var(--text-primary);
-        }
-
-        .playlist-dropdown,
-        .playlist-sort-dropdown {
-          z-index: 25;
-          width: 146px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border);
-          border-radius: 10px;
-          overflow: hidden;
-          box-shadow: var(--shadow-ui);
-          backdrop-filter: blur(12px);
-        }
-
-        .playlist-dropdown button,
-        .playlist-sort-dropdown button {
-          display: block;
-          width: 100%;
-          padding: 9px 12px;
-          text-align: left;
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--text-secondary);
-          background: none;
-          border: none;
-          cursor: pointer;
-          transition: background 0.1s, color 0.1s;
-        }
-
-        .playlist-dropdown button:hover,
-        .playlist-sort-dropdown button:hover,
-        .playlist-sort-dropdown button.is-active,
-        .playlist-sort-dropdown button.is-active:hover {
-          background: var(--bg-hover-strong);
-          color: var(--text-primary);
-        }
-
-        .playlist-dropdown .danger-action {
-          color: var(--danger);
-        }
-
-        .playlist-dropdown .danger-action:hover {
-          color: var(--danger);
         }
 
         .playlist-create-card {
