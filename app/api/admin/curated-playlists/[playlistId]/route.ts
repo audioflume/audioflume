@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
+  DISCOVER_SECTION_OPTIONS,
   getCuratedPlaylistError,
   normalizeCuratedPlaylist,
 } from "@/lib/curatedPlaylists";
@@ -13,6 +14,17 @@ type RouteContext = {
 
 function cleanString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function cleanDiscoverSection(value: unknown) {
+  const section = cleanString(value);
+  return DISCOVER_SECTION_OPTIONS.some((option) => option.value === section)
+    ? section
+    : null;
+}
+
+function cleanBoolean(value: unknown) {
+  return value === true;
 }
 
 export async function PATCH(req: Request, context: RouteContext) {
@@ -38,6 +50,9 @@ export async function PATCH(req: Request, context: RouteContext) {
         cover_image_url: cleanString(body.cover_image_url) || null,
         playlist_group:
           cleanString(body.playlist_group) || DEFAULT_CURATED_PLAYLIST_GROUP,
+        description: cleanString(body.description),
+        discover_section: cleanDiscoverSection(body.discover_section),
+        show_on_discover: cleanBoolean(body.show_on_discover),
       })
       .eq("id", playlistId)
       .select()
