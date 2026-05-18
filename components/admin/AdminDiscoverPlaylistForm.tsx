@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "use client";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
 import TrashIcon from "@/components/icons/TrashIcon";
@@ -10,30 +10,20 @@ import type { CuratedPlaylist, CuratedPlaylistSong } from "@/lib/curatedPlaylist
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   DEFAULT_DISCOVER_BUTTON_TEXT,
-  DISCOVER_SECTION_OPTIONS,
 } from "@/lib/curatedPlaylists";
 import { primaryPillButtonClass, secondaryPillButtonClass, smallIconButtonClass } from "@/components/uiClasses";
-
-const DEFAULT_DISCOVER_SECTION = DISCOVER_SECTION_OPTIONS[0].value;
 
 type Props = {
   mode: "create" | "edit";
   playlistId?: string;
-  initialSection?: string;
 };
 
-function getSafeDiscoverSection(value: string | null | undefined): string {
-  if (!value) return DEFAULT_DISCOVER_SECTION;
-  return DISCOVER_SECTION_OPTIONS.some((o) => o.value === value) ? value : DEFAULT_DISCOVER_SECTION;
-}
-
-export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSection }: Props) {
+export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [description, setDescription] = useState("");
-  const [discoverSection, setDiscoverSection] = useState(getSafeDiscoverSection(initialSection));
   const [buttonEnabled, setButtonEnabled] = useState(true);
   const [buttonText, setButtonText] = useState(DEFAULT_DISCOVER_BUTTON_TEXT);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
@@ -60,7 +50,6 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
           setKicker(playlistData.kicker);
           setCoverImageUrl(playlistData.cover_image_url || "");
           setDescription(playlistData.description || "");
-          setDiscoverSection(getSafeDiscoverSection(playlistData.discover_section));
           setButtonEnabled(playlistData.discover_button_enabled !== false);
           setButtonText(playlistData.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT);
           setSongs(Array.isArray(songsData) ? songsData : []);
@@ -96,7 +85,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
         body: JSON.stringify({
           name, kicker, cover_image_url: coverImageUrl,
           playlist_group: DEFAULT_CURATED_PLAYLIST_GROUP,
-          description, discover_section: discoverSection,
+          description,
           show_on_discover: false,
           discover_button_enabled: buttonEnabled,
           discover_button_text: buttonText,
@@ -156,19 +145,6 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
                 <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]" placeholder="Describe what this Discover block is for." />
               </label>
 
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Discover page placement
-                <select value={discoverSection} onChange={(e) => setDiscoverSection(e.target.value)} className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]">
-                  {Array.from(new Set(DISCOVER_SECTION_OPTIONS.map((o) => o.category))).map((category) => (
-                    <optgroup key={category} label={category}>
-                      {DISCOVER_SECTION_OPTIONS.filter((o) => o.category === category).map((o) => (
-                        <option key={o.value} value={o.value}>{o.label}</option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
-              </label>
-
               <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
                 <input type="checkbox" checked={buttonEnabled} onChange={(e) => setButtonEnabled(e.target.checked)} className="mt-0.5 h-4 w-4 accent-[var(--text-primary)]" />
                 <span>
@@ -195,7 +171,6 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
         </section>
 
         <aside className="grid gap-6">
-          {/* Image upload */}
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <AdminImageUpload
               currentUrl={coverImageUrl}
@@ -206,7 +181,6 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
             />
           </div>
 
-          {/* Card preview */}
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <h3 className="font-[family-name:var(--font-instrument-sans)] text-xl font-medium tracking-[-0.05em]">Card preview</h3>
             <div className="relative mt-4 min-h-[320px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">

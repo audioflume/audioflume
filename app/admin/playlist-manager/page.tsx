@@ -23,6 +23,7 @@ import { CSS } from "@dnd-kit/utilities";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminPlaylistGroupManager from "@/components/admin/AdminPlaylistGroupManager";
 import DropdownShell from "@/components/DropdownShell";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import EditIcon from "@/components/icons/EditIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
@@ -176,6 +177,7 @@ export default function PlaylistManagerPage() {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -210,6 +212,15 @@ export default function PlaylistManagerPage() {
     load();
     return () => { cancelled = true; };
   }, []);
+
+  function toggleGroup(groupName: string) {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(groupName)) next.delete(groupName);
+      else next.add(groupName);
+      return next;
+    });
+  }
 
   const playlistsByGroup = useMemo(() => {
     const map = new Map<string, CuratedPlaylist[]>();
@@ -310,7 +321,6 @@ export default function PlaylistManagerPage() {
         </p>
       </div>
 
-      {/* Tabs + New button inline */}
       <div className="flex items-center justify-between px-8 pb-4">
         <div className="inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] p-1">
           {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
@@ -328,7 +338,6 @@ export default function PlaylistManagerPage() {
             </button>
           ))}
         </div>
-
         <Link
           href={activeTab === "discover" ? "/admin/playlist-manager/discover/new" : "/admin/playlist-manager/new"}
           className={primaryPillButtonClass}
@@ -382,42 +391,54 @@ export default function PlaylistManagerPage() {
               {orderedGroupNames.map((groupName, groupIndex) => {
                 const groupPlaylists = playlistsByGroup.get(groupName) ?? [];
                 const isLastGroup = groupIndex === orderedGroupNames.length - 1;
+                const isCollapsed = collapsedGroups.has(groupName);
                 return (
                   <div key={groupName}>
-                    <div
-                      className="flex h-8 items-center px-4"
+                    <button
+                      type="button"
+                      onClick={() => toggleGroup(groupName)}
+                      className="flex h-8 w-full cursor-pointer items-center px-4 text-left transition hover:bg-[var(--bg-hover)]"
                       style={{
                         borderTop: groupIndex > 0 ? "1px solid var(--border)" : undefined,
-                        borderBottom: "1px solid var(--border-subtle)",
+                        borderBottom: isCollapsed ? "none" : "1px solid var(--border-subtle)",
                         background: "var(--bg-tertiary)",
                       }}
                     >
                       <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">{groupName}</span>
                       <span className="ml-2 text-[11px] text-[var(--text-muted)] opacity-60">{groupPlaylists.length}</span>
-                    </div>
-                    {groupPlaylists.length === 0 ? (
-                      <div className="flex min-h-[52px] items-center justify-between gap-4 px-4 py-3 text-xs text-[var(--text-muted)]">
-                        <span>No item assigned.</span>
-                        {activeTab === "discover" && groupName !== DISCOVER_CURATED_GROUP && (
-                          <Link href="/admin/playlist-manager/discover/new" className="font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">Add block</Link>
-                        )}
-                      </div>
-                    ) : (
-                      <SortableContext items={groupPlaylists.map((p) => p.id)} strategy={verticalListSortingStrategy}>
-                        {groupPlaylists.map((playlist, index) => (
-                          <SortablePlaylistRow
-                            key={playlist.id}
-                            playlist={playlist}
-                            isLastInGroup={index === groupPlaylists.length - 1 && isLastGroup}
-                            openDropdownId={openDropdownId}
-                            setOpenDropdownId={setOpenDropdownId}
-                            deletingId={deletingId}
-                            onDelete={deletePlaylist}
-                            editHref={getEditHref(playlist, activeTab)}
-                            editLabel={activeTab === "discover" && playlist.discover_section ? "Edit Discover Block" : "Edit Playlist"}
-                          />
-                        ))}
-                      </SortableContext>
+                      <span className="ml-auto text-[var(--text-muted)] opacity-50">
+                        <ChevronDownIcon
+                          size={13}
+                          className={`transition-transform duration-150 ${isCollapsed ? "-rotate-90" : ""}`}
+                        />
+                      </span>
+                    </button>
+
+                    {!isCollapsed && (
+                      groupPlaylists.length === 0 ? (
+                        <div className="flex min-h-[52px] items-center justify-between gap-4 px-4 py-3 text-xs text-[var(--text-muted)]">
+                          <span>No item assigned.</span>
+                          {activeTab === "discover" && groupName !== DISCOVER_CURATED_GROUP && (
+                            <Link href="/admin/playlist-manager/discover/new" className="font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">Add block</Link>
+                          )}
+                        </div>
+                      ) : (
+                        <SortableContext items={groupPlaylists.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+                          {groupPlaylists.map((playlist, index) => (
+                            <SortablePlaylistRow
+                              key={playlist.id}
+                              playlist={playlist}
+                              isLastInGroup={index === groupPlaylists.length - 1 && isLastGroup}
+                              openDropdownId={openDropdownId}
+                              setOpenDropdownId={setOpenDropdownId}
+                              deletingId={deletingId}
+                              onDelete={deletePlaylist}
+                              editHref={getEditHref(playlist, activeTab)}
+                              editLabel={activeTab === "discover" && playlist.discover_section ? "Edit Discover Block" : "Edit Playlist"}
+                            />
+                          ))}
+                        </SortableContext>
+                      )
                     )}
                   </div>
                 );
