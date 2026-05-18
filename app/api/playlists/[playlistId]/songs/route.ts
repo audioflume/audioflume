@@ -48,17 +48,21 @@ type PlaylistSong = Song & {
   created_at: string;
 };
 
+// Use maybeSingle() — single() throws PGRST116 on 0 rows which falsely fails ownership check
 async function verifyPlaylistOwner(playlistId: string, userId: string) {
   const { data, error } = await supabaseServer
     .from("playlists")
     .select("id")
     .eq("id", playlistId)
     .eq("clerk_user_id", userId)
-    .single();
+    .maybeSingle();
 
-  if (error || !data) return false;
+  if (error) {
+    console.error("verifyPlaylistOwner error:", error);
+    return false;
+  }
 
-  return true;
+  return data !== null;
 }
 
 async function verifySongExists(songId: string) {
@@ -98,9 +102,7 @@ function parseStems(value: string | null): StemItem[] {
     .split("\n")
     .map((url, index) => {
       const cleanUrl = url.trim();
-
       if (!cleanUrl) return null;
-
       return {
         name: getStemNameFromUrl(cleanUrl, index),
         url: cleanUrl,
@@ -158,7 +160,7 @@ export async function GET(_req: Request, context: RouteContext) {
 
     if (!isOwner) {
       return NextResponse.json(
-        { error: "Playlist not found" },
+        { error: `Playlist ${playlistId} not found for user` },
         { status: 404 },
       );
     }
@@ -170,32 +172,24 @@ export async function GET(_req: Request, context: RouteContext) {
         .eq("playlist_id", playlistId)
         .order("position", { ascending: true });
 
-    if (playlistSongsError) {
-      throw playlistSongsError;
-    }
+    if (playlistSongsError) throw playlistSongsError;
 
     const rows = (playlistSongs ?? []) as PlaylistSongRow[];
 
-    if (!rows.length) {
-      return NextResponse.json([]);
-    }
+    if (!rows.length) return NextResponse.json([]);
 
     const songIds = [
       ...new Set(rows.map((row) => row.song_id).filter(Boolean)),
     ];
 
-    if (!songIds.length) {
-      return NextResponse.json([]);
-    }
+    if (!songIds.length) return NextResponse.json([]);
 
     const { data: songs, error: songsError } = await supabaseServer
       .from("songs")
       .select("*")
       .in("id", songIds);
 
-    if (songsError) {
-      throw songsError;
-    }
+    if (songsError) throw songsError;
 
     const songsById = new Map(
       ((songs ?? []) as SupabaseSongRow[]).map((song) => [
@@ -207,9 +201,7 @@ export async function GET(_req: Request, context: RouteContext) {
     const playlistSongResults = rows
       .map((playlistSong) => {
         const song = songsById.get(playlistSong.song_id);
-
         if (!song) return null;
-
         return mergePlaylistSong(playlistSong, song);
       })
       .filter((song): song is PlaylistSong => Boolean(song));
@@ -217,12 +209,8 @@ export async function GET(_req: Request, context: RouteContext) {
     return NextResponse.json(playlistSongResults);
   } catch (err) {
     console.error("Failed to load playlist songs:", err);
-
     return NextResponse.json(
-      {
-        error:
-          err instanceof Error ? err.message : "Failed to load playlist songs",
-      },
+      { error: err instanceof Error ? err.message : "Failed to load playlist songs" },
       { status: 500 },
     );
   }
@@ -249,10 +237,7 @@ export async function POST(req: Request, context: RouteContext) {
     const isOwner = await verifyPlaylistOwner(playlistId, userId);
 
     if (!isOwner) {
-      return NextResponse.json(
-        { error: "Playlist not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
     }
 
     const songExists = await verifySongExists(songId);
@@ -268,13 +253,9 @@ export async function POST(req: Request, context: RouteContext) {
       .eq("song_id", songId)
       .maybeSingle();
 
-    if (existingError) {
-      throw existingError;
-    }
+    if (existingError) throw existingError;
 
-    if (existingSong) {
-      return NextResponse.json(existingSong);
-    }
+    if (existingSong) return NextResponse.json(existingSong);
 
     const { data: lastSong, error: positionError } = await supabaseServer
       .from("playlist_songs")
@@ -283,9 +264,7 @@ export async function POST(req: Request, context: RouteContext) {
       .order("position", { ascending: false })
       .limit(1);
 
-    if (positionError) {
-      throw positionError;
-    }
+    if (positionError) throw positionError;
 
     const nextPosition =
       lastSong?.[0]?.position != null ? lastSong[0].position + 1 : 0;
@@ -304,19 +283,13 @@ export async function POST(req: Request, context: RouteContext) {
       .select()
       .single();
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return NextResponse.json(data);
   } catch (err) {
     console.error("Failed to add playlist song:", err);
-
     return NextResponse.json(
-      {
-        error:
-          err instanceof Error ? err.message : "Failed to add song to playlist",
-      },
+      { error: err instanceof Error ? err.message : "Failed to add song to playlist" },
       { status: 500 },
     );
   }
