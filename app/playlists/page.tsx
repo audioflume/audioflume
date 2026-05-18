@@ -1157,13 +1157,22 @@ export default function PlaylistsPage() {
         }
 
         .playlist-gallery-art img,
-        .playlist-row-cover img {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+.playlist-row-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.playlist-gallery-art img {
+  transition: transform 0.7s ease;
+}
+
+.playlist-gallery-card:hover .playlist-gallery-art img,
+.playlist-gallery-card.is-menu-open .playlist-gallery-art img {
+  transform: scale(1.025);
+}
 
         .playlist-gallery-letters {
           position: absolute;
@@ -1227,17 +1236,17 @@ export default function PlaylistsPage() {
         }
 
         .playlist-gallery-content h3 {
-          margin-top: 8px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-family: var(--font-instrument-sans);
-          font-size: 25px;
-          font-weight: 500;
-          line-height: 0.95;
-          letter-spacing: -0.055em;
-          color: white;
-        }
+  margin-top: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-instrument-sans);
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.055em;
+  color: white;
+}
 
         .playlist-gallery-content p {
           margin-top: 12px;
