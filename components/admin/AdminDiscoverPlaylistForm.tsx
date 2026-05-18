@@ -67,11 +67,6 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
         if (!playlistRes.ok) throw new Error("Failed to load Discover block");
         if (!songsRes.ok) throw new Error("Failed to load Discover block songs");
 
-        if (!playlistData.discover_section) {
-          router.replace(`/admin/playlist-manager/${playlistId}/edit`);
-          return;
-        }
-
         if (!cancelled) {
           setName(playlistData.name);
           setKicker(playlistData.kicker);
@@ -96,7 +91,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [mode, playlistId, router]);
+  }, [mode, playlistId]);
 
   useEffect(() => {
     if (!toastMessage) return;

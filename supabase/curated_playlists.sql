@@ -33,9 +33,7 @@ alter table public.curated_playlists
   add column if not exists description text not null default '',
   add column if not exists discover_section text,
   add column if not exists show_on_discover boolean not null default false,
-  add column if not exists discover_position integer not null default 0,
-  add column if not exists discover_button_enabled boolean not null default true,
-  add column if not exists discover_button_text text not null default 'Explore this mood';
+  add column if not exists discover_position integer not null default 0;
 
 create index if not exists curated_playlists_discover_section_position_idx
   on public.curated_playlists (discover_section, discover_position);
