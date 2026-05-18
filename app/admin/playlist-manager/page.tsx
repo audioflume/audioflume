@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   DndContext,
   DragOverlay,
@@ -146,7 +147,7 @@ function DragOverlayRow({ playlist }: { playlist: CuratedPlaylist }) {
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// ─── Page ────────────────────────────────────────────────────────────────────
 
 type ManagerTab = "playlists" | "discover";
 
@@ -164,7 +165,6 @@ function getDiscoverGroupName(playlist: CuratedPlaylist): string | null {
   return null;
 }
 
-// Correct edit hrefs: discover blocks go to the discover edit page
 function getEditHref(playlist: CuratedPlaylist, activeTab: ManagerTab): string {
   if (activeTab === "discover" && playlist.discover_section) {
     return `/admin/playlist-manager/discover/${playlist.id}/edit`;
@@ -172,8 +172,15 @@ function getEditHref(playlist: CuratedPlaylist, activeTab: ManagerTab): string {
   return `/admin/playlist-manager/${playlist.id}/edit`;
 }
 
+function useInitialTab(): ManagerTab {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab");
+  return tab === "discover" ? "discover" : "playlists";
+}
+
 export default function PlaylistManagerPage() {
-  const [activeTab, setActiveTab] = useState<ManagerTab>("playlists");
+  const initialTab = useInitialTab();
+  const [activeTab, setActiveTab] = useState<ManagerTab>(initialTab);
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [groups, setGroups] = useState<CuratedPlaylistGroup[]>([]);
   const [loading, setLoading] = useState(true);
@@ -224,7 +231,6 @@ export default function PlaylistManagerPage() {
       return map;
     }
 
-    // Playlists tab: show only non-discover playlists, grouped by their group
     for (const g of groups) map.set(g.name, []);
     for (const p of playlists) {
       if (p.discover_section) continue;

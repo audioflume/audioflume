@@ -72,6 +72,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
           setCoverImageUrl(playlistData.cover_image_url || "");
           setDescription(playlistData.description || "");
           setDiscoverSection(getSafeDiscoverSection(playlistData.discover_section));
+          // Explicit boolean check so unchecked (false) is preserved correctly
           setButtonEnabled(playlistData.discover_button_enabled !== false);
           setButtonText(playlistData.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT);
           setSongs(Array.isArray(songsData) ? songsData : []);
@@ -237,7 +238,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
                 </select>
               </label>
 
-              <label className="flex items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
                 <input
                   type="checkbox"
                   checked={buttonEnabled}
@@ -268,7 +269,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId, initialSec
                 <button
                   type="button"
                   className={secondaryPillButtonClass}
-                  onClick={() => router.push("/admin/playlist-manager")}
+                  onClick={() => router.push("/admin/playlist-manager?tab=discover")}
                 >
                   Back to manager
                 </button>
