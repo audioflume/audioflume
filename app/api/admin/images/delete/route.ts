@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
-import { r2Client } from "@/lib2/r2";
+import { r2Client } from "@/lib/r2";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 export const runtime = "nodejs";
@@ -22,7 +22,6 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Missing imageKey" }, { status: 400 });
     }
 
-    // Safety: only allow deletion of image keys
     if (!imageKey.startsWith("images/")) {
       return NextResponse.json({ error: "Invalid image key" }, { status: 400 });
     }
