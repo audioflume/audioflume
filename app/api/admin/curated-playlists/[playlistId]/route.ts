@@ -42,6 +42,34 @@ export async function PATCH(req: Request, context: RouteContext) {
       return NextResponse.json({ error: "Missing playlist name" }, { status: 400 });
     }
 
+    const updates: Record<string, string | boolean | null> = {
+      name,
+      kicker: cleanString(body.kicker) || "Curated selection",
+      cover_image_url: cleanString(body.cover_image_url) || null,
+      playlist_group:
+        cleanString(body.playlist_group) || DEFAULT_CURATED_PLAYLIST_GROUP,
+    };
+
+    if ("description" in body) {
+      updates.description = cleanString(body.description);
+    }
+
+    if ("discover_section" in body) {
+      updates.discover_section = cleanDiscoverSection(body.discover_section);
+    }
+
+    if ("show_on_discover" in body) {
+      updates.show_on_discover = cleanBoolean(body.show_on_discover);
+    }
+
+    if ("discover_button_enabled" in body) {
+      updates.discover_button_enabled = body.discover_button_enabled !== false;
+    }
+
+    if ("discover_button_text" in body) {
+      updates.discover_button_text = cleanString(body.discover_button_text) || DEFAULT_DISCOVER_BUTTON_TEXT;
+    }
+
     const { data, error } = await supabaseServer
       .from("curated_playlists")
       .update({

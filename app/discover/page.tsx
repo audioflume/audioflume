@@ -14,7 +14,7 @@ import {
 } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
-import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import { DEFAULT_DISCOVER_BUTTON_TEXT, type CuratedPlaylist } from "@/lib/curatedPlaylists";
 import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -35,6 +35,8 @@ type DiscoveryScene = {
   href: string;
   image: string;
   layout: "hero" | "wide" | "small";
+  ctaEnabled?: boolean;
+  ctaText?: string;
 };
 
 type ProductionStyle = {
@@ -544,10 +546,12 @@ function DiscoveryHeroCard({ scene }: { scene: DiscoveryScene }) {
             {scene.description}
           </p>
 
-          <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
-            Explore this mood
-            <ArrowUpRightIcon />
-          </div>
+          {scene.ctaEnabled !== false && (
+            <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
+              {scene.ctaText || DEFAULT_DISCOVER_BUTTON_TEXT}
+              <ArrowUpRightIcon />
+            </div>
+          )}
         </div>
       </div>
     </Link>

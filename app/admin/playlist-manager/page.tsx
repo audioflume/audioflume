@@ -44,6 +44,8 @@ function SortablePlaylistRow({
   setOpenDropdownId,
   deletingId,
   onDelete,
+  editHref,
+  editLabel = "Edit Playlist",
 }: {
   playlist: CuratedPlaylist;
   isLastInGroup: boolean;
@@ -51,6 +53,8 @@ function SortablePlaylistRow({
   setOpenDropdownId: (id: number | null) => void;
   deletingId: number | null;
   onDelete: (playlist: CuratedPlaylist) => void;
+  editHref: string;
+  editLabel?: string;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: playlist.id });
@@ -78,7 +82,7 @@ function SortablePlaylistRow({
         <DragIconSmall />
       </button>
 
-      <Link href={`/admin/playlist-manager/${playlist.id}/edit`} className="flex flex-1 items-center gap-3 py-2.5">
+      <Link href={editHref} className="flex flex-1 items-center gap-3 py-2.5">
         <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
           {playlist.cover_image_url && (
             <Image src={playlist.cover_image_url} alt={playlist.name} fill sizes="32px" className="object-cover" unoptimized />
@@ -91,7 +95,7 @@ function SortablePlaylistRow({
       </Link>
 
       <div className="flex shrink-0 items-center gap-1 pr-2">
-        <Link href={`/admin/playlist-manager/${playlist.id}/edit`} className={smallIconButtonClass} title="Edit playlist">
+        <Link href={editHref} className={smallIconButtonClass} title={editLabel}>
           <EditIcon size={14} />
         </Link>
 
@@ -105,7 +109,7 @@ function SortablePlaylistRow({
             </button>
           )}
         >
-          <Link href={`/admin/playlist-manager/${playlist.id}/edit`} onClick={() => setOpenDropdownId(null)}>Edit Playlist</Link>
+          <Link href={editHref} onClick={() => setOpenDropdownId(null)}>{editLabel}</Link>
           <button
             type="button"
             className="danger-hover"
@@ -219,6 +223,7 @@ export default function PlaylistManagerPage() {
 
     for (const g of groups) map.set(g.name, []);
     for (const p of playlists) {
+      if (p.discover_section) continue;
       const key = p.playlist_group;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(p);
@@ -405,6 +410,8 @@ export default function PlaylistManagerPage() {
                           setOpenDropdownId={setOpenDropdownId}
                           deletingId={deletingId}
                           onDelete={deletePlaylist}
+                          editHref={getEditHref(playlist, activeTab)}
+                          editLabel={activeTab === "discover" && playlist.discover_section ? "Edit Discover Block" : "Edit Playlist"}
                         />
                       ))}
                       </SortableContext>
