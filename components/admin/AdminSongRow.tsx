@@ -2,13 +2,14 @@
 
 import type { Song } from "@/lib/types";
 import Link from "next/link";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import AdminSongActionsDropdown from "@/components/admin/AdminSongActionsDropdown";
 import CheckIcon from "@/components/icons/CheckIcon";
 import EditIcon from "@/components/icons/EditIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import {
   iconButtonActiveClass,
   smallIconButtonClass,
@@ -97,6 +98,7 @@ export default function AdminSongRow({
   showSelectionColumn?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAnalyzingEditPoints, setIsAnalyzingEditPoints] = useState(false);
   const { currentSong, isPlaying, togglePlayPause, seekTo } = usePlayer();
 
   const playerVisible = !!currentSong;
@@ -106,12 +108,37 @@ export default function AdminSongRow({
   const rowHealth = getSongHealthStatus(song);
   const onlyAutoEditPoints = songHasOnlyAutoEditPoints(song);
 
+  useEffect(() => {
+    const onAnalyzingChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        songId?: string;
+        analyzing?: boolean;
+      }>;
+
+      if (customEvent.detail?.songId !== song.id) return;
+
+      setIsAnalyzingEditPoints(Boolean(customEvent.detail.analyzing));
+    };
+
+    window.addEventListener(
+      "admin-song-edit-point-analyzing",
+      onAnalyzingChange,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "admin-song-edit-point-analyzing",
+        onAnalyzingChange,
+      );
+    };
+  }, [song.id]);
+
   const gridColumnsClass = showSelectionColumn
     ? "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]"
     : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]";
 
   const handlePlayClick = () => {
-    if (!song.audioUrl) return;
+    if (!song.audioUrl || isAnalyzingEditPoints) return;
 
     if (isCurrentSong) {
       togglePlayPause(song);
@@ -141,6 +168,8 @@ export default function AdminSongRow({
       className={`admin-song-row group/admin-song-row grid min-h-[46px] cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs transition ${
         rowHealth === "error" ? "is-error" : ""
       } ${rowHealth === "warning" ? "is-warning" : ""} ${
+        isAnalyzingEditPoints ? "pointer-events-none opacity-45" : ""
+      } ${
         selected
           ? "bg-[var(--bg-hover-strong)]"
           : isCurrentSong
@@ -180,7 +209,7 @@ export default function AdminSongRow({
             e.stopPropagation();
             handlePlayClick();
           }}
-          disabled={!song.audioUrl}
+          disabled={!song.audioUrl || isAnalyzingEditPoints}
           className="relative h-8 w-8 cursor-pointer overflow-hidden rounded bg-[var(--bg-tertiary)] disabled:cursor-default"
           aria-label={rowIsPlaying ? "Pause song" : "Play song"}
         >
@@ -192,15 +221,21 @@ export default function AdminSongRow({
             />
           )}
 
-          <span
-            className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${
-              isCurrentSong
-                ? "opacity-100"
-                : "opacity-0 group-hover/admin-song-row:opacity-100"
-            }`}
-          >
-            {rowIsPlaying ? <PauseIcon /> : <PlayIconSmall />}
-          </span>
+          {isAnalyzingEditPoints ? (
+            <span className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)]">
+              <LoadingSpinner size={14} stroke={10} color="currentColor" />
+            </span>
+          ) : (
+            <span
+              className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${
+                isCurrentSong
+                  ? "opacity-100"
+                  : "opacity-0 group-hover/admin-song-row:opacity-100"
+              }`}
+            >
+              {rowIsPlaying ? <PauseIcon /> : <PlayIconSmall />}
+            </span>
+          )}
         </button>
       </div>
 
@@ -210,7 +245,7 @@ export default function AdminSongRow({
           e.stopPropagation();
           handlePlayClick();
         }}
-        disabled={!song.audioUrl}
+        disabled={!song.audioUrl || isAnalyzingEditPoints}
         className="min-w-0 cursor-pointer text-left disabled:cursor-default"
       >
         <div className="truncate font-medium leading-tight text-[var(--text-primary)]">
@@ -227,8 +262,14 @@ export default function AdminSongRow({
       </div>
 
       <div className="flex min-w-0 items-center gap-1.5">
-        <StatusChip issues={issues} />
-        {onlyAutoEditPoints && <AutoEditPointChip />}
+        {isAnalyzingEditPoints ? (
+          <span className="inline-flex h-6 items-center rounded-full bg-[var(--bg-tertiary)] px-2.5 text-[11px] font-medium text-[var(--text-secondary)]">
+            Analyzing
+          </span>
+        ) : (
+          <StatusChip issues={issues} />
+        )}
+        {onlyAutoEditPoints && !isAnalyzingEditPoints && <AutoEditPointChip />}
       </div>
 
       <div className="text-[var(--text-secondary)]">{song.key || "—"}</div>
@@ -237,7 +278,7 @@ export default function AdminSongRow({
         {song.bpm ? `${song.bpm} BPM` : "—"}
       </div>
 
-      <div className="flex items-center justify-end gap-1" data-admin-song-menu>
+      <div className="flex items-center justify-end gap-1 pointer-events-auto" data-admin-song-menu>
         <Link
           href={`/admin/songs/${song.id}/edit`}
           className={`admin-song-edit-btn ${smallIconButtonClass}`}
@@ -273,6 +314,7 @@ export default function AdminSongRow({
               }`}
               aria-label="Song options"
               aria-expanded={open}
+              disabled={isAnalyzingEditPoints}
             >
               <MoreIcon />
             </button>
