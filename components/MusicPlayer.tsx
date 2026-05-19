@@ -39,6 +39,8 @@ const FULL_COMPACT_TIME_MIN_WIDTH = 620;
 const COMPACT_TIME_MIN_WIDTH = 500;
 const KEY_MIN_WIDTH = 560;
 const BPM_MIN_WIDTH = 700;
+const PREVIOUS_CUE_SKIP_BACK_SECONDS = 1.35;
+const NEXT_CUE_SKIP_AHEAD_SECONDS = 0.25;
 
 type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
 
@@ -104,15 +106,21 @@ function getAdjacentCuePoint(
 ) {
   if (cuePoints.length === 0) return null;
 
-  const threshold = direction === "next" ? currentTime + 0.25 : currentTime - 0.25;
+  const sortedCuePoints = [...cuePoints].sort((a, b) => a.time - b.time);
 
   if (direction === "next") {
-    return cuePoints.find((marker) => marker.time > threshold) || cuePoints[0];
+    const threshold = currentTime + NEXT_CUE_SKIP_AHEAD_SECONDS;
+    return (
+      sortedCuePoints.find((marker) => marker.time > threshold) ||
+      sortedCuePoints[0]
+    );
   }
 
+  const threshold = currentTime - PREVIOUS_CUE_SKIP_BACK_SECONDS;
+
   return (
-    [...cuePoints].reverse().find((marker) => marker.time < threshold) ||
-    cuePoints[cuePoints.length - 1]
+    [...sortedCuePoints].reverse().find((marker) => marker.time < threshold) ||
+    sortedCuePoints[sortedCuePoints.length - 1]
   );
 }
 
@@ -144,7 +152,7 @@ const PauseIcon = () => (
 );
 
 const CuePreviousIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path
       d="M15 6L9 12L15 18"
       stroke="currentColor"
@@ -156,7 +164,7 @@ const CuePreviousIcon = () => (
 );
 
 const CueNextIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path
       d="M9 6L15 12L9 18"
       stroke="currentColor"
@@ -704,7 +712,7 @@ export default function MusicPlayer() {
                       aria-label="Jump to previous cue point"
                       onClick={() => jumpToCuePoint(previousCuePoint)}
                       disabled={!previousCuePoint}
-                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]"
+                      className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]"
                     >
                       <CuePreviousIcon />
                     </button>
@@ -719,7 +727,7 @@ export default function MusicPlayer() {
                       aria-label="Jump to next cue point"
                       onClick={() => jumpToCuePoint(nextCuePoint)}
                       disabled={!nextCuePoint}
-                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]"
+                      className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]"
                     >
                       <CueNextIcon />
                     </button>
