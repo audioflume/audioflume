@@ -28,7 +28,7 @@ function cleanupExistingEmbeddedEditPointRoot(ownerId?: string) {
   const existing = window.__filmwaveEmbeddedEditPointRoot;
 
   if (!existing) return;
-  if (ownerId && existing.ownerId === ownerId) return;
+  if (ownerId && existing.ownerId !== ownerId) return;
 
   existing.root.unmount();
   existing.target.remove();
