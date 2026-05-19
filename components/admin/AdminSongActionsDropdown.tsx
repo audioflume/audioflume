@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ReactNode, useState } from "react";
 import AdminAddToPlaylistModal from "@/components/admin/AdminAddToPlaylistModal";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import type { Song } from "@/lib/types";
 import DropdownShell from "@/components/DropdownShell";
 import type { Padding, Placement, Strategy } from "@floating-ui/react";
@@ -33,6 +34,14 @@ const DEFAULT_COLLISION_PADDING: Padding = {
   bottom: 96,
   left: 16,
 };
+
+function dispatchAnalyzingState(songId: string, analyzing: boolean) {
+  window.dispatchEvent(
+    new CustomEvent("admin-song-edit-point-analyzing", {
+      detail: { songId, analyzing },
+    }),
+  );
+}
 
 export default function AdminSongActionsDropdown({
   open,
@@ -68,6 +77,7 @@ export default function AdminSongActionsDropdown({
 
     try {
       setIsAnalyzing(true);
+      dispatchAnalyzingState(songId, true);
 
       const res = await fetch(`/api/admin/songs/${songId}/analyze-edit-points`, {
         method: "POST",
@@ -87,6 +97,7 @@ export default function AdminSongActionsDropdown({
       );
     } finally {
       setIsAnalyzing(false);
+      dispatchAnalyzingState(songId, false);
     }
   };
 
@@ -149,7 +160,7 @@ export default function AdminSongActionsDropdown({
         </Link>
 
         <Link
-          href={`/admin/songs/${songId}/edit-points`}
+          href={`/admin/songs/${songId}/edit-points?from=music-library`}
           onClick={() => onOpenChange(false)}
         >
           Edit Points
@@ -179,7 +190,12 @@ export default function AdminSongActionsDropdown({
           onClick={analyzeEditPoints}
           disabled={!audioUrl || isAnalyzing}
         >
-          {isAnalyzing ? "Analyzing..." : "Analyze Edit Points"}
+          <span className="inline-flex items-center gap-2">
+            {isAnalyzing && (
+              <LoadingSpinner size={12} stroke={12} color="currentColor" />
+            )}
+            {isAnalyzing ? "Analyzing..." : "Analyze Edit Points"}
+          </span>
         </button>
 
         <button
