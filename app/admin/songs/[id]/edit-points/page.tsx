@@ -6,7 +6,6 @@ import EditPointWaveformReview from "@/components/admin/EditPointWaveformReview"
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams?: Promise<{ from?: string }>;
 };
 
 type SongEditPointRow = {
@@ -59,28 +58,7 @@ function getTypeLabel(type: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function getBackLink(songId: string, from?: string) {
-  if (from === "edit-details") {
-    return {
-      href: `/admin/songs/${songId}/edit`,
-      label: "← Edit Details",
-    };
-  }
-
-  if (from === "edit-points") {
-    return {
-      href: "/admin/edit-points",
-      label: "← Edit Points",
-    };
-  }
-
-  return {
-    href: "/admin/music-library",
-    label: "← Music Library",
-  };
-}
-
-export default async function AdminSongEditPointsPage({ params, searchParams }: PageProps) {
+export default async function AdminSongEditPointsPage({ params }: PageProps) {
   const admin = await requireAdmin();
 
   if (!admin.isAdmin) {
@@ -99,8 +77,6 @@ export default async function AdminSongEditPointsPage({ params, searchParams }: 
   }
 
   const { id } = await params;
-  const resolvedSearchParams = searchParams ? await searchParams : {};
-  const backLink = getBackLink(id, resolvedSearchParams.from);
 
   const { data: song, error: songError } = await supabaseServer
     .from("songs")
@@ -142,13 +118,6 @@ export default async function AdminSongEditPointsPage({ params, searchParams }: 
       <div className="px-8 pt-14 pb-20">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div className="min-w-0">
-            <Link
-              href={backLink.href}
-              className="mb-5 inline-flex text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-            >
-              {backLink.label}
-            </Link>
-
             <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
               Edit Points
             </h1>
