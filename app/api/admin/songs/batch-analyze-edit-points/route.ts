@@ -14,7 +14,74 @@ type BatchAnalyzeResult = {
   error?: string;
 };
 
-export async function POST() {
+function getSingleSongId(req: Request) {
+  const url = new URL(req.url);
+  const value = url.searchParams.get("songId");
+  return value?.trim() || null;
+}
+
+async function analyzeSong({
+  song,
+  analyzerUrl,
+  analyzerSecret,
+}: {
+  song: Awaited<ReturnType<typeof getSongs>>[number];
+  analyzerUrl: string;
+  analyzerSecret: string;
+}): Promise<BatchAnalyzeResult> {
+  if (!song.audioUrl) {
+    return {
+      songId: song.id,
+      title: song.title,
+      status: "skipped",
+      error: "Missing audio URL",
+    };
+  }
+
+  try {
+    const response = await fetch(`${analyzerUrl.replace(/\/$/, "")}/analyze`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-analyzer-secret": analyzerSecret,
+      },
+      body: JSON.stringify({
+        songId: song.id,
+        audioUrl: song.audioUrl,
+      }),
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      return {
+        songId: song.id,
+        title: song.title,
+        status: "failed",
+        error:
+          data?.error ||
+          data?.detail ||
+          `Analyzer failed with status ${response.status}`,
+      };
+    }
+
+    return {
+      songId: song.id,
+      title: song.title,
+      status: "saved",
+      saved: Number(data?.saved ?? 0),
+    };
+  } catch (err) {
+    return {
+      songId: song.id,
+      title: song.title,
+      status: "failed",
+      error: err instanceof Error ? err.message : "Analyzer failed",
+    };
+  }
+}
+
+export async function POST(req: Request) {
   const { isAdmin } = await requireAdmin();
 
   if (!isAdmin) {
@@ -36,62 +103,43 @@ export async function POST() {
     const missingEditPointSongs = songs.filter((song) =>
       songHasIssue(song, "editPoints"),
     );
+    const singleSongId = getSingleSongId(req);
+
+    if (singleSongId) {
+      const song = missingEditPointSongs.find((item) => item.id === singleSongId);
+
+      if (!song) {
+        return NextResponse.json({
+          totalMissing: missingEditPointSongs.length,
+          analyzed: 0,
+          skipped: 1,
+          failed: 0,
+          results: [
+            {
+              songId: singleSongId,
+              title: "Unknown song",
+              status: "skipped",
+              error: "Song is no longer missing edit points.",
+            },
+          ],
+        });
+      }
+
+      const result = await analyzeSong({ song, analyzerUrl, analyzerSecret });
+
+      return NextResponse.json({
+        totalMissing: missingEditPointSongs.length,
+        analyzed: result.status === "saved" ? 1 : 0,
+        skipped: result.status === "skipped" ? 1 : 0,
+        failed: result.status === "failed" ? 1 : 0,
+        results: [result],
+      });
+    }
 
     const results: BatchAnalyzeResult[] = [];
 
     for (const song of missingEditPointSongs) {
-      if (!song.audioUrl) {
-        results.push({
-          songId: song.id,
-          title: song.title,
-          status: "skipped",
-          error: "Missing audio URL",
-        });
-        continue;
-      }
-
-      try {
-        const response = await fetch(`${analyzerUrl.replace(/\/$/, "")}/analyze`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-analyzer-secret": analyzerSecret,
-          },
-          body: JSON.stringify({
-            songId: song.id,
-            audioUrl: song.audioUrl,
-          }),
-        });
-
-        const data = await response.json().catch(() => null);
-
-        if (!response.ok) {
-          results.push({
-            songId: song.id,
-            title: song.title,
-            status: "failed",
-            error:
-              data?.error ||
-              data?.detail ||
-              `Analyzer failed with status ${response.status}`,
-          });
-          continue;
-        }
-
-        results.push({
-          songId: song.id,
-          title: song.title,
-          status: "saved",
-          saved: Number(data?.saved ?? 0),
-        });
-      } catch (err) {
-        results.push({
-          songId: song.id,
-          title: song.title,
-          status: "failed",
-          error: err instanceof Error ? err.message : "Analyzer failed",
-        });
-      }
+      results.push(await analyzeSong({ song, analyzerUrl, analyzerSecret }));
     }
 
     const analyzed = results.filter((result) => result.status === "saved").length;
