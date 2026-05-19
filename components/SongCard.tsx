@@ -154,6 +154,7 @@ export default function SongCard({
   playlistId,
   projectId,
   highlightedEditPointTypes = [],
+  showEditPointMarkers = true,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
@@ -163,6 +164,7 @@ export default function SongCard({
   playlistId?: string;
   projectId?: string;
   highlightedEditPointTypes?: string[];
+  showEditPointMarkers?: boolean;
   onRemoveFromPlaylist?: (songId: string) => void;
   onRemoveFromProject?: (songId: string) => void;
 }) {
@@ -405,6 +407,7 @@ export default function SongCard({
               <Waveform
                 song={song}
                 highlightedEditPointTypes={highlightedEditPointTypes}
+                showEditPointMarkers={showEditPointMarkers}
               />
             </div>
 
