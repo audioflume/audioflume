@@ -10,8 +10,11 @@ type RouteContext = {
 
 type EditPointPayload = {
   id?: string;
+  kind?: "point" | "range";
   type: string;
-  time: number;
+  time?: number;
+  startTime?: number | null;
+  endTime?: number | null;
   label?: string;
   confidence?: number;
   source?: string;
@@ -21,20 +24,52 @@ type SaveEditPointsPayload = {
   editPoints: EditPointPayload[];
 };
 
-function cleanEditPoint(point: EditPointPayload) {
-  const time = Number(point.time);
+function clampConfidence(value: unknown) {
+  const numeric = Number(value ?? 0);
 
-  if (!point.type || !Number.isFinite(time) || time < 0) return null;
+  if (!Number.isFinite(numeric)) return null;
+
+  return Math.max(0, Math.min(1, numeric));
+}
+
+function cleanEditPoint(point: EditPointPayload) {
+  const kind = point.kind === "range" ? "range" : "point";
+  const rawStart = Number(point.startTime ?? 0);
+  const rawEnd = Number(point.endTime ?? point.time ?? 0);
+  const rawTime = Number(point.time ?? rawEnd);
+
+  if (!point.type) return null;
+
+  if (kind === "range") {
+    if (!Number.isFinite(rawStart) || !Number.isFinite(rawEnd)) return null;
+
+    const startTime = Math.max(0, Math.min(rawStart, rawEnd));
+    const endTime = Math.max(0, Math.max(rawStart, rawEnd));
+
+    if (endTime <= startTime) return null;
+
+    return {
+      kind,
+      type: String(point.type).trim(),
+      time_seconds: Number(endTime.toFixed(2)),
+      start_time_seconds: Number(startTime.toFixed(2)),
+      end_time_seconds: Number(endTime.toFixed(2)),
+      label: point.label?.trim() || point.type,
+      confidence: clampConfidence(point.confidence),
+      source: "corrected",
+    };
+  }
+
+  if (!Number.isFinite(rawTime) || rawTime < 0) return null;
 
   return {
-    id: point.id,
+    kind,
     type: String(point.type).trim(),
-    time_seconds: Number(time.toFixed(2)),
+    time_seconds: Number(rawTime.toFixed(2)),
+    start_time_seconds: null,
+    end_time_seconds: null,
     label: point.label?.trim() || point.type,
-    confidence:
-      point.confidence == null || !Number.isFinite(Number(point.confidence))
-        ? null
-        : Math.max(0, Math.min(1, Number(point.confidence))),
+    confidence: clampConfidence(point.confidence),
     source: "corrected",
   };
 }
@@ -76,8 +111,11 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     const rows = cleaned.map((point) => ({
       song_id: id,
+      kind: point.kind,
       type: point.type,
       time_seconds: point.time_seconds,
+      start_time_seconds: point.start_time_seconds,
+      end_time_seconds: point.end_time_seconds,
       label: point.label,
       confidence: point.confidence,
       source: point.source,
@@ -86,7 +124,9 @@ export async function PATCH(req: Request, context: RouteContext) {
     const { data, error } = await supabaseServer
       .from("song_edit_points")
       .insert(rows)
-      .select("id, song_id, type, time_seconds, label, confidence, source, created_at")
+      .select(
+        "id, song_id, kind, type, time_seconds, start_time_seconds, end_time_seconds, label, confidence, source, created_at",
+      )
       .order("time_seconds", { ascending: true });
 
     if (error) throw error;
