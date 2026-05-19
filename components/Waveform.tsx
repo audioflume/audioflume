@@ -1,31 +1,13 @@
 "use client";
 
-import type { EditPoints, Song } from "@/lib/types";
+import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useRef } from "react";
 import { usePlayer } from "@/context/PlayerContext";
-
-function parseEditPoints(value: Song["editPoints"]): EditPoints {
-  if (!value) {
-    return {
-      markers: [],
-      ranges: [],
-    };
-  }
-
-  try {
-    const parsed = JSON.parse(value);
-
-    return {
-      markers: Array.isArray(parsed.markers) ? parsed.markers : [],
-      ranges: Array.isArray(parsed.ranges) ? parsed.ranges : [],
-    };
-  } catch {
-    return {
-      markers: [],
-      ranges: [],
-    };
-  }
-}
+import {
+  getEditPointFilterLabel,
+  getMarkerType,
+  parseEditPoints,
+} from "@/lib/editPointUtils";
 
 function drawWaveform(
   canvas: HTMLCanvasElement,
@@ -98,12 +80,25 @@ function drawWaveform(
   }
 }
 
+function formatMarkerTime(secondsValue: number) {
+  const seconds = Number(secondsValue);
+
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
 export default function Waveform({
   song,
   compact = false,
+  highlightedEditPointTypes = [],
 }: {
   song: Song;
   compact?: boolean;
+  highlightedEditPointTypes?: string[];
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -125,6 +120,13 @@ export default function Waveform({
     () => parseEditPoints(song.editPoints),
     [song.editPoints],
   );
+
+  const highlightedTypeSet = useMemo(
+    () => new Set(highlightedEditPointTypes),
+    [highlightedEditPointTypes],
+  );
+
+  const hasHighlightedTypes = highlightedTypeSet.size > 0;
 
   const getPercent = (time: number) => {
     if (!song.duration) return 0;
@@ -192,6 +194,12 @@ export default function Waveform({
     };
   }, []);
 
+  const seekToProgress = (progress: number) => {
+    progressRef.current = progress;
+    redraw();
+    contextSeekTo(song, progress, isPlayingRef.current);
+  };
+
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -205,10 +213,7 @@ export default function Waveform({
       Math.min(1, (e.clientX - rect.left) / rect.width),
     );
 
-    progressRef.current = progress;
-    redraw();
-
-    contextSeekTo(song, progress, isPlayingRef.current);
+    seekToProgress(progress);
   };
 
   return (
@@ -250,28 +255,41 @@ export default function Waveform({
       })}
 
       {editPoints.markers?.map((marker) => {
-        const label = marker.label.toLowerCase();
-
-        const isStrong =
-          label.includes("drop") ||
-          label.includes("impact") ||
-          label.includes("peak");
+        const markerType = getMarkerType(marker);
+        const selected = highlightedTypeSet.has(markerType);
+        const dimmed = hasHighlightedTypes && !selected;
+        const label = marker.label || getEditPointFilterLabel(markerType);
+        const progress = song.duration ? marker.time / song.duration : 0;
 
         return (
-          <div
+          <button
             key={marker.id}
-            className="pointer-events-none absolute z-20 w-[1px]"
+            type="button"
+            className="absolute top-1/2 z-20 h-[34px] w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
             style={{
-              top: "50%",
-              height: "34px",
-              transform: "translateY(-50%)",
               left: `${getPercent(marker.time)}%`,
-              background: isStrong
-                ? "var(--edit-point-marker-secondary)"
-                : "var(--edit-point-marker)",
+              opacity: dimmed ? 0.28 : 1,
             }}
-            title={marker.label}
-          />
+            title={`${label} · ${formatMarkerTime(marker.time)}`}
+            aria-label={`Play from ${label} at ${formatMarkerTime(marker.time)}`}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              seekToProgress(Math.max(0, Math.min(1, progress)));
+            }}
+          >
+            <span
+              className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2"
+              style={{
+                background: selected
+                  ? "var(--edit-point-marker-active)"
+                  : "var(--edit-point-marker)",
+                boxShadow: selected
+                  ? "0 0 0 2px var(--edit-point-marker-active-soft)"
+                  : "none",
+              }}
+            />
+          </button>
         );
       })}
 
