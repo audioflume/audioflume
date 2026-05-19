@@ -382,10 +382,16 @@ export default function EditPointWaveformReview({
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
       <style>{`
+        .edit-point-play-button {
+          background: #111111;
+          border-color: #111111;
+          color: #ffffff;
+        }
+
         html.light .edit-point-play-button {
-          background: #ffffff;
-          border-color: rgba(0, 0, 0, 0.08);
-          color: #111111;
+          background: #111111;
+          border-color: #111111;
+          color: #ffffff;
         }
 
         html.light .edit-point-marker-line,
@@ -442,7 +448,7 @@ export default function EditPointWaveformReview({
             onClick={() => togglePlayback(false)}
             disabled={!audioUrl}
             aria-label={isPlaying ? "Pause" : "Play"}
-            className="edit-point-play-button flex h-10 w-10 items-center justify-center rounded-full border border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] transition hover:scale-[1.03] hover:opacity-90 disabled:cursor-default disabled:opacity-40 disabled:hover:scale-100"
+            className="edit-point-play-button flex h-10 w-10 items-center justify-center rounded-full transition hover:scale-[1.03] hover:opacity-90 disabled:cursor-default disabled:opacity-40 disabled:hover:scale-100"
           >
             {isPlaying ? <PauseIcon size={16} /> : <PlayIconSmall size={16} />}
           </button>
@@ -475,9 +481,14 @@ export default function EditPointWaveformReview({
             if (event.key === "ArrowLeft") seekToTime(currentTime - 1);
             if (event.key === "ArrowRight") seekToTime(currentTime + 1);
           }}
-          className="relative h-28 cursor-ew-resize overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] outline-none transition focus:border-[var(--text-secondary)]"
+          className="relative h-28 cursor-ew-resize overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] outline-none transition focus:border-[var(--border)] focus-visible:outline-none focus-visible:ring-0"
         >
           <div className="absolute inset-x-0 top-1/2 h-px bg-[var(--border)]" />
+
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 bg-[rgba(255,255,255,0.08)]"
+            style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
+          />
 
           <div className="pointer-events-none absolute inset-0 flex items-center gap-px px-3">
             {peaks.length > 0 ? (
@@ -496,11 +507,9 @@ export default function EditPointWaveformReview({
           </div>
 
           <div
-            className="pointer-events-none absolute top-0 z-20 h-full w-[2px] bg-[var(--text-primary)]"
+            className="pointer-events-none absolute top-0 z-20 h-full w-px bg-[var(--text-primary)] opacity-50"
             style={{ left: `${Math.max(0, Math.min(100, progress))}%` }}
-          >
-            <div className="absolute left-1/2 top-2 h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--text-primary)]" />
-          </div>
+          />
 
           {localMarkers.map((marker) => {
             const left = effectiveDuration > 0 ? (marker.time / effectiveDuration) * 100 : 0;
@@ -525,7 +534,7 @@ export default function EditPointWaveformReview({
                 title={`${marker.label} — ${formatTime(marker.time)}`}
               >
                 <span
-                  className={`absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 ${
+                  className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 ${
                     selected
                       ? "bg-[var(--text-primary)]"
                       : "edit-point-marker-line bg-[var(--accent)]"
