@@ -134,6 +134,7 @@ export default function EditPointWaveformReview({
   const [currentTime, setCurrentTime] = useState(0);
   const [localMarkers, setLocalMarkers] = useState(markers);
   const [selectedMarkerId, setSelectedMarkerId] = useState(markers[0]?.id ?? "");
+  const [spacebarStartsFromSelected, setSpacebarStartsFromSelected] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
 
@@ -145,6 +146,7 @@ export default function EditPointWaveformReview({
   const progress = effectiveDuration > 0 ? (currentTime / effectiveDuration) * 100 : 0;
   const hasChanges = JSON.stringify(markers) !== JSON.stringify(localMarkers);
   const sortedMarkers = [...localMarkers].sort((a, b) => a.time - b.time);
+  const selectedMarker = localMarkers.find((marker) => marker.id === selectedMarkerId);
 
   useEffect(() => {
     setLocalMarkers(markers);
@@ -163,7 +165,7 @@ export default function EditPointWaveformReview({
 
       if (event.code === "Space" && !isTyping) {
         event.preventDefault();
-        togglePlayback();
+        togglePlayback(spacebarStartsFromSelected);
         return;
       }
 
@@ -184,7 +186,7 @@ export default function EditPointWaveformReview({
 
     return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMarkerId, localMarkers, isPlaying, audioUrl, effectiveDuration]);
+  }, [selectedMarkerId, localMarkers, isPlaying, audioUrl, effectiveDuration, spacebarStartsFromSelected]);
 
   useEffect(() => {
     const onPointerMove = (event: PointerEvent) => {
@@ -216,12 +218,28 @@ export default function EditPointWaveformReview({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [effectiveDuration]);
 
-  const togglePlayback = async () => {
+  const playFromTime = async (time: number) => {
+    const audio = audioRef.current;
+
+    if (!audio || !audioUrl) return;
+
+    audio.currentTime = clampTime(time, effectiveDuration);
+    setCurrentTime(audio.currentTime);
+    await audio.play();
+    setIsPlaying(true);
+  };
+
+  const togglePlayback = async (startFromSelected = false) => {
     const audio = audioRef.current;
 
     if (!audio || !audioUrl) return;
 
     if (audio.paused) {
+      if (startFromSelected && selectedMarker) {
+        audio.currentTime = clampTime(selectedMarker.time, effectiveDuration);
+        setCurrentTime(audio.currentTime);
+      }
+
       await audio.play();
       setIsPlaying(true);
     } else {
@@ -351,7 +369,20 @@ export default function EditPointWaveformReview({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setSpacebarStartsFromSelected((value) => !value)}
+            className={`h-7 rounded-full border px-2.5 text-[11px] font-medium transition ${
+              spacebarStartsFromSelected
+                ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+            }`}
+            title="When active, pressing space to resume playback starts from the selected edit point."
+          >
+            Space starts at marker
+          </button>
+
           <div className="font-mono text-xs text-[var(--text-secondary)]">
             {formatTime(currentTime)} / {formatTime(effectiveDuration)}
           </div>
@@ -370,7 +401,7 @@ export default function EditPointWaveformReview({
       <div className="grid gap-3 md:grid-cols-[42px_minmax(0,1fr)] md:items-center">
         <button
           type="button"
-          onClick={togglePlayback}
+          onClick={() => togglePlayback(false)}
           disabled={!audioUrl}
           aria-label={isPlaying ? "Pause" : "Play"}
           className="edit-point-play-button flex h-10 w-10 items-center justify-center rounded-full border border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] transition hover:scale-[1.03] hover:opacity-90 disabled:cursor-default disabled:opacity-40 disabled:hover:scale-100"
@@ -433,7 +464,6 @@ export default function EditPointWaveformReview({
                 }}
                 onClick={(event) => {
                   event.stopPropagation();
-                  seekToTime(marker.time);
                   setSelectedMarkerId(marker.id);
                 }}
                 className="absolute top-0 z-30 h-full w-6 -translate-x-1/2 cursor-ew-resize border-0 bg-transparent p-0"
@@ -459,11 +489,11 @@ export default function EditPointWaveformReview({
       </div>
 
       <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--border)]">
-        <div className="min-w-[780px]">
-          <div className="grid grid-cols-[minmax(0,1fr)_120px_130px_120px_110px_90px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+        <div className="min-w-[820px]">
+          <div className="grid grid-cols-[minmax(0,1fr)_130px_120px_120px_110px_90px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
-            <div>Time</div>
             <div>Set</div>
+            <div>Time</div>
             <div>Nudge</div>
             <div>Confidence</div>
             <div>Source</div>
@@ -475,7 +505,7 @@ export default function EditPointWaveformReview({
             return (
               <div
                 key={marker.id}
-                className={`grid grid-cols-[minmax(0,1fr)_120px_130px_120px_110px_90px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
+                className={`grid grid-cols-[minmax(0,1fr)_130px_120px_120px_110px_90px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
                   selected ? "bg-[var(--bg-hover)]" : ""
                 }`}
               >
@@ -483,7 +513,7 @@ export default function EditPointWaveformReview({
                   type="button"
                   onClick={() => {
                     setSelectedMarkerId(marker.id);
-                    seekToTime(marker.time);
+                    playFromTime(marker.time);
                   }}
                   className="min-w-0 text-left"
                 >
@@ -493,6 +523,14 @@ export default function EditPointWaveformReview({
                   <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
                     {marker.type}
                   </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setMarkerToPlayhead(marker.id)}
+                  className="h-7 w-fit rounded-full border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                >
+                  Set to playhead
                 </button>
 
                 <input
@@ -508,14 +546,6 @@ export default function EditPointWaveformReview({
                   }}
                   className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
                 />
-
-                <button
-                  type="button"
-                  onClick={() => setMarkerToPlayhead(marker.id)}
-                  className="h-7 w-fit rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                >
-                  Set to playhead
-                </button>
 
                 <div className="flex items-center gap-1">
                   <button
@@ -534,7 +564,7 @@ export default function EditPointWaveformReview({
                   </button>
                 </div>
 
-                <span className="inline-flex w-fit rounded-full border border-[var(--border)] px-2 py-1 text-[11px] text-[var(--text-secondary)]">
+                <span className="inline-flex h-8 w-fit items-center rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-[11px] text-[var(--text-secondary)]">
                   {getConfidenceLabel(marker.confidence)} · {Math.round(marker.confidence * 100)}%
                 </span>
 
