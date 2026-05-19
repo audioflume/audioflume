@@ -414,6 +414,86 @@ function CoverImage({
   );
 }
 
+function PlayButton({
+  song,
+  size = "small",
+}: {
+  song: Song;
+  size?: "large" | "small";
+}) {
+  const { currentSong, isPlaying, togglePlayPause } = usePlayer();
+  const active = currentSong?.id === song.id;
+  const playing = active && isPlaying;
+  const buttonSize = size === "large" ? "h-12 w-12" : "h-9 w-9";
+  const iconSize = size === "large" ? 20 : 15;
+  const shadowClass =
+    size === "large"
+      ? "shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+      : "shadow-[0_8px_24px_rgba(0,0,0,0.22)]";
+
+  return (
+    <button
+      type="button"
+      onClick={(event) => {
+        stopPlaybackMouseEvent(event);
+        togglePlayPause(song);
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+
+        stopPlaybackKeyEvent(event);
+
+        if (!event.repeat) togglePlayPause(song);
+      }}
+      onKeyUp={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+
+        stopPlaybackKeyEvent(event);
+      }}
+      className={`flex ${buttonSize} ${shadowClass} shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-default disabled:opacity-50`}
+      disabled={!song.audioUrl}
+      aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+    >
+      {playing ? (
+        <PauseIcon size={iconSize} />
+      ) : (
+        <PlayIconSmall size={iconSize} />
+      )}
+    </button>
+  );
+}
+
+function usePlayableCard(song: Song) {
+  const { togglePlayPause } = usePlayer();
+
+  function playCard() {
+    if (!song.audioUrl) return;
+
+    togglePlayPause(song);
+  }
+
+  return {
+    role: "button",
+    tabIndex: song.audioUrl ? 0 : -1,
+    onClick: (event: MouseEvent<HTMLElement>) => {
+      stopPlaybackMouseEvent(event);
+      playCard();
+    },
+    onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      stopPlaybackKeyEvent(event);
+
+      if (!event.repeat) playCard();
+    },
+    onKeyUp: (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      stopPlaybackKeyEvent(event);
+    },
+  };
+}
+
 function FullWidthSearchBar() {
   const router = useRouter();
   const searchInputRef = useRef<HTMLInputElement>(null);
