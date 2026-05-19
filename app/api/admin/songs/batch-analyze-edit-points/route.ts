@@ -14,6 +14,11 @@ type BatchAnalyzeResult = {
   error?: string;
 };
 
+async function getMissingEditPointSongs() {
+  const songs = await getSongs();
+  return songs.filter((song) => songHasIssue(song, "editPoints"));
+}
+
 function getSingleSongId(req: Request) {
   const url = new URL(req.url);
   const value = url.searchParams.get("songId");
@@ -81,6 +86,36 @@ async function analyzeSong({
   }
 }
 
+export async function GET() {
+  const { isAdmin } = await requireAdmin();
+
+  if (!isAdmin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const missingEditPointSongs = await getMissingEditPointSongs();
+
+    return NextResponse.json({
+      totalMissing: missingEditPointSongs.length,
+      songs: missingEditPointSongs.map((song) => ({
+        id: song.id,
+        title: song.title,
+      })),
+    });
+  } catch (err) {
+    return NextResponse.json(
+      {
+        error:
+          err instanceof Error
+            ? err.message
+            : "Failed to load songs missing edit points.",
+      },
+      { status: 500 },
+    );
+  }
+}
+
 export async function POST(req: Request) {
   const { isAdmin } = await requireAdmin();
 
@@ -99,10 +134,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const songs = await getSongs();
-    const missingEditPointSongs = songs.filter((song) =>
-      songHasIssue(song, "editPoints"),
-    );
+    const missingEditPointSongs = await getMissingEditPointSongs();
     const singleSongId = getSingleSongId(req);
 
     if (singleSongId) {
