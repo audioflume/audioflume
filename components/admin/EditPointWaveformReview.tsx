@@ -206,6 +206,7 @@ export default function EditPointWaveformReview({
   useEffect(() => {
     setLocalMarkers(markers);
     setSelectedMarkerId(markers[0]?.id ?? "");
+    setSpacebarStartsFromSelected(markers.length > 0);
   }, [markers]);
 
   useEffect(() => {
@@ -305,6 +306,19 @@ export default function EditPointWaveformReview({
     }
   };
 
+  const toggleMarkerRow = (markerId: string) => {
+    const isSelected = markerId === selectedMarkerId;
+
+    if (isSelected) {
+      setSelectedMarkerId("");
+      setSpacebarStartsFromSelected(false);
+      return;
+    }
+
+    setSelectedMarkerId(markerId);
+    setSpacebarStartsFromSelected(true);
+  };
+
   const getTimeFromClientX = (clientX: number) => {
     const timeline = timelineRef.current;
 
@@ -358,6 +372,7 @@ export default function EditPointWaveformReview({
 
     setLocalMarkers((current) => [...current, marker]);
     setSelectedMarkerId(marker.id);
+    setSpacebarStartsFromSelected(true);
     setSaveMessage("");
   };
 
@@ -366,6 +381,7 @@ export default function EditPointWaveformReview({
       const next = current.filter((marker) => marker.id !== markerId);
       if (selectedMarkerId === markerId) {
         setSelectedMarkerId(next[0]?.id ?? "");
+        setSpacebarStartsFromSelected(next.length > 0);
       }
       return next;
     });
@@ -642,26 +658,32 @@ export default function EditPointWaveformReview({
               return (
                 <div
                   key={marker.id}
-                  className={`grid grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => toggleMarkerRow(marker.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      toggleMarkerRow(marker.id);
+                    }
+                  }}
+                  className={`grid cursor-pointer grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs transition last:border-b-0 hover:bg-[var(--bg-hover)] ${
                     selected ? "bg-[var(--bg-hover)]" : ""
                   }`}
                 >
-                  <button
-                    type="button"
-                    onClick={() => setSelectedMarkerId(marker.id)}
-                    className="min-w-0 text-left"
-                  >
+                  <div className="min-w-0 text-left">
                     <div className="truncate font-medium text-[var(--text-primary)]">
                       {marker.label}
                     </div>
                     <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
                       {marker.type}
                     </div>
-                  </button>
+                  </div>
 
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       setSelectedMarkerId(marker.id);
                       playFromTime(marker.time);
                     }}
@@ -673,7 +695,10 @@ export default function EditPointWaveformReview({
 
                   <button
                     type="button"
-                    onClick={() => setMarkerToPlayhead(marker.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setMarkerToPlayhead(marker.id);
+                    }}
                     className="h-7 w-fit rounded-full border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
                     Set to playhead
@@ -682,6 +707,7 @@ export default function EditPointWaveformReview({
                   <input
                     type="text"
                     value={formatTime(marker.time)}
+                    onClick={(event) => event.stopPropagation()}
                     onFocus={() => setSelectedMarkerId(marker.id)}
                     onChange={(event) => {
                       const parsed = parseTimeInput(event.target.value);
@@ -693,7 +719,7 @@ export default function EditPointWaveformReview({
                     className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
                   />
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1" onClick={(event) => event.stopPropagation()}>
                     <button
                       type="button"
                       onClick={() => nudgeMarker(marker.id, -0.1)}
@@ -720,7 +746,10 @@ export default function EditPointWaveformReview({
 
                   <button
                     type="button"
-                    onClick={() => deleteEditPoint(marker.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      deleteEditPoint(marker.id);
+                    }}
                     className="h-7 w-fit rounded-full px-2 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
                   >
                     Delete
