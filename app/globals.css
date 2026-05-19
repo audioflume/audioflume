@@ -190,8 +190,11 @@ body.sidebar-collapsed aside[data-sidebar] {
   /* Shadows */
   --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.1);
 
+  --accent: #ddff43;
+  --accent-2: #fb8f61;
+
   /* Edit points */
-  --edit-point-marker: #c4e62d;
+  --edit-point-marker: #00000076;
   --edit-point-marker-soft: rgba(196, 230, 45, 0.18);
   --edit-point-marker-secondary: #c4e62d;
   --edit-point-marker-active: #fb8f61;
