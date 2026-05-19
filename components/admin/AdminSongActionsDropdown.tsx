@@ -148,6 +148,13 @@ export default function AdminSongActionsDropdown({
           Edit Details
         </Link>
 
+        <Link
+          href={`/admin/songs/${songId}/edit-points`}
+          onClick={() => onOpenChange(false)}
+        >
+          Edit Points
+        </Link>
+
         {audioUrl ? (
           <a
             href={audioUrl}
