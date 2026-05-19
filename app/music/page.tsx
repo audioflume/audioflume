@@ -216,6 +216,7 @@ export default function MusicPage() {
     selectedVocals,
     selectedDurations,
     selectedEditPoints,
+    showEditPointMarkers,
     instrumental,
     bpmValue,
     keyValue,
@@ -237,6 +238,8 @@ export default function MusicPage() {
     setFilters((f) => ({ ...f, selectedDurations: v }));
   const setSelectedEditPoints = (v: string[]) =>
     setFilters((f) => ({ ...f, selectedEditPoints: v }));
+  const setShowEditPointMarkers = (v: boolean) =>
+    setFilters((f) => ({ ...f, showEditPointMarkers: v }));
   const setInstrumental = (v: boolean) =>
     setFilters((f) => ({ ...f, instrumental: v }));
   const setBpmValue = (v: BpmFilterValue | null) =>
@@ -533,6 +536,20 @@ export default function MusicPage() {
               }
             />
 
+            <button
+              type="button"
+              onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
+              className={`${filterTriggerBaseClass} ${
+                showEditPointMarkers
+                  ? filterTriggerActiveClass
+                  : filterTriggerInactiveClass
+              } ${showEditPointMarkers ? "pr-2" : ""}`}
+              aria-pressed={showEditPointMarkers}
+            >
+              <span>Markers</span>
+              {showEditPointMarkers && <span className={filterDotClass} />}
+            </button>
+
             <BPMFilter value={bpmValue} onChange={setBpmValue} />
 
             <KeyFilter value={keyValue} onChange={setKeyValue} />
@@ -682,6 +699,7 @@ export default function MusicPage() {
                 isFirst={index === 0}
                 isLast={index === displayedSongs.length - 1}
                 highlightedEditPointTypes={selectedEditPoints}
+                showEditPointMarkers={showEditPointMarkers}
               />
             ))}
         </div>
