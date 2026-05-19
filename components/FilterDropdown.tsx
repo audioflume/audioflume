@@ -30,7 +30,7 @@ type FilterDropdownProps = {
 };
 
 function getDefaultSections(label: string, options: string[]): FilterOptionSection[] {
-  if (label !== "Edit Point") return [{ options }];
+  if (label !== "Cue Points") return [{ options }];
 
   const cuePointOptions = ["First Hit", "Main Drop", "Break", "Button Ending"];
   const smartFilterOptions = options.filter(
