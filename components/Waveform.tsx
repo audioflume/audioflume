@@ -288,9 +288,6 @@ export default function Waveform({
                 style={{
                   width: selected ? "2px" : "1.5px",
                   background: "var(--edit-point-marker)",
-                  boxShadow: selected
-                    ? "0 0 0 2px var(--edit-point-marker-soft, rgba(221,255,67,0.18))"
-                    : "0 0 0 1px var(--edit-point-marker-soft, rgba(221,255,67,0.12))",
                 }}
               />
 
