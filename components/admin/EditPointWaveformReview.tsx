@@ -221,6 +221,7 @@ export default function EditPointWaveformReview({
 
       if (event.code === "Space" && !isTyping) {
         event.preventDefault();
+        event.stopPropagation();
         togglePlayback(spacebarStartsFromSelected);
         return;
       }
@@ -658,16 +659,8 @@ export default function EditPointWaveformReview({
               return (
                 <div
                   key={marker.id}
-                  role="button"
-                  tabIndex={0}
                   onClick={() => toggleMarkerRow(marker.id)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      toggleMarkerRow(marker.id);
-                    }
-                  }}
-                  className={`grid cursor-pointer grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs transition last:border-b-0 hover:bg-[var(--bg-hover)] ${
+                  className={`grid cursor-pointer select-none grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 hover:bg-[var(--bg-hover)] ${
                     selected ? "bg-[var(--bg-hover)]" : ""
                   }`}
                 >
