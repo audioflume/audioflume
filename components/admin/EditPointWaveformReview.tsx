@@ -203,6 +203,18 @@ export default function EditPointWaveformReview({
     (option) => !localMarkers.some((marker) => marker.type === option.type),
   );
 
+  const stopCompetingAudio = () => {
+    window.dispatchEvent(new Event("filmwave:close-player"));
+
+    const currentAudio = audioRef.current;
+    const audioElements = Array.from(document.querySelectorAll("audio"));
+
+    audioElements.forEach((audio) => {
+      if (audio === currentAudio) return;
+      audio.pause();
+    });
+  };
+
   useEffect(() => {
     setLocalMarkers(markers);
     setSelectedMarkerId(markers[0]?.id ?? "");
@@ -281,6 +293,7 @@ export default function EditPointWaveformReview({
 
     if (!audio || !audioUrl) return;
 
+    stopCompetingAudio();
     audio.currentTime = clampTime(time, effectiveDuration);
     setCurrentTime(audio.currentTime);
     await audio.play();
@@ -293,6 +306,8 @@ export default function EditPointWaveformReview({
     if (!audio || !audioUrl) return;
 
     if (audio.paused) {
+      stopCompetingAudio();
+
       if (startFromSelected && selectedMarker) {
         audio.currentTime = clampTime(selectedMarker.time, effectiveDuration);
         setCurrentTime(audio.currentTime);
@@ -326,6 +341,7 @@ export default function EditPointWaveformReview({
     const nextTime = clampTime(time, effectiveDuration);
 
     if (audio) {
+      stopCompetingAudio();
       audio.currentTime = nextTime;
     }
 
