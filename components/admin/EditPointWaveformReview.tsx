@@ -25,6 +25,47 @@ type DragState =
   | { mode: "playhead" }
   | { mode: "point"; markerId: string };
 
+function LoopMarkerIcon({ size = 12 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M17 2.5L21 6.5L17 10.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3 11V9.5C3 7.843 4.343 6.5 6 6.5H21"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7 21.5L3 17.5L7 13.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M21 13V14.5C21 16.157 19.657 17.5 18 17.5H3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function formatTime(secondsValue: number) {
   const seconds = Number(secondsValue);
 
@@ -134,7 +175,7 @@ export default function EditPointWaveformReview({
   const [currentTime, setCurrentTime] = useState(0);
   const [localMarkers, setLocalMarkers] = useState(markers);
   const [selectedMarkerId, setSelectedMarkerId] = useState(markers[0]?.id ?? "");
-  const [spacebarStartsFromSelected, setSpacebarStartsFromSelected] = useState(false);
+  const [spacebarStartsFromSelected, setSpacebarStartsFromSelected] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
 
@@ -370,20 +411,6 @@ export default function EditPointWaveformReview({
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setSpacebarStartsFromSelected((value) => !value)}
-            className={`inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-[11px] font-medium transition ${
-              spacebarStartsFromSelected
-                ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-            }`}
-            title="When active, pressing space to resume playback starts from the selected edit point."
-          >
-            <PlayIconSmall size={10} />
-            starts at marker
-          </button>
-
           <div className="font-mono text-xs text-[var(--text-secondary)]">
             {formatTime(currentTime)} / {formatTime(effectiveDuration)}
           </div>
@@ -400,15 +427,32 @@ export default function EditPointWaveformReview({
       </div>
 
       <div className="grid gap-3 md:grid-cols-[42px_minmax(0,1fr)] md:items-center">
-        <button
-          type="button"
-          onClick={() => togglePlayback(false)}
-          disabled={!audioUrl}
-          aria-label={isPlaying ? "Pause" : "Play"}
-          className="edit-point-play-button flex h-10 w-10 items-center justify-center rounded-full border border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] transition hover:scale-[1.03] hover:opacity-90 disabled:cursor-default disabled:opacity-40 disabled:hover:scale-100"
-        >
-          {isPlaying ? <PauseIcon size={16} /> : <PlayIconSmall size={16} />}
-        </button>
+        <div className="flex flex-col items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => togglePlayback(false)}
+            disabled={!audioUrl}
+            aria-label={isPlaying ? "Pause" : "Play"}
+            className="edit-point-play-button flex h-10 w-10 items-center justify-center rounded-full border border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] transition hover:scale-[1.03] hover:opacity-90 disabled:cursor-default disabled:opacity-40 disabled:hover:scale-100"
+          >
+            {isPlaying ? <PauseIcon size={16} /> : <PlayIconSmall size={16} />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSpacebarStartsFromSelected((value) => !value)}
+            aria-pressed={spacebarStartsFromSelected}
+            aria-label="Toggle spacebar start from selected marker"
+            className={`flex h-6 w-6 items-center justify-center rounded-full border transition ${
+              spacebarStartsFromSelected
+                ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+            }`}
+            title="When active, pressing space to resume playback starts from the selected edit point."
+          >
+            <LoopMarkerIcon size={12} />
+          </button>
+        </div>
 
         <div
           ref={timelineRef}
