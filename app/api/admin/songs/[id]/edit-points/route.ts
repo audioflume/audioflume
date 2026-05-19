@@ -21,6 +21,18 @@ type SaveEditPointsPayload = {
   editPoints: EditPointPayload[];
 };
 
+type SavedEditPointRow = {
+  id: string;
+  song_id: string;
+  type: string;
+  time_seconds: number | string;
+  label: string | null;
+  confidence: number | string | null;
+  source: string | null;
+};
+
+const EMPTY_EDIT_POINTS_JSON = '{"markers":[],"ranges":[]}';
+
 function clampConfidence(value: unknown) {
   const numeric = Number(value ?? 0);
 
@@ -50,6 +62,29 @@ function cleanEditPoint(point: EditPointPayload) {
     confidence: clampConfidence(point.confidence),
     source: cleanSource(point.source),
   };
+}
+
+function editPointRowsToJson(rows: SavedEditPointRow[] = []) {
+  return JSON.stringify({
+    markers: rows.flatMap((row) => {
+      const time = Number(row.time_seconds);
+
+      if (!Number.isFinite(time)) return [];
+
+      return [
+        {
+          id: row.id,
+          label: row.label || row.type,
+          time,
+          type: row.type,
+          confidence:
+            row.confidence == null ? undefined : Number(row.confidence),
+          source: row.source || undefined,
+        },
+      ];
+    }),
+    ranges: [],
+  });
 }
 
 export async function PATCH(req: Request, context: RouteContext) {
@@ -84,6 +119,13 @@ export async function PATCH(req: Request, context: RouteContext) {
     await supabaseServer.from("song_edit_points").delete().eq("song_id", id);
 
     if (cleaned.length === 0) {
+      const { error: clearError } = await supabaseServer
+        .from("songs")
+        .update({ edit_points: EMPTY_EDIT_POINTS_JSON })
+        .eq("id", id);
+
+      if (clearError) throw clearError;
+
       return NextResponse.json({ saved: 0, editPoints: [] });
     }
 
@@ -104,9 +146,19 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     if (error) throw error;
 
+    const savedRows = (data ?? []) as SavedEditPointRow[];
+    const editPointsJson = editPointRowsToJson(savedRows);
+
+    const { error: syncError } = await supabaseServer
+      .from("songs")
+      .update({ edit_points: editPointsJson })
+      .eq("id", id);
+
+    if (syncError) throw syncError;
+
     return NextResponse.json({
-      saved: data?.length ?? 0,
-      editPoints: data ?? [],
+      saved: savedRows.length,
+      editPoints: savedRows,
     });
   } catch (err) {
     console.error("Edit point save failed:", err);
