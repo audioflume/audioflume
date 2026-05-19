@@ -172,12 +172,12 @@ function SystemStatusConsole({
 }) {
   return (
     <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5">
-      <div className="mb-1.5 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.08em] text-[var(--text-muted)]">
+      <div className="mb-1.5 flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.08em] text-[var(--text-muted)]">
         <span>Console</span>
         <span>{loading ? "Check" : "Live"}</span>
       </div>
 
-      <div className="space-y-1.5 font-mono text-[10px]">
+      <div className="space-y-1.5 font-mono text-[9px]">
         {statuses.map((status) => (
           <div key={status.key} className="flex items-center justify-between gap-2">
             <div className="flex min-w-0 items-center gap-1.5 text-[var(--text-secondary)]">
@@ -188,7 +188,7 @@ function SystemStatusConsole({
               <span className="truncate">{status.label}</span>
             </div>
             <span
-              className="shrink-0 text-[10px]"
+              className="shrink-0 text-[9px]"
               style={{ color: status.tone === "success" ? "var(--text-primary)" : STATUS_COLORS[status.tone] }}
             >
               {status.value}
@@ -196,7 +196,7 @@ function SystemStatusConsole({
           </div>
         ))}
 
-        <div className="border-t border-[var(--border)] pt-1.5 font-mono text-[9px] uppercase tracking-[0.06em] text-[var(--text-muted)]">
+        <div className="border-t border-[var(--border)] pt-1.5 font-mono text-[8px] uppercase tracking-[0.06em] text-[var(--text-muted)]">
           Check: {lastChecked}
         </div>
       </div>
