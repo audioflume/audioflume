@@ -22,7 +22,7 @@ type UseFilterPersistenceProps = {
   authLoaded: boolean;
 };
 
-const defaultState: FilterState = {
+const baseDefaultState: FilterState = {
   search: "",
   selectedMoods: [],
   selectedGenres: [],
@@ -38,13 +38,72 @@ const defaultState: FilterState = {
   selectedPlaylist: null,
 };
 
+function getInitialMarkerVisibility() {
+  if (typeof window === "undefined") return true;
+
+  for (let i = 0; i < window.sessionStorage.length; i += 1) {
+    const key = window.sessionStorage.key(i);
+
+    if (!key?.startsWith("filmwave-music-filters")) continue;
+
+    try {
+      const parsed = JSON.parse(window.sessionStorage.getItem(key) || "{}");
+
+      if (typeof parsed.showEditPointMarkers === "boolean") {
+        return parsed.showEditPointMarkers;
+      }
+    } catch {
+      // Ignore malformed storage values.
+    }
+  }
+
+  return true;
+}
+
+function getDefaultState(): FilterState {
+  return {
+    ...baseDefaultState,
+    showEditPointMarkers: getInitialMarkerVisibility(),
+  };
+}
+
+function normalizeFilterState(parsed: Record<string, unknown>): FilterState {
+  return {
+    search: typeof parsed.search === "string" ? parsed.search : "",
+    selectedMoods: Array.isArray(parsed.selectedMoods) ? parsed.selectedMoods : [],
+    selectedGenres: Array.isArray(parsed.selectedGenres)
+      ? parsed.selectedGenres
+      : [],
+    selectedInstruments: Array.isArray(parsed.selectedInstruments)
+      ? parsed.selectedInstruments
+      : [],
+    selectedBuilds: Array.isArray(parsed.selectedBuilds) ? parsed.selectedBuilds : [],
+    selectedVocals: Array.isArray(parsed.selectedVocals) ? parsed.selectedVocals : [],
+    selectedDurations: Array.isArray(parsed.selectedDurations)
+      ? parsed.selectedDurations
+      : [],
+    selectedEditPoints: Array.isArray(parsed.selectedEditPoints)
+      ? parsed.selectedEditPoints
+      : [],
+    showEditPointMarkers:
+      typeof parsed.showEditPointMarkers === "boolean"
+        ? parsed.showEditPointMarkers
+        : true,
+    instrumental:
+      typeof parsed.instrumental === "boolean" ? parsed.instrumental : false,
+    bpmValue: (parsed.bpmValue as BpmFilterValue | null) ?? null,
+    keyValue: (parsed.keyValue as KeyFilterValue | null) ?? null,
+    selectedPlaylist: (parsed.selectedPlaylist as PlaylistRef | null) ?? null,
+  };
+}
+
 export function useFilterPersistence({
   storageKey,
   authLoaded,
 }: UseFilterPersistenceProps) {
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
-  const [filters, setFilters] = useState<FilterState>(defaultState);
+  const [filters, setFilters] = useState<FilterState>(() => getDefaultState());
 
   // Hydrate from sessionStorage when auth loads or user changes
   useEffect(() => {
@@ -55,7 +114,7 @@ export function useFilterPersistence({
     sessionStorage.removeItem("filmwave-music-filters");
 
     if (!storageKey) {
-      setFilters(defaultState);
+      setFilters(getDefaultState());
       setHydrated(true);
       setHydratedKey(null);
       return;
@@ -64,7 +123,7 @@ export function useFilterPersistence({
     const saved = sessionStorage.getItem(storageKey);
 
     if (!saved) {
-      setFilters(defaultState);
+      setFilters(getDefaultState());
       setHydrated(true);
       setHydratedKey(storageKey);
       return;
@@ -73,24 +132,10 @@ export function useFilterPersistence({
     try {
       const parsed = JSON.parse(saved);
 
-      setFilters({
-        search: parsed.search ?? "",
-        selectedMoods: parsed.selectedMoods ?? [],
-        selectedGenres: parsed.selectedGenres ?? [],
-        selectedInstruments: parsed.selectedInstruments ?? [],
-        selectedBuilds: parsed.selectedBuilds ?? [],
-        selectedVocals: parsed.selectedVocals ?? [],
-        selectedDurations: parsed.selectedDurations ?? [],
-        selectedEditPoints: parsed.selectedEditPoints ?? [],
-        showEditPointMarkers: parsed.showEditPointMarkers ?? true,
-        instrumental: parsed.instrumental ?? false,
-        bpmValue: parsed.bpmValue ?? null,
-        keyValue: parsed.keyValue ?? null,
-        selectedPlaylist: parsed.selectedPlaylist ?? null,
-      });
+      setFilters(normalizeFilterState(parsed));
     } catch {
       sessionStorage.removeItem(storageKey);
-      setFilters(defaultState);
+      setFilters(getDefaultState());
     } finally {
       setHydrated(true);
       setHydratedKey(storageKey);
