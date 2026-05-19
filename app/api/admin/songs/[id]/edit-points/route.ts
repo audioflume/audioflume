@@ -10,11 +10,8 @@ type RouteContext = {
 
 type EditPointPayload = {
   id?: string;
-  kind?: "point" | "range";
   type: string;
-  time?: number;
-  startTime?: number | null;
-  endTime?: number | null;
+  time: number;
   label?: string;
   confidence?: number;
   source?: string;
@@ -33,41 +30,13 @@ function clampConfidence(value: unknown) {
 }
 
 function cleanEditPoint(point: EditPointPayload) {
-  const kind = point.kind === "range" ? "range" : "point";
-  const rawStart = Number(point.startTime ?? 0);
-  const rawEnd = Number(point.endTime ?? point.time ?? 0);
-  const rawTime = Number(point.time ?? rawEnd);
+  const time = Number(point.time);
 
-  if (!point.type) return null;
-
-  if (kind === "range") {
-    if (!Number.isFinite(rawStart) || !Number.isFinite(rawEnd)) return null;
-
-    const startTime = Math.max(0, Math.min(rawStart, rawEnd));
-    const endTime = Math.max(0, Math.max(rawStart, rawEnd));
-
-    if (endTime <= startTime) return null;
-
-    return {
-      kind,
-      type: String(point.type).trim(),
-      time_seconds: Number(endTime.toFixed(2)),
-      start_time_seconds: Number(startTime.toFixed(2)),
-      end_time_seconds: Number(endTime.toFixed(2)),
-      label: point.label?.trim() || point.type,
-      confidence: clampConfidence(point.confidence),
-      source: "corrected",
-    };
-  }
-
-  if (!Number.isFinite(rawTime) || rawTime < 0) return null;
+  if (!point.type || !Number.isFinite(time) || time < 0) return null;
 
   return {
-    kind,
     type: String(point.type).trim(),
-    time_seconds: Number(rawTime.toFixed(2)),
-    start_time_seconds: null,
-    end_time_seconds: null,
+    time_seconds: Number(time.toFixed(2)),
     label: point.label?.trim() || point.type,
     confidence: clampConfidence(point.confidence),
     source: "corrected",
@@ -111,11 +80,8 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     const rows = cleaned.map((point) => ({
       song_id: id,
-      kind: point.kind,
       type: point.type,
       time_seconds: point.time_seconds,
-      start_time_seconds: point.start_time_seconds,
-      end_time_seconds: point.end_time_seconds,
       label: point.label,
       confidence: point.confidence,
       source: point.source,
@@ -124,9 +90,7 @@ export async function PATCH(req: Request, context: RouteContext) {
     const { data, error } = await supabaseServer
       .from("song_edit_points")
       .insert(rows)
-      .select(
-        "id, song_id, kind, type, time_seconds, start_time_seconds, end_time_seconds, label, confidence, source, created_at",
-      )
+      .select("id, song_id, type, time_seconds, label, confidence, source, created_at")
       .order("time_seconds", { ascending: true });
 
     if (error) throw error;
