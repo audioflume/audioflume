@@ -95,10 +95,12 @@ export default function Waveform({
   song,
   compact = false,
   highlightedEditPointTypes = [],
+  showEditPointMarkers = true,
 }: {
   song: Song;
   compact?: boolean;
   highlightedEditPointTypes?: string[];
+  showEditPointMarkers?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -224,7 +226,7 @@ export default function Waveform({
       }`}
       onPointerDown={handlePointerDown}
     >
-      {editPoints.ranges?.map((range) => {
+      {showEditPointMarkers && editPoints.ranges?.map((range) => {
         const left = getPercent(range.start);
         const right = getPercent(range.end);
         const width = Math.max(0, right - left);
@@ -254,7 +256,7 @@ export default function Waveform({
         );
       })}
 
-      {editPoints.markers?.map((marker) => {
+      {showEditPointMarkers && editPoints.markers?.map((marker) => {
         const markerType = getMarkerType(marker);
         const selected = highlightedTypeSet.has(markerType);
         const dimmed = hasHighlightedTypes && !selected;
@@ -288,7 +290,7 @@ export default function Waveform({
                   : "var(--edit-point-marker)",
                 boxShadow: selected
                   ? "0 0 0 2px var(--edit-point-marker-active-soft, rgba(251,143,97,0.18))"
-                  : "0 0 0 1px var(--edit-point-marker-soft, rgba(251,143,97,0.12))",
+                  : "0 0 0 1px var(--edit-point-marker-soft, rgba(221,255,67,0.12))",
               }}
             />
 
