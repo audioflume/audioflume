@@ -373,14 +373,15 @@ export default function EditPointWaveformReview({
           <button
             type="button"
             onClick={() => setSpacebarStartsFromSelected((value) => !value)}
-            className={`h-7 rounded-full border px-2.5 text-[11px] font-medium transition ${
+            className={`inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-[11px] font-medium transition ${
               spacebarStartsFromSelected
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
             }`}
             title="When active, pressing space to resume playback starts from the selected edit point."
           >
-            Space starts at marker
+            <PlayIconSmall size={10} />
+            starts at marker
           </button>
 
           <div className="font-mono text-xs text-[var(--text-secondary)]">
@@ -442,7 +443,7 @@ export default function EditPointWaveformReview({
           </div>
 
           <div
-            className="pointer-events-none absolute top-0 z-20 h-full w-px bg-[var(--text-primary)]"
+            className="pointer-events-none absolute top-0 z-20 h-full w-[2px] bg-[var(--text-primary)]"
             style={{ left: `${Math.max(0, Math.min(100, progress))}%` }}
           >
             <div className="absolute left-1/2 top-2 h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--text-primary)]" />
@@ -471,7 +472,7 @@ export default function EditPointWaveformReview({
                 title={`${marker.label} — ${formatTime(marker.time)}`}
               >
                 <span
-                  className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 ${
+                  className={`absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 ${
                     selected ? "bg-[var(--text-primary)]" : "bg-[var(--accent)]"
                   }`}
                 />
@@ -489,9 +490,10 @@ export default function EditPointWaveformReview({
       </div>
 
       <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--border)]">
-        <div className="min-w-[820px]">
-          <div className="grid grid-cols-[minmax(0,1fr)_130px_120px_120px_110px_90px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+        <div className="min-w-[860px]">
+          <div className="grid grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
+            <div>Play</div>
             <div>Set</div>
             <div>Time</div>
             <div>Nudge</div>
@@ -505,16 +507,13 @@ export default function EditPointWaveformReview({
             return (
               <div
                 key={marker.id}
-                className={`grid grid-cols-[minmax(0,1fr)_130px_120px_120px_110px_90px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
+                className={`grid grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
                   selected ? "bg-[var(--bg-hover)]" : ""
                 }`}
               >
                 <button
                   type="button"
-                  onClick={() => {
-                    setSelectedMarkerId(marker.id);
-                    playFromTime(marker.time);
-                  }}
+                  onClick={() => setSelectedMarkerId(marker.id)}
                   className="min-w-0 text-left"
                 >
                   <div className="truncate font-medium text-[var(--text-primary)]">
@@ -523,6 +522,18 @@ export default function EditPointWaveformReview({
                   <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
                     {marker.type}
                   </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedMarkerId(marker.id);
+                    playFromTime(marker.time);
+                  }}
+                  aria-label={`Play from ${marker.label}`}
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                >
+                  <PlayIconSmall size={12} />
                 </button>
 
                 <button
@@ -551,16 +562,16 @@ export default function EditPointWaveformReview({
                   <button
                     type="button"
                     onClick={() => nudgeMarker(marker.id, -0.1)}
-                    className="h-7 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
-                    -0.1
+                    -
                   </button>
                   <button
                     type="button"
                     onClick={() => nudgeMarker(marker.id, 0.1)}
-                    className="h-7 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
-                    +0.1
+                    +
                   </button>
                 </div>
 
