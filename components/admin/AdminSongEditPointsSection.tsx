@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePlayer } from "@/context/PlayerContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import EditPointWaveformReview from "@/components/admin/EditPointWaveformReview";
 
@@ -113,6 +114,7 @@ export default function AdminSongEditPointsSection({
   duration = "",
   onEditPointsJsonChange,
 }: AdminSongEditPointsSectionProps) {
+  const { closePlayer } = usePlayer();
   const [markers, setMarkers] = useState<EditPointMarker[]>([]);
   const [resolvedAudioUrl, setResolvedAudioUrl] = useState(audioUrl);
   const [resolvedWaveformPeaks, setResolvedWaveformPeaks] = useState(waveformPeaks);
@@ -125,6 +127,10 @@ export default function AdminSongEditPointsSection({
     [resolvedDuration],
   );
   const canReview = !!songId && !!resolvedAudioUrl && !!resolvedWaveformPeaks;
+
+  const stopGlobalPlayer = useCallback(() => {
+    closePlayer();
+  }, [closePlayer]);
 
   useEffect(() => {
     setResolvedAudioUrl(audioUrl);
@@ -266,12 +272,50 @@ export default function AdminSongEditPointsSection({
   }
 
   return (
-    <EditPointWaveformReview
-      songId={songId}
-      audioUrl={resolvedAudioUrl}
-      waveformPeaks={resolvedWaveformPeaks}
-      duration={durationSeconds}
-      markers={markers}
-    />
+    <div
+      className="admin-song-edit-points-review"
+      onPointerDownCapture={stopGlobalPlayer}
+      onKeyDownCapture={stopGlobalPlayer}
+    >
+      <style>{`
+        .admin-song-edit-points-review > div > .mb-4 {
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: start;
+          column-gap: 1rem;
+        }
+
+        .admin-song-edit-points-review > div > .mb-4 > div:first-child {
+          min-width: 0;
+        }
+
+        .admin-song-edit-points-review > div > .mb-4 > div:last-child {
+          justify-self: end;
+          justify-content: flex-end;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 760px) {
+          .admin-song-edit-points-review > div > .mb-4 {
+            grid-template-columns: 1fr;
+            row-gap: 0.75rem;
+          }
+
+          .admin-song-edit-points-review > div > .mb-4 > div:last-child {
+            justify-self: start;
+            justify-content: flex-start;
+            white-space: normal;
+          }
+        }
+      `}</style>
+
+      <EditPointWaveformReview
+        songId={songId}
+        audioUrl={resolvedAudioUrl}
+        waveformPeaks={resolvedWaveformPeaks}
+        duration={durationSeconds}
+        markers={markers}
+      />
+    </div>
   );
 }
