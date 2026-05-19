@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import AdminSongEditPointsSection from "@/components/admin/AdminSongEditPointsSection";
 
@@ -20,8 +20,20 @@ declare global {
   }
 }
 
-function EmbeddedEditPointsManager({ songId }: AdminSongFormEditPointsLinkInjectorProps) {
-  return <AdminSongEditPointsSection songId={songId} />;
+function setNativeTextareaValue(textarea: HTMLTextAreaElement, value: string) {
+  const valueSetter = Object.getOwnPropertyDescriptor(textarea, "value")?.set;
+  const prototype = Object.getPrototypeOf(textarea);
+  const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, "value")?.set;
+
+  if (prototypeValueSetter && valueSetter !== prototypeValueSetter) {
+    prototypeValueSetter.call(textarea, value);
+  } else if (valueSetter) {
+    valueSetter.call(textarea, value);
+  } else {
+    textarea.value = value;
+  }
+
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function stopAudioInside(target: HTMLElement) {
@@ -49,9 +61,30 @@ function cleanupExistingEmbeddedEditPointRoot(ownerId?: string) {
   }, 0);
 }
 
+function EmbeddedEditPointsManager({
+  songId,
+  onEditPointsJsonChange,
+  onDirtyChange,
+}: AdminSongFormEditPointsLinkInjectorProps & {
+  onEditPointsJsonChange: (value: string) => void;
+  onDirtyChange: (dirty: boolean) => void;
+}) {
+  return (
+    <AdminSongEditPointsSection
+      songId={songId}
+      showSaveButton={false}
+      onEditPointsJsonChange={onEditPointsJsonChange}
+      onDirtyChange={onDirtyChange}
+    />
+  );
+}
+
 export default function AdminSongFormEditPointsLinkInjector({
   songId,
 }: AdminSongFormEditPointsLinkInjectorProps) {
+  const editPointsJsonRef = useRef('{"markers":[],"ranges":[]}');
+  const dirtyRef = useRef(false);
+
   useEffect(() => {
     const ownerId = `edit-points-${songId || "new"}`;
     let mounted = true;
@@ -68,6 +101,24 @@ export default function AdminSongFormEditPointsLinkInjector({
       return header?.closest("section") ?? null;
     };
 
+    const syncHiddenTextarea = (value = editPointsJsonRef.current) => {
+      const editPointsSection = findEditPointsSection();
+      const textarea = editPointsSection?.querySelector<HTMLTextAreaElement>("textarea");
+
+      if (!textarea) return;
+
+      setNativeTextareaValue(textarea, value);
+    };
+
+    const setOriginalBodyContentVisibility = (body: HTMLElement, visible: boolean) => {
+      Array.from(body.children).forEach((child) => {
+        if (!(child instanceof HTMLElement)) return;
+        if (child.dataset.editPointsEmbeddedManager === "true") return;
+
+        child.style.display = visible ? "" : "none";
+      });
+    };
+
     const inject = () => {
       if (!mounted) return false;
 
@@ -75,27 +126,38 @@ export default function AdminSongFormEditPointsLinkInjector({
 
       if (!editPointsSection) return false;
 
-      const body = editPointsSection.querySelector<HTMLElement>(".admin-song-form-card-header + div");
+      const header = editPointsSection.querySelector<HTMLElement>(
+        ".admin-song-form-card-header",
+      );
+      const body = editPointsSection.querySelector<HTMLElement>(
+        ".admin-song-form-card-header + div",
+      );
 
       if (!body) return false;
 
+      if (header) {
+        const kicker = header.querySelector<HTMLElement>(".admin-song-form-kicker");
+        if (kicker) kicker.textContent = "Cue Points";
+      }
+
+      body.className = "p-4";
+      setOriginalBodyContentVisibility(body, false);
+
       const existing = window.__filmwaveEmbeddedEditPointRoot;
-      const currentTarget = body.querySelector<HTMLDivElement>(
+      let target = body.querySelector<HTMLDivElement>(
         "[data-edit-points-embedded-manager]",
       );
 
-      if (existing?.ownerId === ownerId && currentTarget === existing.target) {
+      if (existing?.ownerId === ownerId && target === existing.target) {
+        syncHiddenTextarea();
         return true;
       }
 
       cleanupExistingEmbeddedEditPointRoot();
 
-      body.innerHTML = "";
-      body.className = "p-4";
-
-      const target = document.createElement("div");
+      target = document.createElement("div");
       target.dataset.editPointsEmbeddedManager = "true";
-      body.appendChild(target);
+      body.prepend(target);
 
       const root = createRoot(target);
       window.__filmwaveEmbeddedEditPointRoot = {
@@ -103,8 +165,21 @@ export default function AdminSongFormEditPointsLinkInjector({
         target,
         ownerId,
       };
-      root.render(<EmbeddedEditPointsManager songId={songId} />);
+      root.render(
+        <EmbeddedEditPointsManager
+          songId={songId}
+          onEditPointsJsonChange={(value) => {
+            editPointsJsonRef.current = value;
+            syncHiddenTextarea(value);
+          }}
+          onDirtyChange={(dirty) => {
+            dirtyRef.current = dirty;
+            if (!dirty) syncHiddenTextarea();
+          }}
+        />,
+      );
 
+      syncHiddenTextarea();
       return true;
     };
 
@@ -112,16 +187,23 @@ export default function AdminSongFormEditPointsLinkInjector({
       window.requestAnimationFrame(() => inject());
     });
 
+    const submitListener = () => {
+      if (!dirtyRef.current) return;
+      syncHiddenTextarea();
+    };
+
     observer.observe(document.body, {
       childList: true,
       subtree: true,
     });
 
+    document.addEventListener("submit", submitListener, true);
     inject();
 
     return () => {
       mounted = false;
       observer.disconnect();
+      document.removeEventListener("submit", submitListener, true);
       cleanupExistingEmbeddedEditPointRoot(ownerId);
     };
   }, [songId]);
