@@ -11,11 +11,8 @@ type PageProps = {
 type SongEditPointRow = {
   id: string;
   song_id: string;
-  kind: "point" | "range" | null;
   type: string;
   time_seconds: number | string;
-  start_time_seconds: number | string | null;
-  end_time_seconds: number | string | null;
   label: string | null;
   confidence: number | string | null;
   source: string | null;
@@ -93,9 +90,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
 
   const { data: editPoints, error: editPointsError } = await supabaseServer
     .from("song_edit_points")
-    .select(
-      "id, song_id, kind, type, time_seconds, start_time_seconds, end_time_seconds, label, confidence, source, created_at",
-    )
+    .select("id, song_id, type, time_seconds, label, confidence, source, created_at")
     .eq("song_id", id)
     .order("time_seconds", { ascending: true });
 
@@ -106,26 +101,14 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
   const typedSong = song as SongRow;
   const typedEditPoints = (editPoints ?? []) as SongEditPointRow[];
   const duration = Number(typedSong.duration ?? 0);
-  const markers = typedEditPoints.map((point) => {
-    const kind = point.kind === "range" ? "range" : "point";
-    const time = Number(point.time_seconds);
-    const startTime =
-      point.start_time_seconds == null ? null : Number(point.start_time_seconds);
-    const endTime =
-      point.end_time_seconds == null ? null : Number(point.end_time_seconds);
-
-    return {
-      id: point.id,
-      kind,
-      type: point.type,
-      time,
-      startTime: kind === "range" ? (Number.isFinite(startTime) ? startTime : 0) : null,
-      endTime: kind === "range" ? (Number.isFinite(endTime) ? endTime : time) : null,
-      label: point.label || getTypeLabel(point.type),
-      confidence: getConfidenceValue(point.confidence),
-      source: point.source || "auto",
-    };
-  });
+  const markers = typedEditPoints.map((point) => ({
+    id: point.id,
+    type: point.type,
+    time: Number(point.time_seconds),
+    label: point.label || getTypeLabel(point.type),
+    confidence: getConfidenceValue(point.confidence),
+    source: point.source || "auto",
+  }));
 
   return (
     <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
@@ -144,7 +127,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
             </h1>
 
             <p className="mt-2 text-sm text-[var(--text-secondary)]">
-              Review, drag, and fine-tune generated edit points and ranges.
+              Review, drag, and fine-tune generated edit points.
             </p>
           </div>
 
