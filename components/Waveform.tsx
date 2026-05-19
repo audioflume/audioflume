@@ -226,80 +226,80 @@ export default function Waveform({
       }`}
       onPointerDown={handlePointerDown}
     >
-      {showEditPointMarkers && editPoints.ranges?.map((range) => {
-        const left = getPercent(range.start);
-        const right = getPercent(range.end);
-        const width = Math.max(0, right - left);
-        const label = range.label.toLowerCase();
+      {showEditPointMarkers &&
+        editPoints.ranges?.map((range) => {
+          const left = getPercent(range.start);
+          const right = getPercent(range.end);
+          const width = Math.max(0, right - left);
+          const label = range.label.toLowerCase();
 
-        const isStrong =
-          label.includes("drop") ||
-          label.includes("impact") ||
-          label.includes("peak");
+          const isStrong =
+            label.includes("drop") ||
+            label.includes("impact") ||
+            label.includes("peak");
 
-        return (
-          <div
-            key={range.id}
-            className="pointer-events-none absolute z-10"
-            style={{
-              top: "50%",
-              height: compact ? "18px" : "34px",
-              transform: "translateY(-50%)",
-              left: `${left}%`,
-              width: `${width}%`,
-              background: isStrong
-                ? "var(--edit-point-range-strong)"
-                : "var(--edit-point-range)",
-            }}
-            title={range.label}
-          />
-        );
-      })}
-
-      {showEditPointMarkers && editPoints.markers?.map((marker) => {
-        const markerType = getMarkerType(marker);
-        const selected = highlightedTypeSet.has(markerType);
-        const dimmed = hasHighlightedTypes && !selected;
-        const label = marker.label || getEditPointFilterLabel(markerType);
-        const markerTime = formatMarkerTime(marker.time);
-        const progress = song.duration ? marker.time / song.duration : 0;
-
-        return (
-          <button
-            key={marker.id}
-            type="button"
-            className="group/edit-point-marker absolute top-1/2 z-20 h-[38px] w-5 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
-            style={{
-              left: `${getPercent(marker.time)}%`,
-              opacity: dimmed ? 0.45 : 1,
-            }}
-            title={`${label} · ${markerTime}`}
-            aria-label={`Play from ${label} at ${markerTime}`}
-            onPointerDown={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              seekToProgress(Math.max(0, Math.min(1, progress)));
-            }}
-          >
-            <span
-              className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full transition-[width,opacity] duration-150 group-hover/edit-point-marker:opacity-100"
+          return (
+            <div
+              key={range.id}
+              className="pointer-events-none absolute z-10"
               style={{
-                width: selected ? "2px" : "1.5px",
-                background: selected
-                  ? "var(--edit-point-marker-active, #fb8f61)"
-                  : "var(--edit-point-marker)",
-                boxShadow: selected
-                  ? "0 0 0 2px var(--edit-point-marker-active-soft, rgba(251,143,97,0.18))"
-                  : "0 0 0 1px var(--edit-point-marker-soft, rgba(221,255,67,0.12))",
+                top: "50%",
+                height: compact ? "18px" : "34px",
+                transform: "translateY(-50%)",
+                left: `${left}%`,
+                width: `${width}%`,
+                background: isStrong
+                  ? "var(--edit-point-range-strong)"
+                  : "var(--edit-point-range)",
               }}
+              title={range.label}
             />
+          );
+        })}
 
-            <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-40 flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/edit-point-marker:translate-y-0 group-hover/edit-point-marker:opacity-100">
-              {label} · {markerTime}
-            </span>
-          </button>
-        );
-      })}
+      {showEditPointMarkers &&
+        editPoints.markers?.map((marker) => {
+          const markerType = getMarkerType(marker);
+          const selected = highlightedTypeSet.has(markerType);
+          const dimmed = hasHighlightedTypes && !selected;
+          const label = marker.label || getEditPointFilterLabel(markerType);
+          const markerTime = formatMarkerTime(marker.time);
+          const progress = song.duration ? marker.time / song.duration : 0;
+
+          return (
+            <button
+              key={marker.id}
+              type="button"
+              className="group/edit-point-marker absolute top-1/2 z-20 h-[38px] w-5 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
+              style={{
+                left: `${getPercent(marker.time)}%`,
+                opacity: dimmed ? 0.3 : 1,
+              }}
+              title={`${label} · ${markerTime}`}
+              aria-label={`Play from ${label} at ${markerTime}`}
+              onPointerDown={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                seekToProgress(Math.max(0, Math.min(1, progress)));
+              }}
+            >
+              <span
+                className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full transition-[width,opacity] duration-150 group-hover/edit-point-marker:opacity-100"
+                style={{
+                  width: selected ? "2px" : "1.5px",
+                  background: "var(--edit-point-marker)",
+                  boxShadow: selected
+                    ? "0 0 0 2px var(--edit-point-marker-soft, rgba(221,255,67,0.18))"
+                    : "0 0 0 1px var(--edit-point-marker-soft, rgba(221,255,67,0.12))",
+                }}
+              />
+
+              <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-40 flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/edit-point-marker:translate-y-0 group-hover/edit-point-marker:opacity-100">
+                {label} · {markerTime}
+              </span>
+            </button>
+          );
+        })}
 
       <canvas
         ref={canvasRef}
