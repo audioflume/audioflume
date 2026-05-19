@@ -23,11 +23,17 @@ type EditPointMarker = {
   source: string;
 };
 
+type SongFormRecord = {
+  audioUrl?: string;
+  waveformPeaks?: string;
+  duration?: string;
+};
+
 type AdminSongEditPointsSectionProps = {
   songId?: string;
-  audioUrl: string;
-  waveformPeaks: string;
-  duration: string;
+  audioUrl?: string;
+  waveformPeaks?: string;
+  duration?: string;
   onEditPointsJsonChange?: (value: string) => void;
 };
 
@@ -102,17 +108,72 @@ function rowsToJson(rows: EditPointRow[]) {
 
 export default function AdminSongEditPointsSection({
   songId,
-  audioUrl,
-  waveformPeaks,
-  duration,
+  audioUrl = "",
+  waveformPeaks = "",
+  duration = "",
   onEditPointsJsonChange,
 }: AdminSongEditPointsSectionProps) {
   const [markers, setMarkers] = useState<EditPointMarker[]>([]);
+  const [resolvedAudioUrl, setResolvedAudioUrl] = useState(audioUrl);
+  const [resolvedWaveformPeaks, setResolvedWaveformPeaks] = useState(waveformPeaks);
+  const [resolvedDuration, setResolvedDuration] = useState(duration);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const durationSeconds = useMemo(() => parseDurationToSeconds(duration), [duration]);
-  const canReview = !!songId && !!audioUrl && !!waveformPeaks;
+  const durationSeconds = useMemo(
+    () => parseDurationToSeconds(resolvedDuration),
+    [resolvedDuration],
+  );
+  const canReview = !!songId && !!resolvedAudioUrl && !!resolvedWaveformPeaks;
+
+  useEffect(() => {
+    setResolvedAudioUrl(audioUrl);
+    setResolvedWaveformPeaks(waveformPeaks);
+    setResolvedDuration(duration);
+  }, [audioUrl, waveformPeaks, duration]);
+
+  useEffect(() => {
+    if (!songId || (audioUrl && waveformPeaks)) return;
+
+    let cancelled = false;
+
+    async function loadSong() {
+      setLoading(true);
+      setError("");
+
+      try {
+        const res = await fetch(`/api/admin/songs/${songId}`, {
+          cache: "no-store",
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data?.error || "Failed to load song data.");
+        }
+
+        if (cancelled) return;
+
+        const song = data as SongFormRecord;
+        setResolvedAudioUrl(song.audioUrl || "");
+        setResolvedWaveformPeaks(song.waveformPeaks || "");
+        setResolvedDuration(song.duration || "");
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load song data.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadSong();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [songId, audioUrl, waveformPeaks]);
 
   useEffect(() => {
     if (!songId) {
@@ -207,8 +268,8 @@ export default function AdminSongEditPointsSection({
   return (
     <EditPointWaveformReview
       songId={songId}
-      audioUrl={audioUrl}
-      waveformPeaks={waveformPeaks}
+      audioUrl={resolvedAudioUrl}
+      waveformPeaks={resolvedWaveformPeaks}
       duration={durationSeconds}
       markers={markers}
     />
