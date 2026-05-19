@@ -342,7 +342,11 @@ export default function EditPointWaveformReview({
     setCurrentTime(nextTime);
   };
 
-  const updatePointTime = (markerId: string, time: number) => {
+  const updatePointTime = (
+    markerId: string,
+    time: number,
+    activateMarkerStart = true,
+  ) => {
     const nextTime = clampTime(time, effectiveDuration);
 
     setLocalMarkers((current) =>
@@ -357,7 +361,9 @@ export default function EditPointWaveformReview({
       ),
     );
     setSelectedMarkerId(markerId);
-    setSpacebarStartsFromSelected(true);
+    if (activateMarkerStart) {
+      setSpacebarStartsFromSelected(true);
+    }
     setSaveMessage("");
   };
 
@@ -390,16 +396,16 @@ export default function EditPointWaveformReview({
     setSaveMessage("");
   };
 
-  const nudgeMarker = (markerId: string, amount: number) => {
+  const nudgeMarker = (markerId: string, amount: number, activateMarkerStart = true) => {
     const marker = localMarkers.find((item) => item.id === markerId);
 
     if (!marker) return;
 
-    updatePointTime(markerId, marker.time + amount);
+    updatePointTime(markerId, marker.time + amount, activateMarkerStart);
   };
 
   const setMarkerToPlayhead = (markerId: string) => {
-    updatePointTime(markerId, currentTime);
+    updatePointTime(markerId, currentTime, false);
   };
 
   const saveEditPoints = async () => {
@@ -710,7 +716,7 @@ export default function EditPointWaveformReview({
 
                       if (parsed == null) return;
 
-                      updatePointTime(marker.id, parsed);
+                      updatePointTime(marker.id, parsed, false);
                     }}
                     className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
                   />
@@ -718,14 +724,14 @@ export default function EditPointWaveformReview({
                   <div className="flex items-center gap-1" onClick={(event) => event.stopPropagation()}>
                     <button
                       type="button"
-                      onClick={() => nudgeMarker(marker.id, -0.1)}
+                      onClick={() => nudgeMarker(marker.id, -0.1, false)}
                       className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                     >
                       -
                     </button>
                     <button
                       type="button"
-                      onClick={() => nudgeMarker(marker.id, 0.1)}
+                      onClick={() => nudgeMarker(marker.id, 0.1, false)}
                       className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                     >
                       +
