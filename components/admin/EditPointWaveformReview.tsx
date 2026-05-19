@@ -6,11 +6,8 @@ import PlayIconSmall from "@/components/icons/PlayIconSmall";
 
 type EditPointMarker = {
   id: string;
-  kind: "point" | "range";
   type: string;
   time: number;
-  startTime: number | null;
-  endTime: number | null;
   label: string;
   confidence: number;
   source: string;
@@ -26,9 +23,7 @@ type EditPointWaveformReviewProps = {
 
 type DragState =
   | { mode: "playhead" }
-  | { mode: "point"; markerId: string }
-  | { mode: "range-start"; markerId: string }
-  | { mode: "range-end"; markerId: string };
+  | { mode: "point"; markerId: string };
 
 function formatTime(secondsValue: number) {
   const seconds = Number(secondsValue);
@@ -124,10 +119,6 @@ function getConfidenceLabel(confidence: number) {
   return "Unknown";
 }
 
-function markerSortValue(marker: EditPointMarker) {
-  return marker.kind === "range" ? marker.startTime ?? marker.time : marker.time;
-}
-
 export default function EditPointWaveformReview({
   songId,
   audioUrl,
@@ -153,9 +144,7 @@ export default function EditPointWaveformReview({
   const effectiveDuration = duration > 0 ? duration : audioRef.current?.duration || 0;
   const progress = effectiveDuration > 0 ? (currentTime / effectiveDuration) * 100 : 0;
   const hasChanges = JSON.stringify(markers) !== JSON.stringify(localMarkers);
-  const sortedMarkers = [...localMarkers].sort(
-    (a, b) => markerSortValue(a) - markerSortValue(b),
-  );
+  const sortedMarkers = [...localMarkers].sort((a, b) => a.time - b.time);
 
   useEffect(() => {
     setLocalMarkers(markers);
@@ -210,19 +199,7 @@ export default function EditPointWaveformReview({
         return;
       }
 
-      if (dragState.mode === "point") {
-        updatePointTime(dragState.markerId, nextTime);
-        return;
-      }
-
-      if (dragState.mode === "range-start") {
-        updateRangeTime(dragState.markerId, "start", nextTime);
-        return;
-      }
-
-      if (dragState.mode === "range-end") {
-        updateRangeTime(dragState.markerId, "end", nextTime);
-      }
+      updatePointTime(dragState.markerId, nextTime);
     };
 
     const onPointerUp = () => {
@@ -293,52 +270,16 @@ export default function EditPointWaveformReview({
     setSaveMessage("");
   };
 
-  const updateRangeTime = (
-    markerId: string,
-    edge: "start" | "end",
-    time: number,
-  ) => {
-    const nextTime = clampTime(time, effectiveDuration);
-
-    setLocalMarkers((current) =>
-      current.map((marker) => {
-        if (marker.id !== markerId) return marker;
-
-        const currentStart = marker.startTime ?? 0;
-        const currentEnd = marker.endTime ?? marker.time;
-        const nextStart = edge === "start" ? Math.min(nextTime, currentEnd - 0.1) : currentStart;
-        const nextEnd = edge === "end" ? Math.max(nextTime, currentStart + 0.1) : currentEnd;
-
-        return {
-          ...marker,
-          startTime: Number(clampTime(nextStart, effectiveDuration).toFixed(2)),
-          endTime: Number(clampTime(nextEnd, effectiveDuration).toFixed(2)),
-          time: Number(clampTime(nextEnd, effectiveDuration).toFixed(2)),
-          source: marker.source === "manual" ? "manual" : "corrected",
-        };
-      }),
-    );
-    setSelectedMarkerId(markerId);
-    setSaveMessage("");
-  };
-
   const nudgeMarker = (markerId: string, amount: number) => {
     const marker = localMarkers.find((item) => item.id === markerId);
 
     if (!marker) return;
 
-    if (marker.kind === "range") {
-      const start = marker.startTime ?? 0;
-      const end = marker.endTime ?? marker.time;
-      const length = Math.max(0.1, end - start);
-      const nextStart = clampTime(start + amount, effectiveDuration);
-      const nextEnd = clampTime(nextStart + length, effectiveDuration);
-      updateRangeTime(markerId, "start", Math.max(0, nextEnd - length));
-      updateRangeTime(markerId, "end", nextEnd);
-      return;
-    }
-
     updatePointTime(markerId, marker.time + amount);
+  };
+
+  const setMarkerToPlayhead = (markerId: string) => {
+    updatePointTime(markerId, currentTime);
   };
 
   const saveEditPoints = async () => {
@@ -354,11 +295,8 @@ export default function EditPointWaveformReview({
         body: JSON.stringify({
           editPoints: localMarkers.map((marker) => ({
             id: marker.id,
-            kind: marker.kind,
             type: marker.type,
             time: marker.time,
-            startTime: marker.startTime,
-            endTime: marker.endTime,
             label: marker.label,
             confidence: marker.confidence,
             source: marker.source,
@@ -409,7 +347,7 @@ export default function EditPointWaveformReview({
             Waveform Review
           </div>
           <p className="mt-1 text-xs text-[var(--text-secondary)]">
-            Spacebar toggles playback. Drag points, range handles, or the playhead, then save corrected values.
+            Spacebar toggles playback. Drag points, drag the playhead, or set a marker to the current playhead time.
           </p>
         </div>
 
@@ -472,59 +410,6 @@ export default function EditPointWaveformReview({
             )}
           </div>
 
-          {localMarkers
-            .filter((marker) => marker.kind === "range")
-            .map((marker) => {
-              const start = marker.startTime ?? 0;
-              const end = marker.endTime ?? marker.time;
-              const left = effectiveDuration > 0 ? (start / effectiveDuration) * 100 : 0;
-              const width =
-                effectiveDuration > 0 ? ((end - start) / effectiveDuration) * 100 : 0;
-              const selected = marker.id === selectedMarkerId;
-
-              return (
-                <div
-                  key={marker.id}
-                  className={`absolute top-0 z-10 h-full border-x ${
-                    selected
-                      ? "border-[var(--text-primary)] bg-[rgba(255,255,255,0.08)]"
-                      : "border-[var(--accent)] bg-[rgba(221,255,67,0.08)]"
-                  }`}
-                  style={{
-                    left: `${Math.max(0, Math.min(100, left))}%`,
-                    width: `${Math.max(0.5, Math.min(100, width))}%`,
-                  }}
-                  title={`${marker.label} — ${formatTime(start)} to ${formatTime(end)}`}
-                >
-                  <button
-                    type="button"
-                    onPointerDown={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      dragStateRef.current = { mode: "range-start", markerId: marker.id };
-                      setSelectedMarkerId(marker.id);
-                    }}
-                    className="absolute left-0 top-0 h-full w-4 -translate-x-1/2 cursor-ew-resize border-0 bg-transparent p-0"
-                    aria-label={`Drag ${marker.label} start`}
-                  />
-                  <button
-                    type="button"
-                    onPointerDown={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      dragStateRef.current = { mode: "range-end", markerId: marker.id };
-                      setSelectedMarkerId(marker.id);
-                    }}
-                    className="absolute right-0 top-0 h-full w-4 translate-x-1/2 cursor-ew-resize border-0 bg-transparent p-0"
-                    aria-label={`Drag ${marker.label} end`}
-                  />
-                  <span className="absolute left-2 top-2 rounded-full bg-[var(--bg-primary)] px-2 py-1 text-[10px] font-medium text-[var(--text-secondary)]">
-                    {marker.label}
-                  </span>
-                </div>
-              );
-            })}
-
           <div
             className="pointer-events-none absolute top-0 z-20 h-full w-px bg-[var(--text-primary)]"
             style={{ left: `${Math.max(0, Math.min(100, progress))}%` }}
@@ -532,56 +417,53 @@ export default function EditPointWaveformReview({
             <div className="absolute left-1/2 top-2 h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--text-primary)]" />
           </div>
 
-          {localMarkers
-            .filter((marker) => marker.kind === "point")
-            .map((marker) => {
-              const left = effectiveDuration > 0 ? (marker.time / effectiveDuration) * 100 : 0;
-              const selected = marker.id === selectedMarkerId;
+          {localMarkers.map((marker) => {
+            const left = effectiveDuration > 0 ? (marker.time / effectiveDuration) * 100 : 0;
+            const selected = marker.id === selectedMarkerId;
 
-              return (
-                <button
-                  key={marker.id}
-                  type="button"
-                  onPointerDown={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    dragStateRef.current = { mode: "point", markerId: marker.id };
-                    setSelectedMarkerId(marker.id);
-                  }}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    seekToTime(marker.time);
-                    setSelectedMarkerId(marker.id);
-                  }}
-                  className="absolute top-0 z-30 h-full w-6 -translate-x-1/2 cursor-ew-resize border-0 bg-transparent p-0"
-                  style={{ left: `${Math.max(0, Math.min(100, left))}%` }}
-                  title={`${marker.label} — ${formatTime(marker.time)}`}
-                >
-                  <span
-                    className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 ${
-                      selected ? "bg-[var(--text-primary)]" : "bg-[var(--accent)]"
-                    }`}
-                  />
-                  <span
-                    className={`absolute left-1/2 top-2 h-3 w-3 -translate-x-1/2 rounded-full ${
-                      selected
-                        ? "bg-[var(--text-primary)] shadow-[0_0_0_3px_rgba(255,255,255,0.16)]"
-                        : "bg-[var(--accent)] shadow-[0_0_0_3px_rgba(221,255,67,0.16)]"
-                    }`}
-                  />
-                </button>
-              );
-            })}
+            return (
+              <button
+                key={marker.id}
+                type="button"
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  dragStateRef.current = { mode: "point", markerId: marker.id };
+                  setSelectedMarkerId(marker.id);
+                }}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  seekToTime(marker.time);
+                  setSelectedMarkerId(marker.id);
+                }}
+                className="absolute top-0 z-30 h-full w-6 -translate-x-1/2 cursor-ew-resize border-0 bg-transparent p-0"
+                style={{ left: `${Math.max(0, Math.min(100, left))}%` }}
+                title={`${marker.label} — ${formatTime(marker.time)}`}
+              >
+                <span
+                  className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 ${
+                    selected ? "bg-[var(--text-primary)]" : "bg-[var(--accent)]"
+                  }`}
+                />
+                <span
+                  className={`absolute left-1/2 top-2 h-3 w-3 -translate-x-1/2 rounded-full ${
+                    selected
+                      ? "bg-[var(--text-primary)] shadow-[0_0_0_3px_rgba(255,255,255,0.16)]"
+                      : "bg-[var(--accent)] shadow-[0_0_0_3px_rgba(221,255,67,0.16)]"
+                  }`}
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
 
       <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--border)]">
-        <div className="min-w-[900px]">
-          <div className="grid grid-cols-[90px_minmax(0,1fr)_120px_120px_130px_110px_90px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-            <div>Kind</div>
+        <div className="min-w-[780px]">
+          <div className="grid grid-cols-[minmax(0,1fr)_120px_130px_120px_110px_90px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
-            <div>Start</div>
-            <div>End / Time</div>
+            <div>Time</div>
+            <div>Set</div>
             <div>Nudge</div>
             <div>Confidence</div>
             <div>Source</div>
@@ -589,14 +471,11 @@ export default function EditPointWaveformReview({
 
           {sortedMarkers.map((marker) => {
             const selected = marker.id === selectedMarkerId;
-            const isRange = marker.kind === "range";
-            const start = marker.startTime ?? 0;
-            const end = marker.endTime ?? marker.time;
 
             return (
               <div
                 key={marker.id}
-                className={`grid grid-cols-[90px_minmax(0,1fr)_120px_120px_130px_110px_90px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
+                className={`grid grid-cols-[minmax(0,1fr)_120px_130px_120px_110px_90px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
                   selected ? "bg-[var(--bg-hover)]" : ""
                 }`}
               >
@@ -604,18 +483,7 @@ export default function EditPointWaveformReview({
                   type="button"
                   onClick={() => {
                     setSelectedMarkerId(marker.id);
-                    seekToTime(isRange ? start : marker.time);
-                  }}
-                  className="text-left text-[11px] capitalize text-[var(--text-secondary)]"
-                >
-                  {marker.kind}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedMarkerId(marker.id);
-                    seekToTime(isRange ? start : marker.time);
+                    seekToTime(marker.time);
                   }}
                   className="min-w-0 text-left"
                 >
@@ -629,36 +497,25 @@ export default function EditPointWaveformReview({
 
                 <input
                   type="text"
-                  value={isRange ? formatTime(start) : "—"}
-                  disabled={!isRange}
+                  value={formatTime(marker.time)}
                   onFocus={() => setSelectedMarkerId(marker.id)}
                   onChange={(event) => {
                     const parsed = parseTimeInput(event.target.value);
 
                     if (parsed == null) return;
 
-                    updateRangeTime(marker.id, "start", parsed);
-                  }}
-                  className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)] disabled:text-[var(--text-muted)]"
-                />
-
-                <input
-                  type="text"
-                  value={formatTime(isRange ? end : marker.time)}
-                  onFocus={() => setSelectedMarkerId(marker.id)}
-                  onChange={(event) => {
-                    const parsed = parseTimeInput(event.target.value);
-
-                    if (parsed == null) return;
-
-                    if (isRange) {
-                      updateRangeTime(marker.id, "end", parsed);
-                    } else {
-                      updatePointTime(marker.id, parsed);
-                    }
+                    updatePointTime(marker.id, parsed);
                   }}
                   className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
                 />
+
+                <button
+                  type="button"
+                  onClick={() => setMarkerToPlayhead(marker.id)}
+                  className="h-7 w-fit rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                >
+                  Set to playhead
+                </button>
 
                 <div className="flex items-center gap-1">
                   <button
