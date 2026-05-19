@@ -8,16 +8,38 @@ type AdminSongFormEditPointsLinkInjectorProps = {
   songId?: string;
 };
 
+type EmbeddedEditPointRoot = {
+  root: Root;
+  target: HTMLDivElement;
+  ownerId: string;
+};
+
+declare global {
+  interface Window {
+    __filmwaveEmbeddedEditPointRoot?: EmbeddedEditPointRoot | null;
+  }
+}
+
 function EmbeddedEditPointsManager({ songId }: AdminSongFormEditPointsLinkInjectorProps) {
   return <AdminSongEditPointsSection songId={songId} />;
+}
+
+function cleanupExistingEmbeddedEditPointRoot(ownerId?: string) {
+  const existing = window.__filmwaveEmbeddedEditPointRoot;
+
+  if (!existing) return;
+  if (ownerId && existing.ownerId === ownerId) return;
+
+  existing.root.unmount();
+  existing.target.remove();
+  window.__filmwaveEmbeddedEditPointRoot = null;
 }
 
 export default function AdminSongFormEditPointsLinkInjector({
   songId,
 }: AdminSongFormEditPointsLinkInjectorProps) {
   useEffect(() => {
-    let root: Root | null = null;
-    let target: HTMLDivElement | null = null;
+    const ownerId = `edit-points-${songId || "new"}`;
     let mounted = true;
 
     const findEditPointsSection = () => {
@@ -43,19 +65,32 @@ export default function AdminSongFormEditPointsLinkInjector({
 
       if (!body) return false;
 
-      if (body.querySelector("[data-edit-points-embedded-manager]")) {
+      const existing = window.__filmwaveEmbeddedEditPointRoot;
+      const currentTarget = body.querySelector<HTMLDivElement>(
+        "[data-edit-points-embedded-manager]",
+      );
+
+      if (existing?.ownerId === ownerId && currentTarget === existing.target) {
         return true;
       }
+
+      cleanupExistingEmbeddedEditPointRoot();
 
       body.innerHTML = "";
       body.className = "p-4";
 
-      target = document.createElement("div");
+      const target = document.createElement("div");
       target.dataset.editPointsEmbeddedManager = "true";
       body.appendChild(target);
 
-      root = createRoot(target);
+      const root = createRoot(target);
+      window.__filmwaveEmbeddedEditPointRoot = {
+        root,
+        target,
+        ownerId,
+      };
       root.render(<EmbeddedEditPointsManager songId={songId} />);
+
       return true;
     };
 
@@ -73,14 +108,7 @@ export default function AdminSongFormEditPointsLinkInjector({
     return () => {
       mounted = false;
       observer.disconnect();
-
-      const rootToUnmount = root;
-      const targetToRemove = target;
-
-      window.setTimeout(() => {
-        rootToUnmount?.unmount();
-        targetToRemove?.remove();
-      }, 0);
+      cleanupExistingEmbeddedEditPointRoot(ownerId);
     };
   }, [songId]);
 
