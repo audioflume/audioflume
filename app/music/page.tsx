@@ -19,6 +19,10 @@ import {
   matchesBpmFilter,
   matchesKeyFilter,
 } from "@/lib/filterUtils";
+import {
+  EDIT_POINT_FILTER_OPTIONS,
+  songMatchesEditPointFilters,
+} from "@/lib/editPointUtils";
 import { getRecord, getStringFromRecord } from "@/lib/utils";
 
 import { useFilterPersistence } from "@/hooks/useFilterPersistence";
@@ -211,6 +215,7 @@ export default function MusicPage() {
     selectedBuilds,
     selectedVocals,
     selectedDurations,
+    selectedEditPoints,
     instrumental,
     bpmValue,
     keyValue,
@@ -230,6 +235,8 @@ export default function MusicPage() {
     setFilters((f) => ({ ...f, selectedVocals: v }));
   const setSelectedDurations = (v: string[]) =>
     setFilters((f) => ({ ...f, selectedDurations: v }));
+  const setSelectedEditPoints = (v: string[]) =>
+    setFilters((f) => ({ ...f, selectedEditPoints: v }));
   const setInstrumental = (v: boolean) =>
     setFilters((f) => ({ ...f, instrumental: v }));
   const setBpmValue = (v: BpmFilterValue | null) =>
@@ -336,6 +343,7 @@ export default function MusicPage() {
       if (!includesAll(song.instruments, selectedInstruments)) return false;
       if (!includesAll(song.builds, selectedBuilds)) return false;
       if (!includesAll(song.vocals, selectedVocals)) return false;
+      if (!songMatchesEditPointFilters(song, selectedEditPoints)) return false;
       if (!matchesDurationFilter(song.duration, selectedDurations)) {
         return false;
       }
@@ -365,6 +373,7 @@ export default function MusicPage() {
     selectedBuilds,
     selectedVocals,
     selectedDurations,
+    selectedEditPoints,
     bpmValue,
     keyValue,
     instrumental,
@@ -432,6 +441,7 @@ export default function MusicPage() {
               selectedBuilds={selectedBuilds}
               selectedVocals={selectedVocals}
               selectedDurations={selectedDurations}
+              selectedEditPoints={selectedEditPoints}
               instrumental={instrumental}
               bpmValue={bpmValue}
               keyValue={keyValue}
@@ -457,6 +467,11 @@ export default function MusicPage() {
               onRemoveDuration={(v) =>
                 setSelectedDurations(
                   selectedDurations.filter((item) => item !== v),
+                )
+              }
+              onRemoveEditPoint={(v) =>
+                setSelectedEditPoints(
+                  selectedEditPoints.filter((item) => item !== v),
                 )
               }
               onRemoveInstrumental={() => setInstrumental(false)}
@@ -501,6 +516,21 @@ export default function MusicPage() {
               options={VOCALS_OPTIONS}
               selected={selectedVocals}
               onChange={setSelectedVocals}
+            />
+
+            <FilterDropdown
+              label="Edit Point"
+              options={EDIT_POINT_FILTER_OPTIONS.map((option) => option.label)}
+              selected={EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+                selectedEditPoints.includes(option.type),
+              ).map((option) => option.label)}
+              onChange={(labels) =>
+                setSelectedEditPoints(
+                  EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+                    labels.includes(option.label),
+                  ).map((option) => option.type),
+                )
+              }
             />
 
             <BPMFilter value={bpmValue} onChange={setBpmValue} />
@@ -651,6 +681,7 @@ export default function MusicPage() {
                 song={song}
                 isFirst={index === 0}
                 isLast={index === displayedSongs.length - 1}
+                highlightedEditPointTypes={selectedEditPoints}
               />
             ))}
         </div>
