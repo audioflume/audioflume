@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { usePlayer } from "@/context/PlayerContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import EditPointWaveformReview from "@/components/admin/EditPointWaveformReview";
 
@@ -114,7 +113,6 @@ export default function AdminSongEditPointsSection({
   duration = "",
   onEditPointsJsonChange,
 }: AdminSongEditPointsSectionProps) {
-  const { closePlayer } = usePlayer();
   const [markers, setMarkers] = useState<EditPointMarker[]>([]);
   const [resolvedAudioUrl, setResolvedAudioUrl] = useState(audioUrl);
   const [resolvedWaveformPeaks, setResolvedWaveformPeaks] = useState(waveformPeaks);
@@ -129,8 +127,8 @@ export default function AdminSongEditPointsSection({
   const canReview = !!songId && !!resolvedAudioUrl && !!resolvedWaveformPeaks;
 
   const stopGlobalPlayer = useCallback(() => {
-    closePlayer();
-  }, [closePlayer]);
+    window.dispatchEvent(new Event("filmwave:close-player"));
+  }, []);
 
   useEffect(() => {
     setResolvedAudioUrl(audioUrl);
