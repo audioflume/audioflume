@@ -192,7 +192,9 @@ export default function MusicPlayer() {
     string | null
   >(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
-  const [showEditPointMarkers, setShowEditPointMarkers] = useState(true);
+  const [showEditPointMarkers, setShowEditPointMarkers] = useState(() =>
+    getStoredMarkerVisibility(),
+  );
   const [moreMenuPosition, setMoreMenuPosition] = useState({
     top: 0,
     left: 0,
