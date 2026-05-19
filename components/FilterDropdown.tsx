@@ -39,11 +39,11 @@ function getDefaultSections(label: string, options: string[]): FilterOptionSecti
 
   return [
     {
-      label: "Detected cue points",
+      label: "Detected Cue Points",
       options: cuePointOptions.filter((option) => options.includes(option)),
     },
     {
-      label: "Smart filters",
+      label: "Smart Filters",
       options: smartFilterOptions,
     },
   ].filter((section) => section.options.length > 0);
@@ -129,7 +129,7 @@ export default function FilterDropdown({
                 {sectionIndex > 0 && (
                   <div className="mx-2 mb-1.5 mt-2 border-t border-[var(--border)] pt-2">
                     {section.label && (
-                      <div className="px-1 pb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                      <div className="px-1 pb-1.5 text-[10px] font-medium tracking-[0.02em] text-[var(--text-muted)]">
                         {section.label}
                       </div>
                     )}
@@ -137,7 +137,7 @@ export default function FilterDropdown({
                 )}
 
                 {sectionIndex === 0 && section.label && (
-                  <div className="px-3 pb-1 pt-1 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                  <div className="px-3 pb-1 pt-1 text-[10px] font-medium tracking-[0.02em] text-[var(--text-muted)]">
                     {section.label}
                   </div>
                 )}
