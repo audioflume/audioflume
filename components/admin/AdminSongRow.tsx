@@ -17,6 +17,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import {
   getSongHealthStatus,
   getSongIssues,
+  songHasOnlyAutoEditPoints,
   type SongHealthStatus,
 } from "@/lib/songHealth";
 
@@ -44,6 +45,21 @@ function StatusDot({ health }: { health: SongHealthStatus }) {
       }}
       aria-hidden="true"
     />
+  );
+}
+
+function AutoEditPointChip() {
+  return (
+    <span
+      className="inline-flex h-6 items-center rounded-full border px-2 text-[10px] font-semibold uppercase tracking-[0.04em]"
+      style={{
+        borderColor: "rgba(251, 143, 97, 0.35)",
+        backgroundColor: "rgba(251, 143, 97, 0.1)",
+        color: "#fb8f61",
+      }}
+    >
+      Auto
+    </span>
   );
 }
 
@@ -88,10 +104,11 @@ export default function AdminSongRow({
   const rowIsPlaying = isCurrentSong && isPlaying;
   const issues = getSongIssues(song).map((issue) => issue.label);
   const rowHealth = getSongHealthStatus(song);
+  const onlyAutoEditPoints = songHasOnlyAutoEditPoints(song);
 
   const gridColumnsClass = showSelectionColumn
-    ? "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_120px_80px_80px_72px]"
-    : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(112px,140px)_64px_76px_64px]";
+    ? "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]"
+    : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]";
 
   const handlePlayClick = () => {
     if (!song.audioUrl) return;
@@ -209,8 +226,9 @@ export default function AdminSongRow({
         <StatusDot health={rowHealth} />
       </div>
 
-      <div>
+      <div className="flex min-w-0 items-center gap-1.5">
         <StatusChip issues={issues} />
+        {onlyAutoEditPoints && <AutoEditPointChip />}
       </div>
 
       <div className="text-[var(--text-secondary)]">{song.key || "—"}</div>
