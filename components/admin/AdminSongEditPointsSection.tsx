@@ -40,6 +40,9 @@ type AdminSongEditPointsSectionProps = {
   onDirtyChange?: (dirty: boolean) => void;
 };
 
+const CANONICAL_CUE_TYPES = ["first_hit", "drop", "break", "button_ending"];
+const CANONICAL_CUE_TYPE_SET = new Set(CANONICAL_CUE_TYPES);
+
 function getTypeLabel(type: string) {
   if (type === "drop") return "Main Drop";
 
@@ -83,8 +86,46 @@ function getConfidenceValue(confidence: number | string | null) {
   return Math.max(0, Math.min(1, value));
 }
 
+function getSourcePriority(source: string) {
+  if (source === "manual") return 3;
+  if (source === "corrected") return 2;
+  if (source === "auto") return 1;
+  return 0;
+}
+
+function dedupeCanonicalMarkers(markers: EditPointMarker[]) {
+  const markerByType = new Map<string, EditPointMarker>();
+
+  markers.forEach((marker) => {
+    if (!CANONICAL_CUE_TYPE_SET.has(marker.type)) return;
+
+    const existing = markerByType.get(marker.type);
+
+    if (!existing) {
+      markerByType.set(marker.type, marker);
+      return;
+    }
+
+    const markerPriority = getSourcePriority(marker.source);
+    const existingPriority = getSourcePriority(existing.source);
+
+    if (markerPriority > existingPriority) {
+      markerByType.set(marker.type, marker);
+      return;
+    }
+
+    if (markerPriority === existingPriority && marker.confidence >= existing.confidence) {
+      markerByType.set(marker.type, marker);
+    }
+  });
+
+  return CANONICAL_CUE_TYPES.map((type) => markerByType.get(type)).filter(
+    (marker): marker is EditPointMarker => Boolean(marker),
+  );
+}
+
 function rowsToMarkers(rows: EditPointRow[]): EditPointMarker[] {
-  return rows.flatMap((point) => {
+  const markers = rows.flatMap((point) => {
     const time = Number(point.time_seconds);
 
     if (!Number.isFinite(time)) return [];
@@ -100,6 +141,8 @@ function rowsToMarkers(rows: EditPointRow[]): EditPointMarker[] {
       },
     ];
   });
+
+  return dedupeCanonicalMarkers(markers);
 }
 
 function rowsToJson(rows: EditPointRow[]) {
@@ -150,8 +193,12 @@ export default function AdminSongEditPointsSection({
     }
 
     const rows = (data.editPoints || []) as EditPointRow[];
-    setMarkers(rowsToMarkers(rows));
-    onEditPointsJsonChange?.(data.editPointsJson || rowsToJson(rows));
+    const nextMarkers = rowsToMarkers(rows);
+
+    setMarkers(nextMarkers);
+    onEditPointsJsonChange?.(
+      JSON.stringify({ markers: nextMarkers, ranges: [] }),
+    );
   }, [songId, onEditPointsJsonChange]);
 
   const reAnalyzeCuePoints = useCallback(async () => {
@@ -311,38 +358,6 @@ export default function AdminSongEditPointsSection({
       onPointerDownCapture={stopGlobalPlayer}
       onKeyDownCapture={stopGlobalPlayer}
     >
-      <style>{`
-        .admin-song-edit-points-review > div > .mb-4 {
-          display: grid !important;
-          grid-template-columns: minmax(0, 1fr) auto;
-          align-items: start;
-          column-gap: 1rem;
-        }
-
-        .admin-song-edit-points-review > div > .mb-4 > div:first-child {
-          min-width: 0;
-        }
-
-        .admin-song-edit-points-review > div > .mb-4 > div:last-child {
-          justify-self: end;
-          justify-content: flex-end;
-          white-space: nowrap;
-        }
-
-        @media (max-width: 760px) {
-          .admin-song-edit-points-review > div > .mb-4 {
-            grid-template-columns: 1fr;
-            row-gap: 0.75rem;
-          }
-
-          .admin-song-edit-points-review > div > .mb-4 > div:last-child {
-            justify-self: start;
-            justify-content: flex-start;
-            white-space: normal;
-          }
-        }
-      `}</style>
-
       {error && (
         <div className="mb-3 rounded-lg border border-[var(--border)] bg-[var(--status-error-soft,rgba(220,88,79,0.12))] px-3 py-2 text-xs text-[var(--status-error,#dc584f)]">
           {error}
