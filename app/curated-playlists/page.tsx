@@ -15,22 +15,14 @@ type GroupMeta = {
 };
 
 function SkeletonBlock({ className = "" }: { className?: string }) {
-  return <span className={`skeleton-block ${className}`} />;
+  return <span className={`curated-playlist-skeleton-block ${className}`} />;
 }
 
 function CuratedPlaylistCardSkeleton() {
   return (
     <div className="curated-playlist-skeleton-card-shell">
       <div className="curated-playlist-skeleton-card">
-        <div className="curated-playlist-skeleton-top-row">
-          <SkeletonBlock className="curated-playlist-skeleton-circle" />
-        </div>
-
-        <div className="curated-playlist-skeleton-content">
-          <SkeletonBlock className="curated-playlist-skeleton-kicker" />
-          <SkeletonBlock className="curated-playlist-skeleton-title" />
-          <SkeletonBlock className="curated-playlist-skeleton-meta" />
-        </div>
+        <div className="curated-playlist-skeleton-arrow" />
       </div>
     </div>
   );
@@ -80,15 +72,43 @@ function CuratedPlaylistsLoadingSkeleton() {
           animation-delay: 0.08s;
         }
 
+        .curated-playlist-skeleton-block {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          background: var(--bg-tertiary);
+        }
+
+        .curated-playlist-skeleton-block::after,
+        .curated-playlist-skeleton-card::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transform: translateX(-100%);
+          background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--bg-hover) 48%, transparent),
+            transparent
+          );
+          animation: curated-playlist-skeleton-shimmer 1.6s ease-in-out infinite;
+        }
+
+        @keyframes curated-playlist-skeleton-shimmer {
+          100% {
+            transform: translateX(100%);
+          }
+        }
+
         .curated-playlist-skeleton-heading {
-          width: min(220px, 48vw);
+          width: min(210px, 46vw);
           height: 20px;
           border-radius: 6px;
         }
 
         .curated-playlist-skeleton-description {
-          width: min(360px, 64vw);
-          height: 10px;
+          width: min(340px, 62vw);
+          height: 9px;
           margin-top: 10px;
           border-radius: 999px;
         }
@@ -102,6 +122,23 @@ function CuratedPlaylistsLoadingSkeleton() {
         .curated-playlist-skeleton-card-shell {
           flex: 0 0 250px;
           min-width: 250px;
+          animation: skeleton-fade-in 0.3s ease-out both;
+        }
+
+        .curated-playlist-skeleton-card-shell:nth-child(2) {
+          animation-delay: 0.03s;
+        }
+
+        .curated-playlist-skeleton-card-shell:nth-child(3) {
+          animation-delay: 0.06s;
+        }
+
+        .curated-playlist-skeleton-card-shell:nth-child(4) {
+          animation-delay: 0.09s;
+        }
+
+        .curated-playlist-skeleton-card-shell:nth-child(5) {
+          animation-delay: 0.12s;
         }
 
         @media (min-width: 640px) {
@@ -124,49 +161,17 @@ function CuratedPlaylistsLoadingSkeleton() {
           overflow: hidden;
           border-radius: 18px;
           border: 1px solid var(--border-subtle);
-          background: var(--bg-secondary);
+          background: var(--bg-card);
         }
 
-        .curated-playlist-skeleton-top-row {
-          position: relative;
-          z-index: 2;
-          display: flex;
-          justify-content: flex-end;
-          padding: 16px;
-        }
-
-        .curated-playlist-skeleton-circle {
+        .curated-playlist-skeleton-arrow {
+          position: absolute;
+          right: 16px;
+          top: 16px;
           width: 32px;
           height: 32px;
           border-radius: 999px;
-        }
-
-        .curated-playlist-skeleton-content {
-          position: absolute;
-          z-index: 2;
-          left: 16px;
-          right: 16px;
-          bottom: 16px;
-        }
-
-        .curated-playlist-skeleton-kicker {
-          width: 44%;
-          height: 8px;
-          border-radius: 999px;
-        }
-
-        .curated-playlist-skeleton-title {
-          width: 78%;
-          height: 18px;
-          margin-top: 12px;
-          border-radius: 6px;
-        }
-
-        .curated-playlist-skeleton-meta {
-          width: 34%;
-          height: 9px;
-          margin-top: 14px;
-          border-radius: 999px;
+          background: var(--bg-tertiary);
         }
       `}</style>
 
