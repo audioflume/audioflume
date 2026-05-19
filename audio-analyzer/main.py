@@ -1,7 +1,7 @@
 import os
 import tempfile
 from pathlib import Path
-from typing import Literal
+from typing import Dict, List, Literal, Optional
 
 import librosa
 import numpy as np
@@ -37,7 +37,7 @@ EditPointType = Literal[
     "button_ending",
 ]
 
-LABELS: dict[str, str] = {
+LABELS: Dict[str, str] = {
     "first_hit": "First hit",
     "intro_end": "Intro ends",
     "drop": "Main drop",
@@ -71,7 +71,7 @@ def download_audio(url: str) -> str:
 
 
 def add_point(
-    points: list[dict],
+    points: List[dict],
     point_type: EditPointType,
     time: float,
     confidence: float,
@@ -89,9 +89,9 @@ def add_point(
     )
 
 
-def dedupe_points(points: list[dict], min_gap_seconds: float = 2.0):
+def dedupe_points(points: List[dict], min_gap_seconds: float = 2.0):
     sorted_points = sorted(points, key=lambda item: item["time"])
-    deduped: list[dict] = []
+    deduped: List[dict] = []
 
     for point in sorted_points:
         too_close_same_type = any(
@@ -144,7 +144,7 @@ def detect_edit_points(audio_path: str):
         hop_length=hop_length,
     )
 
-    points: list[dict] = []
+    points: List[dict] = []
 
     max_onset = float(np.max(onset_env) + 1e-6)
     strong_onset_threshold = np.percentile(onset_env, 85)
@@ -229,7 +229,7 @@ def detect_edit_points(audio_path: str):
     }
 
 
-def save_edit_points(song_id: str, edit_points: list[dict]):
+def save_edit_points(song_id: str, edit_points: List[dict]):
     supabase.table("song_edit_points").delete().eq("song_id", song_id).eq(
         "source", "auto"
     ).execute()
@@ -260,7 +260,7 @@ def health():
 @app.post("/analyze")
 def analyze(
     request: AnalyzeRequest,
-    x_analyzer_secret: str | None = Header(default=None),
+    x_analyzer_secret: Optional[str] = Header(default=None),
 ):
     if x_analyzer_secret != ANALYZER_SECRET:
         raise HTTPException(status_code=401, detail="Unauthorized")
