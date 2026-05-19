@@ -522,7 +522,7 @@ export default function MusicPage() {
             />
 
             <FilterDropdown
-              label="Edit Point"
+              label="Cue Points"
               options={EDIT_POINT_FILTER_OPTIONS.map((option) => option.label)}
               selected={EDIT_POINT_FILTER_OPTIONS.filter((option) =>
                 selectedEditPoints.includes(option.type),
