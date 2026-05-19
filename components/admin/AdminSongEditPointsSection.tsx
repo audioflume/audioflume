@@ -34,7 +34,10 @@ type AdminSongEditPointsSectionProps = {
   audioUrl?: string;
   waveformPeaks?: string;
   duration?: string;
+  showSaveButton?: boolean;
+  saveVersion?: number;
   onEditPointsJsonChange?: (value: string) => void;
+  onDirtyChange?: (dirty: boolean) => void;
 };
 
 function getTypeLabel(type: string) {
@@ -111,7 +114,10 @@ export default function AdminSongEditPointsSection({
   audioUrl = "",
   waveformPeaks = "",
   duration = "",
+  showSaveButton = true,
+  saveVersion = 0,
   onEditPointsJsonChange,
+  onDirtyChange,
 }: AdminSongEditPointsSectionProps) {
   const [markers, setMarkers] = useState<EditPointMarker[]>([]);
   const [resolvedAudioUrl, setResolvedAudioUrl] = useState(audioUrl);
@@ -119,6 +125,7 @@ export default function AdminSongEditPointsSection({
   const [resolvedDuration, setResolvedDuration] = useState(duration);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isReAnalyzing, setIsReAnalyzing] = useState(false);
 
   const durationSeconds = useMemo(
     () => parseDurationToSeconds(resolvedDuration),
@@ -129,6 +136,48 @@ export default function AdminSongEditPointsSection({
   const stopGlobalPlayer = useCallback(() => {
     window.dispatchEvent(new Event("filmwave:close-player"));
   }, []);
+
+  const loadEditPoints = useCallback(async () => {
+    if (!songId) return;
+
+    const res = await fetch(`/api/admin/songs/${songId}/edit-points`, {
+      cache: "no-store",
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Failed to load cue points.");
+    }
+
+    const rows = (data.editPoints || []) as EditPointRow[];
+    setMarkers(rowsToMarkers(rows));
+    onEditPointsJsonChange?.(data.editPointsJson || rowsToJson(rows));
+  }, [songId, onEditPointsJsonChange]);
+
+  const reAnalyzeCuePoints = useCallback(async () => {
+    if (!songId) return;
+
+    setIsReAnalyzing(true);
+    setError("");
+
+    try {
+      const res = await fetch(`/api/admin/songs/${songId}/analyze-edit-points`, {
+        method: "POST",
+      });
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to re-analyze cue points.");
+      }
+
+      await loadEditPoints();
+      onDirtyChange?.(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to re-analyze cue points.");
+    } finally {
+      setIsReAnalyzing(false);
+    }
+  }, [songId, loadEditPoints, onDirtyChange]);
 
   useEffect(() => {
     setResolvedAudioUrl(audioUrl);
@@ -188,28 +237,15 @@ export default function AdminSongEditPointsSection({
 
     let cancelled = false;
 
-    async function loadEditPoints() {
+    async function load() {
       setLoading(true);
       setError("");
 
       try {
-        const res = await fetch(`/api/admin/songs/${songId}/edit-points`, {
-          cache: "no-store",
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data?.error || "Failed to load edit points.");
-        }
-
-        if (cancelled) return;
-
-        const rows = (data.editPoints || []) as EditPointRow[];
-        setMarkers(rowsToMarkers(rows));
-        onEditPointsJsonChange?.(data.editPointsJson || rowsToJson(rows));
+        await loadEditPoints();
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load edit points.");
+          setError(err instanceof Error ? err.message : "Failed to load cue points.");
         }
       } finally {
         if (!cancelled) {
@@ -218,21 +254,21 @@ export default function AdminSongEditPointsSection({
       }
     }
 
-    loadEditPoints();
+    load();
 
     return () => {
       cancelled = true;
     };
-  }, [songId, onEditPointsJsonChange]);
+  }, [songId, onEditPointsJsonChange, loadEditPoints]);
 
   if (!songId) {
     return (
       <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
         <div className="text-xs font-medium text-[var(--text-primary)]">
-          Save the song first to review edit points.
+          Save the song first to review cue points.
         </div>
         <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
-          Once the song exists in Supabase, the waveform edit point manager will appear here.
+          Once the song exists in Supabase, the waveform cue point manager will appear here.
         </p>
       </div>
     );
@@ -246,7 +282,7 @@ export default function AdminSongEditPointsSection({
     );
   }
 
-  if (error) {
+  if (error && !canReview) {
     return (
       <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
         <div className="text-xs font-medium text-[var(--status-error,#dc584f)]">
@@ -263,7 +299,7 @@ export default function AdminSongEditPointsSection({
           Audio and waveform data required
         </div>
         <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
-          Add or keep an audio file and waveform peaks before reviewing edit points.
+          Add or keep an audio file and waveform peaks before reviewing cue points.
         </p>
       </div>
     );
@@ -307,12 +343,24 @@ export default function AdminSongEditPointsSection({
         }
       `}</style>
 
+      {error && (
+        <div className="mb-3 rounded-lg border border-[var(--border)] bg-[var(--status-error-soft,rgba(220,88,79,0.12))] px-3 py-2 text-xs text-[var(--status-error,#dc584f)]">
+          {error}
+        </div>
+      )}
+
       <EditPointWaveformReview
         songId={songId}
         audioUrl={resolvedAudioUrl}
         waveformPeaks={resolvedWaveformPeaks}
         duration={durationSeconds}
         markers={markers}
+        showSaveButton={showSaveButton}
+        saveVersion={saveVersion}
+        onChange={onEditPointsJsonChange}
+        onDirtyChange={onDirtyChange}
+        onReAnalyze={reAnalyzeCuePoints}
+        isReAnalyzing={isReAnalyzing}
       />
     </div>
   );
