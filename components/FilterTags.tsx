@@ -16,7 +16,7 @@ type FilterTagsProps = {
   selectedBuilds: string[];
   selectedVocals: string[];
   selectedDurations: string[];
-  selectedEditPoints: string[];
+  selectedEditPoints?: string[];
   instrumental: boolean;
   bpmValue: BpmFilterValue | null;
   keyValue: KeyFilterValue | null;
@@ -28,7 +28,7 @@ type FilterTagsProps = {
   onRemoveBuild: (value: string) => void;
   onRemoveVocal: (value: string) => void;
   onRemoveDuration: (value: string) => void;
-  onRemoveEditPoint: (value: string) => void;
+  onRemoveEditPoint?: (value: string) => void;
   onRemoveInstrumental: () => void;
   onRemoveBpm: () => void;
   onRemoveKey: () => void;
@@ -43,7 +43,7 @@ export default function FilterTags({
   selectedBuilds,
   selectedVocals,
   selectedDurations,
-  selectedEditPoints,
+  selectedEditPoints = [],
   instrumental,
   bpmValue,
   keyValue,
@@ -55,7 +55,7 @@ export default function FilterTags({
   onRemoveBuild,
   onRemoveVocal,
   onRemoveDuration,
-  onRemoveEditPoint,
+  onRemoveEditPoint = () => {},
   onRemoveInstrumental,
   onRemoveBpm,
   onRemoveKey,
