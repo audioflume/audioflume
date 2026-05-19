@@ -428,7 +428,7 @@ export default function EditPointWaveformReview({
   };
 
   return (
-    <div className="bg-transparent p-0">
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
       <style>{`
         .edit-point-play-button {
           background: transparent;
