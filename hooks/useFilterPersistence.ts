@@ -1,4 +1,8 @@
 import {
+  getStoredCuePointFilterSelection,
+  notifyCuePointFilterSelection,
+} from "@/lib/cuePointFilterSelection";
+import {
   getStoredEditPointMarkerVisibility,
   setStoredEditPointMarkerVisibility,
 } from "@/lib/editPointMarkerVisibility";
@@ -45,6 +49,7 @@ const baseDefaultState: FilterState = {
 function getDefaultState(): FilterState {
   return {
     ...baseDefaultState,
+    selectedEditPoints: getStoredCuePointFilterSelection(),
     showEditPointMarkers: getStoredEditPointMarkerVisibility(),
   };
 }
@@ -93,7 +98,10 @@ export function useFilterPersistence({
     sessionStorage.removeItem("filmwave-music-filters");
 
     if (!storageKey) {
-      setFilters(getDefaultState());
+      const defaultState = getDefaultState();
+
+      setFilters(defaultState);
+      notifyCuePointFilterSelection(defaultState.selectedEditPoints);
       setHydrated(true);
       setHydratedKey(null);
       return;
@@ -102,7 +110,10 @@ export function useFilterPersistence({
     const saved = sessionStorage.getItem(storageKey);
 
     if (!saved) {
-      setFilters(getDefaultState());
+      const defaultState = getDefaultState();
+
+      setFilters(defaultState);
+      notifyCuePointFilterSelection(defaultState.selectedEditPoints);
       setHydrated(true);
       setHydratedKey(storageKey);
       return;
@@ -110,11 +121,16 @@ export function useFilterPersistence({
 
     try {
       const parsed = JSON.parse(saved);
+      const normalizedState = normalizeFilterState(parsed);
 
-      setFilters(normalizeFilterState(parsed));
+      setFilters(normalizedState);
+      notifyCuePointFilterSelection(normalizedState.selectedEditPoints);
     } catch {
+      const defaultState = getDefaultState();
+
       sessionStorage.removeItem(storageKey);
-      setFilters(getDefaultState());
+      setFilters(defaultState);
+      notifyCuePointFilterSelection(defaultState.selectedEditPoints);
     } finally {
       setHydrated(true);
       setHydratedKey(storageKey);
@@ -128,6 +144,7 @@ export function useFilterPersistence({
     if (hydratedKey !== storageKey) return;
 
     setStoredEditPointMarkerVisibility(filters.showEditPointMarkers);
+    notifyCuePointFilterSelection(filters.selectedEditPoints);
     sessionStorage.setItem(storageKey, JSON.stringify(filters));
   }, [hydrated, hydratedKey, storageKey, filters]);
 
