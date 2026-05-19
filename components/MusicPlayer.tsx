@@ -10,6 +10,7 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
+import { MUSIC_FILTER_STORAGE_KEY_PREFIX } from "@/lib/constants";
 import {
   formatEditPointTime,
   getEditPointFilterLabel,
@@ -47,6 +48,28 @@ function formatTime(s: number) {
 
 function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+function getStoredMarkerVisibility() {
+  if (typeof window === "undefined") return true;
+
+  for (let i = 0; i < window.sessionStorage.length; i += 1) {
+    const key = window.sessionStorage.key(i);
+
+    if (!key?.startsWith(MUSIC_FILTER_STORAGE_KEY_PREFIX)) continue;
+
+    try {
+      const parsed = JSON.parse(window.sessionStorage.getItem(key) || "{}");
+
+      if (typeof parsed.showEditPointMarkers === "boolean") {
+        return parsed.showEditPointMarkers;
+      }
+    } catch {
+      // Ignore malformed storage values.
+    }
+  }
+
+  return true;
 }
 
 function normalizePeaks(peaks: number[]) {
@@ -169,6 +192,7 @@ export default function MusicPlayer() {
     string | null
   >(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
+  const [showEditPointMarkers, setShowEditPointMarkers] = useState(true);
   const [moreMenuPosition, setMoreMenuPosition] = useState({
     top: 0,
     left: 0,
@@ -186,8 +210,12 @@ export default function MusicPlayer() {
     () => (currentSong ? getSongCuePointMarkers(currentSong) : []),
     [currentSong],
   );
+  const visibleCuePoints = showEditPointMarkers ? cuePoints : [];
   const showCuePointButtons =
-    showWaveform && playerWidth >= 1180 && cuePoints.length > 0;
+    showEditPointMarkers &&
+    showWaveform &&
+    playerWidth >= 1180 &&
+    cuePoints.length > 0;
 
   const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
 
@@ -256,6 +284,18 @@ export default function MusicPlayer() {
       top,
       left,
     });
+  }, []);
+
+  useEffect(() => {
+    const syncMarkerVisibility = () => {
+      setShowEditPointMarkers(getStoredMarkerVisibility());
+    };
+
+    syncMarkerVisibility();
+
+    const interval = window.setInterval(syncMarkerVisibility, 250);
+
+    return () => window.clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -535,7 +575,7 @@ export default function MusicPlayer() {
                   className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-visible"
                   onClick={handleWaveformClick}
                 >
-                  {cuePoints.map((marker) => {
+                  {visibleCuePoints.map((marker) => {
                     const markerType = getMarkerType(marker);
                     const label = marker.label || getEditPointFilterLabel(markerType);
                     const progressValue = currentSong.duration
@@ -598,7 +638,7 @@ export default function MusicPlayer() {
 
                 {showCuePointButtons && (
                   <div className="flex max-w-[260px] flex-shrink-0 items-center gap-1 overflow-hidden">
-                    {cuePoints.map((marker) => {
+                    {visibleCuePoints.map((marker) => {
                       const markerType = getMarkerType(marker);
                       const label = marker.label || getEditPointFilterLabel(markerType);
                       const progressValue = currentSong.duration
