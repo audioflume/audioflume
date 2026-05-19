@@ -153,6 +153,7 @@ export default function SongCard({
   isLast = false,
   playlistId,
   projectId,
+  highlightedEditPointTypes = [],
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
@@ -161,6 +162,7 @@ export default function SongCard({
   isLast?: boolean;
   playlistId?: string;
   projectId?: string;
+  highlightedEditPointTypes?: string[];
   onRemoveFromPlaylist?: (songId: string) => void;
   onRemoveFromProject?: (songId: string) => void;
 }) {
@@ -400,7 +402,10 @@ export default function SongCard({
             </div>
 
             <div className="w-full min-w-0">
-              <Waveform song={song} />
+              <Waveform
+                song={song}
+                highlightedEditPointTypes={highlightedEditPointTypes}
+              />
             </div>
 
             <span className="flex-shrink-0 text-right text-xs text-[var(--text-secondary)]">
