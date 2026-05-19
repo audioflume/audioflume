@@ -9,6 +9,7 @@ type FilterState = {
   selectedBuilds: string[];
   selectedVocals: string[];
   selectedDurations: string[];
+  selectedEditPoints: string[];
   instrumental: boolean;
   bpmValue: BpmFilterValue | null;
   keyValue: KeyFilterValue | null;
@@ -28,6 +29,7 @@ const defaultState: FilterState = {
   selectedBuilds: [],
   selectedVocals: [],
   selectedDurations: [],
+  selectedEditPoints: [],
   instrumental: false,
   bpmValue: null,
   keyValue: null,
@@ -77,6 +79,7 @@ export function useFilterPersistence({
         selectedBuilds: parsed.selectedBuilds ?? [],
         selectedVocals: parsed.selectedVocals ?? [],
         selectedDurations: parsed.selectedDurations ?? [],
+        selectedEditPoints: parsed.selectedEditPoints ?? [],
         instrumental: parsed.instrumental ?? false,
         bpmValue: parsed.bpmValue ?? null,
         keyValue: parsed.keyValue ?? null,
