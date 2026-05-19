@@ -622,13 +622,28 @@ export default function EditPointWaveformReview({
         }
 
         .cue-point-table-shell {
+          container-type: inline-size;
           clip-path: inset(0 round 0.75rem);
         }
 
-        @media (max-width: 1180px) {
+        @container (max-width: 760px) {
           .cue-point-row-grid {
             grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 44px 40px;
             column-gap: 0.5rem;
+          }
+
+          .cue-point-set-full-label {
+            display: none;
+          }
+        }
+
+        @container (max-width: 650px) {
+          .cue-point-row-grid {
+            grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 40px;
+          }
+
+          .cue-point-source-column {
+            display: none;
           }
         }
 
@@ -644,16 +659,6 @@ export default function EditPointWaveformReview({
 
           .cue-point-review-controls {
             justify-content: flex-start;
-          }
-        }
-
-        @media (max-width: 860px) {
-          .cue-point-row-grid {
-            grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 40px;
-          }
-
-          .cue-point-source-column {
-            display: none;
           }
         }
       `}</style>
@@ -851,7 +856,7 @@ export default function EditPointWaveformReview({
             <div>Time</div>
             <div>Nudge</div>
             <div className="cue-point-source-column">Src</div>
-            <div></div>
+            <div>Delete</div>
           </div>
 
           {sortedMarkers.length === 0 ? (
@@ -899,9 +904,9 @@ export default function EditPointWaveformReview({
                       event.stopPropagation();
                       setMarkerToPlayhead(marker.id);
                     }}
-                    className="h-7 w-fit rounded-full border border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] min-[1180px]:px-2.5"
+                    className="h-7 w-fit rounded-full border border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
-                    Set<span className="hidden min-[1180px]:inline"> to playhead</span>
+                    Set<span className="cue-point-set-full-label"> to playhead</span>
                   </button>
 
                   <input
