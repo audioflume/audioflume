@@ -18,6 +18,26 @@ export type SongIssue = {
   severity: SongIssueSeverity;
 };
 
+type EditPointMarker = {
+  id?: string;
+  label?: string;
+  time?: number;
+  type?: string;
+  confidence?: number;
+  source?: string;
+};
+
+function getSongEditPointMarkers(song: Song): EditPointMarker[] {
+  if (!song.editPoints) return [];
+
+  try {
+    const parsed = JSON.parse(song.editPoints);
+    return Array.isArray(parsed?.markers) ? parsed.markers : [];
+  } catch {
+    return [];
+  }
+}
+
 export function songHasMissingInfo(song: Song) {
   return (
     !song.title || !song.artist || !song.duration || !song.bpm || !song.key
@@ -35,15 +55,23 @@ export function songHasMissingTags(song: Song) {
 }
 
 export function songHasMissingEditPoints(song: Song) {
-  return (
-    !song.editPoints ||
-    song.editPoints === '{"markers":[],"ranges":[]}' ||
-    song.editPoints ===
-      `{
-"markers": [],
-"ranges": []
-}`
-  );
+  return getSongEditPointMarkers(song).length === 0;
+}
+
+export function songHasAutoEditPoints(song: Song) {
+  const markers = getSongEditPointMarkers(song);
+
+  if (markers.length === 0) return false;
+
+  return markers.some((marker) => marker.source === "auto");
+}
+
+export function songHasOnlyAutoEditPoints(song: Song) {
+  const markers = getSongEditPointMarkers(song);
+
+  if (markers.length === 0) return false;
+
+  return markers.every((marker) => !marker.source || marker.source === "auto");
 }
 
 export function getSongIssues(song: Song): SongIssue[] {
