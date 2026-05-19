@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 import { primaryPillButtonClass, secondaryPillButtonClass } from "@/components/uiClasses";
 
@@ -21,12 +22,40 @@ type BatchAnalyzeResponse = {
   failed: number;
   results: BatchAnalyzeResult[];
   error?: string;
+  completedAt?: string;
 };
+
+const RECENT_ANALYSIS_STORAGE_KEY = "filmwave-recent-edit-point-analysis";
+
+function getRecentAnalysisLabel(value?: string) {
+  if (!value) return "Recent run";
+
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(new Date(value));
+  } catch {
+    return "Recent run";
+  }
+}
 
 export default function AdminEditPointsPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<BatchAnalyzeResponse | null>(null);
   const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(RECENT_ANALYSIS_STORAGE_KEY);
+      if (!stored) return;
+      setResult(JSON.parse(stored) as BatchAnalyzeResponse);
+    } catch {
+      window.localStorage.removeItem(RECENT_ANALYSIS_STORAGE_KEY);
+    }
+  }, []);
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -44,7 +73,6 @@ export default function AdminEditPointsPage() {
 
     try {
       setIsAnalyzing(true);
-      setResult(null);
 
       const res = await fetch("/api/admin/songs/batch-analyze-edit-points", {
         method: "POST",
@@ -56,7 +84,16 @@ export default function AdminEditPointsPage() {
         throw new Error(data?.error || "Failed to batch analyze edit points.");
       }
 
-      setResult(data);
+      const nextResult = {
+        ...data,
+        completedAt: new Date().toISOString(),
+      };
+
+      setResult(nextResult);
+      window.localStorage.setItem(
+        RECENT_ANALYSIS_STORAGE_KEY,
+        JSON.stringify(nextResult),
+      );
       showToast(
         `Analyzed ${data.analyzed} song${data.analyzed === 1 ? "" : "s"}`,
       );
@@ -111,11 +148,27 @@ export default function AdminEditPointsPage() {
                 disabled={isAnalyzing}
                 className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
               >
+                {isAnalyzing && (
+                  <LoadingSpinner
+                    size={13}
+                    stroke={11}
+                    color="currentColor"
+                  />
+                )}
                 {isAnalyzing ? "Analyzing..." : "Analyze Missing Edit Points"}
               </button>
 
               {result && (
                 <div className="mt-5 overflow-hidden rounded-xl border border-[var(--border)]">
+                  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3">
+                    <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                      Recently Analyzed
+                    </div>
+                    <div className="font-mono text-[11px] text-[var(--text-muted)]">
+                      {getRecentAnalysisLabel(result.completedAt)}
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-[minmax(0,1fr)_96px_80px] border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
                     <div>Song</div>
                     <div>Status</div>
@@ -166,7 +219,7 @@ export default function AdminEditPointsPage() {
               Fill the catalog
             </h2>
             <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-              Once the missing songs are analyzed, the next step is a proper review queue for low-confidence points and corrected/manual status.
+              Auto-generated edit points are useful, but they should still be reviewed. Songs with only auto edit points now show an Auto indicator in the admin library.
             </p>
 
             {result && (
