@@ -29,6 +29,26 @@ type FilterDropdownProps = {
   optionSections?: FilterOptionSection[];
 };
 
+function getDefaultSections(label: string, options: string[]) {
+  if (label !== "Edit Point") return [{ options }];
+
+  const cuePointOptions = ["First Hit", "Main Drop", "Break", "Button Ending"];
+  const smartFilterOptions = options.filter(
+    (option) => !cuePointOptions.includes(option),
+  );
+
+  return [
+    {
+      label: "Detected cue points",
+      options: cuePointOptions.filter((option) => options.includes(option)),
+    },
+    {
+      label: "Smart filters",
+      options: smartFilterOptions,
+    },
+  ].filter((section) => section.options.length > 0);
+}
+
 export default function FilterDropdown({
   label,
   options,
@@ -41,7 +61,7 @@ export default function FilterDropdown({
   const sections =
     optionSections && optionSections.length > 0
       ? optionSections
-      : [{ options }];
+      : getDefaultSections(label, options);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
