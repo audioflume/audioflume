@@ -87,6 +87,55 @@ function editPointRowsToJson(rows: SavedEditPointRow[] = []) {
   });
 }
 
+export async function GET(_req: Request, context: RouteContext) {
+  const admin = await requireAdmin();
+
+  if (!admin.isAdmin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
+  try {
+    const { id } = await context.params;
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing song ID" }, { status: 400 });
+    }
+
+    const { data: existingSong, error: songError } = await supabaseServer
+      .from("songs")
+      .select("id")
+      .eq("id", id)
+      .single();
+
+    if (songError || !existingSong) {
+      return NextResponse.json({ error: "Song not found" }, { status: 404 });
+    }
+
+    const { data, error } = await supabaseServer
+      .from("song_edit_points")
+      .select("id, song_id, type, time_seconds, label, confidence, source, created_at")
+      .eq("song_id", id)
+      .neq("type", "intro_end")
+      .order("time_seconds", { ascending: true });
+
+    if (error) throw error;
+
+    const editPoints = (data ?? []) as SavedEditPointRow[];
+
+    return NextResponse.json({
+      editPoints,
+      editPointsJson: editPointRowsToJson(editPoints),
+    });
+  } catch (err) {
+    console.error("Edit point fetch failed:", err);
+
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Failed to fetch edit points" },
+      { status: 500 },
+    );
+  }
+}
+
 export async function PATCH(req: Request, context: RouteContext) {
   const admin = await requireAdmin();
 
@@ -126,7 +175,11 @@ export async function PATCH(req: Request, context: RouteContext) {
 
       if (clearError) throw clearError;
 
-      return NextResponse.json({ saved: 0, editPoints: [] });
+      return NextResponse.json({
+        saved: 0,
+        editPoints: [],
+        editPointsJson: EMPTY_EDIT_POINTS_JSON,
+      });
     }
 
     const rows = cleaned.map((point) => ({
@@ -159,6 +212,7 @@ export async function PATCH(req: Request, context: RouteContext) {
     return NextResponse.json({
       saved: savedRows.length,
       editPoints: savedRows,
+      editPointsJson,
     });
   } catch (err) {
     console.error("Edit point save failed:", err);
