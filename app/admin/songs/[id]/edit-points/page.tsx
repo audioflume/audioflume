@@ -92,6 +92,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
     .from("song_edit_points")
     .select("id, song_id, type, time_seconds, label, confidence, source, created_at")
     .eq("song_id", id)
+    .neq("type", "intro_end")
     .order("time_seconds", { ascending: true });
 
   if (editPointsError) {
@@ -99,7 +100,9 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
   }
 
   const typedSong = song as SongRow;
-  const typedEditPoints = (editPoints ?? []) as SongEditPointRow[];
+  const typedEditPoints = (editPoints ?? []).filter(
+    (point) => point.type !== "intro_end",
+  ) as SongEditPointRow[];
   const duration = Number(typedSong.duration ?? 0);
   const markers = typedEditPoints.map((point) => ({
     id: point.id,
