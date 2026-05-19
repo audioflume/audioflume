@@ -15,7 +15,7 @@ type GroupMeta = {
 };
 
 function SkeletonBlock({ className = "" }: { className?: string }) {
-  return <span className={`curated-playlist-skeleton-block ${className}`} />;
+  return <span className={`skeleton-block ${className}`} />;
 }
 
 function CuratedPlaylistCardSkeleton() {
@@ -40,7 +40,7 @@ function CuratedPlaylistShelfSkeleton({ compact = false }: { compact?: boolean }
   const cardCount = compact ? 4 : 5;
 
   return (
-    <section className="mt-10">
+    <section className="curated-playlist-skeleton-shelf mt-10">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div className="min-w-0">
           <SkeletonBlock className="curated-playlist-skeleton-heading" />
@@ -68,59 +68,29 @@ function CuratedPlaylistsLoadingSkeleton() {
   return (
     <>
       <style>{`
-        .curated-playlist-skeleton-block {
-          position: relative;
-          display: block;
-          overflow: hidden;
-          border-radius: 999px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-subtle);
+        .curated-playlist-skeleton-shelf {
+          animation: skeleton-fade-in 0.3s ease-out both;
         }
 
-        .curated-playlist-skeleton-block::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          transform: translateX(-115%);
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            transparent 28%,
-            rgba(255, 255, 255, 0.055) 48%,
-            transparent 72%,
-            transparent 100%
-          );
-          animation: curated-playlist-skeleton-shimmer 2.2s ease-in-out infinite;
+        .curated-playlist-skeleton-shelf:nth-child(2) {
+          animation-delay: 0.04s;
         }
 
-        html.light .curated-playlist-skeleton-block::after {
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            transparent 28%,
-            rgba(0, 0, 0, 0.045) 48%,
-            transparent 72%,
-            transparent 100%
-          );
-        }
-
-        @keyframes curated-playlist-skeleton-shimmer {
-          100% {
-            transform: translateX(115%);
-          }
+        .curated-playlist-skeleton-shelf:nth-child(3) {
+          animation-delay: 0.08s;
         }
 
         .curated-playlist-skeleton-heading {
           width: min(220px, 48vw);
-          height: 26px;
-          border-radius: 8px;
+          height: 20px;
+          border-radius: 6px;
         }
 
         .curated-playlist-skeleton-description {
           width: min(360px, 64vw);
-          height: 13px;
+          height: 10px;
           margin-top: 10px;
-          border-radius: 8px;
+          border-radius: 999px;
         }
 
         .curated-playlist-skeleton-control {
@@ -154,43 +124,7 @@ function CuratedPlaylistsLoadingSkeleton() {
           overflow: hidden;
           border-radius: 18px;
           border: 1px solid var(--border-subtle);
-          background:
-            radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.055), transparent 26%),
-            linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
-        }
-
-        html.light .curated-playlist-skeleton-card {
-          background:
-            radial-gradient(circle at 78% 18%, rgba(0, 0, 0, 0.045), transparent 26%),
-            linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
-        }
-
-        .curated-playlist-skeleton-card::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          transform: translateX(-115%);
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            transparent 30%,
-            rgba(255, 255, 255, 0.045) 50%,
-            transparent 70%,
-            transparent 100%
-          );
-          animation: curated-playlist-skeleton-shimmer 2.4s ease-in-out infinite;
-          pointer-events: none;
-        }
-
-        html.light .curated-playlist-skeleton-card::after {
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            transparent 30%,
-            rgba(0, 0, 0, 0.04) 50%,
-            transparent 70%,
-            transparent 100%
-          );
+          background: var(--bg-secondary);
         }
 
         .curated-playlist-skeleton-top-row {
@@ -205,13 +139,6 @@ function CuratedPlaylistsLoadingSkeleton() {
           width: 32px;
           height: 32px;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(255, 255, 255, 0.08);
-        }
-
-        html.light .curated-playlist-skeleton-circle {
-          background: rgba(0, 0, 0, 0.04);
-          border-color: rgba(0, 0, 0, 0.04);
         }
 
         .curated-playlist-skeleton-content {
@@ -224,35 +151,22 @@ function CuratedPlaylistsLoadingSkeleton() {
 
         .curated-playlist-skeleton-kicker {
           width: 44%;
-          height: 9px;
-          border-radius: 8px;
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(255, 255, 255, 0.08);
+          height: 8px;
+          border-radius: 999px;
         }
 
         .curated-playlist-skeleton-title {
           width: 78%;
-          height: 24px;
+          height: 18px;
           margin-top: 12px;
-          border-radius: 8px;
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(255, 255, 255, 0.08);
+          border-radius: 6px;
         }
 
         .curated-playlist-skeleton-meta {
           width: 34%;
-          height: 10px;
+          height: 9px;
           margin-top: 14px;
-          border-radius: 8px;
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(255, 255, 255, 0.08);
-        }
-
-        html.light .curated-playlist-skeleton-kicker,
-        html.light .curated-playlist-skeleton-title,
-        html.light .curated-playlist-skeleton-meta {
-          background: rgba(0, 0, 0, 0.045);
-          border-color: rgba(0, 0, 0, 0.035);
+          border-radius: 999px;
         }
       `}</style>
 
