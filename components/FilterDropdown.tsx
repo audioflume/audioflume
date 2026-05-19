@@ -29,7 +29,10 @@ type FilterDropdownProps = {
   optionSections?: FilterOptionSection[];
 };
 
-function getDefaultSections(label: string, options: string[]): FilterOptionSection[] {
+function getDefaultSections(
+  label: string,
+  options: string[],
+): FilterOptionSection[] {
   if (label !== "Cue Points") return [{ options }];
 
   const cuePointOptions = ["First Hit", "Main Drop", "Break", "Button Ending"];
@@ -127,10 +130,14 @@ export default function FilterDropdown({
             {sections.map((section, sectionIndex) => (
               <div
                 key={`${section.label || "section"}-${sectionIndex}`}
-                className={sectionIndex > 0 ? "mt-2 border-t border-[var(--border)] pt-2" : ""}
+                className={
+                  sectionIndex > 0
+                    ? "mt-2 border-t border-[var(--border)] pt-2"
+                    : ""
+                }
               >
                 {section.label && (
-                  <div className="px-3 pb-2 pt-1 text-[10px] font-medium tracking-[0.02em] text-[var(--text-muted)]">
+                  <div className="px-2.5 pb-2 pt-1 text-[10px] font-medium tracking-[0.02em] text-[var(--text-muted)]">
                     {section.label}
                   </div>
                 )}
