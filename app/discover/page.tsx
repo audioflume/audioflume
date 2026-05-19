@@ -7,6 +7,7 @@ import {
   FormEvent,
   KeyboardEvent,
   MouseEvent,
+  ReactNode,
   useEffect,
   useMemo,
   useRef,
@@ -100,11 +101,280 @@ function stopPlaybackMouseEvent(event: MouseEvent<HTMLElement>) {
   event.nativeEvent.stopImmediatePropagation();
 }
 
-function KickerPill({ children }: { children: React.ReactNode }) {
+function KickerPill({ children }: { children: ReactNode }) {
   return (
     <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/76 backdrop-blur">
       <span className="truncate">{children}</span>
     </div>
+  );
+}
+
+function DiscoverSkeletonBlock({ className = "" }: { className?: string }) {
+  return <span className={`discover-skeleton-block ${className}`} />;
+}
+
+function DiscoverSectionHeadingSkeleton({ wide = false }: { wide?: boolean }) {
+  return (
+    <div className="mb-4 flex items-end justify-between gap-4">
+      <div className="min-w-0">
+        <DiscoverSkeletonBlock
+          className={wide ? "h-5 w-52 rounded-md" : "h-5 w-40 rounded-md"}
+        />
+        <DiscoverSkeletonBlock
+          className={wide ? "mt-2 h-2.5 w-72 rounded-full" : "mt-2 h-2.5 w-64 rounded-full"}
+        />
+      </div>
+      <DiscoverSkeletonBlock className="hidden h-3 w-16 rounded-full sm:block" />
+    </div>
+  );
+}
+
+function DiscoverLargeCardSkeleton({ className = "" }: { className?: string }) {
+  return (
+    <div className={`discover-skeleton-card ${className}`}>
+      <DiscoverSkeletonBlock className="discover-skeleton-pill" />
+      <div className="discover-skeleton-card-copy">
+        <DiscoverSkeletonBlock className="h-6 w-[72%] rounded-md" />
+        <DiscoverSkeletonBlock className="mt-3 h-2.5 w-[56%] rounded-full" />
+        <DiscoverSkeletonBlock className="mt-2 h-2.5 w-[42%] rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+function DiscoverCompactSongsSkeleton() {
+  return (
+    <section className="mt-10 discover-skeleton-section">
+      <DiscoverSectionHeadingSkeleton wide />
+      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: COMPACT_SONG_COUNT }).map((_, index) => (
+          <div key={index} className="discover-skeleton-song-row">
+            <DiscoverSkeletonBlock className="h-9 w-9 shrink-0 rounded-md" />
+            <div className="min-w-0 flex-1">
+              <DiscoverSkeletonBlock className="h-2.5 w-[72%] rounded-full" />
+              <DiscoverSkeletonBlock className="mt-2 h-2 w-[48%] rounded-full" />
+            </div>
+            <DiscoverSkeletonBlock className="h-8 w-8 shrink-0 rounded-full" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function DiscoverProductionSkeleton() {
+  return (
+    <section className="mt-12 discover-skeleton-section">
+      <DiscoverSectionHeadingSkeleton wide />
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <DiscoverLargeCardSkeleton key={index} className="min-h-[245px]" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function DiscoverCuratedShelfSkeleton() {
+  return (
+    <section className="mt-10 discover-skeleton-section">
+      <DiscoverSectionHeadingSkeleton />
+      <div className="relative -mx-8 overflow-hidden">
+        <div className="flex gap-3 overflow-hidden pl-8 pr-20">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="discover-skeleton-shelf-card" />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DiscoverFastScanSkeleton() {
+  return (
+    <section className="mt-12 discover-skeleton-section">
+      <DiscoverSectionHeadingSkeleton wide />
+      <div className="rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-2">
+        <div className="grid gap-x-2 gap-y-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          {Array.from({ length: FAST_SCAN_SONG_COUNT }).map((_, index) => (
+            <div key={index} className="discover-skeleton-fast-row">
+              <DiscoverSkeletonBlock className="h-2 w-4 rounded-full" />
+              <div className="min-w-0 flex-1">
+                <DiscoverSkeletonBlock className="h-2 w-[74%] rounded-full" />
+                <DiscoverSkeletonBlock className="mt-1.5 h-1.5 w-[46%] rounded-full" />
+              </div>
+              <DiscoverSkeletonBlock className="h-2 w-8 rounded-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DiscoverPageSkeleton() {
+  return (
+    <>
+      <style>{`
+        .discover-skeleton-section,
+        .discover-skeleton-hero {
+          animation: skeleton-fade-in 0.3s ease-out both;
+        }
+
+        .discover-skeleton-section:nth-of-type(2) {
+          animation-delay: 0.04s;
+        }
+
+        .discover-skeleton-section:nth-of-type(3) {
+          animation-delay: 0.08s;
+        }
+
+        .discover-skeleton-block,
+        .discover-skeleton-card,
+        .discover-skeleton-shelf-card,
+        .discover-skeleton-song-row,
+        .discover-skeleton-fast-row {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .discover-skeleton-block {
+          display: block;
+          background: var(--bg-tertiary);
+        }
+
+        .discover-skeleton-card,
+        .discover-skeleton-shelf-card,
+        .discover-skeleton-song-row,
+        .discover-skeleton-fast-row {
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-card);
+        }
+
+        .discover-skeleton-block::after,
+        .discover-skeleton-card::after,
+        .discover-skeleton-shelf-card::after,
+        .discover-skeleton-song-row::after,
+        .discover-skeleton-fast-row::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transform: translateX(-100%);
+          background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--bg-hover) 48%, transparent),
+            transparent
+          );
+          animation: discover-skeleton-shimmer 1.6s ease-in-out infinite;
+        }
+
+        @keyframes discover-skeleton-shimmer {
+          100% {
+            transform: translateX(100%);
+          }
+        }
+
+        .discover-skeleton-card {
+          border-radius: 18px;
+          padding: 16px;
+        }
+
+        .discover-skeleton-pill {
+          height: 22px;
+          width: 110px;
+          border-radius: 999px;
+        }
+
+        .discover-skeleton-card-copy {
+          position: absolute;
+          left: 16px;
+          right: 16px;
+          bottom: 16px;
+        }
+
+        .discover-skeleton-song-row {
+          display: flex;
+          height: 54px;
+          align-items: center;
+          gap: 8px;
+          border-radius: 8px;
+          padding: 0 8px;
+        }
+
+        .discover-skeleton-fast-row {
+          display: flex;
+          height: 34px;
+          align-items: center;
+          gap: 8px;
+          border-radius: 6px;
+          border-color: transparent;
+          background: transparent;
+          padding: 0 8px;
+        }
+
+        .discover-skeleton-shelf-card {
+          min-height: 210px;
+          min-width: 250px;
+          flex: 0 0 250px;
+          border-radius: 18px;
+        }
+
+        @media (min-width: 640px) {
+          .discover-skeleton-shelf-card {
+            min-width: 285px;
+            flex-basis: 285px;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .discover-skeleton-shelf-card {
+            min-width: 320px;
+            flex-basis: 320px;
+          }
+        }
+      `}</style>
+
+      <div className="discover-skeleton-hero">
+        <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
+          <div>
+            <DiscoverSkeletonBlock className="mb-3 h-3 w-36 rounded-full" />
+            <DiscoverSkeletonBlock className="h-[clamp(92px,11vw,150px)] w-[min(640px,84%)] rounded-xl" />
+          </div>
+          <div className="xl:justify-self-end">
+            <DiscoverSkeletonBlock className="h-2.5 w-[min(540px,80vw)] rounded-full" />
+            <DiscoverSkeletonBlock className="mt-3 h-2.5 w-[min(440px,72vw)] rounded-full" />
+          </div>
+        </div>
+
+        <div className="flex min-h-[58px] items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-4">
+          <DiscoverSkeletonBlock className="h-9 w-9 shrink-0 rounded-full" />
+          <DiscoverSkeletonBlock className="h-2.5 flex-1 rounded-full" />
+          <div className="hidden items-center gap-1.5 lg:flex">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <DiscoverSkeletonBlock key={index} className="h-7 w-20 rounded-full" />
+            ))}
+          </div>
+          <DiscoverSkeletonBlock className="hidden h-9 w-28 shrink-0 rounded-full sm:block" />
+        </div>
+
+        <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
+          <DiscoverLargeCardSkeleton className="min-h-[420px]" />
+          <div className="grid gap-4">
+            <DiscoverLargeCardSkeleton className="min-h-[204px]" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <DiscoverLargeCardSkeleton className="min-h-[188px]" />
+              <DiscoverLargeCardSkeleton className="min-h-[188px]" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <DiscoverCompactSongsSkeleton />
+      <DiscoverProductionSkeleton />
+      <DiscoverCuratedShelfSkeleton />
+      <DiscoverFastScanSkeleton />
+    </>
   );
 }
 
@@ -142,86 +412,6 @@ function CoverImage({
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
     </div>
   );
-}
-
-function PlayButton({
-  song,
-  size = "small",
-}: {
-  song: Song;
-  size?: "large" | "small";
-}) {
-  const { currentSong, isPlaying, togglePlayPause } = usePlayer();
-  const active = currentSong?.id === song.id;
-  const playing = active && isPlaying;
-  const buttonSize = size === "large" ? "h-12 w-12" : "h-9 w-9";
-  const iconSize = size === "large" ? 20 : 15;
-  const shadowClass =
-    size === "large"
-      ? "shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
-      : "shadow-[0_8px_24px_rgba(0,0,0,0.22)]";
-
-  return (
-    <button
-      type="button"
-      onClick={(event) => {
-        stopPlaybackMouseEvent(event);
-        togglePlayPause(song);
-      }}
-      onKeyDown={(event) => {
-        if (event.key !== "Enter" && event.key !== " ") return;
-
-        stopPlaybackKeyEvent(event);
-
-        if (!event.repeat) togglePlayPause(song);
-      }}
-      onKeyUp={(event) => {
-        if (event.key !== "Enter" && event.key !== " ") return;
-
-        stopPlaybackKeyEvent(event);
-      }}
-      className={`flex ${buttonSize} ${shadowClass} shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-default disabled:opacity-50`}
-      disabled={!song.audioUrl}
-      aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-    >
-      {playing ? (
-        <PauseIcon size={iconSize} />
-      ) : (
-        <PlayIconSmall size={iconSize} />
-      )}
-    </button>
-  );
-}
-
-function usePlayableCard(song: Song) {
-  const { togglePlayPause } = usePlayer();
-
-  function playCard() {
-    if (!song.audioUrl) return;
-
-    togglePlayPause(song);
-  }
-
-  return {
-    role: "button",
-    tabIndex: song.audioUrl ? 0 : -1,
-    onClick: (event: MouseEvent<HTMLElement>) => {
-      stopPlaybackMouseEvent(event);
-      playCard();
-    },
-    onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-
-      stopPlaybackKeyEvent(event);
-
-      if (!event.repeat) playCard();
-    },
-    onKeyUp: (event: KeyboardEvent<HTMLElement>) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-
-      stopPlaybackKeyEvent(event);
-    },
-  };
 }
 
 function FullWidthSearchBar() {
@@ -418,41 +608,7 @@ function DiscoveryMiniCard({ playlist }: { playlist: CuratedPlaylist }) {
   );
 }
 
-function VisualDiscoverySkeleton() {
-  return (
-    <section>
-      <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
-        <div>
-          <div className="mb-3 h-3 w-32 animate-pulse rounded bg-[var(--bg-secondary)]" />
-          <div className="h-20 w-[80%] animate-pulse rounded-xl bg-[var(--bg-secondary)]" />
-        </div>
-        <div className="h-14 animate-pulse rounded-xl bg-[var(--bg-secondary)] xl:w-[80%] xl:justify-self-end" />
-      </div>
-
-      <div className="h-[58px] animate-pulse rounded-full bg-[var(--bg-secondary)]" />
-
-      <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
-        <div className="min-h-[420px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
-        <div className="grid gap-4">
-          <div className="min-h-[204px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="min-h-[188px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
-            <div className="min-h-[188px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]" />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function VisualDiscoverySection({
-  blocks,
-  loading,
-}: {
-  blocks: CuratedPlaylist[];
-  loading: boolean;
-}) {
-  if (loading) return <VisualDiscoverySkeleton />;
+function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
   if (blocks.length === 0) return null;
 
   const [hero, side, ...minis] = blocks;
@@ -541,34 +697,7 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
   );
 }
 
-function ProductionStylesSkeleton() {
-  return (
-    <section className="mt-12">
-      <div className="mb-4">
-        <div className="h-5 w-52 animate-pulse rounded bg-[var(--bg-secondary)]" />
-        <div className="mt-1.5 h-3 w-72 animate-pulse rounded bg-[var(--bg-secondary)]" />
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div
-            key={index}
-            className="min-h-[245px] animate-pulse rounded-[18px] bg-[var(--bg-secondary)]"
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ProductionStylesSection({
-  blocks,
-  loading,
-}: {
-  blocks: CuratedPlaylist[];
-  loading: boolean;
-}) {
-  if (loading) return <ProductionStylesSkeleton />;
+function ProductionStylesSection({ blocks }: { blocks: CuratedPlaylist[] }) {
   if (blocks.length === 0) return null;
 
   return (
@@ -600,36 +729,7 @@ function ProductionStylesSection({
   );
 }
 
-function CuratedPlaylistsSkeleton() {
-  return (
-    <section className="mt-10">
-      <div className="mb-4 flex items-end justify-between gap-4">
-        <div>
-          <div className="h-5 w-40 animate-pulse rounded bg-[var(--bg-secondary)]" />
-          <div className="mt-1.5 h-3 w-64 animate-pulse rounded bg-[var(--bg-secondary)]" />
-        </div>
-      </div>
-
-      <div className="flex gap-3 overflow-hidden">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <div
-            key={index}
-            className="min-h-[210px] w-[200px] shrink-0 animate-pulse rounded-[18px] bg-[var(--bg-secondary)]"
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function CuratedPlaylistsSection({
-  playlists,
-  loading,
-}: {
-  playlists: CuratedPlaylist[];
-  loading: boolean;
-}) {
-  if (loading) return <CuratedPlaylistsSkeleton />;
+function CuratedPlaylistsSection({ playlists }: { playlists: CuratedPlaylist[] }) {
   if (playlists.length === 0) return null;
 
   return (
@@ -811,26 +911,6 @@ function FastScanSection({ songs }: { songs: Song[] }) {
   );
 }
 
-function SongsSkeleton() {
-  return (
-    <section className="mt-10">
-      <div className="mb-4">
-        <div className="h-5 w-40 animate-pulse rounded bg-[var(--bg-secondary)]" />
-        <div className="mt-1.5 h-3 w-72 animate-pulse rounded bg-[var(--bg-secondary)]" />
-      </div>
-
-      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {Array.from({ length: 9 }).map((_, index) => (
-          <div
-            key={index}
-            className="h-[54px] animate-pulse rounded-lg bg-[var(--bg-secondary)]"
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
 export default function DashboardPage() {
   const { songs, loading: songsLoading } = useSongs();
   const { currentSong, setQueue } = usePlayer();
@@ -893,37 +973,33 @@ export default function DashboardPage() {
   const compactSongs = playableSongs.slice(0, COMPACT_SONG_COUNT);
   const fastScanSongs = getFastScanSongs(playableSongs);
   const playerVisible = !!currentSong;
+  const pageLoading = playlistsLoading || songsLoading;
 
   useEffect(() => {
-    setQueue(playableSongs);
-  }, [playableSongs, setQueue]);
+    if (!pageLoading) {
+      setQueue(playableSongs);
+    }
+  }, [pageLoading, playableSongs, setQueue]);
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="ml-[var(--sidebar-width)] min-h-screen pt-14 transition-[margin-left] duration-200">
         <div className="px-8 pt-6">
-          <VisualDiscoverySection
-            blocks={discoverBlocks}
-            loading={playlistsLoading}
-          />
-
-          {songsLoading && playableSongs.length === 0 ? (
-            <SongsSkeleton />
+          {pageLoading ? (
+            <DiscoverPageSkeleton />
           ) : (
-            <CompactSongsSection songs={compactSongs} />
+            <>
+              <VisualDiscoverySection blocks={discoverBlocks} />
+
+              <CompactSongsSection songs={compactSongs} />
+
+              <ProductionStylesSection blocks={productionBlocks} />
+
+              <CuratedPlaylistsSection playlists={discoverCuratedPlaylists} />
+
+              <FastScanSection songs={fastScanSongs} />
+            </>
           )}
-
-          <ProductionStylesSection
-            blocks={productionBlocks}
-            loading={playlistsLoading}
-          />
-
-          <CuratedPlaylistsSection
-            playlists={discoverCuratedPlaylists}
-            loading={playlistsLoading}
-          />
-
-          <FastScanSection songs={fastScanSongs} />
 
           <div
             className="pt-10"
