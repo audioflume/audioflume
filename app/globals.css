@@ -35,24 +35,23 @@
   /* Shadows */
   --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.15);
 
-  /* Edit points */
-  --edit-point-marker: #ddff43;
-  --edit-point-marker-soft: rgba(221, 255, 67, 0.14);
-  --edit-point-marker-secondary: #ddff43;
-  --edit-point-marker-active: #fb8f61;
-  --edit-point-marker-active-soft: rgba(251, 143, 97, 0.18);
-  --edit-point-range: rgba(221, 255, 67, 0.2);
-  --edit-point-range-strong: rgba(251, 143, 97, 0.16);
+  /* Cue points */
+  --cue-point-marker: #ddff43;
+  --cue-point-marker-soft: rgba(221, 255, 67, 0.14);
+  --cue-point-marker-secondary: #ddff43;
+  --cue-point-marker-active: #fb8f61;
+  --cue-point-marker-active-soft: rgba(251, 143, 97, 0.18);
+  --cue-point-range: rgba(221, 255, 67, 0.2);
+  --cue-point-range-strong: rgba(251, 143, 97, 0.16);
 
-  /* ─── Sidebar width ─────────────────────────── */
-
-  aside[data-sidebar] {
-    width: var(--sidebar-width-expanded);
-  }
-
-  body.sidebar-collapsed aside[data-sidebar] {
-    width: var(--sidebar-width-collapsed);
-  }
+  /* Backwards compatibility */
+  --edit-point-marker: var(--cue-point-marker);
+  --edit-point-marker-soft: var(--cue-point-marker-soft);
+  --edit-point-marker-secondary: var(--cue-point-marker-secondary);
+  --edit-point-marker-active: var(--cue-point-marker-active);
+  --edit-point-marker-active-soft: var(--cue-point-marker-active-soft);
+  --edit-point-range: var(--cue-point-range);
+  --edit-point-range-strong: var(--cue-point-range-strong);
 
   /* ─── Sidebar expanded ─────────────────────────── */
 
@@ -62,6 +61,14 @@
   --sidebar-width: var(--sidebar-width-expanded);
 
   --admin-sidebar-width: 280px;
+}
+
+:root aside[data-sidebar] {
+  width: var(--sidebar-width-expanded);
+}
+
+:root body.sidebar-collapsed aside[data-sidebar] {
+  width: var(--sidebar-width-collapsed);
 }
 
 /* ─── Sidebar collapse ─────────────────────────── */
@@ -193,14 +200,23 @@ body.sidebar-collapsed aside[data-sidebar] {
   --accent: #ddff43;
   --accent-2: #fb8f61;
 
-  /* Edit points */
-  --edit-point-marker: #00000076;
-  --edit-point-marker-soft: rgba(196, 230, 45, 0.18);
-  --edit-point-marker-secondary: #c4e62d;
-  --edit-point-marker-active: #fb8f61;
-  --edit-point-marker-active-soft: rgba(251, 143, 97, 0.18);
-  --edit-point-range: rgba(155, 179, 0, 0.2);
-  --edit-point-range-strong: rgba(224, 111, 63, 0.14);
+  /* Cue points */
+  --cue-point-marker: #00000076;
+  --cue-point-marker-soft: rgba(196, 230, 45, 0.18);
+  --cue-point-marker-secondary: #c4e62d;
+  --cue-point-marker-active: #fb8f61;
+  --cue-point-marker-active-soft: rgba(251, 143, 97, 0.18);
+  --cue-point-range: rgba(155, 179, 0, 0.2);
+  --cue-point-range-strong: rgba(224, 111, 63, 0.14);
+
+  /* Backwards compatibility */
+  --edit-point-marker: var(--cue-point-marker);
+  --edit-point-marker-soft: var(--cue-point-marker-soft);
+  --edit-point-marker-secondary: var(--cue-point-marker-secondary);
+  --edit-point-marker-active: var(--cue-point-marker-active);
+  --edit-point-marker-active-soft: var(--cue-point-marker-active-soft);
+  --edit-point-range: var(--cue-point-range);
+  --edit-point-range-strong: var(--cue-point-range-strong);
 }
 
 /* ─── Admin ─────────────────────────── */
@@ -261,7 +277,7 @@ body.sidebar-collapsed {
     transparent 65%,
     transparent 100%
   );
-  animation: shimmer 2.8s ease-in-out infinite;
+  animation: skeleton-shimmer 2.4s ease-in-out infinite;
 }
 
 .light .skeleton-block::after {
@@ -269,221 +285,26 @@ body.sidebar-collapsed {
     90deg,
     transparent 0%,
     transparent 35%,
-    rgba(0, 0, 0, 0.012) 44%,
-    rgba(0, 0, 0, 0.032) 50%,
-    rgba(0, 0, 0, 0.012) 56%,
+    rgba(0, 0, 0, 0.01) 44%,
+    rgba(0, 0, 0, 0.028) 50%,
+    rgba(0, 0, 0, 0.01) 56%,
     transparent 65%,
     transparent 100%
   );
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-35%);
-  }
+@keyframes skeleton-shimmer {
   100% {
-    transform: translateX(35%);
+    transform: translateX(100%);
   }
 }
 
 @keyframes skeleton-fade-in {
   from {
     opacity: 0;
-    transform: translateY(4px);
   }
+
   to {
     opacity: 1;
-    transform: translateY(0);
   }
-}
-
-/* ─── Music player more menu ─────────────────────────── */
-
-.music-player-more-menu {
-  z-index: 95;
-  width: 230px;
-  overflow: hidden;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--bg-primary) 94%, transparent);
-  box-shadow: var(--shadow-ui);
-  backdrop-filter: blur(18px);
-  padding: 6px;
-  color: var(--text-primary);
-}
-
-.light .music-player-more-menu {
-  background: color-mix(in srgb, var(--bg-primary) 98%, transparent);
-}
-
-.music-player-more-menu button,
-.music-player-more-menu a {
-  display: flex !important;
-  min-height: 38px;
-  width: 100%;
-  cursor: pointer;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border-radius: 9px;
-  padding: 0 12px;
-  text-align: left;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    opacity 0.15s ease;
-}
-
-.music-player-more-menu button:hover,
-.music-player-more-menu a:hover {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
-}
-
-.music-player-more-menu button:disabled {
-  cursor: default;
-  opacity: 0.45;
-}
-
-.music-player-more-menu button:disabled:hover {
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.music-player-more-menu-divider {
-  height: 1px;
-  margin: 6px 4px;
-  background: var(--border-subtle);
-}
-
-.music-player-more-menu-close,
-.music-player-more-menu button.danger,
-.music-player-more-menu a.danger,
-.music-player-more-menu button.danger-hover,
-.music-player-more-menu a.danger-hover {
-  color: var(--danger) !important;
-}
-
-.music-player-more-menu-close:hover,
-.music-player-more-menu button.danger:hover,
-.music-player-more-menu a.danger:hover,
-.music-player-more-menu button.danger-hover:hover,
-.music-player-more-menu a.danger-hover:hover {
-  background: var(--danger-hover) !important;
-  color: var(--danger) !important;
-}
-
-/* ─── Dropdown shell ─────────────────────────── */
-
-.filmwave-dropdown-shell {
-  z-index: 160;
-  width: max-content;
-  min-width: 180px;
-  max-width: calc(100vw - 32px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--bg-primary);
-  box-shadow: var(--shadow-ui);
-  padding: 6px;
-  color: var(--text-primary);
-  overscroll-behavior: contain;
-  will-change: transform;
-}
-
-.filmwave-dropdown-shell::-webkit-scrollbar {
-  width: 8px;
-}
-
-.filmwave-dropdown-shell::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.filmwave-dropdown-shell::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--text-primary) 14%, transparent);
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-.filmwave-dropdown-shell button,
-.filmwave-dropdown-shell a {
-  display: flex;
-  min-height: 38px;
-  width: 100%;
-  cursor: pointer;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  padding: 0 12px;
-  text-align: left;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    opacity 0.15s ease;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.filmwave-dropdown-shell button:hover,
-.filmwave-dropdown-shell a:hover {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
-}
-
-.filmwave-dropdown-shell button:disabled {
-  cursor: default;
-  opacity: 0.45;
-}
-
-.filmwave-dropdown-shell button:disabled:hover {
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.filmwave-dropdown-shell button.danger,
-.filmwave-dropdown-shell a.danger,
-.filmwave-dropdown-shell button.danger-hover,
-.filmwave-dropdown-shell a.danger-hover {
-  color: var(--danger);
-}
-
-.filmwave-dropdown-shell button.danger:hover,
-.filmwave-dropdown-shell a.danger:hover,
-.filmwave-dropdown-shell button.danger-hover:hover,
-.filmwave-dropdown-shell a.danger-hover:hover {
-  background: var(--danger-hover);
-  color: var(--danger);
-}
-
-.filmwave-dropdown-shell .dropdown-divider {
-  height: 1px;
-  margin: 6px 4px;
-  background: var(--border-subtle);
-}
-
-.light .filmwave-dropdown-shell {
-  background: var(--bg-primary);
-}
-
-/* ─── Add to playlist modal ─────────────────────────── */
-
-.add-playlist-row:hover .add-playlist-action {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-.add-playlist-row.is-selected .add-playlist-action {
-  background: var(--text-primary);
-  color: var(--bg-primary);
 }
