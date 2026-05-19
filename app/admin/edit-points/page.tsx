@@ -15,6 +15,12 @@ type BatchAnalyzeResult = {
   error?: string;
 };
 
+type MissingSongsResponse = {
+  totalMissing: number;
+  songs: { id: string; title: string }[];
+  error?: string;
+};
+
 type BatchAnalyzeResponse = {
   totalMissing: number;
   analyzed: number;
@@ -42,11 +48,28 @@ function getRecentAnalysisLabel(value?: string) {
   }
 }
 
+function summarizeResults(results: BatchAnalyzeResult[], totalMissing: number) {
+  return {
+    totalMissing,
+    analyzed: results.filter((result) => result.status === "saved").length,
+    skipped: results.filter((result) => result.status === "skipped").length,
+    failed: results.filter((result) => result.status === "failed").length,
+    results,
+    completedAt: new Date().toISOString(),
+  };
+}
+
 export default function AdminEditPointsPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStartedAt, setAnalysisStartedAt] = useState<number | null>(null);
+  const [currentSongTitle, setCurrentSongTitle] = useState("");
+  const [totalToAnalyze, setTotalToAnalyze] = useState(0);
+  const [completedCount, setCompletedCount] = useState(0);
   const [result, setResult] = useState<BatchAnalyzeResponse | null>(null);
   const [toastMessage, setToastMessage] = useState("");
+
+  const progressPercent =
+    totalToAnalyze > 0 ? Math.round((completedCount / totalToAnalyze) * 100) : 0;
 
   useEffect(() => {
     try {
@@ -75,21 +98,57 @@ export default function AdminEditPointsPage() {
     try {
       setIsAnalyzing(true);
       setAnalysisStartedAt(Date.now());
+      setCompletedCount(0);
+      setCurrentSongTitle("");
 
-      const res = await fetch("/api/admin/songs/batch-analyze-edit-points", {
-        method: "POST",
+      const missingRes = await fetch("/api/admin/songs/batch-analyze-edit-points", {
+        method: "GET",
       });
+      const missingData = (await missingRes.json()) as MissingSongsResponse;
 
-      const data = (await res.json()) as BatchAnalyzeResponse;
-
-      if (!res.ok) {
-        throw new Error(data?.error || "Failed to batch analyze edit points.");
+      if (!missingRes.ok) {
+        throw new Error(missingData?.error || "Failed to load songs missing edit points.");
       }
 
-      const nextResult = {
-        ...data,
-        completedAt: new Date().toISOString(),
-      };
+      setTotalToAnalyze(missingData.songs.length);
+
+      if (missingData.songs.length === 0) {
+        const emptyResult = summarizeResults([], 0);
+        setResult(emptyResult);
+        window.localStorage.setItem(
+          RECENT_ANALYSIS_STORAGE_KEY,
+          JSON.stringify(emptyResult),
+        );
+        showToast("No songs are missing edit points");
+        return;
+      }
+
+      const results: BatchAnalyzeResult[] = [];
+
+      for (const song of missingData.songs) {
+        setCurrentSongTitle(song.title || "Untitled song");
+
+        const res = await fetch(
+          `/api/admin/songs/batch-analyze-edit-points?songId=${encodeURIComponent(song.id)}`,
+          { method: "POST" },
+        );
+        const data = (await res.json()) as BatchAnalyzeResponse;
+
+        if (!res.ok) {
+          results.push({
+            songId: song.id,
+            title: song.title || "Untitled song",
+            status: "failed",
+            error: data?.error || "Failed to analyze song.",
+          });
+        } else {
+          results.push(...(data.results || []));
+        }
+
+        setCompletedCount(results.length);
+      }
+
+      const nextResult = summarizeResults(results, missingData.songs.length);
 
       setResult(nextResult);
       window.localStorage.setItem(
@@ -97,7 +156,7 @@ export default function AdminEditPointsPage() {
         JSON.stringify(nextResult),
       );
       showToast(
-        `Analyzed ${data.analyzed} song${data.analyzed === 1 ? "" : "s"}`,
+        `Analyzed ${nextResult.analyzed} song${nextResult.analyzed === 1 ? "" : "s"}`,
       );
     } catch (err) {
       showToast(
@@ -106,6 +165,7 @@ export default function AdminEditPointsPage() {
     } finally {
       setIsAnalyzing(false);
       setAnalysisStartedAt(null);
+      setCurrentSongTitle("");
     }
   };
 
@@ -120,7 +180,7 @@ export default function AdminEditPointsPage() {
               Edit Points
             </h1>
 
-            <p className="mt-2 max-w-[620px] text-xs leading-5 text-[var(--text-secondary)]">
+            <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
               Batch analyze missing edit points and review analyzer results before building frontend edit-point filters.
             </p>
           </div>
@@ -162,16 +222,21 @@ export default function AdminEditPointsPage() {
               </button>
 
               {isAnalyzing && (
-                <div className="mt-4 overflow-hidden rounded-full border border-[var(--border)] bg-[var(--bg-primary)]">
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--bg-tertiary)]">
-                    <div className="h-full w-1/3 animate-[editPointBatchProgress_1.15s_ease-in-out_infinite] rounded-full bg-[var(--text-primary)] opacity-60" />
+                <div className="mt-4">
+                  <div className="mb-2 flex items-center justify-between gap-3 text-xs text-[var(--text-secondary)]">
+                    <span className="truncate">
+                      {currentSongTitle ? `Analyzing ${currentSongTitle}` : "Preparing analyzer..."}
+                    </span>
+                    <span className="shrink-0 font-mono">
+                      {completedCount}/{totalToAnalyze || "—"} · {progressPercent}%
+                    </span>
                   </div>
-                  <style>{`
-                    @keyframes editPointBatchProgress {
-                      0% { transform: translateX(-120%); }
-                      100% { transform: translateX(320%); }
-                    }
-                  `}</style>
+                  <div className="h-2 w-full overflow-hidden rounded-full border border-[var(--border)] bg-[var(--bg-tertiary)]">
+                    <div
+                      className="h-full rounded-full bg-[var(--text-primary)] opacity-60 transition-[width] duration-300 ease-out"
+                      style={{ width: `${Math.max(2, progressPercent)}%` }}
+                    />
+                  </div>
                 </div>
               )}
 
