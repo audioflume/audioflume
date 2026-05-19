@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "images.filmwave.io",
+      },
+      {
+        protocol: "https",
         hostname: "pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev",
       },
       {

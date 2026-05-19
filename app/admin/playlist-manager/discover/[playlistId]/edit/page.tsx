@@ -17,7 +17,7 @@ export default function EditDiscoverBlockPage() {
             Edit Discover Block
           </h1>
           <p className="mt-2 text-sm text-[var(--text-secondary)]">
-            Update the content, image, placement, and button for this Discover block.
+            Update the content, image, and button for this fixed Discover slot.
           </p>
         </div>
       </div>

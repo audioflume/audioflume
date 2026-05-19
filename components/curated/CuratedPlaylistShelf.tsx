@@ -432,7 +432,7 @@ export default function CuratedPlaylistShelf({
           font-family: var(--font-instrument-sans);
           font-size: 25px;
           font-weight: 500;
-          line-height: 0.95;
+          line-height: 1.15;
           letter-spacing: -0.055em;
           color: white;
         }

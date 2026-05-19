@@ -24,19 +24,35 @@ import {
 type Props = {
   mode: "create" | "edit";
   playlistId?: string;
+  lockedDiscoverSection?: string;
 };
 
 const DEFAULT_DISCOVER_SECTION: string =
   DISCOVER_SECTION_OPTIONS[0]?.value ?? "discover_block_1";
 
-export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
+function getSafeDiscoverSection(section?: string | null) {
+  if (
+    section &&
+    DISCOVER_SECTION_OPTIONS.some((option) => option.value === section)
+  ) {
+    return section;
+  }
+
+  return DEFAULT_DISCOVER_SECTION;
+}
+
+export default function AdminDiscoverPlaylistForm({
+  mode,
+  playlistId,
+  lockedDiscoverSection,
+}: Props) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [description, setDescription] = useState("");
   const [discoverSection, setDiscoverSection] = useState(
-    DEFAULT_DISCOVER_SECTION,
+    getSafeDiscoverSection(lockedDiscoverSection),
   );
   const [buttonEnabled, setButtonEnabled] = useState(true);
   const [buttonText, setButtonText] = useState(DEFAULT_DISCOVER_BUTTON_TEXT);
@@ -44,6 +60,14 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
   const [loading, setLoading] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+
+  const managerHref = "/admin/playlist-manager?tab=discover";
+
+  useEffect(() => {
+    if (!lockedDiscoverSection) return;
+
+    setDiscoverSection(getSafeDiscoverSection(lockedDiscoverSection));
+  }, [lockedDiscoverSection]);
 
   useEffect(() => {
     if (mode !== "edit" || !playlistId) return;
@@ -72,7 +96,9 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
           setCoverImageUrl(playlistData.cover_image_url || "");
           setDescription(playlistData.description || "");
           setDiscoverSection(
-            playlistData.discover_section || DEFAULT_DISCOVER_SECTION,
+            getSafeDiscoverSection(
+              lockedDiscoverSection || playlistData.discover_section,
+            ),
           );
           setButtonEnabled(playlistData.discover_button_enabled !== false);
           setButtonText(
@@ -98,7 +124,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [mode, playlistId]);
+  }, [mode, playlistId, lockedDiscoverSection]);
 
   useEffect(() => {
     if (!toastMessage) return;
@@ -132,7 +158,9 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
           cover_image_url: coverImageUrl,
           playlist_group: DEFAULT_CURATED_PLAYLIST_GROUP,
           description,
-          discover_section: discoverSection,
+          discover_section: getSafeDiscoverSection(
+            lockedDiscoverSection || discoverSection,
+          ),
           show_on_discover: false,
           discover_button_enabled: buttonEnabled,
           discover_button_text: buttonText,
@@ -203,8 +231,8 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
               Discover block details
             </h2>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Manage the title, copy, artwork, placement, and button used on the
-              Discover page.
+              Manage the title, copy, artwork, and button used on the Discover
+              page.
             </p>
           </div>
 
@@ -241,21 +269,6 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
                   className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Describe what this Discover block is for."
                 />
-              </label>
-
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Discover placement
-                <select
-                  value={discoverSection}
-                  onChange={(e) => setDiscoverSection(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                >
-                  {DISCOVER_SECTION_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
               </label>
 
               <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
@@ -301,9 +314,7 @@ export default function AdminDiscoverPlaylistForm({ mode, playlistId }: Props) {
                 <button
                   type="button"
                   className={secondaryPillButtonClass}
-                  onClick={() =>
-                    router.push("/admin/playlist-manager?tab=discover")
-                  }
+                  onClick={() => router.push(managerHref)}
                 >
                   Back to manager
                 </button>
