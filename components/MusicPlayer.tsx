@@ -10,7 +10,10 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
-import { MUSIC_FILTER_STORAGE_KEY_PREFIX } from "@/lib/constants";
+import {
+  EDIT_POINT_MARKER_VISIBILITY_EVENT,
+  getStoredEditPointMarkerVisibility,
+} from "@/lib/editPointMarkerVisibility";
 import {
   formatEditPointTime,
   getEditPointFilterLabel,
@@ -37,6 +40,8 @@ const COMPACT_TIME_MIN_WIDTH = 500;
 const KEY_MIN_WIDTH = 560;
 const BPM_MIN_WIDTH = 700;
 
+type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
+
 function formatTime(s: number) {
   if (!s || !isFinite(s)) return "0:00";
 
@@ -48,28 +53,6 @@ function formatTime(s: number) {
 
 function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
-}
-
-function getStoredMarkerVisibility() {
-  if (typeof window === "undefined") return true;
-
-  for (let i = 0; i < window.sessionStorage.length; i += 1) {
-    const key = window.sessionStorage.key(i);
-
-    if (!key?.startsWith(MUSIC_FILTER_STORAGE_KEY_PREFIX)) continue;
-
-    try {
-      const parsed = JSON.parse(window.sessionStorage.getItem(key) || "{}");
-
-      if (typeof parsed.showEditPointMarkers === "boolean") {
-        return parsed.showEditPointMarkers;
-      }
-    } catch {
-      // Ignore malformed storage values.
-    }
-  }
-
-  return true;
 }
 
 function normalizePeaks(peaks: number[]) {
@@ -109,6 +92,30 @@ function buildWaveformBars(peaks: number[], width: number) {
   });
 }
 
+function getCueLabel(marker: CuePointMarker) {
+  const markerType = getMarkerType(marker);
+  return marker.label || getEditPointFilterLabel(markerType);
+}
+
+function getAdjacentCuePoint(
+  cuePoints: CuePointMarker[],
+  currentTime: number,
+  direction: "previous" | "next",
+) {
+  if (cuePoints.length === 0) return null;
+
+  const threshold = direction === "next" ? currentTime + 0.25 : currentTime - 0.25;
+
+  if (direction === "next") {
+    return cuePoints.find((marker) => marker.time > threshold) || cuePoints[0];
+  }
+
+  return (
+    [...cuePoints].reverse().find((marker) => marker.time < threshold) ||
+    cuePoints[cuePoints.length - 1]
+  );
+}
+
 const PrevIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <polygon points="19,20 9,12 19,4" />
@@ -133,6 +140,30 @@ const PauseIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <rect x="6" y="4" width="4" height="16" />
     <rect x="14" y="4" width="4" height="16" />
+  </svg>
+);
+
+const CuePreviousIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d="M15 6L9 12L15 18"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const CueNextIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d="M9 6L15 12L9 18"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
@@ -193,7 +224,7 @@ export default function MusicPlayer() {
   >(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const [showEditPointMarkers, setShowEditPointMarkers] = useState(() =>
-    getStoredMarkerVisibility(),
+    getStoredEditPointMarkerVisibility(),
   );
   const [moreMenuPosition, setMoreMenuPosition] = useState({
     top: 0,
@@ -213,11 +244,19 @@ export default function MusicPlayer() {
     [currentSong],
   );
   const visibleCuePoints = showEditPointMarkers ? cuePoints : [];
-  const showCuePointButtons =
+  const previousCuePoint = useMemo(
+    () => getAdjacentCuePoint(visibleCuePoints, currentTime, "previous"),
+    [visibleCuePoints, currentTime],
+  );
+  const nextCuePoint = useMemo(
+    () => getAdjacentCuePoint(visibleCuePoints, currentTime, "next"),
+    [visibleCuePoints, currentTime],
+  );
+  const showCuePointControls =
     showEditPointMarkers &&
     showWaveform &&
-    playerWidth >= 1180 &&
-    cuePoints.length > 0;
+    playerWidth >= 940 &&
+    visibleCuePoints.length > 0;
 
   const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
 
@@ -290,14 +329,20 @@ export default function MusicPlayer() {
 
   useEffect(() => {
     const syncMarkerVisibility = () => {
-      setShowEditPointMarkers(getStoredMarkerVisibility());
+      setShowEditPointMarkers(getStoredEditPointMarkerVisibility());
     };
 
     syncMarkerVisibility();
+    window.addEventListener(EDIT_POINT_MARKER_VISIBILITY_EVENT, syncMarkerVisibility);
+    window.addEventListener("storage", syncMarkerVisibility);
 
-    const interval = window.setInterval(syncMarkerVisibility, 250);
-
-    return () => window.clearInterval(interval);
+    return () => {
+      window.removeEventListener(
+        EDIT_POINT_MARKER_VISIBILITY_EVENT,
+        syncMarkerVisibility,
+      );
+      window.removeEventListener("storage", syncMarkerVisibility);
+    };
   }, []);
 
   useEffect(() => {
@@ -446,6 +491,16 @@ export default function MusicPlayer() {
     seekTo(currentSong, nextProgress, isPlaying);
   };
 
+  const jumpToCuePoint = (marker: CuePointMarker | null) => {
+    if (!marker || !currentSong.duration) return;
+
+    seekTo(
+      currentSong,
+      Math.max(0, Math.min(1, marker.time / currentSong.duration)),
+      isPlaying,
+    );
+  };
+
   async function handleCreatePlaylist() {
     if (!newPlaylistName.trim() || isCreatingPlaylist) return;
 
@@ -578,8 +633,7 @@ export default function MusicPlayer() {
                   onClick={handleWaveformClick}
                 >
                   {visibleCuePoints.map((marker) => {
-                    const markerType = getMarkerType(marker);
-                    const label = marker.label || getEditPointFilterLabel(markerType);
+                    const label = getCueLabel(marker);
                     const progressValue = currentSong.duration
                       ? marker.time / currentSong.duration
                       : 0;
@@ -596,11 +650,7 @@ export default function MusicPlayer() {
                         onClick={(event) => {
                           event.preventDefault();
                           event.stopPropagation();
-                          seekTo(
-                            currentSong,
-                            Math.max(0, Math.min(1, progressValue)),
-                            isPlaying,
-                          );
+                          jumpToCuePoint(marker);
                         }}
                       >
                         <span className="absolute left-1/2 top-0 h-full w-[1.5px] -translate-x-1/2 rounded-full bg-[var(--edit-point-marker)]" />
@@ -638,39 +688,43 @@ export default function MusicPlayer() {
                   </div>
                 </div>
 
-                {showCuePointButtons && (
-                  <div className="flex max-w-[260px] flex-shrink-0 items-center gap-1 overflow-hidden">
-                    {visibleCuePoints.map((marker) => {
-                      const markerType = getMarkerType(marker);
-                      const label = marker.label || getEditPointFilterLabel(markerType);
-                      const progressValue = currentSong.duration
-                        ? marker.time / currentSong.duration
-                        : 0;
-
-                      return (
-                        <button
-                          key={marker.id}
-                          type="button"
-                          title={`${label} · ${formatEditPointTime(marker.time)}`}
-                          onClick={() =>
-                            seekTo(
-                              currentSong,
-                              Math.max(0, Math.min(1, progressValue)),
-                              isPlaying,
-                            )
-                          }
-                          className="h-6 max-w-[72px] truncate rounded-full border border-[var(--border)] px-2 text-[10px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-                        >
-                          {label.replace("Main ", "")}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-
                 <span className="w-10 flex-shrink-0 text-xs text-[var(--icon-color)]">
                   {formatTime(duration)}
                 </span>
+
+                {showCuePointControls && (
+                  <div className="flex flex-shrink-0 items-center gap-1">
+                    <button
+                      type="button"
+                      title={
+                        previousCuePoint
+                          ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}`
+                          : "Previous cue"
+                      }
+                      aria-label="Jump to previous cue point"
+                      onClick={() => jumpToCuePoint(previousCuePoint)}
+                      disabled={!previousCuePoint}
+                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]"
+                    >
+                      <CuePreviousIcon />
+                    </button>
+
+                    <button
+                      type="button"
+                      title={
+                        nextCuePoint
+                          ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}`
+                          : "Next cue"
+                      }
+                      aria-label="Jump to next cue point"
+                      onClick={() => jumpToCuePoint(nextCuePoint)}
+                      disabled={!nextCuePoint}
+                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]"
+                    >
+                      <CueNextIcon />
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="whitespace-nowrap text-xs text-[var(--icon-color)]">
