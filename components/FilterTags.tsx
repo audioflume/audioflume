@@ -1,4 +1,5 @@
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
+import { getEditPointFilterLabel } from "@/lib/editPointUtils";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 
 type FilterTag = {
@@ -15,6 +16,7 @@ type FilterTagsProps = {
   selectedBuilds: string[];
   selectedVocals: string[];
   selectedDurations: string[];
+  selectedEditPoints: string[];
   instrumental: boolean;
   bpmValue: BpmFilterValue | null;
   keyValue: KeyFilterValue | null;
@@ -26,6 +28,7 @@ type FilterTagsProps = {
   onRemoveBuild: (value: string) => void;
   onRemoveVocal: (value: string) => void;
   onRemoveDuration: (value: string) => void;
+  onRemoveEditPoint: (value: string) => void;
   onRemoveInstrumental: () => void;
   onRemoveBpm: () => void;
   onRemoveKey: () => void;
@@ -40,6 +43,7 @@ export default function FilterTags({
   selectedBuilds,
   selectedVocals,
   selectedDurations,
+  selectedEditPoints,
   instrumental,
   bpmValue,
   keyValue,
@@ -51,6 +55,7 @@ export default function FilterTags({
   onRemoveBuild,
   onRemoveVocal,
   onRemoveDuration,
+  onRemoveEditPoint,
   onRemoveInstrumental,
   onRemoveBpm,
   onRemoveKey,
@@ -87,6 +92,11 @@ export default function FilterTags({
       id: `duration-${value}`,
       label: value,
       onRemove: () => onRemoveDuration(value),
+    })),
+    ...selectedEditPoints.map((value) => ({
+      id: `edit-point-${value}`,
+      label: getEditPointFilterLabel(value),
+      onRemove: () => onRemoveEditPoint(value),
     })),
     ...(instrumental
       ? [
