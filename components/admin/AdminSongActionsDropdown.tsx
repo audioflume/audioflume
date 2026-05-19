@@ -5,6 +5,7 @@ import { ReactNode, useState } from "react";
 import AdminAddToPlaylistModal from "@/components/admin/AdminAddToPlaylistModal";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import type { Song } from "@/lib/types";
+import { songHasMissingEditPoints } from "@/lib/songHealth";
 import DropdownShell from "@/components/DropdownShell";
 import type { Padding, Placement, Strategy } from "@floating-ui/react";
 
@@ -65,6 +66,9 @@ export default function AdminSongActionsDropdown({
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
 
+  const hasEditPoints = song ? !songHasMissingEditPoints(song) : false;
+  const editPointsHref = `/admin/songs/${songId}/edit-points?from=music-library`;
+
   const copyAudioUrl = async () => {
     if (!audioUrl) return;
 
@@ -88,6 +92,12 @@ export default function AdminSongActionsDropdown({
       if (!res.ok) {
         throw new Error(data?.error || "Failed to analyze edit points");
       }
+
+      window.dispatchEvent(
+        new CustomEvent("admin-song-edit-points-updated", {
+          detail: { songId, saved: data.saved ?? 0 },
+        }),
+      );
 
       onOpenChange(false);
       window.alert(`Saved ${data.saved ?? 0} edit points for "${songTitle}".`);
@@ -159,13 +169,6 @@ export default function AdminSongActionsDropdown({
           Edit Details
         </Link>
 
-        <Link
-          href={`/admin/songs/${songId}/edit-points?from=music-library`}
-          onClick={() => onOpenChange(false)}
-        >
-          Edit Points
-        </Link>
-
         {audioUrl ? (
           <a
             href={audioUrl}
@@ -185,18 +188,24 @@ export default function AdminSongActionsDropdown({
           Copy Audio URL
         </button>
 
-        <button
-          type="button"
-          onClick={analyzeEditPoints}
-          disabled={!audioUrl || isAnalyzing}
-        >
-          <span className="inline-flex items-center gap-2">
-            {isAnalyzing && (
-              <LoadingSpinner size={12} stroke={12} color="currentColor" />
-            )}
-            {isAnalyzing ? "Analyzing..." : "Analyze Edit Points"}
-          </span>
-        </button>
+        {hasEditPoints ? (
+          <Link href={editPointsHref} onClick={() => onOpenChange(false)}>
+            Manage Edit Points
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={analyzeEditPoints}
+            disabled={!audioUrl || isAnalyzing}
+          >
+            <span className="inline-flex items-center gap-2">
+              {isAnalyzing && (
+                <LoadingSpinner size={12} stroke={12} color="currentColor" />
+              )}
+              {isAnalyzing ? "Analyzing..." : "Analyze Edit Points"}
+            </span>
+          </button>
+        )}
 
         <button
           type="button"
