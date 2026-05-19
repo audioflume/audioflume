@@ -35,7 +35,7 @@ const baseDefaultState: FilterState = {
   selectedVocals: [],
   selectedDurations: [],
   selectedEditPoints: [],
-  showEditPointMarkers: true,
+  showEditPointMarkers: false,
   instrumental: false,
   bpmValue: null,
   keyValue: null,
@@ -82,7 +82,7 @@ export function useFilterPersistence({
 }: UseFilterPersistenceProps) {
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
-  const [filters, setFilters] = useState<FilterState>(() => getDefaultState());
+  const [filters, setFilters] = useState<FilterState>(baseDefaultState);
 
   // Hydrate from sessionStorage when auth loads or user changes
   useEffect(() => {
