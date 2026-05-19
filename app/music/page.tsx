@@ -30,13 +30,8 @@ import { useSongs } from "@/hooks/useSongs";
 
 import { usePlayer } from "@/context/PlayerContext";
 
-import BPMFilter from "@/components/BPMFilter";
-import DurationFilter from "@/components/DurationFilter";
-import FilterDropdown from "@/components/FilterDropdown";
 import FilterTags from "@/components/FilterTags";
 import Footer from "@/components/Footer";
-import KeyFilter from "@/components/KeyFilter";
-import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import MusicIcon from "@/components/icons/MusicIcon";
@@ -47,12 +42,68 @@ import {
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
-import {
-  filterDotClass,
-  filterTriggerActiveClass,
-  filterTriggerBaseClass,
-  filterTriggerInactiveClass,
-} from "@/components/filterUiClasses";
+import { filterDotClass } from "@/components/filterUiClasses";
+
+type TagFilterCategoryId =
+  | "moods"
+  | "genres"
+  | "vocals"
+  | "duration"
+  | "bpm"
+  | "key"
+  | "instruments"
+  | "builds"
+  | "cuePoints";
+
+type TagFilterOption = {
+  label: string;
+  count: number;
+  active: boolean;
+  onToggle: () => void;
+};
+
+type TagFilterCategory = {
+  id: TagFilterCategoryId;
+  label: string;
+  activeCount: number;
+  options: TagFilterOption[];
+};
+
+const DURATION_TAG_OPTIONS = [
+  "0:00 - 1:00",
+  "1:00 - 2:00",
+  "2:00 - 3:00",
+  "3:00 - 4:00",
+  "4:00+",
+];
+
+const BPM_TAG_OPTIONS: { label: string; value: BpmFilterValue }[] = [
+  { label: "Under 80", value: { mode: "range", low: 1, high: 80, exact: 1 } },
+  { label: "80 - 100", value: { mode: "range", low: 80, high: 100, exact: 1 } },
+  { label: "100 - 120", value: { mode: "range", low: 100, high: 120, exact: 1 } },
+  { label: "120 - 140", value: { mode: "range", low: 120, high: 140, exact: 1 } },
+  { label: "140+", value: { mode: "range", low: 140, high: 300, exact: 1 } },
+];
+
+const KEY_TAG_OPTIONS = [
+  "C",
+  "C#",
+  "Db",
+  "D",
+  "D#",
+  "Eb",
+  "E",
+  "F",
+  "F#",
+  "Gb",
+  "G",
+  "G#",
+  "Ab",
+  "A",
+  "A#",
+  "Bb",
+  "B",
+];
 
 function getSongIdentityValues(song: unknown) {
   const record = getRecord(song);
@@ -192,6 +243,193 @@ function shuffleSongList<T>(songs: T[]) {
   return bestShuffle;
 }
 
+function bpmValuesMatch(a: BpmFilterValue | null, b: BpmFilterValue) {
+  return (
+    !!a &&
+    a.mode === b.mode &&
+    a.low === b.low &&
+    a.high === b.high &&
+    a.exact === b.exact
+  );
+}
+
+function keyValuesMatch(a: KeyFilterValue | null, b: KeyFilterValue) {
+  return !!a && a.note === b.note && a.scale === b.scale;
+}
+
+function MusicTagFilterPanel({
+  categories,
+  activeCategoryId,
+  onActiveCategoryChange,
+  showEditPointMarkers,
+  onToggleMarkers,
+  onClearActiveCategory,
+  shuffleActive,
+  onShuffle,
+}: {
+  categories: TagFilterCategory[];
+  activeCategoryId: TagFilterCategoryId | null;
+  onActiveCategoryChange: (id: TagFilterCategoryId | null) => void;
+  showEditPointMarkers: boolean;
+  onToggleMarkers: () => void;
+  onClearActiveCategory: () => void;
+  shuffleActive: boolean;
+  onShuffle: () => void;
+}) {
+  const activeCategory =
+    categories.find((category) => category.id === activeCategoryId) || null;
+
+  return (
+    <div className="-mx-7 border-t border-b border-[var(--border)]">
+      <div className="flex min-h-[54px] items-center gap-1 overflow-x-auto px-7 py-2">
+        <button
+          type="button"
+          onClick={() => onActiveCategoryChange(activeCategoryId ? null : "genres")}
+          className="mr-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+          aria-label={activeCategory ? "Collapse filters" : "Expand filters"}
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+            className={`transition-transform ${activeCategory ? "" : "rotate-180"}`}
+          >
+            <path
+              d="M5 15.5L12 8.5L19 15.5"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+
+        {categories.map((category) => {
+          const selected = activeCategoryId === category.id;
+          const hasActive = category.activeCount > 0;
+
+          return (
+            <button
+              key={category.id}
+              type="button"
+              onClick={() =>
+                onActiveCategoryChange(selected ? null : category.id)
+              }
+              className={`flex h-9 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-medium transition ${
+                selected
+                  ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                  : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+              }`}
+            >
+              <span>{category.label}</span>
+              {hasActive && (
+                <span
+                  className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] ${
+                    selected
+                      ? "bg-[var(--bg-primary)]/15 text-[var(--bg-primary)]"
+                      : "bg-[var(--bg-elevated)] text-[var(--text-primary)]"
+                  }`}
+                >
+                  {category.activeCount}
+                </span>
+              )}
+            </button>
+          );
+        })}
+
+        <button
+          type="button"
+          onClick={onToggleMarkers}
+          className={`ml-1 flex h-9 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-medium transition ${
+            showEditPointMarkers
+              ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+              : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+          }`}
+          aria-pressed={showEditPointMarkers}
+        >
+          <span>Markers</span>
+          {showEditPointMarkers && <span className={filterDotClass} />}
+        </button>
+
+        <button
+          type="button"
+          onClick={onShuffle}
+          className={`${iconButtonClass} ml-auto shrink-0 ${
+            shuffleActive
+              ? "bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+              : ""
+          }`}
+          aria-label="Shuffle songs"
+          aria-pressed={shuffleActive}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"
+            />
+            <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
+          </svg>
+        </button>
+      </div>
+
+      {activeCategory && (
+        <div className="border-t border-[var(--border)] px-7 py-4">
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+              {activeCategory.label}
+            </div>
+
+            {activeCategory.activeCount > 0 && (
+              <button
+                type="button"
+                onClick={onClearActiveCategory}
+                className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-1.5">
+            {activeCategory.options.map((option) => (
+              <button
+                key={option.label}
+                type="button"
+                onClick={option.onToggle}
+                className={`flex min-h-9 items-center gap-2 rounded-none px-3 text-sm font-medium transition ${
+                  option.active
+                    ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                    : "bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:bg-[var(--bg-hover-strong)]"
+                }`}
+              >
+                <span>{option.label}</span>
+                <span
+                  className={
+                    option.active
+                      ? "text-[var(--bg-primary)]/65"
+                      : "text-[var(--text-secondary)]"
+                  }
+                >
+                  {option.count}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function MusicPage() {
   const { userId, isLoaded: authLoaded } = useAuth();
   const musicFilterStorageKey = userId
@@ -255,6 +493,8 @@ export default function MusicPage() {
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
+  const [activeFilterCategory, setActiveFilterCategory] =
+    useState<TagFilterCategoryId | null>("genres");
 
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
   const shuffleActive = shuffleOrderIds !== null;
@@ -409,6 +649,174 @@ export default function MusicPage() {
     setQueue(displayedSongs.filter((song) => song.audioUrl));
   }, [displayedSongs, setQueue]);
 
+  const toggleMultiValue = (selected: string[], value: string) => {
+    return selected.includes(value)
+      ? selected.filter((item) => item !== value)
+      : [...selected, value];
+  };
+
+  const createMultiOptions = (
+    options: string[],
+    selected: string[],
+    onChange: (next: string[]) => void,
+    getValues: (song: (typeof songs)[number]) => string[],
+  ): TagFilterOption[] =>
+    options.map((option) => ({
+      label: option,
+      count: songs.filter((song) => getValues(song).includes(option)).length,
+      active: selected.includes(option),
+      onToggle: () => onChange(toggleMultiValue(selected, option)),
+    }));
+
+  const cuePointLabelByType = new Map(
+    EDIT_POINT_FILTER_OPTIONS.map((option) => [option.type, option.label]),
+  );
+
+  const filterCategories: TagFilterCategory[] = [
+    {
+      id: "moods",
+      label: "Moods",
+      activeCount: selectedMoods.length,
+      options: createMultiOptions(
+        MOOD_OPTIONS,
+        selectedMoods,
+        setSelectedMoods,
+        (song) => song.moods,
+      ),
+    },
+    {
+      id: "genres",
+      label: "Genres",
+      activeCount: selectedGenres.length,
+      options: createMultiOptions(
+        GENRE_OPTIONS,
+        selectedGenres,
+        setSelectedGenres,
+        (song) => song.genres,
+      ),
+    },
+    {
+      id: "vocals",
+      label: "Vocals",
+      activeCount: selectedVocals.length + (instrumental ? 1 : 0),
+      options: [
+        ...createMultiOptions(
+          VOCALS_OPTIONS,
+          selectedVocals,
+          setSelectedVocals,
+          (song) => song.vocals,
+        ),
+        {
+          label: "Instrumental",
+          count: songs.filter((song) => song.instrumental).length,
+          active: instrumental,
+          onToggle: () => setInstrumental(!instrumental),
+        },
+      ],
+    },
+    {
+      id: "duration",
+      label: "Duration",
+      activeCount: selectedDurations.length,
+      options: DURATION_TAG_OPTIONS.map((option) => ({
+        label: option,
+        count: songs.filter((song) => matchesDurationFilter(song.duration, [option]))
+          .length,
+        active: selectedDurations.includes(option),
+        onToggle: () =>
+          setSelectedDurations(
+            selectedDurations.includes(option)
+              ? selectedDurations.filter((item) => item !== option)
+              : [option],
+          ),
+      })),
+    },
+    {
+      id: "bpm",
+      label: "BPM",
+      activeCount: bpmValue ? 1 : 0,
+      options: BPM_TAG_OPTIONS.map((option) => ({
+        label: option.label,
+        count: songs.filter((song) => matchesBpmFilter(song.bpm, option.value))
+          .length,
+        active: bpmValuesMatch(bpmValue, option.value),
+        onToggle: () =>
+          setBpmValue(bpmValuesMatch(bpmValue, option.value) ? null : option.value),
+      })),
+    },
+    {
+      id: "key",
+      label: "Key",
+      activeCount: keyValue ? 1 : 0,
+      options: KEY_TAG_OPTIONS.map((note) => {
+        const value = { note, scale: null };
+
+        return {
+          label: note,
+          count: songs.filter((song) => matchesKeyFilter(song.key, value)).length,
+          active: keyValuesMatch(keyValue, value),
+          onToggle: () =>
+            setKeyValue(keyValuesMatch(keyValue, value) ? null : value),
+        };
+      }),
+    },
+    {
+      id: "instruments",
+      label: "Instruments",
+      activeCount: selectedInstruments.length,
+      options: createMultiOptions(
+        INSTRUMENT_OPTIONS,
+        selectedInstruments,
+        setSelectedInstruments,
+        (song) => song.instruments,
+      ),
+    },
+    {
+      id: "builds",
+      label: "Builds",
+      activeCount: selectedBuilds.length,
+      options: createMultiOptions(
+        BUILD_OPTIONS,
+        selectedBuilds,
+        setSelectedBuilds,
+        (song) => song.builds,
+      ),
+    },
+    {
+      id: "cuePoints",
+      label: "Cue Points",
+      activeCount: selectedEditPoints.length,
+      options: EDIT_POINT_FILTER_OPTIONS.map((option) => ({
+        label: option.label,
+        count: songs.filter((song) =>
+          songMatchesEditPointFilters(song, [option.type]),
+        ).length,
+        active: selectedEditPoints.includes(option.type),
+        onToggle: () =>
+          setSelectedEditPoints(
+            selectedEditPoints.includes(option.type)
+              ? selectedEditPoints.filter((item) => item !== option.type)
+              : [...selectedEditPoints, option.type],
+          ),
+      })),
+    },
+  ];
+
+  const clearActiveFilterCategory = () => {
+    if (activeFilterCategory === "moods") setSelectedMoods([]);
+    if (activeFilterCategory === "genres") setSelectedGenres([]);
+    if (activeFilterCategory === "vocals") {
+      setSelectedVocals([]);
+      setInstrumental(false);
+    }
+    if (activeFilterCategory === "duration") setSelectedDurations([]);
+    if (activeFilterCategory === "bpm") setBpmValue(null);
+    if (activeFilterCategory === "key") setKeyValue(null);
+    if (activeFilterCategory === "instruments") setSelectedInstruments([]);
+    if (activeFilterCategory === "builds") setSelectedBuilds([]);
+    if (activeFilterCategory === "cuePoints") setSelectedEditPoints([]);
+  };
+
   const loadingPlaylistSongs =
     !!selectedPlaylistId && selectedPlaylistSongIds === null;
 
@@ -485,134 +893,22 @@ export default function MusicPage() {
             />
           </div>
 
-          <div className="-mx-7 flex min-h-[49px] flex-wrap items-center gap-2 border-t border-b border-[var(--border)] px-7 py-2">
-            <FilterDropdown
-              label="Mood"
-              options={MOOD_OPTIONS}
-              selected={selectedMoods}
-              onChange={setSelectedMoods}
-            />
+          <MusicTagFilterPanel
+            categories={filterCategories}
+            activeCategoryId={activeFilterCategory}
+            onActiveCategoryChange={setActiveFilterCategory}
+            showEditPointMarkers={showEditPointMarkers}
+            onToggleMarkers={() => setShowEditPointMarkers(!showEditPointMarkers)}
+            onClearActiveCategory={clearActiveFilterCategory}
+            shuffleActive={shuffleActive}
+            onShuffle={() => {
+              const shuffledSongs = shuffleSongList(filteredSongs);
 
-            <FilterDropdown
-              label="Genre"
-              options={GENRE_OPTIONS}
-              selected={selectedGenres}
-              onChange={setSelectedGenres}
-            />
-
-            <FilterDropdown
-              label="Instrument"
-              options={INSTRUMENT_OPTIONS}
-              selected={selectedInstruments}
-              onChange={setSelectedInstruments}
-            />
-
-            <FilterDropdown
-              label="Build"
-              options={BUILD_OPTIONS}
-              selected={selectedBuilds}
-              onChange={setSelectedBuilds}
-            />
-
-            <FilterDropdown
-              label="Vocals"
-              options={VOCALS_OPTIONS}
-              selected={selectedVocals}
-              onChange={setSelectedVocals}
-            />
-
-            <FilterDropdown
-              label="Cue Points"
-              options={EDIT_POINT_FILTER_OPTIONS.map((option) => option.label)}
-              selected={EDIT_POINT_FILTER_OPTIONS.filter((option) =>
-                selectedEditPoints.includes(option.type),
-              ).map((option) => option.label)}
-              onChange={(labels) =>
-                setSelectedEditPoints(
-                  EDIT_POINT_FILTER_OPTIONS.filter((option) =>
-                    labels.includes(option.label),
-                  ).map((option) => option.type),
-                )
-              }
-            />
-
-            <button
-              type="button"
-              onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
-              className={`${filterTriggerBaseClass} ${
-                showEditPointMarkers
-                  ? filterTriggerActiveClass
-                  : filterTriggerInactiveClass
-              } ${showEditPointMarkers ? "pr-2" : ""}`}
-              aria-pressed={showEditPointMarkers}
-            >
-              <span>Markers</span>
-              {showEditPointMarkers && <span className={filterDotClass} />}
-            </button>
-
-            <BPMFilter value={bpmValue} onChange={setBpmValue} />
-
-            <KeyFilter value={keyValue} onChange={setKeyValue} />
-
-            <DurationFilter
-              selected={selectedDurations}
-              onChange={setSelectedDurations}
-            />
-
-            <button
-              type="button"
-              onClick={() => setInstrumental(!instrumental)}
-              className={`${filterTriggerBaseClass} ${
-                instrumental
-                  ? filterTriggerActiveClass
-                  : filterTriggerInactiveClass
-              } ${instrumental ? "pr-2" : ""}`}
-            >
-              <span>Instrumental</span>
-
-              {instrumental && <span className={filterDotClass} />}
-            </button>
-
-            <PlaylistFilter
-              selected={selectedPlaylist}
-              onChange={setSelectedPlaylist}
-            />
-
-            <button
-              type="button"
-              onClick={() => {
-                const shuffledSongs = shuffleSongList(filteredSongs);
-
-                setShuffleOrderIds(
-                  shuffledSongs.map((song, index) =>
-                    getSongStableId(song, index),
-                  ),
-                );
-              }}
-              className={`${iconButtonClass} ml-auto ${
-                shuffleActive
-                  ? "bg-[var(--bg-secondary)] text-[var(--text-primary)]"
-                  : ""
-              }`}
-              aria-label="Shuffle songs"
-              aria-pressed={shuffleActive}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"
-                />
-                <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
-              </svg>
-            </button>
-          </div>
+              setShuffleOrderIds(
+                shuffledSongs.map((song, index) => getSongStableId(song, index)),
+              );
+            }}
+          />
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5 bg-[var(--bg-primary)] px-8 pt-4 pb-0">
