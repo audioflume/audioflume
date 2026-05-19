@@ -214,18 +214,20 @@ export default function EditPointWaveformReview({
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
+        event.stopPropagation();
         nudgeMarker(selectedMarkerId, event.shiftKey ? -1 : -0.1);
       }
 
       if (event.key === "ArrowRight") {
         event.preventDefault();
+        event.stopPropagation();
         nudgeMarker(selectedMarkerId, event.shiftKey ? 1 : 0.1);
       }
     };
 
-    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keydown", onKeyDown, true);
 
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMarkerId, localMarkers, isPlaying, audioUrl, effectiveDuration, spacebarStartsFromSelected]);
 
@@ -409,6 +411,10 @@ export default function EditPointWaveformReview({
         html.light .edit-point-marker-dot {
           box-shadow: 0 0 0 3px rgba(251, 143, 97, 0.16);
         }
+
+        html.light .edit-point-selected-dot {
+          box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.14);
+        }
       `}</style>
 
       <audio
@@ -452,7 +458,7 @@ export default function EditPointWaveformReview({
         <div className="flex flex-col items-center gap-1.5">
           <button
             type="button"
-            onClick={() => togglePlayback(false)}
+            onClick={() => togglePlayback(spacebarStartsFromSelected)}
             disabled={!audioUrl}
             aria-label={isPlaying ? "Pause" : "Play"}
             className="edit-point-play-button flex h-10 w-10 items-center justify-center rounded-full transition hover:scale-[1.03] disabled:cursor-default disabled:opacity-40 disabled:hover:scale-100"
@@ -483,10 +489,6 @@ export default function EditPointWaveformReview({
           onPointerDown={(event) => {
             dragStateRef.current = { mode: "playhead" };
             seekToTime(getTimeFromClientX(event.clientX));
-          }}
-          onKeyDown={(event) => {
-            if (event.key === "ArrowLeft") seekToTime(currentTime - 1);
-            if (event.key === "ArrowRight") seekToTime(currentTime + 1);
           }}
           className="relative h-28 cursor-ew-resize overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] outline-none transition focus:border-[var(--border)] focus-visible:outline-none focus-visible:ring-0"
         >
@@ -550,7 +552,7 @@ export default function EditPointWaveformReview({
                 <span
                   className={`absolute left-1/2 top-2 h-3 w-3 -translate-x-1/2 rounded-full ${
                     selected
-                      ? "bg-[var(--text-primary)] shadow-[0_0_0_3px_rgba(255,255,255,0.16)]"
+                      ? "edit-point-selected-dot bg-[var(--text-primary)] shadow-[0_0_0_3px_rgba(255,255,255,0.16)]"
                       : "edit-point-marker-dot bg-[var(--accent)] shadow-[0_0_0_3px_rgba(221,255,67,0.16)]"
                   }`}
                 />
