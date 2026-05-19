@@ -186,7 +186,8 @@ export default function MusicPlayer() {
     () => (currentSong ? getSongCuePointMarkers(currentSong) : []),
     [currentSong],
   );
-  const showCuePointButtons = showWaveform && playerWidth >= 1180 && cuePoints.length > 0;
+  const showCuePointButtons =
+    showWaveform && playerWidth >= 1180 && cuePoints.length > 0;
 
   const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
 
@@ -531,9 +532,43 @@ export default function MusicPlayer() {
                 <div
                   ref={waveformRef}
                   data-player-waveform-slot
-                  className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-hidden"
+                  className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-visible"
                   onClick={handleWaveformClick}
                 >
+                  {cuePoints.map((marker) => {
+                    const markerType = getMarkerType(marker);
+                    const label = marker.label || getEditPointFilterLabel(markerType);
+                    const progressValue = currentSong.duration
+                      ? marker.time / currentSong.duration
+                      : 0;
+                    const left = Math.max(0, Math.min(100, progressValue * 100));
+
+                    return (
+                      <button
+                        key={marker.id}
+                        type="button"
+                        title={`${label} · ${formatEditPointTime(marker.time)}`}
+                        aria-label={`Jump to ${label}`}
+                        className="group/player-cue-point absolute top-1/2 z-30 h-[34px] w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
+                        style={{ left: `${left}%` }}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          seekTo(
+                            currentSong,
+                            Math.max(0, Math.min(1, progressValue)),
+                            isPlaying,
+                          );
+                        }}
+                      >
+                        <span className="absolute left-1/2 top-0 h-full w-[1.5px] -translate-x-1/2 rounded-full bg-[var(--edit-point-marker)] shadow-[0_0_0_1px_var(--edit-point-marker-soft)]" />
+                        <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-40 flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/player-cue-point:translate-y-0 group-hover/player-cue-point:opacity-100">
+                          {label} · {formatEditPointTime(marker.time)}
+                        </span>
+                      </button>
+                    );
+                  })}
+
                   <div className="relative z-10 flex h-full w-full items-center overflow-hidden">
                     {waveformBars.map((barHeight, index) => {
                       const barProgress =
