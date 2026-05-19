@@ -10,6 +10,12 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
+import {
+  formatEditPointTime,
+  getEditPointFilterLabel,
+  getMarkerType,
+  getSongCuePointMarkers,
+} from "@/lib/editPointUtils";
 import Image from "next/image";
 import {
   useCallback,
@@ -176,6 +182,11 @@ export default function MusicPlayer() {
   const showBpm = playerWidth >= BPM_MIN_WIDTH;
   const showRightMeta = showKey || showBpm;
   const favorited = currentSong ? isFavorite(currentSong.id) : false;
+  const cuePoints = useMemo(
+    () => (currentSong ? getSongCuePointMarkers(currentSong) : []),
+    [currentSong],
+  );
+  const showCuePointButtons = showWaveform && playerWidth >= 1180 && cuePoints.length > 0;
 
   const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
 
@@ -549,6 +560,36 @@ export default function MusicPlayer() {
                     })}
                   </div>
                 </div>
+
+                {showCuePointButtons && (
+                  <div className="flex max-w-[260px] flex-shrink-0 items-center gap-1 overflow-hidden">
+                    {cuePoints.map((marker) => {
+                      const markerType = getMarkerType(marker);
+                      const label = marker.label || getEditPointFilterLabel(markerType);
+                      const progressValue = currentSong.duration
+                        ? marker.time / currentSong.duration
+                        : 0;
+
+                      return (
+                        <button
+                          key={marker.id}
+                          type="button"
+                          title={`${label} · ${formatEditPointTime(marker.time)}`}
+                          onClick={() =>
+                            seekTo(
+                              currentSong,
+                              Math.max(0, Math.min(1, progressValue)),
+                              isPlaying,
+                            )
+                          }
+                          className="h-6 max-w-[72px] truncate rounded-full border border-[var(--border)] px-2 text-[10px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+                        >
+                          {label.replace("Main ", "")}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
 
                 <span className="w-10 flex-shrink-0 text-xs text-[var(--icon-color)]">
                   {formatTime(duration)}
