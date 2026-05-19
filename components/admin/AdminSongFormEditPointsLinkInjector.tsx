@@ -76,7 +76,7 @@ export default function AdminSongFormEditPointsLinkInjector({
     };
 
     const observer = new MutationObserver(() => {
-      inject();
+      window.requestAnimationFrame(() => inject());
     });
 
     observer.observe(document.body, {
@@ -89,8 +89,14 @@ export default function AdminSongFormEditPointsLinkInjector({
     return () => {
       mounted = false;
       observer.disconnect();
-      root?.unmount();
-      target?.remove();
+
+      const rootToUnmount = root;
+      const targetToRemove = target;
+
+      window.setTimeout(() => {
+        rootToUnmount?.unmount();
+        targetToRemove?.remove();
+      }, 0);
     };
   }, [songId]);
 
