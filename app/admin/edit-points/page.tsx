@@ -169,10 +169,11 @@ export default function AdminEditPointsPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[minmax(0,1fr)_96px_80px] border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                  <div className="grid grid-cols-[minmax(0,1fr)_96px_80px_110px] border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
                     <div>Song</div>
                     <div>Status</div>
                     <div>Saved</div>
+                    <div>Review</div>
                   </div>
 
                   {result.results.length === 0 ? (
@@ -183,12 +184,15 @@ export default function AdminEditPointsPage() {
                     result.results.map((item) => (
                       <div
                         key={item.songId}
-                        className="grid grid-cols-[minmax(0,1fr)_96px_80px] items-center border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
+                        className="grid grid-cols-[minmax(0,1fr)_96px_80px_110px] items-center border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
                       >
                         <div className="min-w-0">
-                          <div className="truncate font-medium text-[var(--text-primary)]">
+                          <Link
+                            href={`/admin/songs/${item.songId}/edit-points`}
+                            className="truncate font-medium text-[var(--text-primary)] transition hover:text-[var(--text-secondary)]"
+                          >
                             {item.title || "Untitled song"}
-                          </div>
+                          </Link>
                           {item.error && (
                             <div className="mt-1 truncate text-[11px] text-[var(--status-error,#dc584f)]">
                               {item.error}
@@ -203,6 +207,13 @@ export default function AdminEditPointsPage() {
                         <div className="font-mono text-[var(--text-secondary)]">
                           {item.saved ?? "—"}
                         </div>
+
+                        <Link
+                          href={`/admin/songs/${item.songId}/edit-points`}
+                          className="inline-flex h-7 w-fit items-center rounded-full border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                        >
+                          Edit Points
+                        </Link>
                       </div>
                     ))
                   )}
