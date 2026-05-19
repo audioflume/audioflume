@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import RefreshIcon from "@/components/icons/RefreshIcon";
+import TrashIcon from "@/components/icons/TrashIcon";
 
 type EditPointMarker = {
   id: string;
@@ -612,8 +613,15 @@ export default function EditPointWaveformReview({
 
         .cue-point-row-grid {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 34px 128px 108px 66px 88px 58px;
-          column-gap: 0.7rem;
+          grid-template-columns:
+            minmax(0, 1fr)
+            clamp(30px, 4.3cqw, 34px)
+            clamp(44px, 16.5cqw, 128px)
+            clamp(82px, 13.8cqw, 108px)
+            clamp(58px, 8.4cqw, 66px)
+            clamp(42px, 11.5cqw, 88px)
+            clamp(30px, 4.8cqw, 34px);
+          column-gap: clamp(0.45rem, 1.05cqw, 0.7rem);
           align-items: center;
         }
 
@@ -626,19 +634,7 @@ export default function EditPointWaveformReview({
           clip-path: inset(0 round 0.75rem);
         }
 
-        @container (max-width: 720px) {
-          .cue-point-row-grid {
-            grid-template-columns: minmax(0, 1fr) 32px 118px 96px 62px 76px 50px;
-            column-gap: 0.55rem;
-          }
-        }
-
         @container (max-width: 620px) {
-          .cue-point-row-grid {
-            grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 58px 40px;
-            column-gap: 0.5rem;
-          }
-
           .cue-point-set-full-label {
             display: none;
           }
@@ -646,7 +642,13 @@ export default function EditPointWaveformReview({
 
         @container (max-width: 540px) {
           .cue-point-row-grid {
-            grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 40px;
+            grid-template-columns:
+              minmax(0, 1fr)
+              clamp(28px, 5cqw, 30px)
+              44px
+              clamp(78px, 15cqw, 82px)
+              58px
+              32px;
           }
 
           .cue-point-source-column {
@@ -863,7 +865,7 @@ export default function EditPointWaveformReview({
             <div>Time</div>
             <div>Nudge</div>
             <div className="cue-point-source-column">Src</div>
-            <div>Delete</div>
+            <div></div>
           </div>
 
           {sortedMarkers.length === 0 ? (
@@ -958,9 +960,11 @@ export default function EditPointWaveformReview({
                       event.stopPropagation();
                       deleteEditPoint(marker.id);
                     }}
-                    className="h-7 w-fit justify-self-end rounded-full px-1.5 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
+                    aria-label={`Delete ${marker.label}`}
+                    title={`Delete ${marker.label}`}
+                    className="flex h-7 w-7 items-center justify-center justify-self-end rounded-full text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
                   >
-                    Delete
+                    <TrashIcon size={13} />
                   </button>
                 </div>
               );
