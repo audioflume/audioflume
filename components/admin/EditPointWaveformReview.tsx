@@ -612,8 +612,8 @@ export default function EditPointWaveformReview({
 
         .cue-point-row-grid {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 34px 116px 108px 66px 58px 48px;
-          column-gap: 0.65rem;
+          grid-template-columns: minmax(0, 1fr) 34px 128px 108px 66px 88px 58px;
+          column-gap: 0.7rem;
           align-items: center;
         }
 
@@ -626,9 +626,16 @@ export default function EditPointWaveformReview({
           clip-path: inset(0 round 0.75rem);
         }
 
-        @container (max-width: 760px) {
+        @container (max-width: 720px) {
           .cue-point-row-grid {
-            grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 44px 40px;
+            grid-template-columns: minmax(0, 1fr) 32px 118px 96px 62px 76px 50px;
+            column-gap: 0.55rem;
+          }
+        }
+
+        @container (max-width: 620px) {
+          .cue-point-row-grid {
+            grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 58px 40px;
             column-gap: 0.5rem;
           }
 
@@ -637,7 +644,7 @@ export default function EditPointWaveformReview({
           }
         }
 
-        @container (max-width: 650px) {
+        @container (max-width: 540px) {
           .cue-point-row-grid {
             grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 40px;
           }
