@@ -6,7 +6,7 @@ import { deleteFilesFromR2 } from "@/lib/r2";
 export const runtime = "nodejs";
 
 type RouteContext = {
-  params: Promise<{ id: string }> | { id: string };
+  params: Promise<{ id: string }>;
 };
 
 type SaveSongPayload = {
@@ -35,6 +35,14 @@ type SongEditPointRow = {
   label: string | null;
   confidence: number | string | null;
   source: string | null;
+};
+
+type ParsedEditPointRow = {
+  type: string;
+  time_seconds: number;
+  label: string;
+  confidence: number | null;
+  source: "auto" | "manual" | "corrected";
 };
 
 type EditPointJsonMarker = {
@@ -146,7 +154,7 @@ function clampConfidence(value: unknown) {
   return Math.max(0, Math.min(1, numeric));
 }
 
-function cleanSource(value: unknown) {
+function cleanSource(value: unknown): ParsedEditPointRow["source"] {
   const source = String(value || "").trim();
 
   if (source === "auto") return "auto";
@@ -156,7 +164,7 @@ function cleanSource(value: unknown) {
   return "manual";
 }
 
-function parseEditPointRowsFromJson(value: string) {
+function parseEditPointRowsFromJson(value: string): ParsedEditPointRow[] {
   const trimmed = value.trim();
 
   if (!trimmed) return [];
@@ -193,12 +201,14 @@ async function syncEditPointRows(songId: string, editPointsJson: string) {
 
   if (rows.length === 0) return;
 
-  const { error } = await supabaseServer.from("song_edit_points").insert(
-    rows.map((row) => ({
-      song_id: songId,
-      ...row,
-    })),
-  );
+  const insertRows = rows.map((row) => ({
+    song_id: songId,
+    ...row,
+  }));
+
+  const { error } = await supabaseServer
+    .from("song_edit_points")
+    .insert(insertRows);
 
   if (error) throw error;
 }
