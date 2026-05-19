@@ -28,6 +28,15 @@ type SaveSongPayload = {
   editPoints: string;
 };
 
+type SongEditPointRow = {
+  id: string;
+  type: string;
+  time_seconds: number | string;
+  label: string | null;
+  confidence: number | string | null;
+  source: string | null;
+};
+
 function durationToSeconds(duration: string) {
   const trimmed = duration.trim();
 
@@ -87,6 +96,39 @@ function getStemUrls(value: string | null): string[] {
     .filter(Boolean);
 }
 
+function emptyEditPointsJson() {
+  return '{"markers":[],"ranges":[]}';
+}
+
+function generatedEditPointsToJson(rows: SongEditPointRow[] = []) {
+  if (rows.length === 0) return null;
+
+  const markers = rows.flatMap((row) => {
+    const time = Number(row.time_seconds);
+
+    if (!Number.isFinite(time)) return [];
+
+    return [
+      {
+        id: row.id,
+        label: row.label || row.type,
+        time,
+        type: row.type,
+        confidence:
+          row.confidence == null ? undefined : Number(row.confidence),
+        source: row.source || undefined,
+      },
+    ];
+  });
+
+  if (markers.length === 0) return null;
+
+  return JSON.stringify({
+    markers,
+    ranges: [],
+  });
+}
+
 export async function GET(_req: Request, context: RouteContext) {
   const admin = await requireAdmin();
 
@@ -111,6 +153,16 @@ export async function GET(_req: Request, context: RouteContext) {
       return NextResponse.json({ error: "Song not found" }, { status: 404 });
     }
 
+    const { data: generatedEditPoints } = await supabaseServer
+      .from("song_edit_points")
+      .select("id, type, time_seconds, label, confidence, source")
+      .eq("song_id", id)
+      .order("time_seconds", { ascending: true });
+
+    const generatedEditPointsJson = generatedEditPointsToJson(
+      (generatedEditPoints ?? []) as SongEditPointRow[],
+    );
+
     return NextResponse.json({
       id: data.id,
       title: data.title,
@@ -128,7 +180,9 @@ export async function GET(_req: Request, context: RouteContext) {
       builds: data.builds || [],
       vocals: data.vocals || [],
       instrumental: Boolean(data.instrumental),
-      editPoints: data.edit_points || '{"markers":[],"ranges":[]}',
+      editPoints:
+        generatedEditPointsJson || data.edit_points || emptyEditPointsJson(),
+      generatedEditPointCount: generatedEditPoints?.length ?? 0,
       status: data.status,
     });
   } catch (err) {
@@ -207,7 +261,7 @@ export async function PATCH(req: Request, context: RouteContext) {
         builds: cleanStringArray(payload.builds),
         vocals: cleanStringArray(payload.vocals),
         instrumental: Boolean(payload.instrumental),
-        edit_points: payload.editPoints || '{"markers":[],"ranges":[]}',
+        edit_points: payload.editPoints || emptyEditPointsJson(),
       })
       .eq("id", id)
       .select()
