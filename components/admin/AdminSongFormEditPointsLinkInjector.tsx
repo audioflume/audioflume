@@ -24,15 +24,29 @@ function EmbeddedEditPointsManager({ songId }: AdminSongFormEditPointsLinkInject
   return <AdminSongEditPointsSection songId={songId} />;
 }
 
+function stopAudioInside(target: HTMLElement) {
+  const audioElements = Array.from(target.querySelectorAll("audio"));
+
+  audioElements.forEach((audio) => {
+    audio.pause();
+    audio.removeAttribute("src");
+    audio.load();
+  });
+}
+
 function cleanupExistingEmbeddedEditPointRoot(ownerId?: string) {
   const existing = window.__filmwaveEmbeddedEditPointRoot;
 
   if (!existing) return;
   if (ownerId && existing.ownerId !== ownerId) return;
 
-  existing.root.unmount();
-  existing.target.remove();
   window.__filmwaveEmbeddedEditPointRoot = null;
+  stopAudioInside(existing.target);
+
+  window.setTimeout(() => {
+    existing.root.unmount();
+    existing.target.remove();
+  }, 0);
 }
 
 export default function AdminSongFormEditPointsLinkInjector({
