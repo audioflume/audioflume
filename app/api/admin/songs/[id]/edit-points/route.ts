@@ -29,6 +29,15 @@ function clampConfidence(value: unknown) {
   return Math.max(0, Math.min(1, numeric));
 }
 
+function cleanSource(source: unknown) {
+  const value = String(source || "").trim();
+
+  if (value === "manual") return "manual";
+  if (value === "auto") return "auto";
+
+  return "corrected";
+}
+
 function cleanEditPoint(point: EditPointPayload) {
   const time = Number(point.time);
 
@@ -39,7 +48,7 @@ function cleanEditPoint(point: EditPointPayload) {
     time_seconds: Number(time.toFixed(2)),
     label: point.label?.trim() || point.type,
     confidence: clampConfidence(point.confidence),
-    source: "corrected",
+    source: cleanSource(point.source),
   };
 }
 
