@@ -25,6 +25,13 @@ type DragState =
   | { mode: "playhead" }
   | { mode: "point"; markerId: string };
 
+const EDIT_POINT_TYPES = [
+  { type: "first_hit", label: "First hit" },
+  { type: "drop", label: "Main drop" },
+  { type: "break", label: "Break" },
+  { type: "button_ending", label: "Button ending" },
+];
+
 function LoopMarkerIcon({ size = 12 }: { size?: number }) {
   return (
     <svg
@@ -160,6 +167,10 @@ function getConfidenceLabel(confidence: number) {
   return "Unknown";
 }
 
+function createLocalMarkerId(type: string) {
+  return `manual-${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
 export default function EditPointWaveformReview({
   songId,
   audioUrl,
@@ -188,6 +199,9 @@ export default function EditPointWaveformReview({
   const hasChanges = JSON.stringify(markers) !== JSON.stringify(localMarkers);
   const sortedMarkers = [...localMarkers].sort((a, b) => a.time - b.time);
   const selectedMarker = localMarkers.find((marker) => marker.id === selectedMarkerId);
+  const missingTypes = EDIT_POINT_TYPES.filter(
+    (option) => !localMarkers.some((marker) => marker.type === option.type),
+  );
 
   useEffect(() => {
     setLocalMarkers(markers);
@@ -331,6 +345,33 @@ export default function EditPointWaveformReview({
     setSaveMessage("");
   };
 
+  const addEditPoint = (type: string, label: string) => {
+    const nextTime = clampTime(currentTime, effectiveDuration);
+    const marker: EditPointMarker = {
+      id: createLocalMarkerId(type),
+      type,
+      label,
+      time: Number(nextTime.toFixed(2)),
+      confidence: 1,
+      source: "manual",
+    };
+
+    setLocalMarkers((current) => [...current, marker]);
+    setSelectedMarkerId(marker.id);
+    setSaveMessage("");
+  };
+
+  const deleteEditPoint = (markerId: string) => {
+    setLocalMarkers((current) => {
+      const next = current.filter((marker) => marker.id !== markerId);
+      if (selectedMarkerId === markerId) {
+        setSelectedMarkerId(next[0]?.id ?? "");
+      }
+      return next;
+    });
+    setSaveMessage("");
+  };
+
   const nudgeMarker = (markerId: string, amount: number) => {
     const marker = localMarkers.find((item) => item.id === markerId);
 
@@ -438,7 +479,18 @@ export default function EditPointWaveformReview({
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          {missingTypes.map((option) => (
+            <button
+              key={option.type}
+              type="button"
+              onClick={() => addEditPoint(option.type, option.label)}
+              className="h-8 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+            >
+              + {option.label}
+            </button>
+          ))}
+
           <div className="font-mono text-xs text-[var(--text-secondary)]">
             {formatTime(currentTime)} / {formatTime(effectiveDuration)}
           </div>
@@ -563,8 +615,8 @@ export default function EditPointWaveformReview({
       </div>
 
       <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--border)]">
-        <div className="min-w-[860px]">
-          <div className="grid grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+        <div className="min-w-[940px]">
+          <div className="grid grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
             <div>Play</div>
             <div>Set</div>
@@ -572,92 +624,107 @@ export default function EditPointWaveformReview({
             <div>Nudge</div>
             <div>Confidence</div>
             <div>Source</div>
+            <div>Delete</div>
           </div>
 
-          {sortedMarkers.map((marker) => {
-            const selected = marker.id === selectedMarkerId;
+          {sortedMarkers.length === 0 ? (
+            <div className="px-3 py-5 text-xs text-[var(--text-secondary)]">
+              No edit points yet. Use the add buttons above to create markers at the current playhead time.
+            </div>
+          ) : (
+            sortedMarkers.map((marker) => {
+              const selected = marker.id === selectedMarkerId;
 
-            return (
-              <div
-                key={marker.id}
-                className={`grid grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
-                  selected ? "bg-[var(--bg-hover)]" : ""
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => setSelectedMarkerId(marker.id)}
-                  className="min-w-0 text-left"
+              return (
+                <div
+                  key={marker.id}
+                  className={`grid grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs last:border-b-0 ${
+                    selected ? "bg-[var(--bg-hover)]" : ""
+                  }`}
                 >
-                  <div className="truncate font-medium text-[var(--text-primary)]">
-                    {marker.label}
-                  </div>
-                  <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
-                    {marker.type}
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedMarkerId(marker.id);
-                    playFromTime(marker.time);
-                  }}
-                  aria-label={`Play from ${marker.label}`}
-                  className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                >
-                  <PlayIconSmall size={12} />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setMarkerToPlayhead(marker.id)}
-                  className="h-7 w-fit rounded-full border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                >
-                  Set to playhead
-                </button>
-
-                <input
-                  type="text"
-                  value={formatTime(marker.time)}
-                  onFocus={() => setSelectedMarkerId(marker.id)}
-                  onChange={(event) => {
-                    const parsed = parseTimeInput(event.target.value);
-
-                    if (parsed == null) return;
-
-                    updatePointTime(marker.id, parsed);
-                  }}
-                  className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
-                />
-
-                <div className="flex items-center gap-1">
                   <button
                     type="button"
-                    onClick={() => nudgeMarker(marker.id, -0.1)}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    onClick={() => setSelectedMarkerId(marker.id)}
+                    className="min-w-0 text-left"
                   >
-                    -
+                    <div className="truncate font-medium text-[var(--text-primary)]">
+                      {marker.label}
+                    </div>
+                    <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                      {marker.type}
+                    </div>
                   </button>
+
                   <button
                     type="button"
-                    onClick={() => nudgeMarker(marker.id, 0.1)}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    onClick={() => {
+                      setSelectedMarkerId(marker.id);
+                      playFromTime(marker.time);
+                    }}
+                    aria-label={`Play from ${marker.label}`}
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
-                    +
+                    <PlayIconSmall size={12} />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setMarkerToPlayhead(marker.id)}
+                    className="h-7 w-fit rounded-full border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  >
+                    Set to playhead
+                  </button>
+
+                  <input
+                    type="text"
+                    value={formatTime(marker.time)}
+                    onFocus={() => setSelectedMarkerId(marker.id)}
+                    onChange={(event) => {
+                      const parsed = parseTimeInput(event.target.value);
+
+                      if (parsed == null) return;
+
+                      updatePointTime(marker.id, parsed);
+                    }}
+                    className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
+                  />
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => nudgeMarker(marker.id, -0.1)}
+                      className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    >
+                      -
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => nudgeMarker(marker.id, 0.1)}
+                      className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <span className="inline-flex h-8 w-fit items-center rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-[11px] text-[var(--text-secondary)]">
+                    {getConfidenceLabel(marker.confidence)} · {Math.round(marker.confidence * 100)}%
+                  </span>
+
+                  <div className="text-[11px] capitalize text-[var(--text-muted)]">
+                    {marker.source}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => deleteEditPoint(marker.id)}
+                    className="h-7 w-fit rounded-full px-2 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
+                  >
+                    Delete
                   </button>
                 </div>
-
-                <span className="inline-flex h-8 w-fit items-center rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-[11px] text-[var(--text-secondary)]">
-                  {getConfidenceLabel(marker.confidence)} · {Math.round(marker.confidence * 100)}%
-                </span>
-
-                <div className="text-[11px] capitalize text-[var(--text-muted)]">
-                  {marker.source}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
 
