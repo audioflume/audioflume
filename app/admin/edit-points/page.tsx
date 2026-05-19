@@ -44,6 +44,7 @@ function getRecentAnalysisLabel(value?: string) {
 
 export default function AdminEditPointsPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisStartedAt, setAnalysisStartedAt] = useState<number | null>(null);
   const [result, setResult] = useState<BatchAnalyzeResponse | null>(null);
   const [toastMessage, setToastMessage] = useState("");
 
@@ -73,6 +74,7 @@ export default function AdminEditPointsPage() {
 
     try {
       setIsAnalyzing(true);
+      setAnalysisStartedAt(Date.now());
 
       const res = await fetch("/api/admin/songs/batch-analyze-edit-points", {
         method: "POST",
@@ -103,6 +105,7 @@ export default function AdminEditPointsPage() {
       );
     } finally {
       setIsAnalyzing(false);
+      setAnalysisStartedAt(null);
     }
   };
 
@@ -158,6 +161,26 @@ export default function AdminEditPointsPage() {
                 {isAnalyzing ? "Analyzing..." : "Analyze Missing Edit Points"}
               </button>
 
+              {isAnalyzing && (
+                <div className="mt-4 overflow-hidden rounded-full border border-[var(--border)] bg-[var(--bg-primary)]">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--bg-tertiary)]">
+                    <div className="h-full w-1/3 animate-[editPointBatchProgress_1.15s_ease-in-out_infinite] rounded-full bg-[var(--text-primary)] opacity-60" />
+                  </div>
+                  <style>{`
+                    @keyframes editPointBatchProgress {
+                      0% { transform: translateX(-120%); }
+                      100% { transform: translateX(320%); }
+                    }
+                  `}</style>
+                </div>
+              )}
+
+              {analysisStartedAt && isAnalyzing && (
+                <p className="mt-2 text-xs text-[var(--text-secondary)]">
+                  Analyzer is running. Keep this page open until the batch completes.
+                </p>
+              )}
+
               {result && (
                 <div className="mt-5 overflow-hidden rounded-xl border border-[var(--border)]">
                   <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3">
@@ -188,7 +211,7 @@ export default function AdminEditPointsPage() {
                       >
                         <div className="min-w-0">
                           <Link
-                            href={`/admin/songs/${item.songId}/edit-points`}
+                            href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
                             className="truncate font-medium text-[var(--text-primary)] transition hover:text-[var(--text-secondary)]"
                           >
                             {item.title || "Untitled song"}
@@ -209,7 +232,7 @@ export default function AdminEditPointsPage() {
                         </div>
 
                         <Link
-                          href={`/admin/songs/${item.songId}/edit-points`}
+                          href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
                           className="inline-flex h-7 w-fit items-center rounded-full border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                         >
                           Edit Points
