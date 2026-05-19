@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
+import EditPointWaveformReview from "@/components/admin/EditPointWaveformReview";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -24,6 +25,7 @@ type SongRow = {
   artist: string | null;
   audio_url: string | null;
   cover_url: string | null;
+  waveform_peaks: string | null;
   duration: number | null;
   bpm: number | null;
   key: string | null;
@@ -72,15 +74,6 @@ function getTypeLabel(type: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function getMarkerLeft(timeSeconds: number | string, duration: number | null) {
-  const time = Number(timeSeconds);
-
-  if (!duration || !Number.isFinite(duration) || duration <= 0) return 0;
-  if (!Number.isFinite(time)) return 0;
-
-  return Math.max(0, Math.min(100, (time / duration) * 100));
-}
-
 export default async function AdminSongEditPointsPage({ params }: PageProps) {
   const admin = await requireAdmin();
 
@@ -103,7 +96,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
 
   const { data: song, error: songError } = await supabaseServer
     .from("songs")
-    .select("id, title, artist, audio_url, cover_url, duration, bpm, key")
+    .select("id, title, artist, audio_url, cover_url, waveform_peaks, duration, bpm, key")
     .eq("id", id)
     .single();
 
@@ -124,6 +117,14 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
   const typedSong = song as SongRow;
   const typedEditPoints = (editPoints ?? []) as SongEditPointRow[];
   const duration = Number(typedSong.duration ?? 0);
+  const markers = typedEditPoints.map((point) => ({
+    id: point.id,
+    type: point.type,
+    time: Number(point.time_seconds),
+    label: point.label || getTypeLabel(point.type),
+    confidence: getConfidenceValue(point.confidence),
+    source: point.source || "auto",
+  }));
 
   return (
     <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
@@ -142,7 +143,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
             </h1>
 
             <p className="mt-2 text-sm text-[var(--text-secondary)]">
-              Review generated edit-point markers before the draggable waveform editor is added.
+              Review generated edit-point markers, play the song, and jump to detected cues.
             </p>
           </div>
 
@@ -187,40 +188,13 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
           <div className="p-4">
             {typedEditPoints.length > 0 ? (
               <>
-                <div className="mb-4 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <div>
-                      <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                        Timeline Preview
-                      </div>
-                      <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                        Static preview for now. Next step adds playback and draggable markers.
-                      </p>
-                    </div>
-
-                    <div className="text-xs text-[var(--text-secondary)]">
-                      {typedEditPoints.length} marker{typedEditPoints.length === 1 ? "" : "s"}
-                    </div>
-                  </div>
-
-                  <div className="relative h-16 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)]">
-                    <div className="absolute inset-x-0 top-1/2 h-px bg-[var(--border)]" />
-
-                    {typedEditPoints.map((point) => {
-                      const left = getMarkerLeft(point.time_seconds, duration);
-
-                      return (
-                        <div
-                          key={point.id}
-                          className="absolute top-0 h-full w-px bg-[var(--accent)]"
-                          style={{ left: `${left}%` }}
-                          title={`${point.label || getTypeLabel(point.type)} — ${formatTime(point.time_seconds)}`}
-                        >
-                          <div className="absolute left-1/2 top-2 h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--accent)]" />
-                        </div>
-                      );
-                    })}
-                  </div>
+                <div className="mb-4">
+                  <EditPointWaveformReview
+                    audioUrl={typedSong.audio_url}
+                    waveformPeaks={typedSong.waveform_peaks || "[]"}
+                    duration={duration}
+                    markers={markers}
+                  />
                 </div>
 
                 <div className="overflow-hidden rounded-xl border border-[var(--border)]">
