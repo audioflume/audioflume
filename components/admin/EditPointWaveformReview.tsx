@@ -206,7 +206,6 @@ export default function EditPointWaveformReview({
   useEffect(() => {
     setLocalMarkers(markers);
     setSelectedMarkerId(markers[0]?.id ?? "");
-    setSpacebarStartsFromSelected(markers.length > 0);
   }, [markers]);
 
   useEffect(() => {
@@ -308,16 +307,7 @@ export default function EditPointWaveformReview({
   };
 
   const toggleMarkerRow = (markerId: string) => {
-    const isSelected = markerId === selectedMarkerId;
-
-    if (isSelected) {
-      setSelectedMarkerId("");
-      setSpacebarStartsFromSelected(false);
-      return;
-    }
-
-    setSelectedMarkerId(markerId);
-    setSpacebarStartsFromSelected(true);
+    setSelectedMarkerId((current) => (current === markerId ? "" : markerId));
   };
 
   const getTimeFromClientX = (clientX: number) => {
@@ -342,11 +332,7 @@ export default function EditPointWaveformReview({
     setCurrentTime(nextTime);
   };
 
-  const updatePointTime = (
-    markerId: string,
-    time: number,
-    activateMarkerStart = true,
-  ) => {
+  const updatePointTime = (markerId: string, time: number) => {
     const nextTime = clampTime(time, effectiveDuration);
 
     setLocalMarkers((current) =>
@@ -361,9 +347,6 @@ export default function EditPointWaveformReview({
       ),
     );
     setSelectedMarkerId(markerId);
-    if (activateMarkerStart) {
-      setSpacebarStartsFromSelected(true);
-    }
     setSaveMessage("");
   };
 
@@ -380,7 +363,6 @@ export default function EditPointWaveformReview({
 
     setLocalMarkers((current) => [...current, marker]);
     setSelectedMarkerId(marker.id);
-    setSpacebarStartsFromSelected(true);
     setSaveMessage("");
   };
 
@@ -389,23 +371,22 @@ export default function EditPointWaveformReview({
       const next = current.filter((marker) => marker.id !== markerId);
       if (selectedMarkerId === markerId) {
         setSelectedMarkerId(next[0]?.id ?? "");
-        setSpacebarStartsFromSelected(next.length > 0);
       }
       return next;
     });
     setSaveMessage("");
   };
 
-  const nudgeMarker = (markerId: string, amount: number, activateMarkerStart = true) => {
+  const nudgeMarker = (markerId: string, amount: number) => {
     const marker = localMarkers.find((item) => item.id === markerId);
 
     if (!marker) return;
 
-    updatePointTime(markerId, marker.time + amount, activateMarkerStart);
+    updatePointTime(markerId, marker.time + amount);
   };
 
   const setMarkerToPlayhead = (markerId: string) => {
-    updatePointTime(markerId, currentTime, false);
+    updatePointTime(markerId, currentTime);
   };
 
   const saveEditPoints = async () => {
@@ -613,12 +594,10 @@ export default function EditPointWaveformReview({
                   event.stopPropagation();
                   dragStateRef.current = { mode: "point", markerId: marker.id };
                   setSelectedMarkerId(marker.id);
-                  setSpacebarStartsFromSelected(true);
                 }}
                 onClick={(event) => {
                   event.stopPropagation();
                   setSelectedMarkerId(marker.id);
-                  setSpacebarStartsFromSelected(true);
                 }}
                 className="absolute top-0 z-30 h-full w-6 -translate-x-1/2 cursor-ew-resize border-0 bg-transparent p-0"
                 style={{ left: `${Math.max(0, Math.min(100, left))}%` }}
@@ -716,7 +695,7 @@ export default function EditPointWaveformReview({
 
                       if (parsed == null) return;
 
-                      updatePointTime(marker.id, parsed, false);
+                      updatePointTime(marker.id, parsed);
                     }}
                     className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
                   />
@@ -724,14 +703,14 @@ export default function EditPointWaveformReview({
                   <div className="flex items-center gap-1" onClick={(event) => event.stopPropagation()}>
                     <button
                       type="button"
-                      onClick={() => nudgeMarker(marker.id, -0.1, false)}
+                      onClick={() => nudgeMarker(marker.id, -0.1)}
                       className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                     >
                       -
                     </button>
                     <button
                       type="button"
-                      onClick={() => nudgeMarker(marker.id, 0.1, false)}
+                      onClick={() => nudgeMarker(marker.id, 0.1)}
                       className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                     >
                       +
