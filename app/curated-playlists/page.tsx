@@ -14,6 +14,257 @@ type GroupMeta = {
   description: string | null;
 };
 
+function SkeletonBlock({ className = "" }: { className?: string }) {
+  return <span className={`curated-playlist-skeleton-block ${className}`} />;
+}
+
+function CuratedPlaylistCardSkeleton() {
+  return (
+    <div className="curated-playlist-skeleton-card-shell">
+      <div className="curated-playlist-skeleton-card">
+        <div className="curated-playlist-skeleton-top-row">
+          <SkeletonBlock className="curated-playlist-skeleton-circle" />
+        </div>
+
+        <div className="curated-playlist-skeleton-content">
+          <SkeletonBlock className="curated-playlist-skeleton-kicker" />
+          <SkeletonBlock className="curated-playlist-skeleton-title" />
+          <SkeletonBlock className="curated-playlist-skeleton-meta" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CuratedPlaylistShelfSkeleton({ compact = false }: { compact?: boolean }) {
+  const cardCount = compact ? 4 : 5;
+
+  return (
+    <section className="mt-10">
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <div className="min-w-0">
+          <SkeletonBlock className="curated-playlist-skeleton-heading" />
+          <SkeletonBlock className="curated-playlist-skeleton-description" />
+        </div>
+
+        <div className="hidden items-center gap-2 sm:flex">
+          <SkeletonBlock className="curated-playlist-skeleton-control" />
+          <SkeletonBlock className="curated-playlist-skeleton-control" />
+        </div>
+      </div>
+
+      <div className="relative -mx-8 overflow-hidden">
+        <div className="flex gap-3 overflow-hidden pl-8 pr-20">
+          {Array.from({ length: cardCount }).map((_, index) => (
+            <CuratedPlaylistCardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CuratedPlaylistsLoadingSkeleton() {
+  return (
+    <>
+      <style>{`
+        .curated-playlist-skeleton-block {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          border-radius: 999px;
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-subtle);
+        }
+
+        .curated-playlist-skeleton-block::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transform: translateX(-115%);
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            transparent 28%,
+            rgba(255, 255, 255, 0.055) 48%,
+            transparent 72%,
+            transparent 100%
+          );
+          animation: curated-playlist-skeleton-shimmer 2.2s ease-in-out infinite;
+        }
+
+        html.light .curated-playlist-skeleton-block::after {
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            transparent 28%,
+            rgba(0, 0, 0, 0.045) 48%,
+            transparent 72%,
+            transparent 100%
+          );
+        }
+
+        @keyframes curated-playlist-skeleton-shimmer {
+          100% {
+            transform: translateX(115%);
+          }
+        }
+
+        .curated-playlist-skeleton-heading {
+          width: min(220px, 48vw);
+          height: 26px;
+          border-radius: 8px;
+        }
+
+        .curated-playlist-skeleton-description {
+          width: min(360px, 64vw);
+          height: 13px;
+          margin-top: 10px;
+          border-radius: 8px;
+        }
+
+        .curated-playlist-skeleton-control {
+          width: 32px;
+          height: 32px;
+          border-radius: 999px;
+        }
+
+        .curated-playlist-skeleton-card-shell {
+          flex: 0 0 250px;
+          min-width: 250px;
+        }
+
+        @media (min-width: 640px) {
+          .curated-playlist-skeleton-card-shell {
+            flex-basis: 285px;
+            min-width: 285px;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .curated-playlist-skeleton-card-shell {
+            flex-basis: 320px;
+            min-width: 320px;
+          }
+        }
+
+        .curated-playlist-skeleton-card {
+          position: relative;
+          min-height: 210px;
+          overflow: hidden;
+          border-radius: 18px;
+          border: 1px solid var(--border-subtle);
+          background:
+            radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.055), transparent 26%),
+            linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+        }
+
+        html.light .curated-playlist-skeleton-card {
+          background:
+            radial-gradient(circle at 78% 18%, rgba(0, 0, 0, 0.045), transparent 26%),
+            linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+        }
+
+        .curated-playlist-skeleton-card::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transform: translateX(-115%);
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            transparent 30%,
+            rgba(255, 255, 255, 0.045) 50%,
+            transparent 70%,
+            transparent 100%
+          );
+          animation: curated-playlist-skeleton-shimmer 2.4s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        html.light .curated-playlist-skeleton-card::after {
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            transparent 30%,
+            rgba(0, 0, 0, 0.04) 50%,
+            transparent 70%,
+            transparent 100%
+          );
+        }
+
+        .curated-playlist-skeleton-top-row {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          justify-content: flex-end;
+          padding: 16px;
+        }
+
+        .curated-playlist-skeleton-circle {
+          width: 32px;
+          height: 32px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        html.light .curated-playlist-skeleton-circle {
+          background: rgba(0, 0, 0, 0.04);
+          border-color: rgba(0, 0, 0, 0.04);
+        }
+
+        .curated-playlist-skeleton-content {
+          position: absolute;
+          z-index: 2;
+          left: 16px;
+          right: 16px;
+          bottom: 16px;
+        }
+
+        .curated-playlist-skeleton-kicker {
+          width: 44%;
+          height: 9px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .curated-playlist-skeleton-title {
+          width: 78%;
+          height: 24px;
+          margin-top: 12px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .curated-playlist-skeleton-meta {
+          width: 34%;
+          height: 10px;
+          margin-top: 14px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        html.light .curated-playlist-skeleton-kicker,
+        html.light .curated-playlist-skeleton-title,
+        html.light .curated-playlist-skeleton-meta {
+          background: rgba(0, 0, 0, 0.045);
+          border-color: rgba(0, 0, 0, 0.035);
+        }
+      `}</style>
+
+      <div className="mt-8">
+        <CuratedPlaylistShelfSkeleton />
+        <CuratedPlaylistShelfSkeleton compact />
+        <CuratedPlaylistShelfSkeleton />
+      </div>
+    </>
+  );
+}
+
 export default function CuratedPlaylistsPage() {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -82,11 +333,7 @@ export default function CuratedPlaylistsPage() {
             <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">Every collection is hand-picked for a specific mood, tone, or production style — so you can skip the search and go straight to auditioning.</p>
           </div>
 
-          {loading && (
-            <div className="mt-8 grid gap-4">
-              {Array.from({ length: 3 }).map((_, index) => <div key={index} className="h-[260px] animate-pulse rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]" />)}
-            </div>
-          )}
+          {loading && <CuratedPlaylistsLoadingSkeleton />}
           {!loading && error && <div className="mt-8 rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-8 text-[var(--text-secondary)]">{error}</div>}
           {!loading && !error && groupedPlaylists.length === 0 && (
             <div className="mt-8 rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-8 text-[var(--text-secondary)]">
