@@ -249,8 +249,8 @@ export default function Waveform({
                 left: `${left}%`,
                 width: `${width}%`,
                 background: isStrong
-                  ? "var(--edit-point-range-strong)"
-                  : "var(--edit-point-range)",
+                  ? "var(--cue-point-range-strong)"
+                  : "var(--cue-point-range)",
               }}
               title={range.label}
             />
@@ -287,7 +287,7 @@ export default function Waveform({
                 className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full transition-[width,opacity] duration-150 group-hover/edit-point-marker:opacity-100"
                 style={{
                   width: selected ? "2px" : "1.5px",
-                  background: "var(--edit-point-marker)",
+                  background: "var(--cue-point-marker)",
                 }}
               />
 
