@@ -37,7 +37,10 @@
 
   /* Edit points */
   --edit-point-marker: #ddff43;
+  --edit-point-marker-soft: rgba(221, 255, 67, 0.14);
   --edit-point-marker-secondary: #ddff43;
+  --edit-point-marker-active: #fb8f61;
+  --edit-point-marker-active-soft: rgba(251, 143, 97, 0.18);
   --edit-point-range: rgba(221, 255, 67, 0.2);
   --edit-point-range-strong: rgba(251, 143, 97, 0.16);
 
@@ -188,10 +191,13 @@ body.sidebar-collapsed aside[data-sidebar] {
   --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.1);
 
   /* Edit points */
-  --edit-point-marker: #c4e62d;
-  --edit-point-marker-secondary: #c4e62d;
-  --edit-point-range: rgba(155, 179, 0, 0.2);
-  --edit-point-range-strong: rgba(224, 111, 63, 0.14);
+  --edit-point-marker: #fb8f61;
+  --edit-point-marker-soft: rgba(251, 143, 97, 0.16);
+  --edit-point-marker-secondary: #fb8f61;
+  --edit-point-marker-active: #111111;
+  --edit-point-marker-active-soft: rgba(0, 0, 0, 0.16);
+  --edit-point-range: rgba(251, 143, 97, 0.16);
+  --edit-point-range-strong: rgba(251, 143, 97, 0.2);
 }
 
 /* ─── Admin ─────────────────────────── */
