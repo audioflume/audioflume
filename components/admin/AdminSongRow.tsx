@@ -2,7 +2,7 @@
 
 import type { Song } from "@/lib/types";
 import Link from "next/link";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useState } from "react";
 import AdminSongActionsDropdown from "@/components/admin/AdminSongActionsDropdown";
 import CheckIcon from "@/components/icons/CheckIcon";
 import EditIcon from "@/components/icons/EditIcon";
@@ -80,6 +80,21 @@ function StatusChip({ issues }: { issues: string[] }) {
   );
 }
 
+function createGeneratedEditPoints(saved: number) {
+  if (saved <= 0) return '{"markers":[],"ranges":[]}';
+
+  return JSON.stringify({
+    markers: Array.from({ length: saved }, (_, index) => ({
+      id: `pending-${index}`,
+      type: "auto",
+      label: "Auto edit point",
+      time: 0,
+      source: "auto",
+    })),
+    ranges: [],
+  });
+}
+
 export default function AdminSongRow({
   song,
   isLast,
@@ -99,14 +114,27 @@ export default function AdminSongRow({
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAnalyzingEditPoints, setIsAnalyzingEditPoints] = useState(false);
+  const [localEditPoints, setLocalEditPoints] = useState(song.editPoints);
   const { currentSong, isPlaying, togglePlayPause, seekTo } = usePlayer();
+
+  const rowSong = useMemo(
+    () => ({
+      ...song,
+      editPoints: localEditPoints,
+    }),
+    [song, localEditPoints],
+  );
 
   const playerVisible = !!currentSong;
   const isCurrentSong = currentSong?.id === song.id;
   const rowIsPlaying = isCurrentSong && isPlaying;
-  const issues = getSongIssues(song).map((issue) => issue.label);
-  const rowHealth = getSongHealthStatus(song);
-  const onlyAutoEditPoints = songHasOnlyAutoEditPoints(song);
+  const issues = getSongIssues(rowSong).map((issue) => issue.label);
+  const rowHealth = getSongHealthStatus(rowSong);
+  const onlyAutoEditPoints = songHasOnlyAutoEditPoints(rowSong);
+
+  useEffect(() => {
+    setLocalEditPoints(song.editPoints);
+  }, [song.editPoints]);
 
   useEffect(() => {
     const onAnalyzingChange = (event: Event) => {
@@ -120,15 +148,34 @@ export default function AdminSongRow({
       setIsAnalyzingEditPoints(Boolean(customEvent.detail.analyzing));
     };
 
+    const onEditPointsUpdated = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        songId?: string;
+        saved?: number;
+      }>;
+
+      if (customEvent.detail?.songId !== song.id) return;
+
+      setLocalEditPoints(createGeneratedEditPoints(customEvent.detail.saved ?? 0));
+    };
+
     window.addEventListener(
       "admin-song-edit-point-analyzing",
       onAnalyzingChange,
+    );
+    window.addEventListener(
+      "admin-song-edit-points-updated",
+      onEditPointsUpdated,
     );
 
     return () => {
       window.removeEventListener(
         "admin-song-edit-point-analyzing",
         onAnalyzingChange,
+      );
+      window.removeEventListener(
+        "admin-song-edit-points-updated",
+        onEditPointsUpdated,
       );
     };
   }, [song.id]);
@@ -294,7 +341,7 @@ export default function AdminSongRow({
           songId={song.id}
           songTitle={song.title}
           audioUrl={song.audioUrl}
-          song={song}
+          song={rowSong}
           onDeleted={onDeleted}
           placement="bottom-end"
           className="song-more-dropdown"
