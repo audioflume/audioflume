@@ -387,6 +387,15 @@ export default function EditPointWaveformReview({
           border-color: rgba(0, 0, 0, 0.08);
           color: #111111;
         }
+
+        html.light .edit-point-marker-line,
+        html.light .edit-point-marker-dot {
+          background: #fb8f61;
+        }
+
+        html.light .edit-point-marker-dot {
+          box-shadow: 0 0 0 3px rgba(251, 143, 97, 0.16);
+        }
       `}</style>
 
       <audio
@@ -517,14 +526,16 @@ export default function EditPointWaveformReview({
               >
                 <span
                   className={`absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 ${
-                    selected ? "bg-[var(--text-primary)]" : "bg-[var(--accent)]"
+                    selected
+                      ? "bg-[var(--text-primary)]"
+                      : "edit-point-marker-line bg-[var(--accent)]"
                   }`}
                 />
                 <span
                   className={`absolute left-1/2 top-2 h-3 w-3 -translate-x-1/2 rounded-full ${
                     selected
                       ? "bg-[var(--text-primary)] shadow-[0_0_0_3px_rgba(255,255,255,0.16)]"
-                      : "bg-[var(--accent)] shadow-[0_0_0_3px_rgba(221,255,67,0.16)]"
+                      : "edit-point-marker-dot bg-[var(--accent)] shadow-[0_0_0_3px_rgba(221,255,67,0.16)]"
                   }`}
                 />
               </button>
