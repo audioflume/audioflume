@@ -11,8 +11,11 @@ type PageProps = {
 type SongEditPointRow = {
   id: string;
   song_id: string;
+  kind: "point" | "range" | null;
   type: string;
   time_seconds: number | string;
+  start_time_seconds: number | string | null;
+  end_time_seconds: number | string | null;
   label: string | null;
   confidence: number | string | null;
   source: string | null;
@@ -42,14 +45,6 @@ function formatTime(secondsValue: number | string) {
   return `${minutes}:${remainingSeconds.toFixed(2).padStart(5, "0")}`;
 }
 
-function formatSeconds(secondsValue: number | string) {
-  const seconds = Number(secondsValue);
-
-  if (!Number.isFinite(seconds)) return "0.00s";
-
-  return `${seconds.toFixed(2)}s`;
-}
-
 function getConfidenceValue(confidence: number | string | null) {
   const value = Number(confidence ?? 0);
 
@@ -58,17 +53,9 @@ function getConfidenceValue(confidence: number | string | null) {
   return Math.max(0, Math.min(1, value));
 }
 
-function getConfidenceLabel(confidence: number | string | null) {
-  const value = getConfidenceValue(confidence);
-
-  if (value >= 0.75) return "High";
-  if (value >= 0.45) return "Medium";
-  if (value > 0) return "Low";
-
-  return "Unknown";
-}
-
 function getTypeLabel(type: string) {
+  if (type === "drop") return "Main Drop";
+
   return type
     .replaceAll("_", " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
@@ -106,7 +93,9 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
 
   const { data: editPoints, error: editPointsError } = await supabaseServer
     .from("song_edit_points")
-    .select("id, song_id, type, time_seconds, label, confidence, source, created_at")
+    .select(
+      "id, song_id, kind, type, time_seconds, start_time_seconds, end_time_seconds, label, confidence, source, created_at",
+    )
     .eq("song_id", id)
     .order("time_seconds", { ascending: true });
 
@@ -117,14 +106,26 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
   const typedSong = song as SongRow;
   const typedEditPoints = (editPoints ?? []) as SongEditPointRow[];
   const duration = Number(typedSong.duration ?? 0);
-  const markers = typedEditPoints.map((point) => ({
-    id: point.id,
-    type: point.type,
-    time: Number(point.time_seconds),
-    label: point.label || getTypeLabel(point.type),
-    confidence: getConfidenceValue(point.confidence),
-    source: point.source || "auto",
-  }));
+  const markers = typedEditPoints.map((point) => {
+    const kind = point.kind === "range" ? "range" : "point";
+    const time = Number(point.time_seconds);
+    const startTime =
+      point.start_time_seconds == null ? null : Number(point.start_time_seconds);
+    const endTime =
+      point.end_time_seconds == null ? null : Number(point.end_time_seconds);
+
+    return {
+      id: point.id,
+      kind,
+      type: point.type,
+      time,
+      startTime: kind === "range" ? (Number.isFinite(startTime) ? startTime : 0) : null,
+      endTime: kind === "range" ? (Number.isFinite(endTime) ? endTime : time) : null,
+      label: point.label || getTypeLabel(point.type),
+      confidence: getConfidenceValue(point.confidence),
+      source: point.source || "auto",
+    };
+  });
 
   return (
     <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
@@ -143,7 +144,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
             </h1>
 
             <p className="mt-2 text-sm text-[var(--text-secondary)]">
-              Review generated edit-point markers, play the song, and jump to detected cues.
+              Review, drag, and fine-tune generated edit points and ranges.
             </p>
           </div>
 
@@ -187,60 +188,13 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
 
           <div className="p-4">
             {typedEditPoints.length > 0 ? (
-              <>
-                <div className="mb-4">
-                  <EditPointWaveformReview
-                    audioUrl={typedSong.audio_url}
-                    waveformPeaks={typedSong.waveform_peaks || "[]"}
-                    duration={duration}
-                    markers={markers}
-                  />
-                </div>
-
-                <div className="overflow-hidden rounded-xl border border-[var(--border)]">
-                  <div className="grid grid-cols-[minmax(0,1.4fr)_100px_110px_90px] border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                    <div>Marker</div>
-                    <div>Time</div>
-                    <div>Confidence</div>
-                    <div>Source</div>
-                  </div>
-
-                  {typedEditPoints.map((point) => {
-                    const confidence = getConfidenceValue(point.confidence);
-                    const confidenceLabel = getConfidenceLabel(point.confidence);
-
-                    return (
-                      <div
-                        key={point.id}
-                        className="grid grid-cols-[minmax(0,1.4fr)_100px_110px_90px] items-center border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
-                      >
-                        <div className="min-w-0">
-                          <div className="truncate font-medium text-[var(--text-primary)]">
-                            {point.label || getTypeLabel(point.type)}
-                          </div>
-                          <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
-                            {point.type}
-                          </div>
-                        </div>
-
-                        <div className="font-mono text-[12px] text-[var(--text-secondary)]">
-                          {formatSeconds(point.time_seconds)}
-                        </div>
-
-                        <div>
-                          <span className="inline-flex rounded-full border border-[var(--border)] px-2 py-1 text-[11px] text-[var(--text-secondary)]">
-                            {confidenceLabel} · {Math.round(confidence * 100)}%
-                          </span>
-                        </div>
-
-                        <div className="text-[11px] capitalize text-[var(--text-muted)]">
-                          {point.source || "auto"}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
+              <EditPointWaveformReview
+                songId={id}
+                audioUrl={typedSong.audio_url}
+                waveformPeaks={typedSong.waveform_peaks || "[]"}
+                duration={duration}
+                markers={markers}
+              />
             ) : (
               <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] p-8 text-center">
                 <div className="text-sm font-medium text-[var(--text-primary)]">
