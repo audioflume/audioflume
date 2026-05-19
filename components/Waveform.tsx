@@ -282,10 +282,10 @@ export default function Waveform({
               className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2"
               style={{
                 background: selected
-                  ? "var(--edit-point-marker-active)"
+                  ? "var(--edit-point-marker-active, #fb8f61)"
                   : "var(--edit-point-marker)",
                 boxShadow: selected
-                  ? "0 0 0 2px var(--edit-point-marker-active-soft)"
+                  ? "0 0 0 2px var(--edit-point-marker-active-soft, rgba(251,143,97,0.18))"
                   : "none",
               }}
             />
