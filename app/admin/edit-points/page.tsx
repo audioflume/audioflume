@@ -120,7 +120,7 @@ export default function AdminEditPointsPage() {
               Edit Points
             </h1>
 
-            <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
+            <p className="mt-2 max-w-[620px] text-xs leading-5 text-[var(--text-secondary)]">
               Batch analyze missing edit points and review analyzer results before building frontend edit-point filters.
             </p>
           </div>
@@ -139,7 +139,7 @@ export default function AdminEditPointsPage() {
               <h2 className="mt-2 text-lg font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                 Analyze songs missing edit points
               </h2>
-              <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+              <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
                 This only targets songs that still have no saved edit-point rows. Corrected songs are left alone.
               </p>
             </div>
@@ -252,7 +252,7 @@ export default function AdminEditPointsPage() {
             <h2 className="mt-2 text-base font-medium text-[var(--text-primary)]">
               Fill the catalog
             </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
               Auto-generated edit points are useful, but they should still be reviewed. Songs with only auto edit points now show an Auto indicator in the admin library.
             </p>
 
