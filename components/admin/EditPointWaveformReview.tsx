@@ -488,13 +488,13 @@ export default function EditPointWaveformReview({
           background: rgba(0, 0, 0, 0.022);
         }
 
-        html.light .edit-point-marker-line,
-        html.light .edit-point-marker-dot {
-          background: #fb8f61;
+        .edit-point-marker-line,
+        .edit-point-marker-dot {
+          background: var(--edit-point-marker);
         }
 
-        html.light .edit-point-marker-dot {
-          box-shadow: 0 0 0 3px rgba(251, 143, 97, 0.16);
+        .edit-point-marker-dot {
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--edit-point-marker) 16%, transparent);
         }
 
         html.light .edit-point-selected-dot {
@@ -644,16 +644,14 @@ export default function EditPointWaveformReview({
               >
                 <span
                   className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 ${
-                    selected
-                      ? "bg-[var(--text-primary)]"
-                      : "edit-point-marker-line bg-[var(--accent)]"
+                    selected ? "bg-[var(--text-primary)]" : "edit-point-marker-line"
                   }`}
                 />
                 <span
                   className={`absolute left-1/2 top-2 h-3 w-3 -translate-x-1/2 rounded-full ${
                     selected
                       ? "edit-point-selected-dot bg-[var(--text-primary)] shadow-[0_0_0_3px_rgba(255,255,255,0.16)]"
-                      : "edit-point-marker-dot bg-[var(--accent)] shadow-[0_0_0_3px_rgba(221,255,67,0.16)]"
+                      : "edit-point-marker-dot"
                   }`}
                 />
               </button>
