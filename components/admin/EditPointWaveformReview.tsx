@@ -469,7 +469,7 @@ export default function EditPointWaveformReview({
         onPlay={() => setIsPlaying(true)}
       />
 
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             Waveform Review
@@ -480,17 +480,6 @@ export default function EditPointWaveformReview({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {missingTypes.map((option) => (
-            <button
-              key={option.type}
-              type="button"
-              onClick={() => addEditPoint(option.type, option.label)}
-              className="h-8 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-            >
-              + {option.label}
-            </button>
-          ))}
-
           <div className="font-mono text-xs text-[var(--text-secondary)]">
             {formatTime(currentTime)} / {formatTime(effectiveDuration)}
           </div>
@@ -505,6 +494,21 @@ export default function EditPointWaveformReview({
           </button>
         </div>
       </div>
+
+      {missingTypes.length > 0 && (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          {missingTypes.map((option) => (
+            <button
+              key={option.type}
+              type="button"
+              onClick={() => addEditPoint(option.type, option.label)}
+              className="h-8 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+            >
+              + {option.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="grid gap-3 md:grid-cols-[42px_minmax(0,1fr)] md:items-center">
         <div className="flex flex-col items-center gap-1.5">
