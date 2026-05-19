@@ -1,3 +1,7 @@
+import {
+  getStoredEditPointMarkerVisibility,
+  setStoredEditPointMarkerVisibility,
+} from "@/lib/editPointMarkerVisibility";
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
 import { useEffect, useState } from "react";
 
@@ -38,32 +42,10 @@ const baseDefaultState: FilterState = {
   selectedPlaylist: null,
 };
 
-function getInitialMarkerVisibility() {
-  if (typeof window === "undefined") return true;
-
-  for (let i = 0; i < window.sessionStorage.length; i += 1) {
-    const key = window.sessionStorage.key(i);
-
-    if (!key?.startsWith("filmwave-music-filters")) continue;
-
-    try {
-      const parsed = JSON.parse(window.sessionStorage.getItem(key) || "{}");
-
-      if (typeof parsed.showEditPointMarkers === "boolean") {
-        return parsed.showEditPointMarkers;
-      }
-    } catch {
-      // Ignore malformed storage values.
-    }
-  }
-
-  return true;
-}
-
 function getDefaultState(): FilterState {
   return {
     ...baseDefaultState,
-    showEditPointMarkers: getInitialMarkerVisibility(),
+    showEditPointMarkers: getStoredEditPointMarkerVisibility(),
   };
 }
 
@@ -85,10 +67,7 @@ function normalizeFilterState(parsed: Record<string, unknown>): FilterState {
     selectedEditPoints: Array.isArray(parsed.selectedEditPoints)
       ? parsed.selectedEditPoints
       : [],
-    showEditPointMarkers:
-      typeof parsed.showEditPointMarkers === "boolean"
-        ? parsed.showEditPointMarkers
-        : true,
+    showEditPointMarkers: getStoredEditPointMarkerVisibility(),
     instrumental:
       typeof parsed.instrumental === "boolean" ? parsed.instrumental : false,
     bpmValue: (parsed.bpmValue as BpmFilterValue | null) ?? null,
@@ -142,12 +121,13 @@ export function useFilterPersistence({
     }
   }, [authLoaded, storageKey]);
 
-  // Persist to sessionStorage whenever filters change
+  // Persist to storage whenever filters change
   useEffect(() => {
     if (!hydrated) return;
     if (!storageKey) return;
     if (hydratedKey !== storageKey) return;
 
+    setStoredEditPointMarkerVisibility(filters.showEditPointMarkers);
     sessionStorage.setItem(storageKey, JSON.stringify(filters));
   }, [hydrated, hydratedKey, storageKey, filters]);
 
