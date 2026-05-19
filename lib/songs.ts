@@ -129,8 +129,6 @@ async function attachEditPoints(songs: Song[]) {
   return songs.map((song) => {
     const rows = editPointsBySongId.get(song.id) ?? [];
 
-    if (rows.length === 0) return song;
-
     return {
       ...song,
       editPoints: editPointRowsToJson(rows),
