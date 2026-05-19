@@ -621,9 +621,13 @@ export default function EditPointWaveformReview({
           min-width: 0;
         }
 
+        .cue-point-table-shell {
+          clip-path: inset(0 round 0.75rem);
+        }
+
         @media (max-width: 1180px) {
           .cue-point-row-grid {
-            grid-template-columns: minmax(0, 1fr) 30px 58px 82px 58px 44px 40px;
+            grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 44px 40px;
             column-gap: 0.5rem;
           }
         }
@@ -640,6 +644,16 @@ export default function EditPointWaveformReview({
 
           .cue-point-review-controls {
             justify-content: flex-start;
+          }
+        }
+
+        @media (max-width: 860px) {
+          .cue-point-row-grid {
+            grid-template-columns: minmax(0, 1fr) 30px 44px 82px 58px 40px;
+          }
+
+          .cue-point-source-column {
+            display: none;
           }
         }
       `}</style>
@@ -828,7 +842,7 @@ export default function EditPointWaveformReview({
         </div>
       </div>
 
-      <div className="mt-4 overflow-visible rounded-xl border border-[var(--border)]">
+      <div className="cue-point-table-shell mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
         <div>
           <div className="cue-point-row-grid border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
@@ -836,7 +850,7 @@ export default function EditPointWaveformReview({
             <div>Set</div>
             <div>Time</div>
             <div>Nudge</div>
-            <div>Src</div>
+            <div className="cue-point-source-column">Src</div>
             <div></div>
           </div>
 
@@ -922,7 +936,7 @@ export default function EditPointWaveformReview({
                     </button>
                   </div>
 
-                  <div className="truncate text-[11px] capitalize text-[var(--text-muted)]">
+                  <div className="cue-point-source-column truncate text-[11px] capitalize text-[var(--text-muted)]">
                     {marker.source}
                   </div>
 
