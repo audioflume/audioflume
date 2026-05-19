@@ -615,13 +615,13 @@ export default function EditPointWaveformReview({
           display: grid;
           grid-template-columns:
             minmax(0, 1fr)
-            clamp(30px, 4.2cqw, 34px)
-            clamp(106px, 13.5cqw, 128px)
-            clamp(100px, 12.5cqw, 116px)
-            clamp(68px, 8.2cqw, 76px)
-            clamp(76px, 9.4cqw, 92px)
-            clamp(28px, 3.8cqw, 32px);
-          column-gap: clamp(0.55rem, 1.1cqw, 0.85rem);
+            clamp(30px, 4.1cqw, 34px)
+            clamp(118px, 13.4cqw, 132px)
+            clamp(112px, 12.8cqw, 128px)
+            clamp(76px, 8.3cqw, 84px)
+            clamp(82px, 9.4cqw, 96px)
+            clamp(30px, 3.6cqw, 34px);
+          column-gap: clamp(0.75rem, 1.05cqw, 0.95rem);
           align-items: center;
         }
 
@@ -630,11 +630,7 @@ export default function EditPointWaveformReview({
         }
 
         .cue-point-row-grid > :nth-child(n + 2) {
-          justify-self: start;
-        }
-
-        .cue-point-row-grid > :last-child {
-          justify-self: end;
+          justify-self: center;
         }
 
         .cue-point-table-shell {
@@ -644,7 +640,7 @@ export default function EditPointWaveformReview({
 
         .cue-point-delete-button {
           color: var(--text-muted);
-          opacity: 0.68;
+          opacity: 0.58;
         }
 
         .cue-point-delete-button:hover {
@@ -667,6 +663,7 @@ export default function EditPointWaveformReview({
               58px
               clamp(56px, 11cqw, 68px)
               30px;
+            column-gap: clamp(0.5rem, 1.3cqw, 0.7rem);
           }
         }
 
@@ -980,7 +977,7 @@ export default function EditPointWaveformReview({
                     </button>
                   </div>
 
-                  <div className="cue-point-source-column truncate text-[11px] capitalize text-[var(--text-muted)]">
+                  <div className="cue-point-source-column truncate text-center text-[11px] capitalize text-[var(--text-muted)]">
                     {marker.source}
                   </div>
 
@@ -992,7 +989,7 @@ export default function EditPointWaveformReview({
                     }}
                     aria-label={`Delete ${marker.label}`}
                     title={`Delete ${marker.label}`}
-                    className="cue-point-delete-button flex h-7 w-7 items-center justify-center justify-self-end rounded-full transition"
+                    className="cue-point-delete-button flex h-7 w-7 items-center justify-center rounded-full transition"
                   >
                     <TrashIcon size={13} />
                   </button>
