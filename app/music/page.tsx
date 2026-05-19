@@ -77,33 +77,12 @@ const DURATION_TAG_OPTIONS = [
   "4:00+",
 ];
 
-const BPM_TAG_OPTIONS: { label: string; value: BpmFilterValue }[] = [
-  { label: "Under 80", value: { mode: "range", low: 1, high: 80, exact: 1 } },
-  { label: "80 - 100", value: { mode: "range", low: 80, high: 100, exact: 1 } },
-  { label: "100 - 120", value: { mode: "range", low: 100, high: 120, exact: 1 } },
-  { label: "120 - 140", value: { mode: "range", low: 120, high: 140, exact: 1 } },
-  { label: "140+", value: { mode: "range", low: 140, high: 300, exact: 1 } },
-];
-
-const KEY_TAG_OPTIONS = [
-  "C",
-  "C#",
-  "Db",
-  "D",
-  "D#",
-  "Eb",
-  "E",
-  "F",
-  "F#",
-  "Gb",
-  "G",
-  "G#",
-  "Ab",
-  "A",
-  "A#",
-  "Bb",
-  "B",
-];
+const BPM_MIN = 1;
+const BPM_MAX = 300;
+const BPM_PRESETS = [80, 105, 120, 140];
+const KEY_SHARP_ACCIDENTALS = ["C#", "D#", null, "F#", "G#", "A#"];
+const KEY_FLAT_ACCIDENTALS = ["Db", "Eb", null, "Gb", "Ab", "Bb"];
+const KEY_NATURALS = ["C", "D", "E", "F", "G", "A", "B"];
 
 function getSongIdentityValues(song: unknown) {
   const record = getRecord(song);
@@ -243,18 +222,27 @@ function shuffleSongList<T>(songs: T[]) {
   return bestShuffle;
 }
 
-function bpmValuesMatch(a: BpmFilterValue | null, b: BpmFilterValue) {
-  return (
-    !!a &&
-    a.mode === b.mode &&
-    a.low === b.low &&
-    a.high === b.high &&
-    a.exact === b.exact
-  );
+function getAccidentalModeFromNote(note: string | null) {
+  if (!note) return "sharp";
+  return note.includes("b") ? "flat" : "sharp";
 }
 
-function keyValuesMatch(a: KeyFilterValue | null, b: KeyFilterValue) {
-  return !!a && a.note === b.note && a.scale === b.scale;
+function formatScaleLabel(scale: KeyFilterValue extends infer T ? never : never) {
+  return scale;
+}
+
+function DownArrowIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M4 6L8 10L12 6"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 function MusicTagFilterPanel({
@@ -266,6 +254,10 @@ function MusicTagFilterPanel({
   onClearActiveCategory,
   shuffleActive,
   onShuffle,
+  bpmValue,
+  onBpmChange,
+  keyValue,
+  onKeyChange,
 }: {
   categories: TagFilterCategory[];
   activeCategoryId: TagFilterCategoryId | null;
@@ -275,22 +267,364 @@ function MusicTagFilterPanel({
   onClearActiveCategory: () => void;
   shuffleActive: boolean;
   onShuffle: () => void;
+  bpmValue: BpmFilterValue | null;
+  onBpmChange: (value: BpmFilterValue | null) => void;
+  keyValue: KeyFilterValue | null;
+  onKeyChange: (value: KeyFilterValue | null) => void;
 }) {
   const activeCategory =
     categories.find((category) => category.id === activeCategoryId) || null;
+  const [bpmMode, setBpmMode] = useState<"range" | "exact">(bpmValue?.mode || "range");
+  const [bpmLow, setBpmLow] = useState(bpmValue?.low || BPM_MIN);
+  const [bpmHigh, setBpmHigh] = useState(bpmValue?.high || BPM_MAX);
+  const [bpmExact, setBpmExact] = useState(bpmValue?.exact || BPM_MIN);
+  const [keyAccidental, setKeyAccidental] = useState<"sharp" | "flat">(
+    getAccidentalModeFromNote(keyValue?.note ?? null),
+  );
+
+  useEffect(() => {
+    setBpmMode(bpmValue?.mode || "range");
+    setBpmLow(bpmValue?.low || BPM_MIN);
+    setBpmHigh(bpmValue?.high || BPM_MAX);
+    setBpmExact(bpmValue?.exact || BPM_MIN);
+  }, [bpmValue]);
+
+  useEffect(() => {
+    if (keyValue?.note) setKeyAccidental(getAccidentalModeFromNote(keyValue.note));
+  }, [keyValue]);
+
+  function applyBpmRange(nextLow = bpmLow, nextHigh = bpmHigh) {
+    if (nextLow === BPM_MIN && nextHigh === BPM_MAX) {
+      onBpmChange(null);
+      return;
+    }
+
+    onBpmChange({ mode: "range", low: nextLow, high: nextHigh, exact: bpmExact });
+  }
+
+  function applyBpmExact(nextExact = bpmExact) {
+    if (nextExact === BPM_MIN) {
+      onBpmChange(null);
+      return;
+    }
+
+    onBpmChange({ mode: "exact", low: bpmLow, high: bpmHigh, exact: nextExact });
+  }
+
+  function clearBpm() {
+    setBpmLow(BPM_MIN);
+    setBpmHigh(BPM_MAX);
+    setBpmExact(BPM_MIN);
+    onBpmChange(null);
+  }
+
+  function clearKey() {
+    onKeyChange(null);
+  }
+
+  function toggleKeyNote(note: string) {
+    if (keyValue?.note === note) {
+      onKeyChange(null);
+      return;
+    }
+
+    onKeyChange({ note, scale: keyValue?.scale ?? null });
+  }
+
+  function toggleKeyScale(scale: "major" | "minor") {
+    if (!keyValue?.note) return;
+
+    onKeyChange({
+      note: keyValue.note,
+      scale: keyValue.scale === scale ? null : scale,
+    });
+  }
+
+  const renderTagPanel = () => {
+    if (!activeCategory) return null;
+
+    if (activeCategory.id === "bpm") {
+      const isExact = bpmMode === "exact";
+
+      return (
+        <div className="w-[320px] p-3">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <div className="grid flex-1 grid-cols-2 gap-1.5 rounded-lg bg-[var(--bg-primary)] p-1">
+              {(["range", "exact"] as const).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setBpmMode(mode)}
+                  className={`h-7 rounded-md text-[11px] font-medium capitalize transition ${
+                    bpmMode === mode
+                      ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {mode}
+                </button>
+              ))}
+            </div>
+
+            {bpmValue && (
+              <button
+                type="button"
+                onClick={clearBpm}
+                className="text-[11px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {isExact ? (
+            <label className="block">
+              <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                Exact BPM
+              </div>
+              <input
+                type="number"
+                value={bpmExact}
+                min={BPM_MIN}
+                max={BPM_MAX}
+                onChange={(event) => setBpmExact(Number(event.target.value))}
+                onBlur={() => applyBpmExact()}
+                className="h-8 w-full rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-xs outline-none"
+              />
+              <input
+                type="range"
+                value={bpmExact}
+                min={BPM_MIN}
+                max={BPM_MAX}
+                onChange={(event) => {
+                  const next = Number(event.target.value);
+                  setBpmExact(next);
+                  onBpmChange({ mode: "exact", low: bpmLow, high: bpmHigh, exact: next });
+                }}
+                className="mt-4 w-full accent-[var(--text-primary)]"
+              />
+            </label>
+          ) : (
+            <div>
+              <div className="grid grid-cols-2 gap-2">
+                <label>
+                  <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                    Low
+                  </div>
+                  <input
+                    type="number"
+                    value={bpmLow}
+                    min={BPM_MIN}
+                    max={BPM_MAX}
+                    onChange={(event) => setBpmLow(Number(event.target.value))}
+                    onBlur={() => applyBpmRange()}
+                    className="h-8 w-full rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-xs outline-none"
+                  />
+                </label>
+                <label>
+                  <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                    High
+                  </div>
+                  <input
+                    type="number"
+                    value={bpmHigh}
+                    min={BPM_MIN}
+                    max={BPM_MAX}
+                    onChange={(event) => setBpmHigh(Number(event.target.value))}
+                    onBlur={() => applyBpmRange()}
+                    className="h-8 w-full rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-xs outline-none"
+                  />
+                </label>
+              </div>
+              <div className="mt-4 grid gap-2">
+                <input
+                  type="range"
+                  value={bpmLow}
+                  min={BPM_MIN}
+                  max={BPM_MAX}
+                  onChange={(event) => {
+                    const next = Math.min(Number(event.target.value), bpmHigh - 1);
+                    setBpmLow(next);
+                    onBpmChange({ mode: "range", low: next, high: bpmHigh, exact: bpmExact });
+                  }}
+                  className="w-full accent-[var(--text-primary)]"
+                />
+                <input
+                  type="range"
+                  value={bpmHigh}
+                  min={BPM_MIN}
+                  max={BPM_MAX}
+                  onChange={(event) => {
+                    const next = Math.max(Number(event.target.value), bpmLow + 1);
+                    setBpmHigh(next);
+                    onBpmChange({ mode: "range", low: bpmLow, high: next, exact: bpmExact });
+                  }}
+                  className="w-full accent-[var(--text-primary)]"
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="mt-3 grid grid-cols-4 gap-1.5">
+            {BPM_PRESETS.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => {
+                  setBpmMode("exact");
+                  setBpmExact(preset);
+                  onBpmChange({ mode: "exact", low: bpmLow, high: bpmHigh, exact: preset });
+                }}
+                className={`h-8 rounded-md border text-xs font-medium transition ${
+                  bpmValue?.mode === "exact" && bpmValue.exact === preset
+                    ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                    : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                {preset}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (activeCategory.id === "key") {
+      const accidentals = keyAccidental === "sharp" ? KEY_SHARP_ACCIDENTALS : KEY_FLAT_ACCIDENTALS;
+
+      return (
+        <div className="w-[320px] p-3">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <div className="grid flex-1 grid-cols-2 gap-1.5 rounded-lg bg-[var(--bg-primary)] p-1">
+              {(["sharp", "flat"] as const).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setKeyAccidental(mode)}
+                  className={`h-7 rounded-md text-[11px] font-medium capitalize transition ${
+                    keyAccidental === mode
+                      ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {mode === "sharp" ? "Sharp" : "Flat"}
+                </button>
+              ))}
+            </div>
+
+            {keyValue && (
+              <button
+                type="button"
+                onClick={clearKey}
+                className="text-[11px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          <div className="grid translate-x-[18px] grid-cols-7 gap-1.5">
+            {accidentals.map((note, index) =>
+              note === null ? (
+                <div key={`spacer-${index}`} className="h-8" />
+              ) : (
+                <button
+                  key={note}
+                  type="button"
+                  onClick={() => toggleKeyNote(note)}
+                  className={`h-8 rounded-md border text-xs font-medium transition ${
+                    keyValue?.note === note
+                      ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                      : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {note}
+                </button>
+              ),
+            )}
+          </div>
+
+          <div className="mt-1.5 grid grid-cols-7 gap-1.5">
+            {KEY_NATURALS.map((note) => (
+              <button
+                key={note}
+                type="button"
+                onClick={() => toggleKeyNote(note)}
+                className={`h-8 rounded-md border text-xs font-medium transition ${
+                  keyValue?.note === note
+                    ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                    : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                {note}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-3 grid grid-cols-2 gap-1.5">
+            {(["major", "minor"] as const).map((scale) => (
+              <button
+                key={scale}
+                type="button"
+                onClick={() => toggleKeyScale(scale)}
+                disabled={!keyValue?.note}
+                className={`h-8 rounded-md border text-xs font-medium capitalize transition disabled:cursor-default disabled:opacity-35 ${
+                  keyValue?.scale === scale
+                    ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                    : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                {scale}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="max-h-[220px] overflow-y-auto px-7 py-3">
+        <div className="flex flex-wrap gap-1.5">
+          {activeCategory.options.map((option) => (
+            <button
+              key={option.label}
+              type="button"
+              onClick={option.onToggle}
+              className={`flex min-h-7 items-center gap-1.5 rounded-none px-2.5 text-xs font-medium transition ${
+                option.active
+                  ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                  : "bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:bg-[var(--bg-hover-strong)]"
+              }`}
+            >
+              <span>{option.label}</span>
+              <span
+                className={
+                  option.active
+                    ? "text-[var(--bg-primary)]/60"
+                    : "text-[var(--text-secondary)]"
+                }
+              >
+                {option.count}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="-mx-7 border-t border-b border-[var(--border)]">
-      <div className="flex min-h-[54px] items-center gap-1 overflow-x-auto px-7 py-2">
+    <div className="relative -mx-7 border-t border-b border-[var(--border)]">
+      <div className="flex h-12 items-center gap-1 overflow-x-auto px-7">
         <button
           type="button"
           onClick={() => onActiveCategoryChange(activeCategoryId ? null : "genres")}
-          className="mr-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+          className="mr-2 flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
           aria-label={activeCategory ? "Collapse filters" : "Expand filters"}
         >
           <svg
-            width="15"
-            height="15"
+            width="13"
+            height="13"
             viewBox="0 0 24 24"
             fill="none"
             aria-hidden="true"
@@ -314,27 +648,20 @@ function MusicTagFilterPanel({
             <button
               key={category.id}
               type="button"
-              onClick={() =>
-                onActiveCategoryChange(selected ? null : category.id)
-              }
-              className={`flex h-9 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-medium transition ${
+              onClick={() => onActiveCategoryChange(selected ? null : category.id)}
+              className={`flex h-12 shrink-0 items-center gap-1.5 border-b-2 px-2.5 text-[13px] font-medium transition ${
                 selected
-                  ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                  : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  ? "border-[var(--text-primary)] text-[var(--text-primary)]"
+                  : "border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
               <span>{category.label}</span>
               {hasActive && (
-                <span
-                  className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] ${
-                    selected
-                      ? "bg-[var(--bg-primary)]/15 text-[var(--bg-primary)]"
-                      : "bg-[var(--bg-elevated)] text-[var(--text-primary)]"
-                  }`}
-                >
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--bg-elevated)] px-1 text-[9px] text-[var(--text-primary)]">
                   {category.activeCount}
                 </span>
               )}
+              <DownArrowIcon />
             </button>
           );
         })}
@@ -342,10 +669,10 @@ function MusicTagFilterPanel({
         <button
           type="button"
           onClick={onToggleMarkers}
-          className={`ml-1 flex h-9 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-medium transition ${
+          className={`ml-1 flex h-12 shrink-0 items-center gap-1.5 border-b-2 px-2.5 text-[13px] font-medium transition ${
             showEditPointMarkers
-              ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-              : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+              ? "border-[var(--text-primary)] text-[var(--text-primary)]"
+              : "border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
           }`}
           aria-pressed={showEditPointMarkers}
         >
@@ -356,7 +683,7 @@ function MusicTagFilterPanel({
         <button
           type="button"
           onClick={onShuffle}
-          className={`${iconButtonClass} ml-auto shrink-0 ${
+          className={`${iconButtonClass} ml-auto h-8 w-8 shrink-0 ${
             shuffleActive
               ? "bg-[var(--bg-secondary)] text-[var(--text-primary)]"
               : ""
@@ -366,8 +693,8 @@ function MusicTagFilterPanel({
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="14"
+            height="14"
             fill="currentColor"
             viewBox="0 0 16 16"
             aria-hidden="true"
@@ -382,48 +709,20 @@ function MusicTagFilterPanel({
       </div>
 
       {activeCategory && (
-        <div className="border-t border-[var(--border)] px-7 py-4">
-          <div className="mb-3 flex items-center justify-between gap-4">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-              {activeCategory.label}
-            </div>
-
-            {activeCategory.activeCount > 0 && (
+        <div className="absolute left-0 right-0 top-full z-[95] border-b border-[var(--border)] bg-[var(--bg-primary)] shadow-[var(--shadow-ui)]">
+          <div className="flex justify-end px-7 pt-2">
+            {activeCategory.activeCount > 0 && activeCategory.id !== "bpm" && activeCategory.id !== "key" && (
               <button
                 type="button"
                 onClick={onClearActiveCategory}
-                className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+                className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
               >
                 Clear
               </button>
             )}
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
-            {activeCategory.options.map((option) => (
-              <button
-                key={option.label}
-                type="button"
-                onClick={option.onToggle}
-                className={`flex min-h-9 items-center gap-2 rounded-none px-3 text-sm font-medium transition ${
-                  option.active
-                    ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                    : "bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:bg-[var(--bg-hover-strong)]"
-                }`}
-              >
-                <span>{option.label}</span>
-                <span
-                  className={
-                    option.active
-                      ? "text-[var(--bg-primary)]/65"
-                      : "text-[var(--text-secondary)]"
-                  }
-                >
-                  {option.count}
-                </span>
-              </button>
-            ))}
-          </div>
+          {renderTagPanel()}
         </div>
       )}
     </div>
@@ -494,7 +793,7 @@ export default function MusicPage() {
     useState<Set<string> | null>(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
   const [activeFilterCategory, setActiveFilterCategory] =
-    useState<TagFilterCategoryId | null>("genres");
+    useState<TagFilterCategoryId | null>(null);
 
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
   const shuffleActive = shuffleOrderIds !== null;
@@ -668,10 +967,6 @@ export default function MusicPage() {
       onToggle: () => onChange(toggleMultiValue(selected, option)),
     }));
 
-  const cuePointLabelByType = new Map(
-    EDIT_POINT_FILTER_OPTIONS.map((option) => [option.type, option.label]),
-  );
-
   const filterCategories: TagFilterCategory[] = [
     {
       id: "moods",
@@ -735,30 +1030,13 @@ export default function MusicPage() {
       id: "bpm",
       label: "BPM",
       activeCount: bpmValue ? 1 : 0,
-      options: BPM_TAG_OPTIONS.map((option) => ({
-        label: option.label,
-        count: songs.filter((song) => matchesBpmFilter(song.bpm, option.value))
-          .length,
-        active: bpmValuesMatch(bpmValue, option.value),
-        onToggle: () =>
-          setBpmValue(bpmValuesMatch(bpmValue, option.value) ? null : option.value),
-      })),
+      options: [],
     },
     {
       id: "key",
       label: "Key",
       activeCount: keyValue ? 1 : 0,
-      options: KEY_TAG_OPTIONS.map((note) => {
-        const value = { note, scale: null };
-
-        return {
-          label: note,
-          count: songs.filter((song) => matchesKeyFilter(song.key, value)).length,
-          active: keyValuesMatch(keyValue, value),
-          onToggle: () =>
-            setKeyValue(keyValuesMatch(keyValue, value) ? null : value),
-        };
-      }),
+      options: [],
     },
     {
       id: "instruments",
@@ -829,10 +1107,10 @@ export default function MusicPage() {
       <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
         <div className="sticky top-[56px] z-[90] flex w-full flex-col gap-0 bg-[var(--bg-primary)] px-7 pt-0 pb-0">
           <div
-            className="flex cursor-text items-center gap-3"
+            className="flex h-12 cursor-text items-center gap-3"
             onClick={() => searchInputRef.current?.focus()}
           >
-            <div className="flex w-[320px] flex-shrink-0 items-center gap-2 py-3 pr-4">
+            <div className="flex w-[320px] flex-shrink-0 items-center gap-2 pr-4">
               <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
 
               <input
@@ -908,6 +1186,10 @@ export default function MusicPage() {
                 shuffledSongs.map((song, index) => getSongStableId(song, index)),
               );
             }}
+            bpmValue={bpmValue}
+            onBpmChange={setBpmValue}
+            keyValue={keyValue}
+            onKeyChange={setKeyValue}
           />
         </div>
 
