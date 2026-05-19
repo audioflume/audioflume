@@ -357,6 +357,7 @@ export default function EditPointWaveformReview({
       ),
     );
     setSelectedMarkerId(markerId);
+    setSpacebarStartsFromSelected(true);
     setSaveMessage("");
   };
 
@@ -606,10 +607,12 @@ export default function EditPointWaveformReview({
                   event.stopPropagation();
                   dragStateRef.current = { mode: "point", markerId: marker.id };
                   setSelectedMarkerId(marker.id);
+                  setSpacebarStartsFromSelected(true);
                 }}
                 onClick={(event) => {
                   event.stopPropagation();
                   setSelectedMarkerId(marker.id);
+                  setSpacebarStartsFromSelected(true);
                 }}
                 className="absolute top-0 z-30 h-full w-6 -translate-x-1/2 cursor-ew-resize border-0 bg-transparent p-0"
                 style={{ left: `${Math.max(0, Math.min(100, left))}%` }}
@@ -660,7 +663,7 @@ export default function EditPointWaveformReview({
                 <div
                   key={marker.id}
                   onClick={() => toggleMarkerRow(marker.id)}
-                  className={`grid cursor-pointer select-none grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 hover:bg-[var(--bg-hover)] ${
+                  className={`grid cursor-pointer select-none grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 ${
                     selected ? "bg-[var(--bg-hover)]" : ""
                   }`}
                 >
