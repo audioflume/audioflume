@@ -448,7 +448,7 @@ export default function MusicPlayer() {
     <>
       <div
         ref={playerRef}
-        className="fixed bottom-0 left-0 right-0 z-[45] grid h-[72px] items-center justify-between border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4"
+        className="fixed bottom-0 left-0 right-0 z-[45] grid h-[72px] items-center justify-between overflow-visible border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4"
         style={{
           gridTemplateColumns,
           columnGap: `${mainGap}px`,
@@ -517,14 +517,14 @@ export default function MusicPlayer() {
 
         {(showWaveform || showCompactTime) && (
           <div
-            className="relative z-10 flex min-w-0 items-center justify-center overflow-hidden"
+            className="relative z-10 flex min-w-0 items-center justify-center overflow-visible"
             style={{
               marginLeft: `${controlsToProgressGap - mainGap}px`,
               marginRight: `${progressToMetaGap - mainGap}px`,
             }}
           >
             {showWaveform ? (
-              <div className="flex w-full min-w-0 items-center gap-4 overflow-hidden">
+              <div className="flex w-full min-w-0 items-center gap-4 overflow-visible">
                 <span className="w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]">
                   {formatTime(currentTime)}
                 </span>
@@ -561,8 +561,8 @@ export default function MusicPlayer() {
                           );
                         }}
                       >
-                        <span className="absolute left-1/2 top-0 h-full w-[1.5px] -translate-x-1/2 rounded-full bg-[var(--edit-point-marker)] shadow-[0_0_0_1px_var(--edit-point-marker-soft)]" />
-                        <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-40 flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/player-cue-point:translate-y-0 group-hover/player-cue-point:opacity-100">
+                        <span className="absolute left-1/2 top-0 h-full w-[1.5px] -translate-x-1/2 rounded-full bg-[var(--edit-point-marker)]" />
+                        <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-[80] flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/player-cue-point:translate-y-0 group-hover/player-cue-point:opacity-100">
                           {label} · {formatEditPointTime(marker.time)}
                         </span>
                       </button>
