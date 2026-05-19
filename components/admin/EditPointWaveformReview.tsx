@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import RefreshIcon from "@/components/icons/RefreshIcon";
 
 type EditPointMarker = {
   id: string;
@@ -19,6 +20,12 @@ type EditPointWaveformReviewProps = {
   waveformPeaks: string;
   duration: number;
   markers: EditPointMarker[];
+  showSaveButton?: boolean;
+  saveVersion?: number;
+  onChange?: (value: string) => void;
+  onDirtyChange?: (dirty: boolean) => void;
+  onReAnalyze?: () => Promise<void> | void;
+  isReAnalyzing?: boolean;
 };
 
 type DragState =
@@ -31,6 +38,15 @@ const EDIT_POINT_TYPES = [
   { type: "break", label: "Break" },
   { type: "button_ending", label: "Button ending" },
 ];
+
+const MARKER_DESCRIPTIONS: Record<string, string> = {
+  first_hit: "First meaningful musical entrance or clear usable hit.",
+  drop: "Strongest energy transition or main section.",
+  break: "Reduced-energy section, reset, or breathing point.",
+  button_ending: "Clean ending hit, button, or final accent.",
+};
+
+const EMPTY_CUE_POINTS_JSON = '{"markers":[],"ranges":[]}';
 
 function LoopMarkerIcon({ size = 12 }: { size?: number }) {
   return (
@@ -167,8 +183,32 @@ function getConfidenceLabel(confidence: number) {
   return "Unknown";
 }
 
+function getMarkerDescription(type: string) {
+  return MARKER_DESCRIPTIONS[type] || "Cue point marker.";
+}
+
 function createLocalMarkerId(type: string) {
   return `manual-${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function normalizeMarkersForCompare(markers: EditPointMarker[]) {
+  return markers
+    .map((marker) => ({
+      id: marker.id,
+      type: marker.type,
+      time: Number(Number(marker.time).toFixed(2)),
+      label: marker.label,
+      confidence: Number(Number(marker.confidence || 0).toFixed(4)),
+      source: marker.source,
+    }))
+    .sort((a, b) => a.time - b.time || a.type.localeCompare(b.type));
+}
+
+function serializeMarkers(markers: EditPointMarker[]) {
+  return JSON.stringify({
+    markers: normalizeMarkersForCompare(markers),
+    ranges: [],
+  });
 }
 
 export default function EditPointWaveformReview({
@@ -177,6 +217,12 @@ export default function EditPointWaveformReview({
   waveformPeaks,
   duration,
   markers,
+  showSaveButton = true,
+  saveVersion = 0,
+  onChange,
+  onDirtyChange,
+  onReAnalyze,
+  isReAnalyzing = false,
 }: EditPointWaveformReviewProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timelineRef = useRef<HTMLDivElement | null>(null);
@@ -185,6 +231,7 @@ export default function EditPointWaveformReview({
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [localMarkers, setLocalMarkers] = useState(markers);
+  const [baselineMarkers, setBaselineMarkers] = useState(markers);
   const [selectedMarkerId, setSelectedMarkerId] = useState(markers[0]?.id ?? "");
   const [spacebarStartsFromSelected, setSpacebarStartsFromSelected] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -196,7 +243,9 @@ export default function EditPointWaveformReview({
 
   const effectiveDuration = duration > 0 ? duration : audioRef.current?.duration || 0;
   const progress = effectiveDuration > 0 ? (currentTime / effectiveDuration) * 100 : 0;
-  const hasChanges = JSON.stringify(markers) !== JSON.stringify(localMarkers);
+  const hasChanges =
+    JSON.stringify(normalizeMarkersForCompare(baselineMarkers)) !==
+    JSON.stringify(normalizeMarkersForCompare(localMarkers));
   const sortedMarkers = [...localMarkers].sort((a, b) => a.time - b.time);
   const selectedMarker = localMarkers.find((marker) => marker.id === selectedMarkerId);
   const missingTypes = EDIT_POINT_TYPES.filter(
@@ -217,8 +266,33 @@ export default function EditPointWaveformReview({
 
   useEffect(() => {
     setLocalMarkers(markers);
+    setBaselineMarkers(markers);
     setSelectedMarkerId(markers[0]?.id ?? "");
   }, [markers]);
+
+  useEffect(() => {
+    setBaselineMarkers(localMarkers);
+    onDirtyChange?.(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saveVersion]);
+
+  useEffect(() => {
+    onChange?.(localMarkers.length ? serializeMarkers(localMarkers) : EMPTY_CUE_POINTS_JSON);
+    onDirtyChange?.(hasChanges);
+  }, [localMarkers, hasChanges, onChange, onDirtyChange]);
+
+  useEffect(() => {
+    if (!hasChanges) return;
+
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", onBeforeUnload);
+
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [hasChanges]);
 
   useEffect(() => {
     return () => {
@@ -380,6 +454,7 @@ export default function EditPointWaveformReview({
           ? {
               ...marker,
               time: Number(nextTime.toFixed(2)),
+              confidence: 1,
               source: marker.source === "manual" ? "manual" : "corrected",
             }
           : marker,
@@ -453,13 +528,15 @@ export default function EditPointWaveformReview({
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data?.error || "Failed to save edit points");
+        throw new Error(data?.error || "Failed to save cue points");
       }
 
-      setSaveMessage(`Saved ${data.saved ?? localMarkers.length} edit points.`);
+      setBaselineMarkers(localMarkers);
+      onDirtyChange?.(false);
+      setSaveMessage(`Saved ${data.saved ?? localMarkers.length} cue points.`);
     } catch (err) {
       setSaveMessage(
-        err instanceof Error ? err.message : "Failed to save edit points.",
+        err instanceof Error ? err.message : "Failed to save cue points.",
       );
     } finally {
       setIsSaving(false);
@@ -488,17 +565,27 @@ export default function EditPointWaveformReview({
           background: rgba(0, 0, 0, 0.022);
         }
 
-        .edit-point-marker-line,
-        .edit-point-marker-dot {
-          background: var(--edit-point-marker);
+        .cue-point-marker-line,
+        .cue-point-marker-dot {
+          background: var(--cue-point-marker);
         }
 
-        .edit-point-marker-dot {
-          box-shadow: 0 0 0 3px color-mix(in srgb, var(--edit-point-marker) 16%, transparent);
+        .cue-point-marker-dot {
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--cue-point-marker) 16%, transparent);
         }
 
         html.light .edit-point-selected-dot {
           box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.14);
+        }
+
+        .cue-point-row-grid {
+          grid-template-columns: minmax(150px, 1fr) 42px 118px 108px 78px 68px 58px;
+        }
+
+        @media (max-width: 1180px) {
+          .cue-point-row-grid {
+            grid-template-columns: minmax(124px, 1fr) 34px 104px 92px 62px 56px 48px;
+          }
         }
       `}</style>
 
@@ -519,8 +606,13 @@ export default function EditPointWaveformReview({
             Waveform Review
           </div>
           <p className="mt-1 text-xs text-[var(--text-secondary)]">
-            Spacebar toggles playback. Drag points, drag the playhead, or set a marker to the current playhead time.
+            Spacebar toggles playback. Drag cue points, drag the playhead, or set a marker to the current playhead time.
           </p>
+          {hasChanges && (
+            <p className="mt-1 text-[11px] font-medium text-[var(--status-warning)]">
+              Unsaved cue point changes
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -528,14 +620,32 @@ export default function EditPointWaveformReview({
             {formatTime(currentTime)} / {formatTime(effectiveDuration)}
           </div>
 
-          <button
-            type="button"
-            onClick={saveEditPoints}
-            disabled={isSaving || !hasChanges}
-            className="h-8 rounded-full border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
-          >
-            {isSaving ? "Saving..." : "Save Edit Points"}
-          </button>
+          {onReAnalyze && (
+            <button
+              type="button"
+              onClick={() => onReAnalyze()}
+              disabled={isReAnalyzing || isSaving}
+              className="flex h-8 items-center gap-2 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+            >
+              {isReAnalyzing ? (
+                <span className="h-3 w-3 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
+              ) : (
+                <RefreshIcon />
+              )}
+              Re-analyze
+            </button>
+          )}
+
+          {showSaveButton && (
+            <button
+              type="button"
+              onClick={saveEditPoints}
+              disabled={isSaving || !hasChanges}
+              className="h-8 rounded-full border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+            >
+              {isSaving ? "Saving..." : "Save Cue Points"}
+            </button>
+          )}
         </div>
       </div>
 
@@ -546,6 +656,7 @@ export default function EditPointWaveformReview({
               key={option.type}
               type="button"
               onClick={() => addEditPoint(option.type, option.label)}
+              title={getMarkerDescription(option.type)}
               className="h-8 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
             >
               + {option.label}
@@ -576,7 +687,7 @@ export default function EditPointWaveformReview({
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
             }`}
-            title="When active, pressing space to resume playback starts from the selected edit point."
+            title="When active, pressing space to resume playback starts from the selected cue point."
           >
             <LoopMarkerIcon size={12} />
           </button>
@@ -640,18 +751,18 @@ export default function EditPointWaveformReview({
                 }}
                 className="absolute top-0 z-30 h-full w-6 -translate-x-1/2 cursor-ew-resize border-0 bg-transparent p-0"
                 style={{ left: `${Math.max(0, Math.min(100, left))}%` }}
-                title={`${marker.label} — ${formatTime(marker.time)}`}
+                title={`${marker.label} — ${formatTime(marker.time)} · ${getMarkerDescription(marker.type)}`}
               >
                 <span
                   className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 ${
-                    selected ? "bg-[var(--text-primary)]" : "edit-point-marker-line"
+                    selected ? "bg-[var(--text-primary)]" : "cue-point-marker-line"
                   }`}
                 />
                 <span
                   className={`absolute left-1/2 top-2 h-3 w-3 -translate-x-1/2 rounded-full ${
                     selected
                       ? "edit-point-selected-dot bg-[var(--text-primary)] shadow-[0_0_0_3px_rgba(255,255,255,0.16)]"
-                      : "edit-point-marker-dot"
+                      : "cue-point-marker-dot"
                   }`}
                 />
               </button>
@@ -660,41 +771,41 @@ export default function EditPointWaveformReview({
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--border)]">
-        <div className="min-w-[940px]">
-          <div className="grid grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+      <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
+        <div>
+          <div className="cue-point-row-grid grid border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
             <div>Play</div>
             <div>Set</div>
             <div>Time</div>
             <div>Nudge</div>
-            <div>Confidence</div>
             <div>Source</div>
             <div>Delete</div>
           </div>
 
           {sortedMarkers.length === 0 ? (
             <div className="px-3 py-5 text-xs text-[var(--text-secondary)]">
-              No edit points yet. Use the add buttons above to create markers at the current playhead time.
+              No cue points yet. Use the add buttons above to create markers at the current playhead time.
             </div>
           ) : (
             sortedMarkers.map((marker) => {
               const selected = marker.id === selectedMarkerId;
+              const confidenceLabel = `${getConfidenceLabel(marker.confidence)} · ${Math.round(marker.confidence * 100)}%`;
 
               return (
                 <div
                   key={marker.id}
                   onClick={() => toggleMarkerRow(marker.id)}
-                  className={`grid cursor-pointer select-none grid-cols-[minmax(0,1fr)_54px_130px_120px_120px_110px_90px_72px] items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 ${
+                  className={`cue-point-row-grid grid cursor-pointer select-none items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 ${
                     selected ? "bg-[var(--bg-hover)]" : ""
                   }`}
                 >
-                  <div className="min-w-0 text-left">
+                  <div className="min-w-0 text-left" title={getMarkerDescription(marker.type)}>
                     <div className="truncate font-medium text-[var(--text-primary)]">
                       {marker.label}
                     </div>
                     <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
-                      {marker.type}
+                      {confidenceLabel}
                     </div>
                   </div>
 
@@ -717,9 +828,9 @@ export default function EditPointWaveformReview({
                       event.stopPropagation();
                       setMarkerToPlayhead(marker.id);
                     }}
-                    className="h-7 w-fit rounded-full border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="h-7 w-fit rounded-full border border-[var(--border)] px-2.5 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
-                    Set to playhead
+                    Set<span className="hidden min-[980px]:inline"> to playhead</span>
                   </button>
 
                   <input
@@ -734,7 +845,7 @@ export default function EditPointWaveformReview({
 
                       updatePointTime(marker.id, parsed);
                     }}
-                    className="h-8 w-24 rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
+                    className="h-8 w-[84px] rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)] min-[1180px]:w-24"
                   />
 
                   <div className="flex items-center gap-1" onClick={(event) => event.stopPropagation()}>
@@ -754,11 +865,7 @@ export default function EditPointWaveformReview({
                     </button>
                   </div>
 
-                  <span className="inline-flex h-8 w-fit items-center rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-[11px] text-[var(--text-secondary)]">
-                    {getConfidenceLabel(marker.confidence)} · {Math.round(marker.confidence * 100)}%
-                  </span>
-
-                  <div className="text-[11px] capitalize text-[var(--text-muted)]">
+                  <div className="truncate text-[11px] capitalize text-[var(--text-muted)]">
                     {marker.source}
                   </div>
 
@@ -768,7 +875,7 @@ export default function EditPointWaveformReview({
                       event.stopPropagation();
                       deleteEditPoint(marker.id);
                     }}
-                    className="h-7 w-fit rounded-full px-2 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
+                    className="h-7 w-fit rounded-full px-1.5 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
                   >
                     Delete
                   </button>
