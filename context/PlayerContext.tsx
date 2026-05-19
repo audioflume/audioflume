@@ -38,6 +38,7 @@ type PlayerContextType = {
 const PlayerContext = createContext<PlayerContextType | null>(null);
 
 const PLAYER_STORAGE_KEY = "filmwave-player-state";
+const CLOSE_PLAYER_EVENT = "filmwave:close-player";
 
 function isInterruptedPlayError(err: unknown) {
   if (!(err instanceof DOMException)) return false;
@@ -461,6 +462,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     window.localStorage.removeItem(PLAYER_STORAGE_KEY);
   }, []);
+
+  useEffect(() => {
+    window.addEventListener(CLOSE_PLAYER_EVENT, closePlayer);
+
+    return () => {
+      window.removeEventListener(CLOSE_PLAYER_EVENT, closePlayer);
+    };
+  }, [closePlayer]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
