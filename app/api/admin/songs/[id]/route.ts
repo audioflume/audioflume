@@ -37,6 +37,15 @@ type SongEditPointRow = {
   source: string | null;
 };
 
+type EditPointJsonMarker = {
+  id?: string;
+  type?: string;
+  time?: number | string;
+  label?: string;
+  confidence?: number | string;
+  source?: string;
+};
+
 function durationToSeconds(duration: string) {
   const trimmed = duration.trim();
 
@@ -129,6 +138,71 @@ function generatedEditPointsToJson(rows: SongEditPointRow[] = []) {
   });
 }
 
+function clampConfidence(value: unknown) {
+  const numeric = Number(value ?? 0);
+
+  if (!Number.isFinite(numeric)) return null;
+
+  return Math.max(0, Math.min(1, numeric));
+}
+
+function cleanSource(value: unknown) {
+  const source = String(value || "").trim();
+
+  if (source === "auto") return "auto";
+  if (source === "manual") return "manual";
+  if (source === "corrected") return "corrected";
+
+  return "manual";
+}
+
+function parseEditPointRowsFromJson(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) return [];
+
+  try {
+    const parsed = JSON.parse(trimmed);
+    const markers = Array.isArray(parsed?.markers) ? parsed.markers : [];
+
+    return markers.flatMap((marker: EditPointJsonMarker) => {
+      const time = Number(marker.time);
+      const type = String(marker.type || "").trim();
+
+      if (!type || !Number.isFinite(time) || time < 0) return [];
+
+      return [
+        {
+          type,
+          time_seconds: Number(time.toFixed(2)),
+          label: String(marker.label || type).trim(),
+          confidence: clampConfidence(marker.confidence),
+          source: cleanSource(marker.source),
+        },
+      ];
+    });
+  } catch {
+    return [];
+  }
+}
+
+async function syncEditPointRows(songId: string, editPointsJson: string) {
+  const rows = parseEditPointRowsFromJson(editPointsJson);
+
+  await supabaseServer.from("song_edit_points").delete().eq("song_id", songId);
+
+  if (rows.length === 0) return;
+
+  const { error } = await supabaseServer.from("song_edit_points").insert(
+    rows.map((row) => ({
+      song_id: songId,
+      ...row,
+    })),
+  );
+
+  if (error) throw error;
+}
+
 export async function GET(_req: Request, context: RouteContext) {
   const admin = await requireAdmin();
 
@@ -210,6 +284,7 @@ export async function PATCH(req: Request, context: RouteContext) {
     }
 
     const payload = (await req.json()) as SaveSongPayload;
+    const nextEditPointsJson = payload.editPoints?.trim() || emptyEditPointsJson();
 
     const { data: current, error: fetchError } = await supabaseServer
       .from("songs")
@@ -261,13 +336,15 @@ export async function PATCH(req: Request, context: RouteContext) {
         builds: cleanStringArray(payload.builds),
         vocals: cleanStringArray(payload.vocals),
         instrumental: Boolean(payload.instrumental),
-        edit_points: payload.editPoints || emptyEditPointsJson(),
+        edit_points: nextEditPointsJson,
       })
       .eq("id", id)
       .select()
       .single();
 
     if (error) throw error;
+
+    await syncEditPointRows(id, nextEditPointsJson);
 
     if (keysToDelete.length > 0) {
       await deleteFilesFromR2(keysToDelete);
