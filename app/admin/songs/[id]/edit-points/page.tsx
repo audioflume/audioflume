@@ -6,6 +6,7 @@ import EditPointWaveformReview from "@/components/admin/EditPointWaveformReview"
 
 type PageProps = {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ from?: string }>;
 };
 
 type SongEditPointRow = {
@@ -58,7 +59,28 @@ function getTypeLabel(type: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-export default async function AdminSongEditPointsPage({ params }: PageProps) {
+function getBackLink(songId: string, from?: string) {
+  if (from === "edit-details") {
+    return {
+      href: `/admin/songs/${songId}/edit`,
+      label: "← Edit Details",
+    };
+  }
+
+  if (from === "edit-points") {
+    return {
+      href: "/admin/edit-points",
+      label: "← Edit Points",
+    };
+  }
+
+  return {
+    href: "/admin/music-library",
+    label: "← Music Library",
+  };
+}
+
+export default async function AdminSongEditPointsPage({ params, searchParams }: PageProps) {
   const admin = await requireAdmin();
 
   if (!admin.isAdmin) {
@@ -77,6 +99,8 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
   }
 
   const { id } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const backLink = getBackLink(id, resolvedSearchParams.from);
 
   const { data: song, error: songError } = await supabaseServer
     .from("songs")
@@ -119,10 +143,10 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
         <div className="mb-8 flex items-end justify-between gap-4">
           <div className="min-w-0">
             <Link
-              href="/admin/music-library"
+              href={backLink.href}
               className="mb-5 inline-flex text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
             >
-              ← Music Library
+              {backLink.label}
             </Link>
 
             <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
@@ -173,24 +197,13 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
           </div>
 
           <div className="p-4">
-            {typedEditPoints.length > 0 ? (
-              <EditPointWaveformReview
-                songId={id}
-                audioUrl={typedSong.audio_url}
-                waveformPeaks={typedSong.waveform_peaks || "[]"}
-                duration={duration}
-                markers={markers}
-              />
-            ) : (
-              <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] p-8 text-center">
-                <div className="text-sm font-medium text-[var(--text-primary)]">
-                  No generated edit points yet
-                </div>
-                <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-[var(--text-secondary)]">
-                  Go back to the music library, open this song’s dropdown, and run Analyze Edit Points.
-                </p>
-              </div>
-            )}
+            <EditPointWaveformReview
+              songId={id}
+              audioUrl={typedSong.audio_url}
+              waveformPeaks={typedSong.waveform_peaks || "[]"}
+              duration={duration}
+              markers={markers}
+            />
           </div>
         </section>
       </div>
