@@ -615,13 +615,13 @@ export default function EditPointWaveformReview({
           display: grid;
           grid-template-columns:
             minmax(0, 1fr)
-            clamp(30px, 4.3cqw, 34px)
-            clamp(44px, 16.5cqw, 128px)
-            clamp(82px, 13.8cqw, 108px)
-            clamp(58px, 8.4cqw, 66px)
-            clamp(42px, 11.5cqw, 88px)
-            clamp(30px, 4.8cqw, 34px);
-          column-gap: clamp(0.45rem, 1.05cqw, 0.7rem);
+            clamp(30px, 4.2cqw, 34px)
+            clamp(106px, 13.5cqw, 128px)
+            clamp(100px, 12.5cqw, 116px)
+            clamp(68px, 8.2cqw, 76px)
+            clamp(76px, 9.4cqw, 92px)
+            clamp(28px, 3.8cqw, 32px);
+          column-gap: clamp(0.55rem, 1.1cqw, 0.85rem);
           align-items: center;
         }
 
@@ -629,14 +629,44 @@ export default function EditPointWaveformReview({
           min-width: 0;
         }
 
+        .cue-point-row-grid > :nth-child(n + 2) {
+          justify-self: start;
+        }
+
+        .cue-point-row-grid > :last-child {
+          justify-self: end;
+        }
+
         .cue-point-table-shell {
           container-type: inline-size;
           clip-path: inset(0 round 0.75rem);
         }
 
+        .cue-point-delete-button {
+          color: var(--text-muted);
+          opacity: 0.68;
+        }
+
+        .cue-point-delete-button:hover {
+          background: var(--status-error-soft, rgba(220, 88, 79, 0.12));
+          color: var(--status-error, #dc584f);
+          opacity: 1;
+        }
+
         @container (max-width: 620px) {
           .cue-point-set-full-label {
             display: none;
+          }
+
+          .cue-point-row-grid {
+            grid-template-columns:
+              minmax(0, 1fr)
+              clamp(28px, 5cqw, 30px)
+              44px
+              clamp(78px, 15cqw, 88px)
+              58px
+              clamp(56px, 11cqw, 68px)
+              30px;
           }
         }
 
@@ -648,7 +678,7 @@ export default function EditPointWaveformReview({
               44px
               clamp(78px, 15cqw, 82px)
               58px
-              32px;
+              30px;
           }
 
           .cue-point-source-column {
@@ -962,7 +992,7 @@ export default function EditPointWaveformReview({
                     }}
                     aria-label={`Delete ${marker.label}`}
                     title={`Delete ${marker.label}`}
-                    className="flex h-7 w-7 items-center justify-center justify-self-end rounded-full text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
+                    className="cue-point-delete-button flex h-7 w-7 items-center justify-center justify-self-end rounded-full transition"
                   >
                     <TrashIcon size={13} />
                   </button>
