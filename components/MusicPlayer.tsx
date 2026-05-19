@@ -11,6 +11,10 @@ import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import {
+  CUE_POINT_FILTER_SELECTION_EVENT,
+  getStoredCuePointFilterSelection,
+} from "@/lib/cuePointFilterSelection";
+import {
   EDIT_POINT_MARKER_VISIBILITY_EVENT,
   getStoredEditPointMarkerVisibility,
 } from "@/lib/editPointMarkerVisibility";
@@ -234,6 +238,9 @@ export default function MusicPlayer() {
   const [showEditPointMarkers, setShowEditPointMarkers] = useState(() =>
     getStoredEditPointMarkerVisibility(),
   );
+  const [selectedCuePointTypes, setSelectedCuePointTypes] = useState<string[]>(
+    () => getStoredCuePointFilterSelection(),
+  );
   const [moreMenuPosition, setMoreMenuPosition] = useState({
     top: 0,
     left: 0,
@@ -252,6 +259,11 @@ export default function MusicPlayer() {
     [currentSong],
   );
   const visibleCuePoints = showEditPointMarkers ? cuePoints : [];
+  const selectedCuePointTypeSet = useMemo(
+    () => new Set(selectedCuePointTypes),
+    [selectedCuePointTypes],
+  );
+  const hasSelectedCuePointTypes = selectedCuePointTypeSet.size > 0;
   const previousCuePoint = useMemo(
     () => getAdjacentCuePoint(visibleCuePoints, currentTime, "previous"),
     [visibleCuePoints, currentTime],
@@ -350,6 +362,34 @@ export default function MusicPlayer() {
         syncMarkerVisibility,
       );
       window.removeEventListener("storage", syncMarkerVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    const syncCuePointFilterSelection = (event?: Event) => {
+      const customEvent = event as CustomEvent<{ selectedTypes?: string[] }>;
+      const selectedTypes = customEvent?.detail?.selectedTypes;
+
+      setSelectedCuePointTypes(
+        Array.isArray(selectedTypes)
+          ? selectedTypes
+          : getStoredCuePointFilterSelection(),
+      );
+    };
+
+    syncCuePointFilterSelection();
+    window.addEventListener(
+      CUE_POINT_FILTER_SELECTION_EVENT,
+      syncCuePointFilterSelection,
+    );
+    window.addEventListener("storage", syncCuePointFilterSelection);
+
+    return () => {
+      window.removeEventListener(
+        CUE_POINT_FILTER_SELECTION_EVENT,
+        syncCuePointFilterSelection,
+      );
+      window.removeEventListener("storage", syncCuePointFilterSelection);
     };
   }, []);
 
@@ -641,7 +681,10 @@ export default function MusicPlayer() {
                   onClick={handleWaveformClick}
                 >
                   {visibleCuePoints.map((marker) => {
-                    const label = getCueLabel(marker);
+                    const markerType = getMarkerType(marker);
+                    const label = marker.label || getEditPointFilterLabel(markerType);
+                    const selected = selectedCuePointTypeSet.has(markerType);
+                    const dimmed = hasSelectedCuePointTypes && !selected;
                     const progressValue = currentSong.duration
                       ? marker.time / currentSong.duration
                       : 0;
@@ -654,7 +697,7 @@ export default function MusicPlayer() {
                         title={`${label} · ${formatEditPointTime(marker.time)}`}
                         aria-label={`Jump to ${label}`}
                         className="group/player-cue-point absolute top-1/2 z-30 h-[34px] w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
-                        style={{ left: `${left}%` }}
+                        style={{ left: `${left}%`, opacity: dimmed ? 0.3 : 1 }}
                         onClick={(event) => {
                           event.preventDefault();
                           event.stopPropagation();
