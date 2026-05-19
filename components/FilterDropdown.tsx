@@ -29,7 +29,7 @@ type FilterDropdownProps = {
   optionSections?: FilterOptionSection[];
 };
 
-function getDefaultSections(label: string, options: string[]) {
+function getDefaultSections(label: string, options: string[]): FilterOptionSection[] {
   if (label !== "Edit Point") return [{ options }];
 
   const cuePointOptions = ["First Hit", "Main Drop", "Break", "Button Ending"];
@@ -58,7 +58,7 @@ export default function FilterDropdown({
 }: FilterDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const sections =
+  const sections: FilterOptionSection[] =
     optionSections && optionSections.length > 0
       ? optionSections
       : getDefaultSections(label, options);
