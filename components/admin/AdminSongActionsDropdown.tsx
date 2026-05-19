@@ -53,6 +53,7 @@ export default function AdminSongActionsDropdown({
   showDelete = true,
 }: AdminSongActionsDropdownProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
 
   const copyAudioUrl = async () => {
@@ -60,6 +61,33 @@ export default function AdminSongActionsDropdown({
 
     await navigator.clipboard.writeText(audioUrl);
     onOpenChange(false);
+  };
+
+  const analyzeEditPoints = async () => {
+    if (!audioUrl || isAnalyzing) return;
+
+    try {
+      setIsAnalyzing(true);
+
+      const res = await fetch(`/api/admin/songs/${songId}/analyze-edit-points`, {
+        method: "POST",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to analyze edit points");
+      }
+
+      onOpenChange(false);
+      window.alert(`Saved ${data.saved ?? 0} edit points for "${songTitle}".`);
+    } catch (err) {
+      window.alert(
+        err instanceof Error ? err.message : "Failed to analyze edit points",
+      );
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const deleteSong = async () => {
@@ -102,64 +130,72 @@ export default function AdminSongActionsDropdown({
   return (
     <>
       <DropdownShell
-      open={open}
-      onOpenChange={onOpenChange}
-      placement={placement}
-      strategy={strategy}
-      usePortal={usePortal}
-      className={className}
-      offsetAmount={offsetAmount}
-      flippedOffsetAmount={flippedOffsetAmount}
-      collisionPadding={collisionPadding}
-      trigger={trigger}
-    >
-      <Link
-        href={`/admin/songs/${songId}/edit`}
-        onClick={() => onOpenChange(false)}
+        open={open}
+        onOpenChange={onOpenChange}
+        placement={placement}
+        strategy={strategy}
+        usePortal={usePortal}
+        className={className}
+        offsetAmount={offsetAmount}
+        flippedOffsetAmount={flippedOffsetAmount}
+        collisionPadding={collisionPadding}
+        trigger={trigger}
       >
-        Edit Details
-      </Link>
-
-      {audioUrl ? (
-        <a
-          href={audioUrl}
-          target="_blank"
-          rel="noreferrer"
+        <Link
+          href={`/admin/songs/${songId}/edit`}
           onClick={() => onOpenChange(false)}
         >
-          Open Audio
-        </a>
-      ) : (
-        <button type="button" disabled>
-          Open Audio
+          Edit Details
+        </Link>
+
+        {audioUrl ? (
+          <a
+            href={audioUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => onOpenChange(false)}
+          >
+            Open Audio
+          </a>
+        ) : (
+          <button type="button" disabled>
+            Open Audio
+          </button>
+        )}
+
+        <button type="button" onClick={copyAudioUrl} disabled={!audioUrl}>
+          Copy Audio URL
         </button>
-      )}
 
-      <button type="button" onClick={copyAudioUrl} disabled={!audioUrl}>
-        Copy Audio URL
-      </button>
-
-      <button
-        type="button"
-        onClick={() => {
-          onOpenChange(false);
-          setPlaylistModalOpen(true);
-        }}
-        disabled={!song}
-      >
-        Add to Playlist
-      </button>
-
-      {showDelete && (
         <button
           type="button"
-          onClick={deleteSong}
-          disabled={isDeleting}
-          className="danger-hover"
+          onClick={analyzeEditPoints}
+          disabled={!audioUrl || isAnalyzing}
         >
-          {isDeleting ? "Deleting..." : "Delete Song"}
+          {isAnalyzing ? "Analyzing..." : "Analyze Edit Points"}
         </button>
-      )}
+
+        <button
+          type="button"
+          onClick={() => {
+            onOpenChange(false);
+            setPlaylistModalOpen(true);
+          }}
+          disabled={!song}
+        >
+          Add to Playlist
+        </button>
+
+        {showDelete && (
+          <button
+            type="button"
+            onClick={deleteSong}
+            disabled={isDeleting}
+            className="danger-hover"
+          >
+            {isDeleting ? "Deleting..." : "Delete Song"}
+          </button>
+        )}
       </DropdownShell>
 
       <AdminAddToPlaylistModal
