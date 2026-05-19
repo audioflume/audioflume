@@ -221,6 +221,29 @@ export default function EditPointWaveformReview({
   }, [markers]);
 
   useEffect(() => {
+    return () => {
+      const audio = audioRef.current;
+
+      if (!audio) return;
+
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+      audioRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (!audio) return;
+
+    audio.pause();
+    setIsPlaying(false);
+    setCurrentTime(0);
+  }, [songId, audioUrl]);
+
+  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       const tagName = target?.tagName?.toLowerCase();
