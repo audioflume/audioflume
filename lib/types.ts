@@ -1,3 +1,24 @@
+export type EditPointMarker = {
+  id: string;
+  label: string;
+  time: number;
+  type?: string;
+  confidence?: number;
+  source?: string;
+};
+
+export type EditPointRange = {
+  id: string;
+  label: string;
+  start: number;
+  end: number;
+};
+
+export type EditPoints = {
+  markers?: EditPointMarker[];
+  ranges?: EditPointRange[];
+};
+
 export type Song = {
   id: string;
   title: string;
@@ -61,22 +82,4 @@ export type Project = {
   description: string | null;
   position: number | null;
   created_at: string;
-};
-
-export type EditPointMarker = {
-  id: string;
-  label: string;
-  time: number;
-};
-
-export type EditPointRange = {
-  id: string;
-  label: string;
-  start: number;
-  end: number;
-};
-
-export type EditPoints = {
-  markers?: EditPointMarker[];
-  ranges?: EditPointRange[];
 };
