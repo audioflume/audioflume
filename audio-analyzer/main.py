@@ -36,13 +36,7 @@ EditPointType = Literal[
     "button_ending",
 ]
 
-EditRangeType = Literal[
-    "intro",
-    "break",
-]
-
 LABELS: Dict[str, str] = {
-    "intro": "Intro",
     "first_hit": "First hit",
     "drop": "Main drop",
     "break": "Break",
@@ -75,7 +69,7 @@ def download_audio(url: str) -> str:
 
 
 def add_point(
-    items: List[dict],
+    points: List[dict],
     point_type: EditPointType,
     time: float,
     confidence: float,
@@ -83,61 +77,29 @@ def add_point(
     if time < 0:
         return
 
-    items.append(
+    points.append(
         {
-            "kind": "point",
             "type": point_type,
             "time": round(float(time), 2),
-            "startTime": None,
-            "endTime": None,
             "label": LABELS[point_type],
             "confidence": round(clamp_confidence(confidence), 2),
         }
     )
 
 
-def add_range(
-    items: List[dict],
-    range_type: EditRangeType,
-    start_time: float,
-    end_time: float,
-    confidence: float,
-):
-    if end_time <= start_time:
-        return
-
-    items.append(
-        {
-            "kind": "range",
-            "type": range_type,
-            "time": round(float(end_time), 2),
-            "startTime": round(float(start_time), 2),
-            "endTime": round(float(end_time), 2),
-            "label": LABELS[range_type],
-            "confidence": round(clamp_confidence(confidence), 2),
-        }
-    )
-
-
-def dedupe_items(items: List[dict], min_gap_seconds: float = 2.0):
-    sorted_items = sorted(items, key=lambda item: item.get("time") or item.get("startTime") or 0)
+def dedupe_points(points: List[dict], min_gap_seconds: float = 2.0):
+    sorted_points = sorted(points, key=lambda item: item["time"])
     deduped: List[dict] = []
 
-    for item in sorted_items:
-        if item["kind"] == "range":
-            deduped.append(item)
-            continue
-
+    for point in sorted_points:
         too_close_same_type = any(
-            item["kind"] == existing["kind"]
-            and item["type"] == existing["type"]
-            and abs(item["time"] - existing["time"]) < min_gap_seconds
+            point["type"] == existing["type"]
+            and abs(point["time"] - existing["time"]) < min_gap_seconds
             for existing in deduped
-            if existing["kind"] == "point"
         )
 
         if not too_close_same_type:
-            deduped.append(item)
+            deduped.append(point)
 
     return deduped
 
@@ -180,26 +142,19 @@ def detect_edit_points(audio_path: str):
         hop_length=hop_length,
     )
 
-    items: List[dict] = []
+    points: List[dict] = []
 
     max_onset = float(np.max(onset_env) + 1e-6)
     strong_onset_threshold = np.percentile(onset_env, 85)
-    first_hit_time: Optional[float] = None
-    first_hit_confidence = 0.0
 
-    # First hit: end of the intro / first strong editable cue.
+    # First hit: first strong editable cue.
     for frame in onset_frames:
         time = librosa.frames_to_time(frame, sr=sr, hop_length=hop_length)
         strength = onset_env[frame] if frame < len(onset_env) else 0
 
         if time > 1.5 and strength >= strong_onset_threshold:
-            first_hit_time = float(time)
-            first_hit_confidence = float(strength / max_onset)
-            add_point(items, "first_hit", first_hit_time, first_hit_confidence)
+            add_point(points, "first_hit", time, strength / max_onset)
             break
-
-    if first_hit_time is not None and first_hit_time > 1:
-        add_range(items, "intro", 0, first_hit_time, first_hit_confidence)
 
     frames_per_second = sr / hop_length
     window = max(4, int(frames_per_second * 4))
@@ -223,7 +178,7 @@ def detect_edit_points(audio_path: str):
     if len(valid_drop_indices):
         drop_index = valid_drop_indices[np.argmax(energy_delta[valid_drop_indices])]
         add_point(
-            items,
+            points,
             "drop",
             rms_times[drop_index],
             energy_delta[drop_index] / max_positive_delta,
@@ -238,13 +193,12 @@ def detect_edit_points(audio_path: str):
         break_index = valid_break_indices[np.argmin(energy_delta[valid_break_indices])]
 
         if energy_delta[break_index] <= negative_threshold:
-            break_time = float(rms_times[break_index])
-            break_confidence = float(abs(energy_delta[break_index]) / max_negative_delta)
-            break_range_start = max(0, break_time - 8)
-            break_range_end = min(duration, break_time + 8)
-
-            add_range(items, "break", break_range_start, break_range_end, break_confidence)
-            add_point(items, "break", break_time, break_confidence)
+            add_point(
+                points,
+                "break",
+                rms_times[break_index],
+                abs(energy_delta[break_index]) / max_negative_delta,
+            )
 
     # Button ending: final strong onset shortly before the end.
     final_onsets = [
@@ -252,14 +206,14 @@ def detect_edit_points(audio_path: str):
     ]
 
     if final_onsets:
-        add_point(items, "button_ending", final_onsets[-1], 0.65)
+        add_point(points, "button_ending", final_onsets[-1], 0.65)
 
     tempo_value = float(np.asarray(tempo).item())
 
     return {
         "duration": round(float(duration), 2),
         "tempo": round(tempo_value, 2),
-        "editPoints": dedupe_items(items),
+        "editPoints": dedupe_points(points),
     }
 
 
@@ -271,11 +225,8 @@ def save_edit_points(song_id: str, edit_points: List[dict]):
     rows = [
         {
             "song_id": song_id,
-            "kind": point.get("kind", "point"),
             "type": point["type"],
             "time_seconds": point["time"],
-            "start_time_seconds": point.get("startTime"),
-            "end_time_seconds": point.get("endTime"),
             "label": point["label"],
             "confidence": point["confidence"],
             "source": "auto",
