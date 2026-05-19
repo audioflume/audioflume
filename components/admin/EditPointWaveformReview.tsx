@@ -396,11 +396,11 @@ export default function EditPointWaveformReview({
         }
 
         .edit-point-progress-overlay {
-          background: rgba(255, 255, 255, 0.035);
+          background: rgba(255, 255, 255, 0.022);
         }
 
         html.light .edit-point-progress-overlay {
-          background: rgba(0, 0, 0, 0.035);
+          background: rgba(0, 0, 0, 0.022);
         }
 
         html.light .edit-point-marker-line,
@@ -516,7 +516,7 @@ export default function EditPointWaveformReview({
           </div>
 
           <div
-            className="pointer-events-none absolute top-0 z-20 h-full w-px bg-[var(--text-primary)] opacity-25"
+            className="pointer-events-none absolute top-0 z-20 h-full w-px bg-[var(--text-primary)] opacity-15"
             style={{ left: `${Math.max(0, Math.min(100, progress))}%` }}
           />
 
