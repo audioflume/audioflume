@@ -578,13 +578,57 @@ export default function EditPointWaveformReview({
           box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.14);
         }
 
+        .cue-point-review-header {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: end;
+          gap: 1rem;
+        }
+
+        .cue-point-review-heading-line {
+          display: flex;
+          min-height: 14px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.75rem;
+        }
+
+        .cue-point-review-controls {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 0.5rem;
+          padding-bottom: 0.01rem;
+          white-space: nowrap;
+        }
+
         .cue-point-row-grid {
-          grid-template-columns: minmax(150px, 1fr) 42px 118px 108px 78px 68px 58px;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 34px minmax(72px, 116px) minmax(78px, 108px) 66px minmax(44px, 58px) 42px;
+          column-gap: 0.5rem;
+          align-items: center;
+        }
+
+        .cue-point-row-grid > * {
+          min-width: 0;
         }
 
         @media (max-width: 1180px) {
           .cue-point-row-grid {
-            grid-template-columns: minmax(124px, 1fr) 34px 104px 92px 62px 56px 48px;
+            grid-template-columns: minmax(0, 1fr) 30px 86px 82px 58px 46px 38px;
+            column-gap: 0.35rem;
+          }
+        }
+
+        @media (max-width: 920px) {
+          .cue-point-review-header {
+            grid-template-columns: 1fr;
+            align-items: start;
+          }
+
+          .cue-point-review-controls {
+            justify-content: flex-start;
           }
         }
       `}</style>
@@ -600,22 +644,26 @@ export default function EditPointWaveformReview({
         onPlay={() => setIsPlaying(true)}
       />
 
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-            Waveform Review
+      <div className="cue-point-review-header mb-4">
+        <div className="min-w-0">
+          <div className="cue-point-review-heading-line">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+              Waveform Review
+            </div>
+
+            {hasChanges && (
+              <div className="shrink-0 text-[11px] font-medium text-[var(--status-warning)]">
+                Unsaved cue point changes
+              </div>
+            )}
           </div>
-          <p className="mt-1 text-xs text-[var(--text-secondary)]">
+
+          <p className="mt-1 max-w-[560px] text-xs text-[var(--text-secondary)]">
             Spacebar toggles playback. Drag cue points, drag the playhead, or set a marker to the current playhead time.
           </p>
-          {hasChanges && (
-            <p className="mt-1 text-[11px] font-medium text-[var(--status-warning)]">
-              Unsaved cue point changes
-            </p>
-          )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="cue-point-review-controls">
           <div className="font-mono text-xs text-[var(--text-secondary)]">
             {formatTime(currentTime)} / {formatTime(effectiveDuration)}
           </div>
@@ -771,16 +819,16 @@ export default function EditPointWaveformReview({
         </div>
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
+      <div className="mt-4 overflow-visible rounded-xl border border-[var(--border)]">
         <div>
-          <div className="cue-point-row-grid grid border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+          <div className="cue-point-row-grid border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
             <div>Play</div>
             <div>Set</div>
             <div>Time</div>
             <div>Nudge</div>
-            <div>Source</div>
-            <div>Delete</div>
+            <div>Src</div>
+            <div></div>
           </div>
 
           {sortedMarkers.length === 0 ? (
@@ -796,7 +844,7 @@ export default function EditPointWaveformReview({
                 <div
                   key={marker.id}
                   onClick={() => toggleMarkerRow(marker.id)}
-                  className={`cue-point-row-grid grid cursor-pointer select-none items-center border-b border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 ${
+                  className={`cue-point-row-grid cursor-pointer select-none border-b border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 ${
                     selected ? "bg-[var(--bg-hover)]" : ""
                   }`}
                 >
@@ -828,9 +876,9 @@ export default function EditPointWaveformReview({
                       event.stopPropagation();
                       setMarkerToPlayhead(marker.id);
                     }}
-                    className="h-7 w-fit rounded-full border border-[var(--border)] px-2.5 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="h-7 w-fit rounded-full border border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] min-[1180px]:px-2.5"
                   >
-                    Set<span className="hidden min-[980px]:inline"> to playhead</span>
+                    Set<span className="hidden min-[1120px]:inline"> to playhead</span>
                   </button>
 
                   <input
@@ -845,7 +893,7 @@ export default function EditPointWaveformReview({
 
                       updatePointTime(marker.id, parsed);
                     }}
-                    className="h-8 w-[84px] rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)] min-[1180px]:w-24"
+                    className="h-8 w-full rounded-md border border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
                   />
 
                   <div className="flex items-center gap-1" onClick={(event) => event.stopPropagation()}>
@@ -875,7 +923,7 @@ export default function EditPointWaveformReview({
                       event.stopPropagation();
                       deleteEditPoint(marker.id);
                     }}
-                    className="h-7 w-fit rounded-full px-1.5 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
+                    className="h-7 w-fit justify-self-end rounded-full px-1.5 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--status-error-soft,rgba(220,88,79,0.12))] hover:text-[var(--status-error,#dc584f)]"
                   >
                     Delete
                   </button>
