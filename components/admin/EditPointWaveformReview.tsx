@@ -585,12 +585,20 @@ export default function EditPointWaveformReview({
           gap: 1rem;
         }
 
-        .cue-point-review-heading-line {
+        .cue-point-review-right {
           display: flex;
+          min-width: 0;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.45rem;
+        }
+
+        .cue-point-dirty-state {
           min-height: 14px;
-          align-items: center;
-          justify-content: space-between;
-          gap: 0.75rem;
+          font-size: 11px;
+          font-weight: 500;
+          line-height: 1;
+          color: var(--status-warning);
         }
 
         .cue-point-review-controls {
@@ -599,14 +607,13 @@ export default function EditPointWaveformReview({
           align-items: center;
           justify-content: flex-end;
           gap: 0.5rem;
-          padding-bottom: 0.01rem;
           white-space: nowrap;
         }
 
         .cue-point-row-grid {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 34px minmax(72px, 116px) minmax(78px, 108px) 66px minmax(44px, 58px) 42px;
-          column-gap: 0.5rem;
+          grid-template-columns: minmax(0, 1fr) 34px 116px 108px 66px 58px 48px;
+          column-gap: 0.65rem;
           align-items: center;
         }
 
@@ -616,8 +623,8 @@ export default function EditPointWaveformReview({
 
         @media (max-width: 1180px) {
           .cue-point-row-grid {
-            grid-template-columns: minmax(0, 1fr) 30px 86px 82px 58px 46px 38px;
-            column-gap: 0.35rem;
+            grid-template-columns: minmax(0, 1fr) 30px 58px 82px 58px 44px 40px;
+            column-gap: 0.5rem;
           }
         }
 
@@ -625,6 +632,10 @@ export default function EditPointWaveformReview({
           .cue-point-review-header {
             grid-template-columns: 1fr;
             align-items: start;
+          }
+
+          .cue-point-review-right {
+            align-items: flex-start;
           }
 
           .cue-point-review-controls {
@@ -646,16 +657,8 @@ export default function EditPointWaveformReview({
 
       <div className="cue-point-review-header mb-4">
         <div className="min-w-0">
-          <div className="cue-point-review-heading-line">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-              Waveform Review
-            </div>
-
-            {hasChanges && (
-              <div className="shrink-0 text-[11px] font-medium text-[var(--status-warning)]">
-                Unsaved cue point changes
-              </div>
-            )}
+          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+            Waveform Review
           </div>
 
           <p className="mt-1 max-w-[560px] text-xs text-[var(--text-secondary)]">
@@ -663,37 +666,43 @@ export default function EditPointWaveformReview({
           </p>
         </div>
 
-        <div className="cue-point-review-controls">
-          <div className="font-mono text-xs text-[var(--text-secondary)]">
-            {formatTime(currentTime)} / {formatTime(effectiveDuration)}
+        <div className="cue-point-review-right">
+          <div className="cue-point-dirty-state">
+            {hasChanges ? "Unsaved cue point changes" : ""}
           </div>
 
-          {onReAnalyze && (
-            <button
-              type="button"
-              onClick={() => onReAnalyze()}
-              disabled={isReAnalyzing || isSaving}
-              className="flex h-8 items-center gap-2 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
-            >
-              {isReAnalyzing ? (
-                <span className="h-3 w-3 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
-              ) : (
-                <RefreshIcon />
-              )}
-              Re-analyze
-            </button>
-          )}
+          <div className="cue-point-review-controls">
+            <div className="font-mono text-xs text-[var(--text-secondary)]">
+              {formatTime(currentTime)} / {formatTime(effectiveDuration)}
+            </div>
 
-          {showSaveButton && (
-            <button
-              type="button"
-              onClick={saveEditPoints}
-              disabled={isSaving || !hasChanges}
-              className="h-8 rounded-full border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
-            >
-              {isSaving ? "Saving..." : "Save Cue Points"}
-            </button>
-          )}
+            {onReAnalyze && (
+              <button
+                type="button"
+                onClick={() => onReAnalyze()}
+                disabled={isReAnalyzing || isSaving}
+                className="flex h-8 items-center gap-2 rounded-full border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+              >
+                {isReAnalyzing ? (
+                  <span className="h-3 w-3 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
+                ) : (
+                  <RefreshIcon />
+                )}
+                Re-analyze
+              </button>
+            )}
+
+            {showSaveButton && (
+              <button
+                type="button"
+                onClick={saveEditPoints}
+                disabled={isSaving || !hasChanges}
+                className="h-8 rounded-full border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+              >
+                {isSaving ? "Saving..." : "Save Cue Points"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -878,7 +887,7 @@ export default function EditPointWaveformReview({
                     }}
                     className="h-7 w-fit rounded-full border border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] min-[1180px]:px-2.5"
                   >
-                    Set<span className="hidden min-[1120px]:inline"> to playhead</span>
+                    Set<span className="hidden min-[1180px]:inline"> to playhead</span>
                   </button>
 
                   <input
