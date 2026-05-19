@@ -16,11 +16,17 @@ import {
   filterTriggerInactiveClass,
 } from "@/components/filterUiClasses";
 
+type FilterOptionSection = {
+  label?: string;
+  options: string[];
+};
+
 type FilterDropdownProps = {
   label: string;
   options: string[];
   selected: string[];
   onChange: (selected: string[]) => void;
+  optionSections?: FilterOptionSection[];
 };
 
 export default function FilterDropdown({
@@ -28,9 +34,14 @@ export default function FilterDropdown({
   options,
   selected,
   onChange,
+  optionSections,
 }: FilterDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const sections =
+    optionSections && optionSections.length > 0
+      ? optionSections
+      : [{ options }];
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -93,38 +104,58 @@ export default function FilterDropdown({
           </div>
 
           <div className="max-h-[340px] overflow-y-auto p-1.5">
-            {options.map((option) => {
-              const isSelected = selected.includes(option);
-
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => toggle(option)}
-                  className={`group ${filterRowButtonClass} ${
-                    isSelected
-                      ? filterRowButtonActiveClass
-                      : filterRowButtonInactiveClass
-                  }`}
-                >
-                  <span className="min-w-0 truncate">{option}</span>
-
-                  <span
-                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
-                      isSelected
-                        ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                        : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
-                    }`}
-                  >
-                    {isSelected ? (
-                      <CheckIcon size={11} />
-                    ) : (
-                      <PlusIcon size={11} />
+            {sections.map((section, sectionIndex) => (
+              <div key={`${section.label || "section"}-${sectionIndex}`}>
+                {sectionIndex > 0 && (
+                  <div className="mx-2 mb-1.5 mt-2 border-t border-[var(--border)] pt-2">
+                    {section.label && (
+                      <div className="px-1 pb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                        {section.label}
+                      </div>
                     )}
-                  </span>
-                </button>
-              );
-            })}
+                  </div>
+                )}
+
+                {sectionIndex === 0 && section.label && (
+                  <div className="px-3 pb-1 pt-1 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                    {section.label}
+                  </div>
+                )}
+
+                {section.options.map((option) => {
+                  const isSelected = selected.includes(option);
+
+                  return (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => toggle(option)}
+                      className={`group ${filterRowButtonClass} ${
+                        isSelected
+                          ? filterRowButtonActiveClass
+                          : filterRowButtonInactiveClass
+                      }`}
+                    >
+                      <span className="min-w-0 truncate">{option}</span>
+
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
+                          isSelected
+                            ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                            : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                        }`}
+                      >
+                        {isSelected ? (
+                          <CheckIcon size={11} />
+                        ) : (
+                          <PlusIcon size={11} />
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
       )}
