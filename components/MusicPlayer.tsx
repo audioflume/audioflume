@@ -240,6 +240,7 @@ export default function MusicPlayer() {
   const {
     currentSong,
     isPlaying,
+    remotePlayingInAnotherTab,
     currentTime,
     duration,
     togglePlayPause,
@@ -673,10 +674,24 @@ export default function MusicPlayer() {
             </div>
 
             <div
-              title={currentSong.artist}
-              className="truncate text-xs text-[var(--text-subtle)]"
+              title={
+                remotePlayingInAnotherTab
+                  ? `${currentSong.artist} · Playing in another tab`
+                  : currentSong.artist
+              }
+              className="flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--text-subtle)]"
             >
-              {currentSong.artist}
+              <span className="truncate">{currentSong.artist}</span>
+              {remotePlayingInAnotherTab ? (
+                <span className="flex min-w-0 items-center gap-1.5 text-[var(--text-muted)]">
+                  <span className="text-[var(--text-muted)]">·</span>
+                  <span className="relative flex h-1.5 w-1.5 flex-shrink-0">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--text-muted)] opacity-40" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--text-muted)]" />
+                  </span>
+                  <span className="truncate">Playing in another tab</span>
+                </span>
+              ) : null}
             </div>
           </div>
         </div>
