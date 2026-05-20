@@ -50,7 +50,7 @@
   --cue-marker-width-active: 1.5px;
   --cue-marker-width-muted: 1px;
   --cue-marker-opacity: 1;
-  --cue-marker-opacity-muted: 0.3;
+  --cue-marker-opacity-muted: 0.15;
 
   /* Backwards compatibility */
   --edit-point-marker: var(--cue-point-marker);
@@ -209,13 +209,20 @@ body.sidebar-collapsed aside[data-sidebar] {
   --accent-2: #fb8f61;
 
   /* Cue points */
-  --cue-point-marker: #0000009c;
+  --cue-point-marker: #fb8f61;
   --cue-point-marker-soft: rgba(196, 230, 45, 0.18);
   --cue-point-marker-secondary: #c4e62d;
   --cue-point-marker-active: #fb8f61;
   --cue-point-marker-active-soft: rgba(251, 143, 97, 0.18);
   --cue-point-range: rgba(155, 179, 0, 0.2);
   --cue-point-range-strong: rgba(224, 111, 63, 0.14);
+
+  --cue-marker-color: var(--cue-point-marker);
+  --cue-marker-width: 1px;
+  --cue-marker-width-active: 1.5px;
+  --cue-marker-width-muted: 1px;
+  --cue-marker-opacity: 1;
+  --cue-marker-opacity-muted: 0.3;
 
   /* Backwards compatibility */
   --edit-point-marker: var(--cue-point-marker);
