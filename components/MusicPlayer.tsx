@@ -259,8 +259,10 @@ export default function MusicPlayer() {
     string | null
   >(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
-  const [musicLibraryShowEditPointMarkers, setMusicLibraryShowEditPointMarkers] =
-    useState(false);
+  const [
+    musicLibraryShowEditPointMarkers,
+    setMusicLibraryShowEditPointMarkers,
+  ] = useState(false);
   const [selectedCuePointTypes, setSelectedCuePointTypes] = useState<string[]>(
     () => getStoredCuePointFilterSelection(),
   );
@@ -750,8 +752,10 @@ export default function MusicPlayer() {
                         <span
                           className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full bg-[var(--cue-marker-color)]"
                           style={{
-                            width: dimmed
-                              ? "var(--cue-marker-width-muted)"
+                            width: hasSelectedCuePointTypes
+                              ? selected
+                                ? "var(--cue-marker-width-active)"
+                                : "var(--cue-marker-width-muted)"
                               : "var(--cue-marker-width)",
                           }}
                         />
