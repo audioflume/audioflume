@@ -84,6 +84,20 @@ function getMarkersFromAnalyzeResponse(data: unknown) {
     .sort((a, b) => a.time - b.time);
 }
 
+function getAnalyzeErrorMessage(data: unknown) {
+  const record = data && typeof data === "object" ? (data as Record<string, unknown>) : {};
+  const detail = record.detail && typeof record.detail === "object"
+    ? (record.detail as Record<string, unknown>)
+    : null;
+
+  if (typeof record.error === "string") return record.error;
+  if (detail && typeof detail.error === "string") return detail.error;
+  if (detail && typeof detail.detail === "string") return detail.detail;
+  if (typeof record.message === "string") return record.message;
+
+  return "Failed to re-analyze cue points.";
+}
+
 export default function CuePointManager({
   songId,
   audioUrl,
@@ -94,9 +108,13 @@ export default function CuePointManager({
   const [currentMarkers, setCurrentMarkers] = useState(markers);
   const [isReAnalyzing, setIsReAnalyzing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [reAnalyzeMessage, setReAnalyzeMessage] = useState("");
+  const [reAnalyzeFailed, setReAnalyzeFailed] = useState(false);
 
   const handleReAnalyze = async () => {
     setIsReAnalyzing(true);
+    setReAnalyzeMessage("");
+    setReAnalyzeFailed(false);
 
     try {
       const response = await fetch(`/api/admin/songs/${songId}/analyze-edit-points`, {
@@ -106,35 +124,54 @@ export default function CuePointManager({
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        const detail =
-          typeof data?.error === "string"
-            ? data.error
-            : typeof data?.detail?.error === "string"
-              ? data.detail.error
-              : "Failed to re-analyze cue points.";
-
-        throw new Error(detail);
+        setReAnalyzeFailed(true);
+        setReAnalyzeMessage(getAnalyzeErrorMessage(data));
+        return;
       }
 
       const nextMarkers = getMarkersFromAnalyzeResponse(data);
 
       setCurrentMarkers(nextMarkers);
       setRefreshKey((value) => value + 1);
+      setReAnalyzeMessage(
+        nextMarkers.length > 0
+          ? `Re-analyzed ${nextMarkers.length} cue point${nextMarkers.length === 1 ? "" : "s"}.`
+          : "Re-analysis finished, but no cue points were returned.",
+      );
+    } catch (err) {
+      setReAnalyzeFailed(true);
+      setReAnalyzeMessage(
+        err instanceof Error ? err.message : "Failed to re-analyze cue points.",
+      );
     } finally {
       setIsReAnalyzing(false);
     }
   };
 
   return (
-    <EditPointWaveformReview
-      key={refreshKey}
-      songId={songId}
-      audioUrl={audioUrl}
-      waveformPeaks={waveformPeaks}
-      duration={duration}
-      markers={currentMarkers}
-      onReAnalyze={handleReAnalyze}
-      isReAnalyzing={isReAnalyzing}
-    />
+    <div className="grid gap-3">
+      <EditPointWaveformReview
+        key={refreshKey}
+        songId={songId}
+        audioUrl={audioUrl}
+        waveformPeaks={waveformPeaks}
+        duration={duration}
+        markers={currentMarkers}
+        onReAnalyze={handleReAnalyze}
+        isReAnalyzing={isReAnalyzing}
+      />
+
+      {reAnalyzeMessage && (
+        <div
+          className={`rounded-lg border px-3 py-2 text-xs leading-5 ${
+            reAnalyzeFailed
+              ? "border-[var(--status-error-soft)] bg-[var(--status-error-soft)] text-[var(--status-error)]"
+              : "border-[var(--status-success-soft)] bg-[var(--status-success-soft)] text-[var(--status-success)]"
+          }`}
+        >
+          {reAnalyzeMessage}
+        </div>
+      )}
+    </div>
   );
 }
