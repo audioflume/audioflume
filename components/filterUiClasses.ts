@@ -15,8 +15,7 @@ export const filterDropdownPanelClass =
 export const filterDropdownWidePanelClass =
   "w-[320px] rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]";
 
-export const filterDropdownHeaderClass =
-  "flex h-9 items-center justify-between border-b border-[var(--border)] px-3";
+export const filterDropdownHeaderClass = "hidden";
 
 export const filterDropdownTitleClass =
   "text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]";
