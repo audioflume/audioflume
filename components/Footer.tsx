@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Logo from "@/components/Logo";
 import { usePlayer } from "@/context/PlayerContext";
 
@@ -22,13 +23,30 @@ export default function Footer({
   playerPadding = true,
 }: FooterProps) {
   const { currentSong } = usePlayer();
+  const footerRef = useRef<HTMLElement | null>(null);
   const playerVisible = Boolean(currentSong);
+
+  useEffect(() => {
+    const parent = footerRef.current?.parentElement;
+    if (!parent) return;
+
+    const inlinePaddingBottom = parent.style.paddingBottom;
+
+    if (inlinePaddingBottom === "72px" || inlinePaddingBottom === "8px") {
+      parent.style.paddingBottom = "0px";
+    }
+  }, [playerVisible]);
 
   return (
     <footer
+      ref={footerRef}
       className={`text-[11px] font-medium text-[var(--text-muted)] ${className}`}
       style={{
-        paddingBottom: playerPadding ? (playerVisible ? "72px" : "8px") : "8px",
+        paddingBottom: playerPadding
+          ? playerVisible
+            ? "72px"
+            : "8px"
+          : "8px",
       }}
     >
       <div className="grid gap-8 pb-6 md:grid-cols-[minmax(160px,1fr)_auto_auto_minmax(150px,auto)] md:gap-10">
