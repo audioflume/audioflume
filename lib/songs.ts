@@ -103,7 +103,7 @@ export function normalizeSongRow(row: any): Song {
   };
 }
 
-async function attachEditPoints(songs: Song[]) {
+export async function attachEditPoints(songs: Song[]) {
   const songIds = songs.map((song) => song.id);
 
   if (songIds.length === 0) return songs;
@@ -131,7 +131,7 @@ async function attachEditPoints(songs: Song[]) {
 
     return {
       ...song,
-      editPoints: editPointRowsToJson(rows),
+      editPoints: rows.length > 0 ? editPointRowsToJson(rows) : song.editPoints,
     };
   });
 }
