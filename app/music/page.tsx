@@ -485,33 +485,19 @@ export default function MusicPage() {
             />
           </div>
 
-          <div className="-mx-7 flex min-h-[49px] flex-wrap items-center gap-2 border-t border-b border-[var(--border)] px-7 py-2">
+          <div className="-mx-7 flex h-12 items-center gap-1 overflow-x-auto border-t border-b border-[var(--border)] px-7">
             <FilterDropdown
-              label="Mood"
+              label="Moods"
               options={MOOD_OPTIONS}
               selected={selectedMoods}
               onChange={setSelectedMoods}
             />
 
             <FilterDropdown
-              label="Genre"
+              label="Genres"
               options={GENRE_OPTIONS}
               selected={selectedGenres}
               onChange={setSelectedGenres}
-            />
-
-            <FilterDropdown
-              label="Instrument"
-              options={INSTRUMENT_OPTIONS}
-              selected={selectedInstruments}
-              onChange={setSelectedInstruments}
-            />
-
-            <FilterDropdown
-              label="Build"
-              options={BUILD_OPTIONS}
-              selected={selectedBuilds}
-              onChange={setSelectedBuilds}
             />
 
             <FilterDropdown
@@ -519,6 +505,29 @@ export default function MusicPage() {
               options={VOCALS_OPTIONS}
               selected={selectedVocals}
               onChange={setSelectedVocals}
+            />
+
+            <DurationFilter
+              selected={selectedDurations}
+              onChange={setSelectedDurations}
+            />
+
+            <BPMFilter value={bpmValue} onChange={setBpmValue} />
+
+            <KeyFilter value={keyValue} onChange={setKeyValue} />
+
+            <FilterDropdown
+              label="Instruments"
+              options={INSTRUMENT_OPTIONS}
+              selected={selectedInstruments}
+              onChange={setSelectedInstruments}
+            />
+
+            <FilterDropdown
+              label="Builds"
+              options={BUILD_OPTIONS}
+              selected={selectedBuilds}
+              onChange={setSelectedBuilds}
             />
 
             <FilterDropdown
@@ -539,34 +548,25 @@ export default function MusicPage() {
             <button
               type="button"
               onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
-              className={`${filterTriggerBaseClass} ${
+              className={`${filterTriggerBaseClass} after:content-none ${
                 showEditPointMarkers
                   ? filterTriggerActiveClass
                   : filterTriggerInactiveClass
-              } ${showEditPointMarkers ? "pr-2" : ""}`}
+              }`}
               aria-pressed={showEditPointMarkers}
             >
               <span>Markers</span>
               {showEditPointMarkers && <span className={filterDotClass} />}
             </button>
 
-            <BPMFilter value={bpmValue} onChange={setBpmValue} />
-
-            <KeyFilter value={keyValue} onChange={setKeyValue} />
-
-            <DurationFilter
-              selected={selectedDurations}
-              onChange={setSelectedDurations}
-            />
-
             <button
               type="button"
               onClick={() => setInstrumental(!instrumental)}
-              className={`${filterTriggerBaseClass} ${
+              className={`${filterTriggerBaseClass} after:content-none ${
                 instrumental
                   ? filterTriggerActiveClass
                   : filterTriggerInactiveClass
-              } ${instrumental ? "pr-2" : ""}`}
+              }`}
             >
               <span>Instrumental</span>
 
@@ -589,7 +589,7 @@ export default function MusicPage() {
                   ),
                 );
               }}
-              className={`${iconButtonClass} ml-auto ${
+              className={`${iconButtonClass} ml-auto h-8 w-8 shrink-0 ${
                 shuffleActive
                   ? "bg-[var(--bg-secondary)] text-[var(--text-primary)]"
                   : ""
@@ -599,8 +599,8 @@ export default function MusicPage() {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="14"
+                height="14"
                 fill="currentColor"
                 viewBox="0 0 16 16"
                 aria-hidden="true"
