@@ -254,7 +254,6 @@ export default function Waveform({
                   ? "var(--cue-point-range-strong)"
                   : "var(--cue-point-range)",
               }}
-              title={range.label}
             />
           );
         })}
@@ -275,11 +274,7 @@ export default function Waveform({
               className="group/edit-point-marker absolute top-1/2 z-20 h-[38px] w-5 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
               style={{
                 left: `${getPercent(marker.time)}%`,
-                opacity: dimmed
-                  ? "var(--cue-marker-opacity-muted)"
-                  : "var(--cue-marker-opacity)",
               }}
-              title={`${label} · ${markerTime}`}
               aria-label={`Play from ${label} at ${markerTime}`}
               onPointerDown={(event) => {
                 event.preventDefault();
@@ -295,6 +290,9 @@ export default function Waveform({
                       ? "var(--cue-marker-width-active)"
                       : "var(--cue-marker-width-muted)"
                     : "var(--cue-marker-width)",
+                  opacity: dimmed
+                    ? "var(--cue-marker-opacity-muted)"
+                    : "var(--cue-marker-opacity)",
                   background: "var(--cue-marker-color)",
                 }}
               />
