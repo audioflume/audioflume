@@ -123,8 +123,8 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
             onClick={() => theme !== "dark" && setTheme("dark")}
             className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md text-[11px] font-medium transition ${
               isDark
-                ? "bg-[var(--accent-2)] text-[var(--accent-2-contrast)]"
-                : "text-[var(--text-secondary)] hover:bg-[var(--accent-2)] hover:text-[var(--accent-2-contrast)]"
+                ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                : "text-[var(--text-secondary)] hover:bg-[var(--accent)] hover:text-[var(--accent-contrast)]"
             }`}
             aria-label="Dark mode"
             aria-pressed={isDark}
@@ -138,8 +138,8 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
             onClick={() => theme !== "light" && setTheme("light")}
             className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md text-[11px] font-medium transition ${
               isLight
-                ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
-                : "text-[var(--text-secondary)] hover:bg-[var(--accent)] hover:text-[var(--accent-contrast)]"
+                ? "bg-[var(--accent-2)] text-[var(--accent-2-contrast)]"
+                : "text-[var(--text-secondary)] hover:bg-[var(--accent-2)] hover:text-[var(--accent-2-contrast)]"
             }`}
             aria-label="Light mode"
             aria-pressed={isLight}
