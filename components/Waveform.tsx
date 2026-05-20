@@ -286,7 +286,7 @@ export default function Waveform({
               <span
                 className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full transition-[width,opacity] duration-150 group-hover/edit-point-marker:opacity-100"
                 style={{
-                  width: selected ? "2px" : "1.5px",
+                  width: selected ? "1.5px" : "1px",
                   background: "var(--cue-point-marker)",
                 }}
               />

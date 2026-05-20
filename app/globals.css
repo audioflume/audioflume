@@ -177,7 +177,7 @@ body.sidebar-collapsed aside[data-sidebar] {
   --icon-button-hover: rgba(0, 0, 0, 0.08);
 
   /* Borders */
-  --border: rgba(0, 0, 0, 0.1);
+  --border: rgba(0, 0, 0, 0.12);
   --border-subtle: rgba(0, 0, 0, 0.04);
   --border-hover: rgba(17, 17, 17, 0.2);
 
@@ -201,7 +201,7 @@ body.sidebar-collapsed aside[data-sidebar] {
   --accent-2: #fb8f61;
 
   /* Cue points */
-  --cue-point-marker: #00000076;
+  --cue-point-marker: #0000009c;
   --cue-point-marker-soft: rgba(196, 230, 45, 0.18);
   --cue-point-marker-secondary: #c4e62d;
   --cue-point-marker-active: #fb8f61;

@@ -156,7 +156,13 @@ const PauseIcon = () => (
 );
 
 const CuePreviousIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
     <path
       d="M15 6L9 12L15 18"
       stroke="currentColor"
@@ -168,7 +174,13 @@ const CuePreviousIcon = () => (
 );
 
 const CueNextIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
     <path
       d="M9 6L15 12L9 18"
       stroke="currentColor"
@@ -353,7 +365,10 @@ export default function MusicPlayer() {
     };
 
     syncMarkerVisibility();
-    window.addEventListener(EDIT_POINT_MARKER_VISIBILITY_EVENT, syncMarkerVisibility);
+    window.addEventListener(
+      EDIT_POINT_MARKER_VISIBILITY_EVENT,
+      syncMarkerVisibility,
+    );
     window.addEventListener("storage", syncMarkerVisibility);
 
     return () => {
@@ -682,13 +697,17 @@ export default function MusicPlayer() {
                 >
                   {visibleCuePoints.map((marker) => {
                     const markerType = getMarkerType(marker);
-                    const label = marker.label || getEditPointFilterLabel(markerType);
+                    const label =
+                      marker.label || getEditPointFilterLabel(markerType);
                     const selected = selectedCuePointTypeSet.has(markerType);
                     const dimmed = hasSelectedCuePointTypes && !selected;
                     const progressValue = currentSong.duration
                       ? marker.time / currentSong.duration
                       : 0;
-                    const left = Math.max(0, Math.min(100, progressValue * 100));
+                    const left = Math.max(
+                      0,
+                      Math.min(100, progressValue * 100),
+                    );
 
                     return (
                       <button
@@ -704,7 +723,12 @@ export default function MusicPlayer() {
                           jumpToCuePoint(marker);
                         }}
                       >
-                        <span className="absolute left-1/2 top-0 h-full w-[1.5px] -translate-x-1/2 rounded-full bg-[var(--edit-point-marker)]" />
+                        <span
+                          className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full bg-[var(--cue-point-marker)]"
+                          style={{
+                            width: dimmed ? "1px" : "1.5px",
+                          }}
+                        />
                         <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-[80] flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/player-cue-point:translate-y-0 group-hover/player-cue-point:opacity-100">
                           {label} · {formatEditPointTime(marker.time)}
                         </span>
