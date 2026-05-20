@@ -88,7 +88,7 @@ export default function FavoritesPage() {
     refetchSongs,
   } = useSongs();
 
-  const { favoriteIds, favoriteIdSet } = useFavorites();
+  const { favoriteIds, favoriteIdSet, favoritesLoaded } = useFavorites();
   const { currentSong, setQueue } = usePlayer();
   const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
   const playerVisible = !!currentSong;
@@ -178,7 +178,7 @@ export default function FavoritesPage() {
     [displayedSongs],
   );
 
-  const showSongSkeleton = !songsError && songsLoading && songs.length === 0;
+  const showSongSkeleton = !songsError && (!favoritesLoaded || songsLoading);
   const hasAnyFavorites = favoriteIdSet.size > 0;
   const shuffleActive = shuffleOrderIds !== null;
 
@@ -506,7 +506,7 @@ export default function FavoritesPage() {
           <section className="favorites-section">
             {showSongSkeleton && <SkeletonSongList />}
 
-            {songsError && !songsLoading && (
+            {songsError && !songsLoading && favoritesLoaded && (
               <div className="flex min-h-[240px] flex-col items-center justify-center gap-3 px-8 text-center">
                 <div className="text-sm font-medium text-[var(--text-primary)]">
                   Couldn&apos;t load favorites
@@ -563,7 +563,7 @@ export default function FavoritesPage() {
               ))}
           </section>
 
-          {!songsLoading && (
+          {!showSongSkeleton && (
             <div
               className="favorites-footer-wrap"
               style={{
