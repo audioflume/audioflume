@@ -229,6 +229,10 @@ export default function MusicPage() {
     selectedPlaylist,
   } = filters;
 
+  const effectiveShowEditPointMarkers = filtersHydrated
+    ? showEditPointMarkers
+    : false;
+
   const setSearch = (v: string) => setFilters((f) => ({ ...f, search: v }));
   const setSelectedMoods = (v: string[]) =>
     setFilters((f) => ({ ...f, selectedMoods: v }));
@@ -569,16 +573,19 @@ export default function MusicPage() {
 
             <button
               type="button"
-              onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
+              onClick={() =>
+                setShowEditPointMarkers(!effectiveShowEditPointMarkers)
+              }
+              disabled={!filtersHydrated}
               className={`${filterTriggerBaseClass} after:content-none ${
-                showEditPointMarkers
+                effectiveShowEditPointMarkers
                   ? filterTriggerActiveClass
                   : filterTriggerInactiveClass
-              }`}
-              aria-pressed={showEditPointMarkers}
+              } ${filtersHydrated ? "" : "opacity-60"}`}
+              aria-pressed={effectiveShowEditPointMarkers}
             >
               <span>Markers</span>
-              {showEditPointMarkers && <span className={filterDotClass} />}
+              {effectiveShowEditPointMarkers && <span className={filterDotClass} />}
             </button>
 
             <button
@@ -702,7 +709,7 @@ export default function MusicPage() {
                 isFirst={index === 0}
                 isLast={index === displayedSongs.length - 1}
                 highlightedEditPointTypes={selectedEditPoints}
-                showEditPointMarkers={showEditPointMarkers}
+                showEditPointMarkers={effectiveShowEditPointMarkers}
               />
             ))}
         </div>
