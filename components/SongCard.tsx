@@ -154,7 +154,7 @@ export default function SongCard({
   playlistId,
   projectId,
   highlightedEditPointTypes = [],
-  showEditPointMarkers = true,
+  showEditPointMarkers,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
