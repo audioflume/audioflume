@@ -1,7 +1,7 @@
 // components/filterUiClasses.ts
 
 export const filterTriggerBaseClass =
-  "flex h-12 cursor-pointer items-center gap-1.5 border-b-2 border-transparent px-2.5 text-[13px] font-medium transition-colors after:ml-0.5 after:h-1.5 after:w-1.5 after:rotate-45 after:border-b after:border-r after:border-current after:content-['']";
+  "flex h-12 cursor-pointer items-center gap-1.5 border-b-2 border-transparent px-2.5 text-[13px] font-medium transition-colors after:translate-y-[-1px] after:ml-0.5 after:h-1.5 after:w-1.5 after:rotate-45 after:border-b after:border-r after:border-current after:content-['']";
 
 export const filterTriggerActiveClass =
   "border-[var(--text-primary)] text-[var(--text-primary)]";
