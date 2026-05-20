@@ -141,8 +141,8 @@ export function useFilterPersistence({
     if (!storageKey) return;
     if (hydratedKey !== storageKey) return;
 
-    notifyCuePointFilterSelection(filters.selectedEditPoints);
     sessionStorage.setItem(storageKey, JSON.stringify(filters));
+    notifyCuePointFilterSelection(filters.selectedEditPoints);
   }, [hydrated, hydratedKey, storageKey, filters]);
 
   return { filters, setFilters, hydrated };
