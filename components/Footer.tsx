@@ -1,6 +1,7 @@
 "use client";
 
 import Logo from "@/components/Logo";
+import { usePlayer } from "@/context/PlayerContext";
 
 const productLinks = ["Music", "SFX", "VFX", "Colour", "Curated"];
 const companyLinks = ["Home", "Support", "About", "Partnerships", "Contact"];
@@ -11,12 +12,23 @@ const footerHeaderClass =
 const footerLinkClass =
   "cursor-pointer leading-none transition hover:text-[var(--text-primary)]";
 
-export default function Footer() {
+type FooterProps = {
+  className?: string;
+  playerPadding?: boolean;
+};
+
+export default function Footer({
+  className = "",
+  playerPadding = true,
+}: FooterProps) {
+  const { currentSong } = usePlayer();
+  const playerVisible = Boolean(currentSong);
+
   return (
     <footer
-      className="text-[11px] font-medium text-[var(--text-muted)]"
+      className={`text-[11px] font-medium text-[var(--text-muted)] ${className}`}
       style={{
-        paddingBottom: "8px",
+        paddingBottom: playerPadding ? (playerVisible ? "72px" : "8px") : "8px",
       }}
     >
       <div className="grid gap-8 pb-6 md:grid-cols-[minmax(160px,1fr)_auto_auto_minmax(150px,auto)] md:gap-10">
