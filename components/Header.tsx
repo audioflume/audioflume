@@ -60,7 +60,10 @@ export default function Header() {
 
     return () => {
       window.removeEventListener("storage", syncProfileImage);
-      window.removeEventListener("filmwave-profile-image-change", syncProfileImage);
+      window.removeEventListener(
+        "filmwave-profile-image-change",
+        syncProfileImage,
+      );
       window.removeEventListener("focus", syncProfileImage);
     };
   }, []);
@@ -118,9 +121,14 @@ export default function Header() {
               <ChevronIcon open={menuOpen} />
             </span>
 
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[10px] font-semibold leading-none text-[var(--text-primary)]">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--bg-secondary)] text-[10px] font-semibold leading-none text-[var(--text-primary)]">
+              {" "}
               {profileImage ? (
-                <img src={profileImage} alt="Profile" className="h-full w-full object-cover" />
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 initials
               )}
