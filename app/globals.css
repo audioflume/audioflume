@@ -44,6 +44,14 @@
   --cue-point-range: rgba(221, 255, 67, 0.2);
   --cue-point-range-strong: rgba(251, 143, 97, 0.16);
 
+  /* Front-end cue marker controls */
+  --cue-marker-color: var(--cue-point-marker);
+  --cue-marker-width: 1.5px;
+  --cue-marker-width-active: 1.5px;
+  --cue-marker-width-muted: 1px;
+  --cue-marker-opacity: 1;
+  --cue-marker-opacity-muted: 0.3;
+
   /* Backwards compatibility */
   --edit-point-marker: var(--cue-point-marker);
   --edit-point-marker-soft: var(--cue-point-marker-soft);
