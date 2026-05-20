@@ -15,6 +15,7 @@ import {
 } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
+import { useUserPreferences } from "@/context/UserPreferencesContext";
 import type { CuratedPlaylist, CuratedPlaylistSong } from "@/lib/curatedPlaylists";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -101,6 +102,7 @@ export default function CuratedPlaylistDetailPage() {
   const router = useRouter();
   const { currentSong, setQueue } = usePlayer();
   const { favoriteIdSet } = useFavorites();
+  const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
 
   const playlistId = String(params.playlistId || "");
   const playerVisible = !!currentSong;
@@ -534,6 +536,17 @@ export default function CuratedPlaylistDetailPage() {
                     </button>
                   );
                 })}
+
+                <button
+                  type="button"
+                  onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
+                  className={`${quickFilterButtonClass} ${
+                    showEditPointMarkers ? quickFilterButtonActiveClass : ""
+                  }`}
+                  aria-pressed={showEditPointMarkers}
+                >
+                  markers
+                </button>
               </div>
 
               <section className="playlist-detail-section">
@@ -555,6 +568,7 @@ export default function CuratedPlaylistDetailPage() {
                         song={song}
                         isFirst={index === 0}
                         isLast={index === filteredSongs.length - 1}
+                        showEditPointMarkers={showEditPointMarkers}
                       />
                     ))}
                   </div>
