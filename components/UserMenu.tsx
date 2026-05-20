@@ -120,21 +120,6 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
         <div className="grid grid-cols-2 gap-1.5 rounded-lg bg-[var(--bg-primary)] p-1">
           <button
             type="button"
-            onClick={() => theme !== "dark" && setTheme("dark")}
-            className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md text-[11px] font-medium transition ${
-              isDark
-                ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
-                : "text-[var(--text-secondary)] hover:bg-[var(--accent)] hover:text-[var(--accent-contrast)]"
-            }`}
-            aria-label="Dark mode"
-            aria-pressed={isDark}
-          >
-            <DarkMode />
-            <span>Dark</span>
-          </button>
-
-          <button
-            type="button"
             onClick={() => theme !== "light" && setTheme("light")}
             className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md text-[11px] font-medium transition ${
               isLight
@@ -146,6 +131,21 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
           >
             <LightMode />
             <span>Light</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => theme !== "dark" && setTheme("dark")}
+            className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md text-[11px] font-medium transition ${
+              isDark
+                ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                : "text-[var(--text-secondary)] hover:bg-[var(--accent)] hover:text-[var(--accent-contrast)]"
+            }`}
+            aria-label="Dark mode"
+            aria-pressed={isDark}
+          >
+            <DarkMode />
+            <span>Dark</span>
           </button>
         </div>
       </div>
