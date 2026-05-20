@@ -44,7 +44,7 @@ export default function Footer({
       style={{
         paddingBottom: playerPadding
           ? playerVisible
-            ? "72px"
+            ? "calc(72px + 8px)"
             : "8px"
           : "8px",
       }}
