@@ -21,9 +21,30 @@ type StoredPlayerState = {
   duration: number;
 };
 
+type PlayerBroadcastMessage =
+  | {
+      type: "playing";
+      tabId: string;
+      song: Song;
+      currentTime: number;
+      duration: number;
+    }
+  | {
+      type: "paused";
+      tabId: string;
+      songId: string | null;
+      currentTime: number;
+      duration: number;
+    }
+  | {
+      type: "closed";
+      tabId: string;
+    };
+
 type PlayerContextType = {
   currentSong: Song | null;
   isPlaying: boolean;
+  remotePlayingInAnotherTab: boolean;
   currentTime: number;
   duration: number;
   togglePlayPause: (song: Song) => void;
@@ -39,6 +60,15 @@ const PlayerContext = createContext<PlayerContextType | null>(null);
 
 const PLAYER_STORAGE_KEY = "filmwave-player-state";
 const CLOSE_PLAYER_EVENT = "filmwave:close-player";
+const PLAYER_BROADCAST_CHANNEL = "filmwave-player";
+
+function createTabId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 
 function isInterruptedPlayError(err: unknown) {
   if (!(err instanceof DOMException)) return false;
@@ -63,6 +93,36 @@ function isValidStoredSong(value: unknown): value is Song {
     Array.isArray(song.stems) &&
     typeof song.waveformPeaks === "string"
   );
+}
+
+function isPlayerBroadcastMessage(
+  value: unknown,
+): value is PlayerBroadcastMessage {
+  if (!value || typeof value !== "object") return false;
+
+  const message = value as Partial<PlayerBroadcastMessage>;
+
+  if (typeof message.tabId !== "string") return false;
+
+  if (message.type === "closed") return true;
+
+  if (message.type === "paused") {
+    return (
+      (typeof message.songId === "string" || message.songId === null) &&
+      typeof message.currentTime === "number" &&
+      typeof message.duration === "number"
+    );
+  }
+
+  if (message.type === "playing") {
+    return (
+      isValidStoredSong(message.song) &&
+      typeof message.currentTime === "number" &&
+      typeof message.duration === "number"
+    );
+  }
+
+  return false;
 }
 
 function readStoredPlayerState() {
@@ -121,6 +181,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const durationRef = useRef(0);
   const queueRef = useRef<Song[]>([]);
   const playRequestIdRef = useRef(0);
+  const channelRef = useRef<BroadcastChannel | null>(null);
+  const tabIdRef = useRef(createTabId());
+  const remoteOwnerTabIdRef = useRef<string | null>(null);
+  const lastBroadcastTimeRef = useRef(0);
 
   const playSongDirectlyRef = useRef<
     (song: Song, shouldPlay?: boolean) => void
@@ -132,8 +196,37 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] =
+    useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  const postPlayerMessage = useCallback((message: PlayerBroadcastMessage) => {
+    channelRef.current?.postMessage(message);
+  }, []);
+
+  const postPlayingState = useCallback(() => {
+    const current = currentSongRef.current;
+    if (!current) return;
+
+    postPlayerMessage({
+      type: "playing",
+      tabId: tabIdRef.current,
+      song: current,
+      currentTime: currentTimeRef.current,
+      duration: durationRef.current || current.duration || 0,
+    });
+  }, [postPlayerMessage]);
+
+  const postPausedState = useCallback(() => {
+    postPlayerMessage({
+      type: "paused",
+      tabId: tabIdRef.current,
+      songId: currentSongRef.current?.id || null,
+      currentTime: currentTimeRef.current,
+      duration: durationRef.current,
+    });
+  }, [postPlayerMessage]);
 
   const setCurrentTimeState = useCallback((value: number) => {
     currentTimeRef.current = value;
@@ -150,7 +243,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const audio = new Audio();
       audio.preload = "auto";
 
-      audio.addEventListener("play", () => setIsPlaying(true));
+      audio.addEventListener("play", () => {
+        remoteOwnerTabIdRef.current = null;
+        setRemotePlayingInAnotherTab(false);
+        setIsPlaying(true);
+        postPlayingState();
+      });
 
       audio.addEventListener("pause", () => setIsPlaying(false));
 
@@ -161,6 +259,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         if (!current || !queue.length) {
           setCurrentTimeState(0);
           setIsPlaying(false);
+          postPausedState();
           return;
         }
 
@@ -178,6 +277,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             currentTime: 0,
             duration: durationRef.current || current.duration || 0,
           });
+
+          postPausedState();
 
           return;
         }
@@ -205,6 +306,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             duration: audio.duration,
           });
         }
+
+        const now = Date.now();
+        if (!audio.paused && now - lastBroadcastTimeRef.current > 1000) {
+          lastBroadcastTimeRef.current = now;
+          postPlayingState();
+        }
       });
 
       audio.addEventListener("loadedmetadata", () => {
@@ -215,6 +322,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       audio.addEventListener("error", () => {
         setIsPlaying(false);
+        postPausedState();
       });
 
       audioRef.current = audio;
@@ -266,14 +374,18 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const audio = getAudio();
     const requestId = ++playRequestIdRef.current;
 
+    remoteOwnerTabIdRef.current = null;
+    setRemotePlayingInAnotherTab(false);
+
     audio.play().catch((err) => {
       if (requestId !== playRequestIdRef.current) return;
       if (isInterruptedPlayError(err)) return;
 
       console.error(err);
       setIsPlaying(false);
+      postPausedState();
     });
-  }, []);
+  }, [postPausedState]);
 
   const safePause = useCallback(() => {
     playRequestIdRef.current += 1;
@@ -281,7 +393,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const audio = getAudio();
     audio.pause();
     setIsPlaying(false);
-  }, []);
+    postPausedState();
+  }, [postPausedState]);
 
   const closePlayer = useCallback(() => {
     playRequestIdRef.current += 1;
@@ -302,14 +415,21 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     currentSongRef.current = null;
     currentTimeRef.current = 0;
     durationRef.current = 0;
+    remoteOwnerTabIdRef.current = null;
 
     setCurrentSong(null);
     setIsPlaying(false);
+    setRemotePlayingInAnotherTab(false);
     setCurrentTime(0);
     setDuration(0);
 
     window.localStorage.removeItem(PLAYER_STORAGE_KEY);
-  }, []);
+
+    postPlayerMessage({
+      type: "closed",
+      tabId: tabIdRef.current,
+    });
+  }, [postPlayerMessage]);
 
   const playSongDirectly = useCallback(
     (song: Song, shouldPlay?: boolean) => {
@@ -317,6 +437,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const wasPlaying = shouldPlay !== undefined ? shouldPlay : !audio.paused;
 
       playRequestIdRef.current += 1;
+      remoteOwnerTabIdRef.current = null;
+      setRemotePlayingInAnotherTab(false);
 
       if (currentSongRef.current) {
         waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0);
@@ -372,6 +494,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         ? Math.max(0, Math.min(1, progress))
         : 0;
 
+      remoteOwnerTabIdRef.current = null;
+      setRemotePlayingInAnotherTab(false);
+
       if (currentSongRef.current?.id !== song.id) {
         playRequestIdRef.current += 1;
 
@@ -406,6 +531,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
         if (shouldPlay) {
           safePlay();
+        } else {
+          postPausedState();
         }
       };
 
@@ -415,7 +542,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [safePlay, setCurrentTimeState, setDurationState],
+    [postPausedState, safePlay, setCurrentTimeState, setDurationState],
   );
 
   const registerWaveform = useCallback(
@@ -447,6 +574,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       if (nextIdx < 0 || nextIdx >= queue.length) {
         setIsPlaying(false);
+        postPausedState();
         return;
       }
 
@@ -454,7 +582,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       playSongDirectly(queue[nextIdx], shouldPlay);
     },
-    [playSongDirectly],
+    [playSongDirectly, postPausedState],
   );
 
   navigateTrackRef.current = navigateTrack;
@@ -462,6 +590,90 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     window.localStorage.removeItem(PLAYER_STORAGE_KEY);
   }, []);
+
+  useEffect(() => {
+    if (typeof BroadcastChannel === "undefined") return;
+
+    const channel = new BroadcastChannel(PLAYER_BROADCAST_CHANNEL);
+    channelRef.current = channel;
+
+    channel.onmessage = (event: MessageEvent<unknown>) => {
+      const message = event.data;
+
+      if (!isPlayerBroadcastMessage(message)) return;
+      if (message.tabId === tabIdRef.current) return;
+
+      if (message.type === "closed") {
+        if (remoteOwnerTabIdRef.current === message.tabId) {
+          remoteOwnerTabIdRef.current = null;
+          setRemotePlayingInAnotherTab(false);
+        }
+
+        return;
+      }
+
+      if (message.type === "paused") {
+        if (remoteOwnerTabIdRef.current === message.tabId) {
+          remoteOwnerTabIdRef.current = null;
+          setRemotePlayingInAnotherTab(false);
+          setIsPlaying(false);
+        }
+
+        return;
+      }
+
+      const audio = getAudio();
+      const existing = currentSongRef.current;
+
+      if (!audio.paused) {
+        playRequestIdRef.current += 1;
+        audio.pause();
+      }
+
+      if (existing?.id !== message.song.id) {
+        if (existing) {
+          waveformsRef.current.get(existing.id)?.seekTo(0);
+        }
+
+        audio.src = message.song.audioUrl;
+        currentSongRef.current = message.song;
+        setCurrentSong(message.song);
+      }
+
+      const safeTime = Math.max(0, message.currentTime || 0);
+      const nextDuration = message.duration || message.song.duration || 0;
+
+      try {
+        if (audio.readyState >= 1 && Number.isFinite(safeTime)) {
+          audio.currentTime = safeTime;
+        }
+      } catch {
+        // Ignore remote seek sync failures.
+      }
+
+      const progress = nextDuration > 0 ? safeTime / nextDuration : 0;
+      waveformsRef.current.get(message.song.id)?.seekTo(progress);
+
+      remoteOwnerTabIdRef.current = message.tabId;
+      setRemotePlayingInAnotherTab(true);
+      setIsPlaying(false);
+      setCurrentTimeState(safeTime);
+      setDurationState(nextDuration);
+
+      writeStoredPlayerState({
+        currentSong: message.song,
+        currentTime: safeTime,
+        duration: nextDuration,
+      });
+    };
+
+    return () => {
+      channel.close();
+      if (channelRef.current === channel) {
+        channelRef.current = null;
+      }
+    };
+  }, [setCurrentTimeState, setDurationState]);
 
   useEffect(() => {
     window.addEventListener(CLOSE_PLAYER_EVENT, closePlayer);
@@ -548,6 +760,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       value={{
         currentSong,
         isPlaying,
+        remotePlayingInAnotherTab,
         currentTime,
         duration,
         togglePlayPause,
