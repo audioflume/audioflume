@@ -3,6 +3,7 @@
 import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useRef } from "react";
 import { usePlayer } from "@/context/PlayerContext";
+import { useUserPreferences } from "@/context/UserPreferencesContext";
 import {
   getEditPointFilterLabel,
   getMarkerType,
@@ -95,7 +96,7 @@ export default function Waveform({
   song,
   compact = false,
   highlightedEditPointTypes = [],
-  showEditPointMarkers = true,
+  showEditPointMarkers,
 }: {
   song: Song;
   compact?: boolean;
@@ -106,6 +107,11 @@ export default function Waveform({
   const containerRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const peaksRef = useRef<number[]>([]);
+  const { showEditPointMarkers: globalShowEditPointMarkers } =
+    useUserPreferences();
+
+  const shouldShowEditPointMarkers =
+    showEditPointMarkers ?? globalShowEditPointMarkers;
 
   const {
     registerWaveform,
@@ -226,7 +232,7 @@ export default function Waveform({
       }`}
       onPointerDown={handlePointerDown}
     >
-      {showEditPointMarkers &&
+      {shouldShowEditPointMarkers &&
         editPoints.ranges?.map((range) => {
           const left = getPercent(range.start);
           const right = getPercent(range.end);
@@ -257,7 +263,7 @@ export default function Waveform({
           );
         })}
 
-      {showEditPointMarkers &&
+      {shouldShowEditPointMarkers &&
         editPoints.markers?.map((marker) => {
           const markerType = getMarkerType(marker);
           const selected = highlightedTypeSet.has(markerType);
