@@ -2,11 +2,6 @@ import {
   getStoredCuePointFilterSelection,
   notifyCuePointFilterSelection,
 } from "@/lib/cuePointFilterSelection";
-import {
-  EDIT_POINT_MARKER_VISIBILITY_EVENT,
-  getStoredEditPointMarkerVisibility,
-  setStoredEditPointMarkerVisibility,
-} from "@/lib/editPointMarkerVisibility";
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
 import { useEffect, useState } from "react";
 
@@ -40,7 +35,7 @@ const baseDefaultState: FilterState = {
   selectedVocals: [],
   selectedDurations: [],
   selectedEditPoints: [],
-  showEditPointMarkers: false,
+  showEditPointMarkers: true,
   instrumental: false,
   bpmValue: null,
   keyValue: null,
@@ -51,7 +46,6 @@ function getDefaultState(): FilterState {
   return {
     ...baseDefaultState,
     selectedEditPoints: getStoredCuePointFilterSelection(),
-    showEditPointMarkers: getStoredEditPointMarkerVisibility(),
   };
 }
 
@@ -73,7 +67,10 @@ function normalizeFilterState(parsed: Record<string, unknown>): FilterState {
     selectedEditPoints: Array.isArray(parsed.selectedEditPoints)
       ? parsed.selectedEditPoints
       : [],
-    showEditPointMarkers: getStoredEditPointMarkerVisibility(),
+    showEditPointMarkers:
+      typeof parsed.showEditPointMarkers === "boolean"
+        ? parsed.showEditPointMarkers
+        : baseDefaultState.showEditPointMarkers,
     instrumental:
       typeof parsed.instrumental === "boolean" ? parsed.instrumental : false,
     bpmValue: (parsed.bpmValue as BpmFilterValue | null) ?? null,
@@ -89,36 +86,6 @@ export function useFilterPersistence({
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>(baseDefaultState);
-
-  useEffect(() => {
-    const syncMarkerVisibility = (event?: Event) => {
-      const customEvent = event as CustomEvent<{ visible?: boolean }>;
-      const visible =
-        typeof customEvent?.detail?.visible === "boolean"
-          ? customEvent.detail.visible
-          : getStoredEditPointMarkerVisibility();
-
-      setFilters((current) =>
-        current.showEditPointMarkers === visible
-          ? current
-          : { ...current, showEditPointMarkers: visible },
-      );
-    };
-
-    window.addEventListener(
-      EDIT_POINT_MARKER_VISIBILITY_EVENT,
-      syncMarkerVisibility,
-    );
-    window.addEventListener("storage", syncMarkerVisibility);
-
-    return () => {
-      window.removeEventListener(
-        EDIT_POINT_MARKER_VISIBILITY_EVENT,
-        syncMarkerVisibility,
-      );
-      window.removeEventListener("storage", syncMarkerVisibility);
-    };
-  }, []);
 
   // Hydrate from sessionStorage when auth loads or user changes
   useEffect(() => {
@@ -174,7 +141,6 @@ export function useFilterPersistence({
     if (!storageKey) return;
     if (hydratedKey !== storageKey) return;
 
-    setStoredEditPointMarkerVisibility(filters.showEditPointMarkers);
     notifyCuePointFilterSelection(filters.selectedEditPoints);
     sessionStorage.setItem(storageKey, JSON.stringify(filters));
   }, [hydrated, hydratedKey, storageKey, filters]);
