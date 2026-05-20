@@ -10,16 +10,10 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
-import { MUSIC_FILTER_STORAGE_KEY_PREFIX } from "@/lib/constants";
 import {
   CUE_POINT_FILTER_SELECTION_EVENT,
   getStoredCuePointFilterSelection,
 } from "@/lib/cuePointFilterSelection";
-import {
-  EDIT_POINT_MARKER_VISIBILITY_EVENT,
-  getStoredEditPointMarkerVisibility,
-  updateEditPointMarkerVisibilityPreference,
-} from "@/lib/editPointMarkerVisibility";
 import {
   formatEditPointTime,
   getEditPointFilterLabel,
@@ -48,6 +42,8 @@ const KEY_MIN_WIDTH = 560;
 const BPM_MIN_WIDTH = 700;
 const PREVIOUS_CUE_SKIP_BACK_SECONDS = 1.35;
 const NEXT_CUE_SKIP_AHEAD_SECONDS = 0.25;
+const MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT =
+  "filmwave:music-library-marker-visibility";
 
 type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
 
@@ -64,23 +60,13 @@ function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function getMusicLibraryMarkerVisibilityFromSession() {
-  if (typeof window === "undefined") return null;
+function getMusicLibraryMarkerVisibilityFromEvent(event: Event) {
+  const markerEvent = event as Event & { visible?: boolean };
+  const customEvent = event as CustomEvent<{ visible?: boolean }>;
 
-  for (let index = 0; index < window.sessionStorage.length; index += 1) {
-    const key = window.sessionStorage.key(index);
-
-    if (!key?.startsWith(`${MUSIC_FILTER_STORAGE_KEY_PREFIX}:`)) continue;
-
-    try {
-      const parsed = JSON.parse(window.sessionStorage.getItem(key) || "{}");
-
-      if (typeof parsed.showEditPointMarkers === "boolean") {
-        return parsed.showEditPointMarkers;
-      }
-    } catch {
-      return null;
-    }
+  if (typeof markerEvent.visible === "boolean") return markerEvent.visible;
+  if (typeof customEvent.detail?.visible === "boolean") {
+    return customEvent.detail.visible;
   }
 
   return null;
@@ -273,11 +259,8 @@ export default function MusicPlayer() {
     string | null
   >(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
-  const [showEditPointMarkers, setShowEditPointMarkers] = useState(() =>
-    getStoredEditPointMarkerVisibility(),
-  );
   const [musicLibraryShowEditPointMarkers, setMusicLibraryShowEditPointMarkers] =
-    useState<boolean | null>(null);
+    useState(false);
   const [selectedCuePointTypes, setSelectedCuePointTypes] = useState<string[]>(
     () => getStoredCuePointFilterSelection(),
   );
@@ -286,11 +269,8 @@ export default function MusicPlayer() {
     left: 0,
   });
 
-  const usingMusicLibraryMarkerVisibility =
-    pathname === "/music" && musicLibraryShowEditPointMarkers !== null;
-  const effectiveShowEditPointMarkers = usingMusicLibraryMarkerVisibility
-    ? musicLibraryShowEditPointMarkers
-    : showEditPointMarkers;
+  const effectiveShowEditPointMarkers =
+    pathname === "/music" && musicLibraryShowEditPointMarkers;
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
   const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
   const showCompactTime =
@@ -393,35 +373,30 @@ export default function MusicPlayer() {
   }, []);
 
   useEffect(() => {
-    const syncMarkerVisibility = () => {
-      setShowEditPointMarkers(getStoredEditPointMarkerVisibility());
-    };
-
-    syncMarkerVisibility();
-    window.addEventListener(
-      EDIT_POINT_MARKER_VISIBILITY_EVENT,
-      syncMarkerVisibility,
-    );
-    window.addEventListener("storage", syncMarkerVisibility);
-
-    return () => {
-      window.removeEventListener(
-        EDIT_POINT_MARKER_VISIBILITY_EVENT,
-        syncMarkerVisibility,
-      );
-      window.removeEventListener("storage", syncMarkerVisibility);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (pathname === "/music") {
-      setMusicLibraryShowEditPointMarkers(
-        getMusicLibraryMarkerVisibilityFromSession(),
-      );
+    if (pathname !== "/music") {
+      setMusicLibraryShowEditPointMarkers(false);
       return;
     }
 
-    setMusicLibraryShowEditPointMarkers(null);
+    const syncMusicLibraryMarkerVisibility = (event: Event) => {
+      const visible = getMusicLibraryMarkerVisibilityFromEvent(event);
+
+      if (visible === null) return;
+
+      setMusicLibraryShowEditPointMarkers(visible);
+    };
+
+    window.addEventListener(
+      MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT,
+      syncMusicLibraryMarkerVisibility,
+    );
+
+    return () => {
+      window.removeEventListener(
+        MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT,
+        syncMusicLibraryMarkerVisibility,
+      );
+    };
   }, [pathname]);
 
   useEffect(() => {
@@ -434,12 +409,6 @@ export default function MusicPlayer() {
           ? selectedTypes
           : getStoredCuePointFilterSelection(),
       );
-
-      if (pathname === "/music") {
-        setMusicLibraryShowEditPointMarkers(
-          getMusicLibraryMarkerVisibilityFromSession(),
-        );
-      }
     };
 
     syncCuePointFilterSelection();
@@ -456,7 +425,7 @@ export default function MusicPlayer() {
       );
       window.removeEventListener("storage", syncCuePointFilterSelection);
     };
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -643,14 +612,6 @@ export default function MusicPlayer() {
       setIsCreatingPlaylist(false);
     }
   }
-
-  const handleToggleEditPointMarkers = () => {
-    const nextValue = !showEditPointMarkers;
-
-    setShowEditPointMarkers(nextValue);
-    updateEditPointMarkerVisibilityPreference(nextValue);
-    setMoreOpen(false);
-  };
 
   const handleClosePlayer = () => {
     setMoreOpen(false);
@@ -980,10 +941,6 @@ export default function MusicPlayer() {
             }}
           >
             <span>Create New Playlist</span>
-          </button>
-
-          <button type="button" onClick={handleToggleEditPointMarkers}>
-            <span>{showEditPointMarkers ? "Hide Markers" : "Show Markers"}</span>
           </button>
 
           {currentSong.audioUrl ? (
