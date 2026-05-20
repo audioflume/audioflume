@@ -12,13 +12,18 @@ type UserPreferencesPatch = {
   playlist_sort_mode?: PlaylistSortMode;
   sidebar_project_sort_mode?: SidebarProjectSortMode;
   theme_mode?: ThemeMode;
+  show_edit_point_markers?: boolean;
 };
+
+const userPreferenceSelect =
+  "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, theme_mode, show_edit_point_markers";
 
 const defaultPreferences = {
   playlist_view_mode: "grid" as PlaylistViewMode,
   playlist_sort_mode: "custom" as PlaylistSortMode,
   sidebar_project_sort_mode: "alphabetical" as SidebarProjectSortMode,
   theme_mode: "dark" as ThemeMode,
+  show_edit_point_markers: true,
 };
 
 function isValidPlaylistViewMode(value: unknown): value is PlaylistViewMode {
@@ -39,6 +44,10 @@ function isValidThemeMode(value: unknown): value is ThemeMode {
   return value === "light" || value === "dark";
 }
 
+function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
+
 export async function GET() {
   const { userId } = await auth();
 
@@ -48,9 +57,7 @@ export async function GET() {
 
   const { data, error } = await supabaseServer
     .from("user_preferences")
-    .select(
-      "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, theme_mode",
-    )
+    .select(userPreferenceSelect)
     .eq("clerk_user_id", userId)
     .maybeSingle();
 
@@ -69,9 +76,7 @@ export async function GET() {
         clerk_user_id: userId,
         ...defaultPreferences,
       })
-      .select(
-        "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, theme_mode",
-      )
+      .select(userPreferenceSelect)
       .single();
 
     if (createError) {
@@ -85,7 +90,10 @@ export async function GET() {
     return NextResponse.json(created);
   }
 
-  return NextResponse.json(data);
+  return NextResponse.json({
+    ...defaultPreferences,
+    ...data,
+  });
 }
 
 export async function PATCH(request: Request) {
@@ -143,6 +151,17 @@ export async function PATCH(request: Request) {
     updates.theme_mode = body.theme_mode;
   }
 
+  if ("show_edit_point_markers" in body) {
+    if (!isBoolean(body.show_edit_point_markers)) {
+      return NextResponse.json(
+        { error: "Invalid show_edit_point_markers" },
+        { status: 400 },
+      );
+    }
+
+    updates.show_edit_point_markers = body.show_edit_point_markers;
+  }
+
   if (Object.keys(updates).length === 0) {
     return NextResponse.json(
       { error: "No valid preferences provided" },
@@ -159,9 +178,7 @@ export async function PATCH(request: Request) {
       },
       { onConflict: "clerk_user_id" },
     )
-    .select(
-      "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, theme_mode",
-    )
+    .select(userPreferenceSelect)
     .single();
 
   if (error) {
