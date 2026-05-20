@@ -32,6 +32,7 @@ function ChevronIcon({ open }: { open: boolean }) {
 export default function Header() {
   const { user } = useUser();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,6 +46,24 @@ export default function Header() {
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
+
+  useEffect(() => {
+    function syncProfileImage() {
+      setProfileImage(localStorage.getItem("filmwave-profile-image"));
+    }
+
+    syncProfileImage();
+
+    window.addEventListener("storage", syncProfileImage);
+    window.addEventListener("filmwave-profile-image-change", syncProfileImage);
+    window.addEventListener("focus", syncProfileImage);
+
+    return () => {
+      window.removeEventListener("storage", syncProfileImage);
+      window.removeEventListener("filmwave-profile-image-change", syncProfileImage);
+      window.removeEventListener("focus", syncProfileImage);
+    };
+  }, []);
 
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
@@ -99,8 +118,12 @@ export default function Header() {
               <ChevronIcon open={menuOpen} />
             </span>
 
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--accent-2)] text-[10px] font-semibold leading-none text-[var(--accent-2-contrast)]">
-              {initials}
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[10px] font-semibold leading-none text-[var(--text-primary)]">
+              {profileImage ? (
+                <img src={profileImage} alt="Profile" className="h-full w-full object-cover" />
+              ) : (
+                initials
+              )}
             </div>
           </button>
 
