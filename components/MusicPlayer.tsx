@@ -716,7 +716,12 @@ export default function MusicPlayer() {
                         title={`${label} · ${formatEditPointTime(marker.time)}`}
                         aria-label={`Jump to ${label}`}
                         className="group/player-cue-point absolute top-1/2 z-30 h-[34px] w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
-                        style={{ left: `${left}%`, opacity: dimmed ? 0.3 : 1 }}
+                        style={{
+                          left: `${left}%`,
+                          opacity: dimmed
+                            ? "var(--cue-marker-opacity-muted)"
+                            : "var(--cue-marker-opacity)",
+                        }}
                         onClick={(event) => {
                           event.preventDefault();
                           event.stopPropagation();
@@ -724,9 +729,11 @@ export default function MusicPlayer() {
                         }}
                       >
                         <span
-                          className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full bg-[var(--cue-point-marker)]"
+                          className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full bg-[var(--cue-marker-color)]"
                           style={{
-                            width: dimmed ? "1px" : "1.5px",
+                            width: dimmed
+                              ? "var(--cue-marker-width-muted)"
+                              : "var(--cue-marker-width)",
                           }}
                         />
                         <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-[80] flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/player-cue-point:translate-y-0 group-hover/player-cue-point:opacity-100">
