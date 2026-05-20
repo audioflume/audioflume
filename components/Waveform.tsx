@@ -3,7 +3,6 @@
 import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useRef } from "react";
 import { usePlayer } from "@/context/PlayerContext";
-import { useUserPreferences } from "@/context/UserPreferencesContext";
 import {
   getEditPointFilterLabel,
   getMarkerType,
@@ -96,7 +95,7 @@ export default function Waveform({
   song,
   compact = false,
   highlightedEditPointTypes = [],
-  showEditPointMarkers,
+  showEditPointMarkers = false,
 }: {
   song: Song;
   compact?: boolean;
@@ -107,11 +106,8 @@ export default function Waveform({
   const containerRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const peaksRef = useRef<number[]>([]);
-  const { showEditPointMarkers: globalShowEditPointMarkers } =
-    useUserPreferences();
 
-  const shouldShowEditPointMarkers =
-    showEditPointMarkers ?? globalShowEditPointMarkers;
+  const shouldShowEditPointMarkers = showEditPointMarkers;
 
   const {
     registerWaveform,
