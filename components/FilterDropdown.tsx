@@ -128,20 +128,7 @@ export default function FilterDropdown({
 
           <div className="max-h-[340px] overflow-y-auto p-1.5">
             {sections.map((section, sectionIndex) => (
-              <div
-                key={`${section.label || "section"}-${sectionIndex}`}
-                className={
-                  sectionIndex > 0
-                    ? "mt-2 border-t border-[var(--border)] pt-2"
-                    : ""
-                }
-              >
-                {section.label && (
-                  <div className="px-2.5 pb-2 pt-1 text-[10px] font-medium tracking-[0.02em] text-[var(--text-muted)]">
-                    {section.label}
-                  </div>
-                )}
-
+              <div key={`${section.label || "section"}-${sectionIndex}`}>
                 {section.options.map((option) => {
                   const isSelected = selected.includes(option);
 
