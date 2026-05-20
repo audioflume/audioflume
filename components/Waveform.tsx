@@ -273,7 +273,9 @@ export default function Waveform({
               className="group/edit-point-marker absolute top-1/2 z-20 h-[38px] w-5 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
               style={{
                 left: `${getPercent(marker.time)}%`,
-                opacity: dimmed ? 0.3 : 1,
+                opacity: dimmed
+                  ? "var(--cue-marker-opacity-muted)"
+                  : "var(--cue-marker-opacity)",
               }}
               title={`${label} · ${markerTime}`}
               aria-label={`Play from ${label} at ${markerTime}`}
@@ -286,8 +288,12 @@ export default function Waveform({
               <span
                 className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full transition-[width,opacity] duration-150 group-hover/edit-point-marker:opacity-100"
                 style={{
-                  width: selected ? "1.5px" : "1px",
-                  background: "var(--cue-point-marker)",
+                  width: hasHighlightedTypes
+                    ? selected
+                      ? "var(--cue-marker-width-active)"
+                      : "var(--cue-marker-width-muted)"
+                    : "var(--cue-marker-width)",
+                  background: "var(--cue-marker-color)",
                 }}
               />
 
