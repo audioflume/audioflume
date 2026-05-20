@@ -331,6 +331,41 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     return audioRef.current;
   }
 
+  const ensureAudioSourceForCurrentSong = useCallback(
+    (audio: HTMLAudioElement) => {
+      const current = currentSongRef.current;
+
+      if (!current) return false;
+
+      const desiredTime = currentTimeRef.current;
+      const needsSource = !audio.src || audio.src !== current.audioUrl;
+
+      if (needsSource) {
+        audio.src = current.audioUrl;
+      }
+
+      const applyTime = () => {
+        if (!audio.duration || !isFinite(audio.duration)) return;
+
+        const safeTime = Math.max(0, Math.min(desiredTime, audio.duration));
+        audio.currentTime = safeTime;
+        setCurrentTimeState(safeTime);
+        setDurationState(audio.duration);
+      };
+
+      if (desiredTime > 0) {
+        if (audio.readyState >= 1) {
+          applyTime();
+        } else {
+          audio.addEventListener("loadedmetadata", applyTime, { once: true });
+        }
+      }
+
+      return true;
+    },
+    [setCurrentTimeState, setDurationState],
+  );
+
   const restoreStoredPlayer = useCallback(() => {
     if (currentSongRef.current) return;
 
@@ -374,6 +409,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const audio = getAudio();
     const requestId = ++playRequestIdRef.current;
 
+    if (!ensureAudioSourceForCurrentSong(audio)) return;
+
     remoteOwnerTabIdRef.current = null;
     setRemotePlayingInAnotherTab(false);
 
@@ -385,7 +422,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       setIsPlaying(false);
       postPausedState();
     });
-  }, [postPausedState]);
+  }, [ensureAudioSourceForCurrentSong, postPausedState]);
 
   const safePause = useCallback(() => {
     playRequestIdRef.current += 1;
@@ -640,15 +677,29 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setCurrentSong(message.song);
       }
 
+      if (!audio.src || audio.src !== message.song.audioUrl) {
+        audio.src = message.song.audioUrl;
+      }
+
       const safeTime = Math.max(0, message.currentTime || 0);
       const nextDuration = message.duration || message.song.duration || 0;
 
-      try {
-        if (audio.readyState >= 1 && Number.isFinite(safeTime)) {
-          audio.currentTime = safeTime;
+      const applyRemoteTime = () => {
+        try {
+          if (audio.duration && isFinite(audio.duration)) {
+            audio.currentTime = Math.max(0, Math.min(safeTime, audio.duration));
+          }
+        } catch {
+          // Ignore remote seek sync failures.
         }
-      } catch {
-        // Ignore remote seek sync failures.
+      };
+
+      if (audio.readyState >= 1) {
+        applyRemoteTime();
+      } else {
+        audio.addEventListener("loadedmetadata", applyRemoteTime, {
+          once: true,
+        });
       }
 
       const progress = nextDuration > 0 ? safeTime / nextDuration : 0;
