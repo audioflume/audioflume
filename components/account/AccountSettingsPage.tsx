@@ -4,7 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import Footer from "@/components/Footer";
 import { useTheme } from "@/context/ThemeContext";
+import { usePlayer } from "@/context/PlayerContext";
 import {
   useUserPreferences,
   type PlaylistSortMode,
@@ -23,6 +25,16 @@ type AccountSection =
 
 type AccountSettingsPageProps = {
   section: AccountSection;
+};
+
+type HeroConfig = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  image: string;
+  statA: string;
+  statB: string;
+  statC: string;
 };
 
 const navItems: {
@@ -69,10 +81,85 @@ const navItems: {
   },
 ];
 
+const heroConfig: Record<AccountSection, HeroConfig> = {
+  profile: {
+    eyebrow: "Account",
+    title: "Your Filmwave profile.",
+    description:
+      "Keep your account details, studio info, and creative use case aligned with the music library you build around.",
+    image:
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=80",
+    statA: "Creator profile",
+    statB: "Library access",
+    statC: "Personal details",
+  },
+  settings: {
+    eyebrow: "Preferences",
+    title: "Shape how Filmwave behaves.",
+    description:
+      "Adjust the global settings that control your browsing layout, theme, playlist order, and sidebar project workflow.",
+    image:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    statA: "Synced prefs",
+    statB: "Playlist layout",
+    statC: "Project order",
+  },
+  membership: {
+    eyebrow: "Membership",
+    title: "Plan, license, and usage.",
+    description:
+      "A clearer account home for membership status, usage signals, plan changes, and subscription controls.",
+    image:
+      "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1400&q=80",
+    statA: "Commercial use",
+    statB: "Unlimited access",
+    statC: "Plan controls",
+  },
+  payment: {
+    eyebrow: "Billing",
+    title: "Payment details without the clutter.",
+    description:
+      "Manage cards, invoice details, receipts, and billing contact information from a compact billing workspace.",
+    image:
+      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
+    statA: "Invoices",
+    statB: "Payment method",
+    statC: "Billing contact",
+  },
+  security: {
+    eyebrow: "Access",
+    title: "Keep the account protected.",
+    description:
+      "Review sign-in controls, recovery details, and account access settings for your Filmwave workspace.",
+    image:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80",
+    statA: "Verified email",
+    statB: "2 devices",
+    statC: "Recovery ready",
+  },
+  support: {
+    eyebrow: "Help",
+    title: "Support for the cut.",
+    description:
+      "Find help for account questions, licensing, billing, missing files, and support requests in one place.",
+    image:
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1400&q=80",
+    statA: "Support tickets",
+    statB: "License help",
+    statC: "FAQ",
+  },
+};
+
 const supportImages = [
   "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
+];
+
+const membershipPlanImages = [
+  "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=80",
 ];
 
 function ArrowIcon() {
@@ -437,27 +524,54 @@ function SidebarSortIcon() {
   );
 }
 
-function Header({
-  eyebrow,
-  title,
-  description,
-}: {
-  eyebrow: string;
-  title: string;
-  description: string;
-}) {
+function KickerPill({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mb-8 max-w-3xl">
-      <div className="text-xs font-medium text-[var(--text-muted)]">
-        {eyebrow}
-      </div>
-      <h1 className="mt-2 text-[34px] font-medium leading-none tracking-[-0.055em] text-[var(--text-primary)] md:text-[44px]">
-        {title}
-      </h1>
-      <p className="mt-3 text-sm leading-6 text-[var(--text-secondary)]">
-        {description}
-      </p>
+    <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
+      <span className="truncate">{children}</span>
     </div>
+  );
+}
+
+function AccountHero({ config }: { config: HeroConfig }) {
+  return (
+    <section className="mb-8">
+      <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.72fr)] xl:items-end">
+        <div>
+          <div className="mb-3 inline-flex items-center text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+            {config.eyebrow}
+          </div>
+          <h1 className="max-w-[760px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,76px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
+            {config.title}
+          </h1>
+        </div>
+
+        <p className="max-w-[520px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">
+          {config.description}
+        </p>
+      </div>
+
+      <div className="group relative min-h-[255px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+        <img
+          src={config.image}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
+        <div className="relative z-10 flex min-h-[255px] flex-col justify-between p-5 md:p-6">
+          <KickerPill>Filmwave account</KickerPill>
+          <div className="grid gap-2 sm:grid-cols-3">
+            {[config.statA, config.statB, config.statC].map((stat) => (
+              <div
+                key={stat}
+                className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur"
+              >
+                {stat}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -470,7 +584,7 @@ function Card({
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-[18px] border border-[var(--border)] bg-white shadow-[0_18px_45px_rgba(0,0,0,0.04)] ${className}`}
+      className={`overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] ${className}`}
     >
       {children}
     </div>
@@ -516,7 +630,7 @@ function Input({
         value={value || ""}
         placeholder={placeholder}
         readOnly
-        className="h-10 w-full rounded-xl border border-[var(--border)] bg-white px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+        className="h-10 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
       />
     </label>
   );
@@ -524,7 +638,7 @@ function Input({
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-white px-3.5 py-3">
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3">
       <div className="text-xs font-medium text-[var(--text-muted)]">
         {label}
       </div>
@@ -545,7 +659,11 @@ function Button({
   return (
     <button
       type="button"
-      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-3.5 text-xs font-medium transition ${subtle ? "bg-white text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]" : "bg-[var(--bg-hover)] text-[var(--text-primary)] hover:bg-[var(--bg-hover-strong)]"}`}
+      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 rounded-full border border-[var(--border)] px-3.5 text-xs font-medium transition ${
+        subtle
+          ? "bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
+          : "bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"
+      }`}
     >
       {children}
     </button>
@@ -556,7 +674,7 @@ function DangerButton({ children }: { children: React.ReactNode }) {
   return (
     <button
       type="button"
-      className="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border)] bg-white px-3.5 text-xs font-medium text-[var(--danger)] transition hover:border-[#fff0f0] hover:bg-[#fff0f0] hover:text-[var(--danger)]"
+      className="inline-flex h-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 text-xs font-medium text-[var(--danger)] transition hover:border-[#fff0f0] hover:bg-[#fff0f0] hover:text-[var(--danger)]"
     >
       {children}
     </button>
@@ -576,7 +694,11 @@ function Option<T extends string>({
     <button
       type="button"
       onClick={() => onClick(label.toLowerCase() as T)}
-      className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-3 text-xs font-medium transition ${active ? "bg-[var(--bg-hover)] text-[var(--text-primary)]" : "bg-white text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"}`}
+      className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-full border border-[var(--border)] px-3 text-xs font-medium transition ${
+        active
+          ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+          : "bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
+      }`}
     >
       {active ? <CheckIcon /> : null}
       {label}
@@ -599,7 +721,7 @@ function Row({
     <div className="grid gap-4 border-b border-[var(--border)] px-4 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
       <div className="flex gap-3">
         {icon ? (
-          <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[var(--border)] bg-white text-[var(--text-secondary)]">
+          <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">
             {icon}
           </div>
         ) : null}
@@ -633,6 +755,7 @@ function ProfileImageUploader({ initials }: { initials: string }) {
       if (!image) return;
       localStorage.setItem("filmwave-profile-image", image);
       setProfileImage(image);
+      window.dispatchEvent(new Event("filmwave-profile-image-change"));
     };
     reader.readAsDataURL(file);
   }
@@ -640,11 +763,12 @@ function ProfileImageUploader({ initials }: { initials: string }) {
   function removeImage() {
     localStorage.removeItem("filmwave-profile-image");
     setProfileImage(null);
+    window.dispatchEvent(new Event("filmwave-profile-image-change"));
   }
 
   return (
     <div className="flex flex-col items-start gap-2">
-      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-xl border border-[var(--border)] bg-white text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
+      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
         <span className="absolute inset-0 overflow-hidden rounded-xl">
           {profileImage ? (
             <img
@@ -655,7 +779,7 @@ function ProfileImageUploader({ initials }: { initials: string }) {
           ) : null}
         </span>
         {!profileImage ? <span>{initials || "FW"}</span> : null}
-        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]">
+        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]">
           <PencilIcon />
         </span>
         <input
@@ -678,14 +802,17 @@ function ProfileImageUploader({ initials }: { initials: string }) {
   );
 }
 
-function VisualPanel({ index }: { index: number }) {
+function VisualPanel({ image, index }: { image?: string; index?: number }) {
+  const src = image || supportImages[(index || 0) % supportImages.length];
+
   return (
-    <div className="h-36 overflow-hidden border-b border-[var(--border)] bg-[var(--bg-hover)]">
+    <div className="relative h-40 overflow-hidden border-b border-[var(--border)] bg-[var(--bg-hover)]">
       <img
-        src={supportImages[index % supportImages.length]}
+        src={src}
         alt=""
-        className="h-full w-full object-cover"
+        className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
       />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/56 via-black/12 to-transparent" />
     </div>
   );
 }
@@ -702,64 +829,57 @@ function Profile() {
     .toUpperCase();
 
   return (
-    <>
-      <Header
-        eyebrow="Account"
-        title="Profile"
-        description="Manage the personal information connected to your Filmwave library, billing, and support activity."
-      />
-      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card>
-          <CardTitle
-            title="Personal information"
-            description="Basic details shown across your account and future customer portal."
+    <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+      <Card>
+        <CardTitle
+          title="Personal information"
+          description="Basic details shown across your account and future customer portal."
+        />
+        <div className="grid gap-4 p-4 sm:grid-cols-2">
+          <Input
+            label="First name"
+            value={user?.firstName || ""}
+            placeholder="First name"
           />
-          <div className="grid gap-4 p-4 sm:grid-cols-2">
-            <Input
-              label="First name"
-              value={user?.firstName || ""}
-              placeholder="First name"
-            />
-            <Input
-              label="Last name"
-              value={user?.lastName || ""}
-              placeholder="Last name"
-            />
-            <Input label="Display name" value={fullName} />
-            <Input label="Email address" value={email} />
-            <Input label="Company / studio" placeholder="Add company name" />
-            <Input
-              label="Primary use"
-              placeholder="Documentary, commercial, YouTube..."
-            />
-          </div>
-          <div className="flex flex-wrap gap-2 border-t border-[var(--border)] px-4 py-3.5">
-            <Button>Save changes</Button>
-            <Button subtle>Cancel</Button>
-          </div>
-        </Card>
-        <Card>
-          <div className="border-b border-[var(--border)] p-4">
-            <div className="flex items-center gap-5">
-              <ProfileImageUploader initials={initials} />
-              <div className="min-w-0">
-                <div className="truncate text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-                  {fullName}
-                </div>
-                <div className="mt-1 truncate text-xs text-[var(--text-muted)]">
-                  {email}
-                </div>
+          <Input
+            label="Last name"
+            value={user?.lastName || ""}
+            placeholder="Last name"
+          />
+          <Input label="Display name" value={fullName} />
+          <Input label="Email address" value={email} />
+          <Input label="Company / studio" placeholder="Add company name" />
+          <Input
+            label="Primary use"
+            placeholder="Documentary, commercial, YouTube..."
+          />
+        </div>
+        <div className="flex flex-wrap gap-2 border-t border-[var(--border)] px-4 py-3.5">
+          <Button>Save changes</Button>
+          <Button subtle>Cancel</Button>
+        </div>
+      </Card>
+      <Card>
+        <div className="border-b border-[var(--border)] p-4">
+          <div className="flex items-center gap-5">
+            <ProfileImageUploader initials={initials} />
+            <div className="min-w-0">
+              <div className="truncate text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                {fullName}
+              </div>
+              <div className="mt-1 truncate text-xs text-[var(--text-muted)]">
+                {email}
               </div>
             </div>
           </div>
-          <div className="grid gap-3 p-4">
-            <Info label="Account type" value="Lifetime Member" />
-            <Info label="Library license" value="Royalty-free commercial use" />
-            <Info label="Member since" value="Mock data" />
-          </div>
-        </Card>
-      </div>
-    </>
+        </div>
+        <div className="grid gap-3 p-4">
+          <Info label="Account type" value="Lifetime Member" />
+          <Info label="Library license" value="Royalty-free commercial use" />
+          <Info label="Member since" value="Mock data" />
+        </div>
+      </Card>
+    </div>
   );
 }
 
@@ -774,88 +894,82 @@ function Settings() {
     setSidebarProjectSortMode,
     preferencesLoaded,
   } = useUserPreferences();
+
   return (
-    <>
-      <Header
-        eyebrow="Preferences"
-        title="Settings"
-        description="Global site preferences stored in Supabase and synced through your existing user preferences context."
+    <Card>
+      <CardTitle
+        title="Global preferences"
+        description={
+          preferencesLoaded
+            ? "Preferences loaded from your account."
+            : "Loading saved preferences..."
+        }
       />
-      <Card>
-        <CardTitle
-          title="Global preferences"
-          description={
-            preferencesLoaded
-              ? "Preferences loaded from your account."
-              : "Loading saved preferences..."
-          }
+      <Row
+        icon={<ThemeIcon />}
+        title="Theme"
+        description="Controls the light or dark appearance across Filmwave."
+      >
+        <Option<ThemeMode>
+          label="Dark"
+          active={theme === "dark"}
+          onClick={() => setTheme("dark")}
         />
-        <Row
-          icon={<ThemeIcon />}
-          title="Theme"
-          description="Controls the light or dark appearance across Filmwave."
-        >
-          <Option<ThemeMode>
-            label="Dark"
-            active={theme === "dark"}
-            onClick={() => setTheme("dark")}
-          />
-          <Option<ThemeMode>
-            label="Light"
-            active={theme === "light"}
-            onClick={() => setTheme("light")}
-          />
-        </Row>
-        <Row
-          icon={<PlaylistViewIcon />}
-          title="Playlist view"
-          description="Sets the default layout for your personal playlist library."
-        >
-          <Option<PlaylistViewMode>
-            label="Grid"
-            active={playlistViewMode === "grid"}
-            onClick={() => setPlaylistViewMode("grid")}
-          />
-          <Option<PlaylistViewMode>
-            label="List"
-            active={playlistViewMode === "list"}
-            onClick={() => setPlaylistViewMode("list")}
-          />
-        </Row>
-        <Row
-          icon={<PlaylistSortIcon />}
-          title="Playlist sorting"
-          description="Choose whether playlists use your custom drag order or stay alphabetical."
-        >
-          <Option<PlaylistSortMode>
-            label="Custom"
-            active={playlistSortMode === "custom"}
-            onClick={() => setPlaylistSortMode("custom")}
-          />
-          <Option<PlaylistSortMode>
-            label="Alphabetical"
-            active={playlistSortMode === "alphabetical"}
-            onClick={() => setPlaylistSortMode("alphabetical")}
-          />
-        </Row>
-        <Row
-          icon={<SidebarSortIcon />}
-          title="Sidebar project sorting"
-          description="Controls how projects are ordered inside the main app sidebar."
-        >
-          <Option<SidebarProjectSortMode>
-            label="Custom"
-            active={sidebarProjectSortMode === "custom"}
-            onClick={() => setSidebarProjectSortMode("custom")}
-          />
-          <Option<SidebarProjectSortMode>
-            label="Alphabetical"
-            active={sidebarProjectSortMode === "alphabetical"}
-            onClick={() => setSidebarProjectSortMode("alphabetical")}
-          />
-        </Row>
-      </Card>
-    </>
+        <Option<ThemeMode>
+          label="Light"
+          active={theme === "light"}
+          onClick={() => setTheme("light")}
+        />
+      </Row>
+      <Row
+        icon={<PlaylistViewIcon />}
+        title="Playlist view"
+        description="Sets the default layout for your personal playlist library."
+      >
+        <Option<PlaylistViewMode>
+          label="Grid"
+          active={playlistViewMode === "grid"}
+          onClick={() => setPlaylistViewMode("grid")}
+        />
+        <Option<PlaylistViewMode>
+          label="List"
+          active={playlistViewMode === "list"}
+          onClick={() => setPlaylistViewMode("list")}
+        />
+      </Row>
+      <Row
+        icon={<PlaylistSortIcon />}
+        title="Playlist sorting"
+        description="Choose whether playlists use your custom drag order or stay alphabetical."
+      >
+        <Option<PlaylistSortMode>
+          label="Custom"
+          active={playlistSortMode === "custom"}
+          onClick={() => setPlaylistSortMode("custom")}
+        />
+        <Option<PlaylistSortMode>
+          label="Alphabetical"
+          active={playlistSortMode === "alphabetical"}
+          onClick={() => setPlaylistSortMode("alphabetical")}
+        />
+      </Row>
+      <Row
+        icon={<SidebarSortIcon />}
+        title="Sidebar project sorting"
+        description="Controls how projects are ordered inside the main app sidebar."
+      >
+        <Option<SidebarProjectSortMode>
+          label="Custom"
+          active={sidebarProjectSortMode === "custom"}
+          onClick={() => setSidebarProjectSortMode("custom")}
+        />
+        <Option<SidebarProjectSortMode>
+          label="Alphabetical"
+          active={sidebarProjectSortMode === "alphabetical"}
+          onClick={() => setSidebarProjectSortMode("alphabetical")}
+        />
+      </Row>
+    </Card>
   );
 }
 
@@ -877,13 +991,9 @@ function Membership() {
       "For agencies, publishers, and teams with higher-volume licensing needs.",
     ],
   ];
+
   return (
     <>
-      <Header
-        eyebrow="Membership"
-        title="Plan & license"
-        description="Review your current Filmwave access, usage snapshot, and future plan options."
-      />
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <Card>
           <div className="border-b border-[var(--border)] p-4">
@@ -899,12 +1009,14 @@ function Membership() {
               licensing.
             </p>
           </div>
+
           <div className="grid gap-3 p-4 sm:grid-cols-3">
             <Info label="Renewal" value="No renewal" />
             <Info label="Downloads" value="Unlimited" />
             <Info label="License" value="Commercial use" />
           </div>
         </Card>
+
         <Card>
           <CardTitle
             title="Usage snapshot"
@@ -917,29 +1029,38 @@ function Membership() {
           </div>
         </Card>
       </div>
+
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        {plans.map(([name, price, description]) => (
-          <Card key={name} className="p-4">
-            <div className="flex min-h-[190px] flex-col">
-              <div className="text-sm font-medium text-[var(--text-primary)]">
-                {name}
-              </div>
-              <div className="mt-2 text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">
-                {price}
-              </div>
-              <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">
-                {description}
-              </p>
-              <div className="mt-auto pt-5">
-                <Button subtle>
-                  {name === "Enterprise" ? "Contact sales" : "Change plan"}{" "}
-                  <DiagonalArrowIcon />
-                </Button>
+        {plans.map(([name, price, description], index) => (
+          <Card key={name} className="group">
+            <VisualPanel image={membershipPlanImages[index]} />
+
+            <div className="p-4">
+              <div className="flex min-h-[190px] flex-col">
+                <div className="text-sm font-medium text-[var(--text-primary)]">
+                  {name}
+                </div>
+
+                <div className="mt-2 text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">
+                  {price}
+                </div>
+
+                <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">
+                  {description}
+                </p>
+
+                <div className="mt-auto pt-5">
+                  <Button subtle>
+                    {name === "Enterprise" ? "Contact sales" : "Change plan"}{" "}
+                    <DiagonalArrowIcon />
+                  </Button>
+                </div>
               </div>
             </div>
           </Card>
         ))}
       </div>
+
       <Card className="mt-4">
         <div className="flex flex-wrap items-center justify-between gap-4 p-4">
           <div>
@@ -951,6 +1072,7 @@ function Membership() {
               period. This is a mock control for now.
             </p>
           </div>
+
           <DangerButton>Cancel membership</DangerButton>
         </div>
       </Card>
@@ -961,11 +1083,6 @@ function Membership() {
 function Payment() {
   return (
     <>
-      <Header
-        eyebrow="Billing"
-        title="Payment"
-        description="Manage billing details, payment methods, and receipts for your Filmwave account."
-      />
       <div className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
         <Card>
           <CardTitle
@@ -973,7 +1090,7 @@ function Payment() {
             description="Primary billing method used for renewals and plan changes."
           />
           <div className="p-4">
-            <div className="rounded-xl border border-[var(--border)] bg-white p-3.5">
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-sm font-medium text-[var(--text-primary)]">
@@ -983,7 +1100,7 @@ function Payment() {
                     Expires 08/29 · Billing address in Canada
                   </div>
                 </div>
-                <div className="rounded-md border border-[var(--border)] px-2 py-1 text-[11px] font-medium text-[var(--text-muted)]">
+                <div className="rounded-full border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]">
                   Mock card
                 </div>
               </div>
@@ -1040,73 +1157,69 @@ function Security() {
   const { user } = useUser();
   const email = user?.primaryEmailAddress?.emailAddress || "Primary email";
   return (
-    <>
-      <Header
-        eyebrow="Access"
-        title="Security"
-        description="Manage sign-in details, recovery options, and account protection."
-      />
-      <div className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
-        <Card>
-          <CardTitle
-            title="Sign-in security"
-            description="Keep your account protected with stronger login controls."
-          />
-          <Row
-            title="Password"
-            description="Change the password used to access your Filmwave account."
-          >
-            <Button>Change password</Button>
-          </Row>
-          <Row
-            title="Two-factor authentication"
-            description="Add an extra layer of protection for your account."
-          >
-            <Button subtle>Set up 2FA</Button>
-          </Row>
-          <Row
-            title="Backup email"
-            description="Use a secondary email for recovery and account alerts."
-          >
-            <Button subtle>Add backup email</Button>
-          </Row>
-        </Card>
-        <Card>
-          <CardTitle
-            title="Account access"
-            description="Current verified contact and session information."
-          />
-          <div className="grid gap-3 p-4">
-            <Info label="Primary email" value={email} />
-            <Info label="Email status" value="Verified" />
-            <Info label="Active sessions" value="2 devices" />
-          </div>
-        </Card>
-      </div>
-    </>
+    <div className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
+      <Card>
+        <CardTitle
+          title="Sign-in security"
+          description="Keep your account protected with stronger login controls."
+        />
+        <Row
+          title="Password"
+          description="Change the password used to access your Filmwave account."
+        >
+          <Button>Change password</Button>
+        </Row>
+        <Row
+          title="Two-factor authentication"
+          description="Add an extra layer of protection for your account."
+        >
+          <Button subtle>Set up 2FA</Button>
+        </Row>
+        <Row
+          title="Backup email"
+          description="Use a secondary email for recovery and account alerts."
+        >
+          <Button subtle>Add backup email</Button>
+        </Row>
+      </Card>
+      <Card>
+        <CardTitle
+          title="Account access"
+          description="Current verified contact and session information."
+        />
+        <div className="grid gap-3 p-4">
+          <Info label="Primary email" value={email} />
+          <Info label="Email status" value="Verified" />
+          <Info label="Active sessions" value="2 devices" />
+        </div>
+      </Card>
+    </div>
   );
 }
 
 function Support() {
   const cards = [
-    [
-      "Submit a ticket",
-      "Send a detailed issue report for billing, song files, downloads, licensing, or account problems.",
-      "Start ticket",
-      <TicketIcon key="ticket" />,
-    ],
-    [
-      "Contact support",
-      "Reach the Filmwave team directly for account questions or help using the library.",
-      "Email support",
-      <MailIcon key="mail" />,
-    ],
-    [
-      "License help",
-      "Find answers about commercial usage, client projects, social ads, and broadcast-style work.",
-      "View license guide",
-      <LicenseIcon key="license" />,
-    ],
+    {
+      title: "Submit a ticket",
+      description:
+        "Send a detailed issue report for billing, song files, downloads, licensing, or account problems.",
+      action: "Start ticket",
+      icon: <TicketIcon />,
+    },
+    {
+      title: "Contact support",
+      description:
+        "Reach the Filmwave team directly for account questions or help using the library.",
+      action: "Email support",
+      icon: <MailIcon />,
+    },
+    {
+      title: "License help",
+      description:
+        "Find answers about commercial usage, client projects, social ads, and broadcast-style work.",
+      action: "View license guide",
+      icon: <LicenseIcon />,
+    },
   ];
   const faqs = [
     [
@@ -1124,25 +1237,20 @@ function Support() {
   ];
   return (
     <>
-      <Header
-        eyebrow="Help"
-        title="Support & FAQ"
-        description="Find support options, licensing help, and common account answers."
-      />
       <div className="grid gap-4 lg:grid-cols-3">
-        {cards.map(([title, desc, action, icon], index) => (
-          <Card key={title as string}>
+        {cards.map((card, index) => (
+          <Card key={card.title} className="group">
             <VisualPanel index={index} />
             <div className="p-4">
               <div className="text-sm font-medium text-[var(--text-primary)]">
-                {title}
+                {card.title}
               </div>
               <p className="mt-2 min-h-[66px] text-xs leading-5 text-[var(--text-muted)]">
-                {desc}
+                {card.description}
               </p>
               <div className="mt-4">
                 <Button subtle>
-                  {action} {icon}
+                  {card.action} {card.icon}
                 </Button>
               </div>
             </div>
@@ -1152,13 +1260,13 @@ function Support() {
       <Card className="mt-4">
         <CardTitle title="Frequently asked questions" />
         <div className="divide-y divide-[var(--border)]">
-          {faqs.map(([q, a]) => (
-            <div key={q} className="px-4 py-3.5">
+          {faqs.map(([question, answer]) => (
+            <div key={question} className="px-4 py-3.5">
               <div className="text-sm font-medium text-[var(--text-primary)]">
-                {q}
+                {question}
               </div>
               <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">
-                {a}
+                {answer}
               </p>
             </div>
           ))}
@@ -1181,11 +1289,15 @@ export default function AccountSettingsPage({
   section,
 }: AccountSettingsPageProps) {
   const pathname = usePathname();
+  const { currentSong } = usePlayer();
   const activeNav = navItems.find((item) => item.section === section);
+  const currentHero = heroConfig[section];
+  const hasPlayer = Boolean(currentSong);
+
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] md:pl-[var(--sidebar-width,240px)]">
       <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
-        <aside className="border-r border-[var(--border)] bg-white px-4 pb-24 pt-[88px] lg:sticky lg:top-0 lg:h-screen">
+        <aside className="border-r border-[var(--border)] bg-[var(--bg-primary)] px-4 pb-24 pt-[88px] lg:sticky lg:top-0 lg:h-screen">
           <div className="mb-6">
             <div className="text-xs font-medium text-[var(--text-muted)]">
               Account
@@ -1201,7 +1313,11 @@ export default function AccountSettingsPage({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`group flex min-h-[48px] items-center justify-between gap-3 rounded-lg px-2.5 py-2 text-left transition ${active ? "bg-[var(--bg-hover)] text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"}`}
+                  className={`group flex min-h-[48px] items-center justify-between gap-3 rounded-lg px-2.5 py-2 text-left transition ${
+                    active
+                      ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  }`}
                 >
                   <span className="min-w-0">
                     <span className="block text-xs font-medium">
@@ -1212,7 +1328,9 @@ export default function AccountSettingsPage({
                     </span>
                   </span>
                   <span
-                    className={`text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)] ${active ? "opacity-100" : "opacity-0"}`}
+                    className={`text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)] ${
+                      active ? "opacity-100" : "opacity-0"
+                    }`}
                   >
                     <ArrowIcon />
                   </span>
@@ -1221,7 +1339,8 @@ export default function AccountSettingsPage({
             })}
           </nav>
         </aside>
-        <section className="min-w-0 px-5 pb-24 pt-[88px] md:px-8 xl:px-10">
+
+        <section className="min-w-0 px-5 pt-[88px] md:px-8 xl:px-10">
           <div className="mx-auto max-w-[1180px]">
             <div className="mb-8 flex items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
               <div className="text-xs text-[var(--text-muted)]">
@@ -1232,12 +1351,22 @@ export default function AccountSettingsPage({
               </div>
               <Link
                 href="/music"
-                className="inline-flex h-8 items-center justify-center rounded-lg border border-[var(--border)] bg-white px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                className="inline-flex h-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
               >
                 Back to music
               </Link>
             </div>
+
+            <AccountHero config={currentHero} />
+
             <Content section={section} />
+
+            <div
+              className="mt-16 border-t border-[var(--border)] pt-8"
+              style={{ paddingBottom: hasPlayer ? "72px" : "8px" }}
+            >
+              <Footer />
+            </div>
           </div>
         </section>
       </div>
