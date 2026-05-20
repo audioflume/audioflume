@@ -17,6 +17,7 @@ import {
 import {
   EDIT_POINT_MARKER_VISIBILITY_EVENT,
   getStoredEditPointMarkerVisibility,
+  updateEditPointMarkerVisibilityPreference,
 } from "@/lib/editPointMarkerVisibility";
 import {
   formatEditPointTime,
@@ -594,6 +595,14 @@ export default function MusicPlayer() {
     }
   }
 
+  const handleToggleEditPointMarkers = () => {
+    const nextValue = !showEditPointMarkers;
+
+    setShowEditPointMarkers(nextValue);
+    updateEditPointMarkerVisibilityPreference(nextValue);
+    setMoreOpen(false);
+  };
+
   const handleClosePlayer = () => {
     setMoreOpen(false);
     setAddToPlaylistOpen(false);
@@ -924,8 +933,8 @@ export default function MusicPlayer() {
             <span>Create New Playlist</span>
           </button>
 
-          <button type="button" disabled>
-            <span>Share Song</span>
+          <button type="button" onClick={handleToggleEditPointMarkers}>
+            <span>{showEditPointMarkers ? "Hide Markers" : "Show Markers"}</span>
           </button>
 
           {currentSong.audioUrl ? (
