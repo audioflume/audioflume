@@ -26,6 +26,9 @@ type UseFilterPersistenceProps = {
   authLoaded: boolean;
 };
 
+const MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT =
+  "filmwave:music-library-marker-visibility";
+
 const baseDefaultState: FilterState = {
   search: "",
   selectedMoods: [],
@@ -47,6 +50,27 @@ function getDefaultState(): FilterState {
     ...baseDefaultState,
     selectedEditPoints: getStoredCuePointFilterSelection(),
   };
+}
+
+function notifyMusicLibraryMarkerVisibility(visible: boolean) {
+  const event = new Event(MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT) as Event & {
+    visible?: boolean;
+  };
+
+  event.visible = visible;
+  window.dispatchEvent(event);
+}
+
+function getMusicLibraryMarkerVisibilityFromEvent(event: Event) {
+  const markerEvent = event as Event & { visible?: boolean };
+  const customEvent = event as CustomEvent<{ visible?: boolean }>;
+
+  if (typeof markerEvent.visible === "boolean") return markerEvent.visible;
+  if (typeof customEvent.detail?.visible === "boolean") {
+    return customEvent.detail.visible;
+  }
+
+  return null;
 }
 
 function normalizeFilterState(parsed: Record<string, unknown>): FilterState {
@@ -87,6 +111,32 @@ export function useFilterPersistence({
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>(baseDefaultState);
 
+  useEffect(() => {
+    const handleMusicLibraryMarkerVisibility = (event: Event) => {
+      const visible = getMusicLibraryMarkerVisibilityFromEvent(event);
+
+      if (visible === null) return;
+
+      setFilters((current) =>
+        current.showEditPointMarkers === visible
+          ? current
+          : { ...current, showEditPointMarkers: visible },
+      );
+    };
+
+    window.addEventListener(
+      MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT,
+      handleMusicLibraryMarkerVisibility,
+    );
+
+    return () => {
+      window.removeEventListener(
+        MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT,
+        handleMusicLibraryMarkerVisibility,
+      );
+    };
+  }, []);
+
   // Hydrate from sessionStorage when auth loads or user changes
   useEffect(() => {
     if (!authLoaded) return;
@@ -100,6 +150,7 @@ export function useFilterPersistence({
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
+      notifyMusicLibraryMarkerVisibility(defaultState.showEditPointMarkers);
       setHydrated(true);
       setHydratedKey(null);
       return;
@@ -112,6 +163,7 @@ export function useFilterPersistence({
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
+      notifyMusicLibraryMarkerVisibility(defaultState.showEditPointMarkers);
       setHydrated(true);
       setHydratedKey(storageKey);
       return;
@@ -123,12 +175,14 @@ export function useFilterPersistence({
 
       setFilters(normalizedState);
       notifyCuePointFilterSelection(normalizedState.selectedEditPoints);
+      notifyMusicLibraryMarkerVisibility(normalizedState.showEditPointMarkers);
     } catch {
       const defaultState = getDefaultState();
 
       sessionStorage.removeItem(storageKey);
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
+      notifyMusicLibraryMarkerVisibility(defaultState.showEditPointMarkers);
     } finally {
       setHydrated(true);
       setHydratedKey(storageKey);
@@ -143,6 +197,7 @@ export function useFilterPersistence({
 
     sessionStorage.setItem(storageKey, JSON.stringify(filters));
     notifyCuePointFilterSelection(filters.selectedEditPoints);
+    notifyMusicLibraryMarkerVisibility(filters.showEditPointMarkers);
   }, [hydrated, hydratedKey, storageKey, filters]);
 
   return { filters, setFilters, hydrated };
