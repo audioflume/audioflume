@@ -1295,7 +1295,7 @@ export default function AccountSettingsPage({
   const hasPlayer = Boolean(currentSong);
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] md:pl-[var(--sidebar-width,240px)]">
+    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-[padding-left] duration-200 ease-out md:pl-[var(--sidebar-width,240px)]">
       <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
         <aside className="border-r border-[var(--border)] bg-[var(--bg-primary)] px-4 pb-24 pt-[88px] lg:sticky lg:top-0 lg:h-screen">
           <div className="mb-6">
