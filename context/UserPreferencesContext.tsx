@@ -8,6 +8,10 @@ import {
   useState,
   ReactNode,
 } from "react";
+import {
+  getStoredEditPointMarkerVisibility,
+  setStoredEditPointMarkerVisibility,
+} from "@/lib/editPointMarkerVisibility";
 
 export type PlaylistViewMode = "grid" | "list";
 export type PlaylistSortMode = "custom" | "alphabetical";
@@ -27,6 +31,9 @@ type UserPreferencesContextValue = {
   themeMode: ThemeMode;
   setThemeMode: (value: ThemeMode) => void;
 
+  showEditPointMarkers: boolean;
+  setShowEditPointMarkers: (value: boolean) => void;
+
   preferencesLoaded: boolean;
 };
 
@@ -35,6 +42,7 @@ type UserPreferencesResponse = {
   playlist_sort_mode: PlaylistSortMode;
   sidebar_project_sort_mode: SidebarProjectSortMode;
   theme_mode: ThemeMode;
+  show_edit_point_markers: boolean;
 };
 
 const UserPreferencesContext =
@@ -63,6 +71,10 @@ function isThemeMode(value: unknown): value is ThemeMode {
   return value === "light" || value === "dark";
 }
 
+function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
+
 export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const [playlistViewMode, setPlaylistViewModeState] =
     useState<PlaylistViewMode>("grid");
@@ -71,7 +83,13 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const [sidebarProjectSortMode, setSidebarProjectSortModeState] =
     useState<SidebarProjectSortMode>("alphabetical");
   const [themeMode, setThemeModeState] = useState<ThemeMode>("dark");
+  const [showEditPointMarkers, setShowEditPointMarkersState] =
+    useState(true);
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
+
+  useEffect(() => {
+    setShowEditPointMarkersState(getStoredEditPointMarkerVisibility());
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -89,6 +107,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
         );
         const localThemeMode =
           window.localStorage.getItem(LOCAL_THEME_MODE_KEY);
+        const localShowEditPointMarkers = getStoredEditPointMarkerVisibility();
 
         if (!cancelled && isPlaylistViewMode(localPlaylistViewMode)) {
           setPlaylistViewModeState(localPlaylistViewMode);
@@ -110,6 +129,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
         }
 
         if (!cancelled) {
+          setShowEditPointMarkersState(localShowEditPointMarkers);
           setPreferencesLoaded(true);
         }
 
@@ -149,6 +169,11 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
         if (isThemeMode(data.theme_mode)) {
           setThemeModeState(data.theme_mode);
           window.localStorage.setItem(LOCAL_THEME_MODE_KEY, data.theme_mode);
+        }
+
+        if (isBoolean(data.show_edit_point_markers)) {
+          setShowEditPointMarkersState(data.show_edit_point_markers);
+          setStoredEditPointMarkerVisibility(data.show_edit_point_markers);
         }
       } catch (err) {
         console.error("Failed to load user preferences:", err);
@@ -210,6 +235,12 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     patchPreferences({ theme_mode: value });
   };
 
+  const setShowEditPointMarkers = (value: boolean) => {
+    setShowEditPointMarkersState(value);
+    setStoredEditPointMarkerVisibility(value);
+    patchPreferences({ show_edit_point_markers: value });
+  };
+
   const value = useMemo<UserPreferencesContextValue>(
     () => ({
       playlistViewMode,
@@ -220,6 +251,8 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
       setSidebarProjectSortMode,
       themeMode,
       setThemeMode,
+      showEditPointMarkers,
+      setShowEditPointMarkers,
       preferencesLoaded,
     }),
     [
@@ -227,6 +260,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
       playlistSortMode,
       sidebarProjectSortMode,
       themeMode,
+      showEditPointMarkers,
       preferencesLoaded,
     ],
   );
