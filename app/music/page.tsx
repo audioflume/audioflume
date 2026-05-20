@@ -23,7 +23,6 @@ import {
   EDIT_POINT_FILTER_OPTIONS,
   songMatchesEditPointFilters,
 } from "@/lib/editPointUtils";
-import { updateEditPointMarkerVisibilityPreference } from "@/lib/editPointMarkerVisibility";
 import { getRecord, getStringFromRecord } from "@/lib/utils";
 
 import { useFilterPersistence } from "@/hooks/useFilterPersistence";
@@ -245,10 +244,8 @@ export default function MusicPage() {
     setFilters((f) => ({ ...f, selectedDurations: v }));
   const setSelectedEditPoints = (v: string[]) =>
     setFilters((f) => ({ ...f, selectedEditPoints: v }));
-  const setShowEditPointMarkers = (v: boolean) => {
+  const setShowEditPointMarkers = (v: boolean) =>
     setFilters((f) => ({ ...f, showEditPointMarkers: v }));
-    updateEditPointMarkerVisibilityPreference(v);
-  };
   const setInstrumental = (v: boolean) =>
     setFilters((f) => ({ ...f, instrumental: v }));
   const setBpmValue = (v: BpmFilterValue | null) =>
