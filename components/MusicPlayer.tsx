@@ -10,6 +10,7 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
+import { useUserPreferences } from "@/context/UserPreferencesContext";
 import {
   CUE_POINT_FILTER_SELECTION_EVENT,
   getStoredCuePointFilterSelection,
@@ -58,6 +59,14 @@ function formatTime(s: number) {
 
 function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+function isGlobalCueMarkerPage(pathname: string) {
+  return (
+    pathname === "/favorites" ||
+    /^\/playlists\/[^/]+$/.test(pathname) ||
+    /^\/curated-playlists\/[^/]+$/.test(pathname)
+  );
 }
 
 function getMusicLibraryMarkerVisibilityFromEvent(event: Event) {
@@ -241,6 +250,7 @@ export default function MusicPlayer() {
 
   const pathname = usePathname();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { showEditPointMarkers } = useUserPreferences();
 
   const playerRef = useRef<HTMLDivElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
@@ -272,7 +282,11 @@ export default function MusicPlayer() {
   });
 
   const effectiveShowEditPointMarkers =
-    pathname === "/music" && musicLibraryShowEditPointMarkers;
+    pathname === "/music"
+      ? musicLibraryShowEditPointMarkers
+      : isGlobalCueMarkerPage(pathname)
+        ? showEditPointMarkers
+        : false;
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
   const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
   const showCompactTime =
