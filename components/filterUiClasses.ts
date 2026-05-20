@@ -1,13 +1,13 @@
 // components/filterUiClasses.ts
 
 export const filterTriggerBaseClass =
-  "flex h-7 cursor-pointer items-center gap-2 rounded-full border border-[var(--border)] px-2.5 text-xs font-medium transition-colors";
+  "flex h-12 cursor-pointer items-center gap-1.5 border-b-2 border-transparent px-2.5 text-[13px] font-medium transition-colors after:ml-0.5 after:h-1.5 after:w-1.5 after:rotate-45 after:border-b after:border-r after:border-current after:content-['']";
 
 export const filterTriggerActiveClass =
-  "bg-[var(--bg-secondary)] text-[var(--text-primary)]";
+  "border-[var(--text-primary)] text-[var(--text-primary)]";
 
 export const filterTriggerInactiveClass =
-  "bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
+  "text-[var(--text-secondary)] hover:text-[var(--text-primary)]";
 
 export const filterDropdownPanelClass =
   "w-[280px] rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]";
