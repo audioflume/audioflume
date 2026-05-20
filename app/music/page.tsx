@@ -54,6 +54,12 @@ import {
   filterTriggerInactiveClass,
 } from "@/components/filterUiClasses";
 
+const INSTRUMENTAL_VOCAL_FILTER_OPTION = "Instrumental";
+const VOCAL_FILTER_OPTIONS = [
+  INSTRUMENTAL_VOCAL_FILTER_OPTION,
+  ...VOCALS_OPTIONS,
+];
+
 function getSongIdentityValues(song: unknown) {
   const record = getRecord(song);
   const fields =
@@ -248,6 +254,14 @@ export default function MusicPage() {
     setFilters((f) => ({ ...f, keyValue: v }));
   const setSelectedPlaylist = (v: PlaylistRef | null) =>
     setFilters((f) => ({ ...f, selectedPlaylist: v }));
+  const setSelectedVocalFilters = (v: string[]) =>
+    setFilters((f) => ({
+      ...f,
+      instrumental: v.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION),
+      selectedVocals: v.filter(
+        (item) => item !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
+      ),
+    }));
 
   const playlistSongIdCacheRef = useRef<Record<string, string[]>>({});
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -261,6 +275,9 @@ export default function MusicPage() {
   const searchPlaceholder = selectedPlaylist?.name
     ? `Search "${selectedPlaylist.name}"`
     : "Search Music Library";
+  const selectedVocalFilters = instrumental
+    ? [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...selectedVocals]
+    : selectedVocals;
 
   const {
     songs,
@@ -486,35 +503,24 @@ export default function MusicPage() {
           </div>
 
           <div className="-mx-7 flex h-12 items-center gap-1 overflow-x-auto border-t border-b border-[var(--border)] px-7">
+            <PlaylistFilter
+              selected={selectedPlaylist}
+              onChange={setSelectedPlaylist}
+            />
+
             <FilterDropdown
-              label="Moods"
+              label="Mood"
               options={MOOD_OPTIONS}
               selected={selectedMoods}
               onChange={setSelectedMoods}
             />
 
             <FilterDropdown
-              label="Genres"
+              label="Genre"
               options={GENRE_OPTIONS}
               selected={selectedGenres}
               onChange={setSelectedGenres}
             />
-
-            <FilterDropdown
-              label="Vocals"
-              options={VOCALS_OPTIONS}
-              selected={selectedVocals}
-              onChange={setSelectedVocals}
-            />
-
-            <DurationFilter
-              selected={selectedDurations}
-              onChange={setSelectedDurations}
-            />
-
-            <BPMFilter value={bpmValue} onChange={setBpmValue} />
-
-            <KeyFilter value={keyValue} onChange={setKeyValue} />
 
             <FilterDropdown
               label="Instruments"
@@ -524,10 +530,26 @@ export default function MusicPage() {
             />
 
             <FilterDropdown
-              label="Builds"
+              label="Vocals"
+              options={VOCAL_FILTER_OPTIONS}
+              selected={selectedVocalFilters}
+              onChange={setSelectedVocalFilters}
+            />
+
+            <FilterDropdown
+              label="Build"
               options={BUILD_OPTIONS}
               selected={selectedBuilds}
               onChange={setSelectedBuilds}
+            />
+
+            <BPMFilter value={bpmValue} onChange={setBpmValue} />
+
+            <KeyFilter value={keyValue} onChange={setKeyValue} />
+
+            <DurationFilter
+              selected={selectedDurations}
+              onChange={setSelectedDurations}
             />
 
             <FilterDropdown
@@ -558,25 +580,6 @@ export default function MusicPage() {
               <span>Markers</span>
               {showEditPointMarkers && <span className={filterDotClass} />}
             </button>
-
-            <button
-              type="button"
-              onClick={() => setInstrumental(!instrumental)}
-              className={`${filterTriggerBaseClass} after:content-none ${
-                instrumental
-                  ? filterTriggerActiveClass
-                  : filterTriggerInactiveClass
-              }`}
-            >
-              <span>Instrumental</span>
-
-              {instrumental && <span className={filterDotClass} />}
-            </button>
-
-            <PlaylistFilter
-              selected={selectedPlaylist}
-              onChange={setSelectedPlaylist}
-            />
 
             <button
               type="button"
