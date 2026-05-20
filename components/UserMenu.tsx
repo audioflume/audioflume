@@ -85,23 +85,44 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
 
       <div className="grid gap-1 p-1.5">
         <MenuLink
-          href="/account"
+          href="/account/profile"
           label="Profile"
-          helper="Profile and settings"
+          helper="Personal info and account details"
           onClose={onClose}
         />
 
         <MenuLink
-          href="/account"
-          label="Account"
-          helper="Membership, payment, security"
+          href="/account/settings"
+          label="Settings"
+          helper="Site preferences and display"
           onClose={onClose}
         />
 
         <MenuLink
-          href="/support"
-          label="Support"
-          helper="Support and FAQs"
+          href="/account/membership"
+          label="Membership"
+          helper="Plan, license, and usage"
+          onClose={onClose}
+        />
+
+        <MenuLink
+          href="/account/payment"
+          label="Payment"
+          helper="Billing and invoices"
+          onClose={onClose}
+        />
+
+        <MenuLink
+          href="/account/security"
+          label="Security"
+          helper="Password and account access"
+          onClose={onClose}
+        />
+
+        <MenuLink
+          href="/account/support"
+          label="Support & FAQ"
+          helper="Help center and contact options"
           onClose={onClose}
         />
 
