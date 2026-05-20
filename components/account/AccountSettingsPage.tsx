@@ -70,13 +70,7 @@ const accountNav: {
 
 function ArrowIcon() {
   return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M9 6L15 12L9 18"
         stroke="currentColor"
@@ -90,13 +84,7 @@ function ArrowIcon() {
 
 function CheckIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M20 6L9 17L4 12"
         stroke="currentColor"
@@ -118,14 +106,14 @@ function SectionHeader({
   description: string;
 }) {
   return (
-    <div className="mb-6">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent-2)]">
+    <div className="mb-5 border-b border-[var(--border)] pb-5">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--text-muted)]">
         {eyebrow}
       </div>
-      <h1 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[var(--text-primary)]">
+      <h1 className="mt-2 text-[32px] font-semibold leading-none tracking-[-0.055em] text-[var(--text-primary)] md:text-[40px]">
         {title}
       </h1>
-      <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+      <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
         {description}
       </p>
     </div>
@@ -141,7 +129,7 @@ function AccountCard({
 }) {
   return (
     <div
-      className={`rounded-[22px] border border-[var(--border)] bg-[var(--bg-card)] shadow-[var(--shadow-ui)] ${className}`}
+      className={`overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] ${className}`}
     >
       {children}
     </div>
@@ -156,8 +144,10 @@ function CardHeader({
   description?: string;
 }) {
   return (
-    <div className="border-b border-[var(--border)] px-5 py-4">
-      <h2 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h2>
+    <div className="border-b border-[var(--border)] px-4 py-3.5">
+      <h2 className="text-sm font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+        {title}
+      </h2>
       {description ? (
         <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
           {description}
@@ -167,16 +157,10 @@ function CardHeader({
   );
 }
 
-function FieldDisplay({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function FieldDisplay({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] px-4 py-3">
-      <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]">
+    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-primary)] px-3.5 py-3">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
         {label}
       </div>
       <div className="mt-1 truncate text-sm font-medium text-[var(--text-primary)]">
@@ -197,14 +181,14 @@ function MockInput({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]">
+      <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
         {label}
       </span>
       <input
         value={value || ""}
         placeholder={placeholder}
         readOnly
-        className="h-10 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent-2)]"
+        className="h-10 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:font-normal placeholder:text-[var(--text-muted)] focus:border-[var(--accent-2)]"
       />
     </label>
   );
@@ -214,7 +198,7 @@ function PrimaryButton({ children }: { children: React.ReactNode }) {
   return (
     <button
       type="button"
-      className="h-9 cursor-pointer rounded-full bg-[var(--accent)] px-4 text-xs font-semibold text-[var(--accent-contrast)] transition hover:opacity-90"
+      className="h-8 cursor-pointer rounded-lg bg-[var(--accent)] px-3.5 text-xs font-semibold text-[var(--accent-contrast)] transition hover:opacity-90"
     >
       {children}
     </button>
@@ -225,7 +209,7 @@ function SecondaryButton({ children }: { children: React.ReactNode }) {
   return (
     <button
       type="button"
-      className="h-9 cursor-pointer rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover-strong)]"
+      className="h-8 cursor-pointer rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover-strong)]"
     >
       {children}
     </button>
@@ -248,7 +232,7 @@ function OptionButton<T extends string>({
       className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 text-xs font-medium transition ${
         active
           ? "bg-[var(--accent-2)] text-[var(--accent-2-contrast)]"
-          : "border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+          : "border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
       }`}
     >
       {active ? <CheckIcon /> : null}
@@ -267,9 +251,11 @@ function SettingRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
+    <div className="grid gap-4 border-b border-[var(--border-subtle)] px-4 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
       <div>
-        <div className="text-sm font-medium text-[var(--text-primary)]">{title}</div>
+        <div className="text-sm font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+          {title}
+        </div>
         <p className="mt-1 max-w-xl text-xs leading-5 text-[var(--text-muted)]">
           {description}
         </p>
@@ -279,13 +265,11 @@ function SettingRow({
   );
 }
 
-function StatPill({ label, value }: { label: string; value: string }) {
+function StatusPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-1.5">
-      <span className="text-[11px] text-[var(--text-muted)]">{label}</span>
-      <span className="ml-2 text-xs font-semibold text-[var(--text-primary)]">
-        {value}
-      </span>
+    <div className="inline-flex h-7 items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-2.5 text-xs">
+      <span className="text-[var(--text-muted)]">{label}</span>
+      <span className="font-semibold text-[var(--text-primary)]">{value}</span>
     </div>
   );
 }
@@ -309,16 +293,16 @@ function ProfileSection() {
       <SectionHeader
         eyebrow="Account"
         title="Profile"
-        description="Manage the personal information attached to your Filmwave account. This is currently a functional mockup, but it is structured for real account editing later."
+        description="Manage the personal information attached to your Filmwave account. This is structured as a functional mockup for future account editing."
       />
 
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <AccountCard>
           <CardHeader
             title="Personal information"
-            description="The core details shown across your account, billing, downloads, and support requests."
+            description="Core account details used for billing, support, and saved library activity."
           />
-          <div className="grid gap-4 p-5 sm:grid-cols-2">
+          <div className="grid gap-4 p-4 sm:grid-cols-2">
             <MockInput label="First name" value={firstName} placeholder="First name" />
             <MockInput label="Last name" value={lastName} placeholder="Last name" />
             <MockInput label="Display name" value={fullName} />
@@ -326,20 +310,20 @@ function ProfileSection() {
             <MockInput label="Company / studio" placeholder="Add company name" />
             <MockInput label="Primary use" placeholder="Documentary, commercial, YouTube..." />
           </div>
-          <div className="flex flex-wrap gap-2 border-t border-[var(--border)] px-5 py-4">
+          <div className="flex flex-wrap gap-2 border-t border-[var(--border)] px-4 py-3.5">
             <PrimaryButton>Save profile</PrimaryButton>
             <SecondaryButton>Cancel changes</SecondaryButton>
           </div>
         </AccountCard>
 
-        <AccountCard className="overflow-hidden">
-          <div className="border-b border-[var(--border)] bg-[linear-gradient(135deg,rgba(221,255,67,0.12),rgba(251,143,97,0.10),transparent)] p-5">
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--bg-primary)] text-lg font-semibold text-[var(--text-primary)]">
+        <AccountCard>
+          <div className="border-b border-[var(--border)] p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-semibold text-[var(--text-primary)]">
                 {initials || "FW"}
               </div>
               <div className="min-w-0">
-                <div className="truncate text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+                <div className="truncate text-base font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
                   {fullName}
                 </div>
                 <div className="mt-1 truncate text-xs text-[var(--text-muted)]">
@@ -348,7 +332,7 @@ function ProfileSection() {
               </div>
             </div>
           </div>
-          <div className="grid gap-3 p-5">
+          <div className="grid gap-3 p-4">
             <FieldDisplay label="Account type" value="Lifetime Member" />
             <FieldDisplay label="Library license" value="Royalty-free commercial use" />
             <FieldDisplay label="Member since" value="Mock data" />
@@ -376,81 +360,45 @@ function SettingsSection() {
       <SectionHeader
         eyebrow="Preferences"
         title="Settings"
-        description="Global site settings stored in the user_preferences table. These controls use your existing preferences context, so changes should save to Supabase through the current API route."
+        description="Global site settings stored in Supabase. These controls use your existing user preferences context and API route."
       />
 
       <AccountCard>
         <CardHeader
           title="Global site preferences"
-          description={
-            preferencesLoaded
-              ? "Preferences loaded from your account."
-              : "Loading saved preferences..."
-          }
+          description={preferencesLoaded ? "Preferences loaded from your account." : "Loading saved preferences..."}
         />
 
         <SettingRow
           title="Theme"
           description="Controls the light or dark appearance of Filmwave across the full app."
         >
-          <OptionButton<ThemeMode>
-            label="Dark"
-            active={theme === "dark"}
-            onClick={() => setTheme("dark")}
-          />
-          <OptionButton<ThemeMode>
-            label="Light"
-            active={theme === "light"}
-            onClick={() => setTheme("light")}
-          />
+          <OptionButton<ThemeMode> label="Dark" active={theme === "dark"} onClick={() => setTheme("dark")} />
+          <OptionButton<ThemeMode> label="Light" active={theme === "light"} onClick={() => setTheme("light")} />
         </SettingRow>
 
         <SettingRow
           title="Playlist view"
           description="Sets the default visual layout for your personal playlist library."
         >
-          <OptionButton<PlaylistViewMode>
-            label="Grid"
-            active={playlistViewMode === "grid"}
-            onClick={() => setPlaylistViewMode("grid")}
-          />
-          <OptionButton<PlaylistViewMode>
-            label="List"
-            active={playlistViewMode === "list"}
-            onClick={() => setPlaylistViewMode("list")}
-          />
+          <OptionButton<PlaylistViewMode> label="Grid" active={playlistViewMode === "grid"} onClick={() => setPlaylistViewMode("grid")} />
+          <OptionButton<PlaylistViewMode> label="List" active={playlistViewMode === "list"} onClick={() => setPlaylistViewMode("list")} />
         </SettingRow>
 
         <SettingRow
           title="Playlist sorting"
           description="Choose whether playlists hold your custom drag order or stay alphabetical."
         >
-          <OptionButton<PlaylistSortMode>
-            label="Custom"
-            active={playlistSortMode === "custom"}
-            onClick={() => setPlaylistSortMode("custom")}
-          />
-          <OptionButton<PlaylistSortMode>
-            label="Alphabetical"
-            active={playlistSortMode === "alphabetical"}
-            onClick={() => setPlaylistSortMode("alphabetical")}
-          />
+          <OptionButton<PlaylistSortMode> label="Custom" active={playlistSortMode === "custom"} onClick={() => setPlaylistSortMode("custom")} />
+          <OptionButton<PlaylistSortMode> label="Alphabetical" active={playlistSortMode === "alphabetical"} onClick={() => setPlaylistSortMode("alphabetical")} />
         </SettingRow>
 
         <SettingRow
           title="Sidebar project sorting"
           description="Controls how user projects are ordered inside the main app sidebar."
         >
-          <OptionButton<SidebarProjectSortMode>
-            label="Custom"
-            active={sidebarProjectSortMode === "custom"}
-            onClick={() => setSidebarProjectSortMode("custom")}
-          />
-          <OptionButton<SidebarProjectSortMode>
-            label="Alphabetical"
-            active={sidebarProjectSortMode === "alphabetical"}
-            onClick={() => setSidebarProjectSortMode("alphabetical")}
-          />
+          <OptionButton<SidebarProjectSortMode> label="Custom" active={sidebarProjectSortMode === "custom"} onClick={() => setSidebarProjectSortMode("custom")} />
+          <OptionButton<SidebarProjectSortMode> label="Alphabetical" active={sidebarProjectSortMode === "alphabetical"} onClick={() => setSidebarProjectSortMode("alphabetical")} />
         </SettingRow>
       </AccountCard>
     </>
@@ -463,18 +411,18 @@ function MembershipSection() {
       <SectionHeader
         eyebrow="Subscription"
         title="Membership"
-        description="A customer-facing overview of the user's current plan, included licensing, usage, and upgrade paths. This is mocked for now, but it gives the page a realistic billing-product shape."
+        description="A clear overview of plan status, licensing, usage, and future upgrade paths for Filmwave members."
       />
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <AccountCard className="overflow-hidden">
-          <div className="border-b border-[var(--border)] bg-[linear-gradient(135deg,rgba(221,255,67,0.16),rgba(251,143,97,0.10),transparent)] p-5">
+        <AccountCard>
+          <div className="border-b border-[var(--border)] p-4">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
                   Current plan
                 </div>
-                <div className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-[var(--text-primary)]">
+                <div className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--text-primary)]">
                   Lifetime Membership
                 </div>
                 <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--text-secondary)]">
@@ -482,13 +430,13 @@ function MembershipSection() {
                   waveform previews, playlist tools, and commercial project licensing.
                 </p>
               </div>
-              <div className="rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-1.5 text-xs font-semibold text-[var(--accent)]">
+              <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1.5 text-xs font-semibold text-[var(--accent)]">
                 Active
               </div>
             </div>
           </div>
 
-          <div className="grid gap-3 p-5 sm:grid-cols-3">
+          <div className="grid gap-3 p-4 sm:grid-cols-3">
             <FieldDisplay label="Renewal" value="No renewal" />
             <FieldDisplay label="Downloads" value="Unlimited" />
             <FieldDisplay label="License" value="Commercial use" />
@@ -497,7 +445,7 @@ function MembershipSection() {
 
         <AccountCard>
           <CardHeader title="Usage snapshot" description="Useful account signals for a more complete customer portal." />
-          <div className="grid gap-3 p-5">
+          <div className="grid gap-3 p-4">
             <FieldDisplay label="Songs downloaded" value="128 this year" />
             <FieldDisplay label="Projects created" value="14 active projects" />
             <FieldDisplay label="Favorite tracks" value="36 saved" />
@@ -511,12 +459,12 @@ function MembershipSection() {
           ["Studio", "$39 CAD / mo", "For teams needing multiple seats, shared playlists, and priority support."],
           ["Enterprise", "Custom", "For agencies, networks, and higher-volume commercial usage."],
         ].map(([name, price, description]) => (
-          <AccountCard key={name} className="p-5">
+          <AccountCard key={name} className="p-4">
             <div className="text-sm font-semibold text-[var(--text-primary)]">{name}</div>
-            <div className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-[var(--text-primary)]">
+            <div className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--text-primary)]">
               {price}
             </div>
-            <p className="mt-2 min-h-[60px] text-xs leading-5 text-[var(--text-muted)]">
+            <p className="mt-2 min-h-[56px] text-xs leading-5 text-[var(--text-muted)]">
               {description}
             </p>
             <div className="mt-4">
@@ -535,14 +483,14 @@ function PaymentSection() {
       <SectionHeader
         eyebrow="Billing"
         title="Payment"
-        description="Manage payment methods, invoices, billing contact details, and tax information. This mirrors the kind of controls users expect in a subscription product."
+        description="Manage payment methods, invoices, billing contact details, and tax information from a compact billing workspace."
       />
 
       <div className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
         <AccountCard>
           <CardHeader title="Payment method" description="Primary billing method used for subscription renewals and upgrades." />
-          <div className="p-5">
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-4">
+          <div className="p-4">
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-sm font-semibold text-[var(--text-primary)]">
@@ -552,7 +500,7 @@ function PaymentSection() {
                     Expires 08/29 · Billing address in Canada
                   </div>
                 </div>
-                <div className="rounded-full bg-[var(--bg-primary)] px-3 py-1.5 text-[11px] font-semibold text-[var(--text-secondary)]">
+                <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-2.5 py-1.5 text-[11px] font-semibold text-[var(--text-secondary)]">
                   Mock card
                 </div>
               </div>
@@ -567,7 +515,7 @@ function PaymentSection() {
 
         <AccountCard>
           <CardHeader title="Billing details" description="Invoice contact and tax details for receipts." />
-          <div className="grid gap-4 p-5">
+          <div className="grid gap-4 p-4">
             <MockInput label="Billing email" value="billing@example.com" />
             <MockInput label="Business name" placeholder="Company or studio" />
             <MockInput label="Tax ID" placeholder="Optional" />
@@ -579,10 +527,7 @@ function PaymentSection() {
         <CardHeader title="Recent invoices" description="Download receipts and track billing history." />
         <div className="divide-y divide-[var(--border-subtle)]">
           {["May 2026", "April 2026", "March 2026"].map((invoice) => (
-            <div
-              key={invoice}
-              className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
-            >
+            <div key={invoice} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3.5">
               <div>
                 <div className="text-sm font-medium text-[var(--text-primary)]">
                   {invoice} invoice
@@ -609,29 +554,20 @@ function SecuritySection() {
       <SectionHeader
         eyebrow="Access"
         title="Security"
-        description="Password, email recovery, sessions, and account protection. The actions are mocked, but this gives you the complete layout for future Clerk-backed controls."
+        description="Password, email recovery, sessions, and account protection for Filmwave sign-in access."
       />
 
       <div className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
         <AccountCard>
           <CardHeader title="Sign-in security" description="Keep your account protected with stronger login controls." />
           <div className="divide-y divide-[var(--border-subtle)]">
-            <SettingRow
-              title="Password"
-              description="Change the password used to access your Filmwave account."
-            >
+            <SettingRow title="Password" description="Change the password used to access your Filmwave account.">
               <PrimaryButton>Change password</PrimaryButton>
             </SettingRow>
-            <SettingRow
-              title="Two-factor authentication"
-              description="Add an extra layer of protection for your account."
-            >
+            <SettingRow title="Two-factor authentication" description="Add an extra layer of protection for your account.">
               <SecondaryButton>Set up 2FA</SecondaryButton>
             </SettingRow>
-            <SettingRow
-              title="Backup email"
-              description="Use a secondary email for recovery and important account alerts."
-            >
+            <SettingRow title="Backup email" description="Use a secondary email for recovery and important account alerts.">
               <SecondaryButton>Add backup email</SecondaryButton>
             </SettingRow>
           </div>
@@ -639,7 +575,7 @@ function SecuritySection() {
 
         <AccountCard>
           <CardHeader title="Account access" description="Current verified contact and session information." />
-          <div className="grid gap-3 p-5">
+          <div className="grid gap-3 p-4">
             <FieldDisplay label="Primary email" value={email} />
             <FieldDisplay label="Email status" value="Verified" />
             <FieldDisplay label="Active sessions" value="2 devices" />
@@ -651,7 +587,7 @@ function SecuritySection() {
         <CardHeader title="Recent security events" description="A lightweight audit trail for user confidence." />
         <div className="divide-y divide-[var(--border-subtle)]">
           {["Password login", "New session started", "Profile viewed"].map((event) => (
-            <div key={event} className="grid gap-1 px-5 py-4 sm:grid-cols-[1fr_auto]">
+            <div key={event} className="grid gap-1 px-4 py-3.5 sm:grid-cols-[1fr_auto]">
               <div className="text-sm font-medium text-[var(--text-primary)]">{event}</div>
               <div className="text-xs text-[var(--text-muted)]">Mock event · Vancouver, BC</div>
             </div>
@@ -687,7 +623,7 @@ function SupportSection() {
       <SectionHeader
         eyebrow="Help"
         title="Support & FAQ"
-        description="A combined support hub with contact portals, ticket options, documentation links, and a standard FAQ section underneath."
+        description="Contact portals, ticket options, documentation links, and common account questions in a single support workspace."
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -696,12 +632,12 @@ function SupportSection() {
           ["Contact support", "Reach the Filmwave team directly for account questions or help using the library.", "Email support"],
           ["License help", "Find answers about commercial usage, client projects, social ads, and broadcast-style work.", "View license guide"],
         ].map(([title, description, action]) => (
-          <AccountCard key={title} className="p-5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--accent-2)]">
+          <AccountCard key={title} className="p-4">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--accent-2)]">
               <ArrowIcon />
             </div>
             <div className="mt-4 text-sm font-semibold text-[var(--text-primary)]">{title}</div>
-            <p className="mt-2 min-h-[70px] text-xs leading-5 text-[var(--text-muted)]">
+            <p className="mt-2 min-h-[66px] text-xs leading-5 text-[var(--text-muted)]">
               {description}
             </p>
             <div className="mt-4">
@@ -715,7 +651,7 @@ function SupportSection() {
         <CardHeader title="Frequently asked questions" description="Common questions users will look for inside account support." />
         <div className="divide-y divide-[var(--border-subtle)]">
           {faqs.map(([question, answer]) => (
-            <div key={question} className="px-5 py-4">
+            <div key={question} className="px-4 py-3.5">
               <div className="text-sm font-semibold text-[var(--text-primary)]">{question}</div>
               <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">{answer}</p>
             </div>
@@ -740,39 +676,39 @@ export default function AccountSettingsPage({ section }: AccountSettingsPageProp
   const activeNav = accountNav.find((item) => item.section === section);
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] px-4 pb-24 pt-24 text-[var(--text-primary)] md:pl-[calc(var(--sidebar-width,240px)+24px)] md:pr-6">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <main className="min-h-screen bg-[var(--bg-primary)] px-4 pb-24 pt-[88px] text-[var(--text-primary)] md:pl-[calc(var(--sidebar-width,240px)+24px)] md:pr-6">
+      <div className="mx-auto max-w-[1320px]">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] pb-4">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-              Filmwave account
+            <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--text-muted)]">
+              Filmwave Account
             </div>
-            <div className="mt-1 flex flex-wrap items-center gap-2">
-              <StatPill label="Section" value={activeNav?.label || "Account"} />
-              <StatPill label="Status" value="Mockup" />
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <StatusPill label="Section" value={activeNav?.label || "Account"} />
+              <StatusPill label="Status" value="Mockup" />
             </div>
           </div>
           <Link
             href="/music"
-            className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover-strong)]"
+            className="inline-flex h-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover-strong)]"
           >
             Back to music
           </Link>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[280px_1fr] lg:items-start">
-          <aside className="lg:sticky lg:top-24">
-            <AccountCard className="overflow-hidden">
-              <div className="border-b border-[var(--border)] px-4 py-4">
-                <div className="text-sm font-semibold text-[var(--text-primary)]">
+        <div className="grid gap-5 lg:grid-cols-[260px_1fr] lg:items-start">
+          <aside className="lg:sticky lg:top-[88px]">
+            <AccountCard>
+              <div className="border-b border-[var(--border)] px-4 py-3.5">
+                <div className="text-sm font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
                   Account center
                 </div>
                 <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-                  Profile, preferences, billing, security, and support in one place.
+                  Profile, preferences, billing, security, and support.
                 </p>
               </div>
 
-              <nav className="grid gap-1 p-1.5" aria-label="Account sections">
+              <nav className="grid" aria-label="Account sections">
                 {accountNav.map((item) => {
                   const active = pathname === item.href || section === item.section;
 
@@ -780,7 +716,7 @@ export default function AccountSettingsPage({ section }: AccountSettingsPageProp
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`group flex min-h-12 items-center justify-between gap-3 rounded-xl px-3 py-2 text-left transition ${
+                      className={`group flex min-h-[54px] items-center justify-between gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-left transition last:border-b-0 ${
                         active
                           ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
                           : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -796,7 +732,7 @@ export default function AccountSettingsPage({ section }: AccountSettingsPageProp
                         className={`flex h-6 w-6 items-center justify-center rounded-md border border-[var(--border)] transition ${
                           active
                             ? "bg-[var(--accent-2)] text-[var(--accent-2-contrast)]"
-                            : "bg-[var(--bg-secondary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                            : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                         }`}
                       >
                         <ArrowIcon />
@@ -808,7 +744,7 @@ export default function AccountSettingsPage({ section }: AccountSettingsPageProp
             </AccountCard>
           </aside>
 
-          <section>{<PageContent section={section} />}</section>
+          <section className="min-w-0">{<PageContent section={section} />}</section>
         </div>
       </div>
     </main>
