@@ -34,3 +34,31 @@ export function setStoredEditPointMarkerVisibility(visible: boolean) {
     ),
   );
 }
+
+export async function saveEditPointMarkerVisibilityPreference(visible: boolean) {
+  try {
+    const response = await fetch("/api/user-preferences", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        show_edit_point_markers: visible,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(
+        "Failed to save edit point marker visibility:",
+        await response.text(),
+      );
+    }
+  } catch (error) {
+    console.error("Failed to save edit point marker visibility:", error);
+  }
+}
+
+export function updateEditPointMarkerVisibilityPreference(visible: boolean) {
+  setStoredEditPointMarkerVisibility(visible);
+  void saveEditPointMarkerVisibilityPreference(visible);
+}
