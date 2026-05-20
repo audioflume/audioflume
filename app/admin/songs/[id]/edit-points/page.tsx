@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
-import EditPointWaveformReview from "@/components/admin/EditPointWaveformReview";
+import CuePointManager from "@/components/admin/CuePointManager";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -119,11 +119,11 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
         <div className="mb-8 flex items-end justify-between gap-4">
           <div className="min-w-0">
             <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-              Edit Points
+              Cue Points
             </h1>
 
             <p className="mt-2 text-sm text-[var(--text-secondary)]">
-              Review, drag, and fine-tune generated edit points.
+              Review, drag, and fine-tune generated cue points.
             </p>
           </div>
 
@@ -166,7 +166,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
           </div>
 
           <div className="p-4">
-            <EditPointWaveformReview
+            <CuePointManager
               songId={id}
               audioUrl={typedSong.audio_url}
               waveformPeaks={typedSong.waveform_peaks || "[]"}
