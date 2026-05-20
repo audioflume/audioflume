@@ -9,6 +9,7 @@ import {
   ReactNode,
 } from "react";
 import {
+  EDIT_POINT_MARKER_VISIBILITY_EVENT,
   getStoredEditPointMarkerVisibility,
   setStoredEditPointMarkerVisibility,
 } from "@/lib/editPointMarkerVisibility";
@@ -89,6 +90,32 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setShowEditPointMarkersState(getStoredEditPointMarkerVisibility());
+  }, []);
+
+  useEffect(() => {
+    const syncMarkerVisibility = (event?: Event) => {
+      const customEvent = event as CustomEvent<{ visible?: boolean }>;
+      const visible =
+        typeof customEvent?.detail?.visible === "boolean"
+          ? customEvent.detail.visible
+          : getStoredEditPointMarkerVisibility();
+
+      setShowEditPointMarkersState(visible);
+    };
+
+    window.addEventListener(
+      EDIT_POINT_MARKER_VISIBILITY_EVENT,
+      syncMarkerVisibility,
+    );
+    window.addEventListener("storage", syncMarkerVisibility);
+
+    return () => {
+      window.removeEventListener(
+        EDIT_POINT_MARKER_VISIBILITY_EVENT,
+        syncMarkerVisibility,
+      );
+      window.removeEventListener("storage", syncMarkerVisibility);
+    };
   }, []);
 
   useEffect(() => {
