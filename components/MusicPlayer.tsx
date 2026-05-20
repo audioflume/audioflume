@@ -10,6 +10,7 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
+import { MUSIC_FILTER_STORAGE_KEY_PREFIX } from "@/lib/constants";
 import {
   CUE_POINT_FILTER_SELECTION_EVENT,
   getStoredCuePointFilterSelection,
@@ -26,6 +27,7 @@ import {
   getSongCuePointMarkers,
 } from "@/lib/editPointUtils";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -60,6 +62,28 @@ function formatTime(s: number) {
 
 function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+function getMusicLibraryMarkerVisibilityFromSession() {
+  if (typeof window === "undefined") return null;
+
+  for (let index = 0; index < window.sessionStorage.length; index += 1) {
+    const key = window.sessionStorage.key(index);
+
+    if (!key?.startsWith(`${MUSIC_FILTER_STORAGE_KEY_PREFIX}:`)) continue;
+
+    try {
+      const parsed = JSON.parse(window.sessionStorage.getItem(key) || "{}");
+
+      if (typeof parsed.showEditPointMarkers === "boolean") {
+        return parsed.showEditPointMarkers;
+      }
+    } catch {
+      return null;
+    }
+  }
+
+  return null;
 }
 
 function normalizePeaks(peaks: number[]) {
@@ -229,6 +253,7 @@ export default function MusicPlayer() {
     closePlayer,
   } = usePlayer();
 
+  const pathname = usePathname();
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const playerRef = useRef<HTMLDivElement>(null);
@@ -251,6 +276,8 @@ export default function MusicPlayer() {
   const [showEditPointMarkers, setShowEditPointMarkers] = useState(() =>
     getStoredEditPointMarkerVisibility(),
   );
+  const [musicLibraryShowEditPointMarkers, setMusicLibraryShowEditPointMarkers] =
+    useState<boolean | null>(null);
   const [selectedCuePointTypes, setSelectedCuePointTypes] = useState<string[]>(
     () => getStoredCuePointFilterSelection(),
   );
@@ -259,6 +286,11 @@ export default function MusicPlayer() {
     left: 0,
   });
 
+  const usingMusicLibraryMarkerVisibility =
+    pathname === "/music" && musicLibraryShowEditPointMarkers !== null;
+  const effectiveShowEditPointMarkers = usingMusicLibraryMarkerVisibility
+    ? musicLibraryShowEditPointMarkers
+    : showEditPointMarkers;
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
   const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
   const showCompactTime =
@@ -271,7 +303,7 @@ export default function MusicPlayer() {
     () => (currentSong ? getSongCuePointMarkers(currentSong) : []),
     [currentSong],
   );
-  const visibleCuePoints = showEditPointMarkers ? cuePoints : [];
+  const visibleCuePoints = effectiveShowEditPointMarkers ? cuePoints : [];
   const selectedCuePointTypeSet = useMemo(
     () => new Set(selectedCuePointTypes),
     [selectedCuePointTypes],
@@ -286,7 +318,7 @@ export default function MusicPlayer() {
     [visibleCuePoints, currentTime],
   );
   const showCuePointControls =
-    showEditPointMarkers &&
+    effectiveShowEditPointMarkers &&
     showWaveform &&
     playerWidth >= 940 &&
     visibleCuePoints.length > 0;
@@ -382,6 +414,17 @@ export default function MusicPlayer() {
   }, []);
 
   useEffect(() => {
+    if (pathname === "/music") {
+      setMusicLibraryShowEditPointMarkers(
+        getMusicLibraryMarkerVisibilityFromSession(),
+      );
+      return;
+    }
+
+    setMusicLibraryShowEditPointMarkers(null);
+  }, [pathname]);
+
+  useEffect(() => {
     const syncCuePointFilterSelection = (event?: Event) => {
       const customEvent = event as CustomEvent<{ selectedTypes?: string[] }>;
       const selectedTypes = customEvent?.detail?.selectedTypes;
@@ -391,6 +434,12 @@ export default function MusicPlayer() {
           ? selectedTypes
           : getStoredCuePointFilterSelection(),
       );
+
+      if (pathname === "/music") {
+        setMusicLibraryShowEditPointMarkers(
+          getMusicLibraryMarkerVisibilityFromSession(),
+        );
+      }
     };
 
     syncCuePointFilterSelection();
@@ -407,7 +456,7 @@ export default function MusicPlayer() {
       );
       window.removeEventListener("storage", syncCuePointFilterSelection);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     const player = playerRef.current;
