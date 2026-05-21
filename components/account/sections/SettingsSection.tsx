@@ -5,6 +5,7 @@ import {
   useUserPreferences,
   type PlaylistSortMode,
   type PlaylistViewMode,
+  type ProjectAssetAddTarget,
   type SidebarProjectSortMode,
   type ThemeMode,
 } from "@/context/UserPreferencesContext";
@@ -28,6 +29,8 @@ export default function SettingsSection() {
     setPlaylistSortMode,
     sidebarProjectSortMode,
     setSidebarProjectSortMode,
+    projectAssetAddTarget,
+    setProjectAssetAddTarget,
     preferencesLoaded,
   } = useUserPreferences();
 
@@ -52,6 +55,10 @@ export default function SettingsSection() {
       <Row icon={<SidebarSortIcon />} title="Sidebar project sorting" description="Controls how projects are ordered inside the main app sidebar.">
         <Option<SidebarProjectSortMode> label="Custom" value="custom" active={sidebarProjectSortMode === "custom"} onClick={() => setSidebarProjectSortMode("custom")} />
         <Option<SidebarProjectSortMode> label="Alphabetical" value="alphabetical" active={sidebarProjectSortMode === "alphabetical"} onClick={() => setSidebarProjectSortMode("alphabetical")} />
+      </Row>
+      <Row icon={<PlaylistViewIcon />} title="Project add location" description="Choose where newly added project files appear by default.">
+        <Option<ProjectAssetAddTarget> label="All Files" value="root" active={projectAssetAddTarget === "root"} onClick={() => setProjectAssetAddTarget("root")} />
+        <Option<ProjectAssetAddTarget> label="Media folder" value="media_folder" active={projectAssetAddTarget === "media_folder"} onClick={() => setProjectAssetAddTarget("media_folder")} />
       </Row>
     </Card>
   );
