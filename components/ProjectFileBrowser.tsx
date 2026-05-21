@@ -1,10 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  filterTriggerBaseClass,
-  filterTriggerInactiveClass,
-} from "@/components/filterUiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 
@@ -36,6 +32,50 @@ type ProjectFileBrowserProps = {
 function ProjectFileBrowserStyles() {
   return (
     <style>{`
+      .project-file-browser {
+        padding: 0 32px 32px !important;
+      }
+
+      .project-file-browser-top {
+        min-height: 50px !important;
+        margin-left: -32px;
+        margin-right: -32px;
+        padding: 0 32px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 16px !important;
+        border-bottom: 1px solid var(--border) !important;
+      }
+
+      .project-file-browser-title-wrap {
+        min-width: 0;
+      }
+
+      .project-breadcrumbs.project-path {
+        margin-top: 0 !important;
+        gap: 6px !important;
+        font-size: 12px !important;
+        line-height: 1;
+        text-transform: lowercase;
+      }
+
+      .project-breadcrumbs.project-path button,
+      .project-breadcrumbs.project-path span {
+        color: var(--text-secondary);
+      }
+
+      .project-breadcrumbs.project-path button:hover {
+        color: var(--text-primary);
+      }
+
+      .project-file-browser-actions {
+        flex-shrink: 0;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+
       .project-browser-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
@@ -355,26 +395,26 @@ function ProjectFileBrowserStyles() {
 
       .project-file-browser .project-file-action {
         display: flex;
-        height: 24px !important;
-        width: 24px;
+        height: 18px !important;
+        width: 18px;
         cursor: pointer;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--border) !important;
-        border-radius: 999px !important;
+        border: 0 !important;
+        border-radius: 0 !important;
         background: transparent !important;
         padding: 0 !important;
-        font-size: 15px !important;
+        font-size: 13px !important;
         line-height: 1;
         color: var(--text-secondary) !important;
       }
 
       .project-file-browser .project-file-card .project-file-action {
         position: absolute;
-        right: 8px;
-        top: 8px;
+        right: 7px;
+        top: 7px;
         opacity: 0;
-        transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+        transition: opacity 0.15s ease, color 0.15s ease;
       }
 
       .project-file-browser .project-file-card:hover .project-file-action,
@@ -383,11 +423,40 @@ function ProjectFileBrowserStyles() {
       }
 
       .project-file-browser .project-file-action:hover {
-        background: var(--bg-hover-strong) !important;
+        background: transparent !important;
         color: var(--text-primary) !important;
       }
 
+      .project-new-folder-button {
+        display: flex;
+        height: 28px;
+        width: 28px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        color: var(--text-secondary);
+        transition: background 0.15s ease, color 0.15s ease;
+      }
+
+      .project-new-folder-button:hover {
+        background: var(--bg-hover-strong);
+        color: var(--text-primary);
+      }
+
       @media (max-width: 760px) {
+        .project-file-browser {
+          padding-left: 18px !important;
+          padding-right: 18px !important;
+        }
+
+        .project-file-browser-top {
+          margin-left: -18px;
+          margin-right: -18px;
+          padding-left: 18px !important;
+          padding-right: 18px !important;
+        }
+
         .project-browser-grid {
           grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
           column-gap: 18px;
@@ -653,8 +722,6 @@ export default function ProjectFileBrowser({
     );
   }
 
-  const activeFolder = activeFolderId == null ? null : foldersById.get(activeFolderId);
-  const unassignedAssetCount = assets.filter((asset) => asset.folder_id == null).length;
   const itemCount = visibleFolders.length + visibleSongs.length;
 
   return (
@@ -663,11 +730,9 @@ export default function ProjectFileBrowser({
       <div className="project-file-browser">
         <div className="project-file-browser-top">
           <div className="project-file-browser-title-wrap">
-            <div className="project-file-browser-kicker">All Files</div>
-            <h2>{activeFolder?.name || "Project Files"}</h2>
-            <div className="project-breadcrumbs">
+            <div className="project-breadcrumbs project-path">
               <button type="button" onClick={() => onOpenFolder(null)}>
-                Root
+                All Files
               </button>
               {breadcrumbFolders.map((folder) => (
                 <span key={folder.id}>
@@ -700,10 +765,14 @@ export default function ProjectFileBrowser({
 
             <button
               type="button"
-              className={`${filterTriggerBaseClass} ${filterTriggerInactiveClass}`}
+              className="project-new-folder-button"
               onClick={onCreateFolder}
+              aria-label="New folder"
             >
-              New Folder
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                <path d="M12 5v14" />
+                <path d="M5 12h14" />
+              </svg>
             </button>
           </div>
         </div>
@@ -711,11 +780,7 @@ export default function ProjectFileBrowser({
         <div className="project-file-browser-section">
           <div className="project-file-section-heading">
             <span>{viewMode === "grid" ? "Items" : "Name"}</span>
-            <span>
-              {activeFolderId == null
-                ? `${itemCount} items · ${unassignedAssetCount} at root`
-                : `${itemCount} items`}
-            </span>
+            <span>{itemCount} items</span>
           </div>
 
           {itemCount > 0 ? (
@@ -765,11 +830,7 @@ export default function ProjectFileBrowser({
               </div>
             )
           ) : (
-            <div className="project-file-empty-inline">
-              {activeFolderId == null
-                ? "Files added directly to the project root will appear here."
-                : "No files in this folder yet."}
-            </div>
+            <div className="project-file-empty-inline">No files in this folder yet.</div>
           )}
         </div>
       </div>
