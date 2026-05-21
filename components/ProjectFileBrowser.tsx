@@ -3,22 +3,17 @@
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import {
   DndContext,
+  DragOverlay,
   type DragEndEvent,
   type DragOverEvent,
   type DragStartEvent,
   PointerSensor,
   type UniqueIdentifier,
+  useDraggable,
   useDroppable,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  rectSortingStrategy,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
@@ -56,7 +51,6 @@ type DragData =
   | { kind: "folder"; folderId: number }
   | { kind: "song"; assetId: number; songId: string };
 
-const ROOT_DROP_ID = "drop-root";
 const BREADCRUMB_ROOT_DROP_ID = "drop-breadcrumb-root";
 
 function getFolderDragId(folderId: number) {
@@ -80,15 +74,14 @@ function parseDropFolderId(value: UniqueIdentifier | null | undefined) {
 
   const id = String(value);
 
-  if (id === ROOT_DROP_ID || id === BREADCRUMB_ROOT_DROP_ID) return null;
+  if (id === BREADCRUMB_ROOT_DROP_ID) return null;
   if (id.startsWith("drop-folder:")) return Number(id.replace("drop-folder:", ""));
   if (id.startsWith("drop-breadcrumb:")) return Number(id.replace("drop-breadcrumb:", ""));
-  if (id.startsWith("folder:")) return Number(id.replace("folder:", ""));
 
   return undefined;
 }
 
-function SortableFolderItem({
+function DraggableFolderItem({
   folder,
   viewMode,
   onOpen,
@@ -97,7 +90,7 @@ function SortableFolderItem({
   viewMode: ProjectFileView;
   onOpen: (folderId: number) => void;
 }) {
-  const sortable = useSortable({
+  const draggable = useDraggable({
     id: getFolderDragId(folder.id),
     data: { kind: "folder", folderId: folder.id } satisfies DragData,
   });
@@ -106,29 +99,23 @@ function SortableFolderItem({
     data: { kind: "folder-drop", folderId: folder.id },
   });
 
-  const style = {
-    transform: CSS.Transform.toString(sortable.transform),
-    transition: sortable.transition,
-    opacity: sortable.isDragging ? 0.5 : 1,
-  };
-
   return (
     <div
       ref={(node) => {
-        sortable.setNodeRef(node);
+        draggable.setNodeRef(node);
         droppable.setNodeRef(node);
       }}
-      style={style}
       className={droppable.isOver ? "project-drag-over-folder" : ""}
-      {...sortable.attributes}
-      {...sortable.listeners}
+      style={{ opacity: draggable.isDragging ? 0.35 : 1 }}
+      {...draggable.attributes}
+      {...draggable.listeners}
     >
       <ProjectFolderCard folder={folder} viewMode={viewMode} onOpen={onOpen} />
     </div>
   );
 }
 
-function SortableSongItem({
+function DraggableSongItem({
   song,
   viewMode,
   queueSongs,
@@ -139,7 +126,7 @@ function SortableSongItem({
   queueSongs: ProjectSong[];
   onMove: (song: ProjectSong) => void;
 }) {
-  const sortable = useSortable({
+  const draggable = useDraggable({
     id: getSongDragId(song),
     data: {
       kind: "song",
@@ -149,18 +136,12 @@ function SortableSongItem({
     disabled: !Number.isFinite(song.project_asset_id),
   });
 
-  const style = {
-    transform: CSS.Transform.toString(sortable.transform),
-    transition: sortable.transition,
-    opacity: sortable.isDragging ? 0.5 : 1,
-  };
-
   return (
     <div
-      ref={sortable.setNodeRef}
-      style={style}
-      {...sortable.attributes}
-      {...sortable.listeners}
+      ref={draggable.setNodeRef}
+      style={{ opacity: draggable.isDragging ? 0.35 : 1 }}
+      {...draggable.attributes}
+      {...draggable.listeners}
     >
       <ProjectSongFileCard song={song} viewMode={viewMode} queueSongs={queueSongs} onMove={onMove} />
     </div>
@@ -195,6 +176,36 @@ function BreadcrumbDropButton({
   );
 }
 
+function DragPreview({
+  dragData,
+  folder,
+  song,
+}: {
+  dragData: DragData | null;
+  folder: ProjectFolder | null;
+  song: ProjectSong | null;
+}) {
+  if (!dragData) return null;
+
+  if (dragData.kind === "folder" && folder) {
+    return (
+      <div className="project-drag-preview">
+        <ProjectFolderCard folder={folder} viewMode="grid" onOpen={() => {}} />
+      </div>
+    );
+  }
+
+  if (dragData.kind === "song" && song) {
+    return (
+      <div className="project-drag-preview project-drag-preview-song">
+        <ProjectSongFileCard song={song} viewMode="grid" queueSongs={[song]} onMove={() => {}} />
+      </div>
+    );
+  }
+
+  return null;
+}
+
 export default function ProjectFileBrowser({
   folders,
   assets: _assets,
@@ -214,6 +225,8 @@ export default function ProjectFileBrowser({
   const [songFolderOverrides, setSongFolderOverrides] = useState<Map<number, number | null>>(
     () => new Map(),
   );
+  const [dragPreviewFolderId, setDragPreviewFolderId] = useState<number | null | undefined>(undefined);
+  const [activeDragData, setActiveDragData] = useState<DragData | null>(null);
   const lastBreadcrumbTargetRef = useRef<number | null | undefined>(undefined);
   const originalFolderTargetRef = useRef<number | null | undefined>(undefined);
   const originalSongTargetRef = useRef<number | null | undefined>(undefined);
@@ -247,6 +260,7 @@ export default function ProjectFileBrowser({
   );
 
   const foldersById = useMemo(() => new Map(effectiveFolders.map((folder) => [folder.id, folder])), [effectiveFolders]);
+  const visibleFolderId = dragPreviewFolderId !== undefined ? dragPreviewFolderId : activeFolderId;
 
   const breadcrumbFolders = useMemo(() => {
     if (activeFolderId == null) return [];
@@ -261,17 +275,12 @@ export default function ProjectFileBrowser({
     return chain;
   }, [activeFolderId, foldersById]);
 
-  const visibleFolders = useMemo(() => effectiveFolders.filter((folder) => folder.parent_folder_id === activeFolderId), [effectiveFolders, activeFolderId]);
-  const visibleSongs = useMemo(() => effectiveSongs.filter((song) => (song.project_folder_id ?? null) === activeFolderId), [effectiveSongs, activeFolderId]);
+  const visibleFolders = useMemo(() => effectiveFolders.filter((folder) => folder.parent_folder_id === visibleFolderId), [effectiveFolders, visibleFolderId]);
+  const visibleSongs = useMemo(() => effectiveSongs.filter((song) => (song.project_folder_id ?? null) === visibleFolderId), [effectiveSongs, visibleFolderId]);
   const itemCount = visibleFolders.length + visibleSongs.length;
   const nextViewMode: ProjectFileView = viewMode === "grid" ? "list" : "grid";
-  const sortableIds = useMemo(
-    () => [
-      ...visibleFolders.map((folder) => getFolderDragId(folder.id)),
-      ...visibleSongs.map(getSongDragId),
-    ],
-    [visibleFolders, visibleSongs],
-  );
+  const draggedFolder = activeDragData?.kind === "folder" ? effectiveFolders.find((folder) => folder.id === activeDragData.folderId) ?? null : null;
+  const draggedSong = activeDragData?.kind === "song" ? effectiveSongs.find((song) => Number(song.project_asset_id) === activeDragData.assetId) ?? null : null;
 
   function folderIsDescendant(targetFolderId: number, draggedFolderId: number) {
     let current = foldersById.get(targetFolderId) ?? null;
@@ -385,6 +394,8 @@ export default function ProjectFileBrowser({
   function handleDragStart(event: DragStartEvent) {
     const dragData = event.active.data.current as DragData | undefined;
     lastBreadcrumbTargetRef.current = undefined;
+    setDragPreviewFolderId(undefined);
+    setActiveDragData(dragData ?? null);
 
     if (dragData?.kind === "song") {
       const song = effectiveSongs.find((item) => Number(item.project_asset_id) === dragData.assetId);
@@ -412,33 +423,50 @@ export default function ProjectFileBrowser({
 
     lastBreadcrumbTargetRef.current = targetFolderId;
     previewDragMove(dragData, targetFolderId);
-    onOpenFolder(targetFolderId);
+    setDragPreviewFolderId(targetFolderId);
+  }
+
+  function cleanupDragState() {
+    lastBreadcrumbTargetRef.current = undefined;
+    originalSongTargetRef.current = undefined;
+    originalFolderTargetRef.current = undefined;
+    setDragPreviewFolderId(undefined);
+    setActiveDragData(null);
   }
 
   function handleDragEnd(event: DragEndEvent) {
     const targetFolderId = getValidDropFolderId(event) ?? lastBreadcrumbTargetRef.current;
     const dragData = event.active.data.current as DragData | undefined;
 
-    lastBreadcrumbTargetRef.current = undefined;
-
-    if (targetFolderId === undefined || !dragData) return;
+    if (targetFolderId === undefined || !dragData) {
+      cleanupDragState();
+      return;
+    }
 
     if (dragData.kind === "song") {
       const song = effectiveSongs.find((item) => Number(item.project_asset_id) === dragData.assetId);
-      if (!song) return;
-      moveSongToFolder(song, targetFolderId);
+      if (song) moveSongToFolder(song, targetFolderId);
+      onOpenFolder(targetFolderId);
+      cleanupDragState();
       return;
     }
 
     const folder = effectiveFolders.find((item) => item.id === dragData.folderId);
-    if (!folder) return;
-    moveFolderToFolder(folder, targetFolderId);
+    if (folder) moveFolderToFolder(folder, targetFolderId);
+    onOpenFolder(targetFolderId);
+    cleanupDragState();
   }
 
   function handleDragCancel() {
-    lastBreadcrumbTargetRef.current = undefined;
-    originalSongTargetRef.current = undefined;
-    originalFolderTargetRef.current = undefined;
+    if (activeDragData?.kind === "song" && originalSongTargetRef.current !== undefined) {
+      previewDragMove(activeDragData, originalSongTargetRef.current);
+    }
+
+    if (activeDragData?.kind === "folder" && originalFolderTargetRef.current !== undefined) {
+      previewDragMove(activeDragData, originalFolderTargetRef.current);
+    }
+
+    cleanupDragState();
   }
 
   if (loading) {
@@ -483,7 +511,7 @@ export default function ProjectFileBrowser({
             <div className="project-breadcrumbs project-path">
               <BreadcrumbDropButton
                 folderId={null}
-                active={breadcrumbFolders.length === 0}
+                active={activeFolderId == null}
                 onClick={() => onOpenFolder(null)}
               >
                 All Files
@@ -526,41 +554,39 @@ export default function ProjectFileBrowser({
         </div>
         <div className="project-file-browser-section">
           {itemCount > 0 ? (
-            <SortableContext
-              items={sortableIds}
-              strategy={viewMode === "grid" ? rectSortingStrategy : verticalListSortingStrategy}
-            >
-              {viewMode === "grid" ? (
-                <div className="project-browser-grid">
-                  {visibleFolders.map((folder) => (
-                    <SortableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
-                  ))}
-                  {visibleSongs.map((song) => (
-                    <SortableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
-                  ))}
+            viewMode === "grid" ? (
+              <div className="project-browser-grid">
+                {visibleFolders.map((folder) => (
+                  <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
+                ))}
+                {visibleSongs.map((song) => (
+                  <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
+                ))}
+              </div>
+            ) : (
+              <div className="project-browser-list">
+                <div className="project-browser-list-head">
+                  <span>Name</span>
+                  <span>Info</span>
+                  <span>Kind</span>
+                  <span />
                 </div>
-              ) : (
-                <div className="project-browser-list">
-                  <div className="project-browser-list-head">
-                    <span>Name</span>
-                    <span>Info</span>
-                    <span>Kind</span>
-                    <span />
-                  </div>
-                  {visibleFolders.map((folder) => (
-                    <SortableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
-                  ))}
-                  {visibleSongs.map((song) => (
-                    <SortableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
-                  ))}
-                </div>
-              )}
-            </SortableContext>
+                {visibleFolders.map((folder) => (
+                  <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
+                ))}
+                {visibleSongs.map((song) => (
+                  <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
+                ))}
+              </div>
+            )
           ) : (
             <div className="project-file-empty-inline">No files in this folder yet.</div>
           )}
         </div>
       </div>
+      <DragOverlay dropAnimation={null}>
+        <DragPreview dragData={activeDragData} folder={draggedFolder} song={draggedSong} />
+      </DragOverlay>
     </DndContext>
   );
 }
