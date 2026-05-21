@@ -3,16 +3,19 @@
 import DropdownShell from "@/components/DropdownShell";
 import EditProjectModal from "@/components/EditProjectModal";
 import Footer from "@/components/Footer";
+import ModalShell from "@/components/ModalShell";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import SongRow from "@/components/SongRow";
 import Toast from "@/components/Toast";
 import DownloadIconSmall from "@/components/icons/DownloadIconSmall";
 import EditIcon from "@/components/icons/EditIcon";
+import FolderIcon from "@/components/icons/FolderIcon";
 import {
   borderedIconButtonClass,
-  quickFilterButtonClass,
+  modalPrimaryButtonClass,
   quickFilterButtonActiveClass,
+  quickFilterButtonClass,
 } from "@/components/uiClasses";
 import {
   filterTriggerActiveClass,
@@ -22,7 +25,7 @@ import {
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
-import type { Project, Song } from "@/lib/types";
+import type { Project, ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
@@ -50,6 +53,7 @@ type ProjectSong = Song & {
   project_position?: number;
   project_added_at?: string;
   project_notes?: string | null;
+  project_folder_id?: number | null;
 };
 
 function isProjectTab(value: string | null): value is ProjectTab {
@@ -62,6 +66,14 @@ function getDownloadLabel(activeTab: ProjectTab) {
   if (activeTab === "colour-grading") return "Download all colour grading";
 
   return "Download all music";
+}
+
+function getAssetTypeLabel(assetType: string | null | undefined) {
+  if (assetType === "song") return "Music";
+  if (assetType === "sound-fx") return "Sound FX";
+  if (assetType === "visual-fx") return "Visual FX";
+  if (assetType === "colour-grading") return "Colour Grading";
+  return "Folder";
 }
 
 function formatProjectDate(project: Project | null) {
@@ -101,11 +113,19 @@ function ProjectPageSkeleton() {
       </div>
 
       <section className="project-tab-panel">
-        <div className="project-overview-grid">
-          <ProjectAssetTableShell title="Music" isLoading />
-          <ProjectAssetTableShell title="Sound FX" />
-          <ProjectAssetTableShell title="Visual FX" />
-          <ProjectAssetTableShell title="Colour Grading" />
+        <div className="project-file-browser">
+          <div className="project-file-browser-top">
+            <div className="project-detail-skeleton-meta-line short project-skeleton-block" />
+            <div className="project-tab-skeleton project-skeleton-block" />
+          </div>
+          <div className="project-folder-grid">
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="project-folder-card skeleton-card">
+                <div className="project-folder-icon project-skeleton-block" />
+                <div className="project-detail-skeleton-meta-line short project-skeleton-block" />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </>
@@ -257,46 +277,249 @@ function MusicAssetTable({
   );
 }
 
-function OverviewTabState({
+function FolderCard({
+  folder,
+  onOpen,
+}: {
+  folder: ProjectFolder;
+  onOpen: (folderId: number) => void;
+}) {
+  const totalItems = (folder.child_count ?? 0) + (folder.asset_count ?? 0);
+
+  return (
+    <button
+      type="button"
+      className="project-folder-card"
+      onClick={() => onOpen(folder.id)}
+    >
+      <span className="project-folder-icon">
+        <FolderIcon />
+      </span>
+      <span className="project-folder-copy">
+        <span className="project-folder-name">{folder.name}</span>
+        <span className="project-folder-meta">
+          {getAssetTypeLabel(folder.asset_type)} · {totalItems}{" "}
+          {totalItems === 1 ? "item" : "items"}
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function FolderBrowser({
   projectId,
+  folders,
+  assets,
   songs,
   loading,
   error,
-  onRemoveFromProject,
+  activeFolderId,
+  onOpenFolder,
+  onMoveSong,
+  onCreateFolder,
 }: {
   projectId: string;
+  folders: ProjectFolder[];
+  assets: ProjectAsset[];
   songs: ProjectSong[];
   loading: boolean;
   error: string | null;
-  onRemoveFromProject: (songId: string) => void;
+  activeFolderId: number | null;
+  onOpenFolder: (folderId: number | null) => void;
+  onMoveSong: (song: ProjectSong, folderId: number | null) => void;
+  onCreateFolder: () => void;
 }) {
+  const foldersById = useMemo(
+    () => new Map(folders.map((folder) => [folder.id, folder])),
+    [folders],
+  );
+
+  const breadcrumbFolders = useMemo(() => {
+    if (activeFolderId == null) return [];
+
+    const chain: ProjectFolder[] = [];
+    const visited = new Set<number>();
+    let current = foldersById.get(activeFolderId) ?? null;
+
+    while (current && !visited.has(current.id)) {
+      chain.unshift(current);
+      visited.add(current.id);
+      current =
+        current.parent_folder_id == null
+          ? null
+          : foldersById.get(current.parent_folder_id) ?? null;
+    }
+
+    return chain;
+  }, [activeFolderId, foldersById]);
+
+  const visibleFolders = useMemo(
+    () =>
+      folders.filter((folder) => folder.parent_folder_id === activeFolderId),
+    [folders, activeFolderId],
+  );
+
+  const visibleSongs = useMemo(
+    () => songs.filter((song) => (song.project_folder_id ?? null) === activeFolderId),
+    [songs, activeFolderId],
+  );
+
+  const folderOptions = useMemo(
+    () =>
+      folders.map((folder) => {
+        const chain: string[] = [folder.name];
+        const visited = new Set<number>([folder.id]);
+        let current =
+          folder.parent_folder_id == null
+            ? null
+            : foldersById.get(folder.parent_folder_id) ?? null;
+
+        while (current && !visited.has(current.id)) {
+          chain.unshift(current.name);
+          visited.add(current.id);
+          current =
+            current.parent_folder_id == null
+              ? null
+              : foldersById.get(current.parent_folder_id) ?? null;
+        }
+
+        return {
+          id: folder.id,
+          label: chain.join(" / "),
+        };
+      }),
+    [folders, foldersById],
+  );
+
+  if (loading) {
+    return (
+      <div className="project-file-browser">
+        <div className="project-file-browser-top">
+          <div className="project-detail-skeleton-meta-line short project-skeleton-block" />
+          <div className="project-tab-skeleton project-skeleton-block" />
+        </div>
+        <div className="project-folder-grid">
+          {Array.from({ length: 4 }, (_, index) => (
+            <div key={index} className="project-folder-card skeleton-card">
+              <div className="project-folder-icon project-skeleton-block" />
+              <div className="project-detail-skeleton-meta-line short project-skeleton-block" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="project-empty">
+        <h2>Couldn&apos;t load project folders</h2>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  const activeFolder = activeFolderId == null ? null : foldersById.get(activeFolderId);
+  const unassignedAssetCount = assets.filter((asset) => asset.folder_id == null).length;
+
   return (
-    <div className="project-overview-grid">
-      <MusicAssetTable
-        projectId={projectId}
-        songs={songs}
-        loading={loading}
-        error={error}
-        onRemoveFromProject={onRemoveFromProject}
-      />
+    <div className="project-file-browser">
+      <div className="project-file-browser-top">
+        <div className="project-file-browser-title-wrap">
+          <div className="project-file-browser-kicker">All Files</div>
+          <h2>{activeFolder?.name || "Project Files"}</h2>
+          <div className="project-breadcrumbs">
+            <button type="button" onClick={() => onOpenFolder(null)}>
+              Root
+            </button>
+            {breadcrumbFolders.map((folder) => (
+              <span key={folder.id}>
+                <span>/</span>
+                <button type="button" onClick={() => onOpenFolder(folder.id)}>
+                  {folder.name}
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
 
-      <ProjectAssetTableShell
-        title="Sound FX"
-        emptyTitle="No sound FX yet"
-        emptyCopy="Sound effects connected to this project will appear here."
-      />
+        <button
+          type="button"
+          className={`${filterTriggerBaseClass} ${filterTriggerInactiveClass}`}
+          onClick={onCreateFolder}
+        >
+          New Folder
+        </button>
+      </div>
 
-      <ProjectAssetTableShell
-        title="Visual FX"
-        emptyTitle="No visual FX yet"
-        emptyCopy="Visual effects connected to this project will appear here."
-      />
+      <div className="project-file-browser-section">
+        <div className="project-file-section-heading">
+          <span>Folders</span>
+          <span>{visibleFolders.length}</span>
+        </div>
 
-      <ProjectAssetTableShell
-        title="Colour Grading"
-        emptyTitle="No colour grading assets yet"
-        emptyCopy="Colour grading assets connected to this project will appear here."
-      />
+        {visibleFolders.length > 0 ? (
+          <div className="project-folder-grid">
+            {visibleFolders.map((folder) => (
+              <FolderCard key={folder.id} folder={folder} onOpen={onOpenFolder} />
+            ))}
+          </div>
+        ) : (
+          <div className="project-file-empty-inline">No folders here yet.</div>
+        )}
+      </div>
+
+      <div className="project-file-browser-section">
+        <div className="project-file-section-heading">
+          <span>Files</span>
+          <span>
+            {activeFolderId == null
+              ? `${unassignedAssetCount} at root`
+              : `${visibleSongs.length} music ${visibleSongs.length === 1 ? "file" : "files"}`}
+          </span>
+        </div>
+
+        {visibleSongs.length > 0 ? (
+          <div className="project-file-list">
+            {visibleSongs.map((song) => (
+              <div key={song.id} className="project-file-row">
+                <div className="project-file-icon">♪</div>
+                <div className="project-file-main">
+                  <div className="project-file-name">{song.title}</div>
+                  <div className="project-file-meta">
+                    {song.artist} · Music
+                  </div>
+                </div>
+                <select
+                  className="project-file-move-select"
+                  value={song.project_folder_id ?? "root"}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    onMoveSong(
+                      song,
+                      nextValue === "root" ? null : Number(nextValue),
+                    );
+                  }}
+                  aria-label={`Move ${song.title}`}
+                >
+                  <option value="root">Root</option>
+                  {folderOptions.map((folder) => (
+                    <option key={folder.id} value={folder.id}>
+                      {folder.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="project-file-empty-inline">
+            {activeFolderId == null
+              ? "Files added directly to the project root will appear here."
+              : "No music files in this folder yet."}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -368,9 +591,15 @@ export default function ProjectDetailPage() {
   const playerVisible = !!currentSong;
 
   const [projectSongs, setProjectSongs] = useState<ProjectSong[]>([]);
+  const [projectAssets, setProjectAssets] = useState<ProjectAsset[]>([]);
+  const [projectFolders, setProjectFolders] = useState<ProjectFolder[]>([]);
   const [projectSort, setProjectSort] = useState<ProjectSort>("newest");
   const [projectSongsLoading, setProjectSongsLoading] = useState(true);
   const [projectSongsError, setProjectSongsError] = useState<string | null>(
+    null,
+  );
+  const [projectFoldersLoading, setProjectFoldersLoading] = useState(true);
+  const [projectFoldersError, setProjectFoldersError] = useState<string | null>(
     null,
   );
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -381,10 +610,15 @@ export default function ProjectDetailPage() {
     null,
   );
   const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
+  const [createFolderOpen, setCreateFolderOpen] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
+  const [creatingFolder, setCreatingFolder] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const tabParam = searchParams.get("tab");
+  const folderParam = searchParams.get("folder");
   const activeTab: ProjectTab = isProjectTab(tabParam) ? tabParam : "overview";
+  const activeFolderId = folderParam && Number.isFinite(Number(folderParam)) ? Number(folderParam) : null;
   const activeDownloadLabel = getDownloadLabel(activeTab);
 
   const project = useMemo(
@@ -456,14 +690,19 @@ export default function ProjectDetailPage() {
         const nextSongs = Array.isArray(data?.songs)
           ? (data.songs as ProjectSong[])
           : [];
+        const nextAssets = Array.isArray(data?.assets)
+          ? (data.assets as ProjectAsset[])
+          : [];
 
         if (cancelled) return;
 
         setProjectSongs(nextSongs.filter((song) => song.id));
+        setProjectAssets(nextAssets.filter((asset) => Number.isFinite(asset.id)));
       } catch (err) {
         if (cancelled) return;
 
         setProjectSongs([]);
+        setProjectAssets([]);
         setProjectSongsError(
           err instanceof Error ? err.message : "Failed to load project songs",
         );
@@ -482,6 +721,55 @@ export default function ProjectDetailPage() {
   }, [projectId]);
 
   useEffect(() => {
+    if (!projectId) return;
+
+    let cancelled = false;
+
+    async function loadProjectFolders() {
+      setProjectFoldersLoading(true);
+      setProjectFoldersError(null);
+
+      try {
+        const res = await fetch(
+          `/api/projects/${encodeURIComponent(projectId)}/folders`,
+          {
+            cache: "no-store",
+          },
+        );
+
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+
+        if (!res.ok) {
+          throw new Error(data?.error || "Failed to load project folders");
+        }
+
+        if (cancelled) return;
+
+        setProjectFolders(Array.isArray(data?.folders) ? data.folders : []);
+        setProjectAssets(Array.isArray(data?.assets) ? data.assets : []);
+      } catch (err) {
+        if (cancelled) return;
+
+        setProjectFolders([]);
+        setProjectFoldersError(
+          err instanceof Error ? err.message : "Failed to load project folders",
+        );
+      } finally {
+        if (!cancelled) {
+          setProjectFoldersLoading(false);
+        }
+      }
+    }
+
+    loadProjectFolders();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId]);
+
+  useEffect(() => {
     if (activeTab !== "music" && activeTab !== "overview") return;
 
     setQueue(displayedProjectSongs.filter((song) => song.audioUrl));
@@ -491,6 +779,26 @@ export default function ProjectDetailPage() {
     const params = new URLSearchParams(searchParams.toString());
 
     params.set("tab", nextTab);
+
+    if (nextTab !== "overview") {
+      params.delete("folder");
+    }
+
+    router.replace(`/projects/${projectId}?${params.toString()}`, {
+      scroll: false,
+    });
+  }
+
+  function setActiveFolder(nextFolderId: number | null) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("tab", "overview");
+
+    if (nextFolderId == null) {
+      params.delete("folder");
+    } else {
+      params.set("folder", String(nextFolderId));
+    }
 
     router.replace(`/projects/${projectId}?${params.toString()}`, {
       scroll: false,
@@ -504,7 +812,103 @@ export default function ProjectDetailPage() {
 
   function handleRemoveFromProject(songId: string) {
     setProjectSongs((current) => current.filter((song) => song.id !== songId));
+    setProjectAssets((current) =>
+      current.filter((asset) => !(asset.asset_type === "song" && asset.asset_id === songId)),
+    );
     showToast("Song removed from project");
+  }
+
+  async function handleMoveSong(song: ProjectSong, folderId: number | null) {
+    if (!song.project_asset_id) return;
+
+    const previousFolderId = song.project_folder_id ?? null;
+
+    setProjectSongs((current) =>
+      current.map((item) =>
+        item.id === song.id ? { ...item, project_folder_id: folderId } : item,
+      ),
+    );
+    setProjectAssets((current) =>
+      current.map((asset) =>
+        asset.id === song.project_asset_id ? { ...asset, folder_id: folderId } : asset,
+      ),
+    );
+
+    try {
+      const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assets`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          asset_id: song.project_asset_id,
+          folder_id: folderId,
+        }),
+      });
+
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to move file");
+      }
+
+      showToast(folderId == null ? "Moved to root" : "Moved file");
+    } catch (err) {
+      setProjectSongs((current) =>
+        current.map((item) =>
+          item.id === song.id
+            ? { ...item, project_folder_id: previousFolderId }
+            : item,
+        ),
+      );
+      setProjectAssets((current) =>
+        current.map((asset) =>
+          asset.id === song.project_asset_id
+            ? { ...asset, folder_id: previousFolderId }
+            : asset,
+        ),
+      );
+      showToast(err instanceof Error ? err.message : "Couldn’t move file");
+    }
+  }
+
+  async function handleCreateFolder() {
+    const cleanName = newFolderName.trim();
+
+    if (!cleanName || creatingFolder) return;
+
+    setCreatingFolder(true);
+
+    try {
+      const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: cleanName,
+          parent_folder_id: activeFolderId,
+          asset_type: null,
+        }),
+      });
+
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to create folder");
+      }
+
+      setProjectFolders((current) => [...current, data]);
+      setNewFolderName("");
+      setCreateFolderOpen(false);
+      showToast("Folder created");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Couldn’t create folder");
+    } finally {
+      setCreatingFolder(false);
+    }
   }
 
   function downloadFiles(songs: ProjectSong[], emptyMessage: string) {
@@ -781,30 +1185,234 @@ export default function ProjectDetailPage() {
           padding: 16px 32px;
         }
 
-        .song-row-compact::after {
-          content: "";
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          height: 1px;
-          background: var(--border-subtle);
-          pointer-events: none;
-        }
-
-        .song-row-compact.is-last::after {
-          display: none;
-        }
-
         .project-tab-panel {
           margin-left: -32px;
           margin-right: -32px;
         }
 
-        .project-overview-grid {
+        .project-file-browser {
+          padding: 32px;
+        }
+
+        .project-file-browser-top {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 20px;
+          border-bottom: 1px solid var(--border);
+          padding-bottom: 20px;
+        }
+
+        .project-file-browser-kicker {
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+
+        .project-file-browser-title-wrap h2 {
+          margin-top: 6px;
+          font-size: 22px;
+          font-weight: 500;
+          letter-spacing: -0.03em;
+          color: var(--text-primary);
+        }
+
+        .project-breadcrumbs {
+          margin-top: 10px;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 7px;
+          font-size: 12px;
+          color: var(--text-muted);
+        }
+
+        .project-breadcrumbs span {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+        }
+
+        .project-breadcrumbs button {
+          cursor: pointer;
+          color: var(--text-secondary);
+          transition: color 0.15s ease;
+        }
+
+        .project-breadcrumbs button:hover {
+          color: var(--text-primary);
+        }
+
+        .project-file-browser-section {
+          padding-top: 24px;
+        }
+
+        .project-file-section-heading {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 12px;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+
+        .project-folder-grid {
           display: grid;
-          gap: 32px;
-          padding: 32px 32px 32px;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 12px;
+        }
+
+        .project-folder-card {
+          display: flex;
+          min-height: 76px;
+          cursor: pointer;
+          align-items: center;
+          gap: 13px;
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          background: var(--bg-secondary);
+          padding: 14px;
+          text-align: left;
+          transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+        }
+
+        .project-folder-card:hover {
+          border-color: color-mix(in srgb, var(--border) 72%, var(--text-primary));
+          background: var(--bg-hover);
+          transform: translateY(-1px);
+        }
+
+        .project-folder-card.skeleton-card {
+          cursor: default;
+          transform: none;
+        }
+
+        .project-folder-icon {
+          display: flex;
+          height: 36px;
+          width: 36px;
+          flex-shrink: 0;
+          align-items: center;
+          justify-content: center;
+          border-radius: 10px;
+          background: var(--bg-tertiary);
+          color: var(--text-secondary);
+        }
+
+        .project-folder-copy {
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .project-folder-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 13px;
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .project-folder-meta {
+          margin-top: 5px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 11px;
+          color: var(--text-secondary);
+        }
+
+        .project-file-list {
+          overflow: hidden;
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          background: var(--bg-secondary);
+        }
+
+        .project-file-row {
+          display: grid;
+          min-height: 56px;
+          grid-template-columns: 38px minmax(0, 1fr) minmax(180px, 260px);
+          align-items: center;
+          gap: 12px;
+          border-bottom: 1px solid var(--border-subtle);
+          padding: 0 14px;
+        }
+
+        .project-file-row:last-child {
+          border-bottom: none;
+        }
+
+        .project-file-icon {
+          display: flex;
+          height: 30px;
+          width: 30px;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          background: var(--bg-tertiary);
+          color: var(--text-secondary);
+          font-size: 13px;
+        }
+
+        .project-file-main {
+          min-width: 0;
+        }
+
+        .project-file-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 13px;
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .project-file-meta {
+          margin-top: 4px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 11px;
+          color: var(--text-secondary);
+        }
+
+        .project-file-move-select {
+          height: 31px;
+          width: 100%;
+          cursor: pointer;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          background: var(--bg-primary);
+          padding: 0 9px;
+          font-size: 11px;
+          color: var(--text-secondary);
+          outline: none;
+        }
+
+        .project-file-move-select:focus {
+          border-color: var(--text-muted);
+          color: var(--text-primary);
+        }
+
+        .project-file-empty-inline {
+          display: flex;
+          min-height: 72px;
+          align-items: center;
+          justify-content: center;
+          border: 1px dashed var(--border);
+          border-radius: 14px;
+          background: var(--bg-secondary);
+          padding: 18px;
+          text-align: center;
+          font-size: 12px;
+          color: var(--text-secondary);
         }
 
         .project-asset-table {
@@ -866,30 +1474,9 @@ export default function ProjectDetailPage() {
           text-align: left;
         }
 
-        .project-asset-table-empty {
-          display: flex;
-          min-height: 120px;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          color: var(--text-secondary);
-        }
-
-        .project-asset-table-empty h3 {
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--text-primary);
-        }
-
-        .project-asset-table-empty p {
-          margin-top: 6px;
-          max-width: 320px;
-          font-size: 12px;
-          line-height: 1.6;
-        }
-
-        .project-empty {
+        .project-asset-table-empty,
+        .project-empty,
+        .project-error {
           display: flex;
           min-height: 280px;
           flex-direction: column;
@@ -899,35 +1486,20 @@ export default function ProjectDetailPage() {
           color: var(--text-secondary);
         }
 
-        .project-empty h2 {
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--text-primary);
+        .project-asset-table-empty {
+          min-height: 120px;
         }
 
-        .project-empty p {
-          margin-top: 6px;
-          max-width: 320px;
-          font-size: 12px;
-          line-height: 1.6;
-        }
-
-        .project-error {
-          display: flex;
-          min-height: 360px;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          color: var(--text-secondary);
-        }
-
+        .project-asset-table-empty h3,
+        .project-empty h2,
         .project-error h2 {
           font-size: 14px;
           font-weight: 500;
           color: var(--text-primary);
         }
 
+        .project-asset-table-empty p,
+        .project-empty p,
         .project-error p {
           margin-top: 6px;
           max-width: 320px;
@@ -993,12 +1565,6 @@ export default function ProjectDetailPage() {
           width: 140px;
         }
 
-        @media (max-width: 720px) {
-          .project-detail-hero {
-            padding-top: 88px;
-          }
-        }
-
         @media (max-width: 760px) {
           .project-detail-shell {
             padding: 0 18px;
@@ -1019,16 +1585,28 @@ export default function ProjectDetailPage() {
             padding: 0 18px;
           }
 
-          .project-sort-row {
+          .project-sort-row,
+          .project-file-browser {
             padding: 16px 18px;
-          }
-
-          .project-overview-grid {
-            padding: 18px 18px 18px;
           }
 
           .project-detail-skeleton-title {
             width: min(420px, 88%);
+          }
+
+          .project-file-browser-top,
+          .project-file-row {
+            grid-template-columns: 1fr;
+          }
+
+          .project-file-row {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 12px 14px;
+          }
+
+          .project-file-move-select {
+            width: 100%;
           }
         }
       `}</style>
@@ -1182,12 +1760,17 @@ export default function ProjectDetailPage() {
 
               <section className="project-tab-panel">
                 {activeTab === "overview" ? (
-                  <OverviewTabState
+                  <FolderBrowser
                     projectId={projectId}
+                    folders={projectFolders}
+                    assets={projectAssets}
                     songs={displayedProjectSongs}
-                    loading={projectSongsLoading}
-                    error={projectSongsError}
-                    onRemoveFromProject={handleRemoveFromProject}
+                    loading={projectFoldersLoading || projectSongsLoading}
+                    error={projectFoldersError || projectSongsError}
+                    activeFolderId={activeFolderId}
+                    onOpenFolder={setActiveFolder}
+                    onMoveSong={handleMoveSong}
+                    onCreateFolder={() => setCreateFolderOpen(true)}
                   />
                 ) : activeTab === "music" ? (
                   <MusicTabState
@@ -1221,6 +1804,43 @@ export default function ProjectDetailPage() {
         message={toastMessage}
         bottomOffset={playerVisible ? "88px" : "24px"}
       />
+
+      <ModalShell
+        isOpen={createFolderOpen}
+        title="New Folder"
+        onClose={() => {
+          setCreateFolderOpen(false);
+          setNewFolderName("");
+        }}
+        closeLabel="Close new folder modal"
+        footer={
+          <button
+            type="button"
+            onClick={handleCreateFolder}
+            className={modalPrimaryButtonClass}
+            disabled={creatingFolder || !newFolderName.trim()}
+          >
+            {creatingFolder ? "Creating..." : "Create Folder"}
+          </button>
+        }
+      >
+        <label className="block text-[11px] font-medium text-[var(--text-secondary)]">
+          Folder name
+        </label>
+        <input
+          value={newFolderName}
+          onChange={(event) => setNewFolderName(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              handleCreateFolder();
+            }
+          }}
+          autoFocus
+          className="mt-2 h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+          placeholder="Client Favorites"
+        />
+      </ModalShell>
 
       <EditProjectModal
         isOpen={!!editingProject}
