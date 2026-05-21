@@ -31,9 +31,17 @@ function ActivePill() {
   );
 }
 
+function PlanLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="inline-flex w-fit items-center rounded-full bg-[#111111] px-3 py-1.5 text-sm font-medium text-white">
+      {children}
+    </div>
+  );
+}
+
 function CurrentPlanButton() {
   return (
-    <div className="inline-flex h-8 min-w-[150px] items-center justify-center rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-3.5 text-xs font-medium text-[#48b571]">
+    <div className="inline-flex h-8 min-w-[132px] items-center justify-center rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-3.5 text-xs font-medium text-[#48b571]">
       Current plan
     </div>
   );
@@ -66,15 +74,13 @@ export default function MembershipSection() {
           return (
             <Card key={name} className="group">
               <VisualPanel image={membershipPlanImages[index]} />
-              <div className="bg-[#111111] px-4 py-3 text-white">
-                <div className="flex min-h-7 items-center justify-between gap-3">
-                  <div className="text-sm font-medium">{name}</div>
-                  {isCurrentPlan ? <ActivePill /> : null}
-                </div>
-              </div>
               <div className="p-4">
-                <div className="flex min-h-[160px] flex-col">
-                  <div className="text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">{price}</div>
+                <div className="flex min-h-[190px] flex-col">
+                  <div className="flex min-h-8 items-start justify-between gap-3">
+                    <PlanLabel>{name}</PlanLabel>
+                    {isCurrentPlan ? <ActivePill /> : null}
+                  </div>
+                  <div className="mt-4 text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">{price}</div>
                   <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">{description}</p>
                   <div className="mt-auto pt-5">
                     {isCurrentPlan ? (
