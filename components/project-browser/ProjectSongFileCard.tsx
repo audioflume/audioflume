@@ -48,16 +48,18 @@ export default function ProjectSongFileCard({
     return (
       <div className="project-browser-row project-file-row">
         <span className="project-browser-row-name">
-          <button
-            type="button"
-            className={`project-preview-button is-active ${previewIsPlaying ? "is-playing" : ""}`}
-            style={{ background: `conic-gradient(var(--text-primary) ${progressDegrees}, var(--project-preview-track) 0deg)` }}
-            onClick={handlePreviewClick}
-            aria-label={previewIsPlaying ? `Pause ${song.title}` : `Preview ${song.title}`}
-          >
-            <PlayPauseIcon playing={previewIsPlaying} />
-          </button>
-          <MusicGlyph small />
+          <span className="project-file-list-icon-wrap">
+            <MusicGlyph small />
+            <button
+              type="button"
+              className={`project-preview-button project-preview-button-list is-active ${previewIsPlaying ? "is-playing" : ""}`}
+              style={{ background: `conic-gradient(var(--text-primary) ${progressDegrees}, var(--project-preview-track) 0deg)` }}
+              onClick={handlePreviewClick}
+              aria-label={previewIsPlaying ? `Pause ${song.title}` : `Preview ${song.title}`}
+            >
+              <PlayPauseIcon playing={previewIsPlaying} />
+            </button>
+          </span>
           <span className="project-browser-row-title">{song.title}</span>
         </span>
         <span className="project-browser-row-muted">{song.artist || "--"}</span>
