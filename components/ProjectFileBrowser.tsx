@@ -144,10 +144,6 @@ export default function ProjectFileBrowser({
         </div>
       </div>
       <div className="project-file-browser-section">
-        <div className="project-file-section-heading">
-          <span>Items</span>
-          <span>{itemCount} items</span>
-        </div>
         {itemCount > 0 ? (
           viewMode === "grid" ? (
             <div className="project-browser-grid">
