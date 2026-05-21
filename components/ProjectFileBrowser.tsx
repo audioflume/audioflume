@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
+import GridViewIcon from "@/components/icons/GridViewIcon";
+import ListViewIcon from "@/components/icons/ListViewIcon";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import ProjectFolderCard from "./project-browser/ProjectFolderCard";
 import ProjectSongFileCard from "./project-browser/ProjectSongFileCard";
@@ -31,10 +33,6 @@ type ProjectFileBrowserProps = {
   onCreateFolder: () => void;
 };
 
-function getGoogleDriveButtonMarkup() {
-  return `<span>Add to Drive</span>`;
-}
-
 export default function ProjectFileBrowser({
   folders,
   assets: _assets,
@@ -49,21 +47,6 @@ export default function ProjectFileBrowser({
   onCreateFolder,
 }: ProjectFileBrowserProps) {
   const foldersById = useMemo(() => new Map(folders.map((folder) => [folder.id, folder])), [folders]);
-
-  useEffect(() => {
-    const wrap = document.querySelector(".project-download-wrap");
-    if (!wrap || document.querySelector(".project-google-drive-trigger")) return;
-
-    const button = document.createElement("button");
-    button.type = "button";
-    button.disabled = true;
-    button.className = "project-google-drive-trigger";
-    button.title = "Google Drive export requires a Google Drive integration.";
-    button.innerHTML = getGoogleDriveButtonMarkup();
-    wrap.insertBefore(button, wrap.firstChild);
-
-    return () => button.remove();
-  }, []);
 
   const breadcrumbFolders = useMemo(() => {
     if (activeFolderId == null) return [];
@@ -81,6 +64,7 @@ export default function ProjectFileBrowser({
   const visibleFolders = useMemo(() => folders.filter((folder) => folder.parent_folder_id === activeFolderId), [folders, activeFolderId]);
   const visibleSongs = useMemo(() => songs.filter((song) => (song.project_folder_id ?? null) === activeFolderId), [songs, activeFolderId]);
   const itemCount = visibleFolders.length + visibleSongs.length;
+  const nextViewMode: ProjectFileView = viewMode === "grid" ? "list" : "grid";
 
   if (loading) {
     return (
@@ -115,28 +99,41 @@ export default function ProjectFileBrowser({
       <div className="project-file-browser-top">
         <div className="project-file-browser-title-wrap">
           <div className="project-breadcrumbs project-path">
-            <button type="button" onClick={() => onOpenFolder(null)}>
+            <button
+              type="button"
+              onClick={() => onOpenFolder(null)}
+              className={breadcrumbFolders.length === 0 ? "is-current" : ""}
+            >
               All Files
             </button>
-            {breadcrumbFolders.map((folder) => (
-              <span key={folder.id}>
-                <span>/</span>
-                <button type="button" onClick={() => onOpenFolder(folder.id)}>
-                  {folder.name}
-                </button>
-              </span>
-            ))}
+            {breadcrumbFolders.map((folder, index) => {
+              const isCurrent = index === breadcrumbFolders.length - 1;
+
+              return (
+                <span key={folder.id}>
+                  <span className="project-path-separator">/</span>
+                  <button
+                    type="button"
+                    onClick={() => onOpenFolder(folder.id)}
+                    className={isCurrent ? "is-current" : ""}
+                  >
+                    {folder.name}
+                  </button>
+                </span>
+              );
+            })}
           </div>
         </div>
         <div className="project-file-browser-actions">
-          <div className="project-view-toggle">
-            <button type="button" onClick={() => onViewModeChange("grid")} className={viewMode === "grid" ? "is-active" : ""}>
-              Grid
-            </button>
-            <button type="button" onClick={() => onViewModeChange("list")} className={viewMode === "list" ? "is-active" : ""}>
-              List
-            </button>
-          </div>
+          <button
+            type="button"
+            className="project-view-toggle-button"
+            aria-label={viewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
+            title={viewMode === "grid" ? "List view" : "Grid view"}
+            onClick={() => onViewModeChange(nextViewMode)}
+          >
+            {viewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
+          </button>
           <button type="button" className="project-new-folder-button" onClick={onCreateFolder} aria-label="New folder" title="New folder">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
               <path d="M12 5v14" />
