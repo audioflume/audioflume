@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { ensureDefaultProjectFolders } from "@/lib/projectFolders";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
@@ -9,6 +10,27 @@ type RouteContext = {
 async function getSongId(context: RouteContext) {
   const params = await context.params;
   return decodeURIComponent(params.songId);
+}
+
+async function getDefaultSongFolderId(projectId: number, userId: string) {
+  await ensureDefaultProjectFolders({
+    supabase: supabaseServer,
+    projectId,
+    userId,
+  });
+
+  const { data, error } = await supabaseServer
+    .from("project_folders")
+    .select("id")
+    .eq("project_id", projectId)
+    .eq("clerk_user_id", userId)
+    .eq("asset_type", "song")
+    .is("parent_folder_id", null)
+    .single();
+
+  if (error || !data) return null;
+
+  return Number(data.id);
 }
 
 export async function GET(_req: Request, context: RouteContext) {
@@ -103,6 +125,7 @@ export async function PATCH(req: Request, context: RouteContext) {
     }
 
     if (selected) {
+      const folderId = await getDefaultSongFolderId(projectId, userId);
       const { data: latestAsset, error: latestAssetError } =
         await supabaseServer
           .from("project_assets")
@@ -124,6 +147,7 @@ export async function PATCH(req: Request, context: RouteContext) {
           project_id: projectId,
           asset_type: "song",
           asset_id: songId,
+          folder_id: folderId,
           position: nextPosition,
         },
         {
