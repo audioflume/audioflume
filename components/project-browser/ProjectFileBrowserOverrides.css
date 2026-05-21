@@ -93,13 +93,21 @@
 
 .project-browser-list .project-browser-row {
   border: 0 !important;
-  border-bottom: 0 !important;
-  border-radius: 8px !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  border-radius: 0 !important;
   padding: 0 14px !important;
 }
 
+.project-browser-list .project-browser-row:last-child {
+  border-bottom: 0 !important;
+}
+
 .project-browser-list .project-browser-row + .project-browser-row {
-  margin-top: 2px !important;
+  margin-top: 0 !important;
+}
+
+.project-browser-list .project-browser-row:hover {
+  border-radius: 8px !important;
 }
 
 .project-file-browser [role="button"] {
