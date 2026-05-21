@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import FolderIcon from "@/components/icons/FolderIcon";
 import {
   filterTriggerBaseClass,
   filterTriggerInactiveClass,
@@ -33,6 +32,19 @@ type ProjectFileBrowserProps = {
   onCreateFolder: () => void;
 };
 
+function FolderGlyph({ small = false }: { small?: boolean }) {
+  return (
+    <span className={small ? "project-folder-glyph small" : "project-folder-glyph"}>
+      <span className="project-folder-glyph-tab" />
+      <span className="project-folder-glyph-body" />
+    </span>
+  );
+}
+
+function MusicGlyph({ small = false }: { small?: boolean }) {
+  return <span className={small ? "project-music-glyph small" : "project-music-glyph"}>♪</span>;
+}
+
 function getAssetTypeLabel(assetType: string | null | undefined) {
   if (assetType === "song") return "Music";
   if (assetType === "sound-fx") return "Sound FX";
@@ -52,12 +64,31 @@ function formatSongMeta(song: ProjectSong) {
 
 function FolderCard({
   folder,
+  viewMode,
   onOpen,
 }: {
   folder: ProjectFolder;
+  viewMode: ProjectFileView;
   onOpen: (folderId: number) => void;
 }) {
   const totalItems = (folder.child_count ?? 0) + (folder.asset_count ?? 0);
+
+  if (viewMode === "list") {
+    return (
+      <button
+        type="button"
+        className="project-browser-row project-folder-row"
+        onClick={() => onOpen(folder.id)}
+      >
+        <span className="project-browser-row-name">
+          <FolderGlyph small />
+          <span className="project-browser-row-title">{folder.name}</span>
+        </span>
+        <span className="project-browser-row-muted">{totalItems || "--"}</span>
+        <span className="project-browser-row-muted">{getAssetTypeLabel(folder.asset_type)}</span>
+      </button>
+    );
+  }
 
   return (
     <button
@@ -65,15 +96,10 @@ function FolderCard({
       className="project-folder-card"
       onClick={() => onOpen(folder.id)}
     >
-      <span className="project-folder-icon">
-        <FolderIcon />
-      </span>
-      <span className="project-folder-copy">
-        <span className="project-folder-name">{folder.name}</span>
-        <span className="project-folder-meta">
-          {getAssetTypeLabel(folder.asset_type)} · {totalItems}{" "}
-          {totalItems === 1 ? "item" : "items"}
-        </span>
+      <FolderGlyph />
+      <span className="project-folder-card-name">{folder.name}</span>
+      <span className="project-folder-card-meta">
+        {totalItems} {totalItems === 1 ? "item" : "items"}
       </span>
     </button>
   );
@@ -90,15 +116,13 @@ function SongFileCard({
 }) {
   if (viewMode === "list") {
     return (
-      <div className="project-file-row">
-        <div className="project-file-icon">♪</div>
-        <div className="project-file-main">
-          <div className="project-file-name">{song.title}</div>
-          <div className="project-file-meta">{formatSongMeta(song)}</div>
-        </div>
-        <div className="project-file-list-meta">
-          {song.duration ? `${Math.round(song.duration)}s` : "—"}
-        </div>
+      <div className="project-browser-row project-file-row">
+        <span className="project-browser-row-name">
+          <MusicGlyph small />
+          <span className="project-browser-row-title">{song.title}</span>
+        </span>
+        <span className="project-browser-row-muted">{song.artist || "--"}</span>
+        <span className="project-browser-row-muted">Music</span>
         <button
           type="button"
           className="project-file-action"
@@ -112,20 +136,18 @@ function SongFileCard({
 
   return (
     <div className="project-file-card">
-      <div className="project-file-card-top">
-        <div className="project-file-card-icon">♪</div>
-        <button
-          type="button"
-          className="project-file-action"
-          onClick={() => onMove(song)}
-        >
-          Move
-        </button>
+      <div className="project-file-card-icon-wrap">
+        <MusicGlyph />
       </div>
-      <div>
-        <div className="project-file-card-title">{song.title}</div>
-        <div className="project-file-card-meta">{formatSongMeta(song)}</div>
-      </div>
+      <div className="project-file-card-title">{song.title}</div>
+      <div className="project-file-card-meta">{formatSongMeta(song)}</div>
+      <button
+        type="button"
+        className="project-file-action"
+        onClick={() => onMove(song)}
+      >
+        Move
+      </button>
     </div>
   );
 }
@@ -184,10 +206,10 @@ export default function ProjectFileBrowser({
           <div className="project-detail-skeleton-meta-line short project-skeleton-block" />
           <div className="project-tab-skeleton project-skeleton-block" />
         </div>
-        <div className="project-folder-grid">
-          {Array.from({ length: 4 }, (_, index) => (
+        <div className="project-browser-grid">
+          {Array.from({ length: 8 }, (_, index) => (
             <div key={index} className="project-folder-card skeleton-card">
-              <div className="project-folder-icon project-skeleton-block" />
+              <div className="project-skeleton-block h-[58px] w-[82px] rounded-[10px]" />
               <div className="project-detail-skeleton-meta-line short project-skeleton-block" />
             </div>
           ))}
@@ -207,6 +229,7 @@ export default function ProjectFileBrowser({
 
   const activeFolder = activeFolderId == null ? null : foldersById.get(activeFolderId);
   const unassignedAssetCount = assets.filter((asset) => asset.folder_id == null).length;
+  const itemCount = visibleFolders.length + visibleSongs.length;
 
   return (
     <div className="project-file-browser">
@@ -259,47 +282,65 @@ export default function ProjectFileBrowser({
 
       <div className="project-file-browser-section">
         <div className="project-file-section-heading">
-          <span>Folders</span>
-          <span>{visibleFolders.length}</span>
-        </div>
-
-        {visibleFolders.length > 0 ? (
-          <div className="project-folder-grid">
-            {visibleFolders.map((folder) => (
-              <FolderCard key={folder.id} folder={folder} onOpen={onOpenFolder} />
-            ))}
-          </div>
-        ) : (
-          <div className="project-file-empty-inline">No folders here yet.</div>
-        )}
-      </div>
-
-      <div className="project-file-browser-section">
-        <div className="project-file-section-heading">
-          <span>Files</span>
+          <span>{viewMode === "grid" ? "Items" : "Name"}</span>
           <span>
             {activeFolderId == null
-              ? `${unassignedAssetCount} at root`
-              : `${visibleSongs.length} music ${visibleSongs.length === 1 ? "file" : "files"}`}
+              ? `${itemCount} items · ${unassignedAssetCount} at root`
+              : `${itemCount} items`}
           </span>
         </div>
 
-        {visibleSongs.length > 0 ? (
-          <div className={viewMode === "grid" ? "project-file-grid" : "project-file-list"}>
-            {visibleSongs.map((song) => (
-              <SongFileCard
-                key={song.project_asset_id ?? song.id}
-                song={song}
-                viewMode={viewMode}
-                onMove={onMoveSong}
-              />
-            ))}
-          </div>
+        {itemCount > 0 ? (
+          viewMode === "grid" ? (
+            <div className="project-browser-grid">
+              {visibleFolders.map((folder) => (
+                <FolderCard
+                  key={`folder-${folder.id}`}
+                  folder={folder}
+                  viewMode={viewMode}
+                  onOpen={onOpenFolder}
+                />
+              ))}
+              {visibleSongs.map((song) => (
+                <SongFileCard
+                  key={`song-${song.project_asset_id ?? song.id}`}
+                  song={song}
+                  viewMode={viewMode}
+                  onMove={onMoveSong}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="project-browser-list">
+              <div className="project-browser-list-head">
+                <span>Name</span>
+                <span>Info</span>
+                <span>Kind</span>
+                <span />
+              </div>
+              {visibleFolders.map((folder) => (
+                <FolderCard
+                  key={`folder-${folder.id}`}
+                  folder={folder}
+                  viewMode={viewMode}
+                  onOpen={onOpenFolder}
+                />
+              ))}
+              {visibleSongs.map((song) => (
+                <SongFileCard
+                  key={`song-${song.project_asset_id ?? song.id}`}
+                  song={song}
+                  viewMode={viewMode}
+                  onMove={onMoveSong}
+                />
+              ))}
+            </div>
+          )
         ) : (
           <div className="project-file-empty-inline">
             {activeFolderId == null
               ? "Files added directly to the project root will appear here."
-              : "No music files in this folder yet."}
+              : "No files in this folder yet."}
           </div>
         )}
       </div>
