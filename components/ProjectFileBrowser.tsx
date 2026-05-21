@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 
@@ -32,12 +32,45 @@ type ProjectFileBrowserProps = {
 function ProjectFileBrowserStyles() {
   return (
     <style>{`
+      .project-download-wrap {
+        display: flex;
+        margin-left: auto;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .project-download-trigger::after {
+        display: none !important;
+      }
+
+      .project-google-drive-trigger {
+        display: flex;
+        height: 48px;
+        cursor: not-allowed;
+        align-items: center;
+        gap: 7px;
+        border-bottom: 2px solid transparent;
+        padding: 0 2.5px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        opacity: 0.72;
+      }
+
+      .project-google-drive-trigger svg {
+        height: 15px;
+        width: 15px;
+      }
+
       .project-file-browser {
         padding: 0 32px 32px !important;
       }
 
       .project-file-browser-top {
-        min-height: 50px !important;
+        position: sticky !important;
+        top: 105px !important;
+        z-index: 70 !important;
+        min-height: 46px !important;
         margin-left: -32px;
         margin-right: -32px;
         padding: 0 32px !important;
@@ -46,6 +79,7 @@ function ProjectFileBrowserStyles() {
         justify-content: space-between !important;
         gap: 16px !important;
         border-bottom: 1px solid var(--border) !important;
+        background: var(--bg-primary) !important;
       }
 
       .project-file-browser-title-wrap {
@@ -54,10 +88,18 @@ function ProjectFileBrowserStyles() {
 
       .project-breadcrumbs.project-path {
         margin-top: 0 !important;
+        display: flex;
+        align-items: center;
         gap: 6px !important;
         font-size: 12px !important;
         line-height: 1;
         text-transform: lowercase;
+      }
+
+      .project-breadcrumbs.project-path span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px !important;
       }
 
       .project-breadcrumbs.project-path button,
@@ -451,10 +493,15 @@ function ProjectFileBrowserStyles() {
         }
 
         .project-file-browser-top {
+          top: 105px !important;
           margin-left: -18px;
           margin-right: -18px;
           padding-left: 18px !important;
           padding-right: 18px !important;
+        }
+
+        .project-google-drive-trigger span {
+          display: none;
         }
 
         .project-browser-grid {
@@ -505,6 +552,23 @@ function PlayPauseIcon({ playing }: { playing: boolean }) {
       <path d="M8 5v14l11-7z" />
     </svg>
   );
+}
+
+function GoogleGIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M21.35 11.1h-9.18v2.95h5.27c-.23 1.53-1.59 4.48-5.27 4.48-3.17 0-5.76-2.63-5.76-5.87s2.59-5.87 5.76-5.87c1.8 0 3.01.77 3.7 1.43l2.52-2.43C16.77 4.28 14.67 3.4 12.17 3.4 7.31 3.4 3.38 7.33 3.38 12.19s3.93 8.79 8.79 8.79c5.07 0 8.43-3.56 8.43-8.57 0-.58-.06-.99-.25-1.31Z" />
+    </svg>
+  );
+}
+
+function getGoogleDriveButtonMarkup() {
+  return `
+    <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M21.35 11.1h-9.18v2.95h5.27c-.23 1.53-1.59 4.48-5.27 4.48-3.17 0-5.76-2.63-5.76-5.87s2.59-5.87 5.76-5.87c1.8 0 3.01.77 3.7 1.43l2.52-2.43C16.77 4.28 14.67 3.4 12.17 3.4 7.31 3.4 3.38 7.33 3.38 12.19s3.93 8.79 8.79 8.79c5.07 0 8.43-3.56 8.43-8.57 0-.58-.06-.99-.25-1.31Z" />
+    </svg>
+    <span>Add to Drive</span>
+  `;
 }
 
 function getAssetTypeLabel(assetType: string | null | undefined) {
@@ -658,6 +722,24 @@ export default function ProjectFileBrowser({
     () => new Map(folders.map((folder) => [folder.id, folder])),
     [folders],
   );
+
+  useEffect(() => {
+    const wrap = document.querySelector(".project-download-wrap");
+    if (!wrap || document.querySelector(".project-google-drive-trigger")) return;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.disabled = true;
+    button.className = "project-google-drive-trigger";
+    button.title = "Google Drive export requires a Google Drive integration.";
+    button.innerHTML = getGoogleDriveButtonMarkup();
+
+    wrap.insertBefore(button, wrap.firstChild);
+
+    return () => {
+      button.remove();
+    };
+  }, []);
 
   const breadcrumbFolders = useMemo(() => {
     if (activeFolderId == null) return [];
