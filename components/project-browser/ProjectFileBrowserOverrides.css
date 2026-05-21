@@ -83,6 +83,42 @@
   outline-offset: 2px;
 }
 
+.project-drag-preview {
+  width: 118px !important;
+  padding: 0 !important;
+  pointer-events: none;
+  opacity: 0.96;
+}
+
+.project-drag-preview .project-folder-card,
+.project-drag-preview .project-file-card {
+  width: 118px !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.project-drag-preview .project-file-action,
+.project-drag-preview .project-file-card-meta {
+  display: none !important;
+}
+
+.project-drag-preview .project-preview-button {
+  opacity: 0 !important;
+}
+
+.project-drag-preview .project-folder-card:hover,
+.project-drag-preview .project-file-card:hover,
+.project-drag-preview .project-file-card.is-active {
+  background: transparent !important;
+}
+
+.project-drag-preview-song .project-file-card {
+  gap: 10px !important;
+}
+
 .project-file-list-icon-wrap {
   position: relative;
   display: flex;
