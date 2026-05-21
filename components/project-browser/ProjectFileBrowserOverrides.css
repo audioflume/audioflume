@@ -11,7 +11,7 @@
 .project-breadcrumbs.project-path button,
 .project-breadcrumbs.project-path span,
 .project-path-separator {
-  color: var(--text-secondary) !important;
+  color: var(--text-subtle) !important;
 }
 
 .project-breadcrumbs.project-path button.is-current {
