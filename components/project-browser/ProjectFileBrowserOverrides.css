@@ -10,18 +10,20 @@
 
 .project-tabs-row > button {
   border-bottom-color: transparent !important;
+  color: var(--text-subtle) !important;
 }
 
-.project-tabs-row > button[class*="text-[var(--text-secondary)]"] {
-  color: var(--text-secondary) !important;
-}
-
-.project-tabs-row > button[class*="text-[var(--text-primary)]"] {
+.project-tabs-row > button[class*="border-[var(--text-primary)]"] {
   color: var(--text-primary) !important;
 }
 
 .project-tabs-row > button:hover {
   color: var(--text-primary) !important;
+}
+
+.project-folder-glyph-body::before,
+.project-folder-glyph-body::after {
+  display: none !important;
 }
 
 .project-breadcrumbs.project-path button,
