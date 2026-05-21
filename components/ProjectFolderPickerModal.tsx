@@ -113,8 +113,8 @@ export default function ProjectFolderPickerModal({
       onClose={onClose}
       closeLabel="Close folder picker"
       centerTitle
-      maxWidth="760px"
-      maxHeight="560px"
+      maxWidth="max-w-[720px]"
+      maxHeight="520px"
       bodyClassName="pb-0"
       footer={
         <button
@@ -147,7 +147,7 @@ export default function ProjectFolderPickerModal({
           </div>
 
           {query.trim() ? (
-            <div className="max-h-[320px] overflow-y-auto p-2">
+            <div className="max-h-[300px] overflow-y-auto p-2">
               {searchResults.length > 0 ? (
                 <div className="grid gap-1">
                   {searchResults.map(({ folder, path }) => (
@@ -173,11 +173,11 @@ export default function ProjectFolderPickerModal({
               )}
             </div>
           ) : (
-            <div className="flex min-h-[300px] overflow-x-auto">
+            <div className="flex min-h-[280px] overflow-x-auto">
               {columns.map((column, columnIndex) => (
                 <div
                   key={column.parentId ?? "root"}
-                  className="min-w-[205px] flex-1 border-r border-[var(--border)] last:border-r-0"
+                  className="min-w-[185px] flex-1 border-r border-[var(--border)] last:border-r-0"
                 >
                   <div className="border-b border-[var(--border)] px-3 py-2 text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">
                     {column.parentId == null
