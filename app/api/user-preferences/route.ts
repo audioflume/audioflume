@@ -5,23 +5,26 @@ import { supabaseServer } from "@/lib/supabaseServer";
 type PlaylistViewMode = "grid" | "list";
 type PlaylistSortMode = "custom" | "alphabetical";
 type SidebarProjectSortMode = "custom" | "alphabetical";
+type ProjectAssetAddTarget = "root" | "media_folder";
 type ThemeMode = "light" | "dark";
 
 type UserPreferencesPatch = {
   playlist_view_mode?: PlaylistViewMode;
   playlist_sort_mode?: PlaylistSortMode;
   sidebar_project_sort_mode?: SidebarProjectSortMode;
+  project_asset_add_target?: ProjectAssetAddTarget;
   theme_mode?: ThemeMode;
   show_edit_point_markers?: boolean;
 };
 
 const userPreferenceSelect =
-  "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, theme_mode, show_edit_point_markers";
+  "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, project_asset_add_target, theme_mode, show_edit_point_markers";
 
 const defaultPreferences = {
   playlist_view_mode: "grid" as PlaylistViewMode,
   playlist_sort_mode: "custom" as PlaylistSortMode,
   sidebar_project_sort_mode: "alphabetical" as SidebarProjectSortMode,
+  project_asset_add_target: "media_folder" as ProjectAssetAddTarget,
   theme_mode: "dark" as ThemeMode,
   show_edit_point_markers: true,
 };
@@ -38,6 +41,12 @@ function isValidSidebarProjectSortMode(
   value: unknown,
 ): value is SidebarProjectSortMode {
   return value === "custom" || value === "alphabetical";
+}
+
+function isValidProjectAssetAddTarget(
+  value: unknown,
+): value is ProjectAssetAddTarget {
+  return value === "root" || value === "media_folder";
 }
 
 function isValidThemeMode(value: unknown): value is ThemeMode {
@@ -138,6 +147,17 @@ export async function PATCH(request: Request) {
     }
 
     updates.sidebar_project_sort_mode = body.sidebar_project_sort_mode;
+  }
+
+  if ("project_asset_add_target" in body) {
+    if (!isValidProjectAssetAddTarget(body.project_asset_add_target)) {
+      return NextResponse.json(
+        { error: "Invalid project_asset_add_target" },
+        { status: 400 },
+      );
+    }
+
+    updates.project_asset_add_target = body.project_asset_add_target;
   }
 
   if ("theme_mode" in body) {
