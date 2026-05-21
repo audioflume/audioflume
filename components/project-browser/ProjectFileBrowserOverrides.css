@@ -8,9 +8,17 @@
   content: none !important;
 }
 
+.project-tabs-row {
+  padding-left: 32px !important;
+}
+
 .project-tabs-row > button {
   border-bottom-color: transparent !important;
   color: var(--text-subtle) !important;
+}
+
+.project-tabs-row > button:first-child {
+  margin-left: -2.5px !important;
 }
 
 .project-tabs-row > button[class*="border-[var(--text-primary)]"] {
@@ -38,6 +46,35 @@
 
 .project-breadcrumbs.project-path button:hover {
   color: var(--text-primary) !important;
+}
+
+.project-file-browser-section {
+  padding-top: 24px !important;
+}
+
+.project-file-list-icon-wrap {
+  position: relative;
+  display: flex;
+  height: 22px;
+  width: 22px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-preview-button-list {
+  height: 18px !important;
+  width: 18px !important;
+  transform: scale(1) !important;
+}
+
+.project-preview-button-list::before {
+  inset: 2px !important;
+}
+
+.project-preview-button-list svg {
+  width: 9px !important;
+  height: 9px !important;
 }
 
 @media (max-width: 760px) {
