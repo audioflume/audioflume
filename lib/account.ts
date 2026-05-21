@@ -1,8 +1,19 @@
-import type { User } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export type MembershipPlanKey = "free" | "starter" | "studio" | "enterprise" | "lifetime";
 export type MembershipStatus = "inactive" | "active" | "trialing" | "past_due" | "canceled" | "lifetime";
+
+type ClerkAccountUser = {
+  id?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  fullName?: string | null;
+  username?: string | null;
+  imageUrl?: string | null;
+  primaryEmailAddress?: {
+    emailAddress?: string | null;
+  } | null;
+} | null;
 
 export type UserProfile = {
   clerk_user_id: string;
@@ -53,11 +64,11 @@ export function cleanOptionalString(value: unknown, maxLength = 160) {
   return cleaned.slice(0, maxLength);
 }
 
-export function getPrimaryEmail(user: User | null) {
+export function getPrimaryEmail(user: ClerkAccountUser) {
   return user?.primaryEmailAddress?.emailAddress ?? null;
 }
 
-export function getProfileSeed(userId: string, user: User | null) {
+export function getProfileSeed(userId: string, user: ClerkAccountUser) {
   const firstName = cleanOptionalString(user?.firstName, 80);
   const lastName = cleanOptionalString(user?.lastName, 80);
   const fullName = cleanOptionalString(user?.fullName, 160);
@@ -74,7 +85,7 @@ export function getProfileSeed(userId: string, user: User | null) {
   } satisfies UserProfile;
 }
 
-export async function ensureUserProfile(userId: string, user: User | null) {
+export async function ensureUserProfile(userId: string, user: ClerkAccountUser) {
   const { data, error } = await supabaseServer
     .from("user_profiles")
     .select("*")
@@ -96,7 +107,7 @@ export async function ensureUserProfile(userId: string, user: User | null) {
   return created as UserProfile;
 }
 
-export async function ensureBillingProfile(userId: string, user: User | null) {
+export async function ensureBillingProfile(userId: string, user: ClerkAccountUser) {
   await ensureUserProfile(userId, user);
 
   const { data, error } = await supabaseServer
@@ -126,7 +137,7 @@ export async function ensureBillingProfile(userId: string, user: User | null) {
   return created as UserBillingProfile;
 }
 
-export async function ensureMembership(userId: string, user: User | null) {
+export async function ensureMembership(userId: string, user: ClerkAccountUser) {
   await ensureUserProfile(userId, user);
 
   const { data, error } = await supabaseServer
