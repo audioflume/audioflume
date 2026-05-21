@@ -8,6 +8,7 @@ import {
   type DragOverEvent,
   type DragStartEvent,
   PointerSensor,
+  pointerWithin,
   type UniqueIdentifier,
   useDraggable,
   useDroppable,
@@ -189,7 +190,7 @@ function DragPreview({
 
   if (dragData.kind === "folder" && folder) {
     return (
-      <div className="project-drag-preview">
+      <div className="project-file-browser project-drag-preview">
         <ProjectFolderCard folder={folder} viewMode="grid" onOpen={() => {}} />
       </div>
     );
@@ -197,7 +198,7 @@ function DragPreview({
 
   if (dragData.kind === "song" && song) {
     return (
-      <div className="project-drag-preview project-drag-preview-song">
+      <div className="project-file-browser project-drag-preview project-drag-preview-song">
         <ProjectSongFileCard song={song} viewMode="grid" queueSongs={[song]} onMove={() => {}} />
       </div>
     );
@@ -500,6 +501,7 @@ export default function ProjectFileBrowser({
   return (
     <DndContext
       sensors={sensors}
+      collisionDetection={pointerWithin}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
