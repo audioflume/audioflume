@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import {
   useUserPreferences,
@@ -22,6 +23,104 @@ type AccountSection =
 
 type AccountSettingsPageProps = {
   section: AccountSection;
+};
+
+type UserProfile = {
+  clerk_user_id: string;
+  first_name: string | null;
+  last_name: string | null;
+  display_name: string | null;
+  company_name: string | null;
+  primary_use: string | null;
+  avatar_url: string | null;
+  created_at?: string;
+  updated_at?: string;
+};
+
+type UserBillingProfile = {
+  clerk_user_id: string;
+  billing_email: string | null;
+  business_name: string | null;
+  tax_id: string | null;
+  country: string | null;
+  province_state: string | null;
+  stripe_customer_id: string | null;
+  created_at?: string;
+  updated_at?: string;
+};
+
+type UserMembership = {
+  clerk_user_id: string;
+  plan_key: string;
+  status: string;
+  stripe_subscription_id: string | null;
+  stripe_price_id: string | null;
+  current_period_start: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  license_label: string;
+  download_limit: number | null;
+  downloads_used: number;
+  created_at?: string;
+  updated_at?: string;
+};
+
+type MembershipDisplay = {
+  plan_label: string;
+  status_label: string;
+  renewal_label: string;
+  downloads_label: string;
+};
+
+type UsageSnapshot = {
+  playlists: number;
+  projects: number;
+  favorites: number;
+  downloads: number;
+};
+
+type SecurityEvent = {
+  id: number;
+  event_type: string;
+  description: string | null;
+  location_label: string | null;
+  created_at: string;
+};
+
+type LoadState = "idle" | "loading" | "ready" | "error";
+
+type ProfileFormState = {
+  first_name: string;
+  last_name: string;
+  display_name: string;
+  company_name: string;
+  primary_use: string;
+  avatar_url: string;
+};
+
+type BillingFormState = {
+  billing_email: string;
+  business_name: string;
+  tax_id: string;
+  country: string;
+  province_state: string;
+};
+
+const emptyProfileForm: ProfileFormState = {
+  first_name: "",
+  last_name: "",
+  display_name: "",
+  company_name: "",
+  primary_use: "",
+  avatar_url: "",
+};
+
+const emptyBillingForm: BillingFormState = {
+  billing_email: "",
+  business_name: "",
+  tax_id: "",
+  country: "",
+  province_state: "",
 };
 
 const accountNav: {
@@ -67,6 +166,45 @@ const accountNav: {
     helper: "Help center",
   },
 ];
+
+function toInputValue(value: string | null | undefined) {
+  return value ?? "";
+}
+
+function profileToForm(profile: UserProfile | null): ProfileFormState {
+  return {
+    first_name: toInputValue(profile?.first_name),
+    last_name: toInputValue(profile?.last_name),
+    display_name: toInputValue(profile?.display_name),
+    company_name: toInputValue(profile?.company_name),
+    primary_use: toInputValue(profile?.primary_use),
+    avatar_url: toInputValue(profile?.avatar_url),
+  };
+}
+
+function billingToForm(billingProfile: UserBillingProfile | null): BillingFormState {
+  return {
+    billing_email: toInputValue(billingProfile?.billing_email),
+    business_name: toInputValue(billingProfile?.business_name),
+    tax_id: toInputValue(billingProfile?.tax_id),
+    country: toInputValue(billingProfile?.country),
+    province_state: toInputValue(billingProfile?.province_state),
+  };
+}
+
+function formatDate(value: string | null | undefined) {
+  if (!value) return "Not available";
+
+  return new Intl.DateTimeFormat("en-CA", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+function formatCount(value: number, label: string) {
+  return `${value} ${label}${value === 1 ? "" : "s"}`;
+}
 
 function ArrowIcon() {
   return (
@@ -170,14 +308,18 @@ function FieldDisplay({ label, value }: { label: string; value: string }) {
   );
 }
 
-function MockInput({
+function TextInput({
   label,
   value,
   placeholder,
+  onChange,
+  type = "text",
 }: {
   label: string;
-  value?: string;
+  value: string;
   placeholder?: string;
+  onChange: (value: string) => void;
+  type?: string;
 }) {
   return (
     <label className="block">
@@ -185,31 +327,53 @@ function MockInput({
         {label}
       </span>
       <input
-        value={value || ""}
+        type={type}
+        value={value}
         placeholder={placeholder}
-        readOnly
+        onChange={(event) => onChange(event.target.value)}
         className="h-10 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:font-normal placeholder:text-[var(--text-muted)] focus:border-[var(--accent-2)]"
       />
     </label>
   );
 }
 
-function PrimaryButton({ children }: { children: React.ReactNode }) {
+function PrimaryButton({
+  children,
+  disabled = false,
+  type = "button",
+}: {
+  children: React.ReactNode;
+  disabled?: boolean;
+  type?: "button" | "submit";
+}) {
   return (
     <button
-      type="button"
-      className="h-8 cursor-pointer rounded-lg bg-[var(--accent)] px-3.5 text-xs font-semibold text-[var(--accent-contrast)] transition hover:opacity-90"
+      type={type}
+      disabled={disabled}
+      className="h-8 cursor-pointer rounded-lg bg-[var(--accent)] px-3.5 text-xs font-semibold text-[var(--accent-contrast)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {children}
     </button>
   );
 }
 
-function SecondaryButton({ children }: { children: React.ReactNode }) {
+function SecondaryButton({
+  children,
+  disabled = false,
+  type = "button",
+  onClick,
+}: {
+  children: React.ReactNode;
+  disabled?: boolean;
+  type?: "button" | "submit";
+  onClick?: () => void;
+}) {
   return (
     <button
-      type="button"
-      className="h-8 cursor-pointer rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover-strong)]"
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      className="h-8 cursor-pointer rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover-strong)] disabled:cursor-not-allowed disabled:opacity-50"
     >
       {children}
     </button>
@@ -218,17 +382,19 @@ function SecondaryButton({ children }: { children: React.ReactNode }) {
 
 function OptionButton<T extends string>({
   label,
+  value,
   active,
   onClick,
 }: {
   label: string;
+  value: T;
   active: boolean;
   onClick: (value: T) => void;
 }) {
   return (
     <button
       type="button"
-      onClick={() => onClick(label.toLowerCase() as T)}
+      onClick={() => onClick(value)}
       className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 text-xs font-medium transition ${
         active
           ? "bg-[var(--accent-2)] text-[var(--accent-2-contrast)]"
@@ -274,13 +440,66 @@ function StatusPill({ label, value }: { label: string; value: string }) {
   );
 }
 
+function FeedbackMessage({ message, tone }: { message: string; tone: "success" | "error" }) {
+  return (
+    <div
+      className={`rounded-xl border px-3 py-2 text-xs ${
+        tone === "success"
+          ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]"
+          : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"
+      }`}
+    >
+      {message}
+    </div>
+  );
+}
+
 function ProfileSection() {
   const { user } = useUser();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [identityEmail, setIdentityEmail] = useState<string | null>(null);
+  const [form, setForm] = useState<ProfileFormState>(emptyProfileForm);
+  const [loadState, setLoadState] = useState<LoadState>("idle");
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<{ tone: "success" | "error"; text: string } | null>(null);
 
-  const fullName = user?.fullName || "Filmwave Member";
-  const firstName = user?.firstName || "";
-  const lastName = user?.lastName || "";
-  const email = user?.primaryEmailAddress?.emailAddress || "No email on file";
+  useEffect(() => {
+    let active = true;
+
+    async function loadProfile() {
+      setLoadState("loading");
+
+      try {
+        const response = await fetch("/api/account/profile");
+        const payload = await response.json();
+
+        if (!response.ok) {
+          throw new Error(payload?.error || "Failed to load profile");
+        }
+
+        if (!active) return;
+
+        setProfile(payload.profile);
+        setIdentityEmail(payload.identity?.email ?? null);
+        setForm(profileToForm(payload.profile));
+        setLoadState("ready");
+      } catch (error) {
+        console.error(error);
+        if (!active) return;
+        setLoadState("error");
+        setMessage({ tone: "error", text: "Could not load your profile." });
+      }
+    }
+
+    loadProfile();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const fullName = form.display_name || user?.fullName || "Filmwave Member";
+  const email = identityEmail || user?.primaryEmailAddress?.emailAddress || "No email on file";
   const initials = fullName
     .split(" ")
     .map((part) => part[0])
@@ -288,39 +507,85 @@ function ProfileSection() {
     .slice(0, 2)
     .toUpperCase();
 
+  const profileChanged = useMemo(() => {
+    return JSON.stringify(form) !== JSON.stringify(profileToForm(profile));
+  }, [form, profile]);
+
+  async function saveProfile(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch("/api/account/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(payload?.error || "Failed to save profile");
+      }
+
+      setProfile(payload.profile);
+      setForm(profileToForm(payload.profile));
+      setMessage({ tone: "success", text: "Profile saved." });
+    } catch (error) {
+      console.error(error);
+      setMessage({ tone: "error", text: error instanceof Error ? error.message : "Profile could not be saved." });
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <>
       <SectionHeader
         eyebrow="Account"
         title="Profile"
-        description="Manage the personal information attached to your Filmwave account. This is structured as a functional mockup for future account editing."
+        description="Manage the personal information attached to your Filmwave account. Identity and login details still come from Clerk; Filmwave-specific profile details are saved to Supabase."
       />
 
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <AccountCard>
           <CardHeader
             title="Personal information"
-            description="Core account details used for billing, support, and saved library activity."
+            description={loadState === "loading" ? "Loading your saved profile..." : "Core account details used for billing, support, and saved library activity."}
           />
-          <div className="grid gap-4 p-4 sm:grid-cols-2">
-            <MockInput label="First name" value={firstName} placeholder="First name" />
-            <MockInput label="Last name" value={lastName} placeholder="Last name" />
-            <MockInput label="Display name" value={fullName} />
-            <MockInput label="Email address" value={email} />
-            <MockInput label="Company / studio" placeholder="Add company name" />
-            <MockInput label="Primary use" placeholder="Documentary, commercial, YouTube..." />
-          </div>
-          <div className="flex flex-wrap gap-2 border-t border-[var(--border)] px-4 py-3.5">
-            <PrimaryButton>Save profile</PrimaryButton>
-            <SecondaryButton>Cancel changes</SecondaryButton>
-          </div>
+          <form onSubmit={saveProfile}>
+            <div className="grid gap-4 p-4 sm:grid-cols-2">
+              <TextInput label="First name" value={form.first_name} placeholder="First name" onChange={(value) => setForm((current) => ({ ...current, first_name: value }))} />
+              <TextInput label="Last name" value={form.last_name} placeholder="Last name" onChange={(value) => setForm((current) => ({ ...current, last_name: value }))} />
+              <TextInput label="Display name" value={form.display_name} placeholder="Display name" onChange={(value) => setForm((current) => ({ ...current, display_name: value }))} />
+              <TextInput label="Email address" value={email} onChange={() => undefined} />
+              <TextInput label="Company / studio" value={form.company_name} placeholder="Add company name" onChange={(value) => setForm((current) => ({ ...current, company_name: value }))} />
+              <TextInput label="Primary use" value={form.primary_use} placeholder="Documentary, commercial, YouTube..." onChange={(value) => setForm((current) => ({ ...current, primary_use: value }))} />
+            </div>
+            <div className="grid gap-3 border-t border-[var(--border)] px-4 py-3.5">
+              {message ? <FeedbackMessage tone={message.tone} message={message.text} /> : null}
+              <div className="flex flex-wrap gap-2">
+                <PrimaryButton type="submit" disabled={saving || !profileChanged || loadState === "loading"}>
+                  {saving ? "Saving..." : "Save profile"}
+                </PrimaryButton>
+                <SecondaryButton disabled={saving || !profileChanged} onClick={() => setForm(profileToForm(profile))}>
+                  Cancel changes
+                </SecondaryButton>
+              </div>
+            </div>
+          </form>
         </AccountCard>
 
         <AccountCard>
           <div className="border-b border-[var(--border)] p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-semibold text-[var(--text-primary)]">
-                {initials || "FW"}
+              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-semibold text-[var(--text-primary)]">
+                {form.avatar_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={form.avatar_url} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  initials || "FW"
+                )}
               </div>
               <div className="min-w-0">
                 <div className="truncate text-base font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
@@ -333,9 +598,9 @@ function ProfileSection() {
             </div>
           </div>
           <div className="grid gap-3 p-4">
-            <FieldDisplay label="Account type" value="Lifetime Member" />
-            <FieldDisplay label="Library license" value="Royalty-free commercial use" />
-            <FieldDisplay label="Member since" value="Mock data" />
+            <FieldDisplay label="Account type" value="Filmwave Member" />
+            <FieldDisplay label="Company / studio" value={form.company_name || "Not set"} />
+            <FieldDisplay label="Member since" value={formatDate(profile?.created_at)} />
           </div>
         </AccountCard>
       </div>
@@ -373,32 +638,32 @@ function SettingsSection() {
           title="Theme"
           description="Controls the light or dark appearance of Filmwave across the full app."
         >
-          <OptionButton<ThemeMode> label="Dark" active={theme === "dark"} onClick={() => setTheme("dark")} />
-          <OptionButton<ThemeMode> label="Light" active={theme === "light"} onClick={() => setTheme("light")} />
+          <OptionButton<ThemeMode> label="Dark" value="dark" active={theme === "dark"} onClick={() => setTheme("dark")} />
+          <OptionButton<ThemeMode> label="Light" value="light" active={theme === "light"} onClick={() => setTheme("light")} />
         </SettingRow>
 
         <SettingRow
           title="Playlist view"
           description="Sets the default visual layout for your personal playlist library."
         >
-          <OptionButton<PlaylistViewMode> label="Grid" active={playlistViewMode === "grid"} onClick={() => setPlaylistViewMode("grid")} />
-          <OptionButton<PlaylistViewMode> label="List" active={playlistViewMode === "list"} onClick={() => setPlaylistViewMode("list")} />
+          <OptionButton<PlaylistViewMode> label="Grid" value="grid" active={playlistViewMode === "grid"} onClick={() => setPlaylistViewMode("grid")} />
+          <OptionButton<PlaylistViewMode> label="List" value="list" active={playlistViewMode === "list"} onClick={() => setPlaylistViewMode("list")} />
         </SettingRow>
 
         <SettingRow
           title="Playlist sorting"
           description="Choose whether playlists hold your custom drag order or stay alphabetical."
         >
-          <OptionButton<PlaylistSortMode> label="Custom" active={playlistSortMode === "custom"} onClick={() => setPlaylistSortMode("custom")} />
-          <OptionButton<PlaylistSortMode> label="Alphabetical" active={playlistSortMode === "alphabetical"} onClick={() => setPlaylistSortMode("alphabetical")} />
+          <OptionButton<PlaylistSortMode> label="Custom" value="custom" active={playlistSortMode === "custom"} onClick={() => setPlaylistSortMode("custom")} />
+          <OptionButton<PlaylistSortMode> label="Alphabetical" value="alphabetical" active={playlistSortMode === "alphabetical"} onClick={() => setPlaylistSortMode("alphabetical")} />
         </SettingRow>
 
         <SettingRow
           title="Sidebar project sorting"
           description="Controls how user projects are ordered inside the main app sidebar."
         >
-          <OptionButton<SidebarProjectSortMode> label="Custom" active={sidebarProjectSortMode === "custom"} onClick={() => setSidebarProjectSortMode("custom")} />
-          <OptionButton<SidebarProjectSortMode> label="Alphabetical" active={sidebarProjectSortMode === "alphabetical"} onClick={() => setSidebarProjectSortMode("alphabetical")} />
+          <OptionButton<SidebarProjectSortMode> label="Custom" value="custom" active={sidebarProjectSortMode === "custom"} onClick={() => setSidebarProjectSortMode("custom")} />
+          <OptionButton<SidebarProjectSortMode> label="Alphabetical" value="alphabetical" active={sidebarProjectSortMode === "alphabetical"} onClick={() => setSidebarProjectSortMode("alphabetical")} />
         </SettingRow>
       </AccountCard>
     </>
@@ -406,6 +671,54 @@ function SettingsSection() {
 }
 
 function MembershipSection() {
+  const [membership, setMembership] = useState<UserMembership | null>(null);
+  const [display, setDisplay] = useState<MembershipDisplay | null>(null);
+  const [usage, setUsage] = useState<UsageSnapshot | null>(null);
+  const [loadState, setLoadState] = useState<LoadState>("idle");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadMembership() {
+      setLoadState("loading");
+
+      try {
+        const [membershipResponse, usageResponse] = await Promise.all([
+          fetch("/api/account/membership"),
+          fetch("/api/account/usage"),
+        ]);
+
+        const membershipPayload = await membershipResponse.json();
+        const usagePayload = await usageResponse.json();
+
+        if (!membershipResponse.ok) {
+          throw new Error(membershipPayload?.error || "Failed to load membership");
+        }
+
+        if (!usageResponse.ok) {
+          throw new Error(usagePayload?.error || "Failed to load usage");
+        }
+
+        if (!active) return;
+
+        setMembership(membershipPayload.membership);
+        setDisplay(membershipPayload.display);
+        setUsage(usagePayload.usage);
+        setLoadState("ready");
+      } catch (error) {
+        console.error(error);
+        if (!active) return;
+        setLoadState("error");
+      }
+    }
+
+    loadMembership();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <>
       <SectionHeader
@@ -413,6 +726,12 @@ function MembershipSection() {
         title="Membership"
         description="A clear overview of plan status, licensing, usage, and future upgrade paths for Filmwave members."
       />
+
+      {loadState === "error" ? (
+        <div className="mb-4">
+          <FeedbackMessage tone="error" message="Could not load membership details. Make sure the account SQL has been run in Supabase." />
+        </div>
+      ) : null}
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <AccountCard>
@@ -423,32 +742,32 @@ function MembershipSection() {
                   Current plan
                 </div>
                 <div className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--text-primary)]">
-                  Lifetime Membership
+                  {display?.plan_label || "Loading membership..."}
                 </div>
                 <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--text-secondary)]">
-                  Unlimited access to the Filmwave music library, curated playlists,
-                  waveform previews, playlist tools, and commercial project licensing.
+                  {membership?.license_label || "Your Filmwave membership controls library access, playlist tools, and commercial licensing."}
                 </p>
               </div>
               <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1.5 text-xs font-semibold text-[var(--accent)]">
-                Active
+                {display?.status_label || "Loading"}
               </div>
             </div>
           </div>
 
           <div className="grid gap-3 p-4 sm:grid-cols-3">
-            <FieldDisplay label="Renewal" value="No renewal" />
-            <FieldDisplay label="Downloads" value="Unlimited" />
-            <FieldDisplay label="License" value="Commercial use" />
+            <FieldDisplay label="Renewal" value={display?.renewal_label || "Loading"} />
+            <FieldDisplay label="Downloads" value={display?.downloads_label || "Loading"} />
+            <FieldDisplay label="License" value={membership?.license_label || "Loading"} />
           </div>
         </AccountCard>
 
         <AccountCard>
-          <CardHeader title="Usage snapshot" description="Useful account signals for a more complete customer portal." />
+          <CardHeader title="Usage snapshot" description="Live usage signals from your Filmwave account." />
           <div className="grid gap-3 p-4">
-            <FieldDisplay label="Songs downloaded" value="128 this year" />
-            <FieldDisplay label="Projects created" value="14 active projects" />
-            <FieldDisplay label="Favorite tracks" value="36 saved" />
+            <FieldDisplay label="Songs downloaded" value={formatCount(usage?.downloads ?? 0, "download")} />
+            <FieldDisplay label="Projects created" value={formatCount(usage?.projects ?? 0, "project")} />
+            <FieldDisplay label="Favorite tracks" value={formatCount(usage?.favorites ?? 0, "saved track")} />
+            <FieldDisplay label="Playlists" value={formatCount(usage?.playlists ?? 0, "playlist")} />
           </div>
         </AccountCard>
       </div>
@@ -468,7 +787,7 @@ function MembershipSection() {
               {description}
             </p>
             <div className="mt-4">
-              <SecondaryButton>{name === "Enterprise" ? "Contact sales" : "Change plan"}</SecondaryButton>
+              <SecondaryButton>{name === "Enterprise" ? "Contact sales" : "Coming soon"}</SecondaryButton>
             </div>
           </AccountCard>
         ))}
@@ -478,67 +797,142 @@ function MembershipSection() {
 }
 
 function PaymentSection() {
+  const { user } = useUser();
+  const [billingProfile, setBillingProfile] = useState<UserBillingProfile | null>(null);
+  const [form, setForm] = useState<BillingFormState>(emptyBillingForm);
+  const [loadState, setLoadState] = useState<LoadState>("idle");
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<{ tone: "success" | "error"; text: string } | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadBillingProfile() {
+      setLoadState("loading");
+
+      try {
+        const response = await fetch("/api/account/billing-profile");
+        const payload = await response.json();
+
+        if (!response.ok) {
+          throw new Error(payload?.error || "Failed to load billing profile");
+        }
+
+        if (!active) return;
+
+        setBillingProfile(payload.billingProfile);
+        setForm(billingToForm(payload.billingProfile));
+        setLoadState("ready");
+      } catch (error) {
+        console.error(error);
+        if (!active) return;
+        setLoadState("error");
+        setMessage({ tone: "error", text: "Could not load billing details." });
+      }
+    }
+
+    loadBillingProfile();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const billingChanged = useMemo(() => {
+    return JSON.stringify(form) !== JSON.stringify(billingToForm(billingProfile));
+  }, [form, billingProfile]);
+
+  async function saveBillingProfile(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch("/api/account/billing-profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(payload?.error || "Failed to save billing details");
+      }
+
+      setBillingProfile(payload.billingProfile);
+      setForm(billingToForm(payload.billingProfile));
+      setMessage({ tone: "success", text: "Billing details saved." });
+    } catch (error) {
+      console.error(error);
+      setMessage({ tone: "error", text: error instanceof Error ? error.message : "Billing details could not be saved." });
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <>
       <SectionHeader
         eyebrow="Billing"
         title="Payment"
-        description="Manage payment methods, invoices, billing contact details, and tax information from a compact billing workspace."
+        description="Manage invoice contact details now. Payment methods and invoices are prepared for Stripe, but real card management should be handled by Stripe Checkout or the Stripe customer portal."
       />
 
       <div className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
         <AccountCard>
-          <CardHeader title="Payment method" description="Primary billing method used for subscription renewals and upgrades." />
+          <CardHeader title="Payment method" description="Safe billing status. Card data should live in Stripe, not Supabase." />
           <div className="p-4">
             <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-sm font-semibold text-[var(--text-primary)]">
-                    Visa ending in 4242
+                    Stripe customer portal not connected yet
                   </div>
                   <div className="mt-1 text-xs text-[var(--text-muted)]">
-                    Expires 08/29 · Billing address in Canada
+                    Customer ID: {billingProfile?.stripe_customer_id || "Not created"}
                   </div>
                 </div>
                 <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-2.5 py-1.5 text-[11px] font-semibold text-[var(--text-secondary)]">
-                  Mock card
+                  Stripe-ready
                 </div>
               </div>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <PrimaryButton>Update payment method</PrimaryButton>
-              <SecondaryButton>Add backup card</SecondaryButton>
+              <SecondaryButton>Connect Stripe later</SecondaryButton>
             </div>
           </div>
         </AccountCard>
 
         <AccountCard>
           <CardHeader title="Billing details" description="Invoice contact and tax details for receipts." />
-          <div className="grid gap-4 p-4">
-            <MockInput label="Billing email" value="billing@example.com" />
-            <MockInput label="Business name" placeholder="Company or studio" />
-            <MockInput label="Tax ID" placeholder="Optional" />
-          </div>
+          <form onSubmit={saveBillingProfile}>
+            <div className="grid gap-4 p-4">
+              <TextInput label="Billing email" value={form.billing_email || user?.primaryEmailAddress?.emailAddress || ""} type="email" onChange={(value) => setForm((current) => ({ ...current, billing_email: value }))} />
+              <TextInput label="Business name" value={form.business_name} placeholder="Company or studio" onChange={(value) => setForm((current) => ({ ...current, business_name: value }))} />
+              <TextInput label="Tax ID" value={form.tax_id} placeholder="Optional" onChange={(value) => setForm((current) => ({ ...current, tax_id: value }))} />
+              <TextInput label="Country" value={form.country} placeholder="Canada" onChange={(value) => setForm((current) => ({ ...current, country: value }))} />
+              <TextInput label="Province / state" value={form.province_state} placeholder="British Columbia" onChange={(value) => setForm((current) => ({ ...current, province_state: value }))} />
+            </div>
+            <div className="grid gap-3 border-t border-[var(--border)] px-4 py-3.5">
+              {message ? <FeedbackMessage tone={message.tone} message={message.text} /> : null}
+              <div className="flex flex-wrap gap-2">
+                <PrimaryButton type="submit" disabled={saving || !billingChanged || loadState === "loading"}>
+                  {saving ? "Saving..." : "Save billing details"}
+                </PrimaryButton>
+                <SecondaryButton disabled={saving || !billingChanged} onClick={() => setForm(billingToForm(billingProfile))}>
+                  Cancel changes
+                </SecondaryButton>
+              </div>
+            </div>
+          </form>
         </AccountCard>
       </div>
 
       <AccountCard className="mt-4">
-        <CardHeader title="Recent invoices" description="Download receipts and track billing history." />
-        <div className="divide-y divide-[var(--border-subtle)]">
-          {["May 2026", "April 2026", "March 2026"].map((invoice) => (
-            <div key={invoice} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3.5">
-              <div>
-                <div className="text-sm font-medium text-[var(--text-primary)]">
-                  {invoice} invoice
-                </div>
-                <div className="mt-1 text-xs text-[var(--text-muted)]">
-                  Paid · $15.00 CAD
-                </div>
-              </div>
-              <SecondaryButton>Download</SecondaryButton>
-            </div>
-          ))}
+        <CardHeader title="Recent invoices" description="Invoices will come from Stripe once subscriptions are connected." />
+        <div className="px-4 py-6 text-sm text-[var(--text-muted)]">
+          No Stripe invoices are connected yet.
         </div>
       </AccountCard>
     </>
@@ -547,51 +941,89 @@ function PaymentSection() {
 
 function SecuritySection() {
   const { user } = useUser();
+  const [events, setEvents] = useState<SecurityEvent[]>([]);
   const email = user?.primaryEmailAddress?.emailAddress || "Primary email";
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadEvents() {
+      try {
+        const response = await fetch("/api/account/security-events");
+        const payload = await response.json();
+
+        if (!active) return;
+        setEvents(Array.isArray(payload.events) ? payload.events : []);
+      } catch (error) {
+        console.error(error);
+        if (!active) return;
+        setEvents([]);
+      }
+    }
+
+    loadEvents();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <>
       <SectionHeader
         eyebrow="Access"
         title="Security"
-        description="Password, email recovery, sessions, and account protection for Filmwave sign-in access."
+        description="Password, email recovery, sessions, and account protection for Filmwave sign-in access. Secure identity controls are handled by Clerk."
       />
 
       <div className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
         <AccountCard>
-          <CardHeader title="Sign-in security" description="Keep your account protected with stronger login controls." />
+          <CardHeader title="Sign-in security" description="Use Clerk account controls for password, 2FA, and active sessions." />
           <div className="divide-y divide-[var(--border-subtle)]">
-            <SettingRow title="Password" description="Change the password used to access your Filmwave account.">
-              <PrimaryButton>Change password</PrimaryButton>
+            <SettingRow title="Password" description="Change the password used to access your Filmwave account through Clerk.">
+              <SecondaryButton>Managed by Clerk</SecondaryButton>
             </SettingRow>
-            <SettingRow title="Two-factor authentication" description="Add an extra layer of protection for your account.">
-              <SecondaryButton>Set up 2FA</SecondaryButton>
+            <SettingRow title="Two-factor authentication" description="Add an extra layer of protection from your Clerk user profile.">
+              <SecondaryButton>Managed by Clerk</SecondaryButton>
             </SettingRow>
-            <SettingRow title="Backup email" description="Use a secondary email for recovery and important account alerts.">
-              <SecondaryButton>Add backup email</SecondaryButton>
+            <SettingRow title="Backup email" description="Use Clerk to manage recovery and verified email addresses.">
+              <SecondaryButton>Managed by Clerk</SecondaryButton>
             </SettingRow>
           </div>
         </AccountCard>
 
         <AccountCard>
-          <CardHeader title="Account access" description="Current verified contact and session information." />
+          <CardHeader title="Account access" description="Current verified contact and identity status from Clerk." />
           <div className="grid gap-3 p-4">
             <FieldDisplay label="Primary email" value={email} />
-            <FieldDisplay label="Email status" value="Verified" />
-            <FieldDisplay label="Active sessions" value="2 devices" />
+            <FieldDisplay label="Email status" value={user?.primaryEmailAddress?.verification?.status || "Unknown"} />
+            <FieldDisplay label="User ID" value={user?.id || "Unavailable"} />
           </div>
         </AccountCard>
       </div>
 
       <AccountCard className="mt-4">
-        <CardHeader title="Recent security events" description="A lightweight audit trail for user confidence." />
+        <CardHeader title="Recent security events" description="Lightweight Filmwave-side audit trail. Clerk remains the source of truth for auth sessions." />
         <div className="divide-y divide-[var(--border-subtle)]">
-          {["Password login", "New session started", "Profile viewed"].map((event) => (
-            <div key={event} className="grid gap-1 px-4 py-3.5 sm:grid-cols-[1fr_auto]">
-              <div className="text-sm font-medium text-[var(--text-primary)]">{event}</div>
-              <div className="text-xs text-[var(--text-muted)]">Mock event · Vancouver, BC</div>
+          {events.length > 0 ? (
+            events.map((event) => (
+              <div key={event.id} className="grid gap-1 px-4 py-3.5 sm:grid-cols-[1fr_auto]">
+                <div>
+                  <div className="text-sm font-medium text-[var(--text-primary)]">{event.event_type}</div>
+                  {event.description ? (
+                    <div className="mt-1 text-xs text-[var(--text-muted)]">{event.description}</div>
+                  ) : null}
+                </div>
+                <div className="text-xs text-[var(--text-muted)]">
+                  {event.location_label || "Filmwave"} · {formatDate(event.created_at)}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="px-4 py-6 text-sm text-[var(--text-muted)]">
+              No Filmwave security events yet.
             </div>
-          ))}
+          )}
         </div>
       </AccountCard>
     </>
@@ -685,7 +1117,7 @@ export default function AccountSettingsPage({ section }: AccountSettingsPageProp
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <StatusPill label="Section" value={activeNav?.label || "Account"} />
-              <StatusPill label="Status" value="Mockup" />
+              <StatusPill label="Status" value="Connected" />
             </div>
           </div>
           <Link
