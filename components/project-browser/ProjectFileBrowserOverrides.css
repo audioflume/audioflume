@@ -8,6 +8,22 @@
   content: none !important;
 }
 
+.project-tabs-row > button {
+  border-bottom-color: transparent !important;
+}
+
+.project-tabs-row > button[class*="text-[var(--text-secondary)]"] {
+  color: var(--text-secondary) !important;
+}
+
+.project-tabs-row > button[class*="text-[var(--text-primary)]"] {
+  color: var(--text-primary) !important;
+}
+
+.project-tabs-row > button:hover {
+  color: var(--text-primary) !important;
+}
+
 .project-breadcrumbs.project-path button,
 .project-breadcrumbs.project-path span,
 .project-path-separator {
