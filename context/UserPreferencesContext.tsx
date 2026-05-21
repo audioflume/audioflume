@@ -17,6 +17,7 @@ import {
 export type PlaylistViewMode = "grid" | "list";
 export type PlaylistSortMode = "custom" | "alphabetical";
 export type SidebarProjectSortMode = "custom" | "alphabetical";
+export type ProjectAssetAddTarget = "root" | "media_folder";
 export type ThemeMode = "light" | "dark";
 
 type UserPreferencesContextValue = {
@@ -28,6 +29,9 @@ type UserPreferencesContextValue = {
 
   sidebarProjectSortMode: SidebarProjectSortMode;
   setSidebarProjectSortMode: (value: SidebarProjectSortMode) => void;
+
+  projectAssetAddTarget: ProjectAssetAddTarget;
+  setProjectAssetAddTarget: (value: ProjectAssetAddTarget) => void;
 
   themeMode: ThemeMode;
   setThemeMode: (value: ThemeMode) => void;
@@ -42,6 +46,7 @@ type UserPreferencesResponse = {
   playlist_view_mode: PlaylistViewMode;
   playlist_sort_mode: PlaylistSortMode;
   sidebar_project_sort_mode: SidebarProjectSortMode;
+  project_asset_add_target: ProjectAssetAddTarget;
   theme_mode: ThemeMode;
   show_edit_point_markers: boolean;
 };
@@ -52,6 +57,7 @@ const UserPreferencesContext =
 const LOCAL_PLAYLIST_VIEW_MODE_KEY = "filmwave-playlist-view-mode";
 const LOCAL_PLAYLIST_SORT_MODE_KEY = "filmwave-playlist-sort-mode";
 const LOCAL_SIDEBAR_PROJECT_SORT_MODE_KEY = "filmwave-sidebar-project-sort";
+const LOCAL_PROJECT_ASSET_ADD_TARGET_KEY = "filmwave-project-asset-add-target";
 const LOCAL_THEME_MODE_KEY = "filmwave-theme-mode";
 
 function isPlaylistViewMode(value: unknown): value is PlaylistViewMode {
@@ -66,6 +72,12 @@ function isSidebarProjectSortMode(
   value: unknown,
 ): value is SidebarProjectSortMode {
   return value === "custom" || value === "alphabetical";
+}
+
+function isProjectAssetAddTarget(
+  value: unknown,
+): value is ProjectAssetAddTarget {
+  return value === "root" || value === "media_folder";
 }
 
 function isThemeMode(value: unknown): value is ThemeMode {
@@ -83,6 +95,8 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     useState<PlaylistSortMode>("custom");
   const [sidebarProjectSortMode, setSidebarProjectSortModeState] =
     useState<SidebarProjectSortMode>("alphabetical");
+  const [projectAssetAddTarget, setProjectAssetAddTargetState] =
+    useState<ProjectAssetAddTarget>("media_folder");
   const [themeMode, setThemeModeState] = useState<ThemeMode>("dark");
   const [showEditPointMarkers, setShowEditPointMarkersState] =
     useState(true);
@@ -132,6 +146,9 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
         const localSidebarProjectSortMode = window.localStorage.getItem(
           LOCAL_SIDEBAR_PROJECT_SORT_MODE_KEY,
         );
+        const localProjectAssetAddTarget = window.localStorage.getItem(
+          LOCAL_PROJECT_ASSET_ADD_TARGET_KEY,
+        );
         const localThemeMode =
           window.localStorage.getItem(LOCAL_THEME_MODE_KEY);
         const localShowEditPointMarkers = getStoredEditPointMarkerVisibility();
@@ -149,6 +166,13 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
           isSidebarProjectSortMode(localSidebarProjectSortMode)
         ) {
           setSidebarProjectSortModeState(localSidebarProjectSortMode);
+        }
+
+        if (
+          !cancelled &&
+          isProjectAssetAddTarget(localProjectAssetAddTarget)
+        ) {
+          setProjectAssetAddTargetState(localProjectAssetAddTarget);
         }
 
         if (!cancelled && isThemeMode(localThemeMode)) {
@@ -190,6 +214,14 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
           window.localStorage.setItem(
             LOCAL_SIDEBAR_PROJECT_SORT_MODE_KEY,
             data.sidebar_project_sort_mode,
+          );
+        }
+
+        if (isProjectAssetAddTarget(data.project_asset_add_target)) {
+          setProjectAssetAddTargetState(data.project_asset_add_target);
+          window.localStorage.setItem(
+            LOCAL_PROJECT_ASSET_ADD_TARGET_KEY,
+            data.project_asset_add_target,
           );
         }
 
@@ -256,6 +288,12 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     patchPreferences({ sidebar_project_sort_mode: value });
   };
 
+  const setProjectAssetAddTarget = (value: ProjectAssetAddTarget) => {
+    setProjectAssetAddTargetState(value);
+    window.localStorage.setItem(LOCAL_PROJECT_ASSET_ADD_TARGET_KEY, value);
+    patchPreferences({ project_asset_add_target: value });
+  };
+
   const setThemeMode = (value: ThemeMode) => {
     setThemeModeState(value);
     window.localStorage.setItem(LOCAL_THEME_MODE_KEY, value);
@@ -276,6 +314,8 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
       setPlaylistSortMode,
       sidebarProjectSortMode,
       setSidebarProjectSortMode,
+      projectAssetAddTarget,
+      setProjectAssetAddTarget,
       themeMode,
       setThemeMode,
       showEditPointMarkers,
@@ -286,6 +326,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
       playlistViewMode,
       playlistSortMode,
       sidebarProjectSortMode,
+      projectAssetAddTarget,
       themeMode,
       showEditPointMarkers,
       preferencesLoaded,
