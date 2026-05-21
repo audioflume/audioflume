@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { usePlayer } from "@/context/PlayerContext";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
+import ProjectFolderCard from "./project-browser/ProjectFolderCard";
+import ProjectSongFileCard from "./project-browser/ProjectSongFileCard";
 import "./project-browser/ProjectFileBrowser.module.css";
 
 type ProjectFileView = "grid" | "list";
@@ -30,147 +31,8 @@ type ProjectFileBrowserProps = {
   onCreateFolder: () => void;
 };
 
-function FolderGlyph({ small = false }: { small?: boolean }) {
-  return (
-    <span className={small ? "project-folder-glyph small" : "project-folder-glyph"}>
-      <span className="project-folder-glyph-tab" />
-      <span className="project-folder-glyph-body" />
-    </span>
-  );
-}
-
-function MusicGlyph({ small = false }: { small?: boolean }) {
-  return <span className={small ? "project-music-glyph small" : "project-music-glyph"}>♪</span>;
-}
-
-function PlayPauseIcon({ playing }: { playing: boolean }) {
-  return playing ? (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M7 5h3v14H7zM14 5h3v14h-3z" />
-    </svg>
-  ) : (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M8 5v14l11-7z" />
-    </svg>
-  );
-}
-
-function getAssetTypeLabel(assetType: string | null | undefined) {
-  if (assetType === "song") return "Music";
-  if (assetType === "sound-fx") return "Sound FX";
-  if (assetType === "visual-fx") return "Visual FX";
-  if (assetType === "colour-grading") return "Colour Grading";
-  return "Folder";
-}
-
-function formatSongMeta(song: ProjectSong) {
-  const parts = [song.artist, "Music"];
-  if (song.key) parts.push(song.key);
-  if (song.bpm) parts.push(`${song.bpm} BPM`);
-  return parts.filter(Boolean).join(" · ");
-}
-
 function getGoogleDriveButtonMarkup() {
   return `<span>Add to Drive</span>`;
-}
-
-function FolderCard({
-  folder,
-  viewMode,
-  onOpen,
-}: {
-  folder: ProjectFolder;
-  viewMode: ProjectFileView;
-  onOpen: (folderId: number) => void;
-}) {
-  const totalItems = (folder.child_count ?? 0) + (folder.asset_count ?? 0);
-
-  if (viewMode === "list") {
-    return (
-      <button type="button" className="project-browser-row project-folder-row" onClick={() => onOpen(folder.id)}>
-        <span className="project-browser-row-name">
-          <FolderGlyph small />
-          <span className="project-browser-row-title">{folder.name}</span>
-        </span>
-        <span className="project-browser-row-muted">{totalItems || "--"}</span>
-        <span className="project-browser-row-muted">{getAssetTypeLabel(folder.asset_type)}</span>
-        <span />
-      </button>
-    );
-  }
-
-  return (
-    <button type="button" className="project-folder-card" onClick={() => onOpen(folder.id)}>
-      <FolderGlyph />
-      <span className="project-folder-card-name">{folder.name}</span>
-      <span className="project-folder-card-meta">
-        {totalItems} {totalItems === 1 ? "item" : "items"}
-      </span>
-    </button>
-  );
-}
-
-function SongFileCard({
-  song,
-  viewMode,
-  onMove,
-}: {
-  song: ProjectSong;
-  viewMode: ProjectFileView;
-  onMove: (song: ProjectSong) => void;
-}) {
-  const { currentSong, isPlaying, currentTime, duration, togglePlayPause } = usePlayer();
-  const isActive = currentSong?.id === song.id;
-  const progress = isActive && duration > 0 ? Math.max(0, Math.min(1, currentTime / duration)) : 0;
-  const progressDegrees = `${progress * 360}deg`;
-  const previewIsPlaying = isActive && isPlaying;
-
-  if (viewMode === "list") {
-    return (
-      <div className="project-browser-row project-file-row">
-        <span className="project-browser-row-name">
-          <button
-            type="button"
-            className={`project-preview-button is-active ${previewIsPlaying ? "is-playing" : ""}`}
-            style={{ background: `conic-gradient(var(--text-primary) ${progressDegrees}, var(--project-preview-track) 0deg)` }}
-            onClick={() => togglePlayPause(song)}
-            aria-label={previewIsPlaying ? `Pause ${song.title}` : `Preview ${song.title}`}
-          >
-            <PlayPauseIcon playing={previewIsPlaying} />
-          </button>
-          <MusicGlyph small />
-          <span className="project-browser-row-title">{song.title}</span>
-        </span>
-        <span className="project-browser-row-muted">{song.artist || "--"}</span>
-        <span className="project-browser-row-muted">Music</span>
-        <button type="button" className="project-file-action" onClick={() => onMove(song)} aria-label={`Move ${song.title}`}>
-          ⋯
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className={`project-file-card ${isActive ? "is-active" : ""}`}>
-      <button type="button" className="project-file-action" onClick={() => onMove(song)} aria-label={`Move ${song.title}`}>
-        ⋯
-      </button>
-      <div className="project-file-card-icon-wrap">
-        <MusicGlyph />
-        <button
-          type="button"
-          className={`project-preview-button ${previewIsPlaying ? "is-playing" : ""} ${isActive ? "is-active" : ""}`}
-          style={{ background: `conic-gradient(var(--text-primary) ${progressDegrees}, var(--project-preview-track) 0deg)` }}
-          onClick={() => togglePlayPause(song)}
-          aria-label={previewIsPlaying ? `Pause ${song.title}` : `Preview ${song.title}`}
-        >
-          <PlayPauseIcon playing={previewIsPlaying} />
-        </button>
-      </div>
-      <div className="project-file-card-title">{song.title}</div>
-      <div className="project-file-card-meta">{formatSongMeta(song)}</div>
-    </div>
-  );
 }
 
 export default function ProjectFileBrowser({
@@ -292,10 +154,10 @@ export default function ProjectFileBrowser({
           viewMode === "grid" ? (
             <div className="project-browser-grid">
               {visibleFolders.map((folder) => (
-                <FolderCard key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
+                <ProjectFolderCard key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
               ))}
               {visibleSongs.map((song) => (
-                <SongFileCard key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} onMove={onMoveSong} />
+                <ProjectSongFileCard key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} onMove={onMoveSong} />
               ))}
             </div>
           ) : (
@@ -307,10 +169,10 @@ export default function ProjectFileBrowser({
                 <span />
               </div>
               {visibleFolders.map((folder) => (
-                <FolderCard key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
+                <ProjectFolderCard key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
               ))}
               {visibleSongs.map((song) => (
-                <SongFileCard key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} onMove={onMoveSong} />
+                <ProjectSongFileCard key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} onMove={onMoveSong} />
               ))}
             </div>
           )
