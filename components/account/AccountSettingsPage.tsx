@@ -652,17 +652,21 @@ function Info({ label, value }: { label: string; value: string }) {
 function Button({
   children,
   subtle = false,
+  dark = false,
 }: {
   children: React.ReactNode;
   subtle?: boolean;
+  dark?: boolean;
 }) {
   return (
     <button
       type="button"
-      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 rounded-full border border-[var(--border)] px-3.5 text-xs font-medium transition ${
-        subtle
-          ? "bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
-          : "bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"
+      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 rounded-full border px-3.5 text-xs font-medium transition ${
+        dark
+          ? "border-[#111111] bg-[#111111] text-white hover:border-[#272727] hover:bg-[#272727]"
+          : subtle
+            ? "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
+            : "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"
       }`}
     >
       {children}
@@ -1050,7 +1054,7 @@ function Membership() {
                 </p>
 
                 <div className="mt-auto pt-5">
-                  <Button subtle>
+                  <Button dark>
                     {name === "Enterprise" ? "Contact sales" : "Change plan"}{" "}
                     <DiagonalArrowIcon />
                   </Button>
@@ -1249,7 +1253,7 @@ function Support() {
                 {card.description}
               </p>
               <div className="mt-4">
-                <Button subtle>
+                <Button dark>
                   {card.action} {card.icon}
                 </Button>
               </div>
