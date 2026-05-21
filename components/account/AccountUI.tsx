@@ -164,7 +164,7 @@ export function Button({ children, subtle = false, dark = false, disabled = fals
 
 export function DangerButton({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="inline-flex h-8 cursor-pointer items-center justify-center rounded-full border border-transparent bg-[var(--danger-hover)] px-3.5 text-xs font-medium text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]">
+    <button type="button" onClick={onClick} className="inline-flex h-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-transparent px-3.5 text-xs font-medium text-[var(--danger)] transition hover:border-transparent hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]">
       {children}
     </button>
   );
