@@ -39,7 +39,7 @@ function ProjectFileBrowserStyles() {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
         column-gap: 24px;
-        row-gap: 30px;
+        row-gap: 34px;
         align-items: start;
       }
 
@@ -50,7 +50,7 @@ function ProjectFileBrowserStyles() {
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        gap: 7px !important;
+        gap: 11px !important;
         border: 0 !important;
         border-radius: 8px !important;
         background: transparent !important;
@@ -69,20 +69,22 @@ function ProjectFileBrowserStyles() {
       .project-folder-glyph {
         position: relative;
         display: block;
-        width: 66px;
-        height: 47px;
+        width: 62px;
+        height: 54px;
         filter: none;
       }
 
       .project-folder-glyph-tab {
         position: absolute;
-        left: 5px;
-        top: 5px;
-        width: 27px;
-        height: 9px;
-        border-radius: 3px 4px 0 0;
-        background: #111111;
-        box-shadow: none;
+        left: 0;
+        top: 6px;
+        width: 28px;
+        height: 12px;
+        border-radius: 4px 5px 0 0;
+        background: linear-gradient(180deg, #3b3b3b 0%, #252525 100%);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          inset 1px 0 0 rgba(255, 255, 255, 0.06);
       }
 
       .project-folder-glyph-body {
@@ -90,29 +92,62 @@ function ProjectFileBrowserStyles() {
         left: 0;
         right: 0;
         bottom: 0;
-        height: 38px;
-        border-radius: 4px;
-        background: #111111;
-        box-shadow: none;
+        height: 43px;
+        border-radius: 5px;
+        background: linear-gradient(180deg, #3a3a3a 0%, #242424 48%, #151515 100%);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.22),
+          inset 0 2px 0 rgba(255, 255, 255, 0.06),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.72),
+          inset 1px 0 0 rgba(255, 255, 255, 0.04),
+          inset -1px 0 0 rgba(0, 0, 0, 0.4),
+          0 1px 1px rgba(0, 0, 0, 0.42);
+      }
+
+      .project-folder-glyph-body::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        right: 4px;
+        top: 4px;
+        height: 1px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .project-folder-glyph-body::after {
+        content: "";
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        bottom: 4px;
+        height: 1px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.55);
       }
 
       .project-folder-glyph.small {
         width: 19px;
-        height: 14px;
+        height: 16px;
         filter: none;
       }
 
       .project-folder-glyph.small .project-folder-glyph-tab {
-        left: 1px;
-        top: 1px;
-        width: 8px;
-        height: 3px;
+        left: 0;
+        top: 2px;
+        width: 9px;
+        height: 4px;
         border-radius: 1px 2px 0 0;
       }
 
       .project-folder-glyph.small .project-folder-glyph-body {
-        height: 11px;
+        height: 13px;
         border-radius: 2px;
+      }
+
+      .project-folder-glyph.small .project-folder-glyph-body::before,
+      .project-folder-glyph.small .project-folder-glyph-body::after {
+        display: none;
       }
 
       .project-folder-card-name {
@@ -121,7 +156,7 @@ function ProjectFileBrowserStyles() {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-        font-size: 13px;
+        font-size: 11px;
         font-weight: 500;
         line-height: 1.15;
         letter-spacing: -0.01em;
@@ -139,7 +174,7 @@ function ProjectFileBrowserStyles() {
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        gap: 7px !important;
+        gap: 10px !important;
         border: 0 !important;
         border-radius: 8px !important;
         background: transparent !important;
@@ -155,7 +190,7 @@ function ProjectFileBrowserStyles() {
 
       .project-file-card-icon-wrap {
         display: flex;
-        height: 47px;
+        height: 54px;
         align-items: center;
         justify-content: center;
       }
@@ -167,9 +202,11 @@ function ProjectFileBrowserStyles() {
         align-items: center;
         justify-content: center;
         border-radius: 8px;
-        background: var(--bg-secondary);
+        background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
         color: var(--text-secondary);
-        box-shadow: inset 0 0 0 1px var(--border);
+        box-shadow:
+          inset 0 0 0 1px var(--border),
+          inset 0 1px 0 rgba(255, 255, 255, 0.07);
         font-size: 20px;
       }
 
@@ -187,7 +224,7 @@ function ProjectFileBrowserStyles() {
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         white-space: normal !important;
-        font-size: 13px;
+        font-size: 11px;
         font-weight: 500;
         line-height: 1.15;
         color: var(--text-primary);
@@ -198,8 +235,8 @@ function ProjectFileBrowserStyles() {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        margin-top: 0 !important;
-        font-size: 10px;
+        margin-top: -6px !important;
+        font-size: 9px;
         color: var(--text-muted);
       }
 
@@ -261,7 +298,7 @@ function ProjectFileBrowserStyles() {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 500;
         color: var(--text-primary);
       }
@@ -270,7 +307,7 @@ function ProjectFileBrowserStyles() {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: 12px;
+        font-size: 11px;
         color: var(--text-secondary);
       }
 
