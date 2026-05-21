@@ -155,7 +155,7 @@ export default function ProjectFileBrowser({
                 <ProjectFolderCard key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
               ))}
               {visibleSongs.map((song) => (
-                <ProjectSongFileCard key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} onMove={onMoveSong} />
+                <ProjectSongFileCard key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
               ))}
             </div>
           ) : (
@@ -170,7 +170,7 @@ export default function ProjectFileBrowser({
                 <ProjectFolderCard key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
               ))}
               {visibleSongs.map((song) => (
-                <ProjectSongFileCard key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} onMove={onMoveSong} />
+                <ProjectSongFileCard key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
               ))}
             </div>
           )
