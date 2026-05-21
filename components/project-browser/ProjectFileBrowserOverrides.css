@@ -18,7 +18,7 @@
 }
 
 .project-tabs-row > button:first-child {
-  margin-left: -2.5px !important;
+  margin-left: -14px !important;
 }
 
 .project-tabs-row > button[class*="border-[var(--text-primary)]"] {
@@ -65,7 +65,6 @@
 .project-preview-button-list {
   height: 18px !important;
   width: 18px !important;
-  transform: scale(1) !important;
 }
 
 .project-preview-button-list::before {
@@ -75,6 +74,13 @@
 .project-preview-button-list svg {
   width: 9px !important;
   height: 9px !important;
+}
+
+.project-browser-row:hover .project-preview-button-list,
+.project-preview-button-list.is-playing,
+.project-preview-button-list.is-active {
+  opacity: 1 !important;
+  transform: scale(1) !important;
 }
 
 @media (max-width: 760px) {
