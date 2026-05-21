@@ -82,6 +82,45 @@ function parseDropFolderId(value: UniqueIdentifier | null | undefined) {
   return undefined;
 }
 
+function getActivatorPoint(event: unknown) {
+  const maybeEvent = event as MouseEvent | TouchEvent | PointerEvent | undefined;
+
+  if (!maybeEvent) return null;
+
+  if ("touches" in maybeEvent && maybeEvent.touches?.[0]) {
+    return { x: maybeEvent.touches[0].clientX, y: maybeEvent.touches[0].clientY };
+  }
+
+  if ("changedTouches" in maybeEvent && maybeEvent.changedTouches?.[0]) {
+    return { x: maybeEvent.changedTouches[0].clientX, y: maybeEvent.changedTouches[0].clientY };
+  }
+
+  if ("clientX" in maybeEvent && "clientY" in maybeEvent) {
+    return { x: maybeEvent.clientX, y: maybeEvent.clientY };
+  }
+
+  return null;
+}
+
+const snapListOverlayToCursor = ({
+  activatorEvent,
+  activeNodeRect,
+  transform,
+}: any) => {
+  const point = getActivatorPoint(activatorEvent);
+
+  if (!point || !activeNodeRect) return transform;
+
+  const startOffsetX = point.x - activeNodeRect.left;
+  const startOffsetY = point.y - activeNodeRect.top;
+
+  return {
+    ...transform,
+    x: transform.x + startOffsetX - 10,
+    y: transform.y + startOffsetY - 10,
+  };
+};
+
 function DraggableFolderItem({
   folder,
   viewMode,
@@ -181,16 +220,20 @@ function DragPreview({
   dragData,
   folder,
   song,
+  viewMode,
 }: {
   dragData: DragData | null;
   folder: ProjectFolder | null;
   song: ProjectSong | null;
+  viewMode: ProjectFileView;
 }) {
   if (!dragData) return null;
 
+  const modeClass = viewMode === "list" ? "is-list-preview" : "is-grid-preview";
+
   if (dragData.kind === "folder" && folder) {
     return (
-      <div className="project-file-browser project-drag-preview">
+      <div className={`project-file-browser project-drag-preview ${modeClass}`}>
         <ProjectFolderCard folder={folder} viewMode="grid" onOpen={() => {}} />
       </div>
     );
@@ -198,7 +241,7 @@ function DragPreview({
 
   if (dragData.kind === "song" && song) {
     return (
-      <div className="project-file-browser project-drag-preview project-drag-preview-song">
+      <div className={`project-file-browser project-drag-preview project-drag-preview-song ${modeClass}`}>
         <ProjectSongFileCard song={song} viewMode="grid" queueSongs={[song]} onMove={() => {}} />
       </div>
     );
@@ -228,6 +271,7 @@ export default function ProjectFileBrowser({
   );
   const [dragPreviewFolderId, setDragPreviewFolderId] = useState<number | null | undefined>(undefined);
   const [activeDragData, setActiveDragData] = useState<DragData | null>(null);
+  const [activeDragViewMode, setActiveDragViewMode] = useState<ProjectFileView>(viewMode);
   const lastBreadcrumbTargetRef = useRef<number | null | undefined>(undefined);
   const originalFolderTargetRef = useRef<number | null | undefined>(undefined);
   const originalSongTargetRef = useRef<number | null | undefined>(undefined);
@@ -282,6 +326,7 @@ export default function ProjectFileBrowser({
   const nextViewMode: ProjectFileView = viewMode === "grid" ? "list" : "grid";
   const draggedFolder = activeDragData?.kind === "folder" ? effectiveFolders.find((folder) => folder.id === activeDragData.folderId) ?? null : null;
   const draggedSong = activeDragData?.kind === "song" ? effectiveSongs.find((song) => Number(song.project_asset_id) === activeDragData.assetId) ?? null : null;
+  const overlayModifiers = activeDragViewMode === "list" ? [snapListOverlayToCursor] : undefined;
 
   function folderIsDescendant(targetFolderId: number, draggedFolderId: number) {
     let current = foldersById.get(targetFolderId) ?? null;
@@ -397,6 +442,7 @@ export default function ProjectFileBrowser({
     lastBreadcrumbTargetRef.current = undefined;
     setDragPreviewFolderId(undefined);
     setActiveDragData(dragData ?? null);
+    setActiveDragViewMode(viewMode);
 
     if (dragData?.kind === "song") {
       const song = effectiveSongs.find((item) => Number(item.project_asset_id) === dragData.assetId);
@@ -586,8 +632,8 @@ export default function ProjectFileBrowser({
           )}
         </div>
       </div>
-      <DragOverlay dropAnimation={null}>
-        <DragPreview dragData={activeDragData} folder={draggedFolder} song={draggedSong} />
+      <DragOverlay dropAnimation={null} modifiers={overlayModifiers}>
+        <DragPreview dragData={activeDragData} folder={draggedFolder} song={draggedSong} viewMode={activeDragViewMode} />
       </DragOverlay>
     </DndContext>
   );
