@@ -80,6 +80,28 @@
   padding-top: 24px !important;
 }
 
+.project-browser-list {
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.project-browser-list-head {
+  display: none !important;
+}
+
+.project-browser-list .project-browser-row {
+  border: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 8px !important;
+  padding: 0 14px !important;
+}
+
+.project-browser-list .project-browser-row + .project-browser-row {
+  margin-top: 2px !important;
+}
+
 .project-file-browser [role="button"] {
   touch-action: none;
 }
