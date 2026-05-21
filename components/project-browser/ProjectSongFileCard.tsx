@@ -52,7 +52,7 @@ export default function ProjectSongFileCard({
             <MusicGlyph small />
             <button
               type="button"
-              className={`project-preview-button project-preview-button-list is-active ${previewIsPlaying ? "is-playing" : ""}`}
+              className={`project-preview-button project-preview-button-list ${previewIsPlaying ? "is-playing" : ""} ${isActive ? "is-active" : ""}`}
               style={{ background: `conic-gradient(var(--text-primary) ${progressDegrees}, var(--project-preview-track) 0deg)` }}
               onClick={handlePreviewClick}
               aria-label={previewIsPlaying ? `Pause ${song.title}` : `Preview ${song.title}`}
