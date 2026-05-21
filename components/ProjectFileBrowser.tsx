@@ -102,6 +102,14 @@ function getActivatorPoint(event: unknown) {
   return null;
 }
 
+function isDefaultMediaFolder(folder: ProjectFolder) {
+  return folder.parent_folder_id == null && folder.asset_type != null;
+}
+
+function defaultMediaFolderHasItems(folder: ProjectFolder) {
+  return (folder.asset_count ?? 0) > 0 || (folder.child_count ?? 0) > 0;
+}
+
 const snapListOverlayToCursor = ({
   activatorEvent,
   activeNodeRect,
@@ -320,7 +328,17 @@ export default function ProjectFileBrowser({
     return chain;
   }, [activeFolderId, foldersById]);
 
-  const visibleFolders = useMemo(() => effectiveFolders.filter((folder) => folder.parent_folder_id === visibleFolderId), [effectiveFolders, visibleFolderId]);
+  const visibleFolders = useMemo(
+    () =>
+      effectiveFolders.filter((folder) => {
+        if (folder.parent_folder_id !== visibleFolderId) return false;
+        if (visibleFolderId == null && isDefaultMediaFolder(folder)) {
+          return defaultMediaFolderHasItems(folder);
+        }
+        return true;
+      }),
+    [effectiveFolders, visibleFolderId],
+  );
   const visibleSongs = useMemo(() => effectiveSongs.filter((song) => (song.project_folder_id ?? null) === visibleFolderId), [effectiveSongs, visibleFolderId]);
   const itemCount = visibleFolders.length + visibleSongs.length;
   const nextViewMode: ProjectFileView = viewMode === "grid" ? "list" : "grid";
