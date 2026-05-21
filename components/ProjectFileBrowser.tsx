@@ -7,6 +7,7 @@ import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import ProjectFolderCard from "./project-browser/ProjectFolderCard";
 import ProjectSongFileCard from "./project-browser/ProjectSongFileCard";
 import "./project-browser/ProjectFileBrowser.module.css";
+import "./project-browser/ProjectFileBrowserOverrides.css";
 
 type ProjectFileView = "grid" | "list";
 
