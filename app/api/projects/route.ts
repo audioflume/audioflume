@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import type { Project } from "@/lib/types";
 import { normalizeProject } from "@/lib/projects";
+import { ensureDefaultProjectFolders } from "@/lib/projectFolders";
 
 export async function GET() {
   const { userId } = await auth();
@@ -77,6 +77,12 @@ export async function POST(req: Request) {
       .single();
 
     if (error) throw error;
+
+    await ensureDefaultProjectFolders({
+      supabase: supabaseServer,
+      projectId: data.id,
+      userId,
+    });
 
     return NextResponse.json(normalizeProject(data));
   } catch (err) {
