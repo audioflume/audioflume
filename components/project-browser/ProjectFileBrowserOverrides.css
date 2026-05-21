@@ -1,0 +1,45 @@
+.project-tabs-row button::after,
+.project-download-trigger::after {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  content: none !important;
+}
+
+.project-breadcrumbs.project-path button,
+.project-breadcrumbs.project-path span,
+.project-path-separator {
+  color: var(--text-secondary) !important;
+}
+
+.project-breadcrumbs.project-path button.is-current {
+  color: var(--text-primary) !important;
+}
+
+.project-breadcrumbs.project-path button:hover {
+  color: var(--text-primary) !important;
+}
+
+@media (max-width: 760px) {
+  .project-file-browser-top {
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+
+  .project-file-browser-actions {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+  }
+
+  .project-file-browser-title-wrap {
+    min-width: 0 !important;
+  }
+
+  .project-breadcrumbs.project-path {
+    min-width: 0 !important;
+    flex-wrap: nowrap !important;
+  }
+}
