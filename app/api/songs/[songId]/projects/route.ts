@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { ensureDefaultProjectFolders } from "@/lib/projectFolders";
 import { supabaseServer } from "@/lib/supabaseServer";
 
+type ProjectAssetAddTarget = "root" | "media_folder";
+
 type RouteContext = {
   params: Promise<{ songId: string }> | { songId: string };
 };
@@ -12,7 +14,23 @@ async function getSongId(context: RouteContext) {
   return decodeURIComponent(params.songId);
 }
 
+async function getProjectAssetAddTarget(userId: string): Promise<ProjectAssetAddTarget> {
+  const { data, error } = await supabaseServer
+    .from("user_preferences")
+    .select("project_asset_add_target")
+    .eq("clerk_user_id", userId)
+    .maybeSingle();
+
+  if (error || !data) return "media_folder";
+
+  return data.project_asset_add_target === "root" ? "root" : "media_folder";
+}
+
 async function getDefaultSongFolderId(projectId: number, userId: string) {
+  const addTarget = await getProjectAssetAddTarget(userId);
+
+  if (addTarget === "root") return null;
+
   await ensureDefaultProjectFolders({
     supabase: supabaseServer,
     projectId,
