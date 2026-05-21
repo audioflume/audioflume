@@ -9,9 +9,7 @@ import {
   type SidebarProjectSortMode,
   type ThemeMode,
 } from "@/context/UserPreferencesContext";
-import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
-import "@/components/project-browser/ProjectFileBrowser.module.css";
-import "@/components/project-browser/ProjectFileBrowserOverrides.css";
+import FolderIcon from "@/components/icons/FolderIcon";
 import {
   Card,
   CardTitle,
@@ -59,7 +57,7 @@ export default function SettingsSection() {
         <Option<SidebarProjectSortMode> label="Custom" value="custom" active={sidebarProjectSortMode === "custom"} onClick={() => setSidebarProjectSortMode("custom")} />
         <Option<SidebarProjectSortMode> label="Alphabetical" value="alphabetical" active={sidebarProjectSortMode === "alphabetical"} onClick={() => setSidebarProjectSortMode("alphabetical")} />
       </Row>
-      <Row icon={<FolderGlyph small />} title="Project add location" description="Choose where newly added project files appear by default.">
+      <Row icon={<FolderIcon />} title="Project add location" description="Choose where newly added project files appear by default.">
         <Option<ProjectAssetAddTarget> label="All Files" value="root" active={projectAssetAddTarget === "root"} onClick={() => setProjectAssetAddTarget("root")} />
         <Option<ProjectAssetAddTarget> label="Media folder" value="media_folder" active={projectAssetAddTarget === "media_folder"} onClick={() => setProjectAssetAddTarget("media_folder")} />
       </Row>
