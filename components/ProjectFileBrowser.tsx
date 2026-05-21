@@ -5,6 +5,7 @@ import {
   filterTriggerBaseClass,
   filterTriggerInactiveClass,
 } from "@/components/filterUiClasses";
+import { usePlayer } from "@/context/PlayerContext";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 
 type ProjectFileView = "grid" | "list";
@@ -168,6 +169,7 @@ function ProjectFileBrowserStyles() {
       }
 
       .project-file-browser .project-file-card {
+        position: relative;
         min-height: 0 !important;
         height: auto !important;
         display: flex !important;
@@ -183,12 +185,14 @@ function ProjectFileBrowserStyles() {
         transform: none !important;
       }
 
-      .project-file-browser .project-file-card:hover {
+      .project-file-browser .project-file-card:hover,
+      .project-file-browser .project-file-card.is-active {
         background: var(--bg-hover-strong) !important;
         transform: none !important;
       }
 
       .project-file-card-icon-wrap {
+        position: relative;
         display: flex;
         height: 54px;
         align-items: center;
@@ -215,6 +219,44 @@ function ProjectFileBrowserStyles() {
         width: 22px;
         border-radius: 5px;
         font-size: 12px;
+      }
+
+      .project-preview-button {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        display: flex;
+        height: 32px;
+        width: 32px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: conic-gradient(var(--text-primary) var(--project-preview-progress, 0deg), rgba(255,255,255,0.18) 0deg);
+        color: var(--text-primary);
+        opacity: 0;
+        transform: scale(0.94);
+        transition: opacity 0.15s ease, transform 0.15s ease;
+      }
+
+      .project-preview-button::before {
+        content: "";
+        position: absolute;
+        inset: 2px;
+        border-radius: inherit;
+        background: var(--bg-primary);
+      }
+
+      .project-preview-button svg {
+        position: relative;
+        z-index: 1;
+      }
+
+      .project-file-card:hover .project-preview-button,
+      .project-preview-button.is-playing,
+      .project-preview-button.is-active {
+        opacity: 1;
+        transform: scale(1);
       }
 
       .project-file-browser .project-file-card-title {
@@ -250,7 +292,7 @@ function ProjectFileBrowserStyles() {
       .project-browser-list-head,
       .project-browser-row {
         display: grid !important;
-        grid-template-columns: minmax(220px, 1fr) minmax(140px, 220px) 120px 78px !important;
+        grid-template-columns: minmax(220px, 1fr) minmax(140px, 220px) 120px 42px !important;
         align-items: center !important;
         gap: 14px !important;
       }
@@ -312,23 +354,31 @@ function ProjectFileBrowserStyles() {
       }
 
       .project-file-browser .project-file-action {
+        display: flex;
         height: 24px !important;
+        width: 24px;
         cursor: pointer;
+        align-items: center;
+        justify-content: center;
         border: 1px solid var(--border) !important;
-        border-radius: 7px !important;
+        border-radius: 999px !important;
         background: transparent !important;
-        padding: 0 9px !important;
-        font-size: 10px !important;
+        padding: 0 !important;
+        font-size: 15px !important;
+        line-height: 1;
         color: var(--text-secondary) !important;
       }
 
       .project-file-browser .project-file-card .project-file-action {
-        margin-top: 2px;
+        position: absolute;
+        right: 8px;
+        top: 8px;
         opacity: 0;
         transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
       }
 
-      .project-file-browser .project-file-card:hover .project-file-action {
+      .project-file-browser .project-file-card:hover .project-file-action,
+      .project-file-browser .project-file-card.is-active .project-file-action {
         opacity: 1;
       }
 
@@ -346,7 +396,7 @@ function ProjectFileBrowserStyles() {
 
         .project-browser-list-head,
         .project-browser-row {
-          grid-template-columns: minmax(0, 1fr) 78px !important;
+          grid-template-columns: minmax(0, 1fr) 42px !important;
         }
 
         .project-browser-list-head span:nth-child(2),
@@ -370,6 +420,22 @@ function FolderGlyph({ small = false }: { small?: boolean }) {
 
 function MusicGlyph({ small = false }: { small?: boolean }) {
   return <span className={small ? "project-music-glyph small" : "project-music-glyph"}>♪</span>;
+}
+
+function PlayPauseIcon({ playing }: { playing: boolean }) {
+  if (playing) {
+    return (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M7 5h3v14H7zM14 5h3v14h-3z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  );
 }
 
 function getAssetTypeLabel(assetType: string | null | undefined) {
@@ -442,10 +508,25 @@ function SongFileCard({
   viewMode: ProjectFileView;
   onMove: (song: ProjectSong) => void;
 }) {
+  const { currentSong, isPlaying, currentTime, duration, togglePlayPause } = usePlayer();
+  const isActive = currentSong?.id === song.id;
+  const progress = isActive && duration > 0 ? Math.max(0, Math.min(1, currentTime / duration)) : 0;
+  const progressDegrees = `${progress * 360}deg`;
+  const previewIsPlaying = isActive && isPlaying;
+
   if (viewMode === "list") {
     return (
       <div className="project-browser-row project-file-row">
         <span className="project-browser-row-name">
+          <button
+            type="button"
+            className={`project-preview-button is-active ${previewIsPlaying ? "is-playing" : ""}`}
+            style={{ background: `conic-gradient(var(--text-primary) ${progressDegrees}, rgba(255,255,255,0.18) 0deg)` }}
+            onClick={() => togglePlayPause(song)}
+            aria-label={previewIsPlaying ? `Pause ${song.title}` : `Preview ${song.title}`}
+          >
+            <PlayPauseIcon playing={previewIsPlaying} />
+          </button>
           <MusicGlyph small />
           <span className="project-browser-row-title">{song.title}</span>
         </span>
@@ -455,27 +536,38 @@ function SongFileCard({
           type="button"
           className="project-file-action"
           onClick={() => onMove(song)}
+          aria-label={`Move ${song.title}`}
         >
-          Move
+          ⋯
         </button>
       </div>
     );
   }
 
   return (
-    <div className="project-file-card">
-      <div className="project-file-card-icon-wrap">
-        <MusicGlyph />
-      </div>
-      <div className="project-file-card-title">{song.title}</div>
-      <div className="project-file-card-meta">{formatSongMeta(song)}</div>
+    <div className={`project-file-card ${isActive ? "is-active" : ""}`}>
       <button
         type="button"
         className="project-file-action"
         onClick={() => onMove(song)}
+        aria-label={`Move ${song.title}`}
       >
-        Move
+        ⋯
       </button>
+      <div className="project-file-card-icon-wrap">
+        <MusicGlyph />
+        <button
+          type="button"
+          className={`project-preview-button ${previewIsPlaying ? "is-playing" : ""} ${isActive ? "is-active" : ""}`}
+          style={{ background: `conic-gradient(var(--text-primary) ${progressDegrees}, rgba(255,255,255,0.18) 0deg)` }}
+          onClick={() => togglePlayPause(song)}
+          aria-label={previewIsPlaying ? `Pause ${song.title}` : `Preview ${song.title}`}
+        >
+          <PlayPauseIcon playing={previewIsPlaying} />
+        </button>
+      </div>
+      <div className="project-file-card-title">{song.title}</div>
+      <div className="project-file-card-meta">{formatSongMeta(song)}</div>
     </div>
   );
 }
