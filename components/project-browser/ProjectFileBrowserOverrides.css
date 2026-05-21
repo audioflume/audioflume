@@ -107,7 +107,9 @@
   pointer-events: none;
 }
 
-.project-browser-list > div:not(.project-browser-list-head):last-child::after {
+.project-browser-list > div:not(.project-browser-list-head):last-child::after,
+.project-browser-list > div:not(.project-browser-list-head):hover::after,
+.project-browser-list > div:not(.project-browser-list-head):has(+ div:not(.project-browser-list-head):hover)::after {
   display: none;
 }
 
