@@ -600,7 +600,7 @@ function CardTitle({
 }) {
   return (
     <div className="border-b border-[var(--border)] px-4 py-3.5">
-      <h2 className="text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+      <h2 className="text-2xl font-medium tracking-[-0.02em] text-[var(--text-primary)]">
         {title}
       </h2>
       {description ? (
@@ -1000,7 +1000,7 @@ function Membership() {
             <div className="text-xs font-medium text-[var(--text-muted)]">
               Current plan
             </div>
-            <div className="mt-2 text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">
+            <div className="mt-2 text-2xl font-medium tracking-[-0.02em] text-[var(--text-primary)]">
               Lifetime Membership
             </div>
             <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--text-secondary)]">
