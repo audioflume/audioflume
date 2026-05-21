@@ -155,7 +155,7 @@ export function Button({ children, subtle = false, dark = false, disabled = fals
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 rounded-full border px-3.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${dark ? "border-[#111111] bg-[#111111] text-white hover:border-[#272727] hover:bg-[#272727]" : subtle ? "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]" : "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"}`}
+      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 rounded-full border px-3.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${dark ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80" : subtle ? "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]" : "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"}`}
     >
       {children}
     </button>
@@ -164,7 +164,7 @@ export function Button({ children, subtle = false, dark = false, disabled = fals
 
 export function DangerButton({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="inline-flex h-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 text-xs font-medium text-[var(--danger)] transition hover:border-[#fff0f0] hover:bg-[#fff0f0] hover:text-[var(--danger)]">
+    <button type="button" onClick={onClick} className="inline-flex h-8 cursor-pointer items-center justify-center rounded-full border border-transparent bg-[var(--danger-hover)] px-3.5 text-xs font-medium text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]">
       {children}
     </button>
   );
