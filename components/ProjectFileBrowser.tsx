@@ -5,6 +5,7 @@ import {
   DndContext,
   type DragEndEvent,
   type DragOverEvent,
+  type DragStartEvent,
   PointerSensor,
   type UniqueIdentifier,
   useDroppable,
@@ -82,6 +83,7 @@ function parseDropFolderId(value: UniqueIdentifier | null | undefined) {
   if (id === ROOT_DROP_ID || id === BREADCRUMB_ROOT_DROP_ID) return null;
   if (id.startsWith("drop-folder:")) return Number(id.replace("drop-folder:", ""));
   if (id.startsWith("drop-breadcrumb:")) return Number(id.replace("drop-breadcrumb:", ""));
+  if (id.startsWith("folder:")) return Number(id.replace("folder:", ""));
 
   return undefined;
 }
@@ -213,6 +215,8 @@ export default function ProjectFileBrowser({
     () => new Map(),
   );
   const lastBreadcrumbTargetRef = useRef<number | null | undefined>(undefined);
+  const originalFolderTargetRef = useRef<number | null | undefined>(undefined);
+  const originalSongTargetRef = useRef<number | null | undefined>(undefined);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -297,12 +301,31 @@ export default function ProjectFileBrowser({
     return targetFolderId;
   }
 
+  function previewDragMove(dragData: DragData | undefined, folderId: number | null) {
+    if (!dragData) return;
+
+    if (dragData.kind === "song") {
+      setSongFolderOverrides((current) => {
+        const next = new Map(current);
+        next.set(dragData.assetId, folderId);
+        return next;
+      });
+      return;
+    }
+
+    setFolderParentOverrides((current) => {
+      const next = new Map(current);
+      next.set(dragData.folderId, folderId);
+      return next;
+    });
+  }
+
   async function moveSongToFolder(song: ProjectSong, folderId: number | null) {
     const assetId = Number(song.project_asset_id);
 
     if (!Number.isFinite(assetId)) return;
 
-    const previousFolderId = song.project_folder_id ?? null;
+    const previousFolderId = originalSongTargetRef.current ?? song.project_folder_id ?? null;
 
     setSongFolderOverrides((current) => {
       const next = new Map(current);
@@ -331,7 +354,7 @@ export default function ProjectFileBrowser({
   }
 
   async function moveFolderToFolder(folder: ProjectFolder, parentFolderId: number | null) {
-    const previousParentFolderId = folder.parent_folder_id ?? null;
+    const previousParentFolderId = originalFolderTargetRef.current ?? folder.parent_folder_id ?? null;
 
     setFolderParentOverrides((current) => {
       const next = new Map(current);
@@ -359,21 +382,41 @@ export default function ProjectFileBrowser({
     }
   }
 
+  function handleDragStart(event: DragStartEvent) {
+    const dragData = event.active.data.current as DragData | undefined;
+    lastBreadcrumbTargetRef.current = undefined;
+
+    if (dragData?.kind === "song") {
+      const song = effectiveSongs.find((item) => Number(item.project_asset_id) === dragData.assetId);
+      originalSongTargetRef.current = song?.project_folder_id ?? null;
+      originalFolderTargetRef.current = undefined;
+      return;
+    }
+
+    if (dragData?.kind === "folder") {
+      const folder = effectiveFolders.find((item) => item.id === dragData.folderId);
+      originalFolderTargetRef.current = folder?.parent_folder_id ?? null;
+      originalSongTargetRef.current = undefined;
+    }
+  }
+
   function handleDragOver(event: DragOverEvent) {
     const targetFolderId = getValidDropFolderId(event);
     const overId = event.over?.id == null ? "" : String(event.over.id);
 
     if (!overId.startsWith("drop-breadcrumb")) return;
     if (targetFolderId === undefined) return;
-    if (targetFolderId === activeFolderId) return;
     if (lastBreadcrumbTargetRef.current === targetFolderId) return;
 
+    const dragData = event.active.data.current as DragData | undefined;
+
     lastBreadcrumbTargetRef.current = targetFolderId;
+    previewDragMove(dragData, targetFolderId);
     onOpenFolder(targetFolderId);
   }
 
   function handleDragEnd(event: DragEndEvent) {
-    const targetFolderId = getValidDropFolderId(event);
+    const targetFolderId = getValidDropFolderId(event) ?? lastBreadcrumbTargetRef.current;
     const dragData = event.active.data.current as DragData | undefined;
 
     lastBreadcrumbTargetRef.current = undefined;
@@ -382,18 +425,20 @@ export default function ProjectFileBrowser({
 
     if (dragData.kind === "song") {
       const song = effectiveSongs.find((item) => Number(item.project_asset_id) === dragData.assetId);
-      if (!song || (song.project_folder_id ?? null) === targetFolderId) return;
+      if (!song) return;
       moveSongToFolder(song, targetFolderId);
       return;
     }
 
     const folder = effectiveFolders.find((item) => item.id === dragData.folderId);
-    if (!folder || (folder.parent_folder_id ?? null) === targetFolderId) return;
+    if (!folder) return;
     moveFolderToFolder(folder, targetFolderId);
   }
 
   function handleDragCancel() {
     lastBreadcrumbTargetRef.current = undefined;
+    originalSongTargetRef.current = undefined;
+    originalFolderTargetRef.current = undefined;
   }
 
   if (loading) {
@@ -427,6 +472,7 @@ export default function ProjectFileBrowser({
   return (
     <DndContext
       sensors={sensors}
+      onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
