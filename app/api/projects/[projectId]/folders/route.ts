@@ -202,3 +202,98 @@ export async function POST(req: Request, context: RouteContext) {
     );
   }
 }
+
+export async function PATCH(req: Request, context: RouteContext) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const projectId = await getProjectId(context);
+    const project = await getOwnedProject(projectId, userId);
+
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    const body = await req.json();
+    const folderId = Number(body.folder_id);
+    const parentFolderId =
+      body.parent_folder_id === null || body.parent_folder_id === undefined
+        ? null
+        : Number(body.parent_folder_id);
+
+    if (!Number.isFinite(folderId)) {
+      return NextResponse.json({ error: "Missing folder_id" }, { status: 400 });
+    }
+
+    if (parentFolderId !== null && !Number.isFinite(parentFolderId)) {
+      return NextResponse.json({ error: "Invalid parent folder" }, { status: 400 });
+    }
+
+    if (parentFolderId === folderId) {
+      return NextResponse.json({ error: "Folder cannot move into itself" }, { status: 400 });
+    }
+
+    const { data: folders, error: foldersError } = await supabaseServer
+      .from("project_folders")
+      .select("id,parent_folder_id")
+      .eq("project_id", projectId)
+      .eq("clerk_user_id", userId);
+
+    if (foldersError) throw foldersError;
+
+    const folderRows = folders ?? [];
+    const folderIds = new Set(folderRows.map((folder) => Number(folder.id)));
+
+    if (!folderIds.has(folderId)) {
+      return NextResponse.json({ error: "Folder not found" }, { status: 404 });
+    }
+
+    if (parentFolderId !== null && !folderIds.has(parentFolderId)) {
+      return NextResponse.json({ error: "Parent folder not found" }, { status: 404 });
+    }
+
+    if (parentFolderId !== null) {
+      const byId = new Map(
+        folderRows.map((folder) => [Number(folder.id), Number(folder.parent_folder_id)]),
+      );
+      const visited = new Set<number>();
+      let current: number | null = parentFolderId;
+
+      while (current !== null && Number.isFinite(current) && !visited.has(current)) {
+        if (current === folderId) {
+          return NextResponse.json({ error: "Folder cannot move into its own child" }, { status: 400 });
+        }
+
+        visited.add(current);
+        const nextParent = byId.get(current);
+        current = nextParent == null || !Number.isFinite(nextParent) ? null : nextParent;
+      }
+    }
+
+    const nextPosition = await getNextFolderPosition(projectId, parentFolderId);
+
+    const { data, error } = await supabaseServer
+      .from("project_folders")
+      .update({ parent_folder_id: parentFolderId, position: nextPosition })
+      .eq("id", folderId)
+      .eq("project_id", projectId)
+      .eq("clerk_user_id", userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json(normalizeProjectFolder(data));
+  } catch (err) {
+    console.error("Project folder update error:", err);
+
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Failed to update project folder" },
+      { status: 500 },
+    );
+  }
+}
