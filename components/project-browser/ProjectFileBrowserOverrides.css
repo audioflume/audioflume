@@ -98,8 +98,8 @@
 .project-browser-list > div:not(.project-browser-list-head)::after {
   content: "";
   position: absolute;
-  left: 14px;
-  right: 14px;
+  left: 0px;
+  right: 0px;
   bottom: 0;
   height: 1px;
   background: var(--border);
