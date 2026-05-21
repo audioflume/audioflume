@@ -119,7 +119,7 @@ export default function MembershipSection() {
                       <CurrentPlanButton />
                     ) : (
                       <Button dark>
-                        {name === "Enterprise" ? "Contact sales" : "Coming soon"} <DiagonalArrowIcon />
+                        Change Plan <DiagonalArrowIcon />
                       </Button>
                     )}
                   </div>
@@ -138,7 +138,7 @@ export default function MembershipSection() {
               Membership cancellation will be handled through Stripe once subscriptions are connected.
             </p>
           </div>
-          <DangerButton>Stripe coming soon</DangerButton>
+          <DangerButton>Cancel Membership</DangerButton>
         </div>
       </Card>
     </>
