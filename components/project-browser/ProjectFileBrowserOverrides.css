@@ -18,7 +18,7 @@
 }
 
 .project-tabs-row > button:first-child {
-  margin-left: -14px !important;
+  margin-left: -10px !important;
 }
 
 .project-tabs-row > button[class*="border-[var(--text-primary)]"] {
