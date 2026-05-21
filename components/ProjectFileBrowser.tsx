@@ -37,9 +37,9 @@ function ProjectFileBrowserStyles() {
     <style>{`
       .project-browser-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
-        column-gap: 28px;
-        row-gap: 34px;
+        grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+        column-gap: 24px;
+        row-gap: 30px;
         align-items: start;
       }
 
@@ -50,11 +50,11 @@ function ProjectFileBrowserStyles() {
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        gap: 8px !important;
+        gap: 7px !important;
         border: 0 !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         background: transparent !important;
-        padding: 8px 6px !important;
+        padding: 6px 5px !important;
         color: var(--text-primary);
         text-align: center !important;
         transform: none !important;
@@ -69,20 +69,20 @@ function ProjectFileBrowserStyles() {
       .project-folder-glyph {
         position: relative;
         display: block;
-        width: 84px;
-        height: 62px;
-        filter: drop-shadow(0 7px 10px rgba(0, 0, 0, 0.14));
+        width: 66px;
+        height: 47px;
+        filter: none;
       }
 
       .project-folder-glyph-tab {
         position: absolute;
-        left: 4px;
-        top: 4px;
-        width: 37px;
-        height: 13px;
-        border-radius: 6px 8px 0 0;
-        background: linear-gradient(180deg, #6ed0f3 0%, #2fa8dd 100%);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+        left: 5px;
+        top: 5px;
+        width: 27px;
+        height: 9px;
+        border-radius: 3px 4px 0 0;
+        background: #111111;
+        box-shadow: none;
       }
 
       .project-folder-glyph-body {
@@ -90,36 +90,33 @@ function ProjectFileBrowserStyles() {
         left: 0;
         right: 0;
         bottom: 0;
-        height: 51px;
-        border-radius: 7px;
-        background: linear-gradient(180deg, #73d5f5 0%, #36b5e6 55%, #1597d0 100%);
-        box-shadow:
-          inset 0 2px 0 rgba(255, 255, 255, 0.55),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.16),
-          0 1px 0 rgba(0, 0, 0, 0.18);
+        height: 38px;
+        border-radius: 4px;
+        background: #111111;
+        box-shadow: none;
       }
 
       .project-folder-glyph.small {
-        width: 22px;
-        height: 17px;
+        width: 19px;
+        height: 14px;
         filter: none;
       }
 
       .project-folder-glyph.small .project-folder-glyph-tab {
         left: 1px;
         top: 1px;
-        width: 10px;
-        height: 4px;
-        border-radius: 2px 3px 0 0;
+        width: 8px;
+        height: 3px;
+        border-radius: 1px 2px 0 0;
       }
 
       .project-folder-glyph.small .project-folder-glyph-body {
-        height: 14px;
-        border-radius: 3px;
+        height: 11px;
+        border-radius: 2px;
       }
 
       .project-folder-card-name {
-        max-width: 112px;
+        max-width: 108px;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -144,9 +141,9 @@ function ProjectFileBrowserStyles() {
         justify-content: flex-start !important;
         gap: 7px !important;
         border: 0 !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         background: transparent !important;
-        padding: 8px 6px !important;
+        padding: 6px 5px !important;
         text-align: center !important;
         transform: none !important;
       }
@@ -158,22 +155,22 @@ function ProjectFileBrowserStyles() {
 
       .project-file-card-icon-wrap {
         display: flex;
-        height: 62px;
+        height: 47px;
         align-items: center;
         justify-content: center;
       }
 
       .project-music-glyph {
         display: flex;
-        height: 54px;
-        width: 54px;
+        height: 44px;
+        width: 44px;
         align-items: center;
         justify-content: center;
-        border-radius: 12px;
+        border-radius: 8px;
         background: var(--bg-secondary);
         color: var(--text-secondary);
         box-shadow: inset 0 0 0 1px var(--border);
-        font-size: 24px;
+        font-size: 20px;
       }
 
       .project-music-glyph.small {
@@ -184,7 +181,7 @@ function ProjectFileBrowserStyles() {
       }
 
       .project-file-browser .project-file-card-title {
-        max-width: 112px;
+        max-width: 108px;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -197,7 +194,7 @@ function ProjectFileBrowserStyles() {
       }
 
       .project-file-browser .project-file-card-meta {
-        max-width: 112px;
+        max-width: 108px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
