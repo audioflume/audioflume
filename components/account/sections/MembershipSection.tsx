@@ -14,8 +14,28 @@ import {
 } from "../AccountUI";
 import { useMembershipData } from "../hooks/useMembershipData";
 
+function DetailPill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2">
+      <div className="text-[11px] font-medium text-[var(--text-muted)]">{label}</div>
+      <div className="mt-0.5 text-sm font-medium text-[var(--text-primary)]">{value}</div>
+    </div>
+  );
+}
+
+function UsageRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 border-b border-[var(--border)] px-4 py-3.5 last:border-b-0">
+      <div className="text-sm text-[var(--text-muted)]">{label}</div>
+      <div className="text-sm font-medium text-[var(--text-primary)]">{value}</div>
+    </div>
+  );
+}
+
 export default function MembershipSection() {
   const { membership, display, usage, loadState } = useMembershipData();
+
+  const licenseLabel = membership?.license_label || "Royalty-free commercial use";
 
   const plans = [
     ["Starter", "$15 CAD / mo", "Solo creators building a smaller library of client projects."],
@@ -31,31 +51,46 @@ export default function MembershipSection() {
         </div>
       ) : null}
 
-      <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
         <Card>
-          <div className="border-b border-[var(--border)] p-4">
-            <div className="text-xs font-medium text-[var(--text-muted)]">Current plan</div>
-            <div className="mt-2 text-2xl font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-              {display?.plan_label || "Loading membership..."}
+          <div className="p-5 md:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="min-w-0">
+                <div className="text-xs font-medium text-[var(--text-muted)]">Current plan</div>
+                <div className="mt-2 text-[clamp(32px,4vw,52px)] font-medium leading-[0.92] tracking-[-0.07em] text-[var(--text-primary)]">
+                  {display?.plan_label || "Loading membership..."}
+                </div>
+              </div>
+
+              <div className="rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)]">
+                {display?.status_label || "Active"}
+              </div>
             </div>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--text-secondary)]">
-              {membership?.license_label || "Your Filmwave membership controls library access, playlist tools, and commercial licensing."}
-            </p>
-          </div>
-          <div className="grid gap-3 p-4 sm:grid-cols-3">
-            <Info label="Renewal" value={display?.renewal_label || "Loading"} />
-            <Info label="Downloads" value={display?.downloads_label || "Loading"} />
-            <Info label="License" value={membership?.license_label || "Loading"} />
+
+            <div className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
+              <div className="text-xs font-medium text-[var(--text-muted)]">License coverage</div>
+              <div className="mt-2 text-xl font-medium leading-tight tracking-[-0.035em] text-[var(--text-primary)]">
+                {licenseLabel}
+              </div>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+                Your current license is attached to this account and applies to eligible Filmwave downloads used in client, commercial, and creator projects.
+              </p>
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <DetailPill label="Renewal" value={display?.renewal_label || "Loading"} />
+              <DetailPill label="Downloads" value={display?.downloads_label || "Loading"} />
+            </div>
           </div>
         </Card>
 
         <Card>
           <CardTitle title="Usage snapshot" description="Live account signals from your Filmwave workspace." />
-          <div className="grid gap-3 p-4">
-            <Info label="Songs downloaded" value={formatCount(usage?.downloads ?? 0, "download")} />
-            <Info label="Projects created" value={formatCount(usage?.projects ?? 0, "project")} />
-            <Info label="Favorite tracks" value={formatCount(usage?.favorites ?? 0, "saved track")} />
-            <Info label="Playlists" value={formatCount(usage?.playlists ?? 0, "playlist")} />
+          <div className="divide-y divide-[var(--border)]">
+            <UsageRow label="Songs downloaded" value={formatCount(usage?.downloads ?? 0, "download")} />
+            <UsageRow label="Projects created" value={formatCount(usage?.projects ?? 0, "project")} />
+            <UsageRow label="Favorite tracks" value={formatCount(usage?.favorites ?? 0, "saved track")} />
+            <UsageRow label="Playlists" value={formatCount(usage?.playlists ?? 0, "playlist")} />
           </div>
         </Card>
       </div>
