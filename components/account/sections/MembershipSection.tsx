@@ -59,38 +59,7 @@ export default function MembershipSection() {
         </div>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        {plans.map(([name, price, description], index) => {
-          const isCurrentPlan = name === "Studio";
-
-          return (
-            <Card key={name} className="group">
-              <VisualPanel image={membershipPlanImages[index]} />
-              <div className="p-4">
-                <div className="flex min-h-[190px] flex-col">
-                  <div className="flex min-h-7 items-start justify-between gap-3">
-                    <div className="text-sm font-medium text-[var(--text-primary)]">{name}</div>
-                    {isCurrentPlan ? <ActivePill /> : null}
-                  </div>
-                  <div className="mt-2 text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">{price}</div>
-                  <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">{description}</p>
-                  <div className="mt-auto pt-5">
-                    {isCurrentPlan ? (
-                      <CurrentPlanButton />
-                    ) : (
-                      <Button dark>
-                        {name === "Enterprise" ? "Contact sales" : "Coming soon"} <DiagonalArrowIcon />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-
-      <div className="mt-4 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <Card>
           <CardTitle title="Current membership" description="Your active Filmwave plan and license coverage." />
           <div className="grid gap-4 p-4 md:grid-cols-[0.9fr_1.1fr]">
@@ -128,6 +97,37 @@ export default function MembershipSection() {
             <Info label="Playlists" value={formatCount(usage?.playlists ?? 0, "playlist")} />
           </div>
         </Card>
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        {plans.map(([name, price, description], index) => {
+          const isCurrentPlan = name === "Studio";
+
+          return (
+            <Card key={name} className="group">
+              <VisualPanel image={membershipPlanImages[index]} />
+              <div className="p-4">
+                <div className="flex min-h-[190px] flex-col">
+                  <div className="flex min-h-7 items-start justify-between gap-3">
+                    <div className="text-sm font-medium text-[var(--text-primary)]">{name}</div>
+                    {isCurrentPlan ? <ActivePill /> : null}
+                  </div>
+                  <div className="mt-2 text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">{price}</div>
+                  <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">{description}</p>
+                  <div className="mt-auto pt-5">
+                    {isCurrentPlan ? (
+                      <CurrentPlanButton />
+                    ) : (
+                      <Button dark>
+                        {name === "Enterprise" ? "Contact sales" : "Coming soon"} <DiagonalArrowIcon />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          );
+        })}
       </div>
 
       <Card className="mt-4">
