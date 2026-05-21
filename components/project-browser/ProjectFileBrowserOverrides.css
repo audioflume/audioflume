@@ -29,6 +29,26 @@
   color: var(--text-primary) !important;
 }
 
+.project-detail-page {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.project-detail-page > .project-detail-shell {
+  display: flex !important;
+  min-height: calc(100vh - 56px) !important;
+  flex: 1 0 auto !important;
+  flex-direction: column !important;
+}
+
+.project-detail-page .project-tab-panel {
+  flex: 1 0 auto !important;
+}
+
+.project-detail-page .project-footer-wrap {
+  margin-top: auto !important;
+}
+
 .project-folder-glyph-body::before,
 .project-folder-glyph-body::after {
   display: none !important;
