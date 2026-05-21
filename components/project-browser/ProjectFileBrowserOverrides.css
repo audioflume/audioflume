@@ -91,28 +91,6 @@
   display: none !important;
 }
 
-.project-browser-list > div:not(.project-browser-list-head) {
-  position: relative;
-}
-
-.project-browser-list > div:not(.project-browser-list-head)::after {
-  content: "";
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  bottom: 0;
-  height: 1px;
-  background: var(--border);
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.project-browser-list > div:not(.project-browser-list-head):last-child::after,
-.project-browser-list > div:not(.project-browser-list-head):hover::after,
-.project-browser-list > div:not(.project-browser-list-head):has(+ div:not(.project-browser-list-head):hover)::after {
-  display: none;
-}
-
 .project-browser-list .project-browser-row {
   border: 0 !important;
   border-bottom: 0 !important;
