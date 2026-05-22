@@ -5,14 +5,14 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 /* Song upload / edit page account-style pass */
 main:has(.admin-song-form-card) {
-  padding-top: 0 !important;
+  padding-top: 56px !important;
 }
 
 main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
   max-width: 1180px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-top: 88px !important;
+  padding-top: 32px !important;
   padding-left: 32px !important;
   padding-right: 32px !important;
 }
@@ -22,6 +22,7 @@ main:has(.admin-song-form-card) > div > .flex.items-end.justify-between {
   margin-bottom: 32px !important;
   align-items: flex-end !important;
   border-bottom: 1px solid var(--border) !important;
+  padding-top: 28px !important;
   padding-bottom: 24px !important;
 }
 
@@ -29,21 +30,21 @@ main:has(.admin-song-form-card) > div > .flex.items-end.justify-between::before 
   content: "Admin / Song editor";
   position: absolute;
   left: 0;
-  top: -42px;
+  top: 0;
   font-size: 12px;
   color: var(--text-muted);
 }
 
 main:has(.admin-song-form-card) h1 {
-  font-size: clamp(42px, 5vw, 72px) !important;
+  font-size: clamp(36px, 4.2vw, 56px) !important;
   font-weight: 500 !important;
-  line-height: 0.9 !important;
-  letter-spacing: -0.07em !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.06em !important;
 }
 
 main:has(.admin-song-form-card) h1 + p {
   max-width: 560px !important;
-  margin-top: 14px !important;
+  margin-top: 12px !important;
   font-size: 14px !important;
   line-height: 1.6 !important;
   color: var(--text-secondary) !important;
@@ -118,12 +119,12 @@ main:has(.admin-song-form-card) .admin-song-form-icon-btn {
 
 @media (max-width: 760px) {
   main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
-    padding-top: 76px !important;
+    padding-top: 24px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
   }
 
-  main:has(.admin-song-form-card) > div > .flex.items-end.justify-between::before {
-    top: -34px;
+  main:has(.admin-song-form-card) > div > .flex.items-end.justify-between {
+    padding-top: 26px !important;
   }
 }
