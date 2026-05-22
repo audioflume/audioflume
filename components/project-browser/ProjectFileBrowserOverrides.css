@@ -31,7 +31,7 @@
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
-  padding: 0 32px !important;
+  padding: 0 132px 0 32px !important;
 }
 
 .project-tabs-row > button {
@@ -118,9 +118,15 @@
 }
 
 .project-detail-page .project-detail-edit-wrap {
-  top: 176px !important;
-  right: 32px !important;
-  z-index: 8 !important;
+  top: 9px !important;
+  right: 110px !important;
+  z-index: 80 !important;
+}
+
+.project-detail-page .project-detail-edit-wrap > button {
+  height: 32px !important;
+  width: 32px !important;
+  border-radius: 9px !important;
 }
 
 .project-detail-page .project-tab-panel {
@@ -184,10 +190,10 @@
 }
 
 .project-file-browser-actions {
-  position: relative !important;
-  right: auto !important;
-  top: auto !important;
-  z-index: 5 !important;
+  position: absolute !important;
+  right: 32px !important;
+  top: -41px !important;
+  z-index: 60 !important;
   display: flex !important;
   flex-direction: row !important;
   flex-shrink: 0 !important;
@@ -336,11 +342,19 @@
     padding-right: 18px !important;
   }
 
+  .project-tabs-row {
+    padding-right: 120px !important;
+  }
+
   .project-detail-page .project-detail-hero {
     padding-right: 116px !important;
   }
 
   .project-detail-page .project-detail-edit-wrap {
+    right: 96px !important;
+  }
+
+  .project-file-browser-actions {
     right: 18px !important;
   }
 
