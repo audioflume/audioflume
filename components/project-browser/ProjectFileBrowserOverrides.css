@@ -31,7 +31,7 @@
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
-  padding: 0 132px 0 32px !important;
+  padding: 0 140px 0 32px !important;
 }
 
 .project-tabs-row > button {
@@ -50,25 +50,6 @@
 
 .project-tabs-row > button[class*="border-[var(--text-primary)]"],
 .project-tabs-row > button:hover {
-  background: transparent !important;
-  color: var(--text-primary) !important;
-}
-
-.project-download-wrap {
-  margin-left: auto !important;
-}
-
-.project-download-trigger {
-  height: 32px !important;
-  border: 0 !important;
-  background: transparent !important;
-  gap: 7px !important;
-  padding: 0 !important;
-  color: var(--text-primary) !important;
-  font-size: 12px !important;
-}
-
-.project-download-trigger:hover {
   background: transparent !important;
   color: var(--text-primary) !important;
 }
@@ -119,7 +100,7 @@
 
 .project-detail-page .project-detail-edit-wrap {
   top: 9px !important;
-  right: 110px !important;
+  right: 112px !important;
   z-index: 80 !important;
 }
 
@@ -127,6 +108,29 @@
   height: 32px !important;
   width: 32px !important;
   border-radius: 9px !important;
+}
+
+.project-download-wrap {
+  position: absolute !important;
+  top: 226px !important;
+  right: 32px !important;
+  z-index: 6 !important;
+  margin-left: 0 !important;
+}
+
+.project-download-trigger {
+  height: 51px !important;
+  border: 0 !important;
+  background: transparent !important;
+  gap: 7px !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 12px !important;
+}
+
+.project-download-trigger:hover {
+  background: transparent !important;
+  color: var(--text-primary) !important;
 }
 
 .project-detail-page .project-tab-panel {
@@ -157,9 +161,9 @@
   gap: 16px !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
-  border-bottom: 1px solid var(--border) !important;
+  border-bottom: 0 !important;
   background: var(--bg-primary) !important;
-  padding: 0 32px !important;
+  padding: 0 160px 0 32px !important;
 }
 
 .project-detail-page .project-file-browser-top::after {
@@ -192,8 +196,8 @@
 .project-file-browser-actions {
   position: absolute !important;
   right: 32px !important;
-  top: -41px !important;
-  z-index: 60 !important;
+  top: -217px !important;
+  z-index: 70 !important;
   display: flex !important;
   flex-direction: row !important;
   flex-shrink: 0 !important;
@@ -343,7 +347,7 @@
   }
 
   .project-tabs-row {
-    padding-right: 120px !important;
+    padding-right: 126px !important;
   }
 
   .project-detail-page .project-detail-hero {
@@ -351,15 +355,20 @@
   }
 
   .project-detail-page .project-detail-edit-wrap {
-    right: 96px !important;
+    right: 98px !important;
   }
 
   .project-file-browser-actions {
     right: 18px !important;
   }
 
+  .project-download-wrap {
+    right: 18px !important;
+  }
+
   .project-detail-page .project-file-browser-top {
     flex-direction: row !important;
     align-items: center !important;
+    padding-right: 150px !important;
   }
 }
