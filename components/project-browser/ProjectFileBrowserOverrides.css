@@ -125,15 +125,17 @@
   color: var(--text-muted);
 }
 
-.project-file-browser .project-folder-card .project-file-action {
-  position: absolute;
-  right: 2px;
-  top: 2px;
+.project-file-browser .project-folder-card .project-file-action,
+.project-file-browser .project-file-card .project-file-action {
+  position: absolute !important;
+  right: 5px !important;
+  top: 5px !important;
   opacity: 0;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
 
-.project-file-browser .project-folder-card:hover .project-file-action {
+.project-file-browser .project-folder-card:hover .project-file-action,
+.project-file-browser .project-file-card:hover .project-file-action {
   opacity: 1;
 }
 
