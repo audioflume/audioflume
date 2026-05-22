@@ -5,8 +5,9 @@
 }
 
 .admin-account-page-header {
-  min-height: 32px;
+  min-height: 49px;
   align-items: center;
+  padding-bottom: 16px;
 }
 
 .admin-original-page-header-hidden {
@@ -15,7 +16,7 @@
 
 /* Admin dashboard */
 main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] {
-  padding-top: 88px !important;
+  padding-top: 56px !important;
 }
 
 /* Song upload / edit page account-style pass */
@@ -27,7 +28,7 @@ main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
   max-width: 1180px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-top: 88px !important;
+  padding-top: 56px !important;
   padding-left: 32px !important;
   padding-right: 32px !important;
 }
@@ -124,7 +125,7 @@ main:has(.admin-song-form-card) .admin-song-form-icon-btn {
 
 @media (max-width: 760px) {
   main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
-    padding-top: 88px !important;
+    padding-top: 56px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
   }
