@@ -128,24 +128,29 @@
 .project-file-browser .project-folder-card .project-file-action,
 .project-file-browser .project-file-card .project-file-action {
   position: absolute !important;
-  right: 4px !important;
-  top: 1px !important;
+  right: 8px !important;
+  top: 8px !important;
   z-index: 2;
   display: flex !important;
-  height: 24px !important;
-  width: 28px !important;
+  width: 32px !important;
+  height: 32px !important;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: 8px !important;
-  background: color-mix(in srgb, var(--bg-primary) 82%, transparent) !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 999px !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.72) !important;
+  cursor: pointer;
   opacity: 0;
-  font-size: 14px !important;
+  font-size: 15px !important;
   line-height: 1;
-  color: var(--text-secondary) !important;
-  backdrop-filter: blur(10px);
-  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  backdrop-filter: blur(12px);
+  box-shadow: none !important;
+  transition:
+    opacity 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .project-file-browser .project-folder-card:hover .project-file-action,
@@ -155,9 +160,8 @@
 
 .project-file-browser .project-folder-card .project-file-action:hover,
 .project-file-browser .project-file-card .project-file-action:hover {
-  border-color: var(--border) !important;
-  background: var(--bg-secondary) !important;
-  color: var(--text-primary) !important;
+  background-color: white !important;
+  color: black !important;
 }
 
 .project-browser-list {
