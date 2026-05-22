@@ -41,12 +41,57 @@
   flex-direction: column !important;
 }
 
+.project-detail-page .project-detail-hero {
+  position: absolute !important;
+  top: 102px !important;
+  left: 32px !important;
+  right: 32px !important;
+  z-index: 1 !important;
+  display: block !important;
+  min-height: 180px !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 34px 0 28px !important;
+  pointer-events: none;
+}
+
+.project-detail-page .project-detail-title,
+.project-detail-page .project-detail-meta,
+.project-detail-page .project-detail-description,
+.project-detail-page .project-detail-kicker {
+  pointer-events: auto;
+}
+
+.project-detail-page .project-detail-title {
+  font-size: 56px !important;
+}
+
 .project-detail-page .project-tab-panel {
   flex: 1 0 auto !important;
 }
 
 .project-detail-page .project-footer-wrap {
   margin-top: auto !important;
+}
+
+.project-detail-page .project-file-browser {
+  padding: 0 !important;
+}
+
+.project-detail-page .project-file-browser-top {
+  min-height: 51px !important;
+  align-items: center !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 0 32px !important;
+}
+
+.project-detail-page .project-breadcrumbs.project-path {
+  margin-top: 0 !important;
+}
+
+.project-detail-page .project-file-browser-section {
+  margin-top: 180px !important;
+  border-top: 1px solid var(--border) !important;
+  padding: 36px 32px 0 !important;
 }
 
 .project-folder-glyph-body::before,
@@ -74,10 +119,6 @@
   background: var(--bg-hover-strong);
   padding: 5px 8px;
   margin: -5px -8px;
-}
-
-.project-file-browser-section {
-  padding-top: 24px !important;
 }
 
 .project-browser-grid {
@@ -290,6 +331,17 @@
 }
 
 @media (max-width: 760px) {
+  .project-detail-page .project-detail-hero {
+    left: 18px !important;
+    right: 18px !important;
+  }
+
+  .project-detail-page .project-file-browser-top,
+  .project-detail-page .project-file-browser-section {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
   .project-file-browser-top {
     flex-direction: row !important;
     align-items: center !important;
