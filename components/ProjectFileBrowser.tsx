@@ -45,6 +45,7 @@ type ProjectFileBrowserProps = {
   onViewModeChange: (mode: ProjectFileView) => void;
   onOpenFolder: (folderId: number | null) => void;
   onMoveSong: (song: ProjectSong) => void;
+  onMoveFolder: (folder: ProjectFolder) => void;
   onCreateFolder: () => void;
 };
 
@@ -133,10 +134,12 @@ function DraggableFolderItem({
   folder,
   viewMode,
   onOpen,
+  onMove,
 }: {
   folder: ProjectFolder;
   viewMode: ProjectFileView;
   onOpen: (folderId: number) => void;
+  onMove: (folder: ProjectFolder) => void;
 }) {
   const draggable = useDraggable({
     id: getFolderDragId(folder.id),
@@ -158,7 +161,7 @@ function DraggableFolderItem({
       {...draggable.attributes}
       {...draggable.listeners}
     >
-      <ProjectFolderCard folder={folder} viewMode={viewMode} onOpen={onOpen} />
+      <ProjectFolderCard folder={folder} viewMode={viewMode} onOpen={onOpen} onMove={onMove} />
     </div>
   );
 }
@@ -242,7 +245,7 @@ function DragPreview({
   if (dragData.kind === "folder" && folder) {
     return (
       <div className={`project-file-browser project-drag-preview ${modeClass}`}>
-        <ProjectFolderCard folder={folder} viewMode="grid" onOpen={() => {}} />
+        <ProjectFolderCard folder={folder} viewMode="grid" onOpen={() => {}} onMove={() => {}} />
       </div>
     );
   }
@@ -269,6 +272,7 @@ export default function ProjectFileBrowser({
   onViewModeChange,
   onOpenFolder,
   onMoveSong,
+  onMoveFolder,
   onCreateFolder,
 }: ProjectFileBrowserProps) {
   const [folderParentOverrides, setFolderParentOverrides] = useState<Map<number, number | null>>(
@@ -623,7 +627,7 @@ export default function ProjectFileBrowser({
             viewMode === "grid" ? (
               <div className="project-browser-grid">
                 {visibleFolders.map((folder) => (
-                  <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
+                  <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onMove={onMoveFolder} />
                 ))}
                 {visibleSongs.map((song) => (
                   <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
@@ -638,7 +642,7 @@ export default function ProjectFileBrowser({
                   <span />
                 </div>
                 {visibleFolders.map((folder) => (
-                  <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} />
+                  <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onMove={onMoveFolder} />
                 ))}
                 {visibleSongs.map((song) => (
                   <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
