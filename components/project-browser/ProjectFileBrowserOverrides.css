@@ -222,8 +222,8 @@
 
 .project-browser-grid {
   grid-template-columns: repeat(auto-fill, minmax(132px, 132px)) !important;
-  column-gap: 18px !important;
-  row-gap: 26px !important;
+  column-gap: 0px !important;
+  row-gap: 0px !important;
   justify-content: start !important;
   padding-top: 0 !important;
 }
