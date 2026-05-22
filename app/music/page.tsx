@@ -42,7 +42,7 @@ import SongCard from "@/components/SongCard";
 import MusicIcon from "@/components/icons/MusicIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
-  iconButtonClass,
+  borderedIconButton9Class,
   primaryPillButtonClass,
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
@@ -592,16 +592,15 @@ export default function MusicPage() {
               type="button"
               onClick={() => {
                 const shuffledSongs = shuffleSongList(filteredSongs);
-
                 setShuffleOrderIds(
                   shuffledSongs.map((song, index) =>
                     getSongStableId(song, index),
                   ),
                 );
               }}
-              className={`${iconButtonClass} ml-auto h-8 w-8 shrink-0 ${
+              className={`${borderedIconButton9Class} ml-auto shrink-0 ${
                 shuffleActive
-                  ? "bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+                  ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)] border-[var(--border-hover)]"
                   : ""
               }`}
               aria-label="Shuffle songs"
