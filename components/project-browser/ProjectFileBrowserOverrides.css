@@ -282,7 +282,7 @@
   opacity: 1;
 }
 
-/* Grid drag-over: use outline (fine for grid cards with border-radius) */
+/* Grid drag-over */
 .project-drag-over-folder .project-folder-card {
   background: var(--bg-hover-strong) !important;
   border-radius: 10px !important;
@@ -290,14 +290,15 @@
   outline-offset: 2px !important;
 }
 
-/* List drag-over: use box-shadow so it respects border-radius */
+/* List drag-over — matches grid: outline + offset creates the white gap */
 .project-drag-over-folder .project-folder-row {
   background: var(--bg-hover-strong) !important;
   border-radius: 8px !important;
-  box-shadow: 0 0 0 1px var(--border-hover, var(--border)) !important;
+  outline: 1px solid var(--border-hover, var(--border)) !important;
+  outline-offset: 2px !important;
 }
 
-/* List view song icon wrap — position relative so the play button overlays */
+/* List view song icon wrap */
 .project-file-list-icon-wrap {
   position: relative !important;
   display: flex !important;
@@ -308,7 +309,7 @@
   height: 22px !important;
 }
 
-/* List-specific preview button — smaller to fit the 22px thumbnail */
+/* List-specific preview button */
 .project-preview-button-list {
   --project-preview-track: rgba(255, 255, 255, 0.18);
   position: absolute !important;
