@@ -38,16 +38,26 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
   return null;
 }
 
+function hasAccountWidthClasses(element: HTMLElement) {
+  return element.classList.contains("mx-auto") && element.classList.contains("max-w-[1180px]");
+}
+
+function getDashboardContainer() {
+  const main = document.querySelector("main");
+  const section = main?.querySelector(":scope > section");
+  const directChildren = Array.from(section?.children ?? []) as HTMLElement[];
+
+  return directChildren.find(hasAccountWidthClasses) ?? null;
+}
+
+function getSongEditorContainer() {
+  const card = document.querySelector<HTMLElement>(".admin-song-form-card");
+  return card?.closest("main")?.querySelector<HTMLElement>(":scope > div") ?? null;
+}
+
 function getPageContainer(pathname: string) {
-  if (pathname === "/admin") {
-    return document.querySelector<HTMLElement>("main > section > div.mx-auto.max-w-[1180px]");
-  }
-
-  if (pathname.startsWith("/admin/songs")) {
-    const card = document.querySelector<HTMLElement>(".admin-song-form-card");
-    return card?.closest("main")?.querySelector<HTMLElement>(":scope > div") ?? null;
-  }
-
+  if (pathname === "/admin") return getDashboardContainer();
+  if (pathname.startsWith("/admin/songs")) return getSongEditorContainer();
   return null;
 }
 
