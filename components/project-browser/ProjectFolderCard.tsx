@@ -79,9 +79,7 @@ export default function ProjectFolderCard({
         <FolderGlyph />
       </span>
       <span className="project-folder-card-name">{folder.name}</span>
-      <span className="project-folder-card-meta">
-        {totalItems} {totalItems === 1 ? "item" : "items"}
-      </span>
+      <span className="project-folder-card-meta">Folder</span>
     </div>
   );
 }
