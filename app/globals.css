@@ -267,6 +267,64 @@ body.sidebar-collapsed {
   --sidebar-width: var(--sidebar-width-collapsed);
 }
 
+/* ─── Shared icon buttons ─────────────────────────── */
+
+.filmwave-icon-button,
+.playlist-icon-btn,
+.project-tabs-row-actions .project-new-folder-button,
+.project-tabs-row-actions .project-view-toggle-button {
+  display: inline-flex !important;
+  height: 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  cursor: pointer !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 9px !important;
+  background: var(--bg-secondary) !important;
+  padding: 0 !important;
+  color: var(--icon-color) !important;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease !important;
+}
+
+.filmwave-icon-button:hover,
+.filmwave-icon-button.is-open,
+.filmwave-icon-button[aria-pressed="true"],
+.playlist-icon-btn:hover,
+.playlist-icon-btn.is-open,
+.playlist-icon-btn[aria-pressed="true"],
+.project-tabs-row-actions .project-new-folder-button:hover,
+.project-tabs-row-actions .project-view-toggle-button:hover {
+  border-color: var(--border-hover) !important;
+  background: var(--icon-button-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.filmwave-icon-button svg,
+.playlist-icon-btn svg,
+.project-tabs-row-actions .project-new-folder-button svg,
+.project-tabs-row-actions .project-view-toggle-button svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.filmwave-icon-button-plain {
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+.filmwave-icon-button-group,
+.playlists-control-right,
+.project-tabs-row-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
 /* ─── Dropdown shell ─────────────────────────── */
 
 .filmwave-dropdown-shell {
