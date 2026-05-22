@@ -99,9 +99,10 @@
 }
 
 .project-detail-page .project-detail-edit-wrap {
-  top: 9px !important;
+  position: fixed !important;
+  top: 83px !important;
   right: 112px !important;
-  z-index: 80 !important;
+  z-index: 120 !important;
 }
 
 .project-detail-page .project-detail-edit-wrap > button {
@@ -159,6 +160,7 @@
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
+  overflow: visible !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 0 !important;
@@ -177,7 +179,7 @@
 .project-detail-page .project-breadcrumbs.project-path {
   margin-top: 0 !important;
   flex-wrap: nowrap !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   font-size: 12px !important;
 }
 
@@ -193,11 +195,18 @@
   color: var(--text-primary) !important;
 }
 
+.project-breadcrumbs.project-path button.is-drag-over {
+  border-radius: 999px !important;
+  background: var(--bg-hover-strong) !important;
+  padding: 5px 8px !important;
+  margin: -5px -8px !important;
+}
+
 .project-file-browser-actions {
-  position: absolute !important;
+  position: fixed !important;
   right: 32px !important;
-  top: -217px !important;
-  z-index: 70 !important;
+  top: 83px !important;
+  z-index: 120 !important;
   display: flex !important;
   flex-direction: row !important;
   flex-shrink: 0 !important;
@@ -207,10 +216,22 @@
 
 .project-view-toggle-button,
 .project-new-folder-button {
+  display: flex !important;
   height: 32px !important;
   width: 32px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--border) !important;
   border-radius: 9px !important;
   background: var(--bg-primary) !important;
+  color: var(--icon-color) !important;
+}
+
+.project-view-toggle-button:hover,
+.project-new-folder-button:hover {
+  border-color: var(--text-muted) !important;
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
 }
 
 .project-detail-page .project-file-browser-section {
@@ -283,6 +304,17 @@
 .project-file-browser .project-folder-card:hover .project-file-action,
 .project-file-browser .project-file-card:hover .project-file-action {
   opacity: 1;
+}
+
+.project-drag-over-folder .project-folder-card,
+.project-drag-over-folder .project-folder-row {
+  background: var(--bg-hover-strong) !important;
+  outline: 1px solid var(--border-hover, var(--border)) !important;
+  outline-offset: 2px !important;
+}
+
+.project-drag-over-folder .project-folder-card {
+  border-radius: 10px !important;
 }
 
 .project-browser-list {
