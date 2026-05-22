@@ -95,7 +95,7 @@
 }
 
 .project-detail-page .project-detail-edit-wrap {
-  top: 144px !important;
+  top: 211px !important;
   right: 116px !important;
   z-index: 8 !important;
 }
@@ -197,7 +197,7 @@
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
-  padding-top: 64px !important;
+  padding-top: 0 !important;
 }
 
 .project-folder-glyph-body::before,
@@ -210,6 +210,7 @@
   column-gap: 18px !important;
   row-gap: 26px !important;
   justify-content: start !important;
+  padding-top: 48px !important;
 }
 
 .project-browser-grid > div,
@@ -270,6 +271,7 @@
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
+  padding-top: 48px !important;
 }
 
 .project-browser-list-head {
