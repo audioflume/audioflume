@@ -15,13 +15,6 @@ type ProjectSong = Song & {
   project_folder_id?: number | null;
 };
 
-function formatSongMeta(song: ProjectSong) {
-  const parts = [song.artist, "Music"];
-  if (song.key) parts.push(song.key);
-  if (song.bpm) parts.push(`${song.bpm} BPM`);
-  return parts.filter(Boolean).join(" · ");
-}
-
 export default function ProjectSongFileCard({
   song,
   viewMode,
@@ -89,7 +82,7 @@ export default function ProjectSongFileCard({
         </button>
       </div>
       <div className="project-file-card-title">{song.title}</div>
-      <div className="project-file-card-meta">{formatSongMeta(song)}</div>
+      <div className="project-file-card-meta">{song.artist || "Unknown Artist"}</div>
     </div>
   );
 }
