@@ -11,6 +11,8 @@ import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
 import DownloadIconSmall from "@/components/icons/DownloadIconSmall";
 import EditIcon from "@/components/icons/EditIcon";
+import GridViewIcon from "@/components/icons/GridViewIcon";
+import ListViewIcon from "@/components/icons/ListViewIcon";
 import {
   borderedIconButtonClass,
   modalPrimaryButtonClass,
@@ -402,7 +404,7 @@ export default function ProjectDetailPageClient() {
           asset.id === song.project_asset_id ? { ...asset, folder_id: previousFolderId } : asset,
         ),
       );
-      showToast(err instanceof Error ? err.message : "Couldn’t move file");
+      showToast(err instanceof Error ? err.message : "Couldn't move file");
     } finally {
       setMovingSong(null);
     }
@@ -434,7 +436,7 @@ export default function ProjectDetailPageClient() {
       setCreateFolderOpen(false);
       showToast("Folder created");
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "Couldn’t create folder");
+      showToast(err instanceof Error ? err.message : "Couldn't create folder");
     } finally {
       setCreatingFolder(false);
     }
@@ -501,7 +503,7 @@ export default function ProjectDetailPageClient() {
       const data = text ? JSON.parse(text) : null;
 
       if (!res.ok) {
-        showToast("Couldn’t save project");
+        showToast("Couldn't save project");
         return;
       }
 
@@ -515,7 +517,7 @@ export default function ProjectDetailPageClient() {
       setEditingProject(null);
       showToast("Project saved");
     } catch {
-      showToast("Couldn’t save project");
+      showToast("Couldn't save project");
     } finally {
       setIsSavingProject(false);
     }
@@ -542,10 +544,10 @@ export default function ProjectDetailPageClient() {
         showToast("Project deleted");
         router.push("/music");
       } else {
-        showToast("Couldn’t delete project");
+        showToast("Couldn't delete project");
       }
     } catch {
-      showToast("Couldn’t delete project");
+      showToast("Couldn't delete project");
     } finally {
       setDeletingProjectId(null);
     }
@@ -570,13 +572,6 @@ export default function ProjectDetailPageClient() {
           position: relative;
           z-index: 1;
           padding: 0 32px;
-        }
-
-        .project-detail-edit-wrap {
-          position: absolute;
-          top: 24px;
-          right: 32px;
-          z-index: 3;
         }
 
         .project-detail-hero {
@@ -640,9 +635,6 @@ export default function ProjectDetailPageClient() {
           background: var(--bg-primary);
           padding: 0 32px;
         }
-
-        .project-download-wrap { margin-left: auto; }
-        .project-download-trigger { gap: 7px; }
 
         .project-tab-skeleton {
           width: 86px;
@@ -932,7 +924,6 @@ export default function ProjectDetailPageClient() {
 
         @media (max-width: 760px) {
           .project-detail-shell { padding: 0 18px; }
-          .project-detail-edit-wrap { right: 18px; }
           .project-tabs-row,
           .project-sort-row,
           .project-tab-panel { margin-left: -18px; margin-right: -18px; }
@@ -948,19 +939,6 @@ export default function ProjectDetailPageClient() {
 
       <main className="project-detail-page">
         <div className="project-detail-shell">
-          {project && !loading && (
-            <div className="project-detail-edit-wrap">
-              <button
-                type="button"
-                onClick={openEdit}
-                className={borderedIconButtonClass}
-                aria-label={`Edit ${project.name}`}
-              >
-                <EditIcon />
-              </button>
-            </div>
-          )}
-
           {loading ? (
             <ProjectPageSkeleton />
           ) : error ? (
@@ -1005,47 +983,40 @@ export default function ProjectDetailPageClient() {
                   );
                 })}
 
-                <div className="project-download-wrap">
-                  <DropdownShell
-                    open={downloadMenuOpen}
-                    onOpenChange={setDownloadMenuOpen}
-                    placement="bottom-end"
-                    offsetAmount={8}
-                    flippedOffsetAmount={8}
-                    collisionPadding={{ top: 70, right: 32, bottom: playerVisible ? 85 : 16, left: 16 }}
-                    trigger={({ open }) => (
-                      <button
-                        type="button"
-                        className={`${filterTriggerBaseClass} project-download-trigger ${open ? filterTriggerActiveClass : filterTriggerInactiveClass}`}
-                        aria-label="Download project files"
-                        aria-expanded={open}
-                      >
-                        <span>Download</span>
-                        <DownloadIconSmall />
-                      </button>
-                    )}
+                <div className="project-tabs-row-actions">
+                  <button
+                    type="button"
+                    onClick={openEdit}
+                    className={borderedIconButtonClass}
+                    aria-label={`Edit ${project.name}`}
                   >
-                    {activeTab !== "overview" && (
+                    <EditIcon />
+                  </button>
+                  {activeTab === "overview" && (
+                    <>
                       <button
                         type="button"
-                        onClick={() => {
-                          setDownloadMenuOpen(false);
-                          handleDownloadActiveTab();
-                        }}
+                        className="project-view-toggle-button"
+                        aria-label={fileViewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
+                        title={fileViewMode === "grid" ? "List view" : "Grid view"}
+                        onClick={() => setFileViewMode(fileViewMode === "grid" ? "list" : "grid")}
                       >
-                        {activeDownloadLabel}
+                        {fileViewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
                       </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setDownloadMenuOpen(false);
-                        downloadFiles(projectSongs, "No project files to download yet");
-                      }}
-                    >
-                      Download all project files
-                    </button>
-                  </DropdownShell>
+                      <button
+                        type="button"
+                        className="project-new-folder-button"
+                        onClick={() => setCreateFolderOpen(true)}
+                        aria-label="New folder"
+                        title="New folder"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                          <path d="M12 5v14" />
+                          <path d="M5 12h14" />
+                        </svg>
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -1074,10 +1045,39 @@ export default function ProjectDetailPageClient() {
                     error={projectFoldersError || projectSongsError}
                     activeFolderId={activeFolderId}
                     viewMode={fileViewMode}
-                    onViewModeChange={setFileViewMode}
                     onOpenFolder={setActiveFolder}
                     onMoveSong={setMovingSong}
-                    onCreateFolder={() => setCreateFolderOpen(true)}
+                    downloadSlot={
+                      <DropdownShell
+                        open={downloadMenuOpen}
+                        onOpenChange={setDownloadMenuOpen}
+                        placement="bottom-end"
+                        offsetAmount={8}
+                        flippedOffsetAmount={8}
+                        collisionPadding={{ top: 70, right: 32, bottom: playerVisible ? 85 : 16, left: 16 }}
+                        trigger={({ open }) => (
+                          <button
+                            type="button"
+                            className={`${filterTriggerBaseClass} project-download-trigger ${open ? filterTriggerActiveClass : filterTriggerInactiveClass}`}
+                            aria-label="Download project files"
+                            aria-expanded={open}
+                          >
+                            <span>Download</span>
+                            <DownloadIconSmall />
+                          </button>
+                        )}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDownloadMenuOpen(false);
+                            downloadFiles(projectSongs, "No project files to download yet");
+                          }}
+                        >
+                          Download all project files
+                        </button>
+                      </DropdownShell>
+                    }
                   />
                 ) : activeTab === "music" ? (
                   <MusicTabState
