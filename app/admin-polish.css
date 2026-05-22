@@ -9,6 +9,7 @@ main:has(.admin-song-form-card) {
 }
 
 main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
+  position: relative !important;
   max-width: 1180px !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -17,34 +18,50 @@ main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
   padding-right: 32px !important;
 }
 
-main:has(.admin-song-form-card) > div > .flex.items-end.justify-between {
-  position: relative !important;
-  margin-bottom: 32px !important;
-  align-items: flex-end !important;
-  border-bottom: 1px solid var(--border) !important;
-  padding-top: 28px !important;
-  padding-bottom: 24px !important;
-}
-
-main:has(.admin-song-form-card) > div > .flex.items-end.justify-between::before {
-  content: "Admin / Song editor";
+main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"]::before {
+  content: "Admin / Song Editor";
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 32px;
+  right: 32px;
+  top: 32px;
   font-size: 12px;
   color: var(--text-muted);
 }
 
+main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"]::after {
+  content: "";
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  top: 63px;
+  height: 1px;
+  background: var(--border);
+}
+
+main:has(.admin-song-form-card) > div > .flex.items-end.justify-between {
+  position: relative !important;
+  margin-top: 88px !important;
+  margin-bottom: 32px !important;
+  align-items: flex-end !important;
+  border-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+main:has(.admin-song-form-card) > div > .flex.items-end.justify-between::before {
+  content: none !important;
+}
+
 main:has(.admin-song-form-card) h1 {
-  font-size: clamp(36px, 4.2vw, 56px) !important;
+  font-size: 34px !important;
   font-weight: 500 !important;
-  line-height: 0.95 !important;
-  letter-spacing: -0.06em !important;
+  line-height: 1 !important;
+  letter-spacing: -0.045em !important;
 }
 
 main:has(.admin-song-form-card) h1 + p {
   max-width: 560px !important;
-  margin-top: 12px !important;
+  margin-top: 8px !important;
   font-size: 14px !important;
   line-height: 1.6 !important;
   color: var(--text-secondary) !important;
@@ -119,12 +136,18 @@ main:has(.admin-song-form-card) .admin-song-form-icon-btn {
 
 @media (max-width: 760px) {
   main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
-    padding-top: 24px !important;
+    padding-top: 32px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
   }
 
-  main:has(.admin-song-form-card) > div > .flex.items-end.justify-between {
-    padding-top: 26px !important;
+  main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"]::before {
+    left: 18px;
+    right: 18px;
+  }
+
+  main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"]::after {
+    left: 18px;
+    right: 18px;
   }
 }
