@@ -80,6 +80,52 @@
   padding-top: 24px !important;
 }
 
+.project-browser-grid {
+  grid-template-columns: repeat(auto-fill, minmax(116px, 116px)) !important;
+  column-gap: 28px !important;
+  row-gap: 30px !important;
+  justify-content: start !important;
+}
+
+.project-browser-grid > div {
+  width: 116px !important;
+}
+
+.project-file-browser .project-folder-card,
+.project-file-browser .project-file-card {
+  position: relative !important;
+  width: 116px !important;
+  min-height: 112px !important;
+  padding: 6px 5px !important;
+  gap: 10px !important;
+}
+
+.project-folder-card-icon-wrap,
+.project-file-card-icon-wrap {
+  display: flex !important;
+  height: 54px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.project-folder-card-name,
+.project-file-browser .project-file-card-title,
+.project-file-browser .project-file-card-meta {
+  max-width: 106px !important;
+}
+
+.project-file-browser .project-folder-card .project-file-action {
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.project-file-browser .project-folder-card:hover .project-file-action {
+  opacity: 1;
+}
+
 .project-browser-list {
   overflow: visible !important;
   border: 0 !important;
@@ -104,6 +150,20 @@
 
 .project-browser-list .project-browser-row:hover {
   border-radius: 8px !important;
+}
+
+.project-folder-action-wrap {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.project-browser-row .project-folder-action-wrap .project-file-action {
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.project-browser-row:hover .project-folder-action-wrap .project-file-action {
+  opacity: 1;
 }
 
 .project-file-browser [role="button"] {
