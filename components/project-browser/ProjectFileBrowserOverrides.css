@@ -97,10 +97,6 @@
   color: var(--text-secondary) !important;
 }
 
-.project-detail-page .project-detail-meta span:first-child::after {
-  content: "  •  56 files";
-}
-
 .project-detail-page .project-detail-description {
   display: none !important;
 }
