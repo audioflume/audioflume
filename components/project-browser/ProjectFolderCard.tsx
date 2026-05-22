@@ -15,12 +15,19 @@ export default function ProjectFolderCard({
   folder,
   viewMode,
   onOpen,
+  onMove,
 }: {
   folder: ProjectFolder;
   viewMode: ProjectFileView;
   onOpen: (folderId: number) => void;
+  onMove?: (folder: ProjectFolder) => void;
 }) {
   const totalItems = (folder.child_count ?? 0) + (folder.asset_count ?? 0);
+
+  function handleMove(event: React.MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+    onMove?.(folder);
+  }
 
   if (viewMode === "list") {
     return (
@@ -31,14 +38,23 @@ export default function ProjectFolderCard({
         </span>
         <span className="project-browser-row-muted">{totalItems || "--"}</span>
         <span className="project-browser-row-muted">{getAssetTypeLabel(folder.asset_type)}</span>
-        <span />
+        <span className="project-folder-action-wrap">
+          <button type="button" className="project-file-action" onClick={handleMove} aria-label={`Move ${folder.name}`}>
+            ...
+          </button>
+        </span>
       </button>
     );
   }
 
   return (
     <button type="button" className="project-folder-card" onClick={() => onOpen(folder.id)}>
-      <FolderGlyph />
+      <button type="button" className="project-file-action" onClick={handleMove} aria-label={`Move ${folder.name}`}>
+        ...
+      </button>
+      <span className="project-folder-card-icon-wrap">
+        <FolderGlyph />
+      </span>
       <span className="project-folder-card-name">{folder.name}</span>
       <span className="project-folder-card-meta">
         {totalItems} {totalItems === 1 ? "item" : "items"}
