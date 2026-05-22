@@ -572,6 +572,7 @@ export default function ProjectDetailPageClient() {
                     onClick={openEdit}
                     className={borderedIconButton9Class}
                     aria-label={`Edit ${project.name}`}
+                    title="Edit"
                   >
                     <EditIcon />
                   </button>
