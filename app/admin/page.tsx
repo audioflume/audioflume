@@ -22,16 +22,6 @@ import {
 import AdminSongRow from "@/components/admin/AdminSongRow";
 import { songHasIssue } from "@/lib/songHealth";
 
-type QuickAction = {
-  label: string;
-  href: string;
-  kicker: string;
-  description: string;
-  icon: "upload" | "music" | "waveform" | "folder";
-  imageUrl: string;
-  imagePosition?: string;
-};
-
 type StatusTone = "success" | "warning" | "error";
 type IssueTone = StatusTone | "neutral";
 
@@ -40,6 +30,23 @@ type SystemHealthItem = {
   label: string;
   tone: StatusTone;
   message: string;
+};
+
+type QuickAction = {
+  label: string;
+  href: string;
+  section: string;
+  description: string;
+  icon: "upload" | "music" | "waveform" | "folder";
+};
+
+type LibraryStats = {
+  totalSongs: number;
+  missingCoverArt: number;
+  missingSongInfo: number;
+  missingWaveformPeaks: number;
+  missingTags: number;
+  missingEditPoints: number;
 };
 
 const STATUS_COLORS = {
@@ -53,6 +60,9 @@ const HEALTH_PROGRESS_COLORS = {
   warning: "#d9a441",
   error: "#dc584f",
 };
+
+const ADMIN_HERO_IMAGE =
+  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80";
 
 const DEFAULT_SYSTEM_STATUSES: SystemHealthItem[] = [
   { key: "supabase", label: "Supabase connected", tone: "warning", message: "Not checked yet." },
@@ -72,90 +82,42 @@ const quickActions: QuickAction[] = [
   {
     label: "New Song Upload",
     href: "/admin/songs/new",
-    kicker: "Upload / Metadata",
+    section: "Upload",
     description: "Upload music, cover art, stems, and metadata.",
     icon: "upload",
-    imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
-    imagePosition: "center",
   },
   {
     label: "Music Library",
     href: "/admin/music-library",
-    kicker: "Library / Review",
+    section: "Database",
     description: "Search, preview, edit, and manage uploaded songs.",
     icon: "music",
-    imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1200&q=80",
-    imagePosition: "center",
   },
   {
     label: "SFX Upload",
     href: "/admin/sfx/new",
-    kicker: "SFX / Metadata",
+    section: "Upload",
     description: "Upload sound effects and metadata.",
     icon: "waveform",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1200&q=80",
-    imagePosition: "center",
   },
   {
     label: "Asset Manager",
     href: "/admin/assets",
-    kicker: "Assets / Delivery",
+    section: "Assets",
     description: "Manage downloadable visual assets.",
     icon: "folder",
-    imageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
-    imagePosition: "center",
   },
 ];
-
-function StatusIcon({ tone, icon }: { tone: StatusTone; icon: "check" | "alert" | "failed" }) {
-  const color = STATUS_COLORS[tone];
-  return (
-    <div className="flex h-5 w-5 items-center justify-center rounded-full" style={{ backgroundColor: `${color}1f`, color }}>
-      {icon === "check" && <CheckIcon size={12} />}
-      {icon === "alert" && <AlertIcon />}
-      {icon === "failed" && <FailedIcon />}
-    </div>
-  );
-}
-
-function TaskStatusIcon({ tone }: { tone: IssueTone }) {
-  if (tone === "neutral") {
-    return (
-      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--bg-secondary)] text-[var(--text-muted)]">
-        <AlertIcon />
-      </div>
-    );
-  }
-  return <StatusIcon tone={tone} icon={tone === "success" ? "check" : tone === "error" ? "failed" : "alert"} />;
-}
-
-function HealthStatusIcon({ status }: { status: StatusTone }) {
-  const color = STATUS_COLORS[status];
-  return (
-    <div className="flex h-5 w-5 items-center justify-center rounded-md" style={{ backgroundColor: `${color}1f`, color }}>
-      {status === "success" && <CheckIcon size={12} />}
-      {status === "warning" && <AlertIcon />}
-      {status === "error" && <FailedIcon />}
-    </div>
-  );
-}
-
-function ActionIcon({ icon }: { icon: QuickAction["icon"] }) {
-  if (icon === "upload") return <UploadIcon size={13} />;
-  if (icon === "music") return <MusicIcon size={13} />;
-  if (icon === "waveform") return <WaveformIcon size={13} />;
-  return <FolderIcon size={13} />;
-}
 
 function getProgressColor(progress: number) {
   if (progress <= 0) return HEALTH_PROGRESS_COLORS.error;
   if (progress >= 100) return HEALTH_PROGRESS_COLORS.success;
+
   if (progress < 50) {
-    const ratio = progress / 50;
-    return interpolateHexColor(HEALTH_PROGRESS_COLORS.error, HEALTH_PROGRESS_COLORS.warning, ratio);
+    return interpolateHexColor(HEALTH_PROGRESS_COLORS.error, HEALTH_PROGRESS_COLORS.warning, progress / 50);
   }
-  const ratio = (progress - 50) / 50;
-  return interpolateHexColor(HEALTH_PROGRESS_COLORS.warning, HEALTH_PROGRESS_COLORS.success, ratio);
+
+  return interpolateHexColor(HEALTH_PROGRESS_COLORS.warning, HEALTH_PROGRESS_COLORS.success, (progress - 50) / 50);
 }
 
 function interpolateHexColor(start: string, end: string, ratio: number) {
@@ -164,6 +126,7 @@ function interpolateHexColor(start: string, end: string, ratio: number) {
   const r = Math.round(startRgb.r + (endRgb.r - startRgb.r) * ratio);
   const g = Math.round(startRgb.g + (endRgb.g - startRgb.g) * ratio);
   const b = Math.round(startRgb.b + (endRgb.b - startRgb.b) * ratio);
+
   return `rgb(${r}, ${g}, ${b})`;
 }
 
@@ -176,120 +139,204 @@ function hexToRgb(hex: string) {
   };
 }
 
+function StatusIcon({ tone, icon }: { tone: StatusTone; icon: "check" | "alert" | "failed" }) {
+  const color = STATUS_COLORS[tone];
+
+  return (
+    <div className="flex h-5 w-5 items-center justify-center rounded-full" style={{ backgroundColor: `${color}1f`, color }}>
+      {icon === "check" && <CheckIcon size={12} />}
+      {icon === "alert" && <AlertIcon />}
+      {icon === "failed" && <FailedIcon />}
+    </div>
+  );
+}
+
+function HealthStatusIcon({ status }: { status: StatusTone }) {
+  const color = STATUS_COLORS[status];
+
+  return (
+    <div className="flex h-5 w-5 items-center justify-center rounded-md" style={{ backgroundColor: `${color}1f`, color }}>
+      {status === "success" && <CheckIcon size={12} />}
+      {status === "warning" && <AlertIcon />}
+      {status === "error" && <FailedIcon />}
+    </div>
+  );
+}
+
+function TaskStatusIcon({ tone }: { tone: IssueTone }) {
+  if (tone === "neutral") {
+    return (
+      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--bg-primary)] text-[var(--text-muted)]">
+        <AlertIcon />
+      </div>
+    );
+  }
+
+  return <StatusIcon tone={tone} icon={tone === "success" ? "check" : tone === "error" ? "failed" : "alert"} />;
+}
+
+function ActionIcon({ icon }: { icon: QuickAction["icon"] }) {
+  if (icon === "upload") return <UploadIcon size={13} />;
+  if (icon === "music") return <MusicIcon size={13} />;
+  if (icon === "waveform") return <WaveformIcon size={13} />;
+  return <FolderIcon size={13} />;
+}
+
+function DashboardCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={`overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] ${className}`}>{children}</div>;
+}
+
+function CardTitle({ title, description, action }: { title: string; description?: string; action?: React.ReactNode }) {
+  return (
+    <div className="flex min-h-[62px] items-center justify-between gap-4 border-b border-[var(--border)] px-4 py-3.5">
+      <div className="min-w-0">
+        <h2 className="text-2xl font-medium tracking-[-0.02em] text-[var(--text-primary)]">{title}</h2>
+        {description ? <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">{description}</p> : null}
+      </div>
+      {action ? <div className="shrink-0">{action}</div> : null}
+    </div>
+  );
+}
+
 function MetricCard({ label, value, helper, href, issueTone = "neutral" }: {
-  label: string; value: number | string; helper: string; href?: string; issueTone?: "neutral" | "warning" | "error";
+  label: string;
+  value: number | string;
+  helper: string;
+  href?: string;
+  issueTone?: "neutral" | "warning" | "error";
 }) {
   const issueClass = issueTone === "error" ? "admin-metric-card-error" : issueTone === "warning" ? "admin-metric-card-warning" : "";
   const content = (
-    <div className={`rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] transition hover:bg-[var(--bg-hover)] ${issueClass}`}>
-      <div className="px-4 pt-3"><div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">{label}</div></div>
-      <div className="px-4 pb-3">
-        <div className="mt-2 text-[30px] leading-none tracking-[-0.04em] text-[var(--text-primary)]">{value}</div>
-        <div className="mt-2 text-xs text-[var(--text-secondary)]">{helper}</div>
-      </div>
+    <div className={`rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 transition hover:bg-[var(--bg-hover)] ${issueClass}`}>
+      <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">{label}</div>
+      <div className="mt-2 text-[28px] leading-none tracking-[-0.04em] text-[var(--text-primary)]">{value}</div>
+      <div className="mt-2 text-xs text-[var(--text-secondary)]">{helper}</div>
     </div>
   );
+
   if (!href) return content;
   return <Link href={href} className="block">{content}</Link>;
 }
 
-function ActionCard({ label, href, kicker, description, icon, imageUrl, imagePosition = "center" }: QuickAction) {
+function ActionRow({ label, href, section, description, icon }: QuickAction) {
   return (
-    <Link href={href} className="admin-action-card group relative block min-h-[190px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] transition">
-      <div
-        className="admin-action-card-image absolute inset-0 bg-cover bg-center transition duration-700 group-hover:scale-[1.04]"
-        style={{ backgroundImage: `url(${imageUrl})`, backgroundPosition: imagePosition }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/36 to-black/8" />
-      <div className="absolute inset-0 bg-black/12 transition group-hover:bg-black/0" />
-
-      <div className="relative z-10 flex min-h-[190px] flex-col justify-between p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="inline-flex max-w-[calc(100%-44px)] items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/76 backdrop-blur">
-            <span className="text-white/70">
-              <ActionIcon icon={icon} />
-            </span>
-            <span className="truncate">{kicker}</span>
-          </div>
-
-          <div className="admin-action-arrow flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black">
-            <ArrowUpRightIcon />
-          </div>
-        </div>
-
-        <div>
-          <h2 className="font-[family-name:var(--font-instrument-sans)] text-[25px] font-medium leading-[1.02] tracking-[-0.055em] text-white">
-            {label}
-          </h2>
-          <p className="mt-3 max-w-[260px] text-xs leading-5 text-white/68">
-            {description}
-          </p>
-        </div>
+    <Link href={href} className="group grid min-h-[72px] grid-cols-[32px_minmax(0,1fr)_auto] items-center gap-3 border-b border-[var(--border)] px-4 py-3 transition last:border-b-0 hover:bg-[var(--bg-hover)]">
+      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] transition group-hover:text-[var(--text-primary)]">
+        <ActionIcon icon={icon} />
+      </div>
+      <div className="min-w-0">
+        <div className="text-[11px] font-medium text-[var(--text-muted)]">{section}</div>
+        <div className="mt-1 text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">{label}</div>
+        <p className="mt-1 max-w-xl truncate text-xs text-[var(--text-muted)]">{description}</p>
+      </div>
+      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] transition group-hover:border-[var(--text-muted)] group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)]">
+        <ArrowUpRightIcon />
       </div>
     </Link>
   );
 }
 
-function LibraryQualityCard({ totalSongs, missingCoverArt, missingSongInfo, missingWaveformPeaks, missingTags, missingEditPoints, healthStatus, songsLoading }: {
-  totalSongs: number; missingCoverArt: number; missingSongInfo: number; missingWaveformPeaks: number; missingTags: number; missingEditPoints: number; healthStatus: StatusTone; songsLoading: boolean;
+function AdminHero({ totalSongs, progress, healthStatus, systemStatuses, songsLoading }: {
+  totalSongs: number;
+  progress: number;
+  healthStatus: StatusTone;
+  systemStatuses: SystemHealthItem[];
+  songsLoading: boolean;
 }) {
-  const checks = [missingCoverArt === 0, missingSongInfo === 0, missingWaveformPeaks === 0, missingTags === 0, missingEditPoints === 0];
+  const systemReadyCount = systemStatuses.filter((status) => status.tone === "success").length;
+
+  return (
+    <section className="mb-8">
+      <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.72fr)] xl:items-end">
+        <div>
+          <div className="mb-3 inline-flex items-center text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">Admin workspace</div>
+          <h1 className="max-w-[760px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,76px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">Admin Dashboard</h1>
+        </div>
+        <p className="max-w-[520px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">Upload, review, and manage Filmwave library content from one operational workspace.</p>
+      </div>
+
+      <div className="group relative min-h-[255px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+        <img src={ADMIN_HERO_IMAGE} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
+        <div className="relative z-10 flex min-h-[255px] flex-col justify-between p-5 md:p-6">
+          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
+            <span className="truncate">Filmwave admin</span>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-3">
+            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">{songsLoading ? "Scanning library" : `${totalSongs} songs scanned`}</div>
+            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">Library health · {songsLoading ? "—" : `${progress}%`}</div>
+            <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: STATUS_COLORS[healthStatus] }} />
+              {systemReadyCount} / {systemStatuses.length} systems ready
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LibraryQualityCard({ stats, healthStatus, songsLoading }: { stats: LibraryStats; healthStatus: StatusTone; songsLoading: boolean }) {
+  const checks = [stats.missingCoverArt === 0, stats.missingSongInfo === 0, stats.missingWaveformPeaks === 0, stats.missingTags === 0, stats.missingEditPoints === 0];
   const completeChecks = checks.filter(Boolean).length;
   const progress = songsLoading ? 0 : Math.round((completeChecks / checks.length) * 100);
   const progressColor = getProgressColor(progress);
 
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex h-10 items-center justify-between border-b border-[var(--border)] px-4">
-        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">Library Health</div>
-        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"><EngagementIcon size={13} /></div>
-      </div>
-      <div className="px-4 py-3">
-        <div className="text-[36px] leading-none tracking-[-0.05em] text-[var(--text-primary)]">{songsLoading ? "—" : `${progress}%`}</div>
-        <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">{songsLoading ? "Checking library metadata..." : "Based on cover art, song info, waveform peaks, tags, and edit point completion."}</p>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--bg-tertiary)]">
+    <DashboardCard>
+      <CardTitle title="Library Health" description="Cover art, song info, waveform peaks, tags, and edit point completion." action={<HealthStatusIcon status={healthStatus} />} />
+      <div className="px-4 py-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="text-[42px] leading-none tracking-[-0.055em] text-[var(--text-primary)]">{songsLoading ? "—" : `${progress}%`}</div>
+            <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">{songsLoading ? "Checking library metadata..." : `${completeChecks} of ${checks.length} health checks complete.`}</p>
+          </div>
+          <div className="text-xs text-[var(--text-muted)]">{stats.totalSongs} songs scanned</div>
+        </div>
+
+        <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[var(--bg-tertiary)]">
           <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, backgroundColor: progressColor }} />
         </div>
-        <div className="mt-4 grid gap-x-8 gap-y-3 pb-1.5 text-xs text-[var(--text-secondary)] md:grid-cols-[1fr_1fr_1fr_1fr]">
-          <div className="flex items-start gap-2"><div className="translate-y-[-2px]"><HealthStatusIcon status={healthStatus} /></div><span>{completeChecks} of {checks.length} checks complete</span></div>
-          <div className="grid gap-3"><div>{missingSongInfo} missing info</div><div>{missingEditPoints} missing edit points</div></div>
-          <div className="grid gap-3"><div>{totalSongs} songs scanned</div><div>{missingWaveformPeaks} missing peaks</div></div>
-          <div className="grid gap-3"><div>{missingCoverArt} missing cover art</div><div>{missingTags} missing tags</div></div>
+
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-xs text-[var(--text-secondary)]">{stats.missingSongInfo} missing info</div>
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-xs text-[var(--text-secondary)]">{stats.missingWaveformPeaks} missing peaks</div>
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-xs text-[var(--text-secondary)]">{stats.missingCoverArt} missing cover art</div>
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-xs text-[var(--text-secondary)]">{stats.missingTags} missing tags</div>
         </div>
+
+        <div className="mt-2 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-xs text-[var(--text-secondary)]">{stats.missingEditPoints} missing edit points</div>
       </div>
-    </div>
+    </DashboardCard>
   );
 }
 
-function NeedsAttentionCard({ missingCoverArt, missingSongInfo, missingWaveformPeaks, missingTags, missingEditPoints, songsLoading }: {
-  missingCoverArt: number; missingSongInfo: number; missingWaveformPeaks: number; missingTags: number; missingEditPoints: number; songsLoading: boolean;
-}) {
-  const hasFailedIssues = missingCoverArt > 0 || missingSongInfo > 0 || missingWaveformPeaks > 0;
-  const hasWarningIssues = missingTags > 0;
+function NeedsAttentionCard({ stats, songsLoading }: { stats: LibraryStats; songsLoading: boolean }) {
+  const hasFailedIssues = stats.missingCoverArt > 0 || stats.missingSongInfo > 0 || stats.missingWaveformPeaks > 0;
+  const hasWarningIssues = stats.missingTags > 0;
   const headerTone: StatusTone = hasFailedIssues ? "error" : hasWarningIssues ? "warning" : "success";
   const tasks: { label: string; value: number; helper: string; issueTone: IssueTone }[] = [
-    { label: "Cover art", value: missingCoverArt, helper: "missing artwork", issueTone: "error" },
-    { label: "Song info", value: missingSongInfo, helper: "metadata fields", issueTone: "error" },
-    { label: "Waveform peaks", value: missingWaveformPeaks, helper: "waveform data", issueTone: "error" },
-    { label: "Tags", value: missingTags, helper: "filtering metadata", issueTone: "warning" },
-    { label: "Edit points", value: missingEditPoints, helper: "markers or ranges", issueTone: "neutral" },
+    { label: "Cover art", value: stats.missingCoverArt, helper: "missing artwork", issueTone: "error" },
+    { label: "Song info", value: stats.missingSongInfo, helper: "metadata fields", issueTone: "error" },
+    { label: "Waveform peaks", value: stats.missingWaveformPeaks, helper: "waveform data", issueTone: "error" },
+    { label: "Tags", value: stats.missingTags, helper: "filtering metadata", issueTone: "warning" },
+    { label: "Edit points", value: stats.missingEditPoints, helper: "markers or ranges", issueTone: "neutral" },
   ];
+
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex h-10 items-center justify-between border-b border-[var(--border)] px-4">
-        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">Needs Attention</div>
-        <HealthStatusIcon status={headerTone} />
-      </div>
+    <DashboardCard>
+      <CardTitle title="Needs Attention" action={<HealthStatusIcon status={headerTone} />} />
       <div className="grid gap-2 px-4 py-3">
         {tasks.map((task) => {
           const isComplete = !songsLoading && task.value === 0;
           const activeTone = isComplete ? "success" : task.issueTone;
           const issueClass = !isComplete && task.issueTone === "error" ? "admin-attention-item-error" : !isComplete && task.issueTone === "warning" ? "admin-attention-item-warning" : "";
+
           return (
-            <div key={task.label} className={`flex h-10 items-center justify-between gap-3 rounded-lg bg-[var(--bg-tertiary)] px-3 transition ${issueClass}`}>
+            <div key={task.label} className={`flex h-11 items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 transition ${issueClass}`}>
               <div className="min-w-0">
                 <div className="text-xs font-medium text-[var(--text-primary)]">{task.label}</div>
-                <div className="mt-0.5 truncate text-[11px] text-[var(--text-secondary)]">{songsLoading ? "Checking..." : isComplete ? "Complete" : task.helper}</div>
+                <div className="mt-0.5 truncate text-[11px] text-[var(--text-muted)]">{songsLoading ? "Checking..." : isComplete ? "Complete" : task.helper}</div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-medium text-[var(--text-primary)]">{songsLoading ? "—" : task.value}</span>
@@ -299,43 +346,67 @@ function NeedsAttentionCard({ missingCoverArt, missingSongInfo, missingWaveformP
           );
         })}
       </div>
-    </div>
+    </DashboardCard>
   );
 }
 
-function NextBestActionCard({ missingCoverArt, missingSongInfo, missingWaveformPeaks, missingTags, missingEditPoints, songsLoading }: {
-  missingCoverArt: number; missingSongInfo: number; missingWaveformPeaks: number; missingTags: number; missingEditPoints: number; songsLoading: boolean;
-}) {
-  const totalIssues = missingCoverArt + missingSongInfo + missingWaveformPeaks + missingTags + missingEditPoints;
-  const actionHref = missingCoverArt > 0 ? "/admin/music-library?issue=coverArt" : missingSongInfo > 0 ? "/admin/music-library?issue=songInfo" : missingWaveformPeaks > 0 ? "/admin/music-library?issue=peakData" : missingTags > 0 ? "/admin/music-library?issue=tags" : missingEditPoints > 0 ? "/admin/music-library?issue=editPoints" : "/admin/music-library";
-  const actionText = missingCoverArt > 0 ? `Add cover art to ${missingCoverArt} song${missingCoverArt === 1 ? "" : "s"} to complete library artwork.` : missingSongInfo > 0 ? `Add missing song info to ${missingSongInfo} song${missingSongInfo === 1 ? "" : "s"} to complete library metadata.` : missingWaveformPeaks > 0 ? `Generate waveform peak data for ${missingWaveformPeaks} song${missingWaveformPeaks === 1 ? "" : "s"}.` : missingTags > 0 ? `Add missing tags to ${missingTags} song${missingTags === 1 ? "" : "s"} to improve filtering.` : missingEditPoints > 0 ? `Add edit point data to ${missingEditPoints} song${missingEditPoints === 1 ? "" : "s"} to improve waveform filtering.` : totalIssues > 0 ? `Clean up ${totalIssues} remaining library issue${totalIssues === 1 ? "" : "s"}.` : "Your music library is looking clean. Upload the next track when ready.";
+function NextBestActionCard({ stats, songsLoading }: { stats: LibraryStats; songsLoading: boolean }) {
+  const totalIssues = stats.missingCoverArt + stats.missingSongInfo + stats.missingWaveformPeaks + stats.missingTags + stats.missingEditPoints;
+  const actionHref = stats.missingCoverArt > 0 ? "/admin/music-library?issue=coverArt" : stats.missingSongInfo > 0 ? "/admin/music-library?issue=songInfo" : stats.missingWaveformPeaks > 0 ? "/admin/music-library?issue=peakData" : stats.missingTags > 0 ? "/admin/music-library?issue=tags" : stats.missingEditPoints > 0 ? "/admin/music-library?issue=editPoints" : "/admin/music-library";
+  const actionText = stats.missingCoverArt > 0
+    ? `Add cover art to ${stats.missingCoverArt} song${stats.missingCoverArt === 1 ? "" : "s"} to complete library artwork.`
+    : stats.missingSongInfo > 0
+      ? `Add missing song info to ${stats.missingSongInfo} song${stats.missingSongInfo === 1 ? "" : "s"} to complete library metadata.`
+      : stats.missingWaveformPeaks > 0
+        ? `Generate waveform peak data for ${stats.missingWaveformPeaks} song${stats.missingWaveformPeaks === 1 ? "" : "s"}.`
+        : stats.missingTags > 0
+          ? `Add missing tags to ${stats.missingTags} song${stats.missingTags === 1 ? "" : "s"} to improve filtering.`
+          : stats.missingEditPoints > 0
+            ? `Add edit point data to ${stats.missingEditPoints} song${stats.missingEditPoints === 1 ? "" : "s"} to improve waveform filtering.`
+            : totalIssues > 0
+              ? `Clean up ${totalIssues} remaining library issue${totalIssues === 1 ? "" : "s"}.`
+              : "Your music library is looking clean. Upload the next track when ready.";
+
   return (
-    <div className="rounded-xl bg-[var(--bg-tertiary)]">
-      <div className="px-4 pt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">Next Best Action</div>
-      <div className="px-4 pb-4">
-        <h2 className="mt-2 text-sm font-medium leading-5 tracking-[-0.01em] text-[var(--text-primary)]">{songsLoading ? "Reviewing library status..." : actionText}</h2>
-        <Link href={actionHref} className={`mt-3 ${secondaryPillButtonClass}`}>Review Library</Link>
+    <DashboardCard>
+      <CardTitle title="Next Best Action" />
+      <div className="px-4 py-4">
+        <h2 className="text-sm font-medium leading-5 tracking-[-0.01em] text-[var(--text-primary)]">{songsLoading ? "Reviewing library status..." : actionText}</h2>
+        <Link href={actionHref} className={`mt-4 ${secondaryPillButtonClass}`}>Review Library</Link>
       </div>
-    </div>
+    </DashboardCard>
   );
 }
 
 function SystemStatusCard({ statuses, loading }: { statuses: SystemHealthItem[]; loading: boolean }) {
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex h-10 items-center justify-between border-b border-[var(--border)] px-4">
-        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">System Status</div>
-        {loading && <div className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">Checking</div>}
-      </div>
+    <DashboardCard>
+      <CardTitle title="System Status" action={loading ? <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">Checking</span> : null} />
       <div className="grid gap-2 px-4 py-3">
         {statuses.map((status) => (
-          <div key={status.key} title={status.message} className="flex items-center gap-2.5 text-xs text-[var(--text-secondary)]">
+          <div key={status.key} title={status.message} className="flex items-center gap-2.5 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-xs text-[var(--text-secondary)]">
             <StatusIcon tone={status.tone} icon={status.tone === "success" ? "check" : status.tone === "error" ? "failed" : "alert"} />
             <span>{status.label}</span>
           </div>
         ))}
       </div>
-    </div>
+    </DashboardCard>
+  );
+}
+
+function SnapshotCard({ stats, songsLoading }: { stats: LibraryStats; songsLoading: boolean }) {
+  return (
+    <DashboardCard>
+      <CardTitle title="Library Snapshot" description="Fast links into common review filters." />
+      <div className="grid gap-2 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <MetricCard label="Total Songs" value={songsLoading ? "—" : stats.totalSongs} helper="songs in library" href="/admin/music-library" />
+        <MetricCard label="Missing Cover" value={songsLoading ? "—" : stats.missingCoverArt} helper="need cover art" href="/admin/music-library?issue=coverArt" issueTone={!songsLoading && stats.missingCoverArt > 0 ? "error" : "neutral"} />
+        <MetricCard label="Missing Info" value={songsLoading ? "—" : stats.missingSongInfo} helper="need metadata" href="/admin/music-library?issue=songInfo" issueTone={!songsLoading && stats.missingSongInfo > 0 ? "error" : "neutral"} />
+        <MetricCard label="Missing Peaks" value={songsLoading ? "—" : stats.missingWaveformPeaks} helper="need waveform data" href="/admin/music-library?issue=peakData" issueTone={!songsLoading && stats.missingWaveformPeaks > 0 ? "error" : "neutral"} />
+        <MetricCard label="Missing Tags" value={songsLoading ? "—" : stats.missingTags} helper="need filtering tags" href="/admin/music-library?issue=tags" issueTone={!songsLoading && stats.missingTags > 0 ? "warning" : "neutral"} />
+        <MetricCard label="Missing Edits" value={songsLoading ? "—" : stats.missingEditPoints} helper="need markers" href="/admin/music-library?issue=editPoints" />
+      </div>
+    </DashboardCard>
   );
 }
 
@@ -367,6 +438,7 @@ export default function AdminDashboardPage() {
         setSongsLoading(false);
       }
     };
+
     if (isLoaded && isAdmin) fetchSongs();
   }, [isLoaded, isAdmin]);
 
@@ -384,15 +456,17 @@ export default function AdminDashboardPage() {
         setSystemHealthLoading(false);
       }
     };
+
     if (isLoaded && isAdmin) fetchSystemHealth();
   }, [isLoaded, isAdmin]);
 
-  const stats = useMemo(() => {
+  const stats: LibraryStats = useMemo(() => {
     const missingCoverArt = songs.filter((song) => songHasIssue(song, "coverArt")).length;
     const missingSongInfo = songs.filter((song) => songHasIssue(song, "songInfo")).length;
     const missingWaveformPeaks = songs.filter((song) => songHasIssue(song, "waveformPeaks")).length;
     const missingTags = songs.filter((song) => songHasIssue(song, "tags")).length;
     const missingEditPoints = songs.filter((song) => songHasIssue(song, "editPoints")).length;
+
     return { totalSongs: songs.length, missingCoverArt, missingSongInfo, missingWaveformPeaks, missingTags, missingEditPoints };
   }, [songs]);
 
@@ -403,28 +477,31 @@ export default function AdminDashboardPage() {
   }, [stats]);
 
   const recentSongs = useMemo(() => [...songs].reverse().slice(0, 10), [songs]);
+  const completeChecks = [stats.missingCoverArt === 0, stats.missingSongInfo === 0, stats.missingWaveformPeaks === 0, stats.missingTags === 0, stats.missingEditPoints === 0].filter(Boolean).length;
+  const healthProgress = songsLoading ? 0 : Math.round((completeChecks / 5) * 100);
 
-  if (!isLoaded) return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-      <div className="px-8 pt-8 text-sm text-[var(--text-secondary)]">Loading...</div>
-    </main>
-  );
+  if (!isLoaded) {
+    return (
+      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+        <div className="px-8 pt-8 text-sm text-[var(--text-secondary)]">Loading...</div>
+      </main>
+    );
+  }
 
-  if (!isAdmin) return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-      <div className="px-8 pt-14">
-        <h1 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium text-[var(--text-primary)]">Admin</h1>
-        <p className="mt-4 text-sm text-[var(--text-secondary)]">You do not have access to this page.</p>
-      </div>
-    </main>
-  );
+  if (!isAdmin) {
+    return (
+      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+        <div className="px-8 pt-14">
+          <h1 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium text-[var(--text-primary)]">Admin</h1>
+          <p className="mt-4 text-sm text-[var(--text-secondary)]">You do not have access to this page.</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <style>{`
-        .admin-action-card:hover { border-color: var(--text-muted); }
-        .admin-action-card-image { filter: saturate(0.9) contrast(1.02); }
-        .admin-action-arrow svg { width: 14px; height: 14px; }
         .admin-song-row.is-error { background: var(--status-error-faint); }
         .admin-song-row.is-warning { background: var(--status-warning-faint); }
         .admin-song-row.is-error:hover { background: var(--status-error-hover); }
@@ -440,37 +517,42 @@ export default function AdminDashboardPage() {
         .admin-attention-item-warning:hover { background: var(--status-warning-hover); }
       `}</style>
 
-      <section className="min-h-screen">
-        <div className="flex items-end justify-between gap-4 px-8 pt-14 pb-8">
-          <div>
-            <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">Admin Dashboard</h1>
-            <p className="mt-2 text-sm text-[var(--text-secondary)]">Upload, review, and manage Filmwave library content.</p>
-          </div>
-          <Link href="/admin/songs/new" className={`${primaryPillButtonClass} hidden md:flex`}><UploadIcon size={13} /><span>Upload Song</span></Link>
-        </div>
-
-        <div className="px-8" style={{ paddingBottom: playerVisible ? "104px" : "32px" }}>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {quickActions.map((action) => <ActionCard key={action.href} label={action.label} href={action.href} kicker={action.kicker} description={action.description} icon={action.icon} imageUrl={action.imageUrl} imagePosition={action.imagePosition} />)}
+      <section className="min-h-screen px-5 pt-[88px] md:px-8 xl:px-10">
+        <div className="mx-auto max-w-[1180px]" style={{ paddingBottom: playerVisible ? "104px" : "32px" }}>
+          <div className="mb-8 flex items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
+            <div className="text-xs text-[var(--text-muted)]">Admin / <span className="text-[var(--text-secondary)]">Dashboard</span></div>
+            <Link href="/admin/songs/new" className={`${primaryPillButtonClass} hidden md:flex`}>
+              <UploadIcon size={13} />
+              <span>Upload Song</span>
+            </Link>
           </div>
 
-          <div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_300px]">
-            <div className="grid gap-3">
-              <LibraryQualityCard totalSongs={stats.totalSongs} missingCoverArt={stats.missingCoverArt} missingSongInfo={stats.missingSongInfo} missingWaveformPeaks={stats.missingWaveformPeaks} missingTags={stats.missingTags} missingEditPoints={stats.missingEditPoints} healthStatus={healthStatus} songsLoading={songsLoading} />
+          <AdminHero totalSongs={stats.totalSongs} progress={healthProgress} healthStatus={healthStatus} systemStatuses={systemStatuses} songsLoading={songsLoading} />
 
-              <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
-                <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
-                  <div>
-                    <h2 className="text-sm font-medium text-[var(--text-primary)]">Review Queue</h2>
-                    <p className="mt-1 text-[11px] text-[var(--text-secondary)]">Last 10 songs needing review.</p>
-                  </div>
-                  <Link href="/admin/music-library" className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">View Library</Link>
-                </div>
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+            <div className="grid gap-4">
+              <DashboardCard>
+                <CardTitle title="Admin Operations" description="Common library management actions." />
+                <div>{quickActions.map((action) => <ActionRow key={action.href} {...action} />)}</div>
+              </DashboardCard>
+
+              <LibraryQualityCard stats={stats} healthStatus={healthStatus} songsLoading={songsLoading} />
+
+              <DashboardCard>
+                <CardTitle title="Review Queue" description="Last 10 songs needing review." action={<Link href="/admin/music-library" className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">View Library</Link>} />
                 <div className="overflow-x-auto overflow-y-hidden">
                   <div className="min-w-[790px]">
                     <div className="grid h-8 grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(112px,140px)_64px_76px_64px] items-center gap-3 border-b border-[var(--border)] px-6 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                      <div /><div>Song</div><div>Artist</div><div /><div>Status</div><div>Key</div><div>BPM</div><div />
+                      <div />
+                      <div>Song</div>
+                      <div>Artist</div>
+                      <div />
+                      <div>Status</div>
+                      <div>Key</div>
+                      <div>BPM</div>
+                      <div />
                     </div>
+
                     {songsLoading && (
                       <div className="grid gap-0">
                         {Array.from({ length: 10 }, (_, index) => (
@@ -487,33 +569,28 @@ export default function AdminDashboardPage() {
                         ))}
                       </div>
                     )}
-                    {!songsLoading && recentSongs.length === 0 && (
-                      <div className="flex min-h-[140px] items-center justify-center px-6 text-sm text-[var(--text-secondary)]">No songs uploaded yet.</div>
-                    )}
+
+                    {!songsLoading && recentSongs.length === 0 && <div className="flex min-h-[140px] items-center justify-center px-6 text-sm text-[var(--text-secondary)]">No songs uploaded yet.</div>}
+
                     {!songsLoading && recentSongs.map((song, index) => (
-                      <AdminSongRow key={song.id} song={song} isLast={index === recentSongs.length - 1} selected={false} selectionMode={false} showSelectionColumn={false} onSelectedChange={() => {}} onDeleted={(songId) => { setSongs((prev) => prev.filter((item) => item.id !== songId)); }} />
+                      <AdminSongRow key={song.id} song={song} isLast={index === recentSongs.length - 1} selected={false} selectionMode={false} showSelectionColumn={false} onSelectedChange={() => {}} onDeleted={(songId) => setSongs((prev) => prev.filter((item) => item.id !== songId))} />
                     ))}
                   </div>
                 </div>
-              </div>
+              </DashboardCard>
             </div>
 
-            <div className="grid gap-3">
-              <NeedsAttentionCard missingCoverArt={stats.missingCoverArt} missingSongInfo={stats.missingSongInfo} missingWaveformPeaks={stats.missingWaveformPeaks} missingTags={stats.missingTags} missingEditPoints={stats.missingEditPoints} songsLoading={songsLoading} />
-              <NextBestActionCard missingCoverArt={stats.missingCoverArt} missingSongInfo={stats.missingSongInfo} missingWaveformPeaks={stats.missingWaveformPeaks} missingTags={stats.missingTags} missingEditPoints={stats.missingEditPoints} songsLoading={songsLoading} />
+            <div className="grid content-start gap-4">
+              <NeedsAttentionCard stats={stats} songsLoading={songsLoading} />
+              <NextBestActionCard stats={stats} songsLoading={songsLoading} />
               <SystemStatusCard statuses={systemStatuses} loading={systemHealthLoading} />
             </div>
           </div>
 
-          {songsError && <div className="mt-3 rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] p-4 text-sm text-[var(--text-secondary)]">{songsError}</div>}
+          {songsError && <div className="mt-4 rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-4 text-sm text-[var(--text-secondary)]">{songsError}</div>}
 
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-            <MetricCard label="Total Songs" value={songsLoading ? "—" : stats.totalSongs} helper="songs in library" href="/admin/music-library" />
-            <MetricCard label="Missing Cover" value={songsLoading ? "—" : stats.missingCoverArt} helper="need cover art" href="/admin/music-library?issue=coverArt" issueTone={!songsLoading && stats.missingCoverArt > 0 ? "error" : "neutral"} />
-            <MetricCard label="Missing Info" value={songsLoading ? "—" : stats.missingSongInfo} helper="need metadata" href="/admin/music-library?issue=songInfo" issueTone={!songsLoading && stats.missingSongInfo > 0 ? "error" : "neutral"} />
-            <MetricCard label="Missing Peaks" value={songsLoading ? "—" : stats.missingWaveformPeaks} helper="need waveform data" href="/admin/music-library?issue=peakData" issueTone={!songsLoading && stats.missingWaveformPeaks > 0 ? "error" : "neutral"} />
-            <MetricCard label="Missing Tags" value={songsLoading ? "—" : stats.missingTags} helper="need filtering tags" href="/admin/music-library?issue=tags" issueTone={!songsLoading && stats.missingTags > 0 ? "warning" : "neutral"} />
-            <MetricCard label="Missing Edit Points" value={songsLoading ? "—" : stats.missingEditPoints} helper="need markers/ranges" href="/admin/music-library?issue=editPoints" />
+          <div className="mt-4">
+            <SnapshotCard stats={stats} songsLoading={songsLoading} />
           </div>
         </div>
       </section>
