@@ -11,6 +11,7 @@ type HeaderConfig = {
   section: string;
   label: string;
   action?: React.ReactNode;
+  hideOriginalHeader?: boolean;
 };
 
 function getHeaderConfig(pathname: string): HeaderConfig | null {
@@ -18,6 +19,7 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
     return {
       section: "Admin",
       label: "Dashboard",
+      hideOriginalHeader: true,
       action: (
         <Link
           href="/admin/songs/new"
@@ -34,6 +36,7 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
     return {
       section: "Admin",
       label: "Song Editor",
+      hideOriginalHeader: false,
     };
   }
 
@@ -103,7 +106,9 @@ export default function AdminPageHeaderMount() {
 
       const nextMount = ensureMount(container);
       cleanupOriginal?.();
-      cleanupOriginal = hideOriginalHeader(container);
+      cleanupOriginal = config.hideOriginalHeader
+        ? hideOriginalHeader(container)
+        : undefined;
       setMount(nextMount);
     }
 
