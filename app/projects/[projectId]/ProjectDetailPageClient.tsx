@@ -14,7 +14,7 @@ import EditIcon from "@/components/icons/EditIcon";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import {
-  borderedIconButtonClass,
+  borderedIconButton9Class,
   modalPrimaryButtonClass,
   quickFilterButtonActiveClass,
   quickFilterButtonClass,
@@ -73,16 +73,9 @@ function getDownloadLabel(activeTab: ProjectTab) {
 
 function formatProjectDate(project: Project | null) {
   if (!project?.created_at) return "";
-
   const date = new Date(project.created_at);
-
   if (Number.isNaN(date.getTime())) return "";
-
-  return date.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
 function ProjectPageSkeleton() {
@@ -96,13 +89,11 @@ function ProjectPageSkeleton() {
           <div className="project-detail-skeleton-meta-line short project-skeleton-block" />
         </div>
       </section>
-
       <div className="project-tabs-row">
         {TABS.map((tab) => (
           <div key={tab.value} className="project-tab-skeleton project-skeleton-block" />
         ))}
       </div>
-
       <section className="project-tab-panel">
         <div className="project-file-browser">
           <div className="project-file-browser-top">
@@ -125,25 +116,16 @@ function ProjectPageSkeleton() {
 
 function EmptyTabState({ activeTab }: { activeTab: ProjectTab }) {
   const tab = TABS.find((item) => item.value === activeTab);
-
   return (
     <div className="project-empty">
       <h2>{tab?.label || "Project"} coming soon</h2>
-      <p>
-        This section will hold the {tab?.label.toLowerCase() || "project"} media
-        connected to this project.
-      </p>
+      <p>This section will hold the {tab?.label.toLowerCase() || "project"} media connected to this project.</p>
     </div>
   );
 }
 
 function MusicTabState({
-  projectId,
-  songs,
-  loading,
-  error,
-  showEditPointMarkers,
-  onRemoveFromProject,
+  projectId, songs, loading, error, showEditPointMarkers, onRemoveFromProject,
 }: {
   projectId: string;
   songs: ProjectSong[];
@@ -153,25 +135,8 @@ function MusicTabState({
   onRemoveFromProject: (songId: string) => void;
 }) {
   if (loading) return <SkeletonSongList />;
-
-  if (error) {
-    return (
-      <div className="project-empty">
-        <h2>Couldn&apos;t load project songs</h2>
-        <p>{error}</p>
-      </div>
-    );
-  }
-
-  if (songs.length === 0) {
-    return (
-      <div className="project-empty">
-        <h2>No songs yet</h2>
-        <p>Add songs from the music library, then they will appear here in this project.</p>
-      </div>
-    );
-  }
-
+  if (error) return <div className="project-empty"><h2>Couldn&apos;t load project songs</h2><p>{error}</p></div>;
+  if (songs.length === 0) return <div className="project-empty"><h2>No songs yet</h2><p>Add songs from the music library, then they will appear here in this project.</p></div>;
   return (
     <div>
       {songs.map((song, index) => (
@@ -239,47 +204,32 @@ export default function ProjectDetailPageClient() {
 
   const displayedProjectSongs = useMemo(() => {
     const indexedSongs = projectSongs.map((song, index) => ({ song, index }));
-    const filteredSongs =
-      projectSort === "liked"
-        ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
-        : indexedSongs;
-
+    const filteredSongs = projectSort === "liked"
+      ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
+      : indexedSongs;
     const sortedSongs = [...filteredSongs].sort((a, b) => {
-      if (projectSort === "alphabetical") {
-        return a.song.title.localeCompare(b.song.title, undefined, { sensitivity: "base" });
-      }
-
+      if (projectSort === "alphabetical") return a.song.title.localeCompare(b.song.title, undefined, { sensitivity: "base" });
       const aDate = a.song.project_added_at ? new Date(a.song.project_added_at).getTime() : 0;
       const bDate = b.song.project_added_at ? new Date(b.song.project_added_at).getTime() : 0;
-
       if (projectSort === "oldest") return aDate - bDate || a.index - b.index;
       return bDate - aDate || b.index - a.index;
     });
-
     return sortedSongs.map(({ song }) => song);
   }, [projectSongs, projectSort, favoriteIdSet]);
 
   useEffect(() => {
     if (!projectId) return;
-
     let cancelled = false;
-
     async function loadProjectSongs() {
       setProjectSongsLoading(true);
       setProjectSongsError(null);
-
       try {
-        const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assets?type=song`, {
-          cache: "no-store",
-        });
+        const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assets?type=song`, { cache: "no-store" });
         const text = await res.text();
         const data = text ? JSON.parse(text) : null;
-
         if (!res.ok) throw new Error(data?.error || "Failed to load project songs");
-
         const nextSongs = Array.isArray(data?.songs) ? (data.songs as ProjectSong[]) : [];
         const nextAssets = Array.isArray(data?.assets) ? (data.assets as ProjectAsset[]) : [];
-
         if (cancelled) return;
         setProjectSongs(nextSongs.filter((song) => song.id));
         setProjectAssets(nextAssets.filter((asset) => Number.isFinite(asset.id)));
@@ -292,32 +242,21 @@ export default function ProjectDetailPageClient() {
         if (!cancelled) setProjectSongsLoading(false);
       }
     }
-
     loadProjectSongs();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [projectId]);
 
   useEffect(() => {
     if (!projectId) return;
-
     let cancelled = false;
-
     async function loadProjectFolders() {
       setProjectFoldersLoading(true);
       setProjectFoldersError(null);
-
       try {
-        const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, {
-          cache: "no-store",
-        });
+        const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, { cache: "no-store" });
         const text = await res.text();
         const data = text ? JSON.parse(text) : null;
-
         if (!res.ok) throw new Error(data?.error || "Failed to load project folders");
-
         if (cancelled) return;
         setProjectFolders(Array.isArray(data?.folders) ? data.folders : []);
         setProjectAssets(Array.isArray(data?.assets) ? data.assets : []);
@@ -329,12 +268,8 @@ export default function ProjectDetailPageClient() {
         if (!cancelled) setProjectFoldersLoading(false);
       }
     }
-
     loadProjectFolders();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [projectId]);
 
   useEffect(() => {
@@ -345,19 +280,15 @@ export default function ProjectDetailPageClient() {
   function setActiveTab(nextTab: ProjectTab) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", nextTab);
-
     if (nextTab !== "overview") params.delete("folder");
-
     router.replace(`/projects/${projectId}?${params.toString()}`, { scroll: false });
   }
 
   function setActiveFolder(nextFolderId: number | null) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", "overview");
-
     if (nextFolderId == null) params.delete("folder");
     else params.set("folder", String(nextFolderId));
-
     router.replace(`/projects/${projectId}?${params.toString()}`, { scroll: false });
   }
 
@@ -368,26 +299,15 @@ export default function ProjectDetailPageClient() {
 
   function handleRemoveFromProject(songId: string) {
     setProjectSongs((current) => current.filter((song) => song.id !== songId));
-    setProjectAssets((current) =>
-      current.filter((asset) => !(asset.asset_type === "song" && asset.asset_id === songId)),
-    );
+    setProjectAssets((current) => current.filter((asset) => !(asset.asset_type === "song" && asset.asset_id === songId)));
     showToast("Song removed from project");
   }
 
   async function handleMoveSong(song: ProjectSong, folderId: number | null) {
     if (!song.project_asset_id) return;
-
     const previousFolderId = song.project_folder_id ?? null;
-
-    setProjectSongs((current) =>
-      current.map((item) => (item.id === song.id ? { ...item, project_folder_id: folderId } : item)),
-    );
-    setProjectAssets((current) =>
-      current.map((asset) =>
-        asset.id === song.project_asset_id ? { ...asset, folder_id: folderId } : asset,
-      ),
-    );
-
+    setProjectSongs((current) => current.map((item) => (item.id === song.id ? { ...item, project_folder_id: folderId } : item)));
+    setProjectAssets((current) => current.map((asset) => asset.id === song.project_asset_id ? { ...asset, folder_id: folderId } : asset));
     try {
       const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assets`, {
         method: "PATCH",
@@ -396,21 +316,11 @@ export default function ProjectDetailPageClient() {
       });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-
       if (!res.ok) throw new Error(data?.error || "Failed to move file");
-
       showToast(folderId == null ? "Moved to root" : "Moved file");
     } catch (err) {
-      setProjectSongs((current) =>
-        current.map((item) =>
-          item.id === song.id ? { ...item, project_folder_id: previousFolderId } : item,
-        ),
-      );
-      setProjectAssets((current) =>
-        current.map((asset) =>
-          asset.id === song.project_asset_id ? { ...asset, folder_id: previousFolderId } : asset,
-        ),
-      );
+      setProjectSongs((current) => current.map((item) => item.id === song.id ? { ...item, project_folder_id: previousFolderId } : item));
+      setProjectAssets((current) => current.map((asset) => asset.id === song.project_asset_id ? { ...asset, folder_id: previousFolderId } : asset));
       showToast(err instanceof Error ? err.message : "Couldn't move file");
     } finally {
       setMovingSong(null);
@@ -420,24 +330,16 @@ export default function ProjectDetailPageClient() {
   async function handleCreateFolder() {
     const cleanName = newFolderName.trim();
     if (!cleanName || creatingFolder) return;
-
     setCreatingFolder(true);
-
     try {
       const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: cleanName,
-          parent_folder_id: activeFolderId,
-          asset_type: null,
-        }),
+        body: JSON.stringify({ name: cleanName, parent_folder_id: activeFolderId, asset_type: null }),
       });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-
       if (!res.ok) throw new Error(data?.error || "Failed to create folder");
-
       setProjectFolders((current) => [...current, data]);
       setNewFolderName("");
       setCreateFolderOpen(false);
@@ -451,12 +353,7 @@ export default function ProjectDetailPageClient() {
 
   function downloadFiles(songs: ProjectSong[], emptyMessage: string) {
     const downloadableSongs = songs.filter((song) => song.audioUrl);
-
-    if (downloadableSongs.length === 0) {
-      showToast(emptyMessage);
-      return;
-    }
-
+    if (downloadableSongs.length === 0) { showToast(emptyMessage); return; }
     downloadableSongs.forEach((song, index) => {
       window.setTimeout(() => {
         const link = document.createElement("a");
@@ -469,12 +366,7 @@ export default function ProjectDetailPageClient() {
         link.remove();
       }, index * 150);
     });
-
-    showToast(
-      downloadableSongs.length === 1
-        ? "Starting 1 download"
-        : `Starting ${downloadableSongs.length} downloads`,
-    );
+    showToast(downloadableSongs.length === 1 ? "Starting 1 download" : `Starting ${downloadableSongs.length} downloads`);
   }
 
   function handleDownloadActiveTab() {
@@ -494,12 +386,9 @@ export default function ProjectDetailPageClient() {
 
   async function handleSaveEdit() {
     if (!editingProject || isSavingProject) return;
-
     const cleanName = editName.trim();
     if (!cleanName) return showToast("Project name required");
-
     setIsSavingProject(true);
-
     try {
       const res = await fetch(`/api/projects/${editingProject.id}`, {
         method: "PATCH",
@@ -508,19 +397,8 @@ export default function ProjectDetailPageClient() {
       });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-
-      if (!res.ok) {
-        showToast("Couldn't save project");
-        return;
-      }
-
-      setProjects((prev) =>
-        prev.map((item) =>
-          item.id === editingProject.id
-            ? data || { ...item, name: cleanName, description: editDescription.trim() || null }
-            : item,
-        ),
-      );
+      if (!res.ok) { showToast("Couldn't save project"); return; }
+      setProjects((prev) => prev.map((item) => item.id === editingProject.id ? data || { ...item, name: cleanName, description: editDescription.trim() || null } : item));
       setEditingProject(null);
       showToast("Project saved");
     } catch {
@@ -532,20 +410,13 @@ export default function ProjectDetailPageClient() {
 
   async function handleDelete() {
     if (!editingProject || deletingProjectId) return;
-
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${editingProject.name}"? This cannot be undone.`,
-    );
-
+    const confirmed = window.confirm(`Are you sure you want to delete "${editingProject.name}"? This cannot be undone.`);
     if (!confirmed) return showToast("Delete cancelled");
-
     const projectIdToDelete = editingProject.id;
     setEditingProject(null);
     setDeletingProjectId(projectIdToDelete);
-
     try {
       const res = await fetch(`/api/projects/${projectIdToDelete}`, { method: "DELETE" });
-
       if (res.ok) {
         setProjects((prev) => prev.filter((item) => item.id !== projectIdToDelete));
         showToast("Project deleted");
@@ -563,382 +434,62 @@ export default function ProjectDetailPageClient() {
   return (
     <>
       <style>{`
-        .project-detail-page {
-          position: relative;
-          margin-left: var(--sidebar-width);
-          margin-top: 56px;
-          min-height: calc(100vh - 56px);
-          overflow-x: clip;
-          overflow-y: visible;
-          background: var(--bg-primary);
-          color: var(--text-primary);
-          transition: margin-left 0.2s ease;
-        }
-
-        .project-detail-shell {
-          position: relative;
-          z-index: 1;
-          padding: 0 32px;
-        }
-
-        .project-detail-hero {
-          display: block;
-          padding: 88px 0 30px;
-        }
-
-        .project-detail-kicker,
-        .project-file-browser-kicker,
-        .project-file-section-heading {
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: var(--text-muted);
-        }
-
-        .project-detail-title {
-          margin-top: 8px;
-          max-width: 640px;
-          font-family: var(--font-instrument-sans);
-          font-size: 56px;
-          font-weight: 500;
-          line-height: 0.94;
-          letter-spacing: -0.055em;
-          color: var(--text-primary);
-        }
-
-        .project-detail-meta {
-          margin-top: 16px;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 8px;
-          font-size: 11px;
-          color: var(--text-secondary);
-        }
-
+        .project-detail-page { position: relative; margin-left: var(--sidebar-width); margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: clip; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); transition: margin-left 0.2s ease; }
+        .project-detail-shell { position: relative; z-index: 1; padding: 0 32px; }
+        .project-detail-hero { display: block; padding: 88px 0 30px; }
+        .project-detail-kicker, .project-file-browser-kicker, .project-file-section-heading { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+        .project-detail-title { margin-top: 8px; max-width: 640px; font-family: var(--font-instrument-sans); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
+        .project-detail-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .project-detail-dot { color: var(--text-muted); }
-
-        .project-detail-description {
-          margin-top: 16px;
-          max-width: 520px;
-          font-size: 12px;
-          line-height: 1.65;
-          color: var(--text-secondary);
-        }
-
-        .project-tabs-row {
-          position: sticky;
-          top: 56px;
-          z-index: 90;
-          display: flex;
-          min-height: 49px;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 8px;
-          margin-left: -32px;
-          margin-right: -32px;
-          border-bottom: 1px solid var(--border);
-          background: var(--bg-primary);
-          padding: 0 32px;
-        }
-
-        .project-tab-skeleton {
-          width: 86px;
-          height: 28px;
-          border-radius: 6px;
-        }
-
-        .project-sort-row {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 6px;
-          margin-left: -32px;
-          margin-right: -32px;
-          background: var(--bg-primary);
-          padding: 16px 32px;
-        }
-
-        .project-tab-panel {
-          margin-left: -32px;
-          margin-right: -32px;
-        }
-
+        .project-detail-description { margin-top: 16px; max-width: 520px; font-size: 12px; line-height: 1.65; color: var(--text-secondary); }
+        .project-tabs-row { position: sticky; top: 56px; z-index: 90; display: flex; min-height: 49px; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: -32px; margin-right: -32px; border-bottom: 1px solid var(--border); background: var(--bg-primary); padding: 0 32px; }
+        .project-tab-skeleton { width: 86px; height: 28px; border-radius: 6px; }
+        .project-sort-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -32px; margin-right: -32px; background: var(--bg-primary); padding: 16px 32px; }
+        .project-tab-panel { margin-left: -32px; margin-right: -32px; }
         .project-file-browser { padding: 32px; }
-
-        .project-file-browser-top {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 20px;
-          border-bottom: 1px solid var(--border);
-          padding-bottom: 20px;
-        }
-
-        .project-file-browser-title-wrap h2 {
-          margin-top: 6px;
-          font-size: 22px;
-          font-weight: 500;
-          letter-spacing: -0.03em;
-          color: var(--text-primary);
-        }
-
-        .project-file-browser-actions {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .project-view-toggle {
-          display: flex;
-          align-items: center;
-          gap: 2px;
-          height: 29px;
-          border: 1px solid var(--border);
-          border-radius: 8px;
-          background: var(--bg-secondary);
-          padding: 2px;
-        }
-
-        .project-view-toggle button {
-          height: 23px;
-          cursor: pointer;
-          border-radius: 6px;
-          padding: 0 9px;
-          font-size: 11px;
-          color: var(--text-secondary);
-          transition: background 0.15s ease, color 0.15s ease;
-        }
-
-        .project-view-toggle button:hover,
-        .project-view-toggle button.is-active {
-          background: var(--bg-hover-strong);
-          color: var(--text-primary);
-        }
-
-        .project-breadcrumbs {
-          margin-top: 10px;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 7px;
-          font-size: 12px;
-          color: var(--text-muted);
-        }
-
-        .project-breadcrumbs span {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-        }
-
-        .project-breadcrumbs button {
-          cursor: pointer;
-          color: var(--text-secondary);
-          transition: color 0.15s ease;
-        }
-
+        .project-file-browser-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .project-file-browser-title-wrap h2 { margin-top: 6px; font-size: 22px; font-weight: 500; letter-spacing: -0.03em; color: var(--text-primary); }
+        .project-file-browser-actions { display: flex; align-items: center; gap: 8px; }
+        .project-breadcrumbs { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 12px; color: var(--text-muted); }
+        .project-breadcrumbs span { display: inline-flex; align-items: center; gap: 7px; }
+        .project-breadcrumbs button { cursor: pointer; color: var(--text-secondary); transition: color 0.15s ease; }
         .project-breadcrumbs button:hover { color: var(--text-primary); }
         .project-file-browser-section { padding-top: 24px; }
-
-        .project-file-section-heading {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 12px;
-        }
-
-        .project-folder-grid,
-        .project-file-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
-          gap: 12px;
-        }
-
-        .project-folder-card,
-        .project-file-card {
-          display: flex;
-          min-height: 112px;
-          cursor: pointer;
-          flex-direction: column;
-          justify-content: space-between;
-          gap: 14px;
-          border: 1px solid var(--border);
-          border-radius: 16px;
-          background: var(--bg-secondary);
-          padding: 14px;
-          text-align: left;
-          transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
-        }
-
-        .project-folder-card:hover,
-        .project-file-card:hover {
-          border-color: color-mix(in srgb, var(--border) 72%, var(--text-primary));
-          background: var(--bg-hover);
-          transform: translateY(-1px);
-        }
-
+        .project-file-section-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .project-folder-grid, .project-file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(188px, 1fr)); gap: 12px; }
+        .project-folder-card, .project-file-card { display: flex; min-height: 112px; cursor: pointer; flex-direction: column; justify-content: space-between; gap: 14px; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-secondary); padding: 14px; text-align: left; transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease; }
+        .project-folder-card:hover, .project-file-card:hover { border-color: color-mix(in srgb, var(--border) 72%, var(--text-primary)); background: var(--bg-hover); transform: translateY(-1px); }
         .project-folder-card { min-height: 104px; }
         .project-folder-card.skeleton-card { cursor: default; transform: none; }
-
-        .project-folder-icon,
-        .project-file-card-icon,
-        .project-file-icon {
-          display: flex;
-          height: 36px;
-          width: 36px;
-          flex-shrink: 0;
-          align-items: center;
-          justify-content: center;
-          border-radius: 10px;
-          background: var(--bg-tertiary);
-          color: var(--text-secondary);
-          font-size: 14px;
-        }
-
-        .project-folder-copy {
-          min-width: 0;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .project-folder-name,
-        .project-file-card-title,
-        .project-file-name {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--text-primary);
-        }
-
-        .project-folder-meta,
-        .project-file-card-meta,
-        .project-file-meta,
-        .project-file-list-meta {
-          margin-top: 5px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 11px;
-          color: var(--text-secondary);
-        }
-
-        .project-file-card-top {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 10px;
-        }
-
-        .project-file-action {
-          height: 28px;
-          cursor: pointer;
-          border: 1px solid var(--border);
-          border-radius: 8px;
-          background: transparent;
-          padding: 0 10px;
-          font-size: 11px;
-          color: var(--text-secondary);
-          transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .project-file-action:hover {
-          border-color: var(--text-muted);
-          background: var(--bg-hover-strong);
-          color: var(--text-primary);
-        }
-
-        .project-file-list {
-          overflow: hidden;
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          background: var(--bg-secondary);
-        }
-
-        .project-file-row {
-          display: grid;
-          min-height: 58px;
-          grid-template-columns: 38px minmax(0, 1fr) 88px 76px;
-          align-items: center;
-          gap: 12px;
-          border-bottom: 1px solid var(--border-subtle);
-          padding: 0 14px;
-        }
-
+        .project-folder-icon, .project-file-card-icon, .project-file-icon { display: flex; height: 36px; width: 36px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 10px; background: var(--bg-tertiary); color: var(--text-secondary); font-size: 14px; }
+        .project-folder-copy { min-width: 0; display: flex; flex-direction: column; }
+        .project-folder-name, .project-file-card-title, .project-file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; color: var(--text-primary); }
+        .project-folder-meta, .project-file-card-meta, .project-file-meta, .project-file-list-meta { margin-top: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); }
+        .project-file-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+        .project-file-action { height: 28px; cursor: pointer; border: 1px solid var(--border); border-radius: 8px; background: transparent; padding: 0 10px; font-size: 11px; color: var(--text-secondary); transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
+        .project-file-action:hover { border-color: var(--text-muted); background: var(--bg-hover-strong); color: var(--text-primary); }
+        .project-file-list { overflow: hidden; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-secondary); }
+        .project-file-row { display: grid; min-height: 58px; grid-template-columns: 38px minmax(0, 1fr) 88px 76px; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-subtle); padding: 0 14px; }
         .project-file-row:last-child { border-bottom: none; }
         .project-file-main { min-width: 0; }
-
-        .project-file-empty-inline {
-          display: flex;
-          min-height: 84px;
-          align-items: center;
-          justify-content: center;
-          border: 1px dashed var(--border);
-          border-radius: 14px;
-          background: var(--bg-secondary);
-          padding: 18px;
-          text-align: center;
-          font-size: 12px;
-          color: var(--text-secondary);
-        }
-
-        .project-empty,
-        .project-error {
-          display: flex;
-          min-height: 280px;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          color: var(--text-secondary);
-        }
-
-        .project-empty h2,
-        .project-error h2 {
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--text-primary);
-        }
-
-        .project-empty p,
-        .project-error p {
-          margin-top: 6px;
-          max-width: 320px;
-          font-size: 12px;
-          line-height: 1.6;
-        }
-
+        .project-file-empty-inline { display: flex; min-height: 84px; align-items: center; justify-content: center; border: 1px dashed var(--border); border-radius: 14px; background: var(--bg-secondary); padding: 18px; text-align: center; font-size: 12px; color: var(--text-secondary); }
+        .project-empty, .project-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-secondary); }
+        .project-empty h2, .project-error h2 { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+        .project-empty p, .project-error p { margin-top: 6px; max-width: 320px; font-size: 12px; line-height: 1.6; }
         .project-footer-wrap { padding-top: 40px; }
         .project-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
-        .project-skeleton-block::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          transform: translateX(-100%);
-          background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent);
-          animation: project-skeleton-shimmer 1.6s ease-in-out infinite;
-        }
-
+        .project-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: project-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes project-skeleton-shimmer { 100% { transform: translateX(100%); } }
         .project-detail-skeleton-kicker { width: 82px; height: 8px; margin-top: 2px; }
         .project-detail-skeleton-title { width: min(420px, 72%); height: 52px; margin-top: 13px; }
         .project-detail-skeleton-meta { display: flex; align-items: center; gap: 8px; margin-top: 18px; }
         .project-detail-skeleton-meta-line { width: 72px; height: 8px; }
         .project-detail-skeleton-meta-line.short { width: 140px; }
-
         @media (max-width: 760px) {
           .project-detail-shell { padding: 0 18px; }
-          .project-tabs-row,
-          .project-sort-row,
-          .project-tab-panel { margin-left: -18px; margin-right: -18px; }
-          .project-tabs-row,
-          .project-sort-row,
-          .project-file-browser { padding-left: 18px; padding-right: 18px; }
-          .project-file-browser-top,
-          .project-file-browser-actions { flex-direction: column; align-items: stretch; }
+          .project-tabs-row, .project-sort-row, .project-tab-panel { margin-left: -18px; margin-right: -18px; }
+          .project-tabs-row, .project-sort-row, .project-file-browser { padding-left: 18px; padding-right: 18px; }
+          .project-file-browser-top, .project-file-browser-actions { flex-direction: column; align-items: stretch; }
           .project-file-row { grid-template-columns: 38px minmax(0, 1fr) 76px; }
           .project-file-list-meta { display: none; }
         }
@@ -949,15 +500,9 @@ export default function ProjectDetailPageClient() {
           {loading ? (
             <ProjectPageSkeleton />
           ) : error ? (
-            <div className="project-error">
-              <h2>Couldn&apos;t load project</h2>
-              <p>{error}</p>
-            </div>
+            <div className="project-error"><h2>Couldn&apos;t load project</h2><p>{error}</p></div>
           ) : !project ? (
-            <div className="project-error">
-              <h2>Project not found</h2>
-              <p>This project may have been deleted or is no longer available.</p>
-            </div>
+            <div className="project-error"><h2>Project not found</h2><p>This project may have been deleted or is no longer available.</p></div>
           ) : (
             <>
               <section className="project-detail-hero">
@@ -1025,7 +570,7 @@ export default function ProjectDetailPageClient() {
                   <button
                     type="button"
                     onClick={openEdit}
-                    className={borderedIconButtonClass}
+                    className={borderedIconButton9Class}
                     aria-label={`Edit ${project.name}`}
                   >
                     <EditIcon />
@@ -1092,10 +637,7 @@ export default function ProjectDetailPageClient() {
                       >
                         <button
                           type="button"
-                          onClick={() => {
-                            setDownloadMenuOpen(false);
-                            downloadFiles(projectSongs, "No project files to download yet");
-                          }}
+                          onClick={() => { setDownloadMenuOpen(false); downloadFiles(projectSongs, "No project files to download yet"); }}
                         >
                           Download all project files
                         </button>
@@ -1135,27 +677,16 @@ export default function ProjectDetailPageClient() {
         title={movingSong ? `Move ${movingSong.title}` : "Move File"}
         confirmLabel="Move Here"
         onClose={() => setMovingSong(null)}
-        onConfirm={(folderId) => {
-          if (!movingSong) return;
-          handleMoveSong(movingSong, folderId);
-        }}
+        onConfirm={(folderId) => { if (!movingSong) return; handleMoveSong(movingSong, folderId); }}
       />
 
       <ModalShell
         isOpen={createFolderOpen}
         title="New Folder"
-        onClose={() => {
-          setCreateFolderOpen(false);
-          setNewFolderName("");
-        }}
+        onClose={() => { setCreateFolderOpen(false); setNewFolderName(""); }}
         closeLabel="Close new folder modal"
         footer={
-          <button
-            type="button"
-            onClick={handleCreateFolder}
-            className={modalPrimaryButtonClass}
-            disabled={creatingFolder || !newFolderName.trim()}
-          >
+          <button type="button" onClick={handleCreateFolder} className={modalPrimaryButtonClass} disabled={creatingFolder || !newFolderName.trim()}>
             {creatingFolder ? "Creating..." : "Create Folder"}
           </button>
         }
@@ -1164,12 +695,7 @@ export default function ProjectDetailPageClient() {
         <input
           value={newFolderName}
           onChange={(event) => setNewFolderName(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              handleCreateFolder();
-            }
-          }}
+          onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); handleCreateFolder(); } }}
           autoFocus
           className="mt-2 h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
           placeholder="Client Favorites"
