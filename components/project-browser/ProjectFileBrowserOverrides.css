@@ -1,6 +1,10 @@
 .project-tabs-row button::after,
 .project-download-trigger::after {
   display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
   content: none !important;
 }
 
@@ -27,7 +31,7 @@
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
-  padding: 0 72px 0 32px !important;
+  padding: 0 32px !important;
 }
 
 .project-tabs-row > button {
@@ -46,6 +50,25 @@
 
 .project-tabs-row > button[class*="border-[var(--text-primary)]"],
 .project-tabs-row > button:hover {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.project-download-wrap {
+  margin-left: auto !important;
+}
+
+.project-download-trigger {
+  height: 32px !important;
+  border: 0 !important;
+  background: transparent !important;
+  gap: 7px !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 12px !important;
+}
+
+.project-download-trigger:hover {
   background: transparent !important;
   color: var(--text-primary) !important;
 }
@@ -95,8 +118,8 @@
 }
 
 .project-detail-page .project-detail-edit-wrap {
-  top: 211px !important;
-  right: 116px !important;
+  top: 176px !important;
+  right: 32px !important;
   z-index: 8 !important;
 }
 
@@ -119,18 +142,26 @@
 
 .project-detail-page .project-file-browser-top {
   position: relative !important;
+  top: auto !important;
   z-index: 3 !important;
+  display: flex !important;
   min-height: 51px !important;
   align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
-  padding: 0 180px 0 32px !important;
+  padding: 0 32px !important;
 }
 
 .project-detail-page .project-file-browser-top::after {
   display: none !important;
+}
+
+.project-detail-page .project-file-browser-title-wrap {
+  min-width: 0 !important;
 }
 
 .project-detail-page .project-breadcrumbs.project-path {
@@ -152,36 +183,14 @@
   color: var(--text-primary) !important;
 }
 
-.project-download-wrap {
-  position: absolute !important;
-  top: 226px !important;
-  right: 32px !important;
-  z-index: 4 !important;
-  margin-left: 0 !important;
-}
-
-.project-download-trigger {
-  height: 51px !important;
-  border: 0 !important;
-  background: transparent !important;
-  padding: 0 !important;
-  gap: 7px !important;
-  color: var(--text-primary) !important;
-  font-size: 12px !important;
-}
-
-.project-download-trigger:hover {
-  background: transparent !important;
-  color: var(--text-primary) !important;
-}
-
 .project-file-browser-actions {
-  position: absolute !important;
-  right: 32px !important;
-  top: -133px !important;
-  z-index: 8 !important;
+  position: relative !important;
+  right: auto !important;
+  top: auto !important;
+  z-index: 5 !important;
   display: flex !important;
   flex-direction: row !important;
+  flex-shrink: 0 !important;
   align-items: center !important;
   gap: 8px !important;
 }
@@ -197,7 +206,7 @@
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
-  padding-top: 0 !important;
+  padding-top: 36px !important;
 }
 
 .project-folder-glyph-body::before,
@@ -210,7 +219,7 @@
   column-gap: 18px !important;
   row-gap: 26px !important;
   justify-content: start !important;
-  padding-top: 48px !important;
+  padding-top: 0 !important;
 }
 
 .project-browser-grid > div,
@@ -271,7 +280,7 @@
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  padding-top: 48px !important;
+  padding-top: 0 !important;
 }
 
 .project-browser-list-head {
@@ -332,18 +341,11 @@
   }
 
   .project-detail-page .project-detail-edit-wrap {
-    right: 102px !important;
-  }
-
-  .project-file-browser-actions {
-    right: 18px !important;
-  }
-
-  .project-download-wrap {
     right: 18px !important;
   }
 
   .project-detail-page .project-file-browser-top {
-    padding-right: 120px !important;
+    flex-direction: row !important;
+    align-items: center !important;
   }
 }
