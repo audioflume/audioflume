@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import UploadIcon from "@/components/icons/UploadIcon";
-import { primaryPillButtonClass } from "@/components/uiClasses";
 
 type HeaderConfig = {
   section: string;
@@ -20,7 +19,10 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
       section: "Admin",
       label: "Dashboard",
       action: (
-        <Link href="/admin/songs/new" className={`${primaryPillButtonClass} hidden md:flex`}>
+        <Link
+          href="/admin/songs/new"
+          className="hidden h-8 items-center justify-center gap-2 rounded-full border border-[var(--text-primary)] bg-[var(--text-primary)] px-3.5 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 md:flex"
+        >
           <UploadIcon size={13} />
           <span>Upload Song</span>
         </Link>
