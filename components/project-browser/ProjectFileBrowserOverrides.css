@@ -16,11 +16,6 @@
   flex-direction: column !important;
 }
 
-.project-detail-page .project-detail-edit-wrap {
-  top: 88px !important;
-  right: 32px !important;
-}
-
 .project-tabs-row {
   order: 1 !important;
   position: relative !important;
@@ -62,7 +57,7 @@
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
-  padding: 38px 72px 28px 32px !important;
+  padding: 38px 132px 28px 32px !important;
 }
 
 .project-detail-page .project-detail-kicker {
@@ -99,6 +94,12 @@
   display: none !important;
 }
 
+.project-detail-page .project-detail-edit-wrap {
+  top: 144px !important;
+  right: 116px !important;
+  z-index: 8 !important;
+}
+
 .project-detail-page .project-tab-panel {
   order: 3 !important;
   flex: 1 0 auto !important;
@@ -118,11 +119,13 @@
 
 .project-detail-page .project-file-browser-top {
   position: relative !important;
+  z-index: 3 !important;
   min-height: 51px !important;
   align-items: center !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
+  background: var(--bg-primary) !important;
   padding: 0 180px 0 32px !important;
 }
 
@@ -175,9 +178,10 @@
 .project-file-browser-actions {
   position: absolute !important;
   right: 32px !important;
-  top: -216px !important;
-  z-index: 5 !important;
+  top: -133px !important;
+  z-index: 8 !important;
   display: flex !important;
+  flex-direction: row !important;
   align-items: center !important;
   gap: 8px !important;
 }
@@ -191,7 +195,9 @@
 }
 
 .project-detail-page .project-file-browser-section {
-  padding-top: 38px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  padding-top: 64px !important;
 }
 
 .project-folder-glyph-body::before,
@@ -317,6 +323,14 @@
     margin-right: -18px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
+  }
+
+  .project-detail-page .project-detail-hero {
+    padding-right: 116px !important;
+  }
+
+  .project-detail-page .project-detail-edit-wrap {
+    right: 102px !important;
   }
 
   .project-file-browser-actions {
