@@ -13,6 +13,7 @@ import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
 import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import "./globals.css";
+import "./admin-polish.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
