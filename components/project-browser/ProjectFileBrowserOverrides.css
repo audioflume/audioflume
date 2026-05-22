@@ -1,33 +1,7 @@
 .project-tabs-row button::after,
 .project-download-trigger::after {
   display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
   content: none !important;
-}
-
-.project-tabs-row {
-  order: 1 !important;
-  padding-left: 32px !important;
-}
-
-.project-tabs-row > button {
-  border-bottom-color: transparent !important;
-  color: var(--text-subtle) !important;
-}
-
-.project-tabs-row > button:first-child {
-  margin-left: -10px !important;
-}
-
-.project-tabs-row > button[class*="border-[var(--text-primary)]"] {
-  color: var(--text-primary) !important;
-}
-
-.project-tabs-row > button:hover {
-  color: var(--text-primary) !important;
 }
 
 .project-detail-page {
@@ -42,67 +16,140 @@
   flex-direction: column !important;
 }
 
+.project-detail-page .project-detail-edit-wrap {
+  top: 16px !important;
+  right: 32px !important;
+}
+
 .project-detail-page .project-detail-hero {
-  order: 3 !important;
-  position: relative !important;
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
-  z-index: 1 !important;
-  display: block !important;
-  min-height: 180px !important;
-  margin-left: -32px !important;
-  margin-right: -32px !important;
-  border-bottom: 1px solid var(--border) !important;
-  padding: 34px 32px 28px !important;
-  pointer-events: auto !important;
-}
-
-.project-detail-page .project-detail-title {
-  font-size: 56px !important;
-}
-
-.project-detail-page .project-tab-panel {
-  order: 4 !important;
-  flex: 1 0 auto !important;
-}
-
-.project-detail-page .project-tab-panel:has(> .project-file-browser) {
-  display: contents !important;
-}
-
-.project-detail-page .project-tab-panel > .project-file-browser {
-  display: contents !important;
-}
-
-.project-detail-page .project-footer-wrap {
-  order: 5 !important;
-  margin-top: auto !important;
-}
-
-.project-detail-page .project-file-browser-top {
-  order: 2 !important;
+  display: flex !important;
   min-height: 51px !important;
   align-items: center !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
+  padding: 0 72px 0 32px !important;
+}
+
+.project-detail-page .project-detail-kicker,
+.project-detail-page .project-detail-meta,
+.project-detail-page .project-detail-description {
+  display: none !important;
+}
+
+.project-detail-page .project-detail-title {
+  margin: 0 !important;
+  max-width: none !important;
+  font-size: 22px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.035em !important;
+}
+
+.project-tabs-row {
+  position: relative !important;
+  top: auto !important;
+  z-index: 30 !important;
+  min-height: 50px !important;
+  gap: 22px !important;
+  margin-left: -32px !important;
+  margin-right: -32px !important;
+  border-bottom: 1px solid var(--border) !important;
+  background: var(--bg-primary) !important;
   padding: 0 32px !important;
+}
+
+.project-tabs-row > button {
+  height: 50px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--text-subtle) !important;
+  font-size: 13px !important;
+}
+
+.project-tabs-row > button:first-child {
+  margin-left: 0 !important;
+}
+
+.project-tabs-row > button[class*="border-[var(--text-primary)]"],
+.project-tabs-row > button:hover {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.project-download-wrap {
+  position: absolute !important;
+  top: 50px !important;
+  right: 32px !important;
+  z-index: 4 !important;
+  margin-left: 0 !important;
+}
+
+.project-download-trigger {
+  height: 51px !important;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 12px !important;
+}
+
+.project-download-trigger span {
+  font-size: 0 !important;
+}
+
+.project-download-trigger span::after {
+  content: "Download Files";
+  font-size: 12px;
+}
+
+.project-download-trigger svg {
+  display: none !important;
+}
+
+.project-detail-page .project-tab-panel {
+  flex: 1 0 auto !important;
+  margin-left: -32px !important;
+  margin-right: -32px !important;
+}
+
+.project-detail-page .project-footer-wrap {
+  margin-top: auto !important;
+}
+
+.project-detail-page .project-file-browser {
+  position: relative !important;
+  padding: 0 32px 32px !important;
+}
+
+.project-detail-page .project-file-browser-top {
+  position: relative !important;
+  min-height: 51px !important;
+  align-items: center !important;
+  margin-left: -32px !important;
+  margin-right: -32px !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 0 230px 0 32px !important;
+}
+
+.project-detail-page .project-file-browser-top::after {
+  content: "Project workspace";
+  position: absolute;
+  right: 212px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .project-detail-page .project-breadcrumbs.project-path {
   margin-top: 0 !important;
-}
-
-.project-detail-page .project-file-browser-section {
-  order: 4 !important;
-  border-top: 0 !important;
-  padding: 36px 0 0 !important;
-}
-
-.project-folder-glyph-body::before,
-.project-folder-glyph-body::after {
-  display: none !important;
+  flex-wrap: nowrap !important;
+  overflow: hidden !important;
+  font-size: 12px !important;
 }
 
 .project-breadcrumbs.project-path button,
@@ -111,20 +158,37 @@
   color: var(--text-subtle) !important;
 }
 
-.project-breadcrumbs.project-path button.is-current {
-  color: var(--text-primary) !important;
-}
-
+.project-breadcrumbs.project-path button.is-current,
 .project-breadcrumbs.project-path button:hover,
 .project-breadcrumbs.project-path button.is-drag-over {
   color: var(--text-primary) !important;
 }
 
-.project-breadcrumbs.project-path button.is-drag-over {
-  border-radius: 999px;
-  background: var(--bg-hover-strong);
-  padding: 5px 8px;
-  margin: -5px -8px;
+.project-file-browser-actions {
+  position: absolute !important;
+  right: 32px !important;
+  top: -40px !important;
+  z-index: 5 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.project-view-toggle-button,
+.project-new-folder-button {
+  height: 32px !important;
+  width: 32px !important;
+  border-radius: 9px !important;
+  background: var(--bg-primary) !important;
+}
+
+.project-detail-page .project-file-browser-section {
+  padding-top: 38px !important;
+}
+
+.project-folder-glyph-body::before,
+.project-folder-glyph-body::after {
+  display: none !important;
 }
 
 .project-browser-grid {
@@ -134,14 +198,15 @@
   justify-content: start !important;
 }
 
-.project-browser-grid > div {
+.project-browser-grid > div,
+.project-file-browser .project-folder-card,
+.project-file-browser .project-file-card {
   width: 132px !important;
 }
 
 .project-file-browser .project-folder-card,
 .project-file-browser .project-file-card {
   position: relative !important;
-  width: 132px !important;
   min-height: 112px !important;
   padding: 6px 8px !important;
   gap: 10px !important;
@@ -157,16 +222,12 @@
 
 .project-folder-card-name,
 .project-file-browser .project-file-card-title,
-.project-file-browser .project-file-card-meta {
+.project-file-browser .project-file-card-meta,
+.project-file-browser .project-folder-card-meta {
   max-width: 116px !important;
 }
 
 .project-file-browser .project-folder-card-meta {
-  display: block !important;
-  max-width: 116px !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   margin-top: -6px !important;
   font-size: 9px;
   color: var(--text-muted);
@@ -178,32 +239,16 @@
   right: 7px !important;
   top: 0 !important;
   z-index: 2;
-  display: flex !important;
-  height: 24px !important;
-  width: 28px !important;
-  align-items: center;
-  justify-content: center;
   border: 0 !important;
-  border-radius: 0 !important;
   background: transparent !important;
-  box-shadow: none !important;
   opacity: 0;
   font-size: 14px !important;
-  line-height: 1;
   color: var(--text-primary) !important;
-  backdrop-filter: none !important;
-  transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 .project-file-browser .project-folder-card:hover .project-file-action,
 .project-file-browser .project-file-card:hover .project-file-action {
   opacity: 1;
-}
-
-.project-file-browser .project-folder-card .project-file-action:hover,
-.project-file-browser .project-file-card .project-file-action:hover {
-  background: transparent !important;
-  color: var(--text-primary) !important;
 }
 
 .project-browser-list {
@@ -219,13 +264,8 @@
 
 .project-browser-list .project-browser-row {
   border: 0 !important;
-  border-bottom: 0 !important;
   border-radius: 0 !important;
   padding: 0 14px !important;
-}
-
-.project-browser-list .project-browser-row + .project-browser-row {
-  margin-top: 0 !important;
 }
 
 .project-browser-list .project-browser-row:hover {
@@ -239,7 +279,6 @@
 
 .project-browser-row .project-folder-action-wrap .project-file-action {
   opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 .project-browser-row:hover .project-folder-action-wrap .project-file-action {
@@ -262,88 +301,9 @@
   cursor: grabbing !important;
 }
 
-.project-drag-over-folder .project-folder-card,
-.project-drag-over-folder .project-folder-row {
-  background: var(--bg-hover-strong) !important;
-  outline: 1px solid var(--border-hover);
-  outline-offset: 2px;
-}
-
-.project-drag-preview {
-  width: 132px !important;
-  padding: 0 !important;
-  pointer-events: none;
-  opacity: 0.96;
-}
-
-.project-drag-preview .project-folder-card,
-.project-drag-preview .project-file-card {
-  width: 132px !important;
-  min-height: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-.project-drag-preview .project-file-action,
-.project-drag-preview .project-file-card-meta {
-  display: none !important;
-}
-
-.project-drag-preview .project-preview-button {
-  opacity: 0 !important;
-}
-
-.project-drag-preview .project-folder-card:hover,
-.project-drag-preview .project-file-card:hover,
-.project-drag-preview .project-file-card.is-active {
-  background: transparent !important;
-}
-
-.project-drag-preview-song .project-file-card {
-  gap: 10px !important;
-}
-
-.project-file-list-icon-wrap {
-  position: relative;
-  display: flex;
-  height: 22px;
-  width: 22px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-}
-
-.project-preview-button-list {
-  height: 18px !important;
-  width: 18px !important;
-}
-
-.project-preview-button-list::before {
-  inset: 2px !important;
-}
-
-.project-preview-button-list svg {
-  width: 9px !important;
-  height: 9px !important;
-}
-
-.project-browser-row:hover .project-preview-button-list,
-.project-preview-button-list.is-playing,
-.project-preview-button-list.is-active {
-  opacity: 1 !important;
-  transform: scale(1) !important;
-}
-
 @media (max-width: 760px) {
-  .project-detail-page .project-detail-hero {
-    margin-left: -18px !important;
-    margin-right: -18px !important;
-    padding-left: 18px !important;
-    padding-right: 18px !important;
-  }
-
+  .project-detail-page .project-detail-hero,
+  .project-tabs-row,
   .project-detail-page .project-file-browser-top {
     margin-left: -18px !important;
     margin-right: -18px !important;
@@ -351,23 +311,16 @@
     padding-right: 18px !important;
   }
 
-  .project-file-browser-top {
-    flex-direction: row !important;
-    align-items: center !important;
+  .project-file-browser-actions,
+  .project-download-wrap {
+    right: 18px !important;
   }
 
-  .project-file-browser-actions {
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
+  .project-detail-page .project-file-browser-top::after {
+    display: none !important;
   }
 
-  .project-file-browser-title-wrap {
-    min-width: 0 !important;
-  }
-
-  .project-breadcrumbs.project-path {
-    min-width: 0 !important;
-    flex-wrap: nowrap !important;
+  .project-detail-page .project-file-browser-top {
+    padding-right: 120px !important;
   }
 }
