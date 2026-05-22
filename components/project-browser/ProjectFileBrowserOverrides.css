@@ -81,22 +81,22 @@
 }
 
 .project-browser-grid {
-  grid-template-columns: repeat(auto-fill, minmax(116px, 116px)) !important;
-  column-gap: 28px !important;
-  row-gap: 30px !important;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 132px)) !important;
+  column-gap: 18px !important;
+  row-gap: 26px !important;
   justify-content: start !important;
 }
 
 .project-browser-grid > div {
-  width: 116px !important;
+  width: 132px !important;
 }
 
 .project-file-browser .project-folder-card,
 .project-file-browser .project-file-card {
   position: relative !important;
-  width: 116px !important;
+  width: 132px !important;
   min-height: 112px !important;
-  padding: 6px 5px !important;
+  padding: 6px 8px !important;
   gap: 10px !important;
 }
 
@@ -111,12 +111,12 @@
 .project-folder-card-name,
 .project-file-browser .project-file-card-title,
 .project-file-browser .project-file-card-meta {
-  max-width: 106px !important;
+  max-width: 116px !important;
 }
 
 .project-file-browser .project-folder-card-meta {
   display: block !important;
-  max-width: 106px !important;
+  max-width: 116px !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -128,7 +128,7 @@
 .project-file-browser .project-folder-card .project-file-action,
 .project-file-browser .project-file-card .project-file-action {
   position: absolute !important;
-  right: 5px !important;
+  right: 7px !important;
   top: 0 !important;
   z-index: 2;
   display: flex !important;
@@ -223,7 +223,7 @@
 }
 
 .project-drag-preview {
-  width: 118px !important;
+  width: 132px !important;
   padding: 0 !important;
   pointer-events: none;
   opacity: 0.96;
@@ -231,7 +231,7 @@
 
 .project-drag-preview .project-folder-card,
 .project-drag-preview .project-file-card {
-  width: 118px !important;
+  width: 132px !important;
   min-height: 0 !important;
   border: 0 !important;
   background: transparent !important;
