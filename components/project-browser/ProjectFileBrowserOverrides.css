@@ -189,23 +189,26 @@
   align-items: center !important;
 }
 
+/* All three tab-row icon buttons: same 28px size, 9px radius */
 .project-view-toggle-button,
 .project-new-folder-button {
   display: flex !important;
-  height: 32px !important;
-  width: 32px !important;
+  height: 28px !important;
+  width: 28px !important;
   align-items: center !important;
   justify-content: center !important;
   border: 1px solid var(--border) !important;
   border-radius: 9px !important;
-  background: var(--bg-primary) !important;
+  background: var(--bg-secondary) !important;
   color: var(--icon-color) !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
 }
 
 .project-view-toggle-button:hover,
 .project-new-folder-button:hover {
-  border-color: var(--text-muted) !important;
-  background: var(--bg-hover) !important;
+  border-color: var(--border-hover) !important;
+  background: var(--icon-button-hover) !important;
   color: var(--text-primary) !important;
 }
 
@@ -376,17 +379,19 @@
   border-radius: 8px !important;
 }
 
+/* Folder action wrap in list rows: always visible, vertically centred */
 .project-folder-action-wrap {
-  display: flex;
-  justify-content: flex-end;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
 }
 
 .project-browser-row .project-folder-action-wrap .project-file-action {
-  opacity: 0;
+  opacity: 1 !important;
 }
 
 .project-browser-row:hover .project-folder-action-wrap .project-file-action {
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .project-file-browser [role="button"] {
