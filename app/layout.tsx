@@ -11,6 +11,7 @@ import { FavoritesProvider } from "@/context/FavoritesContext";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
+import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -66,6 +67,7 @@ export default async function RootLayout({
                       <SidebarRenderer initialCollapsed={sidebarCollapsed} />
                       {children}
                       <PlayerRenderer />
+                      <IconButtonTitleSync />
                     </ProjectsProvider>
                   </PlaylistsProvider>
                 </FavoritesProvider>
