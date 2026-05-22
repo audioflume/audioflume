@@ -1,6 +1,6 @@
 /* Account-page inspired spacing for admin dashboard */
 main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] {
-  padding-top: 32px !important;
+  padding-top: 88px !important;
 }
 
 /* Song upload / edit page account-style pass */
