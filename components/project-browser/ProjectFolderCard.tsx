@@ -1,3 +1,4 @@
+import type { KeyboardEvent, MouseEvent } from "react";
 import type { ProjectFolder } from "@/lib/types";
 import { FolderGlyph } from "./ProjectBrowserGlyphs";
 
@@ -24,14 +25,30 @@ export default function ProjectFolderCard({
 }) {
   const totalItems = (folder.child_count ?? 0) + (folder.asset_count ?? 0);
 
-  function handleMove(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleOpen() {
+    onOpen(folder.id);
+  }
+
+  function handleOpenKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    handleOpen();
+  }
+
+  function handleMove(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
     onMove?.(folder);
   }
 
   if (viewMode === "list") {
     return (
-      <button type="button" className="project-browser-row project-folder-row" onClick={() => onOpen(folder.id)}>
+      <div
+        role="button"
+        tabIndex={0}
+        className="project-browser-row project-folder-row"
+        onClick={handleOpen}
+        onKeyDown={handleOpenKeyDown}
+      >
         <span className="project-browser-row-name">
           <FolderGlyph small />
           <span className="project-browser-row-title">{folder.name}</span>
@@ -43,12 +60,18 @@ export default function ProjectFolderCard({
             ...
           </button>
         </span>
-      </button>
+      </div>
     );
   }
 
   return (
-    <button type="button" className="project-folder-card" onClick={() => onOpen(folder.id)}>
+    <div
+      role="button"
+      tabIndex={0}
+      className="project-folder-card"
+      onClick={handleOpen}
+      onKeyDown={handleOpenKeyDown}
+    >
       <button type="button" className="project-file-action" onClick={handleMove} aria-label={`Move ${folder.name}`}>
         ...
       </button>
@@ -59,6 +82,6 @@ export default function ProjectFolderCard({
       <span className="project-folder-card-meta">
         {totalItems} {totalItems === 1 ? "item" : "items"}
       </span>
-    </button>
+    </div>
   );
 }
