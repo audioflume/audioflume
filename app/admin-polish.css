@@ -15,22 +15,40 @@
 }
 
 /* Admin dashboard */
+main[class*="md:ml-[var(--admin-sidebar-width)]"] {
+  padding-top: 0 !important;
+}
+
 main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] {
-  padding-top: 56px !important;
+  padding-top: 88px !important;
 }
 
 /* Song upload / edit page account-style pass */
 main:has(.admin-song-form-card) {
-  padding-top: 56px !important;
+  padding-top: 0 !important;
 }
 
 main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
-  max-width: 1180px !important;
+  max-width: 1260px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-top: 56px !important;
-  padding-left: 32px !important;
-  padding-right: 32px !important;
+  padding-top: 88px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+@media (min-width: 768px) {
+  main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
 }
 
 main:has(.admin-song-form-card) > div > .flex.items-end.justify-between {
@@ -121,12 +139,4 @@ main:has(.admin-song-form-card) aside .admin-song-form-card > div:not(.admin-son
 
 main:has(.admin-song-form-card) .admin-song-form-icon-btn {
   border-radius: 9px !important;
-}
-
-@media (max-width: 760px) {
-  main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
-    padding-top: 56px !important;
-    padding-left: 18px !important;
-    padding-right: 18px !important;
-  }
 }
