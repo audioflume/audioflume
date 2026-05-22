@@ -229,6 +229,8 @@ export default function ProjectDetailPageClient() {
   );
 
   const projectDate = formatProjectDate(project);
+  const totalFileCount = projectAssets.length;
+  const assetsLoaded = !projectSongsLoading && !projectFoldersLoading;
 
   const displayedProjectSongs = useMemo(() => {
     const indexedSongs = projectSongs.map((song, index) => ({ song, index }));
@@ -958,6 +960,12 @@ export default function ProjectDetailPageClient() {
                 <h1 className="project-detail-title">{project.name}</h1>
                 <div className="project-detail-meta">
                   <span>Project workspace</span>
+                  {assetsLoaded && (
+                    <>
+                      <span className="project-detail-dot">·</span>
+                      <span>{totalFileCount} {totalFileCount === 1 ? "file" : "files"}</span>
+                    </>
+                  )}
                   {projectDate && (
                     <>
                       <span className="project-detail-dot">·</span>
