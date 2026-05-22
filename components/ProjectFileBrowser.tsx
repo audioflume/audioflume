@@ -35,6 +35,10 @@ type ProjectSong = Song & {
   project_folder_id?: number | null;
 };
 
+type ProjectFolderWithFileCount = ProjectFolder & {
+  recursive_asset_count?: number;
+};
+
 type ProjectFileBrowserProps = {
   folders: ProjectFolder[];
   assets: ProjectAsset[];
@@ -103,12 +107,22 @@ function getActivatorPoint(event: unknown) {
   return null;
 }
 
-function isDefaultMediaFolder(folder: ProjectFolder) {
+function isDefaultMediaFolder(folder: ProjectFolderWithFileCount) {
   return folder.parent_folder_id == null && folder.asset_type != null;
 }
 
-function defaultMediaFolderHasItems(folder: ProjectFolder) {
-  return (folder.asset_count ?? 0) > 0 || (folder.child_count ?? 0) > 0;
+function defaultMediaFolderHasItems(folder: ProjectFolderWithFileCount) {
+  return (folder.recursive_asset_count ?? folder.asset_count ?? 0) > 0 || (folder.child_count ?? 0) > 0;
+}
+
+function folderMatchesSearch(folder: ProjectFolderWithFileCount, query: string) {
+  if (!query) return true;
+  return `${folder.name} folder`.toLowerCase().includes(query);
+}
+
+function songMatchesSearch(song: ProjectSong, query: string) {
+  if (!query) return true;
+  return `${song.title} ${song.artist} music`.toLowerCase().includes(query);
 }
 
 const snapListOverlayToCursor = ({
@@ -136,10 +150,10 @@ function DraggableFolderItem({
   onOpen,
   onMove,
 }: {
-  folder: ProjectFolder;
+  folder: ProjectFolderWithFileCount;
   viewMode: ProjectFileView;
   onOpen: (folderId: number) => void;
-  onMove: (folder: ProjectFolder) => void;
+  onMove: (folder: ProjectFolderWithFileCount) => void;
 }) {
   const draggable = useDraggable({
     id: getFolderDragId(folder.id),
@@ -234,7 +248,7 @@ function DragPreview({
   viewMode,
 }: {
   dragData: DragData | null;
-  folder: ProjectFolder | null;
+  folder: ProjectFolderWithFileCount | null;
   song: ProjectSong | null;
   viewMode: ProjectFileView;
 }) {
@@ -283,7 +297,8 @@ export default function ProjectFileBrowser({
   const [dragPreviewFolderId, setDragPreviewFolderId] = useState<number | null | undefined>(undefined);
   const [activeDragData, setActiveDragData] = useState<DragData | null>(null);
   const [activeDragViewMode, setActiveDragViewMode] = useState<ProjectFileView>(viewMode);
-  const [movingFolder, setMovingFolder] = useState<ProjectFolder | null>(null);
+  const [movingFolder, setMovingFolder] = useState<ProjectFolderWithFileCount | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const lastBreadcrumbTargetRef = useRef<number | null | undefined>(undefined);
   const originalFolderTargetRef = useRef<number | null | undefined>(undefined);
   const originalSongTargetRef = useRef<number | null | undefined>(undefined);
@@ -292,16 +307,6 @@ export default function ProjectFileBrowser({
     useSensor(PointerSensor, {
       activationConstraint: { distance: 6 },
     }),
-  );
-
-  const effectiveFolders = useMemo(
-    () =>
-      folders.map((folder) =>
-        folderParentOverrides.has(folder.id)
-          ? { ...folder, parent_folder_id: folderParentOverrides.get(folder.id) ?? null }
-          : folder,
-      ),
-    [folders, folderParentOverrides],
   );
 
   const effectiveSongs = useMemo(
@@ -316,12 +321,58 @@ export default function ProjectFileBrowser({
     [songs, songFolderOverrides],
   );
 
+  const effectiveFolders = useMemo<ProjectFolderWithFileCount[]>(() => {
+    const baseFolders = folders.map((folder) =>
+      folderParentOverrides.has(folder.id)
+        ? { ...folder, parent_folder_id: folderParentOverrides.get(folder.id) ?? null }
+        : folder,
+    );
+    const childIdsByParent = new Map<number | null, number[]>();
+    const directAssetCounts = new Map<number, number>();
+    const recursiveCountCache = new Map<number, number>();
+
+    baseFolders.forEach((folder) => {
+      const parentId = folder.parent_folder_id ?? null;
+      childIdsByParent.set(parentId, [...(childIdsByParent.get(parentId) ?? []), folder.id]);
+    });
+
+    effectiveSongs.forEach((song) => {
+      const folderId = song.project_folder_id ?? null;
+      if (folderId == null) return;
+      directAssetCounts.set(folderId, (directAssetCounts.get(folderId) ?? 0) + 1);
+    });
+
+    function countRecursiveAssets(folderId: number, visited = new Set<number>()): number {
+      if (recursiveCountCache.has(folderId)) return recursiveCountCache.get(folderId) ?? 0;
+      if (visited.has(folderId)) return 0;
+
+      visited.add(folderId);
+
+      const count =
+        (directAssetCounts.get(folderId) ?? 0) +
+        (childIdsByParent.get(folderId) ?? []).reduce(
+          (sum, childId) => sum + countRecursiveAssets(childId, new Set(visited)),
+          0,
+        );
+
+      recursiveCountCache.set(folderId, count);
+      return count;
+    }
+
+    return baseFolders.map((folder) => ({
+      ...folder,
+      asset_count: directAssetCounts.get(folder.id) ?? folder.asset_count ?? 0,
+      recursive_asset_count: countRecursiveAssets(folder.id),
+    }));
+  }, [folders, folderParentOverrides, effectiveSongs]);
+
   const foldersById = useMemo(() => new Map(effectiveFolders.map((folder) => [folder.id, folder])), [effectiveFolders]);
   const visibleFolderId = dragPreviewFolderId !== undefined ? dragPreviewFolderId : activeFolderId;
+  const normalizedSearch = searchQuery.trim().toLowerCase();
 
   const breadcrumbFolders = useMemo(() => {
     if (activeFolderId == null) return [];
-    const chain: ProjectFolder[] = [];
+    const chain: ProjectFolderWithFileCount[] = [];
     const visited = new Set<number>();
     let current = foldersById.get(activeFolderId) ?? null;
     while (current && !visited.has(current.id)) {
@@ -339,11 +390,17 @@ export default function ProjectFileBrowser({
         if (visibleFolderId == null && isDefaultMediaFolder(folder)) {
           return defaultMediaFolderHasItems(folder);
         }
-        return true;
+        return folderMatchesSearch(folder, normalizedSearch);
       }),
-    [effectiveFolders, visibleFolderId],
+    [effectiveFolders, visibleFolderId, normalizedSearch],
   );
-  const visibleSongs = useMemo(() => effectiveSongs.filter((song) => (song.project_folder_id ?? null) === visibleFolderId), [effectiveSongs, visibleFolderId]);
+  const visibleSongs = useMemo(
+    () =>
+      effectiveSongs.filter(
+        (song) => (song.project_folder_id ?? null) === visibleFolderId && songMatchesSearch(song, normalizedSearch),
+      ),
+    [effectiveSongs, visibleFolderId, normalizedSearch],
+  );
   const itemCount = visibleFolders.length + visibleSongs.length;
   const nextViewMode: ProjectFileView = viewMode === "grid" ? "list" : "grid";
   const draggedFolder = activeDragData?.kind === "folder" ? effectiveFolders.find((folder) => folder.id === activeDragData.folderId) ?? null : null;
@@ -438,7 +495,7 @@ export default function ProjectFileBrowser({
     }
   }
 
-  async function moveFolderToFolder(folder: ProjectFolder, parentFolderId: number | null) {
+  async function moveFolderToFolder(folder: ProjectFolderWithFileCount, parentFolderId: number | null) {
     const previousParentFolderId = originalFolderTargetRef.current ?? folder.parent_folder_id ?? null;
 
     setFolderParentOverrides((current) => {
@@ -614,6 +671,17 @@ export default function ProjectFileBrowser({
               </div>
             </div>
             <div className="project-file-browser-actions">
+              <label className="project-file-search" aria-label="Search project files">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="m21 21-4.35-4.35" />
+                  <circle cx="11" cy="11" r="7" />
+                </svg>
+                <input
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search this folder"
+                />
+              </label>
               <button
                 type="button"
                 className="project-view-toggle-button"
@@ -659,7 +727,9 @@ export default function ProjectFileBrowser({
                 </div>
               )
             ) : (
-              <div className="project-file-empty-inline">No files in this folder yet.</div>
+              <div className="project-file-empty-inline">
+                {normalizedSearch ? "No files or folders match your search." : "No files in this folder yet."}
+              </div>
             )}
           </div>
         </div>
