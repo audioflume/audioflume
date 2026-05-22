@@ -101,6 +101,10 @@
   display: none !important;
 }
 
+.project-sort-row {
+  order: 3 !important;
+}
+
 .project-download-wrap {
   display: flex !important;
   align-items: center !important;
@@ -112,14 +116,14 @@
 }
 
 .project-detail-page .project-tab-panel {
-  order: 3 !important;
+  order: 4 !important;
   flex: 1 0 auto !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
 }
 
 .project-detail-page .project-footer-wrap {
-  order: 4 !important;
+  order: 5 !important;
   margin-top: auto !important;
 }
 
@@ -287,6 +291,10 @@
 
 .project-drag-over-folder .project-folder-card {
   border-radius: 10px !important;
+}
+
+.project-drag-over-folder .project-folder-row {
+  border-radius: 8px !important;
 }
 
 .project-browser-list {
