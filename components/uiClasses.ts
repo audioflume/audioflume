@@ -20,6 +20,9 @@ export const dangerButtonClass =
 export const borderedIconButtonClass =
   "flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--icon-color)] transition hover:border-[var(--border-hover)] hover:bg-[var(--icon-button-hover)] hover:text-[var(--text-primary)]";
 
+export const borderedIconButton9Class =
+  "flex h-7 w-7 cursor-pointer items-center justify-center rounded-[9px] border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--icon-color)] transition hover:border-[var(--border-hover)] hover:bg-[var(--icon-button-hover)] hover:text-[var(--text-primary)]";
+
 export const backPillButtonClass =
   "inline-flex h-8 cursor-pointer items-center gap-2 rounded-md border border-[var(--border)] bg-transparent px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
 
