@@ -31,7 +31,7 @@
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
-  padding: 0 140px 0 32px !important;
+  padding: 0 32px !important;
 }
 
 .project-tabs-row > button {
@@ -54,6 +54,13 @@
   color: var(--text-primary) !important;
 }
 
+.project-tabs-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
 .project-detail-page .project-detail-hero {
   order: 2 !important;
   display: block !important;
@@ -61,7 +68,7 @@
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
-  padding: 38px 132px 28px 32px !important;
+  padding: 38px 32px 28px 32px !important;
 }
 
 .project-detail-page .project-detail-kicker {
@@ -98,40 +105,14 @@
   display: none !important;
 }
 
-.project-detail-page .project-detail-edit-wrap {
-  position: fixed !important;
-  top: 83px !important;
-  right: 112px !important;
-  z-index: 120 !important;
-}
-
-.project-detail-page .project-detail-edit-wrap > button {
-  height: 32px !important;
-  width: 32px !important;
-  border-radius: 9px !important;
-}
-
 .project-download-wrap {
-  position: absolute !important;
-  top: 226px !important;
-  right: 32px !important;
-  z-index: 6 !important;
-  margin-left: 0 !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .project-download-trigger {
-  height: 51px !important;
-  border: 0 !important;
-  background: transparent !important;
-  gap: 7px !important;
-  padding: 0 !important;
-  color: var(--text-primary) !important;
+  gap: 6px !important;
   font-size: 12px !important;
-}
-
-.project-download-trigger:hover {
-  background: transparent !important;
-  color: var(--text-primary) !important;
 }
 
 .project-detail-page .project-tab-panel {
@@ -165,7 +146,7 @@
   margin-right: -32px !important;
   border-bottom: 0 !important;
   background: var(--bg-primary) !important;
-  padding: 0 160px 0 32px !important;
+  padding: 0 32px !important;
 }
 
 .project-detail-page .project-file-browser-top::after {
@@ -203,15 +184,9 @@
 }
 
 .project-file-browser-actions {
-  position: fixed !important;
-  right: 32px !important;
-  top: 83px !important;
-  z-index: 120 !important;
   display: flex !important;
-  flex-direction: row !important;
   flex-shrink: 0 !important;
   align-items: center !important;
-  gap: 8px !important;
 }
 
 .project-view-toggle-button,
@@ -237,7 +212,7 @@
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
-  padding-top: 36px !important;
+  padding-top: 16px !important;
 }
 
 .project-folder-glyph-body::before,
@@ -283,6 +258,7 @@
 }
 
 .project-file-browser .project-folder-card-meta {
+  display: block !important;
   margin-top: -6px !important;
   font-size: 9px;
   color: var(--text-muted);
@@ -376,31 +352,5 @@
     margin-right: -18px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
-  }
-
-  .project-tabs-row {
-    padding-right: 126px !important;
-  }
-
-  .project-detail-page .project-detail-hero {
-    padding-right: 116px !important;
-  }
-
-  .project-detail-page .project-detail-edit-wrap {
-    right: 98px !important;
-  }
-
-  .project-file-browser-actions {
-    right: 18px !important;
-  }
-
-  .project-download-wrap {
-    right: 18px !important;
-  }
-
-  .project-detail-page .project-file-browser-top {
-    flex-direction: row !important;
-    align-items: center !important;
-    padding-right: 150px !important;
   }
 }
