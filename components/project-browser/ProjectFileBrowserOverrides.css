@@ -61,6 +61,39 @@
   margin-left: auto;
 }
 
+.project-tabs-row-actions .project-new-folder-button,
+.project-tabs-row-actions .project-view-toggle-button,
+.project-tabs-row-actions > button[aria-label^="Edit"] {
+  display: flex !important;
+  height: 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px !important;
+  background: var(--bg-secondary) !important;
+  padding: 0 !important;
+  color: var(--icon-color) !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+}
+
+.project-tabs-row-actions .project-new-folder-button:hover,
+.project-tabs-row-actions .project-view-toggle-button:hover,
+.project-tabs-row-actions > button[aria-label^="Edit"]:hover {
+  border-color: var(--border-hover) !important;
+  background: var(--icon-button-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.project-tabs-row-actions .project-new-folder-button svg,
+.project-tabs-row-actions .project-view-toggle-button svg,
+.project-tabs-row-actions > button[aria-label^="Edit"] svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
 .project-detail-page .project-detail-hero {
   order: 2 !important;
   display: block !important;
@@ -189,29 +222,6 @@
   align-items: center !important;
 }
 
-/* All three tab-row icon buttons: same 28px size, 9px radius */
-.project-view-toggle-button,
-.project-new-folder-button {
-  display: flex !important;
-  height: 28px !important;
-  width: 28px !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 9px !important;
-  background: var(--bg-secondary) !important;
-  color: var(--icon-color) !important;
-  cursor: pointer !important;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
-}
-
-.project-view-toggle-button:hover,
-.project-new-folder-button:hover {
-  border-color: var(--border-hover) !important;
-  background: var(--icon-button-hover) !important;
-  color: var(--text-primary) !important;
-}
-
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
@@ -285,7 +295,6 @@
   opacity: 1;
 }
 
-/* Grid drag-over */
 .project-drag-over-folder .project-folder-card {
   background: var(--bg-hover-strong) !important;
   border-radius: 10px !important;
@@ -293,7 +302,6 @@
   outline-offset: 2px !important;
 }
 
-/* List drag-over — higher specificity (3 classes) beats the base row rule (2 classes) */
 .project-browser-list .project-drag-over-folder .project-folder-row {
   background: var(--bg-hover-strong) !important;
   border-radius: 8px !important;
@@ -301,7 +309,6 @@
   outline-offset: 2px !important;
 }
 
-/* List view song icon wrap */
 .project-file-list-icon-wrap {
   position: relative !important;
   display: flex !important;
@@ -312,7 +319,6 @@
   height: 22px !important;
 }
 
-/* List-specific preview button */
 .project-preview-button-list {
   --project-preview-track: rgba(255, 255, 255, 0.18);
   position: absolute !important;
@@ -379,7 +385,6 @@
   border-radius: 8px !important;
 }
 
-/* Folder action wrap in list rows: always visible, vertically centred */
 .project-folder-action-wrap {
   display: flex !important;
   align-items: center !important;
