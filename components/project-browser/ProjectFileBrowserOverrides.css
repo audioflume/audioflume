@@ -290,8 +290,8 @@
   outline-offset: 2px !important;
 }
 
-/* List drag-over — matches grid: outline + offset creates the white gap */
-.project-drag-over-folder .project-folder-row {
+/* List drag-over — higher specificity (3 classes) beats the base row rule (2 classes) */
+.project-browser-list .project-drag-over-folder .project-folder-row {
   background: var(--bg-hover-strong) !important;
   border-radius: 8px !important;
   outline: 1px solid var(--border-hover, var(--border)) !important;
