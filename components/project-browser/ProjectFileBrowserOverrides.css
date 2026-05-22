@@ -114,10 +114,21 @@
   max-width: 106px !important;
 }
 
+.project-file-browser .project-folder-card-meta {
+  display: block !important;
+  max-width: 106px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: -6px !important;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
 .project-file-browser .project-folder-card .project-file-action {
   position: absolute;
-  right: 7px;
-  top: 7px;
+  right: 2px;
+  top: 2px;
   opacity: 0;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
