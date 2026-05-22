@@ -128,29 +128,24 @@
 .project-file-browser .project-folder-card .project-file-action,
 .project-file-browser .project-file-card .project-file-action {
   position: absolute !important;
-  right: 8px !important;
-  top: 8px !important;
+  right: 5px !important;
+  top: 0 !important;
   z-index: 2;
   display: flex !important;
-  width: 32px !important;
-  height: 32px !important;
+  height: 24px !important;
+  width: 28px !important;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 999px !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: rgba(255, 255, 255, 0.72) !important;
-  cursor: pointer;
-  opacity: 0;
-  font-size: 15px !important;
-  line-height: 1;
-  backdrop-filter: blur(12px);
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
   box-shadow: none !important;
-  transition:
-    opacity 0.15s ease,
-    background-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease;
+  opacity: 0;
+  font-size: 14px !important;
+  line-height: 1;
+  color: var(--text-primary) !important;
+  backdrop-filter: none !important;
+  transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 .project-file-browser .project-folder-card:hover .project-file-action,
@@ -160,8 +155,8 @@
 
 .project-file-browser .project-folder-card .project-file-action:hover,
 .project-file-browser .project-file-card .project-file-action:hover {
-  background-color: white !important;
-  color: black !important;
+  background: transparent !important;
+  color: var(--text-primary) !important;
 }
 
 .project-browser-list {
