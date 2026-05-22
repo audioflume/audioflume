@@ -3,6 +3,23 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   padding-top: 88px !important;
 }
 
+main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] > div.mx-auto.max-w-\[1180px\] > div:first-child {
+  min-height: 32px !important;
+  margin-bottom: 8px !important;
+  padding-bottom: 16px !important;
+  align-items: center !important;
+}
+
+main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] > div.mx-auto.max-w-\[1180px\] > div:first-child > div:first-child {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: var(--text-muted) !important;
+}
+
+main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] > div.mx-auto.max-w-\[1180px\] > div:first-child > div:first-child span {
+  color: var(--text-secondary) !important;
+}
+
 /* Song upload / edit page account-style pass */
 main:has(.admin-song-form-card) {
   padding-top: 56px !important;
@@ -13,7 +30,7 @@ main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
   max-width: 1180px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-top: 32px !important;
+  padding-top: 88px !important;
   padding-left: 32px !important;
   padding-right: 32px !important;
 }
@@ -23,9 +40,12 @@ main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"]::before {
   position: absolute;
   left: 32px;
   right: 32px;
-  top: 32px;
+  top: 88px;
+  height: 16px;
   font-size: 12px;
-  color: var(--text-muted);
+  line-height: 16px;
+  font-weight: 400;
+  color: var(--text-secondary);
 }
 
 main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"]::after {
@@ -33,14 +53,14 @@ main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"]::after {
   position: absolute;
   left: 32px;
   right: 32px;
-  top: 63px;
+  top: 120px;
   height: 1px;
   background: var(--border);
 }
 
 main:has(.admin-song-form-card) > div > .flex.items-end.justify-between {
   position: relative !important;
-  margin-top: 88px !important;
+  margin-top: 80px !important;
   margin-bottom: 32px !important;
   align-items: flex-end !important;
   border-bottom: 0 !important;
@@ -136,7 +156,7 @@ main:has(.admin-song-form-card) .admin-song-form-icon-btn {
 
 @media (max-width: 760px) {
   main:has(.admin-song-form-card) > div[class*="px-8"][class*="pt-14"] {
-    padding-top: 32px !important;
+    padding-top: 88px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
   }
