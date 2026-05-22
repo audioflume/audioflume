@@ -16,7 +16,6 @@ import MusicIcon from "@/components/icons/MusicIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import {
-  iconButtonClass,
   primaryPillButtonClass,
   secondaryPillButtonClass,
 } from "@/components/uiClasses";
@@ -26,8 +25,11 @@ import { songHasIssue } from "@/lib/songHealth";
 type QuickAction = {
   label: string;
   href: string;
+  kicker: string;
   description: string;
   icon: "upload" | "music" | "waveform" | "folder";
+  imageUrl: string;
+  imagePosition?: string;
 };
 
 type StatusTone = "success" | "warning" | "error";
@@ -67,10 +69,42 @@ const SYSTEM_HEALTH_FAILED_STATUSES: SystemHealthItem[] = [
 ];
 
 const quickActions: QuickAction[] = [
-  { label: "New Song Upload", href: "/admin/songs/new", description: "Upload music, cover art, stems, and metadata.", icon: "upload" },
-  { label: "Music Library", href: "/admin/music-library", description: "Search, preview, edit, and manage uploaded songs.", icon: "music" },
-  { label: "SFX Upload", href: "/admin/sfx/new", description: "Upload sound effects and metadata.", icon: "waveform" },
-  { label: "Asset Manager", href: "/admin/assets", description: "Manage downloadable visual assets.", icon: "folder" },
+  {
+    label: "New Song Upload",
+    href: "/admin/songs/new",
+    kicker: "Upload / Metadata",
+    description: "Upload music, cover art, stems, and metadata.",
+    icon: "upload",
+    imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
+    imagePosition: "center",
+  },
+  {
+    label: "Music Library",
+    href: "/admin/music-library",
+    kicker: "Library / Review",
+    description: "Search, preview, edit, and manage uploaded songs.",
+    icon: "music",
+    imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1200&q=80",
+    imagePosition: "center",
+  },
+  {
+    label: "SFX Upload",
+    href: "/admin/sfx/new",
+    kicker: "SFX / Metadata",
+    description: "Upload sound effects and metadata.",
+    icon: "waveform",
+    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1200&q=80",
+    imagePosition: "center",
+  },
+  {
+    label: "Asset Manager",
+    href: "/admin/assets",
+    kicker: "Assets / Delivery",
+    description: "Manage downloadable visual assets.",
+    icon: "folder",
+    imageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+    imagePosition: "center",
+  },
 ];
 
 function StatusIcon({ tone, icon }: { tone: StatusTone; icon: "check" | "alert" | "failed" }) {
@@ -159,17 +193,39 @@ function MetricCard({ label, value, helper, href, issueTone = "neutral" }: {
   return <Link href={href} className="block">{content}</Link>;
 }
 
-function ActionCard({ label, href, description, icon }: QuickAction) {
+function ActionCard({ label, href, kicker, description, icon, imageUrl, imagePosition = "center" }: QuickAction) {
   return (
-    <Link href={href} className="admin-action-card group relative block rounded-xl bg-[var(--bg-tertiary)] p-5 transition">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition group-hover:text-[var(--text-primary)]">
-          <ActionIcon icon={icon} />
+    <Link href={href} className="admin-action-card group relative block min-h-[190px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] transition">
+      <div
+        className="admin-action-card-image absolute inset-0 bg-cover bg-center transition duration-700 group-hover:scale-[1.04]"
+        style={{ backgroundImage: `url(${imageUrl})`, backgroundPosition: imagePosition }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/36 to-black/8" />
+      <div className="absolute inset-0 bg-black/12 transition group-hover:bg-black/0" />
+
+      <div className="relative z-10 flex min-h-[190px] flex-col justify-between p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="inline-flex max-w-[calc(100%-44px)] items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/76 backdrop-blur">
+            <span className="text-white/70">
+              <ActionIcon icon={icon} />
+            </span>
+            <span className="truncate">{kicker}</span>
+          </div>
+
+          <div className="admin-action-arrow flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black">
+            <ArrowUpRightIcon />
+          </div>
         </div>
-        <div className={`${iconButtonClass} group-hover:bg-[var(--icon-button-hover)] group-hover:text-[var(--text-primary)]`}><ArrowUpRightIcon /></div>
+
+        <div>
+          <h2 className="font-[family-name:var(--font-instrument-sans)] text-[25px] font-medium leading-[1.02] tracking-[-0.055em] text-white">
+            {label}
+          </h2>
+          <p className="mt-3 max-w-[260px] text-xs leading-5 text-white/68">
+            {description}
+          </p>
+        </div>
       </div>
-      <div className="mt-5 font-[family-name:var(--font-instrument-sans)] text-sm font-medium text-[var(--text-primary)]">{label}</div>
-      <p className="mt-2 max-w-[240px] text-xs leading-5 text-[var(--text-secondary)]">{description}</p>
     </Link>
   );
 }
@@ -366,8 +422,9 @@ export default function AdminDashboardPage() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <style>{`
-        .admin-action-card:hover { background: var(--bg-hover); }
-        .light .admin-action-card:hover { background: color-mix(in srgb, var(--bg-tertiary) 94%, #000 2%); }
+        .admin-action-card:hover { border-color: var(--text-muted); }
+        .admin-action-card-image { filter: saturate(0.9) contrast(1.02); }
+        .admin-action-arrow svg { width: 14px; height: 14px; }
         .admin-song-row.is-error { background: var(--status-error-faint); }
         .admin-song-row.is-warning { background: var(--status-warning-faint); }
         .admin-song-row.is-error:hover { background: var(--status-error-hover); }
@@ -394,7 +451,7 @@ export default function AdminDashboardPage() {
 
         <div className="px-8" style={{ paddingBottom: playerVisible ? "104px" : "32px" }}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {quickActions.map((action) => <ActionCard key={action.href} label={action.label} href={action.href} description={action.description} icon={action.icon} />)}
+            {quickActions.map((action) => <ActionCard key={action.href} label={action.label} href={action.href} kicker={action.kicker} description={action.description} icon={action.icon} imageUrl={action.imageUrl} imagePosition={action.imagePosition} />)}
           </div>
 
           <div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_300px]">
