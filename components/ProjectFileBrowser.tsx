@@ -17,6 +17,7 @@ import {
 } from "@dnd-kit/core";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
+import ProjectFolderPickerModal from "@/components/ProjectFolderPickerModal";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import ProjectFolderCard from "./project-browser/ProjectFolderCard";
 import ProjectSongFileCard from "./project-browser/ProjectSongFileCard";
@@ -45,7 +46,6 @@ type ProjectFileBrowserProps = {
   onViewModeChange: (mode: ProjectFileView) => void;
   onOpenFolder: (folderId: number | null) => void;
   onMoveSong: (song: ProjectSong) => void;
-  onMoveFolder: (folder: ProjectFolder) => void;
   onCreateFolder: () => void;
 };
 
@@ -272,7 +272,6 @@ export default function ProjectFileBrowser({
   onViewModeChange,
   onOpenFolder,
   onMoveSong,
-  onMoveFolder,
   onCreateFolder,
 }: ProjectFileBrowserProps) {
   const [folderParentOverrides, setFolderParentOverrides] = useState<Map<number, number | null>>(
@@ -284,6 +283,7 @@ export default function ProjectFileBrowser({
   const [dragPreviewFolderId, setDragPreviewFolderId] = useState<number | null | undefined>(undefined);
   const [activeDragData, setActiveDragData] = useState<DragData | null>(null);
   const [activeDragViewMode, setActiveDragViewMode] = useState<ProjectFileView>(viewMode);
+  const [movingFolder, setMovingFolder] = useState<ProjectFolder | null>(null);
   const lastBreadcrumbTargetRef = useRef<number | null | undefined>(undefined);
   const originalFolderTargetRef = useRef<number | null | undefined>(undefined);
   const originalSongTargetRef = useRef<number | null | undefined>(undefined);
@@ -362,6 +362,14 @@ export default function ProjectFileBrowser({
 
     return false;
   }
+
+  const folderMoveDestinations = useMemo(() => {
+    if (!movingFolder) return effectiveFolders;
+
+    return effectiveFolders.filter(
+      (folder) => folder.id !== movingFolder.id && !folderIsDescendant(folder.id, movingFolder.id),
+    );
+  }, [effectiveFolders, foldersById, movingFolder]);
 
   function getValidDropFolderId(event: DragOverEvent | DragEndEvent) {
     const targetFolderId = parseDropFolderId(event.over?.id);
@@ -567,96 +575,113 @@ export default function ProjectFileBrowser({
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={pointerWithin}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-      onDragCancel={handleDragCancel}
-    >
-      <div className="project-file-browser">
-        <div className="project-file-browser-top">
-          <div className="project-file-browser-title-wrap">
-            <div className="project-breadcrumbs project-path">
-              <BreadcrumbDropButton
-                folderId={null}
-                active={activeFolderId == null}
-                onClick={() => onOpenFolder(null)}
-              >
-                All Files
-              </BreadcrumbDropButton>
-              {breadcrumbFolders.map((folder, index) => {
-                const isCurrent = index === breadcrumbFolders.length - 1;
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
+        <div className="project-file-browser">
+          <div className="project-file-browser-top">
+            <div className="project-file-browser-title-wrap">
+              <div className="project-breadcrumbs project-path">
+                <BreadcrumbDropButton
+                  folderId={null}
+                  active={activeFolderId == null}
+                  onClick={() => onOpenFolder(null)}
+                >
+                  All Files
+                </BreadcrumbDropButton>
+                {breadcrumbFolders.map((folder, index) => {
+                  const isCurrent = index === breadcrumbFolders.length - 1;
 
-                return (
-                  <span key={folder.id}>
-                    <span className="project-path-separator">/</span>
-                    <BreadcrumbDropButton
-                      folderId={folder.id}
-                      active={isCurrent}
-                      onClick={() => onOpenFolder(folder.id)}
-                    >
-                      {folder.name}
-                    </BreadcrumbDropButton>
-                  </span>
-                );
-              })}
+                  return (
+                    <span key={folder.id}>
+                      <span className="project-path-separator">/</span>
+                      <BreadcrumbDropButton
+                        folderId={folder.id}
+                        active={isCurrent}
+                        onClick={() => onOpenFolder(folder.id)}
+                      >
+                        {folder.name}
+                      </BreadcrumbDropButton>
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="project-file-browser-actions">
+              <button
+                type="button"
+                className="project-view-toggle-button"
+                aria-label={viewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
+                title={viewMode === "grid" ? "List view" : "Grid view"}
+                onClick={() => onViewModeChange(nextViewMode)}
+              >
+                {viewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
+              </button>
+              <button type="button" className="project-new-folder-button" onClick={onCreateFolder} aria-label="New folder" title="New folder">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                  <path d="M12 5v14" />
+                  <path d="M5 12h14" />
+                </svg>
+              </button>
             </div>
           </div>
-          <div className="project-file-browser-actions">
-            <button
-              type="button"
-              className="project-view-toggle-button"
-              aria-label={viewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
-              title={viewMode === "grid" ? "List view" : "Grid view"}
-              onClick={() => onViewModeChange(nextViewMode)}
-            >
-              {viewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
-            </button>
-            <button type="button" className="project-new-folder-button" onClick={onCreateFolder} aria-label="New folder" title="New folder">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-                <path d="M12 5v14" />
-                <path d="M5 12h14" />
-              </svg>
-            </button>
+          <div className="project-file-browser-section">
+            {itemCount > 0 ? (
+              viewMode === "grid" ? (
+                <div className="project-browser-grid">
+                  {visibleFolders.map((folder) => (
+                    <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onMove={setMovingFolder} />
+                  ))}
+                  {visibleSongs.map((song) => (
+                    <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
+                  ))}
+                </div>
+              ) : (
+                <div className="project-browser-list">
+                  <div className="project-browser-list-head">
+                    <span>Name</span>
+                    <span>Info</span>
+                    <span>Kind</span>
+                    <span />
+                  </div>
+                  {visibleFolders.map((folder) => (
+                    <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onMove={setMovingFolder} />
+                  ))}
+                  {visibleSongs.map((song) => (
+                    <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
+                  ))}
+                </div>
+              )
+            ) : (
+              <div className="project-file-empty-inline">No files in this folder yet.</div>
+            )}
           </div>
         </div>
-        <div className="project-file-browser-section">
-          {itemCount > 0 ? (
-            viewMode === "grid" ? (
-              <div className="project-browser-grid">
-                {visibleFolders.map((folder) => (
-                  <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onMove={onMoveFolder} />
-                ))}
-                {visibleSongs.map((song) => (
-                  <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
-                ))}
-              </div>
-            ) : (
-              <div className="project-browser-list">
-                <div className="project-browser-list-head">
-                  <span>Name</span>
-                  <span>Info</span>
-                  <span>Kind</span>
-                  <span />
-                </div>
-                {visibleFolders.map((folder) => (
-                  <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onMove={onMoveFolder} />
-                ))}
-                {visibleSongs.map((song) => (
-                  <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
-                ))}
-              </div>
-            )
-          ) : (
-            <div className="project-file-empty-inline">No files in this folder yet.</div>
-          )}
-        </div>
-      </div>
-      <DragOverlay dropAnimation={null} modifiers={overlayModifiers}>
-        <DragPreview dragData={activeDragData} folder={draggedFolder} song={draggedSong} viewMode={activeDragViewMode} />
-      </DragOverlay>
-    </DndContext>
+        <DragOverlay dropAnimation={null} modifiers={overlayModifiers}>
+          <DragPreview dragData={activeDragData} folder={draggedFolder} song={draggedSong} viewMode={activeDragViewMode} />
+        </DragOverlay>
+      </DndContext>
+
+      <ProjectFolderPickerModal
+        isOpen={!!movingFolder}
+        folders={folderMoveDestinations}
+        initialFolderId={movingFolder?.parent_folder_id ?? null}
+        title={movingFolder ? `Move ${movingFolder.name}` : "Move Folder"}
+        confirmLabel="Move Here"
+        onClose={() => setMovingFolder(null)}
+        onConfirm={(folderId) => {
+          if (!movingFolder) return;
+          moveFolderToFolder(movingFolder, folderId);
+          setMovingFolder(null);
+          onOpenFolder(folderId);
+        }}
+      />
+    </>
   );
 }
