@@ -997,25 +997,8 @@ export default function ProjectDetailPageClient() {
                 })}
 
                 <div className="project-tabs-row-actions">
-                  <button
-                    type="button"
-                    onClick={openEdit}
-                    className={borderedIconButtonClass}
-                    aria-label={`Edit ${project.name}`}
-                  >
-                    <EditIcon />
-                  </button>
                   {activeTab === "overview" && (
                     <>
-                      <button
-                        type="button"
-                        className="project-view-toggle-button"
-                        aria-label={fileViewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
-                        title={fileViewMode === "grid" ? "List view" : "Grid view"}
-                        onClick={() => setFileViewMode(fileViewMode === "grid" ? "list" : "grid")}
-                      >
-                        {fileViewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
-                      </button>
                       <button
                         type="button"
                         className="project-new-folder-button"
@@ -1028,8 +1011,25 @@ export default function ProjectDetailPageClient() {
                           <path d="M5 12h14" />
                         </svg>
                       </button>
+                      <button
+                        type="button"
+                        className="project-view-toggle-button"
+                        aria-label={fileViewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
+                        title={fileViewMode === "grid" ? "List view" : "Grid view"}
+                        onClick={() => setFileViewMode(fileViewMode === "grid" ? "list" : "grid")}
+                      >
+                        {fileViewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
+                      </button>
                     </>
                   )}
+                  <button
+                    type="button"
+                    onClick={openEdit}
+                    className={borderedIconButtonClass}
+                    aria-label={`Edit ${project.name}`}
+                  >
+                    <EditIcon />
+                  </button>
                 </div>
               </div>
 
