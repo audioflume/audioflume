@@ -160,21 +160,41 @@
 }
 
 .project-browser-list {
-  overflow: visible !important;
-  border: 0 !important;
-  border-radius: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 18px !important;
   background: transparent !important;
 }
 
 .project-browser-list-head {
-  display: none !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 160px 140px 44px !important;
+  align-items: center !important;
+  min-height: 40px !important;
+  padding: 0 18px !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
 }
 
 .project-browser-list .project-browser-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 160px 140px 44px !important;
+  align-items: center !important;
+  min-height: 36px !important;
   border: 0 !important;
-  border-bottom: 0 !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
   border-radius: 0 !important;
-  padding: 0 14px !important;
+  padding: 0 18px !important;
+  background: transparent !important;
+}
+
+.project-browser-list > div:last-child .project-browser-row,
+.project-browser-list .project-browser-row:last-child {
+  border-bottom: 0 !important;
 }
 
 .project-browser-list .project-browser-row + .project-browser-row {
@@ -182,7 +202,19 @@
 }
 
 .project-browser-list .project-browser-row:hover {
-  border-radius: 8px !important;
+  border-radius: 0 !important;
+  background: var(--bg-hover) !important;
+}
+
+.project-browser-list .project-browser-row-name {
+  min-width: 0 !important;
+}
+
+.project-browser-list .project-browser-row-title {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
 .project-folder-action-wrap {
@@ -308,5 +340,17 @@
   .project-breadcrumbs.project-path {
     min-width: 0 !important;
     flex-wrap: nowrap !important;
+  }
+
+  .project-browser-list-head,
+  .project-browser-list .project-browser-row {
+    grid-template-columns: minmax(0, 1fr) 44px !important;
+  }
+
+  .project-browser-list-head span:nth-child(2),
+  .project-browser-list-head span:nth-child(3),
+  .project-browser-list .project-browser-row > span:nth-child(2),
+  .project-browser-list .project-browser-row > span:nth-child(3) {
+    display: none !important;
   }
 }
