@@ -128,15 +128,36 @@
 .project-file-browser .project-folder-card .project-file-action,
 .project-file-browser .project-file-card .project-file-action {
   position: absolute !important;
-  right: 5px !important;
-  top: 0 !important;
+  right: 4px !important;
+  top: 1px !important;
+  z-index: 2;
+  display: flex !important;
+  height: 24px !important;
+  width: 28px !important;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--bg-primary) 82%, transparent) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  font-size: 14px !important;
+  line-height: 1;
+  color: var(--text-secondary) !important;
+  backdrop-filter: blur(10px);
+  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
 .project-file-browser .project-folder-card:hover .project-file-action,
 .project-file-browser .project-file-card:hover .project-file-action {
   opacity: 1;
+}
+
+.project-file-browser .project-folder-card .project-file-action:hover,
+.project-file-browser .project-file-card .project-file-action:hover {
+  border-color: var(--border) !important;
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
 }
 
 .project-browser-list {
