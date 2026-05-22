@@ -129,7 +129,7 @@
 .project-file-browser .project-file-card .project-file-action {
   position: absolute !important;
   right: 5px !important;
-  top: 5px !important;
+  top: 0 !important;
   opacity: 0;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
