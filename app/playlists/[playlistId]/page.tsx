@@ -11,7 +11,7 @@ import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
-  borderedIconButtonClass,
+  borderedIconButton9Class,
   primaryPillButtonClass,
   secondaryPillButtonClass,
   quickFilterButtonClass,
@@ -171,8 +171,7 @@ export default function PlaylistDetailPage() {
     if (!query) return songs;
     return songs.filter((song) => {
       const searchableText = [song.title, song.artist, song.key, ...song.genres, ...song.moods, ...song.instruments, ...song.builds, ...song.vocals]
-        .join(" ")
-        .toLowerCase();
+        .join(" ").toLowerCase();
       return searchableText.includes(query);
     });
   }, [songs, search]);
@@ -183,9 +182,7 @@ export default function PlaylistDetailPage() {
       ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
       : indexedSongs;
     const sortedSongs = [...nextSongs].sort((a, b) => {
-      if (quickFilter === "alphabetical") {
-        return a.song.title.localeCompare(b.song.title, undefined, { sensitivity: "base" });
-      }
+      if (quickFilter === "alphabetical") return a.song.title.localeCompare(b.song.title, undefined, { sensitivity: "base" });
       const aTime = getSongAddedTime(a.song);
       const bTime = getSongAddedTime(b.song);
       if (aTime !== bTime) return quickFilter === "oldest" ? aTime - bTime : bTime - aTime;
@@ -208,24 +205,17 @@ export default function PlaylistDetailPage() {
   useEffect(() => {
     if (!playlistId) return;
     let cancelled = false;
-
     async function loadSongs() {
       setSongsLoading(true);
       setError("");
       try {
         const res = await fetch(`/api/playlists/${playlistId}/songs`);
-        // Read JSON first so we can surface the real API error message
         const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data?.error || "Failed to load playlist songs.");
-        }
-        const loadedSongs = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.songs)
-            ? data.songs
-            : Array.isArray(data?.playlistSongs)
-              ? data.playlistSongs
-              : [];
+        if (!res.ok) throw new Error(data?.error || "Failed to load playlist songs.");
+        const loadedSongs = Array.isArray(data) ? data
+          : Array.isArray(data?.songs) ? data.songs
+          : Array.isArray(data?.playlistSongs) ? data.playlistSongs
+          : [];
         if (cancelled) return;
         setSongs(loadedSongs.filter((song: PlaylistSong) => song.id));
       } catch (err) {
@@ -236,7 +226,6 @@ export default function PlaylistDetailPage() {
         if (!cancelled) setSongsLoading(false);
       }
     }
-
     loadSongs();
     return () => { cancelled = true; };
   }, [playlistId]);
@@ -250,8 +239,6 @@ export default function PlaylistDetailPage() {
   }, [quickFilter, search]);
 
   function playFirstSong() {
-    const firstSong = filteredSongs[0];
-    if (!firstSong) return;
     const firstSongButton = document.querySelector<HTMLButtonElement>(`[aria-label="Play song"], [aria-label="Pause song"]`);
     firstSongButton?.click();
   }
@@ -286,17 +273,8 @@ export default function PlaylistDetailPage() {
       });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-      if (!res.ok) {
-        console.error("Failed to save playlist:", data || res.statusText);
-        return;
-      }
-      setPlaylists((prev) =>
-        prev.map((p) =>
-          p.id === editingPlaylist.id
-            ? data || { ...p, name: editName, cover_image_url: editCoverPreview }
-            : p,
-        ),
-      );
+      if (!res.ok) { console.error("Failed to save playlist:", data || res.statusText); return; }
+      setPlaylists((prev) => prev.map((p) => p.id === editingPlaylist.id ? data || { ...p, name: editName, cover_image_url: editCoverPreview } : p));
       showToast("Changes saved");
       setEditingPlaylist(null);
     } finally {
@@ -407,7 +385,7 @@ export default function PlaylistDetailPage() {
               type="button"
               onClick={openEdit}
               disabled={!playlist}
-              className={`${borderedIconButtonClass} ${playlist ? "" : "pointer-events-none invisible"}`}
+              className={`${borderedIconButton9Class} ${playlist ? "" : "pointer-events-none invisible"}`}
               aria-label={playlist ? `Edit ${playlist.name}` : "Edit playlist"}
             >
               <EditIcon />
@@ -511,13 +489,10 @@ export default function PlaylistDetailPage() {
                     </button>
                   );
                 })}
-
                 <button
                   type="button"
                   onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
-                  className={`${quickFilterButtonClass} ${
-                    showEditPointMarkers ? quickFilterButtonActiveClass : ""
-                  }`}
+                  className={`${quickFilterButtonClass} ${showEditPointMarkers ? quickFilterButtonActiveClass : ""}`}
                   aria-pressed={showEditPointMarkers}
                 >
                   markers
