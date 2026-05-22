@@ -15,8 +15,6 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import GridViewIcon from "@/components/icons/GridViewIcon";
-import ListViewIcon from "@/components/icons/ListViewIcon";
 import ProjectFolderPickerModal from "@/components/ProjectFolderPickerModal";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import ProjectFolderCard from "./project-browser/ProjectFolderCard";
@@ -43,10 +41,9 @@ type ProjectFileBrowserProps = {
   error: string | null;
   activeFolderId: number | null;
   viewMode: ProjectFileView;
-  onViewModeChange: (mode: ProjectFileView) => void;
   onOpenFolder: (folderId: number | null) => void;
   onMoveSong: (song: ProjectSong) => void;
-  onCreateFolder: () => void;
+  downloadSlot?: ReactNode;
 };
 
 type DragData =
@@ -269,10 +266,9 @@ export default function ProjectFileBrowser({
   error,
   activeFolderId,
   viewMode,
-  onViewModeChange,
   onOpenFolder,
   onMoveSong,
-  onCreateFolder,
+  downloadSlot,
 }: ProjectFileBrowserProps) {
   const [folderParentOverrides, setFolderParentOverrides] = useState<Map<number, number | null>>(
     () => new Map(),
@@ -345,7 +341,6 @@ export default function ProjectFileBrowser({
   );
   const visibleSongs = useMemo(() => effectiveSongs.filter((song) => (song.project_folder_id ?? null) === visibleFolderId), [effectiveSongs, visibleFolderId]);
   const itemCount = visibleFolders.length + visibleSongs.length;
-  const nextViewMode: ProjectFileView = viewMode === "grid" ? "list" : "grid";
   const draggedFolder = activeDragData?.kind === "folder" ? effectiveFolders.find((folder) => folder.id === activeDragData.folderId) ?? null : null;
   const draggedSong = activeDragData?.kind === "song" ? effectiveSongs.find((song) => Number(song.project_asset_id) === activeDragData.assetId) ?? null : null;
   const overlayModifiers = activeDragViewMode === "list" ? [snapListOverlayToCursor] : undefined;
@@ -613,23 +608,11 @@ export default function ProjectFileBrowser({
                 })}
               </div>
             </div>
-            <div className="project-file-browser-actions">
-              <button
-                type="button"
-                className="project-view-toggle-button"
-                aria-label={viewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
-                title={viewMode === "grid" ? "List view" : "Grid view"}
-                onClick={() => onViewModeChange(nextViewMode)}
-              >
-                {viewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
-              </button>
-              <button type="button" className="project-new-folder-button" onClick={onCreateFolder} aria-label="New folder" title="New folder">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-                  <path d="M12 5v14" />
-                  <path d="M5 12h14" />
-                </svg>
-              </button>
-            </div>
+            {downloadSlot && (
+              <div className="project-file-browser-actions">
+                {downloadSlot}
+              </div>
+            )}
           </div>
           <div className="project-file-browser-section">
             {itemCount > 0 ? (
