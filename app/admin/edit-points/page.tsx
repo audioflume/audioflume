@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminContentPage from "@/components/admin/AdminContentPage";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 import { primaryPillButtonClass, secondaryPillButtonClass } from "@/components/uiClasses";
@@ -90,7 +90,7 @@ export default function AdminEditPointsPage() {
     if (isAnalyzing) return;
 
     const confirmed = window.confirm(
-      "Analyze all songs currently missing edit points? This can take a few minutes.",
+      "Analyze all songs currently missing cue points? This can take a few minutes.",
     );
 
     if (!confirmed) return;
@@ -107,7 +107,7 @@ export default function AdminEditPointsPage() {
       const missingData = (await missingRes.json()) as MissingSongsResponse;
 
       if (!missingRes.ok) {
-        throw new Error(missingData?.error || "Failed to load songs missing edit points.");
+        throw new Error(missingData?.error || "Failed to load songs missing cue points.");
       }
 
       setTotalToAnalyze(missingData.songs.length);
@@ -119,7 +119,7 @@ export default function AdminEditPointsPage() {
           RECENT_ANALYSIS_STORAGE_KEY,
           JSON.stringify(emptyResult),
         );
-        showToast("No songs are missing edit points");
+        showToast("No songs are missing cue points");
         return;
       }
 
@@ -160,7 +160,7 @@ export default function AdminEditPointsPage() {
       );
     } catch (err) {
       showToast(
-        err instanceof Error ? err.message : "Failed to batch analyze edit points.",
+        err instanceof Error ? err.message : "Failed to batch analyze cue points.",
       );
     } finally {
       setIsAnalyzing(false);
@@ -170,190 +170,179 @@ export default function AdminEditPointsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-      <AdminSidebar />
-
-      <section className="px-8 pt-14 pb-20">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
-            <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-              Edit Points
-            </h1>
-
-            <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
-              Batch analyze missing edit points and review analyzer results before building frontend edit-point filters.
+    <AdminContentPage
+      label="Cue Points"
+      title="Cue Points"
+      description="Batch analyze missing cue points and review analyzer results before building frontend cue-point filters."
+      headerAction={(
+        <Link href="/admin/music-library?issue=editPoints" className={secondaryPillButtonClass}>
+          View Missing
+        </Link>
+      )}
+    >
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <section className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+          <div className="border-b border-[var(--border)] px-5 py-4">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+              Batch Analyzer
+            </div>
+            <h2 className="mt-2 text-lg font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+              Analyze songs missing cue points
+            </h2>
+            <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
+              This only targets songs that still have no saved cue-point rows. Corrected songs are left alone.
             </p>
           </div>
 
-          <Link href="/admin/music-library?issue=editPoints" className={secondaryPillButtonClass}>
-            View Missing
-          </Link>
-        </div>
-
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)]">
-            <div className="border-b border-[var(--border)] px-5 py-4">
-              <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                Batch Analyzer
-              </div>
-              <h2 className="mt-2 text-lg font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-                Analyze songs missing edit points
-              </h2>
-              <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
-                This only targets songs that still have no saved edit-point rows. Corrected songs are left alone.
-              </p>
-            </div>
-
-            <div className="px-5 py-5">
-              <button
-                type="button"
-                onClick={analyzeMissingEditPoints}
-                disabled={isAnalyzing}
-                className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
-              >
-                {isAnalyzing && (
-                  <LoadingSpinner
-                    size={13}
-                    stroke={11}
-                    color="currentColor"
-                  />
-                )}
-                {isAnalyzing ? "Analyzing..." : "Analyze Missing Edit Points"}
-              </button>
-
+          <div className="px-5 py-5">
+            <button
+              type="button"
+              onClick={analyzeMissingEditPoints}
+              disabled={isAnalyzing}
+              className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+            >
               {isAnalyzing && (
-                <div className="mt-4">
-                  <div className="mb-2 flex items-center justify-between gap-3 text-xs text-[var(--text-secondary)]">
-                    <span className="truncate">
-                      {currentSongTitle ? `Analyzing ${currentSongTitle}` : "Preparing analyzer..."}
-                    </span>
-                    <span className="shrink-0 font-mono">
-                      {completedCount}/{totalToAnalyze || "—"} · {progressPercent}%
-                    </span>
-                  </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full border border-[var(--border)] bg-[var(--bg-tertiary)]">
-                    <div
-                      className="h-full rounded-full bg-[var(--text-primary)] opacity-60 transition-[width] duration-300 ease-out"
-                      style={{ width: `${Math.max(2, progressPercent)}%` }}
-                    />
-                  </div>
-                </div>
+                <LoadingSpinner
+                  size={13}
+                  stroke={11}
+                  color="currentColor"
+                />
               )}
+              {isAnalyzing ? "Analyzing..." : "Analyze Missing Cue Points"}
+            </button>
 
-              {analysisStartedAt && isAnalyzing && (
-                <p className="mt-2 text-xs text-[var(--text-secondary)]">
-                  Analyzer is running. Keep this page open until the batch completes.
-                </p>
-              )}
-
-              {result && (
-                <div className="mt-5 overflow-hidden rounded-xl border border-[var(--border)]">
-                  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3">
-                    <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                      Recently Analyzed
-                    </div>
-                    <div className="font-mono text-[11px] text-[var(--text-muted)]">
-                      {getRecentAnalysisLabel(result.completedAt)}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-[minmax(0,1fr)_96px_80px_110px] border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                    <div>Song</div>
-                    <div>Status</div>
-                    <div>Saved</div>
-                    <div>Review</div>
-                  </div>
-
-                  {result.results.length === 0 ? (
-                    <div className="px-4 py-6 text-sm text-[var(--text-secondary)]">
-                      No songs are missing edit points.
-                    </div>
-                  ) : (
-                    result.results.map((item) => (
-                      <div
-                        key={item.songId}
-                        className="grid grid-cols-[minmax(0,1fr)_96px_80px_110px] items-center border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
-                      >
-                        <div className="min-w-0">
-                          <Link
-                            href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
-                            className="truncate font-medium text-[var(--text-primary)] transition hover:text-[var(--text-secondary)]"
-                          >
-                            {item.title || "Untitled song"}
-                          </Link>
-                          {item.error && (
-                            <div className="mt-1 truncate text-[11px] text-[var(--status-error,#dc584f)]">
-                              {item.error}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="capitalize text-[var(--text-secondary)]">
-                          {item.status}
-                        </div>
-
-                        <div className="font-mono text-[var(--text-secondary)]">
-                          {item.saved ?? "—"}
-                        </div>
-
-                        <Link
-                          href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
-                          className="inline-flex h-7 w-fit items-center rounded-full border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                        >
-                          Edit Points
-                        </Link>
-                      </div>
-                    ))
-                  )}
+            {isAnalyzing && (
+              <div className="mt-4">
+                <div className="mb-2 flex items-center justify-between gap-3 text-xs text-[var(--text-secondary)]">
+                  <span className="truncate">
+                    {currentSongTitle ? `Analyzing ${currentSongTitle}` : "Preparing analyzer..."}
+                  </span>
+                  <span className="shrink-0 font-mono">
+                    {completedCount}/{totalToAnalyze || "—"} · {progressPercent}%
+                  </span>
                 </div>
-              )}
-            </div>
-          </section>
-
-          <aside className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-              Current Step
-            </div>
-            <h2 className="mt-2 text-base font-medium text-[var(--text-primary)]">
-              Fill the catalog
-            </h2>
-            <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
-              Auto-generated edit points are useful, but they should still be reviewed. Songs with only auto edit points now show an Auto indicator in the admin library.
-            </p>
-
-            {result && (
-              <div className="mt-5 grid grid-cols-2 gap-2 text-xs">
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                  <div className="text-[var(--text-muted)]">Missing</div>
-                  <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
-                    {result.totalMissing}
-                  </div>
-                </div>
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                  <div className="text-[var(--text-muted)]">Analyzed</div>
-                  <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
-                    {result.analyzed}
-                  </div>
-                </div>
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                  <div className="text-[var(--text-muted)]">Skipped</div>
-                  <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
-                    {result.skipped}
-                  </div>
-                </div>
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                  <div className="text-[var(--text-muted)]">Failed</div>
-                  <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
-                    {result.failed}
-                  </div>
+                <div className="h-2 w-full overflow-hidden rounded-full border border-[var(--border)] bg-[var(--bg-tertiary)]">
+                  <div
+                    className="h-full rounded-full bg-[var(--text-primary)] opacity-60 transition-[width] duration-300 ease-out"
+                    style={{ width: `${Math.max(2, progressPercent)}%` }}
+                  />
                 </div>
               </div>
             )}
-          </aside>
-        </div>
-      </section>
+
+            {analysisStartedAt && isAnalyzing && (
+              <p className="mt-2 text-xs text-[var(--text-secondary)]">
+                Analyzer is running. Keep this page open until the batch completes.
+              </p>
+            )}
+
+            {result && (
+              <div className="mt-5 overflow-hidden rounded-xl border border-[var(--border)]">
+                <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3">
+                  <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                    Recently Analyzed
+                  </div>
+                  <div className="font-mono text-[11px] text-[var(--text-muted)]">
+                    {getRecentAnalysisLabel(result.completedAt)}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-[minmax(0,1fr)_96px_80px_110px] border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                  <div>Song</div>
+                  <div>Status</div>
+                  <div>Saved</div>
+                  <div>Review</div>
+                </div>
+
+                {result.results.length === 0 ? (
+                  <div className="px-4 py-6 text-sm text-[var(--text-secondary)]">
+                    No songs are missing cue points.
+                  </div>
+                ) : (
+                  result.results.map((item) => (
+                    <div
+                      key={item.songId}
+                      className="grid grid-cols-[minmax(0,1fr)_96px_80px_110px] items-center border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
+                    >
+                      <div className="min-w-0">
+                        <Link
+                          href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
+                          className="truncate font-medium text-[var(--text-primary)] transition hover:text-[var(--text-secondary)]"
+                        >
+                          {item.title || "Untitled song"}
+                        </Link>
+                        {item.error && (
+                          <div className="mt-1 truncate text-[11px] text-[var(--status-error,#dc584f)]">
+                            {item.error}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="capitalize text-[var(--text-secondary)]">
+                        {item.status}
+                      </div>
+
+                      <div className="font-mono text-[var(--text-secondary)]">
+                        {item.saved ?? "—"}
+                      </div>
+
+                      <Link
+                        href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
+                        className="inline-flex h-7 w-fit items-center rounded-full border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                      >
+                        Cue Points
+                      </Link>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <aside className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+            Current Step
+          </div>
+          <h2 className="mt-2 text-base font-medium text-[var(--text-primary)]">
+            Fill the catalog
+          </h2>
+          <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
+            Auto-generated cue points are useful, but they should still be reviewed. Songs with only auto cue points now show an Auto indicator in the admin library.
+          </p>
+
+          {result && (
+            <div className="mt-5 grid grid-cols-2 gap-2 text-xs">
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
+                <div className="text-[var(--text-muted)]">Missing</div>
+                <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
+                  {result.totalMissing}
+                </div>
+              </div>
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
+                <div className="text-[var(--text-muted)]">Analyzed</div>
+                <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
+                  {result.analyzed}
+                </div>
+              </div>
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
+                <div className="text-[var(--text-muted)]">Skipped</div>
+                <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
+                  {result.skipped}
+                </div>
+              </div>
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
+                <div className="text-[var(--text-muted)]">Failed</div>
+                <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
+                  {result.failed}
+                </div>
+              </div>
+            </div>
+          )}
+        </aside>
+      </div>
 
       <Toast message={toastMessage} />
-    </main>
+    </AdminContentPage>
   );
 }
