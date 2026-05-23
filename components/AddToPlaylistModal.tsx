@@ -93,8 +93,8 @@ function SongPreview({ song }: { song: Song }) {
     : null;
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-1 text-center">
-      <div className="flex min-w-0 items-center justify-center gap-2">
+    <div className="flex flex-shrink-0 items-center justify-start px-5 pb-4 pt-0 text-left">
+      <div className="flex min-w-0 items-center gap-2">
         <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-secondary)]">
           {cover ? (
             <Image
@@ -326,11 +326,10 @@ export default function AddToPlaylistModal({
         title="Add to Playlist"
         onClose={onClose}
         closeLabel="Close add to playlist modal"
-        maxWidth="max-w-[490px]"
-        maxHeight="460px"
-        centerTitle
+        maxWidth="max-w-[430px]"
+        maxHeight="420px"
         bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-        contentClassName="h-[460px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[64px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
+        contentClassName="h-[420px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[58px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
       >
         <SongPreview song={song} />
 
