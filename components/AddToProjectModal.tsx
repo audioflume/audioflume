@@ -7,9 +7,10 @@ import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
 import Toast from "@/components/Toast";
 import ModalShell from "@/components/ModalShell";
-import { modalPrimaryButtonClass } from "@/components/uiClasses";
 import CheckIcon from "@/components/icons/CheckIcon";
-import FolderIcon from "@/components/icons/FolderIcon";
+import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
+import "@/components/project-browser/ProjectFileBrowser.module.css";
 
 const RECENT_PROJECT_IDS_KEY = "filmwaveRecentProjectIds";
 const RECENT_PROJECT_LIMIT = 3;
@@ -20,9 +21,10 @@ type AddToProjectModalProps = {
   onClose: () => void;
 };
 
-function formatProjectNames(names: string[]) {
-  return names.map((name) => `"${name}"`).join(", ");
-}
+type ProjectResponseBody = {
+  error?: string;
+  selected_project_ids?: Array<number | string>;
+};
 
 function readRecentProjectIds() {
   if (typeof window === "undefined") return [];
@@ -45,6 +47,70 @@ function writeRecentProjectIds(ids: number[]) {
   window.localStorage.setItem(RECENT_PROJECT_IDS_KEY, JSON.stringify(ids));
 }
 
+async function readProjectResponse(res: Response): Promise<ProjectResponseBody | null> {
+  const text = await res.text();
+
+  if (!text.trim()) return null;
+
+  const contentType = res.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error(
+      res.ok ? "Invalid project response" : "Failed to update project",
+    );
+  }
+
+  try {
+    return JSON.parse(text) as ProjectResponseBody;
+  } catch {
+    throw new Error(
+      res.ok ? "Invalid project response" : "Failed to update project",
+    );
+  }
+}
+
+function SongPreview({ song }: { song: Song }) {
+  const cover = typeof song.coverArt === "string" && song.coverArt.trim()
+    ? song.coverArt
+    : null;
+
+  return (
+    <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-0 text-center">
+      <div className="flex min-w-0 items-center justify-center gap-2">
+        <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-md bg-[var(--bg-secondary)]">
+          {cover ? (
+            <Image
+              src={cover}
+              alt={song.title}
+              fill
+              sizes="24px"
+              className="object-cover"
+            />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
+              <PlaylistIcon size={10} />
+            </span>
+          )}
+        </span>
+
+        <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+          {song.title} by {song.artist}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function ProjectThumbnail() {
+  return (
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center">
+      <span className="scale-[1.55]">
+        <FolderGlyph small />
+      </span>
+    </span>
+  );
+}
+
 export default function AddToProjectModal({
   isOpen,
   song,
@@ -61,12 +127,9 @@ export default function AddToProjectModal({
   } = useProjectsContext();
 
   const [recentProjectIds, setRecentProjectIds] = useState<number[]>([]);
-  const [initialSelectedIds, setInitialSelectedIds] = useState<Set<number>>(
-    new Set(),
-  );
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [selectedLoading, setSelectedLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [pendingProjectIds, setPendingProjectIds] = useState<Set<number>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -100,8 +163,7 @@ export default function AddToProjectModal({
         const res = await fetch(
           `/api/songs/${encodeURIComponent(activeSong.id)}/projects`,
         );
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : null;
+        const data = await readProjectResponse(res);
 
         if (!res.ok) {
           throw new Error(data?.error || "Failed to load project selections");
@@ -113,12 +175,11 @@ export default function AddToProjectModal({
 
         if (cancelled) return;
 
-        const selected = new Set<number>(
-          data.selected_project_ids.map((id: number | string) => Number(id)),
+        setSelectedIds(
+          new Set<number>(
+            data.selected_project_ids.map((id: number | string) => Number(id)),
+          ),
         );
-
-        setInitialSelectedIds(selected);
-        setSelectedIds(new Set(selected));
       } catch (err) {
         if (!cancelled) {
           setError(
@@ -126,7 +187,6 @@ export default function AddToProjectModal({
               ? err.message
               : "Failed to load project selections",
           );
-          setInitialSelectedIds(new Set());
           setSelectedIds(new Set());
         }
       } finally {
@@ -162,133 +222,85 @@ export default function AddToProjectModal({
     return [...recent, ...remaining];
   }, [projects, recentProjectIds]);
 
-  const hasChanges = useMemo(() => {
-    if (initialSelectedIds.size !== selectedIds.size) return true;
-
-    for (const id of selectedIds) {
-      if (!initialSelectedIds.has(id)) return true;
-    }
-
-    return false;
-  }, [initialSelectedIds, selectedIds]);
-
-  function toggleProject(projectId: number) {
-    if (selectedLoading) return;
-
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-
-      if (next.has(projectId)) {
-        next.delete(projectId);
-      } else {
-        next.add(projectId);
-      }
-
-      return next;
-    });
-  }
-
-  function updateRecentProjects(addedProjectIds: number[]) {
-    if (addedProjectIds.length === 0) return;
-
+  function updateRecentProjects(projectId: number) {
     const current = readRecentProjectIds();
 
     const next = [
-      ...addedProjectIds,
-      ...current.filter((id) => !addedProjectIds.includes(id)),
+      projectId,
+      ...current.filter((id) => id !== projectId),
     ].slice(0, RECENT_PROJECT_LIMIT);
 
     writeRecentProjectIds(next);
     setRecentProjectIds(next);
   }
 
-  async function handleSave() {
-    if (!song || saving || selectedLoading) return;
+  async function handleProjectClick(project: { id: number; name: string }) {
+    if (!song || selectedLoading || pendingProjectIds.has(project.id)) return;
 
     const activeSong = song;
+    const wasSelected = selectedIds.has(project.id);
+    const nextSelected = !wasSelected;
 
-    setSaving(true);
+    setPendingProjectIds((current) => new Set(current).add(project.id));
     setError(null);
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      if (nextSelected) next.add(project.id);
+      else next.delete(project.id);
+
+      return next;
+    });
 
     try {
-      const addedProjectIds: number[] = [];
-      const addedProjectNames: string[] = [];
-      const removedProjectNames: string[] = [];
-
-      const updates = projects
-        .map((project) => {
-          const wasSelected = initialSelectedIds.has(project.id);
-          const isSelected = selectedIds.has(project.id);
-
-          if (wasSelected === isSelected) return null;
-
-          if (isSelected) {
-            addedProjectIds.push(project.id);
-            addedProjectNames.push(project.name);
-          } else {
-            removedProjectNames.push(project.name);
-          }
-
-          return {
-            project_id: project.id,
-            selected: isSelected,
-          };
-        })
-        .filter(
-          (update): update is { project_id: number; selected: boolean } =>
-            update !== null,
-        );
-
-      for (const update of updates) {
-        const res = await fetch(
-          `/api/songs/${encodeURIComponent(activeSong.id)}/projects`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(update),
+      const res = await fetch(
+        `/api/songs/${encodeURIComponent(activeSong.id)}/projects`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
-
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : null;
-
-        if (!res.ok) {
-          throw new Error(data?.error || "Failed to update project");
-        }
-      }
-
-      setInitialSelectedIds(new Set(selectedIds));
-      updateRecentProjects(addedProjectIds);
-
-      if (addedProjectNames.length > 0 && removedProjectNames.length > 0) {
-        setToastMessage(
-          `Added to ${formatProjectNames(
-            addedProjectNames,
-          )} · Removed from ${formatProjectNames(removedProjectNames)}`,
-        );
-      } else if (addedProjectNames.length > 0) {
-        setToastMessage(`Added to ${formatProjectNames(addedProjectNames)}`);
-      } else if (removedProjectNames.length > 0) {
-        setToastMessage(
-          `Removed from ${formatProjectNames(removedProjectNames)}`,
-        );
-      }
-
-      onClose();
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to save project changes",
+          body: JSON.stringify({
+            project_id: project.id,
+            selected: nextSelected,
+          }),
+        },
       );
+
+      const data = await readProjectResponse(res);
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to update project");
+      }
+
+      if (nextSelected) {
+        updateRecentProjects(project.id);
+        setToastMessage(`Added to "${project.name}"`);
+      } else {
+        setToastMessage(`Removed from "${project.name}"`);
+      }
+    } catch (err) {
+      setSelectedIds((current) => {
+        const next = new Set(current);
+
+        if (wasSelected) next.add(project.id);
+        else next.delete(project.id);
+
+        return next;
+      });
+      setError(err instanceof Error ? err.message : "Failed to update project");
     } finally {
-      setSaving(false);
+      setPendingProjectIds((current) => {
+        const next = new Set(current);
+        next.delete(project.id);
+        return next;
+      });
     }
   }
 
   if (!song) return null;
 
-  const loading = projectsLoading;
+  const loading = projectsLoading || selectedLoading;
   const displayedError = error || projectsError;
 
   return (
@@ -298,130 +310,89 @@ export default function AddToProjectModal({
         title="Add to Project"
         onClose={onClose}
         closeLabel="Close add to project modal"
+        maxWidth="max-w-[430px]"
+        maxHeight="420px"
         centerTitle
-        maxHeight="480px"
-        bodyScroll
-        bodyClassName="flex flex-col pb-0"
-        footerClassName="justify-center"
-        footer={
-          <button
-            type="button"
-            onClick={handleSave}
-            className={`${modalPrimaryButtonClass} w-full`}
-            disabled={saving || loading || selectedLoading || !hasChanges}
-          >
-            {saving ? "Saving..." : "Save"}
-          </button>
-        }
+        bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
+        contentClassName="h-[420px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[58px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
       >
-        {/* Song strip — no bottom margin so scroll area starts flush at the border */}
-        <div className="-mx-5 flex flex-shrink-0 items-center gap-3 border-b border-[var(--border)] pb-4 px-5">
-          <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
-            {song.coverArt && (
-              <Image
-                src={song.coverArt}
-                alt={song.title}
-                fill
-                sizes="40px"
-                className="object-cover"
-              />
-            )}
-          </div>
+        <SongPreview song={song} />
 
-          <div className="min-w-0">
-            <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-              {song.title}
-            </div>
-            <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
-              {song.artist}
-            </div>
-          </div>
-        </div>
-
-        {/* Project rows — starts immediately at the border, clips flush */}
-        <div className="-mx-5 min-h-[200px] flex-1 overflow-y-auto px-2 pb-2">
-          {/* Loading skeleton */}
-          {(loading || selectedLoading) && (
-            <div className="grid gap-0.5 pt-2">
-              {Array.from({ length: projects.length || 6 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="flex h-11 items-center gap-3 rounded-xl px-3"
-                >
-                  <div className="h-7 w-7 animate-pulse rounded-lg bg-[var(--bg-tertiary)]" />
-                  <div className="h-2.5 w-28 animate-pulse rounded bg-[var(--bg-tertiary)]" />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Error state */}
-          {!loading && !selectedLoading && displayedError && (
-            <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 px-4 text-center">
-              <div className="text-xs font-medium text-[var(--danger)]">
-                {displayedError}
+        <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)]">
+          <div className="min-h-0 flex-1 overflow-y-auto p-3">
+            {loading && (
+              <div className="grid gap-0.5 pt-1">
+                {Array.from({ length: projects.length || 4 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="flex min-h-[52px] items-center gap-3 rounded-xl p-2"
+                  >
+                    <div className="h-9 w-9 animate-pulse rounded-lg bg-[var(--bg-tertiary)]" />
+                    <div className="h-3 w-32 animate-pulse rounded bg-[var(--bg-tertiary)]" />
+                  </div>
+                ))}
               </div>
+            )}
 
-              {projectsError && (
-                <button
-                  type="button"
-                  onClick={refetchProjects}
-                  className="h-8 rounded-md bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
-                >
-                  Try Again
-                </button>
-              )}
-            </div>
-          )}
+            {!loading && displayedError && (
+              <div className="flex min-h-full flex-col items-center justify-center gap-3 px-4 text-center">
+                <div className="text-xs font-medium text-[var(--danger)]">
+                  {displayedError}
+                </div>
 
-          {/* Empty state */}
-          {!loading &&
-            !selectedLoading &&
-            !displayedError &&
-            displayedProjects.length === 0 && (
-              <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+                {projectsError && (
+                  <button
+                    type="button"
+                    onClick={refetchProjects}
+                    className="h-8 rounded-md bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
+                  >
+                    Try Again
+                  </button>
+                )}
+              </div>
+            )}
+
+            {!loading && !displayedError && displayedProjects.length === 0 && (
+              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
                 You don&apos;t have any projects yet.
               </div>
             )}
 
-          {/* Project rows */}
-          {!loading &&
-            !selectedLoading &&
-            !displayedError &&
-            displayedProjects.length > 0 &&
-            displayedProjects.map((project) => {
-              const isSelected = selectedIds.has(project.id);
+            {!loading &&
+              !displayedError &&
+              displayedProjects.length > 0 &&
+              displayedProjects.map((project) => {
+                const isSelected = selectedIds.has(project.id);
+                const isPending = pendingProjectIds.has(project.id);
 
-              return (
-                <button
-                  key={project.id}
-                  type="button"
-                  onClick={() => toggleProject(project.id)}
-                  disabled={selectedLoading}
-                  className={`group flex h-11 w-full cursor-pointer items-center gap-3 rounded-xl px-3 text-left text-sm font-medium transition-colors disabled:cursor-default disabled:opacity-70 ${
-                    isSelected
-                      ? "text-[var(--text-primary)]"
-                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                  }`}
-                >
-                  <span
-                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                      isSelected
-                        ? "bg-[var(--accent)] text-black"
-                        : "bg-[var(--bg-secondary)] text-[var(--text-muted)] group-hover:bg-[var(--bg-hover-strong)] group-hover:text-[var(--text-primary)]"
-                    }`}
+                return (
+                  <button
+                    key={project.id}
+                    type="button"
+                    onClick={() => handleProjectClick(project)}
+                    disabled={isPending}
+                    className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                   >
-                    {isSelected ? (
-                      <CheckIcon size={13} />
-                    ) : (
-                      <FolderIcon size={13} />
-                    )}
-                  </span>
+                    <ProjectThumbnail />
 
-                  <span className="min-w-0 flex-1 truncate">{project.name}</span>
-                </button>
-              );
-            })}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                        {project.name}
+                      </span>
+                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                        {isSelected ? "Added" : "Click to add"}
+                      </span>
+                    </span>
+
+                    {isSelected && (
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-primary)]">
+                        <CheckIcon size={16} />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+          </div>
         </div>
       </ModalShell>
 
