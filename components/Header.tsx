@@ -73,6 +73,50 @@ export default function Header() {
   useEffect(() => {
     if (!pathname?.startsWith("/projects/")) return;
 
+    const styleId = "filmwave-project-responsive-actions-style";
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = `
+      .project-tabs-row {
+        height: 49px !important;
+        min-height: 49px !important;
+        flex-wrap: nowrap !important;
+        row-gap: 0 !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none !important;
+      }
+
+      .project-tabs-row::-webkit-scrollbar {
+        display: none !important;
+      }
+
+      .project-tabs-row > button {
+        flex: 0 0 auto !important;
+        height: 49px !important;
+        white-space: nowrap !important;
+      }
+
+      .project-detail-page .project-detail-hero {
+        position: relative !important;
+        margin-top: 49px !important;
+      }
+
+      @media (max-width: 920px) {
+        .project-detail-page .project-detail-hero > .project-tabs-row-actions.is-in-project-hero {
+          position: absolute !important;
+          top: 38px !important;
+          right: 32px !important;
+          z-index: 2 !important;
+          display: flex !important;
+          margin-left: 0 !important;
+        }
+      }
+    `;
+
+    document.getElementById(styleId)?.remove();
+    document.head.appendChild(style);
+
     const mediaQuery = window.matchMedia("(max-width: 920px)");
     let frame = 0;
 
@@ -110,6 +154,7 @@ export default function Header() {
       observer.disconnect();
       mediaQuery.removeEventListener("change", syncProjectActions);
       window.removeEventListener("resize", syncProjectActions);
+      style.remove();
 
       const actions = document.querySelector<HTMLElement>(
         ".project-tabs-row-actions.is-in-project-hero",
