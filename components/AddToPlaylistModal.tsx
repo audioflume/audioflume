@@ -429,7 +429,7 @@ export default function AddToPlaylistModal({
                 }}
                 className="mb-1 flex w-full items-start gap-3 rounded-xl p-2"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
                 </span>
 
@@ -473,7 +473,7 @@ export default function AddToPlaylistModal({
                 onClick={() => setNewPlaylistOpen(true)}
                 className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
                   <PlusIcon size={18} />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
