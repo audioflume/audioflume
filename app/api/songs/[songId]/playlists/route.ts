@@ -25,17 +25,17 @@ async function getOwnedPlaylistIds(userId: string) {
   return (data ?? []).map((playlist) => playlist.id);
 }
 
-async function verifyPlaylistOwner(playlistId: number, userId: string) {
+async function getOwnedPlaylist(playlistId: number, userId: string) {
   const { data, error } = await supabaseServer
     .from("playlists")
-    .select("id")
+    .select("id, cover_image_url")
     .eq("id", playlistId)
     .eq("clerk_user_id", userId)
     .single();
 
-  if (error || !data) return false;
+  if (error || !data) return null;
 
-  return true;
+  return data;
 }
 
 export async function GET(_req: Request, context: RouteContext) {
@@ -100,6 +100,10 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     const playlistId = Number(body.playlist_id);
     const selected = body.selected;
+    const coverImageUrl =
+      typeof body.cover_image_url === "string" && body.cover_image_url.trim()
+        ? body.cover_image_url.trim()
+        : null;
 
     if (!Number.isFinite(playlistId)) {
       return NextResponse.json(
@@ -115,9 +119,9 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
-    const isOwner = await verifyPlaylistOwner(playlistId, userId);
+    const ownedPlaylist = await getOwnedPlaylist(playlistId, userId);
 
-    if (!isOwner) {
+    if (!ownedPlaylist) {
       return NextResponse.json(
         { error: "Playlist not found" },
         { status: 404 },
@@ -157,10 +161,28 @@ export async function PATCH(req: Request, context: RouteContext) {
         throw insertError;
       }
 
+      const shouldSetCover =
+        coverImageUrl &&
+        (typeof ownedPlaylist.cover_image_url !== "string" ||
+          !ownedPlaylist.cover_image_url.trim());
+
+      if (shouldSetCover) {
+        const { error: coverUpdateError } = await supabaseServer
+          .from("playlists")
+          .update({ cover_image_url: coverImageUrl })
+          .eq("id", playlistId)
+          .eq("clerk_user_id", userId);
+
+        if (coverUpdateError) {
+          throw coverUpdateError;
+        }
+      }
+
       return NextResponse.json({
         playlist_id: playlistId,
         song_id: decodedSongId,
         selected: true,
+        cover_image_url: shouldSetCover ? coverImageUrl : ownedPlaylist.cover_image_url,
       });
     }
 
@@ -178,6 +200,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       playlist_id: playlistId,
       song_id: decodedSongId,
       selected: false,
+      cover_image_url: ownedPlaylist.cover_image_url,
     });
   } catch (err) {
     console.error("Playlist selection update failed:", err);
