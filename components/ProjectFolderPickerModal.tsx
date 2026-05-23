@@ -161,7 +161,7 @@ export default function ProjectFolderPickerModal({
       maxWidth="max-w-[700px]"
       maxHeight="460px"
       bodyClassName="flex flex-col px-0 pb-0"
-      footerClassName="justify-between border-t border-[var(--border)] px-5 pb-4 pt-3"
+      footerClassName="justify-between px-5 pb-4 pt-3"
       headerContent={
         <div className="min-w-0">
           <div className={`${modalFieldLabelClass} !mb-0`}>Source</div>
@@ -185,8 +185,8 @@ export default function ProjectFolderPickerModal({
         </>
       }
     >
-      <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="flex min-h-[250px] flex-1 min-w-0 overflow-x-auto overflow-y-hidden">
+      <div className="-mx-5 flex min-h-0 flex-1 flex-col border-y border-[var(--border)] bg-[var(--bg-primary)]">
+        <div className="flex min-h-0 flex-1 min-w-0 overflow-x-auto overflow-y-hidden">
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
             const hasItems = column.folders.length > 0 || column.songs.length > 0;
@@ -207,7 +207,7 @@ export default function ProjectFolderPickerModal({
                 </div>
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
-                  <div className="flex min-h-full flex-col gap-1.5">
+                  <div className="flex min-h-full flex-col gap-0">
                     {columnIndex === 0 && (
                       <button
                         type="button"
