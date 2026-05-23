@@ -3,7 +3,6 @@
 import type { Playlist, Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import Toast from "@/components/Toast";
@@ -55,7 +54,10 @@ function writeRecentPlaylistIds(ids: number[]) {
   window.localStorage.setItem(RECENT_PLAYLIST_IDS_KEY, JSON.stringify(ids));
 }
 
-async function readPlaylistResponse(res: Response): Promise<PlaylistResponseBody | null> {
+async function readJsonResponse<T>(
+  res: Response,
+  fallbackMessage: string,
+): Promise<T | null> {
   const text = await res.text();
 
   if (!text.trim()) return null;
@@ -63,17 +65,13 @@ async function readPlaylistResponse(res: Response): Promise<PlaylistResponseBody
   const contentType = res.headers.get("content-type") || "";
 
   if (!contentType.includes("application/json")) {
-    throw new Error(
-      res.ok ? "Invalid playlist response" : "Failed to update playlist",
-    );
+    throw new Error(fallbackMessage);
   }
 
   try {
-    return JSON.parse(text) as PlaylistResponseBody;
+    return JSON.parse(text) as T;
   } catch {
-    throw new Error(
-      res.ok ? "Invalid playlist response" : "Failed to update playlist",
-    );
+    throw new Error(fallbackMessage);
   }
 }
 
@@ -151,12 +149,12 @@ export default function AddToPlaylistModal({
   song,
   onClose,
 }: AddToPlaylistModalProps) {
-  const router = useRouter();
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
 
   const {
     playlists,
+    setPlaylists,
     loading: playlistsLoading,
     error: playlistsError,
     refetchPlaylists,
@@ -166,6 +164,9 @@ export default function AddToPlaylistModal({
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [selectedLoading, setSelectedLoading] = useState(false);
   const [pendingPlaylistIds, setPendingPlaylistIds] = useState<Set<number>>(new Set());
+  const [creatingPlaylist, setCreatingPlaylist] = useState(false);
+  const [newPlaylistName, setNewPlaylistName] = useState("");
+  const [newPlaylistOpen, setNewPlaylistOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -199,7 +200,10 @@ export default function AddToPlaylistModal({
         const res = await fetch(
           `/api/songs/${encodeURIComponent(activeSong.id)}/playlists`,
         );
-        const data = await readPlaylistResponse(res);
+        const data = await readJsonResponse<PlaylistResponseBody>(
+          res,
+          res.ok ? "Invalid playlist response" : "Failed to load playlist selections",
+        );
 
         if (!res.ok) {
           throw new Error(data?.error || "Failed to load playlist selections");
@@ -270,10 +274,45 @@ export default function AddToPlaylistModal({
     setRecentPlaylistIds(next);
   }
 
-  async function handlePlaylistClick(playlist: Playlist) {
-    if (!song || selectedLoading || pendingPlaylistIds.has(playlist.id)) return;
+  function handleClose() {
+    if (creatingPlaylist) return;
 
-    const activeSong = song;
+    setNewPlaylistOpen(false);
+    setNewPlaylistName("");
+    setError(null);
+    onClose();
+  }
+
+  async function updateSongPlaylist(playlistId: number, selected: boolean) {
+    if (!song) throw new Error("Missing song");
+
+    const res = await fetch(
+      `/api/songs/${encodeURIComponent(song.id)}/playlists`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          playlist_id: playlistId,
+          selected,
+        }),
+      },
+    );
+
+    const data = await readJsonResponse<PlaylistResponseBody>(
+      res,
+      res.ok ? "Invalid playlist response" : "Failed to update playlist",
+    );
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Failed to update playlist");
+    }
+  }
+
+  async function handlePlaylistClick(playlist: Playlist) {
+    if (!song || selectedLoading || pendingPlaylistIds.has(playlist.id) || creatingPlaylist) return;
+
     const wasSelected = selectedIds.has(playlist.id);
     const nextSelected = !wasSelected;
 
@@ -289,25 +328,7 @@ export default function AddToPlaylistModal({
     });
 
     try {
-      const res = await fetch(
-        `/api/songs/${encodeURIComponent(activeSong.id)}/playlists`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            playlist_id: playlist.id,
-            selected: nextSelected,
-          }),
-        },
-      );
-
-      const data = await readPlaylistResponse(res);
-
-      if (!res.ok) {
-        throw new Error(data?.error || "Failed to update playlist");
-      }
+      await updateSongPlaylist(playlist.id, nextSelected);
 
       if (nextSelected) {
         updateRecentPlaylists(playlist.id);
@@ -334,9 +355,48 @@ export default function AddToPlaylistModal({
     }
   }
 
-  function handleNewPlaylistClick() {
-    onClose();
-    router.push("/playlists");
+  async function handleCreatePlaylist() {
+    if (!song || creatingPlaylist || !newPlaylistName.trim()) return;
+
+    const cleanName = newPlaylistName.trim();
+
+    setCreatingPlaylist(true);
+    setError(null);
+
+    try {
+      const createRes = await fetch("/api/playlists", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: cleanName,
+          position: playlists.length,
+        }),
+      });
+
+      const createdPlaylist = await readJsonResponse<Playlist & { error?: string }>(
+        createRes,
+        createRes.ok ? "Invalid playlist response" : "Failed to create playlist",
+      );
+
+      if (!createRes.ok || !createdPlaylist?.id) {
+        throw new Error(createdPlaylist?.error || "Failed to create playlist");
+      }
+
+      await updateSongPlaylist(createdPlaylist.id, true);
+
+      setPlaylists((current) => [...current, createdPlaylist]);
+      setSelectedIds((current) => new Set(current).add(createdPlaylist.id));
+      updateRecentPlaylists(createdPlaylist.id);
+      setNewPlaylistName("");
+      setNewPlaylistOpen(false);
+      setToastMessage(`Created "${createdPlaylist.name}"`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create playlist");
+    } finally {
+      setCreatingPlaylist(false);
+    }
   }
 
   if (!song) return null;
@@ -349,7 +409,7 @@ export default function AddToPlaylistModal({
       <ModalShell
         isOpen={isOpen}
         title="Add to Playlist"
-        onClose={onClose}
+        onClose={handleClose}
         closeLabel="Close add to playlist modal"
         maxWidth="max-w-[430px]"
         maxHeight="420px"
@@ -361,18 +421,66 @@ export default function AddToPlaylistModal({
 
         <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)]">
           <div className="min-h-0 flex-1 overflow-y-auto p-3">
-            <button
-              type="button"
-              onClick={handleNewPlaylistClick}
-              className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
-                <PlusIcon size={18} />
-              </span>
-              <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-                New Playlist...
-              </span>
-            </button>
+            {newPlaylistOpen ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleCreatePlaylist();
+                }}
+                className="mb-1 flex w-full items-center gap-3 rounded-xl p-2"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]">
+                  <PlusIcon size={18} />
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <input
+                    type="text"
+                    value={newPlaylistName}
+                    disabled={creatingPlaylist}
+                    onChange={(e) => setNewPlaylistName(e.target.value)}
+                    placeholder="Name"
+                    autoFocus
+                    className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:opacity-60"
+                  />
+
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={creatingPlaylist}
+                      onClick={() => {
+                        setNewPlaylistOpen(false);
+                        setNewPlaylistName("");
+                      }}
+                      className="h-8 rounded-lg border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={creatingPlaylist || !newPlaylistName.trim()}
+                      className="h-8 rounded-lg bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setNewPlaylistOpen(true)}
+                className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
+                  <PlusIcon size={18} />
+                </span>
+                <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                  New Playlist...
+                </span>
+              </button>
+            )}
 
             {loading && (
               <div className="grid gap-0.5 pt-1">
@@ -427,7 +535,7 @@ export default function AddToPlaylistModal({
                     key={playlist.id}
                     type="button"
                     onClick={() => handlePlaylistClick(playlist)}
-                    disabled={isPending}
+                    disabled={isPending || creatingPlaylist}
                     className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                   >
                     <PlaylistThumbnail playlist={playlist} index={index} />
