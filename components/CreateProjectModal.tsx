@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import ModalShell from "@/components/ModalShell";
-import { modalPrimaryButtonClass } from "@/components/uiClasses";
+import {
+  modalFieldLabelClass,
+  modalInputClass,
+  modalPrimaryButtonClass,
+} from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import type { Project } from "@/lib/types";
 
@@ -99,7 +103,7 @@ export default function CreateProjectModal({
           handleCreate();
         }}
       >
-        <label htmlFor="project-name" className="block text-[11px] font-medium text-[var(--text-secondary)]">
+        <label htmlFor="project-name" className={modalFieldLabelClass}>
           Project name
         </label>
 
@@ -111,7 +115,7 @@ export default function CreateProjectModal({
           onChange={(e) => setName(e.target.value)}
           placeholder="Example: Pacific Sunday"
           autoFocus
-          className="mt-2 h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+          className={modalInputClass}
         />
 
         {error && (
