@@ -589,12 +589,12 @@ export default function ProjectFileBrowser({
     }
   }
 
-  async function deleteSong(song: ProjectSong) {
+  async function removeSongFromProject(song: ProjectSong) {
     setContextMenu(null);
     const assetId = Number(song.project_asset_id);
 
     if (!Number.isFinite(assetId)) return;
-    if (!window.confirm(`Delete "${song.title}" from this project?`)) return;
+    if (!window.confirm(`Remove "${song.title}" from this project?`)) return;
 
     setDeletedAssetIds((current) => new Set([...current, assetId]));
 
@@ -607,7 +607,7 @@ export default function ProjectFileBrowser({
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
 
-      if (!res.ok) throw new Error(data?.error || "Failed to delete file");
+      if (!res.ok) throw new Error(data?.error || "Failed to remove file from project");
     } catch (err) {
       setDeletedAssetIds((current) => {
         const next = new Set(current);
@@ -858,7 +858,7 @@ export default function ProjectFileBrowser({
           <>
             <button type="button" onClick={() => { onMoveSong(contextMenu.song); setContextMenu(null); }}>Move</button>
             <button type="button" onClick={() => downloadSong(contextMenu.song)}>Download</button>
-            <button type="button" className="danger-hover" onClick={() => deleteSong(contextMenu.song)}>Delete</button>
+            <button type="button" className="danger-hover" onClick={() => removeSongFromProject(contextMenu.song)}>Remove from Project</button>
           </>
         ) : null}
       </DropdownShell>
