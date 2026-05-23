@@ -5,28 +5,75 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import PlusIcon from "@/components/icons/PlusIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
+
+type HideMode = "first-child" | "all-children" | "none";
 
 type HeaderConfig = {
   section: string;
   label: string;
   action?: React.ReactNode;
-  hideOriginalHeader?: boolean;
+  hideMode: HideMode;
 };
+
+const adminPrimaryButtonClass =
+  "hidden h-8 items-center justify-center gap-2 rounded-full border border-[var(--text-primary)] bg-[var(--text-primary)] px-3.5 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 md:flex";
+
+const adminSecondaryButtonClass =
+  "hidden h-8 items-center justify-center rounded-full border border-[var(--border)] px-3.5 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] md:flex";
 
 function getHeaderConfig(pathname: string): HeaderConfig | null {
   if (pathname === "/admin") {
     return {
       section: "Admin",
       label: "Dashboard",
-      hideOriginalHeader: true,
+      hideMode: "first-child",
       action: (
-        <Link
-          href="/admin/songs/new"
-          className="hidden h-8 items-center justify-center gap-2 rounded-full border border-[var(--text-primary)] bg-[var(--text-primary)] px-3.5 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 md:flex"
-        >
+        <Link href="/admin/songs/new" className={adminPrimaryButtonClass}>
           <UploadIcon size={13} />
           <span>Upload Song</span>
+        </Link>
+      ),
+    };
+  }
+
+  if (pathname === "/admin/music-library") {
+    return {
+      section: "Admin",
+      label: "Music Library",
+      hideMode: "first-child",
+      action: (
+        <Link href="/admin/songs/new" className={adminPrimaryButtonClass}>
+          <UploadIcon size={13} />
+          <span>Upload Song</span>
+        </Link>
+      ),
+    };
+  }
+
+  if (pathname === "/admin/playlist-manager") {
+    return {
+      section: "Admin",
+      label: "Playlist Manager",
+      hideMode: "all-children",
+      action: (
+        <Link href="/admin/playlist-manager/new" className={adminPrimaryButtonClass}>
+          <PlusIcon size={13} />
+          <span>New Playlist</span>
+        </Link>
+      ),
+    };
+  }
+
+  if (pathname === "/admin/edit-points") {
+    return {
+      section: "Admin",
+      label: "Cue Points",
+      hideMode: "first-child",
+      action: (
+        <Link href="/admin/music-library?issue=editPoints" className={adminSecondaryButtonClass}>
+          View Missing
         </Link>
       ),
     };
@@ -36,7 +83,7 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
     return {
       section: "Admin",
       label: "Song Editor",
-      hideOriginalHeader: false,
+      hideMode: "none",
     };
   }
 
@@ -60,8 +107,29 @@ function getSongEditorContainer() {
   return card?.closest("main")?.querySelector<HTMLElement>(":scope > div") ?? null;
 }
 
+function getMainSectionContainer() {
+  return document.querySelector<HTMLElement>("main > section");
+}
+
+function getPlaylistManagerContainer() {
+  const main = document.querySelector("main");
+  const directChildren = Array.from(main?.children ?? []) as HTMLElement[];
+
+  return (
+    directChildren.find(
+      (child) =>
+        child.tagName.toLowerCase() === "div" &&
+        child.className.includes("pt-14") &&
+        child.className.includes("pb-6"),
+    ) ?? null
+  );
+}
+
 function getPageContainer(pathname: string) {
   if (pathname === "/admin") return getDashboardContainer();
+  if (pathname === "/admin/music-library") return getMainSectionContainer();
+  if (pathname === "/admin/playlist-manager") return getPlaylistManagerContainer();
+  if (pathname === "/admin/edit-points") return getMainSectionContainer();
   if (pathname.startsWith("/admin/songs")) return getSongEditorContainer();
   return null;
 }
@@ -76,13 +144,23 @@ function ensureMount(container: HTMLElement) {
   return mount;
 }
 
-function hideOriginalHeader(container: HTMLElement) {
+function hideOriginalHeader(container: HTMLElement, hideMode: HideMode) {
+  if (hideMode === "none") return undefined;
+
   const children = Array.from(container.children) as HTMLElement[];
-  const originalHeader = children.find((child) => !child.classList.contains("admin-page-header-mount"));
-  originalHeader?.classList.add("admin-original-page-header-hidden");
+  const candidates = children.filter(
+    (child) => !child.classList.contains("admin-page-header-mount"),
+  );
+  const hiddenChildren = hideMode === "all-children" ? candidates : candidates.slice(0, 1);
+
+  hiddenChildren.forEach((child) => {
+    child.classList.add("admin-original-page-header-hidden");
+  });
 
   return () => {
-    originalHeader?.classList.remove("admin-original-page-header-hidden");
+    hiddenChildren.forEach((child) => {
+      child.classList.remove("admin-original-page-header-hidden");
+    });
   };
 }
 
@@ -106,9 +184,7 @@ export default function AdminPageHeaderMount() {
 
       const nextMount = ensureMount(container);
       cleanupOriginal?.();
-      cleanupOriginal = config.hideOriginalHeader
-        ? hideOriginalHeader(container)
-        : undefined;
+      cleanupOriginal = hideOriginalHeader(container, config.hideMode);
       setMount(nextMount);
     }
 
