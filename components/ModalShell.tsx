@@ -118,7 +118,13 @@ export default function ModalShell({
             </div>
           </>
         ) : (
-          <div className={`px-5 pb-5 ${contentClassName}`}>{children}</div>
+          <div
+            className={`min-h-0 flex-1 px-5 pb-5 ${
+              bodyScroll ? "overflow-y-auto" : "overflow-hidden"
+            } ${bodyClassName}`}
+          >
+            {children}
+          </div>
         )}
       </div>
     </div>
