@@ -164,3 +164,44 @@ export async function PATCH(req: Request, context: RouteContext) {
     );
   }
 }
+
+export async function DELETE(req: Request, context: RouteContext) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const projectId = await getProjectId(context);
+    const project = await verifyProject(projectId, userId);
+
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    const body = await req.json();
+    const assetId = Number(body.asset_id);
+
+    if (!Number.isFinite(assetId)) {
+      return NextResponse.json({ error: "Missing asset_id" }, { status: 400 });
+    }
+
+    const { error } = await supabaseServer
+      .from("project_assets")
+      .delete()
+      .eq("id", assetId)
+      .eq("project_id", projectId);
+
+    if (error) throw error;
+
+    return NextResponse.json({ deleted_asset_id: assetId });
+  } catch (err) {
+    console.error("Project asset delete error:", err);
+
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Failed to delete project asset" },
+      { status: 500 },
+    );
+  }
+}
