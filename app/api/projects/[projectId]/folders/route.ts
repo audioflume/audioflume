@@ -220,6 +220,8 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     const body = await req.json();
     const folderId = Number(body.folder_id);
+    const cleanName = typeof body.name === "string" ? body.name.trim() : undefined;
+    const isMoveRequest = "parent_folder_id" in body;
     const parentFolderId =
       body.parent_folder_id === null || body.parent_folder_id === undefined
         ? null
@@ -229,11 +231,15 @@ export async function PATCH(req: Request, context: RouteContext) {
       return NextResponse.json({ error: "Missing folder_id" }, { status: 400 });
     }
 
-    if (parentFolderId !== null && !Number.isFinite(parentFolderId)) {
+    if (cleanName !== undefined && !cleanName) {
+      return NextResponse.json({ error: "Folder name required" }, { status: 400 });
+    }
+
+    if (isMoveRequest && parentFolderId !== null && !Number.isFinite(parentFolderId)) {
       return NextResponse.json({ error: "Invalid parent folder" }, { status: 400 });
     }
 
-    if (parentFolderId === folderId) {
+    if (isMoveRequest && parentFolderId === folderId) {
       return NextResponse.json({ error: "Folder cannot move into itself" }, { status: 400 });
     }
 
@@ -252,11 +258,11 @@ export async function PATCH(req: Request, context: RouteContext) {
       return NextResponse.json({ error: "Folder not found" }, { status: 404 });
     }
 
-    if (parentFolderId !== null && !folderIds.has(parentFolderId)) {
+    if (isMoveRequest && parentFolderId !== null && !folderIds.has(parentFolderId)) {
       return NextResponse.json({ error: "Parent folder not found" }, { status: 404 });
     }
 
-    if (parentFolderId !== null) {
+    if (isMoveRequest && parentFolderId !== null) {
       const byId = new Map(
         folderRows.map((folder) => [Number(folder.id), Number(folder.parent_folder_id)]),
       );
@@ -274,11 +280,19 @@ export async function PATCH(req: Request, context: RouteContext) {
       }
     }
 
-    const nextPosition = await getNextFolderPosition(projectId, parentFolderId);
+    const updatePayload: Record<string, string | number | null> = {};
+
+    if (cleanName !== undefined) updatePayload.name = cleanName;
+
+    if (isMoveRequest) {
+      const nextPosition = await getNextFolderPosition(projectId, parentFolderId);
+      updatePayload.parent_folder_id = parentFolderId;
+      updatePayload.position = nextPosition;
+    }
 
     const { data, error } = await supabaseServer
       .from("project_folders")
-      .update({ parent_folder_id: parentFolderId, position: nextPosition })
+      .update(updatePayload)
       .eq("id", folderId)
       .eq("project_id", projectId)
       .eq("clerk_user_id", userId)
@@ -293,6 +307,89 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Failed to update project folder" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(req: Request, context: RouteContext) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const projectId = await getProjectId(context);
+    const project = await getOwnedProject(projectId, userId);
+
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    const body = await req.json();
+    const folderId = Number(body.folder_id);
+
+    if (!Number.isFinite(folderId)) {
+      return NextResponse.json({ error: "Missing folder_id" }, { status: 400 });
+    }
+
+    const { data: folders, error: foldersError } = await supabaseServer
+      .from("project_folders")
+      .select("id,parent_folder_id")
+      .eq("project_id", projectId)
+      .eq("clerk_user_id", userId);
+
+    if (foldersError) throw foldersError;
+
+    const folderRows = folders ?? [];
+    const folderIds = new Set(folderRows.map((folder) => Number(folder.id)));
+
+    if (!folderIds.has(folderId)) {
+      return NextResponse.json({ error: "Folder not found" }, { status: 404 });
+    }
+
+    const descendantIds = new Set<number>([folderId]);
+    let changed = true;
+
+    while (changed) {
+      changed = false;
+      folderRows.forEach((folder) => {
+        const id = Number(folder.id);
+        const parentId = Number(folder.parent_folder_id);
+
+        if (Number.isFinite(parentId) && descendantIds.has(parentId) && !descendantIds.has(id)) {
+          descendantIds.add(id);
+          changed = true;
+        }
+      });
+    }
+
+    const ids = Array.from(descendantIds);
+
+    const { error: assetDeleteError } = await supabaseServer
+      .from("project_assets")
+      .delete()
+      .eq("project_id", projectId)
+      .in("folder_id", ids);
+
+    if (assetDeleteError) throw assetDeleteError;
+
+    const { error: folderDeleteError } = await supabaseServer
+      .from("project_folders")
+      .delete()
+      .eq("project_id", projectId)
+      .eq("clerk_user_id", userId)
+      .in("id", ids);
+
+    if (folderDeleteError) throw folderDeleteError;
+
+    return NextResponse.json({ deleted_folder_ids: ids });
+  } catch (err) {
+    console.error("Project folder delete error:", err);
+
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Failed to delete project folder" },
       { status: 500 },
     );
   }
