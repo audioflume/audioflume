@@ -33,7 +33,7 @@ export default function ModalShell({
   closeLabel = "Close modal",
   centerTitle = false,
   bodyScroll = false,
-  bodyClassName = "",
+  bodyClassName,
   contentClassName = "",
   footerClassName = "",
   headerContent,
@@ -51,6 +51,10 @@ export default function ModalShell({
   const modalMaxHeight = playerVisible
     ? `min(${maxHeight}, calc(100vh - 128px))`
     : `min(${maxHeight}, calc(100vh - 64px))`;
+
+  const defaultBodyClassName = footer
+    ? "px-5 pb-2"
+    : "px-5 pb-5";
 
   const modal = (
     <div
@@ -103,27 +107,17 @@ export default function ModalShell({
           </svg>
         </button>
 
-        {footer ? (
-          <>
-            <div
-              className={`min-h-0 flex-1 px-5 pb-2 ${
-                bodyScroll ? "overflow-y-auto" : "overflow-hidden"
-              } ${bodyClassName}`}
-            >
-              {children}
-            </div>
+        <div
+          className={`min-h-0 flex-1 ${bodyClassName ?? defaultBodyClassName} ${
+            bodyScroll ? "overflow-y-auto" : "overflow-hidden"
+          }`}
+        >
+          {children}
+        </div>
 
-            <div className={`flex flex-shrink-0 items-center gap-2 px-5 pb-5 pt-2 ${footerClassName || "justify-end"}`}>
-              {footer}
-            </div>
-          </>
-        ) : (
-          <div
-            className={`min-h-0 flex-1 px-5 pb-5 ${
-              bodyScroll ? "overflow-y-auto" : "overflow-hidden"
-            } ${bodyClassName}`}
-          >
-            {children}
+        {footer && (
+          <div className={`flex flex-shrink-0 items-center gap-2 px-5 pb-5 pt-2 ${footerClassName || "justify-end"}`}>
+            {footer}
           </div>
         )}
       </div>
