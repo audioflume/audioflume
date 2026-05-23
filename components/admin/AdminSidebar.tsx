@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import EngagementIcon from "@/components/icons/EngagementIcon";
-import SearchIcon from "@/components/icons/SearchIcon";
 import { usePlayer } from "@/context/PlayerContext";
 
 type AdminNavItem = {
@@ -239,18 +238,8 @@ export default function AdminSidebar() {
       style={{ top: "56px", bottom: playerVisible ? "64px" : "0px" }}
     >
       <div className="flex flex-1 flex-col overflow-y-auto px-5 pt-6 pb-6">
-        <div className="shrink-0">
-          <button
-            type="button"
-            className="flex h-9 w-full items-center gap-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-left text-[13px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-          >
-            <SearchIcon size={14} />
-            <span className="min-w-0 flex-1 truncate">Quick search...</span>
-            <span className="text-[11px] text-[var(--text-muted)]">⌘K</span>
-          </button>
-        </div>
-
-        <div className="mt-5 border-b border-[var(--border)] pb-5">
+        <div className="border-b border-[var(--border)] pb-5">
+          <div className="mb-2 px-2.5 text-[11px] font-medium text-[var(--text-muted)]">Admin</div>
           <div className="space-y-[2px]">
             {primaryLinks.map((link) => (
               <PrimaryNavLink key={link.href} label={link.label} href={link.href} icon={link.icon} status={link.status} />
