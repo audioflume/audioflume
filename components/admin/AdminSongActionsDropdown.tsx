@@ -90,7 +90,7 @@ export default function AdminSongActionsDropdown({
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data?.error || "Failed to analyze edit points");
+        throw new Error(data?.error || "Failed to analyze cue points");
       }
 
       window.dispatchEvent(
@@ -100,10 +100,10 @@ export default function AdminSongActionsDropdown({
       );
 
       onOpenChange(false);
-      window.alert(`Saved ${data.saved ?? 0} edit points for "${songTitle}".`);
+      window.alert(`Saved ${data.saved ?? 0} cue points for "${songTitle}".`);
     } catch (err) {
       window.alert(
-        err instanceof Error ? err.message : "Failed to analyze edit points",
+        err instanceof Error ? err.message : "Failed to analyze cue points",
       );
     } finally {
       setIsAnalyzing(false);
@@ -190,7 +190,7 @@ export default function AdminSongActionsDropdown({
 
         {hasEditPoints ? (
           <Link href={editPointsHref} onClick={() => onOpenChange(false)}>
-            Manage Edit Points
+            Cue Point Manager
           </Link>
         ) : (
           <button
@@ -202,7 +202,7 @@ export default function AdminSongActionsDropdown({
               {isAnalyzing && (
                 <LoadingSpinner size={12} stroke={12} color="currentColor" />
               )}
-              {isAnalyzing ? "Analyzing..." : "Analyze Edit Points"}
+              {isAnalyzing ? "Analyzing..." : "Analyze Cue Points"}
             </span>
           </button>
         )}
