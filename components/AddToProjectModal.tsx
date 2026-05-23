@@ -1,6 +1,6 @@
 "use client";
 
-import type { Song } from "@/lib/types";
+import type { Project, Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { usePlayer } from "@/context/PlayerContext";
@@ -9,6 +9,7 @@ import Toast from "@/components/Toast";
 import ModalShell from "@/components/ModalShell";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
 import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
 import "@/components/project-browser/ProjectFileBrowser.module.css";
 
@@ -47,7 +48,10 @@ function writeRecentProjectIds(ids: number[]) {
   window.localStorage.setItem(RECENT_PROJECT_IDS_KEY, JSON.stringify(ids));
 }
 
-async function readProjectResponse(res: Response): Promise<ProjectResponseBody | null> {
+async function readJsonResponse<T>(
+  res: Response,
+  fallbackMessage: string,
+): Promise<T | null> {
   const text = await res.text();
 
   if (!text.trim()) return null;
@@ -55,17 +59,13 @@ async function readProjectResponse(res: Response): Promise<ProjectResponseBody |
   const contentType = res.headers.get("content-type") || "";
 
   if (!contentType.includes("application/json")) {
-    throw new Error(
-      res.ok ? "Invalid project response" : "Failed to update project",
-    );
+    throw new Error(fallbackMessage);
   }
 
   try {
-    return JSON.parse(text) as ProjectResponseBody;
+    return JSON.parse(text) as T;
   } catch {
-    throw new Error(
-      res.ok ? "Invalid project response" : "Failed to update project",
-    );
+    throw new Error(fallbackMessage);
   }
 }
 
@@ -121,6 +121,7 @@ export default function AddToProjectModal({
 
   const {
     projects,
+    setProjects,
     loading: projectsLoading,
     error: projectsError,
     refetchProjects,
@@ -130,6 +131,9 @@ export default function AddToProjectModal({
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [selectedLoading, setSelectedLoading] = useState(false);
   const [pendingProjectIds, setPendingProjectIds] = useState<Set<number>>(new Set());
+  const [creatingProject, setCreatingProject] = useState(false);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [newProjectOpen, setNewProjectOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -163,7 +167,10 @@ export default function AddToProjectModal({
         const res = await fetch(
           `/api/songs/${encodeURIComponent(activeSong.id)}/projects`,
         );
-        const data = await readProjectResponse(res);
+        const data = await readJsonResponse<ProjectResponseBody>(
+          res,
+          res.ok ? "Invalid project response" : "Failed to load project selections",
+        );
 
         if (!res.ok) {
           throw new Error(data?.error || "Failed to load project selections");
@@ -234,10 +241,45 @@ export default function AddToProjectModal({
     setRecentProjectIds(next);
   }
 
-  async function handleProjectClick(project: { id: number; name: string }) {
-    if (!song || selectedLoading || pendingProjectIds.has(project.id)) return;
+  function handleClose() {
+    if (creatingProject) return;
 
-    const activeSong = song;
+    setNewProjectOpen(false);
+    setNewProjectName("");
+    setError(null);
+    onClose();
+  }
+
+  async function updateSongProject(projectId: number, selected: boolean) {
+    if (!song) throw new Error("Missing song");
+
+    const res = await fetch(
+      `/api/songs/${encodeURIComponent(song.id)}/projects`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          project_id: projectId,
+          selected,
+        }),
+      },
+    );
+
+    const data = await readJsonResponse<ProjectResponseBody>(
+      res,
+      res.ok ? "Invalid project response" : "Failed to update project",
+    );
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Failed to update project");
+    }
+  }
+
+  async function handleProjectClick(project: { id: number; name: string }) {
+    if (!song || selectedLoading || pendingProjectIds.has(project.id) || creatingProject) return;
+
     const wasSelected = selectedIds.has(project.id);
     const nextSelected = !wasSelected;
 
@@ -253,25 +295,7 @@ export default function AddToProjectModal({
     });
 
     try {
-      const res = await fetch(
-        `/api/songs/${encodeURIComponent(activeSong.id)}/projects`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            project_id: project.id,
-            selected: nextSelected,
-          }),
-        },
-      );
-
-      const data = await readProjectResponse(res);
-
-      if (!res.ok) {
-        throw new Error(data?.error || "Failed to update project");
-      }
+      await updateSongProject(project.id, nextSelected);
 
       if (nextSelected) {
         updateRecentProjects(project.id);
@@ -298,6 +322,49 @@ export default function AddToProjectModal({
     }
   }
 
+  async function handleCreateProject() {
+    if (!song || creatingProject || !newProjectName.trim()) return;
+
+    const cleanName = newProjectName.trim();
+
+    setCreatingProject(true);
+    setError(null);
+
+    try {
+      const createRes = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: cleanName,
+        }),
+      });
+
+      const createdProject = await readJsonResponse<Project & { error?: string }>(
+        createRes,
+        createRes.ok ? "Invalid project response" : "Failed to create project",
+      );
+
+      if (!createRes.ok || !createdProject?.id) {
+        throw new Error(createdProject?.error || "Failed to create project");
+      }
+
+      await updateSongProject(createdProject.id, true);
+
+      setProjects((current) => [...current, createdProject]);
+      setSelectedIds((current) => new Set(current).add(createdProject.id));
+      updateRecentProjects(createdProject.id);
+      setNewProjectName("");
+      setNewProjectOpen(false);
+      setToastMessage(`Created "${createdProject.name}"`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create project");
+    } finally {
+      setCreatingProject(false);
+    }
+  }
+
   if (!song) return null;
 
   const loading = projectsLoading || selectedLoading;
@@ -308,7 +375,7 @@ export default function AddToProjectModal({
       <ModalShell
         isOpen={isOpen}
         title="Add to Project"
-        onClose={onClose}
+        onClose={handleClose}
         closeLabel="Close add to project modal"
         maxWidth="max-w-[430px]"
         maxHeight="420px"
@@ -320,6 +387,67 @@ export default function AddToProjectModal({
 
         <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)]">
           <div className="min-h-0 flex-1 overflow-y-auto p-3">
+            {newProjectOpen ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleCreateProject();
+                }}
+                className="mb-1 flex w-full items-start gap-3 rounded-xl p-2"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-primary)]">
+                  <PlusIcon size={18} />
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <input
+                    type="text"
+                    value={newProjectName}
+                    disabled={creatingProject}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                    placeholder="Name"
+                    autoFocus
+                    className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:opacity-60"
+                  />
+
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={creatingProject}
+                      onClick={() => {
+                        setNewProjectOpen(false);
+                        setNewProjectName("");
+                      }}
+                      className="h-8 rounded-full border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={creatingProject || !newProjectName.trim()}
+                      className="h-8 rounded-full bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setNewProjectOpen(true)}
+                className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
+                  <PlusIcon size={18} />
+                </span>
+                <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                  New Project...
+                </span>
+              </button>
+            )}
+
             {loading && (
               <div className="grid gap-0.5 pt-1">
                 {Array.from({ length: projects.length || 4 }).map((_, index) => (
@@ -370,7 +498,7 @@ export default function AddToProjectModal({
                     key={project.id}
                     type="button"
                     onClick={() => handleProjectClick(project)}
-                    disabled={isPending}
+                    disabled={isPending || creatingProject}
                     className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                   >
                     <ProjectThumbnail />
