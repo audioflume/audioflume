@@ -87,6 +87,43 @@ function PlaylistThumbnail({
   );
 }
 
+function SongPreview({ song }: { song: Song }) {
+  const cover = typeof song.coverArt === "string" && song.coverArt.trim()
+    ? song.coverArt
+    : null;
+
+  return (
+    <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-1">
+      <div className="flex min-w-0 items-center gap-3">
+        <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-secondary)]">
+          {cover ? (
+            <Image
+              src={cover}
+              alt={song.title}
+              fill
+              sizes="32px"
+              className="object-cover"
+            />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
+              <PlaylistIcon size={12} />
+            </span>
+          )}
+        </span>
+
+        <span className="min-w-0 text-left">
+          <span className="block max-w-[300px] truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+            {song.title}
+          </span>
+          <span className="mt-0.5 block max-w-[300px] truncate text-[11px] text-[var(--text-muted)]">
+            {song.artist}
+          </span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function AddToPlaylistModal({
   isOpen,
   song,
@@ -295,10 +332,12 @@ export default function AddToPlaylistModal({
         onClose={onClose}
         closeLabel="Close add to playlist modal"
         maxWidth="max-w-[490px]"
-        maxHeight="420px"
+        maxHeight="460px"
         bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-        contentClassName="h-[420px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[66px] [&>div:first-child]:items-end [&>div:first-child]:pb-3"
+        contentClassName="h-[460px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[64px] [&>div:first-child]:items-end [&>div:first-child]:justify-center [&>div:first-child]:pb-2"
       >
+        <SongPreview song={song} />
+
         <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)]">
           <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-0 pt-5">
             <button
