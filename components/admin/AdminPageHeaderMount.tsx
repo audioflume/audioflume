@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import PlusIcon from "@/components/icons/PlusIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 
 type HideMode = "first-child" | "all-children" | "none";
@@ -63,6 +64,12 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
       section: "Admin",
       label: "Playlist Manager",
       hideMode: "all-children",
+      action: (
+        <Link href="/admin/playlist-manager/new" className={adminPrimaryButtonClass}>
+          <PlusIcon size={13} />
+          <span>New Playlist</span>
+        </Link>
+      ),
     };
   }
 
