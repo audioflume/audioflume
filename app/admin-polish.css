@@ -144,7 +144,7 @@ main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(1),
 main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(2),
 main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3),
 main:has(a[href="/admin/music-library?issue=editPoints"]) > section,
-main:has(.waveform-review) > div {
+main.admin-cue-point-page > .admin-cue-point-container {
   max-width: 1260px !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -154,7 +154,7 @@ main:has(.waveform-review) > div {
 
 main:has(input[placeholder="Search Music Library"]) > section,
 main:has(a[href="/admin/music-library?issue=editPoints"]) > section,
-main:has(.waveform-review) > div,
+main.admin-cue-point-page > .admin-cue-point-container,
 main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(1) {
   padding-top: 88px !important;
 }
@@ -163,7 +163,7 @@ main:has(input[placeholder="Search Music Library"]) h1,
 main:has(a[href="/admin/playlist-manager/new"]) h1,
 main:has(a[href*="/admin/playlist-manager/discover/"]) h1,
 main:has(a[href="/admin/music-library?issue=editPoints"]) h1,
-main:has(.waveform-review) h1 {
+main.admin-cue-point-page h1 {
   font-size: 34px !important;
   font-weight: 500 !important;
   line-height: 1 !important;
@@ -174,16 +174,12 @@ main:has(input[placeholder="Search Music Library"]) h1 + p,
 main:has(a[href="/admin/playlist-manager/new"]) h1 + p,
 main:has(a[href*="/admin/playlist-manager/discover/"]) h1 + p,
 main:has(a[href="/admin/music-library?issue=editPoints"]) h1 + p,
-main:has(.waveform-review) h1 + p {
+main.admin-cue-point-page h1 + p {
   margin-top: 8px !important;
   max-width: 620px !important;
   color: var(--text-secondary) !important;
   font-size: 14px !important;
   line-height: 1.6 !important;
-}
-
-main:has(.waveform-review) > div > .flex.items-end.justify-between > .flex.shrink-0 {
-  display: none !important;
 }
 
 main:has(input[placeholder="Search Music Library"]) > section > div.sticky {
@@ -211,7 +207,7 @@ main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(3) > div,
 main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3) > div,
 main:has(a[href="/admin/music-library?issue=editPoints"]) section.rounded-2xl,
 main:has(a[href="/admin/music-library?issue=editPoints"]) aside.rounded-2xl,
-main:has(.waveform-review) section.rounded-xl {
+main.admin-cue-point-page section.rounded-xl {
   border-radius: 18px !important;
   background: var(--bg-secondary) !important;
 }
@@ -264,7 +260,7 @@ main:has(a[href="/admin/music-library?issue=editPoints"]) aside.rounded-2xl {
   main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(2),
   main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3),
   main:has(a[href="/admin/music-library?issue=editPoints"]) > section,
-  main:has(.waveform-review) > div {
+  main.admin-cue-point-page > .admin-cue-point-container {
     padding-left: 32px !important;
     padding-right: 32px !important;
   }
@@ -279,7 +275,7 @@ main:has(a[href="/admin/music-library?issue=editPoints"]) aside.rounded-2xl {
   main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(2),
   main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3),
   main:has(a[href="/admin/music-library?issue=editPoints"]) > section,
-  main:has(.waveform-review) > div {
+  main.admin-cue-point-page > .admin-cue-point-container {
     padding-left: 40px !important;
     padding-right: 40px !important;
   }
