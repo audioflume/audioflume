@@ -28,6 +28,7 @@ type DropdownShellProps = {
   crossAxisOffset?: number;
   strategy?: Strategy;
   usePortal?: boolean;
+  anchorPoint?: { x: number; y: number } | null;
 };
 
 type FrozenSide = "top" | "bottom";
@@ -88,6 +89,7 @@ export default function DropdownShell({
   crossAxisOffset = 0,
   strategy: _strategy = "fixed",
   usePortal = true,
+  anchorPoint = null,
 }: DropdownShellProps) {
   const referenceRef = useRef<HTMLDivElement>(null);
   const floatingRef = useRef<HTMLDivElement>(null);
@@ -96,6 +98,20 @@ export default function DropdownShell({
   const frameRef = useRef<number | null>(null);
 
   const measureAnchor = useCallback(() => {
+    if (anchorPoint) {
+      const anchor = {
+        top: anchorPoint.y + window.scrollY,
+        bottom: anchorPoint.y + window.scrollY,
+        left: anchorPoint.x + window.scrollX,
+        right: anchorPoint.x + window.scrollX,
+        width: 0,
+      };
+
+      anchorRef.current = anchor;
+
+      return anchor;
+    }
+
     const reference = referenceRef.current;
 
     if (!reference) return null;
@@ -113,7 +129,7 @@ export default function DropdownShell({
     anchorRef.current = anchor;
 
     return anchor;
-  }, []);
+  }, [anchorPoint]);
 
   const chooseSide = useCallback(
     (anchor: Anchor, floatingHeight: number): FrozenSide => {
