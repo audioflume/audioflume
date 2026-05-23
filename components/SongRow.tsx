@@ -276,12 +276,11 @@ export default function SongRow({
           <button
             type="button"
             onClick={() => toggleFavorite(safeSong)}
-            className={`${smallIconButtonClass} h-7 w-7 flex-shrink-0 ${
-              favorited ? "text-[var(--text-primary)]" : ""
-            }`}
+            className={`${smallIconButtonClass} h-7 w-7 flex-shrink-0`}
             aria-label={
               favorited ? "Remove song from favorites" : "Favorite song"
             }
+            aria-pressed={favorited}
           >
             <HeartIcon filled={favorited} />
           </button>
