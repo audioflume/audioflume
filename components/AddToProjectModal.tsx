@@ -314,8 +314,8 @@ export default function AddToProjectModal({
           </button>
         }
       >
-        {/* Song strip — -mx-5 px-5 extends border-b to modal edges */}
-        <div className="-mx-5 mb-1 flex flex-shrink-0 items-center gap-3 border-b border-[var(--border)] pb-4 px-5">
+        {/* Song strip — no bottom margin so scroll area starts flush at the border */}
+        <div className="-mx-5 flex flex-shrink-0 items-center gap-3 border-b border-[var(--border)] pb-4 px-5">
           <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
             {song.coverArt && (
               <Image
@@ -338,7 +338,7 @@ export default function AddToProjectModal({
           </div>
         </div>
 
-        {/* Project rows — edge-to-edge, pb-2 only so rows clip flush at the border */}
+        {/* Project rows — starts immediately at the border, clips flush */}
         <div className="-mx-5 min-h-[200px] flex-1 overflow-y-auto px-2 pb-2">
           {/* Loading skeleton */}
           {(loading || selectedLoading) && (
