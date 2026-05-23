@@ -3,7 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 import { modalPrimaryButtonClass } from "@/components/uiClasses";
-import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
+import {
+  FolderGlyph,
+  MusicGlyph,
+} from "@/components/project-browser/ProjectBrowserGlyphs";
 import type { ProjectFolder } from "@/lib/types";
 
 type ProjectFolderPickerModalProps = {
@@ -32,19 +35,6 @@ function sortFolders(folderA: ProjectFolder, folderB: ProjectFolder) {
 
 function sortSongs(songA: ProjectPickerSong, songB: ProjectPickerSong) {
   return songA.title.localeCompare(songB.title, undefined, { sensitivity: "base" });
-}
-
-function FileGlyph() {
-  return (
-    <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-muted)]">
-      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M9 18V6L18 12L9 18Z"
-          fill="currentColor"
-        />
-      </svg>
-    </span>
-  );
 }
 
 export default function ProjectFolderPickerModal({
@@ -170,7 +160,7 @@ export default function ProjectFolderPickerModal({
       }
     >
       <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="flex h-[320px] overflow-x-auto overflow-y-hidden">
+        <div className="flex h-[320px] min-w-0 overflow-x-auto overflow-y-hidden">
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
             const hasItems = column.folders.length > 0 || column.songs.length > 0;
@@ -178,7 +168,7 @@ export default function ProjectFolderPickerModal({
             return (
               <div
                 key={column.parentId ?? "root"}
-                className="flex min-w-[190px] flex-1 flex-col border-r border-[var(--border)] last:border-r-0"
+                className="flex min-w-[150px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0 sm:min-w-[170px]"
               >
                 <div className="flex-shrink-0 px-3 pb-1.5 pt-3 text-[11px] font-medium text-[var(--text-muted)]">
                   {isRootPreviewColumn
@@ -234,9 +224,9 @@ export default function ProjectFolderPickerModal({
                     {column.songs.map((song) => (
                       <div
                         key={song.id}
-                        className="flex h-8 items-center gap-2 rounded-full px-2.5 text-left text-xs text-[var(--text-muted)]"
+                        className="flex h-8 items-center gap-2 rounded-full px-2.5 text-left text-xs text-[var(--text-secondary)]"
                       >
-                        <FileGlyph />
+                        <MusicGlyph small />
                         <span className="min-w-0 truncate font-medium">{song.title}</span>
                       </div>
                     ))}
