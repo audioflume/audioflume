@@ -27,7 +27,7 @@ export const backPillButtonClass =
   "inline-flex h-8 cursor-pointer items-center gap-2 rounded-md border border-[var(--border)] bg-transparent px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
 
 export const modalTitleClass =
-  "min-w-0 font-[family-name:var(--font-instrument-sans)] text-[20px] font-medium tracking-[-0.035em] text-[var(--text-primary)]";
+  "min-w-0 font-[family-name:var(--font-instrument-sans)] text-[24px] font-medium tracking-[-0.045em] text-[var(--text-primary)]";
 
 export const modalFieldLabelClass =
   "mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]";
