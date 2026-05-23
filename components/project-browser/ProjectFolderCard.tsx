@@ -21,12 +21,12 @@ export default function ProjectFolderCard({
   folder,
   viewMode,
   onOpen,
-  onMove,
+  onContextMenu,
 }: {
   folder: ProjectFolderWithFileCount;
   viewMode: ProjectFileView;
   onOpen: (folderId: number) => void;
-  onMove?: (folder: ProjectFolderWithFileCount) => void;
+  onContextMenu?: (event: MouseEvent<HTMLElement>, folder: ProjectFolderWithFileCount) => void;
 }) {
   const totalItems = (folder.child_count ?? 0) + (folder.asset_count ?? 0);
   const recursiveFileCount = folder.recursive_asset_count ?? folder.asset_count ?? 0;
@@ -41,9 +41,8 @@ export default function ProjectFolderCard({
     handleOpen();
   }
 
-  function handleMove(event: MouseEvent<HTMLButtonElement>) {
-    event.stopPropagation();
-    onMove?.(folder);
+  function handleContextMenu(event: MouseEvent<HTMLElement>) {
+    onContextMenu?.(event, folder);
   }
 
   if (viewMode === "list") {
@@ -54,6 +53,7 @@ export default function ProjectFolderCard({
         className="project-browser-row project-folder-row"
         onClick={handleOpen}
         onKeyDown={handleOpenKeyDown}
+        onContextMenu={handleContextMenu}
       >
         <span className="project-browser-row-name">
           <FolderGlyph small />
@@ -61,11 +61,7 @@ export default function ProjectFolderCard({
         </span>
         <span className="project-browser-row-muted">{totalItems || "--"}</span>
         <span className="project-browser-row-muted">{getAssetTypeLabel(folder.asset_type)}</span>
-        <span className="project-folder-action-wrap">
-          <button type="button" className="project-file-action" onClick={handleMove} aria-label={`Move ${folder.name}`}>
-            ...
-          </button>
-        </span>
+        <span className="project-folder-action-wrap" />
       </div>
     );
   }
@@ -77,10 +73,8 @@ export default function ProjectFolderCard({
       className="project-folder-card"
       onClick={handleOpen}
       onKeyDown={handleOpenKeyDown}
+      onContextMenu={handleContextMenu}
     >
-      <button type="button" className="project-file-action" onClick={handleMove} aria-label={`Move ${folder.name}`}>
-        ...
-      </button>
       <span className="project-folder-card-icon-wrap">
         <FolderGlyph />
       </span>
