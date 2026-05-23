@@ -304,6 +304,14 @@ body.sidebar-collapsed {
   color: var(--text-primary) !important;
 }
 
+.filmwave-icon-button[aria-label="Remove song from favorites"],
+.filmwave-icon-button[aria-label="Remove song from favorites"] svg,
+.filmwave-icon-button[aria-pressed="true"] svg {
+  color: var(--text-primary) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
 .filmwave-icon-button svg,
 .playlist-icon-btn svg,
 .project-tabs-row-actions .project-new-folder-button svg,
