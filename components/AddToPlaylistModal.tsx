@@ -94,30 +94,25 @@ function SongPreview({ song }: { song: Song }) {
 
   return (
     <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-1">
-      <div className="flex min-w-0 items-center gap-3">
-        <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-secondary)]">
+      <div className="flex min-w-0 items-center gap-2.5">
+        <span className="relative flex h-7 w-7 shrink-0 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-secondary)]">
           {cover ? (
             <Image
               src={cover}
               alt={song.title}
               fill
-              sizes="32px"
+              sizes="28px"
               className="object-cover"
             />
           ) : (
             <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
-              <PlaylistIcon size={12} />
+              <PlaylistIcon size={11} />
             </span>
           )}
         </span>
 
-        <span className="min-w-0 text-left">
-          <span className="block max-w-[300px] truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-            {song.title}
-          </span>
-          <span className="mt-0.5 block max-w-[300px] truncate text-[11px] text-[var(--text-muted)]">
-            {song.artist}
-          </span>
+        <span className="block max-w-[330px] truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+          {song.title} <span className="text-[var(--text-muted)]">by</span> {song.artist}
         </span>
       </div>
     </div>
