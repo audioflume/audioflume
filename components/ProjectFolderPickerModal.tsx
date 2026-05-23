@@ -2,7 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ModalShell from "@/components/ModalShell";
-import { modalPrimaryButtonClass } from "@/components/uiClasses";
+import {
+  modalFieldLabelClass,
+  modalPrimaryButtonClass,
+} from "@/components/uiClasses";
 import {
   FolderGlyph,
   MusicGlyph,
@@ -139,7 +142,6 @@ export default function ProjectFolderPickerModal({
     });
   }, [folders, selectedChain, songs]);
 
-  // Label shown beneath the button indicating where the item will land
   const destinationLabel = useMemo(() => {
     if (selectedFolderId == null) return "Root";
     return foldersById.get(selectedFolderId)?.name ?? "Selected folder";
@@ -155,25 +157,24 @@ export default function ProjectFolderPickerModal({
       maxWidth="max-w-[740px]"
       maxHeight="500px"
       bodyClassName="pb-0"
-      footerClassName="justify-center flex-col gap-1"
+      footerClassName="justify-between gap-4"
       footer={
         <>
+          <div className="min-w-0 truncate text-xs text-[var(--text-muted)]">
+            Into: <span className="font-medium text-[var(--text-secondary)]">{destinationLabel}</span>
+          </div>
           <button
             type="button"
-            className={`${modalPrimaryButtonClass} w-full`}
+            className={`${modalPrimaryButtonClass} min-w-[132px] px-6`}
             onClick={() => onConfirm(selectedFolderId)}
           >
             {confirmLabel}
           </button>
-          <span className="text-[11px] text-[var(--text-muted)]">
-            Into: <span className="font-medium text-[var(--text-secondary)]">{destinationLabel}</span>
-          </span>
         </>
       }
     >
-      {/* Column browser — edge-to-edge with border-t separator */}
-      <div className="-mx-5 border-t border-[var(--border)]">
-        <div className="flex h-[300px] min-w-0 overflow-x-auto overflow-y-hidden">
+      <div className="-mx-5 border-y border-[var(--border)]">
+        <div className="flex h-[clamp(220px,42vh,300px)] min-h-0 min-w-0 overflow-x-auto overflow-y-hidden">
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
             const hasItems = column.folders.length > 0 || column.songs.length > 0;
@@ -183,8 +184,9 @@ export default function ProjectFolderPickerModal({
                 key={column.parentId ?? "root"}
                 className="flex min-w-[150px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0 sm:min-w-[170px]"
               >
-                {/* Column header */}
-                <div className="flex-shrink-0 px-4 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                <div
+                  className={`${modalFieldLabelClass} !mb-0 flex-shrink-0 border-b border-[var(--border)] px-4 py-2`}
+                >
                   {isRootPreviewColumn
                     ? "Selected"
                     : column.parentId == null
@@ -192,9 +194,8 @@ export default function ProjectFolderPickerModal({
                       : foldersById.get(column.parentId as number)?.name || "Folder"}
                 </div>
 
-                <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">
+                <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
                   <div className="grid gap-0.5">
-                    {/* Root option in first column */}
                     {columnIndex === 0 && (
                       <button
                         type="button"
@@ -213,7 +214,6 @@ export default function ProjectFolderPickerModal({
                       </button>
                     )}
 
-                    {/* Folder rows */}
                     {column.folders.map((folder) => {
                       const isSelected = selectedFolderId === folder.id;
 
@@ -237,18 +237,16 @@ export default function ProjectFolderPickerModal({
                       );
                     })}
 
-                    {/* Song rows (non-interactive) */}
                     {column.songs.map((song) => (
                       <div
                         key={song.id}
-                        className="flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs text-[var(--text-muted)]"
+                        className="flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs text-[var(--text-secondary)]"
                       >
                         <MusicGlyph small />
                         <span className="min-w-0 truncate font-medium">{song.title}</span>
                       </div>
                     ))}
 
-                    {/* Empty state */}
                     {!hasItems && (
                       <div className="flex h-[220px] items-center justify-center rounded-lg px-4 text-center text-xs text-[var(--text-muted)]">
                         {isRootPreviewColumn ? "Root selected" : "Empty folder"}
