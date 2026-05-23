@@ -21,7 +21,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminPlaylistGroupManager from "@/components/admin/AdminPlaylistGroupManager";
 import DropdownShell from "@/components/DropdownShell";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
@@ -498,49 +498,38 @@ export default function PlaylistManagerPage() {
       : playlists.filter((playlist) => !playlist.discover_section).length;
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-      <AdminSidebar />
-
-      <div className="px-8 pt-14 pb-6">
-        <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-          Playlist Manager
-        </h1>
-        <p className="mt-2 text-sm text-[var(--text-secondary)]">
-          Manage curated playlists and the content blocks on Discover.
-        </p>
-      </div>
-
-      <div className="flex items-center justify-between px-8 pb-4">
-        <div className="inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] p-1">
-          {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              className={`h-9 rounded-full px-4 text-xs font-medium capitalize transition ${
-                activeTab === tab
-                  ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              {tab === "playlists" ? "Playlists" : "Discover"}
-            </button>
-          ))}
-        </div>
-
-        {activeTab === "playlists" && (
-          <Link
-            href="/admin/playlist-manager/new"
-            className={primaryPillButtonClass}
-          >
-            <PlusIcon />
+    <AdminContentPage
+      label="Playlist Manager"
+      title="Playlist Manager"
+      description="Manage curated playlists and the content blocks on Discover."
+      headerAction={
+        activeTab === "playlists" ? (
+          <Link href="/admin/playlist-manager/new" className={primaryPillButtonClass}>
+            <PlusIcon size={13} />
             <span>New Playlist</span>
           </Link>
-        )}
+        ) : undefined
+      }
+    >
+      <div className="mb-4 inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] p-1">
+        {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => setActiveTab(tab)}
+            className={`h-9 rounded-full px-4 text-xs font-medium capitalize transition ${
+              activeTab === tab
+                ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            {tab === "playlists" ? "Playlists" : "Discover"}
+          </button>
+        ))}
       </div>
 
-      <div className="grid gap-3 px-8 pb-8 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
           <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
             <div>
               <h2 className="text-sm font-medium text-[var(--text-primary)]">
@@ -715,7 +704,7 @@ export default function PlaylistManagerPage() {
             }
           />
         ) : (
-          <aside className="rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+          <aside className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <h2 className="font-[family-name:var(--font-instrument-sans)] text-xl font-medium tracking-[-0.05em]">
               Discover sections
             </h2>
@@ -736,6 +725,6 @@ export default function PlaylistManagerPage() {
           </aside>
         )}
       </div>
-    </main>
+    </AdminContentPage>
   );
 }
