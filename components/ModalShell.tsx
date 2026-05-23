@@ -3,10 +3,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePlayer } from "@/context/PlayerContext";
-import {
-  modalTitleClass,
-  modalIconCloseButtonClass,
-} from "@/components/uiClasses";
+import { modalTitleClass } from "@/components/uiClasses";
 
 type ModalShellProps = {
   isOpen: boolean;
@@ -80,16 +77,16 @@ export default function ModalShell({
         <button
           type="button"
           onClick={onClose}
-          className={`${modalIconCloseButtonClass} absolute right-4 top-4 z-10`}
+          className="absolute right-5 top-5 z-10 flex h-6 w-6 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
           aria-label={closeLabel}
         >
           <svg
-            width="17"
-            height="17"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1.8"
             strokeLinecap="round"
             aria-hidden="true"
           >
@@ -108,7 +105,7 @@ export default function ModalShell({
               {children}
             </div>
 
-            <div className="flex flex-shrink-0 items-center justify-end gap-2 px-5 pb-4 pt-0">
+            <div className="flex flex-shrink-0 items-center justify-end gap-2 px-5 pb-6 pt-2">
               {footer}
             </div>
           </>
