@@ -62,7 +62,7 @@ export default function ModalShell({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[22px] border border-[var(--border-subtle)] bg-[var(--bg-primary)] shadow-[0_28px_90px_rgba(0,0,0,0.42)] ${contentClassName}`}
+        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[32px] border border-[var(--border-subtle)] bg-[var(--bg-primary)] shadow-[0_28px_90px_rgba(0,0,0,0.42)] ${contentClassName}`}
         style={{
           maxHeight: modalMaxHeight,
         }}
@@ -70,17 +70,17 @@ export default function ModalShell({
         <div
           className={
             centerTitle
-              ? "flex h-14 flex-shrink-0 items-center justify-center px-14 pt-1"
-              : "flex h-14 flex-shrink-0 items-center px-5 pr-14 pt-1"
+              ? "flex h-16 flex-shrink-0 items-center justify-center px-14 pt-1"
+              : "flex h-16 flex-shrink-0 items-center px-5 pr-14 pt-1"
           }
         >
-          <h2 className={`${modalTitleClass} text-[14px] tracking-[-0.015em]`}>{title}</h2>
+          <h2 className={`${modalTitleClass} text-[18px] tracking-[-0.025em]`}>{title}</h2>
         </div>
 
         <button
           type="button"
           onClick={onClose}
-          className={`${modalIconCloseButtonClass} absolute right-3 top-3 z-10`}
+          className={`${modalIconCloseButtonClass} absolute right-4 top-4 z-10`}
           aria-label={closeLabel}
         >
           <svg
