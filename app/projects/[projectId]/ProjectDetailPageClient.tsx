@@ -11,7 +11,6 @@ import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
 import DownloadIconSmall from "@/components/icons/DownloadIconSmall";
 import EditIcon from "@/components/icons/EditIcon";
-import FolderIcon from "@/components/icons/FolderIcon";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import {
@@ -77,6 +76,43 @@ function formatProjectDate(project: Project | null) {
   const date = new Date(project.created_at);
   if (Number.isNaN(date.getTime())) return "";
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function FolderPlusIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 7.5C4 6.67157 4.67157 6 5.5 6H9.4L11.1 8H14.8"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M19.9 11.7V17.5C19.9 18.3284 19.2284 19 18.4 19H5.5C4.67157 19 4 18.3284 4 17.5V7.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M18.2 5.4V10.2"
+        stroke="currentColor"
+        strokeWidth="1.55"
+        strokeLinecap="round"
+      />
+      <path
+        d="M15.8 7.8H20.6"
+        stroke="currentColor"
+        strokeWidth="1.55"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 }
 
 function ProjectPageSkeleton() {
@@ -443,14 +479,15 @@ export default function ProjectDetailPageClient() {
         .project-detail-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .project-detail-dot { color: var(--text-muted); }
         .project-detail-description { margin-top: 16px; max-width: 520px; font-size: 12px; line-height: 1.65; color: var(--text-secondary); }
-        .project-tabs-row { position: sticky; top: 56px; z-index: 90; display: flex; min-height: 49px; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: -32px; margin-right: -32px; border-bottom: 1px solid var(--border); background: var(--bg-primary); padding: 0 32px; }
+        .project-tabs-row { position: sticky; top: 56px; z-index: 109; display: flex; min-height: 49px; flex-wrap: wrap; align-items: center; gap: 8px; row-gap: 8px; margin-left: -32px; margin-right: -32px; border-bottom: 1px solid var(--border); background: var(--bg-primary); padding: 0 32px; }
         .project-tab-skeleton { width: 86px; height: 28px; border-radius: 6px; }
         .project-sort-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -32px; margin-right: -32px; background: var(--bg-primary); padding: 16px 32px; }
         .project-tab-panel { margin-left: -32px; margin-right: -32px; }
         .project-file-browser { padding: 32px; }
         .project-file-browser-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .project-file-browser-title-wrap { min-width: 0; flex: 1 1 auto; }
         .project-file-browser-title-wrap h2 { margin-top: 6px; font-size: 22px; font-weight: 500; letter-spacing: -0.03em; color: var(--text-primary); }
-        .project-file-browser-actions { display: flex; align-items: center; gap: 8px; }
+        .project-file-browser-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; }
         .project-breadcrumbs { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 12px; color: var(--text-muted); }
         .project-breadcrumbs span { display: inline-flex; align-items: center; gap: 7px; }
         .project-breadcrumbs button { cursor: pointer; color: var(--text-secondary); transition: color 0.15s ease; }
@@ -489,8 +526,10 @@ export default function ProjectDetailPageClient() {
         @media (max-width: 760px) {
           .project-detail-shell { padding: 0 18px; }
           .project-tabs-row, .project-sort-row, .project-tab-panel { margin-left: -18px; margin-right: -18px; }
-          .project-tabs-row, .project-sort-row, .project-file-browser { padding-left: 18px; padding-right: 18px; }
-          .project-file-browser-top, .project-file-browser-actions { flex-direction: column; align-items: stretch; }
+          .project-tabs-row { padding: 8px 18px; }
+          .project-sort-row, .project-file-browser { padding-left: 18px; padding-right: 18px; }
+          .project-file-browser-top { align-items: flex-start; }
+          .project-file-browser-actions { align-items: center; }
           .project-file-row { grid-template-columns: 38px minmax(0, 1fr) 76px; }
           .project-file-list-meta { display: none; }
           .project-footer-wrap { padding-left: 18px; padding-right: 18px; }
@@ -553,23 +592,7 @@ export default function ProjectDetailPageClient() {
                         aria-label="New folder"
                         title="New folder"
                       >
-                        <span className="relative flex h-4 w-4 items-center justify-center" aria-hidden="true">
-                          <FolderIcon size={16} />
-                          <span className="absolute -right-[2px] -top-[3px] flex h-[8px] w-[8px] items-center justify-center rounded-full bg-[var(--bg-primary)]">
-                            <svg
-                              width="6"
-                              height="6"
-                              viewBox="0 0 6 6"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.25"
-                              strokeLinecap="round"
-                            >
-                              <path d="M3 1.2v3.6" />
-                              <path d="M1.2 3h3.6" />
-                            </svg>
-                          </span>
-                        </span>
+                        <FolderPlusIcon />
                       </button>
                       <button
                         type="button"
