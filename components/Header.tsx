@@ -123,11 +123,11 @@ export default function Header() {
         padding-right: 32px !important;
       }
 
-      @media (max-width: 760px) {
+      @media (max-width: 700px) {
         .project-detail-page .project-detail-hero > .project-tabs-row-actions.is-in-project-hero {
           position: absolute !important;
-          top: 38px !important;
-          right: 32px !important;
+          top: 24px !important;
+          right: 24px !important;
           z-index: 2 !important;
           display: flex !important;
           margin-left: 0 !important;
@@ -138,7 +138,7 @@ export default function Header() {
     document.getElementById(styleId)?.remove();
     document.head.appendChild(style);
 
-    const mediaQuery = window.matchMedia("(max-width: 760px)");
+    const mediaQuery = window.matchMedia("(max-width: 700px)");
     let frame = 0;
 
     function syncProjectActions() {
