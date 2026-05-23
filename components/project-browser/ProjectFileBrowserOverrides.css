@@ -97,6 +97,14 @@
   height: 14px !important;
 }
 
+.project-tabs-row-actions .project-new-folder-button svg path:nth-of-type(3),
+.project-tabs-row-actions .project-new-folder-button svg path:nth-of-type(4) {
+  transform: scale(1.18);
+  transform-box: fill-box;
+  transform-origin: center;
+  stroke-width: 1.65 !important;
+}
+
 .project-detail-page .project-detail-hero {
   order: 2 !important;
   display: block !important;
