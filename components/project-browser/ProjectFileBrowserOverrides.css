@@ -22,13 +22,16 @@
 
 .project-tabs-row {
   order: 1 !important;
-  position: relative !important;
-  top: auto !important;
-  z-index: 30 !important;
+  position: fixed !important;
+  top: 56px !important;
+  left: var(--sidebar-width) !important;
+  right: 0 !important;
+  z-index: 109 !important;
   min-height: 50px !important;
   gap: 22px !important;
-  margin-left: -32px !important;
-  margin-right: -32px !important;
+  row-gap: 10px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
   padding: 0 32px !important;
@@ -98,6 +101,7 @@
   order: 2 !important;
   display: block !important;
   min-height: 176px !important;
+  margin-top: 50px !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
@@ -423,5 +427,17 @@
     margin-right: -18px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
+  }
+
+  .project-tabs-row {
+    left: var(--sidebar-width) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .project-detail-page .project-detail-hero {
+    margin-top: 98px !important;
   }
 }
