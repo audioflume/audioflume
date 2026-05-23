@@ -133,3 +133,182 @@ main:has(.admin-song-form-card) aside .admin-song-form-card > div:not(.admin-son
 main:has(.admin-song-form-card) .admin-song-form-icon-btn {
   border-radius: 9px !important;
 }
+
+/* Account-page inspired admin database pages.
+   These rules intentionally avoid the matched dashboard and song editor headers above. */
+main:has(input[placeholder="Search Music Library"]) > section,
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(1),
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(2),
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(3),
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(1),
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(2),
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3),
+main:has(a[href="/admin/music-library?issue=editPoints"]) > section {
+  max-width: 1260px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section,
+main:has(a[href="/admin/music-library?issue=editPoints"]) > section {
+  padding-top: 88px !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.flex.items-end.justify-between,
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(1),
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(1),
+main:has(a[href="/admin/music-library?issue=editPoints"]) > section > div:first-child {
+  position: relative !important;
+  margin-bottom: 32px !important;
+  padding-top: 81px !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  align-items: flex-end !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.flex.items-end.justify-between::before,
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(1)::before,
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(1)::before,
+main:has(a[href="/admin/music-library?issue=editPoints"]) > section > div:first-child::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  min-height: 32px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-muted);
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.flex.items-end.justify-between::before {
+  content: "Admin / Music Library";
+}
+
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(1)::before,
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(1)::before {
+  content: "Admin / Playlist Manager";
+}
+
+main:has(a[href="/admin/music-library?issue=editPoints"]) > section > div:first-child::before {
+  content: "Admin / Cue Points";
+}
+
+main:has(input[placeholder="Search Music Library"]) h1,
+main:has(a[href="/admin/playlist-manager/new"]) h1,
+main:has(a[href*="/admin/playlist-manager/discover/"]) h1,
+main:has(a[href="/admin/music-library?issue=editPoints"]) h1 {
+  font-size: 34px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.045em !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) h1 + p,
+main:has(a[href="/admin/playlist-manager/new"]) h1 + p,
+main:has(a[href*="/admin/playlist-manager/discover/"]) h1 + p,
+main:has(a[href="/admin/music-library?issue=editPoints"]) h1 + p {
+  margin-top: 8px !important;
+  max-width: 620px !important;
+  color: var(--text-secondary) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.sticky {
+  position: static !important;
+  z-index: auto !important;
+  height: auto !important;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  overflow: visible !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 18px !important;
+  background: var(--bg-secondary) !important;
+  padding: 0 16px !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.sticky + div {
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.sticky + div > div,
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(3) > div,
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3) > div,
+main:has(a[href="/admin/music-library?issue=editPoints"]) section.rounded-2xl,
+main:has(a[href="/admin/music-library?issue=editPoints"]) aside.rounded-2xl {
+  border-radius: 18px !important;
+  background: var(--bg-secondary) !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.sticky + div > div {
+  margin-top: 16px !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.sticky input {
+  font-size: 14px !important;
+}
+
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(2),
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(2) {
+  padding-top: 0 !important;
+  padding-bottom: 16px !important;
+}
+
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(3),
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3) {
+  padding-bottom: 32px !important;
+  gap: 16px !important;
+}
+
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(3) > div,
+main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3) > div {
+  overflow: hidden;
+  border-radius: 18px !important;
+}
+
+main:has(a[href="/admin/music-library?issue=editPoints"]) > section > div.grid {
+  gap: 16px !important;
+}
+
+main:has(a[href="/admin/music-library?issue=editPoints"]) section.rounded-2xl > div:first-child,
+main:has(a[href="/admin/music-library?issue=editPoints"]) aside.rounded-2xl {
+  padding: 16px !important;
+}
+
+@media (min-width: 768px) {
+  main:has(input[placeholder="Search Music Library"]) > section,
+  main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(1),
+  main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(2),
+  main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(3),
+  main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(1),
+  main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(2),
+  main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3),
+  main:has(a[href="/admin/music-library?issue=editPoints"]) > section {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  main:has(input[placeholder="Search Music Library"]) > section,
+  main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(1),
+  main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(2),
+  main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(3),
+  main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(1),
+  main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(2),
+  main:has(a[href*="/admin/playlist-manager/discover/"]) > div:nth-of-type(3),
+  main:has(a[href="/admin/music-library?issue=editPoints"]) > section {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+}
