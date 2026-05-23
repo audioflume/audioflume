@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
@@ -114,8 +113,8 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
   }));
 
   return (
-    <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-      <div className="px-8 pt-14 pb-20">
+    <main className="admin-cue-point-page relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+      <div className="admin-cue-point-container px-8 pt-14 pb-20">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div className="min-w-0">
             <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
@@ -125,15 +124,6 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
             <p className="mt-2 text-sm text-[var(--text-secondary)]">
               Review, drag, and fine-tune generated cue points.
             </p>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2">
-            <Link
-              href={`/admin/songs/${id}/edit`}
-              className="rounded-full border border-[var(--border)] px-4 py-2 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-            >
-              Edit Details
-            </Link>
           </div>
         </div>
 
