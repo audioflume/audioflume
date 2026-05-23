@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import { MusicGlyph, PlayPauseIcon } from "./ProjectBrowserGlyphs";
@@ -19,12 +20,12 @@ export default function ProjectSongFileCard({
   song,
   viewMode,
   queueSongs,
-  onMove,
+  onContextMenu,
 }: {
   song: ProjectSong;
   viewMode: ProjectFileView;
   queueSongs: ProjectSong[];
-  onMove: (song: ProjectSong) => void;
+  onContextMenu?: (event: MouseEvent<HTMLElement>, song: ProjectSong) => void;
 }) {
   const { currentSong, isPlaying, currentTime, duration, togglePlayPause, setQueue } = usePlayer();
   const isActive = currentSong?.id === song.id;
@@ -37,9 +38,13 @@ export default function ProjectSongFileCard({
     togglePlayPause(song);
   }
 
+  function handleContextMenu(event: MouseEvent<HTMLElement>) {
+    onContextMenu?.(event, song);
+  }
+
   if (viewMode === "list") {
     return (
-      <div className="project-browser-row project-file-row">
+      <div className="project-browser-row project-file-row" onContextMenu={handleContextMenu}>
         <span className="project-browser-row-name">
           <span className="project-file-list-icon-wrap">
             <MusicGlyph small />
@@ -57,18 +62,13 @@ export default function ProjectSongFileCard({
         </span>
         <span className="project-browser-row-muted">{song.artist || "--"}</span>
         <span className="project-browser-row-muted">Music</span>
-        <button type="button" className="project-file-action" onClick={() => onMove(song)} aria-label={`Move ${song.title}`}>
-          ...
-        </button>
+        <span />
       </div>
     );
   }
 
   return (
-    <div className={`project-file-card ${isActive ? "is-active" : ""}`}>
-      <button type="button" className="project-file-action" onClick={() => onMove(song)} aria-label={`Move ${song.title}`}>
-        ...
-      </button>
+    <div className={`project-file-card ${isActive ? "is-active" : ""}`} onContextMenu={handleContextMenu}>
       <div className="project-file-card-icon-wrap">
         <MusicGlyph />
         <button
