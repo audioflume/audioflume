@@ -338,11 +338,11 @@ export default function AddToPlaylistModal({
           </div>
         </div>
 
-        {/* Playlist rows — extended edge-to-edge within modal body */}
-        <div className="-mx-5 min-h-[200px] flex-1 overflow-y-auto px-2 py-2">
+        {/* Playlist rows — edge-to-edge, pb-2 only so rows clip flush at the border */}
+        <div className="-mx-5 min-h-[200px] flex-1 overflow-y-auto px-2 pb-2">
           {/* Loading skeleton */}
           {(loading || selectedLoading) && (
-            <div className="grid gap-0.5">
+            <div className="grid gap-0.5 pt-2">
               {Array.from({ length: playlists.length || 6 }).map((_, index) => (
                 <div
                   key={index}
