@@ -63,7 +63,7 @@ function PlaylistThumbnail({
 
   return (
     <span
-      className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]"
+      className="relative flex h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]"
       style={{
         background: cover
           ? "var(--bg-tertiary)"
@@ -75,12 +75,12 @@ function PlaylistThumbnail({
           src={cover}
           alt={playlist.name}
           fill
-          sizes="40px"
+          sizes="36px"
           className="object-cover"
         />
       ) : (
         <span className="flex h-full w-full items-center justify-center text-[var(--text-secondary)]">
-          <PlaylistIcon size={14} />
+          <PlaylistIcon size={13} />
         </span>
       )}
     </span>
@@ -294,21 +294,22 @@ export default function AddToPlaylistModal({
         title="Add to Playlist"
         onClose={onClose}
         closeLabel="Close add to playlist modal"
-        maxWidth="max-w-[540px]"
-        maxHeight="470px"
+        maxWidth="max-w-[490px]"
+        maxHeight="420px"
         bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
+        contentClassName="[&>div:first-child]:h-[66px] [&>div:first-child]:items-end [&>div:first-child]:pb-3"
       >
         <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)]">
-          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 pb-0">
             <button
               type="button"
               onClick={handleNewPlaylistClick}
-              className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3.5 rounded-xl px-3 py-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
+              className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
-                <PlusIcon size={19} />
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
+                <PlusIcon size={18} />
               </span>
-              <span className="min-w-0 flex-1 truncate text-[15px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+              <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                 New Playlist...
               </span>
             </button>
@@ -318,9 +319,9 @@ export default function AddToPlaylistModal({
                 {Array.from({ length: playlists.length || 4 }).map((_, index) => (
                   <div
                     key={index}
-                    className="flex min-h-[58px] items-center gap-3.5 rounded-xl px-3 py-2"
+                    className="flex min-h-[52px] items-center gap-3 rounded-xl px-3 py-2"
                   >
-                    <div className="h-10 w-10 animate-pulse rounded-lg bg-[var(--bg-tertiary)]" />
+                    <div className="h-9 w-9 animate-pulse rounded-lg bg-[var(--bg-tertiary)]" />
                     <div className="space-y-2">
                       <div className="h-3 w-32 animate-pulse rounded bg-[var(--bg-tertiary)]" />
                       <div className="h-2.5 w-20 animate-pulse rounded bg-[var(--bg-tertiary)]" />
@@ -367,22 +368,22 @@ export default function AddToPlaylistModal({
                     type="button"
                     onClick={() => handlePlaylistClick(playlist)}
                     disabled={isPending}
-                    className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3.5 rounded-xl px-3 py-2 text-left transition-colors hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                    className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                   >
                     <PlaylistThumbnail playlist={playlist} index={index} />
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[15px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                         {playlist.name}
                       </span>
-                      <span className="mt-0.5 block truncate text-xs text-[var(--text-muted)]">
+                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
                         {isSelected ? "Added" : "Click to add"}
                       </span>
                     </span>
 
                     {isSelected && (
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-primary)]">
-                        <CheckIcon size={17} />
+                        <CheckIcon size={16} />
                       </span>
                     )}
                   </button>
