@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 import ModalShell from "@/components/ModalShell";
-import {
-  modalFieldLabelClass,
-  modalInputClass,
-  modalPrimaryButtonClass,
-  modalTextareaClass,
-} from "@/components/uiClasses";
+import { modalPrimaryButtonClass } from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import type { Project } from "@/lib/types";
 
@@ -23,7 +18,6 @@ export default function CreateProjectModal({
   onProjectCreated,
 }: CreateProjectModalProps) {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState("");
 
@@ -31,7 +25,6 @@ export default function CreateProjectModal({
 
   function resetForm() {
     setName("");
-    setDescription("");
     setError("");
   }
 
@@ -58,7 +51,6 @@ export default function CreateProjectModal({
         },
         body: JSON.stringify({
           name: cleanName,
-          description: description.trim() || null,
         }),
       });
 
@@ -86,7 +78,6 @@ export default function CreateProjectModal({
       title="New Project"
       onClose={clearAndClose}
       closeLabel="Close create project modal"
-      maxHeight="520px"
       footer={
         <button
           type="button"
@@ -97,7 +88,7 @@ export default function CreateProjectModal({
           {isCreating ? (
             <LoadingSpinner size={18} stroke={9} color="var(--bg-primary)" />
           ) : (
-            "Create"
+            "Create Project"
           )}
         </button>
       }
@@ -107,42 +98,24 @@ export default function CreateProjectModal({
           e.preventDefault();
           handleCreate();
         }}
-        className="space-y-4"
       >
-        <div>
-          <label htmlFor="project-name" className={modalFieldLabelClass}>
-            Project Name
-          </label>
+        <label htmlFor="project-name" className="block text-[11px] font-medium text-[var(--text-secondary)]">
+          Project name
+        </label>
 
-          <input
-            id="project-name"
-            type="text"
-            value={name}
-            disabled={isCreating}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Example: Pacific Sunday"
-            className={modalInputClass}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="project-description" className={modalFieldLabelClass}>
-            Notes
-          </label>
-
-          <textarea
-            id="project-description"
-            value={description}
-            disabled={isCreating}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Optional project notes..."
-            rows={4}
-            className={modalTextareaClass}
-          />
-        </div>
+        <input
+          id="project-name"
+          type="text"
+          value={name}
+          disabled={isCreating}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Example: Pacific Sunday"
+          autoFocus
+          className="mt-2 h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+        />
 
         {error && (
-          <p className="text-xs font-medium text-[var(--danger)]">{error}</p>
+          <p className="mt-3 text-xs font-medium text-[var(--danger)]">{error}</p>
         )}
       </form>
     </ModalShell>
