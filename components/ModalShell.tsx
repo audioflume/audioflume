@@ -19,6 +19,7 @@ type ModalShellProps = {
   bodyClassName?: string;
   contentClassName?: string;
   footerClassName?: string;
+  headerContent?: ReactNode;
 };
 
 export default function ModalShell({
@@ -35,6 +36,7 @@ export default function ModalShell({
   bodyClassName = "",
   contentClassName = "",
   footerClassName = "",
+  headerContent,
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -68,27 +70,31 @@ export default function ModalShell({
       >
         <div
           className={
-            centerTitle
-              ? "flex h-[60px] flex-shrink-0 items-center justify-center px-14 pt-1"
-              : "flex h-[60px] flex-shrink-0 items-center px-5 pr-14 pt-1"
+            headerContent
+              ? "flex h-[60px] flex-shrink-0 items-center px-5 pr-14"
+              : centerTitle
+                ? "flex h-[60px] flex-shrink-0 items-center justify-center px-14 pt-1"
+                : "flex h-[60px] flex-shrink-0 items-center px-5 pr-14 pt-1"
           }
         >
-          <h2 className={`${modalTitleClass} text-[22px] tracking-[-0.04em]`}>{title}</h2>
+          {headerContent || (
+            <h2 className={`${modalTitleClass} text-[22px] tracking-[-0.04em]`}>{title}</h2>
+          )}
         </div>
 
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+          className="absolute right-4 top-4 z-10 flex h-7 w-7 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
           aria-label={closeLabel}
         >
           <svg
-            width="18"
-            height="18"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1.8"
             strokeLinecap="round"
             aria-hidden="true"
           >
