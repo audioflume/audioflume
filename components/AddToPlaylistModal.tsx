@@ -122,7 +122,7 @@ function SongPreview({ song }: { song: Song }) {
   return (
     <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-0 text-center">
       <div className="flex min-w-0 items-center justify-center gap-2">
-        <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-secondary)]">
+        <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-md bg-[var(--bg-secondary)]">
           {cover ? (
             <Image
               src={cover}
