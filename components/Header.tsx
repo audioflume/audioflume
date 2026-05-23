@@ -123,23 +123,21 @@ export default function Header() {
         padding-right: 32px !important;
       }
 
-      @media (max-width: 700px) {
-        .project-detail-page .project-detail-hero > .project-tabs-row-actions.is-in-project-hero {
-          position: absolute !important;
-          top: 24px !important;
-          right: 24px !important;
-          z-index: 2 !important;
-          display: flex !important;
-          margin-left: 0 !important;
-        }
+      .project-detail-page .project-detail-hero > .project-tabs-row-actions.is-in-project-hero {
+        position: absolute !important;
+        top: 15px !important;
+        right: 15px !important;
+        z-index: 2 !important;
+        display: flex !important;
+        margin-left: 0 !important;
       }
     `;
 
     document.getElementById(styleId)?.remove();
     document.head.appendChild(style);
 
-    const mediaQuery = window.matchMedia("(max-width: 700px)");
     let frame = 0;
+    let resizeObserver: ResizeObserver | null = null;
 
     function syncProjectActions() {
       window.cancelAnimationFrame(frame);
@@ -152,7 +150,9 @@ export default function Header() {
 
         if (!actions || !tabsRow || !hero) return;
 
-        if (mediaQuery.matches) {
+        const shouldMoveToHero = tabsRow.getBoundingClientRect().width <= 560;
+
+        if (shouldMoveToHero) {
           if (actions.parentElement !== hero) hero.appendChild(actions);
           actions.classList.add("is-in-project-hero");
           return;
@@ -163,17 +163,28 @@ export default function Header() {
       });
     }
 
-    const observer = new MutationObserver(syncProjectActions);
+    function attachResizeObserver() {
+      const tabsRow = document.querySelector<HTMLElement>(".project-tabs-row");
+      if (!tabsRow || resizeObserver) return;
+
+      resizeObserver = new ResizeObserver(syncProjectActions);
+      resizeObserver.observe(tabsRow);
+    }
+
+    const observer = new MutationObserver(() => {
+      attachResizeObserver();
+      syncProjectActions();
+    });
     observer.observe(document.body, { childList: true, subtree: true });
 
+    attachResizeObserver();
     syncProjectActions();
-    mediaQuery.addEventListener("change", syncProjectActions);
     window.addEventListener("resize", syncProjectActions);
 
     return () => {
       window.cancelAnimationFrame(frame);
+      resizeObserver?.disconnect();
       observer.disconnect();
-      mediaQuery.removeEventListener("change", syncProjectActions);
       window.removeEventListener("resize", syncProjectActions);
       style.remove();
 
