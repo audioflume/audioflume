@@ -97,12 +97,33 @@ export default function Header() {
         white-space: nowrap !important;
       }
 
-      .project-detail-page .project-detail-hero {
-        position: relative !important;
-        margin-top: 49px !important;
+      .project-detail-page .project-detail-shell {
+        padding-left: 32px !important;
+        padding-right: 32px !important;
       }
 
-      @media (max-width: 920px) {
+      .project-detail-page .project-detail-hero {
+        position: relative !important;
+        margin-left: -32px !important;
+        margin-right: -32px !important;
+        margin-top: 49px !important;
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+      }
+
+      .project-detail-page .project-file-browser {
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+      }
+
+      .project-detail-page .project-file-browser-top {
+        margin-left: -32px !important;
+        margin-right: -32px !important;
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+      }
+
+      @media (max-width: 760px) {
         .project-detail-page .project-detail-hero > .project-tabs-row-actions.is-in-project-hero {
           position: absolute !important;
           top: 38px !important;
@@ -117,7 +138,7 @@ export default function Header() {
     document.getElementById(styleId)?.remove();
     document.head.appendChild(style);
 
-    const mediaQuery = window.matchMedia("(max-width: 920px)");
+    const mediaQuery = window.matchMedia("(max-width: 760px)");
     let frame = 0;
 
     function syncProjectActions() {
