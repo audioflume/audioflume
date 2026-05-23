@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import DashboardIcon from "@/components/icons/DashboardIcon";
@@ -31,6 +32,7 @@ function ChevronIcon({ open }: { open: boolean }) {
 
 export default function Header() {
   const { user } = useUser();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -67,6 +69,59 @@ export default function Header() {
       window.removeEventListener("focus", syncProfileImage);
     };
   }, []);
+
+  useEffect(() => {
+    if (!pathname?.startsWith("/projects/")) return;
+
+    const mediaQuery = window.matchMedia("(max-width: 920px)");
+    let frame = 0;
+
+    function syncProjectActions() {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const actions = document.querySelector<HTMLElement>(
+          ".project-tabs-row-actions",
+        );
+        const tabsRow = document.querySelector<HTMLElement>(".project-tabs-row");
+        const hero = document.querySelector<HTMLElement>(".project-detail-hero");
+
+        if (!actions || !tabsRow || !hero) return;
+
+        if (mediaQuery.matches) {
+          if (actions.parentElement !== hero) hero.appendChild(actions);
+          actions.classList.add("is-in-project-hero");
+          return;
+        }
+
+        if (actions.parentElement !== tabsRow) tabsRow.appendChild(actions);
+        actions.classList.remove("is-in-project-hero");
+      });
+    }
+
+    const observer = new MutationObserver(syncProjectActions);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    syncProjectActions();
+    mediaQuery.addEventListener("change", syncProjectActions);
+    window.addEventListener("resize", syncProjectActions);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      mediaQuery.removeEventListener("change", syncProjectActions);
+      window.removeEventListener("resize", syncProjectActions);
+
+      const actions = document.querySelector<HTMLElement>(
+        ".project-tabs-row-actions.is-in-project-hero",
+      );
+      const tabsRow = document.querySelector<HTMLElement>(".project-tabs-row");
+
+      if (actions && tabsRow) {
+        tabsRow.appendChild(actions);
+        actions.classList.remove("is-in-project-hero");
+      }
+    };
+  }, [pathname]);
 
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
