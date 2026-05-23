@@ -360,11 +360,11 @@ export default function AddToPlaylistModal({
         <SongPreview song={song} />
 
         <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)]">
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-0 pt-5">
+          <div className="min-h-0 flex-1 overflow-y-auto p-3">
             <button
               type="button"
               onClick={handleNewPlaylistClick}
-              className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
+              className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
                 <PlusIcon size={18} />
@@ -379,7 +379,7 @@ export default function AddToPlaylistModal({
                 {Array.from({ length: playlists.length || 4 }).map((_, index) => (
                   <div
                     key={index}
-                    className="flex min-h-[52px] items-center gap-3 rounded-xl px-3 py-2"
+                    className="flex min-h-[52px] items-center gap-3 rounded-xl p-2"
                   >
                     <div className="h-9 w-9 animate-pulse rounded-lg bg-[var(--bg-tertiary)]" />
                     <div className="space-y-2">
@@ -428,7 +428,7 @@ export default function AddToPlaylistModal({
                     type="button"
                     onClick={() => handlePlaylistClick(playlist)}
                     disabled={isPending}
-                    className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                    className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                   >
                     <PlaylistThumbnail playlist={playlist} index={index} />
 
