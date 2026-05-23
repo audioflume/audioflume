@@ -46,8 +46,9 @@ export default function AdminPageHeaderMount() {
       return;
     }
 
-    let frame = 0;
     let cancelled = false;
+    let frame = 0;
+    let observer: MutationObserver | null = null;
 
     function sync() {
       if (cancelled) return;
@@ -56,7 +57,6 @@ export default function AdminPageHeaderMount() {
 
       if (container) {
         setMount(ensureMount(container));
-        return;
       }
 
       frame = window.requestAnimationFrame(sync);
@@ -64,9 +64,25 @@ export default function AdminPageHeaderMount() {
 
     sync();
 
+    observer = new MutationObserver(() => {
+      if (cancelled) return;
+
+      const container = getSongEditorContainer();
+
+      if (container) {
+        setMount(ensureMount(container));
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
     return () => {
       cancelled = true;
       window.cancelAnimationFrame(frame);
+      observer?.disconnect();
       setMount(null);
     };
   }, [config, pathname]);
