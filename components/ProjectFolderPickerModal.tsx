@@ -207,12 +207,12 @@ export default function ProjectFolderPickerModal({
                 </div>
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
-                  <div className="grid min-h-full gap-1.5">
+                  <div className="flex min-h-full flex-col gap-1.5">
                     {columnIndex === 0 && (
                       <button
                         type="button"
                         onClick={() => setSelectedFolderId(null)}
-                        className={`group flex h-8 cursor-pointer items-center justify-between gap-2 rounded-xl px-2.5 text-left text-xs font-medium transition ${
+                        className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-xl px-2.5 text-left text-xs font-medium transition ${
                           selectedFolderId == null
                             ? "border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-primary)]"
                             : "border border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -234,7 +234,7 @@ export default function ProjectFolderPickerModal({
                           key={folder.id}
                           type="button"
                           onClick={() => setSelectedFolderId(folder.id)}
-                          className={`group flex h-8 cursor-pointer items-center justify-between gap-2 rounded-xl px-2.5 text-left text-xs font-medium transition ${
+                          className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-xl px-2.5 text-left text-xs font-medium transition ${
                             isSelected
                               ? "border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-primary)]"
                               : "border border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -252,7 +252,7 @@ export default function ProjectFolderPickerModal({
                     {column.songs.map((song) => (
                       <div
                         key={song.id}
-                        className="flex h-8 items-center gap-2 rounded-xl px-2.5 text-xs text-[var(--text-secondary)]"
+                        className="flex h-8 flex-shrink-0 items-center gap-2 rounded-xl px-2.5 text-xs text-[var(--text-secondary)]"
                       >
                         <MusicGlyph small />
                         <span className="min-w-0 truncate font-medium">{song.title}</span>
@@ -260,7 +260,7 @@ export default function ProjectFolderPickerModal({
                     ))}
 
                     {!hasItems && (
-                      <div className="flex min-h-full items-center justify-center rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-muted)]">
+                      <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-muted)]">
                         {isRootPreviewColumn ? "Root selected" : "Empty folder"}
                       </div>
                     )}
