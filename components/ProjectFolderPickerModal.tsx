@@ -158,9 +158,9 @@ export default function ProjectFolderPickerModal({
       title={title}
       onClose={onClose}
       closeLabel="Close folder picker"
-      maxWidth="max-w-[640px]"
-      maxHeight="430px"
-      bodyClassName="px-0 pb-0"
+      maxWidth="max-w-[700px]"
+      maxHeight="460px"
+      bodyClassName="flex flex-col px-0 pb-0"
       footerClassName="justify-between border-t border-[var(--border)] px-5 pb-4 pt-3"
       headerContent={
         <div className="min-w-0">
@@ -185,8 +185,8 @@ export default function ProjectFolderPickerModal({
         </>
       }
     >
-      <div className="-mx-5 border-t border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="flex h-[clamp(250px,48vh,320px)] min-h-0 min-w-0 overflow-x-auto overflow-y-hidden">
+      <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)] bg-[var(--bg-primary)]">
+        <div className="flex min-h-[250px] flex-1 min-w-0 overflow-x-auto overflow-y-hidden">
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
             const hasItems = column.folders.length > 0 || column.songs.length > 0;
@@ -194,7 +194,7 @@ export default function ProjectFolderPickerModal({
             return (
               <div
                 key={column.parentId ?? "root"}
-                className="flex min-w-[180px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
+                className="flex min-w-[185px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
               >
                 <div
                   className={`${modalFieldLabelClass} !mb-0 flex-shrink-0 border-b border-[var(--border)] px-5 py-2.5`}
@@ -207,7 +207,7 @@ export default function ProjectFolderPickerModal({
                 </div>
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
-                  <div className="grid gap-1.5">
+                  <div className="grid min-h-full gap-1.5">
                     {columnIndex === 0 && (
                       <button
                         type="button"
@@ -260,7 +260,7 @@ export default function ProjectFolderPickerModal({
                     ))}
 
                     {!hasItems && (
-                      <div className="flex min-h-[210px] items-center justify-center rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-muted)]">
+                      <div className="flex min-h-full items-center justify-center rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-muted)]">
                         {isRootPreviewColumn ? "Root selected" : "Empty folder"}
                       </div>
                     )}
