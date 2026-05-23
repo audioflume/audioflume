@@ -22,8 +22,7 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
 }
 
 function getSongEditorContainer() {
-  const card = document.querySelector<HTMLElement>(".admin-song-form-card");
-  return card?.closest("main")?.querySelector<HTMLElement>(":scope > div") ?? null;
+  return document.querySelector<HTMLElement>("main > div.px-8");
 }
 
 function ensureMount(container: HTMLElement) {
