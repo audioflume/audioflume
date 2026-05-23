@@ -54,7 +54,7 @@ export default function ModalShell({
   const modal = (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[200] flex items-center justify-center overflow-y-auto bg-[var(--modal-backdrop)] px-4"
+      className="fixed inset-0 z-[200] flex items-center justify-center overflow-y-auto bg-[var(--modal-backdrop)] px-4 backdrop-blur-[10px]"
       style={{
         paddingTop: "32px",
         paddingBottom: playerVisible ? "96px" : "32px",
@@ -62,7 +62,7 @@ export default function ModalShell({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]`}
+        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[22px] border border-[var(--border-subtle)] bg-[var(--bg-primary)] shadow-[0_28px_90px_rgba(0,0,0,0.42)] ${contentClassName}`}
         style={{
           maxHeight: modalMaxHeight,
         }}
@@ -70,17 +70,17 @@ export default function ModalShell({
         <div
           className={
             centerTitle
-              ? "flex h-11 flex-shrink-0 items-center justify-center border-b border-[var(--border)] px-12"
-              : "flex h-11 flex-shrink-0 items-center border-b border-[var(--border)] px-4 pr-12"
+              ? "flex h-14 flex-shrink-0 items-center justify-center px-14 pt-1"
+              : "flex h-14 flex-shrink-0 items-center px-5 pr-14 pt-1"
           }
         >
-          <h2 className={modalTitleClass}>{title}</h2>
+          <h2 className={`${modalTitleClass} text-[14px] tracking-[-0.015em]`}>{title}</h2>
         </div>
 
         <button
           type="button"
           onClick={onClose}
-          className={`${modalIconCloseButtonClass} absolute right-2 top-2 z-10`}
+          className={`${modalIconCloseButtonClass} absolute right-3 top-3 z-10`}
           aria-label={closeLabel}
         >
           <svg
@@ -101,19 +101,19 @@ export default function ModalShell({
         {footer ? (
           <>
             <div
-              className={`min-h-0 flex-1 p-4 ${
+              className={`min-h-0 flex-1 px-5 pb-4 ${
                 bodyScroll ? "overflow-y-auto" : "overflow-hidden"
               } ${bodyClassName}`}
             >
               {children}
             </div>
 
-            <div className="flex flex-shrink-0 items-center justify-end gap-2 border-t border-[var(--border)] px-4 py-3">
+            <div className="flex flex-shrink-0 items-center justify-end gap-2 px-5 pb-5 pt-1">
               {footer}
             </div>
           </>
         ) : (
-          <div className={`p-4 ${contentClassName}`}>{children}</div>
+          <div className={`px-5 pb-5 ${contentClassName}`}>{children}</div>
         )}
       </div>
     </div>
