@@ -328,8 +328,9 @@ export default function AddToPlaylistModal({
         closeLabel="Close add to playlist modal"
         maxWidth="max-w-[490px]"
         maxHeight="460px"
+        centerTitle
         bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-        contentClassName="h-[460px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[64px] [&>div:first-child]:items-end [&>div:first-child]:justify-center [&>div:first-child]:pb-2"
+        contentClassName="h-[460px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[64px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
       >
         <SongPreview song={song} />
 
