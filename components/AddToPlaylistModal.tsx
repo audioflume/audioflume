@@ -31,6 +31,7 @@ type AddToPlaylistModalProps = {
 type PlaylistResponseBody = {
   error?: string;
   selected_playlist_ids?: Array<number | string>;
+  cover_image_url?: string | null;
 };
 
 function readRecentPlaylistIds() {
@@ -274,6 +275,18 @@ export default function AddToPlaylistModal({
     setRecentPlaylistIds(next);
   }
 
+  function updatePlaylistCover(playlistId: number, coverImageUrl?: string | null) {
+    if (!coverImageUrl) return;
+
+    setPlaylists((current) =>
+      current.map((playlist) =>
+        playlist.id === playlistId
+          ? { ...playlist, cover_image_url: coverImageUrl }
+          : playlist,
+      ),
+    );
+  }
+
   function handleClose() {
     if (creatingPlaylist) return;
 
@@ -296,6 +309,7 @@ export default function AddToPlaylistModal({
         body: JSON.stringify({
           playlist_id: playlistId,
           selected,
+          cover_image_url: song.coverArt,
         }),
       },
     );
@@ -308,6 +322,8 @@ export default function AddToPlaylistModal({
     if (!res.ok) {
       throw new Error(data?.error || "Failed to update playlist");
     }
+
+    updatePlaylistCover(playlistId, data?.cover_image_url);
   }
 
   async function handlePlaylistClick(playlist: Playlist) {
@@ -386,7 +402,15 @@ export default function AddToPlaylistModal({
 
       await updateSongPlaylist(createdPlaylist.id, true);
 
-      setPlaylists((current) => [...current, createdPlaylist]);
+      const coverImageUrl =
+        typeof song.coverArt === "string" && song.coverArt.trim()
+          ? song.coverArt.trim()
+          : createdPlaylist.cover_image_url;
+
+      setPlaylists((current) => [
+        ...current,
+        { ...createdPlaylist, cover_image_url: coverImageUrl },
+      ]);
       setSelectedIds((current) => new Set(current).add(createdPlaylist.id));
       updateRecentPlaylists(createdPlaylist.id);
       setNewPlaylistName("");
