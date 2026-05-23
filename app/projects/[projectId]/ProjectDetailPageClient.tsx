@@ -2,7 +2,7 @@
 
 import DropdownShell from "@/components/DropdownShell";
 import EditProjectModal from "@/components/EditProjectModal";
-import Footer from "@/components/Footer";
+import FooterBottom from "@/components/FooterBottom";
 import ModalShell from "@/components/ModalShell";
 import ProjectFileBrowser from "@/components/ProjectFileBrowser";
 import ProjectFolderPickerModal from "@/components/ProjectFolderPickerModal";
@@ -95,7 +95,6 @@ function ProjectPageSkeleton() {
           <div key={tab.value} className="project-tab-skeleton project-skeleton-block" />
         ))}
       </div>
-      <div className="project-tabs-row-spacer" aria-hidden="true" />
       <section className="project-tab-panel">
         <div className="project-file-browser">
           <div className="project-file-browser-top">
@@ -436,7 +435,7 @@ export default function ProjectDetailPageClient() {
   return (
     <>
       <style>{`
-        .project-detail-page { position: relative; margin-left: var(--sidebar-width); margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: clip; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); transition: margin-left 0.2s ease; }
+        .project-detail-page { position: relative; margin-left: var(--sidebar-width); margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: visible; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); transition: margin-left 0.2s ease; }
         .project-detail-shell { position: relative; z-index: 1; padding: 0 32px; }
         .project-detail-hero { display: block; padding: 88px 0 30px; }
         .project-detail-kicker, .project-file-browser-kicker, .project-file-section-heading { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
@@ -444,8 +443,7 @@ export default function ProjectDetailPageClient() {
         .project-detail-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .project-detail-dot { color: var(--text-muted); }
         .project-detail-description { margin-top: 16px; max-width: 520px; font-size: 12px; line-height: 1.65; color: var(--text-secondary); }
-        .project-tabs-row { position: fixed; top: 56px; left: var(--sidebar-width); right: 0; z-index: 90; display: flex; min-height: 49px; flex-wrap: wrap; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); background: var(--bg-primary); padding: 0 32px; transition: left 0.2s ease; }
-        .project-tabs-row-spacer { min-height: 49px; margin-left: -32px; margin-right: -32px; }
+        .project-tabs-row { position: sticky; top: 56px; z-index: 90; display: flex; min-height: 49px; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: -32px; margin-right: -32px; border-bottom: 1px solid var(--border); background: var(--bg-primary); padding: 0 32px; }
         .project-tab-skeleton { width: 86px; height: 28px; border-radius: 6px; }
         .project-sort-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -32px; margin-right: -32px; background: var(--bg-primary); padding: 16px 32px; }
         .project-tab-panel { margin-left: -32px; margin-right: -32px; }
@@ -479,7 +477,7 @@ export default function ProjectDetailPageClient() {
         .project-empty, .project-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-secondary); }
         .project-empty h2, .project-error h2 { font-size: 14px; font-weight: 500; color: var(--text-primary); }
         .project-empty p, .project-error p { margin-top: 6px; max-width: 320px; font-size: 12px; line-height: 1.6; }
-        .project-footer-wrap { padding-top: 40px; }
+        .project-footer-wrap { padding: 40px 32px 8px; }
         .project-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .project-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: project-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes project-skeleton-shimmer { 100% { transform: translateX(100%); } }
@@ -490,12 +488,12 @@ export default function ProjectDetailPageClient() {
         .project-detail-skeleton-meta-line.short { width: 140px; }
         @media (max-width: 760px) {
           .project-detail-shell { padding: 0 18px; }
-          .project-tabs-row-spacer, .project-sort-row, .project-tab-panel { margin-left: -18px; margin-right: -18px; }
-          .project-tabs-row { padding-left: 18px; padding-right: 18px; }
-          .project-sort-row, .project-file-browser { padding-left: 18px; padding-right: 18px; }
+          .project-tabs-row, .project-sort-row, .project-tab-panel { margin-left: -18px; margin-right: -18px; }
+          .project-tabs-row, .project-sort-row, .project-file-browser { padding-left: 18px; padding-right: 18px; }
           .project-file-browser-top, .project-file-browser-actions { flex-direction: column; align-items: stretch; }
           .project-file-row { grid-template-columns: 38px minmax(0, 1fr) 76px; }
           .project-file-list-meta { display: none; }
+          .project-footer-wrap { padding-left: 18px; padding-right: 18px; }
         }
       `}</style>
 
@@ -557,18 +555,18 @@ export default function ProjectDetailPageClient() {
                       >
                         <span className="relative flex h-4 w-4 items-center justify-center" aria-hidden="true">
                           <FolderIcon size={16} />
-                          <span className="absolute -right-[3px] -bottom-[3px] flex h-[9px] w-[9px] items-center justify-center rounded-full bg-[var(--bg-primary)]">
+                          <span className="absolute -right-[2px] -top-[3px] flex h-[8px] w-[8px] items-center justify-center rounded-full bg-[var(--bg-primary)]">
                             <svg
-                              width="7"
-                              height="7"
-                              viewBox="0 0 7 7"
+                              width="6"
+                              height="6"
+                              viewBox="0 0 6 6"
                               fill="none"
                               stroke="currentColor"
-                              strokeWidth="1.4"
+                              strokeWidth="1.25"
                               strokeLinecap="round"
                             >
-                              <path d="M3.5 1.25v4.5" />
-                              <path d="M1.25 3.5h4.5" />
+                              <path d="M3 1.2v3.6" />
+                              <path d="M1.2 3h3.6" />
                             </svg>
                           </span>
                         </span>
@@ -595,7 +593,6 @@ export default function ProjectDetailPageClient() {
                   </button>
                 </div>
               </div>
-              <div className="project-tabs-row-spacer" aria-hidden="true" />
 
               {activeTab !== "overview" && (
                 <div className="project-sort-row">
@@ -681,7 +678,7 @@ export default function ProjectDetailPageClient() {
 
           {!loading && (
             <div className="project-footer-wrap" style={{ paddingBottom: playerVisible ? "72px" : "8px" }}>
-              <Footer />
+              <FooterBottom />
             </div>
           )}
         </div>
