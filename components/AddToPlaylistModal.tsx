@@ -295,10 +295,11 @@ export default function AddToPlaylistModal({
         onClose={onClose}
         closeLabel="Close add to playlist modal"
         maxWidth="max-w-[620px]"
-        maxHeight="560px"
+        maxHeight="min(560px, calc(100vh - 64px))"
+        bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
       >
-        <div className="border-t border-[var(--border)] pt-5">
-          <div className="max-h-[390px] overflow-y-auto pr-1">
+        <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)]">
+          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-0">
             <button
               type="button"
               onClick={handleNewPlaylistClick}
@@ -330,7 +331,7 @@ export default function AddToPlaylistModal({
             )}
 
             {!loading && displayedError && (
-              <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 px-4 text-center">
+              <div className="flex min-h-full flex-col items-center justify-center gap-3 px-4 text-center">
                 <div className="text-xs font-medium text-[var(--danger)]">
                   {displayedError}
                 </div>
@@ -348,7 +349,7 @@ export default function AddToPlaylistModal({
             )}
 
             {!loading && !displayedError && displayedPlaylists.length === 0 && (
-              <div className="flex min-h-[160px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
                 You don&apos;t have any playlists yet.
               </div>
             )}
