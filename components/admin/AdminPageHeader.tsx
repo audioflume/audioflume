@@ -12,11 +12,16 @@ export default function AdminPageHeader({
   action,
 }: AdminPageHeaderProps) {
   return (
-    <div className="admin-account-page-header mb-8 flex items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
+    <div className="mb-8 flex min-h-12 items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
       <div className="text-xs text-[var(--text-muted)]">
         {section} / <span className="text-[var(--text-primary)]">{label}</span>
       </div>
-      {action ? <div className="shrink-0">{action}</div> : <div aria-hidden="true" className="h-8 w-0 shrink-0" />}
+
+      {action ? (
+        <div className="flex h-8 shrink-0 items-center">{action}</div>
+      ) : (
+        <div aria-hidden="true" className="hidden h-8 w-0 shrink-0 md:block" />
+      )}
     </div>
   );
 }
