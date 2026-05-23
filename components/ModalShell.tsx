@@ -85,7 +85,7 @@ export default function ModalShell({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-7 w-7 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+          className="absolute right-4 top-4 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
           aria-label={closeLabel}
         >
           <svg
