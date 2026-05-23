@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
-import PlusIcon from "@/components/icons/PlusIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 
 type HideMode = "first-child" | "all-children" | "none";
@@ -23,7 +22,14 @@ const adminPrimaryButtonClass =
 const adminSecondaryButtonClass =
   "hidden h-8 items-center justify-center rounded-full border border-[var(--border)] px-3.5 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] md:flex";
 
+function getSongIdFromCuePointPath(pathname: string) {
+  const match = pathname.match(/^\/admin\/songs\/([^/]+)\/edit-points/);
+  return match?.[1] ?? null;
+}
+
 function getHeaderConfig(pathname: string): HeaderConfig | null {
+  const cuePointSongId = getSongIdFromCuePointPath(pathname);
+
   if (pathname === "/admin") {
     return {
       section: "Admin",
@@ -57,12 +63,6 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
       section: "Admin",
       label: "Playlist Manager",
       hideMode: "all-children",
-      action: (
-        <Link href="/admin/playlist-manager/new" className={adminPrimaryButtonClass}>
-          <PlusIcon size={13} />
-          <span>New Playlist</span>
-        </Link>
-      ),
     };
   }
 
@@ -74,6 +74,19 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
       action: (
         <Link href="/admin/music-library?issue=editPoints" className={adminSecondaryButtonClass}>
           View Missing
+        </Link>
+      ),
+    };
+  }
+
+  if (cuePointSongId) {
+    return {
+      section: "Admin",
+      label: "Cue Points",
+      hideMode: "none",
+      action: (
+        <Link href={`/admin/songs/${cuePointSongId}/edit`} className={adminSecondaryButtonClass}>
+          Edit Details
         </Link>
       ),
     };
@@ -107,6 +120,10 @@ function getSongEditorContainer() {
   return card?.closest("main")?.querySelector<HTMLElement>(":scope > div") ?? null;
 }
 
+function getSongCuePointContainer() {
+  return document.querySelector<HTMLElement>("main > div");
+}
+
 function getMainSectionContainer() {
   return document.querySelector<HTMLElement>("main > section");
 }
@@ -130,6 +147,7 @@ function getPageContainer(pathname: string) {
   if (pathname === "/admin/music-library") return getMainSectionContainer();
   if (pathname === "/admin/playlist-manager") return getPlaylistManagerContainer();
   if (pathname === "/admin/edit-points") return getMainSectionContainer();
+  if (getSongIdFromCuePointPath(pathname)) return getSongCuePointContainer();
   if (pathname.startsWith("/admin/songs")) return getSongEditorContainer();
   return null;
 }
