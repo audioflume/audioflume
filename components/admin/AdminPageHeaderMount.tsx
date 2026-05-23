@@ -49,7 +49,7 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
     return {
       section: "Admin",
       label: "Music Library",
-      hideMode: "first-child",
+      hideMode: "none",
       action: (
         <Link href="/admin/songs/new" className={adminPrimaryButtonClass}>
           <UploadIcon size={13} />
@@ -63,7 +63,7 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
     return {
       section: "Admin",
       label: "Playlist Manager",
-      hideMode: "all-children",
+      hideMode: "none",
       action: (
         <Link href="/admin/playlist-manager/new" className={adminPrimaryButtonClass}>
           <PlusIcon size={13} />
@@ -77,7 +77,7 @@ function getHeaderConfig(pathname: string): HeaderConfig | null {
     return {
       section: "Admin",
       label: "Cue Points",
-      hideMode: "first-child",
+      hideMode: "none",
       action: (
         <Link href="/admin/music-library?issue=editPoints" className={adminSecondaryButtonClass}>
           View Missing
