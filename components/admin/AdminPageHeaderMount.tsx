@@ -48,18 +48,25 @@ export default function AdminPageHeaderMount() {
     }
 
     let frame = 0;
+    let cancelled = false;
 
     function sync() {
-      const container = getSongEditorContainer();
-      if (!container) return;
+      if (cancelled) return;
 
-      setMount(ensureMount(container));
+      const container = getSongEditorContainer();
+
+      if (container) {
+        setMount(ensureMount(container));
+        return;
+      }
+
+      frame = window.requestAnimationFrame(sync);
     }
 
     sync();
-    frame = window.requestAnimationFrame(sync);
 
     return () => {
+      cancelled = true;
       window.cancelAnimationFrame(frame);
       setMount(null);
     };
