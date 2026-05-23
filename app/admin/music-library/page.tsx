@@ -4,7 +4,7 @@ import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminContentPage from "@/components/admin/AdminContentPage";
 import AlertIcon from "@/components/icons/AlertIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
 import FailedIcon from "@/components/icons/FailedIcon";
@@ -204,7 +204,7 @@ export default function AdminMusicLibraryPage() {
     { key: "tags", label: "Missing Tags", count: issueCounts.tags },
     {
       key: "editPoints",
-      label: "Missing Edit Points",
+      label: "Missing Cue Points",
       count: issueCounts.editPoints,
     },
   ];
@@ -285,14 +285,8 @@ export default function AdminMusicLibraryPage() {
     if (!(activeRow instanceof HTMLElement)) return;
 
     const rowRect = activeRow.getBoundingClientRect();
-
-    const stickyHeaderOffset = 56;
-    const stickySearchOffset = 54;
-    const topPadding = 12;
-    const bottomPadding = playerVisible ? 88 : 16;
-
-    const visibleTop = stickyHeaderOffset + stickySearchOffset + topPadding;
-    const visibleBottom = window.innerHeight - bottomPadding;
+    const visibleTop = 76;
+    const visibleBottom = window.innerHeight - (playerVisible ? 88 : 16);
 
     if (rowRect.top < visibleTop) {
       window.scrollBy({
@@ -430,9 +424,17 @@ export default function AdminMusicLibraryPage() {
   const showSkeleton = songsLoading && songs.length === 0 && !songsError;
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-      <AdminSidebar />
-
+    <AdminContentPage
+      label="Music Library"
+      title="Music Library"
+      description="Search and manage uploaded songs."
+      headerAction={(
+        <Link href="/admin/songs/new" className={primaryPillButtonClass}>
+          <UploadIcon size={13} />
+          <span>Upload Song</span>
+        </Link>
+      )}
+    >
       <style>{`
         .admin-song-menu-btn,
         .admin-song-edit-btn {
@@ -516,57 +518,6 @@ export default function AdminMusicLibraryPage() {
           opacity: 1;
         }
 
-        .admin-song-dropdown {
-          z-index: 25;
-          width: 138px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border);
-          border-radius: 8px;
-          overflow: hidden;
-          box-shadow: var(--shadow-ui);
-          backdrop-filter: blur(12px);
-        }
-
-        .admin-song-dropdown button,
-        .admin-song-dropdown a {
-          display: block;
-          width: 100%;
-          padding: 9px 12px;
-          text-align: left;
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--text-secondary);
-          background: none;
-          border: none;
-          cursor: pointer;
-          transition: background 0.1s, color 0.1s;
-          text-decoration: none;
-        }
-
-        .admin-song-dropdown button:hover,
-        .admin-song-dropdown a:hover {
-          background: var(--bg-hover-strong);
-          color: var(--text-primary);
-        }
-
-        .admin-song-dropdown .danger-action {
-          color: var(--danger);
-        }
-
-        .admin-song-dropdown .danger-action:hover {
-          color: var(--danger);
-        }
-
-        .admin-song-dropdown button:disabled {
-          cursor: default;
-          opacity: 0.45;
-        }
-
-        .admin-song-dropdown button:disabled:hover {
-          background: transparent;
-          color: var(--text-secondary);
-        }
-
         .admin-batch-delete-btn {
           background: var(--danger) !important;
           color: var(--danger-contrast) !important;
@@ -578,257 +529,232 @@ export default function AdminMusicLibraryPage() {
         }
       `}</style>
 
-      <section className="min-h-screen">
-        <div className="flex items-end justify-between gap-4 px-8 pt-14 pb-8">
-          <div>
-            <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-              Music Library
-            </h1>
+      <div
+        style={{
+          paddingBottom: playerVisible ? "104px" : "32px",
+        }}
+      >
+        <div className="mb-4 rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4">
+          {selectionMode ? (
+            <div className="flex h-12 items-center gap-3">
+              <div className="text-sm font-medium text-[var(--text-primary)]">
+                {selectedCount} song{selectedCount === 1 ? "" : "s"} selected
+              </div>
 
-            <p className="mt-2 text-sm text-[var(--text-secondary)]">
-              Search and manage uploaded songs.
-            </p>
-          </div>
+              <button
+                type="button"
+                onClick={handleBatchDelete}
+                disabled={isBatchDeleting}
+                className={`admin-batch-delete-btn ml-auto ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+              >
+                <TrashIcon />
+                {isBatchDeleting
+                  ? "Deleting..."
+                  : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
+              </button>
 
-          <Link
-            href="/admin/songs/new"
-            className={`${primaryPillButtonClass} hidden md:flex`}
-          >
-            <UploadIcon size={13} />
-            <span>Upload Song</span>
-          </Link>
+              <button
+                type="button"
+                onClick={clearSelection}
+                disabled={isBatchDeleting}
+                className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <div className="flex h-12 items-center gap-2">
+              <SearchIcon
+                size={16}
+                className="shrink-0 text-[var(--text-muted)]"
+              />
+
+              <input
+                type="text"
+                placeholder="Search Music Library"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-transparent text-sm font-[300] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+              />
+            </div>
+          )}
         </div>
 
-        <div className="sticky top-[55px] z-[40] flex h-[49px] w-full flex-col gap-0 overflow-hidden border-y border-[var(--border)] bg-[var(--bg-primary)] px-8 pt-0 pb-0">
-          <div className="flex items-center gap-3">
-            {selectionMode ? (
-              <div className="flex h-[48px] w-full items-center gap-3">
-                <div className="text-sm font-medium text-[var(--text-primary)]">
-                  {selectedCount} song{selectedCount === 1 ? "" : "s"} selected
+        <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+          <div className="flex flex-col gap-3 border-b border-[var(--border)] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-3">
+              {songsLoading ? (
+                <HealthIconSkeleton />
+              ) : (
+                <StatusIcon status={healthStatus} />
+              )}
+
+              <div>
+                <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                  Library Health
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleBatchDelete}
-                  disabled={isBatchDeleting}
-                  className={`admin-batch-delete-btn ml-auto ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
-                >
-                  <TrashIcon />
-                  {isBatchDeleting
-                    ? "Deleting..."
-                    : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={clearSelection}
-                  disabled={isBatchDeleting}
-                  className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <div className="flex w-[320px] flex-shrink-0 items-center gap-2 py-3 pr-4">
-                <SearchIcon
-                  size={16}
-                  className="shrink-0 text-[var(--text-muted)]"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Search Music Library"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-transparent text-[15px] font-[300] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div
-          className="px-8"
-          style={{
-            paddingBottom: playerVisible ? "104px" : "32px",
-          }}
-        >
-          <div className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)]">
-            <div className="flex flex-col gap-3 border-b border-[var(--border)] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center gap-3">
-                {songsLoading ? (
-                  <HealthIconSkeleton />
-                ) : (
-                  <StatusIcon status={healthStatus} />
-                )}
-
-                <div>
-                  <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                    Library Health
-                  </div>
-
-                  <div className="mt-1 text-xs text-[var(--text-secondary)]">
-                    {healthLabel}
-                  </div>
+                <div className="mt-1 text-xs text-[var(--text-secondary)]">
+                  {healthLabel}
                 </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {issueFilters.map((filter) => {
-                  const active = issueFilter === filter.key;
-                  const severity = getIssueFilterSeverity(filter.key);
-                  const severityColor =
-                    severity === "error"
-                      ? STATUS_COLORS.error
-                      : severity === "warning"
-                        ? STATUS_COLORS.warning
-                        : undefined;
-
-                  return (
-                    <button
-                      key={filter.key}
-                      type="button"
-                      onClick={() => setIssueFilter(filter.key)}
-                      className={`flex h-8 cursor-pointer items-center gap-2 rounded-full px-3 text-xs font-medium transition ${
-                        active
-                          ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-                          : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                      }`}
-                    >
-                      <span>{filter.label}</span>
-                      <span
-                        className="rounded-full bg-[var(--bg-secondary)] px-1.5 py-[1px] text-[10px]"
-                        style={{
-                          color:
-                            filter.count > 0 && severityColor
-                              ? severityColor
-                              : active
-                                ? "var(--text-primary)"
-                                : "var(--text-muted)",
-                        }}
-                      >
-                        {filter.count}
-                      </span>
-                    </button>
-                  );
-                })}
               </div>
             </div>
 
-            <div className="overflow-x-auto overflow-y-hidden">
-              <div className="min-w-[1080px]">
-                <div className="grid h-[38px] grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_120px_80px_80px_72px] items-center gap-3 border-b border-[var(--border)] px-6 text-[11px] font-medium uppercase tracking-[0.04em] text-[var(--text-muted)]">
-                  <div className="flex items-center">
-                    <label
-                      className="admin-song-select-wrap is-visible"
-                      aria-label="Select all visible songs"
+            <div className="flex flex-wrap gap-2">
+              {issueFilters.map((filter) => {
+                const active = issueFilter === filter.key;
+                const severity = getIssueFilterSeverity(filter.key);
+                const severityColor =
+                  severity === "error"
+                    ? STATUS_COLORS.error
+                    : severity === "warning"
+                      ? STATUS_COLORS.warning
+                      : undefined;
+
+                return (
+                  <button
+                    key={filter.key}
+                    type="button"
+                    onClick={() => setIssueFilter(filter.key)}
+                    className={`flex h-8 cursor-pointer items-center gap-2 rounded-full px-3 text-xs font-medium transition ${
+                      active
+                        ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                        : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    }`}
+                  >
+                    <span>{filter.label}</span>
+                    <span
+                      className="rounded-full bg-[var(--bg-secondary)] px-1.5 py-[1px] text-[10px]"
+                      style={{
+                        color:
+                          filter.count > 0 && severityColor
+                            ? severityColor
+                            : active
+                              ? "var(--text-primary)"
+                              : "var(--text-muted)",
+                      }}
                     >
-                      <input
-                        type="checkbox"
-                        checked={allFilteredSelected}
-                        onChange={(e) =>
-                          toggleSelectAllFiltered(e.target.checked)
-                        }
-                        className="admin-song-select-input"
-                      />
+                      {filter.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-                      <span className="admin-song-select-box">
-                        <CheckIcon size={11} strokeWidth={3} />
-                      </span>
-                    </label>
-                  </div>
+          <div className="overflow-x-auto overflow-y-hidden">
+            <div className="min-w-[1080px]">
+              <div className="grid h-[38px] grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_120px_80px_80px_72px] items-center gap-3 border-b border-[var(--border)] px-6 text-[11px] font-medium uppercase tracking-[0.04em] text-[var(--text-muted)]">
+                <div className="flex items-center">
+                  <label
+                    className="admin-song-select-wrap is-visible"
+                    aria-label="Select all visible songs"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={allFilteredSelected}
+                      onChange={(e) =>
+                        toggleSelectAllFiltered(e.target.checked)
+                      }
+                      className="admin-song-select-input"
+                    />
 
-                  <div />
-                  <div>Song</div>
-                  <div>Artist</div>
-                  <div />
-                  <div>Status</div>
-                  <div>Key</div>
-                  <div>BPM</div>
-                  <div />
+                    <span className="admin-song-select-box">
+                      <CheckIcon size={11} strokeWidth={3} />
+                    </span>
+                  </label>
                 </div>
 
-                {showSkeleton && (
-                  <div className="grid gap-0">
-                    {Array.from({ length: 10 }, (_, index) => (
-                      <div
-                        key={index}
-                        className="grid min-h-[46px] grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_120px_80px_80px_72px] items-center gap-3 px-6"
-                        style={{
-                          borderBottom:
-                            index === 9
-                              ? "none"
-                              : "1px solid var(--border-subtle)",
-                        }}
-                      >
-                        <div className="flex items-center">
-                          <div className="h-4 w-4 rounded-[4px] bg-[var(--bg-tertiary)]" />
-                        </div>
+                <div />
+                <div>Song</div>
+                <div>Artist</div>
+                <div />
+                <div>Status</div>
+                <div>Key</div>
+                <div>BPM</div>
+                <div />
+              </div>
 
-                        <div className="h-8 w-8 rounded bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-[60%] bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-[50%] bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-2 rounded-full bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-[78px] bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-[50px] bg-[var(--bg-tertiary)]" />
+              {showSkeleton && (
+                <div className="grid gap-0">
+                  {Array.from({ length: 10 }, (_, index) => (
+                    <div
+                      key={index}
+                      className="grid min-h-[46px] grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_120px_80px_80px_72px] items-center gap-3 px-6"
+                      style={{
+                        borderBottom:
+                          index === 9
+                            ? "none"
+                            : "1px solid var(--border-subtle)",
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <div className="h-4 w-4 rounded-[4px] bg-[var(--bg-tertiary)]" />
                       </div>
-                    ))}
-                  </div>
-                )}
 
-                {songsError && !songsLoading && (
-                  <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 px-8 text-center">
-                    <div className="text-sm font-medium text-[var(--text-primary)]">
-                      Couldn&apos;t load songs
+                      <div className="h-8 w-8 rounded bg-[var(--bg-tertiary)]" />
+                      <div className="h-2 w-[60%] bg-[var(--bg-tertiary)]" />
+                      <div className="h-2 w-[50%] bg-[var(--bg-tertiary)]" />
+                      <div className="h-2 w-2 rounded-full bg-[var(--bg-tertiary)]" />
+                      <div className="h-2 w-[78px] bg-[var(--bg-tertiary)]" />
+                      <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
+                      <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
+                      <div className="h-2 w-[50px] bg-[var(--bg-tertiary)]" />
                     </div>
+                  ))}
+                </div>
+              )}
 
-                    <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
-                      {songsError}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={fetchSongs}
-                      className={primaryPillButtonClass}
-                    >
-                      Try Again
-                    </button>
+              {songsError && !songsLoading && (
+                <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 px-8 text-center">
+                  <div className="text-sm font-medium text-[var(--text-primary)]">
+                    Couldn&apos;t load songs
                   </div>
-                )}
 
-                {!songsError && !showSkeleton && visibleSongs.length === 0 && (
-                  <div className="flex min-h-[180px] items-center justify-center px-8 text-sm text-[var(--text-secondary)]">
-                    No songs found.
+                  <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
+                    {songsError}
                   </div>
-                )}
 
-                {!songsError && !showSkeleton && visibleSongs.length > 0 && (
-                  <div className="admin-song-row-group">
-                    {visibleSongs.map((song, index) => (
-                      <AdminSongRow
-                        key={song.id}
-                        song={song}
-                        isLast={index === visibleSongs.length - 1}
-                        selected={selectedSongIds.includes(song.id)}
-                        selectionMode={selectionMode}
-                        onSelectedChange={handleSelectedChange}
-                        onDeleted={handleSongDeleted}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
+                  <button
+                    type="button"
+                    onClick={fetchSongs}
+                    className={primaryPillButtonClass}
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+
+              {!songsError && !showSkeleton && visibleSongs.length === 0 && (
+                <div className="flex min-h-[180px] items-center justify-center px-8 text-sm text-[var(--text-secondary)]">
+                  No songs found.
+                </div>
+              )}
+
+              {!songsError && !showSkeleton && visibleSongs.length > 0 && (
+                <div className="admin-song-row-group">
+                  {visibleSongs.map((song, index) => (
+                    <AdminSongRow
+                      key={song.id}
+                      song={song}
+                      isLast={index === visibleSongs.length - 1}
+                      selected={selectedSongIds.includes(song.id)}
+                      selectionMode={selectionMode}
+                      onSelectedChange={handleSelectedChange}
+                      onDeleted={handleSongDeleted}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       <Toast
         message={toastMessage}
         bottomOffset={playerVisible ? "96px" : "24px"}
       />
-    </main>
+    </AdminContentPage>
   );
 }
