@@ -29,6 +29,11 @@ type AddToPlaylistModalProps = {
   onClose: () => void;
 };
 
+type PlaylistResponseBody = {
+  error?: string;
+  selected_playlist_ids?: Array<number | string>;
+};
+
 function readRecentPlaylistIds() {
   if (typeof window === "undefined") return [];
 
@@ -48,6 +53,28 @@ function writeRecentPlaylistIds(ids: number[]) {
   if (typeof window === "undefined") return;
 
   window.localStorage.setItem(RECENT_PLAYLIST_IDS_KEY, JSON.stringify(ids));
+}
+
+async function readPlaylistResponse(res: Response): Promise<PlaylistResponseBody | null> {
+  const text = await res.text();
+
+  if (!text.trim()) return null;
+
+  const contentType = res.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error(
+      res.ok ? "Invalid playlist response" : "Failed to update playlist",
+    );
+  }
+
+  try {
+    return JSON.parse(text) as PlaylistResponseBody;
+  } catch {
+    throw new Error(
+      res.ok ? "Invalid playlist response" : "Failed to update playlist",
+    );
+  }
 }
 
 function PlaylistThumbnail({
@@ -93,8 +120,8 @@ function SongPreview({ song }: { song: Song }) {
     : null;
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-start px-5 pb-4 pt-0 text-left">
-      <div className="flex min-w-0 items-center gap-2">
+    <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-0 text-center">
+      <div className="flex min-w-0 items-center justify-center gap-2">
         <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-secondary)]">
           {cover ? (
             <Image
@@ -172,8 +199,7 @@ export default function AddToPlaylistModal({
         const res = await fetch(
           `/api/songs/${encodeURIComponent(activeSong.id)}/playlists`,
         );
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : null;
+        const data = await readPlaylistResponse(res);
 
         if (!res.ok) {
           throw new Error(data?.error || "Failed to load playlist selections");
@@ -277,8 +303,7 @@ export default function AddToPlaylistModal({
         },
       );
 
-      const text = await res.text();
-      const data = text ? JSON.parse(text) : null;
+      const data = await readPlaylistResponse(res);
 
       if (!res.ok) {
         throw new Error(data?.error || "Failed to update playlist");
@@ -328,6 +353,7 @@ export default function AddToPlaylistModal({
         closeLabel="Close add to playlist modal"
         maxWidth="max-w-[430px]"
         maxHeight="420px"
+        centerTitle
         bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
         contentClassName="h-[420px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[58px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
       >
