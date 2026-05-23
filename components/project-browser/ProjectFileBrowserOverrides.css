@@ -246,17 +246,18 @@
 }
 
 .project-browser-grid {
-  grid-template-columns: repeat(auto-fill, minmax(132px, 132px)) !important;
-  column-gap: 0px !important;
-  row-gap: 0px !important;
-  justify-content: start !important;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)) !important;
+  column-gap: 12px !important;
+  row-gap: 12px !important;
+  justify-content: stretch !important;
   padding-top: 0 !important;
 }
 
 .project-browser-grid > div,
 .project-file-browser .project-folder-card,
 .project-file-browser .project-file-card {
-  width: 132px !important;
+  width: 100% !important;
+  min-width: 0 !important;
 }
 
 .project-file-browser .project-folder-card,
@@ -279,7 +280,7 @@
 .project-file-browser .project-file-card-title,
 .project-file-browser .project-file-card-meta,
 .project-file-browser .project-folder-card-meta {
-  max-width: 116px !important;
+  max-width: 100% !important;
 }
 
 .project-file-browser .project-folder-card-meta {
