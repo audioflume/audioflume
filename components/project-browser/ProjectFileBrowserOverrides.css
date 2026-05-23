@@ -27,24 +27,35 @@
   left: var(--sidebar-width) !important;
   right: 0 !important;
   z-index: 109 !important;
-  min-height: 50px !important;
+  height: 49px !important;
+  min-height: 49px !important;
+  flex-wrap: nowrap !important;
   gap: 22px !important;
-  row-gap: 10px !important;
+  row-gap: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
   padding: 0 32px !important;
+  scrollbar-width: none !important;
+}
+
+.project-tabs-row::-webkit-scrollbar {
+  display: none !important;
 }
 
 .project-tabs-row > button {
-  height: 50px !important;
+  flex: 0 0 auto !important;
+  height: 49px !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding: 0 !important;
   color: var(--text-subtle) !important;
   font-size: 13px !important;
+  white-space: nowrap !important;
 }
 
 .project-tabs-row > button:first-child {
@@ -62,6 +73,15 @@
   align-items: center;
   gap: 6px;
   margin-left: auto;
+}
+
+.project-tabs-row-actions.is-in-project-hero {
+  position: absolute !important;
+  top: 15px !important;
+  right: 15px !important;
+  z-index: 2 !important;
+  display: flex !important;
+  margin-left: 0 !important;
 }
 
 .project-tabs-row-actions .project-new-folder-button,
@@ -107,9 +127,10 @@
 
 .project-detail-page .project-detail-hero {
   order: 2 !important;
+  position: relative !important;
   display: block !important;
   min-height: 176px !important;
-  margin-top: 50px !important;
+  margin-top: 49px !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
@@ -426,35 +447,4 @@
 .project-file-browser .project-file-card:active,
 .project-browser-row:active {
   cursor: grabbing !important;
-}
-
-@media (max-width: 760px) {
-  .project-tabs-row {
-    left: var(--sidebar-width) !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding: 0 32px !important;
-  }
-
-  .project-tabs-row-actions {
-    position: fixed !important;
-    top: 120px !important;
-    right: 32px !important;
-    z-index: 108 !important;
-    margin-left: 0 !important;
-  }
-
-  .project-detail-page .project-detail-hero {
-    margin-top: 50px !important;
-    margin-left: -32px !important;
-    margin-right: -32px !important;
-    padding: 38px 32px 28px 32px !important;
-  }
-
-  .project-detail-page .project-file-browser-top {
-    margin-left: -32px !important;
-    margin-right: -32px !important;
-    padding-left: 32px !important;
-    padding-right: 32px !important;
-  }
 }
