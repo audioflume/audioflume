@@ -18,6 +18,7 @@ type ModalShellProps = {
   bodyScroll?: boolean;
   bodyClassName?: string;
   contentClassName?: string;
+  footerClassName?: string;
 };
 
 export default function ModalShell({
@@ -33,6 +34,7 @@ export default function ModalShell({
   bodyScroll = false,
   bodyClassName = "",
   contentClassName = "",
+  footerClassName = "",
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -67,8 +69,8 @@ export default function ModalShell({
         <div
           className={
             centerTitle
-              ? "flex h-[68px] flex-shrink-0 items-center justify-center px-14 pt-1"
-              : "flex h-[68px] flex-shrink-0 items-center px-5 pr-14 pt-1"
+              ? "flex h-[60px] flex-shrink-0 items-center justify-center px-14 pt-1"
+              : "flex h-[60px] flex-shrink-0 items-center px-5 pr-14 pt-1"
           }
         >
           <h2 className={`${modalTitleClass} text-[22px] tracking-[-0.04em]`}>{title}</h2>
@@ -77,16 +79,16 @@ export default function ModalShell({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-5 top-5 z-10 flex h-6 w-6 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+          className="absolute right-4 top-4 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
           aria-label={closeLabel}
         >
           <svg
-            width="22"
-            height="22"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.8"
+            strokeWidth="2"
             strokeLinecap="round"
             aria-hidden="true"
           >
@@ -105,7 +107,7 @@ export default function ModalShell({
               {children}
             </div>
 
-            <div className="flex flex-shrink-0 items-center justify-end gap-2 px-5 pb-6 pt-2">
+            <div className={`flex flex-shrink-0 items-center gap-2 px-5 pb-5 pt-2 ${footerClassName || "justify-end"}`}>
               {footer}
             </div>
           </>
