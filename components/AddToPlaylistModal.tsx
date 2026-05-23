@@ -452,7 +452,7 @@ export default function AddToPlaylistModal({
                         setNewPlaylistOpen(false);
                         setNewPlaylistName("");
                       }}
-                      className="h-8 rounded-lg border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                      className="h-8 rounded-full border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                     >
                       Cancel
                     </button>
@@ -460,7 +460,7 @@ export default function AddToPlaylistModal({
                     <button
                       type="submit"
                       disabled={creatingPlaylist || !newPlaylistName.trim()}
-                      className="h-8 rounded-lg bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                      className="h-8 rounded-full bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
                     >
                       Add
                     </button>
