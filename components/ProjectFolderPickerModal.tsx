@@ -158,7 +158,7 @@ export default function ProjectFolderPickerModal({
       title={title}
       onClose={onClose}
       closeLabel="Close folder picker"
-      maxWidth="max-w-[520px]"
+      maxWidth="max-w-[640px]"
       maxHeight="430px"
       bodyClassName="px-0 pb-0"
       footerClassName="justify-between border-t border-[var(--border)] px-5 pb-4 pt-3"
@@ -185,7 +185,7 @@ export default function ProjectFolderPickerModal({
         </>
       }
     >
-      <div className="border-t border-[var(--border)] bg-[var(--bg-primary)]">
+      <div className="-mx-5 border-t border-[var(--border)] bg-[var(--bg-primary)]">
         <div className="flex h-[clamp(250px,48vh,320px)] min-h-0 min-w-0 overflow-x-auto overflow-y-hidden">
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
@@ -194,7 +194,7 @@ export default function ProjectFolderPickerModal({
             return (
               <div
                 key={column.parentId ?? "root"}
-                className="flex min-w-[160px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
+                className="flex min-w-[180px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
               >
                 <div
                   className={`${modalFieldLabelClass} !mb-0 flex-shrink-0 border-b border-[var(--border)] px-5 py-2.5`}
