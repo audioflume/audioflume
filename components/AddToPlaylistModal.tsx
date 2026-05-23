@@ -427,7 +427,7 @@ export default function AddToPlaylistModal({
                   e.preventDefault();
                   handleCreatePlaylist();
                 }}
-                className="mb-1 flex w-full items-center gap-3 rounded-xl p-2"
+                className="mb-1 flex w-full items-start gap-3 rounded-xl p-2"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
