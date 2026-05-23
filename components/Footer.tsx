@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import FooterBottom from "@/components/FooterBottom";
 import Logo from "@/components/Logo";
 import { usePlayer } from "@/context/PlayerContext";
 
@@ -95,10 +96,7 @@ export default function Footer({
         </div>
       </div>
 
-      <div className="flex min-h-9 items-center justify-between border-t border-[var(--border-subtle)] text-[10px] leading-none text-[var(--text-muted)]">
-        <span>© 2026 Filmwave</span>
-        <span>All rights reserved</span>
-      </div>
+      <FooterBottom />
     </footer>
   );
 }
