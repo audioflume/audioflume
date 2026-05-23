@@ -1,13 +1,6 @@
 /* Shared admin/account-style header */
 .admin-page-header-mount {
   display: block;
-  margin-bottom: 28px;
-}
-
-.admin-account-page-header {
-  min-height: 49px;
-  align-items: center;
-  padding-bottom: 16px;
 }
 
 .admin-original-page-header-hidden {
