@@ -362,7 +362,7 @@ export default function AddToPlaylistModal({
           </div>
         </div>
 
-        <div className="-mx-4 min-h-[234px] flex-1 overflow-y-auto border-t border-[var(--border)] px-4 pt-3 pb-3">
+        <div className="min-h-[234px] flex-1 overflow-y-auto rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-2">
           {(loading || selectedLoading) && (
             <div className="grid gap-1.5">
               {Array.from({ length: playlists.length || 6 }).map((_, index) => (
