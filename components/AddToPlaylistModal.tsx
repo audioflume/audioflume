@@ -314,8 +314,8 @@ export default function AddToPlaylistModal({
           </button>
         }
       >
-        {/* Song strip */}
-        <div className="mb-1 flex flex-shrink-0 items-center gap-3 border-b border-[var(--border)] pb-4">
+        {/* Song strip — -mx-5 px-5 extends border-b to modal edges */}
+        <div className="-mx-5 mb-1 flex flex-shrink-0 items-center gap-3 border-b border-[var(--border)] pb-4 px-5">
           <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
             {song.coverArt && (
               <Image
