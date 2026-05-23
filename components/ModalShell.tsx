@@ -54,7 +54,7 @@ export default function ModalShell({
   const modal = (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[200] flex items-center justify-center overflow-y-auto bg-[var(--modal-backdrop)] px-4 backdrop-blur-[10px]"
+      className="fixed inset-0 z-[200] flex items-center justify-center overflow-y-auto bg-[var(--modal-backdrop)] px-4"
       style={{
         paddingTop: "32px",
         paddingBottom: playerVisible ? "96px" : "32px",
@@ -62,7 +62,7 @@ export default function ModalShell({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[32px] border border-[var(--border-subtle)] bg-[var(--bg-primary)] shadow-[0_28px_90px_rgba(0,0,0,0.42)] ${contentClassName}`}
+        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-primary)] shadow-[0_28px_90px_rgba(0,0,0,0.36)] ${contentClassName}`}
         style={{
           maxHeight: modalMaxHeight,
         }}
@@ -70,11 +70,11 @@ export default function ModalShell({
         <div
           className={
             centerTitle
-              ? "flex h-16 flex-shrink-0 items-center justify-center px-14 pt-1"
-              : "flex h-16 flex-shrink-0 items-center px-5 pr-14 pt-1"
+              ? "flex h-[68px] flex-shrink-0 items-center justify-center px-14 pt-1"
+              : "flex h-[68px] flex-shrink-0 items-center px-5 pr-14 pt-1"
           }
         >
-          <h2 className={`${modalTitleClass} text-[18px] tracking-[-0.025em]`}>{title}</h2>
+          <h2 className={`${modalTitleClass} text-[22px] tracking-[-0.04em]`}>{title}</h2>
         </div>
 
         <button
@@ -101,14 +101,14 @@ export default function ModalShell({
         {footer ? (
           <>
             <div
-              className={`min-h-0 flex-1 px-5 pb-4 ${
+              className={`min-h-0 flex-1 px-5 pb-2 ${
                 bodyScroll ? "overflow-y-auto" : "overflow-hidden"
               } ${bodyClassName}`}
             >
               {children}
             </div>
 
-            <div className="flex flex-shrink-0 items-center justify-end gap-2 px-5 pb-5 pt-1">
+            <div className="flex flex-shrink-0 items-center justify-end gap-2 px-5 pb-4 pt-0">
               {footer}
             </div>
           </>
