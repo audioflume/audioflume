@@ -30,7 +30,7 @@ export const modalTitleClass =
   "min-w-0 font-[family-name:var(--font-instrument-sans)] text-[24px] font-medium tracking-[-0.045em] text-[var(--text-primary)]";
 
 export const modalFieldLabelClass =
-  "mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]";
+  "mb-1.5 block text-[11px] font-medium text-[var(--text-muted)]";
 
 export const modalInputClass =
   "h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-default disabled:opacity-70";
