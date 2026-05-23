@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -15,6 +15,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import DropdownShell from "@/components/DropdownShell";
 import ProjectFolderPickerModal from "@/components/ProjectFolderPickerModal";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import ProjectFolderCard from "./project-browser/ProjectFolderCard";
@@ -49,6 +50,18 @@ type ProjectFileBrowserProps = {
 type DragData =
   | { kind: "folder"; folderId: number }
   | { kind: "song"; assetId: number; songId: string };
+
+type ContextMenuState =
+  | {
+      type: "folder";
+      folder: ProjectFolder;
+      point: { x: number; y: number };
+    }
+  | {
+      type: "song";
+      song: ProjectSong;
+      point: { x: number; y: number };
+    };
 
 const BREADCRUMB_ROOT_DROP_ID = "drop-breadcrumb-root";
 
@@ -108,6 +121,17 @@ function defaultMediaFolderHasItems(folder: ProjectFolder) {
   return (folder.asset_count ?? 0) > 0 || (folder.child_count ?? 0) > 0;
 }
 
+function downloadUrl(url: string, filename: string) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.target = "_blank";
+  link.rel = "noreferrer";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
 const snapListOverlayToCursor = ({
   activatorEvent,
   activeNodeRect,
@@ -131,12 +155,12 @@ function DraggableFolderItem({
   folder,
   viewMode,
   onOpen,
-  onMove,
+  onContextMenu,
 }: {
   folder: ProjectFolder;
   viewMode: ProjectFileView;
   onOpen: (folderId: number) => void;
-  onMove: (folder: ProjectFolder) => void;
+  onContextMenu: (event: MouseEvent<HTMLElement>, folder: ProjectFolder) => void;
 }) {
   const draggable = useDraggable({
     id: getFolderDragId(folder.id),
@@ -158,7 +182,7 @@ function DraggableFolderItem({
       {...draggable.attributes}
       {...draggable.listeners}
     >
-      <ProjectFolderCard folder={folder} viewMode={viewMode} onOpen={onOpen} onMove={onMove} />
+      <ProjectFolderCard folder={folder} viewMode={viewMode} onOpen={onOpen} onContextMenu={onContextMenu} />
     </div>
   );
 }
@@ -167,12 +191,12 @@ function DraggableSongItem({
   song,
   viewMode,
   queueSongs,
-  onMove,
+  onContextMenu,
 }: {
   song: ProjectSong;
   viewMode: ProjectFileView;
   queueSongs: ProjectSong[];
-  onMove: (song: ProjectSong) => void;
+  onContextMenu: (event: MouseEvent<HTMLElement>, song: ProjectSong) => void;
 }) {
   const draggable = useDraggable({
     id: getSongDragId(song),
@@ -191,7 +215,7 @@ function DraggableSongItem({
       {...draggable.attributes}
       {...draggable.listeners}
     >
-      <ProjectSongFileCard song={song} viewMode={viewMode} queueSongs={queueSongs} onMove={onMove} />
+      <ProjectSongFileCard song={song} viewMode={viewMode} queueSongs={queueSongs} onContextMenu={onContextMenu} />
     </div>
   );
 }
@@ -242,7 +266,7 @@ function DragPreview({
   if (dragData.kind === "folder" && folder) {
     return (
       <div className={`project-file-browser project-drag-preview ${modeClass}`}>
-        <ProjectFolderCard folder={folder} viewMode="grid" onOpen={() => {}} onMove={() => {}} />
+        <ProjectFolderCard folder={folder} viewMode="grid" onOpen={() => {}} />
       </div>
     );
   }
@@ -250,7 +274,7 @@ function DragPreview({
   if (dragData.kind === "song" && song) {
     return (
       <div className={`project-file-browser project-drag-preview project-drag-preview-song ${modeClass}`}>
-        <ProjectSongFileCard song={song} viewMode="grid" queueSongs={[song]} onMove={() => {}} />
+        <ProjectSongFileCard song={song} viewMode="grid" queueSongs={[song]} />
       </div>
     );
   }
@@ -273,6 +297,9 @@ export default function ProjectFileBrowser({
   const [folderParentOverrides, setFolderParentOverrides] = useState<Map<number, number | null>>(
     () => new Map(),
   );
+  const [folderNameOverrides, setFolderNameOverrides] = useState<Map<number, string>>(() => new Map());
+  const [deletedFolderIds, setDeletedFolderIds] = useState<Set<number>>(() => new Set());
+  const [deletedAssetIds, setDeletedAssetIds] = useState<Set<number>>(() => new Set());
   const [songFolderOverrides, setSongFolderOverrides] = useState<Map<number, number | null>>(
     () => new Map(),
   );
@@ -280,6 +307,7 @@ export default function ProjectFileBrowser({
   const [activeDragData, setActiveDragData] = useState<DragData | null>(null);
   const [activeDragViewMode, setActiveDragViewMode] = useState<ProjectFileView>(viewMode);
   const [movingFolder, setMovingFolder] = useState<ProjectFolder | null>(null);
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const lastBreadcrumbTargetRef = useRef<number | null | undefined>(undefined);
   const originalFolderTargetRef = useRef<number | null | undefined>(undefined);
   const originalSongTargetRef = useRef<number | null | undefined>(undefined);
@@ -292,24 +320,33 @@ export default function ProjectFileBrowser({
 
   const effectiveFolders = useMemo(
     () =>
-      folders.map((folder) =>
-        folderParentOverrides.has(folder.id)
-          ? { ...folder, parent_folder_id: folderParentOverrides.get(folder.id) ?? null }
-          : folder,
-      ),
-    [folders, folderParentOverrides],
+      folders
+        .filter((folder) => !deletedFolderIds.has(folder.id))
+        .map((folder) => ({
+          ...folder,
+          name: folderNameOverrides.get(folder.id) ?? folder.name,
+          parent_folder_id: folderParentOverrides.has(folder.id)
+            ? folderParentOverrides.get(folder.id) ?? null
+            : folder.parent_folder_id,
+        })),
+    [folders, folderNameOverrides, folderParentOverrides, deletedFolderIds],
   );
 
   const effectiveSongs = useMemo(
     () =>
-      songs.map((song) => {
-        const assetId = Number(song.project_asset_id);
+      songs
+        .filter((song) => {
+          const assetId = Number(song.project_asset_id);
+          return !Number.isFinite(assetId) || !deletedAssetIds.has(assetId);
+        })
+        .map((song) => {
+          const assetId = Number(song.project_asset_id);
 
-        return Number.isFinite(assetId) && songFolderOverrides.has(assetId)
-          ? { ...song, project_folder_id: songFolderOverrides.get(assetId) ?? null }
-          : song;
-      }),
-    [songs, songFolderOverrides],
+          return Number.isFinite(assetId) && songFolderOverrides.has(assetId)
+            ? { ...song, project_folder_id: songFolderOverrides.get(assetId) ?? null }
+            : song;
+        }),
+    [songs, songFolderOverrides, deletedAssetIds],
   );
 
   const foldersById = useMemo(() => new Map(effectiveFolders.map((folder) => [folder.id, folder])), [effectiveFolders]);
@@ -365,6 +402,31 @@ export default function ProjectFileBrowser({
       (folder) => folder.id !== movingFolder.id && !folderIsDescendant(folder.id, movingFolder.id),
     );
   }, [effectiveFolders, foldersById, movingFolder]);
+
+  function getDescendantFolderIds(folderId: number) {
+    const ids = new Set<number>([folderId]);
+    let changed = true;
+
+    while (changed) {
+      changed = false;
+      effectiveFolders.forEach((folder) => {
+        if (folder.parent_folder_id != null && ids.has(folder.parent_folder_id) && !ids.has(folder.id)) {
+          ids.add(folder.id);
+          changed = true;
+        }
+      });
+    }
+
+    return ids;
+  }
+
+  function getSongsInFolderTree(folderId: number) {
+    const folderIds = getDescendantFolderIds(folderId);
+    return effectiveSongs.filter((song) => {
+      const songFolderId = song.project_folder_id ?? null;
+      return songFolderId != null && folderIds.has(songFolderId);
+    });
+  }
 
   function getValidDropFolderId(event: DragOverEvent | DragEndEvent) {
     const targetFolderId = parseDropFolderId(event.over?.id);
@@ -462,7 +524,129 @@ export default function ProjectFileBrowser({
     }
   }
 
+  async function renameFolder(folder: ProjectFolder) {
+    setContextMenu(null);
+    const nextName = window.prompt("Rename folder", folder.name)?.trim();
+
+    if (!nextName || nextName === folder.name) return;
+
+    const previousName = folder.name;
+
+    setFolderNameOverrides((current) => {
+      const next = new Map(current);
+      next.set(folder.id, nextName);
+      return next;
+    });
+
+    try {
+      const res = await fetch(`/api/projects/${encodeURIComponent(String(folder.project_id))}/folders`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ folder_id: folder.id, name: nextName }),
+      });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) throw new Error(data?.error || "Failed to rename folder");
+    } catch (err) {
+      setFolderNameOverrides((current) => {
+        const next = new Map(current);
+        next.set(folder.id, previousName);
+        return next;
+      });
+      console.error(err);
+    }
+  }
+
+  async function deleteFolder(folder: ProjectFolder) {
+    setContextMenu(null);
+
+    if (!window.confirm(`Delete "${folder.name}" and everything inside it?`)) return;
+
+    const folderIds = getDescendantFolderIds(folder.id);
+
+    setDeletedFolderIds((current) => new Set([...current, ...folderIds]));
+
+    try {
+      const res = await fetch(`/api/projects/${encodeURIComponent(String(folder.project_id))}/folders`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ folder_id: folder.id }),
+      });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) throw new Error(data?.error || "Failed to delete folder");
+
+      if (folderIds.has(activeFolderId ?? -1)) onOpenFolder(folder.parent_folder_id ?? null);
+    } catch (err) {
+      setDeletedFolderIds((current) => {
+        const next = new Set(current);
+        folderIds.forEach((id) => next.delete(id));
+        return next;
+      });
+      console.error(err);
+    }
+  }
+
+  async function deleteSong(song: ProjectSong) {
+    setContextMenu(null);
+    const assetId = Number(song.project_asset_id);
+
+    if (!Number.isFinite(assetId)) return;
+    if (!window.confirm(`Delete "${song.title}" from this project?`)) return;
+
+    setDeletedAssetIds((current) => new Set([...current, assetId]));
+
+    try {
+      const res = await fetch(`/api/projects/${encodeURIComponent(String(song.project_id))}/assets`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ asset_id: assetId }),
+      });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) throw new Error(data?.error || "Failed to delete file");
+    } catch (err) {
+      setDeletedAssetIds((current) => {
+        const next = new Set(current);
+        next.delete(assetId);
+        return next;
+      });
+      console.error(err);
+    }
+  }
+
+  function downloadSong(song: ProjectSong) {
+    setContextMenu(null);
+    if (!song.audioUrl) return;
+    downloadUrl(song.audioUrl, song.title || "filmwave-song");
+  }
+
+  function downloadFolder(folder: ProjectFolder) {
+    setContextMenu(null);
+    const songsToDownload = getSongsInFolderTree(folder.id).filter((song) => song.audioUrl);
+
+    songsToDownload.forEach((song, index) => {
+      window.setTimeout(() => downloadUrl(song.audioUrl, song.title || "filmwave-song"), index * 150);
+    });
+  }
+
+  function openFolderContextMenu(event: MouseEvent<HTMLElement>, folder: ProjectFolder) {
+    event.preventDefault();
+    event.stopPropagation();
+    setContextMenu({ type: "folder", folder, point: { x: event.clientX, y: event.clientY } });
+  }
+
+  function openSongContextMenu(event: MouseEvent<HTMLElement>, song: ProjectSong) {
+    event.preventDefault();
+    event.stopPropagation();
+    setContextMenu({ type: "song", song, point: { x: event.clientX, y: event.clientY } });
+  }
+
   function handleDragStart(event: DragStartEvent) {
+    setContextMenu(null);
     const dragData = event.active.data.current as DragData | undefined;
     lastBreadcrumbTargetRef.current = undefined;
     setDragPreviewFolderId(undefined);
@@ -579,7 +763,7 @@ export default function ProjectFileBrowser({
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
-        <div className="project-file-browser">
+        <div className="project-file-browser" onContextMenu={() => setContextMenu(null)}>
           <div className="project-file-browser-top">
             <div className="project-file-browser-title-wrap">
               <div className="project-breadcrumbs project-path">
@@ -619,10 +803,10 @@ export default function ProjectFileBrowser({
               viewMode === "grid" ? (
                 <div className="project-browser-grid">
                   {visibleFolders.map((folder) => (
-                    <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onMove={setMovingFolder} />
+                    <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onContextMenu={openFolderContextMenu} />
                   ))}
                   {visibleSongs.map((song) => (
-                    <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
+                    <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onContextMenu={openSongContextMenu} />
                   ))}
                 </div>
               ) : (
@@ -634,10 +818,10 @@ export default function ProjectFileBrowser({
                     <span />
                   </div>
                   {visibleFolders.map((folder) => (
-                    <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onMove={setMovingFolder} />
+                    <DraggableFolderItem key={`folder-${folder.id}`} folder={folder} viewMode={viewMode} onOpen={onOpenFolder} onContextMenu={openFolderContextMenu} />
                   ))}
                   {visibleSongs.map((song) => (
-                    <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onMove={onMoveSong} />
+                    <DraggableSongItem key={`song-${song.project_asset_id ?? song.id}`} song={song} viewMode={viewMode} queueSongs={visibleSongs} onContextMenu={openSongContextMenu} />
                   ))}
                 </div>
               )
@@ -650,6 +834,34 @@ export default function ProjectFileBrowser({
           <DragPreview dragData={activeDragData} folder={draggedFolder} song={draggedSong} viewMode={activeDragViewMode} />
         </DragOverlay>
       </DndContext>
+
+      <DropdownShell
+        open={!!contextMenu}
+        onOpenChange={(open) => {
+          if (!open) setContextMenu(null);
+        }}
+        placement="bottom-start"
+        className="project-context-menu"
+        anchorPoint={contextMenu?.point ?? null}
+        collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
+        offsetAmount={4}
+        trigger={() => <span className="project-context-menu-anchor" aria-hidden="true" />}
+      >
+        {contextMenu?.type === "folder" ? (
+          <>
+            <button type="button" onClick={() => renameFolder(contextMenu.folder)}>Rename</button>
+            <button type="button" onClick={() => { setMovingFolder(contextMenu.folder); setContextMenu(null); }}>Move</button>
+            <button type="button" onClick={() => downloadFolder(contextMenu.folder)}>Download</button>
+            <button type="button" className="danger-hover" onClick={() => deleteFolder(contextMenu.folder)}>Delete</button>
+          </>
+        ) : contextMenu?.type === "song" ? (
+          <>
+            <button type="button" onClick={() => { onMoveSong(contextMenu.song); setContextMenu(null); }}>Move</button>
+            <button type="button" onClick={() => downloadSong(contextMenu.song)}>Download</button>
+            <button type="button" className="danger-hover" onClick={() => deleteSong(contextMenu.song)}>Delete</button>
+          </>
+        ) : null}
+      </DropdownShell>
 
       <ProjectFolderPickerModal
         isOpen={!!movingFolder}
