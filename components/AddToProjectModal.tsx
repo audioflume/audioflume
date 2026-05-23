@@ -103,9 +103,9 @@ function SongPreview({ song }: { song: Song }) {
 
 function ProjectThumbnail() {
   return (
-    <span className="flex h-9 w-9 shrink-0 items-center justify-center">
-      <span className="scale-[1.55]">
-        <FolderGlyph small />
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-visible">
+      <span className="scale-[0.56]">
+        <FolderGlyph />
       </span>
     </span>
   );
