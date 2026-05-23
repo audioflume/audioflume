@@ -45,31 +45,6 @@ function writeRecentPlaylistIds(ids: number[]) {
   window.localStorage.setItem(RECENT_PLAYLIST_IDS_KEY, JSON.stringify(ids));
 }
 
-function PlusIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 5V19"
-        stroke="currentColor"
-        strokeWidth="2.3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H19"
-        stroke="currentColor"
-        strokeWidth="2.3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 export default function AddToPlaylistModal({
   isOpen,
   song,
@@ -324,64 +299,65 @@ export default function AddToPlaylistModal({
         onClose={onClose}
         closeLabel="Close add to playlist modal"
         centerTitle
-        maxHeight="462px"
+        maxHeight="480px"
         bodyScroll
         bodyClassName="flex flex-col pb-0"
+        footerClassName="justify-center"
         footer={
           <button
             type="button"
             onClick={handleSave}
-            className={modalPrimaryButtonClass}
+            className={`${modalPrimaryButtonClass} w-full`}
             disabled={saving || loading || selectedLoading || !hasChanges}
           >
             {saving ? "Saving..." : "Save"}
           </button>
         }
       >
-        <div className="mb-3 flex flex-shrink-0 items-center gap-2.5 rounded-lg bg-[var(--bg-primary)] pl-2 pb-1.5">
-          <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
+        {/* Song strip */}
+        <div className="mb-1 flex flex-shrink-0 items-center gap-3 border-b border-[var(--border)] pb-4">
+          <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
             {song.coverArt && (
               <Image
                 src={song.coverArt}
                 alt={song.title}
                 fill
-                sizes="32px"
+                sizes="40px"
                 className="object-cover"
               />
             )}
           </div>
 
           <div className="min-w-0">
-            <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+            <div className="truncate text-sm font-medium text-[var(--text-primary)]">
               {song.title}
             </div>
-
-            <div className="mt-0.5 truncate text-[11px] text-[var(--text-subtle)]">
+            <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
               {song.artist}
             </div>
           </div>
         </div>
 
-        <div className="min-h-[234px] flex-1 overflow-y-auto rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-2">
+        {/* Playlist rows — extended edge-to-edge within modal body */}
+        <div className="-mx-5 min-h-[200px] flex-1 overflow-y-auto px-2 py-2">
+          {/* Loading skeleton */}
           {(loading || selectedLoading) && (
-            <div className="grid gap-1.5">
+            <div className="grid gap-0.5">
               {Array.from({ length: playlists.length || 6 }).map((_, index) => (
                 <div
                   key={index}
-                  className="flex h-9 items-center justify-between gap-2.5 rounded-lg px-2.5"
+                  className="flex h-11 items-center gap-3 rounded-xl px-3"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-5 w-5 rounded-md bg-[var(--bg-tertiary)]" />
-                    <div className="h-2.5 w-32 bg-[var(--bg-tertiary)]" />
-                  </div>
-                  <div className="h-5 w-5 rounded-md bg-[var(--bg-tertiary)]" />
+                  <div className="h-7 w-7 animate-pulse rounded-lg bg-[var(--bg-tertiary)]" />
+                  <div className="h-2.5 w-28 animate-pulse rounded bg-[var(--bg-tertiary)]" />
                 </div>
               ))}
             </div>
           )}
 
+          {/* Error state */}
           {!loading && !selectedLoading && displayedError && (
-            <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 rounded-lg bg-[var(--bg-primary)] px-4 text-center">
+            <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 px-4 text-center">
               <div className="text-xs font-medium text-[var(--danger)]">
                 {displayedError}
               </div>
@@ -398,15 +374,17 @@ export default function AddToPlaylistModal({
             </div>
           )}
 
+          {/* Empty state */}
           {!loading &&
             !selectedLoading &&
             !displayedError &&
             displayedPlaylists.length === 0 && (
-              <div className="flex min-h-[180px] items-center justify-center rounded-lg bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-secondary)]">
+              <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
                 You don&apos;t have any playlists yet.
               </div>
             )}
 
+          {/* Playlist rows */}
           {!loading &&
             !selectedLoading &&
             !displayedError &&
@@ -420,35 +398,27 @@ export default function AddToPlaylistModal({
                   type="button"
                   onClick={() => togglePlaylist(playlist.id)}
                   disabled={selectedLoading}
-                  className={`add-playlist-row group flex h-9 w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-2.5 text-left text-xs font-medium transition-colors disabled:cursor-default disabled:opacity-70 ${
+                  className={`group flex h-11 w-full cursor-pointer items-center gap-3 rounded-xl px-3 text-left text-sm font-medium transition-colors disabled:cursor-default disabled:opacity-70 ${
                     isSelected
-                      ? "is-selected bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
-                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+                      ? "text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   }`}
                 >
-                  <span className="flex min-w-0 items-center gap-2.5">
-                    <span
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
-                        isSelected
-                          ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                          : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
-                      }`}
-                    >
-                      <PlaylistIcon size={13} />
-                    </span>
-
-                    <span className="min-w-0 truncate">{playlist.name}</span>
-                  </span>
-
                   <span
-                    className={`add-playlist-action flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors ${
                       isSelected
-                        ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                        : "text-[var(--text-muted)]"
+                        ? "bg-[var(--accent)] text-black"
+                        : "bg-[var(--bg-secondary)] text-[var(--text-muted)] group-hover:bg-[var(--bg-hover-strong)] group-hover:text-[var(--text-primary)]"
                     }`}
                   >
-                    {isSelected ? <CheckIcon size={12} /> : <PlusIcon />}
+                    {isSelected ? (
+                      <CheckIcon size={13} />
+                    ) : (
+                      <PlaylistIcon size={13} />
+                    )}
                   </span>
+
+                  <span className="min-w-0 flex-1 truncate">{playlist.name}</span>
                 </button>
               );
             })}
