@@ -182,6 +182,17 @@ main.admin-cue-point-page h1 + p {
   line-height: 1.6 !important;
 }
 
+main:has(input[placeholder="Search Music Library"]) > section > div.flex.items-end.justify-between,
+main:has(a[href="/admin/playlist-manager/new"]) > div:nth-of-type(1),
+main:has(a[href="/admin/music-library?issue=editPoints"]) > section > div:first-child,
+main.admin-cue-point-page > .admin-cue-point-container > div.flex.items-end.justify-between {
+  margin-bottom: 32px !important;
+}
+
+main:has(input[placeholder="Search Music Library"]) > section > div.flex.items-end.justify-between > a[href="/admin/songs/new"] {
+  display: none !important;
+}
+
 main:has(input[placeholder="Search Music Library"]) > section > div.sticky {
   position: static !important;
   z-index: auto !important;
