@@ -45,12 +45,13 @@ function sortFolders(folderA: ProjectFolder, folderB: ProjectFolder) {
   return positionA - positionB || folderA.name.localeCompare(folderB.name);
 }
 
-function formatFolderMeta(folder: ProjectFolderWithCounts, childCount: number) {
+function formatFolderMeta(folder: ProjectFolderWithCounts) {
   const fileCount = folder.recursive_asset_count ?? folder.asset_count ?? 0;
+  const childCount = folder.child_count ?? 0;
   const fileLabel = `${fileCount} ${fileCount === 1 ? "file" : "files"}`;
-  const folderLabel = `${childCount} ${childCount === 1 ? "folder" : "folders"}`;
+  const childLabel = `${childCount} ${childCount === 1 ? "folder" : "folders"}`;
 
-  if (childCount > 0) return `${fileLabel} · ${folderLabel}`;
+  if (childCount > 0) return `${fileLabel} · ${childLabel}`;
   return fileLabel;
 }
 
@@ -65,7 +66,6 @@ export default function ProjectFolderPickerModal({
 }: ProjectFolderPickerModalProps) {
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(initialFolderId);
   const [query, setQuery] = useState("");
-  const [direction, setDirection] = useState<"forward" | "back">("forward");
 
   const foldersById = useMemo(
     () => new Map(folders.map((folder) => [folder.id, folder])),
@@ -77,7 +77,6 @@ export default function ProjectFolderPickerModal({
 
     setSelectedFolderId(initialFolderId);
     setQuery("");
-    setDirection("forward");
   }, [isOpen, initialFolderId]);
 
   const selectedChain = useMemo(() => {
@@ -97,16 +96,16 @@ export default function ProjectFolderPickerModal({
     return chain;
   }, [foldersById, selectedFolderId]);
 
-  const selectedFolder = selectedFolderId == null ? null : foldersById.get(selectedFolderId) ?? null;
-  const selectedPath = selectedFolder ? getFolderPath(selectedFolder, foldersById) : "Root";
+  const columns = useMemo(() => {
+    const parentIds = [null, ...selectedChain.map((folder) => folder.id)];
 
-  const currentFolders = useMemo(
-    () =>
-      folders
-        .filter((folder) => folder.parent_folder_id === selectedFolderId)
+    return parentIds.map((parentId) => ({
+      parentId,
+      folders: folders
+        .filter((folder) => folder.parent_folder_id === parentId)
         .sort(sortFolders),
-    [folders, selectedFolderId],
-  );
+    }));
+  }, [folders, selectedChain]);
 
   const searchResults = useMemo(() => {
     const cleanQuery = query.trim().toLowerCase();
@@ -119,18 +118,11 @@ export default function ProjectFolderPickerModal({
         folder,
         path: getFolderPath(folder, foldersById),
       }))
-      .slice(0, 14);
+      .slice(0, 12);
   }, [folders, foldersById, query]);
 
-  function selectFolder(folderId: number | null, nextDirection: "forward" | "back" = "forward") {
-    setDirection(nextDirection);
-    setSelectedFolderId(folderId);
-    setQuery("");
-  }
-
-  const parentFolderId = selectedFolder?.parent_folder_id ?? null;
-  const pathParts = ["Root", ...selectedChain.map((folder) => folder.name)];
-  const transitionClass = direction === "forward" ? "animate-[moveTrayIn_0.18s_ease-out]" : "animate-[moveTrayBack_0.18s_ease-out]";
+  const selectedFolder = selectedFolderId == null ? null : foldersById.get(selectedFolderId) ?? null;
+  const selectedPath = selectedFolder ? getFolderPath(selectedFolder, foldersById) : "Root";
 
   return (
     <ModalShell
@@ -139,14 +131,14 @@ export default function ProjectFolderPickerModal({
       onClose={onClose}
       closeLabel="Close folder picker"
       centerTitle
-      maxWidth="max-w-[760px]"
-      maxHeight="560px"
+      maxWidth="max-w-[740px]"
+      maxHeight="540px"
       bodyClassName="pb-0"
       footer={
-        <div className="sticky bottom-0 flex w-full items-center justify-between gap-4 border-t border-[var(--border)] bg-[var(--bg-primary)] px-1 py-1">
+        <div className="flex w-full items-center justify-between gap-4">
           <div className="min-w-0 text-left">
-            <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">
-              Move destination
+            <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]">
+              Destination
             </div>
             <div className="mt-1 truncate text-xs font-medium text-[var(--text-primary)]">
               {selectedPath}
@@ -162,183 +154,141 @@ export default function ProjectFolderPickerModal({
         </div>
       }
     >
-      <style jsx global>{`
-        @keyframes moveTrayIn {
-          from {
-            opacity: 0;
-            transform: translateX(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
+      <div className="flex flex-col gap-3">
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          className="h-10 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
+          placeholder="Search folders..."
+        />
 
-        @keyframes moveTrayBack {
-          from {
-            opacity: 0;
-            transform: translateX(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-      `}</style>
-
-      <div className="-mx-1 flex flex-col gap-4">
-        <div className="rounded-[22px] border border-[var(--border)] bg-[var(--bg-secondary)] p-4">
-          <div className="flex items-start justify-between gap-4">
+        <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--bg-primary)]">
+          <div className="flex items-center justify-between gap-4 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3">
             <div className="min-w-0">
               <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]">
-                Destination path
+                Move destination
               </div>
-              <div className="mt-2 max-w-full truncate font-[family-name:var(--font-instrument-sans)] text-[28px] font-medium leading-none tracking-[-0.055em] text-[var(--text-primary)]">
+              <div className="mt-1 truncate text-sm font-medium text-[var(--text-primary)]">
                 {selectedPath}
               </div>
-              <div className="mt-2 flex min-w-0 flex-wrap items-center gap-1.5 text-[11px] text-[var(--text-secondary)]">
-                {pathParts.map((part, index) => {
-                  const folder = index === 0 ? null : selectedChain[index - 1];
-                  const isLast = index === pathParts.length - 1;
-
-                  return (
-                    <span key={`${part}-${index}`} className="flex min-w-0 items-center gap-1.5">
-                      {index > 0 && <span className="text-[var(--text-muted)]">/</span>}
-                      <button
-                        type="button"
-                        onClick={() => selectFolder(folder?.id ?? null, "back")}
-                        className={`max-w-[140px] cursor-pointer truncate rounded-full px-2 py-1 transition ${
-                          isLast
-                            ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                            : "bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-                        }`}
-                      >
-                        {part}
-                      </button>
-                    </span>
-                  );
-                })}
-              </div>
             </div>
-
-            {selectedFolderId !== null && (
-              <button
-                type="button"
-                onClick={() => selectFolder(parentFolderId, "back")}
-                className="mt-1 shrink-0 cursor-pointer rounded-full bg-[var(--bg-hover)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-              >
-                Back
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setSelectedFolderId(null)}
+              className="shrink-0 cursor-pointer rounded-full bg-[var(--bg-hover)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+            >
+              Root
+            </button>
           </div>
 
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            className="mt-4 h-10 w-full rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
-            placeholder="Search destinations..."
-          />
-        </div>
-
-        <div className="rounded-[22px] border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-          <div className="mb-3 flex items-center justify-between gap-3 px-1">
-            <div>
-              <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]">
-                {query.trim() ? "Search results" : "Folder tray"}
-              </div>
-              <div className="mt-1 text-xs text-[var(--text-secondary)]">
-                {query.trim()
-                  ? `${searchResults.length} matching destinations`
-                  : currentFolders.length > 0
-                    ? "Choose a folder below, or move directly to the current destination."
-                    : "No folders inside this destination."}
-              </div>
-            </div>
-
-            {!query.trim() && (
-              <button
-                type="button"
-                onClick={() => onConfirm(selectedFolderId)}
-                className="shrink-0 cursor-pointer rounded-full bg-[var(--bg-hover)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-              >
-                Use this destination
-              </button>
-            )}
-          </div>
-
-          <div key={`${selectedFolderId ?? "root"}-${query.trim() ? "search" : "tray"}`} className={`${transitionClass} max-h-[290px] overflow-y-auto pr-1`}>
-            {query.trim() ? (
-              searchResults.length > 0 ? (
-                <div className="grid gap-2">
+          {query.trim() ? (
+            <div className="max-h-[310px] overflow-y-auto p-2">
+              {searchResults.length > 0 ? (
+                <div className="grid gap-1.5">
                   {searchResults.map(({ folder, path }) => (
                     <button
                       key={folder.id}
                       type="button"
-                      onClick={() => selectFolder(folder.id)}
-                      className="group flex min-h-[58px] cursor-pointer items-center justify-between gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5 text-left transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)]"
+                      onClick={() => {
+                        setSelectedFolderId(folder.id);
+                        setQuery("");
+                      }}
+                      className={`flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-xl px-3 text-left text-xs transition ${
+                        selectedFolderId === folder.id
+                          ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+                      }`}
                     >
-                      <span className="flex min-w-0 items-center gap-3">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--bg-hover)] text-[var(--text-primary)]">
-                          <FolderIcon size={15} />
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block truncate text-sm font-medium text-[var(--text-primary)]">
-                            {folder.name}
-                          </span>
-                          <span className="mt-0.5 block truncate text-[11px] text-[var(--text-secondary)]">
-                            {path}
-                          </span>
-                        </span>
+                      <span className="flex min-w-0 items-center gap-2">
+                        <FolderIcon size={14} />
+                        <span className="min-w-0 truncate">{path}</span>
                       </span>
-                      <span className="text-lg leading-none text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">
-                        ›
-                      </span>
+                      <span className="text-sm opacity-60">›</span>
                     </button>
                   ))}
                 </div>
               ) : (
-                <div className="flex min-h-[170px] items-center justify-center rounded-2xl border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)]">
+                <div className="flex min-h-[160px] items-center justify-center text-xs text-[var(--text-secondary)]">
                   No folders match your search.
                 </div>
-              )
-            ) : currentFolders.length > 0 ? (
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(138px,1fr))] gap-2.5">
-                {currentFolders.map((folder) => {
-                  const childCount = folders.filter((child) => child.parent_folder_id === folder.id).length;
+              )}
+            </div>
+          ) : (
+            <div className="flex min-h-[300px] max-h-[320px] overflow-x-auto">
+              {columns.map((column, columnIndex) => (
+                <div
+                  key={column.parentId ?? "root"}
+                  className="min-w-[196px] flex-1 border-r border-[var(--border)] last:border-r-0"
+                >
+                  <div className="border-b border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.16em] text-[var(--text-muted)]">
+                    {column.parentId == null
+                      ? "Root"
+                      : foldersById.get(column.parentId)?.name || "Folder"}
+                  </div>
 
-                  return (
-                    <button
-                      key={folder.id}
-                      type="button"
-                      onClick={() => selectFolder(folder.id)}
-                      className="group min-h-[118px] cursor-pointer rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-3 text-left transition hover:-translate-y-0.5 hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)]"
-                    >
-                      <span className="flex items-start justify-between gap-2">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--bg-hover)] text-[var(--text-primary)] transition group-hover:bg-[var(--bg-hover-strong)]">
-                          <FolderIcon size={16} />
-                        </span>
-                        {childCount > 0 && (
-                          <span className="text-lg leading-none text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">
-                            ›
-                          </span>
-                        )}
-                      </span>
-                      <span className="mt-4 block truncate text-sm font-medium text-[var(--text-primary)]">
-                        {folder.name}
-                      </span>
-                      <span className="mt-1 block truncate text-[11px] text-[var(--text-secondary)]">
-                        {formatFolderMeta(folder as ProjectFolderWithCounts, childCount)}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="flex min-h-[170px] items-center justify-center rounded-2xl border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)]">
-                Move here, or go back to choose another destination.
-              </div>
-            )}
-          </div>
+                  <div className="grid gap-1.5 p-2">
+                    {columnIndex === 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedFolderId(null)}
+                        className={`flex h-10 cursor-pointer items-center gap-2 rounded-xl px-3 text-left text-xs transition ${
+                          selectedFolderId == null
+                            ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                            : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+                        }`}
+                      >
+                        <FolderIcon size={14} />
+                        <span className="truncate font-medium">Root</span>
+                      </button>
+                    )}
+
+                    {column.folders.length > 0 ? (
+                      column.folders.map((folder) => {
+                        const hasChildren = folders.some(
+                          (child) => child.parent_folder_id === folder.id,
+                        );
+                        const isSelected = selectedFolderId === folder.id;
+
+                        return (
+                          <button
+                            key={folder.id}
+                            type="button"
+                            onClick={() => setSelectedFolderId(folder.id)}
+                            className={`group flex min-h-12 cursor-pointer items-center justify-between gap-2 rounded-xl px-3 text-left text-xs transition ${
+                              isSelected
+                                ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                                : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+                            }`}
+                          >
+                            <span className="flex min-w-0 items-center gap-2">
+                              <FolderIcon size={14} />
+                              <span className="min-w-0">
+                                <span className="block truncate font-medium">{folder.name}</span>
+                                <span
+                                  className={`mt-0.5 block truncate text-[10px] ${
+                                    isSelected
+                                      ? "text-[color-mix(in_srgb,var(--bg-primary)_72%,transparent)]"
+                                      : "text-[var(--text-muted)]"
+                                  }`}
+                                >
+                                  {formatFolderMeta(folder as ProjectFolderWithCounts)}
+                                </span>
+                              </span>
+                            </span>
+                            {hasChildren && <span className="text-sm opacity-60">›</span>}
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <div className="flex min-h-[160px] items-center justify-center rounded-xl border border-dashed border-[var(--border)] px-4 text-center text-xs text-[var(--text-muted)]">
+                        No folders
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </ModalShell>
