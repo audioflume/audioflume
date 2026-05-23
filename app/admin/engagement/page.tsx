@@ -324,32 +324,158 @@ function MetricCardBlock({ metric, index }: { metric: Metric; index: number }) {
   );
 }
 
-function ActivityCard({ data }: { data: ActivityPoint[] }) {
-  const max = Math.max(...data.map((point) => point.value), 1);
+function ActivityCard({ data, accentLabel }: { data: ActivityPoint[]; accentLabel: string }) {
+  const width = 1000;
+  const height = 176;
+  const top = 16;
+  const right = 14;
+  const bottom = 30;
+  const left = 42;
+  const values = data.map((point) => point.value);
+  const maxValue = Math.max(...values);
+  const minValue = 0;
+  const plotWidth = width - left - right;
+  const plotHeight = height - top - bottom;
+  const stepX = data.length > 1 ? plotWidth / (data.length - 1) : 0;
+  const points = data.map((point, index) => {
+    const x = left + index * stepX;
+    const y =
+      top +
+      plotHeight -
+      ((point.value - minValue) / (maxValue - minValue || 1)) * plotHeight;
+
+    return {
+      ...point,
+      x,
+      y,
+      xPercent: (x / width) * 100,
+      yPercent: (y / height) * 100,
+    };
+  });
+  const linePath = points
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
+    .join(" ");
+  const areaPath = `${linePath} L ${points[points.length - 1].x} ${
+    top + plotHeight
+  } L ${points[0].x} ${top + plotHeight} Z`;
+  const yTicks = 4;
+  const yValues = Array.from({ length: yTicks + 1 }, (_, index) => {
+    const ratio = index / yTicks;
+    const y = top + (plotHeight / yTicks) * index;
+    const value = Math.round(maxValue - ratio * maxValue);
+
+    return {
+      y,
+      value,
+      yPercent: (y / height) * 100,
+    };
+  });
 
   return (
-    <div className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
-        <div>
-          <h2 className="text-sm font-medium text-[var(--text-primary)]">Activity</h2>
-          <p className="mt-1 text-[11px] text-[var(--text-secondary)]">Playback and download trend.</p>
+    <div className="flex h-full min-h-[277px] flex-col rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+      <div className="flex h-10 shrink-0 items-center justify-between border-b border-[var(--border)] px-4">
+        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+          Activity
+        </div>
+
+        <div className="flex items-center gap-4 text-xs text-[var(--text-secondary)]">
+          <div className="flex items-center gap-2">
+            <span className="block h-[2px] w-7 rounded-full bg-[var(--chart-line)]" />
+            <span>{accentLabel}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="block h-px w-7 rounded-full bg-[var(--chart-grid)]" />
+            <span>Grid scale</span>
+          </div>
         </div>
       </div>
 
-      <div className="flex h-[220px] items-end gap-2 px-4 py-4">
-        {data.map((point) => (
-          <div key={point.label} className="flex h-full min-w-0 flex-1 flex-col justify-end gap-2">
-            <div className="flex flex-1 items-end rounded-full bg-[var(--bg-primary)]">
-              <div
-                className="w-full rounded-full bg-[var(--text-primary)] opacity-80"
-                style={{ height: `${Math.max(8, (point.value / max) * 100)}%` }}
+      <div className="flex flex-1 px-4 py-3">
+        <div className="relative h-full min-h-[200px] w-full">
+          <svg
+            viewBox={`0 0 ${width} ${height}`}
+            className="absolute inset-0 h-full w-full"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            {yValues.map((tick, index) => (
+              <line
+                key={`horizontal-${index}`}
+                x1={left}
+                y1={tick.y}
+                x2={width - right}
+                y2={tick.y}
+                stroke="var(--chart-grid)"
+                strokeWidth="1"
               />
+            ))}
+
+            {points.map((point) => (
+              <line
+                key={`grid-${point.label}`}
+                x1={point.x}
+                y1={top}
+                x2={point.x}
+                y2={top + plotHeight}
+                stroke="var(--chart-grid-subtle)"
+                strokeWidth="1"
+              />
+            ))}
+
+            <path d={areaPath} fill="var(--chart-area)" />
+
+            <path
+              d={linePath}
+              fill="none"
+              stroke="var(--chart-line)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+
+          {yValues.map((tick) => (
+            <div
+              key={`y-label-${tick.value}`}
+              className="pointer-events-none absolute -translate-y-1/2 text-right text-[10px] font-medium text-[var(--text-muted)]"
+              style={{
+                left: `calc(${(left / width) * 100}% - 24px)`,
+                top: `${tick.yPercent}%`,
+                width: "20px",
+              }}
+            >
+              {tick.value}
             </div>
-            <div className="truncate text-center text-[10px] font-medium text-[var(--text-muted)]">
+          ))}
+
+          {points.map((point) => (
+            <div
+              key={`point-${point.label}`}
+              className="pointer-events-none absolute h-2 w-2 rounded-full border-2 bg-[var(--bg-secondary)]"
+              style={{
+                left: `${point.xPercent}%`,
+                top: `${point.yPercent}%`,
+                borderColor: "var(--chart-line)",
+                transform: "translate(-50%, -50%)",
+              }}
+            />
+          ))}
+
+          {points.map((point) => (
+            <div
+              key={`x-label-${point.label}`}
+              className="pointer-events-none absolute -translate-x-1/2 text-[10px] font-medium text-[var(--text-muted)]"
+              style={{
+                left: `${point.xPercent}%`,
+                bottom: "0px",
+              }}
+            >
               {point.label}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -473,7 +599,13 @@ export default function AdminEngagementPage() {
           })}
         </div>
       )}
-      contentStyle={{ paddingBottom: playerVisible ? "104px" : "32px" }}
+      contentStyle={{
+        paddingBottom: playerVisible ? "104px" : "32px",
+        "--chart-line": "var(--text-primary)",
+        "--chart-area": "color-mix(in srgb, var(--text-primary) 10%, transparent)",
+        "--chart-grid": "color-mix(in srgb, var(--text-primary) 10%, transparent)",
+        "--chart-grid-subtle": "color-mix(in srgb, var(--text-primary) 6%, transparent)",
+      } as React.CSSProperties}
     >
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {data.metrics.map((metric, index) => (
@@ -482,7 +614,7 @@ export default function AdminEngagementPage() {
       </div>
 
       <div className="mt-3 grid items-stretch gap-3 xl:grid-cols-[minmax(0,1fr)_300px]">
-        <ActivityCard data={data.activity} />
+        <ActivityCard data={data.activity} accentLabel={data.metrics[0].label} />
         <FunnelCard items={data.funnel} />
       </div>
 
