@@ -83,11 +83,6 @@ export default function ProjectFolderPickerModal({
     });
   }, [folders, selectedChain]);
 
-  const selectedFolder = selectedFolderId == null ? null : foldersById.get(selectedFolderId) ?? null;
-  const selectedPath = selectedFolder
-    ? selectedChain.map((folder) => folder.name).join(" / ")
-    : "Root";
-
   return (
     <ModalShell
       isOpen={isOpen}
@@ -99,20 +94,13 @@ export default function ProjectFolderPickerModal({
       maxHeight="500px"
       bodyClassName="pb-0"
       footer={
-        <div className="flex w-full items-center justify-between gap-4 rounded-full bg-[var(--bg-secondary)] px-3 py-2">
-          <div className="min-w-0 text-left">
-            <div className="truncate text-xs font-medium text-[var(--text-primary)]">
-              {selectedPath}
-            </div>
-          </div>
-          <button
-            type="button"
-            className={modalPrimaryButtonClass}
-            onClick={() => onConfirm(selectedFolderId)}
-          >
-            {confirmLabel}
-          </button>
-        </div>
+        <button
+          type="button"
+          className={modalPrimaryButtonClass}
+          onClick={() => onConfirm(selectedFolderId)}
+        >
+          {confirmLabel}
+        </button>
       }
     >
       <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
@@ -133,7 +121,7 @@ export default function ProjectFolderPickerModal({
                       : foldersById.get(column.parentId)?.name || "Folder"}
                 </div>
 
-                <div className="grid gap-1 px-2 pb-2">
+                <div className="grid h-[268px] gap-1 px-2 pb-2">
                   {columnIndex === 0 && (
                     <button
                       type="button"
@@ -150,7 +138,7 @@ export default function ProjectFolderPickerModal({
                   )}
 
                   {isRootPreviewColumn ? (
-                    <div className="flex min-h-[160px] items-center justify-center rounded-xl border border-dashed border-[var(--border)] px-4 text-center text-xs text-[var(--text-muted)]">
+                    <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-[var(--border)] px-4 text-center text-xs text-[var(--text-muted)]">
                       Root selected
                     </div>
                   ) : column.folders.length > 0 ? (
@@ -180,7 +168,7 @@ export default function ProjectFolderPickerModal({
                       );
                     })
                   ) : (
-                    <div className="flex min-h-[160px] items-center justify-center rounded-xl border border-dashed border-[var(--border)] px-4 text-center text-xs text-[var(--text-muted)]">
+                    <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-[var(--border)] px-4 text-center text-xs text-[var(--text-muted)]">
                       No folders
                     </div>
                   )}
