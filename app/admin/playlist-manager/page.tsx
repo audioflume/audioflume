@@ -129,7 +129,7 @@ function SortablePlaylistRow({
       </button>
 
       <Link href={editHref} className="flex flex-1 items-center gap-3 py-2.5">
-        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
+        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary)]">
           {playlist.cover_image_url && (
             <Image
               src={playlist.cover_image_url}
@@ -205,7 +205,7 @@ function DragOverlayRow({ playlist }: { playlist: CuratedPlaylist }) {
       </div>
 
       <div className="flex flex-1 items-center gap-3 py-2.5 pr-4">
-        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
+        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary)]">
           {playlist.cover_image_url && (
             <Image
               src={playlist.cover_image_url}
@@ -565,7 +565,7 @@ export default function PlaylistManagerPage() {
                       index < 5 ? "1px solid var(--border-subtle)" : "none",
                   }}
                 >
-                  <div className="h-8 w-8 shrink-0 rounded bg-[var(--bg-tertiary)]" />
+                  <div className="h-8 w-8 shrink-0 rounded-none bg-[var(--bg-tertiary)]" />
                   <div className="flex-1">
                     <div className="h-2 w-[45%] rounded bg-[var(--bg-tertiary)]" />
                     <div className="mt-1.5 h-2 w-[30%] rounded bg-[var(--bg-tertiary)]" />
