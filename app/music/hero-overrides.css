@@ -17,13 +17,38 @@ main [style*="url("] h1 {
   }
 
   main [style*="url("] > div:nth-child(2) > div:first-child::after {
-    content: "Cue Points";
+    display: none !important;
+  }
+
+  main [style*="url("] > div:nth-child(2) > div:nth-child(2) {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 330px) !important;
+    align-items: stretch !important;
+  }
+
+  main [style*="url("] .hidden.lg\:block {
+    position: relative !important;
+    display: flex !important;
+    min-height: 210px !important;
+    align-self: end !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 18px !important;
+    background:
+      radial-gradient(circle at 24% 18%, rgba(221, 255, 67, 0.2), transparent 28%),
+      radial-gradient(circle at 84% 78%, rgba(251, 143, 97, 0.18), transparent 34%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03) 46%, rgba(0, 0, 0, 0.2)) !important;
+    padding: 22px !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  main [style*="url("] .hidden.lg\:block::before {
+    content: "Desktop Sync";
     display: inline-flex;
-    align-items: center;
-    gap: 8px;
     width: fit-content;
     max-width: 100%;
-    margin-left: auto;
+    align-items: center;
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.1);
@@ -31,43 +56,22 @@ main [style*="url("] h1 {
     font-size: 11px;
     font-weight: 500;
     line-height: 1;
-    color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(8px);
+    color: rgba(255, 255, 255, 0.82);
   }
 
-  main [style*="url("] .hidden.lg\:block > div:first-child {
+  main [style*="url("] .hidden.lg\:block::after {
+    content: "Sync project songs to your desktop and drag them straight into Premiere, Resolve, Finder, or your editing timeline.";
+    display: block;
+    max-width: 270px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  main [style*="url("] .hidden.lg\:block > div:first-child,
+  main [style*="url("] .hidden.lg\:block > div:nth-child(2),
+  main [style*="url("] .hidden.lg\:block > div:nth-child(3) {
     display: none !important;
-  }
-
-  main [style*="url("] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(2n) > span:last-child {
-    height: 7px !important;
-  }
-
-  main [style*="url("] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(3n) > span:last-child {
-    height: 22px !important;
-  }
-
-  main [style*="url("] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(4n) > span:last-child {
-    height: 13px !important;
-  }
-
-  main [style*="url("] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(5n) > span:last-child {
-    height: 30px !important;
-  }
-
-  main [style*="url("] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(7n) > span:last-child {
-    height: 16px !important;
-  }
-
-  main [style*="url("] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(11n) > span:last-child {
-    height: 25px !important;
-  }
-
-  main [style*="url("] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(13n) > span:last-child {
-    height: 9px !important;
-  }
-
-  main [style*="url("] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(17n) > span:last-child {
-    height: 19px !important;
   }
 }
