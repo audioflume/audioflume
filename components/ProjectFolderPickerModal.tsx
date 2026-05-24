@@ -179,7 +179,7 @@ export default function ProjectFolderPickerModal({
         return {
           parentId,
           folders: [] as ProjectFolder[],
-          songs: songs.filter((song) => (song.project_folder_id ?? null) === null).sort(sortSongs),
+          songs: [] as ProjectPickerSong[],
         };
       }
 
@@ -196,7 +196,7 @@ export default function ProjectFolderPickerModal({
   }, [folders, selectedChain, songs]);
 
   const destinationLabel = useMemo(() => {
-    if (selectedFolderId == null) return "Root";
+    if (selectedFolderId == null) return "All Files";
     return foldersById.get(selectedFolderId)?.name ?? "Selected folder";
   }, [selectedFolderId, foldersById]);
 
@@ -268,9 +268,10 @@ export default function ProjectFolderPickerModal({
       }
     >
       <div className="flex min-h-0 flex-1 flex-col bg-[var(--bg-tertiary)]">
-        <div className="flex min-h-0 flex-1 min-w-0 overflow-x-auto overflow-y-hidden">
+        <div className="flex min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden">
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
+            const isRootColumn = column.parentId == null;
             const hasItems = column.folders.length > 0 || column.songs.length > 0;
 
             return (
@@ -279,12 +280,12 @@ export default function ProjectFolderPickerModal({
                 className="flex min-w-[185px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
               >
                 <div
-                  className={`${modalFieldLabelClass} !mb-0 flex-shrink-0 px-5 py-2.5`}
+                  className={`${modalFieldLabelClass} !mb-0 flex-shrink-0 border-b border-[var(--border)] px-5 py-2.5`}
                 >
                   {isRootPreviewColumn
                     ? "Selected"
-                    : column.parentId == null
-                      ? "Root"
+                    : isRootColumn
+                      ? "All Files"
                       : foldersById.get(column.parentId as number)?.name || "Folder"}
                 </div>
 
@@ -302,7 +303,7 @@ export default function ProjectFolderPickerModal({
                       >
                         <span className="flex min-w-0 items-center gap-2">
                           <FolderGlyph small />
-                          <span className="truncate">Root</span>
+                          <span className="truncate">All Files</span>
                         </span>
                         <span className="text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">›</span>
                       </button>
@@ -331,20 +332,41 @@ export default function ProjectFolderPickerModal({
                       );
                     })}
 
-                    {column.songs.map((song) => (
-                      <div
-                        key={song.id}
-                        className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs text-[var(--text-secondary)]"
-                      >
-                        <MusicGlyph small />
-                        <span className="min-w-0 truncate font-medium">{song.title}</span>
+                    {isRootColumn && column.songs.length > 0 ? (
+                      <div className="ml-[17px] mt-1 border-l border-[var(--border)] pl-4">
+                        {column.songs.map((song) => (
+                          <div
+                            key={song.id}
+                            className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs text-[var(--text-secondary)]"
+                          >
+                            <MusicGlyph small />
+                            <span className="min-w-0 truncate font-medium">{song.title}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : (
+                      !isRootColumn &&
+                      column.songs.map((song) => (
+                        <div
+                          key={song.id}
+                          className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs text-[var(--text-secondary)]"
+                        >
+                          <MusicGlyph small />
+                          <span className="min-w-0 truncate font-medium">{song.title}</span>
+                        </div>
+                      ))
+                    )}
 
-                    {!hasItems && (
-                      <div className="flex min-h-0 flex-1 items-center justify-center rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-muted)]">
-                        {isRootPreviewColumn ? "Root selected" : "Empty folder"}
+                    {isRootPreviewColumn ? (
+                      <div className="flex min-h-0 flex-1 items-center justify-center rounded-none border border-dashed border-[var(--border)] bg-transparent px-4 text-center text-xs text-[var(--text-muted)]">
+                        Currently in &quot;All Files&quot;
                       </div>
+                    ) : (
+                      !hasItems && (
+                        <div className="flex min-h-0 flex-1 items-center justify-center rounded-none border border-dashed border-[var(--border)] bg-transparent px-4 text-center text-xs text-[var(--text-muted)]">
+                          Empty folder
+                        </div>
+                      )
                     )}
                   </div>
                 </div>
