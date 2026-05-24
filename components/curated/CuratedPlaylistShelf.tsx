@@ -538,7 +538,7 @@ export default function CuratedPlaylistShelf({
           </div>
         </div>
 
-        <div className="relative -mx-8 overflow-hidden">
+        <div className="group/playlist-shelf relative -mx-8 overflow-hidden">
           {canScrollPrev && (
             <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 hidden w-12 bg-gradient-to-r from-[var(--bg-primary)] to-transparent opacity-60 sm:block" />
           )}
@@ -551,7 +551,7 @@ export default function CuratedPlaylistShelf({
             type="button"
             onClick={() => scrollPlaylists("prev")}
             disabled={!canScrollPrev}
-            className="absolute left-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+            className="absolute left-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
             aria-label={`Scroll ${title} left`}
           >
             <ChevronLeftIcon size={18} />
@@ -561,7 +561,7 @@ export default function CuratedPlaylistShelf({
             type="button"
             onClick={() => scrollPlaylists("next")}
             disabled={!canScrollNext}
-            className="absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+            className="absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
             aria-label={`Scroll ${title} right`}
           >
             <ChevronRightIcon size={18} />
