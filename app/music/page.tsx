@@ -280,6 +280,8 @@ export default function MusicPage() {
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
+  const [musicHeroHovered, setMusicHeroHovered] = useState(false);
+  const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
 
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
   const shuffleActive = shuffleOrderIds !== null;
@@ -680,10 +682,14 @@ export default function MusicPage() {
             <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
               <div
                 className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
+                onMouseEnter={() => setMusicHeroHovered(true)}
+                onMouseLeave={() => setMusicHeroHovered(false)}
                 style={{
                   backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
-                  backgroundSize: "cover",
+                  backgroundSize: `100% 100%, 100% 100%, ${musicHeroHovered ? "104%" : "100%"} auto`,
                   backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  transition: "background-size 700ms",
                 }}
               >
                 <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
@@ -719,10 +725,14 @@ export default function MusicPage() {
 
               <div
                 className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
+                onMouseEnter={() => setDesktopSyncHovered(true)}
+                onMouseLeave={() => setDesktopSyncHovered(false)}
                 style={{
                   backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.04)), url("${DESKTOP_SYNC_IMAGE}")`,
-                  backgroundSize: "cover",
+                  backgroundSize: `100% 100%, 100% 100%, auto ${desktopSyncHovered ? "104%" : "100%"}`,
                   backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  transition: "background-size 700ms",
                 }}
               >
                 <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
