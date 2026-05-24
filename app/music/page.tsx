@@ -670,7 +670,7 @@ export default function MusicPage() {
             >
               <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
                 <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                  <MusicIcon size={13} />
+                  <MusicIcon size={11} />
                   <span className="truncate">Music Library</span>
                 </div>
 
