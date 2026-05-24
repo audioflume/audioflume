@@ -464,7 +464,7 @@ export default function AddToPlaylistModal({
                     onChange={(e) => setNewPlaylistName(e.target.value)}
                     placeholder="Name"
                     autoFocus
-                    className="h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:opacity-60"
+                    className="h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:opacity-60"
                   />
 
                   <div className="mt-2 flex items-center gap-2">
