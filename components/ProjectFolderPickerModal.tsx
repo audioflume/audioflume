@@ -78,7 +78,9 @@ function FolderPreview({ name }: { name: string }) {
 function ResolvingPreview({ name }: { name: string }) {
   return (
     <div className="flex min-w-0 items-center gap-2">
-      <span className="h-6 w-6 shrink-0" />
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+        <MusicGlyph small />
+      </span>
       <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
         {name}
       </span>
