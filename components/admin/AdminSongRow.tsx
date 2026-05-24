@@ -257,7 +257,7 @@ export default function AdminSongRow({
             handlePlayClick();
           }}
           disabled={!song.audioUrl || isAnalyzingEditPoints}
-          className="relative h-8 w-8 cursor-pointer overflow-hidden rounded bg-[var(--bg-tertiary)] disabled:cursor-default"
+          className="relative h-8 w-8 cursor-pointer overflow-hidden rounded-none bg-[var(--bg-tertiary)] disabled:cursor-default"
           aria-label={rowIsPlaying ? "Pause song" : "Play song"}
         >
           {song.coverArt && (
