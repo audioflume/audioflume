@@ -719,6 +719,14 @@ export default function MusicPage() {
                   Sync songs to your desktop and drag them straight into
                   Premiere, Resolve, or your editing timeline.
                 </p>
+
+                <button
+                  type="button"
+                  className="mt-6 inline-flex h-12 w-fit items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-colors hover:bg-white/90"
+                >
+                  <span>Desktop Sync</span>
+                  <span aria-hidden="true">↗</span>
+                </button>
               </div>
             </div>
           </div>
