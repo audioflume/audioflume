@@ -39,7 +39,6 @@ import KeyFilter from "@/components/KeyFilter";
 import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
-import EditPointsIcon from "@/components/icons/EditPointsIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
@@ -60,6 +59,12 @@ const VOCAL_FILTER_OPTIONS = [
   INSTRUMENTAL_VOCAL_FILTER_OPTION,
   ...VOCALS_OPTIONS,
 ];
+
+const MUSIC_HERO_IMAGE =
+  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1800&q=80";
+
+const DESKTOP_SYNC_IMAGE =
+  "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1100&q=80";
 
 function getSongIdentityValues(song: unknown) {
   const record = getRecord(song);
@@ -197,47 +202,6 @@ function shuffleSongList<T>(songs: T[]) {
   }
 
   return bestShuffle;
-}
-
-function getMusicHeroFallback(index = 0) {
-  const gradients = [
-    "radial-gradient(circle at 22% 18%, rgba(221,255,67,0.24), transparent 25%), radial-gradient(circle at 78% 32%, rgba(251,143,97,0.22), transparent 28%), linear-gradient(135deg, #2a2a2a 0%, #111111 58%, #343434 100%)",
-    "radial-gradient(circle at 18% 22%, rgba(98,135,196,0.24), transparent 28%), radial-gradient(circle at 82% 74%, rgba(183,93,145,0.18), transparent 30%), linear-gradient(135deg, #202632 0%, #111111 54%, #2d3037 100%)",
-    "radial-gradient(circle at 20% 76%, rgba(77,140,123,0.22), transparent 30%), radial-gradient(circle at 82% 20%, rgba(182,108,69,0.2), transparent 28%), linear-gradient(135deg, #1f2927 0%, #111111 56%, #29231f 100%)",
-  ];
-
-  return gradients[index % gradients.length];
-}
-
-function CuePointHeroGraphic() {
-  const bars = [
-    8, 11, 10, 12, 14, 16, 18, 17, 15, 14, 16, 18, 17, 19, 21, 20,
-    18, 17, 16, 15, 17, 19, 23, 27, 24, 22, 21, 20, 19, 18, 17, 19,
-    21, 20, 19, 18, 17, 16, 18, 20, 22, 21, 19, 18, 17, 16, 17, 18,
-    20, 21, 19, 18, 17, 16, 15, 16, 18, 20, 19, 18, 17, 16, 18, 20,
-    22, 21, 20, 19, 18, 17, 16, 18, 20, 21, 22, 20, 18, 17, 16, 15,
-    14, 13, 12, 11, 10, 9, 8, 7,
-  ];
-  const markerIndexes = new Set([8, 31, 49, 83]);
-
-  return (
-    <div className="relative h-16 w-full overflow-hidden">
-      <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center gap-[2px]">
-        {bars.map((height, index) => (
-          <div key={`${height}-${index}`} className="relative h-0 flex-1">
-            {markerIndexes.has(index) && (
-              <span className="absolute left-1/2 top-1/2 h-[52px] w-px -translate-x-1/2 -translate-y-1/2 bg-[var(--cue-point-marker)]" />
-            )}
-
-            <span
-              className="absolute left-1/2 top-1/2 w-[2px] -translate-x-1/2 -translate-y-1/2 bg-white/42"
-              style={{ height: `${height}px` }}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 }
 
 export default function MusicPage() {
@@ -479,16 +443,6 @@ export default function MusicPage() {
     !songsError &&
     ((songsLoading && songs.length === 0) || loadingPlaylistSongs);
 
-  const heroSong =
-    displayedSongs.find((song) => song.coverArt) ?? displayedSongs[0] ?? songs[0];
-  const heroStyle = {
-    backgroundImage: heroSong?.coverArt
-      ? `linear-gradient(90deg, rgba(0,0,0,0.84) 0%, rgba(0,0,0,0.56) 44%, rgba(0,0,0,0.34) 100%), url("${heroSong.coverArt}")`
-      : getMusicHeroFallback(0),
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  };
-
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
@@ -702,25 +656,28 @@ export default function MusicPage() {
         </div>
 
         <div className="px-8 pt-5 pb-8">
-          <div
-            className="relative min-h-[300px] overflow-hidden rounded-[18px] border border-white/10 bg-[var(--bg-card)] p-7 text-white"
-            style={heroStyle}
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.18),transparent_34%),linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.34)_100%)]" />
-            <div className="relative z-[1] flex min-h-[246px] flex-col justify-between">
-              <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                <MusicIcon size={13} />
-                <span className="truncate">Music Library</span>
-              </div>
+          <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
+            <div
+              className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
+              style={{
+                backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
+                <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                  <MusicIcon size={13} />
+                  <span className="truncate">Music Library</span>
+                </div>
 
-              <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)]">
-                <div className="min-w-0">
-                  <h1 className="max-w-[760px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,4.45vw,72px)] font-normal leading-[0.92] tracking-[-0.058em] text-white/92">
+                <div>
+                  <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(46px,4.2vw,68px)] font-medium leading-[0.92] tracking-[-0.068em] text-white">
                     Find the cue that fits the cut.
                   </h1>
 
                   <div className="mt-5 flex flex-wrap items-end gap-5">
-                    <p className="max-w-[620px] text-[14px] leading-6 text-white/72">
+                    <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
                       Move through the library like a visual treatment —
                       documentary warmth, after-dark tension, open travel cues,
                       and polished brand motion.
@@ -736,25 +693,30 @@ export default function MusicPage() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div className="hidden lg:block">
-                  <div className="mb-5 inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                    <EditPointsIcon />
-                    <span className="truncate">Cue Points</span>
-                  </div>
+            <div
+              className="relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
+              style={{
+                backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.04)), url("${DESKTOP_SYNC_IMAGE}")`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                Desktop Sync
+              </div>
 
-                  <CuePointHeroGraphic />
+              <div className="max-w-[340px]">
+                <h2 className="font-[family-name:var(--font-instrument-sans)] text-[30px] font-medium leading-[1.05] tracking-[-0.055em] text-white">
+                  Local files, ready to cut.
+                </h2>
 
-                  <div className="mt-4 max-w-[340px]">
-                    <h2 className="text-[13px] font-medium text-white">
-                      Cue point markers
-                    </h2>
-                    <p className="mt-2 text-[12px] leading-5 text-white/68">
-                      Jump to first hits, drops, breaks, and button endings
-                      without scrubbing through the whole track.
-                    </p>
-                  </div>
-                </div>
+                <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
+                  Sync songs to your desktop and drag them straight into
+                  Premiere, Resolve, or your editing timeline.
+                </p>
               </div>
             </div>
           </div>
