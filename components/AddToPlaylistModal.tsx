@@ -585,10 +585,7 @@ export default function AddToPlaylistModal({
         </div>
       </ModalShell>
 
-      <Toast
-        message={toastMessage}
-        bottomOffset={playerVisible ? "96px" : "24px"}
-      />
+      <Toast message={toastMessage} />
     </>
   );
 }
