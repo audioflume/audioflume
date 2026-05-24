@@ -522,6 +522,10 @@ main .sticky > .\-mx-7 {
 
 /* ─── Discover ─────────────────────────── */
 
+main article[aria-label^="Play "][class*="h-[54px]"] {
+  border-radius: 0 !important;
+}
+
 main article[aria-label^="Play "] > .relative.h-9.w-9.shrink-0.rounded-md {
   border-radius: 0 !important;
 }
