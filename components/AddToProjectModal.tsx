@@ -386,7 +386,7 @@ export default function AddToProjectModal({
         <SongPreview song={song} />
 
         <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--border)]">
-          <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-3">
             {newProjectOpen ? (
               <form
                 onSubmit={(e) => {
@@ -449,7 +449,7 @@ export default function AddToProjectModal({
             )}
 
             {loading && (
-              <div className="grid gap-0.5 pt-1">
+              <div className="grid gap-1 pt-1">
                 {Array.from({ length: projects.length || 4 }).map((_, index) => (
                   <div
                     key={index}
