@@ -35,6 +35,22 @@ function isAllCapsWord(word: string) {
   return /^[A-Z0-9&]+$/.test(word) && /[A-Z]/.test(word);
 }
 
+function uppercaseFirstLetter(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function preserveInternalCapsWithLeadingTitleCase(word: string) {
+  return word
+    .split(/([\-'’])/)
+    .map((part) => {
+      if (part === "-" || part === "'" || part === "’") return part;
+      if (!part) return part;
+
+      return uppercaseFirstLetter(part);
+    })
+    .join("");
+}
+
 function formatWord(word: string, isFirstWord: boolean) {
   if (!word) return word;
 
@@ -49,8 +65,12 @@ function formatWord(word: string, isFirstWord: boolean) {
     return `${prefix}${lowerCore}${suffix}`;
   }
 
-  if (hasIntentionalInternalCaps(core) || isAllCapsWord(core)) {
+  if (isAllCapsWord(core)) {
     return `${prefix}${core}${suffix}`;
+  }
+
+  if (hasIntentionalInternalCaps(core)) {
+    return `${prefix}${preserveInternalCapsWithLeadingTitleCase(core)}${suffix}`;
   }
 
   const formattedCore = core
