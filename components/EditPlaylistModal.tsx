@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import ModalShell from "@/components/ModalShell";
 import {
-  modalDeleteButtonClass,
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
@@ -122,7 +121,7 @@ export default function EditPlaylistModal({
             type="button"
             disabled={isSaving}
             onClick={onDelete}
-            className={modalDeleteButtonClass}
+            className="flex h-9 cursor-pointer items-center justify-center rounded-none px-3 text-xs font-medium text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] disabled:cursor-default disabled:opacity-70"
           >
             Delete
           </button>
@@ -200,7 +199,7 @@ export default function EditPlaylistModal({
                 onClick={() => {
                   if (!isSaving) fileInputRef.current?.click();
                 }}
-                className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border)]"
+                className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)]"
               >
                 <img
                   src={coverPreview}
@@ -228,7 +227,7 @@ export default function EditPlaylistModal({
                 handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-tertiary)] px-3 transition hover:border-[var(--border)] hover:bg-[var(--bg-hover)]"
+              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-tertiary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-tertiary-hover)]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-muted)]">
                 <UploadIcon />
