@@ -88,7 +88,7 @@ function PlaylistThumbnail({
 
   return (
     <span
-      className="relative flex h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]"
+      className="relative flex h-9 w-9 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary)]"
       style={{
         background: cover
           ? "var(--bg-tertiary)"
@@ -120,7 +120,7 @@ function SongPreview({ song }: { song: Song }) {
   return (
     <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-0 text-center">
       <div className="flex min-w-0 items-center justify-center gap-2">
-        <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-[4px] bg-[var(--bg-secondary)]">
+        <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
           {cover ? (
             <Image
               src={cover}
@@ -450,9 +450,9 @@ export default function AddToPlaylistModal({
                   e.preventDefault();
                   handleCreatePlaylist();
                 }}
-                className="mb-1 flex w-full items-start gap-3 rounded-xl p-2"
+                className="mb-1 flex w-full items-start gap-3 rounded-none p-2"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-primary)] text-[var(--text-primary)]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
                 </span>
 
@@ -464,7 +464,7 @@ export default function AddToPlaylistModal({
                     onChange={(e) => setNewPlaylistName(e.target.value)}
                     placeholder="Name"
                     autoFocus
-                    className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:opacity-60"
+                    className="h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:opacity-60"
                   />
 
                   <div className="mt-2 flex items-center gap-2">
@@ -475,7 +475,7 @@ export default function AddToPlaylistModal({
                         setNewPlaylistOpen(false);
                         setNewPlaylistName("");
                       }}
-                      className="h-8 rounded-full border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                      className="h-8 rounded-none border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                     >
                       Cancel
                     </button>
@@ -483,7 +483,7 @@ export default function AddToPlaylistModal({
                     <button
                       type="submit"
                       disabled={creatingPlaylist || !newPlaylistName.trim()}
-                      className="h-8 rounded-full bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                      className="h-8 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
                     >
                       Add
                     </button>
@@ -494,9 +494,9 @@ export default function AddToPlaylistModal({
               <button
                 type="button"
                 onClick={() => setNewPlaylistOpen(true)}
-                className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
+                className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-hover-strong)]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--icon-button-hover)]">
                   <PlusIcon size={18} />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
@@ -510,12 +510,12 @@ export default function AddToPlaylistModal({
                 {Array.from({ length: playlists.length || 4 }).map((_, index) => (
                   <div
                     key={index}
-                    className="flex min-h-[52px] items-center gap-3 rounded-xl p-2"
+                    className="flex min-h-[52px] items-center gap-3 rounded-none p-2"
                   >
-                    <div className="h-9 w-9 animate-pulse rounded-lg bg-[var(--bg-primary)]" />
+                    <div className="h-9 w-9 animate-pulse rounded-none bg-[var(--bg-primary)]" />
                     <div className="space-y-2">
-                      <div className="h-3 w-32 animate-pulse rounded bg-[var(--bg-primary)]" />
-                      <div className="h-2.5 w-20 animate-pulse rounded bg-[var(--bg-primary)]" />
+                      <div className="h-3 w-32 animate-pulse rounded-none bg-[var(--bg-primary)]" />
+                      <div className="h-2.5 w-20 animate-pulse rounded-none bg-[var(--bg-primary)]" />
                     </div>
                   </div>
                 ))}
@@ -532,7 +532,7 @@ export default function AddToPlaylistModal({
                   <button
                     type="button"
                     onClick={refetchPlaylists}
-                    className="h-8 rounded-md bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
+                    className="h-8 rounded-none bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
                   >
                     Try Again
                   </button>
@@ -559,7 +559,7 @@ export default function AddToPlaylistModal({
                     type="button"
                     onClick={() => handlePlaylistClick(playlist)}
                     disabled={isPending || creatingPlaylist}
-                    className={`group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
+                    className={`group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
                       isSelected
                         ? "bg-[var(--bg-primary)] hover:bg-[var(--bg-primary)]"
                         : "hover:bg-[var(--bg-hover)]"
