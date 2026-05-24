@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import ModalShell from "@/components/ModalShell";
 import {
   modalFieldLabelClass,
@@ -10,6 +11,7 @@ import {
   FolderGlyph,
   MusicGlyph,
 } from "@/components/project-browser/ProjectBrowserGlyphs";
+import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import type { ProjectFolder } from "@/lib/types";
 
 type ProjectFolderPickerModalProps = {
@@ -18,6 +20,7 @@ type ProjectFolderPickerModalProps = {
   initialFolderId: number | null;
   title?: string;
   confirmLabel?: string;
+  movingSong?: ProjectPickerSong | null;
   onClose: () => void;
   onConfirm: (folderId: number | null) => void;
 };
@@ -26,6 +29,7 @@ type ProjectPickerSong = {
   id: string;
   title: string;
   artist?: string;
+  coverArt?: string | null;
   project_folder_id?: number | null;
 };
 
@@ -40,12 +44,43 @@ function sortSongs(songA: ProjectPickerSong, songB: ProjectPickerSong) {
   return songA.title.localeCompare(songB.title, undefined, { sensitivity: "base" });
 }
 
+function SongPreview({ song }: { song: ProjectPickerSong }) {
+  const cover = typeof song.coverArt === "string" && song.coverArt.trim()
+    ? song.coverArt
+    : null;
+
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-md bg-[var(--bg-secondary)]">
+        {cover ? (
+          <Image
+            src={cover}
+            alt={song.title}
+            fill
+            sizes="24px"
+            className="object-cover"
+          />
+        ) : (
+          <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
+            <PlaylistIcon size={10} />
+          </span>
+        )}
+      </span>
+
+      <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+        {song.artist ? `${song.title} by ${song.artist}` : song.title}
+      </span>
+    </div>
+  );
+}
+
 export default function ProjectFolderPickerModal({
   isOpen,
   folders,
   initialFolderId,
   title = "Choose Folder",
   confirmLabel = "Move Here",
+  movingSong = null,
   onClose,
   onConfirm,
 }: ProjectFolderPickerModalProps) {
@@ -161,19 +196,28 @@ export default function ProjectFolderPickerModal({
       maxWidth="max-w-[700px]"
       maxHeight="460px"
       bodyClassName="flex flex-col px-0 pb-0"
-      footerClassName="justify-between px-5 pb-4 pt-3"
+      footerClassName="justify-between gap-4 px-5 pb-4 pt-3"
       headerContent={
-        <div className="min-w-0">
-          <div className={`${modalFieldLabelClass} !mb-0`}>Source</div>
-          <div className="mt-1 truncate text-sm font-medium text-[var(--text-primary)]">
-            {sourceLabel}
+        movingSong ? (
+          <SongPreview song={movingSong} />
+        ) : (
+          <div className="min-w-0">
+            <div className={`${modalFieldLabelClass} !mb-0`}>Source</div>
+            <div className="mt-1 truncate text-sm font-medium text-[var(--text-primary)]">
+              {sourceLabel}
+            </div>
           </div>
-        </div>
+        )
       }
       footer={
         <>
-          <div className="min-w-0 truncate rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
-            Into: <span className="font-medium text-[var(--text-primary)]">{destinationLabel}</span>
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <div className="min-w-0 truncate rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
+              From: <span className="font-medium text-[var(--text-primary)]">{sourceLabel}</span>
+            </div>
+            <div className="min-w-0 truncate rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
+              Into: <span className="font-medium text-[var(--text-primary)]">{destinationLabel}</span>
+            </div>
           </div>
           <button
             type="button"
