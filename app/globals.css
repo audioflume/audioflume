@@ -520,6 +520,12 @@ main .sticky > .\-mx-7 {
   background: var(--bg-primary);
 }
 
+/* ─── Playlist page ─────────────────────────── */
+
+.playlist-create-mark {
+  border-radius: 0 !important;
+}
+
 /* ─── Discover ─────────────────────────── */
 
 main article[aria-label^="Play "][class*="h-[54px]"] {
