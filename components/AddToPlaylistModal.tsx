@@ -3,7 +3,6 @@
 import type { Playlist, Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import Toast from "@/components/Toast";
 import ModalShell from "@/components/ModalShell";
@@ -150,9 +149,6 @@ export default function AddToPlaylistModal({
   song,
   onClose,
 }: AddToPlaylistModalProps) {
-  const { currentSong } = usePlayer();
-  const playerVisible = !!currentSong;
-
   const {
     playlists,
     setPlaylists,
@@ -416,6 +412,9 @@ export default function AddToPlaylistModal({
       setNewPlaylistName("");
       setNewPlaylistOpen(false);
       setToastMessage(`Created "${createdPlaylist.name}"`);
+      window.setTimeout(() => {
+        setToastMessage(`Added "${song.title}" to "${createdPlaylist.name}"`);
+      }, 1400);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create playlist");
     } finally {
