@@ -39,6 +39,7 @@ import KeyFilter from "@/components/KeyFilter";
 import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
@@ -699,7 +700,7 @@ export default function MusicPage() {
             </div>
 
             <div
-              className="relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
+              className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
               style={{
                 backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.04)), url("${DESKTOP_SYNC_IMAGE}")`,
                 backgroundSize: "cover",
@@ -720,13 +721,10 @@ export default function MusicPage() {
                   Premiere, Resolve, or your editing timeline.
                 </p>
 
-                <button
-                  type="button"
-                  className="mt-6 inline-flex h-12 w-fit items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-colors hover:bg-white/90"
-                >
-                  <span>Desktop Sync</span>
-                  <span aria-hidden="true">↗</span>
-                </button>
+                <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
+                  Desktop Sync
+                  <ArrowUpRightIcon />
+                </div>
               </div>
             </div>
           </div>
