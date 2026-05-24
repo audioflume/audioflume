@@ -46,9 +46,9 @@
 
   /* Front-end cue marker controls */
   --cue-marker-color: var(--cue-point-marker);
-  --cue-marker-width: 1px;
-  --cue-marker-width-active: 1px;
-  --cue-marker-width-muted: 1px;
+  --cue-marker-width: 0.5px;
+  --cue-marker-width-active: 0.5px;
+  --cue-marker-width-muted: 0.5px;
   --cue-marker-opacity: 1;
   --cue-marker-opacity-muted: 0.2;
 
