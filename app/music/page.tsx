@@ -678,13 +678,19 @@ export default function MusicPage() {
         </div>
 
         <div
-          className={`grid overflow-hidden px-8 transition-all duration-300 ease-out ${
-            hasActiveFilters ? "pt-0 pb-0 opacity-0" : "pt-5 pb-8 opacity-100"
-          }`}
-          style={{ gridTemplateRows: hasActiveFilters ? "0fr" : "1fr" }}
+          className="overflow-hidden px-8"
+          style={{
+            maxHeight: hasActiveFilters ? "0px" : "380px",
+            paddingTop: hasActiveFilters ? "0px" : "20px",
+            paddingBottom: hasActiveFilters ? "0px" : "32px",
+            opacity: hasActiveFilters ? 0 : 1,
+            transform: hasActiveFilters ? "translateY(-8px)" : "translateY(0)",
+            transition:
+              "max-height 520ms cubic-bezier(0.22, 1, 0.36, 1), padding 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease, transform 320ms ease",
+          }}
           aria-hidden={hasActiveFilters}
         >
-          <div className="min-h-0 overflow-hidden">
+          <div className="overflow-hidden">
             <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
               <div
                 className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
