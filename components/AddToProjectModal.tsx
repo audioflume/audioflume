@@ -524,10 +524,7 @@ export default function AddToProjectModal({
         </div>
       </ModalShell>
 
-      <Toast
-        message={toastMessage}
-        bottomOffset={playerVisible ? "96px" : "24px"}
-      />
+      <Toast message={toastMessage} />
     </>
   );
 }
