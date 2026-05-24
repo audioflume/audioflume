@@ -300,12 +300,24 @@ export default function MusicPlayer() {
     () => (currentSong ? getSongCuePointMarkers(currentSong) : []),
     [currentSong],
   );
-  const visibleCuePoints = effectiveShowEditPointMarkers ? cuePoints : [];
   const selectedCuePointTypeSet = useMemo(
     () => new Set(selectedCuePointTypes),
     [selectedCuePointTypes],
   );
   const hasSelectedCuePointTypes = selectedCuePointTypeSet.size > 0;
+  const visibleCuePoints = useMemo(() => {
+    if (!effectiveShowEditPointMarkers) return [];
+    if (!hasSelectedCuePointTypes) return cuePoints;
+
+    return cuePoints.filter((marker) =>
+      selectedCuePointTypeSet.has(getMarkerType(marker)),
+    );
+  }, [
+    cuePoints,
+    effectiveShowEditPointMarkers,
+    hasSelectedCuePointTypes,
+    selectedCuePointTypeSet,
+  ]);
   const previousCuePoint = useMemo(
     () => getAdjacentCuePoint(visibleCuePoints, currentTime, "previous"),
     [visibleCuePoints, currentTime],
@@ -751,8 +763,6 @@ export default function MusicPlayer() {
                     const markerType = getMarkerType(marker);
                     const label =
                       marker.label || getEditPointFilterLabel(markerType);
-                    const selected = selectedCuePointTypeSet.has(markerType);
-                    const dimmed = hasSelectedCuePointTypes && !selected;
                     const progressValue = currentSong.duration
                       ? marker.time / currentSong.duration
                       : 0;
@@ -780,13 +790,9 @@ export default function MusicPlayer() {
                           className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full bg-[var(--cue-marker-color)]"
                           style={{
                             width: hasSelectedCuePointTypes
-                              ? selected
-                                ? "var(--cue-marker-width-active)"
-                                : "var(--cue-marker-width-muted)"
+                              ? "var(--cue-marker-width-active)"
                               : "var(--cue-marker-width)",
-                            opacity: dimmed
-                              ? "var(--cue-marker-opacity-muted)"
-                              : "var(--cue-marker-opacity)",
+                            opacity: "var(--cue-marker-opacity)",
                           }}
                         />
                         <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-[80] flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/player-cue-point:translate-y-0 group-hover/player-cue-point:opacity-100">
