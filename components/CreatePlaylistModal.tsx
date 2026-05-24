@@ -168,7 +168,7 @@ export default function CreatePlaylistModal({
                 onClick={() => {
                   if (!isCreating) fileInputRef.current?.click();
                 }}
-                className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border)]"
+                className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)]"
               >
                 <img
                   src={coverPreview}
@@ -196,7 +196,7 @@ export default function CreatePlaylistModal({
                 handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-tertiary)] px-3 transition hover:border-[var(--border)] hover:bg-[var(--bg-hover)]"
+              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-tertiary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-tertiary-hover)]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-muted)]">
                 <UploadIcon />
