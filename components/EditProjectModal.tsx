@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 import {
-  modalDeleteButtonClass,
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
-  modalTextareaClass,
 } from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import type { Project } from "@/lib/types";
@@ -29,10 +27,8 @@ export default function EditProjectModal({
   isOpen,
   project,
   name,
-  description,
   isSaving,
   onNameChange,
-  onDescriptionChange,
   onSave,
   onDelete,
   onClose,
@@ -64,7 +60,7 @@ export default function EditProjectModal({
       onClose={onClose}
       closeLabel="Close edit project modal"
       maxWidth="max-w-[430px]"
-      maxHeight="440px"
+      maxHeight="320px"
       bodyClassName="px-5 py-5"
       footerClassName="justify-between"
       footer={
@@ -73,7 +69,7 @@ export default function EditProjectModal({
             type="button"
             onClick={onDelete}
             disabled={isSaving}
-            className={modalDeleteButtonClass}
+            className="flex h-9 cursor-pointer items-center justify-center rounded-none px-3 text-xs font-medium text-[var(--danger)] transition hover:bg-[rgba(220,88,79,0.1)] disabled:cursor-default disabled:opacity-70"
           >
             Delete
           </button>
@@ -98,45 +94,23 @@ export default function EditProjectModal({
           event.preventDefault();
           handleSave();
         }}
-        className="space-y-4"
       >
-        <div>
-          <label htmlFor="edit-project-name" className={modalFieldLabelClass}>
-            Project Name
-          </label>
+        <label htmlFor="edit-project-name" className={modalFieldLabelClass}>
+          Project Name
+        </label>
 
-          <input
-            id="edit-project-name"
-            type="text"
-            value={name}
-            disabled={isSaving}
-            onChange={(event) => onNameChange(event.target.value)}
-            placeholder="Example: Pacific Sunday"
-            className={modalInputClass}
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="edit-project-description"
-            className={modalFieldLabelClass}
-          >
-            Notes
-          </label>
-
-          <textarea
-            id="edit-project-description"
-            value={description}
-            disabled={isSaving}
-            onChange={(event) => onDescriptionChange(event.target.value)}
-            placeholder="Optional project notes..."
-            rows={4}
-            className={modalTextareaClass}
-          />
-        </div>
+        <input
+          id="edit-project-name"
+          type="text"
+          value={name}
+          disabled={isSaving}
+          onChange={(event) => onNameChange(event.target.value)}
+          placeholder="Example: Pacific Sunday"
+          className={modalInputClass}
+        />
 
         {error && (
-          <p className="text-xs font-medium text-[var(--danger)]">{error}</p>
+          <p className="mt-3 text-xs font-medium text-[var(--danger)]">{error}</p>
         )}
       </form>
     </ModalShell>
