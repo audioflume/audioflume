@@ -80,13 +80,16 @@ export default function CreatePlaylistModal({
       title="New Playlist"
       onClose={clearFormAndClose}
       closeLabel="Close new playlist modal"
-      maxHeight="520px"
+      maxWidth="max-w-[430px]"
+      maxHeight="460px"
+      bodyClassName="bg-[var(--bg-tertiary)] px-5 py-5"
+      footerClassName="justify-between bg-[var(--bg-tertiary)]"
       footer={
         <div className="flex w-full items-center justify-between gap-3">
           <button
             type="button"
             disabled={isCreating}
-            className="flex h-8 cursor-pointer items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
+            className="flex h-8 cursor-pointer items-center gap-1.5 rounded-none px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
           >
             Unsplash
             <SearchIconSmall />
@@ -155,7 +158,7 @@ export default function CreatePlaylistModal({
                   e.stopPropagation();
                   removeCoverImage();
                 }}
-                className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
+                className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-none bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
                 aria-label="Remove cover image"
               >
                 ×
@@ -165,7 +168,7 @@ export default function CreatePlaylistModal({
                 onClick={() => {
                   if (!isCreating) fileInputRef.current?.click();
                 }}
-                className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--text-secondary)]"
+                className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border)]"
               >
                 <img
                   src={coverPreview}
@@ -174,7 +177,7 @@ export default function CreatePlaylistModal({
                 />
 
                 <div className="absolute inset-0 flex items-center justify-center bg-transparent p-2 opacity-0 transition group-hover:bg-[var(--media-overlay-preview)] group-hover:opacity-100">
-                  <span className="whitespace-nowrap rounded-md bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-medium leading-none text-[var(--media-overlay-contrast)] shadow-[var(--shadow-ui)]">
+                  <span className="whitespace-nowrap rounded-none bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-medium leading-none text-[var(--media-overlay-contrast)]">
                     Change image
                   </span>
                 </div>
@@ -193,9 +196,9 @@ export default function CreatePlaylistModal({
                 handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--border)] hover:bg-[var(--bg-hover)]"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-muted)]">
                 <UploadIcon />
               </div>
 
