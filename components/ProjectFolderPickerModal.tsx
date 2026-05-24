@@ -75,6 +75,17 @@ function FolderPreview({ name }: { name: string }) {
   );
 }
 
+function ResolvingPreview({ name }: { name: string }) {
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <span className="h-6 w-6 shrink-0" />
+      <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+        {name}
+      </span>
+    </div>
+  );
+}
+
 export default function ProjectFolderPickerModal({
   isOpen,
   folders,
@@ -87,6 +98,7 @@ export default function ProjectFolderPickerModal({
 }: ProjectFolderPickerModalProps) {
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(initialFolderId);
   const [songs, setSongs] = useState<ProjectPickerSong[]>([]);
+  const [songsLoaded, setSongsLoaded] = useState(false);
 
   const foldersById = useMemo(
     () => new Map(folders.map((folder) => [folder.id, folder])),
@@ -108,12 +120,15 @@ export default function ProjectFolderPickerModal({
   useEffect(() => {
     if (!isOpen || projectId == null) {
       setSongs([]);
+      setSongsLoaded(false);
       return;
     }
 
     let cancelled = false;
 
     async function loadProjectSongs() {
+      setSongsLoaded(false);
+
       try {
         const res = await fetch(`/api/projects/${encodeURIComponent(String(projectId))}/assets?type=song`);
         const data = await res.json();
@@ -126,6 +141,8 @@ export default function ProjectFolderPickerModal({
         if (!cancelled) setSongs(data.songs as ProjectPickerSong[]);
       } catch {
         if (!cancelled) setSongs([]);
+      } finally {
+        if (!cancelled) setSongsLoaded(true);
       }
     }
 
@@ -203,6 +220,22 @@ export default function ProjectFolderPickerModal({
     return folders.find((folder) => folder.name === movingItemName) ?? null;
   }, [folders, inferredMovingSong, movingItemName, title]);
 
+  const headerPreview = useMemo(() => {
+    if (inferredMovingSong) {
+      return <SongFilePreview song={inferredMovingSong} fallbackTitle={movingItemName} />;
+    }
+
+    if (inferredMovingFolder) {
+      return <FolderPreview name={inferredMovingFolder.name} />;
+    }
+
+    if (!songsLoaded) {
+      return <ResolvingPreview name={movingItemName} />;
+    }
+
+    return <FolderPreview name={movingItemName} />;
+  }, [inferredMovingFolder, inferredMovingSong, movingItemName, songsLoaded]);
+
   return (
     <ModalShell
       isOpen={isOpen}
@@ -213,13 +246,7 @@ export default function ProjectFolderPickerModal({
       maxHeight="460px"
       bodyClassName="flex flex-col px-0 pb-0"
       footerClassName="justify-between gap-4 px-5 pb-4 pt-3"
-      headerContent={
-        inferredMovingFolder ? (
-          <FolderPreview name={inferredMovingFolder.name} />
-        ) : (
-          <SongFilePreview song={inferredMovingSong} fallbackTitle={movingItemName} />
-        )
-      }
+      headerContent={headerPreview}
       footer={
         <>
           <div className="flex min-w-0 flex-1 items-center gap-2">
