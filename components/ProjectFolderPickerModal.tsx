@@ -14,6 +14,14 @@ import {
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import type { ProjectFolder } from "@/lib/types";
 
+type ProjectPickerSong = {
+  id: string;
+  title: string;
+  artist?: string;
+  coverArt?: string | null;
+  project_folder_id?: number | null;
+};
+
 type ProjectFolderPickerModalProps = {
   isOpen: boolean;
   folders: ProjectFolder[];
@@ -23,14 +31,6 @@ type ProjectFolderPickerModalProps = {
   movingSong?: ProjectPickerSong | null;
   onClose: () => void;
   onConfirm: (folderId: number | null) => void;
-};
-
-type ProjectPickerSong = {
-  id: string;
-  title: string;
-  artist?: string;
-  coverArt?: string | null;
-  project_folder_id?: number | null;
 };
 
 function sortFolders(folderA: ProjectFolder, folderB: ProjectFolder) {
@@ -187,6 +187,15 @@ export default function ProjectFolderPickerModal({
     return foldersById.get(initialFolderId)?.name ?? "All Files";
   }, [initialFolderId, foldersById]);
 
+  const inferredMovingSong = useMemo(() => {
+    if (movingSong) return movingSong;
+    if (!title.startsWith("Move ")) return null;
+
+    const movingTitle = title.replace(/^Move\s+/, "").trim();
+
+    return songs.find((song) => song.title === movingTitle) ?? null;
+  }, [movingSong, songs, title]);
+
   return (
     <ModalShell
       isOpen={isOpen}
@@ -198,8 +207,8 @@ export default function ProjectFolderPickerModal({
       bodyClassName="flex flex-col px-0 pb-0"
       footerClassName="justify-between gap-4 px-5 pb-4 pt-3"
       headerContent={
-        movingSong ? (
-          <SongPreview song={movingSong} />
+        inferredMovingSong ? (
+          <SongPreview song={inferredMovingSong} />
         ) : (
           <div className="min-w-0">
             <div className={`${modalFieldLabelClass} !mb-0`}>Source</div>
