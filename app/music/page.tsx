@@ -208,6 +208,33 @@ function getMusicHeroFallback(index = 0) {
   return gradients[index % gradients.length];
 }
 
+function CuePointHeroGraphic() {
+  const bars = [
+    10, 13, 8, 15, 18, 12, 16, 22, 14, 19, 13, 17, 24, 15, 18, 21, 13,
+    16, 20, 14, 18, 15, 19, 22, 16, 14, 17, 21, 15, 18, 13, 16, 20, 17,
+    14, 19, 23, 18, 15, 12,
+  ];
+  const markerIndexes = new Set([5, 18, 28, 38]);
+
+  return (
+    <div className="relative h-16 w-full overflow-hidden">
+      <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center gap-[3px]">
+        {bars.map((height, index) => (
+          <div
+            key={`${height}-${index}`}
+            className="relative w-[3px] flex-1 bg-white/36"
+            style={{ height: `${height}px` }}
+          >
+            {markerIndexes.has(index) && (
+              <span className="absolute left-1/2 top-1/2 h-14 w-px -translate-x-1/2 -translate-y-1/2 bg-[var(--cue-point-marker)]" />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function MusicPage() {
   const { userId, isLoaded: authLoaded } = useAuth();
   const musicFilterStorageKey = userId
@@ -451,7 +478,7 @@ export default function MusicPage() {
     displayedSongs.find((song) => song.coverArt) ?? displayedSongs[0] ?? songs[0];
   const heroStyle = {
     backgroundImage: heroSong?.coverArt
-      ? `linear-gradient(90deg, rgba(0,0,0,0.84) 0%, rgba(0,0,0,0.46) 48%, rgba(0,0,0,0.22) 100%), url("${heroSong.coverArt}")`
+      ? `linear-gradient(90deg, rgba(0,0,0,0.84) 0%, rgba(0,0,0,0.56) 44%, rgba(0,0,0,0.34) 100%), url("${heroSong.coverArt}")`
       : getMusicHeroFallback(0),
     backgroundSize: "cover",
     backgroundPosition: "center",
@@ -671,35 +698,51 @@ export default function MusicPage() {
 
         <div className="px-8 pt-5 pb-8">
           <div
-            className="relative min-h-[300px] overflow-hidden rounded-[18px] border border-white/10 bg-[var(--bg-card)] p-6 text-white shadow-[0_22px_80px_rgba(0,0,0,0.18)]"
+            className="relative min-h-[300px] overflow-hidden rounded-[18px] border border-white/10 bg-[var(--bg-card)] p-7 text-white"
             style={heroStyle}
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.18),transparent_34%),linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.34)_100%)]" />
-            <div className="relative z-[1] flex min-h-[252px] flex-col justify-between">
+            <div className="relative z-[1] flex min-h-[246px] flex-col justify-between">
               <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
                 <MusicIcon size={13} />
                 <span className="truncate">Music Library</span>
               </div>
 
-              <div className="max-w-[980px]">
-                <h1 className="font-[family-name:var(--font-instrument-sans)] text-[clamp(44px,5.8vw,88px)] font-medium leading-[0.86] tracking-[-0.074em] text-white">
-                  Find the cue that fits the cut.
-                </h1>
+              <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)]">
+                <div className="min-w-0">
+                  <h1 className="max-w-[760px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,4.45vw,72px)] font-medium leading-[0.9] tracking-[-0.074em] text-white">
+                    Find the cue that fits the cut.
+                  </h1>
 
-                <div className="mt-5 flex flex-wrap items-end justify-between gap-5">
-                  <p className="max-w-[620px] text-[14px] leading-6 text-white/72">
-                    Move through the library like a visual treatment —
-                    documentary warmth, after-dark tension, open travel cues,
-                    and polished brand motion.
-                  </p>
+                  <div className="mt-5 flex flex-wrap items-end gap-5">
+                    <p className="max-w-[620px] text-[14px] leading-6 text-white/72">
+                      Move through the library like a visual treatment —
+                      documentary warmth, after-dark tension, open travel cues,
+                      and polished brand motion.
+                    </p>
 
-                  <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
-                    <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                      {displayedSongs.length} shown
-                    </span>
-                    <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                      {songs.length} songs
-                    </span>
+                    <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
+                      <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                        {displayedSongs.length} shown
+                      </span>
+                      <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                        {songs.length} songs
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="hidden lg:block">
+                  <CuePointHeroGraphic />
+
+                  <div className="mt-4 max-w-[340px]">
+                    <h2 className="text-[13px] font-medium text-white">
+                      Cue point markers
+                    </h2>
+                    <p className="mt-2 text-[12px] leading-5 text-white/68">
+                      Jump to first hits, drops, breaks, and button endings
+                      without scrubbing through the whole track.
+                    </p>
                   </div>
                 </div>
               </div>
