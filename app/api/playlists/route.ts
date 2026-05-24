@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { normalizePlaylist, getPlaylistErrorResponse } from "@/lib/playlists";
+import { toSmartTitleCase } from "@/lib/smartTitleCase";
 
 export async function GET() {
   const { userId } = await auth();
@@ -53,7 +54,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const cleanName = body.name.trim();
+    const cleanName = toSmartTitleCase(body.name);
 
     if (!cleanName) {
       return NextResponse.json(
