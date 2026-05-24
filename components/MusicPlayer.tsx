@@ -652,17 +652,17 @@ export default function MusicPlayer() {
       >
         <div className="flex min-w-0 items-center gap-3">
           {currentSong.coverArt ? (
-            <div className="relative h-10 w-10 flex-shrink-0">
+            <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-none">
               <Image
                 src={currentSong.coverArt}
                 alt={currentSong.title}
                 fill
                 sizes="40px"
-                className="rounded object-cover"
+                className="object-cover"
               />
             </div>
           ) : (
-            <div className="h-10 w-10 flex-shrink-0 rounded bg-[var(--bg-hover)]" />
+            <div className="h-10 w-10 flex-shrink-0 rounded-none bg-[var(--bg-hover)]" />
           )}
 
           <div className="min-w-0">
