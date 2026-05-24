@@ -262,7 +262,10 @@ export default function Waveform({
         editPoints.markers?.map((marker) => {
           const markerType = getMarkerType(marker);
           const selected = highlightedTypeSet.has(markerType);
-          const dimmed = hasHighlightedTypes && !selected;
+          const hidden = hasHighlightedTypes && !selected;
+
+          if (hidden) return null;
+
           const label = marker.label || getEditPointFilterLabel(markerType);
           const markerTime = formatMarkerTime(marker.time);
           const progress = song.duration ? marker.time / song.duration : 0;
@@ -286,13 +289,9 @@ export default function Waveform({
                 className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full transition-[width,opacity] duration-150 group-hover/edit-point-marker:opacity-100"
                 style={{
                   width: hasHighlightedTypes
-                    ? selected
-                      ? "var(--cue-marker-width-active)"
-                      : "var(--cue-marker-width-muted)"
+                    ? "var(--cue-marker-width-active)"
                     : "var(--cue-marker-width)",
-                  opacity: dimmed
-                    ? "var(--cue-marker-opacity-muted)"
-                    : "var(--cue-marker-opacity)",
+                  opacity: "var(--cue-marker-opacity)",
                   background: "var(--cue-marker-color)",
                 }}
               />
