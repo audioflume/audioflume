@@ -39,6 +39,7 @@ import KeyFilter from "@/components/KeyFilter";
 import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import EditPointsIcon from "@/components/icons/EditPointsIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
@@ -210,24 +211,28 @@ function getMusicHeroFallback(index = 0) {
 
 function CuePointHeroGraphic() {
   const bars = [
-    10, 13, 8, 15, 18, 12, 16, 22, 14, 19, 13, 17, 24, 15, 18, 21, 13,
-    16, 20, 14, 18, 15, 19, 22, 16, 14, 17, 21, 15, 18, 13, 16, 20, 17,
-    14, 19, 23, 18, 15, 12,
+    8, 11, 10, 12, 14, 16, 18, 17, 15, 14, 16, 18, 17, 19, 21, 20,
+    18, 17, 16, 15, 17, 19, 23, 27, 24, 22, 21, 20, 19, 18, 17, 19,
+    21, 20, 19, 18, 17, 16, 18, 20, 22, 21, 19, 18, 17, 16, 17, 18,
+    20, 21, 19, 18, 17, 16, 15, 16, 18, 20, 19, 18, 17, 16, 18, 20,
+    22, 21, 20, 19, 18, 17, 16, 18, 20, 21, 22, 20, 18, 17, 16, 15,
+    14, 13, 12, 11, 10, 9, 8, 7,
   ];
-  const markerIndexes = new Set([5, 18, 28, 38]);
+  const markerIndexes = new Set([8, 31, 49, 83]);
 
   return (
     <div className="relative h-16 w-full overflow-hidden">
-      <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center gap-[3px]">
+      <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center gap-[2px]">
         {bars.map((height, index) => (
-          <div
-            key={`${height}-${index}`}
-            className="relative w-[3px] flex-1 bg-white/36"
-            style={{ height: `${height}px` }}
-          >
+          <div key={`${height}-${index}`} className="relative h-0 flex-1">
             {markerIndexes.has(index) && (
-              <span className="absolute left-1/2 top-1/2 h-14 w-px -translate-x-1/2 -translate-y-1/2 bg-[var(--cue-point-marker)]" />
+              <span className="absolute left-1/2 top-1/2 h-[52px] w-px -translate-x-1/2 -translate-y-1/2 bg-[var(--cue-point-marker)]" />
             )}
+
+            <span
+              className="absolute left-1/2 top-1/2 w-[2px] -translate-x-1/2 -translate-y-1/2 bg-white/42"
+              style={{ height: `${height}px` }}
+            />
           </div>
         ))}
       </div>
@@ -710,7 +715,7 @@ export default function MusicPage() {
 
               <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)]">
                 <div className="min-w-0">
-                  <h1 className="max-w-[760px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,4.45vw,72px)] font-medium leading-[0.9] tracking-[-0.074em] text-white">
+                  <h1 className="max-w-[760px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,4.45vw,72px)] font-normal leading-[0.92] tracking-[-0.058em] text-white/92">
                     Find the cue that fits the cut.
                   </h1>
 
@@ -733,6 +738,11 @@ export default function MusicPage() {
                 </div>
 
                 <div className="hidden lg:block">
+                  <div className="mb-5 inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                    <EditPointsIcon />
+                    <span className="truncate">Cue Points</span>
+                  </div>
+
                   <CuePointHeroGraphic />
 
                   <div className="mt-4 max-w-[340px]">
