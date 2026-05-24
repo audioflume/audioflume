@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { normalizeProject } from "@/lib/projects";
 import { ensureDefaultProjectFolders } from "@/lib/projectFolders";
+import { toSmartTitleCase } from "@/lib/smartTitleCase";
 
 export async function GET() {
   const { userId } = await auth();
@@ -41,7 +42,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const cleanName = typeof body.name === "string" ? body.name.trim() : "";
+    const cleanName =
+      typeof body.name === "string" ? toSmartTitleCase(body.name) : "";
 
     if (!cleanName) {
       return NextResponse.json(
