@@ -438,11 +438,11 @@
   flex-direction: column !important;
 }
 
-.project-context-menu > button:nth-child(1) {
+.project-context-menu:has(> button:nth-child(4)) > button:nth-child(1) {
   order: 2 !important;
 }
 
-.project-context-menu > button:nth-child(2) {
+.project-context-menu:has(> button:nth-child(4)) > button:nth-child(2) {
   order: 1 !important;
 }
 
