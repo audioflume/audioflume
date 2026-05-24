@@ -715,6 +715,8 @@ export default function ProjectDetailPageClient() {
         initialFolderId={movingSong?.project_folder_id ?? null}
         title={movingSong ? `Move ${movingSong.title}` : "Move File"}
         confirmLabel="Move Here"
+        movingSong={movingSong}
+        moveItemType="song"
         onClose={() => setMovingSong(null)}
         onConfirm={(folderId) => { if (!movingSong) return; handleMoveSong(movingSong, folderId); }}
       />
