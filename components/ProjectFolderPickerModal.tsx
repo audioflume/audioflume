@@ -44,6 +44,10 @@ function sortSongs(songA: ProjectPickerSong, songB: ProjectPickerSong) {
   return songA.title.localeCompare(songB.title, undefined, { sensitivity: "base" });
 }
 
+function getMovingTitle(title: string) {
+  return title.replace(/^Move\s+/, "").trim();
+}
+
 function SongPreview({ song }: { song: ProjectPickerSong }) {
   const cover = typeof song.coverArt === "string" && song.coverArt.trim()
     ? song.coverArt
@@ -69,6 +73,19 @@ function SongPreview({ song }: { song: ProjectPickerSong }) {
 
       <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
         {song.artist ? `${song.title} by ${song.artist}` : song.title}
+      </span>
+    </div>
+  );
+}
+
+function FolderPreview({ name }: { name: string }) {
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+        <FolderGlyph small />
+      </span>
+      <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+        {name}
       </span>
     </div>
   );
@@ -187,14 +204,20 @@ export default function ProjectFolderPickerModal({
     return foldersById.get(initialFolderId)?.name ?? "All Files";
   }, [initialFolderId, foldersById]);
 
+  const movingItemName = useMemo(() => getMovingTitle(title), [title]);
+
   const inferredMovingSong = useMemo(() => {
     if (movingSong) return movingSong;
     if (!title.startsWith("Move ")) return null;
 
-    const movingTitle = title.replace(/^Move\s+/, "").trim();
+    return songs.find((song) => song.title === movingItemName) ?? null;
+  }, [movingItemName, movingSong, songs, title]);
 
-    return songs.find((song) => song.title === movingTitle) ?? null;
-  }, [movingSong, songs, title]);
+  const inferredMovingFolder = useMemo(() => {
+    if (inferredMovingSong || !title.startsWith("Move ")) return null;
+
+    return folders.find((folder) => folder.name === movingItemName) ?? null;
+  }, [folders, inferredMovingSong, movingItemName, title]);
 
   return (
     <ModalShell
@@ -210,12 +233,7 @@ export default function ProjectFolderPickerModal({
         inferredMovingSong ? (
           <SongPreview song={inferredMovingSong} />
         ) : (
-          <div className="min-w-0">
-            <div className={`${modalFieldLabelClass} !mb-0`}>Source</div>
-            <div className="mt-1 truncate text-sm font-medium text-[var(--text-primary)]">
-              {sourceLabel}
-            </div>
-          </div>
+          <FolderPreview name={inferredMovingFolder?.name ?? movingItemName} />
         )
       }
       footer={
