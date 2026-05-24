@@ -289,7 +289,7 @@ export default function ProjectFolderPickerModal({
                 key={column.parentId ?? "root"}
                 className="flex min-w-[185px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
               >
-                <div className="flex h-6 flex-shrink-0 px-3">
+                <div className="flex h-8 flex-shrink-0 px-3 pt-2">
                   <span
                     className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full items-center rounded-full bg-[var(--bg-hover)] px-3 text-[10px] leading-none`}
                   >
