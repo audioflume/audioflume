@@ -250,10 +250,10 @@ export default function ProjectFolderPickerModal({
       footer={
         <>
           <div className="flex min-w-0 flex-1 items-center gap-2">
-            <div className="min-w-0 truncate rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
+            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
               From: <span className="font-medium text-[var(--text-primary)]">{sourceLabel}</span>
             </div>
-            <div className="min-w-0 truncate rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
+            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
               Into: <span className="font-medium text-[var(--text-primary)]">{destinationLabel}</span>
             </div>
           </div>
@@ -267,7 +267,7 @@ export default function ProjectFolderPickerModal({
         </>
       }
     >
-      <div className="flex min-h-0 flex-1 flex-col border-y border-[var(--border)] bg-[var(--bg-primary)]">
+      <div className="flex min-h-0 flex-1 flex-col bg-[var(--bg-tertiary)]">
         <div className="flex min-h-0 flex-1 min-w-0 overflow-x-auto overflow-y-hidden">
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
@@ -279,7 +279,7 @@ export default function ProjectFolderPickerModal({
                 className="flex min-w-[185px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
               >
                 <div
-                  className={`${modalFieldLabelClass} !mb-0 flex-shrink-0 border-b border-[var(--border)] px-5 py-2.5`}
+                  className={`${modalFieldLabelClass} !mb-0 flex-shrink-0 px-5 py-2.5`}
                 >
                   {isRootPreviewColumn
                     ? "Selected"
@@ -294,10 +294,10 @@ export default function ProjectFolderPickerModal({
                       <button
                         type="button"
                         onClick={() => setSelectedFolderId(null)}
-                        className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-xl px-2.5 text-left text-xs font-medium transition ${
+                        className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
                           selectedFolderId == null
-                            ? "border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-primary)]"
-                            : "border border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                            ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                            : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                         }`}
                       >
                         <span className="flex min-w-0 items-center gap-2">
@@ -316,10 +316,10 @@ export default function ProjectFolderPickerModal({
                           key={folder.id}
                           type="button"
                           onClick={() => setSelectedFolderId(folder.id)}
-                          className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-xl px-2.5 text-left text-xs font-medium transition ${
+                          className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
                             isSelected
-                              ? "border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-primary)]"
-                              : "border border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                              ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                              : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                           }`}
                         >
                           <span className="flex min-w-0 items-center gap-2">
@@ -334,7 +334,7 @@ export default function ProjectFolderPickerModal({
                     {column.songs.map((song) => (
                       <div
                         key={song.id}
-                        className="flex h-8 flex-shrink-0 items-center gap-2 rounded-xl px-2.5 text-xs text-[var(--text-secondary)]"
+                        className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs text-[var(--text-secondary)]"
                       >
                         <MusicGlyph small />
                         <span className="min-w-0 truncate font-medium">{song.title}</span>
@@ -342,7 +342,7 @@ export default function ProjectFolderPickerModal({
                     ))}
 
                     {!hasItems && (
-                      <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-muted)]">
+                      <div className="flex min-h-0 flex-1 items-center justify-center rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-muted)]">
                         {isRootPreviewColumn ? "Root selected" : "Empty folder"}
                       </div>
                     )}
