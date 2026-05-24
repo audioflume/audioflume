@@ -559,7 +559,11 @@ export default function AddToPlaylistModal({
                     type="button"
                     onClick={() => handlePlaylistClick(playlist)}
                     disabled={isPending || creatingPlaylist}
-                    className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                    className={`group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-xl border p-2 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
+                      isSelected
+                        ? "border-[var(--border)] bg-[var(--bg-primary)] hover:bg-[var(--bg-hover)]"
+                        : "border-transparent hover:bg-[var(--bg-hover)]"
+                    }`}
                   >
                     <PlaylistThumbnail playlist={playlist} index={index} />
 
