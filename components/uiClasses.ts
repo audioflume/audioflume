@@ -33,16 +33,16 @@ export const modalFieldLabelClass =
   "mb-1.5 block text-[11px] font-medium text-[var(--text-muted)]";
 
 export const modalInputClass =
-  "h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-default disabled:opacity-70";
+  "h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:cursor-default disabled:opacity-70";
 
 export const modalTextareaClass =
-  "w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-default disabled:opacity-70";
+  "w-full resize-none rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:cursor-default disabled:opacity-70";
 
 export const modalCoverButtonClass =
-  "h-8 cursor-pointer rounded-md border border-[var(--border)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70";
+  "h-8 cursor-pointer rounded-none border border-[var(--border)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70";
 
 export const modalActionButtonClass =
-  "flex h-9 cursor-pointer items-center justify-center rounded-full px-4 text-xs font-medium transition disabled:cursor-default disabled:opacity-70";
+  "flex h-9 cursor-pointer items-center justify-center rounded-none px-4 text-xs font-medium transition disabled:cursor-default disabled:opacity-70";
 
 export const modalCancelButtonClass = `${modalActionButtonClass} text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
 
@@ -53,10 +53,10 @@ export const modalDeleteButtonClass = `${modalActionButtonClass} ${dangerButtonC
 export const modalIconCloseButtonClass = iconButtonClass;
 
 export const squareButtonClass =
-  "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--border)] bg-transparent px-2.5 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40";
+  "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none border border-[var(--border)] bg-transparent px-2.5 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40";
 
 export const primarySquareButtonClass =
-  "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--text-primary)] bg-[var(--text-primary)] px-2.5 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40";
+  "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none border border-[var(--text-primary)] bg-[var(--text-primary)] px-2.5 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40";
 
 export const quickFilterButtonClass =
   "cursor-pointer rounded-none bg-[var(--bg-elevated)] px-2 py-[3px] text-[11px] font-medium capitalize leading-[1.2] text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
