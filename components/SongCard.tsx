@@ -317,7 +317,7 @@ export default function SongCard({
       >
         <button
           type="button"
-          className="relative h-10 w-10 flex-shrink-0 cursor-pointer overflow-hidden rounded"
+          className="relative h-10 w-10 flex-shrink-0 cursor-pointer overflow-hidden rounded-none"
           onClick={() => togglePlayPause(song)}
           aria-label={actuallyPlaying ? "Pause song" : "Play song"}
         >
