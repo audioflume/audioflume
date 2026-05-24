@@ -259,9 +259,11 @@ export default function AdminAddToPlaylistModal({
         onClose={onClose}
         closeLabel="Close add to curated playlist modal"
         centerTitle
-        maxHeight="462px"
-        bodyScroll
-        bodyClassName="flex flex-col pb-0"
+        maxWidth="max-w-[430px]"
+        maxHeight="420px"
+        bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
+        contentClassName="h-[420px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[58px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
+        footerClassName="justify-end bg-[var(--bg-tertiary)]"
         footer={
           <button
             type="button"
@@ -273,74 +275,84 @@ export default function AdminAddToPlaylistModal({
           </button>
         }
       >
-        <div className="mb-3 flex flex-shrink-0 items-center gap-2.5 rounded-lg bg-[var(--bg-primary)] pl-2 pb-1.5">
-          <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
-            {song.coverArt && <Image src={song.coverArt} alt={song.title} fill sizes="32px" className="object-cover" />}
-          </div>
-          <div className="min-w-0">
-            <div className="truncate text-xs font-medium text-[var(--text-primary)]">{song.title}</div>
-            <div className="mt-0.5 truncate text-[11px] text-[var(--text-subtle)]">{song.artist}</div>
+        <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-0 text-center">
+          <div className="flex min-w-0 items-center justify-center gap-2">
+            <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
+              {song.coverArt && <Image src={song.coverArt} alt={song.title} fill sizes="24px" className="object-cover" />}
+            </span>
+            <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+              {song.title} by {song.artist}
+            </span>
           </div>
         </div>
 
-        <div className="-mx-4 min-h-[234px] flex-1 overflow-y-auto border-t border-[var(--border)] px-4 pt-3 pb-3">
-          {(loading || selectedLoading) && (
-            <div className="grid gap-1.5">
-              {Array.from({ length: playlists.length || 6 }).map((_, index) => (
-                <div key={index} className="flex h-9 items-center justify-between gap-2.5 rounded-lg px-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-5 w-5 rounded-md bg-[var(--bg-tertiary)]" />
-                    <div className="h-2.5 w-32 bg-[var(--bg-tertiary)]" />
+        <div className="-mx-5 flex min-h-0 flex-1 flex-col bg-[var(--bg-tertiary)]">
+          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-3">
+            {(loading || selectedLoading) && (
+              <div className="grid gap-1">
+                {Array.from({ length: playlists.length || 6 }).map((_, index) => (
+                  <div key={index} className="flex min-h-[52px] items-center justify-between gap-3 rounded-none p-2">
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-none bg-[var(--bg-primary)]" />
+                      <div className="h-3 w-32 bg-[var(--bg-primary)]" />
+                    </div>
+                    <div className="h-5 w-5 rounded-none bg-[var(--bg-primary)]" />
                   </div>
-                  <div className="h-5 w-5 rounded-md bg-[var(--bg-tertiary)]" />
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
 
-          {!loading && !selectedLoading && displayedError && (
-            <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 rounded-lg bg-[var(--bg-primary)] px-4 text-center">
-              <div className="text-xs font-medium text-[var(--danger)]">{displayedError}</div>
-              {playlistsError && (
-                <button type="button" onClick={refetchPlaylists} className="h-8 rounded-md bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80">
-                  Try Again
-                </button>
-              )}
-            </div>
-          )}
+            {!loading && !selectedLoading && displayedError && (
+              <div className="flex min-h-full flex-col items-center justify-center gap-3 px-4 text-center">
+                <div className="text-xs font-medium text-[var(--danger)]">{displayedError}</div>
+                {playlistsError && (
+                  <button type="button" onClick={refetchPlaylists} className="h-8 rounded-none bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80">
+                    Try Again
+                  </button>
+                )}
+              </div>
+            )}
 
-          {!loading && !selectedLoading && !displayedError && displayedPlaylists.length === 0 && (
-            <div className="flex min-h-[180px] items-center justify-center rounded-lg bg-[var(--bg-primary)] px-4 text-center text-xs text-[var(--text-secondary)]">
-              No curated playlists yet. Create one in Playlist Manager.
-            </div>
-          )}
+            {!loading && !selectedLoading && !displayedError && displayedPlaylists.length === 0 && (
+              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+                No curated playlists yet. Create one in Playlist Manager.
+              </div>
+            )}
 
-          {!loading && !selectedLoading && !displayedError && displayedPlaylists.map((playlist) => {
-            const isSelected = selectedIds.has(playlist.id);
-            return (
-              <button
-                key={playlist.id}
-                type="button"
-                onClick={() => togglePlaylist(playlist.id)}
-                disabled={selectedLoading}
-                className={`add-playlist-row group flex h-9 w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-2.5 text-left text-xs font-medium transition-colors disabled:cursor-default disabled:opacity-70 ${
-                  isSelected
-                    ? "is-selected bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-                }`}
-              >
-                <span className="flex min-w-0 items-center gap-2.5">
-                  <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${isSelected ? "bg-[var(--text-primary)] text-[var(--bg-primary)]" : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"}`}>
+            {!loading && !selectedLoading && !displayedError && displayedPlaylists.map((playlist) => {
+              const isSelected = selectedIds.has(playlist.id);
+              return (
+                <button
+                  key={playlist.id}
+                  type="button"
+                  onClick={() => togglePlaylist(playlist.id)}
+                  disabled={selectedLoading}
+                  className={`group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
+                    isSelected
+                      ? "bg-[var(--bg-primary)] hover:bg-[var(--bg-primary)]"
+                      : "hover:bg-[var(--bg-hover)]"
+                  }`}
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-primary)] text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">
                     <PlaylistIcon size={13} />
                   </span>
-                  <span className="min-w-0 truncate">{playlist.name}</span>
-                </span>
-                <span className={`add-playlist-action flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${isSelected ? "bg-[var(--text-primary)] text-[var(--bg-primary)]" : "text-[var(--text-muted)]"}`}>
-                  {isSelected ? <CheckIcon size={12} /> : <PlusIcon />}
-                </span>
-              </button>
-            );
-          })}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                      {playlist.name}
+                    </span>
+                    <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                      {isSelected ? "Added" : "Click to add"}
+                    </span>
+                  </span>
+                  {isSelected && (
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-primary)]">
+                      <CheckIcon size={16} />
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </ModalShell>
 
