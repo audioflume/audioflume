@@ -530,6 +530,83 @@ main article[aria-label^="Play "] > .relative.h-9.w-9.shrink-0.rounded-md {
   border-radius: 0 !important;
 }
 
+/* ─── Music page hero ─────────────────────────── */
+
+main [style*="rgba(0,0,0,0.84)"] {
+  box-shadow: none !important;
+}
+
+main [style*="rgba(0,0,0,0.84)"] h1 {
+  max-width: 720px !important;
+  font-size: clamp(42px, 4.4vw, 70px) !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.07em !important;
+}
+
+main [style*="rgba(0,0,0,0.84)"]::before {
+  content: "";
+  position: absolute;
+  right: 32px;
+  bottom: 128px;
+  z-index: 2;
+  width: min(330px, 28vw);
+  height: 64px;
+  pointer-events: none;
+  opacity: 0.88;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0 7%,
+      var(--cue-point-marker) 7% 7.35%,
+      transparent 7.35% 36%,
+      var(--cue-point-marker) 36% 36.35%,
+      transparent 36.35% 55%,
+      var(--cue-point-marker) 55% 55.35%,
+      transparent 55.35% 88%,
+      var(--cue-point-marker) 88% 88.35%,
+      transparent 88.35% 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.46) 0 2px,
+      transparent 2px 6px
+    );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0 14%,
+    #000 14% 26%,
+    transparent 26% 35%,
+    #000 35% 48%,
+    transparent 48% 54%,
+    #000 54% 68%,
+    transparent 68% 76%,
+    #000 76% 88%,
+    transparent 88% 100%
+  );
+}
+
+main [style*="rgba(0,0,0,0.84)"]::after {
+  content: "Cue point markers\AJump to first hits, drops, breaks, and button endings without scrubbing through the whole track.";
+  position: absolute;
+  right: 32px;
+  bottom: 46px;
+  z-index: 2;
+  width: min(330px, 28vw);
+  pointer-events: none;
+  white-space: pre-line;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+@media (max-width: 1280px) {
+  main [style*="rgba(0,0,0,0.84)"]::before,
+  main [style*="rgba(0,0,0,0.84)"]::after {
+    display: none;
+  }
+}
+
 /* ─── Skeleton loader shared styles ─────────────────────────── */
 
 .skeleton-block {
