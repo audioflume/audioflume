@@ -289,6 +289,19 @@ export default function MusicPage() {
   const selectedVocalFilters = instrumental
     ? [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...selectedVocals]
     : selectedVocals;
+  const hasActiveFilters =
+    search.trim().length > 0 ||
+    selectedMoods.length > 0 ||
+    selectedGenres.length > 0 ||
+    selectedInstruments.length > 0 ||
+    selectedBuilds.length > 0 ||
+    selectedVocals.length > 0 ||
+    selectedDurations.length > 0 ||
+    selectedEditPoints.length > 0 ||
+    instrumental ||
+    bpmValue !== null ||
+    keyValue !== null ||
+    selectedPlaylist !== null;
 
   const {
     songs,
@@ -633,7 +646,11 @@ export default function MusicPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5 bg-[var(--bg-primary)] px-8 pt-4 pb-0">
+        <div
+          className={`flex flex-wrap items-center gap-1.5 bg-[var(--bg-primary)] px-8 pt-4 ${
+            hasActiveFilters ? "pb-4" : "pb-0"
+          }`}
+        >
           {QUICK_FILTERS.map((filter) => {
             const isActive = selectedGenres.includes(filter);
 
@@ -658,77 +675,79 @@ export default function MusicPage() {
           })}
         </div>
 
-        <div className="px-8 pt-5 pb-8">
-          <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
-            <div
-              className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
-              style={{
-                backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
-                <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                  <MusicIcon size={11} />
-                  <span className="truncate">Music Library</span>
-                </div>
+        {!hasActiveFilters && (
+          <div className="px-8 pt-5 pb-8">
+            <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
+              <div
+                className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
+                style={{
+                  backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
+                  <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                    <MusicIcon size={11} />
+                    <span className="truncate">Music Library</span>
+                  </div>
 
-                <div>
-                  <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(46px,4.2vw,68px)] font-medium leading-[0.92] tracking-[-0.068em] text-white">
-                    Find the cue that fits the cut.
-                  </h1>
+                  <div>
+                    <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
+                      Find the cue that fits the cut.
+                    </h1>
 
-                  <div className="mt-5 flex flex-wrap items-end gap-5">
-                    <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
-                      Move through the library like a visual treatment —
-                      documentary warmth, after-dark tension, open travel cues,
-                      and polished brand motion.
-                    </p>
+                    <div className="mt-5 flex flex-wrap items-end gap-5">
+                      <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
+                        Move through the library like a visual treatment —
+                        documentary warmth, after-dark tension, open travel cues,
+                        and polished brand motion.
+                      </p>
 
-                    <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
-                      <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                        {displayedSongs.length} shown
-                      </span>
-                      <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                        {songs.length} songs
-                      </span>
+                      <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
+                        <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                          {displayedSongs.length} shown
+                        </span>
+                        <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                          {songs.length} songs
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div
-              className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
-              style={{
-                backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.04)), url("${DESKTOP_SYNC_IMAGE}")`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                Desktop Sync
-              </div>
-
-              <div className="max-w-[340px]">
-                <h2 className="font-[family-name:var(--font-instrument-sans)] text-[30px] font-medium leading-[1.05] tracking-[-0.055em] text-white">
-                  Local files, ready to cut.
-                </h2>
-
-                <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
-                  Sync songs to your desktop and drag them straight into
-                  Premiere, Resolve, or your editing timeline.
-                </p>
-
-                <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
+              <div
+                className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.04)), url("${DESKTOP_SYNC_IMAGE}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
                   Desktop Sync
-                  <ArrowUpRightIcon />
+                </div>
+
+                <div className="max-w-[340px]">
+                  <h2 className="font-[family-name:var(--font-instrument-sans)] text-[30px] font-medium leading-[1.05] tracking-[-0.055em] text-white">
+                    Local files, ready to cut.
+                  </h2>
+
+                  <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
+                    Sync songs to your desktop and drag them straight into
+                    Premiere, Resolve, or your editing timeline.
+                  </p>
+
+                  <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
+                    Desktop Sync
+                    <ArrowUpRightIcon />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="w-full border-t border-[var(--border-subtle)]">
           {showSongSkeleton && <SkeletonSongList />}
