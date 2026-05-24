@@ -114,8 +114,8 @@ export default function EditPlaylistModal({
       closeLabel="Close edit playlist modal"
       maxWidth="max-w-[430px]"
       maxHeight="460px"
-      bodyClassName="bg-[var(--bg-tertiary)] px-5 py-5"
-      footerClassName="justify-between bg-[var(--bg-tertiary)]"
+      bodyClassName="px-5 py-5"
+      footerClassName="justify-between"
       footer={
         <div className="flex w-full items-center justify-between gap-3">
           <button
@@ -228,7 +228,7 @@ export default function EditPlaylistModal({
                 handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--border)] hover:bg-[var(--bg-hover)]"
+              className="mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-tertiary)] px-3 transition hover:border-[var(--border)] hover:bg-[var(--bg-hover)]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-muted)]">
                 <UploadIcon />
