@@ -61,10 +61,10 @@ const VOCAL_FILTER_OPTIONS = [
 ];
 
 const MUSIC_HERO_IMAGE =
-  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1800&q=80";
+  "https://images.unsplash.com/photo-1556139930-c23fa4a4f934?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 const DESKTOP_SYNC_IMAGE =
-  "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1100&q=80";
+  "https://images.unsplash.com/photo-1686519093104-3140c6dcf284?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 function getSongIdentityValues(song: unknown) {
   const record = getRecord(song);
@@ -591,7 +591,9 @@ export default function MusicPage() {
               aria-pressed={effectiveShowEditPointMarkers}
             >
               <span>Markers</span>
-              {effectiveShowEditPointMarkers && <span className={filterDotClass} />}
+              {effectiveShowEditPointMarkers && (
+                <span className={filterDotClass} />
+              )}
             </button>
 
             <button
