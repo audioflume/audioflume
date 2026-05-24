@@ -537,73 +537,49 @@ main [style*="rgba(0,0,0,0.84)"] {
 }
 
 main [style*="rgba(0,0,0,0.84)"] h1 {
-  max-width: 720px !important;
-  font-size: clamp(42px, 4.4vw, 70px) !important;
+  max-width: 760px !important;
+  font-size: clamp(42px, 4.45vw, 72px) !important;
+  font-weight: 500 !important;
   line-height: 0.9 !important;
-  letter-spacing: -0.07em !important;
+  letter-spacing: -0.064em !important;
+  color: #ffffff !important;
 }
 
-main [style*="rgba(0,0,0,0.84)"]::before {
-  content: "";
-  position: absolute;
-  right: 32px;
-  bottom: 128px;
-  z-index: 2;
-  width: min(330px, 28vw);
-  height: 64px;
-  pointer-events: none;
-  opacity: 0.88;
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0 7%,
-      var(--cue-point-marker) 7% 7.35%,
-      transparent 7.35% 36%,
-      var(--cue-point-marker) 36% 36.35%,
-      transparent 36.35% 55%,
-      var(--cue-point-marker) 55% 55.35%,
-      transparent 55.35% 88%,
-      var(--cue-point-marker) 88% 88.35%,
-      transparent 88.35% 100%
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.46) 0 2px,
-      transparent 2px 6px
-    );
-  mask-image: linear-gradient(
-    180deg,
-    transparent 0 14%,
-    #000 14% 26%,
-    transparent 26% 35%,
-    #000 35% 48%,
-    transparent 48% 54%,
-    #000 54% 68%,
-    transparent 68% 76%,
-    #000 76% 88%,
-    transparent 88% 100%
-  );
-}
-
+main [style*="rgba(0,0,0,0.84)"]::before,
 main [style*="rgba(0,0,0,0.84)"]::after {
-  content: "Cue point markers\AJump to first hits, drops, breaks, and button endings without scrubbing through the whole track.";
-  position: absolute;
-  right: 32px;
-  bottom: 46px;
-  z-index: 2;
-  width: min(330px, 28vw);
-  pointer-events: none;
-  white-space: pre-line;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.72);
+  display: none !important;
 }
 
-@media (max-width: 1280px) {
-  main [style*="rgba(0,0,0,0.84)"]::before,
-  main [style*="rgba(0,0,0,0.84)"]::after {
-    display: none;
+@media (min-width: 1024px) {
+  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:first-child {
+    position: absolute !important;
+    top: 28px !important;
+    right: 28px !important;
+    margin: 0 !important;
+  }
+
+  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(3n + 1) > span:last-child {
+    height: 9px !important;
+  }
+
+  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(4n + 2) > span:last-child {
+    height: 18px !important;
+  }
+
+  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(5n + 3) > span:last-child {
+    height: 24px !important;
+  }
+
+  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(7n + 4) > span:last-child {
+    height: 13px !important;
+  }
+
+  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(11n + 5) > span:last-child {
+    height: 29px !important;
+  }
+
+  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(13n + 6) > span:last-child {
+    height: 7px !important;
   }
 }
 
