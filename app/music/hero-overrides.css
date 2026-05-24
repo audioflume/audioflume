@@ -81,6 +81,7 @@ main [style*="url("] .hidden.lg\:block {
     linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.76) 100%),
     linear-gradient(90deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.05)),
     url("https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1100&q=80") center / cover no-repeat !important;
+  color: #ffffff !important;
 }
 
 main [style*="url("] .hidden.lg\:block > div {
@@ -113,14 +114,6 @@ main [style*="url("] .hidden.lg\:block::after {
   font-weight: 500;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.74);
-}
-
-main [style*="url("] .hidden.lg\:block::after::first-line {
-  font-size: 28px;
-}
-
-main [style*="url("] .hidden.lg\:block {
-  color: #ffffff !important;
 }
 
 @media (max-width: 1180px) {
