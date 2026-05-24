@@ -974,6 +974,8 @@ export default function ProjectFileBrowser({
         initialFolderId={movingFolder?.parent_folder_id ?? null}
         title={movingFolder ? `Move ${movingFolder.name}` : "Move Folder"}
         confirmLabel="Move Here"
+        movingFolder={movingFolder}
+        moveItemType="folder"
         onClose={() => setMovingFolder(null)}
         onConfirm={(folderId) => {
           if (!movingFolder) return;
