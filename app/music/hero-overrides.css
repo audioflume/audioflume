@@ -1,0 +1,132 @@
+/* Route-scoped music hero layout. Loaded only by app/music/layout.tsx. */
+
+main [style*="url("] {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px) !important;
+  gap: 18px !important;
+  min-height: 320px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+main [style*="url("] > div:first-child {
+  display: none !important;
+}
+
+main [style*="url("] > div:nth-child(2) {
+  display: contents !important;
+}
+
+main [style*="url("] > div:nth-child(2) > div:first-child {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  z-index: 3 !important;
+  align-self: start !important;
+  margin: 28px 0 0 28px !important;
+}
+
+main [style*="url("] > div:nth-child(2) > div:nth-child(2) {
+  display: contents !important;
+}
+
+main [style*="url("] > div:nth-child(2) > div:nth-child(2) > div:first-child {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  min-height: 320px !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  padding: 28px !important;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.76) 0%, rgba(0, 0, 0, 0.44) 54%, rgba(0, 0, 0, 0.18) 100%),
+    radial-gradient(circle at 72% 10%, rgba(221, 255, 67, 0.18), transparent 24%),
+    radial-gradient(circle at 18% 85%, rgba(251, 143, 97, 0.16), transparent 28%),
+    linear-gradient(135deg, #2b302f 0%, #101010 48%, #2a211a 100%) !important;
+}
+
+main [style*="url("] h1 {
+  max-width: 720px !important;
+  font-size: clamp(46px, 4.2vw, 68px) !important;
+  font-weight: 500 !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.068em !important;
+  color: #ffffff !important;
+}
+
+main [style*="url("] h1 + div {
+  margin-top: 22px !important;
+}
+
+main [style*="url("] h1 + div p {
+  max-width: 560px !important;
+  color: rgba(255, 255, 255, 0.76) !important;
+}
+
+main [style*="url("] .hidden.lg\:block {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  position: relative !important;
+  display: flex !important;
+  min-height: 320px !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  padding: 28px !important;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.74) 100%),
+    radial-gradient(circle at 12% 14%, rgba(221, 255, 67, 0.2), transparent 26%),
+    radial-gradient(circle at 88% 20%, rgba(255, 255, 255, 0.18), transparent 22%),
+    radial-gradient(circle at 72% 86%, rgba(251, 143, 97, 0.2), transparent 32%),
+    linear-gradient(135deg, #1e2a2a 0%, #090909 48%, #342219 100%) !important;
+}
+
+main [style*="url("] .hidden.lg\:block > div {
+  display: none !important;
+}
+
+main [style*="url("] .hidden.lg\:block::before {
+  content: "Desktop Sync";
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 5px 13px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+main [style*="url("] .hidden.lg\:block::after {
+  content: "Sync songs straight to your desktop, then drag them from Finder into Premiere, Resolve, or your editing timeline.";
+  display: block;
+  max-width: 320px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+main [style*="url("] .hidden.lg\:block {
+  color: #ffffff !important;
+}
+
+@media (max-width: 1180px) {
+  main [style*="url("] {
+    grid-template-columns: 1fr !important;
+  }
+
+  main [style*="url("] .hidden.lg\:block {
+    display: none !important;
+  }
+}
