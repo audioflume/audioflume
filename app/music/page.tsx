@@ -198,6 +198,16 @@ function shuffleSongList<T>(songs: T[]) {
   return bestShuffle;
 }
 
+function getMusicHeroFallback(index = 0) {
+  const gradients = [
+    "radial-gradient(circle at 22% 18%, rgba(221,255,67,0.24), transparent 25%), radial-gradient(circle at 78% 32%, rgba(251,143,97,0.22), transparent 28%), linear-gradient(135deg, #2a2a2a 0%, #111111 58%, #343434 100%)",
+    "radial-gradient(circle at 18% 22%, rgba(98,135,196,0.24), transparent 28%), radial-gradient(circle at 82% 74%, rgba(183,93,145,0.18), transparent 30%), linear-gradient(135deg, #202632 0%, #111111 54%, #2d3037 100%)",
+    "radial-gradient(circle at 20% 76%, rgba(77,140,123,0.22), transparent 30%), radial-gradient(circle at 82% 20%, rgba(182,108,69,0.2), transparent 28%), linear-gradient(135deg, #1f2927 0%, #111111 56%, #29231f 100%)",
+  ];
+
+  return gradients[index % gradients.length];
+}
+
 export default function MusicPage() {
   const { userId, isLoaded: authLoaded } = useAuth();
   const musicFilterStorageKey = userId
@@ -437,6 +447,31 @@ export default function MusicPage() {
     !songsError &&
     ((songsLoading && songs.length === 0) || loadingPlaylistSongs);
 
+  const heroSong =
+    displayedSongs.find((song) => song.coverArt) ?? displayedSongs[0] ?? songs[0];
+  const heroStyle = {
+    backgroundImage: heroSong?.coverArt
+      ? `linear-gradient(90deg, rgba(0,0,0,0.84) 0%, rgba(0,0,0,0.46) 48%, rgba(0,0,0,0.22) 100%), url("${heroSong.coverArt}")`
+      : getMusicHeroFallback(0),
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  };
+
+  const visualCards = [
+    {
+      label: "Documentary warmth",
+      copy: "Patient beds, textured pulses, human-first pacing.",
+    },
+    {
+      label: "After-dark tension",
+      copy: "Low-lit cues for pressure, restraint, and release.",
+    },
+    {
+      label: "Brand motion",
+      copy: "Clean builds for polished cuts and campaign edits.",
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
@@ -649,30 +684,81 @@ export default function MusicPage() {
           })}
         </div>
 
-        <div className="px-8 pt-[38px] pb-[42px]">
-          <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
-            <div>
-              <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                <MusicIcon size={13} />
-                Music Library
-              </div>
+        <div className="px-8 pt-5 pb-8">
+          <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.55fr)]">
+            <div
+              className="relative min-h-[330px] overflow-hidden rounded-[18px] border border-white/10 bg-[var(--bg-card)] p-6 text-white shadow-[0_22px_80px_rgba(0,0,0,0.18)]"
+              style={heroStyle}
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.18),transparent_34%),linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.32)_100%)]" />
+              <div className="relative z-[1] flex min-h-[282px] flex-col justify-between">
+                <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                  <MusicIcon size={13} />
+                  <span className="truncate">Music Library</span>
+                </div>
 
-              <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,78px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
-                Find the cue that fits the cut.
-              </h1>
+                <div className="max-w-[760px]">
+                  <h1 className="font-[family-name:var(--font-instrument-sans)] text-[clamp(52px,7vw,108px)] font-medium leading-[0.82] tracking-[-0.078em] text-white">
+                    Find the cue that fits the cut.
+                  </h1>
+
+                  <div className="mt-5 flex flex-wrap items-end justify-between gap-5">
+                    <p className="max-w-[520px] text-[14px] leading-6 text-white/72">
+                      Move through the library like a visual treatment —
+                      documentary warmth, after-dark tension, open travel cues,
+                      and polished brand motion.
+                    </p>
+
+                    <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
+                      <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                        {displayedSongs.length} shown
+                      </span>
+                      <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                        {songs.length} songs
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">
-              Move through the library like a visual treatment — documentary
-              warmth, after-dark tension, open travel cues, and polished brand
-              motion.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 text-[11px] text-[var(--text-secondary)]">
-            <span>{displayedSongs.length} shown</span>
-            <span className="text-[var(--text-muted)]">·</span>
-            <span>{songs.length} songs</span>
+            <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-1">
+              {visualCards.map((card, index) => (
+                <button
+                  key={card.label}
+                  type="button"
+                  onClick={() => {
+                    const genre =
+                      index === 0
+                        ? "Documentary"
+                        : index === 1
+                          ? "Tension"
+                          : "Commercial";
+                    setSelectedGenres(
+                      selectedGenres.includes(genre)
+                        ? selectedGenres
+                        : [...selectedGenres, genre],
+                    );
+                  }}
+                  className="group relative min-h-[98px] overflow-hidden rounded-[18px] border border-[var(--border-subtle)] p-4 text-left text-white transition hover:scale-[1.01] hover:border-white/20"
+                  style={{
+                    backgroundImage: getMusicHeroFallback(index + 1),
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/28 transition group-hover:bg-black/18" />
+                  <div className="relative z-[1] flex h-full flex-col justify-end">
+                    <div className="text-[15px] font-medium tracking-[-0.03em]">
+                      {card.label}
+                    </div>
+                    <p className="mt-1 max-w-[260px] text-[11px] leading-4 text-white/62">
+                      {card.copy}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
