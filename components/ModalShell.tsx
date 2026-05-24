@@ -67,7 +67,7 @@ export default function ModalShell({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-primary)] shadow-[0_28px_90px_rgba(0,0,0,0.36)] ${contentClassName}`}
+        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-primary)] shadow-none ${contentClassName}`}
         style={{
           maxHeight: modalMaxHeight,
         }}
