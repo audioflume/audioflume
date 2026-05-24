@@ -65,8 +65,8 @@ export default function EditProjectModal({
       closeLabel="Close edit project modal"
       maxWidth="max-w-[430px]"
       maxHeight="440px"
-      bodyClassName="bg-[var(--bg-tertiary)] px-5 py-5"
-      footerClassName="justify-between bg-[var(--bg-tertiary)]"
+      bodyClassName="px-5 py-5"
+      footerClassName="justify-between"
       footer={
         <div className="flex w-full items-center justify-between gap-3">
           <button
