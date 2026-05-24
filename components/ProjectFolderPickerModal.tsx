@@ -27,6 +27,8 @@ type ProjectFolderPickerModalProps = {
   title?: string;
   confirmLabel?: string;
   movingSong?: ProjectPickerSong | null;
+  movingFolder?: ProjectFolder | null;
+  moveItemType?: "song" | "folder";
   onClose: () => void;
   onConfirm: (folderId: number | null) => void;
 };
@@ -62,27 +64,16 @@ function SongFilePreview({ song, fallbackTitle }: { song?: ProjectPickerSong | n
   );
 }
 
-function FolderPreview({ name }: { name: string }) {
+function FolderPreview({ folder, fallbackName }: { folder?: ProjectFolder | null; fallbackName: string }) {
+  const label = folder?.name || fallbackName;
+
   return (
     <div className="flex min-w-0 items-center gap-2">
       <span className="flex h-6 w-6 shrink-0 items-center justify-center">
         <FolderGlyph small />
       </span>
       <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
-        {name}
-      </span>
-    </div>
-  );
-}
-
-function ResolvingPreview({ name }: { name: string }) {
-  return (
-    <div className="flex min-w-0 items-center gap-2">
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center">
-        <MusicGlyph small />
-      </span>
-      <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
-        {name}
+        {label}
       </span>
     </div>
   );
@@ -95,12 +86,13 @@ export default function ProjectFolderPickerModal({
   title = "Choose Folder",
   confirmLabel = "Move Here",
   movingSong = null,
+  movingFolder = null,
+  moveItemType,
   onClose,
   onConfirm,
 }: ProjectFolderPickerModalProps) {
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(initialFolderId);
   const [songs, setSongs] = useState<ProjectPickerSong[]>([]);
-  const [songsLoaded, setSongsLoaded] = useState(false);
 
   const foldersById = useMemo(
     () => new Map(folders.map((folder) => [folder.id, folder])),
@@ -110,8 +102,9 @@ export default function ProjectFolderPickerModal({
   const projectId = useMemo(() => {
     if (folders.length > 0) return folders[0].project_id;
     if (initialFolderId != null) return foldersById.get(initialFolderId)?.project_id;
+    if (movingFolder) return movingFolder.project_id;
     return undefined;
-  }, [folders, foldersById, initialFolderId]);
+  }, [folders, foldersById, initialFolderId, movingFolder]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -120,17 +113,14 @@ export default function ProjectFolderPickerModal({
   }, [isOpen, initialFolderId]);
 
   useEffect(() => {
-    if (!isOpen || projectId == null) {
+    if (!isOpen || projectId == null || movingSong || movingFolder || moveItemType) {
       setSongs([]);
-      setSongsLoaded(false);
       return;
     }
 
     let cancelled = false;
 
     async function loadProjectSongs() {
-      setSongsLoaded(false);
-
       try {
         const res = await fetch(`/api/projects/${encodeURIComponent(String(projectId))}/assets?type=song`);
         const data = await res.json();
@@ -143,8 +133,6 @@ export default function ProjectFolderPickerModal({
         if (!cancelled) setSongs(data.songs as ProjectPickerSong[]);
       } catch {
         if (!cancelled) setSongs([]);
-      } finally {
-        if (!cancelled) setSongsLoaded(true);
       }
     }
 
@@ -153,7 +141,7 @@ export default function ProjectFolderPickerModal({
     return () => {
       cancelled = true;
     };
-  }, [isOpen, projectId]);
+  }, [isOpen, projectId, movingSong, movingFolder, moveItemType]);
 
   const selectedChain = useMemo(() => {
     if (selectedFolderId == null) return [];
@@ -216,32 +204,28 @@ export default function ProjectFolderPickerModal({
 
   const inferredMovingSong = useMemo(() => {
     if (movingSong) return movingSong;
+    if (moveItemType === "folder") return null;
     if (!title.startsWith("Move ")) return null;
 
     return songs.find((song) => song.title === movingItemName) ?? null;
-  }, [movingItemName, movingSong, songs, title]);
+  }, [moveItemType, movingItemName, movingSong, songs, title]);
 
   const inferredMovingFolder = useMemo(() => {
-    if (inferredMovingSong || !title.startsWith("Move ")) return null;
+    if (movingFolder) return movingFolder;
+    if (moveItemType === "song" || inferredMovingSong || !title.startsWith("Move ")) {
+      return null;
+    }
 
     return folders.find((folder) => folder.name === movingItemName) ?? null;
-  }, [folders, inferredMovingSong, movingItemName, title]);
+  }, [folders, inferredMovingSong, moveItemType, movingFolder, movingItemName, title]);
 
   const headerPreview = useMemo(() => {
-    if (inferredMovingSong) {
-      return <SongFilePreview song={inferredMovingSong} fallbackTitle={movingItemName} />;
+    if (movingSong || moveItemType === "song" || inferredMovingSong) {
+      return <SongFilePreview song={movingSong || inferredMovingSong} fallbackTitle={movingItemName} />;
     }
 
-    if (inferredMovingFolder) {
-      return <FolderPreview name={inferredMovingFolder.name} />;
-    }
-
-    if (!songsLoaded) {
-      return <ResolvingPreview name={movingItemName} />;
-    }
-
-    return <FolderPreview name={movingItemName} />;
-  }, [inferredMovingFolder, inferredMovingSong, movingItemName, songsLoaded]);
+    return <FolderPreview folder={movingFolder || inferredMovingFolder} fallbackName={movingItemName} />;
+  }, [inferredMovingFolder, inferredMovingSong, moveItemType, movingFolder, movingItemName, movingSong]);
 
   return (
     <ModalShell
