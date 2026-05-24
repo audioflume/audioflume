@@ -43,10 +43,9 @@ main [style*="url("] > div:nth-child(2) > div:nth-child(2) > div:first-child {
   border-radius: 18px !important;
   padding: 28px !important;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.76) 0%, rgba(0, 0, 0, 0.44) 54%, rgba(0, 0, 0, 0.18) 100%),
-    radial-gradient(circle at 72% 10%, rgba(221, 255, 67, 0.18), transparent 24%),
-    radial-gradient(circle at 18% 85%, rgba(251, 143, 97, 0.16), transparent 28%),
-    linear-gradient(135deg, #2b302f 0%, #101010 48%, #2a211a 100%) !important;
+    linear-gradient(90deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.5) 52%, rgba(0, 0, 0, 0.2) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.3) 100%),
+    url("https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1800&q=80") center / cover no-repeat !important;
 }
 
 main [style*="url("] h1 {
@@ -79,11 +78,9 @@ main [style*="url("] .hidden.lg\:block {
   border-radius: 18px !important;
   padding: 28px !important;
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.74) 100%),
-    radial-gradient(circle at 12% 14%, rgba(221, 255, 67, 0.2), transparent 26%),
-    radial-gradient(circle at 88% 20%, rgba(255, 255, 255, 0.18), transparent 22%),
-    radial-gradient(circle at 72% 86%, rgba(251, 143, 97, 0.2), transparent 32%),
-    linear-gradient(135deg, #1e2a2a 0%, #090909 48%, #342219 100%) !important;
+    linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.76) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.05)),
+    url("https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1100&q=80") center / cover no-repeat !important;
 }
 
 main [style*="url("] .hidden.lg\:block > div {
@@ -108,13 +105,18 @@ main [style*="url("] .hidden.lg\:block::before {
 }
 
 main [style*="url("] .hidden.lg\:block::after {
-  content: "Sync songs straight to your desktop, then drag them from Finder into Premiere, Resolve, or your editing timeline.";
+  content: "Local files, no extra downloads.\A\A Sync songs straight to your desktop, then drag them from Finder into Premiere, Resolve, or your editing timeline.";
   display: block;
   max-width: 320px;
+  white-space: pre-line;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.74);
+}
+
+main [style*="url("] .hidden.lg\:block::after::first-line {
+  font-size: 28px;
 }
 
 main [style*="url("] .hidden.lg\:block {
