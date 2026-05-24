@@ -219,7 +219,7 @@ body.sidebar-collapsed aside[data-sidebar] {
 
   --cue-marker-color: var(--cue-point-marker);
   --cue-marker-width: 1px;
-  --cue-marker-width-active: 1.5px;
+  --cue-marker-width-active: 1px;
   --cue-marker-width-muted: 1px;
   --cue-marker-opacity: 1;
   --cue-marker-opacity-muted: 0.4;
@@ -564,27 +564,63 @@ main [style*="rgba(0,0,0,0.84)"]::after {
     margin: 0 !important;
   }
 
-  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(3n + 1) > span:last-child {
+  main
+    [style*="rgba(0,0,0,0.84)"]
+    .hidden.lg\:block
+    > div:nth-child(2)
+    > div
+    > div:nth-child(3n + 1)
+    > span:last-child {
     height: 9px !important;
   }
 
-  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(4n + 2) > span:last-child {
+  main
+    [style*="rgba(0,0,0,0.84)"]
+    .hidden.lg\:block
+    > div:nth-child(2)
+    > div
+    > div:nth-child(4n + 2)
+    > span:last-child {
     height: 18px !important;
   }
 
-  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(5n + 3) > span:last-child {
+  main
+    [style*="rgba(0,0,0,0.84)"]
+    .hidden.lg\:block
+    > div:nth-child(2)
+    > div
+    > div:nth-child(5n + 3)
+    > span:last-child {
     height: 24px !important;
   }
 
-  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(7n + 4) > span:last-child {
+  main
+    [style*="rgba(0,0,0,0.84)"]
+    .hidden.lg\:block
+    > div:nth-child(2)
+    > div
+    > div:nth-child(7n + 4)
+    > span:last-child {
     height: 13px !important;
   }
 
-  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(11n + 5) > span:last-child {
+  main
+    [style*="rgba(0,0,0,0.84)"]
+    .hidden.lg\:block
+    > div:nth-child(2)
+    > div
+    > div:nth-child(11n + 5)
+    > span:last-child {
     height: 29px !important;
   }
 
-  main [style*="rgba(0,0,0,0.84)"] .hidden.lg\:block > div:nth-child(2) > div > div:nth-child(13n + 6) > span:last-child {
+  main
+    [style*="rgba(0,0,0,0.84)"]
+    .hidden.lg\:block
+    > div:nth-child(2)
+    > div
+    > div:nth-child(13n + 6)
+    > span:last-child {
     height: 7px !important;
   }
 }
