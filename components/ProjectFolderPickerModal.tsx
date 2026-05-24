@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import ModalShell from "@/components/ModalShell";
 import {
   modalFieldLabelClass,
@@ -11,7 +10,6 @@ import {
   FolderGlyph,
   MusicGlyph,
 } from "@/components/project-browser/ProjectBrowserGlyphs";
-import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import type { ProjectFolder } from "@/lib/types";
 
 type ProjectPickerSong = {
@@ -48,31 +46,17 @@ function getMovingTitle(title: string) {
   return title.replace(/^Move\s+/, "").trim();
 }
 
-function SongPreview({ song }: { song: ProjectPickerSong }) {
-  const cover = typeof song.coverArt === "string" && song.coverArt.trim()
-    ? song.coverArt
-    : null;
+function SongFilePreview({ song, fallbackTitle }: { song?: ProjectPickerSong | null; fallbackTitle: string }) {
+  const label = song?.artist ? `${song.title} by ${song.artist}` : song?.title || fallbackTitle;
 
   return (
     <div className="flex min-w-0 items-center gap-2">
-      <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-md bg-[var(--bg-secondary)]">
-        {cover ? (
-          <Image
-            src={cover}
-            alt={song.title}
-            fill
-            sizes="24px"
-            className="object-cover"
-          />
-        ) : (
-          <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
-            <PlaylistIcon size={10} />
-          </span>
-        )}
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+        <MusicGlyph small />
       </span>
 
       <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
-        {song.artist ? `${song.title} by ${song.artist}` : song.title}
+        {label}
       </span>
     </div>
   );
@@ -230,10 +214,10 @@ export default function ProjectFolderPickerModal({
       bodyClassName="flex flex-col px-0 pb-0"
       footerClassName="justify-between gap-4 px-5 pb-4 pt-3"
       headerContent={
-        inferredMovingSong ? (
-          <SongPreview song={inferredMovingSong} />
+        inferredMovingFolder ? (
+          <FolderPreview name={inferredMovingFolder.name} />
         ) : (
-          <FolderPreview name={inferredMovingFolder?.name ?? movingItemName} />
+          <SongFilePreview song={inferredMovingSong} fallbackTitle={movingItemName} />
         )
       }
       footer={
