@@ -185,7 +185,7 @@ export default function ProjectFolderPickerModal({
         </>
       }
     >
-      <div className="-mx-5 flex min-h-0 flex-1 flex-col border-y border-[var(--border)] bg-[var(--bg-primary)]">
+      <div className="flex min-h-0 flex-1 flex-col border-y border-[var(--border)] bg-[var(--bg-primary)]">
         <div className="flex min-h-0 flex-1 min-w-0 overflow-x-auto overflow-y-hidden">
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
