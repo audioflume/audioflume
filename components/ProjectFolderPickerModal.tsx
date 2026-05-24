@@ -289,7 +289,7 @@ export default function ProjectFolderPickerModal({
                 key={column.parentId ?? "root"}
                 className="flex min-w-[185px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
               >
-                <div className="flex-shrink-0 px-3 py-2">
+                <div className="flex h-6 flex-shrink-0 px-3">
                   <span
                     className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full items-center rounded-full bg-[var(--bg-hover)] px-3 text-[10px] leading-none`}
                   >
@@ -306,7 +306,7 @@ export default function ProjectFolderPickerModal({
                         className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
                           selectedFolderId == null
                             ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
-                            : "bg-[var(--bg-hover)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                            : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                         }`}
                       >
                         <span className="flex min-w-0 items-center gap-2">
