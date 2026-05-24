@@ -677,8 +677,14 @@ export default function MusicPage() {
           })}
         </div>
 
-        {!hasActiveFilters && (
-          <div className="px-8 pt-5 pb-8">
+        <div
+          className={`grid overflow-hidden px-8 transition-all duration-300 ease-out ${
+            hasActiveFilters ? "pt-0 pb-0 opacity-0" : "pt-5 pb-8 opacity-100"
+          }`}
+          style={{ gridTemplateRows: hasActiveFilters ? "0fr" : "1fr" }}
+          aria-hidden={hasActiveFilters}
+        >
+          <div className="min-h-0 overflow-hidden">
             <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
               <div
                 className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
@@ -757,7 +763,7 @@ export default function MusicPage() {
               </div>
             </div>
           </div>
-        )}
+        </div>
 
         <div className="w-full border-t border-[var(--border-subtle)]">
           {showSongSkeleton && <SkeletonSongList />}
