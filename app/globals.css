@@ -520,6 +520,12 @@ main .sticky > .\-mx-7 {
   background: var(--bg-primary);
 }
 
+/* ─── Discover ─────────────────────────── */
+
+main article[aria-label^="Play "] > .relative.h-9.w-9.shrink-0.rounded-md {
+  border-radius: 0 !important;
+}
+
 /* ─── Skeleton loader shared styles ─────────────────────────── */
 
 .skeleton-block {
