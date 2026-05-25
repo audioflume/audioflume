@@ -8,18 +8,20 @@ export default function IconButton({
   label,
   onClick,
   active = false,
+  activeClassName = iconButtonActiveClass,
 }: {
   children: React.ReactNode;
   label: string;
   onClick?: () => void;
   active?: boolean;
+  activeClassName?: string;
 }) {
   return (
     <button
       type="button"
       aria-label={label}
       onClick={onClick}
-      className={`${iconButtonClass} ${active ? iconButtonActiveClass : ""}`}
+      className={`${iconButtonClass} ${active ? activeClassName : ""}`}
     >
       {children}
     </button>
