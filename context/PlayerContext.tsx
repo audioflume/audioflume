@@ -332,6 +332,24 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     [logAudioDebug, postPausedState],
   );
 
+  const seekAudioTo = useCallback((audio: HTMLAudioElement, targetTime: number) => {
+    const safeTargetTime = Math.max(0, targetTime);
+    const mediaWithFastSeek = audio as HTMLAudioElement & {
+      fastSeek?: (time: number) => void;
+    };
+
+    if (typeof mediaWithFastSeek.fastSeek === "function") {
+      try {
+        mediaWithFastSeek.fastSeek(safeTargetTime);
+        return;
+      } catch {
+        // Fall back to currentTime assignment below.
+      }
+    }
+
+    audio.currentTime = safeTargetTime;
+  }, []);
+
   function getAudio(): HTMLAudioElement {
     if (!audioRef.current) {
       const audio = new Audio();
@@ -487,7 +505,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             if (!audio.duration || !isFinite(audio.duration)) return;
 
             const safeTime = Math.max(0, Math.min(desiredTime, audio.duration));
-            audio.currentTime = safeTime;
+            seekAudioTo(audio, safeTime);
             setCurrentTimeState(safeTime);
             setDurationState(audio.duration);
           };
@@ -502,7 +520,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       return true;
     },
-    [logAudioDebug, setCurrentTimeState, setDurationState],
+    [logAudioDebug, seekAudioTo, setCurrentTimeState, setDurationState],
   );
 
   const safePlay = useCallback(() => {
@@ -594,7 +612,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.src = song.audioUrl;
       }
 
-      audio.currentTime = 0;
+      seekAudioTo(audio, 0);
 
       logAudioDebug(
         "play-song-directly",
@@ -614,7 +632,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         playAudio(audio);
       }
     },
-    [logAudioDebug, playAudio, setCurrentTimeState, setDurationState],
+    [logAudioDebug, playAudio, seekAudioTo, setCurrentTimeState, setDurationState],
   );
 
   playSongDirectlyRef.current = playSongDirectly;
@@ -687,6 +705,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         });
       }
 
+      const resumeAfterSeek = () => {
+        if (seekRequestId !== pendingSeekRequestIdRef.current) return;
+        if (currentSongRef.current?.id !== song.id) return;
+
+        playAudio(audio);
+      };
+
       const applySeek = () => {
         if (seekRequestId !== pendingSeekRequestIdRef.current) return;
         if (currentSongRef.current?.id !== song.id) return;
@@ -702,7 +727,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           true,
         );
 
-        audio.currentTime = targetTime;
+        if (shouldPlay && !audio.paused) {
+          playRequestIdRef.current += 1;
+          audio.pause();
+        }
+
+        seekAudioTo(audio, targetTime);
         setCurrentTimeState(targetTime);
         setDurationState(audio.duration);
 
@@ -715,11 +745,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           });
         }
 
-        if (shouldPlay) {
-          playAudio(audio);
-        } else {
+        if (!shouldPlay) {
           postPausedState();
+          return;
         }
+
+        if (audio.seeking) {
+          audio.addEventListener("seeked", resumeAfterSeek, { once: true });
+          return;
+        }
+
+        window.requestAnimationFrame(resumeAfterSeek);
       };
 
       if (audio.duration && isFinite(audio.duration)) {
@@ -728,7 +764,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [logAudioDebug, playAudio, postPausedState, setCurrentTimeState, setDurationState],
+    [logAudioDebug, playAudio, postPausedState, seekAudioTo, setCurrentTimeState, setDurationState],
   );
 
   const registerWaveform = useCallback(
@@ -833,7 +869,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const applyRemoteTime = () => {
         try {
           if (audio.duration && isFinite(audio.duration)) {
-            audio.currentTime = Math.max(0, Math.min(safeTime, audio.duration));
+            seekAudioTo(audio, Math.max(0, Math.min(safeTime, audio.duration)));
           }
         } catch {
           // Ignore remote seek sync failures
@@ -868,7 +904,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         channelRef.current = null;
       }
     };
-  }, [setCurrentTimeState, setDurationState]);
+  }, [seekAudioTo, setCurrentTimeState, setDurationState]);
 
   useEffect(() => {
     window.addEventListener(CLOSE_PLAYER_EVENT, closePlayer);
