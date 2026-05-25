@@ -8,6 +8,13 @@ type RouteContext = {
   params: Promise<{ projectId: string }> | { projectId: string };
 };
 
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isUuid(value: string) {
+  return UUID_PATTERN.test(value);
+}
+
 async function getProjectId(context: RouteContext) {
   const params = await context.params;
   return params.projectId;
@@ -28,13 +35,14 @@ async function verifyProject(projectId: string, userId: string) {
 
 async function getProjectSongRows(songIds: string[]) {
   const uniqueSongIds = [...new Set(songIds.filter(Boolean))];
+  const uuidSongIds = uniqueSongIds.filter(isUuid);
 
-  if (uniqueSongIds.length === 0) return [];
+  if (uuidSongIds.length === 0) return [];
 
   const targeted = await supabaseServer
     .from("songs")
     .select("*")
-    .in("id", uniqueSongIds)
+    .in("id", uuidSongIds)
     .eq("status", "published");
 
   if (!targeted.error) return targeted.data ?? [];
@@ -44,7 +52,7 @@ async function getProjectSongRows(songIds: string[]) {
   const targetedWithoutStatus = await supabaseServer
     .from("songs")
     .select("*")
-    .in("id", uniqueSongIds);
+    .in("id", uuidSongIds);
 
   if (!targetedWithoutStatus.error) return targetedWithoutStatus.data ?? [];
 
@@ -57,7 +65,7 @@ async function getProjectSongRows(songIds: string[]) {
 
   if (catalogue.error) throw catalogue.error;
 
-  const songIdSet = new Set(uniqueSongIds.map(String));
+  const songIdSet = new Set(uuidSongIds.map(String));
 
   return (catalogue.data ?? []).filter((row) => songIdSet.has(String(row.id)));
 }
