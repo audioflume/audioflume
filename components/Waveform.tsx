@@ -9,10 +9,29 @@ import {
   parseEditPoints,
 } from "@/lib/editPointUtils";
 
+type WaveformDrawCache = {
+  cssWidth: number;
+  cssHeight: number;
+  dpr: number;
+  progressColor: string;
+  inactiveColor: string;
+};
+
+function getWaveformColors() {
+  const styles = getComputedStyle(document.documentElement);
+
+  return {
+    progressColor: styles.getPropertyValue("--waveform-progress").trim(),
+    inactiveColor: styles.getPropertyValue("--waveform-color").trim(),
+  };
+}
+
 function drawWaveform(
   canvas: HTMLCanvasElement,
   peaks: number[],
   progress: number,
+  cache: WaveformDrawCache,
+  forceResize = false,
 ) {
   const container = canvas.parentElement;
   if (!container) return;
@@ -23,19 +42,25 @@ function drawWaveform(
 
   if (w < 10) return;
 
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
+  const sizeChanged =
+    forceResize ||
+    cache.cssWidth !== w ||
+    cache.cssHeight !== h ||
+    cache.dpr !== dpr;
+
+  if (sizeChanged) {
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    cache.cssWidth = w;
+    cache.cssHeight = h;
+    cache.dpr = dpr;
+  }
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
-
-  const styles = getComputedStyle(document.documentElement);
-
-  const progressColor = styles.getPropertyValue("--waveform-progress").trim();
-  const inactiveColor = styles.getPropertyValue("--waveform-color").trim();
 
   const barWidth = 2;
   const barGap = 1;
@@ -75,7 +100,7 @@ function drawWaveform(
     const barH = Math.max(2, Math.min(maxBarH, peak * maxBarH));
     const x = i * barTotal;
 
-    ctx.fillStyle = i < progressBars ? progressColor : inactiveColor;
+    ctx.fillStyle = i < progressBars ? cache.progressColor : cache.inactiveColor;
     ctx.fillRect(x, midY - barH / 2, barWidth, barH);
   }
 }
@@ -106,6 +131,13 @@ export default function Waveform({
   const containerRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const peaksRef = useRef<number[]>([]);
+  const animationFrameRef = useRef<number | null>(null);
+  const drawCacheRef = useRef<WaveformDrawCache>({
+    cssWidth: 0,
+    cssHeight: 0,
+    dpr: 0,
+    ...getWaveformColors(),
+  });
 
   const shouldShowEditPointMarkers = showEditPointMarkers;
 
@@ -138,10 +170,32 @@ export default function Waveform({
     return Math.max(0, Math.min(100, (time / song.duration) * 100));
   };
 
-  const redraw = () => {
+  const cancelScheduledRedraw = () => {
+    if (animationFrameRef.current == null) return;
+
+    window.cancelAnimationFrame(animationFrameRef.current);
+    animationFrameRef.current = null;
+  };
+
+  const redraw = (forceResize = false) => {
     if (!canvasRef.current) return;
 
-    drawWaveform(canvasRef.current, peaksRef.current, progressRef.current);
+    drawWaveform(
+      canvasRef.current,
+      peaksRef.current,
+      progressRef.current,
+      drawCacheRef.current,
+      forceResize,
+    );
+  };
+
+  const scheduleRedraw = () => {
+    if (animationFrameRef.current != null) return;
+
+    animationFrameRef.current = window.requestAnimationFrame(() => {
+      animationFrameRef.current = null;
+      redraw();
+    });
   };
 
   useEffect(() => {
@@ -159,14 +213,14 @@ export default function Waveform({
     }
 
     progressRef.current = 0;
-    redraw();
+    redraw(true);
   }, [song.waveformPeaks]);
 
   useEffect(() => {
     registerWaveform(song.id, {
       seekTo: (progress: number) => {
         progressRef.current = progress;
-        redraw();
+        scheduleRedraw();
       },
     });
 
@@ -179,12 +233,16 @@ export default function Waveform({
     if (!container) return;
 
     const resizeObserver = new ResizeObserver(() => {
-      redraw();
+      redraw(true);
     });
 
     resizeObserver.observe(container);
 
     const themeObserver = new MutationObserver(() => {
+      drawCacheRef.current = {
+        ...drawCacheRef.current,
+        ...getWaveformColors(),
+      };
       redraw();
     });
 
@@ -193,6 +251,7 @@ export default function Waveform({
     });
 
     return () => {
+      cancelScheduledRedraw();
       resizeObserver.disconnect();
       themeObserver.disconnect();
     };
@@ -200,8 +259,8 @@ export default function Waveform({
 
   const seekToProgress = (progress: number) => {
     progressRef.current = progress;
-    redraw();
     contextSeekTo(song, progress, isPlayingRef.current);
+    scheduleRedraw();
   };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
