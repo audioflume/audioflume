@@ -508,6 +508,13 @@ export default function MusicPlayer() {
     const rect = e.currentTarget.getBoundingClientRect();
     if (!rect.width) return;
     const nextProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+
+    // Update the canvas immediately for instant visual feedback —
+    // same pattern as Waveform.tsx which updates progressRef before contextSeekTo.
+    // The audio seek happens asynchronously; the visual should not wait for it.
+    waveformProgressRef.current = nextProgress;
+    drawPlayerCanvas();
+
     seekTo(currentSong, nextProgress, isPlaying);
   };
 
