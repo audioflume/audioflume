@@ -1,9 +1,11 @@
+// Plain (borderless/transparent) icon button — used for inline icon actions
 export const iconButtonClass =
   "filmwave-icon-button filmwave-icon-button-plain";
 
 export const iconButtonActiveClass =
   "bg-[var(--icon-button-hover)] text-[var(--text-primary)]";
 
+// Alias of iconButtonClass — kept for backwards compatibility
 export const smallIconButtonClass =
   "filmwave-icon-button filmwave-icon-button-plain";
 
@@ -15,16 +17,20 @@ export const primaryPillButtonClass = `${pillButtonClass} bg-[var(--text-primary
 export const secondaryPillButtonClass = `${pillButtonClass} border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
 
 export const dangerButtonClass =
-  "danger-action text-[var(--danger)] hover:text-[var(--danger)]";
+  "text-[var(--danger)] hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]";
 
-export const borderedIconButtonClass =
-  "filmwave-icon-button";
+// Bordered icon button (border + bg-secondary) — uses the filmwave-icon-button global class
+export const borderedIconButtonClass = "filmwave-icon-button";
 
-export const borderedIconButton9Class =
-  "filmwave-icon-button";
+// Alias of borderedIconButtonClass — kept for backwards compatibility
+export const borderedIconButton9Class = "filmwave-icon-button";
 
 export const backPillButtonClass =
   "inline-flex h-8 cursor-pointer items-center gap-2 rounded-md border border-[var(--border)] bg-transparent px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
+
+// Header nav links and similar navigation items
+export const navLinkClass =
+  "flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
 
 export const modalTitleClass =
   "min-w-0 font-[family-name:var(--font-instrument-sans)] text-[24px] font-medium tracking-[-0.045em] text-[var(--text-primary)]";
@@ -33,10 +39,10 @@ export const modalFieldLabelClass =
   "mb-1.5 block text-[11px] font-medium text-[var(--text-muted)]";
 
 export const modalInputClass =
-  "h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:cursor-default disabled:opacity-70";
+  "h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
 
 export const modalTextareaClass =
-  "w-full resize-none rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:cursor-default disabled:opacity-70";
+  "w-full resize-none rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
 
 export const modalCoverButtonClass =
   "h-8 cursor-pointer rounded-none border border-[var(--border)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70";
@@ -48,7 +54,9 @@ export const modalCancelButtonClass = `${modalActionButtonClass} text-[var(--tex
 
 export const modalPrimaryButtonClass = `${modalActionButtonClass} font-[family-name:var(--font-instrument-sans)] min-w-[112px] bg-[var(--text-primary)] font-semibold text-[var(--bg-primary)] hover:opacity-80`;
 
-export const modalDeleteButtonClass = `${modalActionButtonClass} ${dangerButtonClass} px-0`;
+// Danger/delete button for modal footers
+export const modalDeleteButtonClass =
+  "flex h-9 cursor-pointer items-center justify-center rounded-none px-3 text-xs font-medium text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] disabled:cursor-default disabled:opacity-70";
 
 export const modalIconCloseButtonClass = iconButtonClass;
 
