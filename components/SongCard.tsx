@@ -477,34 +477,40 @@ export default function SongCard({
         </div>
       </div>
 
-      <AddToPlaylistModal
-        isOpen={playlistModalOpen}
-        song={song}
-        onClose={() => setPlaylistModalOpen(false)}
-      />
+      {playlistModalOpen && (
+        <AddToPlaylistModal
+          isOpen={playlistModalOpen}
+          song={song}
+          onClose={() => setPlaylistModalOpen(false)}
+        />
+      )}
 
-      <AddToProjectModal
-        isOpen={projectModalOpen}
-        song={song}
-        onClose={() => setProjectModalOpen(false)}
-      />
+      {projectModalOpen && (
+        <AddToProjectModal
+          isOpen={projectModalOpen}
+          song={song}
+          onClose={() => setProjectModalOpen(false)}
+        />
+      )}
 
-      <CreatePlaylistModal
-        isOpen={createPlaylistOpen}
-        name={newPlaylistName}
-        coverPreview={newPlaylistCoverPreview}
-        isCreating={isCreatingPlaylist}
-        onNameChange={setNewPlaylistName}
-        onCoverPreviewChange={setNewPlaylistCoverPreview}
-        onCreate={handleCreatePlaylist}
-        onClose={() => {
-          if (isCreatingPlaylist) return;
+      {createPlaylistOpen && (
+        <CreatePlaylistModal
+          isOpen={createPlaylistOpen}
+          name={newPlaylistName}
+          coverPreview={newPlaylistCoverPreview}
+          isCreating={isCreatingPlaylist}
+          onNameChange={setNewPlaylistName}
+          onCoverPreviewChange={setNewPlaylistCoverPreview}
+          onCreate={handleCreatePlaylist}
+          onClose={() => {
+            if (isCreatingPlaylist) return;
 
-          setNewPlaylistName("");
-          setNewPlaylistCoverPreview(null);
-          setCreatePlaylistOpen(false);
-        }}
-      />
+            setNewPlaylistName("");
+            setNewPlaylistCoverPreview(null);
+            setCreatePlaylistOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }
