@@ -4,8 +4,8 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-      <style>{`
-        main .min-h-\[320px\].rounded-\[18px\] {
+      <style jsx global>{`
+        .music-page-banner {
           background-size: 100% 100%, 100% 100%, cover !important;
         }
       `}</style>
