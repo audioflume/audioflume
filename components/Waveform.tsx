@@ -281,8 +281,7 @@ export default function Waveform({
   }, []);
 
   const seekToProgress = (progress: number) => {
-    const isSameSong = currentSongIdRef.current === song.id;
-    const shouldPlay = isPlayingRef.current || !isSameSong;
+    const shouldPlay = isPlayingRef.current;
 
     progressRef.current = progress;
     redraw();
