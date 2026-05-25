@@ -566,6 +566,7 @@ export default function MusicPage() {
               label="Build"
               options={BUILD_OPTIONS}
               selected={selectedBuilds}
+              onChange={setSelectedBuilds}
             />
 
             <BPMFilter value={bpmValue} onChange={setBpmValue} />
