@@ -8,6 +8,8 @@ import {
   useState,
   useCallback,
   useEffect,
+  useMemo,
+  useSyncExternalStore,
   ReactNode,
 } from "react";
 
@@ -41,6 +43,16 @@ type PlayerBroadcastMessage =
       tabId: string;
     };
 
+type PlayerProgressSnapshot = {
+  currentTime: number;
+  duration: number;
+};
+
+type PlayerProgressStore = {
+  subscribe: (listener: () => void) => () => void;
+  getSnapshot: () => PlayerProgressSnapshot;
+};
+
 type PlayerContextType = {
   currentSong: Song | null;
   isPlaying: boolean;
@@ -57,6 +69,7 @@ type PlayerContextType = {
 };
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
+const PlayerProgressContext = createContext<PlayerProgressStore | null>(null);
 
 const PLAYER_STORAGE_KEY = "filmwave-player-state";
 const CLOSE_PLAYER_EVENT = "filmwave:close-player";
@@ -145,6 +158,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const currentSongRef = useRef<Song | null>(null);
   const currentTimeRef = useRef(0);
   const durationRef = useRef(0);
+  const progressSnapshotRef = useRef<PlayerProgressSnapshot>({
+    currentTime: 0,
+    duration: 0,
+  });
+  const progressSubscribersRef = useRef<Set<() => void>>(new Set());
   const queueRef = useRef<Song[]>([]);
   const playRequestIdRef = useRef(0);
   const channelRef = useRef<BroadcastChannel | null>(null);
@@ -159,8 +177,36 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+
+  const emitProgressUpdate = useCallback(() => {
+    progressSnapshotRef.current = {
+      currentTime: currentTimeRef.current,
+      duration: durationRef.current,
+    };
+
+    progressSubscribersRef.current.forEach((listener) => listener());
+  }, []);
+
+  const subscribeToProgress = useCallback((listener: () => void) => {
+    progressSubscribersRef.current.add(listener);
+
+    return () => {
+      progressSubscribersRef.current.delete(listener);
+    };
+  }, []);
+
+  const getProgressSnapshot = useCallback(
+    () => progressSnapshotRef.current,
+    [],
+  );
+
+  const progressStore = useMemo<PlayerProgressStore>(
+    () => ({
+      subscribe: subscribeToProgress,
+      getSnapshot: getProgressSnapshot,
+    }),
+    [getProgressSnapshot, subscribeToProgress],
+  );
 
   const postPlayerMessage = useCallback((message: PlayerBroadcastMessage) => {
     channelRef.current?.postMessage(message);
@@ -188,15 +234,21 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     });
   }, [postPlayerMessage]);
 
-  const setCurrentTimeState = useCallback((value: number) => {
-    currentTimeRef.current = value;
-    setCurrentTime(value);
-  }, []);
+  const setCurrentTimeState = useCallback(
+    (value: number) => {
+      currentTimeRef.current = value;
+      emitProgressUpdate();
+    },
+    [emitProgressUpdate],
+  );
 
-  const setDurationState = useCallback((value: number) => {
-    durationRef.current = value;
-    setDuration(value);
-  }, []);
+  const setDurationState = useCallback(
+    (value: number) => {
+      durationRef.current = value;
+      emitProgressUpdate();
+    },
+    [emitProgressUpdate],
+  );
 
   function getAudio(): HTMLAudioElement {
     if (!audioRef.current) {
@@ -214,16 +266,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setIsPlaying(false);
       });
 
-      // stalled fires when the browser has stopped receiving data for ~3 seconds
-      // while the audio element wants to play. We seek to the current position
-      // to force the browser to re-request the stream from the CDN.
       audio.addEventListener("stalled", () => {
         const stalledTime = audio.currentTime;
 
         if (audio.paused) return;
 
         window.setTimeout(() => {
-          // Only attempt recovery if we're still stuck at the same position
           if (audio.paused) return;
           if (audio.currentTime !== stalledTime) return;
 
@@ -280,8 +328,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setCurrentTimeState(audio.currentTime);
         setDurationState(audio.duration);
 
-        // Throttle localStorage writes — avoid serializing the full song object
-        // (including waveformPeaks) on every timeupdate tick (~4x per second).
         const now = Date.now();
         if (
           currentSongRef.current &&
@@ -309,8 +355,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       });
 
       audio.addEventListener("error", () => {
-        // Audio decode / network errors are normal in a music player.
-        // Use warn so this doesn't trigger the Next.js error overlay.
         if (audio.error) {
           console.warn(
             `[Player] Audio error — code: ${audio.error.code}, message: ${audio.error.message}`,
@@ -337,10 +381,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         const desiredTime = currentTimeRef.current;
         audio.src = current.audioUrl;
 
-        // Only restore a saved position when actually loading a new source.
-        // When called after seekTo(), audio.currentTime is already set correctly —
-        // applying it again cancels the in-progress browser seek and restarts it,
-        // causing the perceived lag when clicking the waveform.
         if (desiredTime > 0) {
           const applyTime = () => {
             if (!audio.duration || !isFinite(audio.duration)) return;
@@ -387,7 +427,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     audio.pause();
     setIsPlaying(false);
 
-    // Write current position immediately on pause
     if (currentSongRef.current) {
       lastStorageWriteTimeRef.current = Date.now();
       writeStoredPlayerState({
@@ -419,18 +458,18 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     currentSongRef.current = null;
     currentTimeRef.current = 0;
     durationRef.current = 0;
+    progressSnapshotRef.current = { currentTime: 0, duration: 0 };
     remoteOwnerTabIdRef.current = null;
 
     setCurrentSong(null);
     setIsPlaying(false);
     setRemotePlayingInAnotherTab(false);
-    setCurrentTime(0);
-    setDuration(0);
+    emitProgressUpdate();
 
     window.localStorage.removeItem(PLAYER_STORAGE_KEY);
 
     postPlayerMessage({ type: "closed", tabId: tabIdRef.current });
-  }, [postPlayerMessage]);
+  }, [emitProgressUpdate, postPlayerMessage]);
 
   const playSongDirectly = useCallback(
     (song: Song, shouldPlay?: boolean) => {
@@ -596,8 +635,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   navigateTrackRef.current = navigateTrack;
 
-  // Clear any stale player state from a previous session on mount.
-  // We intentionally don't auto-restore — the user should choose to play.
   useEffect(() => {
     window.localStorage.removeItem(PLAYER_STORAGE_KEY);
   }, []);
@@ -752,24 +789,50 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [safePause, safePlay]);
 
+  const playerValue = useMemo(() => {
+    const value = {
+      currentSong,
+      isPlaying,
+      remotePlayingInAnotherTab,
+      togglePlayPause,
+      seekTo,
+      registerWaveform,
+      unregisterWaveform,
+      setQueue,
+      navigateTrack,
+      closePlayer,
+    } as PlayerContextType;
+
+    Object.defineProperties(value, {
+      currentTime: {
+        enumerable: true,
+        get: () => currentTimeRef.current,
+      },
+      duration: {
+        enumerable: true,
+        get: () => durationRef.current,
+      },
+    });
+
+    return value;
+  }, [
+    currentSong,
+    isPlaying,
+    remotePlayingInAnotherTab,
+    togglePlayPause,
+    seekTo,
+    registerWaveform,
+    unregisterWaveform,
+    setQueue,
+    navigateTrack,
+    closePlayer,
+  ]);
+
   return (
-    <PlayerContext.Provider
-      value={{
-        currentSong,
-        isPlaying,
-        remotePlayingInAnotherTab,
-        currentTime,
-        duration,
-        togglePlayPause,
-        seekTo,
-        registerWaveform,
-        unregisterWaveform,
-        setQueue,
-        navigateTrack,
-        closePlayer,
-      }}
-    >
-      {children}
+    <PlayerContext.Provider value={playerValue}>
+      <PlayerProgressContext.Provider value={progressStore}>
+        {children}
+      </PlayerProgressContext.Provider>
     </PlayerContext.Provider>
   );
 }
@@ -780,4 +843,17 @@ export function usePlayer() {
     throw new Error("usePlayer must be used within PlayerProvider");
   }
   return ctx;
+}
+
+export function usePlayerProgress() {
+  const store = useContext(PlayerProgressContext);
+  if (!store) {
+    throw new Error("usePlayerProgress must be used within PlayerProvider");
+  }
+
+  return useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
+  );
 }
