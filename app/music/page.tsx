@@ -566,7 +566,6 @@ export default function MusicPage() {
               label="Build"
               options={BUILD_OPTIONS}
               selected={selectedBuilds}
-              onChange={setSelectedBuilds}
             />
 
             <BPMFilter value={bpmValue} onChange={setBpmValue} />
@@ -648,11 +647,7 @@ export default function MusicPage() {
           </div>
         </div>
 
-        <div
-          className={`flex flex-wrap items-center gap-1.5 bg-[var(--bg-primary)] px-8 pt-4 ${
-            hasActiveFilters ? "pb-4" : "pb-0"
-          }`}
-        >
+        <div className="flex flex-wrap items-center gap-1.5 bg-[var(--bg-primary)] px-8 pt-4 pb-0">
           {QUICK_FILTERS.map((filter) => {
             const isActive = selectedGenres.includes(filter);
 
@@ -771,7 +766,12 @@ export default function MusicPage() {
           </div>
         </div>
 
-        <div className="w-full border-t border-[var(--border-subtle)]">
+        <div
+          className="w-full border-t border-[var(--border-subtle)] transition-[margin-top] duration-300 ease-out"
+          style={{
+            marginTop: hasActiveFilters ? "16px" : "0px",
+          }}
+        >
           {showSongSkeleton && <SkeletonSongList />}
 
           {songsError && !songsLoading && (
