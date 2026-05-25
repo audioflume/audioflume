@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import Waveform from "./Waveform";
 import Image from "next/image";
@@ -154,7 +155,6 @@ export default function SongCard({
   playlistId,
   projectId,
   highlightedEditPointTypes = [],
-  showEditPointMarkers,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
@@ -170,6 +170,7 @@ export default function SongCard({
 }) {
   const { togglePlayPause, currentSong, isPlaying } = usePlayer();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { showEditPointMarkers } = useUserPreferences();
   const { playlists, setPlaylists } = usePlaylists();
 
   const [cardWidth, setCardWidth] = useState(0);
