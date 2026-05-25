@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { usePlayer } from "@/context/PlayerContext";
+import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 import FailedIcon from "@/components/icons/FailedIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import NextTrackIcon from "@/components/icons/NextTrackIcon";
@@ -87,13 +87,12 @@ export default function AdminMusicPlayer() {
   const {
     currentSong,
     isPlaying,
-    currentTime,
-    duration,
     togglePlayPause,
     navigateTrack,
     seekTo,
     closePlayer,
   } = usePlayer();
+  const { currentTime, duration } = usePlayerProgress();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
