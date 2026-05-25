@@ -125,7 +125,7 @@ function isPlayerBroadcastMessage(
 }
 
 function getSongSource(song: Song) {
-  return song.playbackUrl || song.audioUrl || song.hlsUrl;
+  return song.hlsUrl || song.playbackUrl || song.audioUrl;
 }
 
 function canPlayNativeHls(audio: HTMLAudioElement) {
