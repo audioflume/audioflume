@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePlayer } from "@/context/PlayerContext";
-import { modalTitleClass } from "@/components/uiClasses";
+import { iconButtonClass, modalTitleClass } from "@/components/uiClasses";
 
 type ModalShellProps = {
   isOpen: boolean;
@@ -52,9 +52,7 @@ export default function ModalShell({
     ? `min(${maxHeight}, calc(100vh - 128px))`
     : `min(${maxHeight}, calc(100vh - 64px))`;
 
-  const defaultBodyClassName = footer
-    ? "px-5 pb-2"
-    : "px-5 pb-5";
+  const defaultBodyClassName = footer ? "px-5 pb-2" : "px-5 pb-5";
 
   const modal = (
     <div
@@ -86,10 +84,11 @@ export default function ModalShell({
           )}
         </div>
 
+        {/* Uses iconButtonClass (filmwave-icon-button-plain) for consistent borderless icon button styling */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-none border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+          className={`absolute right-4 top-4 z-10 ${iconButtonClass}`}
           aria-label={closeLabel}
         >
           <svg
