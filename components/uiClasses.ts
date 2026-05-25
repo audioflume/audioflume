@@ -1,4 +1,4 @@
-// Plain (borderless/transparent) icon button — used for inline icon actions
+// Plain (borderless/transparent, keeps 9px border-radius) — for inline icon actions
 export const iconButtonClass =
   "filmwave-icon-button filmwave-icon-button-plain";
 
@@ -8,6 +8,10 @@ export const iconButtonActiveClass =
 // Alias of iconButtonClass — kept for backwards compatibility
 export const smallIconButtonClass =
   "filmwave-icon-button filmwave-icon-button-plain";
+
+// Flat (square corners, no border, subtler hover) — for modal close buttons and similar
+export const flatIconButtonClass =
+  "filmwave-icon-button filmwave-icon-button-flat";
 
 export const pillButtonClass =
   "inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-full px-4 text-xs font-semibold transition";
@@ -28,7 +32,7 @@ export const borderedIconButton9Class = "filmwave-icon-button";
 export const backPillButtonClass =
   "inline-flex h-8 cursor-pointer items-center gap-2 rounded-md border border-[var(--border)] bg-transparent px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
 
-// Header nav links and similar navigation items
+// Navigation link — used in Header and similar nav bars
 export const navLinkClass =
   "flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
 
@@ -58,7 +62,7 @@ export const modalPrimaryButtonClass = `${modalActionButtonClass} font-[family-n
 export const modalDeleteButtonClass =
   "flex h-9 cursor-pointer items-center justify-center rounded-none px-3 text-xs font-medium text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] disabled:cursor-default disabled:opacity-70";
 
-export const modalIconCloseButtonClass = iconButtonClass;
+export const modalIconCloseButtonClass = flatIconButtonClass;
 
 export const squareButtonClass =
   "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none border border-[var(--border)] bg-transparent px-2.5 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40";
