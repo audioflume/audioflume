@@ -8,6 +8,7 @@ import DashboardIcon from "@/components/icons/DashboardIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import Logo from "@/components/Logo";
 import UserMenu from "@/components/UserMenu";
+import { navLinkClass } from "@/components/uiClasses";
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
@@ -212,18 +213,12 @@ export default function Header() {
         </Link>
 
         <div className="relative flex h-full items-center gap-1" ref={menuRef}>
-          <Link
-            href="/discover"
-            className="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-          >
+          <Link href="/discover" className={navLinkClass}>
             <DashboardIcon />
             Discover
           </Link>
 
-          <Link
-            href="/curated-playlists"
-            className="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-          >
+          <Link href="/curated-playlists" className={navLinkClass}>
             <PlaylistIcon size={13} />
             Playlists
           </Link>
@@ -254,7 +249,6 @@ export default function Header() {
             </span>
 
             <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--bg-secondary)] text-[10px] font-semibold leading-none text-[var(--text-primary)]">
-              {" "}
               {profileImage ? (
                 <img
                   src={profileImage}
