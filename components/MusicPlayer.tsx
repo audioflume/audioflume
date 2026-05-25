@@ -9,7 +9,7 @@ import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
-import { usePlayer } from "@/context/PlayerContext";
+import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import {
   CUE_POINT_FILTER_SELECTION_EVENT,
@@ -48,6 +48,14 @@ const MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT =
 
 type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
 
+type PlayerCanvasDrawCache = {
+  cssWidth: number;
+  cssHeight: number;
+  dpr: number;
+  progressColor: string;
+  inactiveColor: string;
+};
+
 function formatTime(s: number) {
   if (!s || !isFinite(s)) return "0:00";
   const m = Math.floor(s / 60);
@@ -57,6 +65,25 @@ function formatTime(s: number) {
 
 function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+function getWaveformColors() {
+  const styles = getComputedStyle(document.documentElement);
+
+  return {
+    progressColor: styles.getPropertyValue("--waveform-progress").trim(),
+    inactiveColor: styles.getPropertyValue("--waveform-color").trim(),
+  };
+}
+
+function createPlayerCanvasDrawCache(): PlayerCanvasDrawCache {
+  return {
+    cssWidth: 0,
+    cssHeight: 0,
+    dpr: 0,
+    progressColor: "",
+    inactiveColor: "",
+  };
 }
 
 function isGlobalCueMarkerPage(pathname: string) {
@@ -185,13 +212,12 @@ export default function MusicPlayer() {
     currentSong,
     isPlaying,
     remotePlayingInAnotherTab,
-    currentTime,
-    duration,
     togglePlayPause,
     navigateTrack,
     seekTo,
     closePlayer,
   } = usePlayer();
+  const { currentTime, duration } = usePlayerProgress();
 
   const pathname = usePathname();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -199,11 +225,13 @@ export default function MusicPlayer() {
 
   const playerRef = useRef<HTMLDivElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
-  // Canvas for the player bar waveform — avoids reconciling 260+ divs on every timeupdate
   const playerCanvasRef = useRef<HTMLCanvasElement>(null);
-  // Refs keep the latest waveform data accessible to the stable drawPlayerCanvas callback
   const waveformBarsRef = useRef<number[]>([]);
   const waveformProgressRef = useRef(0);
+  const playerCanvasAnimationFrameRef = useRef<number | null>(null);
+  const playerCanvasDrawCacheRef = useRef<PlayerCanvasDrawCache>(
+    createPlayerCanvasDrawCache(),
+  );
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
@@ -288,10 +316,7 @@ export default function MusicPlayer() {
     [peaks, waveformWidth],
   );
 
-  // Stable canvas draw function that reads from refs, never from stale closures.
-  // This means it can safely be called from a MutationObserver (for theme changes)
-  // without needing to be recreated every render.
-  const drawPlayerCanvas = useCallback(() => {
+  const drawPlayerCanvas = useCallback((forceResize = false) => {
     const canvas = playerCanvasRef.current;
     const bars = waveformBarsRef.current;
     const prog = waveformProgressRef.current;
@@ -304,8 +329,21 @@ export default function MusicPlayer() {
 
     if (w < 4) return;
 
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
+    const cache = playerCanvasDrawCacheRef.current;
+    const sizeChanged =
+      forceResize || cache.cssWidth !== w || cache.cssHeight !== h || cache.dpr !== dpr;
+
+    if (sizeChanged) {
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      cache.cssWidth = w;
+      cache.cssHeight = h;
+      cache.dpr = dpr;
+    }
+
+    if (!cache.progressColor || !cache.inactiveColor) {
+      Object.assign(cache, getWaveformColors());
+    }
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -313,34 +351,48 @@ export default function MusicPlayer() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
-    // Always read CSS variables fresh — this is what makes dark/light mode work
-    const styles = getComputedStyle(document.documentElement);
-    const progressColor = styles.getPropertyValue("--waveform-progress").trim();
-    const inactiveColor = styles.getPropertyValue("--waveform-color").trim();
-
     const midY = h / 2;
     const progressBars = Math.floor(bars.length * prog);
 
     for (let i = 0; i < bars.length; i++) {
       const x = i * BAR_TOTAL;
-      ctx.fillStyle = i < progressBars ? progressColor : inactiveColor;
+      ctx.fillStyle = i < progressBars ? cache.progressColor : cache.inactiveColor;
       ctx.fillRect(x, midY - bars[i] / 2, BAR_WIDTH, bars[i]);
     }
   }, []);
 
-  // Sync refs and redraw whenever waveform data or playback progress changes
+  const schedulePlayerCanvasDraw = useCallback((forceResize = false) => {
+    if (playerCanvasAnimationFrameRef.current != null) return;
+
+    playerCanvasAnimationFrameRef.current = window.requestAnimationFrame(() => {
+      playerCanvasAnimationFrameRef.current = null;
+      drawPlayerCanvas(forceResize);
+    });
+  }, [drawPlayerCanvas]);
+
   useEffect(() => {
     waveformBarsRef.current = waveformBars;
     waveformProgressRef.current = progress;
-    drawPlayerCanvas();
-  }, [waveformBars, progress, drawPlayerCanvas]);
+    schedulePlayerCanvasDraw();
+  }, [waveformBars, progress, schedulePlayerCanvasDraw]);
 
-  // Redraw when the theme changes (class toggled on <html> by ThemeContext)
   useEffect(() => {
-    const observer = new MutationObserver(drawPlayerCanvas);
+    const observer = new MutationObserver(() => {
+      playerCanvasDrawCacheRef.current = {
+        ...playerCanvasDrawCacheRef.current,
+        ...getWaveformColors(),
+      };
+      schedulePlayerCanvasDraw();
+    });
     observer.observe(document.documentElement, { attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, [drawPlayerCanvas]);
+    return () => {
+      observer.disconnect();
+      if (playerCanvasAnimationFrameRef.current != null) {
+        window.cancelAnimationFrame(playerCanvasAnimationFrameRef.current);
+        playerCanvasAnimationFrameRef.current = null;
+      }
+    };
+  }, [schedulePlayerCanvasDraw]);
 
   const gridTemplateColumns = [
     `${songInfoWidth}px`,
@@ -453,6 +505,7 @@ export default function MusicPlayer() {
     if (!waveform) return;
     const updateWidth = () => {
       setWaveformWidth(Math.floor(waveform.getBoundingClientRect().width));
+      schedulePlayerCanvasDraw(true);
     };
     updateWidth();
     const ro = new ResizeObserver(updateWidth);
@@ -464,7 +517,7 @@ export default function MusicPlayer() {
       window.removeEventListener("resize", updateWidth);
       window.clearTimeout(t);
     };
-  }, [currentSong?.id, showWaveform]);
+  }, [currentSong?.id, showWaveform, schedulePlayerCanvasDraw]);
 
   useLayoutEffect(() => {
     if (!moreOpen) return;
@@ -509,18 +562,17 @@ export default function MusicPlayer() {
     if (!rect.width) return;
     const nextProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
 
-    // Update the canvas immediately for instant visual feedback —
-    // same pattern as Waveform.tsx which updates progressRef before contextSeekTo.
-    // The audio seek happens asynchronously; the visual should not wait for it.
     waveformProgressRef.current = nextProgress;
-    drawPlayerCanvas();
-
     seekTo(currentSong, nextProgress, isPlaying);
+    schedulePlayerCanvasDraw();
   };
 
   const jumpToCuePoint = (marker: CuePointMarker | null) => {
     if (!marker || !currentSong.duration) return;
-    seekTo(currentSong, Math.max(0, Math.min(1, marker.time / currentSong.duration)), isPlaying);
+    const nextProgress = Math.max(0, Math.min(1, marker.time / currentSong.duration));
+    waveformProgressRef.current = nextProgress;
+    seekTo(currentSong, nextProgress, isPlaying);
+    schedulePlayerCanvasDraw();
   };
 
   async function handleCreatePlaylist() {
@@ -558,7 +610,6 @@ export default function MusicPlayer() {
         className="fixed bottom-0 left-0 right-0 z-[45] grid h-[72px] items-center justify-between overflow-visible border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4"
         style={{ gridTemplateColumns, columnGap: `${mainGap}px` }}
       >
-        {/* Song info */}
         <div className="flex min-w-0 items-center gap-3">
           {currentSong.coverArt ? (
             <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-none">
@@ -590,7 +641,6 @@ export default function MusicPlayer() {
           </div>
         </div>
 
-        {/* Playback controls */}
         <div className="flex flex-shrink-0 items-center justify-center gap-[clamp(12px,2vw,24px)]">
           <button
             type="button"
@@ -620,7 +670,6 @@ export default function MusicPlayer() {
           </button>
         </div>
 
-        {/* Progress / waveform */}
         {(showWaveform || showCompactTime) && (
           <div
             className="relative z-10 flex min-w-0 items-center justify-center overflow-visible"
@@ -641,7 +690,6 @@ export default function MusicPlayer() {
                   className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-visible"
                   onClick={handleWaveformClick}
                 >
-                  {/* Cue point markers */}
                   {visibleCuePoints.map((marker) => {
                     const markerType = getMarkerType(marker);
                     const label = marker.label || getEditPointFilterLabel(markerType);
@@ -674,9 +722,6 @@ export default function MusicPlayer() {
                     );
                   })}
 
-                  {/* Canvas waveform — replaces 260+ div elements.
-                      Redraws via useEffect on progress/data change,
-                      and via MutationObserver on theme (dark/light) change. */}
                   <canvas
                     ref={playerCanvasRef}
                     className="relative z-10 h-full w-full"
@@ -723,7 +768,6 @@ export default function MusicPlayer() {
           </div>
         )}
 
-        {/* Key / BPM */}
         {showRightMeta && (
           <div
             className="flex flex-shrink-0 items-center text-xs text-[var(--text-secondary)]"
@@ -734,7 +778,6 @@ export default function MusicPlayer() {
           </div>
         )}
 
-        {/* Actions */}
         <div
           className="flex flex-shrink-0 items-center justify-end gap-0.5"
           style={{ marginLeft: `${metaToActionsGap - mainGap}px` }}
