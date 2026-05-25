@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 import {
+  modalDeleteButtonClass,
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
@@ -69,7 +70,7 @@ export default function EditProjectModal({
             type="button"
             onClick={onDelete}
             disabled={isSaving}
-            className="flex h-9 cursor-pointer items-center justify-center rounded-none px-3 text-xs font-medium text-[var(--danger)] transition hover:bg-[rgba(220,88,79,0.1)] disabled:cursor-default disabled:opacity-70"
+            className={modalDeleteButtonClass}
           >
             Delete
           </button>
