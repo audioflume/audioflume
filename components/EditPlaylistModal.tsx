@@ -3,11 +3,13 @@
 import { useRef } from "react";
 import ModalShell from "@/components/ModalShell";
 import {
+  modalDeleteButtonClass,
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
 } from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import UploadIcon from "@/components/icons/UploadIcon";
 
 type Playlist = {
   id: number;
@@ -27,38 +29,6 @@ type EditPlaylistModalProps = {
   onDelete: () => void;
   onClose: () => void;
 };
-
-function UploadIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M12 16V4"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M7.5 8.5L12 4L16.5 8.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5 20H19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 export default function EditPlaylistModal({
   isOpen,
@@ -121,7 +91,7 @@ export default function EditPlaylistModal({
             type="button"
             disabled={isSaving}
             onClick={onDelete}
-            className="flex h-9 cursor-pointer items-center justify-center rounded-none px-3 text-xs font-medium text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] disabled:cursor-default disabled:opacity-70"
+            className={modalDeleteButtonClass}
           >
             Delete
           </button>
