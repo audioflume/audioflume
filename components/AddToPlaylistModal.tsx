@@ -2,7 +2,6 @@
 
 import type { Playlist, Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import Toast from "@/components/Toast";
 import ModalShell from "@/components/ModalShell";
@@ -96,12 +95,11 @@ function PlaylistThumbnail({
       }}
     >
       {cover ? (
-        <Image
+        // Use <img> instead of Next/Image so any URL source works (R2, Unsplash, etc.)
+        <img
           src={cover}
           alt={playlist.name}
-          fill
-          sizes="36px"
-          className="object-cover"
+          className="h-full w-full object-cover"
         />
       ) : (
         <span className="flex h-full w-full items-center justify-center text-[var(--text-secondary)]">
@@ -122,12 +120,10 @@ function SongPreview({ song }: { song: Song }) {
       <div className="flex min-w-0 items-center justify-center gap-2">
         <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
           {cover ? (
-            <Image
+            <img
               src={cover}
               alt={song.title}
-              fill
-              sizes="24px"
-              className="object-cover"
+              className="h-full w-full object-cover"
             />
           ) : (
             <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
