@@ -1,4 +1,7 @@
-import { iconButtonClass } from "@/components/uiClasses";
+import {
+  iconButtonActiveClass,
+  iconButtonClass,
+} from "@/components/uiClasses";
 
 export default function IconButton({
   children,
@@ -16,9 +19,7 @@ export default function IconButton({
       type="button"
       aria-label={label}
       onClick={onClick}
-      className={`${iconButtonClass} ${
-        active ? "text-[var(--text-primary)]" : ""
-      }`}
+      className={`${iconButtonClass} ${active ? iconButtonActiveClass : ""}`}
     >
       {children}
     </button>
