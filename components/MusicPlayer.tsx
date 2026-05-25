@@ -5,6 +5,7 @@ import AddToProjectModal from "@/components/AddToProjectModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import IconButton from "@/components/IconButton";
 import DownloadIcon from "@/components/icons/DownloadIcon";
+import EditPointsIcon from "@/components/icons/EditPointsIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
@@ -22,7 +23,6 @@ import {
   getSongCuePointMarkers,
 } from "@/lib/editPointUtils";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -43,8 +43,6 @@ const KEY_MIN_WIDTH = 560;
 const BPM_MIN_WIDTH = 700;
 const PREVIOUS_CUE_SKIP_BACK_SECONDS = 1.35;
 const NEXT_CUE_SKIP_AHEAD_SECONDS = 0.25;
-const MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT =
-  "filmwave:music-library-marker-visibility";
 
 type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
 
@@ -84,24 +82,6 @@ function createPlayerCanvasDrawCache(): PlayerCanvasDrawCache {
     progressColor: "",
     inactiveColor: "",
   };
-}
-
-function isGlobalCueMarkerPage(pathname: string) {
-  return (
-    pathname === "/favorites" ||
-    /^\/playlists\/[^/]+$/.test(pathname) ||
-    /^\/curated-playlists\/[^/]+$/.test(pathname)
-  );
-}
-
-function getMusicLibraryMarkerVisibilityFromEvent(event: Event) {
-  const markerEvent = event as Event & { visible?: boolean };
-  const customEvent = event as CustomEvent<{ visible?: boolean }>;
-  if (typeof markerEvent.visible === "boolean") return markerEvent.visible;
-  if (typeof customEvent.detail?.visible === "boolean") {
-    return customEvent.detail.visible;
-  }
-  return null;
 }
 
 function normalizePeaks(peaks: number[]) {
@@ -219,9 +199,8 @@ export default function MusicPlayer() {
   } = usePlayer();
   const { currentTime, duration } = usePlayerProgress();
 
-  const pathname = usePathname();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showEditPointMarkers } = useUserPreferences();
+  const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
 
   const playerRef = useRef<HTMLDivElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
@@ -245,18 +224,12 @@ export default function MusicPlayer() {
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<string | null>(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
-  const [musicLibraryShowEditPointMarkers, setMusicLibraryShowEditPointMarkers] = useState(false);
   const [selectedCuePointTypes, setSelectedCuePointTypes] = useState<string[]>(
     () => getStoredCuePointFilterSelection(),
   );
   const [moreMenuPosition, setMoreMenuPosition] = useState({ top: 0, left: 0 });
 
-  const effectiveShowEditPointMarkers =
-    pathname === "/music"
-      ? musicLibraryShowEditPointMarkers
-      : isGlobalCueMarkerPage(pathname)
-        ? showEditPointMarkers
-        : false;
+  const effectiveShowEditPointMarkers = showEditPointMarkers;
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
   const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
   const showCompactTime = !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
@@ -424,22 +397,6 @@ export default function MusicPlayer() {
     const top = Math.max(viewportPadding, triggerRect.top - menuRect.height - playerGap);
     setMoreMenuPosition({ top, left });
   }, []);
-
-  useEffect(() => {
-    if (pathname !== "/music") {
-      setMusicLibraryShowEditPointMarkers(false);
-      return;
-    }
-    const syncMusicLibraryMarkerVisibility = (event: Event) => {
-      const visible = getMusicLibraryMarkerVisibilityFromEvent(event);
-      if (visible === null) return;
-      setMusicLibraryShowEditPointMarkers(visible);
-    };
-    window.addEventListener(MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT, syncMusicLibraryMarkerVisibility);
-    return () => {
-      window.removeEventListener(MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT, syncMusicLibraryMarkerVisibility);
-    };
-  }, [pathname]);
 
   useEffect(() => {
     const syncCuePointFilterSelection = (event?: Event) => {
@@ -788,6 +745,14 @@ export default function MusicPlayer() {
             onClick={() => toggleFavorite(currentSong)}
           >
             <HeartIcon filled={favorited} />
+          </IconButton>
+
+          <IconButton
+            label={showEditPointMarkers ? "Hide cue markers" : "Show cue markers"}
+            active={showEditPointMarkers}
+            onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
+          >
+            <EditPointsIcon />
           </IconButton>
 
           <button
