@@ -75,10 +75,8 @@ const PLAYER_STORAGE_KEY = "filmwave-player-state";
 const CLOSE_PLAYER_EVENT = "filmwave:close-player";
 const PLAYER_BROADCAST_CHANNEL = "filmwave-player";
 
-// Throttle localStorage writes during playback — the song object includes
-// waveformPeaks which is large. We write immediately on song change / pause,
-// and at most once every 5 s while playing.
 const STORAGE_WRITE_INTERVAL_MS = 5000;
+const DEBUG_PLAYER_AUDIO = true;
 
 function createTabId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -170,6 +168,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const remoteOwnerTabIdRef = useRef<string | null>(null);
   const lastBroadcastTimeRef = useRef(0);
   const lastStorageWriteTimeRef = useRef(0);
+  const lastDebugLogTimeRef = useRef(0);
 
   const playSongDirectlyRef = useRef<(song: Song, shouldPlay?: boolean) => void>(() => {});
   const navigateTrackRef = useRef<(direction: "prev" | "next", forcePlay?: boolean) => void>(() => {});
@@ -177,6 +176,56 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] = useState(false);
+
+  const getAudioDebugPayload = useCallback(
+    (audio: HTMLAudioElement, eventName: string, extra: Record<string, unknown> = {}) => {
+      const current = currentSongRef.current;
+      return {
+        event: eventName,
+        songId: current?.id,
+        title: current?.title,
+        artist: current?.artist,
+        audioUrl: current?.audioUrl,
+        currentTime: audio.currentTime,
+        duration: Number.isFinite(audio.duration) ? audio.duration : null,
+        readyState: audio.readyState,
+        networkState: audio.networkState,
+        paused: audio.paused,
+        seeking: audio.seeking,
+        src: audio.currentSrc || audio.src,
+        buffered: Array.from({ length: audio.buffered.length }, (_, index) => ({
+          start: audio.buffered.start(index),
+          end: audio.buffered.end(index),
+        })),
+        ...extra,
+      };
+    },
+    [],
+  );
+
+  const logAudioDebug = useCallback(
+    (
+      eventName: string,
+      audio: HTMLAudioElement,
+      extra: Record<string, unknown> = {},
+      force = false,
+    ) => {
+      if (!DEBUG_PLAYER_AUDIO) return;
+
+      const now = Date.now();
+      if (!force && now - lastDebugLogTimeRef.current < 250) return;
+      lastDebugLogTimeRef.current = now;
+
+      console.warn(
+        `[PlayerDebug] ${eventName} ${JSON.stringify(
+          getAudioDebugPayload(audio, eventName, extra),
+          null,
+          2,
+        )}`,
+      );
+    },
+    [getAudioDebugPayload],
+  );
 
   const emitProgressUpdate = useCallback(() => {
     progressSnapshotRef.current = {
@@ -259,15 +308,38 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         remoteOwnerTabIdRef.current = null;
         setRemotePlayingInAnotherTab(false);
         setIsPlaying(true);
+        logAudioDebug("play", audio);
         postPlayingState();
       });
 
       audio.addEventListener("pause", () => {
+        logAudioDebug("pause", audio);
         setIsPlaying(false);
+      });
+
+      audio.addEventListener("seeking", () => {
+        logAudioDebug("seeking", audio, {}, true);
+      });
+
+      audio.addEventListener("seeked", () => {
+        logAudioDebug("seeked", audio, {}, true);
+      });
+
+      audio.addEventListener("waiting", () => {
+        logAudioDebug("waiting", audio, {}, true);
+      });
+
+      audio.addEventListener("canplay", () => {
+        logAudioDebug("canplay", audio);
+      });
+
+      audio.addEventListener("playing", () => {
+        logAudioDebug("playing", audio, {}, true);
       });
 
       audio.addEventListener("stalled", () => {
         const stalledTime = audio.currentTime;
+        logAudioDebug("stalled", audio, { stalledTime }, true);
 
         if (audio.paused) return;
 
@@ -287,6 +359,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       audio.addEventListener("ended", () => {
         const current = currentSongRef.current;
         const queue = queueRef.current;
+        logAudioDebug("ended", audio, {}, true);
 
         if (!current || !queue.length) {
           setCurrentTimeState(0);
@@ -352,26 +425,21 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         if (isFinite(audio.duration)) {
           setDurationState(audio.duration);
         }
+        logAudioDebug("loadedmetadata", audio, {}, true);
       });
 
       audio.addEventListener("error", () => {
-        const current = currentSongRef.current;
+        const error = audio.error;
 
-        if (audio.error) {
-          console.warn("[Player] Audio error", {
-            code: audio.error.code,
-            message: audio.error.message,
-            songId: current?.id,
-            title: current?.title,
-            artist: current?.artist,
-            audioUrl: current?.audioUrl,
-            readyState: audio.readyState,
-            networkState: audio.networkState,
-            currentTime: audio.currentTime,
-            duration: audio.duration,
-            src: audio.currentSrc,
-          });
-        }
+        logAudioDebug(
+          "error",
+          audio,
+          {
+            errorCode: error?.code,
+            errorMessage: error?.message,
+          },
+          true,
+        );
 
         setIsPlaying(false);
         postPausedState();
@@ -393,6 +461,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (needsSource) {
         const desiredTime = currentTimeRef.current;
         audio.src = current.audioUrl;
+        logAudioDebug("source-change", audio, { desiredTime }, true);
 
         if (desiredTime > 0) {
           const applyTime = () => {
@@ -413,7 +482,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       return true;
     },
-    [setCurrentTimeState, setDurationState],
+    [logAudioDebug, setCurrentTimeState, setDurationState],
   );
 
   const safePlay = useCallback(() => {
@@ -428,11 +497,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     audio.play().catch((err) => {
       if (requestId !== playRequestIdRef.current) return;
       if (isInterruptedPlayError(err)) return;
-      console.warn("[Player] play() rejected:", err);
+      logAudioDebug("play-rejected", audio, { error: String(err) }, true);
       setIsPlaying(false);
       postPausedState();
     });
-  }, [ensureAudioSourceForCurrentSong, postPausedState]);
+  }, [ensureAudioSourceForCurrentSong, logAudioDebug, postPausedState]);
 
   const safePause = useCallback(() => {
     playRequestIdRef.current += 1;
@@ -504,6 +573,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       setCurrentSong(song);
       setCurrentTimeState(0);
       setDurationState(song.duration || 0);
+      logAudioDebug("play-song-directly", audio, { nextSongId: song.id, shouldPlay }, true);
 
       lastStorageWriteTimeRef.current = Date.now();
       writeStoredPlayerState({
@@ -516,7 +586,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         safePlay();
       }
     },
-    [safePlay, setCurrentTimeState, setDurationState],
+    [logAudioDebug, safePlay, setCurrentTimeState, setDurationState],
   );
 
   playSongDirectlyRef.current = playSongDirectly;
@@ -562,6 +632,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         currentSongRef.current = song;
         setCurrentSong(song);
         setDurationState(song.duration || 0);
+        logAudioDebug("seek-source-change", audio, { nextSongId: song.id, safeProgress }, true);
 
         lastStorageWriteTimeRef.current = Date.now();
         writeStoredPlayerState({
@@ -575,6 +646,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         if (!audio.duration || !isFinite(audio.duration)) return;
 
         const targetTime = safeProgress * audio.duration;
+        const beforeTime = audio.currentTime;
+
+        logAudioDebug(
+          "seek-request",
+          audio,
+          { beforeTime, targetTime, safeProgress, isSameSong, shouldPlay },
+          true,
+        );
 
         audio.currentTime = targetTime;
         setCurrentTimeState(targetTime);
@@ -604,7 +683,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [postPausedState, safePlay, setCurrentTimeState, setDurationState],
+    [logAudioDebug, postPausedState, safePlay, setCurrentTimeState, setDurationState],
   );
 
   const registerWaveform = useCallback(
