@@ -155,6 +155,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
   const activeSourceRef = useRef("");
+
+  // When a new HLS source is loading, we queue a play request so it fires
+  // as soon as the manifest is parsed — rather than calling play() before
+  // hls.js has any data ready, which causes the freeze on song switches.
+  const pendingPlayAfterManifestRef = useRef(false);
+
   const waveformsRef = useRef<Map<string, WaveformHandle>>(new Map());
   const currentSongRef = useRef<Song | null>(null);
   const currentTimeRef = useRef(0);
@@ -181,39 +187,93 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] = useState(false);
 
   const destroyHls = useCallback(() => {
+    pendingPlayAfterManifestRef.current = false;
     hlsRef.current?.destroy();
     hlsRef.current = null;
   }, []);
 
   const loadSongSource = useCallback(
-    (audio: HTMLAudioElement, song: Song) => {
+    (audio: HTMLAudioElement, song: Song, playAfterLoad = false) => {
       const nextSource = getSongSource(song);
-      if (!nextSource || activeSourceRef.current === nextSource) return;
+      if (!nextSource) return;
+
+      // If the source hasn't changed, don't reload — just play if requested.
+      if (activeSourceRef.current === nextSource) {
+        if (playAfterLoad && audio.paused) {
+          audio.play().catch((err) => {
+            if (!isInterruptedPlayError(err)) {
+              console.warn("[Player] play() rejected:", err);
+            }
+          });
+        }
+        return;
+      }
 
       activeSourceRef.current = nextSource;
       destroyHls();
 
       if (song.hlsUrl && nextSource === song.hlsUrl) {
+        // Safari: native HLS support — just set src directly
         if (canPlayNativeHls(audio)) {
           audio.src = song.hlsUrl;
+          if (playAfterLoad) {
+            audio.play().catch((err) => {
+              if (!isInterruptedPlayError(err)) {
+                console.warn("[Player] play() rejected:", err);
+              }
+            });
+          }
           return;
         }
 
+        // Chrome / Firefox: use hls.js
         if (Hls.isSupported()) {
           const hls = new Hls({
             lowLatencyMode: false,
             backBufferLength: 30,
+            // Start fetching the first segment as soon as the manifest arrives.
+            // This reduces the gap between manifest parsed and audio start.
+            maxBufferLength: 30,
+            startFragPrefetch: true,
           });
 
           hls.loadSource(song.hlsUrl);
           hls.attachMedia(audio);
           hlsRef.current = hls;
+
+          if (playAfterLoad) {
+            // Queue play — fire as soon as hls.js has parsed the manifest
+            // and knows what segments to fetch. Calling play() before this
+            // point causes the browser to stall waiting for data.
+            pendingPlayAfterManifestRef.current = true;
+
+            hls.once(Hls.Events.MANIFEST_PARSED, () => {
+              if (!pendingPlayAfterManifestRef.current) return;
+              pendingPlayAfterManifestRef.current = false;
+
+              audio.play().catch((err) => {
+                if (!isInterruptedPlayError(err)) {
+                  console.warn("[Player] play() rejected after manifest:", err);
+                }
+              });
+            });
+          }
+
           return;
         }
       }
 
+      // Fallback: plain URL (WAV / MP3 without HLS)
       audio.src = song.playbackUrl || song.audioUrl;
       activeSourceRef.current = audio.src;
+
+      if (playAfterLoad) {
+        audio.play().catch((err) => {
+          if (!isInterruptedPlayError(err)) {
+            console.warn("[Player] play() rejected:", err);
+          }
+        });
+      }
     },
     [destroyHls],
   );
@@ -292,24 +352,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     [emitProgressUpdate],
   );
 
-  const playAudio = useCallback(
-    (audio: HTMLAudioElement) => {
-      const requestId = ++playRequestIdRef.current;
-
-      remoteOwnerTabIdRef.current = null;
-      setRemotePlayingInAnotherTab(false);
-
-      audio.play().catch((err) => {
-        if (requestId !== playRequestIdRef.current) return;
-        if (isInterruptedPlayError(err)) return;
-        console.warn("[Player] play() rejected:", err);
-        setIsPlaying(false);
-        postPausedState();
-      });
-    },
-    [postPausedState],
-  );
-
   function getAudio(): HTMLAudioElement {
     if (!audioRef.current) {
       const audio = new Audio();
@@ -324,6 +366,22 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       audio.addEventListener("pause", () => {
         setIsPlaying(false);
+      });
+
+      audio.addEventListener("stalled", () => {
+        const stalledTime = audio.currentTime;
+        if (audio.paused) return;
+
+        window.setTimeout(() => {
+          if (audio.paused) return;
+          if (audio.currentTime !== stalledTime) return;
+          try {
+            audio.currentTime = stalledTime;
+            audio.play().catch(() => {});
+          } catch {
+            // Ignore
+          }
+        }, 1200);
       });
 
       audio.addEventListener("ended", () => {
@@ -412,44 +470,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     return audioRef.current;
   }
 
-  const ensureAudioSourceForCurrentSong = useCallback(
-    (audio: HTMLAudioElement) => {
-      const current = currentSongRef.current;
-      if (!current) return false;
-
-      const desiredTime = currentTimeRef.current;
-      const previousSource = activeSourceRef.current;
-      loadSongSource(audio, current);
-
-      if (previousSource !== activeSourceRef.current && desiredTime > 0) {
-        const applyTime = () => {
-          if (!audio.duration || !isFinite(audio.duration)) return;
-          const safeTime = Math.max(0, Math.min(desiredTime, audio.duration));
-          audio.currentTime = safeTime;
-          setCurrentTimeState(safeTime);
-          setDurationState(audio.duration);
-        };
-
-        if (audio.readyState >= 1) {
-          applyTime();
-        } else {
-          audio.addEventListener("loadedmetadata", applyTime, { once: true });
-        }
-      }
-
-      return true;
-    },
-    [loadSongSource, setCurrentTimeState, setDurationState],
-  );
-
   const safePlay = useCallback(() => {
     const audio = getAudio();
-    if (!ensureAudioSourceForCurrentSong(audio)) return;
-    playAudio(audio);
-  }, [ensureAudioSourceForCurrentSong, playAudio]);
+    const current = currentSongRef.current;
+    if (!current) return;
+
+    loadSongSource(audio, current, true);
+  }, [loadSongSource]);
 
   const safePause = useCallback(() => {
     playRequestIdRef.current += 1;
+    pendingPlayAfterManifestRef.current = false;
 
     const audio = getAudio();
     audio.pause();
@@ -506,26 +537,23 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       playRequestIdRef.current += 1;
       pendingSeekRequestIdRef.current += 1;
+      pendingPlayAfterManifestRef.current = false;
       remoteOwnerTabIdRef.current = null;
       setRemotePlayingInAnotherTab(false);
 
       const previousSong = currentSongRef.current;
-
       if (previousSong) {
         waveformsRef.current.get(previousSong.id)?.seekTo(0);
+      }
+
+      if (!audio.paused) {
+        audio.pause();
       }
 
       currentSongRef.current = song;
       setCurrentSong(song);
       setCurrentTimeState(0);
       setDurationState(song.duration || 0);
-
-      if (!audio.paused) {
-        audio.pause();
-      }
-
-      loadSongSource(audio, song);
-      audio.currentTime = 0;
 
       lastStorageWriteTimeRef.current = Date.now();
       writeStoredPlayerState({
@@ -534,11 +562,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         duration: song.duration || 0,
       });
 
-      if (wasPlaying) {
-        playAudio(audio);
-      }
+      // Pass wasPlaying so loadSongSource can queue play on MANIFEST_PARSED
+      // instead of calling play() before hls.js has any data ready.
+      loadSongSource(audio, song, wasPlaying);
     },
-    [loadSongSource, playAudio, setCurrentTimeState, setDurationState],
+    [loadSongSource, setCurrentTimeState, setDurationState],
   );
 
   playSongDirectlyRef.current = playSongDirectly;
@@ -576,9 +604,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       if (!isSameSong) {
         playRequestIdRef.current += 1;
+        pendingPlayAfterManifestRef.current = false;
 
         const previousSong = currentSongRef.current;
-
         if (previousSong) {
           waveformsRef.current.get(previousSong.id)?.seekTo(0);
         }
@@ -592,7 +620,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setIsPlaying(false);
         setCurrentTimeState(0);
         setDurationState(song.duration || 0);
-        loadSongSource(audio, song);
+        loadSongSource(audio, song, false);
 
         lastStorageWriteTimeRef.current = Date.now();
         writeStoredPlayerState({
@@ -623,7 +651,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
 
         if (shouldPlay) {
-          playAudio(audio);
+          // If already playing, setting currentTime is sufficient — the browser
+          // resumes automatically. Only call play() when transitioning from paused.
+          if (!audio.paused) {
+            postPlayingState();
+          } else {
+            audio.play().catch((err) => {
+              if (!isInterruptedPlayError(err)) {
+                console.warn("[Player] play() rejected after seek:", err);
+              }
+            });
+          }
         } else {
           postPausedState();
         }
@@ -635,7 +673,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [loadSongSource, playAudio, postPausedState, setCurrentTimeState, setDurationState],
+    [loadSongSource, postPausedState, postPlayingState, setCurrentTimeState, setDurationState],
   );
 
   const registerWaveform = useCallback(
@@ -718,6 +756,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (!audio.paused) {
         playRequestIdRef.current += 1;
         pendingSeekRequestIdRef.current += 1;
+        pendingPlayAfterManifestRef.current = false;
         audio.pause();
       }
 
@@ -728,7 +767,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
         currentSongRef.current = message.song;
         setCurrentSong(message.song);
-        loadSongSource(audio, message.song);
+        loadSongSource(audio, message.song, false);
       }
 
       const safeTime = Math.max(0, message.currentTime || 0);
