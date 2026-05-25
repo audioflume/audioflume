@@ -1,7 +1,7 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { usePlayer } from "@/context/PlayerContext";
+import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import { MusicGlyph, PlayPauseIcon } from "./ProjectBrowserGlyphs";
 
@@ -27,7 +27,8 @@ export default function ProjectSongFileCard({
   queueSongs: ProjectSong[];
   onContextMenu?: (event: MouseEvent<HTMLElement>, song: ProjectSong) => void;
 }) {
-  const { currentSong, isPlaying, currentTime, duration, togglePlayPause, setQueue } = usePlayer();
+  const { currentSong, isPlaying, togglePlayPause, setQueue } = usePlayer();
+  const { currentTime, duration } = usePlayerProgress();
   const isActive = currentSong?.id === song.id;
   const progress = isActive && duration > 0 ? Math.max(0, Math.min(1, currentTime / duration)) : 0;
   const progressDegrees = `${progress * 360}deg`;
