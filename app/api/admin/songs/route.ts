@@ -11,6 +11,8 @@ type SaveSongPayload = {
   key: string;
   duration: string;
   audioUrl: string;
+  playbackUrl?: string;
+  hlsUrl?: string;
   coverUrl?: string | null;
   stemUrls?: string[];
   waveformPeaks: string;
@@ -70,6 +72,8 @@ function buildSupabaseSongRow(body: SaveSongPayload) {
     key: body.key || null,
     duration: durationToSeconds(body.duration),
     audio_url: body.audioUrl.trim(),
+    playback_url: body.playbackUrl?.trim() || null,
+    hls_url: body.hlsUrl?.trim() || null,
     cover_url: body.coverUrl || null,
     stems: body.stemUrls?.length ? body.stemUrls.join("\n") : null,
     waveform_peaks: body.waveformPeaks || "[]",
