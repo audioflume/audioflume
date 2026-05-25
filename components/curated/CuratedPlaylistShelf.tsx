@@ -539,14 +539,6 @@ export default function CuratedPlaylistShelf({
         </div>
 
         <div className="group/playlist-shelf relative -mx-8 overflow-hidden">
-          {canScrollPrev && (
-            <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 hidden w-12 bg-gradient-to-r from-[var(--bg-primary)] to-transparent opacity-0 transition-opacity duration-150 group-hover/playlist-shelf:opacity-60 sm:block" />
-          )}
-
-          {canScrollNext && (
-            <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 hidden w-16 bg-gradient-to-l from-[var(--bg-primary)] to-transparent opacity-0 transition-opacity duration-150 group-hover/playlist-shelf:opacity-60 sm:block" />
-          )}
-
           <button
             type="button"
             onClick={() => scrollPlaylists("prev")}
