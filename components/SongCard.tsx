@@ -385,6 +385,8 @@ export default function SongCard({
                   )}
                 >
                   {stems.map((stem) => (
+                    // filmwave-dropdown-shell global handles display, padding, colors, hover.
+                    // Only truncate is added here to handle long stem names.
                     <a
                       key={`${stem.name}-${stem.url}`}
                       href={stem.url}
@@ -392,7 +394,7 @@ export default function SongCard({
                       target="_blank"
                       rel="noreferrer"
                       onClick={() => setStemsOpen(false)}
-                      className="block min-h-[38px] truncate px-3 py-2 text-[12px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+                      className="truncate"
                     >
                       {stem.name}
                     </a>
