@@ -3,24 +3,18 @@
 import type { Song } from "@/lib/types";
 import {
   createContext,
-  useContext,
-  useRef,
-  useState,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
+  useRef,
+  useState,
   useSyncExternalStore,
   ReactNode,
 } from "react";
 
 type WaveformHandle = {
   seekTo: (progress: number) => void;
-};
-
-type StoredPlayerState = {
-  currentSong: Song;
-  currentTime: number;
-  duration: number;
 };
 
 type PlayerBroadcastMessage =
@@ -74,19 +68,20 @@ const PlayerProgressContext = createContext<PlayerProgressStore | null>(null);
 const PLAYER_STORAGE_KEY = "filmwave-player-state";
 const CLOSE_PLAYER_EVENT = "filmwave:close-player";
 const PLAYER_BROADCAST_CHANNEL = "filmwave-player";
-
 const STORAGE_WRITE_INTERVAL_MS = 5000;
-const DEBUG_PLAYER_AUDIO = true;
+const DEBUG_PLAYER_AUDIO = false;
 
 function createTabId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
   }
+
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 function isInterruptedPlayError(err: unknown) {
   if (!(err instanceof DOMException)) return false;
+
   return (
     err.name === "AbortError" ||
     err.message.includes("interrupted by a call to pause") ||
@@ -96,7 +91,9 @@ function isInterruptedPlayError(err: unknown) {
 
 function isValidStoredSong(value: unknown): value is Song {
   if (!value || typeof value !== "object") return false;
+
   const song = value as Partial<Song>;
+
   return (
     typeof song.id === "string" &&
     typeof song.title === "string" &&
@@ -111,9 +108,12 @@ function isPlayerBroadcastMessage(
   value: unknown,
 ): value is PlayerBroadcastMessage {
   if (!value || typeof value !== "object") return false;
+
   const message = value as Partial<PlayerBroadcastMessage>;
+
   if (typeof message.tabId !== "string") return false;
   if (message.type === "closed") return true;
+
   if (message.type === "paused") {
     return (
       (typeof message.songId === "string" || message.songId === null) &&
@@ -121,6 +121,7 @@ function isPlayerBroadcastMessage(
       typeof message.duration === "number"
     );
   }
+
   if (message.type === "playing") {
     return (
       isValidStoredSong(message.song) &&
@@ -128,6 +129,7 @@ function isPlayerBroadcastMessage(
       typeof message.duration === "number"
     );
   }
+
   return false;
 }
 
@@ -171,16 +173,26 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const lastStorageWriteTimeRef = useRef(0);
   const lastDebugLogTimeRef = useRef(0);
 
-  const playSongDirectlyRef = useRef<(song: Song, shouldPlay?: boolean) => void>(() => {});
-  const navigateTrackRef = useRef<(direction: "prev" | "next", forcePlay?: boolean) => void>(() => {});
+  const playSongDirectlyRef = useRef<
+    (song: Song, shouldPlay?: boolean) => void
+  >(() => {});
+  const navigateTrackRef = useRef<
+    (direction: "prev" | "next", forcePlay?: boolean) => void
+  >(() => {});
 
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] = useState(false);
+  const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] =
+    useState(false);
 
   const getAudioDebugPayload = useCallback(
-    (audio: HTMLAudioElement, eventName: string, extra: Record<string, unknown> = {}) => {
+    (
+      audio: HTMLAudioElement,
+      eventName: string,
+      extra: Record<string, unknown> = {},
+    ) => {
       const current = currentSongRef.current;
+
       return {
         event: eventName,
         songId: current?.id,
@@ -265,6 +277,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const postPlayingState = useCallback(() => {
     const current = currentSongRef.current;
     if (!current) return;
+
     postPlayerMessage({
       type: "playing",
       tabId: tabIdRef.current,
@@ -298,6 +311,25 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       emitProgressUpdate();
     },
     [emitProgressUpdate],
+  );
+
+  const playAudio = useCallback(
+    (audio: HTMLAudioElement) => {
+      const requestId = ++playRequestIdRef.current;
+
+      remoteOwnerTabIdRef.current = null;
+      setRemotePlayingInAnotherTab(false);
+
+      audio.play().catch((err) => {
+        if (requestId !== playRequestIdRef.current) return;
+        if (isInterruptedPlayError(err)) return;
+
+        logAudioDebug("play-rejected", audio, { error: String(err) }, true);
+        setIsPlaying(false);
+        postPausedState();
+      });
+    },
+    [logAudioDebug, postPausedState],
   );
 
   function getAudio(): HTMLAudioElement {
@@ -341,20 +373,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       audio.addEventListener("stalled", () => {
         const stalledTime = audio.currentTime;
         logAudioDebug("stalled", audio, { stalledTime }, true);
-
-        if (audio.paused) return;
-
-        window.setTimeout(() => {
-          if (audio.paused) return;
-          if (audio.currentTime !== stalledTime) return;
-
-          try {
-            audio.currentTime = stalledTime;
-            audio.play().catch(() => {});
-          } catch {
-            // Ignore seek errors during stall recovery
-          }
-        }, 1200);
       });
 
       audio.addEventListener("ended", () => {
@@ -462,12 +480,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (needsSource) {
         const desiredTime = currentTimeRef.current;
         audio.src = current.audioUrl;
-        audio.load();
         logAudioDebug("source-change", audio, { desiredTime }, true);
 
         if (desiredTime > 0) {
           const applyTime = () => {
             if (!audio.duration || !isFinite(audio.duration)) return;
+
             const safeTime = Math.max(0, Math.min(desiredTime, audio.duration));
             audio.currentTime = safeTime;
             setCurrentTimeState(safeTime);
@@ -489,24 +507,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   const safePlay = useCallback(() => {
     const audio = getAudio();
-    const requestId = ++playRequestIdRef.current;
 
     if (!ensureAudioSourceForCurrentSong(audio)) return;
 
-    remoteOwnerTabIdRef.current = null;
-    setRemotePlayingInAnotherTab(false);
-
-    audio.play().catch((err) => {
-      if (requestId !== playRequestIdRef.current) return;
-      if (isInterruptedPlayError(err)) return;
-      logAudioDebug("play-rejected", audio, { error: String(err) }, true);
-      setIsPlaying(false);
-      postPausedState();
-    });
-  }, [ensureAudioSourceForCurrentSong, logAudioDebug, postPausedState]);
+    playAudio(audio);
+  }, [ensureAudioSourceForCurrentSong, playAudio]);
 
   const safePause = useCallback(() => {
     playRequestIdRef.current += 1;
+
     const audio = getAudio();
     audio.pause();
     setIsPlaying(false);
@@ -566,23 +575,33 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       remoteOwnerTabIdRef.current = null;
       setRemotePlayingInAnotherTab(false);
 
-      if (currentSongRef.current) {
-        waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0);
-      }
+      const previousSong = currentSongRef.current;
 
-      if (!audio.paused) {
-        audio.pause();
+      if (previousSong) {
+        waveformsRef.current.get(previousSong.id)?.seekTo(0);
       }
-
-      audio.src = song.audioUrl;
-      audio.currentTime = 0;
-      audio.load();
 
       currentSongRef.current = song;
       setCurrentSong(song);
       setCurrentTimeState(0);
       setDurationState(song.duration || 0);
-      logAudioDebug("play-song-directly", audio, { nextSongId: song.id, shouldPlay }, true);
+
+      if (!audio.paused) {
+        audio.pause();
+      }
+
+      if (audio.src !== song.audioUrl) {
+        audio.src = song.audioUrl;
+      }
+
+      audio.currentTime = 0;
+
+      logAudioDebug(
+        "play-song-directly",
+        audio,
+        { nextSongId: song.id, shouldPlay },
+        true,
+      );
 
       lastStorageWriteTimeRef.current = Date.now();
       writeStoredPlayerState({
@@ -592,10 +611,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       });
 
       if (wasPlaying) {
-        safePlay();
+        playAudio(audio);
       }
     },
-    [logAudioDebug, safePlay, setCurrentTimeState, setDurationState],
+    [logAudioDebug, playAudio, setCurrentTimeState, setDurationState],
   );
 
   playSongDirectlyRef.current = playSongDirectly;
@@ -623,7 +642,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const audio = getAudio();
       const isSameSong = currentSongRef.current?.id === song.id;
       const seekRequestId = ++pendingSeekRequestIdRef.current;
-
       const safeProgress = Number.isFinite(progress)
         ? Math.max(0, Math.min(1, progress))
         : 0;
@@ -634,23 +652,32 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (!isSameSong) {
         playRequestIdRef.current += 1;
 
-        if (currentSongRef.current) {
-          waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0);
+        const previousSong = currentSongRef.current;
+
+        if (previousSong) {
+          waveformsRef.current.get(previousSong.id)?.seekTo(0);
         }
 
         if (!audio.paused) {
           audio.pause();
         }
 
-        audio.src = song.audioUrl;
-        audio.load();
-
         currentSongRef.current = song;
         setCurrentSong(song);
         setIsPlaying(false);
         setCurrentTimeState(0);
         setDurationState(song.duration || 0);
-        logAudioDebug("seek-source-change", audio, { nextSongId: song.id, safeProgress }, true);
+
+        if (audio.src !== song.audioUrl) {
+          audio.src = song.audioUrl;
+        }
+
+        logAudioDebug(
+          "seek-source-change",
+          audio,
+          { nextSongId: song.id, safeProgress },
+          true,
+        );
 
         lastStorageWriteTimeRef.current = Date.now();
         writeStoredPlayerState({
@@ -689,9 +716,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
 
         if (shouldPlay) {
-          if (!isSameSong || audio.paused) {
-            safePlay();
-          }
+          playAudio(audio);
         } else {
           postPausedState();
         }
@@ -703,7 +728,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [logAudioDebug, postPausedState, safePlay, setCurrentTimeState, setDurationState],
+    [logAudioDebug, playAudio, postPausedState, setCurrentTimeState, setDurationState],
   );
 
   const registerWaveform = useCallback(
@@ -793,13 +818,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         if (existing) {
           waveformsRef.current.get(existing.id)?.seekTo(0);
         }
-        audio.src = message.song.audioUrl;
+
         currentSongRef.current = message.song;
         setCurrentSong(message.song);
-      }
 
-      if (!audio.src || audio.src !== message.song.audioUrl) {
-        audio.src = message.song.audioUrl;
+        if (audio.src !== message.song.audioUrl) {
+          audio.src = message.song.audioUrl;
+        }
       }
 
       const safeTime = Math.max(0, message.currentTime || 0);
@@ -878,6 +903,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (e.code === "Space") {
         e.preventDefault();
         const audio = getAudio();
+
         if (currentSongRef.current) {
           if (audio.paused) {
             safePlay();
@@ -952,14 +978,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
 export function usePlayer() {
   const ctx = useContext(PlayerContext);
+
   if (!ctx) {
     throw new Error("usePlayer must be used within PlayerProvider");
   }
+
   return ctx;
 }
 
 export function usePlayerProgress() {
   const store = useContext(PlayerProgressContext);
+
   if (!store) {
     throw new Error("usePlayerProgress must be used within PlayerProvider");
   }
