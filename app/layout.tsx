@@ -32,6 +32,10 @@ const instrumentSans = Instrument_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
+// R2 public CDN hostname — used for preconnect and dns-prefetch hints.
+// Keeps a single source of truth if the bucket URL ever changes.
+const R2_CDN_ORIGIN = "https://pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev";
+
 export const metadata: Metadata = {
   title: "Filmwave",
   description: "Royalty-free music for filmmakers",
@@ -53,6 +57,19 @@ export default async function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={htmlClassName} suppressHydrationWarning>
+        <head>
+          {/*
+           * Preconnect to the R2 CDN so the TCP + TLS handshake is already
+           * complete by the time the user clicks any song. Without this, every
+           * new song play pays a 100–300 ms connection setup cost before the
+           * first byte of audio arrives.
+           *
+           * preconnect   → full connection (DNS + TCP + TLS), kept warm
+           * dns-prefetch → DNS-only fallback for browsers that drop preconnect
+           */}
+          <link rel="preconnect" href={R2_CDN_ORIGIN} crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${instrumentSans.variable} antialiased${
             sidebarCollapsed ? " sidebar-collapsed" : ""
