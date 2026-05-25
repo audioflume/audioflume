@@ -27,6 +27,10 @@ function getWaveformColors() {
   };
 }
 
+function getSongSource(song: Song) {
+  return song.hlsUrl || song.playbackUrl || song.audioUrl;
+}
+
 function drawWaveform(
   canvas: HTMLCanvasElement,
   peaks: number[],
@@ -133,6 +137,8 @@ export default function Waveform({
   const progressRef = useRef(0);
   const peaksRef = useRef<number[]>([]);
   const animationFrameRef = useRef<number | null>(null);
+  const preloadedAudioRef = useRef<HTMLAudioElement | null>(null);
+  const preloadedSourceRef = useRef("");
   const drawCacheRef = useRef<WaveformDrawCache>({
     cssWidth: 0,
     cssHeight: 0,
@@ -201,6 +207,20 @@ export default function Waveform({
     });
   };
 
+  const preloadSongSource = () => {
+    const source = getSongSource(song);
+
+    if (!source || preloadedSourceRef.current === source) return;
+
+    const audio = new Audio();
+    audio.preload = "auto";
+    audio.src = source;
+    audio.load();
+
+    preloadedAudioRef.current = audio;
+    preloadedSourceRef.current = source;
+  };
+
   useEffect(() => {
     isPlayingRef.current = isPlaying;
     currentSongIdRef.current = currentSong?.id ?? null;
@@ -261,9 +281,12 @@ export default function Waveform({
   }, []);
 
   const seekToProgress = (progress: number) => {
+    const isSameSong = currentSongIdRef.current === song.id;
+    const shouldPlay = isPlayingRef.current || !isSameSong;
+
     progressRef.current = progress;
-    contextSeekTo(song, progress, isPlayingRef.current);
-    scheduleRedraw();
+    redraw();
+    contextSeekTo(song, progress, shouldPlay);
   };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -288,6 +311,7 @@ export default function Waveform({
       className={`relative flex-1 cursor-pointer overflow-visible ${
         compact ? "h-[14px]" : "h-6"
       }`}
+      onPointerEnter={preloadSongSource}
       onPointerDown={handlePointerDown}
     >
       {shouldShowEditPointMarkers &&
