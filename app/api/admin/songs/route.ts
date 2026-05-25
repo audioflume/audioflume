@@ -64,16 +64,47 @@ function cleanStringArray(value: unknown) {
   return value.map((item) => String(item).trim()).filter(Boolean);
 }
 
+function inferStreamingUrls(audioUrl: string) {
+  try {
+    const url = new URL(audioUrl);
+    const pathParts = url.pathname.split("/").filter(Boolean);
+    const audioIndex = pathParts.indexOf("audio");
+
+    if (audioIndex <= 1) {
+      return {
+        playbackUrl: "",
+        hlsUrl: "",
+      };
+    }
+
+    const basePath = pathParts.slice(0, audioIndex).join("/");
+    const origin = `${url.origin}/`;
+
+    return {
+      playbackUrl: `${origin}${basePath}/playback/preview.mp3`,
+      hlsUrl: `${origin}${basePath}/hls/index.m3u8`,
+    };
+  } catch {
+    return {
+      playbackUrl: "",
+      hlsUrl: "",
+    };
+  }
+}
+
 function buildSupabaseSongRow(body: SaveSongPayload) {
+  const audioUrl = body.audioUrl.trim();
+  const inferredStreamingUrls = inferStreamingUrls(audioUrl);
+
   return {
     title: body.title.trim(),
     artist: body.artist.trim(),
     bpm: body.bpm ? Number(body.bpm) : null,
     key: body.key || null,
     duration: durationToSeconds(body.duration),
-    audio_url: body.audioUrl.trim(),
-    playback_url: body.playbackUrl?.trim() || null,
-    hls_url: body.hlsUrl?.trim() || null,
+    audio_url: audioUrl,
+    playback_url: body.playbackUrl?.trim() || inferredStreamingUrls.playbackUrl || null,
+    hls_url: body.hlsUrl?.trim() || inferredStreamingUrls.hlsUrl || null,
     cover_url: body.coverUrl || null,
     stems: body.stemUrls?.length ? body.stemUrls.join("\n") : null,
     waveform_peaks: body.waveformPeaks || "[]",
