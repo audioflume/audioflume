@@ -1,6 +1,7 @@
 "use client";
 
 import type { Song } from "@/lib/types";
+import Hls from "hls.js";
 import {
   createContext,
   useCallback,
@@ -123,6 +124,14 @@ function isPlayerBroadcastMessage(
   return false;
 }
 
+function getSongSource(song: Song) {
+  return song.hlsUrl || song.playbackUrl || song.audioUrl;
+}
+
+function canPlayNativeHls(audio: HTMLAudioElement) {
+  return Boolean(audio.canPlayType("application/vnd.apple.mpegurl"));
+}
+
 function writeStoredPlayerState({
   currentSong,
   currentTime,
@@ -144,6 +153,8 @@ function writeStoredPlayerState({
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hlsRef = useRef<Hls | null>(null);
+  const activeSourceRef = useRef("");
   const waveformsRef = useRef<Map<string, WaveformHandle>>(new Map());
   const currentSongRef = useRef<Song | null>(null);
   const currentTimeRef = useRef(0);
@@ -162,19 +173,57 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const lastBroadcastTimeRef = useRef(0);
   const lastStorageWriteTimeRef = useRef(0);
 
-  // When true, the audio element is paused ONLY to allow a seek to complete cleanly.
-  // The pause event listener checks this flag and suppresses the isPlaying=false
-  // state update so the UI stays in "playing" state during the seek.
-  // Must be reset in safePause, playSongDirectly, and closePlayer so that
-  // any interruption of a seek-in-progress correctly falls back to paused state.
-  const seekingForPlayRef = useRef(false);
-
   const playSongDirectlyRef = useRef<(song: Song, shouldPlay?: boolean) => void>(() => {});
   const navigateTrackRef = useRef<(direction: "prev" | "next", forcePlay?: boolean) => void>(() => {});
 
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] = useState(false);
+
+  const destroyHls = useCallback(() => {
+    hlsRef.current?.destroy();
+    hlsRef.current = null;
+  }, []);
+
+  const loadSongSource = useCallback(
+    (audio: HTMLAudioElement, song: Song) => {
+      const nextSource = getSongSource(song);
+      if (!nextSource || activeSourceRef.current === nextSource) return;
+
+      activeSourceRef.current = nextSource;
+      destroyHls();
+
+      if (song.hlsUrl && nextSource === song.hlsUrl) {
+        if (canPlayNativeHls(audio)) {
+          audio.src = song.hlsUrl;
+          return;
+        }
+
+        if (Hls.isSupported()) {
+          const hls = new Hls({
+            lowLatencyMode: false,
+            backBufferLength: 30,
+          });
+
+          hls.loadSource(song.hlsUrl);
+          hls.attachMedia(audio);
+          hlsRef.current = hls;
+          return;
+        }
+      }
+
+      audio.src = song.playbackUrl || song.audioUrl;
+      activeSourceRef.current = audio.src;
+    },
+    [destroyHls],
+  );
+
+  const clearAudioSource = useCallback((audio: HTMLAudioElement) => {
+    destroyHls();
+    activeSourceRef.current = "";
+    audio.removeAttribute("src");
+    audio.load();
+  }, [destroyHls]);
 
   const emitProgressUpdate = useCallback(() => {
     progressSnapshotRef.current = {
@@ -274,12 +323,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       });
 
       audio.addEventListener("pause", () => {
-        // Suppress isPlaying state change when we intentionally paused the
-        // audio element mid-seek to allow clean CDN data fetching.
-        // seekingForPlayRef is reset to false once the seeked event fires
-        // and playback resumes, or if the seek is interrupted by safePause /
-        // playSongDirectly / closePlayer.
-        if (seekingForPlayRef.current) return;
         setIsPlaying(false);
       });
 
@@ -354,14 +397,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       });
 
       audio.addEventListener("error", () => {
-        // Audio decode/network errors are normal in a music player.
-        // warn keeps this out of the Next.js dev overlay.
         if (audio.error) {
           console.warn(
             `[Player] Audio error — code: ${audio.error.code}, message: ${audio.error.message}`,
           );
         }
-        seekingForPlayRef.current = false;
         setIsPlaying(false);
         postPausedState();
       });
@@ -377,35 +417,29 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const current = currentSongRef.current;
       if (!current) return false;
 
-      const needsSource = !audio.src || audio.src !== current.audioUrl;
+      const desiredTime = currentTimeRef.current;
+      const previousSource = activeSourceRef.current;
+      loadSongSource(audio, current);
 
-      if (needsSource) {
-        const desiredTime = currentTimeRef.current;
-        audio.src = current.audioUrl;
+      if (previousSource !== activeSourceRef.current && desiredTime > 0) {
+        const applyTime = () => {
+          if (!audio.duration || !isFinite(audio.duration)) return;
+          const safeTime = Math.max(0, Math.min(desiredTime, audio.duration));
+          audio.currentTime = safeTime;
+          setCurrentTimeState(safeTime);
+          setDurationState(audio.duration);
+        };
 
-        // Only restore a saved position when loading a new source.
-        // After seekTo(), audio.currentTime is already correct — applying it
-        // again would cancel the in-progress browser seek and restart it.
-        if (desiredTime > 0) {
-          const applyTime = () => {
-            if (!audio.duration || !isFinite(audio.duration)) return;
-            const safeTime = Math.max(0, Math.min(desiredTime, audio.duration));
-            audio.currentTime = safeTime;
-            setCurrentTimeState(safeTime);
-            setDurationState(audio.duration);
-          };
-
-          if (audio.readyState >= 1) {
-            applyTime();
-          } else {
-            audio.addEventListener("loadedmetadata", applyTime, { once: true });
-          }
+        if (audio.readyState >= 1) {
+          applyTime();
+        } else {
+          audio.addEventListener("loadedmetadata", applyTime, { once: true });
         }
       }
 
       return true;
     },
-    [setCurrentTimeState, setDurationState],
+    [loadSongSource, setCurrentTimeState, setDurationState],
   );
 
   const safePlay = useCallback(() => {
@@ -415,9 +449,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, [ensureAudioSourceForCurrentSong, playAudio]);
 
   const safePause = useCallback(() => {
-    // Cancel any in-progress seek-for-play so the next pause event
-    // correctly sets isPlaying = false.
-    seekingForPlayRef.current = false;
     playRequestIdRef.current += 1;
 
     const audio = getAudio();
@@ -437,7 +468,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, [postPausedState]);
 
   const closePlayer = useCallback(() => {
-    seekingForPlayRef.current = false;
     playRequestIdRef.current += 1;
     pendingSeekRequestIdRef.current += 1;
 
@@ -446,8 +476,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
     if (audio) {
       audio.pause();
-      audio.removeAttribute("src");
-      audio.load();
+      clearAudioSource(audio);
     }
 
     if (current) {
@@ -468,15 +497,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     window.localStorage.removeItem(PLAYER_STORAGE_KEY);
 
     postPlayerMessage({ type: "closed", tabId: tabIdRef.current });
-  }, [emitProgressUpdate, postPlayerMessage]);
+  }, [clearAudioSource, emitProgressUpdate, postPlayerMessage]);
 
   const playSongDirectly = useCallback(
     (song: Song, shouldPlay?: boolean) => {
       const audio = getAudio();
       const wasPlaying = shouldPlay !== undefined ? shouldPlay : !audio.paused;
 
-      // Cancel any in-progress seek-for-play before changing songs.
-      seekingForPlayRef.current = false;
       playRequestIdRef.current += 1;
       pendingSeekRequestIdRef.current += 1;
       remoteOwnerTabIdRef.current = null;
@@ -497,10 +524,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.pause();
       }
 
-      if (audio.src !== song.audioUrl) {
-        audio.src = song.audioUrl;
-      }
-
+      loadSongSource(audio, song);
       audio.currentTime = 0;
 
       lastStorageWriteTimeRef.current = Date.now();
@@ -514,7 +538,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         playAudio(audio);
       }
     },
-    [playAudio, setCurrentTimeState, setDurationState],
+    [loadSongSource, playAudio, setCurrentTimeState, setDurationState],
   );
 
   playSongDirectlyRef.current = playSongDirectly;
@@ -543,10 +567,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const isSameSong = currentSongRef.current?.id === song.id;
       const seekRequestId = ++pendingSeekRequestIdRef.current;
 
-      // Reset the seek flag at the start of every new seek so that if a previous
-      // seek-for-play was in progress, the stale flag doesn't affect this one.
-      seekingForPlayRef.current = false;
-
       const safeProgress = Number.isFinite(progress)
         ? Math.max(0, Math.min(1, progress))
         : 0;
@@ -572,10 +592,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setIsPlaying(false);
         setCurrentTimeState(0);
         setDurationState(song.duration || 0);
-
-        if (audio.src !== song.audioUrl) {
-          audio.src = song.audioUrl;
-        }
+        loadSongSource(audio, song);
 
         lastStorageWriteTimeRef.current = Date.now();
         writeStoredPlayerState({
@@ -592,8 +609,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
         const targetTime = safeProgress * audio.duration;
 
-        // Update progress refs immediately so waveforms snap to the new
-        // position before the audio element has completed its seek.
+        audio.currentTime = targetTime;
         setCurrentTimeState(targetTime);
         setDurationState(audio.duration);
 
@@ -607,51 +623,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
 
         if (shouldPlay) {
-          if (!audio.paused) {
-            // ─── THE CORE FIX ──────────────────────────────────────────────
-            // When seeking while playing, we pause first, then set currentTime,
-            // then wait for the 'seeked' event (which fires once the browser
-            // has fetched enough CDN data to start playing from the new
-            // position), and only then call play().
-            //
-            // Without this: audio.currentTime triggers a CDN Range request
-            // while the audio pipeline is still running. Audio output starves
-            // while competing with the network fetch → the "choke and freeze"
-            // the user experiences.
-            //
-            // With this: audio stops cleanly (brief silence), browser fetches
-            // data exclusively, seeked fires → clean instantaneous resume.
-            // This is the standard pattern used by Spotify, SoundCloud, etc.
-            // ──────────────────────────────────────────────────────────────
-            seekingForPlayRef.current = true;
-            audio.pause(); // pause event fires, but suppressed by seekingForPlayRef
-
-            audio.currentTime = targetTime;
-
-            const onSeeked = () => {
-              // Always clear the flag — even if we don't resume.
-              seekingForPlayRef.current = false;
-
-              if (seekRequestId !== pendingSeekRequestIdRef.current) return;
-              if (currentSongRef.current?.id !== song.id) return;
-
-              playAudio(audio);
-            };
-
-            // Also clear flag on error so future pause events work normally.
-            const onError = () => {
-              seekingForPlayRef.current = false;
-            };
-
-            audio.addEventListener("seeked", onSeeked, { once: true });
-            audio.addEventListener("error", onError, { once: true });
-          } else {
-            // Audio was already paused — just seek and start playing.
-            audio.currentTime = targetTime;
-            playAudio(audio);
-          }
+          playAudio(audio);
         } else {
-          audio.currentTime = targetTime;
           postPausedState();
         }
       };
@@ -662,7 +635,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [playAudio, postPausedState, setCurrentTimeState, setDurationState],
+    [loadSongSource, playAudio, postPausedState, setCurrentTimeState, setDurationState],
   );
 
   const registerWaveform = useCallback(
@@ -743,7 +716,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const existing = currentSongRef.current;
 
       if (!audio.paused) {
-        seekingForPlayRef.current = false;
         playRequestIdRef.current += 1;
         pendingSeekRequestIdRef.current += 1;
         audio.pause();
@@ -756,10 +728,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
         currentSongRef.current = message.song;
         setCurrentSong(message.song);
-
-        if (audio.src !== message.song.audioUrl) {
-          audio.src = message.song.audioUrl;
-        }
+        loadSongSource(audio, message.song);
       }
 
       const safeTime = Math.max(0, message.currentTime || 0);
@@ -803,7 +772,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         channelRef.current = null;
       }
     };
-  }, [setCurrentTimeState, setDurationState]);
+  }, [loadSongSource, setCurrentTimeState, setDurationState]);
 
   useEffect(() => {
     window.addEventListener(CLOSE_PLAYER_EVENT, closePlayer);
@@ -829,6 +798,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [setCurrentTimeState, setDurationState]);
+
+  useEffect(() => {
+    return () => {
+      destroyHls();
+    };
+  }, [destroyHls]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
