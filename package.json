@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "pkill -f 'next dev' || true && NODE_OPTIONS='--max-old-space-size=8192' next dev",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "r2:backfill-cache": "node scripts/backfill-r2-cache-headers.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1045.0",
