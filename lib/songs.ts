@@ -82,11 +82,15 @@ function editPointRowsToJson(rows: SongEditPointRow[] = []) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeSongRow(row: any): Song {
+  const audioUrl = String(row.audio_url || "");
+
   return {
     id: String(row.id),
     title: String(row.title || ""),
     artist: String(row.artist || ""),
-    audioUrl: String(row.audio_url || ""),
+    audioUrl,
+    playbackUrl: String(row.playback_url || audioUrl),
+    hlsUrl: String(row.hls_url || ""),
     coverArt: row.cover_url ? String(row.cover_url) : null,
     stems: parseStems(row.stems),
     waveformPeaks: String(row.waveform_peaks || "[]"),
