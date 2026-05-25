@@ -43,7 +43,7 @@ import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
-  borderedIconButton9Class,
+  iconButtonClass,
   primaryPillButtonClass,
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
@@ -622,19 +622,19 @@ export default function MusicPage() {
                   ),
                 );
               }}
-              className={`${borderedIconButton9Class} ml-auto shrink-0 ${
+              className={`${iconButtonClass} ml-auto shrink-0`}
+              style={
                 shuffleActive
-                  ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)] border-[var(--border-hover)]"
-                  : ""
-              }`}
+                  ? ({ "--shuffle-icon-color": "#000000" } as React.CSSProperties)
+                  : undefined
+              }
               aria-label="Shuffle songs"
-              aria-pressed={shuffleActive}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="14"
                 height="14"
-                fill="currentColor"
+                fill="var(--shuffle-icon-color, currentColor)"
                 viewBox="0 0 16 16"
                 aria-hidden="true"
               >
