@@ -113,7 +113,7 @@ export default function ProjectFolderPickerModal({
   }, [isOpen, initialFolderId]);
 
   useEffect(() => {
-    if (!isOpen || projectId == null || movingSong || movingFolder || moveItemType) {
+    if (!isOpen || projectId == null) {
       setSongs([]);
       return;
     }
@@ -141,7 +141,7 @@ export default function ProjectFolderPickerModal({
     return () => {
       cancelled = true;
     };
-  }, [isOpen, projectId, movingSong, movingFolder, moveItemType]);
+  }, [isOpen, projectId]);
 
   const selectedChain = useMemo(() => {
     if (selectedFolderId == null) return [];
@@ -275,7 +275,7 @@ export default function ProjectFolderPickerModal({
                 key={column.parentId ?? "root"}
                 className="flex min-w-[185px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
               >
-                <div className="flex h-8 flex-shrink-0 px-3 pt-2">
+                <div className="flex h-9 flex-shrink-0 px-3 pt-3">
                   <span
                     className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full items-center rounded-full bg-[var(--bg-hover)] px-3 text-[10px] leading-none`}
                   >
