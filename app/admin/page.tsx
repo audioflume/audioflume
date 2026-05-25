@@ -15,7 +15,6 @@ import MusicIcon from "@/components/icons/MusicIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import { primaryPillButtonClass } from "@/components/uiClasses";
-import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import { songHasIssue } from "@/lib/songHealth";
 
 type StatusTone = "success" | "warning" | "error";
@@ -117,6 +116,26 @@ const STATUS_COLORS = {
   warning: "var(--status-warning)",
   error: "var(--status-error)",
 };
+
+/**
+ * Client-side admin check — two methods (either is sufficient):
+ *
+ * 1. Clerk publicMetadata role (recommended):
+ *    In Clerk dashboard set publicMetadata: { role: 'admin' } on admin users.
+ *
+ * 2. NEXT_PUBLIC_ADMIN_EMAILS env var (easy fallback):
+ *    Add NEXT_PUBLIC_ADMIN_EMAILS=you@example.com,other@example.com to .env.local
+ *    This is never committed to the repository.
+ */
+function getIsAdmin(userEmail: string | undefined, publicMetadata: Record<string, unknown> | undefined) {
+  const isAdminByRole = publicMetadata?.role === "admin";
+
+  const adminEmailsEnv = process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? "";
+  const adminEmails = adminEmailsEnv.split(",").map((e) => e.trim()).filter(Boolean);
+  const isAdminByEmail = !!userEmail && adminEmails.includes(userEmail);
+
+  return isAdminByRole || isAdminByEmail;
+}
 
 function DashboardCard({ children }: { children: React.ReactNode }) {
   return (
@@ -381,7 +400,7 @@ function ReviewQueueCard({
 export default function AdminDashboardPage() {
   const { user, isLoaded } = useUser();
   const userEmail = user?.primaryEmailAddress?.emailAddress;
-  const isAdmin = !!userEmail && ADMIN_EMAILS.includes(userEmail);
+  const isAdmin = getIsAdmin(userEmail, user?.publicMetadata as Record<string, unknown> | undefined);
 
   const [songs, setSongs] = useState<Song[]>([]);
   const [songsLoading, setSongsLoading] = useState(true);
@@ -435,17 +454,11 @@ export default function AdminDashboardPage() {
   const stats: LibraryStats = useMemo(() => {
     return {
       totalSongs: songs.length,
-      missingCoverArt: songs.filter((song) => songHasIssue(song, "coverArt"))
-        .length,
-      missingSongInfo: songs.filter((song) => songHasIssue(song, "songInfo"))
-        .length,
-      missingWaveformPeaks: songs.filter((song) =>
-        songHasIssue(song, "waveformPeaks"),
-      ).length,
+      missingCoverArt: songs.filter((song) => songHasIssue(song, "coverArt")).length,
+      missingSongInfo: songs.filter((song) => songHasIssue(song, "songInfo")).length,
+      missingWaveformPeaks: songs.filter((song) => songHasIssue(song, "waveformPeaks")).length,
       missingTags: songs.filter((song) => songHasIssue(song, "tags")).length,
-      missingEditPoints: songs.filter((song) =>
-        songHasIssue(song, "editPoints"),
-      ).length,
+      missingEditPoints: songs.filter((song) => songHasIssue(song, "editPoints")).length,
     };
   }, [songs]);
 
