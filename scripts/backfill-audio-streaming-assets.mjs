@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { createClient } from "@supabase/supabase-js";
 import ffmpegPath from "ffmpeg-static";
@@ -6,6 +7,9 @@ import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promis
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
+
+dotenv.config({ path: ".env.local" });
+dotenv.config();
 
 const execFileAsync = promisify(execFile);
 
