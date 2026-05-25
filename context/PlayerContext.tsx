@@ -490,6 +490,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const seekTo = useCallback(
     (song: Song, progress: number, shouldPlay: boolean) => {
       const audio = getAudio();
+      const isSameSong = currentSongRef.current?.id === song.id;
 
       const safeProgress = Number.isFinite(progress)
         ? Math.max(0, Math.min(1, progress))
@@ -498,7 +499,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       remoteOwnerTabIdRef.current = null;
       setRemotePlayingInAnotherTab(false);
 
-      if (currentSongRef.current?.id !== song.id) {
+      if (!isSameSong) {
         playRequestIdRef.current += 1;
 
         if (currentSongRef.current) {
@@ -521,19 +522,25 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const applySeek = () => {
         if (!audio.duration || !isFinite(audio.duration)) return;
 
-        audio.currentTime = safeProgress * audio.duration;
-        setCurrentTimeState(audio.currentTime);
+        const targetTime = safeProgress * audio.duration;
+
+        audio.currentTime = targetTime;
+        setCurrentTimeState(targetTime);
         setDurationState(audio.duration);
 
-        lastStorageWriteTimeRef.current = Date.now();
-        writeStoredPlayerState({
-          currentSong: song,
-          currentTime: audio.currentTime,
-          duration: audio.duration,
-        });
+        if (!isSameSong || !shouldPlay) {
+          lastStorageWriteTimeRef.current = Date.now();
+          writeStoredPlayerState({
+            currentSong: song,
+            currentTime: targetTime,
+            duration: audio.duration,
+          });
+        }
 
         if (shouldPlay) {
-          safePlay();
+          if (!isSameSong || audio.paused) {
+            safePlay();
+          }
         } else {
           postPausedState();
         }
