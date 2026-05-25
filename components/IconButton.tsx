@@ -20,6 +20,7 @@ export default function IconButton({
     <button
       type="button"
       aria-label={label}
+      aria-pressed={active}
       onClick={onClick}
       className={`${iconButtonClass} ${active ? activeClassName : ""}`}
     >
