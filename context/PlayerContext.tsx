@@ -163,6 +163,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const progressSubscribersRef = useRef<Set<() => void>>(new Set());
   const queueRef = useRef<Song[]>([]);
   const playRequestIdRef = useRef(0);
+  const pendingSeekRequestIdRef = useRef(0);
   const channelRef = useRef<BroadcastChannel | null>(null);
   const tabIdRef = useRef(createTabId());
   const remoteOwnerTabIdRef = useRef<string | null>(null);
@@ -461,6 +462,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (needsSource) {
         const desiredTime = currentTimeRef.current;
         audio.src = current.audioUrl;
+        audio.load();
         logAudioDebug("source-change", audio, { desiredTime }, true);
 
         if (desiredTime > 0) {
@@ -523,6 +525,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   const closePlayer = useCallback(() => {
     playRequestIdRef.current += 1;
+    pendingSeekRequestIdRef.current += 1;
 
     const audio = audioRef.current;
     const current = currentSongRef.current;
@@ -559,6 +562,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const wasPlaying = shouldPlay !== undefined ? shouldPlay : !audio.paused;
 
       playRequestIdRef.current += 1;
+      pendingSeekRequestIdRef.current += 1;
       remoteOwnerTabIdRef.current = null;
       setRemotePlayingInAnotherTab(false);
 
@@ -566,8 +570,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0);
       }
 
+      if (!audio.paused) {
+        audio.pause();
+      }
+
       audio.src = song.audioUrl;
       audio.currentTime = 0;
+      audio.load();
 
       currentSongRef.current = song;
       setCurrentSong(song);
@@ -613,6 +622,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     (song: Song, progress: number, shouldPlay: boolean) => {
       const audio = getAudio();
       const isSameSong = currentSongRef.current?.id === song.id;
+      const seekRequestId = ++pendingSeekRequestIdRef.current;
 
       const safeProgress = Number.isFinite(progress)
         ? Math.max(0, Math.min(1, progress))
@@ -628,9 +638,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           waveformsRef.current.get(currentSongRef.current.id)?.seekTo(0);
         }
 
+        if (!audio.paused) {
+          audio.pause();
+        }
+
         audio.src = song.audioUrl;
+        audio.load();
+
         currentSongRef.current = song;
         setCurrentSong(song);
+        setIsPlaying(false);
+        setCurrentTimeState(0);
         setDurationState(song.duration || 0);
         logAudioDebug("seek-source-change", audio, { nextSongId: song.id, safeProgress }, true);
 
@@ -643,6 +661,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       }
 
       const applySeek = () => {
+        if (seekRequestId !== pendingSeekRequestIdRef.current) return;
+        if (currentSongRef.current?.id !== song.id) return;
         if (!audio.duration || !isFinite(audio.duration)) return;
 
         const targetTime = safeProgress * audio.duration;
@@ -765,6 +785,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       if (!audio.paused) {
         playRequestIdRef.current += 1;
+        pendingSeekRequestIdRef.current += 1;
         audio.pause();
       }
 
