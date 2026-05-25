@@ -355,11 +355,24 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       });
 
       audio.addEventListener("error", () => {
+        const current = currentSongRef.current;
+
         if (audio.error) {
-          console.warn(
-            `[Player] Audio error — code: ${audio.error.code}, message: ${audio.error.message}`,
-          );
+          console.warn("[Player] Audio error", {
+            code: audio.error.code,
+            message: audio.error.message,
+            songId: current?.id,
+            title: current?.title,
+            artist: current?.artist,
+            audioUrl: current?.audioUrl,
+            readyState: audio.readyState,
+            networkState: audio.networkState,
+            currentTime: audio.currentTime,
+            duration: audio.duration,
+            src: audio.currentSrc,
+          });
         }
+
         setIsPlaying(false);
         postPausedState();
       });
