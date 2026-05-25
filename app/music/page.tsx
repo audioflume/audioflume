@@ -673,91 +673,93 @@ export default function MusicPage() {
         </div>
 
         <div
-          className="overflow-hidden px-8"
+          className="grid overflow-hidden"
           style={{
-            maxHeight: hasActiveFilters ? "0px" : "380px",
-            paddingTop: hasActiveFilters ? "0px" : "20px",
-            paddingBottom: hasActiveFilters ? "0px" : "32px",
+            gridTemplateRows: hasActiveFilters ? "0fr" : "1fr",
             opacity: hasActiveFilters ? 0 : 1,
             transition:
-              "max-height 520ms cubic-bezier(0.22, 1, 0.36, 1), padding 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
+              "grid-template-rows 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
           }}
           aria-hidden={hasActiveFilters}
         >
-          <div className="overflow-hidden">
-            <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
-              <div
-                className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
-                onMouseEnter={() => setMusicHeroHovered(true)}
-                onMouseLeave={() => setMusicHeroHovered(false)}
-                style={{
-                  backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
-                  backgroundSize: `100% 100%, 100% 100%, ${musicHeroHovered ? "104%" : "100%"} auto`,
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  transition: "background-size 700ms",
-                }}
-              >
-                <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
-                  <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                    <MusicIcon size={11} />
-                    <span className="truncate">Music Library</span>
-                  </div>
+          <div className="min-h-0 overflow-hidden">
+            <div className="px-8 pt-5 pb-8">
+              <div className="overflow-hidden">
+                <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
+                  <div
+                    className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
+                    onMouseEnter={() => setMusicHeroHovered(true)}
+                    onMouseLeave={() => setMusicHeroHovered(false)}
+                    style={{
+                      backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
+                      backgroundSize: `100% 100%, 100% 100%, ${musicHeroHovered ? "104%" : "100%"} auto`,
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
+                      transition: "background-size 700ms",
+                    }}
+                  >
+                    <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
+                      <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                        <MusicIcon size={11} />
+                        <span className="truncate">Music Library</span>
+                      </div>
 
-                  <div>
-                    <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
-                      Find the cue that fits the cut.
-                    </h1>
+                      <div>
+                        <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
+                          Find the cue that fits the cut.
+                        </h1>
 
-                    <div className="mt-5 flex flex-wrap items-end gap-5">
-                      <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
-                        Move through the library like a visual treatment —
-                        documentary warmth, after-dark tension, open travel cues,
-                        and polished brand motion.
-                      </p>
+                        <div className="mt-5 flex flex-wrap items-end gap-5">
+                          <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
+                            Move through the library like a visual treatment —
+                            documentary warmth, after-dark tension, open travel cues,
+                            and polished brand motion.
+                          </p>
 
-                      <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
-                        <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                          {displayedSongs.length} shown
-                        </span>
-                        <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                          {songs.length} songs
-                        </span>
+                          <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
+                            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                              {displayedSongs.length} shown
+                            </span>
+                            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                              {songs.length} songs
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div
-                className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
-                onMouseEnter={() => setDesktopSyncHovered(true)}
-                onMouseLeave={() => setDesktopSyncHovered(false)}
-                style={{
-                  backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.04)), url("${DESKTOP_SYNC_IMAGE}")`,
-                  backgroundSize: `100% 100%, 100% 100%, auto ${desktopSyncHovered ? "104%" : "100%"}`,
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  transition: "background-size 700ms",
-                }}
-              >
-                <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                  Desktop Sync
-                </div>
+                  <div
+                    className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
+                    onMouseEnter={() => setDesktopSyncHovered(true)}
+                    onMouseLeave={() => setDesktopSyncHovered(false)}
+                    style={{
+                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.04)), url("${DESKTOP_SYNC_IMAGE}")`,
+                      backgroundSize: `100% 100%, 100% 100%, auto ${desktopSyncHovered ? "104%" : "100%"}`,
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
+                      transition: "background-size 700ms",
+                    }}
+                  >
+                    <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                      Desktop Sync
+                    </div>
 
-                <div className="max-w-[340px]">
-                  <h2 className="font-[family-name:var(--font-instrument-sans)] text-[30px] font-medium leading-[1.05] tracking-[-0.055em] text-white">
-                    Local files, ready to cut.
-                  </h2>
+                    <div className="max-w-[340px]">
+                      <h2 className="font-[family-name:var(--font-instrument-sans)] text-[30px] font-medium leading-[1.05] tracking-[-0.055em] text-white">
+                        Local files, ready to cut.
+                      </h2>
 
-                  <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
-                    Sync songs to your desktop and drag them straight into
-                    Premiere, Resolve, or your editing timeline.
-                  </p>
+                      <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
+                        Sync songs to your desktop and drag them straight into
+                        Premiere, Resolve, or your editing timeline.
+                      </p>
 
-                  <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
-                    Desktop Sync
-                    <ArrowUpRightIcon />
+                      <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
+                        Desktop Sync
+                        <ArrowUpRightIcon />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
