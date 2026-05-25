@@ -400,34 +400,40 @@ export default function SongRow({
         </div>
       </div>
 
-      <AddToPlaylistModal
-        isOpen={playlistModalOpen}
-        song={safeSong}
-        onClose={() => setPlaylistModalOpen(false)}
-      />
+      {playlistModalOpen && (
+        <AddToPlaylistModal
+          isOpen={playlistModalOpen}
+          song={safeSong}
+          onClose={() => setPlaylistModalOpen(false)}
+        />
+      )}
 
-      <AddToProjectModal
-        isOpen={projectModalOpen}
-        song={safeSong}
-        onClose={() => setProjectModalOpen(false)}
-      />
+      {projectModalOpen && (
+        <AddToProjectModal
+          isOpen={projectModalOpen}
+          song={safeSong}
+          onClose={() => setProjectModalOpen(false)}
+        />
+      )}
 
-      <CreatePlaylistModal
-        isOpen={createPlaylistOpen}
-        name={newPlaylistName}
-        coverPreview={newPlaylistCoverPreview}
-        isCreating={isCreatingPlaylist}
-        onNameChange={setNewPlaylistName}
-        onCoverPreviewChange={setNewPlaylistCoverPreview}
-        onCreate={handleCreatePlaylist}
-        onClose={() => {
-          if (isCreatingPlaylist) return;
+      {createPlaylistOpen && (
+        <CreatePlaylistModal
+          isOpen={createPlaylistOpen}
+          name={newPlaylistName}
+          coverPreview={newPlaylistCoverPreview}
+          isCreating={isCreatingPlaylist}
+          onNameChange={setNewPlaylistName}
+          onCoverPreviewChange={setNewPlaylistCoverPreview}
+          onCreate={handleCreatePlaylist}
+          onClose={() => {
+            if (isCreatingPlaylist) return;
 
-          setNewPlaylistName("");
-          setNewPlaylistCoverPreview(null);
-          setCreatePlaylistOpen(false);
-        }}
-      />
+            setNewPlaylistName("");
+            setNewPlaylistCoverPreview(null);
+            setCreatePlaylistOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }
