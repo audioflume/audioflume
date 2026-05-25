@@ -18,19 +18,25 @@ export default function IconButton({
   activeClassName?: string;
 }) {
   const isCueMarkerToggle = label === "Hide cue markers" || label === "Show cue markers";
+  const isFavoriteToggle =
+    label === "Remove song from favorites" || label === "Favorite song";
+  const usesPlainActiveIcon = isCueMarkerToggle || isFavoriteToggle;
   const style =
-    active && isCueMarkerToggle
-      ? ({ "--edit-points-icon-color": "#000000" } as CSSProperties)
+    active && usesPlainActiveIcon
+      ? ({
+          "--edit-points-icon-color": "#000000",
+          "--favorite-icon-color": "#000000",
+        } as CSSProperties)
       : undefined;
 
   return (
     <button
       type="button"
       aria-label={label}
-      aria-pressed={isCueMarkerToggle ? undefined : active}
+      aria-pressed={usesPlainActiveIcon ? undefined : active}
       onClick={onClick}
       style={style}
-      className={`${iconButtonClass} ${active && !isCueMarkerToggle ? activeClassName : ""}`}
+      className={`${iconButtonClass} ${active && !usesPlainActiveIcon ? activeClassName : ""}`}
     >
       {children}
     </button>
