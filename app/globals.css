@@ -366,8 +366,13 @@ body.sidebar-collapsed {
   background: transparent;
 }
 
+.project-tabs-row > button.border-\[var\(--text-primary\)\]::before,
 .project-tabs-row > button:not(.project-new-folder-button):not(.project-view-toggle-button)[class*="border-[var(--text-primary)]"]::before {
-  background: var(--text-primary);
+  background: var(--text-primary) !important;
+}
+
+.project-tabs-row > button.border-\[var\(--text-primary\)\] {
+  border-bottom-color: var(--text-primary) !important;
 }
 
 /* ─── Dropdown shell ─────────────────────────── */
