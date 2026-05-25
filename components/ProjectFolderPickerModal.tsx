@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 import {
   modalFieldLabelClass,
@@ -93,6 +93,7 @@ export default function ProjectFolderPickerModal({
 }: ProjectFolderPickerModalProps) {
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(initialFolderId);
   const [songs, setSongs] = useState<ProjectPickerSong[]>([]);
+  const columnsScrollRef = useRef<HTMLDivElement>(null);
 
   const foldersById = useMemo(
     () => new Map(folders.map((folder) => [folder.id, folder])),
@@ -190,6 +191,19 @@ export default function ProjectFolderPickerModal({
     });
   }, [folders, selectedChain, songs]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const container = columnsScrollRef.current;
+    if (!container) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      container.scrollTo({ left: container.scrollWidth, behavior: "smooth" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [columns.length, isOpen, selectedFolderId]);
+
   const destinationLabel = useMemo(() => {
     if (selectedFolderId == null) return "All Files";
     return foldersById.get(selectedFolderId)?.name ?? "Selected folder";
@@ -259,11 +273,15 @@ export default function ProjectFolderPickerModal({
       }
     >
       <div className="flex min-h-0 flex-1 flex-col bg-[var(--bg-tertiary)]">
-        <div className="flex min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden">
+        <div
+          ref={columnsScrollRef}
+          className="flex min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden"
+        >
           {columns.map((column, columnIndex) => {
             const isRootPreviewColumn = column.parentId === "root-preview";
             const isRootColumn = column.parentId == null;
             const hasItems = column.folders.length > 0 || column.songs.length > 0;
+            const headerFolderId = typeof column.parentId === "number" ? column.parentId : null;
             const columnLabel = isRootPreviewColumn
               ? "Selected"
               : isRootColumn
@@ -276,40 +294,24 @@ export default function ProjectFolderPickerModal({
                 className="flex min-w-[185px] flex-[1_1_0] flex-col border-r border-[var(--border)] last:border-r-0"
               >
                 <div className="flex h-9 flex-shrink-0 px-3 pt-3">
-                  <span
-                    className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full items-center rounded-full bg-[var(--bg-hover)] px-3 text-[10px] leading-none`}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedFolderId(headerFolderId)}
+                    className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full cursor-pointer items-center rounded-full bg-[var(--bg-hover)] px-3 text-left text-[10px] leading-none transition hover:bg-[var(--bg-hover-strong)]`}
                   >
                     <span className="truncate">{columnLabel}</span>
-                  </span>
+                  </button>
                 </div>
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
                   <div className="flex min-h-full flex-col gap-0">
-                    {columnIndex === 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setSelectedFolderId(null)}
-                        className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
-                          selectedFolderId == null
-                            ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
-                            : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                        }`}
-                      >
-                        <span className="flex min-w-0 items-center gap-2">
-                          <FolderGlyph small />
-                          <span className="truncate">All Files</span>
-                        </span>
-                        <span className="text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">›</span>
-                      </button>
-                    )}
-
                     {isRootPreviewColumn ? (
                       <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-xs text-[var(--text-muted)]">
                         Currently in &quot;All Files&quot;
                       </div>
                     ) : isRootColumn ? (
                       hasItems ? (
-                        <div className="ml-[17px] mt-1 border-l border-[var(--border)] pl-1">
+                        <>
                           {column.folders.map((folder) => {
                             const isSelected = selectedFolderId === folder.id;
                             const isAncestor = selectedAncestorIds.has(folder.id);
@@ -319,7 +321,7 @@ export default function ProjectFolderPickerModal({
                                 key={folder.id}
                                 type="button"
                                 onClick={() => setSelectedFolderId(folder.id)}
-                                className={`group flex h-8 w-full flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2 text-left text-xs font-medium transition ${
+                                className={`group flex h-8 w-full flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
                                   isSelected
                                     ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
                                     : isAncestor
@@ -339,13 +341,13 @@ export default function ProjectFolderPickerModal({
                           {column.songs.map((song) => (
                             <div
                               key={song.id}
-                              className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2 text-xs text-[var(--text-secondary)]"
+                              className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs text-[var(--text-secondary)]"
                             >
                               <MusicGlyph small />
                               <span className="min-w-0 truncate font-medium">{song.title}</span>
                             </div>
                           ))}
-                        </div>
+                        </>
                       ) : (
                         <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-xs text-[var(--text-muted)]">
                           Empty folder
