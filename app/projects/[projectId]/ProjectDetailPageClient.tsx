@@ -27,7 +27,6 @@ import {
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
-import { useUserPreferences } from "@/context/UserPreferencesContext";
 import type { Project, ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -162,13 +161,12 @@ function EmptyTabState({ activeTab }: { activeTab: ProjectTab }) {
 }
 
 function MusicTabState({
-  projectId, songs, loading, error, showEditPointMarkers, onRemoveFromProject,
+  projectId, songs, loading, error, onRemoveFromProject,
 }: {
   projectId: string;
   songs: ProjectSong[];
   loading: boolean;
   error: string | null;
-  showEditPointMarkers: boolean;
   onRemoveFromProject: (songId: string) => void;
 }) {
   if (loading) return <SkeletonSongList />;
@@ -183,7 +181,6 @@ function MusicTabState({
           isFirst={index === 0}
           isLast={index === songs.length - 1}
           projectId={projectId}
-          showEditPointMarkers={showEditPointMarkers}
           onRemoveFromProject={onRemoveFromProject}
         />
       ))}
@@ -198,7 +195,6 @@ export default function ProjectDetailPageClient() {
   const { currentSong, setQueue } = usePlayer();
   const { favoriteIdSet } = useFavorites();
   const { projects, setProjects, loading, error } = useProjectsContext();
-  const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
 
   const projectId = String(params.projectId || "");
   const playerVisible = !!currentSong;
@@ -629,16 +625,6 @@ export default function ProjectDetailPageClient() {
                       {option.label}
                     </button>
                   ))}
-                  {activeTab === "music" && (
-                    <button
-                      type="button"
-                      onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
-                      className={`${quickFilterButtonClass} ${showEditPointMarkers ? quickFilterButtonActiveClass : ""}`}
-                      aria-pressed={showEditPointMarkers}
-                    >
-                      markers
-                    </button>
-                  )}
                 </div>
               )}
 
@@ -689,7 +675,6 @@ export default function ProjectDetailPageClient() {
                     songs={displayedProjectSongs}
                     loading={projectSongsLoading}
                     error={projectSongsError}
-                    showEditPointMarkers={showEditPointMarkers}
                     onRemoveFromProject={handleRemoveFromProject}
                   />
                 ) : (
