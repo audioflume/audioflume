@@ -320,9 +320,24 @@ body.sidebar-collapsed {
   height: 14px !important;
 }
 
+/* Plain: no border, no background (keeps border-radius from base) */
 .filmwave-icon-button-plain {
   border-color: transparent !important;
   background: transparent !important;
+}
+
+/* Flat: square corners, no border, subtler hover — for modal close and similar */
+.filmwave-icon-button-flat {
+  border-radius: 0 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+.filmwave-icon-button.filmwave-icon-button-flat:hover,
+.filmwave-icon-button.filmwave-icon-button-flat.is-open,
+.filmwave-icon-button.filmwave-icon-button-flat[aria-pressed="true"] {
+  border-color: transparent !important;
+  background: var(--bg-hover) !important;
 }
 
 .filmwave-icon-button-group,
@@ -335,7 +350,8 @@ body.sidebar-collapsed {
 
 /* ─── Dropdown shell ─────────────────────────── */
 
-.filmwave-dropdown-shell {
+.filmwave-dropdown-shell,
+.music-player-more-menu {
   z-index: 160;
   width: max-content;
   min-width: 180px;
@@ -368,96 +384,7 @@ body.sidebar-collapsed {
 }
 
 .filmwave-dropdown-shell button,
-.filmwave-dropdown-shell a {
-  display: flex;
-  min-height: 38px;
-  width: 100%;
-  cursor: pointer;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  padding: 0 12px;
-  text-align: left;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    opacity 0.15s ease;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.filmwave-dropdown-shell button:hover,
-.filmwave-dropdown-shell a:hover {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
-}
-
-.filmwave-dropdown-shell button:disabled {
-  cursor: default;
-  opacity: 0.45;
-}
-
-.filmwave-dropdown-shell button:disabled:hover {
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.filmwave-dropdown-shell button.danger,
-.filmwave-dropdown-shell a.danger,
-.filmwave-dropdown-shell button.danger-hover,
-.filmwave-dropdown-shell a.danger-hover {
-  color: var(--danger);
-}
-
-.filmwave-dropdown-shell button.danger:hover,
-.filmwave-dropdown-shell a.danger:hover,
-.filmwave-dropdown-shell button.danger-hover:hover,
-.filmwave-dropdown-shell a.danger-hover:hover {
-  background: var(--danger-hover);
-  color: var(--danger);
-}
-
-.filmwave-dropdown-shell .dropdown-divider {
-  height: 1px;
-  margin: 6px 4px;
-  background: var(--border-subtle);
-}
-
-.light .filmwave-dropdown-shell {
-  background: var(--bg-primary);
-}
-
-/* Keep filter popovers visible outside the single-row music filter bar. */
-
-main .sticky > .\-mx-7 {
-  overflow: visible !important;
-}
-
-/* Match the bottom music-player menu to the shared dropdown shell. */
-
-.music-player-more-menu {
-  z-index: 160;
-  width: max-content;
-  min-width: 180px;
-  max-width: calc(100vw - 32px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--bg-primary);
-  box-shadow: var(--shadow-ui);
-  padding: 6px;
-  color: var(--text-primary);
-  overscroll-behavior: contain;
-  will-change: transform;
-}
-
+.filmwave-dropdown-shell a,
 .music-player-more-menu button,
 .music-player-more-menu a {
   display: flex;
@@ -483,41 +410,61 @@ main .sticky > .\-mx-7 {
   white-space: nowrap;
 }
 
+.filmwave-dropdown-shell button:hover,
+.filmwave-dropdown-shell a:hover,
 .music-player-more-menu button:hover,
 .music-player-more-menu a:hover {
   background: var(--bg-hover-strong);
   color: var(--text-primary);
 }
 
+.filmwave-dropdown-shell button:disabled,
 .music-player-more-menu button:disabled {
   cursor: default;
   opacity: 0.45;
 }
 
+.filmwave-dropdown-shell button:disabled:hover,
 .music-player-more-menu button:disabled:hover {
   background: transparent;
   color: var(--text-secondary);
 }
 
+.filmwave-dropdown-shell button.danger,
+.filmwave-dropdown-shell a.danger,
+.filmwave-dropdown-shell button.danger-hover,
+.filmwave-dropdown-shell a.danger-hover,
 .music-player-more-menu button.danger-hover,
 .music-player-more-menu a.danger-hover {
   color: var(--danger);
 }
 
+.filmwave-dropdown-shell button.danger:hover,
+.filmwave-dropdown-shell a.danger:hover,
+.filmwave-dropdown-shell button.danger-hover:hover,
+.filmwave-dropdown-shell a.danger-hover:hover,
 .music-player-more-menu button.danger-hover:hover,
 .music-player-more-menu a.danger-hover:hover {
   background: var(--danger-hover);
   color: var(--danger);
 }
 
+.filmwave-dropdown-shell .dropdown-divider,
 .music-player-more-menu-divider {
   height: 1px;
   margin: 6px 4px;
   background: var(--border-subtle);
 }
 
+.light .filmwave-dropdown-shell,
 .light .music-player-more-menu {
   background: var(--bg-primary);
+}
+
+/* Keep filter popovers visible outside the single-row music filter bar. */
+
+main .sticky > .\-mx-7 {
+  overflow: visible !important;
 }
 
 /* ─── Playlist page ─────────────────────────── */
