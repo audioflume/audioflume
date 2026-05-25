@@ -19,7 +19,6 @@ import {
 } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
-import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import type { Playlist, Song } from "@/lib/types";
 import { useParams, useRouter } from "next/navigation";
@@ -135,7 +134,6 @@ export default function PlaylistDetailPage() {
   const router = useRouter();
   const { currentSong, setQueue } = usePlayer();
   const { favoriteIdSet } = useFavorites();
-  const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
   const { playlists, setPlaylists, loading: playlistsLoading } = usePlaylists();
 
   const playlistId = String(params.playlistId || "");
@@ -489,14 +487,6 @@ export default function PlaylistDetailPage() {
                     </button>
                   );
                 })}
-                <button
-                  type="button"
-                  onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
-                  className={`${quickFilterButtonClass} ${showEditPointMarkers ? quickFilterButtonActiveClass : ""}`}
-                  aria-pressed={showEditPointMarkers}
-                >
-                  markers
-                </button>
               </div>
 
               <section className="playlist-detail-section">
@@ -519,7 +509,6 @@ export default function PlaylistDetailPage() {
                         isFirst={index === 0}
                         isLast={index === filteredSongs.length - 1}
                         playlistId={playlistId}
-                        showEditPointMarkers={showEditPointMarkers}
                         onRemoveFromPlaylist={(songId) => {
                           setSongs((prev) => prev.filter((item) => item.id !== songId));
                           showToast("Song removed");
