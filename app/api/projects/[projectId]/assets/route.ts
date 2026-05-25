@@ -26,6 +26,42 @@ async function verifyProject(projectId: string, userId: string) {
   return project;
 }
 
+async function getProjectSongRows(songIds: string[]) {
+  const uniqueSongIds = [...new Set(songIds.filter(Boolean))];
+
+  if (uniqueSongIds.length === 0) return [];
+
+  const targeted = await supabaseServer
+    .from("songs")
+    .select("*")
+    .in("id", uniqueSongIds)
+    .eq("status", "published");
+
+  if (!targeted.error) return targeted.data ?? [];
+
+  console.warn("Targeted project song fetch failed. Retrying without status filter.", targeted.error);
+
+  const targetedWithoutStatus = await supabaseServer
+    .from("songs")
+    .select("*")
+    .in("id", uniqueSongIds);
+
+  if (!targetedWithoutStatus.error) return targetedWithoutStatus.data ?? [];
+
+  console.warn("Targeted project song fetch without status failed. Retrying with catalogue fetch.", targetedWithoutStatus.error);
+
+  const catalogue = await supabaseServer
+    .from("songs")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (catalogue.error) throw catalogue.error;
+
+  const songIdSet = new Set(uniqueSongIds.map(String));
+
+  return (catalogue.data ?? []).filter((row) => songIdSet.has(String(row.id)));
+}
+
 export async function GET(req: Request, context: RouteContext) {
   const { userId } = await auth();
 
@@ -62,33 +98,25 @@ export async function GET(req: Request, context: RouteContext) {
       return NextResponse.json({ assets: projectAssets });
     }
 
-    // Only fetch the specific songs that belong to this project,
-    // instead of loading the entire catalogue and filtering in memory.
     const songIds = projectAssets
-      .map((asset) => asset.asset_id)
+      .map((asset) => String(asset.asset_id || ""))
       .filter(Boolean);
 
     if (songIds.length === 0) {
       return NextResponse.json({ assets: projectAssets, songs: [] });
     }
 
-    const { data: songRows, error: songRowsError } = await supabaseServer
-      .from("songs")
-      .select("*")
-      .in("id", songIds)
-      .eq("status", "published");
-
-    if (songRowsError) throw songRowsError;
+    const songRows = await getProjectSongRows(songIds);
 
     const normalizedSongs = await attachEditPoints(
       (songRows ?? []).map(normalizeSongRow),
     );
 
-    const songsById = new Map(normalizedSongs.map((song) => [song.id, song]));
+    const songsById = new Map(normalizedSongs.map((song) => [String(song.id), song]));
 
     const projectSongs = projectAssets
       .map((asset) => {
-        const song = songsById.get(asset.asset_id);
+        const song = songsById.get(String(asset.asset_id));
 
         if (!song) return null;
 
