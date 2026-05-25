@@ -45,6 +45,14 @@ function getContentType(file: UploadableFile) {
   return 'application/octet-stream'
 }
 
+function getCacheControl(contentType: string) {
+  if (contentType.startsWith('audio/') || contentType.startsWith('image/')) {
+    return 'public, max-age=31536000, immutable'
+  }
+
+  return 'public, max-age=86400'
+}
+
 const publicBaseUrl = publicUrl.replace(/\/$/, '')
 
 function buildPublicUrl(key: string) {
@@ -68,6 +76,7 @@ export async function uploadFileToR2({
       Key: key,
       Body: body,
       ContentType: contentType,
+      CacheControl: getCacheControl(contentType),
     })
   )
 
