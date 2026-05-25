@@ -50,10 +50,8 @@ type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
 
 function formatTime(s: number) {
   if (!s || !isFinite(s)) return "0:00";
-
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
-
   return `${m}:${sec.toString().padStart(2, "0")}`;
 }
 
@@ -72,48 +70,38 @@ function isGlobalCueMarkerPage(pathname: string) {
 function getMusicLibraryMarkerVisibilityFromEvent(event: Event) {
   const markerEvent = event as Event & { visible?: boolean };
   const customEvent = event as CustomEvent<{ visible?: boolean }>;
-
   if (typeof markerEvent.visible === "boolean") return markerEvent.visible;
   if (typeof customEvent.detail?.visible === "boolean") {
     return customEvent.detail.visible;
   }
-
   return null;
 }
 
 function normalizePeaks(peaks: number[]) {
   let maxVal = 0;
-
   for (let i = 0; i < peaks.length; i++) {
     const v = Math.abs(Number(peaks[i]) || 0);
     if (v > maxVal) maxVal = v;
   }
-
   if (maxVal <= 0) return peaks.map(() => 0);
-
   return peaks.map((peak) => Math.abs(Number(peak) || 0) / maxVal);
 }
 
 function buildWaveformBars(peaks: number[], width: number) {
   if (!peaks.length || width <= 0) return [];
-
   const barCount = Math.max(1, Math.floor(width / BAR_TOTAL));
   const normalizedPeaks = normalizePeaks(peaks);
   const samplesPerBar = normalizedPeaks.length / barCount;
-
   return Array.from({ length: barCount }, (_, i) => {
     const start = Math.floor(i * samplesPerBar);
     const end = Math.min(
       normalizedPeaks.length,
       Math.floor((i + 1) * samplesPerBar),
     );
-
     let barPeak = 0;
-
     for (let j = start; j < end; j++) {
       if (normalizedPeaks[j] > barPeak) barPeak = normalizedPeaks[j];
     }
-
     return Math.max(2, Math.min(20, barPeak * 20));
   });
 }
@@ -129,9 +117,7 @@ function getAdjacentCuePoint(
   direction: "previous" | "next",
 ) {
   if (cuePoints.length === 0) return null;
-
   const sortedCuePoints = [...cuePoints].sort((a, b) => a.time - b.time);
-
   if (direction === "next") {
     const threshold = currentTime + NEXT_CUE_SKIP_AHEAD_SECONDS;
     return (
@@ -139,9 +125,7 @@ function getAdjacentCuePoint(
       sortedCuePoints[0]
     );
   }
-
   const threshold = currentTime - PREVIOUS_CUE_SKIP_BACK_SECONDS;
-
   return (
     [...sortedCuePoints].reverse().find((marker) => marker.time < threshold) ||
     sortedCuePoints[sortedCuePoints.length - 1]
@@ -175,63 +159,46 @@ const PauseIcon = () => (
   </svg>
 );
 
+function BufferingIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className="animate-spin"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeDasharray="28 56"
+      />
+    </svg>
+  );
+}
+
 const CuePreviousIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-  >
-    <path
-      d="M15 6L9 12L15 18"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const CueNextIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-  >
-    <path
-      d="M9 6L15 12L9 18"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 function CloseIcon() {
   return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M6 6L18 18"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 6L6 18"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
     </svg>
   );
 }
@@ -240,6 +207,7 @@ export default function MusicPlayer() {
   const {
     currentSong,
     isPlaying,
+    isBuffering,
     remotePlayingInAnotherTab,
     currentTime,
     duration,
@@ -255,6 +223,8 @@ export default function MusicPlayer() {
 
   const playerRef = useRef<HTMLDivElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
+  // Canvas ref for the player waveform — avoids reconciling 260+ divs on every timeupdate tick
+  const playerCanvasRef = useRef<HTMLCanvasElement>(null);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
@@ -266,21 +236,13 @@ export default function MusicPlayer() {
   const [addToProjectOpen, setAddToProjectOpen] = useState(false);
   const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
-  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<
-    string | null
-  >(null);
+  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<string | null>(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
-  const [
-    musicLibraryShowEditPointMarkers,
-    setMusicLibraryShowEditPointMarkers,
-  ] = useState(false);
+  const [musicLibraryShowEditPointMarkers, setMusicLibraryShowEditPointMarkers] = useState(false);
   const [selectedCuePointTypes, setSelectedCuePointTypes] = useState<string[]>(
     () => getStoredCuePointFilterSelection(),
   );
-  const [moreMenuPosition, setMoreMenuPosition] = useState({
-    top: 0,
-    left: 0,
-  });
+  const [moreMenuPosition, setMoreMenuPosition] = useState({ top: 0, left: 0 });
 
   const effectiveShowEditPointMarkers =
     pathname === "/music"
@@ -290,8 +252,7 @@ export default function MusicPlayer() {
         : false;
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
   const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
-  const showCompactTime =
-    !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
+  const showCompactTime = !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
   const showKey = playerWidth >= KEY_MIN_WIDTH;
   const showBpm = playerWidth >= BPM_MIN_WIDTH;
   const showRightMeta = showKey || showBpm;
@@ -308,16 +269,11 @@ export default function MusicPlayer() {
   const visibleCuePoints = useMemo(() => {
     if (!effectiveShowEditPointMarkers) return [];
     if (!hasSelectedCuePointTypes) return cuePoints;
-
     return cuePoints.filter((marker) =>
       selectedCuePointTypeSet.has(getMarkerType(marker)),
     );
-  }, [
-    cuePoints,
-    effectiveShowEditPointMarkers,
-    hasSelectedCuePointTypes,
-    selectedCuePointTypeSet,
-  ]);
+  }, [cuePoints, effectiveShowEditPointMarkers, hasSelectedCuePointTypes, selectedCuePointTypeSet]);
+
   const previousCuePoint = useMemo(
     () => getAdjacentCuePoint(visibleCuePoints, currentTime, "previous"),
     [visibleCuePoints, currentTime],
@@ -333,18 +289,12 @@ export default function MusicPlayer() {
     visibleCuePoints.length > 0;
 
   const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
-
   const mainGap = 22 + compressionProgress * 24;
   const controlsToProgressGap = 18 + compressionProgress * 18;
   const metaGap = 24 + compressionProgress * 30;
   const progressToMetaGap = 22 + compressionProgress * 24;
   const metaToActionsGap = 18 + compressionProgress * 18;
-  const songInfoWidth = clampNumber(
-    150 + ((playerWidth - 620) / 580) * 50,
-    150,
-    200,
-  );
-
+  const songInfoWidth = clampNumber(150 + ((playerWidth - 620) / 580) * 50, 150, 200);
   const waveformMaxWidth = 390 + compressionProgress * 260;
   const progressGroupMaxWidth = waveformMaxWidth + 112;
 
@@ -357,6 +307,42 @@ export default function MusicPlayer() {
     () => buildWaveformBars(peaks, waveformWidth),
     [peaks, waveformWidth],
   );
+
+  // Draw the player waveform onto a canvas instead of rendering 260 individual divs.
+  // Canvas operations are orders of magnitude cheaper than React reconciling a large list.
+  useEffect(() => {
+    const canvas = playerCanvasRef.current;
+    if (!canvas || !waveformBars.length) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight || 24;
+
+    if (w < 4) return;
+
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const styles = getComputedStyle(document.documentElement);
+    const progressColor = styles.getPropertyValue("--waveform-progress").trim();
+    const inactiveColor = styles.getPropertyValue("--waveform-color").trim();
+
+    const midY = h / 2;
+    const progressBars = Math.floor(waveformBars.length * progress);
+
+    for (let i = 0; i < waveformBars.length; i++) {
+      const barHeight = waveformBars[i];
+      const x = i * BAR_TOTAL;
+      ctx.fillStyle = i < progressBars ? progressColor : inactiveColor;
+      ctx.fillRect(x, midY - barHeight / 2, BAR_WIDTH, barHeight);
+    }
+  }, [waveformBars, progress]);
 
   const gridTemplateColumns = [
     `${songInfoWidth}px`,
@@ -375,30 +361,18 @@ export default function MusicPlayer() {
   const updateMoreMenuPosition = useCallback(() => {
     const trigger = moreButtonRef.current;
     const menu = moreMenuRef.current;
-
     if (!trigger || !menu) return;
-
     const triggerRect = trigger.getBoundingClientRect();
     const menuRect = menu.getBoundingClientRect();
-
     const viewportPadding = 16;
     const playerGap = 6;
-
     const left = clampNumber(
       triggerRect.right - menuRect.width,
       viewportPadding,
       window.innerWidth - menuRect.width - viewportPadding,
     );
-
-    const top = Math.max(
-      viewportPadding,
-      triggerRect.top - menuRect.height - playerGap,
-    );
-
-    setMoreMenuPosition({
-      top,
-      left,
-    });
+    const top = Math.max(viewportPadding, triggerRect.top - menuRect.height - playerGap);
+    setMoreMenuPosition({ top, left });
   }, []);
 
   useEffect(() => {
@@ -406,25 +380,14 @@ export default function MusicPlayer() {
       setMusicLibraryShowEditPointMarkers(false);
       return;
     }
-
     const syncMusicLibraryMarkerVisibility = (event: Event) => {
       const visible = getMusicLibraryMarkerVisibilityFromEvent(event);
-
       if (visible === null) return;
-
       setMusicLibraryShowEditPointMarkers(visible);
     };
-
-    window.addEventListener(
-      MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT,
-      syncMusicLibraryMarkerVisibility,
-    );
-
+    window.addEventListener(MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT, syncMusicLibraryMarkerVisibility);
     return () => {
-      window.removeEventListener(
-        MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT,
-        syncMusicLibraryMarkerVisibility,
-      );
+      window.removeEventListener(MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT, syncMusicLibraryMarkerVisibility);
     };
   }, [pathname]);
 
@@ -432,26 +395,15 @@ export default function MusicPlayer() {
     const syncCuePointFilterSelection = (event?: Event) => {
       const customEvent = event as CustomEvent<{ selectedTypes?: string[] }>;
       const selectedTypes = customEvent?.detail?.selectedTypes;
-
       setSelectedCuePointTypes(
-        Array.isArray(selectedTypes)
-          ? selectedTypes
-          : getStoredCuePointFilterSelection(),
+        Array.isArray(selectedTypes) ? selectedTypes : getStoredCuePointFilterSelection(),
       );
     };
-
     syncCuePointFilterSelection();
-    window.addEventListener(
-      CUE_POINT_FILTER_SELECTION_EVENT,
-      syncCuePointFilterSelection,
-    );
+    window.addEventListener(CUE_POINT_FILTER_SELECTION_EVENT, syncCuePointFilterSelection);
     window.addEventListener("storage", syncCuePointFilterSelection);
-
     return () => {
-      window.removeEventListener(
-        CUE_POINT_FILTER_SELECTION_EVENT,
-        syncCuePointFilterSelection,
-      );
+      window.removeEventListener(CUE_POINT_FILTER_SELECTION_EVENT, syncCuePointFilterSelection);
       window.removeEventListener("storage", syncCuePointFilterSelection);
     };
   }, []);
@@ -459,20 +411,14 @@ export default function MusicPlayer() {
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
-
     const updateWidth = () => {
       setPlayerWidth(Math.floor(player.getBoundingClientRect().width));
     };
-
     updateWidth();
-
     const ro = new ResizeObserver(updateWidth);
-
     ro.observe(player);
     window.addEventListener("resize", updateWidth);
-
     const t = window.setTimeout(updateWidth, 50);
-
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", updateWidth);
@@ -485,10 +431,8 @@ export default function MusicPlayer() {
       setPeaks([]);
       return;
     }
-
     try {
       const parsed = JSON.parse(currentSong.waveformPeaks);
-
       setPeaks(
         Array.isArray(parsed)
           ? parsed.map((v) => {
@@ -507,23 +451,16 @@ export default function MusicPlayer() {
       setWaveformWidth(0);
       return;
     }
-
     const waveform = waveformRef.current;
     if (!waveform) return;
-
     const updateWidth = () => {
       setWaveformWidth(Math.floor(waveform.getBoundingClientRect().width));
     };
-
     updateWidth();
-
     const ro = new ResizeObserver(updateWidth);
-
     ro.observe(waveform);
     window.addEventListener("resize", updateWidth);
-
     const t = window.setTimeout(updateWidth, 50);
-
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", updateWidth);
@@ -533,24 +470,16 @@ export default function MusicPlayer() {
 
   useLayoutEffect(() => {
     if (!moreOpen) return;
-
     updateMoreMenuPosition();
-
     const frame = window.requestAnimationFrame(updateMoreMenuPosition);
-
     return () => window.cancelAnimationFrame(frame);
   }, [moreOpen, updateMoreMenuPosition]);
 
   useEffect(() => {
     if (!moreOpen) return;
-
-    const handlePositionUpdate = () => {
-      updateMoreMenuPosition();
-    };
-
+    const handlePositionUpdate = () => updateMoreMenuPosition();
     window.addEventListener("resize", handlePositionUpdate);
     window.addEventListener("scroll", handlePositionUpdate, true);
-
     return () => {
       window.removeEventListener("resize", handlePositionUpdate);
       window.removeEventListener("scroll", handlePositionUpdate, true);
@@ -559,29 +488,16 @@ export default function MusicPlayer() {
 
   useEffect(() => {
     if (!moreOpen) return;
-
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
-
-      if (
-        moreButtonRef.current?.contains(target) ||
-        moreMenuRef.current?.contains(target)
-      ) {
-        return;
-      }
-
+      if (moreButtonRef.current?.contains(target) || moreMenuRef.current?.contains(target)) return;
       setMoreOpen(false);
     };
-
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMoreOpen(false);
-      }
+      if (event.key === "Escape") setMoreOpen(false);
     };
-
     document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
-
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
@@ -593,47 +509,25 @@ export default function MusicPlayer() {
   const handleWaveformClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     if (!rect.width) return;
-
-    const nextProgress = Math.max(
-      0,
-      Math.min(1, (e.clientX - rect.left) / rect.width),
-    );
-
+    const nextProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     seekTo(currentSong, nextProgress, isPlaying);
   };
 
   const jumpToCuePoint = (marker: CuePointMarker | null) => {
     if (!marker || !currentSong.duration) return;
-
-    seekTo(
-      currentSong,
-      Math.max(0, Math.min(1, marker.time / currentSong.duration)),
-      isPlaying,
-    );
+    seekTo(currentSong, Math.max(0, Math.min(1, marker.time / currentSong.duration)), isPlaying);
   };
 
   async function handleCreatePlaylist() {
     if (!newPlaylistName.trim() || isCreatingPlaylist) return;
-
     setIsCreatingPlaylist(true);
-
     try {
       const res = await fetch("/api/playlists", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: newPlaylistName,
-          cover_image_url: newPlaylistCoverPreview,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newPlaylistName, cover_image_url: newPlaylistCoverPreview }),
       });
-
-      if (!res.ok) {
-        console.error("Failed to create playlist");
-        return;
-      }
-
+      if (!res.ok) { console.error("Failed to create playlist"); return; }
       setNewPlaylistName("");
       setNewPlaylistCoverPreview(null);
       setCreatePlaylistOpen(false);
@@ -657,40 +551,23 @@ export default function MusicPlayer() {
       <div
         ref={playerRef}
         className="fixed bottom-0 left-0 right-0 z-[45] grid h-[72px] items-center justify-between overflow-visible border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4"
-        style={{
-          gridTemplateColumns,
-          columnGap: `${mainGap}px`,
-        }}
+        style={{ gridTemplateColumns, columnGap: `${mainGap}px` }}
       >
+        {/* Song info */}
         <div className="flex min-w-0 items-center gap-3">
           {currentSong.coverArt ? (
             <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-none">
-              <Image
-                src={currentSong.coverArt}
-                alt={currentSong.title}
-                fill
-                sizes="40px"
-                className="object-cover"
-              />
+              <Image src={currentSong.coverArt} alt={currentSong.title} fill sizes="40px" className="object-cover" />
             </div>
           ) : (
             <div className="h-10 w-10 flex-shrink-0 rounded-none bg-[var(--bg-hover)]" />
           )}
-
           <div className="min-w-0">
-            <div
-              title={currentSong.title}
-              className="truncate text-sm font-medium text-[var(--text-primary)]"
-            >
+            <div title={currentSong.title} className="truncate text-sm font-medium text-[var(--text-primary)]">
               {currentSong.title}
             </div>
-
             <div
-              title={
-                remotePlayingInAnotherTab
-                  ? "Playing in another tab"
-                  : currentSong.artist
-              }
+              title={remotePlayingInAnotherTab ? "Playing in another tab" : currentSong.artist}
               className="flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--text-subtle)]"
             >
               {remotePlayingInAnotherTab ? (
@@ -699,9 +576,7 @@ export default function MusicPlayer() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--text-muted)] opacity-40" />
                     <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--text-muted)]" />
                   </span>
-                  <span className="truncate text-[var(--text-muted)]">
-                    Playing in another tab
-                  </span>
+                  <span className="truncate text-[var(--text-muted)]">Playing in another tab</span>
                 </>
               ) : (
                 <span className="truncate">{currentSong.artist}</span>
@@ -710,6 +585,7 @@ export default function MusicPlayer() {
           </div>
         </div>
 
+        {/* Playback controls */}
         <div className="flex flex-shrink-0 items-center justify-center gap-[clamp(12px,2vw,24px)]">
           <button
             type="button"
@@ -726,7 +602,7 @@ export default function MusicPlayer() {
             className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
             aria-label={isPlaying ? "Pause song" : "Play song"}
           >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+            {isBuffering ? <BufferingIcon /> : isPlaying ? <PauseIcon /> : <PlayIcon />}
           </button>
 
           <button
@@ -739,6 +615,7 @@ export default function MusicPlayer() {
           </button>
         </div>
 
+        {/* Progress / waveform */}
         {(showWaveform || showCompactTime) && (
           <div
             className="relative z-10 flex min-w-0 items-center justify-center overflow-visible"
@@ -759,27 +636,19 @@ export default function MusicPlayer() {
                   className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-visible"
                   onClick={handleWaveformClick}
                 >
+                  {/* Cue point markers */}
                   {visibleCuePoints.map((marker) => {
                     const markerType = getMarkerType(marker);
-                    const label =
-                      marker.label || getEditPointFilterLabel(markerType);
-                    const progressValue = currentSong.duration
-                      ? marker.time / currentSong.duration
-                      : 0;
-                    const left = Math.max(
-                      0,
-                      Math.min(100, progressValue * 100),
-                    );
-
+                    const label = marker.label || getEditPointFilterLabel(markerType);
+                    const progressValue = currentSong.duration ? marker.time / currentSong.duration : 0;
+                    const left = Math.max(0, Math.min(100, progressValue * 100));
                     return (
                       <button
                         key={marker.id}
                         type="button"
                         aria-label={`Jump to ${label}`}
                         className="group/player-cue-point absolute top-1/2 z-30 h-[34px] w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
-                        style={{
-                          left: `${left}%`,
-                        }}
+                        style={{ left: `${left}%` }}
                         onClick={(event) => {
                           event.preventDefault();
                           event.stopPropagation();
@@ -789,9 +658,7 @@ export default function MusicPlayer() {
                         <span
                           className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full bg-[var(--cue-marker-color)]"
                           style={{
-                            width: hasSelectedCuePointTypes
-                              ? "var(--cue-marker-width-active)"
-                              : "var(--cue-marker-width)",
+                            width: hasSelectedCuePointTypes ? "var(--cue-marker-width-active)" : "var(--cue-marker-width)",
                             opacity: "var(--cue-marker-opacity)",
                           }}
                         />
@@ -802,31 +669,12 @@ export default function MusicPlayer() {
                     );
                   })}
 
-                  <div className="relative z-10 flex h-full w-full items-center overflow-hidden">
-                    {waveformBars.map((barHeight, index) => {
-                      const barProgress =
-                        waveformBars.length > 0
-                          ? index / waveformBars.length
-                          : 0;
-
-                      const isActive = barProgress <= progress;
-
-                      return (
-                        <div
-                          key={index}
-                          className="relative z-10 flex-shrink-0 rounded-full"
-                          style={{
-                            width: `${BAR_WIDTH}px`,
-                            height: `${barHeight}px`,
-                            marginRight: `${BAR_GAP}px`,
-                            backgroundColor: isActive
-                              ? "var(--waveform-progress)"
-                              : "var(--waveform-color)",
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
+                  {/* Canvas waveform — replaces 260+ div elements, drawn imperatively on progress change */}
+                  <canvas
+                    ref={playerCanvasRef}
+                    className="relative z-10 h-full w-full"
+                    style={{ display: "block" }}
+                  />
                 </div>
 
                 <span className="w-10 flex-shrink-0 text-xs text-[var(--icon-color)]">
@@ -837,11 +685,7 @@ export default function MusicPlayer() {
                   <div className="flex flex-shrink-0 items-center gap-1">
                     <button
                       type="button"
-                      title={
-                        previousCuePoint
-                          ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}`
-                          : "Previous cue"
-                      }
+                      title={previousCuePoint ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}` : "Previous cue"}
                       aria-label="Jump to previous cue point"
                       onClick={() => jumpToCuePoint(previousCuePoint)}
                       disabled={!previousCuePoint}
@@ -849,14 +693,9 @@ export default function MusicPlayer() {
                     >
                       <CuePreviousIcon />
                     </button>
-
                     <button
                       type="button"
-                      title={
-                        nextCuePoint
-                          ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}`
-                          : "Next cue"
-                      }
+                      title={nextCuePoint ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}` : "Next cue"}
                       aria-label="Jump to next cue point"
                       onClick={() => jumpToCuePoint(nextCuePoint)}
                       disabled={!nextCuePoint}
@@ -877,32 +716,21 @@ export default function MusicPlayer() {
           </div>
         )}
 
+        {/* Key / BPM */}
         {showRightMeta && (
           <div
             className="flex flex-shrink-0 items-center text-xs text-[var(--text-secondary)]"
-            style={{
-              gap: `${metaGap}px`,
-            }}
+            style={{ gap: `${metaGap}px` }}
           >
-            {showKey && (
-              <span className="whitespace-nowrap">
-                {currentSong.key || "—"}
-              </span>
-            )}
-
-            {showBpm && (
-              <span className="whitespace-nowrap">
-                {currentSong.bpm ? `${currentSong.bpm} BPM` : "—"}
-              </span>
-            )}
+            {showKey && <span className="whitespace-nowrap">{currentSong.key || "—"}</span>}
+            {showBpm && <span className="whitespace-nowrap">{currentSong.bpm ? `${currentSong.bpm} BPM` : "—"}</span>}
           </div>
         )}
 
+        {/* Actions */}
         <div
           className="flex flex-shrink-0 items-center justify-end gap-0.5"
-          style={{
-            marginLeft: `${metaToActionsGap - mainGap}px`,
-          }}
+          style={{ marginLeft: `${metaToActionsGap - mainGap}px` }}
         >
           <IconButton
             label={favorited ? "Remove song from favorites" : "Favorite song"}
@@ -917,26 +745,14 @@ export default function MusicPlayer() {
             type="button"
             aria-label="Song options"
             aria-expanded={moreOpen}
-            onClick={(e) => {
-              e.stopPropagation();
-              setMoreOpen((open) => !open);
-            }}
-            className={`${iconButtonClass} ${
-              moreOpen
-                ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)]"
-                : ""
-            }`}
+            onClick={(e) => { e.stopPropagation(); setMoreOpen((open) => !open); }}
+            className={`${iconButtonClass} ${moreOpen ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)]" : ""}`}
           >
             <MoreIcon />
           </button>
 
           {currentSong.audioUrl && (
-            <a
-              href={currentSong.audioUrl}
-              download
-              aria-label="Download song"
-              className={iconButtonClass}
-            >
+            <a href={currentSong.audioUrl} download aria-label="Download song" className={iconButtonClass}>
               <DownloadIcon />
             </a>
           )}
@@ -947,78 +763,36 @@ export default function MusicPlayer() {
         <div
           ref={moreMenuRef}
           className="music-player-more-menu fixed"
-          style={{
-            top: `${moreMenuPosition.top}px`,
-            left: `${moreMenuPosition.left}px`,
-          }}
+          style={{ top: `${moreMenuPosition.top}px`, left: `${moreMenuPosition.left}px` }}
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            type="button"
-            onClick={() => {
-              setMoreOpen(false);
-              setAddToPlaylistOpen(true);
-            }}
-          >
+          <button type="button" onClick={() => { setMoreOpen(false); setAddToPlaylistOpen(true); }}>
             <span>Add to Playlist</span>
           </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setMoreOpen(false);
-              setAddToProjectOpen(true);
-            }}
-          >
+          <button type="button" onClick={() => { setMoreOpen(false); setAddToProjectOpen(true); }}>
             <span>Add to Project</span>
           </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setMoreOpen(false);
-              setCreatePlaylistOpen(true);
-            }}
-          >
+          <button type="button" onClick={() => { setMoreOpen(false); setCreatePlaylistOpen(true); }}>
             <span>Create New Playlist</span>
           </button>
-
           {currentSong.audioUrl ? (
             <a href={currentSong.audioUrl} download>
               <span>Download Song</span>
               <DownloadIcon />
             </a>
           ) : (
-            <button type="button" disabled>
-              <span>Download Song</span>
-            </button>
+            <button type="button" disabled><span>Download Song</span></button>
           )}
-
           <div className="music-player-more-menu-divider" />
-
-          <button
-            type="button"
-            onClick={handleClosePlayer}
-            className="music-player-more-menu-close danger-hover"
-          >
+          <button type="button" onClick={handleClosePlayer} className="music-player-more-menu-close danger-hover">
             <span>Close Player</span>
             <CloseIcon />
           </button>
         </div>
       )}
 
-      <AddToPlaylistModal
-        isOpen={addToPlaylistOpen}
-        song={currentSong}
-        onClose={() => setAddToPlaylistOpen(false)}
-      />
-
-      <AddToProjectModal
-        isOpen={addToProjectOpen}
-        song={currentSong}
-        onClose={() => setAddToProjectOpen(false)}
-      />
-
+      <AddToPlaylistModal isOpen={addToPlaylistOpen} song={currentSong} onClose={() => setAddToPlaylistOpen(false)} />
+      <AddToProjectModal isOpen={addToProjectOpen} song={currentSong} onClose={() => setAddToProjectOpen(false)} />
       <CreatePlaylistModal
         isOpen={createPlaylistOpen}
         name={newPlaylistName}
@@ -1029,7 +803,6 @@ export default function MusicPlayer() {
         onCreate={handleCreatePlaylist}
         onClose={() => {
           if (isCreatingPlaylist) return;
-
           setNewPlaylistName("");
           setNewPlaylistCoverPreview(null);
           setCreatePlaylistOpen(false);
