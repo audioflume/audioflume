@@ -2,6 +2,11 @@ import {
   getStoredCuePointFilterSelection,
   notifyCuePointFilterSelection,
 } from "@/lib/cuePointFilterSelection";
+import {
+  EDIT_POINT_MARKER_VISIBILITY_EVENT,
+  getStoredEditPointMarkerVisibility,
+  setStoredEditPointMarkerVisibility,
+} from "@/lib/editPointMarkerVisibility";
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
 import { useEffect, useState } from "react";
 
@@ -26,9 +31,6 @@ type UseFilterPersistenceProps = {
   authLoaded: boolean;
 };
 
-const MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT =
-  "filmwave:music-library-marker-visibility";
-
 const baseDefaultState: FilterState = {
   search: "",
   selectedMoods: [],
@@ -49,28 +51,18 @@ function getDefaultState(): FilterState {
   return {
     ...baseDefaultState,
     selectedEditPoints: getStoredCuePointFilterSelection(),
+    showEditPointMarkers: getStoredEditPointMarkerVisibility(),
   };
 }
 
-function notifyMusicLibraryMarkerVisibility(visible: boolean) {
-  const event = new Event(MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT) as Event & {
-    visible?: boolean;
-  };
-
-  event.visible = visible;
-  window.dispatchEvent(event);
-}
-
-function getMusicLibraryMarkerVisibilityFromEvent(event: Event) {
-  const markerEvent = event as Event & { visible?: boolean };
+function getEditPointMarkerVisibilityFromEvent(event: Event) {
   const customEvent = event as CustomEvent<{ visible?: boolean }>;
 
-  if (typeof markerEvent.visible === "boolean") return markerEvent.visible;
   if (typeof customEvent.detail?.visible === "boolean") {
     return customEvent.detail.visible;
   }
 
-  return null;
+  return getStoredEditPointMarkerVisibility();
 }
 
 function normalizeFilterState(parsed: Record<string, unknown>): FilterState {
@@ -91,10 +83,7 @@ function normalizeFilterState(parsed: Record<string, unknown>): FilterState {
     selectedEditPoints: Array.isArray(parsed.selectedEditPoints)
       ? parsed.selectedEditPoints
       : [],
-    showEditPointMarkers:
-      typeof parsed.showEditPointMarkers === "boolean"
-        ? parsed.showEditPointMarkers
-        : baseDefaultState.showEditPointMarkers,
+    showEditPointMarkers: getStoredEditPointMarkerVisibility(),
     instrumental:
       typeof parsed.instrumental === "boolean" ? parsed.instrumental : false,
     bpmValue: (parsed.bpmValue as BpmFilterValue | null) ?? null,
@@ -112,10 +101,8 @@ export function useFilterPersistence({
   const [filters, setFilters] = useState<FilterState>(baseDefaultState);
 
   useEffect(() => {
-    const handleMusicLibraryMarkerVisibility = (event: Event) => {
-      const visible = getMusicLibraryMarkerVisibilityFromEvent(event);
-
-      if (visible === null) return;
+    const handleEditPointMarkerVisibility = (event: Event) => {
+      const visible = getEditPointMarkerVisibilityFromEvent(event);
 
       setFilters((current) =>
         current.showEditPointMarkers === visible
@@ -125,15 +112,17 @@ export function useFilterPersistence({
     };
 
     window.addEventListener(
-      MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT,
-      handleMusicLibraryMarkerVisibility,
+      EDIT_POINT_MARKER_VISIBILITY_EVENT,
+      handleEditPointMarkerVisibility,
     );
+    window.addEventListener("storage", handleEditPointMarkerVisibility);
 
     return () => {
       window.removeEventListener(
-        MUSIC_LIBRARY_MARKER_VISIBILITY_EVENT,
-        handleMusicLibraryMarkerVisibility,
+        EDIT_POINT_MARKER_VISIBILITY_EVENT,
+        handleEditPointMarkerVisibility,
       );
+      window.removeEventListener("storage", handleEditPointMarkerVisibility);
     };
   }, []);
 
@@ -150,7 +139,6 @@ export function useFilterPersistence({
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
-      notifyMusicLibraryMarkerVisibility(defaultState.showEditPointMarkers);
       setHydrated(true);
       setHydratedKey(null);
       return;
@@ -163,7 +151,6 @@ export function useFilterPersistence({
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
-      notifyMusicLibraryMarkerVisibility(defaultState.showEditPointMarkers);
       setHydrated(true);
       setHydratedKey(storageKey);
       return;
@@ -175,14 +162,12 @@ export function useFilterPersistence({
 
       setFilters(normalizedState);
       notifyCuePointFilterSelection(normalizedState.selectedEditPoints);
-      notifyMusicLibraryMarkerVisibility(normalizedState.showEditPointMarkers);
     } catch {
       const defaultState = getDefaultState();
 
       sessionStorage.removeItem(storageKey);
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
-      notifyMusicLibraryMarkerVisibility(defaultState.showEditPointMarkers);
     } finally {
       setHydrated(true);
       setHydratedKey(storageKey);
@@ -197,7 +182,7 @@ export function useFilterPersistence({
 
     sessionStorage.setItem(storageKey, JSON.stringify(filters));
     notifyCuePointFilterSelection(filters.selectedEditPoints);
-    notifyMusicLibraryMarkerVisibility(filters.showEditPointMarkers);
+    setStoredEditPointMarkerVisibility(filters.showEditPointMarkers);
   }, [hydrated, hydratedKey, storageKey, filters]);
 
   return { filters, setFilters, hydrated };
