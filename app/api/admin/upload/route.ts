@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
+import { processAudioForStreaming } from "@/lib/audioProcessing";
 import { uploadFileToR2 } from "@/lib/r2";
 
 export const runtime = "nodejs";
+export const maxDuration = 300;
 
 function slugify(value: string) {
   const cleanValue = value
@@ -118,9 +120,22 @@ export async function POST(req: Request) {
       key,
     });
 
+    const streamingAssets =
+      type === "audio"
+        ? await processAudioForStreaming({
+            file,
+            baseKey: `${artistSlug}/${titleSlug}`,
+          })
+        : null;
+
     return NextResponse.json({
       url,
       key,
+      playbackUrl: streamingAssets?.playbackUrl || "",
+      playbackKey: streamingAssets?.playbackKey || "",
+      hlsUrl: streamingAssets?.hlsUrl || "",
+      hlsKey: streamingAssets?.hlsKey || "",
+      hlsAssetKeys: streamingAssets?.hlsAssetKeys || [],
       fileName: file.name,
       storedFileName: fileName,
       contentType: file.type,
