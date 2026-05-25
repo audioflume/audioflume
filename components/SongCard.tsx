@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePlayer } from "@/context/PlayerContext";
+import {
+  usePlayer,
+  useIsCurrentSong,
+  useIsCurrentSongPlaying,
+  useHasCurrentSong,
+} from "@/context/PlayerContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
@@ -27,10 +32,8 @@ type StemItem = {
 
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
-
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
-
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
@@ -63,13 +66,8 @@ function normalizeStems(value: unknown): StemItem[] {
         .split(/\n/)
         .map((url, index) => {
           const cleanUrl = url.trim();
-
           if (!cleanUrl || !cleanUrl.startsWith("http")) return null;
-
-          return {
-            name: getStemNameFromUrl(cleanUrl, index),
-            url: cleanUrl,
-          };
+          return { name: getStemNameFromUrl(cleanUrl, index), url: cleanUrl };
         })
         .filter((item): item is StemItem => Boolean(item));
     }
@@ -79,13 +77,8 @@ function normalizeStems(value: unknown): StemItem[] {
 
   if (value.every((item) => typeof item === "string")) {
     const joined = value.join("\n").trim();
-
     if (joined.startsWith("[") || joined.startsWith("{")) {
-      try {
-        return normalizeStems(JSON.parse(joined));
-      } catch {
-        // Fall through to string URL parsing below.
-      }
+      try { return normalizeStems(JSON.parse(joined)); } catch { /* fall through */ }
     }
   }
 
@@ -93,19 +86,13 @@ function normalizeStems(value: unknown): StemItem[] {
     .map((item, index) => {
       if (typeof item === "string") {
         const url = item.trim();
-
         if (!url || !url.startsWith("http")) return null;
-
-        return {
-          name: getStemNameFromUrl(url, index),
-          url,
-        };
+        return { name: getStemNameFromUrl(url, index), url };
       }
 
       if (!item || typeof item !== "object") return null;
 
       const record = getRecord(item);
-
       const url =
         typeof record.url === "string" && record.url.trim()
           ? record.url.trim()
@@ -168,7 +155,17 @@ export default function SongCard({
   onRemoveFromPlaylist?: (songId: string) => void;
   onRemoveFromProject?: (songId: string) => void;
 }) {
-  const { togglePlayPause, currentSong, isPlaying } = usePlayer();
+  // Fine-grained hooks — only THIS SongCard re-renders when its status changes.
+  // Replaces reading currentSong + isPlaying from usePlayer() which caused all
+  // 50+ SongCards to re-render on every song switch or play/pause toggle.
+  const isCurrentSong = useIsCurrentSong(song.id);
+  const actuallyPlaying = useIsCurrentSongPlaying(song.id);
+  const playerVisible = useHasCurrentSong();
+
+  // Only stable actions from usePlayer() — these never change so they
+  // don't trigger re-renders.
+  const { togglePlayPause, seekTo, registerWaveform, unregisterWaveform } = usePlayer();
+
   const { isFavorite, toggleFavorite } = useFavorites();
   const { showEditPointMarkers } = useUserPreferences();
   const { playlists, setPlaylists } = usePlaylists();
@@ -180,15 +177,10 @@ export default function SongCard({
   const [projectModalOpen, setProjectModalOpen] = useState(false);
   const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
-  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<
-    string | null
-  >(null);
+  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<string | null>(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const playerVisible = !!currentSong;
-  const isCurrentSong = currentSong?.id === song.id;
-  const actuallyPlaying = isCurrentSong && isPlaying;
   const displayIcon = actuallyPlaying ? (
     <PauseIcon size={15} />
   ) : (
@@ -203,34 +195,21 @@ export default function SongCard({
 
   async function handleCreatePlaylist() {
     if (!newPlaylistName.trim() || isCreatingPlaylist) return;
-
     setIsCreatingPlaylist(true);
-
     try {
       const res = await fetch("/api/playlists", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: newPlaylistName,
           cover_image_url: newPlaylistCoverPreview,
           position: playlists.length,
         }),
       });
-
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-
-      if (!res.ok) {
-        console.error("Failed to create playlist:", data || res.statusText);
-        return;
-      }
-
-      if (data) {
-        setPlaylists((current) => [...current, data]);
-      }
-
+      if (!res.ok) { console.error("Failed to create playlist:", data || res.statusText); return; }
+      if (data) setPlaylists((current) => [...current, data]);
       setNewPlaylistName("");
       setNewPlaylistCoverPreview(null);
       setCreatePlaylistOpen(false);
@@ -241,47 +220,26 @@ export default function SongCard({
 
   async function handleRemoveFromPlaylist() {
     if (!playlistId || !onRemoveFromPlaylist) return;
-
     const res = await fetch(
-      `/api/playlists/${encodeURIComponent(
-        playlistId,
-      )}/songs/${encodeURIComponent(song.id)}`,
-      {
-        method: "DELETE",
-      },
+      `/api/playlists/${encodeURIComponent(playlistId)}/songs/${encodeURIComponent(song.id)}`,
+      { method: "DELETE" },
     );
-
-    if (!res.ok) {
-      console.error("Failed to remove song from playlist");
-      return;
-    }
-
+    if (!res.ok) { console.error("Failed to remove song from playlist"); return; }
     onRemoveFromPlaylist(song.id);
     setMoreOpen(false);
   }
 
   async function handleRemoveFromProject() {
     if (!projectId || !onRemoveFromProject) return;
-
     const res = await fetch(
       `/api/songs/${encodeURIComponent(song.id)}/projects`,
       {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          project_id: Number(projectId),
-          selected: false,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project_id: Number(projectId), selected: false }),
       },
     );
-
-    if (!res.ok) {
-      console.error("Failed to remove song from project");
-      return;
-    }
-
+    if (!res.ok) { console.error("Failed to remove song from project"); return; }
     onRemoveFromProject(song.id);
     setMoreOpen(false);
   }
@@ -293,13 +251,10 @@ export default function SongCard({
 
   useEffect(() => {
     if (!cardRef.current) return;
-
     const ro = new ResizeObserver((entries) => {
       setCardWidth(entries[0].contentRect.width);
     });
-
     ro.observe(cardRef.current);
-
     return () => ro.disconnect();
   }, []);
 
@@ -312,9 +267,7 @@ export default function SongCard({
             ? "bg-[var(--bg-hover)]"
             : "hover:bg-[color-mix(in_srgb,var(--bg-hover)_30%,transparent)]"
         }`}
-        style={{
-          borderBottom: "1px solid var(--border-subtle)",
-        }}
+        style={{ borderBottom: "1px solid var(--border-subtle)" }}
       >
         <button
           type="button"
@@ -323,22 +276,14 @@ export default function SongCard({
           aria-label={actuallyPlaying ? "Pause song" : "Play song"}
         >
           {coverArtUrl ? (
-            <Image
-              src={coverArtUrl}
-              alt={song.title}
-              fill
-              sizes="40px"
-              className="object-cover"
-            />
+            <Image src={coverArtUrl} alt={song.title} fill sizes="40px" className="object-cover" />
           ) : (
             <div className="h-10 w-10 bg-[var(--bg-hover)]" />
           )}
 
           <div
             className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] transition-opacity ${
-              isCurrentSong
-                ? "opacity-100"
-                : "opacity-0 group-hover:opacity-100"
+              isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
             }`}
           >
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(0,0,0,0.22)]">
@@ -351,7 +296,6 @@ export default function SongCard({
           <span className="truncate text-sm font-medium text-[var(--text-primary)]">
             {song.title}
           </span>
-
           <span className="truncate text-xs text-[var(--text-subtle)]">
             {song.artist}
           </span>
@@ -386,8 +330,6 @@ export default function SongCard({
                   )}
                 >
                   {stems.map((stem) => (
-                    // filmwave-dropdown-shell global handles display, padding, colors, hover.
-                    // Only truncate is added here to handle long stem names.
                     <a
                       key={`${stem.name}-${stem.url}`}
                       href={stem.url}
@@ -448,21 +390,11 @@ export default function SongCard({
             <SongMoreDropdown
               open={moreOpen}
               onOpenChange={setMoreOpen}
-              onAddToPlaylist={() => {
-                setPlaylistModalOpen(true);
-              }}
-              onAddToProject={() => {
-                setProjectModalOpen(true);
-              }}
-              onCreatePlaylist={() => {
-                setCreatePlaylistOpen(true);
-              }}
-              onRemoveFromPlaylist={
-                playlistId ? handleRemoveFromPlaylist : undefined
-              }
-              onRemoveFromProject={
-                projectId ? handleRemoveFromProject : undefined
-              }
+              onAddToPlaylist={() => setPlaylistModalOpen(true)}
+              onAddToProject={() => setProjectModalOpen(true)}
+              onCreatePlaylist={() => setCreatePlaylistOpen(true)}
+              onRemoveFromPlaylist={playlistId ? handleRemoveFromPlaylist : undefined}
+              onRemoveFromProject={projectId ? handleRemoveFromProject : undefined}
               collisionPadding={{
                 top: 163,
                 right: 16,
@@ -505,7 +437,6 @@ export default function SongCard({
           onCreate={handleCreatePlaylist}
           onClose={() => {
             if (isCreatingPlaylist) return;
-
             setNewPlaylistName("");
             setNewPlaylistCoverPreview(null);
             setCreatePlaylistOpen(false);
