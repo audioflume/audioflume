@@ -297,7 +297,7 @@ export default function ProjectFolderPickerModal({
                   <button
                     type="button"
                     onClick={() => setSelectedFolderId(headerFolderId)}
-                    className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full cursor-pointer items-center rounded-full bg-[var(--bg-hover)] px-3 text-left text-[10px] leading-none transition-colors hover:bg-white/[0.08] [.light_&:hover]:bg-black/[0.05]`}
+                    className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full cursor-pointer items-center rounded-full bg-[var(--bg-hover)] px-3 text-left text-[10px] leading-none transition-colors hover:bg-white/[0.08] [.light_&:hover]:bg-black/[0.12]`}
                   >
                     <span className="truncate">{columnLabel}</span>
                   </button>
