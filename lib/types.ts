@@ -24,6 +24,8 @@ export type Song = {
   title: string;
   artist: string;
   audioUrl: string;
+  playbackUrl: string;
+  hlsUrl: string;
   stems: {
     name: string;
     url: string;
