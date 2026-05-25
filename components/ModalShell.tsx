@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePlayer } from "@/context/PlayerContext";
-import { iconButtonClass, modalTitleClass } from "@/components/uiClasses";
+import { flatIconButtonClass, modalTitleClass } from "@/components/uiClasses";
 
 type ModalShellProps = {
   isOpen: boolean;
@@ -84,11 +84,11 @@ export default function ModalShell({
           )}
         </div>
 
-        {/* Uses iconButtonClass (filmwave-icon-button-plain) for consistent borderless icon button styling */}
+        {/* flatIconButtonClass: square corners, no border, subtle hover (filmwave-icon-button-flat) */}
         <button
           type="button"
           onClick={onClose}
-          className={`absolute right-4 top-4 z-10 ${iconButtonClass}`}
+          className={`absolute right-4 top-4 z-10 ${flatIconButtonClass}`}
           aria-label={closeLabel}
         >
           <svg
