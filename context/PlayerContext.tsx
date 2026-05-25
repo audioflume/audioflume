@@ -331,26 +331,30 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const current = currentSongRef.current;
       if (!current) return false;
 
-      const desiredTime = currentTimeRef.current;
       const needsSource = !audio.src || audio.src !== current.audioUrl;
 
       if (needsSource) {
+        const desiredTime = currentTimeRef.current;
         audio.src = current.audioUrl;
-      }
 
-      const applyTime = () => {
-        if (!audio.duration || !isFinite(audio.duration)) return;
-        const safeTime = Math.max(0, Math.min(desiredTime, audio.duration));
-        audio.currentTime = safeTime;
-        setCurrentTimeState(safeTime);
-        setDurationState(audio.duration);
-      };
+        // Only restore a saved position when actually loading a new source.
+        // When called after seekTo(), audio.currentTime is already set correctly —
+        // applying it again cancels the in-progress browser seek and restarts it,
+        // causing the perceived lag when clicking the waveform.
+        if (desiredTime > 0) {
+          const applyTime = () => {
+            if (!audio.duration || !isFinite(audio.duration)) return;
+            const safeTime = Math.max(0, Math.min(desiredTime, audio.duration));
+            audio.currentTime = safeTime;
+            setCurrentTimeState(safeTime);
+            setDurationState(audio.duration);
+          };
 
-      if (desiredTime > 0) {
-        if (audio.readyState >= 1) {
-          applyTime();
-        } else {
-          audio.addEventListener("loadedmetadata", applyTime, { once: true });
+          if (audio.readyState >= 1) {
+            applyTime();
+          } else {
+            audio.addEventListener("loadedmetadata", applyTime, { once: true });
+          }
         }
       }
 
