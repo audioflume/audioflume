@@ -348,6 +348,28 @@ body.sidebar-collapsed {
   gap: 6px !important;
 }
 
+/* ─── Project tabs ─────────────────────────── */
+
+.project-tabs-row > button:not(.project-new-folder-button):not(.project-view-toggle-button) {
+  position: relative;
+  align-self: stretch;
+  border-bottom-color: transparent !important;
+}
+
+.project-tabs-row > button:not(.project-new-folder-button):not(.project-view-toggle-button)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  background: transparent;
+}
+
+.project-tabs-row > button:not(.project-new-folder-button):not(.project-view-toggle-button)[class*="border-[var(--text-primary)]"]::before {
+  background: var(--text-primary);
+}
+
 /* ─── Dropdown shell ─────────────────────────── */
 
 .filmwave-dropdown-shell,
