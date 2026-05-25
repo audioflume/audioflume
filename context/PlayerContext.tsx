@@ -570,29 +570,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const safeProgress = Number.isFinite(progress)
         ? Math.max(0, Math.min(1, progress))
         : 0;
-      const currentAudioDuration =
-        audio.duration && isFinite(audio.duration) ? audio.duration : 0;
-      const estimatedDuration =
-        isSameSong && currentAudioDuration
-          ? currentAudioDuration
-          : song.duration || 0;
-      const estimatedTargetTime = estimatedDuration * safeProgress;
-      let playbackStarted = false;
-
-      const startPlayback = () => {
-        if (!shouldPlay || playbackStarted) return;
-        playbackStarted = true;
-        playAudio(audio);
-      };
-
-      const writeSeekState = (currentTime: number, duration: number) => {
-        lastStorageWriteTimeRef.current = Date.now();
-        writeStoredPlayerState({
-          currentSong: song,
-          currentTime,
-          duration,
-        });
-      };
 
       remoteOwnerTabIdRef.current = null;
       setRemotePlayingInAnotherTab(false);
@@ -613,76 +590,48 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         currentSongRef.current = song;
         setCurrentSong(song);
         setIsPlaying(false);
-        setCurrentTimeState(estimatedTargetTime);
-        setDurationState(estimatedDuration);
+        setCurrentTimeState(0);
+        setDurationState(song.duration || 0);
         loadSongSource(audio, song);
-        writeSeekState(estimatedTargetTime, estimatedDuration);
-      } else if (!currentAudioDuration && estimatedDuration) {
-        setCurrentTimeState(estimatedTargetTime);
-        setDurationState(estimatedDuration);
+
+        lastStorageWriteTimeRef.current = Date.now();
+        writeStoredPlayerState({
+          currentSong: song,
+          currentTime: 0,
+          duration: song.duration || 0,
+        });
       }
 
       const applySeek = () => {
         if (seekRequestId !== pendingSeekRequestIdRef.current) return;
         if (currentSongRef.current?.id !== song.id) return;
+        if (!audio.duration || !isFinite(audio.duration)) return;
 
-        const resolvedDuration =
-          audio.duration && isFinite(audio.duration)
-            ? audio.duration
-            : estimatedDuration;
+        const targetTime = safeProgress * audio.duration;
 
-        if (!resolvedDuration) {
-          startPlayback();
-          return;
-        }
-
-        const targetTime = safeProgress * resolvedDuration;
-
-        try {
-          if (typeof audio.fastSeek === "function") {
-            audio.fastSeek(targetTime);
-          } else {
-            audio.currentTime = targetTime;
-          }
-        } catch {
-          try {
-            audio.currentTime = targetTime;
-          } catch {
-            // Ignore seek failures until the browser has enough metadata.
-          }
-        }
-
+        audio.currentTime = targetTime;
         setCurrentTimeState(targetTime);
-        setDurationState(resolvedDuration);
+        setDurationState(audio.duration);
 
         if (!isSameSong || !shouldPlay) {
-          writeSeekState(targetTime, resolvedDuration);
+          lastStorageWriteTimeRef.current = Date.now();
+          writeStoredPlayerState({
+            currentSong: song,
+            currentTime: targetTime,
+            duration: audio.duration,
+          });
         }
 
         if (shouldPlay) {
-          startPlayback();
+          playAudio(audio);
         } else {
           postPausedState();
         }
       };
 
-      if (currentAudioDuration) {
+      if (audio.duration && isFinite(audio.duration)) {
         applySeek();
       } else {
-        if (estimatedDuration) {
-          try {
-            audio.currentTime = estimatedTargetTime;
-          } catch {
-            // Some browsers reject currentTime before metadata; loadedmetadata corrects it.
-          }
-        }
-
-        if (shouldPlay) {
-          startPlayback();
-        } else {
-          postPausedState();
-        }
-
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
