@@ -15,7 +15,6 @@ import {
 } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
-import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { useSongs } from "@/hooks/useSongs";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -90,7 +89,6 @@ export default function FavoritesPage() {
 
   const { favoriteIds, favoriteIdSet, favoritesLoaded } = useFavorites();
   const { currentSong, setQueue } = usePlayer();
-  const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
   const playerVisible = !!currentSong;
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -490,17 +488,6 @@ export default function FavoritesPage() {
                 </button>
               );
             })}
-
-            <button
-              type="button"
-              onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
-              className={`${quickFilterButtonClass} ${
-                showEditPointMarkers ? quickFilterButtonActiveClass : ""
-              }`}
-              aria-pressed={showEditPointMarkers}
-            >
-              markers
-            </button>
           </div>
 
           <section className="favorites-section">
@@ -558,7 +545,6 @@ export default function FavoritesPage() {
                   song={song}
                   isFirst={index === 0}
                   isLast={index === displayedSongs.length - 1}
-                  showEditPointMarkers={showEditPointMarkers}
                 />
               ))}
           </section>
