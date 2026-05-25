@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { getSongs } from "@/lib/songs";
+import { normalizeSongRow, attachEditPoints } from "@/lib/songs";
 import { normalizeProjectAsset } from "@/lib/projectFolders";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -62,8 +62,29 @@ export async function GET(req: Request, context: RouteContext) {
       return NextResponse.json({ assets: projectAssets });
     }
 
-    const songs = await getSongs();
-    const songsById = new Map(songs.map((song) => [song.id, song]));
+    // Only fetch the specific songs that belong to this project,
+    // instead of loading the entire catalogue and filtering in memory.
+    const songIds = projectAssets
+      .map((asset) => asset.asset_id)
+      .filter(Boolean);
+
+    if (songIds.length === 0) {
+      return NextResponse.json({ assets: projectAssets, songs: [] });
+    }
+
+    const { data: songRows, error: songRowsError } = await supabaseServer
+      .from("songs")
+      .select("*")
+      .in("id", songIds)
+      .eq("status", "published");
+
+    if (songRowsError) throw songRowsError;
+
+    const normalizedSongs = await attachEditPoints(
+      (songRows ?? []).map(normalizeSongRow),
+    );
+
+    const songsById = new Map(normalizedSongs.map((song) => [song.id, song]));
 
     const projectSongs = projectAssets
       .map((asset) => {
