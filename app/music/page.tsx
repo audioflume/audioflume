@@ -679,9 +679,8 @@ export default function MusicPage() {
             paddingTop: hasActiveFilters ? "0px" : "20px",
             paddingBottom: hasActiveFilters ? "0px" : "32px",
             opacity: hasActiveFilters ? 0 : 1,
-            transform: hasActiveFilters ? "translateY(-8px)" : "translateY(0)",
             transition:
-              "max-height 520ms cubic-bezier(0.22, 1, 0.36, 1), padding 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease, transform 320ms ease",
+              "max-height 520ms cubic-bezier(0.22, 1, 0.36, 1), padding 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
           }}
           aria-hidden={hasActiveFilters}
         >
