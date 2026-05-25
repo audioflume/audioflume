@@ -750,6 +750,7 @@ export default function MusicPlayer() {
           <IconButton
             label={showEditPointMarkers ? "Hide cue markers" : "Show cue markers"}
             active={showEditPointMarkers}
+            activeClassName="bg-[var(--text-primary)] text-[var(--bg-primary)]"
             onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
           >
             <EditPointsIcon />
