@@ -1,15 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { load } from "@tauri-apps/plugin-store";
-import { getMockProjects, type Project } from "./lib/mockFilmwaveApi";
+import {
+  getFilmwaveProjects,
+  getMockProjects,
+  type Project,
+} from "./lib/mockFilmwaveApi";
 import { formatSyncReport, syncProjectsToFolder } from "./lib/syncEngine";
 import "./App.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 
+type ProjectSource = "mock" | "local-api";
+
 function App() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectSource, setProjectSource] = useState<ProjectSource>("mock");
   const [syncFolder, setSyncFolder] = useState<string | null>(null);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
   const [syncStatus, setSyncStatus] = useState("Not connected");
@@ -33,34 +40,72 @@ function App() {
     return `${selectedCount} ${label} selected`;
   }, [hasSelectedProjects, projectsLoading, selectedProjectIds.length]);
 
+  const sourceDescription =
+    projectSource === "mock"
+      ? "Using local sample data"
+      : "Using localhost:3000 Filmwave API";
+
   useEffect(() => {
     async function loadSavedSettings() {
       const store = await load(SETTINGS_STORE);
       const savedFolder = await store.get<string>("syncFolder");
+      const savedProjectSource = await store.get<ProjectSource>("projectSource");
 
       if (savedFolder) {
         setSyncFolder(savedFolder);
         setSyncStatus("Folder ready");
       }
-    }
 
-    async function loadProjects() {
-      setProjectsLoading(true);
-
-      try {
-        const nextProjects = await getMockProjects();
-        setProjects(nextProjects);
-      } catch (error) {
-        console.error(error);
-        setSyncStatus("Could not load projects");
-      } finally {
-        setProjectsLoading(false);
+      if (savedProjectSource === "mock" || savedProjectSource === "local-api") {
+        setProjectSource(savedProjectSource);
       }
     }
 
     loadSavedSettings();
-    loadProjects();
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProjects() {
+      setProjectsLoading(true);
+      setLastSyncReport(null);
+      setSelectedProjectIds([]);
+
+      try {
+        const nextProjects =
+          projectSource === "local-api"
+            ? await getFilmwaveProjects()
+            : await getMockProjects();
+
+        if (cancelled) return;
+
+        setProjects(nextProjects);
+        setSyncStatus(projectSource === "local-api" ? "Local API loaded" : "Mock data loaded");
+      } catch (error) {
+        if (cancelled) return;
+
+        console.error(error);
+        setProjects([]);
+        setSyncStatus("Could not load projects");
+        setLastSyncReport(
+          error instanceof Error
+            ? error.message
+            : "Could not load Filmwave projects.",
+        );
+      } finally {
+        if (!cancelled) {
+          setProjectsLoading(false);
+        }
+      }
+    }
+
+    loadProjects();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [projectSource]);
 
   async function chooseSyncFolder() {
     const selected = await open({
@@ -78,6 +123,14 @@ function App() {
       await store.set("syncFolder", selected);
       await store.save();
     }
+  }
+
+  async function changeProjectSource(nextSource: ProjectSource) {
+    const store = await load(SETTINGS_STORE);
+
+    setProjectSource(nextSource);
+    await store.set("projectSource", nextSource);
+    await store.save();
   }
 
   function toggleProject(projectId: string) {
@@ -160,6 +213,30 @@ function App() {
 
         <div className="section-block">
           <div>
+            <h2>Project source</h2>
+            <p>{sourceDescription}</p>
+          </div>
+
+          <div className="source-toggle" aria-label="Project data source">
+            <button
+              type="button"
+              className={projectSource === "mock" ? "is-active" : ""}
+              onClick={() => changeProjectSource("mock")}
+            >
+              Mock
+            </button>
+            <button
+              type="button"
+              className={projectSource === "local-api" ? "is-active" : ""}
+              onClick={() => changeProjectSource("local-api")}
+            >
+              Local API
+            </button>
+          </div>
+        </div>
+
+        <div className="section-block">
+          <div>
             <h2>Sync folder</h2>
             <p className="folder-path">{syncFolder ?? "No folder selected"}</p>
           </div>
@@ -208,6 +285,16 @@ function App() {
                   </span>
                 </span>
               </div>
+            ) : projects.length === 0 ? (
+              <div className="project-row is-loading">
+                <span className="project-check" aria-hidden="true" />
+                <span className="project-main">
+                  <span className="project-name">No projects found</span>
+                  <span className="project-description">
+                    Try switching sources or creating a project on Filmwave.
+                  </span>
+                </span>
+              </div>
             ) : (
               projects.map((project) => {
                 const selected = selectedProjectIds.includes(project.id);
@@ -226,7 +313,7 @@ function App() {
                     <span className="project-main">
                       <span className="project-name">{project.name}</span>
                       <span className="project-description">
-                        {project.description}
+                        {project.description || "No description"}
                       </span>
                     </span>
 
