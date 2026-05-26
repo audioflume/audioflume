@@ -63,7 +63,7 @@ h1 {
 h2 {
   color: var(--text-primary);
   font-size: 15px;
-  font-weight: 650;
+  font-weight: 500;
   letter-spacing: -0.025em;
   line-height: 1.15;
 }
@@ -72,7 +72,7 @@ h3 {
   margin-top: 12px;
   color: var(--text-primary);
   font-size: 15px;
-  font-weight: 650;
+  font-weight: 500;
   letter-spacing: -0.02em;
 }
 
@@ -127,7 +127,7 @@ p {
   color: var(--text-secondary);
   padding: 0 13px;
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .status-dot {
@@ -157,12 +157,17 @@ p {
   border-radius: 0;
 }
 
-.section-block:first-of-type {
+.account-block {
+  align-items: start;
   border-top-left-radius: 22px;
   border-top-right-radius: 22px;
 }
 
-.section-block:nth-of-type(7) {
+.account-block::after {
+  display: none;
+}
+
+.section-block:nth-of-type(8) {
   border-bottom-left-radius: 22px;
   border-bottom-right-radius: 22px;
 }
@@ -171,7 +176,7 @@ p {
   margin-top: 0;
 }
 
-.section-block:not(:first-of-type)::after {
+.section-block:not(.account-block)::after {
   content: "";
   position: absolute;
   left: 20px;
@@ -188,10 +193,6 @@ p {
 .section-block p,
 .projects-header p {
   margin-top: 4px;
-}
-
-.account-block {
-  align-items: start;
 }
 
 .folder-path {
@@ -225,7 +226,7 @@ p {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 500;
 }
 
 .account-avatar img {
@@ -245,7 +246,7 @@ p {
 .account-name {
   color: var(--text-primary);
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .account-email {
@@ -279,11 +280,11 @@ p {
   width: min(390px, 100%);
   min-height: 38px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 999px;
   background: var(--bg-control);
   color: var(--text-primary);
   outline: none;
-  padding: 0 13px;
+  padding: 0 15px;
   font-size: 14px;
 }
 
@@ -296,11 +297,11 @@ p {
 .secondary-button {
   min-height: 38px;
   border: 0;
-  border-radius: 10px;
-  padding: 0 16px;
+  border-radius: 999px;
+  padding: 0 18px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 500;
   white-space: nowrap;
   transition: background 0.15s ease, opacity 0.15s ease, color 0.15s ease;
 }
@@ -332,7 +333,7 @@ p {
   align-items: center;
   gap: 4px;
   min-height: 38px;
-  border-radius: 10px;
+  border-radius: 999px;
   background: var(--bg-control);
   padding: 4px;
 }
@@ -340,13 +341,13 @@ p {
 .source-toggle button {
   min-height: 30px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 999px;
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
   padding: 0 14px;
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .source-toggle button.is-active {
@@ -362,6 +363,7 @@ p {
   border-radius: 999px;
   padding: 0;
   gap: 0;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.14);
   transition: background 0.24s ease;
 }
@@ -380,6 +382,7 @@ p {
   border-radius: 999px;
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  pointer-events: none;
   transition: transform 0.24s cubic-bezier(.25, .9, .2, 1);
 }
 
@@ -388,15 +391,27 @@ p {
 }
 
 .source-toggle[aria-label="Realtime sync setting"] button {
-  position: relative;
-  z-index: 1;
-  width: 33px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
   min-height: 36px;
   padding: 0;
   border-radius: 999px;
   color: transparent;
   background: transparent !important;
   box-shadow: none;
+}
+
+.source-toggle[aria-label="Realtime sync setting"] button:nth-child(2) {
+  z-index: 2;
+}
+
+.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active) button:nth-child(1) {
+  z-index: 2;
+}
+
+.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active) button:nth-child(2) {
+  z-index: 1;
 }
 
 .projects-panel {
@@ -478,7 +493,7 @@ p {
   background: var(--bg-control);
   color: var(--text-primary);
   font-size: 12px;
-  font-weight: 750;
+  font-weight: 500;
 }
 
 .project-row.is-selected .project-check {
@@ -495,7 +510,7 @@ p {
 .project-name {
   color: inherit;
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .project-description {
@@ -530,7 +545,7 @@ p {
   gap: 18px;
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .progress-track {
@@ -583,7 +598,7 @@ p {
   padding: 5px 8px;
   color: var(--text-secondary);
   font-size: 11px;
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .local-removal-actions {
