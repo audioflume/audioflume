@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { load } from "@tauri-apps/plugin-store";
@@ -29,6 +30,27 @@ function formatRefreshTime(date: Date | null) {
   })}`;
 }
 
+function getTokenFromDeepLink(url: string) {
+  try {
+    const parsedUrl = new URL(url);
+
+    if (parsedUrl.protocol !== "filmwave:") return null;
+    if (parsedUrl.hostname !== "auth") return null;
+
+    return parsedUrl.searchParams.get("token");
+  } catch {
+    return null;
+  }
+}
+
+function getDeepLinkUrls(payload: unknown) {
+  if (Array.isArray(payload)) {
+    return payload.filter((item): item is string => typeof item === "string");
+  }
+
+  return typeof payload === "string" ? [payload] : [];
+}
+
 function App() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
@@ -37,7 +59,6 @@ function App() {
   const [lastSyncedFolder, setLastSyncedFolder] = useState<string | null>(null);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
   const [desktopToken, setDesktopToken] = useState<string | null>(null);
-  const [tokenInput, setTokenInput] = useState("");
   const [syncStatus, setSyncStatus] = useState("Not connected");
   const [syncing, setSyncing] = useState(false);
   const [openingFolder, setOpeningFolder] = useState(false);
@@ -73,12 +94,27 @@ function App() {
         : "Sign in to load your Filmwave projects";
 
   const accountDescription = isSignedIn
-    ? "Filmwave Desktop is connected. Your token is stored locally on this computer."
-    : "Connect your Filmwave account to access your real project files.";
+    ? "Filmwave Desktop is connected. Your session is stored locally on this computer."
+    : "Connect with your normal Filmwave sign-in to access your real project files.";
 
   const syncProgressPercent = syncProgress?.totalFiles
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
     : 0;
+
+  async function saveDesktopToken(nextToken: string) {
+    const store = await load(SETTINGS_STORE);
+
+    setDesktopToken(nextToken);
+    setProjectSource("local-api");
+    setSelectedProjectIds([]);
+    setLastRefreshedAt(null);
+    setLastSyncReport(null);
+    setSyncStatus("Signed in");
+
+    await store.set("desktopToken", nextToken);
+    await store.set("projectSource", "local-api");
+    await store.save();
+  }
 
   async function fetchProjects() {
     return projectSource === "local-api"
@@ -160,6 +196,30 @@ function App() {
     }
 
     loadSavedSettings();
+  }, []);
+
+  useEffect(() => {
+    async function handleDeepLinkUrl(url: string) {
+      const token = getTokenFromDeepLink(url);
+
+      if (!token) return;
+
+      await saveDesktopToken(token);
+    }
+
+    let unlisten: (() => void) | undefined;
+
+    listen<unknown>("deep-link://new-url", async (event) => {
+      for (const url of getDeepLinkUrls(event.payload)) {
+        await handleDeepLinkUrl(url);
+      }
+    }).then((nextUnlisten) => {
+      unlisten = nextUnlisten;
+    });
+
+    return () => {
+      unlisten?.();
+    };
   }, []);
 
   useEffect(() => {
@@ -258,7 +318,7 @@ function App() {
     try {
       await invoke("open_path", { path: getDesktopAuthTokenUrl() });
       setSyncStatus("Sign in opened");
-      setLastSyncReport("After signing in, copy the desktop token from your browser and paste it here.");
+      setLastSyncReport("Finish signing in in your browser. Filmwave Desktop will connect automatically.");
     } catch (error) {
       console.error(error);
       setSyncStatus("Could not open sign in");
@@ -268,34 +328,10 @@ function App() {
     }
   }
 
-  async function saveDesktopToken() {
-    const nextToken = tokenInput.trim();
-
-    if (!nextToken) {
-      setSyncStatus("Paste a token first");
-      return;
-    }
-
-    const store = await load(SETTINGS_STORE);
-
-    setDesktopToken(nextToken);
-    setTokenInput("");
-    setProjectSource("local-api");
-    setSelectedProjectIds([]);
-    setLastRefreshedAt(null);
-    setLastSyncReport(null);
-    setSyncStatus("Signed in");
-
-    await store.set("desktopToken", nextToken);
-    await store.set("projectSource", "local-api");
-    await store.save();
-  }
-
   async function signOutDesktop() {
     const store = await load(SETTINGS_STORE);
 
     setDesktopToken(null);
-    setTokenInput("");
     setProjects([]);
     setSelectedProjectIds([]);
     setLastRefreshedAt(null);
@@ -458,24 +494,6 @@ function App() {
           <div>
             <h2>Account</h2>
             <p>{accountDescription}</p>
-            {!isSignedIn && (
-              <div className="token-form">
-                <input
-                  type="password"
-                  value={tokenInput}
-                  onChange={(event) => setTokenInput(event.target.value)}
-                  placeholder="Paste desktop token"
-                  autoComplete="off"
-                />
-                <button
-                  type="button"
-                  className="secondary-button"
-                  onClick={saveDesktopToken}
-                >
-                  Save token
-                </button>
-              </div>
-            )}
           </div>
 
           <div className="button-group">
@@ -484,7 +502,7 @@ function App() {
               className="primary-button"
               onClick={openSignInPage}
             >
-              {isSignedIn ? "Get new token" : "Sign in"}
+              {isSignedIn ? "Reconnect" : "Sign in"}
             </button>
             {isSignedIn && (
               <button
