@@ -262,9 +262,15 @@ export async function getMockProjects() {
   return mockProjects;
 }
 
-export async function getFilmwaveProjects() {
+export async function getFilmwaveProjects(token?: string | null) {
+  const headers: HeadersInit = token
+    ? {
+        Authorization: `Bearer ${token}`,
+      }
+    : {};
   const response = await fetch(`${FILMWAVE_API_BASE_URL}/api/desktop/projects`, {
     credentials: "include",
+    headers,
   });
 
   const data = (await response.json()) as DesktopProjectsApiResponse & {
@@ -276,4 +282,8 @@ export async function getFilmwaveProjects() {
   }
 
   return (data.projects ?? []).map(normalizeApiProject);
+}
+
+export function getDesktopAuthTokenUrl() {
+  return `${FILMWAVE_API_BASE_URL}/api/desktop/auth/token`;
 }
