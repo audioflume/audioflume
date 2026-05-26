@@ -473,7 +473,8 @@ p {
 }
 
 .project-row.is-selected {
-  background: rgba(221, 255, 67, 0.12);
+  background: #ffffff;
+  color: #111111;
 }
 
 .project-row.is-loading {
@@ -497,8 +498,13 @@ p {
 }
 
 .project-row.is-selected .project-check {
-  background: var(--accent);
-  color: #111111;
+  background: #111111;
+  color: #ffffff;
+}
+
+.project-row.is-selected .project-description,
+.project-row.is-selected .project-meta {
+  color: rgba(17, 17, 17, 0.55);
 }
 
 .project-main {
