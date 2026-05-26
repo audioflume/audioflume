@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { load } from "@tauri-apps/plugin-store";
 import {
+  getDesktopAuthTokenUrl,
   getFilmwaveProjects,
   getMockProjects,
   type Project,
@@ -35,6 +36,8 @@ function App() {
   const [syncFolder, setSyncFolder] = useState<string | null>(null);
   const [lastSyncedFolder, setLastSyncedFolder] = useState<string | null>(null);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
+  const [desktopToken, setDesktopToken] = useState<string | null>(null);
+  const [tokenInput, setTokenInput] = useState("");
   const [syncStatus, setSyncStatus] = useState("Not connected");
   const [syncing, setSyncing] = useState(false);
   const [openingFolder, setOpeningFolder] = useState(false);
@@ -43,6 +46,7 @@ function App() {
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
 
   const hasSelectedProjects = selectedProjectIds.length > 0;
+  const isSignedIn = Boolean(desktopToken);
   const canSync =
     Boolean(syncFolder) && hasSelectedProjects && !projectsLoading && !syncing;
 
@@ -64,7 +68,13 @@ function App() {
   const sourceDescription =
     projectSource === "mock"
       ? "Using local sample data"
-      : "Using localhost:3000 Filmwave API";
+      : isSignedIn
+        ? "Using your signed-in Filmwave account"
+        : "Sign in to load your Filmwave projects";
+
+  const accountDescription = isSignedIn
+    ? "Filmwave Desktop is connected. Your token is stored locally on this computer."
+    : "Connect your Filmwave account to access your real project files.";
 
   const syncProgressPercent = syncProgress?.totalFiles
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
@@ -72,7 +82,7 @@ function App() {
 
   async function fetchProjects() {
     return projectSource === "local-api"
-      ? await getFilmwaveProjects()
+      ? await getFilmwaveProjects(desktopToken)
       : await getMockProjects();
   }
 
@@ -101,7 +111,7 @@ function App() {
       );
       setLastRefreshedAt(new Date());
       setSyncStatus(
-        projectSource === "local-api" ? "Local API loaded" : "Mock data loaded",
+        projectSource === "local-api" ? "Filmwave loaded" : "Mock data loaded",
       );
 
       return nextProjects;
@@ -129,6 +139,7 @@ function App() {
       const savedProjectSource =
         await store.get<ProjectSource>("projectSource");
       const savedLastSyncedFolder = await store.get<string>("lastSyncedFolder");
+      const savedDesktopToken = await store.get<string>("desktopToken");
 
       if (savedFolder) {
         setSyncFolder(savedFolder);
@@ -137,6 +148,10 @@ function App() {
 
       if (savedLastSyncedFolder) {
         setLastSyncedFolder(savedLastSyncedFolder);
+      }
+
+      if (savedDesktopToken) {
+        setDesktopToken(savedDesktopToken);
       }
 
       if (savedProjectSource === "mock" || savedProjectSource === "local-api") {
@@ -154,6 +169,14 @@ function App() {
       setProjectsLoading(true);
       setLastSyncReport(null);
 
+      if (projectSource === "local-api" && !desktopToken) {
+        setProjects([]);
+        setSelectedProjectIds([]);
+        setSyncStatus("Sign in required");
+        setProjectsLoading(false);
+        return;
+      }
+
       try {
         const nextProjects = await fetchProjects();
 
@@ -170,7 +193,7 @@ function App() {
         setLastRefreshedAt(new Date());
         setSyncStatus(
           projectSource === "local-api"
-            ? "Local API loaded"
+            ? "Filmwave loaded"
             : "Mock data loaded",
         );
       } catch (error) {
@@ -197,7 +220,7 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [projectSource]);
+  }, [projectSource, desktopToken]);
 
   async function chooseSyncFolder() {
     const selected = await open({
@@ -231,8 +254,66 @@ function App() {
     await store.save();
   }
 
+  async function openSignInPage() {
+    try {
+      await invoke("open_path", { path: getDesktopAuthTokenUrl() });
+      setSyncStatus("Sign in opened");
+      setLastSyncReport("After signing in, copy the desktop token from your browser and paste it here.");
+    } catch (error) {
+      console.error(error);
+      setSyncStatus("Could not open sign in");
+      setLastSyncReport(
+        error instanceof Error ? error.message : "Could not open Filmwave sign in.",
+      );
+    }
+  }
+
+  async function saveDesktopToken() {
+    const nextToken = tokenInput.trim();
+
+    if (!nextToken) {
+      setSyncStatus("Paste a token first");
+      return;
+    }
+
+    const store = await load(SETTINGS_STORE);
+
+    setDesktopToken(nextToken);
+    setTokenInput("");
+    setProjectSource("local-api");
+    setSelectedProjectIds([]);
+    setLastRefreshedAt(null);
+    setLastSyncReport(null);
+    setSyncStatus("Signed in");
+
+    await store.set("desktopToken", nextToken);
+    await store.set("projectSource", "local-api");
+    await store.save();
+  }
+
+  async function signOutDesktop() {
+    const store = await load(SETTINGS_STORE);
+
+    setDesktopToken(null);
+    setTokenInput("");
+    setProjects([]);
+    setSelectedProjectIds([]);
+    setLastRefreshedAt(null);
+    setSyncProgress(null);
+    setLastSyncReport(null);
+    setSyncStatus("Signed out");
+
+    await store.delete("desktopToken");
+    await store.save();
+  }
+
   async function refreshProjects() {
     if (syncing || projectsLoading) return;
+
+    if (projectSource === "local-api" && !desktopToken) {
+      setSyncStatus("Sign in required");
+      return;
+    }
 
     try {
       await refreshProjectList();
@@ -278,6 +359,11 @@ function App() {
 
     if (selectedProjectIds.length === 0) {
       setSyncStatus("Select a project first");
+      return;
+    }
+
+    if (projectSource === "local-api" && !desktopToken) {
+      setSyncStatus("Sign in required");
       return;
     }
 
@@ -368,15 +454,48 @@ function App() {
           </div>
         </div>
 
-        <div className="section-block">
+        <div className="section-block account-block">
           <div>
             <h2>Account</h2>
-            <p>Connect your Filmwave account to access your projects.</p>
+            <p>{accountDescription}</p>
+            {!isSignedIn && (
+              <div className="token-form">
+                <input
+                  type="password"
+                  value={tokenInput}
+                  onChange={(event) => setTokenInput(event.target.value)}
+                  placeholder="Paste desktop token"
+                  autoComplete="off"
+                />
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={saveDesktopToken}
+                >
+                  Save token
+                </button>
+              </div>
+            )}
           </div>
 
-          <button type="button" className="primary-button">
-            Sign in
-          </button>
+          <div className="button-group">
+            <button
+              type="button"
+              className="primary-button"
+              onClick={openSignInPage}
+            >
+              {isSignedIn ? "Get new token" : "Sign in"}
+            </button>
+            {isSignedIn && (
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={signOutDesktop}
+              >
+                Sign out
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="section-block">
@@ -398,7 +517,7 @@ function App() {
               className={projectSource === "local-api" ? "is-active" : ""}
               onClick={() => changeProjectSource("local-api")}
             >
-              Local API
+              Filmwave
             </button>
           </div>
         </div>
