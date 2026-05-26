@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
-import { exists, mkdir, writeTextFile } from "@tauri-apps/plugin-fs";
+import { exists, mkdir, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
 import "./App.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
+const DEFAULT_MOCK_UPDATED_AT = "2026-05-25T00:00:00.000Z";
 
 type ProjectFileNode = {
   id: string;
@@ -12,6 +13,7 @@ type ProjectFileNode = {
   name: string;
   path: string;
   sizeLabel?: string;
+  updatedAt?: string;
 };
 
 type Project = {
@@ -21,6 +23,14 @@ type Project = {
   fileCount: number;
   sizeLabel: string;
   files: ProjectFileNode[];
+};
+
+type SyncManifest = {
+  projectId: string;
+  projectName: string;
+  syncedAt: string;
+  source: "mock-all-files";
+  fileTree: ProjectFileNode[];
 };
 
 const mockProjects: Project[] = [
@@ -37,6 +47,7 @@ const mockProjects: Project[] = [
         name: "Creative Brief.txt",
         path: "Creative Brief.txt",
         sizeLabel: "4 KB",
+        updatedAt: "2026-05-25T12:00:00.000Z",
       },
       {
         id: "doc-folder-music",
@@ -50,6 +61,7 @@ const mockProjects: Project[] = [
         name: "Aurora Bed.txt",
         path: "Music Selects/Aurora Bed.txt",
         sizeLabel: "64 MB",
+        updatedAt: "2026-05-25T12:10:00.000Z",
       },
       {
         id: "doc-file-northline",
@@ -57,6 +69,7 @@ const mockProjects: Project[] = [
         name: "Northline Pulse.txt",
         path: "Music Selects/Northline Pulse.txt",
         sizeLabel: "71 MB",
+        updatedAt: "2026-05-25T12:20:00.000Z",
       },
       {
         id: "doc-folder-notes",
@@ -70,6 +83,7 @@ const mockProjects: Project[] = [
         name: "Scene Notes.txt",
         path: "Client Notes/Scene Notes.txt",
         sizeLabel: "8 KB",
+        updatedAt: "2026-05-25T12:30:00.000Z",
       },
       {
         id: "doc-loose-license",
@@ -77,6 +91,7 @@ const mockProjects: Project[] = [
         name: "License.txt",
         path: "License.txt",
         sizeLabel: "3 KB",
+        updatedAt: "2026-05-25T12:40:00.000Z",
       },
     ],
   },
@@ -93,6 +108,7 @@ const mockProjects: Project[] = [
         name: "README.txt",
         path: "README.txt",
         sizeLabel: "2 KB",
+        updatedAt: "2026-05-25T13:00:00.000Z",
       },
       {
         id: "brand-folder-final",
@@ -106,6 +122,7 @@ const mockProjects: Project[] = [
         name: "Clean Pulse.txt",
         path: "Final Music/Clean Pulse.txt",
         sizeLabel: "93 MB",
+        updatedAt: "2026-05-25T13:10:00.000Z",
       },
       {
         id: "brand-file-slow-build",
@@ -113,6 +130,7 @@ const mockProjects: Project[] = [
         name: "Slow Build.txt",
         path: "Final Music/Slow Build.txt",
         sizeLabel: "88 MB",
+        updatedAt: "2026-05-25T13:20:00.000Z",
       },
       {
         id: "brand-folder-stems",
@@ -132,6 +150,7 @@ const mockProjects: Project[] = [
         name: "Drums.txt",
         path: "Artist Stems/Clean Pulse/Drums.txt",
         sizeLabel: "35 MB",
+        updatedAt: "2026-05-25T13:30:00.000Z",
       },
       {
         id: "brand-file-bass",
@@ -139,6 +158,7 @@ const mockProjects: Project[] = [
         name: "Bass.txt",
         path: "Artist Stems/Clean Pulse/Bass.txt",
         sizeLabel: "28 MB",
+        updatedAt: "2026-05-25T13:40:00.000Z",
       },
       {
         id: "brand-file-synth",
@@ -146,6 +166,7 @@ const mockProjects: Project[] = [
         name: "Synth.txt",
         path: "Artist Stems/Clean Pulse/Synth.txt",
         sizeLabel: "41 MB",
+        updatedAt: "2026-05-25T13:50:00.000Z",
       },
     ],
   },
@@ -162,6 +183,7 @@ const mockProjects: Project[] = [
         name: "Main Track.txt",
         path: "Main Track.txt",
         sizeLabel: "74 MB",
+        updatedAt: "2026-05-25T14:00:00.000Z",
       },
       {
         id: "travel-loose-alt",
@@ -169,6 +191,7 @@ const mockProjects: Project[] = [
         name: "Alternate Cut.txt",
         path: "Alternate Cut.txt",
         sizeLabel: "68 MB",
+        updatedAt: "2026-05-25T14:10:00.000Z",
       },
       {
         id: "travel-folder-references",
@@ -182,6 +205,7 @@ const mockProjects: Project[] = [
         name: "Music Direction.txt",
         path: "References/Music Direction.txt",
         sizeLabel: "6 KB",
+        updatedAt: "2026-05-25T14:20:00.000Z",
       },
       {
         id: "travel-loose-license",
@@ -189,6 +213,7 @@ const mockProjects: Project[] = [
         name: "License.txt",
         path: "License.txt",
         sizeLabel: "3 KB",
+        updatedAt: "2026-05-25T14:30:00.000Z",
       },
     ],
   },
@@ -217,6 +242,39 @@ function sanitizeRelativePath(path: string) {
   }
 
   return cleanedPath;
+}
+
+function getNodeUpdatedAt(node: ProjectFileNode) {
+  return node.updatedAt ?? DEFAULT_MOCK_UPDATED_AT;
+}
+
+function buildManifest(project: Project): SyncManifest {
+  return {
+    projectId: project.id,
+    projectName: project.name,
+    syncedAt: new Date().toISOString(),
+    source: "mock-all-files",
+    fileTree: project.files.map((node) => ({
+      ...node,
+      updatedAt: getNodeUpdatedAt(node),
+    })),
+  };
+}
+
+async function readProjectManifest(manifestFilePath: string) {
+  const hasManifest = await exists(manifestFilePath);
+
+  if (!hasManifest) {
+    return null;
+  }
+
+  try {
+    const rawManifest = await readTextFile(manifestFilePath);
+    return JSON.parse(rawManifest) as SyncManifest;
+  } catch (error) {
+    console.warn("Could not read existing Filmwave manifest.", error);
+    return null;
+  }
 }
 
 function App() {
@@ -300,8 +358,9 @@ function App() {
         selectedProjectIds.includes(project.id),
       );
 
-      let createdFolderCount = 0;
+      let checkedFolderCount = 0;
       let createdFileCount = 0;
+      let updatedFileCount = 0;
       let skippedFileCount = 0;
       let manifestFileCount = 0;
 
@@ -309,10 +368,13 @@ function App() {
         const projectFolderName = sanitizeFolderName(project.name);
         const projectPath = `${syncFolder}/${projectFolderName}`;
         const manifestPath = `${projectPath}/_filmwave`;
+        const manifestFilePath = `${manifestPath}/manifest.json`;
+        const previousManifest = await readProjectManifest(manifestFilePath);
+        const nextManifest = buildManifest(project);
 
         await mkdir(projectPath, { recursive: true });
         await mkdir(manifestPath, { recursive: true });
-        createdFolderCount += 2;
+        checkedFolderCount += 2;
 
         const folderNodes = project.files.filter(
           (node) => node.type === "folder",
@@ -323,21 +385,25 @@ function App() {
           const safePath = sanitizeRelativePath(folder.path);
 
           await mkdir(`${projectPath}/${safePath}`, { recursive: true });
-          createdFolderCount += 1;
+          checkedFolderCount += 1;
         }
 
         for (const file of fileNodes) {
           const safePath = sanitizeRelativePath(file.path);
           const filePath = `${projectPath}/${safePath}`;
           const parentPath = safePath.split("/").slice(0, -1).join("/");
+          const previousFile = previousManifest?.fileTree.find(
+            (node) => node.id === file.id && node.type === "file",
+          );
+          const currentUpdatedAt = getNodeUpdatedAt(file);
+          const previousUpdatedAt = previousFile?.updatedAt ?? null;
+          const fileAlreadyExists = await exists(filePath);
 
           if (parentPath) {
             await mkdir(`${projectPath}/${parentPath}`, { recursive: true });
           }
 
-          const fileAlreadyExists = await exists(filePath);
-
-          if (fileAlreadyExists) {
+          if (fileAlreadyExists && previousUpdatedAt === currentUpdatedAt) {
             skippedFileCount += 1;
             continue;
           }
@@ -351,27 +417,22 @@ function App() {
               `File: ${file.name}`,
               `Path: ${file.path}`,
               `Size: ${file.sizeLabel ?? "Unknown"}`,
+              `Updated at: ${currentUpdatedAt}`,
               ``,
               `This placeholder represents a future synced file from Filmwave's All Files section.`,
             ].join("\n"),
           );
 
-          createdFileCount += 1;
+          if (fileAlreadyExists) {
+            updatedFileCount += 1;
+          } else {
+            createdFileCount += 1;
+          }
         }
 
         await writeTextFile(
-          `${manifestPath}/manifest.json`,
-          JSON.stringify(
-            {
-              projectId: project.id,
-              projectName: project.name,
-              syncedAt: new Date().toISOString(),
-              source: "mock-all-files",
-              fileTree: project.files,
-            },
-            null,
-            2,
-          ),
+          manifestFilePath,
+          JSON.stringify(nextManifest, null, 2),
         );
 
         manifestFileCount += 1;
@@ -380,13 +441,14 @@ function App() {
       const projectLabel =
         selectedProjects.length === 1 ? "project" : "projects";
       const createdFileLabel = createdFileCount === 1 ? "file" : "files";
+      const updatedFileLabel = updatedFileCount === 1 ? "file" : "files";
       const skippedFileLabel = skippedFileCount === 1 ? "file" : "files";
-      const folderLabel = createdFolderCount === 1 ? "folder" : "folders";
+      const folderLabel = checkedFolderCount === 1 ? "folder" : "folders";
       const manifestLabel = manifestFileCount === 1 ? "manifest" : "manifests";
 
       setSyncStatus("Synced");
       setLastSyncReport(
-        `Synced ${selectedProjects.length} ${projectLabel}. Created ${createdFileCount} ${createdFileLabel}, skipped ${skippedFileCount} existing ${skippedFileLabel}, checked ${createdFolderCount} ${folderLabel}, and wrote ${manifestFileCount} ${manifestLabel}.`,
+        `Synced ${selectedProjects.length} ${projectLabel}. Created ${createdFileCount} ${createdFileLabel}, updated ${updatedFileCount} ${updatedFileLabel}, skipped ${skippedFileCount} existing ${skippedFileLabel}, checked ${checkedFolderCount} ${folderLabel}, and wrote ${manifestFileCount} ${manifestLabel}.`,
       );
     } catch (error) {
       console.error(error);
