@@ -5,6 +5,10 @@ export type ProjectFileNode = {
   type: "folder" | "file";
   name: string;
   path: string;
+  parentId?: string | null;
+  sortOrder?: number;
+  downloadUrl?: string;
+  sizeBytes?: number;
   sizeLabel?: string;
   updatedAt?: string;
 };
@@ -14,9 +18,23 @@ export type Project = {
   name: string;
   description: string;
   fileCount: number;
+  sizeBytes?: number;
   sizeLabel: string;
   files: ProjectFileNode[];
 };
+
+type DesktopProjectsApiResponse = {
+  projects?: Array<{
+    id: string | number;
+    name: string;
+    description?: string | null;
+    fileCount?: number;
+    sizeBytes?: number;
+    files?: ProjectFileNode[];
+  }>;
+};
+
+const FILMWAVE_API_BASE_URL = "http://localhost:3000";
 
 const mockProjects: Project[] = [
   {
@@ -204,8 +222,56 @@ const mockProjects: Project[] = [
   },
 ];
 
+function formatSize(bytes: number | undefined) {
+  if (!bytes || bytes <= 0) {
+    return "0 KB";
+  }
+
+  const units = ["B", "KB", "MB", "GB"];
+  let value = bytes;
+  let unitIndex = 0;
+
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+
+  return `${value >= 10 ? value.toFixed(0) : value.toFixed(1)} ${units[unitIndex]}`;
+}
+
+function normalizeApiProject(project: NonNullable<DesktopProjectsApiResponse["projects"]>[number]): Project {
+  const sizeBytes = Number(project.sizeBytes || 0);
+  const files = Array.isArray(project.files) ? project.files : [];
+
+  return {
+    id: String(project.id),
+    name: String(project.name || "Untitled Project"),
+    description: typeof project.description === "string" ? project.description : "",
+    fileCount: Number(project.fileCount || files.filter((file) => file.type === "file").length),
+    sizeBytes,
+    sizeLabel: formatSize(sizeBytes),
+    files,
+  };
+}
+
 export async function getMockProjects() {
   await new Promise((resolve) => window.setTimeout(resolve, 250));
 
   return mockProjects;
+}
+
+export async function getFilmwaveProjects() {
+  const response = await fetch(`${FILMWAVE_API_BASE_URL}/api/desktop/projects`, {
+    credentials: "include",
+  });
+
+  const data = (await response.json()) as DesktopProjectsApiResponse & {
+    error?: string;
+  };
+
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to load Filmwave projects");
+  }
+
+  return (data.projects ?? []).map(normalizeApiProject);
 }
