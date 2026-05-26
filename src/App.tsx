@@ -26,13 +26,26 @@ import {
 import "./App.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
+const DEFAULT_AUTO_SYNC_INTERVAL_MINUTES = 15;
 
 type ProjectSource = "mock" | "local-api";
+type SyncRunOptions = {
+  automatic?: boolean;
+};
 
 function formatRefreshTime(date: Date | null) {
   if (!date) return "Not refreshed yet";
 
   return `Last refreshed ${date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  })}`;
+}
+
+function formatAutoSyncTime(date: Date | null) {
+  if (!date) return "Auto-sync has not run yet";
+
+  return `Last auto-sync ${date.toLocaleTimeString([], {
     hour: "numeric",
     minute: "2-digit",
   })}`;
@@ -83,6 +96,11 @@ function App() {
   const [checkingLocalRemovals, setCheckingLocalRemovals] = useState(false);
   const [applyingLocalRemovals, setApplyingLocalRemovals] = useState(false);
   const [localRemovals, setLocalRemovals] = useState<LocalRemoval[]>([]);
+  const [autoSyncEnabled, setAutoSyncEnabled] = useState(false);
+  const [autoSyncIntervalMinutes, setAutoSyncIntervalMinutes] = useState(
+    DEFAULT_AUTO_SYNC_INTERVAL_MINUTES,
+  );
+  const [lastAutoSyncedAt, setLastAutoSyncedAt] = useState<Date | null>(null);
   const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null);
   const [lastSyncReport, setLastSyncReport] = useState<string | null>(null);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
@@ -95,6 +113,12 @@ function App() {
   );
   const canSync =
     Boolean(syncFolder) && hasSelectedProjects && !projectsLoading && !syncing;
+  const canAutoSync =
+    autoSyncEnabled &&
+    Boolean(syncFolder) &&
+    hasSelectedProjects &&
+    projectSource === "local-api" &&
+    Boolean(desktopToken);
   const selectedProjects = useMemo(() => {
     const selectedProjectIdSet = new Set(selectedProjectIds);
 
@@ -130,6 +154,10 @@ function App() {
         ? "Loading your Filmwave account..."
         : "Filmwave Desktop is connected."
     : "Connect with your normal Filmwave sign-in to access your real project files.";
+
+  const autoSyncDescription = autoSyncEnabled
+    ? `Every ${autoSyncIntervalMinutes} minutes. Local removals are automatically applied to Filmwave projects only.`
+    : "Off. Manual sync and manual local-removal checks are still available.";
 
   const syncProgressPercent = syncProgress?.totalFiles
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
@@ -254,10 +282,23 @@ function App() {
       const savedLastSyncedFolder = await store.get<string>("lastSyncedFolder");
       const savedDesktopToken = await store.get<string>("desktopToken");
       const savedApiBaseUrl = await store.get<string>("apiBaseUrl");
+      const savedAutoSyncEnabled = await store.get<boolean>("autoSyncEnabled");
+      const savedAutoSyncIntervalMinutes = await store.get<number>(
+        "autoSyncIntervalMinutes",
+      );
       const nextApiBaseUrl = normalizeFilmwaveApiBaseUrl(savedApiBaseUrl);
 
       setApiBaseUrl(nextApiBaseUrl);
       setApiBaseUrlDraft(nextApiBaseUrl);
+      setAutoSyncEnabled(Boolean(savedAutoSyncEnabled));
+
+      if (
+        savedAutoSyncIntervalMinutes === 5 ||
+        savedAutoSyncIntervalMinutes === 15 ||
+        savedAutoSyncIntervalMinutes === 30
+      ) {
+        setAutoSyncIntervalMinutes(savedAutoSyncIntervalMinutes);
+      }
 
       if (savedFolder) {
         setSyncFolder(savedFolder);
@@ -367,6 +408,36 @@ function App() {
     };
   }, [projectSource, desktopToken, normalizedApiBaseUrl]);
 
+  useEffect(() => {
+    if (!canAutoSync) return;
+
+    const intervalId = window.setInterval(() => {
+      if (
+        syncing ||
+        projectsLoading ||
+        checkingLocalRemovals ||
+        applyingLocalRemovals
+      ) {
+        return;
+      }
+
+      void syncSelectedProjects({ automatic: true });
+    }, autoSyncIntervalMinutes * 60 * 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, [
+    applyingLocalRemovals,
+    autoSyncIntervalMinutes,
+    canAutoSync,
+    checkingLocalRemovals,
+    normalizedApiBaseUrl,
+    projects,
+    projectsLoading,
+    selectedProjectIds,
+    syncFolder,
+    syncing,
+  ]);
+
   async function chooseSyncFolder() {
     const selected = await open({
       directory: true,
@@ -398,6 +469,26 @@ function App() {
     setLastRefreshedAt(null);
     setProjectSource(nextSource);
     await store.set("projectSource", nextSource);
+    await store.save();
+  }
+
+  async function changeAutoSyncEnabled(nextEnabled: boolean) {
+    const store = await load(SETTINGS_STORE);
+
+    setAutoSyncEnabled(nextEnabled);
+    setSyncStatus(nextEnabled ? "Auto-sync enabled" : "Auto-sync off");
+
+    await store.set("autoSyncEnabled", nextEnabled);
+    await store.save();
+  }
+
+  async function changeAutoSyncInterval(nextInterval: number) {
+    const store = await load(SETTINGS_STORE);
+
+    setAutoSyncIntervalMinutes(nextInterval);
+    setSyncStatus(`Auto-sync every ${nextInterval} minutes`);
+
+    await store.set("autoSyncIntervalMinutes", nextInterval);
     await store.save();
   }
 
@@ -638,28 +729,55 @@ function App() {
     }
   }
 
-  async function syncSelectedProjects() {
+  async function syncSelectedProjects(options: SyncRunOptions = {}) {
     if (!syncFolder) {
-      setSyncStatus("Choose a sync folder first");
+      if (!options.automatic) setSyncStatus("Choose a sync folder first");
       return;
     }
 
     if (selectedProjectIds.length === 0) {
-      setSyncStatus("Select a project first");
+      if (!options.automatic) setSyncStatus("Select a project first");
       return;
     }
 
     if (projectSource === "local-api" && !desktopToken) {
-      setSyncStatus("Sign in required");
+      if (!options.automatic) setSyncStatus("Sign in required");
       return;
     }
 
     try {
       setSyncing(true);
-      setSyncStatus("Refreshing projects...");
+      setSyncStatus(options.automatic ? "Auto-syncing..." : "Checking local removals...");
       setLastSyncReport(null);
       setLocalRemovals([]);
       setSyncProgress(null);
+
+      let autoRemovalSummary = "";
+
+      if (projectSource === "local-api" && desktopToken) {
+        const removals = await detectLocalRemovals({
+          projects: selectedProjects,
+          syncFolder,
+        });
+
+        if (removals.length > 0) {
+          setSyncStatus("Applying local removals...");
+
+          const removalResult = await applyDesktopLocalRemovals({
+            apiBaseUrl: normalizedApiBaseUrl,
+            token: desktopToken,
+            removals: removals.map((removal) => ({
+              projectId: removal.projectId,
+              id: removal.id,
+              type: removal.type,
+            })),
+          });
+
+          autoRemovalSummary = `Applied ${removals.length} local removal${removals.length === 1 ? "" : "s"} to Filmwave. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. `;
+        }
+      }
+
+      setSyncStatus("Refreshing projects...");
 
       const latestProjects = await refreshProjectList({
         clearReport: false,
@@ -679,7 +797,7 @@ function App() {
         return;
       }
 
-      setSyncStatus("Syncing...");
+      setSyncStatus(options.automatic ? "Auto-syncing..." : "Syncing...");
       setSyncProgress({
         phase: "preparing",
         message: "Preparing sync...",
@@ -707,11 +825,15 @@ function App() {
       await store.set("lastSyncedFolder", nextLastSyncedFolder);
       await store.save();
 
-      setSyncStatus("Synced");
-      setLastSyncReport(formatSyncReport(result));
+      if (options.automatic) {
+        setLastAutoSyncedAt(new Date());
+      }
+
+      setSyncStatus(options.automatic ? "Auto-synced" : "Synced");
+      setLastSyncReport(`${autoRemovalSummary}${formatSyncReport(result)}`);
     } catch (error) {
       console.error(error);
-      setSyncStatus("Sync failed");
+      setSyncStatus(options.automatic ? "Auto-sync failed" : "Sync failed");
       setLastSyncReport(
         error instanceof Error
           ? error.message
@@ -861,6 +983,38 @@ function App() {
           </div>
         </div>
 
+        <div className="section-block settings-block">
+          <div>
+            <h2>Auto-sync</h2>
+            <p>{autoSyncDescription}</p>
+            <p className="refresh-meta">{formatAutoSyncTime(lastAutoSyncedAt)}</p>
+          </div>
+
+          <div className="button-group">
+            <button
+              type="button"
+              className={autoSyncEnabled ? "primary-button" : "secondary-button"}
+              onClick={() => changeAutoSyncEnabled(!autoSyncEnabled)}
+            >
+              {autoSyncEnabled ? "On" : "Off"}
+            </button>
+            {[5, 15, 30].map((interval) => (
+              <button
+                key={interval}
+                type="button"
+                className={
+                  autoSyncIntervalMinutes === interval
+                    ? "primary-button"
+                    : "secondary-button"
+                }
+                onClick={() => changeAutoSyncInterval(interval)}
+              >
+                {interval}m
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="section-block">
           <div>
             <h2>Sync folder</h2>
@@ -925,7 +1079,7 @@ function App() {
                 type="button"
                 className="secondary-button"
                 disabled={!canSync}
-                onClick={syncSelectedProjects}
+                onClick={() => syncSelectedProjects()}
               >
                 {syncing ? "Syncing..." : "Sync selected"}
               </button>
