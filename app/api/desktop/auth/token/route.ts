@@ -78,8 +78,7 @@ function renderPage({
         gap: 10px;
         margin-top: 18px;
       }
-      a.button,
-      button.button {
+      a.button {
         min-height: 40px;
         display: inline-flex;
         align-items: center;
@@ -111,26 +110,22 @@ function renderPage({
       <h1>Connect Filmwave Desktop</h1>
       <p>${message}</p>
       <div class="actions">
-        ${signedIn ? `<button class="button" id="open-desktop" type="button">Open Filmwave Desktop</button>` : `<a class="button" href="${signInUrl}">Sign in to Filmwave</a>`}
+        ${signedIn ? `<a class="button" id="open-desktop" href="${safeCallbackUrl}">Open Filmwave Desktop</a>` : `<a class="button" href="${signInUrl}">Sign in to Filmwave</a>`}
         <a class="button secondary" href="/api/desktop/auth/token?callback=deeplink">Try again</a>
       </div>
-      <div class="status" id="status">${signedIn ? "If nothing happens, keep Filmwave Desktop open and click the button again." : "After signing in, Filmwave Desktop will open automatically."}</div>
+      <div class="status" id="status">${signedIn ? "If nothing happens, make sure Filmwave Desktop is running, then click Open Filmwave Desktop again." : "After signing in, Filmwave Desktop will open automatically."}</div>
     </main>
     ${signedIn ? `<script>
-      const callbackUrl = ${JSON.stringify(safeCallbackUrl)};
-      const status = document.getElementById("status");
       const openButton = document.getElementById("open-desktop");
+      const status = document.getElementById("status");
 
-      function openDesktop() {
-        status.textContent = "Opening Filmwave Desktop...";
-        window.location.href = callbackUrl;
-        window.setTimeout(() => {
-          status.textContent = "If Filmwave Desktop did not open, make sure the desktop app is running, then click Open Filmwave Desktop again.";
-        }, 1200);
-      }
+      openButton?.addEventListener("click", () => {
+        status.textContent = "Opening Filmwave Desktop... If nothing happens, the desktop URL scheme is not registered yet.";
+      });
 
-      openButton?.addEventListener("click", openDesktop);
-      window.setTimeout(openDesktop, 300);
+      window.setTimeout(() => {
+        openButton?.click();
+      }, 300);
     </script>` : ""}
   </body>
 </html>`;
