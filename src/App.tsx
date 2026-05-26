@@ -53,10 +53,10 @@ function formatRefreshTime(date: Date | null) {
   })}`;
 }
 
-function formatAutoSyncTime(date: Date | null) {
-  if (!date) return "Auto-sync has not run yet";
+function formatFallbackSyncTime(date: Date | null) {
+  if (!date) return "No fallback sync has run yet";
 
-  return `Last auto-sync ${date.toLocaleTimeString([], {
+  return `Last fallback sync ${date.toLocaleTimeString([], {
     hour: "numeric",
     minute: "2-digit",
   })}`;
@@ -181,8 +181,10 @@ function App() {
     : "Connect with your normal Filmwave sign-in to access your real project files.";
 
   const autoSyncDescription = autoSyncEnabled
-    ? `Every ${autoSyncIntervalMinutes} minutes. Local removals are automatically applied to Filmwave projects only.`
-    : "Off. Manual sync and manual local-removal checks are still available.";
+    ? "Realtime sync is on. Local folder changes and Filmwave project changes trigger sync automatically."
+    : "Realtime sync is off. Manual sync still works.";
+
+  const fallbackSyncDescription = `Fallback check runs every ${autoSyncIntervalMinutes} minutes when realtime sync is on, catching missed changes after sleep or reconnect.`;
 
   const syncProgressPercent = syncProgress?.totalFiles
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
@@ -546,17 +548,17 @@ function App() {
     const store = await load(SETTINGS_STORE);
 
     setAutoSyncEnabled(nextEnabled);
-    setSyncStatus(nextEnabled ? "Auto-sync enabled" : "Auto-sync off");
+    setSyncStatus(nextEnabled ? "Realtime sync on" : "Realtime sync off");
 
     await store.set("autoSyncEnabled", nextEnabled);
     await store.save();
     await addSyncActivityLogEntry({
       mode: "system",
       status: "info",
-      title: nextEnabled ? "Auto-sync enabled" : "Auto-sync disabled",
+      title: nextEnabled ? "Realtime sync enabled" : "Realtime sync disabled",
       detail: nextEnabled
-        ? `Auto-sync will run every ${autoSyncIntervalMinutes} minutes.`
-        : "Auto-sync was turned off.",
+        ? `Local folder changes and Filmwave project changes now trigger sync automatically. Fallback check runs every ${autoSyncIntervalMinutes} minutes.`
+        : "Realtime sync was turned off. Manual sync still works.",
       projectNames: getProjectNames(selectedProjects),
     });
   }
@@ -565,7 +567,7 @@ function App() {
     const store = await load(SETTINGS_STORE);
 
     setAutoSyncIntervalMinutes(nextInterval);
-    setSyncStatus(`Auto-sync every ${nextInterval} minutes`);
+    setSyncStatus(`Fallback every ${nextInterval} minutes`);
 
     await store.set("autoSyncIntervalMinutes", nextInterval);
     await store.save();
@@ -875,7 +877,7 @@ function App() {
 
     try {
       setSyncing(true);
-      setSyncStatus(options.automatic ? "Auto-syncing..." : "Checking local removals...");
+      setSyncStatus(options.automatic ? "Fallback syncing..." : "Checking local removals...");
       setLastSyncReport(null);
       setLocalRemovals([]);
       setSyncProgress(null);
@@ -931,7 +933,7 @@ function App() {
         return;
       }
 
-      setSyncStatus(options.automatic ? "Auto-syncing..." : "Syncing...");
+      setSyncStatus(options.automatic ? "Fallback syncing..." : "Syncing...");
       setSyncProgress({
         phase: "preparing",
         message: "Preparing sync...",
@@ -963,12 +965,12 @@ function App() {
         setLastAutoSyncedAt(new Date());
       }
 
-      setSyncStatus(options.automatic ? "Auto-synced" : "Synced");
+      setSyncStatus(options.automatic ? "Fallback synced" : "Synced");
       setLastSyncReport(`${autoRemovalSummary}${formatSyncReport(result)}`);
       await addSyncActivityLogEntry({
         mode: options.automatic ? "auto" : "manual",
         status: "success",
-        title: options.automatic ? "Auto-sync complete" : "Manual sync complete",
+        title: options.automatic ? "Fallback sync complete" : "Manual sync complete",
         detail: `${autoRemovalSummary}${formatSyncReport(result)}`,
         projectNames: getProjectNames(latestSelectedProjects),
       });
@@ -984,7 +986,7 @@ function App() {
       }
     } catch (error) {
       console.error(error);
-      setSyncStatus(options.automatic ? "Auto-sync failed" : "Sync failed");
+      setSyncStatus(options.automatic ? "Fallback sync failed" : "Sync failed");
       setLastSyncReport(
         error instanceof Error
           ? error.message
@@ -993,7 +995,7 @@ function App() {
       await addSyncActivityLogEntry({
         mode: options.automatic ? "auto" : "manual",
         status: "error",
-        title: options.automatic ? "Auto-sync failed" : "Manual sync failed",
+        title: options.automatic ? "Fallback sync failed" : "Manual sync failed",
         detail:
           error instanceof Error
             ? error.message
@@ -1146,28 +1148,41 @@ function App() {
 
         <div className="section-block settings-block">
           <div>
-            <h2>Auto-sync</h2>
+            <h2>Realtime sync</h2>
             <p>{autoSyncDescription}</p>
-            <p className="refresh-meta">{formatAutoSyncTime(lastAutoSyncedAt)}</p>
+            <p className="refresh-meta">{formatFallbackSyncTime(lastAutoSyncedAt)}</p>
           </div>
 
-          <div className="button-group">
+          <div className="source-toggle" aria-label="Realtime sync setting">
             <button
               type="button"
-              className={autoSyncEnabled ? "primary-button" : "secondary-button"}
-              onClick={() => changeAutoSyncEnabled(!autoSyncEnabled)}
+              className={!autoSyncEnabled ? "is-active" : ""}
+              onClick={() => changeAutoSyncEnabled(false)}
             >
-              {autoSyncEnabled ? "On" : "Off"}
+              Off
             </button>
+            <button
+              type="button"
+              className={autoSyncEnabled ? "is-active" : ""}
+              onClick={() => changeAutoSyncEnabled(true)}
+            >
+              On
+            </button>
+          </div>
+        </div>
+
+        <div className="section-block settings-block">
+          <div>
+            <h2>Fallback check</h2>
+            <p>{fallbackSyncDescription}</p>
+          </div>
+
+          <div className="source-toggle" aria-label="Fallback sync interval">
             {[5, 15, 30].map((interval) => (
               <button
                 key={interval}
                 type="button"
-                className={
-                  autoSyncIntervalMinutes === interval
-                    ? "primary-button"
-                    : "secondary-button"
-                }
+                className={autoSyncIntervalMinutes === interval ? "is-active" : ""}
                 onClick={() => changeAutoSyncInterval(interval)}
               >
                 {interval}m
