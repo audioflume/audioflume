@@ -1,4 +1,5 @@
 export const DEFAULT_MOCK_UPDATED_AT = "2026-05-25T00:00:00.000Z";
+export const DEFAULT_FILMWAVE_API_BASE_URL = "http://localhost:3000";
 
 export type ProjectFileNode = {
   id: string;
@@ -45,8 +46,6 @@ type DesktopAccountApiResponse = {
   user?: DesktopAccount;
   error?: string;
 };
-
-const FILMWAVE_API_BASE_URL = "http://localhost:3000";
 
 const mockProjects: Project[] = [
   {
@@ -234,6 +233,13 @@ const mockProjects: Project[] = [
   },
 ];
 
+export function normalizeFilmwaveApiBaseUrl(apiBaseUrl?: string | null) {
+  const trimmed = apiBaseUrl?.trim();
+  const value = trimmed || DEFAULT_FILMWAVE_API_BASE_URL;
+
+  return value.replace(/\/+$/, "");
+}
+
 function formatSize(bytes: number | undefined) {
   if (bytes == null || bytes <= 0) {
     return "Size pending";
@@ -282,8 +288,8 @@ export async function getMockProjects() {
   return mockProjects;
 }
 
-export async function getFilmwaveProjects(token?: string | null) {
-  const response = await fetch(`${FILMWAVE_API_BASE_URL}/api/desktop/projects`, {
+export async function getFilmwaveProjects(token?: string | null, apiBaseUrl?: string | null) {
+  const response = await fetch(`${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/projects`, {
     credentials: "include",
     headers: getAuthHeaders(token),
   });
@@ -299,10 +305,10 @@ export async function getFilmwaveProjects(token?: string | null) {
   return (data.projects ?? []).map(normalizeApiProject);
 }
 
-export async function getDesktopAccount(token?: string | null) {
+export async function getDesktopAccount(token?: string | null, apiBaseUrl?: string | null) {
   if (!token) return null;
 
-  const response = await fetch(`${FILMWAVE_API_BASE_URL}/api/desktop/me`, {
+  const response = await fetch(`${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/me`, {
     credentials: "include",
     headers: getAuthHeaders(token),
   });
@@ -316,6 +322,6 @@ export async function getDesktopAccount(token?: string | null) {
   return data.user ?? null;
 }
 
-export function getDesktopAuthTokenUrl() {
-  return `${FILMWAVE_API_BASE_URL}/api/desktop/auth/token?callback=deeplink`;
+export function getDesktopAuthTokenUrl(apiBaseUrl?: string | null) {
+  return `${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/auth/token?callback=deeplink`;
 }
