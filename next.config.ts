@@ -29,12 +29,33 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/api/desktop/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "http://localhost:1420",
+          },
+          {
+            key: "Access-Control-Allow-Credentials",
+            value: "true",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, OPTIONS",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
+          },
+        ],
+      },
+      {
         // Apply to all app pages
         source: "/(.*)",
         headers: [
           {
             // Instruct the browser (and Cloudflare) to preconnect to R2.
-            // This is the HTTP header equivalent of <link rel="preconnect">.
+            // This is the HTTP header equivalent of <link rel=\"preconnect\">.
             // Together they ensure both the HTML parser and the network stack
             // warm the connection as early as possible.
             key: "Link",
