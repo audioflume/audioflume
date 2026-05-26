@@ -70,7 +70,6 @@ function App() {
     async function loadProjects() {
       setProjectsLoading(true);
       setLastSyncReport(null);
-      setSelectedProjectIds([]);
 
       try {
         const nextProjects =
@@ -80,13 +79,19 @@ function App() {
 
         if (cancelled) return;
 
+        const nextProjectIds = new Set(nextProjects.map((project) => project.id));
+
         setProjects(nextProjects);
+        setSelectedProjectIds((current) =>
+          current.filter((projectId) => nextProjectIds.has(projectId)),
+        );
         setSyncStatus(projectSource === "local-api" ? "Local API loaded" : "Mock data loaded");
       } catch (error) {
         if (cancelled) return;
 
         console.error(error);
         setProjects([]);
+        setSelectedProjectIds([]);
         setSyncStatus("Could not load projects");
         setLastSyncReport(
           error instanceof Error
@@ -126,8 +131,12 @@ function App() {
   }
 
   async function changeProjectSource(nextSource: ProjectSource) {
+    if (nextSource === projectSource) return;
+
     const store = await load(SETTINGS_STORE);
 
+    setSelectedProjectIds([]);
+    setLastSyncReport(null);
     setProjectSource(nextSource);
     await store.set("projectSource", nextSource);
     await store.save();
