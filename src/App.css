@@ -177,6 +177,10 @@ p {
   background: var(--status-warning);
 }
 
+.status-pill.is-syncing .status-dot {
+  background: var(--status-success);
+}
+
 .section-block {
   margin-top: 14px;
   min-height: 82px;
@@ -198,6 +202,12 @@ p {
   font-size: 12px;
   line-height: 1.45;
   word-break: break-all;
+}
+
+.button-group {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 8px;
 }
 
 .primary-button,
@@ -350,10 +360,15 @@ p {
     font-size: clamp(48px, 15vw, 72px);
   }
 
+  .button-group,
   .primary-button,
   .secondary-button,
   .source-toggle {
     width: 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
   }
 
   .source-toggle button {
@@ -395,6 +410,10 @@ p {
 .project-row.is-selected {
   border-color: var(--border-hover);
   background: var(--bg-hover-strong);
+}
+
+.project-row:disabled {
+  cursor: wait;
 }
 
 .project-row.is-loading {
@@ -465,15 +484,44 @@ p {
   }
 }
 
+.progress-panel,
 .sync-report {
   margin-top: 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--bg-tertiary);
   padding: 11px 12px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.progress-track {
+  height: 5px;
+  margin-top: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--text-primary);
+  transition: width 0.2s ease;
+}
+
+.sync-report {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .sync-report-dot {
