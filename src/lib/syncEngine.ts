@@ -4,6 +4,7 @@ import {
   readTextFile,
   remove,
   rename,
+  stat,
   writeFile,
   writeTextFile,
 } from "@tauri-apps/plugin-fs";
@@ -126,7 +127,7 @@ async function readProjectManifest(manifestFilePath: string) {
   }
 }
 
-function fileVersionMatches({
+function fileContentVersionMatches({
   currentFile,
   currentUpdatedAt,
   previousFile,
@@ -141,9 +142,49 @@ function fileVersionMatches({
 
   return (
     previousFile.updatedAt === currentUpdatedAt &&
-    (previousFile.downloadUrl ?? "") === (currentFile.downloadUrl ?? "") &&
-    (previousFile.path ?? "") === (currentFile.path ?? "")
+    (previousFile.downloadUrl ?? "") === (currentFile.downloadUrl ?? "")
   );
+}
+
+async function localFileSizeMatches(filePath: string, expectedSizeBytes?: number) {
+  if (!expectedSizeBytes || expectedSizeBytes <= 0) {
+    return true;
+  }
+
+  try {
+    const fileInfo = await stat(filePath);
+    return Number(fileInfo.size) === Number(expectedSizeBytes);
+  } catch {
+    return false;
+  }
+}
+
+async function canSkipLocalFile({
+  currentFile,
+  currentUpdatedAt,
+  filePath,
+  previousFile,
+}: {
+  currentFile: ProjectFileNode;
+  currentUpdatedAt: string;
+  filePath: string;
+  previousFile: ProjectFileNode | undefined;
+}) {
+  if (!(await exists(filePath))) {
+    return false;
+  }
+
+  if (
+    !fileContentVersionMatches({
+      currentFile,
+      currentUpdatedAt,
+      previousFile,
+    })
+  ) {
+    return false;
+  }
+
+  return localFileSizeMatches(filePath, currentFile.sizeBytes);
 }
 
 function getRemovedFilePath(removedPath: string, relativePath: string) {
@@ -534,19 +575,18 @@ export async function syncProjectsToFolder({
       const currentUpdatedAt = getNodeUpdatedAt(file);
       const fileAlreadyExists = await exists(filePath);
       const wasMoved = Boolean(previousFile && previousFile.path !== file.path);
-      const canSkipExistingFile =
-        fileAlreadyExists &&
-        fileVersionMatches({
-          currentFile: file,
-          currentUpdatedAt,
-          previousFile,
-        });
+      const canSkipExistingFile = await canSkipLocalFile({
+        currentFile: file,
+        currentUpdatedAt,
+        filePath,
+        previousFile,
+      });
 
       if (parentPath) {
         await mkdir(`${projectPath}/${parentPath}`, { recursive: true });
       }
 
-      if (wasMoved && previousFile) {
+      if (wasMoved && previousFile && !canSkipExistingFile) {
         const previousSafePath = sanitizeRelativePath(previousFile.path);
         const previousFilePath = `${projectPath}/${previousSafePath}`;
         const moved = await moveExistingFileToRemoved({
