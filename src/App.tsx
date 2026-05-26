@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
+import { revealItemInDir } from "@tauri-apps/plugin-opener";
 import { load } from "@tauri-apps/plugin-store";
 import {
   getFilmwaveProjects,
   getMockProjects,
   type Project,
 } from "./lib/mockFilmwaveApi";
-import { formatSyncReport, syncProjectsToFolder } from "./lib/syncEngine";
+import {
+  formatSyncReport,
+  getProjectFolderPath,
+  syncProjectsToFolder,
+  type SyncProgress,
+} from "./lib/syncEngine";
 import "./App.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
@@ -18,12 +24,20 @@ function App() {
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [projectSource, setProjectSource] = useState<ProjectSource>("mock");
   const [syncFolder, setSyncFolder] = useState<string | null>(null);
+  const [lastSyncedFolder, setLastSyncedFolder] = useState<string | null>(null);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
   const [syncStatus, setSyncStatus] = useState("Not connected");
+  const [syncing, setSyncing] = useState(false);
+  const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null);
   const [lastSyncReport, setLastSyncReport] = useState<string | null>(null);
 
   const hasSelectedProjects = selectedProjectIds.length > 0;
-  const canSync = Boolean(syncFolder) && hasSelectedProjects && !projectsLoading;
+  const canSync = Boolean(syncFolder) && hasSelectedProjects && !projectsLoading && !syncing;
+
+  const selectedProjects = useMemo(
+    () => projects.filter((project) => selectedProjectIds.includes(project.id)),
+    [projects, selectedProjectIds],
+  );
 
   const selectedSummary = useMemo(() => {
     if (projectsLoading) {
@@ -45,15 +59,24 @@ function App() {
       ? "Using local sample data"
       : "Using localhost:3000 Filmwave API";
 
+  const syncProgressPercent = syncProgress?.totalFiles
+    ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
+    : 0;
+
   useEffect(() => {
     async function loadSavedSettings() {
       const store = await load(SETTINGS_STORE);
       const savedFolder = await store.get<string>("syncFolder");
       const savedProjectSource = await store.get<ProjectSource>("projectSource");
+      const savedLastSyncedFolder = await store.get<string>("lastSyncedFolder");
 
       if (savedFolder) {
         setSyncFolder(savedFolder);
         setSyncStatus("Folder ready");
+      }
+
+      if (savedLastSyncedFolder) {
+        setLastSyncedFolder(savedLastSyncedFolder);
       }
 
       if (savedProjectSource === "mock" || savedProjectSource === "local-api") {
@@ -136,6 +159,7 @@ function App() {
     const store = await load(SETTINGS_STORE);
 
     setSelectedProjectIds([]);
+    setSyncProgress(null);
     setLastSyncReport(null);
     setProjectSource(nextSource);
     await store.set("projectSource", nextSource);
@@ -143,6 +167,8 @@ function App() {
   }
 
   function toggleProject(projectId: string) {
+    if (syncing) return;
+
     setSelectedProjectIds((current) => {
       if (current.includes(projectId)) {
         return current.filter((id) => id !== projectId);
@@ -150,6 +176,20 @@ function App() {
 
       return [...current, projectId];
     });
+  }
+
+  async function openLastSyncedFolder() {
+    if (!lastSyncedFolder) return;
+
+    try {
+      await revealItemInDir(lastSyncedFolder);
+    } catch (error) {
+      console.error(error);
+      setSyncStatus("Could not open folder");
+      setLastSyncReport(
+        error instanceof Error ? error.message : "Could not open the synced folder.",
+      );
+    }
   }
 
   async function syncSelectedProjects() {
@@ -164,17 +204,34 @@ function App() {
     }
 
     try {
-      setSyncStatus("Checking files...");
+      setSyncing(true);
+      setSyncStatus("Syncing...");
       setLastSyncReport(null);
-
-      const selectedProjects = projects.filter((project) =>
-        selectedProjectIds.includes(project.id),
-      );
+      setSyncProgress({
+        phase: "preparing",
+        message: "Preparing sync...",
+        completedFiles: 0,
+        totalFiles: selectedProjects.reduce(
+          (total, project) => total + project.files.filter((node) => node.type === "file").length,
+          0,
+        ),
+      });
 
       const result = await syncProjectsToFolder({
         projects: selectedProjects,
         syncFolder,
+        onProgress: setSyncProgress,
       });
+
+      const nextLastSyncedFolder =
+        selectedProjects.length === 1
+          ? getProjectFolderPath(syncFolder, selectedProjects[0])
+          : syncFolder;
+      const store = await load(SETTINGS_STORE);
+
+      setLastSyncedFolder(nextLastSyncedFolder);
+      await store.set("lastSyncedFolder", nextLastSyncedFolder);
+      await store.save();
 
       setSyncStatus("Synced");
       setLastSyncReport(formatSyncReport(result));
@@ -186,6 +243,8 @@ function App() {
           ? error.message
           : "An unknown sync error occurred.",
       );
+    } finally {
+      setSyncing(false);
     }
   }
 
@@ -203,7 +262,7 @@ function App() {
             </p>
           </div>
 
-          <div className="status-pill">
+          <div className={`status-pill ${syncing ? "is-syncing" : ""}`}>
             <span className="status-dot" />
             {syncStatus}
           </div>
@@ -250,13 +309,24 @@ function App() {
             <p className="folder-path">{syncFolder ?? "No folder selected"}</p>
           </div>
 
-          <button
-            type="button"
-            className="secondary-button"
-            onClick={chooseSyncFolder}
-          >
-            Choose folder
-          </button>
+          <div className="button-group">
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={chooseSyncFolder}
+              disabled={syncing}
+            >
+              Choose folder
+            </button>
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={openLastSyncedFolder}
+              disabled={!lastSyncedFolder || syncing}
+            >
+              Open folder
+            </button>
+          </div>
         </div>
 
         <div className="projects-panel">
@@ -272,9 +342,26 @@ function App() {
               disabled={!canSync}
               onClick={syncSelectedProjects}
             >
-              Sync selected
+              {syncing ? "Syncing..." : "Sync selected"}
             </button>
           </div>
+
+          {syncProgress && (
+            <div className="progress-panel">
+              <div className="progress-header">
+                <span>{syncProgress.message}</span>
+                <span>
+                  {syncProgress.completedFiles}/{syncProgress.totalFiles} files
+                </span>
+              </div>
+              <div className="progress-track" aria-hidden="true">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${syncProgressPercent}%` }}
+                />
+              </div>
+            </div>
+          )}
 
           {lastSyncReport && (
             <div className="sync-report">
@@ -314,6 +401,7 @@ function App() {
                     type="button"
                     className={`project-row ${selected ? "is-selected" : ""}`}
                     onClick={() => toggleProject(project.id)}
+                    disabled={syncing}
                   >
                     <span className="project-check" aria-hidden="true">
                       {selected ? "✓" : ""}
