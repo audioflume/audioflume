@@ -20,6 +20,21 @@ export type SyncManifest = {
   fileTree: ProjectFileNode[];
 };
 
+export type SyncProgress = {
+  phase:
+    | "preparing"
+    | "checking"
+    | "downloading"
+    | "writing-placeholder"
+    | "manifest"
+    | "complete";
+  message: string;
+  projectName?: string;
+  fileName?: string;
+  completedFiles: number;
+  totalFiles: number;
+};
+
 export type SyncResult = {
   projectCount: number;
   checkedFolderCount: number;
@@ -54,6 +69,10 @@ function sanitizeRelativePath(path: string) {
   }
 
   return cleanedPath;
+}
+
+export function getProjectFolderPath(syncFolder: string, project: Project) {
+  return `${syncFolder}/${sanitizeFolderName(project.name)}`;
 }
 
 function getNodeUpdatedAt(node: ProjectFileNode) {
@@ -168,12 +187,21 @@ export function formatSyncReport(result: SyncResult) {
 }
 
 export async function syncProjectsToFolder({
+  onProgress,
   projects,
   syncFolder,
 }: {
+  onProgress?: (progress: SyncProgress) => void;
   projects: Project[];
   syncFolder: string;
 }): Promise<SyncResult> {
+  const totalFiles = projects.reduce(
+    (total, project) =>
+      total + project.files.filter((node) => node.type === "file").length,
+    0,
+  );
+  let completedFiles = 0;
+
   const result: SyncResult = {
     projectCount: projects.length,
     checkedFolderCount: 0,
@@ -185,13 +213,27 @@ export async function syncProjectsToFolder({
     manifestFileCount: 0,
   };
 
+  onProgress?.({
+    phase: "preparing",
+    message: "Preparing sync...",
+    completedFiles,
+    totalFiles,
+  });
+
   for (const project of projects) {
-    const projectFolderName = sanitizeFolderName(project.name);
-    const projectPath = `${syncFolder}/${projectFolderName}`;
+    const projectPath = getProjectFolderPath(syncFolder, project);
     const manifestPath = `${projectPath}/_filmwave`;
     const manifestFilePath = `${manifestPath}/manifest.json`;
     const previousManifest = await readProjectManifest(manifestFilePath);
     const nextManifest = buildManifest(project);
+
+    onProgress?.({
+      phase: "checking",
+      message: `Checking ${project.name}...`,
+      projectName: project.name,
+      completedFiles,
+      totalFiles,
+    });
 
     await mkdir(projectPath, { recursive: true });
     await mkdir(manifestPath, { recursive: true });
@@ -230,13 +272,38 @@ export async function syncProjectsToFolder({
 
       if (canSkipExistingFile) {
         result.skippedFileCount += 1;
+        completedFiles += 1;
+        onProgress?.({
+          phase: "checking",
+          message: `Skipped ${completedFiles} of ${totalFiles}: ${file.name}`,
+          projectName: project.name,
+          fileName: file.name,
+          completedFiles,
+          totalFiles,
+        });
         continue;
       }
 
       if (file.downloadUrl) {
+        onProgress?.({
+          phase: "downloading",
+          message: `Downloading ${completedFiles + 1} of ${totalFiles}: ${file.name}`,
+          projectName: project.name,
+          fileName: file.name,
+          completedFiles,
+          totalFiles,
+        });
         await downloadFileToPath(file.downloadUrl, filePath);
         result.downloadedFileCount += 1;
       } else {
+        onProgress?.({
+          phase: "writing-placeholder",
+          message: `Writing placeholder ${completedFiles + 1} of ${totalFiles}: ${file.name}`,
+          projectName: project.name,
+          fileName: file.name,
+          completedFiles,
+          totalFiles,
+        });
         await writePlaceholderFile({
           file,
           filePath,
@@ -246,6 +313,8 @@ export async function syncProjectsToFolder({
         result.placeholderFileCount += 1;
       }
 
+      completedFiles += 1;
+
       if (fileAlreadyExists) {
         result.updatedFileCount += 1;
       } else {
@@ -253,10 +322,25 @@ export async function syncProjectsToFolder({
       }
     }
 
+    onProgress?.({
+      phase: "manifest",
+      message: `Writing manifest for ${project.name}...`,
+      projectName: project.name,
+      completedFiles,
+      totalFiles,
+    });
+
     await writeTextFile(manifestFilePath, JSON.stringify(nextManifest, null, 2));
 
     result.manifestFileCount += 1;
   }
+
+  onProgress?.({
+    phase: "complete",
+    message: "Sync complete",
+    completedFiles,
+    totalFiles,
+  });
 
   return result;
 }
