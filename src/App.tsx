@@ -67,6 +67,7 @@ function App() {
   const [lastSyncedFolder, setLastSyncedFolder] = useState<string | null>(null);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
   const [desktopToken, setDesktopToken] = useState<string | null>(null);
+  const [connectionCode, setConnectionCode] = useState("");
   const [desktopAccount, setDesktopAccount] = useState<DesktopAccount | null>(null);
   const [accountLoading, setAccountLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState("Not connected");
@@ -140,6 +141,7 @@ function App() {
     const store = await load(SETTINGS_STORE);
 
     setDesktopToken(nextToken);
+    setConnectionCode("");
     setProjectSource("local-api");
     setSelectedProjectIds([]);
     setLastRefreshedAt(null);
@@ -151,6 +153,17 @@ function App() {
     await store.save();
 
     await loadDesktopAccount(nextToken);
+  }
+
+  async function connectWithConnectionCode() {
+    const nextToken = connectionCode.trim();
+
+    if (!nextToken) {
+      setSyncStatus("Paste a connection code first");
+      return;
+    }
+
+    await saveDesktopToken(nextToken);
   }
 
   async function fetchProjects() {
@@ -362,7 +375,7 @@ function App() {
     try {
       await invoke("open_path", { path: getDesktopAuthTokenUrl() });
       setSyncStatus("Sign in opened");
-      setLastSyncReport("Finish signing in in your browser. Filmwave Desktop will connect automatically.");
+      setLastSyncReport("Finish signing in in your browser. If the desktop app does not connect automatically, copy the connection code from the browser and paste it here.");
     } catch (error) {
       console.error(error);
       setSyncStatus("Could not open sign in");
@@ -376,6 +389,7 @@ function App() {
     const store = await load(SETTINGS_STORE);
 
     setDesktopToken(null);
+    setConnectionCode("");
     setDesktopAccount(null);
     setProjects([]);
     setSelectedProjectIds([]);
@@ -539,6 +553,24 @@ function App() {
           <div>
             <h2>Account</h2>
             <p>{accountDescription}</p>
+            {!isSignedIn && (
+              <div className="token-form">
+                <input
+                  type="password"
+                  value={connectionCode}
+                  onChange={(event) => setConnectionCode(event.target.value)}
+                  placeholder="Paste connection code"
+                  autoComplete="off"
+                />
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={connectWithConnectionCode}
+                >
+                  Connect
+                </button>
+              </div>
+            )}
             {isSignedIn && (
               <div className="account-profile">
                 <div className="account-avatar">
