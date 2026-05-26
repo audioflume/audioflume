@@ -47,6 +47,7 @@ export type SyncResult = {
   downloadedFileCount: number;
   placeholderFileCount: number;
   staleFileCount: number;
+  staleFolderCount: number;
   manifestFileCount: number;
 };
 
@@ -139,6 +140,13 @@ function getRemovedFilePath(removedPath: string, relativePath: string) {
   return `${removedPath}/${timestamp}-${filename}`;
 }
 
+function getRemovedFolderPath(removedPath: string, relativePath: string) {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const folderName = relativePath.split("/").pop() ?? "removed-folder";
+
+  return `${removedPath}/folders/${timestamp}-${folderName}`;
+}
+
 async function moveExistingFileToRemoved({
   fromPath,
   removedPath,
@@ -162,6 +170,63 @@ async function moveExistingFileToRemoved({
 
   await rename(fromPath, destinationPath);
   return true;
+}
+
+async function moveExistingFolderToRemoved({
+  fromPath,
+  removedPath,
+  relativePath,
+}: {
+  fromPath: string;
+  removedPath: string;
+  relativePath: string;
+}) {
+  if (!(await exists(fromPath))) {
+    return false;
+  }
+
+  const destinationPath = getRemovedFolderPath(removedPath, relativePath);
+
+  await mkdir(`${removedPath}/folders`, { recursive: true });
+
+  if (await exists(destinationPath)) {
+    await remove(destinationPath, { recursive: true });
+  }
+
+  await rename(fromPath, destinationPath);
+  return true;
+}
+
+function isPathOrAncestorOfPath(path: string, possibleAncestor: string) {
+  return path === possibleAncestor || path.startsWith(`${possibleAncestor}/`);
+}
+
+function folderIsStillNeeded({
+  currentFilePaths,
+  currentFolderPaths,
+  folderPath,
+}: {
+  currentFilePaths: Set<string>;
+  currentFolderPaths: Set<string>;
+  folderPath: string;
+}) {
+  if (currentFolderPaths.has(folderPath)) {
+    return true;
+  }
+
+  for (const currentFolderPath of currentFolderPaths) {
+    if (isPathOrAncestorOfPath(currentFolderPath, folderPath)) {
+      return true;
+    }
+  }
+
+  for (const currentFilePath of currentFilePaths) {
+    if (isPathOrAncestorOfPath(currentFilePath, folderPath)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 async function downloadFileToPath(url: string, filePath: string) {
@@ -217,10 +282,11 @@ export function formatSyncReport(result: SyncResult) {
   const downloadedFileLabel = result.downloadedFileCount === 1 ? "file" : "files";
   const placeholderFileLabel = result.placeholderFileCount === 1 ? "placeholder" : "placeholders";
   const staleFileLabel = result.staleFileCount === 1 ? "stale file" : "stale files";
+  const staleFolderLabel = result.staleFolderCount === 1 ? "stale folder" : "stale folders";
   const folderLabel = result.checkedFolderCount === 1 ? "folder" : "folders";
   const manifestLabel = result.manifestFileCount === 1 ? "manifest" : "manifests";
 
-  return `Synced ${result.projectCount} ${projectLabel}. Created ${result.createdFileCount} ${createdFileLabel}, updated ${result.updatedFileCount} ${updatedFileLabel}, skipped ${result.skippedFileCount} existing ${skippedFileLabel}, downloaded ${result.downloadedFileCount} ${downloadedFileLabel}, wrote ${result.placeholderFileCount} ${placeholderFileLabel}, moved ${result.staleFileCount} ${staleFileLabel}, checked ${result.checkedFolderCount} ${folderLabel}, and wrote ${result.manifestFileCount} ${manifestLabel}.`;
+  return `Synced ${result.projectCount} ${projectLabel}. Created ${result.createdFileCount} ${createdFileLabel}, updated ${result.updatedFileCount} ${updatedFileLabel}, skipped ${result.skippedFileCount} existing ${skippedFileLabel}, downloaded ${result.downloadedFileCount} ${downloadedFileLabel}, wrote ${result.placeholderFileCount} ${placeholderFileLabel}, moved ${result.staleFileCount} ${staleFileLabel}, moved ${result.staleFolderCount} ${staleFolderLabel}, checked ${result.checkedFolderCount} ${folderLabel}, and wrote ${result.manifestFileCount} ${manifestLabel}.`;
 }
 
 export async function syncProjectsToFolder({
@@ -248,6 +314,7 @@ export async function syncProjectsToFolder({
     downloadedFileCount: 0,
     placeholderFileCount: 0,
     staleFileCount: 0,
+    staleFolderCount: 0,
     manifestFileCount: 0,
   };
 
@@ -281,6 +348,12 @@ export async function syncProjectsToFolder({
     const folderNodes = project.files.filter((node) => node.type === "folder");
     const fileNodes = project.files.filter((node) => node.type === "file");
     const currentFileIds = new Set(fileNodes.map((node) => node.id));
+    const currentFilePaths = new Set(
+      fileNodes.map((node) => sanitizeRelativePath(node.path)),
+    );
+    const currentFolderPaths = new Set(
+      folderNodes.map((node) => sanitizeRelativePath(node.path)),
+    );
 
     for (const folder of folderNodes) {
       const safePath = sanitizeRelativePath(folder.path);
@@ -314,6 +387,47 @@ export async function syncProjectsToFolder({
 
       if (moved) {
         result.staleFileCount += 1;
+      }
+    }
+
+    const previousFolders = previousManifest?.fileTree
+      .filter((node) => node.type === "folder")
+      .map((node) => ({
+        ...node,
+        safePath: sanitizeRelativePath(node.path),
+      }))
+      .sort((a, b) => b.safePath.length - a.safePath.length) ?? [];
+
+    for (const previousFolder of previousFolders) {
+      if (
+        folderIsStillNeeded({
+          currentFilePaths,
+          currentFolderPaths,
+          folderPath: previousFolder.safePath,
+        })
+      ) {
+        continue;
+      }
+
+      const oldFolderPath = `${projectPath}/${previousFolder.safePath}`;
+
+      onProgress?.({
+        phase: "stale",
+        message: `Moving removed folder: ${previousFolder.name}`,
+        projectName: project.name,
+        fileName: previousFolder.name,
+        completedFiles,
+        totalFiles,
+      });
+
+      const moved = await moveExistingFolderToRemoved({
+        fromPath: oldFolderPath,
+        removedPath,
+        relativePath: previousFolder.safePath,
+      });
+
+      if (moved) {
+        result.staleFolderCount += 1;
       }
     }
 
