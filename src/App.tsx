@@ -1,6 +1,6 @@
+import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
-import { openPath } from "@tauri-apps/plugin-opener";
 import { load } from "@tauri-apps/plugin-store";
 import {
   getFilmwaveProjects,
@@ -190,7 +190,7 @@ function App() {
 
     try {
       setOpeningFolder(true);
-      await openPath(lastSyncedFolder);
+      await invoke("open_path", { path: lastSyncedFolder });
     } catch (error) {
       console.error(error);
       setSyncStatus("Could not open folder");
