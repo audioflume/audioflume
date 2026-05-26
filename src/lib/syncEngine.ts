@@ -1,7 +1,6 @@
 import {
   exists,
   mkdir,
-  readDir,
   readTextFile,
   remove,
   rename,
@@ -30,7 +29,6 @@ export type SyncProgress = {
     | "downloading"
     | "writing-placeholder"
     | "stale"
-    | "cleanup"
     | "manifest"
     | "complete";
   message: string;
@@ -49,7 +47,6 @@ export type SyncResult = {
   downloadedFileCount: number;
   placeholderFileCount: number;
   staleFileCount: number;
-  cleanedFolderCount: number;
   manifestFileCount: number;
 };
 
@@ -167,34 +164,6 @@ async function moveExistingFileToRemoved({
   return true;
 }
 
-async function removeEmptyParentFolders({
-  projectPath,
-  relativePath,
-}: {
-  projectPath: string;
-  relativePath: string;
-}) {
-  const pathParts = relativePath.split("/").slice(0, -1);
-  let removedCount = 0;
-
-  for (let index = pathParts.length; index > 0; index -= 1) {
-    const folderPath = `${projectPath}/${pathParts.slice(0, index).join("/")}`;
-
-    if (!(await exists(folderPath))) continue;
-
-    const entries = await readDir(folderPath);
-
-    if (entries.length > 0) {
-      break;
-    }
-
-    await remove(folderPath);
-    removedCount += 1;
-  }
-
-  return removedCount;
-}
-
 async function downloadFileToPath(url: string, filePath: string) {
   const response = await tauriFetch(url);
 
@@ -248,11 +217,10 @@ export function formatSyncReport(result: SyncResult) {
   const downloadedFileLabel = result.downloadedFileCount === 1 ? "file" : "files";
   const placeholderFileLabel = result.placeholderFileCount === 1 ? "placeholder" : "placeholders";
   const staleFileLabel = result.staleFileCount === 1 ? "stale file" : "stale files";
-  const cleanedFolderLabel = result.cleanedFolderCount === 1 ? "empty folder" : "empty folders";
   const folderLabel = result.checkedFolderCount === 1 ? "folder" : "folders";
   const manifestLabel = result.manifestFileCount === 1 ? "manifest" : "manifests";
 
-  return `Synced ${result.projectCount} ${projectLabel}. Created ${result.createdFileCount} ${createdFileLabel}, updated ${result.updatedFileCount} ${updatedFileLabel}, skipped ${result.skippedFileCount} existing ${skippedFileLabel}, downloaded ${result.downloadedFileCount} ${downloadedFileLabel}, wrote ${result.placeholderFileCount} ${placeholderFileLabel}, moved ${result.staleFileCount} ${staleFileLabel}, cleaned ${result.cleanedFolderCount} ${cleanedFolderLabel}, checked ${result.checkedFolderCount} ${folderLabel}, and wrote ${result.manifestFileCount} ${manifestLabel}.`;
+  return `Synced ${result.projectCount} ${projectLabel}. Created ${result.createdFileCount} ${createdFileLabel}, updated ${result.updatedFileCount} ${updatedFileLabel}, skipped ${result.skippedFileCount} existing ${skippedFileLabel}, downloaded ${result.downloadedFileCount} ${downloadedFileLabel}, wrote ${result.placeholderFileCount} ${placeholderFileLabel}, moved ${result.staleFileCount} ${staleFileLabel}, checked ${result.checkedFolderCount} ${folderLabel}, and wrote ${result.manifestFileCount} ${manifestLabel}.`;
 }
 
 export async function syncProjectsToFolder({
@@ -280,7 +248,6 @@ export async function syncProjectsToFolder({
     downloadedFileCount: 0,
     placeholderFileCount: 0,
     staleFileCount: 0,
-    cleanedFolderCount: 0,
     manifestFileCount: 0,
   };
 
@@ -347,10 +314,6 @@ export async function syncProjectsToFolder({
 
       if (moved) {
         result.staleFileCount += 1;
-        result.cleanedFolderCount += await removeEmptyParentFolders({
-          projectPath,
-          relativePath: safePath,
-        });
       }
     }
 
@@ -387,10 +350,6 @@ export async function syncProjectsToFolder({
 
         if (moved) {
           result.staleFileCount += 1;
-          result.cleanedFolderCount += await removeEmptyParentFolders({
-            projectPath,
-            relativePath: previousSafePath,
-          });
         }
       }
 
@@ -444,18 +403,6 @@ export async function syncProjectsToFolder({
       } else {
         result.createdFileCount += 1;
       }
-    }
-
-    if (result.cleanedFolderCount > 0) {
-      onProgress?.({
-        phase: "cleanup",
-        message: `Cleaned ${result.cleanedFolderCount} empty local folder${
-          result.cleanedFolderCount === 1 ? "" : "s"
-        }`,
-        projectName: project.name,
-        completedFiles,
-        totalFiles,
-      });
     }
 
     onProgress?.({
