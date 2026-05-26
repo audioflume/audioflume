@@ -13,8 +13,9 @@ import { syncProjectsToFolder } from "./syncEngine";
 const SETTINGS_STORE = "filmwave-settings.json";
 const LOCAL_CHANGE_DEBOUNCE_MS = 3500;
 const WEBSITE_CHANGE_DEBOUNCE_MS = 2500;
-const POST_SYNC_SUPPRESS_MS = 7000;
+const POST_SYNC_SUPPRESS_MS = 10000;
 const SETTINGS_REFRESH_MS = 10000;
+const MIN_SYNC_GAP_MS = 2500;
 
 type RealtimeSettings = {
   apiBaseUrl: string;
@@ -38,6 +39,7 @@ let websiteChangeTimer: number | null = null;
 let settingsRefreshTimer: number | null = null;
 let syncing = false;
 let suppressLocalChangesUntil = 0;
+let lastSyncStartedAt = 0;
 let pendingWebsiteProjectIds = new Set<string>();
 
 async function readSettings(): Promise<RealtimeSettings> {
@@ -73,7 +75,6 @@ async function addActivityLogEntry({
   status,
   title,
 }: {
-  detail: string;
   mode: "manual" | "auto" | "local" | "system";
   projectNames: string[];
   status: "success" | "error" | "info";
@@ -117,6 +118,7 @@ function getChangedProjectIds(changes: Awaited<ReturnType<typeof detectLocalChan
 
 async function runEventDrivenSync(reason: "local" | "website", projectIds = new Set<string>()) {
   if (syncing) return;
+  if (Date.now() - lastSyncStartedAt < MIN_SYNC_GAP_MS) return;
 
   const settings = await readSettings();
 
@@ -124,6 +126,7 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
   if (!settings.desktopToken || !settings.syncFolder) return;
 
   syncing = true;
+  lastSyncStartedAt = Date.now();
 
   try {
     const allProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
@@ -149,12 +152,23 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
         const changedProjectIds = getChangedProjectIds(localChanges);
         const refreshedProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
         projectsToSync = filterProjectsByIds(refreshedProjects, changedProjectIds);
+      } else {
+        localChangeSummary = "No manifest-backed local changes found. ";
       }
     }
 
-    if (projectsToSync.length === 0) return;
+    if (projectsToSync.length === 0) {
+      await addActivityLogEntry({
+        mode: "auto",
+        status: "info",
+        title: reason === "local" ? "Realtime local sync skipped" : "Realtime website sync skipped",
+        detail: `${localChangeSummary}No selected projects needed syncing.`,
+        projectNames: [],
+      });
+      return;
+    }
 
-    await syncProjectsToFolder({
+    const result = await syncProjectsToFolder({
       projects: projectsToSync,
       syncFolder: settings.syncFolder,
     });
@@ -165,7 +179,7 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
       mode: "auto",
       status: "success",
       title: reason === "local" ? "Realtime local sync complete" : "Realtime website sync complete",
-      detail: `${localChangeSummary}Synced after ${reason === "local" ? "a local folder change" : "a Filmwave project change"}.`,
+      detail: `${localChangeSummary}Synced after ${reason === "local" ? "a local folder change" : "a Filmwave project change"}. Skipped ${result.skippedFileCount} unchanged files and downloaded ${result.downloadedFileCount} files.`,
       projectNames: getProjectNames(projectsToSync),
     });
   } catch (error) {
