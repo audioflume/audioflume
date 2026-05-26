@@ -1,4 +1,10 @@
-import { exists, mkdir, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import {
+  exists,
+  mkdir,
+  readTextFile,
+  writeFile,
+  writeTextFile,
+} from "@tauri-apps/plugin-fs";
 import {
   DEFAULT_MOCK_UPDATED_AT,
   type Project,
@@ -19,6 +25,8 @@ export type SyncResult = {
   createdFileCount: number;
   updatedFileCount: number;
   skippedFileCount: number;
+  downloadedFileCount: number;
+  placeholderFileCount: number;
   manifestFileCount: number;
 };
 
@@ -80,15 +88,56 @@ async function readProjectManifest(manifestFilePath: string) {
   }
 }
 
+async function downloadFileToPath(url: string, filePath: string) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Download failed: ${response.status} ${response.statusText}`);
+  }
+
+  const data = new Uint8Array(await response.arrayBuffer());
+  await writeFile(filePath, data);
+}
+
+async function writePlaceholderFile({
+  file,
+  filePath,
+  project,
+  updatedAt,
+}: {
+  file: ProjectFileNode;
+  filePath: string;
+  project: Project;
+  updatedAt: string;
+}) {
+  await writeTextFile(
+    filePath,
+    [
+      `Filmwave placeholder file`,
+      ``,
+      `Project: ${project.name}`,
+      `File: ${file.name}`,
+      `Path: ${file.path}`,
+      `Size: ${file.sizeLabel ?? "Unknown"}`,
+      `Updated at: ${updatedAt}`,
+      `Download URL: ${file.downloadUrl ?? "None"}`,
+      ``,
+      `This placeholder represents a future synced file from Filmwave's All Files section.`,
+    ].join("\n"),
+  );
+}
+
 export function formatSyncReport(result: SyncResult) {
   const projectLabel = result.projectCount === 1 ? "project" : "projects";
   const createdFileLabel = result.createdFileCount === 1 ? "file" : "files";
   const updatedFileLabel = result.updatedFileCount === 1 ? "file" : "files";
   const skippedFileLabel = result.skippedFileCount === 1 ? "file" : "files";
+  const downloadedFileLabel = result.downloadedFileCount === 1 ? "file" : "files";
+  const placeholderFileLabel = result.placeholderFileCount === 1 ? "placeholder" : "placeholders";
   const folderLabel = result.checkedFolderCount === 1 ? "folder" : "folders";
   const manifestLabel = result.manifestFileCount === 1 ? "manifest" : "manifests";
 
-  return `Synced ${result.projectCount} ${projectLabel}. Created ${result.createdFileCount} ${createdFileLabel}, updated ${result.updatedFileCount} ${updatedFileLabel}, skipped ${result.skippedFileCount} existing ${skippedFileLabel}, checked ${result.checkedFolderCount} ${folderLabel}, and wrote ${result.manifestFileCount} ${manifestLabel}.`;
+  return `Synced ${result.projectCount} ${projectLabel}. Created ${result.createdFileCount} ${createdFileLabel}, updated ${result.updatedFileCount} ${updatedFileLabel}, skipped ${result.skippedFileCount} existing ${skippedFileLabel}, downloaded ${result.downloadedFileCount} ${downloadedFileLabel}, wrote ${result.placeholderFileCount} ${placeholderFileLabel}, checked ${result.checkedFolderCount} ${folderLabel}, and wrote ${result.manifestFileCount} ${manifestLabel}.`;
 }
 
 export async function syncProjectsToFolder({
@@ -104,6 +153,8 @@ export async function syncProjectsToFolder({
     createdFileCount: 0,
     updatedFileCount: 0,
     skippedFileCount: 0,
+    downloadedFileCount: 0,
+    placeholderFileCount: 0,
     manifestFileCount: 0,
   };
 
@@ -149,20 +200,18 @@ export async function syncProjectsToFolder({
         continue;
       }
 
-      await writeTextFile(
-        filePath,
-        [
-          `Filmwave placeholder file`,
-          ``,
-          `Project: ${project.name}`,
-          `File: ${file.name}`,
-          `Path: ${file.path}`,
-          `Size: ${file.sizeLabel ?? "Unknown"}`,
-          `Updated at: ${currentUpdatedAt}`,
-          ``,
-          `This placeholder represents a future synced file from Filmwave's All Files section.`,
-        ].join("\n"),
-      );
+      if (file.downloadUrl) {
+        await downloadFileToPath(file.downloadUrl, filePath);
+        result.downloadedFileCount += 1;
+      } else {
+        await writePlaceholderFile({
+          file,
+          filePath,
+          project,
+          updatedAt: currentUpdatedAt,
+        });
+        result.placeholderFileCount += 1;
+      }
 
       if (fileAlreadyExists) {
         result.updatedFileCount += 1;
