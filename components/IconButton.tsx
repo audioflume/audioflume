@@ -24,8 +24,8 @@ export default function IconButton({
   const style =
     active && usesPlainActiveIcon
       ? ({
-          "--edit-points-icon-color": "#000000",
-          "--favorite-icon-color": "#000000",
+          "--edit-points-icon-color": "var(--text-primary)",
+          "--favorite-icon-color": "var(--text-primary)",
         } as CSSProperties)
       : undefined;
 
