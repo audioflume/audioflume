@@ -20,7 +20,11 @@ function getProjectIdFromPayload(payload: {
   return Number.isFinite(numericValue) ? numericValue : null;
 }
 
-function writeSse(controller: ReadableStreamDefaultController, event: string, data: unknown) {
+function writeSse(
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  event: string,
+  data: unknown,
+) {
   const encoder = new TextEncoder();
 
   controller.enqueue(
@@ -62,18 +66,35 @@ export async function GET(req: Request) {
   const userId = payload.userId;
   const allowedProjectIds = await getAllowedProjectIds(userId, requestedProjectIds);
 
-  const stream = new ReadableStream({
+  const stream = new ReadableStream<Uint8Array>({
     start(controller) {
       let closed = false;
 
-      const emitProjectChange = (source: "project_assets" | "project_folders", eventPayload: any) => {
+      const safeWriteSse = (event: string, data: unknown) => {
+        if (closed) return;
+
+        try {
+          writeSse(controller, event, data);
+        } catch {
+          closed = true;
+        }
+      };
+
+      const emitProjectChange = (
+        source: "project_assets" | "project_folders",
+        eventPayload: {
+          eventType?: string;
+          new?: ProjectEventRow;
+          old?: ProjectEventRow;
+        },
+      ) => {
         if (closed) return;
 
         const projectId = getProjectIdFromPayload(eventPayload);
 
         if (!projectId || !allowedProjectIds.has(projectId)) return;
 
-        writeSse(controller, "project-change", {
+        safeWriteSse("project-change", {
           projectId,
           source,
           eventType: eventPayload.eventType ?? "change",
@@ -102,18 +123,14 @@ export async function GET(req: Request) {
           (eventPayload) => emitProjectChange("project_folders", eventPayload),
         )
         .subscribe((status) => {
-          if (closed) return;
-
-          writeSse(controller, "connection", {
+          safeWriteSse("connection", {
             status,
             connectedAt: new Date().toISOString(),
           });
         });
 
-      const heartbeat = window.setInterval(() => {
-        if (closed) return;
-
-        writeSse(controller, "heartbeat", {
+      const heartbeat = setInterval(() => {
+        safeWriteSse("heartbeat", {
           at: new Date().toISOString(),
         });
       }, 25000);
