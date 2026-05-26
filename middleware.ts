@@ -28,7 +28,7 @@ function applyDesktopCorsHeaders(response: NextResponse, request: NextRequest) {
   response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
   response.headers.set(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization",
+    "Content-Type, Authorization, X-Filmwave-Desktop-Dev-Key",
   );
   response.headers.set("Vary", "Origin");
 
@@ -42,10 +42,6 @@ export default clerkMiddleware(async (auth, request) => {
         new NextResponse(null, { status: 204 }),
         request,
       );
-    }
-
-    if (!isPublicRoute(request)) {
-      await auth.protect();
     }
 
     return applyDesktopCorsHeaders(NextResponse.next(), request);
