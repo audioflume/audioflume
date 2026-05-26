@@ -473,8 +473,8 @@ p {
 }
 
 .project-row.is-selected {
-  background: #ffffff;
-  color: #111111;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
 }
 
 .project-row.is-loading {
@@ -492,19 +492,19 @@ p {
   place-items: center;
   border-radius: 7px;
   background: var(--bg-control);
-  color: var(--text-primary);
+  color: transparent;
   font-size: 12px;
   font-weight: 500;
 }
 
 .project-row.is-selected .project-check {
-  background: #111111;
-  color: #ffffff;
+  background: #ffffff;
+  color: #111111;
 }
 
 .project-row.is-selected .project-description,
 .project-row.is-selected .project-meta {
-  color: rgba(17, 17, 17, 0.55);
+  color: var(--text-secondary);
 }
 
 .project-main {
