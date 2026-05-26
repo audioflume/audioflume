@@ -4,9 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { load } from "@tauri-apps/plugin-store";
 import {
+  getDesktopAccount,
   getDesktopAuthTokenUrl,
   getFilmwaveProjects,
   getMockProjects,
+  type DesktopAccount,
   type Project,
 } from "./lib/mockFilmwaveApi";
 import {
@@ -51,6 +53,11 @@ function getDeepLinkUrls(payload: unknown) {
   return typeof payload === "string" ? [payload] : [];
 }
 
+function getAccountInitial(account: DesktopAccount | null) {
+  const value = account?.name || account?.email || "F";
+  return value.trim().charAt(0).toUpperCase() || "F";
+}
+
 function App() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
@@ -59,6 +66,8 @@ function App() {
   const [lastSyncedFolder, setLastSyncedFolder] = useState<string | null>(null);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
   const [desktopToken, setDesktopToken] = useState<string | null>(null);
+  const [desktopAccount, setDesktopAccount] = useState<DesktopAccount | null>(null);
+  const [accountLoading, setAccountLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState("Not connected");
   const [syncing, setSyncing] = useState(false);
   const [openingFolder, setOpeningFolder] = useState(false);
@@ -94,12 +103,37 @@ function App() {
         : "Sign in to load your Filmwave projects";
 
   const accountDescription = isSignedIn
-    ? "Filmwave Desktop is connected. Your session is stored locally on this computer."
+    ? desktopAccount
+      ? `Signed in as ${desktopAccount.name}`
+      : accountLoading
+        ? "Loading your Filmwave account..."
+        : "Filmwave Desktop is connected."
     : "Connect with your normal Filmwave sign-in to access your real project files.";
 
   const syncProgressPercent = syncProgress?.totalFiles
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
     : 0;
+
+  async function loadDesktopAccount(token: string) {
+    setAccountLoading(true);
+
+    try {
+      const account = await getDesktopAccount(token);
+      setDesktopAccount(account);
+      return account;
+    } catch (error) {
+      console.error(error);
+      setDesktopAccount(null);
+      setLastSyncReport(
+        error instanceof Error
+          ? error.message
+          : "Could not load Filmwave account.",
+      );
+      return null;
+    } finally {
+      setAccountLoading(false);
+    }
+  }
 
   async function saveDesktopToken(nextToken: string) {
     const store = await load(SETTINGS_STORE);
@@ -114,6 +148,8 @@ function App() {
     await store.set("desktopToken", nextToken);
     await store.set("projectSource", "local-api");
     await store.save();
+
+    await loadDesktopAccount(nextToken);
   }
 
   async function fetchProjects() {
@@ -188,6 +224,7 @@ function App() {
 
       if (savedDesktopToken) {
         setDesktopToken(savedDesktopToken);
+        void loadDesktopAccount(savedDesktopToken);
       }
 
       if (savedProjectSource === "mock" || savedProjectSource === "local-api") {
@@ -332,6 +369,7 @@ function App() {
     const store = await load(SETTINGS_STORE);
 
     setDesktopToken(null);
+    setDesktopAccount(null);
     setProjects([]);
     setSelectedProjectIds([]);
     setLastRefreshedAt(null);
@@ -494,6 +532,26 @@ function App() {
           <div>
             <h2>Account</h2>
             <p>{accountDescription}</p>
+            {isSignedIn && (
+              <div className="account-profile">
+                <div className="account-avatar">
+                  {desktopAccount?.imageUrl ? (
+                    <img src={desktopAccount.imageUrl} alt="" />
+                  ) : (
+                    getAccountInitial(desktopAccount)
+                  )}
+                </div>
+                <div className="account-profile-main">
+                  <span className="account-name">
+                    {desktopAccount?.name ??
+                      (accountLoading ? "Loading account..." : "Filmwave user")}
+                  </span>
+                  <span className="account-email">
+                    {desktopAccount?.email ?? "Connected to Filmwave"}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="button-group">
