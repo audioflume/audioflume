@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
 import { normalizeProject } from "@/lib/projects";
 import {
   ensureDefaultProjectFolders,
@@ -186,8 +187,18 @@ function buildDesktopFileTree({
   });
 }
 
-export async function GET() {
+async function getDesktopRequestUserId(req: Request) {
+  const tokenUserId = getDesktopUserIdFromRequest(req);
+
+  if (tokenUserId) return tokenUserId;
+
   const { userId } = await auth();
+
+  return userId;
+}
+
+export async function GET(req: Request) {
+  const userId = await getDesktopRequestUserId(req);
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
