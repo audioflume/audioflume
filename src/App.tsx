@@ -32,12 +32,17 @@ function App() {
   const [lastSyncReport, setLastSyncReport] = useState<string | null>(null);
 
   const hasSelectedProjects = selectedProjectIds.length > 0;
+<<<<<<< HEAD
   const canSync = Boolean(syncFolder) && hasSelectedProjects && !projectsLoading && !syncing;
 
   const selectedProjects = useMemo(
     () => projects.filter((project) => selectedProjectIds.includes(project.id)),
     [projects, selectedProjectIds],
   );
+=======
+  const canSync =
+    Boolean(syncFolder) && hasSelectedProjects && !projectsLoading;
+>>>>>>> 500e6ff (update)
 
   const selectedSummary = useMemo(() => {
     if (projectsLoading) {
@@ -67,8 +72,13 @@ function App() {
     async function loadSavedSettings() {
       const store = await load(SETTINGS_STORE);
       const savedFolder = await store.get<string>("syncFolder");
+<<<<<<< HEAD
       const savedProjectSource = await store.get<ProjectSource>("projectSource");
       const savedLastSyncedFolder = await store.get<string>("lastSyncedFolder");
+=======
+      const savedProjectSource =
+        await store.get<ProjectSource>("projectSource");
+>>>>>>> 500e6ff (update)
 
       if (savedFolder) {
         setSyncFolder(savedFolder);
@@ -102,13 +112,19 @@ function App() {
 
         if (cancelled) return;
 
-        const nextProjectIds = new Set(nextProjects.map((project) => project.id));
+        const nextProjectIds = new Set(
+          nextProjects.map((project) => project.id),
+        );
 
         setProjects(nextProjects);
         setSelectedProjectIds((current) =>
           current.filter((projectId) => nextProjectIds.has(projectId)),
         );
-        setSyncStatus(projectSource === "local-api" ? "Local API loaded" : "Mock data loaded");
+        setSyncStatus(
+          projectSource === "local-api"
+            ? "Local API loaded"
+            : "Mock data loaded",
+        );
       } catch (error) {
         if (cancelled) return;
 
@@ -375,7 +391,9 @@ function App() {
               <div className="project-row is-loading">
                 <span className="project-check" aria-hidden="true" />
                 <span className="project-main">
-                  <span className="project-name">Loading Filmwave projects</span>
+                  <span className="project-name">
+                    Loading Filmwave projects
+                  </span>
                   <span className="project-description">
                     Fetching your project file trees...
                   </span>
