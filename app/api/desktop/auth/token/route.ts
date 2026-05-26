@@ -9,22 +9,25 @@ function escapeHtml(value: string) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
+    .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
 
 function renderPage({
   callbackUrl,
+  connectionCode,
   message,
   signedIn,
   signInUrl,
 }: {
   callbackUrl?: string;
+  connectionCode?: string;
   message: string;
   signedIn: boolean;
   signInUrl: string;
 }) {
   const safeCallbackUrl = callbackUrl ? escapeHtml(callbackUrl) : "";
+  const safeConnectionCode = connectionCode ? escapeHtml(connectionCode) : "";
 
   return `<!doctype html>
 <html lang="en">
@@ -43,89 +46,40 @@ function renderPage({
         --accent: #ddff43;
       }
       * { box-sizing: border-box; }
-      body {
-        min-height: 100vh;
-        margin: 0;
-        display: grid;
-        place-items: center;
-        background: var(--bg);
-        color: var(--text);
-        font-family: Arial, Helvetica, sans-serif;
-      }
-      main {
-        width: min(640px, calc(100vw - 32px));
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        background: var(--panel);
-        padding: 28px;
-      }
-      h1 {
-        margin: 0;
-        font-size: 42px;
-        line-height: 0.95;
-        letter-spacing: -0.06em;
-        font-weight: 500;
-      }
-      p {
-        margin: 14px 0 0;
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.55;
-      }
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 18px;
-      }
-      a.button {
-        min-height: 40px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: 0;
-        border-radius: 999px;
-        background: var(--accent);
-        color: #111111;
-        cursor: pointer;
-        padding: 0 18px;
-        font-weight: 700;
-        text-decoration: none;
-      }
-      .secondary {
-        background: transparent !important;
-        color: var(--text) !important;
-        border: 1px solid var(--border) !important;
-      }
-      .status {
-        min-height: 20px;
-        margin-top: 12px;
-        color: var(--muted);
-        font-size: 12px;
-      }
+      body { min-height: 100vh; margin: 0; display: grid; place-items: center; background: var(--bg); color: var(--text); font-family: Arial, Helvetica, sans-serif; }
+      main { width: min(680px, calc(100vw - 32px)); border: 1px solid var(--border); border-radius: 24px; background: var(--panel); padding: 28px; }
+      h1 { margin: 0; font-size: 42px; line-height: 0.95; letter-spacing: -0.06em; font-weight: 500; }
+      p { margin: 14px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+      textarea { width: 100%; min-height: 110px; margin-top: 18px; resize: vertical; border: 1px solid var(--border); border-radius: 16px; background: #0d0d0d; color: var(--text); padding: 14px; font: 12px/1.45 SFMono-Regular, Consolas, monospace; }
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+      a.button, button.button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 999px; background: var(--accent); color: #111111; cursor: pointer; padding: 0 18px; font-weight: 700; text-decoration: none; }
+      .secondary { background: transparent !important; color: var(--text) !important; border: 1px solid var(--border) !important; }
+      .status { min-height: 20px; margin-top: 12px; color: var(--muted); font-size: 12px; }
     </style>
   </head>
   <body>
     <main>
       <h1>Connect Filmwave Desktop</h1>
       <p>${message}</p>
+      ${signedIn ? `<textarea id="connection-code" readonly>${safeConnectionCode}</textarea>` : ""}
       <div class="actions">
-        ${signedIn ? `<a class="button" id="open-desktop" href="${safeCallbackUrl}">Open Filmwave Desktop</a>` : `<a class="button" href="${signInUrl}">Sign in to Filmwave</a>`}
+        ${signedIn ? `<a class="button" id="open-desktop" href="${safeCallbackUrl}">Open Filmwave Desktop</a><button class="button secondary" id="copy-code" type="button">Copy connection code</button>` : `<a class="button" href="${signInUrl}">Sign in to Filmwave</a>`}
         <a class="button secondary" href="/api/desktop/auth/token?callback=deeplink">Try again</a>
       </div>
-      <div class="status" id="status">${signedIn ? "If nothing happens, make sure Filmwave Desktop is running, then click Open Filmwave Desktop again." : "After signing in, Filmwave Desktop will open automatically."}</div>
+      <div class="status" id="status">${signedIn ? "If the app does not open, copy the connection code and paste it into Filmwave Desktop." : "After signing in, Filmwave Desktop will open automatically."}</div>
     </main>
     ${signedIn ? `<script>
       const openButton = document.getElementById("open-desktop");
+      const copyButton = document.getElementById("copy-code");
+      const code = document.getElementById("connection-code");
       const status = document.getElementById("status");
-
-      openButton?.addEventListener("click", () => {
-        status.textContent = "Opening Filmwave Desktop... If nothing happens, the desktop URL scheme is not registered yet.";
+      openButton?.addEventListener("click", () => { status.textContent = "Opening Filmwave Desktop... If nothing happens, use the fallback connection code."; });
+      copyButton?.addEventListener("click", async () => {
+        code.select();
+        await navigator.clipboard.writeText(code.value);
+        status.textContent = "Copied. Paste the connection code into Filmwave Desktop.";
       });
-
-      window.setTimeout(() => {
-        openButton?.click();
-      }, 300);
+      window.setTimeout(() => { openButton?.click(); }, 300);
     </script>` : ""}
   </body>
 </html>`;
@@ -181,6 +135,7 @@ export async function GET(req: Request) {
   return new NextResponse(
     renderPage({
       callbackUrl: shouldDeepLink ? callbackUrl : undefined,
+      connectionCode: token,
       message: shouldDeepLink
         ? "You are signed in. Filmwave Desktop should open automatically."
         : "You are signed in. Click the button below to connect Filmwave Desktop.",
