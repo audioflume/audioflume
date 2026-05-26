@@ -22,6 +22,11 @@
     "fs:allow-download-read-recursive",
     "fs:scope-download-recursive",
     "http:default",
+    "deep-link:default",
+    "deep-link:allow-register",
+    "deep-link:allow-unregister",
+    "deep-link:allow-is-registered",
+    "deep-link:allow-get-current",
     {
       "identifier": "http:allow-fetch",
       "allow": [
