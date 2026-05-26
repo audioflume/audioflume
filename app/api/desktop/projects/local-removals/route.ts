@@ -10,6 +10,11 @@ type LocalRemovalRequestItem = {
   folderId?: string | number | null;
 };
 
+type ProjectFolderRow = {
+  id: number;
+  parent_folder_id: number | null;
+};
+
 function getNumericId(value: unknown) {
   const numericValue = Number(value);
 
@@ -60,6 +65,34 @@ function normalizeRemoval(item: LocalRemovalRequestItem) {
   return null;
 }
 
+function getDescendantFolderIds({
+  allFolders,
+  rootFolderIds,
+}: {
+  allFolders: ProjectFolderRow[];
+  rootFolderIds: number[];
+}) {
+  const folderIds = new Set(rootFolderIds);
+  let changed = true;
+
+  while (changed) {
+    changed = false;
+
+    for (const folder of allFolders) {
+      if (
+        folder.parent_folder_id != null &&
+        folderIds.has(folder.parent_folder_id) &&
+        !folderIds.has(folder.id)
+      ) {
+        folderIds.add(folder.id);
+        changed = true;
+      }
+    }
+  }
+
+  return [...folderIds];
+}
+
 export async function POST(req: Request) {
   const userId = getDesktopUserIdFromRequest(req);
 
@@ -90,7 +123,9 @@ export async function POST(req: Request) {
 
     if (projectsError) throw projectsError;
 
-    const allowedProjectIds = new Set((projectRows ?? []).map((project) => Number(project.id)));
+    const allowedProjectIds = new Set(
+      (projectRows ?? []).map((project) => Number(project.id)),
+    );
     const allowedRemovals = removals.filter((item) =>
       allowedProjectIds.has(Number(item.projectId)),
     );
@@ -115,6 +150,48 @@ export async function POST(req: Request) {
     let removedAssetCount = 0;
     let removedFolderCount = 0;
 
+    for (const [projectId, folderIds] of folderIdsByProjectId) {
+      const uniqueFolderIds = [...new Set(folderIds)];
+
+      if (uniqueFolderIds.length === 0) continue;
+
+      const { data: folderRows, error: foldersError } = await supabaseServer
+        .from("project_folders")
+        .select("id,parent_folder_id")
+        .eq("project_id", projectId)
+        .eq("clerk_user_id", userId);
+
+      if (foldersError) throw foldersError;
+
+      const allFolderIdsToDelete = getDescendantFolderIds({
+        allFolders: (folderRows ?? []) as ProjectFolderRow[],
+        rootFolderIds: uniqueFolderIds,
+      });
+
+      if (allFolderIdsToDelete.length === 0) continue;
+
+      const { error: assetDeleteError, count: assetCount } = await supabaseServer
+        .from("project_assets")
+        .delete({ count: "exact" })
+        .eq("project_id", projectId)
+        .in("folder_id", allFolderIdsToDelete);
+
+      if (assetDeleteError) throw assetDeleteError;
+
+      removedAssetCount += assetCount ?? 0;
+
+      const { error: folderDeleteError, count: folderCount } = await supabaseServer
+        .from("project_folders")
+        .delete({ count: "exact" })
+        .eq("project_id", projectId)
+        .eq("clerk_user_id", userId)
+        .in("id", allFolderIdsToDelete);
+
+      if (folderDeleteError) throw folderDeleteError;
+
+      removedFolderCount += folderCount ?? 0;
+    }
+
     for (const [projectId, assetIds] of assetIdsByProjectId) {
       const uniqueAssetIds = [...new Set(assetIds)];
 
@@ -129,23 +206,6 @@ export async function POST(req: Request) {
       if (error) throw error;
 
       removedAssetCount += count ?? 0;
-    }
-
-    for (const [projectId, folderIds] of folderIdsByProjectId) {
-      const uniqueFolderIds = [...new Set(folderIds)];
-
-      if (uniqueFolderIds.length === 0) continue;
-
-      const { error, count } = await supabaseServer
-        .from("project_folders")
-        .delete({ count: "exact" })
-        .eq("project_id", projectId)
-        .eq("clerk_user_id", userId)
-        .in("id", uniqueFolderIds);
-
-      if (error) throw error;
-
-      removedFolderCount += count ?? 0;
     }
 
     return NextResponse.json({
