@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { useEffect, useMemo, useState } from "react";
+import { register } from "@tauri-apps/plugin-deep-link";
 import { open } from "@tauri-apps/plugin-dialog";
 import { load } from "@tauri-apps/plugin-store";
 import {
@@ -203,6 +204,12 @@ function App() {
       setProjectsLoading(false);
     }
   }
+
+  useEffect(() => {
+    register("filmwave").catch((error) => {
+      console.warn("Could not register Filmwave deep link scheme.", error);
+    });
+  }, []);
 
   useEffect(() => {
     async function loadSavedSettings() {
