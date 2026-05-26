@@ -27,10 +27,21 @@ import "./App.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const DEFAULT_AUTO_SYNC_INTERVAL_MINUTES = 15;
+const MAX_SYNC_ACTIVITY_LOG_ENTRIES = 10;
 
 type ProjectSource = "mock" | "local-api";
 type SyncRunOptions = {
   automatic?: boolean;
+};
+
+type SyncActivityLogEntry = {
+  id: string;
+  createdAt: string;
+  mode: "manual" | "auto" | "local" | "system";
+  status: "success" | "error" | "info";
+  title: string;
+  detail: string;
+  projectNames: string[];
 };
 
 function formatRefreshTime(date: Date | null) {
@@ -49,6 +60,15 @@ function formatAutoSyncTime(date: Date | null) {
     hour: "numeric",
     minute: "2-digit",
   })}`;
+}
+
+function formatLogTime(value: string) {
+  return new Date(value).toLocaleString([], {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 function getTokenFromDeepLink(url: string) {
@@ -75,6 +95,10 @@ function getDeepLinkUrls(payload: unknown) {
 function getAccountInitial(account: DesktopAccount | null) {
   const value = account?.name || account?.email || "F";
   return value.trim().charAt(0).toUpperCase() || "F";
+}
+
+function getProjectNames(projects: Project[]) {
+  return projects.map((project) => project.name).filter(Boolean);
 }
 
 function App() {
@@ -104,6 +128,7 @@ function App() {
   const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null);
   const [lastSyncReport, setLastSyncReport] = useState<string | null>(null);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
+  const [syncActivityLog, setSyncActivityLog] = useState<SyncActivityLogEntry[]>([]);
 
   const hasSelectedProjects = selectedProjectIds.length > 0;
   const isSignedIn = Boolean(desktopToken);
@@ -163,6 +188,37 @@ function App() {
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
     : 0;
 
+  async function persistSyncActivityLog(nextLog: SyncActivityLogEntry[]) {
+    const store = await load(SETTINGS_STORE);
+
+    await store.set("syncActivityLog", nextLog);
+    await store.save();
+  }
+
+  async function addSyncActivityLogEntry(
+    entry: Omit<SyncActivityLogEntry, "id" | "createdAt">,
+  ) {
+    const nextEntry: SyncActivityLogEntry = {
+      ...entry,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      createdAt: new Date().toISOString(),
+    };
+
+    setSyncActivityLog((current) => {
+      const nextLog = [nextEntry, ...current].slice(0, MAX_SYNC_ACTIVITY_LOG_ENTRIES);
+      void persistSyncActivityLog(nextLog);
+      return nextLog;
+    });
+  }
+
+  async function clearSyncActivityLog() {
+    const store = await load(SETTINGS_STORE);
+
+    setSyncActivityLog([]);
+    await store.set("syncActivityLog", []);
+    await store.save();
+  }
+
   async function loadDesktopAccount(token: string, nextApiBaseUrl = normalizedApiBaseUrl) {
     setAccountLoading(true);
 
@@ -201,6 +257,13 @@ function App() {
     await store.save();
 
     await loadDesktopAccount(nextToken);
+    await addSyncActivityLogEntry({
+      mode: "system",
+      status: "info",
+      title: "Signed in",
+      detail: "Filmwave Desktop connected to your account.",
+      projectNames: [],
+    });
   }
 
   async function connectWithConnectionCode() {
@@ -286,11 +349,18 @@ function App() {
       const savedAutoSyncIntervalMinutes = await store.get<number>(
         "autoSyncIntervalMinutes",
       );
+      const savedSyncActivityLog = await store.get<SyncActivityLogEntry[]>(
+        "syncActivityLog",
+      );
       const nextApiBaseUrl = normalizeFilmwaveApiBaseUrl(savedApiBaseUrl);
 
       setApiBaseUrl(nextApiBaseUrl);
       setApiBaseUrlDraft(nextApiBaseUrl);
       setAutoSyncEnabled(Boolean(savedAutoSyncEnabled));
+
+      if (Array.isArray(savedSyncActivityLog)) {
+        setSyncActivityLog(savedSyncActivityLog.slice(0, MAX_SYNC_ACTIVITY_LOG_ENTRIES));
+      }
 
       if (
         savedAutoSyncIntervalMinutes === 5 ||
@@ -480,6 +550,15 @@ function App() {
 
     await store.set("autoSyncEnabled", nextEnabled);
     await store.save();
+    await addSyncActivityLogEntry({
+      mode: "system",
+      status: "info",
+      title: nextEnabled ? "Auto-sync enabled" : "Auto-sync disabled",
+      detail: nextEnabled
+        ? `Auto-sync will run every ${autoSyncIntervalMinutes} minutes.`
+        : "Auto-sync was turned off.",
+      projectNames: getProjectNames(selectedProjects),
+    });
   }
 
   async function changeAutoSyncInterval(nextInterval: number) {
@@ -559,6 +638,13 @@ function App() {
 
     await store.delete("desktopToken");
     await store.save();
+    await addSyncActivityLogEntry({
+      mode: "system",
+      status: "info",
+      title: "Signed out",
+      detail: "Filmwave Desktop disconnected from the current account.",
+      projectNames: [],
+    });
   }
 
   async function refreshProjects() {
@@ -610,6 +696,16 @@ function App() {
           ? `${removals.length} local removal${removals.length === 1 ? "" : "s"} detected. Review and apply them to remove those items from the Filmwave project only.`
           : "No local removals were detected for the selected projects.",
       );
+      await addSyncActivityLogEntry({
+        mode: "local",
+        status: "info",
+        title: removals.length > 0 ? "Local removals detected" : "No local removals",
+        detail:
+          removals.length > 0
+            ? `${removals.length} local removal${removals.length === 1 ? "" : "s"} found and waiting to be applied.`
+            : "Manual local-removal check completed with no removals found.",
+        projectNames: getProjectNames(selectedProjects),
+      });
     } catch (error) {
       console.error(error);
       setSyncStatus("Local check failed");
@@ -618,6 +714,16 @@ function App() {
           ? error.message
           : "Could not check local removals.",
       );
+      await addSyncActivityLogEntry({
+        mode: "local",
+        status: "error",
+        title: "Local removal check failed",
+        detail:
+          error instanceof Error
+            ? error.message
+            : "Could not check local removals.",
+        projectNames: getProjectNames(selectedProjects),
+      });
     } finally {
       setCheckingLocalRemovals(false);
     }
@@ -638,6 +744,9 @@ function App() {
       setSyncStatus("No local removals");
       return;
     }
+
+    const pendingRemovalCount = localRemovals.length;
+    const pendingProjectNames = getProjectNames(selectedProjects);
 
     try {
       setApplyingLocalRemovals(true);
@@ -685,6 +794,13 @@ function App() {
       }
 
       setSyncStatus("Local removals applied");
+      await addSyncActivityLogEntry({
+        mode: "local",
+        status: "success",
+        title: "Local removals applied",
+        detail: `Applied ${pendingRemovalCount} local removal${pendingRemovalCount === 1 ? "" : "s"}. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"} from Filmwave projects only.`,
+        projectNames: pendingProjectNames,
+      });
     } catch (error) {
       console.error(error);
       setSyncStatus("Apply failed");
@@ -693,6 +809,16 @@ function App() {
           ? error.message
           : "Could not apply local removals.",
       );
+      await addSyncActivityLogEntry({
+        mode: "local",
+        status: "error",
+        title: "Apply local removals failed",
+        detail:
+          error instanceof Error
+            ? error.message
+            : "Could not apply local removals.",
+        projectNames: pendingProjectNames,
+      });
     } finally {
       setApplyingLocalRemovals(false);
       setSyncing(false);
@@ -745,6 +871,8 @@ function App() {
       return;
     }
 
+    const runProjectNames = getProjectNames(selectedProjects);
+
     try {
       setSyncing(true);
       setSyncStatus(options.automatic ? "Auto-syncing..." : "Checking local removals...");
@@ -753,6 +881,9 @@ function App() {
       setSyncProgress(null);
 
       let autoRemovalSummary = "";
+      let appliedRemovalCount = 0;
+      let removedAssetCount = 0;
+      let removedFolderCount = 0;
 
       if (projectSource === "local-api" && desktopToken) {
         const removals = await detectLocalRemovals({
@@ -773,6 +904,9 @@ function App() {
             })),
           });
 
+          appliedRemovalCount = removals.length;
+          removedAssetCount = removalResult.removedAssetCount;
+          removedFolderCount = removalResult.removedFolderCount;
           autoRemovalSummary = `Applied ${removals.length} local removal${removals.length === 1 ? "" : "s"} to Filmwave. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. `;
         }
       }
@@ -831,6 +965,23 @@ function App() {
 
       setSyncStatus(options.automatic ? "Auto-synced" : "Synced");
       setLastSyncReport(`${autoRemovalSummary}${formatSyncReport(result)}`);
+      await addSyncActivityLogEntry({
+        mode: options.automatic ? "auto" : "manual",
+        status: "success",
+        title: options.automatic ? "Auto-sync complete" : "Manual sync complete",
+        detail: `${autoRemovalSummary}${formatSyncReport(result)}`,
+        projectNames: getProjectNames(latestSelectedProjects),
+      });
+
+      if (appliedRemovalCount > 0) {
+        await addSyncActivityLogEntry({
+          mode: "local",
+          status: "success",
+          title: "Local removals auto-applied",
+          detail: `Auto-applied ${appliedRemovalCount} local removal${appliedRemovalCount === 1 ? "" : "s"}. Removed ${removedAssetCount} project file${removedAssetCount === 1 ? "" : "s"} and ${removedFolderCount} folder${removedFolderCount === 1 ? "" : "s"} from Filmwave projects only.`,
+          projectNames: getProjectNames(latestSelectedProjects),
+        });
+      }
     } catch (error) {
       console.error(error);
       setSyncStatus(options.automatic ? "Auto-sync failed" : "Sync failed");
@@ -839,6 +990,16 @@ function App() {
           ? error.message
           : "An unknown sync error occurred.",
       );
+      await addSyncActivityLogEntry({
+        mode: options.automatic ? "auto" : "manual",
+        status: "error",
+        title: options.automatic ? "Auto-sync failed" : "Manual sync failed",
+        detail:
+          error instanceof Error
+            ? error.message
+            : "An unknown sync error occurred.",
+        projectNames: runProjectNames,
+      });
     } finally {
       setSyncing(false);
     }
@@ -1203,6 +1364,65 @@ function App() {
                   </button>
                 );
               })
+            )}
+          </div>
+        </div>
+
+        <div className="projects-panel">
+          <div className="projects-header">
+            <div>
+              <h2>Sync activity</h2>
+              <p>Last {MAX_SYNC_ACTIVITY_LOG_ENTRIES} sync events, local removals, and errors.</p>
+            </div>
+
+            <button
+              type="button"
+              className="secondary-button"
+              disabled={syncActivityLog.length === 0}
+              onClick={clearSyncActivityLog}
+            >
+              Clear log
+            </button>
+          </div>
+
+          <div className="project-list">
+            {syncActivityLog.length === 0 ? (
+              <div className="project-row is-loading">
+                <span className="project-check" aria-hidden="true" />
+                <span className="project-main">
+                  <span className="project-name">No sync activity yet</span>
+                  <span className="project-description">
+                    Manual syncs, auto-syncs, local removals, and errors will appear here.
+                  </span>
+                </span>
+              </div>
+            ) : (
+              syncActivityLog.map((entry) => (
+                <div key={entry.id} className="project-row is-loading">
+                  <span className="project-check" aria-hidden="true">
+                    {entry.status === "success"
+                      ? "✓"
+                      : entry.status === "error"
+                        ? "!"
+                        : "•"}
+                  </span>
+                  <span className="project-main">
+                    <span className="project-name">
+                      {entry.title} · {formatLogTime(entry.createdAt)}
+                    </span>
+                    <span className="project-description">{entry.detail}</span>
+                    {entry.projectNames.length > 0 && (
+                      <span className="project-description">
+                        Projects: {entry.projectNames.join(", ")}
+                      </span>
+                    )}
+                  </span>
+                  <span className="project-meta">
+                    <span>{entry.mode}</span>
+                    <span>{entry.status}</span>
+                  </span>
+                </div>
+              ))
             )}
           </div>
         </div>
