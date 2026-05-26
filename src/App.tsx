@@ -2,28 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { exists, mkdir, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
+import {
+  DEFAULT_MOCK_UPDATED_AT,
+  getMockProjects,
+  type Project,
+  type ProjectFileNode,
+} from "./lib/mockFilmwaveApi";
 import "./App.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
-const DEFAULT_MOCK_UPDATED_AT = "2026-05-25T00:00:00.000Z";
-
-type ProjectFileNode = {
-  id: string;
-  type: "folder" | "file";
-  name: string;
-  path: string;
-  sizeLabel?: string;
-  updatedAt?: string;
-};
-
-type Project = {
-  id: string;
-  name: string;
-  description: string;
-  fileCount: number;
-  sizeLabel: string;
-  files: ProjectFileNode[];
-};
 
 type SyncManifest = {
   projectId: string;
@@ -32,192 +19,6 @@ type SyncManifest = {
   source: "mock-all-files";
   fileTree: ProjectFileNode[];
 };
-
-const mockProjects: Project[] = [
-  {
-    id: "project-documentary",
-    name: "Quiet Documentary Beds",
-    description: "Soft movement, subtle pulse, and grounded cue options.",
-    fileCount: 7,
-    sizeLabel: "412 MB",
-    files: [
-      {
-        id: "doc-loose-brief",
-        type: "file",
-        name: "Creative Brief.txt",
-        path: "Creative Brief.txt",
-        sizeLabel: "4 KB",
-        updatedAt: "2026-05-25T12:00:00.000Z",
-      },
-      {
-        id: "doc-folder-music",
-        type: "folder",
-        name: "Music Selects",
-        path: "Music Selects",
-      },
-      {
-        id: "doc-file-aurora",
-        type: "file",
-        name: "Aurora Bed.txt",
-        path: "Music Selects/Aurora Bed.txt",
-        sizeLabel: "64 MB",
-        updatedAt: "2026-05-25T12:10:00.000Z",
-      },
-      {
-        id: "doc-file-northline",
-        type: "file",
-        name: "Northline Pulse.txt",
-        path: "Music Selects/Northline Pulse.txt",
-        sizeLabel: "71 MB",
-        updatedAt: "2026-05-25T12:20:00.000Z",
-      },
-      {
-        id: "doc-folder-notes",
-        type: "folder",
-        name: "Client Notes",
-        path: "Client Notes",
-      },
-      {
-        id: "doc-file-notes",
-        type: "file",
-        name: "Scene Notes.txt",
-        path: "Client Notes/Scene Notes.txt",
-        sizeLabel: "8 KB",
-        updatedAt: "2026-05-25T12:30:00.000Z",
-      },
-      {
-        id: "doc-loose-license",
-        type: "file",
-        name: "License.txt",
-        path: "License.txt",
-        sizeLabel: "3 KB",
-        updatedAt: "2026-05-25T12:40:00.000Z",
-      },
-    ],
-  },
-  {
-    id: "project-brand-film",
-    name: "Brand Film Selects",
-    description: "Polished motion, warm builds, and clean commercial tracks.",
-    fileCount: 9,
-    sizeLabel: "680 MB",
-    files: [
-      {
-        id: "brand-loose-readme",
-        type: "file",
-        name: "README.txt",
-        path: "README.txt",
-        sizeLabel: "2 KB",
-        updatedAt: "2026-05-25T13:00:00.000Z",
-      },
-      {
-        id: "brand-folder-final",
-        type: "folder",
-        name: "Final Music",
-        path: "Final Music",
-      },
-      {
-        id: "brand-file-clean-pulse",
-        type: "file",
-        name: "Clean Pulse.txt",
-        path: "Final Music/Clean Pulse.txt",
-        sizeLabel: "93 MB",
-        updatedAt: "2026-05-25T13:10:00.000Z",
-      },
-      {
-        id: "brand-file-slow-build",
-        type: "file",
-        name: "Slow Build.txt",
-        path: "Final Music/Slow Build.txt",
-        sizeLabel: "88 MB",
-        updatedAt: "2026-05-25T13:20:00.000Z",
-      },
-      {
-        id: "brand-folder-stems",
-        type: "folder",
-        name: "Artist Stems",
-        path: "Artist Stems",
-      },
-      {
-        id: "brand-folder-clean-stems",
-        type: "folder",
-        name: "Clean Pulse",
-        path: "Artist Stems/Clean Pulse",
-      },
-      {
-        id: "brand-file-drums",
-        type: "file",
-        name: "Drums.txt",
-        path: "Artist Stems/Clean Pulse/Drums.txt",
-        sizeLabel: "35 MB",
-        updatedAt: "2026-05-25T13:30:00.000Z",
-      },
-      {
-        id: "brand-file-bass",
-        type: "file",
-        name: "Bass.txt",
-        path: "Artist Stems/Clean Pulse/Bass.txt",
-        sizeLabel: "28 MB",
-        updatedAt: "2026-05-25T13:40:00.000Z",
-      },
-      {
-        id: "brand-file-synth",
-        type: "file",
-        name: "Synth.txt",
-        path: "Artist Stems/Clean Pulse/Synth.txt",
-        sizeLabel: "41 MB",
-        updatedAt: "2026-05-25T13:50:00.000Z",
-      },
-    ],
-  },
-  {
-    id: "project-travel-reel",
-    name: "Travel Reel Music",
-    description: "Open travel cues, organic rhythm, and light transitions.",
-    fileCount: 5,
-    sizeLabel: "295 MB",
-    files: [
-      {
-        id: "travel-loose-main",
-        type: "file",
-        name: "Main Track.txt",
-        path: "Main Track.txt",
-        sizeLabel: "74 MB",
-        updatedAt: "2026-05-25T14:00:00.000Z",
-      },
-      {
-        id: "travel-loose-alt",
-        type: "file",
-        name: "Alternate Cut.txt",
-        path: "Alternate Cut.txt",
-        sizeLabel: "68 MB",
-        updatedAt: "2026-05-25T14:10:00.000Z",
-      },
-      {
-        id: "travel-folder-references",
-        type: "folder",
-        name: "References",
-        path: "References",
-      },
-      {
-        id: "travel-file-reference",
-        type: "file",
-        name: "Music Direction.txt",
-        path: "References/Music Direction.txt",
-        sizeLabel: "6 KB",
-        updatedAt: "2026-05-25T14:20:00.000Z",
-      },
-      {
-        id: "travel-loose-license",
-        type: "file",
-        name: "License.txt",
-        path: "License.txt",
-        sizeLabel: "3 KB",
-        updatedAt: "2026-05-25T14:30:00.000Z",
-      },
-    ],
-  },
-];
 
 function sanitizeFolderName(name: string) {
   return name
@@ -278,15 +79,21 @@ async function readProjectManifest(manifestFilePath: string) {
 }
 
 function App() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
   const [syncFolder, setSyncFolder] = useState<string | null>(null);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
   const [syncStatus, setSyncStatus] = useState("Not connected");
   const [lastSyncReport, setLastSyncReport] = useState<string | null>(null);
 
   const hasSelectedProjects = selectedProjectIds.length > 0;
-  const canSync = Boolean(syncFolder) && hasSelectedProjects;
+  const canSync = Boolean(syncFolder) && hasSelectedProjects && !projectsLoading;
 
   const selectedSummary = useMemo(() => {
+    if (projectsLoading) {
+      return "Loading projects...";
+    }
+
     if (!hasSelectedProjects) {
       return "No projects selected";
     }
@@ -295,7 +102,7 @@ function App() {
     const label = selectedCount === 1 ? "project" : "projects";
 
     return `${selectedCount} ${label} selected`;
-  }, [hasSelectedProjects, selectedProjectIds.length]);
+  }, [hasSelectedProjects, projectsLoading, selectedProjectIds.length]);
 
   useEffect(() => {
     async function loadSavedSettings() {
@@ -308,7 +115,22 @@ function App() {
       }
     }
 
+    async function loadProjects() {
+      setProjectsLoading(true);
+
+      try {
+        const nextProjects = await getMockProjects();
+        setProjects(nextProjects);
+      } catch (error) {
+        console.error(error);
+        setSyncStatus("Could not load projects");
+      } finally {
+        setProjectsLoading(false);
+      }
+    }
+
     loadSavedSettings();
+    loadProjects();
   }, []);
 
   async function chooseSyncFolder() {
@@ -354,7 +176,7 @@ function App() {
       setSyncStatus("Checking files...");
       setLastSyncReport(null);
 
-      const selectedProjects = mockProjects.filter((project) =>
+      const selectedProjects = projects.filter((project) =>
         selectedProjectIds.includes(project.id),
       );
 
@@ -532,34 +354,46 @@ function App() {
           )}
 
           <div className="project-list">
-            {mockProjects.map((project) => {
-              const selected = selectedProjectIds.includes(project.id);
-
-              return (
-                <button
-                  key={project.id}
-                  type="button"
-                  className={`project-row ${selected ? "is-selected" : ""}`}
-                  onClick={() => toggleProject(project.id)}
-                >
-                  <span className="project-check" aria-hidden="true">
-                    {selected ? "✓" : ""}
+            {projectsLoading ? (
+              <div className="project-row is-loading">
+                <span className="project-check" aria-hidden="true" />
+                <span className="project-main">
+                  <span className="project-name">Loading Filmwave projects</span>
+                  <span className="project-description">
+                    Fetching your project file trees...
                   </span>
+                </span>
+              </div>
+            ) : (
+              projects.map((project) => {
+                const selected = selectedProjectIds.includes(project.id);
 
-                  <span className="project-main">
-                    <span className="project-name">{project.name}</span>
-                    <span className="project-description">
-                      {project.description}
+                return (
+                  <button
+                    key={project.id}
+                    type="button"
+                    className={`project-row ${selected ? "is-selected" : ""}`}
+                    onClick={() => toggleProject(project.id)}
+                  >
+                    <span className="project-check" aria-hidden="true">
+                      {selected ? "✓" : ""}
                     </span>
-                  </span>
 
-                  <span className="project-meta">
-                    <span>{project.fileCount} files</span>
-                    <span>{project.sizeLabel}</span>
-                  </span>
-                </button>
-              );
-            })}
+                    <span className="project-main">
+                      <span className="project-name">{project.name}</span>
+                      <span className="project-description">
+                        {project.description}
+                      </span>
+                    </span>
+
+                    <span className="project-meta">
+                      <span>{project.fileCount} files</span>
+                      <span>{project.sizeLabel}</span>
+                    </span>
+                  </button>
+                );
+              })
+            )}
           </div>
         </div>
       </section>
