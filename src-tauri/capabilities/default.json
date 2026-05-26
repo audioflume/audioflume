@@ -19,6 +19,21 @@
     "fs:scope-document-recursive",
     "fs:allow-download-write-recursive",
     "fs:allow-download-read-recursive",
-    "fs:scope-download-recursive"
+    "fs:scope-download-recursive",
+    "http:default",
+    {
+      "identifier": "http:allow-fetch",
+      "allow": [
+        {
+          "url": "https://**"
+        },
+        {
+          "url": "http://localhost:**"
+        },
+        {
+          "url": "http://127.0.0.1:**"
+        }
+      ]
+    }
   ]
 }
