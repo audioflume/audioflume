@@ -285,5 +285,5 @@ export async function getFilmwaveProjects(token?: string | null) {
 }
 
 export function getDesktopAuthTokenUrl() {
-  return `${FILMWAVE_API_BASE_URL}/api/desktop/auth/token`;
+  return `${FILMWAVE_API_BASE_URL}/api/desktop/auth/token?callback=deeplink`;
 }
