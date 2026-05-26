@@ -137,14 +137,9 @@ function fileVersionMatches({
 
 function getRemovedFilePath(removedPath: string, relativePath: string) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const pathParts = relativePath.split("/");
-  const filename = pathParts.pop() ?? "removed-file";
-  const folderPath = pathParts.join("/");
-  const destinationName = `${timestamp}-${filename}`;
+  const filename = relativePath.split("/").pop() ?? "removed-file";
 
-  return folderPath
-    ? `${removedPath}/${folderPath}/${destinationName}`
-    : `${removedPath}/${destinationName}`;
+  return `${removedPath}/${timestamp}-${filename}`;
 }
 
 async function moveExistingFileToRemoved({
@@ -161,11 +156,8 @@ async function moveExistingFileToRemoved({
   }
 
   const destinationPath = getRemovedFilePath(removedPath, relativePath);
-  const destinationFolder = destinationPath.split("/").slice(0, -1).join("/");
 
-  if (destinationFolder) {
-    await mkdir(destinationFolder, { recursive: true });
-  }
+  await mkdir(removedPath, { recursive: true });
 
   if (await exists(destinationPath)) {
     await remove(destinationPath);
