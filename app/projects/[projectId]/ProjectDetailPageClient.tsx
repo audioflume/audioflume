@@ -27,9 +27,10 @@ import {
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
+import { supabase } from "@/lib/supabase";
 import type { Project, ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const TABS = [
   { label: "All Files", value: "overview" },
@@ -250,60 +251,115 @@ export default function ProjectDetailPageClient() {
     return sortedSongs.map(({ song }) => song);
   }, [projectSongs, projectSort, favoriteIdSet]);
 
-  useEffect(() => {
+  const loadProjectSongs = useCallback(async ({ silent = false }: { silent?: boolean } = {}) => {
     if (!projectId) return;
-    let cancelled = false;
-    async function loadProjectSongs() {
-      setProjectSongsLoading(true);
-      setProjectSongsError(null);
-      try {
-        const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assets?type=song`, { cache: "no-store" });
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : null;
-        if (!res.ok) throw new Error(data?.error || "Failed to load project songs");
-        const nextSongs = Array.isArray(data?.songs) ? (data.songs as ProjectSong[]) : [];
-        const nextAssets = Array.isArray(data?.assets) ? (data.assets as ProjectAsset[]) : [];
-        if (cancelled) return;
-        setProjectSongs(nextSongs.filter((song) => song.id));
-        setProjectAssets(nextAssets.filter((asset) => Number.isFinite(asset.id)));
-      } catch (err) {
-        if (cancelled) return;
-        setProjectSongs([]);
-        setProjectAssets([]);
-        setProjectSongsError(err instanceof Error ? err.message : "Failed to load project songs");
-      } finally {
-        if (!cancelled) setProjectSongsLoading(false);
-      }
+    if (!silent) setProjectSongsLoading(true);
+    setProjectSongsError(null);
+    try {
+      const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assets?type=song`, { cache: "no-store" });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+      if (!res.ok) throw new Error(data?.error || "Failed to load project songs");
+      const nextSongs = Array.isArray(data?.songs) ? (data.songs as ProjectSong[]) : [];
+      const nextAssets = Array.isArray(data?.assets) ? (data.assets as ProjectAsset[]) : [];
+      setProjectSongs(nextSongs.filter((song) => song.id));
+      setProjectAssets(nextAssets.filter((asset) => Number.isFinite(asset.id)));
+    } catch (err) {
+      setProjectSongs([]);
+      setProjectAssets([]);
+      setProjectSongsError(err instanceof Error ? err.message : "Failed to load project songs");
+    } finally {
+      if (!silent) setProjectSongsLoading(false);
     }
-    loadProjectSongs();
-    return () => { cancelled = true; };
+  }, [projectId]);
+
+  const loadProjectFolders = useCallback(async ({ silent = false }: { silent?: boolean } = {}) => {
+    if (!projectId) return;
+    if (!silent) setProjectFoldersLoading(true);
+    setProjectFoldersError(null);
+    try {
+      const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, { cache: "no-store" });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+      if (!res.ok) throw new Error(data?.error || "Failed to load project folders");
+      setProjectFolders(Array.isArray(data?.folders) ? data.folders : []);
+      setProjectAssets(Array.isArray(data?.assets) ? data.assets : []);
+    } catch (err) {
+      setProjectFolders([]);
+      setProjectFoldersError(err instanceof Error ? err.message : "Failed to load project folders");
+    } finally {
+      if (!silent) setProjectFoldersLoading(false);
+    }
   }, [projectId]);
 
   useEffect(() => {
-    if (!projectId) return;
     let cancelled = false;
-    async function loadProjectFolders() {
-      setProjectFoldersLoading(true);
-      setProjectFoldersError(null);
-      try {
-        const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, { cache: "no-store" });
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : null;
-        if (!res.ok) throw new Error(data?.error || "Failed to load project folders");
-        if (cancelled) return;
-        setProjectFolders(Array.isArray(data?.folders) ? data.folders : []);
-        setProjectAssets(Array.isArray(data?.assets) ? data.assets : []);
-      } catch (err) {
-        if (cancelled) return;
-        setProjectFolders([]);
-        setProjectFoldersError(err instanceof Error ? err.message : "Failed to load project folders");
-      } finally {
-        if (!cancelled) setProjectFoldersLoading(false);
-      }
+
+    async function run() {
+      await loadProjectSongs();
+      if (cancelled) return;
     }
-    loadProjectFolders();
+
+    run();
     return () => { cancelled = true; };
-  }, [projectId]);
+  }, [loadProjectSongs]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function run() {
+      await loadProjectFolders();
+      if (cancelled) return;
+    }
+
+    run();
+    return () => { cancelled = true; };
+  }, [loadProjectFolders]);
+
+  useEffect(() => {
+    if (!projectId) return;
+
+    let refreshTimer: ReturnType<typeof window.setTimeout> | null = null;
+
+    function scheduleRefresh() {
+      if (refreshTimer) window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => {
+        void Promise.all([
+          loadProjectSongs({ silent: true }),
+          loadProjectFolders({ silent: true }),
+        ]);
+      }, 250);
+    }
+
+    const channel = supabase
+      .channel(`project-detail-live:${projectId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "project_assets",
+          filter: `project_id=eq.${projectId}`,
+        },
+        scheduleRefresh,
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "project_folders",
+          filter: `project_id=eq.${projectId}`,
+        },
+        scheduleRefresh,
+      )
+      .subscribe();
+
+    return () => {
+      if (refreshTimer) window.clearTimeout(refreshTimer);
+      void supabase.removeChannel(channel);
+    };
+  }, [loadProjectFolders, loadProjectSongs, projectId]);
 
   useEffect(() => {
     if (activeTab !== "music" && activeTab !== "overview") return;
