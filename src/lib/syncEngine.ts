@@ -22,6 +22,15 @@ export type SyncManifest = {
   fileTree: ProjectFileNode[];
 };
 
+export type LocalRemoval = {
+  projectId: string;
+  projectName: string;
+  id: string;
+  type: "file" | "folder";
+  name: string;
+  path: string;
+};
+
 export type SyncProgress = {
   phase:
     | "preparing"
@@ -78,6 +87,10 @@ function sanitizeRelativePath(path: string) {
 
 export function getProjectFolderPath(syncFolder: string, project: Project) {
   return `${syncFolder}/${sanitizeFolderName(project.name)}`;
+}
+
+function getManifestFilePath(syncFolder: string, project: Project) {
+  return `${getProjectFolderPath(syncFolder, project)}/_filmwave/manifest.json`;
 }
 
 function getNodeUpdatedAt(node: ProjectFileNode) {
@@ -201,6 +214,16 @@ function isPathOrAncestorOfPath(path: string, possibleAncestor: string) {
   return path === possibleAncestor || path.startsWith(`${possibleAncestor}/`);
 }
 
+function hasAncestorPath(path: string, possibleAncestors: Set<string>) {
+  for (const ancestor of possibleAncestors) {
+    if (path.startsWith(`${ancestor}/`)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function folderIsStillNeeded({
   currentFilePaths,
   currentFolderPaths,
@@ -272,6 +295,76 @@ async function writePlaceholderFile({
       `This placeholder represents a future synced file from Filmwave's All Files section.`,
     ].join("\n"),
   );
+}
+
+export async function detectLocalRemovals({
+  projects,
+  syncFolder,
+}: {
+  projects: Project[];
+  syncFolder: string;
+}) {
+  const removals: LocalRemoval[] = [];
+
+  for (const project of projects) {
+    const projectPath = getProjectFolderPath(syncFolder, project);
+    const manifest = await readProjectManifest(getManifestFilePath(syncFolder, project));
+
+    if (!manifest) continue;
+
+    const removedFolderPaths = new Set<string>();
+    const previousFolders = manifest.fileTree
+      .filter((node) => node.type === "folder")
+      .map((node) => ({
+        ...node,
+        safePath: sanitizeRelativePath(node.path),
+      }))
+      .sort((a, b) => a.safePath.length - b.safePath.length);
+
+    for (const folder of previousFolders) {
+      if (hasAncestorPath(folder.safePath, removedFolderPaths)) continue;
+
+      const folderPath = `${projectPath}/${folder.safePath}`;
+
+      if (await exists(folderPath)) continue;
+
+      removedFolderPaths.add(folder.safePath);
+      removals.push({
+        projectId: manifest.projectId || project.id,
+        projectName: manifest.projectName || project.name,
+        id: folder.id,
+        type: "folder",
+        name: folder.name,
+        path: folder.safePath,
+      });
+    }
+
+    const previousFiles = manifest.fileTree
+      .filter((node) => node.type === "file")
+      .map((node) => ({
+        ...node,
+        safePath: sanitizeRelativePath(node.path),
+      }));
+
+    for (const file of previousFiles) {
+      if (hasAncestorPath(file.safePath, removedFolderPaths)) continue;
+
+      const filePath = `${projectPath}/${file.safePath}`;
+
+      if (await exists(filePath)) continue;
+
+      removals.push({
+        projectId: manifest.projectId || project.id,
+        projectName: manifest.projectName || project.name,
+        id: file.id,
+        type: "file",
+        name: file.name,
+        path: file.safePath,
+      });
+    }
+  }
+
+  return removals;
 }
 
 export function formatSyncReport(result: SyncResult) {
