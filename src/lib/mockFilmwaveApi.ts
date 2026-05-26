@@ -31,6 +31,17 @@ export type DesktopAccount = {
   imageUrl: string | null;
 };
 
+export type DesktopLocalRemoval = {
+  projectId: string;
+  id: string;
+  type: "file" | "folder";
+};
+
+export type DesktopLocalRemovalResult = {
+  removedAssetCount: number;
+  removedFolderCount: number;
+};
+
 type DesktopProjectsApiResponse = {
   projects?: Array<{
     id: string | number;
@@ -44,6 +55,10 @@ type DesktopProjectsApiResponse = {
 
 type DesktopAccountApiResponse = {
   user?: DesktopAccount;
+  error?: string;
+};
+
+type DesktopLocalRemovalApiResponse = DesktopLocalRemovalResult & {
   error?: string;
 };
 
@@ -320,6 +335,44 @@ export async function getDesktopAccount(token?: string | null, apiBaseUrl?: stri
   }
 
   return data.user ?? null;
+}
+
+export async function applyDesktopLocalRemovals({
+  apiBaseUrl,
+  removals,
+  token,
+}: {
+  apiBaseUrl?: string | null;
+  removals: DesktopLocalRemoval[];
+  token?: string | null;
+}) {
+  if (!token) {
+    throw new Error("Sign in required");
+  }
+
+  const response = await fetch(
+    `${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/projects/local-removals`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders(token),
+      },
+      body: JSON.stringify({ removals }),
+    },
+  );
+
+  const data = (await response.json()) as DesktopLocalRemovalApiResponse;
+
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to apply local removals");
+  }
+
+  return {
+    removedAssetCount: Number(data.removedAssetCount || 0),
+    removedFolderCount: Number(data.removedFolderCount || 0),
+  } satisfies DesktopLocalRemovalResult;
 }
 
 export function getDesktopAuthTokenUrl(apiBaseUrl?: string | null) {
