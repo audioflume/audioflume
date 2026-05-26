@@ -1,82 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
-import { exists, mkdir, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
-import {
-  DEFAULT_MOCK_UPDATED_AT,
-  getMockProjects,
-  type Project,
-  type ProjectFileNode,
-} from "./lib/mockFilmwaveApi";
+import { getMockProjects, type Project } from "./lib/mockFilmwaveApi";
+import { formatSyncReport, syncProjectsToFolder } from "./lib/syncEngine";
 import "./App.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
-
-type SyncManifest = {
-  projectId: string;
-  projectName: string;
-  syncedAt: string;
-  source: "mock-all-files";
-  fileTree: ProjectFileNode[];
-};
-
-function sanitizeFolderName(name: string) {
-  return name
-    .replace(/[<>:"/\\|?*]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function sanitizeRelativePath(path: string) {
-  const cleanedPath = path
-    .split("/")
-    .map((part) => sanitizeFolderName(part))
-    .filter(Boolean)
-    .join("/");
-
-  if (
-    !cleanedPath ||
-    cleanedPath.startsWith("/") ||
-    cleanedPath.includes("..")
-  ) {
-    throw new Error(`Unsafe file path: ${path}`);
-  }
-
-  return cleanedPath;
-}
-
-function getNodeUpdatedAt(node: ProjectFileNode) {
-  return node.updatedAt ?? DEFAULT_MOCK_UPDATED_AT;
-}
-
-function buildManifest(project: Project): SyncManifest {
-  return {
-    projectId: project.id,
-    projectName: project.name,
-    syncedAt: new Date().toISOString(),
-    source: "mock-all-files",
-    fileTree: project.files.map((node) => ({
-      ...node,
-      updatedAt: getNodeUpdatedAt(node),
-    })),
-  };
-}
-
-async function readProjectManifest(manifestFilePath: string) {
-  const hasManifest = await exists(manifestFilePath);
-
-  if (!hasManifest) {
-    return null;
-  }
-
-  try {
-    const rawManifest = await readTextFile(manifestFilePath);
-    return JSON.parse(rawManifest) as SyncManifest;
-  } catch (error) {
-    console.warn("Could not read existing Filmwave manifest.", error);
-    return null;
-  }
-}
 
 function App() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -180,98 +109,13 @@ function App() {
         selectedProjectIds.includes(project.id),
       );
 
-      let checkedFolderCount = 0;
-      let createdFileCount = 0;
-      let updatedFileCount = 0;
-      let skippedFileCount = 0;
-      let manifestFileCount = 0;
-
-      for (const project of selectedProjects) {
-        const projectFolderName = sanitizeFolderName(project.name);
-        const projectPath = `${syncFolder}/${projectFolderName}`;
-        const manifestPath = `${projectPath}/_filmwave`;
-        const manifestFilePath = `${manifestPath}/manifest.json`;
-        const previousManifest = await readProjectManifest(manifestFilePath);
-        const nextManifest = buildManifest(project);
-
-        await mkdir(projectPath, { recursive: true });
-        await mkdir(manifestPath, { recursive: true });
-        checkedFolderCount += 2;
-
-        const folderNodes = project.files.filter(
-          (node) => node.type === "folder",
-        );
-        const fileNodes = project.files.filter((node) => node.type === "file");
-
-        for (const folder of folderNodes) {
-          const safePath = sanitizeRelativePath(folder.path);
-
-          await mkdir(`${projectPath}/${safePath}`, { recursive: true });
-          checkedFolderCount += 1;
-        }
-
-        for (const file of fileNodes) {
-          const safePath = sanitizeRelativePath(file.path);
-          const filePath = `${projectPath}/${safePath}`;
-          const parentPath = safePath.split("/").slice(0, -1).join("/");
-          const previousFile = previousManifest?.fileTree.find(
-            (node) => node.id === file.id && node.type === "file",
-          );
-          const currentUpdatedAt = getNodeUpdatedAt(file);
-          const previousUpdatedAt = previousFile?.updatedAt ?? null;
-          const fileAlreadyExists = await exists(filePath);
-
-          if (parentPath) {
-            await mkdir(`${projectPath}/${parentPath}`, { recursive: true });
-          }
-
-          if (fileAlreadyExists && previousUpdatedAt === currentUpdatedAt) {
-            skippedFileCount += 1;
-            continue;
-          }
-
-          await writeTextFile(
-            filePath,
-            [
-              `Filmwave placeholder file`,
-              ``,
-              `Project: ${project.name}`,
-              `File: ${file.name}`,
-              `Path: ${file.path}`,
-              `Size: ${file.sizeLabel ?? "Unknown"}`,
-              `Updated at: ${currentUpdatedAt}`,
-              ``,
-              `This placeholder represents a future synced file from Filmwave's All Files section.`,
-            ].join("\n"),
-          );
-
-          if (fileAlreadyExists) {
-            updatedFileCount += 1;
-          } else {
-            createdFileCount += 1;
-          }
-        }
-
-        await writeTextFile(
-          manifestFilePath,
-          JSON.stringify(nextManifest, null, 2),
-        );
-
-        manifestFileCount += 1;
-      }
-
-      const projectLabel =
-        selectedProjects.length === 1 ? "project" : "projects";
-      const createdFileLabel = createdFileCount === 1 ? "file" : "files";
-      const updatedFileLabel = updatedFileCount === 1 ? "file" : "files";
-      const skippedFileLabel = skippedFileCount === 1 ? "file" : "files";
-      const folderLabel = checkedFolderCount === 1 ? "folder" : "folders";
-      const manifestLabel = manifestFileCount === 1 ? "manifest" : "manifests";
+      const result = await syncProjectsToFolder({
+        projects: selectedProjects,
+        syncFolder,
+      });
 
       setSyncStatus("Synced");
-      setLastSyncReport(
-        `Synced ${selectedProjects.length} ${projectLabel}. Created ${createdFileCount} ${createdFileLabel}, updated ${updatedFileCount} ${updatedFileLabel}, skipped ${skippedFileCount} existing ${skippedFileLabel}, checked ${checkedFolderCount} ${folderLabel}, and wrote ${manifestFileCount} ${manifestLabel}.`,
-      );
+      setLastSyncReport(formatSyncReport(result));
     } catch (error) {
       console.error(error);
       setSyncStatus("Sync failed");
