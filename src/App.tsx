@@ -6,6 +6,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { load } from "@tauri-apps/plugin-store";
 import {
   DEFAULT_FILMWAVE_API_BASE_URL,
+  applyDesktopLocalRemovals,
   getDesktopAccount,
   getDesktopAuthTokenUrl,
   getFilmwaveProjects,
@@ -15,9 +16,11 @@ import {
   type Project,
 } from "./lib/mockFilmwaveApi";
 import {
+  detectLocalRemovals,
   formatSyncReport,
   getProjectFolderPath,
   syncProjectsToFolder,
+  type LocalRemoval,
   type SyncProgress,
 } from "./lib/syncEngine";
 import "./App.css";
@@ -77,6 +80,9 @@ function App() {
   const [syncStatus, setSyncStatus] = useState("Not connected");
   const [syncing, setSyncing] = useState(false);
   const [openingFolder, setOpeningFolder] = useState(false);
+  const [checkingLocalRemovals, setCheckingLocalRemovals] = useState(false);
+  const [applyingLocalRemovals, setApplyingLocalRemovals] = useState(false);
+  const [localRemovals, setLocalRemovals] = useState<LocalRemoval[]>([]);
   const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null);
   const [lastSyncReport, setLastSyncReport] = useState<string | null>(null);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
@@ -89,6 +95,11 @@ function App() {
   );
   const canSync =
     Boolean(syncFolder) && hasSelectedProjects && !projectsLoading && !syncing;
+  const selectedProjects = useMemo(() => {
+    const selectedProjectIdSet = new Set(selectedProjectIds);
+
+    return projects.filter((project) => selectedProjectIdSet.has(project.id));
+  }, [projects, selectedProjectIds]);
 
   const selectedSummary = useMemo(() => {
     if (projectsLoading) {
@@ -152,6 +163,7 @@ function App() {
     setConnectionCode("");
     setProjectSource("local-api");
     setSelectedProjectIds([]);
+    setLocalRemovals([]);
     setLastRefreshedAt(null);
     setLastSyncReport(null);
     setSyncStatus("Signed in");
@@ -213,6 +225,7 @@ function App() {
       console.error(error);
       setProjects([]);
       setSelectedProjectIds([]);
+      setLocalRemovals([]);
       setSyncStatus("Could not load projects");
       setLastSyncReport(
         error instanceof Error
@@ -302,6 +315,7 @@ function App() {
       if (projectSource === "local-api" && !desktopToken) {
         setProjects([]);
         setSelectedProjectIds([]);
+        setLocalRemovals([]);
         setSyncStatus("Sign in required");
         setProjectsLoading(false);
         return;
@@ -332,6 +346,7 @@ function App() {
         console.error(error);
         setProjects([]);
         setSelectedProjectIds([]);
+        setLocalRemovals([]);
         setSyncStatus("Could not load projects");
         setLastSyncReport(
           error instanceof Error
@@ -363,6 +378,7 @@ function App() {
       const store = await load(SETTINGS_STORE);
 
       setSyncFolder(selected);
+      setLocalRemovals([]);
       setSyncStatus("Folder ready");
 
       await store.set("syncFolder", selected);
@@ -377,6 +393,7 @@ function App() {
 
     setSelectedProjectIds([]);
     setSyncProgress(null);
+    setLocalRemovals([]);
     setLastSyncReport(null);
     setLastRefreshedAt(null);
     setProjectSource(nextSource);
@@ -391,6 +408,7 @@ function App() {
     setApiBaseUrl(nextApiBaseUrl);
     setApiBaseUrlDraft(nextApiBaseUrl);
     setSelectedProjectIds([]);
+    setLocalRemovals([]);
     setLastRefreshedAt(null);
     setLastSyncReport(null);
     setProjects([]);
@@ -410,6 +428,7 @@ function App() {
 
     setApiBaseUrl(DEFAULT_FILMWAVE_API_BASE_URL);
     setSelectedProjectIds([]);
+    setLocalRemovals([]);
     setLastRefreshedAt(null);
     setLastSyncReport(null);
     setProjects([]);
@@ -441,6 +460,7 @@ function App() {
     setDesktopAccount(null);
     setProjects([]);
     setSelectedProjectIds([]);
+    setLocalRemovals([]);
     setLastRefreshedAt(null);
     setSyncProgress(null);
     setLastSyncReport(null);
@@ -460,8 +480,131 @@ function App() {
 
     try {
       await refreshProjectList();
+      setLocalRemovals([]);
     } catch {
       // refreshProjectList already updates visible error state.
+    }
+  }
+
+  async function checkLocalRemovals() {
+    if (!syncFolder) {
+      setSyncStatus("Choose a sync folder first");
+      return;
+    }
+
+    if (!hasSelectedProjects) {
+      setSyncStatus("Select a project first");
+      return;
+    }
+
+    if (projectSource !== "local-api") {
+      setSyncStatus("Use Filmwave source first");
+      return;
+    }
+
+    try {
+      setCheckingLocalRemovals(true);
+      setLastSyncReport(null);
+      setSyncStatus("Checking local removals...");
+
+      const removals = await detectLocalRemovals({
+        projects: selectedProjects,
+        syncFolder,
+      });
+
+      setLocalRemovals(removals);
+      setSyncStatus(removals.length > 0 ? "Local removals found" : "No local removals");
+      setLastSyncReport(
+        removals.length > 0
+          ? `${removals.length} local removal${removals.length === 1 ? "" : "s"} detected. Review and apply them to remove those items from the Filmwave project only.`
+          : "No local removals were detected for the selected projects.",
+      );
+    } catch (error) {
+      console.error(error);
+      setSyncStatus("Local check failed");
+      setLastSyncReport(
+        error instanceof Error
+          ? error.message
+          : "Could not check local removals.",
+      );
+    } finally {
+      setCheckingLocalRemovals(false);
+    }
+  }
+
+  async function applyLocalRemovals() {
+    if (!desktopToken) {
+      setSyncStatus("Sign in required");
+      return;
+    }
+
+    if (!syncFolder) {
+      setSyncStatus("Choose a sync folder first");
+      return;
+    }
+
+    if (localRemovals.length === 0) {
+      setSyncStatus("No local removals");
+      return;
+    }
+
+    try {
+      setApplyingLocalRemovals(true);
+      setSyncing(true);
+      setLastSyncReport(null);
+      setSyncProgress(null);
+      setSyncStatus("Applying local removals...");
+
+      const removalResult = await applyDesktopLocalRemovals({
+        apiBaseUrl: normalizedApiBaseUrl,
+        token: desktopToken,
+        removals: localRemovals.map((removal) => ({
+          projectId: removal.projectId,
+          id: removal.id,
+          type: removal.type,
+        })),
+      });
+
+      setLocalRemovals([]);
+
+      const latestProjects = await refreshProjectList({
+        clearReport: false,
+        statusLabel: "Refreshing after local removals...",
+      });
+      const selectedProjectIdSet = new Set(selectedProjectIds);
+      const latestSelectedProjects = latestProjects.filter((project) =>
+        selectedProjectIdSet.has(project.id),
+      );
+
+      if (latestSelectedProjects.length > 0) {
+        setSyncStatus("Updating local manifest...");
+        const syncResult = await syncProjectsToFolder({
+          projects: latestSelectedProjects,
+          syncFolder,
+          onProgress: setSyncProgress,
+        });
+
+        setLastSyncReport(
+          `Applied local removals to Filmwave. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. ${formatSyncReport(syncResult)}`,
+        );
+      } else {
+        setLastSyncReport(
+          `Applied local removals to Filmwave. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}.`,
+        );
+      }
+
+      setSyncStatus("Local removals applied");
+    } catch (error) {
+      console.error(error);
+      setSyncStatus("Apply failed");
+      setLastSyncReport(
+        error instanceof Error
+          ? error.message
+          : "Could not apply local removals.",
+      );
+    } finally {
+      setApplyingLocalRemovals(false);
+      setSyncing(false);
     }
   }
 
@@ -473,6 +616,7 @@ function App() {
 
       return [...current, projectId];
     });
+    setLocalRemovals([]);
   }
 
   async function openLastSyncedFolder() {
@@ -514,6 +658,7 @@ function App() {
       setSyncing(true);
       setSyncStatus("Refreshing projects...");
       setLastSyncReport(null);
+      setLocalRemovals([]);
       setSyncProgress(null);
 
       const latestProjects = await refreshProjectList({
@@ -764,6 +909,21 @@ function App() {
               <button
                 type="button"
                 className="secondary-button"
+                disabled={
+                  syncing ||
+                  projectsLoading ||
+                  checkingLocalRemovals ||
+                  !syncFolder ||
+                  !hasSelectedProjects ||
+                  projectSource !== "local-api"
+                }
+                onClick={checkLocalRemovals}
+              >
+                {checkingLocalRemovals ? "Checking..." : "Check local removals"}
+              </button>
+              <button
+                type="button"
+                className="secondary-button"
                 disabled={!canSync}
                 onClick={syncSelectedProjects}
               >
@@ -771,6 +931,47 @@ function App() {
               </button>
             </div>
           </div>
+
+          {localRemovals.length > 0 && (
+            <div className="sync-report local-removals-report">
+              <span className="sync-report-dot" />
+              <div>
+                <p>
+                  {localRemovals.length} local removal
+                  {localRemovals.length === 1 ? "" : "s"} detected. Applying will
+                  remove these items from the Filmwave project only.
+                </p>
+                <div className="local-removal-list">
+                  {localRemovals.slice(0, 5).map((removal) => (
+                    <span key={`${removal.projectId}-${removal.id}`}>
+                      {removal.type === "folder" ? "Folder" : "File"}: {removal.path}
+                    </span>
+                  ))}
+                  {localRemovals.length > 5 && (
+                    <span>+{localRemovals.length - 5} more</span>
+                  )}
+                </div>
+                <div className="local-removal-actions">
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    disabled={applyingLocalRemovals || syncing}
+                    onClick={applyLocalRemovals}
+                  >
+                    {applyingLocalRemovals ? "Applying..." : "Apply to Filmwave"}
+                  </button>
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    disabled={applyingLocalRemovals || syncing}
+                    onClick={() => setLocalRemovals([])}
+                  >
+                    Ignore
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {syncProgress && (
             <div className="progress-panel">
