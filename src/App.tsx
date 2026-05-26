@@ -5,10 +5,12 @@ import { register } from "@tauri-apps/plugin-deep-link";
 import { open } from "@tauri-apps/plugin-dialog";
 import { load } from "@tauri-apps/plugin-store";
 import {
+  DEFAULT_FILMWAVE_API_BASE_URL,
   getDesktopAccount,
   getDesktopAuthTokenUrl,
   getFilmwaveProjects,
   getMockProjects,
+  normalizeFilmwaveApiBaseUrl,
   type DesktopAccount,
   type Project,
 } from "./lib/mockFilmwaveApi";
@@ -63,6 +65,8 @@ function App() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [projectSource, setProjectSource] = useState<ProjectSource>("mock");
+  const [apiBaseUrl, setApiBaseUrl] = useState(DEFAULT_FILMWAVE_API_BASE_URL);
+  const [apiBaseUrlDraft, setApiBaseUrlDraft] = useState(DEFAULT_FILMWAVE_API_BASE_URL);
   const [syncFolder, setSyncFolder] = useState<string | null>(null);
   const [lastSyncedFolder, setLastSyncedFolder] = useState<string | null>(null);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
@@ -79,6 +83,10 @@ function App() {
 
   const hasSelectedProjects = selectedProjectIds.length > 0;
   const isSignedIn = Boolean(desktopToken);
+  const normalizedApiBaseUrl = useMemo(
+    () => normalizeFilmwaveApiBaseUrl(apiBaseUrl),
+    [apiBaseUrl],
+  );
   const canSync =
     Boolean(syncFolder) && hasSelectedProjects && !projectsLoading && !syncing;
 
@@ -101,8 +109,8 @@ function App() {
     projectSource === "mock"
       ? "Using local sample data"
       : isSignedIn
-        ? "Using your signed-in Filmwave account"
-        : "Sign in to load your Filmwave projects";
+        ? `Using ${normalizedApiBaseUrl}`
+        : `Sign in to load projects from ${normalizedApiBaseUrl}`;
 
   const accountDescription = isSignedIn
     ? desktopAccount
@@ -116,11 +124,11 @@ function App() {
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
     : 0;
 
-  async function loadDesktopAccount(token: string) {
+  async function loadDesktopAccount(token: string, nextApiBaseUrl = normalizedApiBaseUrl) {
     setAccountLoading(true);
 
     try {
-      const account = await getDesktopAccount(token);
+      const account = await getDesktopAccount(token, nextApiBaseUrl);
       setDesktopAccount(account);
       return account;
     } catch (error) {
@@ -168,7 +176,7 @@ function App() {
 
   async function fetchProjects() {
     return projectSource === "local-api"
-      ? await getFilmwaveProjects(desktopToken)
+      ? await getFilmwaveProjects(desktopToken, normalizedApiBaseUrl)
       : await getMockProjects();
   }
 
@@ -232,6 +240,11 @@ function App() {
         await store.get<ProjectSource>("projectSource");
       const savedLastSyncedFolder = await store.get<string>("lastSyncedFolder");
       const savedDesktopToken = await store.get<string>("desktopToken");
+      const savedApiBaseUrl = await store.get<string>("apiBaseUrl");
+      const nextApiBaseUrl = normalizeFilmwaveApiBaseUrl(savedApiBaseUrl);
+
+      setApiBaseUrl(nextApiBaseUrl);
+      setApiBaseUrlDraft(nextApiBaseUrl);
 
       if (savedFolder) {
         setSyncFolder(savedFolder);
@@ -244,7 +257,7 @@ function App() {
 
       if (savedDesktopToken) {
         setDesktopToken(savedDesktopToken);
-        void loadDesktopAccount(savedDesktopToken);
+        void loadDesktopAccount(savedDesktopToken, nextApiBaseUrl);
       }
 
       if (savedProjectSource === "mock" || savedProjectSource === "local-api") {
@@ -337,7 +350,7 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [projectSource, desktopToken]);
+  }, [projectSource, desktopToken, normalizedApiBaseUrl]);
 
   async function chooseSyncFolder() {
     const selected = await open({
@@ -371,9 +384,44 @@ function App() {
     await store.save();
   }
 
+  async function saveApiBaseUrl() {
+    const nextApiBaseUrl = normalizeFilmwaveApiBaseUrl(apiBaseUrlDraft);
+    const store = await load(SETTINGS_STORE);
+
+    setApiBaseUrl(nextApiBaseUrl);
+    setApiBaseUrlDraft(nextApiBaseUrl);
+    setSelectedProjectIds([]);
+    setLastRefreshedAt(null);
+    setLastSyncReport(null);
+    setProjects([]);
+    setSyncStatus("API URL saved");
+
+    await store.set("apiBaseUrl", nextApiBaseUrl);
+    await store.save();
+
+    if (desktopToken) {
+      await loadDesktopAccount(desktopToken, nextApiBaseUrl);
+    }
+  }
+
+  async function resetApiBaseUrl() {
+    setApiBaseUrlDraft(DEFAULT_FILMWAVE_API_BASE_URL);
+    const store = await load(SETTINGS_STORE);
+
+    setApiBaseUrl(DEFAULT_FILMWAVE_API_BASE_URL);
+    setSelectedProjectIds([]);
+    setLastRefreshedAt(null);
+    setLastSyncReport(null);
+    setProjects([]);
+    setSyncStatus("Using local API");
+
+    await store.set("apiBaseUrl", DEFAULT_FILMWAVE_API_BASE_URL);
+    await store.save();
+  }
+
   async function openSignInPage() {
     try {
-      await invoke("open_path", { path: getDesktopAuthTokenUrl() });
+      await invoke("open_path", { path: getDesktopAuthTokenUrl(normalizedApiBaseUrl) });
       setSyncStatus("Sign in opened");
       setLastSyncReport("Finish signing in in your browser. If the desktop app does not connect automatically, copy the connection code from the browser and paste it here.");
     } catch (error) {
@@ -633,6 +681,37 @@ function App() {
               onClick={() => changeProjectSource("local-api")}
             >
               Filmwave
+            </button>
+          </div>
+        </div>
+
+        <div className="section-block settings-block">
+          <div>
+            <h2>API endpoint</h2>
+            <p className="folder-path">{normalizedApiBaseUrl}</p>
+          </div>
+
+          <div className="settings-form">
+            <input
+              type="url"
+              value={apiBaseUrlDraft}
+              onChange={(event) => setApiBaseUrlDraft(event.target.value)}
+              placeholder="https://your-filmwave-domain.com"
+              autoComplete="off"
+            />
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={saveApiBaseUrl}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={resetApiBaseUrl}
+            >
+              Local
             </button>
           </div>
         </div>
