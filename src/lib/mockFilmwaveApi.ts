@@ -23,6 +23,13 @@ export type Project = {
   files: ProjectFileNode[];
 };
 
+export type DesktopAccount = {
+  id: string;
+  name: string;
+  email: string | null;
+  imageUrl: string | null;
+};
+
 type DesktopProjectsApiResponse = {
   projects?: Array<{
     id: string | number;
@@ -32,6 +39,11 @@ type DesktopProjectsApiResponse = {
     sizeBytes?: number;
     files?: ProjectFileNode[];
   }>;
+};
+
+type DesktopAccountApiResponse = {
+  user?: DesktopAccount;
+  error?: string;
 };
 
 const FILMWAVE_API_BASE_URL = "http://localhost:3000";
@@ -239,6 +251,14 @@ function formatSize(bytes: number | undefined) {
   return `${value >= 10 ? value.toFixed(0) : value.toFixed(1)} ${units[unitIndex]}`;
 }
 
+function getAuthHeaders(token?: string | null): HeadersInit {
+  return token
+    ? {
+        Authorization: `Bearer ${token}`,
+      }
+    : {};
+}
+
 function normalizeApiProject(project: NonNullable<DesktopProjectsApiResponse["projects"]>[number]): Project {
   const rawSizeBytes = Number(project.sizeBytes || 0);
   const files = Array.isArray(project.files) ? project.files : [];
@@ -263,14 +283,9 @@ export async function getMockProjects() {
 }
 
 export async function getFilmwaveProjects(token?: string | null) {
-  const headers: HeadersInit = token
-    ? {
-        Authorization: `Bearer ${token}`,
-      }
-    : {};
   const response = await fetch(`${FILMWAVE_API_BASE_URL}/api/desktop/projects`, {
     credentials: "include",
-    headers,
+    headers: getAuthHeaders(token),
   });
 
   const data = (await response.json()) as DesktopProjectsApiResponse & {
@@ -282,6 +297,23 @@ export async function getFilmwaveProjects(token?: string | null) {
   }
 
   return (data.projects ?? []).map(normalizeApiProject);
+}
+
+export async function getDesktopAccount(token?: string | null) {
+  if (!token) return null;
+
+  const response = await fetch(`${FILMWAVE_API_BASE_URL}/api/desktop/me`, {
+    credentials: "include",
+    headers: getAuthHeaders(token),
+  });
+
+  const data = (await response.json()) as DesktopAccountApiResponse;
+
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to load Filmwave account");
+  }
+
+  return data.user ?? null;
 }
 
 export function getDesktopAuthTokenUrl() {
