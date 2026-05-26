@@ -88,6 +88,26 @@ async function readProjectManifest(manifestFilePath: string) {
   }
 }
 
+function fileVersionMatches({
+  currentFile,
+  currentUpdatedAt,
+  previousFile,
+}: {
+  currentFile: ProjectFileNode;
+  currentUpdatedAt: string;
+  previousFile: ProjectFileNode | undefined;
+}) {
+  if (!previousFile) {
+    return false;
+  }
+
+  return (
+    previousFile.updatedAt === currentUpdatedAt &&
+    (previousFile.downloadUrl ?? "") === (currentFile.downloadUrl ?? "") &&
+    (previousFile.path ?? "") === (currentFile.path ?? "")
+  );
+}
+
 async function downloadFileToPath(url: string, filePath: string) {
   const response = await fetch(url);
 
@@ -188,14 +208,20 @@ export async function syncProjectsToFolder({
         (node) => node.id === file.id && node.type === "file",
       );
       const currentUpdatedAt = getNodeUpdatedAt(file);
-      const previousUpdatedAt = previousFile?.updatedAt ?? null;
       const fileAlreadyExists = await exists(filePath);
+      const canSkipExistingFile =
+        fileAlreadyExists &&
+        fileVersionMatches({
+          currentFile: file,
+          currentUpdatedAt,
+          previousFile,
+        });
 
       if (parentPath) {
         await mkdir(`${projectPath}/${parentPath}`, { recursive: true });
       }
 
-      if (fileAlreadyExists && previousUpdatedAt === currentUpdatedAt) {
+      if (canSkipExistingFile) {
         result.skippedFileCount += 1;
         continue;
       }
