@@ -42,6 +42,35 @@ export type DesktopLocalRemovalResult = {
   removedFolderCount: number;
 };
 
+export type DesktopLocalChanges = {
+  folderCreates: Array<{
+    projectId: string;
+    path: string;
+  }>;
+  fileMoves: Array<{
+    projectId: string;
+    id: string;
+    path: string;
+  }>;
+  fileRemovals: Array<{
+    projectId: string;
+    id: string;
+  }>;
+  folderRemovals: Array<{
+    projectId: string;
+    id: string;
+  }>;
+  ignoredFileAddCount: number;
+};
+
+export type DesktopLocalChangesResult = {
+  createdFolderCount: number;
+  movedFileCount: number;
+  removedAssetCount: number;
+  removedFolderCount: number;
+  ignoredFileAddCount: number;
+};
+
 type DesktopProjectsApiResponse = {
   projects?: Array<{
     id: string | number;
@@ -59,6 +88,10 @@ type DesktopAccountApiResponse = {
 };
 
 type DesktopLocalRemovalApiResponse = DesktopLocalRemovalResult & {
+  error?: string;
+};
+
+type DesktopLocalChangesApiResponse = DesktopLocalChangesResult & {
   error?: string;
 };
 
@@ -373,6 +406,47 @@ export async function applyDesktopLocalRemovals({
     removedAssetCount: Number(data.removedAssetCount || 0),
     removedFolderCount: Number(data.removedFolderCount || 0),
   } satisfies DesktopLocalRemovalResult;
+}
+
+export async function applyDesktopLocalChanges({
+  apiBaseUrl,
+  changes,
+  token,
+}: {
+  apiBaseUrl?: string | null;
+  changes: DesktopLocalChanges;
+  token?: string | null;
+}) {
+  if (!token) {
+    throw new Error("Sign in required");
+  }
+
+  const response = await fetch(
+    `${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/projects/local-changes`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders(token),
+      },
+      body: JSON.stringify(changes),
+    },
+  );
+
+  const data = (await response.json()) as DesktopLocalChangesApiResponse;
+
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to apply local changes");
+  }
+
+  return {
+    createdFolderCount: Number(data.createdFolderCount || 0),
+    movedFileCount: Number(data.movedFileCount || 0),
+    removedAssetCount: Number(data.removedAssetCount || 0),
+    removedFolderCount: Number(data.removedFolderCount || 0),
+    ignoredFileAddCount: Number(data.ignoredFileAddCount || 0),
+  } satisfies DesktopLocalChangesResult;
 }
 
 export function getDesktopAuthTokenUrl(apiBaseUrl?: string | null) {
