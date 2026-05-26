@@ -4,15 +4,28 @@ import { createDesktopToken } from "@/lib/desktopAuth";
 
 const DESKTOP_CALLBACK_URL = "filmwave://auth/callback";
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function renderPage({
+  callbackUrl,
   message,
   signedIn,
   signInUrl,
 }: {
+  callbackUrl?: string;
   message: string;
   signedIn: boolean;
   signInUrl: string;
 }) {
+  const safeCallbackUrl = callbackUrl ? escapeHtml(callbackUrl) : "";
+
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -65,7 +78,8 @@ function renderPage({
         gap: 10px;
         margin-top: 18px;
       }
-      a.button {
+      a.button,
+      button.button {
         min-height: 40px;
         display: inline-flex;
         align-items: center;
@@ -97,11 +111,27 @@ function renderPage({
       <h1>Connect Filmwave Desktop</h1>
       <p>${message}</p>
       <div class="actions">
-        ${signedIn ? `<a class="button" href="/api/desktop/auth/token?callback=deeplink">Open Filmwave Desktop</a>` : `<a class="button" href="${signInUrl}">Sign in to Filmwave</a>`}
+        ${signedIn ? `<button class="button" id="open-desktop" type="button">Open Filmwave Desktop</button>` : `<a class="button" href="${signInUrl}">Sign in to Filmwave</a>`}
         <a class="button secondary" href="/api/desktop/auth/token?callback=deeplink">Try again</a>
       </div>
-      <div class="status">You can close this page after Filmwave Desktop opens.</div>
+      <div class="status" id="status">${signedIn ? "If nothing happens, keep Filmwave Desktop open and click the button again." : "After signing in, Filmwave Desktop will open automatically."}</div>
     </main>
+    ${signedIn ? `<script>
+      const callbackUrl = ${JSON.stringify(safeCallbackUrl)};
+      const status = document.getElementById("status");
+      const openButton = document.getElementById("open-desktop");
+
+      function openDesktop() {
+        status.textContent = "Opening Filmwave Desktop...";
+        window.location.href = callbackUrl;
+        window.setTimeout(() => {
+          status.textContent = "If Filmwave Desktop did not open, make sure the desktop app is running, then click Open Filmwave Desktop again.";
+        }, 1200);
+      }
+
+      openButton?.addEventListener("click", openDesktop);
+      window.setTimeout(openDesktop, 300);
+    </script>` : ""}
   </body>
 </html>`;
 }
@@ -151,15 +181,14 @@ export async function GET(req: Request) {
   }
 
   const token = createDesktopToken(userId);
-
-  if (shouldDeepLink) {
-    return NextResponse.redirect(getDesktopCallbackUrl(token));
-  }
+  const callbackUrl = getDesktopCallbackUrl(token);
 
   return new NextResponse(
     renderPage({
-      message:
-        "You are signed in. Click the button below to connect Filmwave Desktop.",
+      callbackUrl: shouldDeepLink ? callbackUrl : undefined,
+      message: shouldDeepLink
+        ? "You are signed in. Filmwave Desktop should open automatically."
+        : "You are signed in. Click the button below to connect Filmwave Desktop.",
       signedIn: true,
       signInUrl: signInUrl.toString(),
     }),
