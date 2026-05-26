@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
-import { revealItemInDir } from "@tauri-apps/plugin-opener";
+import { openPath } from "@tauri-apps/plugin-opener";
 import { load } from "@tauri-apps/plugin-store";
 import {
   getFilmwaveProjects,
@@ -28,6 +28,7 @@ function App() {
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
   const [syncStatus, setSyncStatus] = useState("Not connected");
   const [syncing, setSyncing] = useState(false);
+  const [openingFolder, setOpeningFolder] = useState(false);
   const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null);
   const [lastSyncReport, setLastSyncReport] = useState<string | null>(null);
 
@@ -185,10 +186,11 @@ function App() {
   }
 
   async function openLastSyncedFolder() {
-    if (!lastSyncedFolder) return;
+    if (!lastSyncedFolder || openingFolder) return;
 
     try {
-      await revealItemInDir(lastSyncedFolder);
+      setOpeningFolder(true);
+      await openPath(lastSyncedFolder);
     } catch (error) {
       console.error(error);
       setSyncStatus("Could not open folder");
@@ -197,6 +199,8 @@ function App() {
           ? error.message
           : "Could not open the synced folder.",
       );
+    } finally {
+      window.setTimeout(() => setOpeningFolder(false), 500);
     }
   }
 
@@ -331,9 +335,9 @@ function App() {
               type="button"
               className="secondary-button"
               onClick={openLastSyncedFolder}
-              disabled={!lastSyncedFolder || syncing}
+              disabled={!lastSyncedFolder || syncing || openingFolder}
             >
-              Open folder
+              {openingFolder ? "Opening..." : "Open folder"}
             </button>
           </div>
         </div>
