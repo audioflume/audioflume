@@ -19,6 +19,15 @@ const SETTINGS_STORE = "filmwave-settings.json";
 
 type ProjectSource = "mock" | "local-api";
 
+function formatRefreshTime(date: Date | null) {
+  if (!date) return "Not refreshed yet";
+
+  return `Last refreshed ${date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  })}`;
+}
+
 function App() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
@@ -31,15 +40,11 @@ function App() {
   const [openingFolder, setOpeningFolder] = useState(false);
   const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null);
   const [lastSyncReport, setLastSyncReport] = useState<string | null>(null);
+  const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
 
   const hasSelectedProjects = selectedProjectIds.length > 0;
   const canSync =
     Boolean(syncFolder) && hasSelectedProjects && !projectsLoading && !syncing;
-
-  const selectedProjects = useMemo(
-    () => projects.filter((project) => selectedProjectIds.includes(project.id)),
-    [projects, selectedProjectIds],
-  );
 
   const selectedSummary = useMemo(() => {
     if (projectsLoading) {
@@ -64,6 +69,58 @@ function App() {
   const syncProgressPercent = syncProgress?.totalFiles
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
     : 0;
+
+  async function fetchProjects() {
+    return projectSource === "local-api"
+      ? await getFilmwaveProjects()
+      : await getMockProjects();
+  }
+
+  async function refreshProjectList({
+    clearReport = true,
+    statusLabel = "Refreshing projects...",
+  }: {
+    clearReport?: boolean;
+    statusLabel?: string;
+  } = {}) {
+    setProjectsLoading(true);
+
+    if (clearReport) {
+      setLastSyncReport(null);
+    }
+
+    setSyncStatus(statusLabel);
+
+    try {
+      const nextProjects = await fetchProjects();
+      const nextProjectIds = new Set(nextProjects.map((project) => project.id));
+
+      setProjects(nextProjects);
+      setSelectedProjectIds((current) =>
+        current.filter((projectId) => nextProjectIds.has(projectId)),
+      );
+      setLastRefreshedAt(new Date());
+      setSyncStatus(
+        projectSource === "local-api" ? "Local API loaded" : "Mock data loaded",
+      );
+
+      return nextProjects;
+    } catch (error) {
+      console.error(error);
+      setProjects([]);
+      setSelectedProjectIds([]);
+      setSyncStatus("Could not load projects");
+      setLastSyncReport(
+        error instanceof Error
+          ? error.message
+          : "Could not load Filmwave projects.",
+      );
+
+      throw error;
+    } finally {
+      setProjectsLoading(false);
+    }
+  }
 
   useEffect(() => {
     async function loadSavedSettings() {
@@ -93,15 +150,12 @@ function App() {
   useEffect(() => {
     let cancelled = false;
 
-    async function loadProjects() {
+    async function loadInitialProjects() {
       setProjectsLoading(true);
       setLastSyncReport(null);
 
       try {
-        const nextProjects =
-          projectSource === "local-api"
-            ? await getFilmwaveProjects()
-            : await getMockProjects();
+        const nextProjects = await fetchProjects();
 
         if (cancelled) return;
 
@@ -113,6 +167,7 @@ function App() {
         setSelectedProjectIds((current) =>
           current.filter((projectId) => nextProjectIds.has(projectId)),
         );
+        setLastRefreshedAt(new Date());
         setSyncStatus(
           projectSource === "local-api"
             ? "Local API loaded"
@@ -137,7 +192,7 @@ function App() {
       }
     }
 
-    loadProjects();
+    loadInitialProjects();
 
     return () => {
       cancelled = true;
@@ -170,9 +225,20 @@ function App() {
     setSelectedProjectIds([]);
     setSyncProgress(null);
     setLastSyncReport(null);
+    setLastRefreshedAt(null);
     setProjectSource(nextSource);
     await store.set("projectSource", nextSource);
     await store.save();
+  }
+
+  async function refreshProjects() {
+    if (syncing || projectsLoading) return;
+
+    try {
+      await refreshProjectList();
+    } catch {
+      // refreshProjectList already updates visible error state.
+    }
   }
 
   function toggleProject(projectId: string) {
@@ -217,13 +283,34 @@ function App() {
 
     try {
       setSyncing(true);
-      setSyncStatus("Syncing...");
+      setSyncStatus("Refreshing projects...");
       setLastSyncReport(null);
+      setSyncProgress(null);
+
+      const latestProjects = await refreshProjectList({
+        clearReport: false,
+        statusLabel: "Refreshing projects...",
+      });
+
+      const selectedProjectIdSet = new Set(selectedProjectIds);
+      const latestSelectedProjects = latestProjects.filter((project) =>
+        selectedProjectIdSet.has(project.id),
+      );
+
+      if (latestSelectedProjects.length === 0) {
+        setSyncStatus("Select a project first");
+        setLastSyncReport(
+          "The selected project is no longer available. Choose a project and sync again.",
+        );
+        return;
+      }
+
+      setSyncStatus("Syncing...");
       setSyncProgress({
         phase: "preparing",
         message: "Preparing sync...",
         completedFiles: 0,
-        totalFiles: selectedProjects.reduce(
+        totalFiles: latestSelectedProjects.reduce(
           (total, project) =>
             total + project.files.filter((node) => node.type === "file").length,
           0,
@@ -231,14 +318,14 @@ function App() {
       });
 
       const result = await syncProjectsToFolder({
-        projects: selectedProjects,
+        projects: latestSelectedProjects,
         syncFolder,
         onProgress: setSyncProgress,
       });
 
       const nextLastSyncedFolder =
-        selectedProjects.length === 1
-          ? getProjectFolderPath(syncFolder, selectedProjects[0])
+        latestSelectedProjects.length === 1
+          ? getProjectFolderPath(syncFolder, latestSelectedProjects[0])
           : syncFolder;
       const store = await load(SETTINGS_STORE);
 
@@ -347,16 +434,29 @@ function App() {
             <div>
               <h2>Projects</h2>
               <p>{selectedSummary}</p>
+              <p className="refresh-meta">
+                {formatRefreshTime(lastRefreshedAt)}
+              </p>
             </div>
 
-            <button
-              type="button"
-              className="secondary-button"
-              disabled={!canSync}
-              onClick={syncSelectedProjects}
-            >
-              {syncing ? "Syncing..." : "Sync selected"}
-            </button>
+            <div className="button-group">
+              <button
+                type="button"
+                className="secondary-button"
+                disabled={syncing || projectsLoading}
+                onClick={refreshProjects}
+              >
+                {projectsLoading ? "Refreshing..." : "Refresh"}
+              </button>
+              <button
+                type="button"
+                className="secondary-button"
+                disabled={!canSync}
+                onClick={syncSelectedProjects}
+              >
+                {syncing ? "Syncing..." : "Sync selected"}
+              </button>
+            </div>
           </div>
 
           {syncProgress && (
