@@ -5,6 +5,7 @@ import {
   writeFile,
   writeTextFile,
 } from "@tauri-apps/plugin-fs";
+import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import {
   DEFAULT_MOCK_UPDATED_AT,
   type Project,
@@ -109,13 +110,19 @@ function fileVersionMatches({
 }
 
 async function downloadFileToPath(url: string, filePath: string) {
-  const response = await fetch(url);
+  const response = await tauriFetch(url);
 
   if (!response.ok) {
     throw new Error(`Download failed: ${response.status} ${response.statusText}`);
   }
 
+  const contentType = response.headers.get("content-type") ?? "";
   const data = new Uint8Array(await response.arrayBuffer());
+
+  if (data.byteLength < 1024 && contentType.includes("text/html")) {
+    throw new Error(`Download returned HTML instead of audio: ${url}`);
+  }
+
   await writeFile(filePath, data);
 }
 
