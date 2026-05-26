@@ -1,10 +1,10 @@
 :root {
   --bg-primary: #f5f5f7;
   --bg-secondary: #ffffff;
-  --bg-tertiary: #eeeeef;
-  --bg-tertiary-hover: #e5e5e7;
+  --bg-tertiary: #f1f1f3;
+  --bg-tertiary-hover: #e8e8eb;
   --bg-card: #ffffff;
-  --bg-elevated: #f1f1f2;
+  --bg-elevated: #eeeeef;
 
   --bg-hover: rgba(0, 0, 0, 0.035);
   --bg-hover-strong: rgba(0, 0, 0, 0.06);
@@ -13,10 +13,10 @@
   --border-subtle: rgba(0, 0, 0, 0.055);
   --border-hover: rgba(0, 0, 0, 0.16);
 
-  --text-primary: #111111;
-  --text-secondary: rgba(17, 17, 17, 0.58);
-  --text-muted: rgba(17, 17, 17, 0.36);
-  --text-subtle: rgba(17, 17, 17, 0.44);
+  --text-primary: #171717;
+  --text-secondary: rgba(23, 23, 23, 0.58);
+  --text-muted: rgba(23, 23, 23, 0.36);
+  --text-subtle: rgba(23, 23, 23, 0.44);
 
   --accent: #111111;
   --accent-2: #ddff43;
@@ -70,7 +70,7 @@ button {
 
 .app-shell {
   min-height: 100vh;
-  padding: 22px;
+  padding: 24px 28px 42px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -78,10 +78,10 @@ button {
 }
 
 .sync-card {
-  width: min(1040px, 100%);
+  width: min(760px, 100%);
   background: transparent;
   border-radius: 0;
-  padding: 18px 6px 36px;
+  padding: 0;
   box-shadow: none;
 }
 
@@ -111,7 +111,7 @@ button {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
+  gap: 20px;
 }
 
 .refresh-meta {
@@ -128,19 +128,19 @@ p {
 }
 
 h1 {
-  max-width: 620px;
-  font-size: clamp(44px, 5.5vw, 74px);
+  max-width: 540px;
+  font-size: clamp(38px, 5vw, 58px);
   font-weight: 500;
-  line-height: 0.92;
-  letter-spacing: -0.065em;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
   color: var(--text-primary);
 }
 
 h2 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 1.18;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.018em;
 }
 
 h3 {
@@ -153,29 +153,35 @@ h3 {
 p {
   color: var(--text-secondary);
   font-size: 13px;
-  line-height: 1.48;
+  line-height: 1.42;
 }
 
 .header-row {
-  margin-bottom: 22px;
+  position: relative;
+  display: block;
+  margin-bottom: 24px;
+  padding: 8px 2px 4px;
 }
 
 .header-row p {
-  max-width: 500px;
-  margin-top: 13px;
-  font-size: 14px;
+  max-width: 455px;
+  margin-top: 12px;
+  font-size: 13px;
 }
 
 .status-pill {
+  position: absolute;
+  top: 10px;
+  right: 0;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 32px;
+  gap: 7px;
+  min-height: 30px;
   border: 0;
   background: var(--bg-tertiary);
   border-radius: 999px;
-  padding: 0 12px;
+  padding: 0 11px;
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 700;
@@ -192,18 +198,49 @@ p {
   background: var(--status-success);
 }
 
-.section-block {
-  margin-top: 10px;
-  min-height: 68px;
+.section-block,
+.projects-panel {
+  position: relative;
+  margin-top: 0;
+  min-height: 58px;
   align-items: center;
   border: 0;
   background: var(--bg-secondary);
-  border-radius: 14px;
-  padding: 14px 16px;
+  border-radius: 0;
+  padding: 13px 16px;
 }
 
-.section-block:first-of-type {
-  margin-top: 0;
+.section-block:first-of-type,
+.projects-panel:first-of-type {
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+
+.section-block:not(:first-of-type)::before,
+.projects-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.section-block:nth-of-type(5) {
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.projects-panel {
+  margin-top: 16px;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.projects-panel::before {
+  display: none;
 }
 
 .account-block {
@@ -215,7 +252,7 @@ p {
   max-width: 100%;
   align-items: center;
   gap: 9px;
-  margin-top: 11px;
+  margin-top: 10px;
   border: 0;
   border-radius: 999px;
   background: var(--bg-tertiary);
@@ -223,12 +260,12 @@ p {
 }
 
 .account-avatar {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  max-width: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  width: 31px;
+  height: 31px;
+  min-width: 31px;
+  max-width: 31px;
+  min-height: 31px;
+  max-height: 31px;
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -242,10 +279,10 @@ p {
 }
 
 .account-avatar img {
-  width: 32px;
-  height: 32px;
-  max-width: 32px;
-  max-height: 32px;
+  width: 31px;
+  height: 31px;
+  max-width: 31px;
+  max-height: 31px;
   display: block;
   object-fit: cover;
 }
@@ -282,14 +319,14 @@ p {
 
 .token-form input,
 .settings-form input {
-  width: min(420px, 100%);
-  min-height: 36px;
+  width: min(360px, 100%);
+  min-height: 34px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 9px;
   background: var(--bg-tertiary);
   color: var(--text-primary);
   outline: none;
-  padding: 0 14px;
+  padding: 0 12px;
   font-size: 13px;
   transition:
     background 0.15s ease,
@@ -319,7 +356,7 @@ p {
   color: var(--text-muted);
   font-family: "SF Mono", Consolas, monospace;
   font-size: 12px;
-  line-height: 1.42;
+  line-height: 1.38;
   word-break: break-all;
 }
 
@@ -331,9 +368,9 @@ p {
 
 .primary-button,
 .secondary-button {
-  min-height: 36px;
-  border-radius: 999px;
-  padding: 0 16px;
+  min-height: 34px;
+  border-radius: 9px;
+  padding: 0 14px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 700;
@@ -381,21 +418,21 @@ p {
   flex-shrink: 0;
   align-items: center;
   gap: 3px;
-  min-height: 34px;
+  min-height: 32px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 9px;
   background: var(--bg-tertiary);
   padding: 3px;
 }
 
 .source-toggle button {
-  min-height: 28px;
+  min-height: 26px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 7px;
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 0 13px;
+  padding: 0 12px;
   font-size: 12px;
   font-weight: 700;
   transition:
@@ -412,15 +449,7 @@ p {
 .source-toggle button.is-active {
   background: var(--bg-secondary);
   color: var(--text-primary);
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.09);
-}
-
-.projects-panel {
-  margin-top: 10px;
-  border: 0;
-  background: var(--bg-secondary);
-  border-radius: 14px;
-  padding: 16px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
 }
 
 .projects-header {
@@ -428,33 +457,33 @@ p {
 }
 
 .projects-header p {
-  margin-top: 5px;
+  margin-top: 4px;
 }
 
 .empty-state {
-  margin-top: 14px;
-  min-height: 220px;
+  margin-top: 12px;
+  min-height: 210px;
   border: 0;
-  border-radius: 13px;
+  border-radius: 12px;
   background: var(--bg-tertiary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 30px;
+  padding: 28px;
 }
 
 .empty-icon {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   border: 0;
   background: var(--bg-secondary);
   color: var(--text-primary);
-  font-size: 21px;
+  font-size: 20px;
 }
 
 .empty-state p {
@@ -463,33 +492,46 @@ p {
 }
 
 .project-list {
-  margin-top: 14px;
+  margin-top: 13px;
   display: grid;
-  gap: 6px;
+  gap: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-tertiary);
 }
 
 .project-row {
+  position: relative;
   width: 100%;
-  min-height: 62px;
+  min-height: 54px;
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   border: 0;
-  border-radius: 12px;
-  background: var(--bg-tertiary);
-  padding: 12px;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px 12px;
   color: var(--text-primary);
   text-align: left;
   cursor: pointer;
   transition:
     background 0.15s ease,
-    transform 0.15s ease,
     box-shadow 0.15s ease;
 }
 
+.project-row + .project-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 46px;
+  right: 12px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.055);
+}
+
 .project-row:hover {
-  background: var(--bg-tertiary-hover);
+  background: rgba(255, 255, 255, 0.56);
 }
 
 .project-row.is-selected {
@@ -506,16 +548,16 @@ p {
 }
 
 .project-row.is-loading:hover {
-  background: var(--bg-tertiary);
+  background: transparent;
 }
 
 .project-check {
-  width: 21px;
-  height: 21px;
+  width: 20px;
+  height: 20px;
   display: grid;
   place-items: center;
   border: 0;
-  border-radius: 7px;
+  border-radius: 6px;
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-size: 12px;
@@ -544,7 +586,7 @@ p {
   overflow: hidden;
   color: var(--text-secondary);
   font-size: 12px;
-  line-height: 1.34;
+  line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -560,11 +602,11 @@ p {
 
 .progress-panel,
 .sync-report {
-  margin-top: 14px;
+  margin-top: 12px;
   border: 0;
   border-radius: 12px;
   background: var(--bg-tertiary);
-  padding: 11px 12px;
+  padding: 10px 12px;
 }
 
 .progress-header {
@@ -644,14 +686,27 @@ p {
   }
 
   .sync-card {
-    padding: 8px 0 28px;
+    padding: 0 0 28px;
   }
 
   .header-row,
   .section-block,
   .projects-header {
     flex-direction: column;
-    gap: 14px;
+    gap: 13px;
+  }
+
+  .header-row {
+    display: flex;
+  }
+
+  .status-pill {
+    position: static;
+    width: fit-content;
+  }
+
+  .section-block:nth-of-type(5) {
+    margin-bottom: 14px;
   }
 
   .account-profile {
@@ -675,7 +730,7 @@ p {
   }
 
   h1 {
-    font-size: clamp(44px, 14vw, 66px);
+    font-size: clamp(38px, 13vw, 58px);
   }
 
   .button-group,
