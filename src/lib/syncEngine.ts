@@ -2,6 +2,8 @@ import {
   exists,
   mkdir,
   readTextFile,
+  remove,
+  rename,
   writeFile,
   writeTextFile,
 } from "@tauri-apps/plugin-fs";
@@ -26,6 +28,7 @@ export type SyncProgress = {
     | "checking"
     | "downloading"
     | "writing-placeholder"
+    | "stale"
     | "manifest"
     | "complete";
   message: string;
@@ -43,6 +46,7 @@ export type SyncResult = {
   skippedFileCount: number;
   downloadedFileCount: number;
   placeholderFileCount: number;
+  staleFileCount: number;
   manifestFileCount: number;
 };
 
@@ -128,6 +132,46 @@ function fileVersionMatches({
   );
 }
 
+function getRemovedFilePath(removedPath: string, relativePath: string) {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const pathParts = relativePath.split("/");
+  const filename = pathParts.pop() ?? "removed-file";
+  const folderPath = pathParts.join("/");
+  const destinationName = `${timestamp}-${filename}`;
+
+  return folderPath
+    ? `${removedPath}/${folderPath}/${destinationName}`
+    : `${removedPath}/${destinationName}`;
+}
+
+async function moveExistingFileToRemoved({
+  fromPath,
+  removedPath,
+  relativePath,
+}: {
+  fromPath: string;
+  removedPath: string;
+  relativePath: string;
+}) {
+  if (!(await exists(fromPath))) {
+    return false;
+  }
+
+  const destinationPath = getRemovedFilePath(removedPath, relativePath);
+  const destinationFolder = destinationPath.split("/").slice(0, -1).join("/");
+
+  if (destinationFolder) {
+    await mkdir(destinationFolder, { recursive: true });
+  }
+
+  if (await exists(destinationPath)) {
+    await remove(destinationPath);
+  }
+
+  await rename(fromPath, destinationPath);
+  return true;
+}
+
 async function downloadFileToPath(url: string, filePath: string) {
   const response = await tauriFetch(url);
 
@@ -180,10 +224,11 @@ export function formatSyncReport(result: SyncResult) {
   const skippedFileLabel = result.skippedFileCount === 1 ? "file" : "files";
   const downloadedFileLabel = result.downloadedFileCount === 1 ? "file" : "files";
   const placeholderFileLabel = result.placeholderFileCount === 1 ? "placeholder" : "placeholders";
+  const staleFileLabel = result.staleFileCount === 1 ? "stale file" : "stale files";
   const folderLabel = result.checkedFolderCount === 1 ? "folder" : "folders";
   const manifestLabel = result.manifestFileCount === 1 ? "manifest" : "manifests";
 
-  return `Synced ${result.projectCount} ${projectLabel}. Created ${result.createdFileCount} ${createdFileLabel}, updated ${result.updatedFileCount} ${updatedFileLabel}, skipped ${result.skippedFileCount} existing ${skippedFileLabel}, downloaded ${result.downloadedFileCount} ${downloadedFileLabel}, wrote ${result.placeholderFileCount} ${placeholderFileLabel}, checked ${result.checkedFolderCount} ${folderLabel}, and wrote ${result.manifestFileCount} ${manifestLabel}.`;
+  return `Synced ${result.projectCount} ${projectLabel}. Created ${result.createdFileCount} ${createdFileLabel}, updated ${result.updatedFileCount} ${updatedFileLabel}, skipped ${result.skippedFileCount} existing ${skippedFileLabel}, downloaded ${result.downloadedFileCount} ${downloadedFileLabel}, wrote ${result.placeholderFileCount} ${placeholderFileLabel}, moved ${result.staleFileCount} ${staleFileLabel}, checked ${result.checkedFolderCount} ${folderLabel}, and wrote ${result.manifestFileCount} ${manifestLabel}.`;
 }
 
 export async function syncProjectsToFolder({
@@ -210,6 +255,7 @@ export async function syncProjectsToFolder({
     skippedFileCount: 0,
     downloadedFileCount: 0,
     placeholderFileCount: 0,
+    staleFileCount: 0,
     manifestFileCount: 0,
   };
 
@@ -223,6 +269,7 @@ export async function syncProjectsToFolder({
   for (const project of projects) {
     const projectPath = getProjectFolderPath(syncFolder, project);
     const manifestPath = `${projectPath}/_filmwave`;
+    const removedPath = `${manifestPath}/removed`;
     const manifestFilePath = `${manifestPath}/manifest.json`;
     const previousManifest = await readProjectManifest(manifestFilePath);
     const nextManifest = buildManifest(project);
@@ -241,12 +288,41 @@ export async function syncProjectsToFolder({
 
     const folderNodes = project.files.filter((node) => node.type === "folder");
     const fileNodes = project.files.filter((node) => node.type === "file");
+    const currentFileIds = new Set(fileNodes.map((node) => node.id));
 
     for (const folder of folderNodes) {
       const safePath = sanitizeRelativePath(folder.path);
 
       await mkdir(`${projectPath}/${safePath}`, { recursive: true });
       result.checkedFolderCount += 1;
+    }
+
+    for (const previousFile of previousManifest?.fileTree.filter(
+      (node) => node.type === "file",
+    ) ?? []) {
+      if (currentFileIds.has(previousFile.id)) continue;
+
+      const safePath = sanitizeRelativePath(previousFile.path);
+      const oldFilePath = `${projectPath}/${safePath}`;
+
+      onProgress?.({
+        phase: "stale",
+        message: `Moving removed file: ${previousFile.name}`,
+        projectName: project.name,
+        fileName: previousFile.name,
+        completedFiles,
+        totalFiles,
+      });
+
+      const moved = await moveExistingFileToRemoved({
+        fromPath: oldFilePath,
+        removedPath,
+        relativePath: safePath,
+      });
+
+      if (moved) {
+        result.staleFileCount += 1;
+      }
     }
 
     for (const file of fileNodes) {
@@ -258,6 +334,7 @@ export async function syncProjectsToFolder({
       );
       const currentUpdatedAt = getNodeUpdatedAt(file);
       const fileAlreadyExists = await exists(filePath);
+      const wasMoved = Boolean(previousFile && previousFile.path !== file.path);
       const canSkipExistingFile =
         fileAlreadyExists &&
         fileVersionMatches({
@@ -268,6 +345,20 @@ export async function syncProjectsToFolder({
 
       if (parentPath) {
         await mkdir(`${projectPath}/${parentPath}`, { recursive: true });
+      }
+
+      if (wasMoved && previousFile) {
+        const previousSafePath = sanitizeRelativePath(previousFile.path);
+        const previousFilePath = `${projectPath}/${previousSafePath}`;
+        const moved = await moveExistingFileToRemoved({
+          fromPath: previousFilePath,
+          removedPath,
+          relativePath: previousSafePath,
+        });
+
+        if (moved) {
+          result.staleFileCount += 1;
+        }
       }
 
       if (canSkipExistingFile) {
