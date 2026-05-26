@@ -223,8 +223,8 @@ const mockProjects: Project[] = [
 ];
 
 function formatSize(bytes: number | undefined) {
-  if (!bytes || bytes <= 0) {
-    return "0 KB";
+  if (bytes == null || bytes <= 0) {
+    return "Size pending";
   }
 
   const units = ["B", "KB", "MB", "GB"];
@@ -240,16 +240,18 @@ function formatSize(bytes: number | undefined) {
 }
 
 function normalizeApiProject(project: NonNullable<DesktopProjectsApiResponse["projects"]>[number]): Project {
-  const sizeBytes = Number(project.sizeBytes || 0);
+  const rawSizeBytes = Number(project.sizeBytes || 0);
   const files = Array.isArray(project.files) ? project.files : [];
+  const fileCount = Number(project.fileCount || files.filter((file) => file.type === "file").length);
+  const sizeBytes = rawSizeBytes > 0 ? rawSizeBytes : undefined;
 
   return {
     id: String(project.id),
     name: String(project.name || "Untitled Project"),
     description: typeof project.description === "string" ? project.description : "",
-    fileCount: Number(project.fileCount || files.filter((file) => file.type === "file").length),
+    fileCount,
     sizeBytes,
-    sizeLabel: formatSize(sizeBytes),
+    sizeLabel: fileCount > 0 ? formatSize(sizeBytes) : "0 KB",
     files,
   };
 }
