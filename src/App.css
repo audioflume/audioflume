@@ -14,17 +14,41 @@
   --success: #67ce67;
   --warning: #d9a441;
   --error: #dc584f;
-  font-family: "Instrument Sans", Arial, Helvetica, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    "Instrument Sans",
+    Arial,
+    Helvetica,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   color: var(--text-primary);
   background: var(--bg-primary);
   -webkit-font-smoothing: antialiased;
 }
 
-* { box-sizing: border-box; }
-html, body, #root { min-width: 320px; min-height: 100vh; margin: 0; }
-body { background: var(--bg-primary); color: var(--text-primary); }
-button, input { font: inherit; }
-button { -webkit-tap-highlight-color: transparent; }
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  -webkit-tap-highlight-color: transparent;
+}
 
 .app-shell {
   min-height: 100vh;
@@ -46,10 +70,27 @@ button { -webkit-tap-highlight-color: transparent; }
 }
 
 .eyebrow {
-  display: none;
+  display: flex;
+  width: 100%;
+  min-height: 32px;
+  align-items: center;
+  margin: 0 0 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--divider);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
 }
 
-h1, h2, h3, p { margin: 0; }
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
 
 h1 {
   color: var(--text-primary);
@@ -83,17 +124,11 @@ p {
 }
 
 .header-row {
-  position: relative;
-  min-height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  padding: 36px 0 30px;
-  border-radius: 0;
-  background: transparent;
-  overflow: visible;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(340px, 0.72fr);
+  align-items: end;
+  gap: 24px;
+  padding: 0 0 34px;
 }
 
 .header-row::before,
@@ -102,9 +137,27 @@ p {
 }
 
 .header-row > div:first-child {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: contents;
+}
+
+.header-row h1 {
+  max-width: 760px;
+  color: var(--text-primary);
+  font-size: clamp(42px, 6vw, 76px);
+  font-weight: 500;
+  letter-spacing: -0.07em;
+  line-height: 0.9;
+  text-align: left;
+}
+
+.header-row p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.55;
+  text-align: left;
+  justify-self: end;
 }
 
 .header-row p {
@@ -117,17 +170,24 @@ p {
 }
 
 .status-pill {
+  position: absolute;
+  top: 0;
+  right: 0;
   display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  width: fit-content;
   min-height: 32px;
-  margin-top: 2px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--divider);
   border-radius: 999px;
-  background: var(--bg-control);
+  background: var(--bg-panel);
   color: var(--text-secondary);
   padding: 0 13px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1;
+  gap: 5px;
 }
 
 .status-dot {
@@ -137,7 +197,9 @@ p {
   background: var(--warning);
 }
 
-.status-pill.is-syncing .status-dot { background: var(--success); }
+.status-pill.is-syncing .status-dot {
+  background: var(--success);
+}
 
 .section-block,
 .projects-panel {
@@ -303,7 +365,10 @@ p {
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
-  transition: background 0.15s ease, opacity 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease,
+    color 0.15s ease;
 }
 
 .primary-button {
@@ -368,7 +433,9 @@ p {
   transition: background 0.24s ease;
 }
 
-.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active) {
+.source-toggle[aria-label="Realtime sync setting"]:has(
+    button:nth-child(2).is-active
+  ) {
   background: var(--success);
 }
 
@@ -383,10 +450,12 @@ p {
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
   pointer-events: none;
-  transition: transform 0.24s cubic-bezier(.25, .9, .2, 1);
+  transition: transform 0.24s cubic-bezier(0.25, 0.9, 0.2, 1);
 }
 
-.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active)::after {
+.source-toggle[aria-label="Realtime sync setting"]:has(
+    button:nth-child(2).is-active
+  )::after {
   transform: translateX(30px);
 }
 
@@ -406,11 +475,17 @@ p {
   z-index: 2;
 }
 
-.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active) button:nth-child(1) {
+.source-toggle[aria-label="Realtime sync setting"]:has(
+    button:nth-child(2).is-active
+  )
+  button:nth-child(1) {
   z-index: 2;
 }
 
-.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active) button:nth-child(2) {
+.source-toggle[aria-label="Realtime sync setting"]:has(
+    button:nth-child(2).is-active
+  )
+  button:nth-child(2) {
   z-index: 1;
 }
 
@@ -621,9 +696,15 @@ p {
 }
 
 @media (max-width: 760px) {
-  .app-shell { padding: 14px; }
-  .header-row { padding: 26px 0 24px; }
-  h1 { font-size: clamp(38px, 12vw, 54px); }
+  .app-shell {
+    padding: 14px;
+  }
+  .header-row {
+    padding: 26px 0 24px;
+  }
+  h1 {
+    font-size: clamp(38px, 12vw, 54px);
+  }
   .section-block,
   .projects-header {
     grid-template-columns: 1fr;
@@ -645,10 +726,16 @@ p {
   .source-toggle {
     width: 100%;
   }
-  .source-toggle button { flex: 1; }
+  .source-toggle button {
+    flex: 1;
+  }
   .source-toggle[aria-label="Realtime sync setting"] {
     width: 66px;
   }
-  .project-row { grid-template-columns: 26px minmax(0, 1fr); }
-  .project-meta { grid-column: 2; }
+  .project-row {
+    grid-template-columns: 26px minmax(0, 1fr);
+  }
+  .project-meta {
+    grid-column: 2;
+  }
 }
