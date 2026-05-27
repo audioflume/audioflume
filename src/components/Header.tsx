@@ -40,8 +40,8 @@ export default function Header({
   }, [theme]);
 
   return (
-    <header className="desktop-header">
-      <div className="desktop-header-inner">
+    <header className="desktop-header" data-tauri-drag-region>
+      <div className="desktop-header-inner" data-tauri-drag-region>
         <button
           type="button"
           className="desktop-header-logo-button"
