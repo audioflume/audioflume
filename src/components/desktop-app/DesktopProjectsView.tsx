@@ -1,3 +1,5 @@
+import { invoke } from "@tauri-apps/api/core";
+import { exists } from "@tauri-apps/plugin-fs";
 import { useMemo, useState } from "react";
 import type { Project, ProjectFileNode } from "../../lib/mockFilmwaveApi";
 import { getProjectNodeLocalPath } from "../../lib/syncEngine";
@@ -99,15 +101,6 @@ function formatSyncTime(project: Project, syncState: ProjectSyncState) {
   })}`;
 }
 
-function getFileUrl(localPath: string) {
-  const normalizedPath = localPath.replace(/\\/g, "/");
-  const absolutePath = normalizedPath.startsWith("/")
-    ? normalizedPath
-    : `/${normalizedPath}`;
-
-  return `file://${encodeURI(absolutePath)}`;
-}
-
 function getNodeDepth(node: ProjectFileNode) {
   return node.path.split("/").filter(Boolean).length;
 }
@@ -162,44 +155,28 @@ function getFileArtist(node: ProjectFileNode) {
   return node.path.includes("/") ? getNodeParentPath(node).split("/").pop() : "Filmwave";
 }
 
-function handleProjectNodeDragStart({
-  event,
+async function startNativeProjectNodeDrag({
   node,
   project,
   syncFolder,
 }: {
-  event: React.DragEvent<HTMLElement>;
   node: ProjectFileNode;
   project: Project;
   syncFolder: string | null;
 }) {
-  event.dataTransfer.effectAllowed = "copy";
-  event.dataTransfer.dropEffect = "copy";
-
-  const localPath = syncFolder
-    ? getProjectNodeLocalPath({ node, project, syncFolder })
-    : null;
-  const fileUrl = localPath ? getFileUrl(localPath) : null;
-
-  event.dataTransfer.setData(
-    "application/filmwave-file",
-    JSON.stringify({
-      ...node,
-      localPath,
-      projectId: project.id,
-      projectName: project.name,
-    }),
-  );
-
-  event.dataTransfer.setData("text/plain", localPath ?? node.path);
-
-  if (fileUrl) {
-    const mimeType = node.type === "folder" ? "application/x-directory" : "application/octet-stream";
-
-    event.dataTransfer.setData("text/uri-list", fileUrl);
-    event.dataTransfer.setData("text/html", `<a href="${fileUrl}">${node.name}</a>`);
-    event.dataTransfer.setData("DownloadURL", `${mimeType}:${node.name}:${fileUrl}`);
+  if (!syncFolder) {
+    console.warn("Choose a sync folder before dragging project files.");
+    return;
   }
+
+  const localPath = getProjectNodeLocalPath({ node, project, syncFolder });
+
+  if (!(await exists(localPath))) {
+    console.warn(`Synced path does not exist yet: ${localPath}`);
+    return;
+  }
+
+  await invoke("start_native_file_drag", { path: localPath });
 }
 
 function ProjectSyncStatus({
@@ -298,10 +275,12 @@ function ProjectGridItem({
       <div
         role="button"
         tabIndex={0}
-        draggable
         className="project-folder-card"
         title={syncFolder ? "Drag synced folder" : "Choose a sync folder before dragging"}
-        onDragStart={(event) => handleProjectNodeDragStart({ event, node, project, syncFolder })}
+        onPointerDown={(event) => {
+          if (event.button !== 0) return;
+          void startNativeProjectNodeDrag({ node, project, syncFolder });
+        }}
         onClick={() => onOpenFolder(node)}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") onOpenFolder(node);
@@ -321,9 +300,11 @@ function ProjectGridItem({
   return (
     <div
       className="project-file-card"
-      draggable
       title={syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"}
-      onDragStart={(event) => handleProjectNodeDragStart({ event, node, project, syncFolder })}
+      onPointerDown={(event) => {
+        if (event.button !== 0) return;
+        void startNativeProjectNodeDrag({ node, project, syncFolder });
+      }}
     >
       <div className="project-file-card-icon-wrap">
         <DesktopMusicGlyph />
@@ -352,10 +333,12 @@ function ProjectListItem({
       <div
         role="button"
         tabIndex={0}
-        draggable
         className="project-browser-row project-folder-row"
         title={syncFolder ? "Drag synced folder" : "Choose a sync folder before dragging"}
-        onDragStart={(event) => handleProjectNodeDragStart({ event, node, project, syncFolder })}
+        onPointerDown={(event) => {
+          if (event.button !== 0) return;
+          void startNativeProjectNodeDrag({ node, project, syncFolder });
+        }}
         onClick={() => onOpenFolder(node)}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") onOpenFolder(node);
@@ -375,9 +358,11 @@ function ProjectListItem({
   return (
     <div
       className="project-browser-row project-file-row"
-      draggable
       title={syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"}
-      onDragStart={(event) => handleProjectNodeDragStart({ event, node, project, syncFolder })}
+      onPointerDown={(event) => {
+        if (event.button !== 0) return;
+        void startNativeProjectNodeDrag({ node, project, syncFolder });
+      }}
     >
       <span className="project-browser-row-name">
         <span className="project-file-list-icon-wrap">
