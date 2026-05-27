@@ -10,105 +10,139 @@
   bottom: 0;
   left: 0;
   z-index: 90;
-  width: 244px;
+  width: 260px;
   border-right: 1px solid var(--divider);
   background: var(--bg-primary);
 }
 
 .desktop-app-sidebar-inner {
   height: 100%;
-  padding: 22px 14px;
+  overflow-y: auto;
+  padding: 24px 20px;
 }
 
-.desktop-app-sidebar-kicker {
-  padding: 0 12px 12px;
+.desktop-sidebar-section {
+  border-bottom: 1px solid var(--divider);
+  padding-bottom: 20px;
+}
+
+.desktop-sidebar-section + .desktop-sidebar-section {
+  margin-top: 20px;
+}
+
+.desktop-sidebar-section.is-projects-section {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.desktop-sidebar-heading,
+.desktop-sidebar-projects-head {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.desktop-sidebar-heading {
+  margin: 0 0 8px;
+  padding: 0 10px;
   color: var(--text-muted);
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  line-height: 1;
 }
 
-.desktop-app-nav {
-  display: grid;
-  gap: 4px;
+.desktop-sidebar-projects-head {
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
-.desktop-app-nav-item {
-  width: 100%;
-  min-height: 54px;
+.desktop-sidebar-projects-head .desktop-sidebar-heading {
+  margin: 0;
+}
+
+.desktop-sidebar-add-button {
+  width: 24px;
+  height: 24px;
   display: grid;
-  grid-template-columns: 30px minmax(0, 1fr);
-  align-items: center;
-  gap: 10px;
+  place-items: center;
   cursor: pointer;
   border: 0;
-  border-radius: 12px;
+  border-radius: 6px;
   background: transparent;
-  color: var(--text-secondary);
-  padding: 0 10px;
-  text-align: left;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
+  color: var(--text-muted);
+  padding: 0;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.desktop-app-nav-item:hover {
+.desktop-sidebar-add-button:hover {
   background: var(--bg-row-hover);
   color: var(--text-primary);
 }
 
-.desktop-app-nav-item.is-active {
-  background: var(--bg-panel);
-  color: var(--text-primary);
-}
-
-.desktop-app-nav-icon {
-  display: grid;
-  width: 30px;
-  height: 30px;
-  place-items: center;
-  border-radius: 9px;
-  background: var(--bg-control);
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.desktop-app-nav-item.is-active .desktop-app-nav-icon {
-  background: var(--accent);
-  color: #111111;
-}
-
-.desktop-app-nav-copy {
-  min-width: 0;
+.desktop-sidebar-nav {
   display: grid;
   gap: 2px;
 }
 
-.desktop-app-nav-label {
+.desktop-sidebar-link {
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0 10px;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.desktop-sidebar-link:hover,
+.desktop-sidebar-link.is-active {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-link-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.desktop-sidebar-link:hover .desktop-sidebar-link-icon,
+.desktop-sidebar-link.is-active .desktop-sidebar-link-icon {
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-link-label {
+  min-width: 0;
   overflow: hidden;
+  margin-left: 10px;
   color: inherit;
   font-size: 13px;
   font-weight: 500;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.desktop-app-nav-description {
-  overflow: hidden;
-  color: var(--text-muted);
-  font-size: 11px;
-  line-height: 1.1;
+  line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .desktop-app-main {
   min-height: 100vh;
-  padding: 88px 24px 34px 268px;
+  padding: 88px 24px 34px 284px;
+}
+
+.desktop-app-main:has(.desktop-projects-page.is-detail) {
+  padding: 56px 0 0 260px;
 }
 
 .desktop-view {
@@ -361,18 +395,23 @@
     width: 74px;
   }
 
-  .desktop-app-sidebar-kicker,
-  .desktop-app-nav-copy {
+  .desktop-sidebar-heading,
+  .desktop-sidebar-link-label,
+  .desktop-sidebar-add-button {
     display: none;
   }
 
-  .desktop-app-nav-item {
-    grid-template-columns: 30px;
+  .desktop-sidebar-link {
     justify-content: center;
+    padding: 0;
   }
 
   .desktop-app-main {
     padding-left: 98px;
+  }
+
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+    padding-left: 74px;
   }
 
   .desktop-view-grid {
@@ -385,7 +424,8 @@
     display: none;
   }
 
-  .desktop-app-main {
+  .desktop-app-main,
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
     padding-left: 24px;
   }
 
