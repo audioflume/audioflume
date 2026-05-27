@@ -7,6 +7,7 @@ import PlaylistIcon from "../icons/PlaylistIcon";
 import WaveformIcon from "../icons/WaveformIcon";
 import "./DesktopAppShell.css";
 import "./DesktopAppShellResponsive.css";
+import "./DesktopScrollLock.css";
 
 export type DesktopAppView =
   | "projects"
