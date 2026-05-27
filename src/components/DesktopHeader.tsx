@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import "./DesktopHeader.css";
 
 const THEME_STORAGE_KEY = "filmwave-theme";
 
