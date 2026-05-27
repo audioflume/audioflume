@@ -47,6 +47,7 @@ let syncing = false;
 let suppressLocalChangesUntil = 0;
 let lastSyncStartedAt = 0;
 let pendingWebsiteProjectIds = new Set<string>();
+let localSyncQueued = false;
 
 async function readSettings(): Promise<RealtimeSettings> {
   const store = await load(SETTINGS_STORE);
@@ -134,9 +135,45 @@ function dispatchRealtimeUpdated({
   );
 }
 
+function scheduleLocalSync(delayMs = LOCAL_CHANGE_DEBOUNCE_MS) {
+  localSyncQueued = true;
+
+  if (localChangeTimer) {
+    window.clearTimeout(localChangeTimer);
+  }
+
+  localChangeTimer = window.setTimeout(() => {
+    localChangeTimer = null;
+
+    if (syncing) {
+      scheduleLocalSync(LOCAL_CHANGE_DEBOUNCE_MS);
+      return;
+    }
+
+    const suppressRemainingMs = suppressLocalChangesUntil - Date.now();
+
+    if (suppressRemainingMs > 0) {
+      scheduleLocalSync(suppressRemainingMs + LOCAL_CHANGE_DEBOUNCE_MS);
+      return;
+    }
+
+    localSyncQueued = false;
+    void runEventDrivenSync("local");
+  }, Math.max(0, delayMs));
+}
+
 async function runEventDrivenSync(reason: "local" | "website", projectIds = new Set<string>()) {
-  if (syncing) return;
-  if (Date.now() - lastSyncStartedAt < MIN_SYNC_GAP_MS) return;
+  if (syncing) {
+    if (reason === "local") scheduleLocalSync(LOCAL_CHANGE_DEBOUNCE_MS);
+    return;
+  }
+
+  const syncGapRemainingMs = MIN_SYNC_GAP_MS - (Date.now() - lastSyncStartedAt);
+
+  if (syncGapRemainingMs > 0) {
+    if (reason === "local") scheduleLocalSync(syncGapRemainingMs + LOCAL_CHANGE_DEBOUNCE_MS);
+    return;
+  }
 
   const settings = await readSettings();
 
@@ -217,20 +254,11 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
     });
   } finally {
     syncing = false;
+
+    if (localSyncQueued && !localChangeTimer) {
+      scheduleLocalSync(LOCAL_CHANGE_DEBOUNCE_MS);
+    }
   }
-}
-
-function scheduleLocalSync() {
-  if (Date.now() < suppressLocalChangesUntil || syncing) return;
-
-  if (localChangeTimer) {
-    window.clearTimeout(localChangeTimer);
-  }
-
-  localChangeTimer = window.setTimeout(() => {
-    localChangeTimer = null;
-    void runEventDrivenSync("local");
-  }, LOCAL_CHANGE_DEBOUNCE_MS);
 }
 
 function scheduleWebsiteSync(projectId?: string | number) {
@@ -367,6 +395,7 @@ export function stopRealtimeSyncController() {
   localChangeTimer = null;
   websiteChangeTimer = null;
   settingsRefreshTimer = null;
+  localSyncQueued = false;
 
   if (currentWatchedFolder) {
     void invoke("stop_sync_folder_watch", { path: currentWatchedFolder });
