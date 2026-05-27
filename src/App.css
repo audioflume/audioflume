@@ -31,6 +31,7 @@
 * {
   box-sizing: border-box;
 }
+
 html,
 body,
 #root {
@@ -38,14 +39,17 @@ body,
   min-height: 100vh;
   margin: 0;
 }
+
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
 }
+
 button,
 input {
   font: inherit;
 }
+
 button {
   -webkit-tap-highlight-color: transparent;
 }
@@ -78,7 +82,6 @@ button {
   margin: 0 0 32px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--divider);
-  color: var(--text-muted);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
@@ -86,20 +89,20 @@ button {
   text-transform: none;
 }
 
-h1,
+.eyebrow span {
+  color: var(--text-muted);
+}
+
+.eyebrow strong {
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 500;
+}
+
 h2,
 h3,
 p {
   margin: 0;
-}
-
-h1 {
-  color: var(--text-primary);
-  font-size: clamp(42px, 6vw, 76px);
-  font-weight: 500;
-  letter-spacing: -0.07em;
-  line-height: 0.9;
-  text-align: left;
 }
 
 h2 {
@@ -124,62 +127,27 @@ p {
   line-height: 1.42;
 }
 
-.header-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(340px, 0.72fr);
-  align-items: end;
-  gap: 24px;
-  padding: 0 0 102px;
-}
-
-.header-row::before {
-  content: "Sync status";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 24px;
-  height: 58px;
+.status-row {
+  min-height: 58px;
   display: flex;
   align-items: center;
-  border-radius: 22px;
+  justify-content: space-between;
+  gap: 18px;
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
   background: var(--bg-panel);
-  color: var(--text-secondary);
   padding: 0 20px;
+}
+
+.status-row-label {
+  color: var(--text-secondary);
   font-size: 13px;
   font-weight: 500;
   letter-spacing: -0.01em;
-  user-select: text;
-}
-
-.header-row::after {
-  display: none;
-}
-
-.header-row > div:first-child {
-  display: contents;
-}
-
-.header-row h1 {
-  max-width: 760px;
-}
-
-.header-row p {
-  max-width: 520px;
-  margin: 0;
-  margin-top: 14px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.55;
-  text-align: left;
-  justify-self: end;
+  line-height: 1;
 }
 
 .status-pill {
-  position: absolute;
-  right: 20px;
-  bottom: 37px;
-  z-index: 1;
   display: inline-flex;
   width: fit-content;
   min-height: 32px;
@@ -228,15 +196,9 @@ p {
 
 .account-block {
   align-items: start;
-  border-top-left-radius: 22px;
-  border-top-right-radius: 22px;
 }
 
-.account-block::after {
-  display: none;
-}
-
-.section-block:nth-of-type(8) {
+.sync-folder-block {
   border-bottom-left-radius: 22px;
   border-bottom-right-radius: 22px;
 }
@@ -245,7 +207,7 @@ p {
   margin-top: 0;
 }
 
-.section-block:not(.account-block)::after {
+.section-block::after {
   content: "";
   position: absolute;
   left: 0;
@@ -355,10 +317,18 @@ p {
   outline: none;
 }
 
-.token-form input { width: min(360px, 100%); }
-.settings-form input { width: 170px; }
+.token-form input {
+  width: min(360px, 100%);
+}
+
+.settings-form input {
+  width: 170px;
+}
+
 .token-form input::placeholder,
-.settings-form input::placeholder { color: var(--text-muted); }
+.settings-form input::placeholder {
+  color: var(--text-muted);
+}
 
 .primary-button,
 .secondary-button {
@@ -570,6 +540,15 @@ p {
   font-size: 12px;
 }
 
+.progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
 .progress-track {
   height: 6px;
   margin-top: 10px;
@@ -585,6 +564,33 @@ p {
   transition: width 0.18s ease;
 }
 
+.sync-report {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.sync-report-dot {
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
+  margin-top: 5px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.local-removals-report .sync-report-dot {
+  background: var(--warning);
+}
+
+.local-removal-list {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 .local-removal-actions {
   display: flex;
   flex-wrap: wrap;
@@ -593,42 +599,23 @@ p {
 }
 
 @media (max-width: 760px) {
-  .header-row {
-    grid-template-columns: 1fr;
-    align-items: start;
-    gap: 14px;
-    padding-bottom: 112px;
-  }
-
-  .header-row > div:first-child {
-    display: block;
-  }
-
-  .header-row p {
-    justify-self: start;
-  }
-
-  .header-row::before {
-    bottom: 24px;
-  }
-
-  .header-row::after {
-    display: none;
-  }
-
-  .status-pill {
-    right: 20px;
-    bottom: 37px;
+  .status-row {
+    min-height: 58px;
   }
 }
 
 @media (max-width: 550px) {
+  .status-row,
   .section-block,
   .projects-header {
     grid-template-columns: 1fr;
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
+  }
+
+  .status-row {
+    padding: 14px 20px;
   }
 
   .token-form,
