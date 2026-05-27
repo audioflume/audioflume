@@ -1,4 +1,4 @@
-import { readDir, stat } from "@tauri-apps/plugin-fs";
+import { exists, readDir, readTextFile, stat } from "@tauri-apps/plugin-fs";
 import type {
   DesktopLocalChanges,
   Project,
@@ -7,6 +7,7 @@ import type {
 import {
   getProjectFolderPath,
   sanitizeProjectRelativePath,
+  type SyncManifest,
 } from "./syncEngine";
 
 type DiskNode = {
@@ -145,6 +146,24 @@ async function readProjectDiskTree(rootPath: string) {
   return nodes;
 }
 
+async function readLastSyncedManifest(projectPath: string) {
+  const manifestPath = `${projectPath}/_filmwave/manifest.json`;
+
+  if (!(await exists(manifestPath))) return null;
+
+  try {
+    return JSON.parse(await readTextFile(manifestPath)) as SyncManifest;
+  } catch {
+    return null;
+  }
+}
+
+function getLocalChangeBaseline(project: Project, manifest: SyncManifest | null) {
+  if (!manifest?.fileTree?.length) return project.files;
+
+  return manifest.fileTree;
+}
+
 function localFileMatchesPreviousNode(localFile: DiskNode, previousFile: ProjectFileNode) {
   const sameName = getNameFromPath(localFile.path) === getNameFromPath(previousFile.path);
   const previousSize = Number(previousFile.sizeBytes || 0);
@@ -251,6 +270,8 @@ export async function detectDesktopLocalChanges({
 
   for (const project of projects) {
     const projectPath = getProjectFolderPath(syncFolder, project);
+    const manifest = await readLastSyncedManifest(projectPath);
+    const baselineFileTree = getLocalChangeBaseline(project, manifest);
     let diskNodes: DiskNode[];
 
     try {
@@ -264,13 +285,13 @@ export async function detectDesktopLocalChanges({
     const diskFiles = diskNodes.filter((node) => node.type === "file");
     const diskFilePathMap = new Map(diskFiles.map((node) => [node.path, node]));
 
-    const previousFolders = project.files
+    const previousFolders = baselineFileTree
       .filter((node): node is ProjectFileNode & { type: "folder" } => node.type === "folder")
       .map((node) => ({
         ...node,
         safePath: normalizeRelativePath(node.path),
       }));
-    const previousFiles = project.files
+    const previousFiles = baselineFileTree
       .filter((node): node is ProjectFileNode & { type: "file" } => node.type === "file")
       .map((node) => ({
         ...node,
