@@ -1,4 +1,5 @@
 import type { Project } from "../../lib/mockFilmwaveApi";
+import DesktopProjectsView from "./DesktopProjectsView";
 
 type ProjectsHomeViewProps = {
   projects: Project[];
@@ -9,142 +10,11 @@ type ProjectsHomeViewProps = {
   onOpenSyncSettings: () => void;
 };
 
-function getTotalProjectFileCount(projects: Project[]) {
-  return projects.reduce((total, project) => total + project.fileCount, 0);
-}
-
-function getSelectedProjectLabel(selectedProjectIds: string[]) {
-  if (selectedProjectIds.length === 0) return "None selected";
-  if (selectedProjectIds.length === 1) return "1 selected";
-  return `${selectedProjectIds.length} selected`;
-}
-
 export function ProjectsHomeView({
   projects,
   projectsLoading,
-  selectedProjectIds,
-  syncFolder,
-  syncStatus,
-  onOpenSyncSettings,
 }: ProjectsHomeViewProps) {
-  const visibleProjects = projects.slice(0, 6);
-
-  return (
-    <section className="desktop-view">
-      <div className="desktop-view-header">
-        <div>
-          <div className="desktop-view-eyebrow">Desktop companion</div>
-          <h1 className="desktop-view-title">Projects</h1>
-          <p className="desktop-view-description">
-            Your local production hub for synced project files, folder structure,
-            and timeline-ready music assets.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          className="secondary-button"
-          onClick={onOpenSyncSettings}
-        >
-          Desktop sync settings
-        </button>
-      </div>
-
-      <div className="desktop-view-grid">
-        <div className="desktop-panel">
-          <div className="desktop-panel-header">
-            <div>
-              <h2 className="desktop-panel-title">Synced projects</h2>
-              <p className="desktop-panel-copy">
-                Project files will mirror the website&apos;s All Files structure.
-              </p>
-            </div>
-          </div>
-
-          <div className="desktop-project-list">
-            {projectsLoading ? (
-              <div className="desktop-project-card">
-                <div>
-                  <div className="desktop-project-card-title">Loading projects...</div>
-                  <div className="desktop-project-card-meta">
-                    Fetching your Filmwave project list.
-                  </div>
-                </div>
-                <span className="desktop-project-status">Loading</span>
-              </div>
-            ) : visibleProjects.length > 0 ? (
-              visibleProjects.map((project) => (
-                <article key={project.id} className="desktop-project-card">
-                  <div>
-                    <h3 className="desktop-project-card-title">{project.name}</h3>
-                    <p className="desktop-project-card-meta">
-                      {project.description || "No project description"} · {project.fileCount} files · {project.sizeLabel}
-                    </p>
-                  </div>
-                  <span className="desktop-project-status">
-                    {selectedProjectIds.includes(project.id) ? "Selected" : "Available"}
-                  </span>
-                </article>
-              ))
-            ) : (
-              <div className="desktop-project-card">
-                <div>
-                  <div className="desktop-project-card-title">No projects loaded</div>
-                  <div className="desktop-project-card-meta">
-                    Connect your Filmwave account or switch the source in sync settings.
-                  </div>
-                </div>
-                <span className="desktop-project-status">Idle</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <aside className="desktop-panel">
-          <div className="desktop-panel-header">
-            <div>
-              <h2 className="desktop-panel-title">Local sync overview</h2>
-              <p className="desktop-panel-copy">
-                The first production-focused version of the app starts here.
-              </p>
-            </div>
-          </div>
-
-          <div className="desktop-stat-grid">
-            <div className="desktop-stat-card">
-              <div className="desktop-stat-value">{projects.length}</div>
-              <div className="desktop-stat-label">Projects loaded</div>
-            </div>
-            <div className="desktop-stat-card">
-              <div className="desktop-stat-value">{getTotalProjectFileCount(projects)}</div>
-              <div className="desktop-stat-label">Project files</div>
-            </div>
-            <div className="desktop-stat-card">
-              <div className="desktop-stat-value">{getSelectedProjectLabel(selectedProjectIds)}</div>
-              <div className="desktop-stat-label">Sync selection</div>
-            </div>
-          </div>
-
-          <div className="desktop-feature-list" style={{ marginTop: 12 }}>
-            <div className="desktop-feature-row">
-              <h3 className="desktop-panel-title">Status</h3>
-              <p>{syncStatus}</p>
-            </div>
-            <div className="desktop-feature-row">
-              <h3 className="desktop-panel-title">Sync folder</h3>
-              <p>{syncFolder || "No local folder selected yet."}</p>
-            </div>
-            <div className="desktop-feature-row">
-              <h3 className="desktop-panel-title">Next build target</h3>
-              <p>
-                Project detail pages with folders, loose files, and local actions.
-              </p>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-  );
+  return <DesktopProjectsView projects={projects} projectsLoading={projectsLoading} />;
 }
 
 export function MusicLibraryView() {
