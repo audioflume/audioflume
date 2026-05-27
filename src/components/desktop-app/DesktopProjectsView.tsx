@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { Project, ProjectFileNode } from "../../lib/mockFilmwaveApi";
+import { getProjectNodeLocalPath } from "../../lib/syncEngine";
 import {
   DesktopFolderGlyph,
   DesktopMusicGlyph,
@@ -16,6 +17,7 @@ type DesktopProjectsViewProps = {
   activeProjectId: string | null;
   projects: Project[];
   projectsLoading: boolean;
+  syncFolder: string | null;
   syncStatus: string;
   onActiveProjectIdChange: (projectId: string | null) => void;
 };
@@ -97,6 +99,15 @@ function formatSyncTime(project: Project, syncState: ProjectSyncState) {
   })}`;
 }
 
+function getFileUrl(localPath: string) {
+  const normalizedPath = localPath.replace(/\\/g, "/");
+  const absolutePath = normalizedPath.startsWith("/")
+    ? normalizedPath
+    : `/${normalizedPath}`;
+
+  return `file://${encodeURI(absolutePath)}`;
+}
+
 function getNodeDepth(node: ProjectFileNode) {
   return node.path.split("/").filter(Boolean).length;
 }
@@ -151,10 +162,44 @@ function getFileArtist(node: ProjectFileNode) {
   return node.path.includes("/") ? getNodeParentPath(node).split("/").pop() : "Filmwave";
 }
 
-function handleFileDragStart(event: React.DragEvent<HTMLElement>, node: ProjectFileNode) {
+function handleProjectNodeDragStart({
+  event,
+  node,
+  project,
+  syncFolder,
+}: {
+  event: React.DragEvent<HTMLElement>;
+  node: ProjectFileNode;
+  project: Project;
+  syncFolder: string | null;
+}) {
   event.dataTransfer.effectAllowed = "copy";
-  event.dataTransfer.setData("text/plain", node.downloadUrl || node.path);
-  event.dataTransfer.setData("application/filmwave-file", JSON.stringify(node));
+  event.dataTransfer.dropEffect = "copy";
+
+  const localPath = syncFolder
+    ? getProjectNodeLocalPath({ node, project, syncFolder })
+    : null;
+  const fileUrl = localPath ? getFileUrl(localPath) : null;
+
+  event.dataTransfer.setData(
+    "application/filmwave-file",
+    JSON.stringify({
+      ...node,
+      localPath,
+      projectId: project.id,
+      projectName: project.name,
+    }),
+  );
+
+  event.dataTransfer.setData("text/plain", localPath ?? node.path);
+
+  if (fileUrl) {
+    const mimeType = node.type === "folder" ? "application/x-directory" : "application/octet-stream";
+
+    event.dataTransfer.setData("text/uri-list", fileUrl);
+    event.dataTransfer.setData("text/html", `<a href="${fileUrl}">${node.name}</a>`);
+    event.dataTransfer.setData("DownloadURL", `${mimeType}:${node.name}:${fileUrl}`);
+  }
 }
 
 function ProjectSyncStatus({
@@ -240,10 +285,12 @@ function ProjectListView({
 function ProjectGridItem({
   node,
   project,
+  syncFolder,
   onOpenFolder,
 }: {
   node: ProjectFileNode;
   project: Project;
+  syncFolder: string | null;
   onOpenFolder: (folder: ProjectFileNode) => void;
 }) {
   if (node.type === "folder") {
@@ -251,7 +298,10 @@ function ProjectGridItem({
       <div
         role="button"
         tabIndex={0}
+        draggable
         className="project-folder-card"
+        title={syncFolder ? "Drag synced folder" : "Choose a sync folder before dragging"}
+        onDragStart={(event) => handleProjectNodeDragStart({ event, node, project, syncFolder })}
         onClick={() => onOpenFolder(node)}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") onOpenFolder(node);
@@ -272,7 +322,8 @@ function ProjectGridItem({
     <div
       className="project-file-card"
       draggable
-      onDragStart={(event) => handleFileDragStart(event, node)}
+      title={syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"}
+      onDragStart={(event) => handleProjectNodeDragStart({ event, node, project, syncFolder })}
     >
       <div className="project-file-card-icon-wrap">
         <DesktopMusicGlyph />
@@ -286,10 +337,12 @@ function ProjectGridItem({
 function ProjectListItem({
   node,
   project,
+  syncFolder,
   onOpenFolder,
 }: {
   node: ProjectFileNode;
   project: Project;
+  syncFolder: string | null;
   onOpenFolder: (folder: ProjectFileNode) => void;
 }) {
   if (node.type === "folder") {
@@ -299,7 +352,10 @@ function ProjectListItem({
       <div
         role="button"
         tabIndex={0}
+        draggable
         className="project-browser-row project-folder-row"
+        title={syncFolder ? "Drag synced folder" : "Choose a sync folder before dragging"}
+        onDragStart={(event) => handleProjectNodeDragStart({ event, node, project, syncFolder })}
         onClick={() => onOpenFolder(node)}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") onOpenFolder(node);
@@ -320,7 +376,8 @@ function ProjectListItem({
     <div
       className="project-browser-row project-file-row"
       draggable
-      onDragStart={(event) => handleFileDragStart(event, node)}
+      title={syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"}
+      onDragStart={(event) => handleProjectNodeDragStart({ event, node, project, syncFolder })}
     >
       <span className="project-browser-row-name">
         <span className="project-file-list-icon-wrap">
@@ -337,10 +394,12 @@ function ProjectListItem({
 
 function ProjectDetailView({
   project,
+  syncFolder,
   syncStatus,
   onBack,
 }: {
   project: Project;
+  syncFolder: string | null;
   syncStatus: string;
   onBack: () => void;
 }) {
@@ -448,6 +507,7 @@ function ProjectDetailView({
                     key={node.id}
                     node={node}
                     project={project}
+                    syncFolder={syncFolder}
                     onOpenFolder={setActiveFolder}
                   />
                 ))}
@@ -459,6 +519,7 @@ function ProjectDetailView({
                     key={node.id}
                     node={node}
                     project={project}
+                    syncFolder={syncFolder}
                     onOpenFolder={setActiveFolder}
                   />
                 ))}
@@ -477,6 +538,7 @@ export default function DesktopProjectsView({
   activeProjectId,
   projects,
   projectsLoading,
+  syncFolder,
   syncStatus,
   onActiveProjectIdChange,
 }: DesktopProjectsViewProps) {
@@ -487,6 +549,7 @@ export default function DesktopProjectsView({
     return (
       <ProjectDetailView
         project={activeProject}
+        syncFolder={syncFolder}
         syncStatus={syncStatus}
         onBack={() => onActiveProjectIdChange(null)}
       />
