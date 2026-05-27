@@ -52,7 +52,7 @@ button {
 
 .app-shell {
   min-height: 100vh;
-  padding: 24px 38px 42px;
+  padding: 88px 24px 34px;
   background: var(--bg-primary);
 }
 
@@ -62,7 +62,8 @@ button {
 }
 
 .sync-card {
-  width: min(920px, 100%);
+  position: relative;
+  width: min(1180px, 100%);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -72,10 +73,10 @@ button {
 .eyebrow {
   display: flex;
   width: 100%;
-  min-height: 32px;
+  min-height: 24px;
   align-items: center;
-  margin: 0 0 32px;
-  padding-bottom: 16px;
+  margin: 0 0 20px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--divider);
   color: var(--text-muted);
   font-size: 12px;
@@ -94,11 +95,11 @@ p {
 
 h1 {
   color: var(--text-primary);
-  font-size: clamp(42px, 5vw, 58px);
+  font-size: clamp(42px, 6vw, 76px);
   font-weight: 500;
-  letter-spacing: -0.06em;
-  line-height: 0.95;
-  text-align: center;
+  letter-spacing: -0.07em;
+  line-height: 0.9;
+  text-align: left;
 }
 
 h2 {
@@ -142,12 +143,6 @@ p {
 
 .header-row h1 {
   max-width: 760px;
-  color: var(--text-primary);
-  font-size: clamp(42px, 6vw, 76px);
-  font-weight: 500;
-  letter-spacing: -0.07em;
-  line-height: 0.9;
-  text-align: left;
 }
 
 .header-row p {
@@ -160,15 +155,6 @@ p {
   justify-self: end;
 }
 
-.header-row p {
-  max-width: 560px;
-  margin-top: 10px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.42;
-  text-align: center;
-}
-
 .status-pill {
   position: absolute;
   top: 0;
@@ -178,6 +164,7 @@ p {
   min-height: 32px;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   border: 1px solid var(--divider);
   border-radius: 999px;
   background: var(--bg-panel);
@@ -187,7 +174,6 @@ p {
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1;
-  gap: 5px;
 }
 
 .status-dot {
@@ -282,27 +268,20 @@ p {
   height: 42px;
   min-width: 42px;
   overflow: hidden;
+  border-radius: 999px;
+  background: var(--bg-panel-2);
   display: grid;
   place-items: center;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
 }
 
 .account-avatar img {
-  width: 42px;
-  height: 42px;
+  width: 100%;
+  height: 100%;
   display: block;
   object-fit: cover;
-  border-radius: 999px;
-}
-
-.account-profile-main {
-  min-width: 0;
-  display: grid;
-  gap: 3px;
 }
 
 .account-name {
@@ -312,7 +291,7 @@ p {
 }
 
 .account-email {
-  max-width: 360px;
+  max-width: 380px;
   overflow: hidden;
   color: var(--text-muted);
   font-size: 12px;
@@ -320,266 +299,199 @@ p {
   white-space: nowrap;
 }
 
-.refresh-meta {
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
 .token-form,
 .settings-form,
 .button-group {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .token-form {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .token-form input,
 .settings-form input {
-  width: min(390px, 100%);
-  min-height: 38px;
+  min-height: 36px;
   border: 0;
   border-radius: 999px;
   background: var(--bg-control);
   color: var(--text-primary);
-  outline: none;
   padding: 0 15px;
-  font-size: 14px;
+  outline: none;
 }
 
+.token-form input { width: min(360px, 100%); }
+.settings-form input { width: 170px; }
 .token-form input::placeholder,
-.settings-form input::placeholder {
-  color: var(--text-muted);
-}
+.settings-form input::placeholder { color: var(--text-muted); }
 
 .primary-button,
 .secondary-button {
-  min-height: 38px;
+  min-height: 36px;
+  cursor: pointer;
   border: 0;
   border-radius: 999px;
-  padding: 0 18px;
-  cursor: pointer;
+  padding: 0 17px;
   font-size: 14px;
   font-weight: 500;
-  white-space: nowrap;
-  transition:
-    background 0.15s ease,
-    opacity 0.15s ease,
-    color 0.15s ease;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .primary-button {
   background: var(--text-primary);
-  color: #111111;
+  color: var(--bg-primary);
 }
 
 .secondary-button {
   background: var(--bg-control);
-  color: var(--text-primary);
+  color: var(--text-secondary);
 }
 
-.primary-button:hover,
+.primary-button:disabled,
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
 .secondary-button:hover:not(:disabled) {
   background: var(--bg-control-hover);
   color: var(--text-primary);
 }
 
-.secondary-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.38;
-}
-
 .source-toggle {
+  position: relative;
   display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 4px;
-  min-height: 38px;
+  min-height: 36px;
+  overflow: hidden;
   border-radius: 999px;
   background: var(--bg-control);
   padding: 4px;
 }
 
 .source-toggle button {
-  min-height: 30px;
+  position: relative;
+  z-index: 1;
+  min-height: 28px;
+  cursor: pointer;
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  padding: 0 14px;
+  color: var(--text-muted);
+  padding: 0 13px;
   font-size: 13px;
   font-weight: 500;
 }
 
 .source-toggle button.is-active {
-  background: rgba(255, 255, 255, 0.13);
+  background: var(--bg-panel-2);
   color: var(--text-primary);
 }
 
 .source-toggle[aria-label="Realtime sync setting"] {
-  position: relative;
-  width: 66px;
-  height: 36px;
-  min-height: 36px;
-  border-radius: 999px;
-  padding: 0;
-  gap: 0;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.14);
-  transition: background 0.24s ease;
-}
-
-.source-toggle[aria-label="Realtime sync setting"]:has(
-    button:nth-child(2).is-active
-  ) {
-  background: var(--success);
+  width: 62px;
 }
 
 .source-toggle[aria-label="Realtime sync setting"]::after {
   content: "";
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 30px;
-  height: 30px;
+  top: 4px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
-  pointer-events: none;
-  transition: transform 0.24s cubic-bezier(0.25, 0.9, 0.2, 1);
+  background: var(--warning);
+  transition: transform 0.18s ease, background 0.18s ease;
 }
 
-.source-toggle[aria-label="Realtime sync setting"]:has(
-    button:nth-child(2).is-active
-  )::after {
-  transform: translateX(30px);
+.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active)::after {
+  background: var(--success);
+  transform: translateX(26px);
 }
 
 .source-toggle[aria-label="Realtime sync setting"] button {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  min-height: 36px;
+  width: 28px;
+  min-height: 28px;
+  overflow: hidden;
   padding: 0;
-  border-radius: 999px;
   color: transparent;
-  background: transparent !important;
-  box-shadow: none;
-}
-
-.source-toggle[aria-label="Realtime sync setting"] button:nth-child(2) {
-  z-index: 2;
-}
-
-.source-toggle[aria-label="Realtime sync setting"]:has(
-    button:nth-child(2).is-active
-  )
-  button:nth-child(1) {
-  z-index: 2;
-}
-
-.source-toggle[aria-label="Realtime sync setting"]:has(
-    button:nth-child(2).is-active
-  )
-  button:nth-child(2) {
-  z-index: 1;
 }
 
 .projects-panel {
-  margin-top: 26px;
-  padding: 20px;
+  margin-top: 24px;
   border-radius: 22px;
-  background: var(--bg-panel);
+  padding: 18px;
 }
 
 .projects-panel + .projects-panel {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .projects-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
+  gap: 20px;
+}
+
+.refresh-meta {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
 }
 
 .project-list {
   margin-top: 14px;
-  display: grid;
-  gap: 0;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 16px;
   background: var(--bg-panel-2);
 }
 
 .project-row {
   position: relative;
   width: 100%;
-  min-height: 62px;
   display: grid;
   grid-template-columns: 26px minmax(0, 1fr) auto;
+  gap: 12px;
   align-items: center;
-  gap: 13px;
   border: 0;
-  border-radius: 0;
   background: transparent;
-  padding: 13px 16px;
-  color: var(--text-primary);
+  color: inherit;
+  padding: 14px;
   text-align: left;
-  cursor: pointer;
 }
 
 .project-row + .project-row::before {
   content: "";
   position: absolute;
+  left: 14px;
+  right: 14px;
   top: 0;
-  left: 55px;
-  right: 16px;
   height: 1px;
   background: var(--divider);
 }
 
-.project-row:hover {
-  background: var(--bg-row-hover);
-}
-
+.project-row:hover,
 .project-row.is-selected {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-primary);
-}
-
-.project-row.is-loading {
-  cursor: default;
-}
-
-.project-row.is-loading:hover {
-  background: transparent;
+  background: var(--bg-row-hover);
 }
 
 .project-check {
   width: 24px;
   height: 24px;
+  border-radius: 8px;
+  background: var(--bg-control);
+  color: var(--text-muted);
   display: grid;
   place-items: center;
-  border-radius: 7px;
-  background: var(--bg-control);
-  color: transparent;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .project-row.is-selected .project-check {
-  background: #ffffff;
+  background: var(--accent);
   color: #111111;
-}
-
-.project-row.is-selected .project-description,
-.project-row.is-selected .project-meta {
-  color: var(--text-secondary);
 }
 
 .project-main {
@@ -589,44 +501,40 @@ p {
 }
 
 .project-name {
-  color: inherit;
+  overflow: hidden;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.project-description {
+.project-description,
+.project-meta {
   overflow: hidden;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.project-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-muted);
-  font-size: 12px;
-  white-space: nowrap;
+.project-row.is-selected .project-description,
+.project-row.is-selected .project-meta {
+  color: var(--text-secondary);
 }
 
 .progress-panel,
 .sync-report {
   margin-top: 14px;
-  border: 0;
   border-radius: 16px;
-  background: var(--bg-control);
-  padding: 13px 15px;
+  background: var(--bg-panel-2);
+  padding: 13px 14px;
 }
 
-.progress-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
+.progress-panel p,
+.sync-report p {
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 500;
 }
 
 .progress-track {
@@ -634,84 +542,48 @@ p {
   margin-top: 10px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-control);
 }
 
 .progress-fill {
   height: 100%;
   border-radius: inherit;
-  background: #ffffff;
-  transition: width 0.2s ease;
-}
-
-.sync-report {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sync-report-dot {
-  width: 7px;
-  height: 7px;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: var(--success);
-}
-
-.sync-report p {
-  font-size: 12px;
-}
-
-.local-removals-report {
-  align-items: flex-start;
-}
-
-.local-removal-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.local-removal-list span {
-  border-radius: 999px;
-  background: var(--bg-control-hover);
-  padding: 5px 8px;
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 500;
+  background: var(--accent);
+  transition: width 0.18s ease;
 }
 
 .local-removal-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 10px;
 }
 
-@media (min-width: 980px) {
-  .sync-card {
-    display: flex;
-    flex-direction: column;
+@media (max-width: 760px) {
+  .header-row {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 14px;
+  }
+
+  .header-row > div:first-child {
+    display: block;
+  }
+
+  .header-row p {
+    justify-self: start;
   }
 }
 
-@media (max-width: 760px) {
-  .app-shell {
-    padding: 14px;
-  }
-  .header-row {
-    padding: 26px 0 24px;
-  }
-  h1 {
-    font-size: clamp(38px, 12vw, 54px);
-  }
+@media (max-width: 550px) {
   .section-block,
   .projects-header {
     grid-template-columns: 1fr;
     flex-direction: column;
     align-items: stretch;
-    gap: 14px;
+    gap: 12px;
   }
+
   .token-form,
   .settings-form,
   .button-group {
@@ -719,6 +591,7 @@ p {
     flex-direction: column;
     align-items: stretch;
   }
+
   .token-form input,
   .settings-form input,
   .primary-button,
@@ -726,15 +599,19 @@ p {
   .source-toggle {
     width: 100%;
   }
+
   .source-toggle button {
     flex: 1;
   }
+
   .source-toggle[aria-label="Realtime sync setting"] {
-    width: 66px;
+    width: 62px;
   }
+
   .project-row {
     grid-template-columns: 26px minmax(0, 1fr);
   }
+
   .project-meta {
     grid-column: 2;
   }
