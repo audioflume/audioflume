@@ -12,7 +12,7 @@ export default function ProjectSourceBlock({
   onChangeProjectSource,
 }: ProjectSourceBlockProps) {
   return (
-    <div className="section-block">
+    <div className="section-block project-source-block">
       <div>
         <h2>Project source</h2>
         <p>{sourceDescription}</p>
