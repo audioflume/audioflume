@@ -6,7 +6,7 @@
 .desktop-projects-page.is-detail {
   width: 100%;
   max-width: none;
-  margin: -32px -24px -34px;
+  margin: 0;
 }
 
 .desktop-projects-list-page {
@@ -127,7 +127,7 @@
   display: none;
 }
 
-.project-tabs-row button {
+.project-tabs-row > button:not(.project-toolbar-button) {
   flex: 0 0 auto;
   height: 49px;
   cursor: pointer;
@@ -141,12 +141,12 @@
   white-space: nowrap;
 }
 
-.project-tabs-row button:hover,
-.project-tabs-row button.is-active {
+.project-tabs-row > button:not(.project-toolbar-button):hover,
+.project-tabs-row > button:not(.project-toolbar-button).is-active {
   color: var(--text-primary);
 }
 
-.project-tabs-row button.is-active {
+.project-tabs-row > button:not(.project-toolbar-button).is-active {
   border-bottom-color: var(--text-primary);
 }
 
@@ -169,6 +169,8 @@
   background: var(--bg-panel);
   color: var(--text-muted);
   cursor: pointer;
+  padding: 0;
+  line-height: 1;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
@@ -522,12 +524,6 @@ html[data-theme="light"] .project-folder-glyph-tab {
 
 html[data-theme="light"] .project-folder-glyph-body {
   background: linear-gradient(180deg, #3a3a3a 0%, #242424 48%, #151515 100%);
-}
-
-@media (max-width: 900px) {
-  .desktop-projects-page.is-detail {
-    margin-left: -24px;
-  }
 }
 
 @media (max-width: 760px) {
