@@ -12,3 +12,31 @@
   width: 28px;
   height: 28px;
 }
+
+.project-sync-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.project-sync-status-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--success);
+}
+
+.project-sync-status.is-syncing .project-sync-status-dot {
+  background: var(--warning);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.project-sync-status.is-error .project-sync-status-dot {
+  background: var(--error);
+}
+
+.project-sync-status.is-success .project-sync-status-dot {
+  background: var(--success);
+}
