@@ -68,7 +68,7 @@ function sanitizeFolderName(name: string) {
     .trim();
 }
 
-function sanitizeRelativePath(path: string) {
+export function sanitizeProjectRelativePath(path: string) {
   const cleanedPath = path
     .split("/")
     .map((part) => sanitizeFolderName(part))
@@ -86,8 +86,24 @@ function sanitizeRelativePath(path: string) {
   return cleanedPath;
 }
 
+function sanitizeRelativePath(path: string) {
+  return sanitizeProjectRelativePath(path);
+}
+
 export function getProjectFolderPath(syncFolder: string, project: Project) {
   return `${syncFolder}/${sanitizeFolderName(project.name)}`;
+}
+
+export function getProjectNodeLocalPath({
+  node,
+  project,
+  syncFolder,
+}: {
+  node: ProjectFileNode;
+  project: Project;
+  syncFolder: string;
+}) {
+  return `${getProjectFolderPath(syncFolder, project)}/${sanitizeProjectRelativePath(node.path)}`;
 }
 
 function getManifestFilePath(syncFolder: string, project: Project) {
