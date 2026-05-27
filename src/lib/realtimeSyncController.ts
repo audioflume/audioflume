@@ -113,11 +113,20 @@ function filterProjectsByIds(projects: Project[], projectIds: Set<string>) {
   return projects.filter((project) => projectIds.has(String(project.id)));
 }
 
-function dispatchRealtimeUpdated(projectIds: Set<string>, reason: "local" | "website") {
+function dispatchRealtimeUpdated({
+  projects,
+  reason,
+  updatedProjectIds,
+}: {
+  projects: Project[];
+  reason: "local" | "website";
+  updatedProjectIds: Set<string>;
+}) {
   window.dispatchEvent(
     new CustomEvent(REALTIME_UPDATED_EVENT, {
       detail: {
-        projectIds: [...projectIds],
+        projectIds: [...updatedProjectIds],
+        projects,
         reason,
         updatedAt: new Date().toISOString(),
       },
@@ -185,7 +194,11 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
     });
 
     suppressLocalChangesUntil = Date.now() + POST_SYNC_SUPPRESS_MS;
-    dispatchRealtimeUpdated(updatedProjectIds, reason);
+    dispatchRealtimeUpdated({
+      projects: projectsToSync,
+      reason,
+      updatedProjectIds,
+    });
 
     await addActivityLogEntry({
       mode: "auto",
