@@ -25,6 +25,16 @@ import {
 } from "./lib/syncEngine";
 import "./App.css";
 import Header from "./components/Header";
+import AccountBlock from "./components/desktop-sync/AccountBlock";
+import ApiEndpointBlock from "./components/desktop-sync/ApiEndpointBlock";
+import FallbackCheckBlock from "./components/desktop-sync/FallbackCheckBlock";
+import ProjectSourceBlock from "./components/desktop-sync/ProjectSourceBlock";
+import ProjectsBlock from "./components/desktop-sync/ProjectsBlock";
+import RealtimeSyncBlock from "./components/desktop-sync/RealtimeSyncBlock";
+import SettingsBreadcrumb from "./components/desktop-sync/SettingsBreadcrumb";
+import SyncActivityBlock from "./components/desktop-sync/SyncActivityBlock";
+import SyncFolderBlock from "./components/desktop-sync/SyncFolderBlock";
+import SyncStatusRow from "./components/desktop-sync/SyncStatusRow";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const DEFAULT_AUTO_SYNC_INTERVAL_MINUTES = 15;
@@ -45,33 +55,6 @@ type SyncActivityLogEntry = {
   projectNames: string[];
 };
 
-function formatRefreshTime(date: Date | null) {
-  if (!date) return "Not refreshed yet";
-
-  return `Last refreshed ${date.toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
-  })}`;
-}
-
-function formatFallbackSyncTime(date: Date | null) {
-  if (!date) return "No fallback sync has run yet";
-
-  return `Last fallback sync ${date.toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
-  })}`;
-}
-
-function formatLogTime(value: string) {
-  return new Date(value).toLocaleString([], {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
 function getTokenFromDeepLink(url: string) {
   try {
     const parsedUrl = new URL(url);
@@ -91,11 +74,6 @@ function getDeepLinkUrls(payload: unknown) {
   }
 
   return typeof payload === "string" ? [payload] : [];
-}
-
-function getAccountInitial(account: DesktopAccount | null) {
-  const value = account?.name || account?.email || "F";
-  return value.trim().charAt(0).toUpperCase() || "F";
 }
 
 function getProjectNames(projects: Project[]) {
@@ -1052,448 +1030,87 @@ function App() {
       />
 
       <section className="sync-card">
-        <div className="eyebrow">Filmwave Desktop</div>
+        <SettingsBreadcrumb />
+        <SyncStatusRow syncStatus={syncStatus} syncing={syncing} />
 
-        <div className="header-row">
-          <div>
-            <h1>Sync your project music</h1>
-            <p>
-              Keep selected Filmwave project files available locally for
-              editing, dragging, and offline access.
-            </p>
-          </div>
+        <AccountBlock
+          account={desktopAccount}
+          accountDescription={accountDescription}
+          accountLoading={accountLoading}
+          connectionCode={connectionCode}
+          isSignedIn={isSignedIn}
+          onConnectionCodeChange={setConnectionCode}
+          onConnect={connectWithConnectionCode}
+          onOpenSignIn={openSignInPage}
+          onSignOut={signOutDesktop}
+        />
 
-          <div className={`status-pill ${syncing ? "is-syncing" : ""}`}>
-            <span className="status-dot" />
-            {syncStatus}
-          </div>
-        </div>
+        <ProjectSourceBlock
+          projectSource={projectSource}
+          sourceDescription={sourceDescription}
+          onChangeProjectSource={changeProjectSource}
+        />
 
-        <div className="section-block account-block">
-          <div>
-            <h2>Account</h2>
-            <p>{accountDescription}</p>
-            {!isSignedIn && (
-              <div className="token-form">
-                <input
-                  type="password"
-                  value={connectionCode}
-                  onChange={(event) => setConnectionCode(event.target.value)}
-                  placeholder="Paste connection code"
-                  autoComplete="off"
-                />
-                <button
-                  type="button"
-                  className="secondary-button"
-                  onClick={connectWithConnectionCode}
-                >
-                  Connect
-                </button>
-              </div>
-            )}
-            {isSignedIn && (
-              <div className="account-profile">
-                <div className="account-avatar">
-                  {desktopAccount?.imageUrl ? (
-                    <img src={desktopAccount.imageUrl} alt="" />
-                  ) : (
-                    getAccountInitial(desktopAccount)
-                  )}
-                </div>
-                <div className="account-profile-main">
-                  <span className="account-name">
-                    {desktopAccount?.name ??
-                      (accountLoading ? "Loading account..." : "Filmwave user")}
-                  </span>
-                  <span className="account-email">
-                    {desktopAccount?.email ?? "Connected to Filmwave"}
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
+        <ApiEndpointBlock
+          apiBaseUrlDraft={apiBaseUrlDraft}
+          normalizedApiBaseUrl={normalizedApiBaseUrl}
+          onApiBaseUrlDraftChange={setApiBaseUrlDraft}
+          onResetApiBaseUrl={resetApiBaseUrl}
+          onSaveApiBaseUrl={saveApiBaseUrl}
+        />
 
-          <div className="button-group">
-            <button
-              type="button"
-              className="primary-button"
-              onClick={openSignInPage}
-            >
-              {isSignedIn ? "Reconnect" : "Sign in"}
-            </button>
-            {isSignedIn && (
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={signOutDesktop}
-              >
-                Sign out
-              </button>
-            )}
-          </div>
-        </div>
+        <RealtimeSyncBlock
+          autoSyncDescription={autoSyncDescription}
+          autoSyncEnabled={autoSyncEnabled}
+          lastAutoSyncedAt={lastAutoSyncedAt}
+          onChangeAutoSyncEnabled={changeAutoSyncEnabled}
+        />
 
-        <div className="section-block">
-          <div>
-            <h2>Project source</h2>
-            <p>{sourceDescription}</p>
-          </div>
+        <FallbackCheckBlock
+          autoSyncIntervalMinutes={autoSyncIntervalMinutes}
+          fallbackSyncDescription={fallbackSyncDescription}
+          onChangeAutoSyncInterval={changeAutoSyncInterval}
+        />
 
-          <div className="source-toggle" aria-label="Project data source">
-            <button
-              type="button"
-              className={projectSource === "mock" ? "is-active" : ""}
-              onClick={() => changeProjectSource("mock")}
-            >
-              Mock
-            </button>
-            <button
-              type="button"
-              className={projectSource === "local-api" ? "is-active" : ""}
-              onClick={() => changeProjectSource("local-api")}
-            >
-              Filmwave
-            </button>
-          </div>
-        </div>
+        <SyncFolderBlock
+          lastSyncedFolder={lastSyncedFolder}
+          openingFolder={openingFolder}
+          syncFolder={syncFolder}
+          syncing={syncing}
+          onChooseSyncFolder={chooseSyncFolder}
+          onOpenLastSyncedFolder={openLastSyncedFolder}
+        />
 
-        <div className="section-block settings-block">
-          <div>
-            <h2>API endpoint</h2>
-            <p className="folder-path">{normalizedApiBaseUrl}</p>
-          </div>
+        <ProjectsBlock
+          applyingLocalRemovals={applyingLocalRemovals}
+          canSync={canSync}
+          checkingLocalRemovals={checkingLocalRemovals}
+          hasSelectedProjects={hasSelectedProjects}
+          lastRefreshedAt={lastRefreshedAt}
+          lastSyncReport={lastSyncReport}
+          localRemovals={localRemovals}
+          projectSource={projectSource}
+          projects={projects}
+          projectsLoading={projectsLoading}
+          selectedProjectIds={selectedProjectIds}
+          selectedSummary={selectedSummary}
+          syncFolder={syncFolder}
+          syncProgress={syncProgress}
+          syncProgressPercent={syncProgressPercent}
+          syncing={syncing}
+          onApplyLocalRemovals={applyLocalRemovals}
+          onCheckLocalRemovals={checkLocalRemovals}
+          onIgnoreLocalRemovals={() => setLocalRemovals([])}
+          onRefreshProjects={refreshProjects}
+          onSyncSelectedProjects={() => syncSelectedProjects()}
+          onToggleProject={toggleProject}
+        />
 
-          <div className="settings-form">
-            <input
-              type="url"
-              value={apiBaseUrlDraft}
-              onChange={(event) => setApiBaseUrlDraft(event.target.value)}
-              placeholder="https://your-filmwave-domain.com"
-              autoComplete="off"
-            />
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={saveApiBaseUrl}
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={resetApiBaseUrl}
-            >
-              Local
-            </button>
-          </div>
-        </div>
-
-        <div className="section-block settings-block">
-          <div>
-            <h2>Realtime sync</h2>
-            <p>{autoSyncDescription}</p>
-            <p className="refresh-meta">
-              {formatFallbackSyncTime(lastAutoSyncedAt)}
-            </p>
-          </div>
-
-          <div className="source-toggle" aria-label="Realtime sync setting">
-            <button
-              type="button"
-              className={!autoSyncEnabled ? "is-active" : ""}
-              onClick={() => changeAutoSyncEnabled(false)}
-            >
-              Off
-            </button>
-            <button
-              type="button"
-              className={autoSyncEnabled ? "is-active" : ""}
-              onClick={() => changeAutoSyncEnabled(true)}
-            >
-              On
-            </button>
-          </div>
-        </div>
-
-        <div className="section-block settings-block">
-          <div>
-            <h2>Fallback check</h2>
-            <p>{fallbackSyncDescription}</p>
-          </div>
-
-          <div className="source-toggle" aria-label="Fallback sync interval">
-            {[5, 15, 30].map((interval) => (
-              <button
-                key={interval}
-                type="button"
-                className={
-                  autoSyncIntervalMinutes === interval ? "is-active" : ""
-                }
-                onClick={() => changeAutoSyncInterval(interval)}
-              >
-                {interval}m
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="section-block">
-          <div>
-            <h2>Sync folder</h2>
-            <p className="folder-path">{syncFolder ?? "No folder selected"}</p>
-          </div>
-
-          <div className="button-group">
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={chooseSyncFolder}
-              disabled={syncing}
-            >
-              Choose folder
-            </button>
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={openLastSyncedFolder}
-              disabled={!lastSyncedFolder || syncing || openingFolder}
-            >
-              {openingFolder ? "Opening..." : "Open folder"}
-            </button>
-          </div>
-        </div>
-
-        <div className="projects-panel">
-          <div className="projects-header">
-            <div>
-              <h2>Projects</h2>
-              <p>{selectedSummary}</p>
-              <p className="refresh-meta">
-                {formatRefreshTime(lastRefreshedAt)}
-              </p>
-            </div>
-
-            <div className="button-group">
-              <button
-                type="button"
-                className="secondary-button"
-                disabled={syncing || projectsLoading}
-                onClick={refreshProjects}
-              >
-                {projectsLoading ? "Refreshing..." : "Refresh"}
-              </button>
-              <button
-                type="button"
-                className="secondary-button"
-                disabled={
-                  syncing ||
-                  projectsLoading ||
-                  checkingLocalRemovals ||
-                  !syncFolder ||
-                  !hasSelectedProjects ||
-                  projectSource !== "local-api"
-                }
-                onClick={checkLocalRemovals}
-              >
-                {checkingLocalRemovals ? "Checking..." : "Check local removals"}
-              </button>
-              <button
-                type="button"
-                className="secondary-button"
-                disabled={!canSync}
-                onClick={() => syncSelectedProjects()}
-              >
-                {syncing ? "Syncing..." : "Sync selected"}
-              </button>
-            </div>
-          </div>
-
-          {localRemovals.length > 0 && (
-            <div className="sync-report local-removals-report">
-              <span className="sync-report-dot" />
-              <div>
-                <p>
-                  {localRemovals.length} local removal
-                  {localRemovals.length === 1 ? "" : "s"} detected. Applying
-                  will remove these items from the Filmwave project only.
-                </p>
-                <div className="local-removal-list">
-                  {localRemovals.slice(0, 5).map((removal) => (
-                    <span key={`${removal.projectId}-${removal.id}`}>
-                      {removal.type === "folder" ? "Folder" : "File"}:{" "}
-                      {removal.path}
-                    </span>
-                  ))}
-                  {localRemovals.length > 5 && (
-                    <span>+{localRemovals.length - 5} more</span>
-                  )}
-                </div>
-                <div className="local-removal-actions">
-                  <button
-                    type="button"
-                    className="secondary-button"
-                    disabled={applyingLocalRemovals || syncing}
-                    onClick={applyLocalRemovals}
-                  >
-                    {applyingLocalRemovals
-                      ? "Applying..."
-                      : "Apply to Filmwave"}
-                  </button>
-                  <button
-                    type="button"
-                    className="secondary-button"
-                    disabled={applyingLocalRemovals || syncing}
-                    onClick={() => setLocalRemovals([])}
-                  >
-                    Ignore
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {syncProgress && (
-            <div className="progress-panel">
-              <div className="progress-header">
-                <span>{syncProgress.message}</span>
-                <span>
-                  {syncProgress.completedFiles}/{syncProgress.totalFiles} files
-                </span>
-              </div>
-              <div className="progress-track" aria-hidden="true">
-                <div
-                  className="progress-fill"
-                  style={{ width: `${syncProgressPercent}%` }}
-                />
-              </div>
-            </div>
-          )}
-
-          {lastSyncReport && (
-            <div className="sync-report">
-              <span className="sync-report-dot" />
-              <p>{lastSyncReport}</p>
-            </div>
-          )}
-
-          <div className="project-list">
-            {projectsLoading ? (
-              <div className="project-row is-loading">
-                <span className="project-check" aria-hidden="true" />
-                <span className="project-main">
-                  <span className="project-name">
-                    Loading Filmwave projects
-                  </span>
-                  <span className="project-description">
-                    Fetching your project file trees...
-                  </span>
-                </span>
-              </div>
-            ) : projects.length === 0 ? (
-              <div className="project-row is-loading">
-                <span className="project-check" aria-hidden="true" />
-                <span className="project-main">
-                  <span className="project-name">No projects found</span>
-                  <span className="project-description">
-                    Try switching sources or creating a project on Filmwave.
-                  </span>
-                </span>
-              </div>
-            ) : (
-              projects.map((project) => {
-                const selected = selectedProjectIds.includes(project.id);
-
-                return (
-                  <button
-                    key={project.id}
-                    type="button"
-                    className={`project-row ${selected ? "is-selected" : ""}`}
-                    onClick={() => toggleProject(project.id)}
-                  >
-                    <span className="project-check" aria-hidden="true">
-                      {selected ? "✓" : ""}
-                    </span>
-
-                    <span className="project-main">
-                      <span className="project-name">{project.name}</span>
-                      <span className="project-description">
-                        {project.description || "No description"}
-                      </span>
-                    </span>
-
-                    <span className="project-meta">
-                      <span>{project.fileCount} files</span>
-                      <span>{project.sizeLabel}</span>
-                    </span>
-                  </button>
-                );
-              })
-            )}
-          </div>
-        </div>
-
-        <div className="projects-panel">
-          <div className="projects-header">
-            <div>
-              <h2>Sync activity</h2>
-              <p>
-                Last {MAX_SYNC_ACTIVITY_LOG_ENTRIES} sync events, local
-                removals, and errors.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              className="secondary-button"
-              disabled={syncActivityLog.length === 0}
-              onClick={clearSyncActivityLog}
-            >
-              Clear log
-            </button>
-          </div>
-
-          <div className="project-list">
-            {syncActivityLog.length === 0 ? (
-              <div className="project-row is-loading">
-                <span className="project-check" aria-hidden="true" />
-                <span className="project-main">
-                  <span className="project-name">No sync activity yet</span>
-                  <span className="project-description">
-                    Manual syncs, auto-syncs, local removals, and errors will
-                    appear here.
-                  </span>
-                </span>
-              </div>
-            ) : (
-              syncActivityLog.map((entry) => (
-                <div key={entry.id} className="project-row is-loading">
-                  <span className="project-check" aria-hidden="true">
-                    {entry.status === "success"
-                      ? "✓"
-                      : entry.status === "error"
-                        ? "!"
-                        : "•"}
-                  </span>
-                  <span className="project-main">
-                    <span className="project-name">
-                      {entry.title} · {formatLogTime(entry.createdAt)}
-                    </span>
-                    <span className="project-description">{entry.detail}</span>
-                    {entry.projectNames.length > 0 && (
-                      <span className="project-description">
-                        Projects: {entry.projectNames.join(", ")}
-                      </span>
-                    )}
-                  </span>
-                  <span className="project-meta">
-                    <span>{entry.mode}</span>
-                    <span>{entry.status}</span>
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+        <SyncActivityBlock
+          maxEntries={MAX_SYNC_ACTIVITY_LOG_ENTRIES}
+          syncActivityLog={syncActivityLog}
+          onClearSyncActivityLog={clearSyncActivityLog}
+        />
       </section>
     </main>
   );
