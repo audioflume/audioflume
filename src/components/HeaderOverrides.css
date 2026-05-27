@@ -1,0 +1,58 @@
+.desktop-account-trigger {
+  background: transparent !important;
+  padding-left: 0;
+  padding-right: 2px;
+}
+
+.desktop-account-trigger:hover,
+.desktop-account-trigger.is-open {
+  background: transparent !important;
+  color: var(--text-primary);
+}
+
+.desktop-account-trigger-label {
+  height: 32px;
+  border-radius: 6px;
+  padding: 0 10px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.desktop-account-trigger:hover .desktop-account-trigger-label,
+.desktop-account-trigger.is-open .desktop-account-trigger-label {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+}
+
+.desktop-theme-toggle button.is-dark:hover,
+.desktop-theme-toggle button.is-light:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.desktop-theme-toggle button.is-dark.is-active {
+  background: #ffffff;
+  color: #111111;
+}
+
+.desktop-theme-toggle button.is-light.is-active {
+  background: #ffffff;
+  color: #111111;
+}
+
+html[data-theme="light"] .desktop-theme-toggle button.is-dark:hover,
+html[data-theme="light"] .desktop-theme-toggle button.is-light:hover {
+  background: rgba(0, 0, 0, 0.065);
+  color: #111111;
+}
+
+html[data-theme="light"] .desktop-theme-toggle button.is-dark.is-active {
+  background: #111111;
+  color: #ffffff;
+}
+
+html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
+  background: #ffffff;
+  color: #111111;
+}
