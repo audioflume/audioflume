@@ -1,11 +1,9 @@
 import type { ReactNode } from "react";
-import EditPointsIcon from "../icons/EditPointsIcon";
+import type { Project } from "../../lib/mockFilmwaveApi";
 import FolderIcon from "../icons/FolderIcon";
 import HeartIcon from "../icons/HeartIcon";
 import MusicIcon from "../icons/MusicIcon";
 import PlaylistIcon from "../icons/PlaylistIcon";
-import SongMatchIcon from "../icons/SongMatchIcon";
-import StoryMatchIcon from "../icons/StoryMatchIcon";
 import WaveformIcon from "../icons/WaveformIcon";
 import "./DesktopAppShell.css";
 
@@ -18,9 +16,12 @@ export type DesktopAppView =
   | "settings";
 
 type DesktopAppShellProps = {
+  activeProjectId: string | null;
   activeView: DesktopAppView;
   header: ReactNode;
   children: ReactNode;
+  projects: Project[];
+  onActiveProjectIdChange: (projectId: string | null) => void;
   onActiveViewChange: (view: DesktopAppView) => void;
 };
 
@@ -64,31 +65,29 @@ function SidebarNavButton({
 }
 
 export default function DesktopAppShell({
+  activeProjectId,
   activeView,
   header,
   children,
+  projects,
+  onActiveProjectIdChange,
   onActiveViewChange,
 }: DesktopAppShellProps) {
   const libraryLinks: SidebarNavItem[] = [
     { view: "music", label: "Music Library", icon: <MusicIcon size={16} /> },
     { view: "playlists", label: "My Playlists", icon: <PlaylistIcon size={16} /> },
-    { label: "Favorites", icon: <HeartIcon size={16} /> },
-    { label: "Sound FX", icon: <WaveformIcon size={16} /> },
-  ];
-
-  const aiLinks: SidebarNavItem[] = [
-    { label: "AI Song Match", icon: <SongMatchIcon size={16} /> },
-    { label: "Edit Points", icon: <EditPointsIcon size={16} /> },
-    { label: "Story Match", icon: <StoryMatchIcon size={16} /> },
-  ];
-
-  const projectLinks: SidebarNavItem[] = [
     {
       view: "projects",
       label: "Projects",
       icon: <FolderIcon size={16} />,
-      active: activeView === "projects",
+      active: activeView === "projects" && !activeProjectId,
+      onClick: () => {
+        onActiveProjectIdChange(null);
+        onActiveViewChange("projects");
+      },
     },
+    { label: "Favorites", icon: <HeartIcon size={16} /> },
+    { label: "Sound FX", icon: <WaveformIcon size={16} /> },
   ];
 
   return (
@@ -111,20 +110,6 @@ export default function DesktopAppShell({
             </nav>
           </section>
 
-          <section className="desktop-sidebar-section">
-            <h2 className="desktop-sidebar-heading">AI Tools</h2>
-            <nav className="desktop-sidebar-nav" aria-label="AI tools navigation">
-              {aiLinks.map((item) => (
-                <SidebarNavButton
-                  key={item.label}
-                  item={item}
-                  activeView={activeView}
-                  onActiveViewChange={onActiveViewChange}
-                />
-              ))}
-            </nav>
-          </section>
-
           <section className="desktop-sidebar-section is-projects-section">
             <div className="desktop-sidebar-projects-head">
               <h2 className="desktop-sidebar-heading">Projects</h2>
@@ -137,14 +122,26 @@ export default function DesktopAppShell({
               </button>
             </div>
             <nav className="desktop-sidebar-nav" aria-label="Projects navigation">
-              {projectLinks.map((item) => (
-                <SidebarNavButton
-                  key={item.label}
-                  item={item}
-                  activeView={activeView}
-                  onActiveViewChange={onActiveViewChange}
-                />
-              ))}
+              {projects.length > 0 ? (
+                projects.map((project) => (
+                  <SidebarNavButton
+                    key={project.id}
+                    item={{
+                      label: project.name,
+                      icon: <FolderIcon size={16} />,
+                      active: activeView === "projects" && activeProjectId === project.id,
+                      onClick: () => {
+                        onActiveProjectIdChange(project.id);
+                        onActiveViewChange("projects");
+                      },
+                    }}
+                    activeView={activeView}
+                    onActiveViewChange={onActiveViewChange}
+                  />
+                ))
+              ) : (
+                <div className="desktop-sidebar-empty-projects">No projects</div>
+              )}
             </nav>
           </section>
         </div>
