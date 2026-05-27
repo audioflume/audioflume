@@ -47,7 +47,7 @@ export default function Header({
           className="desktop-header-logo-button"
           aria-label="Filmwave Desktop home"
         >
-          <FilmwaveLogoIcon className="desktop-header-logo-mark" width={132} height={26} />
+          <FilmwaveLogoIcon className="desktop-header-logo-mark" width={115} height={22} />
         </button>
 
         <div className="desktop-header-actions">
