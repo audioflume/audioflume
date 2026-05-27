@@ -47,6 +47,16 @@ export type DesktopLocalChanges = {
     projectId: string;
     path: string;
   }>;
+  folderMoves: Array<{
+    projectId: string;
+    id: string;
+    path: string;
+  }>;
+  fileCreates: Array<{
+    projectId: string;
+    path: string;
+    sizeBytes?: number;
+  }>;
   fileMoves: Array<{
     projectId: string;
     id: string;
@@ -65,6 +75,8 @@ export type DesktopLocalChanges = {
 
 export type DesktopLocalChangesResult = {
   createdFolderCount: number;
+  movedFolderCount: number;
+  createdFileCount: number;
   movedFileCount: number;
   removedAssetCount: number;
   removedFolderCount: number;
@@ -442,6 +454,8 @@ export async function applyDesktopLocalChanges({
 
   return {
     createdFolderCount: Number(data.createdFolderCount || 0),
+    movedFolderCount: Number(data.movedFolderCount || 0),
+    createdFileCount: Number(data.createdFileCount || 0),
     movedFileCount: Number(data.movedFileCount || 0),
     removedAssetCount: Number(data.removedAssetCount || 0),
     removedFolderCount: Number(data.removedFolderCount || 0),
