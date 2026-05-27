@@ -38,11 +38,22 @@ body,
   min-width: 600px;
   min-height: 100vh;
   margin: 0;
+  background: var(--bg-primary);
+}
+
+html {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
 }
 
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
+  overscroll-behavior-y: contain;
+}
+
+#root {
+  isolation: isolate;
 }
 
 button,
