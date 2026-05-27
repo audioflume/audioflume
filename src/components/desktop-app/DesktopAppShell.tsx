@@ -38,6 +38,14 @@ type SidebarTooltip = {
   top: number;
 } | null;
 
+function PlusIcon() {
+  return (
+    <span className="desktop-sidebar-plus-icon" aria-hidden="true">
+      +
+    </span>
+  );
+}
+
 function CollapseIcon({ collapsed }: { collapsed: boolean }) {
   return (
     <svg
@@ -55,10 +63,7 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
 
 function SidebarTooltipEl({ label, top }: { label: string; top: number }) {
   return (
-    <div
-      className="desktop-sidebar-tooltip"
-      style={{ top }}
-    >
+    <div className="desktop-sidebar-tooltip" style={{ top }}>
       <div className="desktop-sidebar-tooltip-border">
         <div className="desktop-sidebar-tooltip-inner">{label}</div>
       </div>
@@ -142,6 +147,25 @@ export default function DesktopAppShell({
     { label: "Sound FX", icon: <WaveformIcon size={16} /> },
   ];
 
+  const projectLinks: SidebarNavItem[] = [
+    {
+      label: "New Project",
+      icon: <PlusIcon />,
+      onClick: () => {
+        // Create-project flow will be wired up when the desktop project create API is added.
+      },
+    },
+    ...projects.map((project) => ({
+      label: project.name,
+      icon: <FolderIcon size={16} />,
+      active: activeView === "projects" && activeProjectId === project.id,
+      onClick: () => {
+        onActiveProjectIdChange(project.id);
+        onActiveViewChange("projects");
+      },
+    })),
+  ];
+
   return (
     <div className={`desktop-app-shell${collapsed ? " is-sidebar-collapsed" : ""}`}>
       {header}
@@ -181,48 +205,20 @@ export default function DesktopAppShell({
           <section className="desktop-sidebar-section is-projects-section">
             <div className="desktop-sidebar-projects-head">
               <h2 className="desktop-sidebar-heading">Projects</h2>
-              <button
-                type="button"
-                className="desktop-sidebar-add-button"
-                aria-label="Create new project"
-                onMouseEnter={(event) => {
-                  if (!collapsed) return;
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  setTooltip({ label: "New Project", top: rect.top + rect.height / 2 });
-                }}
-                onMouseLeave={() => setTooltip(null)}
-                onFocus={(event) => {
-                  if (!collapsed) return;
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  setTooltip({ label: "New Project", top: rect.top + rect.height / 2 });
-                }}
-                onBlur={() => setTooltip(null)}
-              >
-                +
-              </button>
             </div>
             <nav className="desktop-sidebar-nav" aria-label="Projects navigation">
-              {projects.length > 0 ? (
-                projects.map((project) => (
-                  <SidebarNavButton
-                    key={project.id}
-                    collapsed={collapsed}
-                    item={{
-                      label: project.name,
-                      icon: <FolderIcon size={16} />,
-                      active: activeView === "projects" && activeProjectId === project.id,
-                      onClick: () => {
-                        onActiveProjectIdChange(project.id);
-                        onActiveViewChange("projects");
-                      },
-                    }}
-                    activeView={activeView}
-                    onActiveViewChange={onActiveViewChange}
-                    onTooltipChange={setTooltip}
-                  />
-                ))
-              ) : (
-                <div className="desktop-sidebar-empty-projects">No projects</div>
+              {projectLinks.map((item) => (
+                <SidebarNavButton
+                  key={item.label}
+                  collapsed={collapsed}
+                  item={item}
+                  activeView={activeView}
+                  onActiveViewChange={onActiveViewChange}
+                  onTooltipChange={setTooltip}
+                />
+              ))}
+              {projects.length === 0 && (
+                <div className="desktop-sidebar-empty-projects">No projects yet</div>
               )}
             </nav>
           </section>
