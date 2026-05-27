@@ -1,5 +1,3 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import ChevronDownIcon from "./icons/ChevronDownIcon";
@@ -7,169 +5,151 @@ import DarkMode from "./icons/DarkMode";
 import LightMode from "./icons/LightMode";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
 
-function ArrowIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M9 6L15 12L9 18"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+type ThemeMode = "dark" | "light";
+
+type UserMenuProps = {
+  account: DesktopAccount | null;
+  accountLoading: boolean;
+  isSignedIn: boolean;
+  onOpenSignIn: () => void | Promise<void>;
+  onSignOut: () => void | Promise<void>;
+  theme: ThemeMode;
+  onThemeChange: (theme: ThemeMode) => void;
+};
+
+function getAccountInitial(account: DesktopAccount | null) {
+  const value = account?.name || account?.email || "F";
+  return value.trim().charAt(0).toUpperCase() || "F";
 }
 
-function MenuLink({
-  href,
-  label,
-  helper,
-  onClose,
+function ThemeButton({
+  active,
+  children,
+  className,
+  onClick,
 }: {
-  href: string;
-  label: string;
-  helper: string;
-  onClose?: () => void;
+  active: boolean;
+  children: ReactNode;
+  className: string;
+  onClick: () => void;
 }) {
   return (
-    <Link
-      href={href}
-      onClick={onClose}
-      className="group flex h-11 items-center justify-between gap-3 rounded-lg px-3 text-left transition hover:bg-[var(--bg-hover-strong)]"
+    <button
+      type="button"
+      onClick={onClick}
+      className={`${className} ${active ? "is-active" : ""}`}
+      aria-pressed={active}
     >
-      <div className="min-w-0">
-        <div className="text-xs font-medium text-[var(--text-primary)]">
-          {label}
-        </div>
-
-        <div className="mt-0.5 truncate text-[11px] text-[var(--text-muted)]">
-          {helper}
-        </div>
-      </div>
-
-      <div className={`${iconButtonClass} h-6 w-6 flex-shrink-0`}>
-        <ArrowIcon />
-      </div>
-    </Link>
+      {children}
+    </button>
   );
 }
 
-export default function UserMenu({ onClose }: { onClose?: () => void }) {
-  const { signOut } = useClerk();
-  const { user } = useUser();
-  const { theme, setTheme } = useTheme();
+export default function UserMenu({
+  account,
+  accountLoading,
+  isSignedIn,
+  onOpenSignIn,
+  onSignOut,
+  theme,
+  onThemeChange,
+}: UserMenuProps) {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  const isDark = theme === "dark";
-  const isLight = theme === "light";
-  const displayName =
-    user?.fullName || user?.primaryEmailAddress?.emailAddress || "Account";
+  const accountName = account?.name ?? (accountLoading ? "Loading account..." : "Filmwave user");
+  const accountEmail = account?.email ?? (isSignedIn ? "Connected to Filmwave" : "Not connected");
+
+  useEffect(() => {
+    function handlePointerDown(event: PointerEvent) {
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    if (open) window.addEventListener("pointerdown", handlePointerDown);
+    return () => window.removeEventListener("pointerdown", handlePointerDown);
+  }, [open]);
 
   return (
-    <div className="w-[300px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]">
-      <div className="border-b border-[var(--border)] px-3 py-3">
-        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-          {displayName}
+    <div ref={menuRef} className="desktop-user-menu-root">
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        className={`desktop-account-trigger ${open ? "is-open" : ""}`}
+        aria-label="Open user menu"
+        aria-expanded={open}
+      >
+        <span className="desktop-account-trigger-label">
+          <span className="desktop-account-name">{isSignedIn ? accountName : "Account"}</span>
+          <ChevronDownIcon className={`desktop-header-chevron ${open ? "is-open" : ""}`} size={13} />
+        </span>
+
+        <span className="desktop-account-avatar">
+          {account?.imageUrl ? <img src={account.imageUrl} alt="" /> : getAccountInitial(account)}
+        </span>
+      </button>
+
+      {open && (
+        <div className="desktop-user-menu-wrap">
+          <div className="desktop-user-menu">
+            <div className="desktop-user-menu-head">
+              <div className="desktop-user-menu-name">{isSignedIn ? accountName : "Filmwave Desktop"}</div>
+              <div className="desktop-user-menu-plan">{accountEmail}</div>
+            </div>
+
+            <div className="desktop-user-menu-actions">
+              <button
+                type="button"
+                className="desktop-user-menu-action"
+                onClick={() => {
+                  setOpen(false);
+                  void onOpenSignIn();
+                }}
+              >
+                <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
+                <span>{isSignedIn ? "Refresh desktop access" : "Connect your Filmwave account"}</span>
+              </button>
+
+              {isSignedIn && (
+                <button
+                  type="button"
+                  className="desktop-user-menu-action"
+                  onClick={() => {
+                    setOpen(false);
+                    void onSignOut();
+                  }}
+                >
+                  <span>Sign out</span>
+                  <span>Disconnect this desktop app</span>
+                </button>
+              )}
+            </div>
+
+            <div className="desktop-theme-menu">
+              <div className="desktop-theme-toggle" aria-label="Theme setting">
+                <ThemeButton
+                  active={theme === "dark"}
+                  className="is-dark"
+                  onClick={() => onThemeChange("dark")}
+                >
+                  <DarkMode size={12} />
+                  <span>Dark</span>
+                </ThemeButton>
+
+                <ThemeButton
+                  active={theme === "light"}
+                  className="is-light"
+                  onClick={() => onThemeChange("light")}
+                >
+                  <LightMode size={13} />
+                  <span>Light</span>
+                </ThemeButton>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
-          Lifetime Membership
-        </div>
-      </div>
-
-      <div className="grid gap-1 p-1.5">
-        <MenuLink
-          href="/account/profile"
-          label="Profile"
-          helper="Personal info and account details"
-          onClose={onClose}
-        />
-
-        <MenuLink
-          href="/account/settings"
-          label="Settings"
-          helper="Site preferences and display"
-          onClose={onClose}
-        />
-
-        <MenuLink
-          href="/account/membership"
-          label="Membership"
-          helper="Plan, license, and usage"
-          onClose={onClose}
-        />
-
-        <MenuLink
-          href="/account/payment"
-          label="Payment"
-          helper="Billing and invoices"
-          onClose={onClose}
-        />
-
-        <MenuLink
-          href="/account/security"
-          label="Security"
-          helper="Password and account access"
-          onClose={onClose}
-        />
-
-        <MenuLink
-          href="/account/support"
-          label="Support & FAQ"
-          helper="Help center and contact options"
-          onClose={onClose}
-        />
-
-        <button
-          type="button"
-          onClick={() => signOut()}
-          className="flex h-9 cursor-pointer items-center justify-between rounded-lg px-3 text-left text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-        >
-          <span>Log Out</span>
-
-          <span className="text-[11px] text-[var(--text-muted)]">Exit</span>
-        </button>
-      </div>
-
-      <div className="border-t border-[var(--border)] p-1.5">
-        <div className="grid grid-cols-2 gap-1.5 rounded-lg bg-[var(--bg-primary)] p-1">
-          <button
-            type="button"
-            onClick={() => theme !== "dark" && setTheme("dark")}
-            className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md text-[11px] font-medium transition ${
-              isDark
-                ? "bg-[var(--accent-2)] text-[var(--accent-2-contrast)]"
-                : "text-[var(--text-secondary)] hover:bg-[var(--accent-2)] hover:text-[var(--accent-2-contrast)]"
-            }`}
-            aria-label="Dark mode"
-            aria-pressed={isDark}
-          >
-            <DarkMode />
-            <span>Dark</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => theme !== "light" && setTheme("light")}
-            className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md text-[11px] font-medium transition ${
-              isLight
-                ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
-                : "text-[var(--text-secondary)] hover:bg-[var(--accent)] hover:text-[var(--accent-contrast)]"
-            }`}
-            aria-label="Light mode"
-            aria-pressed={isLight}
-          >
-            <LightMode />
-            <span>Light</span>
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
