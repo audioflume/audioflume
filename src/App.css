@@ -35,7 +35,7 @@
 html,
 body,
 #root {
-  min-width: 320px;
+  min-width: 600px;
   min-height: 100vh;
   margin: 0;
 }
@@ -79,574 +79,164 @@ button {
   width: 100%;
   min-height: 24px;
   align-items: center;
-  margin: 0 0 32px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--divider);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1;
-  text-transform: none;
-}
-
-.eyebrow span {
   color: var(--text-muted);
-}
-
-.eyebrow strong {
-  color: var(--text-primary);
-  font: inherit;
-  font-weight: 500;
-}
-
-h2,
-h3,
-p {
-  margin: 0;
-}
-
-h2 {
-  color: var(--text-primary);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-}
-
-h3 {
-  margin-top: 12px;
-  color: var(--text-primary);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
-
-p {
-  color: var(--text-secondary);
-  font-size: 13px;
-  line-height: 1.42;
-}
-
-.status-row {
-  min-height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  border-top-left-radius: 22px;
-  border-top-right-radius: 22px;
-  background: var(--bg-panel);
-  padding: 0 20px;
-}
-
-.status-row-label {
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1;
-}
-
-.status-pill {
-  display: inline-flex;
-  width: fit-content;
-  min-height: 32px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 1px solid var(--divider);
-  border-radius: 999px;
-  background: var(--bg-panel-2);
-  color: var(--text-secondary);
-  padding: 0 13px;
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sync-card h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
   line-height: 1;
 }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--warning);
-}
-
-.status-pill.is-syncing .status-dot {
-  background: var(--success);
-}
-
-.section-block,
-.projects-panel {
-  border: 0;
-  background: var(--bg-panel);
-  box-shadow: none;
+.sync-card p {
+  margin: 0;
 }
 
 .section-block {
   position: relative;
-  min-height: 78px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
+  border-bottom: 1px solid var(--divider);
+  padding: 26px 0;
+}
+
+.section-block:first-of-type {
+  padding-top: 0;
+}
+
+.section-block:last-child {
+  border-bottom: 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 22px;
-  padding: 18px 20px;
-  border-radius: 0;
+}
+
+.section-title-group {
+  min-width: 0;
+}
+
+.section-title-group h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.section-title-group p {
+  margin-top: 5px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.status-row {
+  position: relative;
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid var(--divider);
+  padding: 0 0 18px;
+}
+
+.status-row::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: var(--divider);
+}
+
+.status-label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.status-dot.is-loading {
+  animation: pulse 1s ease-in-out infinite;
+  background: var(--warning);
+}
+
+.status-pill {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--bg-row);
+  color: var(--text-secondary);
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.project-source-block {
+  order: 3;
 }
 
 .account-block {
-  align-items: start;
+  order: 1;
+}
+
+.status-row {
+  order: 2;
+}
+
+.api-endpoint-block {
+  order: 4;
+}
+
+.realtime-sync-block {
+  order: 5;
+}
+
+.fallback-check-block {
+  order: 6;
 }
 
 .sync-folder-block {
-  border-bottom-left-radius: 22px;
-  border-bottom-right-radius: 22px;
+  order: 7;
 }
 
-.section-block + .section-block {
-  margin-top: 0;
+.projects-block {
+  order: 8;
 }
 
-.section-block::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 1px;
-  background: var(--divider);
+.sync-activity-block {
+  order: 9;
 }
 
-.section-block > div:first-child {
-  min-width: 0;
-}
-
-.section-block p,
-.projects-header p {
-  margin-top: 4px;
-}
-
-.folder-path {
-  max-width: 620px;
-  color: var(--text-muted);
-  font-family: "SF Mono", Consolas, monospace;
-  font-size: 12px;
-  line-height: 1.35;
-  word-break: break-all;
-}
-
-.account-profile {
-  display: inline-flex;
-  max-width: 100%;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  border-radius: 999px;
-  background: var(--bg-control);
-  padding: 6px 15px 6px 6px;
-}
-
-.account-profile-main {
-  min-width: 0;
-  display: grid;
-  gap: 2px;
-}
-
-.account-avatar {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: var(--bg-panel-2);
-  display: grid;
-  place-items: center;
-  color: var(--text-primary);
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.account-avatar img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.account-name {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.12;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.account-email {
-  max-width: 380px;
-  overflow: hidden;
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.15;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.token-form,
-.settings-form,
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.token-form {
-  margin-top: 14px;
-}
-
-.token-form input,
-.settings-form input {
-  min-height: 36px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--bg-control);
-  color: var(--text-primary);
-  padding: 0 15px;
-  outline: none;
-}
-
-.token-form input {
-  width: min(360px, 100%);
-}
-
-.settings-form input {
-  width: 170px;
-}
-
-.token-form input::placeholder,
-.settings-form input::placeholder {
-  color: var(--text-muted);
-}
-
-.primary-button,
-.secondary-button {
-  min-height: 36px;
-  cursor: pointer;
-  border: 0;
-  border-radius: 999px;
-  padding: 0 17px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
-}
-
-.primary-button {
-  background: var(--text-primary);
-  color: var(--bg-primary);
-}
-
-.secondary-button {
-  background: var(--bg-control);
-  color: var(--text-secondary);
-}
-
-.primary-button:disabled,
-.secondary-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.42;
-}
-
-.secondary-button:hover:not(:disabled) {
-  background: var(--bg-control-hover);
-  color: var(--text-primary);
-}
-
-.source-toggle {
-  position: relative;
-  display: inline-flex;
-  min-height: 36px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: var(--bg-control);
-  padding: 4px;
-}
-
-.source-toggle button {
-  position: relative;
-  z-index: 1;
-  min-height: 28px;
-  cursor: pointer;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text-muted);
-  padding: 0 13px;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.source-toggle button.is-active {
-  background: var(--bg-panel-2);
-  color: var(--text-primary);
-}
-
-.source-toggle[aria-label="Realtime sync setting"] {
-  width: 62px;
-}
-
-.source-toggle[aria-label="Realtime sync setting"]::after {
-  content: "";
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  background: var(--warning);
-  transition: transform 0.18s ease, background 0.18s ease;
-}
-
-.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active)::after {
-  background: var(--success);
-  transform: translateX(26px);
-}
-
-.source-toggle[aria-label="Realtime sync setting"] button {
-  width: 28px;
-  min-height: 28px;
-  overflow: hidden;
-  padding: 0;
-  color: transparent;
-}
-
-.projects-panel {
-  margin-top: 24px;
-  border-radius: 22px;
-  padding: 18px;
-}
-
-.projects-panel + .projects-panel {
-  margin-top: 12px;
-}
-
-.projects-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.refresh-meta {
-  margin-top: 6px;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.project-list {
-  margin-top: 14px;
-  overflow: hidden;
-  border-radius: 16px;
-  background: var(--bg-panel-2);
-}
-
-.project-row {
-  position: relative;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  padding: 14px;
-  text-align: left;
-}
-
-.project-row + .project-row::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 1px;
-  background: var(--divider);
-}
-
-.project-row:hover,
-.project-row.is-selected {
-  background: var(--bg-row-hover);
-}
-
-.project-check {
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
-  background: var(--bg-control);
-  color: var(--text-muted);
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.project-row.is-selected .project-check {
-  background: var(--accent);
-  color: #111111;
-}
-
-.project-main {
-  min-width: 0;
-  display: grid;
-  gap: 4px;
-}
-
-.project-name {
-  overflow: hidden;
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.project-description,
-.project-meta {
-  overflow: hidden;
-  color: var(--text-muted);
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.project-row.is-selected .project-description,
-.project-row.is-selected .project-meta {
-  color: var(--text-secondary);
-}
-
-.progress-panel,
-.sync-report {
-  margin-top: 14px;
-  border-radius: 16px;
-  background: var(--bg-panel-2);
-  padding: 13px 14px;
-}
-
-.progress-panel p,
-.sync-report p {
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-.progress-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-.progress-track {
-  height: 6px;
-  margin-top: 10px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: var(--bg-control);
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: inherit;
-  background: var(--accent);
-  transition: width 0.18s ease;
-}
-
-.sync-report {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.sync-report-dot {
-  width: 7px;
-  height: 7px;
-  min-width: 7px;
-  margin-top: 5px;
-  border-radius: 999px;
-  background: var(--accent);
-}
-
-.local-removals-report .sync-report-dot {
-  background: var(--warning);
-}
-
-.local-removal-list {
-  display: grid;
-  gap: 4px;
-  margin-top: 10px;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.local-removal-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-@media (max-width: 760px) {
-  .status-row {
-    min-height: 58px;
-  }
-}
-
-@media (max-width: 550px) {
-  .status-row,
-  .section-block,
-  .projects-header {
-    grid-template-columns: 1fr;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
   }
 
-  .status-row {
-    padding: 14px 20px;
-  }
-
-  .token-form,
-  .settings-form,
-  .button-group {
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .token-form input,
-  .settings-form input,
-  .primary-button,
-  .secondary-button,
-  .source-toggle {
-    width: 100%;
-  }
-
-  .source-toggle button {
-    flex: 1;
-  }
-
-  .source-toggle[aria-label="Realtime sync setting"] {
-    width: 62px;
-  }
-
-  .project-row {
-    grid-template-columns: 26px minmax(0, 1fr);
-  }
-
-  .project-meta {
-    grid-column: 2;
+  50% {
+    opacity: 0.45;
   }
 }
