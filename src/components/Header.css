@@ -282,23 +282,78 @@ html[data-theme="light"] .desktop-user-menu {
 }
 
 @media (max-width: 760px) {
+  .app-shell {
+    padding: 90px 38px 42px;
+  }
+
   .desktop-header-inner {
-    padding: 0 14px;
+    padding: 0 24px;
   }
 
   .desktop-nav-link {
-    display: none;
+    display: flex;
   }
 
   .desktop-account-name {
-    display: none;
+    display: inline;
   }
 
   .desktop-user-menu-wrap {
-    right: -2px;
+    right: 0;
   }
 
   .desktop-user-menu {
-    width: min(300px, calc(100vw - 28px));
+    width: 300px;
+  }
+
+  .header-row {
+    padding: 36px 0 30px;
+  }
+
+  h1 {
+    font-size: clamp(42px, 5vw, 58px);
+  }
+
+  .section-block {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .projects-header {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .token-form,
+  .settings-form,
+  .button-group {
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .token-form input,
+  .settings-form input {
+    width: min(390px, 100%);
+  }
+
+  .primary-button,
+  .secondary-button,
+  .source-toggle {
+    width: auto;
+  }
+
+  .source-toggle button {
+    flex: 0 1 auto;
+  }
+
+  .project-row {
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+  }
+
+  .project-meta {
+    grid-column: auto;
   }
 }
