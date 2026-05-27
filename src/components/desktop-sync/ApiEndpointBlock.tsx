@@ -1,0 +1,48 @@
+type ApiEndpointBlockProps = {
+  apiBaseUrlDraft: string;
+  normalizedApiBaseUrl: string;
+  onApiBaseUrlDraftChange: (value: string) => void;
+  onResetApiBaseUrl: () => void;
+  onSaveApiBaseUrl: () => void;
+};
+
+export default function ApiEndpointBlock({
+  apiBaseUrlDraft,
+  normalizedApiBaseUrl,
+  onApiBaseUrlDraftChange,
+  onResetApiBaseUrl,
+  onSaveApiBaseUrl,
+}: ApiEndpointBlockProps) {
+  return (
+    <div className="section-block settings-block">
+      <div>
+        <h2>API endpoint</h2>
+        <p className="folder-path">{normalizedApiBaseUrl}</p>
+      </div>
+
+      <div className="settings-form">
+        <input
+          type="url"
+          value={apiBaseUrlDraft}
+          onChange={(event) => onApiBaseUrlDraftChange(event.target.value)}
+          placeholder="https://your-filmwave-domain.com"
+          autoComplete="off"
+        />
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={onSaveApiBaseUrl}
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={onResetApiBaseUrl}
+        >
+          Local
+        </button>
+      </div>
+    </div>
+  );
+}
