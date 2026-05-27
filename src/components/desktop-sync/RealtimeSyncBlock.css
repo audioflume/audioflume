@@ -1,0 +1,52 @@
+.realtime-toggle {
+  width: 62px;
+  min-width: 62px;
+  height: 36px;
+  min-height: 36px;
+  padding: 4px;
+  background: var(--bg-control);
+  transition: background 0.18s ease;
+}
+
+.realtime-toggle.is-on {
+  background: var(--success);
+}
+
+.realtime-toggle::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.realtime-toggle.is-on::after {
+  transform: translateX(26px);
+}
+
+.realtime-toggle button,
+.realtime-toggle button.is-active {
+  width: 28px;
+  min-height: 28px;
+  overflow: hidden;
+  padding: 0;
+  background: transparent;
+  color: transparent !important;
+}
+
+html[data-theme="light"] .realtime-toggle {
+  background: rgba(0, 0, 0, 0.09);
+}
+
+html[data-theme="light"] .realtime-toggle.is-on {
+  background: var(--success);
+}
+
+html[data-theme="light"] .realtime-toggle::after {
+  background: #ffffff;
+}
