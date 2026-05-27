@@ -16,6 +16,16 @@ type DiskNode = {
   sizeBytes?: number;
 };
 
+type FolderWithSafePath = ProjectFileNode & {
+  type: "folder";
+  safePath: string;
+};
+
+type FileWithSafePath = ProjectFileNode & {
+  type: "file";
+  safePath: string;
+};
+
 export type DetectedLocalChanges = {
   changes: DesktopLocalChanges;
   affectedProjectIds: string[];
@@ -35,7 +45,14 @@ function getParentPath(path: string) {
   return parts.join("/");
 }
 
-function isPathInsidePath(path: string, possibleParent: string) {
+function replacePathPrefix(path: string, fromPrefix: string, toPrefix: string) {
+  if (path === fromPrefix) return toPrefix;
+  if (!path.startsWith(`${fromPrefix}/`)) return path;
+
+  return `${toPrefix}/${path.slice(fromPrefix.length + 1)}`;
+}
+
+function pathIsSameOrDescendant(path: string, possibleParent: string) {
   return path === possibleParent || path.startsWith(`${possibleParent}/`);
 }
 
@@ -45,10 +62,6 @@ function hasRemovedAncestor(path: string, removedFolderPaths: Set<string>) {
   }
 
   return false;
-}
-
-function getNodeUpdatedAt(node: ProjectFileNode) {
-  return node.updatedAt ?? "";
 }
 
 async function readProjectDiskTree(rootPath: string) {
@@ -116,6 +129,8 @@ function localFileMatchesPreviousNode(localFile: DiskNode, previousFile: Project
 function createEmptyChanges(): DesktopLocalChanges {
   return {
     folderCreates: [],
+    folderMoves: [],
+    fileCreates: [],
     fileMoves: [],
     fileRemovals: [],
     folderRemovals: [],
@@ -126,11 +141,70 @@ function createEmptyChanges(): DesktopLocalChanges {
 export function hasDesktopLocalChanges(changes: DesktopLocalChanges) {
   return (
     changes.folderCreates.length > 0 ||
+    changes.folderMoves.length > 0 ||
+    changes.fileCreates.length > 0 ||
     changes.fileMoves.length > 0 ||
     changes.fileRemovals.length > 0 ||
     changes.folderRemovals.length > 0 ||
     changes.ignoredFileAddCount > 0
   );
+}
+
+function countFolderFiles(path: string, files: DiskNode[]) {
+  return files.filter((file) => file.type === "file" && file.path.startsWith(`${path}/`)).length;
+}
+
+function countFolderChildren(path: string, folders: DiskNode[]) {
+  return folders.filter((folder) => folder.type === "folder" && folder.path.startsWith(`${path}/`)).length;
+}
+
+function detectFolderMoves({
+  diskFiles,
+  diskFolders,
+  previousFolders,
+  previousFolderPaths,
+}: {
+  diskFiles: DiskNode[];
+  diskFolders: DiskNode[];
+  previousFolders: FolderWithSafePath[];
+  previousFolderPaths: Set<string>;
+}) {
+  const diskFolderPaths = new Set(diskFolders.map((folder) => folder.path));
+  const missingFolders = previousFolders.filter((folder) => !diskFolderPaths.has(folder.safePath));
+  const newFolders = diskFolders.filter((folder) => !previousFolderPaths.has(folder.path));
+  const usedNewFolderPaths = new Set<string>();
+  const movedFolderMap = new Map<string, string>();
+
+  for (const previousFolder of missingFolders.sort((a, b) => a.safePath.length - b.safePath.length)) {
+    if ([...movedFolderMap.keys()].some((oldPath) => previousFolder.safePath.startsWith(`${oldPath}/`))) {
+      continue;
+    }
+
+    const oldName = getNameFromPath(previousFolder.safePath);
+    const oldFileCount = countFolderFiles(previousFolder.safePath, diskFiles);
+    const oldChildFolderCount = previousFolders.filter((folder) => folder.safePath.startsWith(`${previousFolder.safePath}/`)).length;
+
+    const candidates = newFolders.filter((folder) => {
+      if (usedNewFolderPaths.has(folder.path)) return false;
+      if ([...usedNewFolderPaths].some((path) => folder.path.startsWith(`${path}/`))) return false;
+
+      const newName = getNameFromPath(folder.path);
+      const newFileCount = countFolderFiles(folder.path, diskFiles);
+      const newChildFolderCount = countFolderChildren(folder.path, diskFolders);
+      const sameName = newName === oldName;
+      const sameShape = newFileCount === oldFileCount && newChildFolderCount === oldChildFolderCount;
+
+      return sameName || sameShape;
+    });
+
+    if (candidates.length !== 1) continue;
+
+    const candidate = candidates[0];
+    movedFolderMap.set(previousFolder.safePath, candidate.path);
+    usedNewFolderPaths.add(candidate.path);
+  }
+
+  return movedFolderMap;
 }
 
 export async function detectDesktopLocalChanges({
@@ -153,29 +227,52 @@ export async function detectDesktopLocalChanges({
       continue;
     }
 
-    const diskFolderPaths = new Set(
-      diskNodes.filter((node) => node.type === "folder").map((node) => node.path),
-    );
+    const diskFolders = diskNodes.filter((node) => node.type === "folder");
+    const diskFolderPaths = new Set(diskFolders.map((node) => node.path));
     const diskFiles = diskNodes.filter((node) => node.type === "file");
     const diskFilePathMap = new Map(diskFiles.map((node) => [node.path, node]));
 
     const previousFolders = project.files
-      .filter((node) => node.type === "folder")
+      .filter((node): node is ProjectFileNode & { type: "folder" } => node.type === "folder")
       .map((node) => ({
         ...node,
         safePath: normalizeRelativePath(node.path),
       }));
     const previousFiles = project.files
-      .filter((node) => node.type === "file")
+      .filter((node): node is ProjectFileNode & { type: "file" } => node.type === "file")
       .map((node) => ({
         ...node,
         safePath: normalizeRelativePath(node.path),
       }));
     const previousFolderPaths = new Set(previousFolders.map((node) => node.safePath));
     const previousFilePaths = new Set(previousFiles.map((node) => node.safePath));
+    const movedFolderMap = detectFolderMoves({
+      diskFiles,
+      diskFolders,
+      previousFolders,
+      previousFolderPaths,
+    });
+    const movedOldFolderPaths = new Set(movedFolderMap.keys());
+    const movedNewFolderPaths = new Set(movedFolderMap.values());
 
-    for (const folder of diskNodes.filter((node) => node.type === "folder")) {
-      if (!previousFolderPaths.has(folder.path)) {
+    for (const [fromPath, toPath] of movedFolderMap) {
+      const folder = previousFolders.find((item) => item.safePath === fromPath);
+      if (!folder) continue;
+
+      changes.folderMoves.push({
+        projectId: project.id,
+        id: folder.id,
+        path: toPath,
+      });
+      affectedProjectIds.add(project.id);
+    }
+
+    for (const folder of diskFolders) {
+      const belongsToMovedFolder = [...movedNewFolderPaths].some((path) =>
+        pathIsSameOrDescendant(folder.path, path),
+      );
+
+      if (!previousFolderPaths.has(folder.path) && !belongsToMovedFolder) {
         changes.folderCreates.push({
           projectId: project.id,
           path: folder.path,
@@ -192,6 +289,7 @@ export async function detectDesktopLocalChanges({
     for (const folder of sortedPreviousFolders) {
       if (hasRemovedAncestor(folder.safePath, removedFolderPaths)) continue;
       if (diskFolderPaths.has(folder.safePath)) continue;
+      if ([...movedOldFolderPaths].some((path) => pathIsSameOrDescendant(folder.safePath, path))) continue;
 
       removedFolderPaths.add(folder.safePath);
       changes.folderRemovals.push({
@@ -205,11 +303,25 @@ export async function detectDesktopLocalChanges({
 
     for (const previousFile of previousFiles) {
       if (hasRemovedAncestor(previousFile.safePath, removedFolderPaths)) continue;
+
+      const folderMoveEntry = [...movedFolderMap.entries()].find(([oldFolderPath]) =>
+        previousFile.safePath.startsWith(`${oldFolderPath}/`),
+      );
+      const expectedMovedPath = folderMoveEntry
+        ? replacePathPrefix(previousFile.safePath, folderMoveEntry[0], folderMoveEntry[1])
+        : null;
+
+      if (expectedMovedPath && diskFilePathMap.has(expectedMovedPath)) {
+        usedMovedFilePaths.add(expectedMovedPath);
+        continue;
+      }
+
       if (diskFilePathMap.has(previousFile.safePath)) continue;
 
       const moveCandidates = diskFiles.filter((localFile) => {
         if (usedMovedFilePaths.has(localFile.path)) return false;
         if (previousFilePaths.has(localFile.path)) return false;
+        if ([...movedNewFolderPaths].some((path) => pathIsSameOrDescendant(localFile.path, path))) return false;
         return localFileMatchesPreviousNode(localFile, previousFile);
       });
 
@@ -232,16 +344,16 @@ export async function detectDesktopLocalChanges({
       affectedProjectIds.add(project.id);
     }
 
-    const ignoredFileAdds = diskFiles.filter((localFile) => {
-      if (usedMovedFilePaths.has(localFile.path)) return false;
-      if (previousFilePaths.has(localFile.path)) return false;
-      return ![...previousFiles].some((previousFile) =>
-        isPathInsidePath(localFile.path, getParentPath(previousFile.safePath)),
-      );
-    }).length;
+    for (const localFile of diskFiles) {
+      if (usedMovedFilePaths.has(localFile.path)) continue;
+      if (previousFilePaths.has(localFile.path)) continue;
+      if ([...movedNewFolderPaths].some((path) => pathIsSameOrDescendant(localFile.path, path))) continue;
 
-    if (ignoredFileAdds > 0) {
-      changes.ignoredFileAddCount += ignoredFileAdds;
+      changes.fileCreates.push({
+        projectId: project.id,
+        path: localFile.path,
+        sizeBytes: localFile.sizeBytes,
+      });
       affectedProjectIds.add(project.id);
     }
   }
