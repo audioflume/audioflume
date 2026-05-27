@@ -5,6 +5,7 @@ import {
   DesktopMusicGlyph,
 } from "./DesktopProjectBrowserGlyphs";
 import "./DesktopProjectsView.css";
+import "./DesktopProjectsViewOverrides.css";
 
 type ProjectTab = "overview" | "music" | "sound-fx" | "licenses";
 type ProjectFileView = "grid" | "list";
