@@ -1,0 +1,75 @@
+.desktop-sidebar-plus-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
+  display: none;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-section + .desktop-sidebar-section {
+  margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+  .desktop-app-sidebar {
+    display: block;
+    width: 74px;
+  }
+
+  .desktop-app-sidebar-inner {
+    padding: 24px 20px;
+  }
+
+  .desktop-sidebar-projects-head,
+  .desktop-sidebar-heading,
+  .desktop-sidebar-link-label,
+  .desktop-sidebar-empty-projects {
+    display: none;
+  }
+
+  .desktop-sidebar-link {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .desktop-app-main {
+    padding-left: 98px;
+  }
+
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+    padding-left: 74px;
+  }
+}
+
+@media (max-width: 650px) {
+  .desktop-app-sidebar {
+    display: block;
+    width: 74px;
+  }
+
+  .desktop-app-main {
+    padding: 88px 24px 34px 98px;
+  }
+
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+    padding: 56px 0 0 74px;
+  }
+
+  .desktop-view-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .desktop-stat-grid,
+  .desktop-playlist-grid {
+    grid-template-columns: 1fr;
+  }
+}
