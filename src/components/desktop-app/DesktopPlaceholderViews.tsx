@@ -16,6 +16,7 @@ export function ProjectsHomeView({
   activeProjectId,
   projects,
   projectsLoading,
+  syncFolder,
   syncStatus,
   onActiveProjectIdChange,
 }: ProjectsHomeViewProps) {
@@ -24,6 +25,7 @@ export function ProjectsHomeView({
       activeProjectId={activeProjectId}
       projects={projects}
       projectsLoading={projectsLoading}
+      syncFolder={syncFolder}
       syncStatus={syncStatus}
       onActiveProjectIdChange={onActiveProjectIdChange}
     />
