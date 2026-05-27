@@ -209,7 +209,7 @@ export default function Header() {
     <header className="fixed left-0 right-0 top-0 z-[110] h-14 border-b border-[var(--border)] bg-[var(--bg-primary)]">
       <div className="flex h-full items-center justify-between px-6">
         <Link href="/music" className="flex items-center text-[var(--text-primary)]" aria-label="Filmwave Home">
-          <FilmwaveLogoIcon size={22} />
+          <FilmwaveLogoIcon className="h-[22px] w-auto" />
         </Link>
 
         <div className="relative flex h-full items-center gap-1" ref={menuRef}>
