@@ -12,6 +12,7 @@ type UserMenuProps = {
   accountLoading: boolean;
   isSignedIn: boolean;
   onOpenSignIn: () => void | Promise<void>;
+  onOpenSyncSettings: () => void;
   onSignOut: () => void | Promise<void>;
   theme: ThemeMode;
   onThemeChange: (theme: ThemeMode) => void;
@@ -50,6 +51,7 @@ export default function UserMenu({
   accountLoading,
   isSignedIn,
   onOpenSignIn,
+  onOpenSyncSettings,
   onSignOut,
   theme,
   onThemeChange,
@@ -99,6 +101,18 @@ export default function UserMenu({
             </div>
 
             <div className="desktop-user-menu-actions">
+              <button
+                type="button"
+                className="desktop-user-menu-action"
+                onClick={() => {
+                  setOpen(false);
+                  onOpenSyncSettings();
+                }}
+              >
+                <span>Desktop Sync</span>
+                <span>Open sync settings</span>
+              </button>
+
               <button
                 type="button"
                 className="desktop-user-menu-action"
