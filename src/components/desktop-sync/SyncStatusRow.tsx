@@ -1,3 +1,5 @@
+import "./DesktopSyncLayout.css";
+
 type SyncStatusRowProps = {
   syncStatus: string;
   syncing: boolean;
