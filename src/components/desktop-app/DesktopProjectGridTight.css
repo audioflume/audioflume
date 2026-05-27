@@ -1,0 +1,28 @@
+.project-browser-grid {
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  column-gap: 8px;
+  row-gap: 0;
+}
+
+.project-file-browser .project-folder-card,
+.project-file-browser .project-file-card {
+  min-height: 94px;
+  gap: 6px;
+  padding: 4px 6px;
+}
+
+.project-folder-card-icon-wrap,
+.project-file-card-icon-wrap {
+  height: 48px;
+}
+
+.project-file-browser .project-file-card-title,
+.project-folder-card-name {
+  font-size: 10.5px;
+  line-height: 1.12;
+}
+
+.project-folder-card-meta,
+.project-file-browser .project-file-card-meta {
+  margin-top: -3px;
+}
