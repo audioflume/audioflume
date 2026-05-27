@@ -158,8 +158,8 @@ p {
 
 .status-pill {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 188px;
+  right: 20px;
   display: inline-flex;
   width: fit-content;
   min-height: 32px;
@@ -264,6 +264,12 @@ p {
   padding: 6px 15px 6px 6px;
 }
 
+.account-profile-main {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
 .account-avatar {
   width: 42px;
   height: 42px;
@@ -286,9 +292,14 @@ p {
 }
 
 .account-name {
+  min-width: 0;
+  overflow: hidden;
   color: var(--text-primary);
   font-size: 14px;
   font-weight: 500;
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .account-email {
@@ -296,6 +307,7 @@ p {
   overflow: hidden;
   color: var(--text-muted);
   font-size: 12px;
+  line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -306,6 +318,11 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.account-block .button-group {
+  align-self: start;
+  margin-top: 54px;
 }
 
 .token-form {
@@ -323,16 +340,10 @@ p {
   outline: none;
 }
 
-.token-form input {
-  width: min(360px, 100%);
-}
-.settings-form input {
-  width: 170px;
-}
+.token-form input { width: min(360px, 100%); }
+.settings-form input { width: 170px; }
 .token-form input::placeholder,
-.settings-form input::placeholder {
-  color: var(--text-muted);
-}
+.settings-form input::placeholder { color: var(--text-muted); }
 
 .primary-button,
 .secondary-button {
@@ -343,10 +354,7 @@ p {
   padding: 0 17px;
   font-size: 14px;
   font-weight: 500;
-  transition:
-    opacity 0.15s ease,
-    background 0.15s ease,
-    color 0.15s ease;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .primary-button {
@@ -412,14 +420,10 @@ p {
   height: 28px;
   border-radius: 999px;
   background: var(--warning);
-  transition:
-    transform 0.18s ease,
-    background 0.18s ease;
+  transition: transform 0.18s ease, background 0.18s ease;
 }
 
-.source-toggle[aria-label="Realtime sync setting"]:has(
-    button:nth-child(2).is-active
-  )::after {
+.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active)::after {
   background: var(--success);
   transform: translateX(26px);
 }
@@ -587,6 +591,11 @@ p {
   .header-row p {
     justify-self: start;
   }
+
+  .status-pill {
+    position: static;
+    margin-top: 4px;
+  }
 }
 
 @media (max-width: 550px) {
@@ -604,6 +613,10 @@ p {
     width: 100%;
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .account-block .button-group {
+    margin-top: 0;
   }
 
   .token-form input,
