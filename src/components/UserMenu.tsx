@@ -1,5 +1,8 @@
+import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import ChevronDownIcon from "./icons/ChevronDownIcon";
+import DarkMode from "./icons/DarkMode";
+import LightMode from "./icons/LightMode";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
 
 type ThemeMode = "dark" | "light";
@@ -26,7 +29,7 @@ function ThemeButton({
   onClick,
 }: {
   active: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
   className: string;
   onClick: () => void;
 }) {
@@ -130,7 +133,8 @@ export default function UserMenu({
                   className="is-dark"
                   onClick={() => onThemeChange("dark")}
                 >
-                  Dark
+                  <DarkMode size={12} />
+                  <span>Dark</span>
                 </ThemeButton>
 
                 <ThemeButton
@@ -138,7 +142,8 @@ export default function UserMenu({
                   className="is-light"
                   onClick={() => onThemeChange("light")}
                 >
-                  Light
+                  <LightMode size={13} />
+                  <span>Light</span>
                 </ThemeButton>
               </div>
             </div>
