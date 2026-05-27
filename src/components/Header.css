@@ -25,7 +25,7 @@ body {
 }
 
 .app-shell {
-  padding: 118px 24px 42px;
+  padding: 86px 24px 42px;
 }
 
 .sync-card {
@@ -34,12 +34,11 @@ body {
 
 .desktop-header {
   position: fixed;
-  top: 32px;
+  top: 0;
   left: 0;
   right: 0;
   z-index: 110;
   height: 56px;
-  border-top: 1px solid var(--divider);
   border-bottom: 1px solid var(--divider);
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -350,28 +349,12 @@ h1 {
 }
 
 @media (max-width: 550px) {
-  .app-shell {
-    padding: 106px 14px 32px;
-  }
-
-  .desktop-header-inner {
-    padding: 0 14px;
-  }
-
   .desktop-nav-link {
     display: none;
   }
 
   .desktop-account-name {
     display: none;
-  }
-
-  .header-row {
-    padding: 26px 0 24px;
-  }
-
-  h1 {
-    font-size: clamp(38px, 12vw, 54px);
   }
 
   .section-block,
