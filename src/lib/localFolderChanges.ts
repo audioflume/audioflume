@@ -64,6 +64,33 @@ function hasRemovedAncestor(path: string, removedFolderPaths: Set<string>) {
   return false;
 }
 
+function getRelativeDescendantPath(path: string, folderPath: string) {
+  if (!path.startsWith(`${folderPath}/`)) return null;
+  return path.slice(folderPath.length + 1);
+}
+
+function buildDescendantFileFingerprint(
+  folderPath: string,
+  files: Array<{ path?: string; safePath?: string }>,
+) {
+  return files
+    .map((file) => getRelativeDescendantPath(file.safePath ?? file.path ?? "", folderPath))
+    .filter((path): path is string => Boolean(path))
+    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }))
+    .join("|");
+}
+
+function buildDescendantFolderFingerprint(
+  folderPath: string,
+  folders: Array<{ path?: string; safePath?: string }>,
+) {
+  return folders
+    .map((folder) => getRelativeDescendantPath(folder.safePath ?? folder.path ?? "", folderPath))
+    .filter((path): path is string => Boolean(path))
+    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }))
+    .join("|");
+}
+
 async function readProjectDiskTree(rootPath: string) {
   const nodes: DiskNode[] = [];
 
@@ -150,22 +177,16 @@ export function hasDesktopLocalChanges(changes: DesktopLocalChanges) {
   );
 }
 
-function countFolderFiles(path: string, files: DiskNode[]) {
-  return files.filter((file) => file.type === "file" && file.path.startsWith(`${path}/`)).length;
-}
-
-function countFolderChildren(path: string, folders: DiskNode[]) {
-  return folders.filter((folder) => folder.type === "folder" && folder.path.startsWith(`${path}/`)).length;
-}
-
 function detectFolderMoves({
   diskFiles,
   diskFolders,
+  previousFiles,
   previousFolders,
   previousFolderPaths,
 }: {
   diskFiles: DiskNode[];
   diskFolders: DiskNode[];
+  previousFiles: FileWithSafePath[];
   previousFolders: FolderWithSafePath[];
   previousFolderPaths: Set<string>;
 }) {
@@ -181,20 +202,31 @@ function detectFolderMoves({
     }
 
     const oldName = getNameFromPath(previousFolder.safePath);
-    const oldFileCount = countFolderFiles(previousFolder.safePath, diskFiles);
-    const oldChildFolderCount = previousFolders.filter((folder) => folder.safePath.startsWith(`${previousFolder.safePath}/`)).length;
+    const oldParentPath = getParentPath(previousFolder.safePath);
+    const oldFileFingerprint = buildDescendantFileFingerprint(previousFolder.safePath, previousFiles);
+    const oldFolderFingerprint = buildDescendantFolderFingerprint(previousFolder.safePath, previousFolders);
+    const oldHasDescendants = Boolean(oldFileFingerprint || oldFolderFingerprint);
 
     const candidates = newFolders.filter((folder) => {
       if (usedNewFolderPaths.has(folder.path)) return false;
       if ([...usedNewFolderPaths].some((path) => folder.path.startsWith(`${path}/`))) return false;
 
       const newName = getNameFromPath(folder.path);
-      const newFileCount = countFolderFiles(folder.path, diskFiles);
-      const newChildFolderCount = countFolderChildren(folder.path, diskFolders);
+      const newParentPath = getParentPath(folder.path);
+      const newFileFingerprint = buildDescendantFileFingerprint(folder.path, diskFiles);
+      const newFolderFingerprint = buildDescendantFolderFingerprint(folder.path, diskFolders);
       const sameName = newName === oldName;
-      const sameShape = newFileCount === oldFileCount && newChildFolderCount === oldChildFolderCount;
+      const sameTree =
+        oldHasDescendants &&
+        newFileFingerprint === oldFileFingerprint &&
+        newFolderFingerprint === oldFolderFingerprint;
+      const singleEmptyRenameInSameParent =
+        !oldHasDescendants &&
+        missingFolders.length === 1 &&
+        newFolders.length === 1 &&
+        newParentPath === oldParentPath;
 
-      return sameName || sameShape;
+      return sameName || sameTree || singleEmptyRenameInSameParent;
     });
 
     if (candidates.length !== 1) continue;
@@ -249,6 +281,7 @@ export async function detectDesktopLocalChanges({
     const movedFolderMap = detectFolderMoves({
       diskFiles,
       diskFolders,
+      previousFiles,
       previousFolders,
       previousFolderPaths,
     });
