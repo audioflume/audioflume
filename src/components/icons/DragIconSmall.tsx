@@ -1,12 +1,8 @@
-type PlaylistIconProps = {
-  className?: string;
+type DragIconSmallProps = {
   size?: number;
 };
 
-export default function PlaylistIcon({
-  className,
-  size = 16,
-}: PlaylistIconProps) {
+export default function DragIconSmall({ size = 13 }: DragIconSmallProps) {
   return (
     <svg
       width={size}
@@ -14,26 +10,23 @@ export default function PlaylistIcon({
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
-      className={className}
     >
       <path
-        d="M5 7H19"
+        d="M8 7H16"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 12H15"
+        d="M8 12H16"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 17H12"
+        d="M8 17H16"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
       />
     </svg>

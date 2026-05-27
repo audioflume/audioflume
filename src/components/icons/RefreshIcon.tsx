@@ -1,12 +1,9 @@
-type PlaylistIconProps = {
-  className?: string;
+type RefreshIconProps = {
   size?: number;
+  className?: string;
 };
 
-export default function PlaylistIcon({
-  className,
-  size = 16,
-}: PlaylistIconProps) {
+export default function RefreshIcon({ size = 14, className }: RefreshIconProps) {
   return (
     <svg
       width={size}
@@ -17,24 +14,30 @@ export default function PlaylistIcon({
       className={className}
     >
       <path
-        d="M5 7H19"
+        d="M20 12C20 16.4183 16.4183 20 12 20C9.61061 20 7.46589 18.9525 6 17.2916"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 12H15"
+        d="M4 12C4 7.58172 7.58172 4 12 4C14.3894 4 16.5341 5.04753 18 6.70838"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 17H12"
+        d="M18 3V7H14"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6 21V17H10"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

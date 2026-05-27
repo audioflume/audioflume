@@ -1,12 +1,8 @@
-type PlaylistIconProps = {
-  className?: string;
+type UploadIconProps = {
   size?: number;
 };
 
-export default function PlaylistIcon({
-  className,
-  size = 16,
-}: PlaylistIconProps) {
+export default function UploadIcon({ size = 18 }: UploadIconProps) {
   return (
     <svg
       width={size}
@@ -14,26 +10,24 @@ export default function PlaylistIcon({
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
-      className={className}
     >
       <path
-        d="M5 7H19"
+        d="M12 16V4"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 12H15"
+        d="M7.5 8.5L12 4L16.5 8.5"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
-
       <path
-        d="M5 17H12"
+        d="M5 20H19"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
       />
     </svg>

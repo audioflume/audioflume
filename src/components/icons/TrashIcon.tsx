@@ -1,12 +1,9 @@
-type PlaylistIconProps = {
-  className?: string;
+type TrashIconProps = {
   size?: number;
+  className?: string;
 };
 
-export default function PlaylistIcon({
-  className,
-  size = 16,
-}: PlaylistIconProps) {
+export default function TrashIcon({ size = 13, className }: TrashIconProps) {
   return (
     <svg
       width={size}
@@ -17,24 +14,36 @@ export default function PlaylistIcon({
       className={className}
     >
       <path
-        d="M5 7H19"
+        d="M4 7H20"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 12H15"
+        d="M10 11V17"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 17H12"
+        d="M14 11V17"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
+      />
+      <path
+        d="M6 7L7 21H17L18 7"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 7V4H15V7"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

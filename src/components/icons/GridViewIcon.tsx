@@ -1,8 +1,8 @@
-type DashboardIconProps = {
+type GridViewIconProps = {
   size?: number;
 };
 
-export default function DashboardIcon({ size = 13 }: DashboardIconProps) {
+export default function GridViewIcon({ size = 17 }: GridViewIconProps) {
   return (
     <svg
       width={size}
@@ -16,7 +16,7 @@ export default function DashboardIcon({ size = 13 }: DashboardIconProps) {
         y="4"
         width="6.5"
         height="6.5"
-        rx="1.4"
+        rx="1.5"
         stroke="currentColor"
         strokeWidth="1.8"
       />
@@ -25,7 +25,7 @@ export default function DashboardIcon({ size = 13 }: DashboardIconProps) {
         y="4"
         width="6.5"
         height="6.5"
-        rx="1.4"
+        rx="1.5"
         stroke="currentColor"
         strokeWidth="1.8"
       />
@@ -34,7 +34,7 @@ export default function DashboardIcon({ size = 13 }: DashboardIconProps) {
         y="13.5"
         width="6.5"
         height="6.5"
-        rx="1.4"
+        rx="1.5"
         stroke="currentColor"
         strokeWidth="1.8"
       />
@@ -43,7 +43,7 @@ export default function DashboardIcon({ size = 13 }: DashboardIconProps) {
         y="13.5"
         width="6.5"
         height="6.5"
-        rx="1.4"
+        rx="1.5"
         stroke="currentColor"
         strokeWidth="1.8"
       />

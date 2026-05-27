@@ -1,12 +1,14 @@
-type PlaylistIconProps = {
-  className?: string;
+type FailedIconProps = {
   size?: number;
+  className?: string;
+  strokeWidth?: number;
 };
 
-export default function PlaylistIcon({
+export default function FailedIcon({
+  size = 12,
   className,
-  size = 16,
-}: PlaylistIconProps) {
+  strokeWidth = 2.6,
+}: FailedIconProps) {
   return (
     <svg
       width={size}
@@ -17,23 +19,15 @@ export default function PlaylistIcon({
       className={className}
     >
       <path
-        d="M5 7H19"
+        d="M6 6L18 18"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth={strokeWidth}
         strokeLinecap="round"
       />
-
       <path
-        d="M5 12H15"
+        d="M18 6L6 18"
         stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M5 17H12"
-        stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth={strokeWidth}
         strokeLinecap="round"
       />
     </svg>

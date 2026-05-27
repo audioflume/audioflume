@@ -1,12 +1,12 @@
-type PlaylistIconProps = {
-  className?: string;
+type ArrowUpRightIconProps = {
   size?: number;
+  className?: string;
 };
 
-export default function PlaylistIcon({
+export default function ArrowUpRightIcon({
+  size = 13,
   className,
-  size = 16,
-}: PlaylistIconProps) {
+}: ArrowUpRightIconProps) {
   return (
     <svg
       width={size}
@@ -17,24 +17,17 @@ export default function PlaylistIcon({
       className={className}
     >
       <path
-        d="M5 7H19"
+        d="M7 17L17 7"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 12H15"
+        d="M9 7H17V15"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
-      />
-
-      <path
-        d="M5 17H12"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

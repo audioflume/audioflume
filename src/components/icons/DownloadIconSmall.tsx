@@ -1,12 +1,12 @@
-type PlaylistIconProps = {
+type DownloadIconSmallProps = {
   className?: string;
   size?: number;
 };
 
-export default function PlaylistIcon({
+export default function DownloadIconSmall({
   className,
-  size = 16,
-}: PlaylistIconProps) {
+  size = 13,
+}: DownloadIconSmallProps) {
   return (
     <svg
       width={size}
@@ -17,23 +17,22 @@ export default function PlaylistIcon({
       className={className}
     >
       <path
-        d="M5 7H19"
+        d="M12 4V15"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
       />
-
       <path
-        d="M5 12H15"
+        d="M7.5 10.5L12 15L16.5 10.5"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
-
       <path
-        d="M5 17H12"
+        d="M5 20H19"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
       />
     </svg>

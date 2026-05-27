@@ -1,12 +1,9 @@
-type PlaylistIconProps = {
+type MoreIconProps = {
   className?: string;
   size?: number;
 };
 
-export default function PlaylistIcon({
-  className,
-  size = 16,
-}: PlaylistIconProps) {
+export default function MoreIcon({ className, size = 15 }: MoreIconProps) {
   return (
     <svg
       width={size}
@@ -17,23 +14,23 @@ export default function PlaylistIcon({
       className={className}
     >
       <path
-        d="M5 7H19"
+        d="M5 12H5.01"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="3.2"
         strokeLinecap="round"
       />
 
       <path
-        d="M5 12H15"
+        d="M12 12H12.01"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="3.2"
         strokeLinecap="round"
       />
 
       <path
-        d="M5 17H12"
+        d="M19 12H19.01"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="3.2"
         strokeLinecap="round"
       />
     </svg>
