@@ -12,9 +12,10 @@
   "app": {
     "windows": [
       {
-        "title": "filmwave-desktop",
+        "title": "Filmwave",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "titleBarStyle": "Overlay"
       }
     ],
     "security": {
