@@ -24,6 +24,7 @@ type HeaderProps = {
   isSignedIn: boolean;
   onActiveViewChange: (view: DesktopAppView) => void;
   onOpenSignIn: () => void | Promise<void>;
+  onOpenSyncSettings: () => void;
   onSignOut: () => void | Promise<void>;
 };
 
@@ -41,6 +42,7 @@ export default function Header({
   isSignedIn,
   onActiveViewChange,
   onOpenSignIn,
+  onOpenSyncSettings,
   onSignOut,
 }: HeaderProps) {
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
@@ -90,11 +92,11 @@ export default function Header({
 
           <button
             type="button"
-            className={`desktop-nav-link${activeView === "projects" ? " is-active" : ""}`}
-            onClick={() => onActiveViewChange("projects")}
+            className={`desktop-nav-link${activeView === "playlists" ? " is-active" : ""}`}
+            onClick={() => onActiveViewChange("playlists")}
           >
             <PlaylistIcon size={14} />
-            Projects
+            Playlists
           </button>
 
           <UserMenu
@@ -102,6 +104,7 @@ export default function Header({
             accountLoading={accountLoading}
             isSignedIn={isSignedIn}
             onOpenSignIn={onOpenSignIn}
+            onOpenSyncSettings={onOpenSyncSettings}
             onSignOut={onSignOut}
             theme={theme}
             onThemeChange={setTheme}
