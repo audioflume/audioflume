@@ -27,6 +27,30 @@ const TABS: Array<{ label: string; value: ProjectTab }> = [
   { label: "Colour Grading", value: "colour-grading" },
 ];
 
+function GridViewIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4" y="4" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
+      <rect x="14" y="4" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
+      <rect x="4" y="14" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
+      <rect x="14" y="14" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
+function ListViewIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M8 6H20" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+      <path d="M8 12H20" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+      <path d="M8 18H20" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+      <path d="M4.5 6H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M4.5 12H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M4.5 18H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function formatFileCount(count: number) {
   return `${count} ${count === 1 ? "file" : "files"}`;
 }
@@ -306,7 +330,7 @@ function ProjectDetailView({
             aria-label="Grid view"
             onClick={() => setViewMode("grid")}
           >
-            □
+            <GridViewIcon />
           </button>
           <button
             type="button"
@@ -314,7 +338,7 @@ function ProjectDetailView({
             aria-label="List view"
             onClick={() => setViewMode("list")}
           >
-            ≡
+            <ListViewIcon />
           </button>
         </div>
       </div>
