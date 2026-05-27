@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import DashboardIcon from "@/components/icons/DashboardIcon";
+import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-import Logo from "@/components/Logo";
 import UserMenu from "@/components/UserMenu";
 import { navLinkClass } from "@/components/uiClasses";
 
@@ -208,8 +208,8 @@ export default function Header() {
   return (
     <header className="fixed left-0 right-0 top-0 z-[110] h-14 border-b border-[var(--border)] bg-[var(--bg-primary)]">
       <div className="flex h-full items-center justify-between px-6">
-        <Link href="/music" className="flex items-center">
-          <Logo className="h-[22px] w-auto text-[var(--text-primary)]" />
+        <Link href="/music" className="flex items-center text-[var(--text-primary)]" aria-label="Filmwave Home">
+          <FilmwaveLogoIcon size={22} />
         </Link>
 
         <div className="relative flex h-full items-center gap-1" ref={menuRef}>
