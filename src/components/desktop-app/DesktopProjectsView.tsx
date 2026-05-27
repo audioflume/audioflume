@@ -324,25 +324,6 @@ function ProjectDetailView({
             {tab.label}
           </button>
         ))}
-
-        <div className="project-tabs-row-actions">
-          <button
-            type="button"
-            className={`project-toolbar-button ${viewMode === "grid" ? "is-active" : ""}`}
-            aria-label="Grid view"
-            onClick={() => setViewMode("grid")}
-          >
-            <GridViewIcon />
-          </button>
-          <button
-            type="button"
-            className={`project-toolbar-button ${viewMode === "list" ? "is-active" : ""}`}
-            aria-label="List view"
-            onClick={() => setViewMode("list")}
-          >
-            <ListViewIcon />
-          </button>
-        </div>
       </div>
 
       <section className="project-detail-hero">
@@ -382,8 +363,21 @@ function ProjectDetailView({
           </div>
 
           <div className="project-file-browser-actions">
-            <button type="button" className="project-download-button">
-              Download ↓
+            <button
+              type="button"
+              className={`project-toolbar-button ${viewMode === "grid" ? "is-active" : ""}`}
+              aria-label="Grid view"
+              onClick={() => setViewMode("grid")}
+            >
+              <GridViewIcon />
+            </button>
+            <button
+              type="button"
+              className={`project-toolbar-button ${viewMode === "list" ? "is-active" : ""}`}
+              aria-label="List view"
+              onClick={() => setViewMode("list")}
+            >
+              <ListViewIcon />
             </button>
           </div>
         </div>
