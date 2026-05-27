@@ -1,0 +1,317 @@
+html[data-theme="light"] {
+  --bg-primary: #f1f1f1;
+  --bg-panel: #ffffff;
+  --bg-panel-2: #e9e9e9;
+  --bg-row: rgba(0, 0, 0, 0.035);
+  --bg-row-hover: rgba(0, 0, 0, 0.055);
+  --bg-control: rgba(0, 0, 0, 0.07);
+  --bg-control-hover: rgba(0, 0, 0, 0.1);
+  --divider: rgba(0, 0, 0, 0.07);
+  --text-primary: #111111;
+  --text-secondary: rgba(17, 17, 17, 0.58);
+  --text-muted: rgba(17, 17, 17, 0.36);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+body {
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.app-shell {
+  padding-top: 90px;
+}
+
+.desktop-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 110;
+  height: 56px;
+  border-bottom: 1px solid var(--divider);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.desktop-header-inner {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.desktop-header-logo-button {
+  display: flex;
+  height: 32px;
+  cursor: pointer;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  padding: 0;
+}
+
+.desktop-header-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.desktop-header-logo-mark {
+  color: var(--text-primary);
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.desktop-header-actions {
+  position: relative;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 4px;
+}
+
+.desktop-nav-link,
+.desktop-account-trigger {
+  display: flex;
+  height: 32px;
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.desktop-nav-link:hover,
+.desktop-account-trigger:hover,
+.desktop-account-trigger.is-open {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+}
+
+.desktop-account-trigger {
+  gap: 8px;
+  padding-right: 0;
+}
+
+.desktop-account-trigger-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.desktop-account-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-header-chevron {
+  transition: transform 0.15s ease;
+}
+
+.desktop-header-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.desktop-account-avatar {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--bg-control);
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.desktop-user-menu-wrap {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 120;
+  margin-top: 8px;
+}
+
+.desktop-user-menu {
+  width: 300px;
+  overflow: hidden;
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  background: var(--bg-panel-2);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.34);
+}
+
+html[data-theme="light"] .desktop-user-menu {
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.12);
+}
+
+.desktop-user-menu-head {
+  border-bottom: 1px solid var(--divider);
+  padding: 12px;
+}
+
+.desktop-user-menu-name {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-user-menu-plan {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.desktop-user-menu-links {
+  display: grid;
+  gap: 4px;
+  padding: 6px;
+}
+
+.desktop-user-menu-link {
+  display: flex;
+  height: 44px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  padding: 0 12px;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.desktop-user-menu-link:hover {
+  background: var(--bg-row-hover);
+}
+
+.desktop-user-menu-link-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.desktop-user-menu-link-label {
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.desktop-user-menu-link-helper {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-user-menu-icon-button {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.desktop-user-menu-link:hover .desktop-user-menu-icon-button {
+  background: var(--bg-control);
+  color: var(--text-primary);
+}
+
+.desktop-theme-menu {
+  border-top: 1px solid var(--divider);
+  padding: 6px;
+}
+
+.desktop-theme-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  border-radius: 10px;
+  background: var(--bg-primary);
+  padding: 4px;
+}
+
+.desktop-theme-toggle button {
+  display: inline-flex;
+  height: 32px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.desktop-theme-toggle button.is-dark:hover,
+.desktop-theme-toggle button.is-dark.is-active {
+  background: #fb8f61;
+  color: #ffffff;
+}
+
+.desktop-theme-toggle button.is-light:hover,
+.desktop-theme-toggle button.is-light.is-active {
+  background: #ddff43;
+  color: #111111;
+}
+
+@media (max-width: 760px) {
+  .desktop-header-inner {
+    padding: 0 14px;
+  }
+
+  .desktop-nav-link {
+    display: none;
+  }
+
+  .desktop-account-name {
+    display: none;
+  }
+
+  .desktop-user-menu-wrap {
+    right: -2px;
+  }
+
+  .desktop-user-menu {
+    width: min(300px, calc(100vw - 28px));
+  }
+}
