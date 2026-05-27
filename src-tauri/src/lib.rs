@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
     sync::{Mutex, OnceLock},
 };
-use tauri::{AppHandle, Emitter, Manager, WebviewWindow};
+use tauri::{AppHandle, Emitter, WebviewWindow};
 
 static WATCHERS: OnceLock<Mutex<HashMap<String, RecommendedWatcher>>> = OnceLock::new();
 
@@ -53,10 +53,10 @@ fn open_path(path: String) -> Result<(), String> {
 
 #[cfg(target_os = "macos")]
 fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(), String> {
-    use cocoa::appkit::{NSDraggingItem, NSDraggingSession, NSDraggingSource, NSPasteboard, NSPasteboardItem, NSView, NSWindow};
+    use cocoa::appkit::NSWindow;
     use cocoa::base::{id, nil, YES};
     use cocoa::foundation::{NSArray, NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString, NSURL};
-    use objc::{msg_send, sel, sel_impl};
+    use objc::{class, msg_send, sel, sel_impl};
     use std::path::Path;
 
     if !Path::new(&path).exists() {
@@ -75,15 +75,23 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
             return Err("Could not access native window content view.".to_string());
         }
 
-        let file_url: id = NSURL::fileURLWithPath_(nil, NSString::alloc(nil).init_str(&path));
-        let pasteboard_item: id = NSPasteboardItem::alloc(nil).init();
-        let wrote: bool = msg_send![pasteboard_item, setString: file_url.absoluteString() forType: NSString::alloc(nil).init_str("public.file-url")];
+        let path_string = NSString::alloc(nil).init_str(&path);
+        let file_url: id = NSURL::fileURLWithPath_(nil, path_string);
+        let absolute_string: id = msg_send![file_url, absoluteString];
+        let file_url_type = NSString::alloc(nil).init_str("public.file-url");
+
+        let pasteboard_item_class = class!(NSPasteboardItem);
+        let pasteboard_item: id = msg_send![pasteboard_item_class, alloc];
+        let pasteboard_item: id = msg_send![pasteboard_item, init];
+        let wrote: bool = msg_send![pasteboard_item, setString: absolute_string forType: file_url_type];
 
         if !wrote {
             return Err("Could not prepare drag pasteboard item.".to_string());
         }
 
-        let dragging_item: id = NSDraggingItem::alloc(nil).initWithPasteboardWriter_(pasteboard_item);
+        let dragging_item_class = class!(NSDraggingItem);
+        let dragging_item: id = msg_send![dragging_item_class, alloc];
+        let dragging_item: id = msg_send![dragging_item, initWithPasteboardWriter: pasteboard_item];
         let drag_frame = NSRect::new(NSPoint::new(0.0, 0.0), NSSize::new(1.0, 1.0));
         let _: () = msg_send![dragging_item, setDraggingFrame: drag_frame contents: nil];
 
