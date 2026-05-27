@@ -9,11 +9,13 @@ import "./DesktopProjectsViewOverrides.css";
 
 type ProjectTab = "overview" | "music" | "sound-fx" | "licenses";
 type ProjectFileView = "grid" | "list";
+type ProjectSyncState = "success" | "syncing" | "error";
 
 type DesktopProjectsViewProps = {
   activeProjectId: string | null;
   projects: Project[];
   projectsLoading: boolean;
+  syncStatus: string;
   onActiveProjectIdChange: (projectId: string | null) => void;
 };
 
@@ -23,6 +25,9 @@ const TABS: Array<{ label: string; value: ProjectTab }> = [
   { label: "Sound FX", value: "sound-fx" },
   { label: "Licenses", value: "licenses" },
 ];
+
+const ERROR_SYNC_PATTERNS = ["failed", "error", "could not"];
+const SYNCING_PATTERNS = ["syncing", "refreshing", "checking", "applying", "updating"];
 
 function GridViewIcon() {
   return (
@@ -52,8 +57,43 @@ function formatFileCount(count: number) {
   return `${count} ${count === 1 ? "file" : "files"}`;
 }
 
-function formatProjectDate() {
-  return "Created May 14, 2026";
+function getProjectSyncState(syncStatus: string): ProjectSyncState {
+  const normalizedStatus = syncStatus.toLowerCase();
+
+  if (ERROR_SYNC_PATTERNS.some((pattern) => normalizedStatus.includes(pattern))) {
+    return "error";
+  }
+
+  if (SYNCING_PATTERNS.some((pattern) => normalizedStatus.includes(pattern))) {
+    return "syncing";
+  }
+
+  return "success";
+}
+
+function getLatestProjectFileDate(project: Project) {
+  const timestamps = project.files
+    .map((node) => node.updatedAt)
+    .filter((value): value is string => Boolean(value))
+    .map((value) => new Date(value).getTime())
+    .filter((value) => Number.isFinite(value));
+
+  if (timestamps.length === 0) return null;
+  return new Date(Math.max(...timestamps));
+}
+
+function formatSyncTime(project: Project, syncState: ProjectSyncState) {
+  if (syncState === "syncing") return "Syncing now";
+  if (syncState === "error") return "Sync error";
+
+  const latestFileDate = getLatestProjectFileDate(project);
+
+  if (!latestFileDate) return "Last synced status ready";
+
+  return `Last synced at ${latestFileDate.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  })}`;
 }
 
 function getNodeDepth(node: ProjectFileNode) {
@@ -114,6 +154,23 @@ function handleFileDragStart(event: React.DragEvent<HTMLElement>, node: ProjectF
   event.dataTransfer.effectAllowed = "copy";
   event.dataTransfer.setData("text/plain", node.downloadUrl || node.path);
   event.dataTransfer.setData("application/filmwave-file", JSON.stringify(node));
+}
+
+function ProjectSyncStatus({
+  project,
+  syncStatus,
+}: {
+  project: Project;
+  syncStatus: string;
+}) {
+  const syncState = getProjectSyncState(syncStatus);
+
+  return (
+    <span className={`project-sync-status is-${syncState}`}>
+      <span className="project-sync-status-dot" />
+      <span>{formatSyncTime(project, syncState)}</span>
+    </span>
+  );
 }
 
 function ProjectListView({
@@ -279,9 +336,11 @@ function ProjectListItem({
 
 function ProjectDetailView({
   project,
+  syncStatus,
   onBack,
 }: {
   project: Project;
+  syncStatus: string;
   onBack: () => void;
 }) {
   const [activeTab, setActiveTab] = useState<ProjectTab>("overview");
@@ -329,7 +388,7 @@ function ProjectDetailView({
           <span>·</span>
           <span>{project.fileCount} files</span>
           <span>·</span>
-          <span>{formatProjectDate()}</span>
+          <ProjectSyncStatus project={project} syncStatus={syncStatus} />
         </div>
       </section>
 
@@ -417,6 +476,7 @@ export default function DesktopProjectsView({
   activeProjectId,
   projects,
   projectsLoading,
+  syncStatus,
   onActiveProjectIdChange,
 }: DesktopProjectsViewProps) {
   const activeProject =
@@ -426,6 +486,7 @@ export default function DesktopProjectsView({
     return (
       <ProjectDetailView
         project={activeProject}
+        syncStatus={syncStatus}
         onBack={() => onActiveProjectIdChange(null)}
       />
     );
