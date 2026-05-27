@@ -2,19 +2,30 @@ import type { Project } from "../../lib/mockFilmwaveApi";
 import DesktopProjectsView from "./DesktopProjectsView";
 
 type ProjectsHomeViewProps = {
+  activeProjectId: string | null;
   projects: Project[];
   projectsLoading: boolean;
   selectedProjectIds: string[];
   syncFolder: string | null;
   syncStatus: string;
+  onActiveProjectIdChange: (projectId: string | null) => void;
   onOpenSyncSettings: () => void;
 };
 
 export function ProjectsHomeView({
+  activeProjectId,
   projects,
   projectsLoading,
+  onActiveProjectIdChange,
 }: ProjectsHomeViewProps) {
-  return <DesktopProjectsView projects={projects} projectsLoading={projectsLoading} />;
+  return (
+    <DesktopProjectsView
+      activeProjectId={activeProjectId}
+      projects={projects}
+      projectsLoading={projectsLoading}
+      onActiveProjectIdChange={onActiveProjectIdChange}
+    />
+  );
 }
 
 export function MusicLibraryView() {
