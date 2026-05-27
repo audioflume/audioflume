@@ -32,25 +32,16 @@ export default function RealtimeSyncBlock({
         </p>
       </div>
 
-      <div
-        className={`source-toggle realtime-toggle ${autoSyncEnabled ? "is-on" : "is-off"}`}
+      <button
+        type="button"
+        className={`realtime-toggle ${autoSyncEnabled ? "is-on" : "is-off"}`}
+        role="switch"
+        aria-checked={autoSyncEnabled}
         aria-label="Realtime sync setting"
+        onClick={() => onChangeAutoSyncEnabled(!autoSyncEnabled)}
       >
-        <button
-          type="button"
-          className={!autoSyncEnabled ? "is-active" : ""}
-          onClick={() => onChangeAutoSyncEnabled(false)}
-        >
-          Off
-        </button>
-        <button
-          type="button"
-          className={autoSyncEnabled ? "is-active" : ""}
-          onClick={() => onChangeAutoSyncEnabled(true)}
-        >
-          On
-        </button>
-      </div>
+        <span className="realtime-toggle-knob" aria-hidden="true" />
+      </button>
     </div>
   );
 }
