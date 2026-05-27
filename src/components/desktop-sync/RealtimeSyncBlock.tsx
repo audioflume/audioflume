@@ -1,3 +1,5 @@
+import "./RealtimeSyncBlock.css";
+
 type RealtimeSyncBlockProps = {
   autoSyncDescription: string;
   autoSyncEnabled: boolean;
@@ -30,7 +32,10 @@ export default function RealtimeSyncBlock({
         </p>
       </div>
 
-      <div className="source-toggle" aria-label="Realtime sync setting">
+      <div
+        className={`source-toggle realtime-toggle ${autoSyncEnabled ? "is-on" : "is-off"}`}
+        aria-label="Realtime sync setting"
+      >
         <button
           type="button"
           className={!autoSyncEnabled ? "is-active" : ""}
