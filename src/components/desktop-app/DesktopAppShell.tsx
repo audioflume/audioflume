@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Project } from "../../lib/mockFilmwaveApi";
 import FolderIcon from "../icons/FolderIcon";
 import HeartIcon from "../icons/HeartIcon";
@@ -33,22 +33,71 @@ type SidebarNavItem = {
   onClick?: () => void;
 };
 
+type SidebarTooltip = {
+  label: string;
+  top: number;
+} | null;
+
+function CollapseIcon({ collapsed }: { collapsed: boolean }) {
+  return (
+    <svg
+      width="6"
+      height="9"
+      viewBox="0 0 7 10"
+      fill="none"
+      aria-hidden="true"
+      className={collapsed ? "desktop-sidebar-collapse-icon is-collapsed" : "desktop-sidebar-collapse-icon"}
+    >
+      <path d="M6.2 1L1.8 5L6.2 9V1Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function SidebarTooltipEl({ label, top }: { label: string; top: number }) {
+  return (
+    <div
+      className="desktop-sidebar-tooltip"
+      style={{ top }}
+    >
+      <div className="desktop-sidebar-tooltip-border">
+        <div className="desktop-sidebar-tooltip-inner">{label}</div>
+      </div>
+    </div>
+  );
+}
+
 function SidebarNavButton({
+  collapsed,
   item,
   activeView,
   onActiveViewChange,
+  onTooltipChange,
 }: {
+  collapsed: boolean;
   item: SidebarNavItem;
   activeView: DesktopAppView;
   onActiveViewChange: (view: DesktopAppView) => void;
+  onTooltipChange: (tooltip: SidebarTooltip) => void;
 }) {
   const isActive = item.active ?? item.view === activeView;
+
+  function showTooltip(element: HTMLElement) {
+    if (!collapsed) return;
+    const rect = element.getBoundingClientRect();
+    onTooltipChange({ label: item.label, top: rect.top + rect.height / 2 });
+  }
 
   return (
     <button
       type="button"
       className={`desktop-sidebar-link${isActive ? " is-active" : ""}`}
+      aria-label={item.label}
+      onMouseEnter={(event) => showTooltip(event.currentTarget)}
+      onMouseLeave={() => onTooltipChange(null)}
+      onFocus={(event) => showTooltip(event.currentTarget)}
+      onBlur={() => onTooltipChange(null)}
       onClick={() => {
+        onTooltipChange(null);
         if (item.onClick) {
           item.onClick();
           return;
@@ -73,6 +122,9 @@ export default function DesktopAppShell({
   onActiveProjectIdChange,
   onActiveViewChange,
 }: DesktopAppShellProps) {
+  const [collapsed, setCollapsed] = useState(false);
+  const [tooltip, setTooltip] = useState<SidebarTooltip>(null);
+
   const libraryLinks: SidebarNavItem[] = [
     { view: "music", label: "Music Library", icon: <MusicIcon size={16} /> },
     { view: "playlists", label: "My Playlists", icon: <PlaylistIcon size={16} /> },
@@ -91,10 +143,24 @@ export default function DesktopAppShell({
   ];
 
   return (
-    <div className="desktop-app-shell">
+    <div className={`desktop-app-shell${collapsed ? " is-sidebar-collapsed" : ""}`}>
       {header}
 
       <aside className="desktop-app-sidebar" data-tauri-drag-region>
+        <div className="desktop-sidebar-collapse-zone">
+          <button
+            type="button"
+            className="desktop-sidebar-collapse-button"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            onClick={() => {
+              setCollapsed((value) => !value);
+              setTooltip(null);
+            }}
+          >
+            <CollapseIcon collapsed={collapsed} />
+          </button>
+        </div>
+
         <div className="desktop-app-sidebar-inner">
           <section className="desktop-sidebar-section">
             <h2 className="desktop-sidebar-heading">Library</h2>
@@ -102,9 +168,11 @@ export default function DesktopAppShell({
               {libraryLinks.map((item) => (
                 <SidebarNavButton
                   key={item.label}
+                  collapsed={collapsed}
                   item={item}
                   activeView={activeView}
                   onActiveViewChange={onActiveViewChange}
+                  onTooltipChange={setTooltip}
                 />
               ))}
             </nav>
@@ -117,6 +185,18 @@ export default function DesktopAppShell({
                 type="button"
                 className="desktop-sidebar-add-button"
                 aria-label="Create new project"
+                onMouseEnter={(event) => {
+                  if (!collapsed) return;
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  setTooltip({ label: "New Project", top: rect.top + rect.height / 2 });
+                }}
+                onMouseLeave={() => setTooltip(null)}
+                onFocus={(event) => {
+                  if (!collapsed) return;
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  setTooltip({ label: "New Project", top: rect.top + rect.height / 2 });
+                }}
+                onBlur={() => setTooltip(null)}
               >
                 +
               </button>
@@ -126,6 +206,7 @@ export default function DesktopAppShell({
                 projects.map((project) => (
                   <SidebarNavButton
                     key={project.id}
+                    collapsed={collapsed}
                     item={{
                       label: project.name,
                       icon: <FolderIcon size={16} />,
@@ -137,6 +218,7 @@ export default function DesktopAppShell({
                     }}
                     activeView={activeView}
                     onActiveViewChange={onActiveViewChange}
+                    onTooltipChange={setTooltip}
                   />
                 ))
               ) : (
@@ -146,6 +228,8 @@ export default function DesktopAppShell({
           </section>
         </div>
       </aside>
+
+      {tooltip && collapsed && <SidebarTooltipEl label={tooltip.label} top={tooltip.top} />}
 
       <main className="desktop-app-main">{children}</main>
     </div>
