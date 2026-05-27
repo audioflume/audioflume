@@ -7,6 +7,7 @@ import UserMenu from "./UserMenu";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
 import type { DesktopAppView } from "./desktop-app/DesktopAppShell";
 import "./Header.css";
+import "./HeaderOverrides.css";
 
 const THEME_STORAGE_KEY = "filmwave-theme";
 
