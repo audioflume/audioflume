@@ -11,6 +11,11 @@ type RouteContext = {
   params: Promise<{ projectId: string }> | { projectId: string };
 };
 
+type FolderCountRow = {
+  id: number;
+  parent_folder_id: number | null;
+};
+
 async function getProjectId(context: RouteContext) {
   const params = await context.params;
   return params.projectId;
@@ -44,6 +49,27 @@ async function getNextFolderPosition(projectId: string, parentFolderId: number |
   if (error) throw error;
 
   return data?.[0]?.position != null ? Number(data[0].position) + 1 : 0;
+}
+
+function getDescendantFolderIds(folderId: number, folders: FolderCountRow[]) {
+  const ids = new Set<number>([folderId]);
+  let changed = true;
+
+  while (changed) {
+    changed = false;
+
+    folders.forEach((folder) => {
+      const id = Number(folder.id);
+      const parentId = Number(folder.parent_folder_id);
+
+      if (Number.isFinite(parentId) && ids.has(parentId) && !ids.has(id)) {
+        ids.add(id);
+        changed = true;
+      }
+    });
+  }
+
+  return ids;
 }
 
 export async function GET(_req: Request, context: RouteContext) {
@@ -92,6 +118,7 @@ export async function GET(_req: Request, context: RouteContext) {
 
     const childCounts = new Map<number, number>();
     const assetCounts = new Map<number, number>();
+    const recursiveAssetCounts = new Map<number, number>();
 
     normalizedFolders.forEach((folder) => {
       if (folder.parent_folder_id == null) return;
@@ -106,11 +133,22 @@ export async function GET(_req: Request, context: RouteContext) {
       assetCounts.set(asset.folder_id, (assetCounts.get(asset.folder_id) ?? 0) + 1);
     });
 
+    normalizedFolders.forEach((folder) => {
+      const descendantFolderIds = getDescendantFolderIds(folder.id, normalizedFolders);
+      const recursiveAssetCount = normalizedAssets.filter((asset) => {
+        if (asset.folder_id == null) return false;
+        return descendantFolderIds.has(asset.folder_id);
+      }).length;
+
+      recursiveAssetCounts.set(folder.id, recursiveAssetCount);
+    });
+
     return NextResponse.json({
       folders: normalizedFolders.map((folder) => ({
         ...folder,
         child_count: childCounts.get(folder.id) ?? 0,
         asset_count: assetCounts.get(folder.id) ?? 0,
+        recursive_asset_count: recursiveAssetCounts.get(folder.id) ?? 0,
       })),
       assets: normalizedAssets,
     });
@@ -349,23 +387,7 @@ export async function DELETE(req: Request, context: RouteContext) {
       return NextResponse.json({ error: "Folder not found" }, { status: 404 });
     }
 
-    const descendantIds = new Set<number>([folderId]);
-    let changed = true;
-
-    while (changed) {
-      changed = false;
-      folderRows.forEach((folder) => {
-        const id = Number(folder.id);
-        const parentId = Number(folder.parent_folder_id);
-
-        if (Number.isFinite(parentId) && descendantIds.has(parentId) && !descendantIds.has(id)) {
-          descendantIds.add(id);
-          changed = true;
-        }
-      });
-    }
-
-    const ids = Array.from(descendantIds);
+    const ids = Array.from(getDescendantFolderIds(folderId, folderRows));
 
     const { error: assetDeleteError } = await supabaseServer
       .from("project_assets")
