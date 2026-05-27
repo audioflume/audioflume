@@ -79,6 +79,8 @@ export async function detectLocalChanges({
 }): Promise<LocalChangesSummary> {
   const changes: LocalChangesSummary = {
     folderCreates: [],
+    folderMoves: [],
+    fileCreates: [],
     fileMoves: [],
     fileRemovals: [],
     folderRemovals: [],
@@ -134,22 +136,31 @@ export async function detectLocalChanges({
 
     for (const localFilePath of tree.files.keys()) {
       if (!consumedLocalFiles.has(localFilePath) && !manifestFilePaths.has(localFilePath)) {
-        changes.ignoredFileAddCount += 1;
+        changes.fileCreates.push({ projectId: manifest.projectId || project.id, path: localFilePath });
       }
     }
   }
 
-  changes.totalChangeCount = changes.folderCreates.length + changes.fileMoves.length + changes.fileRemovals.length + changes.folderRemovals.length + changes.ignoredFileAddCount;
+  changes.totalChangeCount =
+    changes.folderCreates.length +
+    changes.folderMoves.length +
+    changes.fileCreates.length +
+    changes.fileMoves.length +
+    changes.fileRemovals.length +
+    changes.folderRemovals.length +
+    changes.ignoredFileAddCount;
   return changes;
 }
 
 export function formatLocalChangesSummary(result: {
   createdFolderCount: number;
+  movedFolderCount?: number;
+  createdFileCount?: number;
   movedFileCount: number;
   removedAssetCount: number;
   removedFolderCount: number;
   ignoredFileAddCount: number;
 }) {
-  const summary = `${result.createdFolderCount} folders created, ${result.movedFileCount} files moved, ${result.removedAssetCount} files removed, ${result.removedFolderCount} folders removed`;
+  const summary = `${result.createdFolderCount} folders created, ${result.movedFolderCount ?? 0} folders moved, ${result.createdFileCount ?? 0} files created, ${result.movedFileCount} files moved, ${result.removedAssetCount} files removed, ${result.removedFolderCount} folders removed`;
   return result.ignoredFileAddCount > 0 ? `${summary}, ${result.ignoredFileAddCount} added files ignored` : summary;
 }
