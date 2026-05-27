@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import FilmwaveLogoIcon from "./icons/FilmwaveLogoIcon";
 import DashboardIcon from "./icons/DashboardIcon";
 import PlaylistIcon from "./icons/PlaylistIcon";
@@ -7,6 +8,11 @@ import type { DesktopAccount } from "../lib/mockFilmwaveApi";
 import "./Header.css";
 
 const THEME_STORAGE_KEY = "filmwave-theme";
+
+const THEME_WINDOW_BACKGROUNDS = {
+  dark: "#111111",
+  light: "#ffffff",
+} as const;
 
 type ThemeMode = "dark" | "light";
 
@@ -37,6 +43,18 @@ export default function Header({
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem(THEME_STORAGE_KEY, theme);
+
+    const appWindow = getCurrentWebviewWindow();
+
+    appWindow.setTheme(theme).catch((error) => {
+      console.warn("Could not update native window theme.", error);
+    });
+
+    appWindow
+      .setBackgroundColor(THEME_WINDOW_BACKGROUNDS[theme])
+      .catch((error) => {
+        console.warn("Could not update native window background.", error);
+      });
   }, [theme]);
 
   return (
@@ -47,7 +65,11 @@ export default function Header({
           className="desktop-header-logo-button"
           aria-label="Filmwave Desktop home"
         >
-          <FilmwaveLogoIcon className="desktop-header-logo-mark" width={115} height={22} />
+          <FilmwaveLogoIcon
+            className="desktop-header-logo-mark"
+            width={115}
+            height={22}
+          />
         </button>
 
         <div className="desktop-header-actions">
