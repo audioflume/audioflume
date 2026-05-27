@@ -1,16 +1,16 @@
 .project-music-glyph.small {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  width: 19px;
+  height: 19px;
+  border-radius: 5px;
   background: var(--bg-panel);
   color: var(--text-primary);
   box-shadow: inset 0 0 0 1px var(--divider);
-  font-size: 15px;
+  font-size: 12px;
 }
 
 .project-file-list-icon-wrap {
-  width: 28px;
-  height: 28px;
+  width: 19px;
+  height: 19px;
 }
 
 .project-sync-status {
