@@ -7,7 +7,11 @@ import {
   normalizeFilmwaveApiBaseUrl,
   type Project,
 } from "./mockFilmwaveApi";
-import { detectLocalChanges, formatLocalChangesSummary } from "./localChangeDetector";
+import {
+  detectDesktopLocalChanges,
+  hasDesktopLocalChanges,
+} from "./localFolderChanges";
+import { formatLocalChangesSummary } from "./localChangeDetector";
 import { syncProjectsToFolder } from "./syncEngine";
 
 const SETTINGS_STORE = "filmwave-settings.json";
@@ -16,6 +20,8 @@ const WEBSITE_CHANGE_DEBOUNCE_MS = 2500;
 const POST_SYNC_SUPPRESS_MS = 10000;
 const SETTINGS_REFRESH_MS = 10000;
 const MIN_SYNC_GAP_MS = 2500;
+
+const REALTIME_UPDATED_EVENT = "filmwave:realtime-projects-updated";
 
 type RealtimeSettings = {
   apiBaseUrl: string;
@@ -107,13 +113,16 @@ function filterProjectsByIds(projects: Project[], projectIds: Set<string>) {
   return projects.filter((project) => projectIds.has(String(project.id)));
 }
 
-function getChangedProjectIds(changes: Awaited<ReturnType<typeof detectLocalChanges>>) {
-  return new Set([
-    ...changes.folderCreates.map((change) => String(change.projectId)),
-    ...changes.fileMoves.map((change) => String(change.projectId)),
-    ...changes.fileRemovals.map((change) => String(change.projectId)),
-    ...changes.folderRemovals.map((change) => String(change.projectId)),
-  ]);
+function dispatchRealtimeUpdated(projectIds: Set<string>, reason: "local" | "website") {
+  window.dispatchEvent(
+    new CustomEvent(REALTIME_UPDATED_EVENT, {
+      detail: {
+        projectIds: [...projectIds],
+        reason,
+        updatedAt: new Date().toISOString(),
+      },
+    }),
+  );
 }
 
 async function runEventDrivenSync(reason: "local" | "website", projectIds = new Set<string>()) {
@@ -133,25 +142,27 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
     const initialProjects = filterProjectsByIds(allProjects, projectIds);
     let projectsToSync = initialProjects;
     let localChangeSummary = "";
+    let updatedProjectIds = new Set(projectsToSync.map((project) => String(project.id)));
 
     if (reason === "local") {
-      const localChanges = await detectLocalChanges({
+      const detected = await detectDesktopLocalChanges({
         projects: initialProjects,
         syncFolder: settings.syncFolder,
       });
 
-      if (localChanges.totalChangeCount > 0) {
+      if (hasDesktopLocalChanges(detected.changes)) {
         const changeResult = await applyDesktopLocalChanges({
           apiBaseUrl: settings.apiBaseUrl,
           token: settings.desktopToken,
-          changes: localChanges,
+          changes: detected.changes,
         });
 
         localChangeSummary = `Applied local changes: ${formatLocalChangesSummary(changeResult)}. `;
 
-        const changedProjectIds = getChangedProjectIds(localChanges);
+        const changedProjectIds = new Set(detected.affectedProjectIds.map(String));
         const refreshedProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
         projectsToSync = filterProjectsByIds(refreshedProjects, changedProjectIds);
+        updatedProjectIds = changedProjectIds;
       } else {
         localChangeSummary = "No manifest-backed local changes found. ";
       }
@@ -174,6 +185,7 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
     });
 
     suppressLocalChangesUntil = Date.now() + POST_SYNC_SUPPRESS_MS;
+    dispatchRealtimeUpdated(updatedProjectIds, reason);
 
     await addActivityLogEntry({
       mode: "auto",
