@@ -15,8 +15,10 @@ type ProjectTab =
 type ProjectFileView = "grid" | "list";
 
 type DesktopProjectsViewProps = {
+  activeProjectId: string | null;
   projects: Project[];
   projectsLoading: boolean;
+  onActiveProjectIdChange: (projectId: string | null) => void;
 };
 
 const TABS: Array<{ label: string; value: ProjectTab }> = [
@@ -423,10 +425,11 @@ function ProjectDetailView({
 }
 
 export default function DesktopProjectsView({
+  activeProjectId,
   projects,
   projectsLoading,
+  onActiveProjectIdChange,
 }: DesktopProjectsViewProps) {
-  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const activeProject =
     projects.find((project) => project.id === activeProjectId) ?? null;
 
@@ -434,7 +437,7 @@ export default function DesktopProjectsView({
     return (
       <ProjectDetailView
         project={activeProject}
-        onBack={() => setActiveProjectId(null)}
+        onBack={() => onActiveProjectIdChange(null)}
       />
     );
   }
@@ -443,7 +446,7 @@ export default function DesktopProjectsView({
     <ProjectListView
       projects={projects}
       projectsLoading={projectsLoading}
-      onOpenProject={setActiveProjectId}
+      onOpenProject={onActiveProjectIdChange}
     />
   );
 }
