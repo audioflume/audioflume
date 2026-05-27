@@ -3,6 +3,7 @@
 }
 
 .status-row {
+  position: relative;
   order: 2;
   min-height: 58px;
   border-top-left-radius: 0;
