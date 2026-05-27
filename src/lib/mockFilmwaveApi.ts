@@ -35,6 +35,8 @@ export type DesktopLocalRemoval = {
   projectId: string;
   id: string;
   type: "file" | "folder";
+  name?: string;
+  path?: string;
 };
 
 export type DesktopLocalRemovalResult = {
