@@ -60,9 +60,9 @@ function getDescendantFolderIds(folderId: number, folders: FolderCountRow[]) {
 
     folders.forEach((folder) => {
       const id = Number(folder.id);
-      const parentId = Number(folder.parent_folder_id);
+      const parentId = folder.parent_folder_id == null ? null : Number(folder.parent_folder_id);
 
-      if (Number.isFinite(parentId) && ids.has(parentId) && !ids.has(id)) {
+      if (parentId != null && Number.isFinite(parentId) && ids.has(parentId) && !ids.has(id)) {
         ids.add(id);
         changed = true;
       }
@@ -384,7 +384,7 @@ export async function DELETE(req: Request, context: RouteContext) {
     const folderIds = new Set(folderRows.map((folder) => Number(folder.id)));
 
     if (!folderIds.has(folderId)) {
-      return NextResponse.json({ error: "Folder not found" }, { status: 404 });
+      return NextResponse.json({ deleted_folder_ids: [], already_deleted: true });
     }
 
     const ids = Array.from(getDescendantFolderIds(folderId, folderRows));
