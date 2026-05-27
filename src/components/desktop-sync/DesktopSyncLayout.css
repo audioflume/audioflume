@@ -17,8 +17,10 @@
   border-top-right-radius: 22px;
 }
 
+.section-block.account-block::after,
 .account-block::after {
   display: none;
+  content: none;
 }
 
 .status-row::before {
@@ -31,16 +33,19 @@
   background: var(--divider);
 }
 
-.project-source-block,
+.project-source-block {
+  order: 3;
+}
+
 .api-endpoint-block,
 .settings-block,
 .sync-folder-block {
-  order: 3;
+  order: 4;
 }
 
 .projects-panel,
 .sync-activity-panel {
-  order: 4;
+  order: 5;
 }
 
 @media (max-width: 550px) {
