@@ -6,12 +6,7 @@ import {
 } from "./DesktopProjectBrowserGlyphs";
 import "./DesktopProjectsView.css";
 
-type ProjectTab =
-  | "overview"
-  | "music"
-  | "sound-fx"
-  | "visual-fx"
-  | "colour-grading";
+type ProjectTab = "overview" | "music" | "sound-fx" | "licenses";
 type ProjectFileView = "grid" | "list";
 
 type DesktopProjectsViewProps = {
@@ -25,8 +20,7 @@ const TABS: Array<{ label: string; value: ProjectTab }> = [
   { label: "All Files", value: "overview" },
   { label: "Music", value: "music" },
   { label: "Sound FX", value: "sound-fx" },
-  { label: "Visual FX", value: "visual-fx" },
-  { label: "Colour Grading", value: "colour-grading" },
+  { label: "Licenses", value: "licenses" },
 ];
 
 function GridViewIcon() {
