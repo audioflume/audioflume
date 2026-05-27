@@ -9,8 +9,20 @@ type LocalFileMove = {
   path?: string;
 };
 
+type LocalFileCreate = {
+  projectId?: string | number;
+  path?: string;
+  sizeBytes?: number;
+};
+
 type LocalFolderCreate = {
   projectId?: string | number;
+  path?: string;
+};
+
+type LocalFolderMove = {
+  projectId?: string | number;
+  id?: string;
   path?: string;
 };
 
@@ -73,6 +85,14 @@ function getParentPathFromFilePath(filePath: string) {
   return filePath.split("/").slice(0, -1).join("/");
 }
 
+function getNameFromPath(filePath: string) {
+  return filePath.split("/").filter(Boolean).pop() ?? filePath;
+}
+
+function getFolderParentPath(folderPath: string) {
+  return getParentPathFromFilePath(folderPath);
+}
+
 function buildFolderPathMap(folders: ProjectFolderRow[]) {
   const foldersById = new Map(folders.map((folder) => [Number(folder.id), folder]));
   const pathsById = new Map<number, string>();
@@ -111,6 +131,23 @@ async function getNextFolderPosition(projectId: number, parentFolderId: number |
   query = parentFolderId == null
     ? query.is("parent_folder_id", null)
     : query.eq("parent_folder_id", parentFolderId);
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+
+  return data?.[0]?.position != null ? Number(data[0].position) + 1 : 0;
+}
+
+async function getNextAssetPosition(projectId: number, folderId: number | null) {
+  let query = supabaseServer
+    .from("project_assets")
+    .select("position")
+    .eq("project_id", projectId)
+    .order("position", { ascending: false })
+    .limit(1);
+
+  query = folderId == null ? query.is("folder_id", null) : query.eq("folder_id", folderId);
 
   const { data, error } = await query;
 
@@ -247,6 +284,12 @@ export async function POST(req: Request) {
     const folderCreates = Array.isArray(body.folderCreates)
       ? (body.folderCreates as LocalFolderCreate[])
       : [];
+    const folderMoves = Array.isArray(body.folderMoves)
+      ? (body.folderMoves as LocalFolderMove[])
+      : [];
+    const fileCreates = Array.isArray(body.fileCreates)
+      ? (body.fileCreates as LocalFileCreate[])
+      : [];
     const fileMoves = Array.isArray(body.fileMoves)
       ? (body.fileMoves as LocalFileMove[])
       : [];
@@ -259,12 +302,16 @@ export async function POST(req: Request) {
 
     const allowedProjectIds = await getAllowedProjectIds(userId, [
       ...folderCreates.map((item) => item.projectId),
+      ...folderMoves.map((item) => item.projectId),
+      ...fileCreates.map((item) => item.projectId),
       ...fileMoves.map((item) => item.projectId),
       ...fileRemovals.map((item) => item.projectId),
       ...folderRemovals.map((item) => item.projectId),
     ]);
 
     let createdFolderCount = 0;
+    let movedFolderCount = 0;
+    let createdFileCount = 0;
     let movedFileCount = 0;
     let removedAssetCount = 0;
     let removedFolderCount = 0;
@@ -292,6 +339,85 @@ export async function POST(req: Request) {
         userId,
       });
       createdFolderCount += 1;
+    }
+
+    const normalizedFolderMoves = folderMoves
+      .map((item) => ({
+        projectId: getNumericId(item.projectId),
+        folderId: getIdFromDesktopNodeId(item.id, "folder"),
+        path: normalizeRelativePath(item.path),
+      }))
+      .filter((item): item is { projectId: number; folderId: number; path: string } =>
+        item.projectId != null &&
+        item.folderId != null &&
+        allowedProjectIds.has(item.projectId) &&
+        Boolean(item.path),
+      )
+      .sort((a, b) => a.path.length - b.path.length);
+
+    for (const move of normalizedFolderMoves) {
+      const nextName = getNameFromPath(move.path);
+      const nextParentPath = getFolderParentPath(move.path);
+      let nextParentFolderId = nextParentPath
+        ? await ensureFolderPath({ path: nextParentPath, projectId: move.projectId, userId })
+        : null;
+
+      const allFolders = await getProjectFolders(move.projectId, userId);
+      const descendantIds = getDescendantFolderIds({ allFolders, rootFolderIds: [move.folderId] });
+
+      if (nextParentFolderId != null && descendantIds.includes(nextParentFolderId)) {
+        nextParentFolderId = null;
+      }
+
+      const { error, count } = await supabaseServer
+        .from("project_folders")
+        .update({
+          name: nextName,
+          parent_folder_id: nextParentFolderId,
+        })
+        .eq("project_id", move.projectId)
+        .eq("clerk_user_id", userId)
+        .eq("id", move.folderId)
+        .select("id", { count: "exact" });
+
+      if (error) throw error;
+
+      movedFolderCount += count ?? 0;
+    }
+
+    for (const create of fileCreates) {
+      const projectId = getNumericId(create.projectId);
+      const nextPath = normalizeRelativePath(create.path);
+
+      if (!projectId || !nextPath || !allowedProjectIds.has(projectId)) continue;
+
+      const parentPath = getParentPathFromFilePath(nextPath);
+      const folderId = parentPath
+        ? await ensureFolderPath({ path: parentPath, projectId, userId })
+        : null;
+      const nextPosition = await getNextAssetPosition(projectId, folderId);
+      const filename = getNameFromPath(nextPath);
+      const fallbackAssetId = `local:${projectId}:${nextPath}`;
+
+      const { error, count } = await supabaseServer
+        .from("project_assets")
+        .insert({
+          project_id: projectId,
+          asset_type: "local-file",
+          asset_id: fallbackAssetId,
+          folder_id: folderId,
+          position: nextPosition,
+          metadata: {
+            filename,
+            source: "desktop-local-file",
+            sizeBytes: Number(create.sizeBytes || 0),
+          },
+        })
+        .select("id", { count: "exact" });
+
+      if (error) throw error;
+
+      createdFileCount += count ?? 0;
     }
 
     for (const move of fileMoves) {
@@ -371,6 +497,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       createdFolderCount,
+      movedFolderCount,
+      createdFileCount,
       movedFileCount,
       removedAssetCount,
       removedFolderCount,
