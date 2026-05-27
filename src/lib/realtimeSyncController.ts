@@ -17,10 +17,12 @@ import { detectLocalRemovals, syncProjectsToFolder } from "./syncEngine";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const LOCAL_CHANGE_DEBOUNCE_MS = 3500;
+const LOCAL_REMOVE_DEBOUNCE_MS = 700;
 const WEBSITE_CHANGE_DEBOUNCE_MS = 2500;
 const POST_SYNC_SUPPRESS_MS = 10000;
 const SETTINGS_REFRESH_MS = 10000;
 const LOCAL_RECONCILE_SWEEP_MS = 20000;
+const WEBSITE_RECONCILE_SWEEP_MS = 30000;
 const MIN_SYNC_GAP_MS = 2500;
 
 const REALTIME_UPDATED_EVENT = "filmwave:realtime-projects-updated";
@@ -39,6 +41,12 @@ type ProjectChangePayload = {
   eventType?: string;
 };
 
+type LocalFolderChangePayload = {
+  kind?: string;
+  paths?: string[];
+  syncFolder?: string;
+};
+
 let started = false;
 let currentWatchedFolder: string | null = null;
 let currentEventSource: EventSource | null = null;
@@ -46,11 +54,13 @@ let localChangeTimer: number | null = null;
 let websiteChangeTimer: number | null = null;
 let settingsRefreshTimer: number | null = null;
 let localReconcileSweepTimer: number | null = null;
+let websiteReconcileSweepTimer: number | null = null;
 let syncing = false;
 let suppressLocalChangesUntil = 0;
 let lastSyncStartedAt = 0;
 let pendingWebsiteProjectIds = new Set<string>();
 let localSyncQueued = false;
+let localSyncBypassSuppression = false;
 
 async function readSettings(): Promise<RealtimeSettings> {
   const store = await load(SETTINGS_STORE);
@@ -138,8 +148,20 @@ function dispatchRealtimeUpdated({
   );
 }
 
-function scheduleLocalSync(delayMs = LOCAL_CHANGE_DEBOUNCE_MS) {
+function isRemovalFolderChangeEvent(payload: unknown) {
+  if (!payload || typeof payload !== "object") return false;
+
+  const kind = String((payload as LocalFolderChangePayload).kind ?? "").toLowerCase();
+
+  return kind.includes("remove") || kind.includes("delete");
+}
+
+function scheduleLocalSync(
+  delayMs = LOCAL_CHANGE_DEBOUNCE_MS,
+  options: { bypassSuppression?: boolean } = {},
+) {
   localSyncQueued = true;
+  localSyncBypassSuppression = localSyncBypassSuppression || Boolean(options.bypassSuppression);
 
   if (localChangeTimer) {
     window.clearTimeout(localChangeTimer);
@@ -149,18 +171,21 @@ function scheduleLocalSync(delayMs = LOCAL_CHANGE_DEBOUNCE_MS) {
     localChangeTimer = null;
 
     if (syncing) {
-      scheduleLocalSync(LOCAL_CHANGE_DEBOUNCE_MS);
+      scheduleLocalSync(LOCAL_CHANGE_DEBOUNCE_MS, {
+        bypassSuppression: localSyncBypassSuppression,
+      });
       return;
     }
 
     const suppressRemainingMs = suppressLocalChangesUntil - Date.now();
 
-    if (suppressRemainingMs > 0) {
+    if (suppressRemainingMs > 0 && !localSyncBypassSuppression) {
       scheduleLocalSync(suppressRemainingMs + LOCAL_CHANGE_DEBOUNCE_MS);
       return;
     }
 
     localSyncQueued = false;
+    localSyncBypassSuppression = false;
     void runEventDrivenSync("local");
   }, Math.max(0, delayMs));
 }
@@ -282,7 +307,9 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
     syncing = false;
 
     if (localSyncQueued && !localChangeTimer) {
-      scheduleLocalSync(LOCAL_CHANGE_DEBOUNCE_MS);
+      scheduleLocalSync(LOCAL_CHANGE_DEBOUNCE_MS, {
+        bypassSuppression: localSyncBypassSuppression,
+      });
     }
   }
 }
@@ -382,6 +409,22 @@ async function refreshRealtimeConnections() {
   }
 }
 
+async function projectHasPendingLocalChanges({
+  projects,
+  syncFolder,
+}: {
+  projects: Project[];
+  syncFolder: string;
+}) {
+  const removals = await detectLocalRemovals({ projects, syncFolder });
+
+  if (removals.length > 0) return true;
+
+  const detected = await detectDesktopLocalChanges({ projects, syncFolder });
+
+  return hasDesktopLocalChanges(detected.changes);
+}
+
 async function runLocalReconcileSweep() {
   if (syncing || localChangeTimer) return;
 
@@ -399,13 +442,39 @@ async function runLocalReconcileSweep() {
   void runEventDrivenSync("local");
 }
 
+async function runWebsiteReconcileSweep() {
+  if (syncing || localChangeTimer || websiteChangeTimer) return;
+
+  const settings = await readSettings();
+
+  if (!shouldRunRealtimeSync(settings)) return;
+  if (!settings.desktopToken || !settings.syncFolder) return;
+
+  const projects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
+  const hasPendingLocalChanges = await projectHasPendingLocalChanges({
+    projects,
+    syncFolder: settings.syncFolder,
+  });
+
+  if (hasPendingLocalChanges) {
+    scheduleLocalSync(LOCAL_REMOVE_DEBOUNCE_MS, { bypassSuppression: true });
+    return;
+  }
+
+  void runEventDrivenSync("website");
+}
+
 export function startRealtimeSyncController() {
   if (started) return;
 
   started = true;
 
-  void listen("filmwave://local-folder-change", () => {
-    scheduleLocalSync();
+  void listen<LocalFolderChangePayload>("filmwave://local-folder-change", (event) => {
+    const isRemovalEvent = isRemovalFolderChangeEvent(event.payload);
+
+    scheduleLocalSync(isRemovalEvent ? LOCAL_REMOVE_DEBOUNCE_MS : LOCAL_CHANGE_DEBOUNCE_MS, {
+      bypassSuppression: isRemovalEvent,
+    });
   });
 
   void listen("filmwave://local-folder-watch-error", (event) => {
@@ -427,6 +496,10 @@ export function startRealtimeSyncController() {
   localReconcileSweepTimer = window.setInterval(() => {
     void runLocalReconcileSweep();
   }, LOCAL_RECONCILE_SWEEP_MS);
+
+  websiteReconcileSweepTimer = window.setInterval(() => {
+    void runWebsiteReconcileSweep();
+  }, WEBSITE_RECONCILE_SWEEP_MS);
 }
 
 export function stopRealtimeSyncController() {
@@ -439,12 +512,15 @@ export function stopRealtimeSyncController() {
   if (websiteChangeTimer) window.clearTimeout(websiteChangeTimer);
   if (settingsRefreshTimer) window.clearInterval(settingsRefreshTimer);
   if (localReconcileSweepTimer) window.clearInterval(localReconcileSweepTimer);
+  if (websiteReconcileSweepTimer) window.clearInterval(websiteReconcileSweepTimer);
 
   localChangeTimer = null;
   websiteChangeTimer = null;
   settingsRefreshTimer = null;
   localReconcileSweepTimer = null;
+  websiteReconcileSweepTimer = null;
   localSyncQueued = false;
+  localSyncBypassSuppression = false;
 
   if (currentWatchedFolder) {
     void invoke("stop_sync_folder_watch", { path: currentWatchedFolder });
