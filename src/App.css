@@ -149,18 +149,11 @@ p {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: -0.01em;
+  user-select: text;
 }
 
 .header-row::after {
-  content: "Live project connection and local sync readiness.";
-  position: absolute;
-  left: 20px;
-  bottom: 34px;
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1;
-  pointer-events: none;
-  transform: translateY(16px);
+  display: none;
 }
 
 .header-row > div:first-child {
@@ -255,8 +248,8 @@ p {
 .section-block:not(.account-block)::after {
   content: "";
   position: absolute;
-  left: 20px;
-  right: 20px;
+  left: 0;
+  right: 0;
   top: 0;
   height: 1px;
   background: var(--divider);
@@ -505,8 +498,8 @@ p {
 .project-row + .project-row::before {
   content: "";
   position: absolute;
-  left: 14px;
-  right: 14px;
+  left: 0;
+  right: 0;
   top: 0;
   height: 1px;
   background: var(--divider);
