@@ -24,7 +24,7 @@ type HeaderProps = {
   isSignedIn: boolean;
   onActiveViewChange: (view: DesktopAppView) => void;
   onOpenSignIn: () => void | Promise<void>;
-  onOpenSyncSettings: () => void;
+  onOpenSyncSettings?: () => void;
   onSignOut: () => void | Promise<void>;
 };
 
@@ -46,6 +46,7 @@ export default function Header({
   onSignOut,
 }: HeaderProps) {
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
+  const openSyncSettings = onOpenSyncSettings ?? (() => onActiveViewChange("settings"));
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -104,7 +105,7 @@ export default function Header({
             accountLoading={accountLoading}
             isSignedIn={isSignedIn}
             onOpenSignIn={onOpenSignIn}
-            onOpenSyncSettings={onOpenSyncSettings}
+            onOpenSyncSettings={openSyncSettings}
             onSignOut={onSignOut}
             theme={theme}
             onThemeChange={setTheme}
