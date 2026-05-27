@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import "./DesktopAppShell.css";
 
 export type DesktopAppView =
@@ -10,8 +11,8 @@ export type DesktopAppView =
 
 type DesktopAppShellProps = {
   activeView: DesktopAppView;
-  header: React.ReactNode;
-  children: React.ReactNode;
+  header: ReactNode;
+  children: ReactNode;
   onActiveViewChange: (view: DesktopAppView) => void;
 };
 
