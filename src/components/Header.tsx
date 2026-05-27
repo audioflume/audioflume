@@ -5,6 +5,7 @@ import DashboardIcon from "./icons/DashboardIcon";
 import PlaylistIcon from "./icons/PlaylistIcon";
 import UserMenu from "./UserMenu";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
+import type { DesktopAppView } from "./desktop-app/DesktopAppShell";
 import "./Header.css";
 
 const THEME_STORAGE_KEY = "filmwave-theme";
@@ -19,7 +20,9 @@ type ThemeMode = "dark" | "light";
 type HeaderProps = {
   account: DesktopAccount | null;
   accountLoading: boolean;
+  activeView: DesktopAppView;
   isSignedIn: boolean;
+  onActiveViewChange: (view: DesktopAppView) => void;
   onOpenSignIn: () => void | Promise<void>;
   onSignOut: () => void | Promise<void>;
 };
@@ -34,7 +37,9 @@ function getInitialTheme(): ThemeMode {
 export default function Header({
   account,
   accountLoading,
+  activeView,
   isSignedIn,
+  onActiveViewChange,
   onOpenSignIn,
   onSignOut,
 }: HeaderProps) {
@@ -64,6 +69,7 @@ export default function Header({
           type="button"
           className="desktop-header-logo-button"
           aria-label="Filmwave Desktop home"
+          onClick={() => onActiveViewChange("projects")}
         >
           <FilmwaveLogoIcon
             className="desktop-header-logo-mark"
@@ -73,12 +79,20 @@ export default function Header({
         </button>
 
         <div className="desktop-header-actions">
-          <button type="button" className="desktop-nav-link">
+          <button
+            type="button"
+            className={`desktop-nav-link${activeView === "discover" ? " is-active" : ""}`}
+            onClick={() => onActiveViewChange("discover")}
+          >
             <DashboardIcon size={14} />
             Discover
           </button>
 
-          <button type="button" className="desktop-nav-link">
+          <button
+            type="button"
+            className={`desktop-nav-link${activeView === "projects" ? " is-active" : ""}`}
+            onClick={() => onActiveViewChange("projects")}
+          >
             <PlaylistIcon size={14} />
             Projects
           </button>
