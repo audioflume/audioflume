@@ -990,7 +990,9 @@ function App() {
     <Header
       account={desktopAccount}
       accountLoading={accountLoading}
+      activeView={activeView}
       isSignedIn={isSignedIn}
+      onActiveViewChange={setActiveView}
       onOpenSignIn={openSignInPage}
       onSignOut={signOutDesktop}
     />
