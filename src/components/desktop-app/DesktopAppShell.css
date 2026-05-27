@@ -136,6 +136,13 @@
   white-space: nowrap;
 }
 
+.desktop-sidebar-empty-projects {
+  padding: 6px 10px 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .desktop-app-main {
   min-height: 100vh;
   padding: 88px 24px 34px 284px;
@@ -397,7 +404,8 @@
 
   .desktop-sidebar-heading,
   .desktop-sidebar-link-label,
-  .desktop-sidebar-add-button {
+  .desktop-sidebar-add-button,
+  .desktop-sidebar-empty-projects {
     display: none;
   }
 
