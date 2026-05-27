@@ -1,15 +1,24 @@
 type FilmwaveLogoIconProps = {
   className?: string;
+  width?: number;
+  height?: number;
 };
 
-export default function FilmwaveLogoIcon({ className }: FilmwaveLogoIconProps) {
+export default function FilmwaveLogoIcon({
+  className,
+  width = 158,
+  height = 31,
+}: FilmwaveLogoIconProps) {
   return (
     <svg
       className={className}
       xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
       fill="currentColor"
       viewBox="0 0 158.3 30.74"
       aria-label="Filmwave"
+      role="img"
     >
       <path d="M9.58,28.35c0,1.39,1.19,2.51,2.61,2.38,1.27-.11,2.18-1.28,2.18-2.55v-12.95s-.02-.04-.04-.04h-4.71s-.04.02-.04.04v13.12Z" />
       <path d="M9.58,8.17c0-1.39-1.19-2.51-2.61-2.38-1.27.11-2.18,1.28-2.18,2.55v6.81s.02.04.04.04h4.71s.04-.02.04-.04v-6.98Z" />
