@@ -3,6 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import { load } from "@tauri-apps/plugin-store";
 import {
   applyDesktopLocalChanges,
+  applyDesktopLocalRemovals,
   getFilmwaveProjects,
   normalizeFilmwaveApiBaseUrl,
   type Project,
@@ -12,7 +13,7 @@ import {
   hasDesktopLocalChanges,
 } from "./localFolderChanges";
 import { formatLocalChangesSummary } from "./localChangeDetector";
-import { syncProjectsToFolder } from "./syncEngine";
+import { detectLocalRemovals, syncProjectsToFolder } from "./syncEngine";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const LOCAL_CHANGE_DEBOUNCE_MS = 3500;
@@ -193,8 +194,31 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
     let updatedProjectIds = new Set(projectsToSync.map((project) => String(project.id)));
 
     if (reason === "local") {
+      const localRemovals = await detectLocalRemovals({
+        projects: projectsToSync,
+        syncFolder: settings.syncFolder,
+      });
+
+      if (localRemovals.length > 0) {
+        const removalResult = await applyDesktopLocalRemovals({
+          apiBaseUrl: settings.apiBaseUrl,
+          token: settings.desktopToken,
+          removals: localRemovals.map((removal) => ({
+            projectId: removal.projectId,
+            id: removal.id,
+            type: removal.type,
+          })),
+        });
+        const removalProjectIds = new Set(localRemovals.map((removal) => String(removal.projectId)));
+        const refreshedProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
+
+        projectsToSync = filterProjectsByIds(refreshedProjects, removalProjectIds);
+        updatedProjectIds = removalProjectIds;
+        localChangeSummary += `Applied ${localRemovals.length} local removal${localRemovals.length === 1 ? "" : "s"}: removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. `;
+      }
+
       const detected = await detectDesktopLocalChanges({
-        projects: initialProjects,
+        projects: projectsToSync,
         syncFolder: settings.syncFolder,
       });
 
@@ -205,13 +229,13 @@ async function runEventDrivenSync(reason: "local" | "website", projectIds = new 
           changes: detected.changes,
         });
 
-        localChangeSummary = `Applied local changes: ${formatLocalChangesSummary(changeResult)}. `;
+        localChangeSummary += `Applied local changes: ${formatLocalChangesSummary(changeResult)}. `;
 
         const changedProjectIds = new Set(detected.affectedProjectIds.map(String));
         const refreshedProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
         projectsToSync = filterProjectsByIds(refreshedProjects, changedProjectIds);
-        updatedProjectIds = changedProjectIds;
-      } else {
+        updatedProjectIds = new Set([...updatedProjectIds, ...changedProjectIds]);
+      } else if (!localChangeSummary) {
         localChangeSummary = "No manifest-backed local changes found. ";
       }
     }
