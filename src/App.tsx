@@ -35,12 +35,23 @@ import SettingsBreadcrumb from "./components/desktop-sync/SettingsBreadcrumb";
 import SyncActivityBlock from "./components/desktop-sync/SyncActivityBlock";
 import SyncFolderBlock from "./components/desktop-sync/SyncFolderBlock";
 import SyncStatusRow from "./components/desktop-sync/SyncStatusRow";
+import DesktopAppShell, {
+  type DesktopAppView,
+} from "./components/desktop-app/DesktopAppShell";
+import {
+  CuratedPlaylistsView,
+  DiscoverView,
+  MusicLibraryView,
+  PlaylistsView,
+  ProjectsHomeView,
+} from "./components/desktop-app/DesktopPlaceholderViews";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const DEFAULT_AUTO_SYNC_INTERVAL_MINUTES = 15;
 const MAX_SYNC_ACTIVITY_LOG_ENTRIES = 10;
 
 type ProjectSource = "mock" | "local-api";
+
 type SyncRunOptions = {
   automatic?: boolean;
 };
@@ -81,6 +92,7 @@ function getProjectNames(projects: Project[]) {
 }
 
 function App() {
+  const [activeView, setActiveView] = useState<DesktopAppView>("projects");
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [projectSource, setProjectSource] = useState<ProjectSource>("mock");
@@ -136,13 +148,8 @@ function App() {
   }, [projects, selectedProjectIds]);
 
   const selectedSummary = useMemo(() => {
-    if (projectsLoading) {
-      return "Loading projects...";
-    }
-
-    if (!hasSelectedProjects) {
-      return "No projects selected";
-    }
+    if (projectsLoading) return "Loading projects...";
+    if (!hasSelectedProjects) return "No projects selected";
 
     const selectedCount = selectedProjectIds.length;
     const label = selectedCount === 1 ? "project" : "projects";
@@ -285,9 +292,7 @@ function App() {
   } = {}) {
     setProjectsLoading(true);
 
-    if (clearReport) {
-      setLastSyncReport(null);
-    }
+    if (clearReport) setLastSyncReport(null);
 
     setSyncStatus(statusLabel);
 
@@ -316,7 +321,6 @@ function App() {
           ? error.message
           : "Could not load Filmwave projects.",
       );
-
       throw error;
     } finally {
       setProjectsLoading(false);
@@ -369,9 +373,7 @@ function App() {
         setSyncStatus("Folder ready");
       }
 
-      if (savedLastSyncedFolder) {
-        setLastSyncedFolder(savedLastSyncedFolder);
-      }
+      if (savedLastSyncedFolder) setLastSyncedFolder(savedLastSyncedFolder);
 
       if (savedDesktopToken) {
         setDesktopToken(savedDesktopToken);
@@ -383,15 +385,13 @@ function App() {
       }
     }
 
-    loadSavedSettings();
+    void loadSavedSettings();
   }, []);
 
   useEffect(() => {
     async function handleDeepLinkUrl(url: string) {
       const token = getTokenFromDeepLink(url);
-
       if (!token) return;
-
       await saveDesktopToken(token);
     }
 
@@ -428,7 +428,6 @@ function App() {
 
       try {
         const nextProjects = await fetchProjects();
-
         if (cancelled) return;
 
         const nextProjectIds = new Set(
@@ -459,13 +458,11 @@ function App() {
             : "Could not load Filmwave projects.",
         );
       } finally {
-        if (!cancelled) {
-          setProjectsLoading(false);
-        }
+        if (!cancelled) setProjectsLoading(false);
       }
     }
 
-    loadInitialProjects();
+    void loadInitialProjects();
 
     return () => {
       cancelled = true;
@@ -584,9 +581,7 @@ function App() {
     await store.set("apiBaseUrl", nextApiBaseUrl);
     await store.save();
 
-    if (desktopToken) {
-      await loadDesktopAccount(desktopToken, nextApiBaseUrl);
-    }
+    if (desktopToken) await loadDesktopAccount(desktopToken, nextApiBaseUrl);
   }
 
   async function resetApiBaseUrl() {
@@ -716,18 +711,14 @@ function App() {
       console.error(error);
       setSyncStatus("Local check failed");
       setLastSyncReport(
-        error instanceof Error
-          ? error.message
-          : "Could not check local removals.",
+        error instanceof Error ? error.message : "Could not check local removals.",
       );
       await addSyncActivityLogEntry({
         mode: "local",
         status: "error",
         title: "Local removal check failed",
         detail:
-          error instanceof Error
-            ? error.message
-            : "Could not check local removals.",
+          error instanceof Error ? error.message : "Could not check local removals.",
         projectNames: getProjectNames(selectedProjects),
       });
     } finally {
@@ -811,18 +802,14 @@ function App() {
       console.error(error);
       setSyncStatus("Apply failed");
       setLastSyncReport(
-        error instanceof Error
-          ? error.message
-          : "Could not apply local removals.",
+        error instanceof Error ? error.message : "Could not apply local removals.",
       );
       await addSyncActivityLogEntry({
         mode: "local",
         status: "error",
         title: "Apply local removals failed",
         detail:
-          error instanceof Error
-            ? error.message
-            : "Could not apply local removals.",
+          error instanceof Error ? error.message : "Could not apply local removals.",
         projectNames: pendingProjectNames,
       });
     } finally {
@@ -833,10 +820,7 @@ function App() {
 
   function toggleProject(projectId: string) {
     setSelectedProjectIds((current) => {
-      if (current.includes(projectId)) {
-        return current.filter((id) => id !== projectId);
-      }
-
+      if (current.includes(projectId)) return current.filter((id) => id !== projectId);
       return [...current, projectId];
     });
     setLocalRemovals([]);
@@ -852,9 +836,7 @@ function App() {
       console.error(error);
       setSyncStatus("Could not open folder");
       setLastSyncReport(
-        error instanceof Error
-          ? error.message
-          : "Could not open the synced folder.",
+        error instanceof Error ? error.message : "Could not open the synced folder.",
       );
     } finally {
       window.setTimeout(() => setOpeningFolder(false), 500);
@@ -881,11 +863,7 @@ function App() {
 
     try {
       setSyncing(true);
-      setSyncStatus(
-        options.automatic
-          ? "Fallback syncing..."
-          : "Checking local removals...",
-      );
+      setSyncStatus(options.automatic ? "Fallback syncing..." : "Checking local removals...");
       setLastSyncReport(null);
       setLocalRemovals([]);
       setSyncProgress(null);
@@ -927,7 +905,6 @@ function App() {
         clearReport: false,
         statusLabel: "Refreshing projects...",
       });
-
       const selectedProjectIdSet = new Set(selectedProjectIds);
       const latestSelectedProjects = latestProjects.filter((project) =>
         selectedProjectIdSet.has(project.id),
@@ -969,18 +946,14 @@ function App() {
       await store.set("lastSyncedFolder", nextLastSyncedFolder);
       await store.save();
 
-      if (options.automatic) {
-        setLastAutoSyncedAt(new Date());
-      }
+      if (options.automatic) setLastAutoSyncedAt(new Date());
 
       setSyncStatus(options.automatic ? "Fallback synced" : "Synced");
       setLastSyncReport(`${autoRemovalSummary}${formatSyncReport(result)}`);
       await addSyncActivityLogEntry({
         mode: options.automatic ? "auto" : "manual",
         status: "success",
-        title: options.automatic
-          ? "Fallback sync complete"
-          : "Manual sync complete",
+        title: options.automatic ? "Fallback sync complete" : "Manual sync complete",
         detail: `${autoRemovalSummary}${formatSyncReport(result)}`,
         projectNames: getProjectNames(latestSelectedProjects),
       });
@@ -998,20 +971,14 @@ function App() {
       console.error(error);
       setSyncStatus(options.automatic ? "Fallback sync failed" : "Sync failed");
       setLastSyncReport(
-        error instanceof Error
-          ? error.message
-          : "An unknown sync error occurred.",
+        error instanceof Error ? error.message : "An unknown sync error occurred.",
       );
       await addSyncActivityLogEntry({
         mode: options.automatic ? "auto" : "manual",
         status: "error",
-        title: options.automatic
-          ? "Fallback sync failed"
-          : "Manual sync failed",
+        title: options.automatic ? "Fallback sync failed" : "Manual sync failed",
         detail:
-          error instanceof Error
-            ? error.message
-            : "An unknown sync error occurred.",
+          error instanceof Error ? error.message : "An unknown sync error occurred.",
         projectNames: runProjectNames,
       });
     } finally {
@@ -1019,15 +986,27 @@ function App() {
     }
   }
 
-  return (
-    <main className="app-shell">
-      <Header
-        account={desktopAccount}
-        accountLoading={accountLoading}
-        isSignedIn={isSignedIn}
-        onOpenSignIn={openSignInPage}
-        onSignOut={signOutDesktop}
-      />
+  const header = (
+    <Header
+      account={desktopAccount}
+      accountLoading={accountLoading}
+      isSignedIn={isSignedIn}
+      onOpenSignIn={openSignInPage}
+      onSignOut={signOutDesktop}
+    />
+  );
+
+  const syncSettingsView = (
+    <section className="desktop-view desktop-settings-view">
+      <div className="desktop-view-header">
+        <div>
+          <div className="desktop-view-eyebrow">Settings</div>
+          <h1 className="desktop-view-title">Desktop Sync</h1>
+          <p className="desktop-view-description">
+            Control account connection, project source, realtime sync, fallback checks, local folder, and sync activity.
+          </p>
+        </div>
+      </div>
 
       <section className="sync-card">
         <SettingsBreadcrumb />
@@ -1112,7 +1091,45 @@ function App() {
           onClearSyncActivityLog={clearSyncActivityLog}
         />
       </section>
-    </main>
+    </section>
+  );
+
+  function renderActiveView() {
+    switch (activeView) {
+      case "projects":
+        return (
+          <ProjectsHomeView
+            projects={projects}
+            projectsLoading={projectsLoading}
+            selectedProjectIds={selectedProjectIds}
+            syncFolder={syncFolder}
+            syncStatus={syncStatus}
+            onOpenSyncSettings={() => setActiveView("settings")}
+          />
+        );
+      case "music":
+        return <MusicLibraryView />;
+      case "playlists":
+        return <PlaylistsView />;
+      case "discover":
+        return <DiscoverView />;
+      case "curated":
+        return <CuratedPlaylistsView />;
+      case "settings":
+        return syncSettingsView;
+      default:
+        return null;
+    }
+  }
+
+  return (
+    <DesktopAppShell
+      activeView={activeView}
+      header={header}
+      onActiveViewChange={setActiveView}
+    >
+      {renderActiveView()}
+    </DesktopAppShell>
   );
 }
 
