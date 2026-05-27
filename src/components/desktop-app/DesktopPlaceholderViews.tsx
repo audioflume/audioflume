@@ -1,5 +1,15 @@
+import { useEffect, useMemo, useState } from "react";
 import type { Project } from "../../lib/mockFilmwaveApi";
 import DesktopProjectsView from "./DesktopProjectsView";
+
+const REALTIME_UPDATED_EVENT = "filmwave:realtime-projects-updated";
+
+type RealtimeProjectsUpdatedDetail = {
+  projectIds?: string[];
+  projects?: Project[];
+  reason?: "local" | "website";
+  updatedAt?: string;
+};
 
 type ProjectsHomeViewProps = {
   activeProjectId: string | null;
@@ -12,6 +22,23 @@ type ProjectsHomeViewProps = {
   onOpenSyncSettings: () => void;
 };
 
+function mergeProjectUpdates(currentProjects: Project[], updatedProjects: Project[]) {
+  if (updatedProjects.length === 0) return currentProjects;
+
+  const updatedProjectMap = new Map(
+    updatedProjects.map((project) => [String(project.id), project]),
+  );
+  const mergedProjects = currentProjects.map((project) =>
+    updatedProjectMap.get(String(project.id)) ?? project,
+  );
+  const existingProjectIds = new Set(currentProjects.map((project) => String(project.id)));
+  const newProjects = updatedProjects.filter(
+    (project) => !existingProjectIds.has(String(project.id)),
+  );
+
+  return [...mergedProjects, ...newProjects];
+}
+
 export function ProjectsHomeView({
   activeProjectId,
   projects,
@@ -20,10 +47,47 @@ export function ProjectsHomeView({
   syncStatus,
   onActiveProjectIdChange,
 }: ProjectsHomeViewProps) {
+  const [realtimeProjects, setRealtimeProjects] = useState(projects);
+
+  useEffect(() => {
+    setRealtimeProjects(projects);
+  }, [projects]);
+
+  useEffect(() => {
+    function handleRealtimeProjectsUpdated(event: Event) {
+      const detail = (event as CustomEvent<RealtimeProjectsUpdatedDetail>).detail;
+
+      if (!Array.isArray(detail?.projects) || detail.projects.length === 0) return;
+
+      setRealtimeProjects((currentProjects) =>
+        mergeProjectUpdates(currentProjects, detail.projects ?? []),
+      );
+    }
+
+    window.addEventListener(REALTIME_UPDATED_EVENT, handleRealtimeProjectsUpdated);
+
+    return () => {
+      window.removeEventListener(REALTIME_UPDATED_EVENT, handleRealtimeProjectsUpdated);
+    };
+  }, []);
+
+  const activeProjectStillExists = useMemo(
+    () =>
+      !activeProjectId ||
+      realtimeProjects.some((project) => String(project.id) === String(activeProjectId)),
+    [activeProjectId, realtimeProjects],
+  );
+
+  useEffect(() => {
+    if (!activeProjectStillExists) {
+      onActiveProjectIdChange(null);
+    }
+  }, [activeProjectStillExists, onActiveProjectIdChange]);
+
   return (
     <DesktopProjectsView
       activeProjectId={activeProjectId}
-      projects={projects}
+      projects={realtimeProjects}
       projectsLoading={projectsLoading}
       syncFolder={syncFolder}
       syncStatus={syncStatus}
