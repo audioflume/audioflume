@@ -93,6 +93,7 @@ function getProjectNames(projects: Project[]) {
 
 function App() {
   const [activeView, setActiveView] = useState<DesktopAppView>("projects");
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [projectSource, setProjectSource] = useState<ProjectSource>("mock");
@@ -304,6 +305,9 @@ function App() {
       setSelectedProjectIds((current) =>
         current.filter((projectId) => nextProjectIds.has(projectId)),
       );
+      setActiveProjectId((current) =>
+        current && nextProjectIds.has(current) ? current : null,
+      );
       setLastRefreshedAt(new Date());
       setSyncStatus(
         projectSource === "local-api" ? "Filmwave loaded" : "Mock data loaded",
@@ -314,6 +318,7 @@ function App() {
       console.error(error);
       setProjects([]);
       setSelectedProjectIds([]);
+      setActiveProjectId(null);
       setLocalRemovals([]);
       setSyncStatus("Could not load projects");
       setLastSyncReport(
@@ -420,6 +425,7 @@ function App() {
       if (projectSource === "local-api" && !desktopToken) {
         setProjects([]);
         setSelectedProjectIds([]);
+        setActiveProjectId(null);
         setLocalRemovals([]);
         setSyncStatus("Sign in required");
         setProjectsLoading(false);
@@ -438,6 +444,9 @@ function App() {
         setSelectedProjectIds((current) =>
           current.filter((projectId) => nextProjectIds.has(projectId)),
         );
+        setActiveProjectId((current) =>
+          current && nextProjectIds.has(current) ? current : null,
+        );
         setLastRefreshedAt(new Date());
         setSyncStatus(
           projectSource === "local-api"
@@ -450,6 +459,7 @@ function App() {
         console.error(error);
         setProjects([]);
         setSelectedProjectIds([]);
+        setActiveProjectId(null);
         setLocalRemovals([]);
         setSyncStatus("Could not load projects");
         setLastSyncReport(
@@ -527,6 +537,7 @@ function App() {
     const store = await load(SETTINGS_STORE);
 
     setSelectedProjectIds([]);
+    setActiveProjectId(null);
     setSyncProgress(null);
     setLocalRemovals([]);
     setLastSyncReport(null);
@@ -572,6 +583,7 @@ function App() {
     setApiBaseUrl(nextApiBaseUrl);
     setApiBaseUrlDraft(nextApiBaseUrl);
     setSelectedProjectIds([]);
+    setActiveProjectId(null);
     setLocalRemovals([]);
     setLastRefreshedAt(null);
     setLastSyncReport(null);
@@ -590,6 +602,7 @@ function App() {
 
     setApiBaseUrl(DEFAULT_FILMWAVE_API_BASE_URL);
     setSelectedProjectIds([]);
+    setActiveProjectId(null);
     setLocalRemovals([]);
     setLastRefreshedAt(null);
     setLastSyncReport(null);
@@ -628,6 +641,7 @@ function App() {
     setDesktopAccount(null);
     setProjects([]);
     setSelectedProjectIds([]);
+    setActiveProjectId(null);
     setLocalRemovals([]);
     setLastRefreshedAt(null);
     setSyncProgress(null);
@@ -1101,11 +1115,13 @@ function App() {
       case "projects":
         return (
           <ProjectsHomeView
+            activeProjectId={activeProjectId}
             projects={projects}
             projectsLoading={projectsLoading}
             selectedProjectIds={selectedProjectIds}
             syncFolder={syncFolder}
             syncStatus={syncStatus}
+            onActiveProjectIdChange={setActiveProjectId}
             onOpenSyncSettings={() => setActiveView("settings")}
           />
         );
@@ -1126,8 +1142,11 @@ function App() {
 
   return (
     <DesktopAppShell
+      activeProjectId={activeProjectId}
       activeView={activeView}
       header={header}
+      projects={projects}
+      onActiveProjectIdChange={setActiveProjectId}
       onActiveViewChange={setActiveView}
     >
       {renderActiveView()}
