@@ -21,7 +21,9 @@ html[data-theme="light"] {
 }
 
 body {
-  transition: background 0.18s ease, color 0.18s ease;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
 }
 
 html[data-theme="light"] .desktop-header {
@@ -67,8 +69,12 @@ html[data-theme="light"] .source-toggle button.is-active {
   color: #111111;
 }
 
-html[data-theme="light"] .source-toggle[aria-label="Realtime sync setting"] button,
-html[data-theme="light"] .source-toggle[aria-label="Realtime sync setting"] button.is-active {
+html[data-theme="light"]
+  .source-toggle[aria-label="Realtime sync setting"]
+  button,
+html[data-theme="light"]
+  .source-toggle[aria-label="Realtime sync setting"]
+  button.is-active {
   color: transparent !important;
 }
 
@@ -221,7 +227,9 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
   padding: 0 10px;
   font-size: 12px;
   font-weight: 500;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .desktop-nav-link:hover,
@@ -388,7 +396,9 @@ html[data-theme="light"] .desktop-user-menu {
   color: var(--text-secondary);
   font-size: 11px;
   font-weight: 500;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .desktop-theme-toggle button.is-dark:hover,
@@ -408,7 +418,7 @@ html[data-theme="light"] .desktop-user-menu {
   width: 100%;
   min-height: 42px;
   align-items: flex-start;
-  margin: 0 0 52px;
+  margin: 0 0 32px;
   border-bottom: 1px solid var(--divider);
   color: var(--text-muted);
   font-size: 12px;
@@ -592,7 +602,9 @@ p,
   height: 26px;
 }
 
-.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active)::after {
+.source-toggle[aria-label="Realtime sync setting"]:has(
+    button:nth-child(2).is-active
+  )::after {
   transform: translateX(26px);
 }
 
