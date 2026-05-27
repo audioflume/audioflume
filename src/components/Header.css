@@ -394,14 +394,14 @@ html[data-theme="light"] .desktop-user-menu {
 
 .desktop-theme-toggle button.is-dark:hover,
 .desktop-theme-toggle button.is-dark.is-active {
-  background: #fb8f61;
-  color: #ffffff;
+  background: #ffffff;
+  color: #111111;
 }
 
 .desktop-theme-toggle button.is-light:hover,
 .desktop-theme-toggle button.is-light.is-active {
-  background: #ddff43;
-  color: #111111;
+  background: #111111;
+  color: #ffffff;
 }
 
 @media (max-width: 550px) {
