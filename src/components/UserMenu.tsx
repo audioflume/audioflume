@@ -1,0 +1,150 @@
+import { useEffect, useRef, useState } from "react";
+import ChevronDownIcon from "./icons/ChevronDownIcon";
+import type { DesktopAccount } from "../lib/mockFilmwaveApi";
+
+type ThemeMode = "dark" | "light";
+
+type UserMenuProps = {
+  account: DesktopAccount | null;
+  accountLoading: boolean;
+  isSignedIn: boolean;
+  onOpenSignIn: () => void | Promise<void>;
+  onSignOut: () => void | Promise<void>;
+  theme: ThemeMode;
+  onThemeChange: (theme: ThemeMode) => void;
+};
+
+function getAccountInitial(account: DesktopAccount | null) {
+  const value = account?.name || account?.email || "F";
+  return value.trim().charAt(0).toUpperCase() || "F";
+}
+
+function ThemeButton({
+  active,
+  children,
+  className,
+  onClick,
+}: {
+  active: boolean;
+  children: React.ReactNode;
+  className: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`${className} ${active ? "is-active" : ""}`}
+      aria-pressed={active}
+    >
+      {children}
+    </button>
+  );
+}
+
+export default function UserMenu({
+  account,
+  accountLoading,
+  isSignedIn,
+  onOpenSignIn,
+  onSignOut,
+  theme,
+  onThemeChange,
+}: UserMenuProps) {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const accountName = account?.name ?? (accountLoading ? "Loading account..." : "Filmwave user");
+  const accountEmail = account?.email ?? (isSignedIn ? "Connected to Filmwave" : "Not connected");
+
+  useEffect(() => {
+    function handlePointerDown(event: PointerEvent) {
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    if (open) window.addEventListener("pointerdown", handlePointerDown);
+    return () => window.removeEventListener("pointerdown", handlePointerDown);
+  }, [open]);
+
+  return (
+    <div ref={menuRef} className="desktop-user-menu-root">
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        className={`desktop-account-trigger ${open ? "is-open" : ""}`}
+        aria-label="Open user menu"
+        aria-expanded={open}
+      >
+        <span className="desktop-account-trigger-label">
+          <span className="desktop-account-name">{isSignedIn ? accountName : "Account"}</span>
+          <ChevronDownIcon className={`desktop-header-chevron ${open ? "is-open" : ""}`} size={13} />
+        </span>
+
+        <span className="desktop-account-avatar">
+          {account?.imageUrl ? <img src={account.imageUrl} alt="" /> : getAccountInitial(account)}
+        </span>
+      </button>
+
+      {open && (
+        <div className="desktop-user-menu-wrap">
+          <div className="desktop-user-menu">
+            <div className="desktop-user-menu-head">
+              <div className="desktop-user-menu-name">{isSignedIn ? accountName : "Filmwave Desktop"}</div>
+              <div className="desktop-user-menu-plan">{accountEmail}</div>
+            </div>
+
+            <div className="desktop-user-menu-actions">
+              <button
+                type="button"
+                className="desktop-user-menu-action"
+                onClick={() => {
+                  setOpen(false);
+                  void onOpenSignIn();
+                }}
+              >
+                <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
+                <span>{isSignedIn ? "Refresh desktop access" : "Connect your Filmwave account"}</span>
+              </button>
+
+              {isSignedIn && (
+                <button
+                  type="button"
+                  className="desktop-user-menu-action"
+                  onClick={() => {
+                    setOpen(false);
+                    void onSignOut();
+                  }}
+                >
+                  <span>Sign out</span>
+                  <span>Disconnect this desktop app</span>
+                </button>
+              )}
+            </div>
+
+            <div className="desktop-theme-menu">
+              <div className="desktop-theme-toggle" aria-label="Theme setting">
+                <ThemeButton
+                  active={theme === "dark"}
+                  className="is-dark"
+                  onClick={() => onThemeChange("dark")}
+                >
+                  Dark
+                </ThemeButton>
+
+                <ThemeButton
+                  active={theme === "light"}
+                  className="is-light"
+                  onClick={() => onThemeChange("light")}
+                >
+                  Light
+                </ThemeButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
