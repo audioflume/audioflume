@@ -19,6 +19,7 @@ const LOCAL_CHANGE_DEBOUNCE_MS = 3500;
 const WEBSITE_CHANGE_DEBOUNCE_MS = 2500;
 const POST_SYNC_SUPPRESS_MS = 10000;
 const SETTINGS_REFRESH_MS = 10000;
+const LOCAL_RECONCILE_SWEEP_MS = 20000;
 const MIN_SYNC_GAP_MS = 2500;
 
 const REALTIME_UPDATED_EVENT = "filmwave:realtime-projects-updated";
@@ -43,6 +44,7 @@ let currentEventSource: EventSource | null = null;
 let localChangeTimer: number | null = null;
 let websiteChangeTimer: number | null = null;
 let settingsRefreshTimer: number | null = null;
+let localReconcileSweepTimer: number | null = null;
 let syncing = false;
 let suppressLocalChangesUntil = 0;
 let lastSyncStartedAt = 0;
@@ -356,6 +358,23 @@ async function refreshRealtimeConnections() {
   }
 }
 
+async function runLocalReconcileSweep() {
+  if (syncing || localChangeTimer) return;
+
+  const settings = await readSettings();
+
+  if (!shouldRunRealtimeSync(settings)) return;
+
+  const suppressRemainingMs = suppressLocalChangesUntil - Date.now();
+
+  if (suppressRemainingMs > 0) {
+    scheduleLocalSync(suppressRemainingMs + LOCAL_CHANGE_DEBOUNCE_MS);
+    return;
+  }
+
+  void runEventDrivenSync("local");
+}
+
 export function startRealtimeSyncController() {
   if (started) return;
 
@@ -380,6 +399,10 @@ export function startRealtimeSyncController() {
   settingsRefreshTimer = window.setInterval(() => {
     void refreshRealtimeConnections();
   }, SETTINGS_REFRESH_MS);
+
+  localReconcileSweepTimer = window.setInterval(() => {
+    void runLocalReconcileSweep();
+  }, LOCAL_RECONCILE_SWEEP_MS);
 }
 
 export function stopRealtimeSyncController() {
@@ -391,10 +414,12 @@ export function stopRealtimeSyncController() {
   if (localChangeTimer) window.clearTimeout(localChangeTimer);
   if (websiteChangeTimer) window.clearTimeout(websiteChangeTimer);
   if (settingsRefreshTimer) window.clearInterval(settingsRefreshTimer);
+  if (localReconcileSweepTimer) window.clearInterval(localReconcileSweepTimer);
 
   localChangeTimer = null;
   websiteChangeTimer = null;
   settingsRefreshTimer = null;
+  localReconcileSweepTimer = null;
   localSyncQueued = false;
 
   if (currentWatchedFolder) {
