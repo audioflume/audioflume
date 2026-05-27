@@ -167,8 +167,8 @@ function ProjectSyncStatus({
 
   return (
     <span className={`project-sync-status is-${syncState}`}>
-      <span className="project-sync-status-dot" />
       <span>{formatSyncTime(project, syncState)}</span>
+      <span className="project-sync-status-dot" />
     </span>
   );
 }
