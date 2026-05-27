@@ -75,7 +75,7 @@ button {
   width: 100%;
   min-height: 24px;
   align-items: center;
-  margin: 0 0 20px;
+  margin: 0 0 32px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--divider);
   color: var(--text-muted);
@@ -148,6 +148,7 @@ p {
 .header-row p {
   max-width: 520px;
   margin: 0;
+  margin-top: 14px;
   color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.55;
@@ -322,10 +323,16 @@ p {
   outline: none;
 }
 
-.token-form input { width: min(360px, 100%); }
-.settings-form input { width: 170px; }
+.token-form input {
+  width: min(360px, 100%);
+}
+.settings-form input {
+  width: 170px;
+}
 .token-form input::placeholder,
-.settings-form input::placeholder { color: var(--text-muted); }
+.settings-form input::placeholder {
+  color: var(--text-muted);
+}
 
 .primary-button,
 .secondary-button {
@@ -336,7 +343,10 @@ p {
   padding: 0 17px;
   font-size: 14px;
   font-weight: 500;
-  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .primary-button {
@@ -402,10 +412,14 @@ p {
   height: 28px;
   border-radius: 999px;
   background: var(--warning);
-  transition: transform 0.18s ease, background 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease;
 }
 
-.source-toggle[aria-label="Realtime sync setting"]:has(button:nth-child(2).is-active)::after {
+.source-toggle[aria-label="Realtime sync setting"]:has(
+    button:nth-child(2).is-active
+  )::after {
   background: var(--success);
   transform: translateX(26px);
 }
