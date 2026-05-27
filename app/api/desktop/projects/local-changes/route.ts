@@ -5,7 +5,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 
 type LocalFileMove = {
   projectId?: string | number;
-  id?: string;
+  id?: string | number;
   path?: string;
 };
 
@@ -22,18 +22,18 @@ type LocalFolderCreate = {
 
 type LocalFolderMove = {
   projectId?: string | number;
-  id?: string;
+  id?: string | number;
   path?: string;
 };
 
 type LocalFolderRemoval = {
   projectId?: string | number;
-  id?: string;
+  id?: string | number;
 };
 
 type LocalFileRemoval = {
   projectId?: string | number;
-  id?: string;
+  id?: string | number;
 };
 
 type ProjectFolderRow = {
@@ -49,13 +49,20 @@ function getNumericId(value: unknown) {
 }
 
 function getIdFromDesktopNodeId(value: unknown, prefix: "asset" | "folder") {
+  if (typeof value === "number") return getNumericId(value);
+
   if (typeof value !== "string") return null;
+
+  const trimmedValue = value.trim();
+  const directNumericId = getNumericId(trimmedValue);
+
+  if (directNumericId != null) return directNumericId;
 
   const expectedPrefix = `${prefix}:`;
 
-  if (!value.startsWith(expectedPrefix)) return null;
+  if (!trimmedValue.startsWith(expectedPrefix)) return null;
 
-  return getNumericId(value.slice(expectedPrefix.length));
+  return getNumericId(trimmedValue.slice(expectedPrefix.length));
 }
 
 function sanitizePathPart(value: string) {
