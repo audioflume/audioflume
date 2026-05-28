@@ -4,13 +4,13 @@
 }
 
 .desktop-music-page .desktop-tag-chip {
-  height: 28px;
+  height: 24px;
   border-color: transparent;
   border-radius: 0;
   background: var(--accent);
   color: #111111;
-  padding: 0 10px;
-  font-size: 12px;
+  padding: 0 8px;
+  font-size: 11px;
   font-weight: 500;
 }
 
@@ -73,10 +73,7 @@
 }
 
 @media (max-width: 900px) {
-  .desktop-app-main:has(.desktop-music-page) {
-    padding-left: 260px;
-  }
-
+  .desktop-app-main:has(.desktop-music-page),
   .desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-music-page) {
     padding-left: 74px;
   }
@@ -114,10 +111,7 @@
 }
 
 @media (max-width: 680px) {
-  .desktop-app-main:has(.desktop-music-page) {
-    padding-left: 260px;
-  }
-
+  .desktop-app-main:has(.desktop-music-page),
   .desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-music-page) {
     padding-left: 74px;
   }
