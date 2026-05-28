@@ -40,6 +40,21 @@ function normalizeRelativePath(path: string) {
   return sanitizeProjectRelativePath(path.replace(/\\/g, "/"));
 }
 
+function shouldIgnoreLocalPath(path: string) {
+  return path
+    .split("/")
+    .filter(Boolean)
+    .some((part) => {
+      const lowerPart = part.toLowerCase();
+
+      return (
+        part.startsWith(".") ||
+        lowerPart === "thumbs.db" ||
+        lowerPart === "desktop.ini"
+      );
+    });
+}
+
 function getParentPath(path: string) {
   const parts = path.split("/").filter(Boolean);
   parts.pop();
@@ -106,7 +121,11 @@ async function readProjectDiskTree(rootPath: string) {
       const nextRelativePath = relativePath ? `${relativePath}/${name}` : name;
       const normalizedPath = normalizeRelativePath(nextRelativePath);
 
-      if (normalizedPath === "_filmwave" || normalizedPath.startsWith("_filmwave/")) {
+      if (
+        normalizedPath === "_filmwave" ||
+        normalizedPath.startsWith("_filmwave/") ||
+        shouldIgnoreLocalPath(normalizedPath)
+      ) {
         continue;
       }
 
