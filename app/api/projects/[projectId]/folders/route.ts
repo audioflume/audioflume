@@ -5,6 +5,7 @@ import {
   normalizeProjectAsset,
   normalizeProjectFolder,
 } from "@/lib/projectFolders";
+import { createProjectSyncOperation } from "@/lib/projectSyncOperations";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
@@ -42,7 +43,9 @@ async function getNextFolderPosition(projectId: string, parentFolderId: number |
     .order("position", { ascending: false })
     .limit(1);
 
-  query = parentFolderId == null ? query.is("parent_folder_id", null) : query.eq("parent_folder_id", parentFolderId);
+  query = parentFolderId == null
+    ? query.is("parent_folder_id", null)
+    : query.eq("parent_folder_id", parentFolderId);
 
   const { data, error } = await query;
 
@@ -122,10 +125,7 @@ export async function GET(_req: Request, context: RouteContext) {
 
     normalizedFolders.forEach((folder) => {
       if (folder.parent_folder_id == null) return;
-      childCounts.set(
-        folder.parent_folder_id,
-        (childCounts.get(folder.parent_folder_id) ?? 0) + 1,
-      );
+      childCounts.set(folder.parent_folder_id, (childCounts.get(folder.parent_folder_id) ?? 0) + 1);
     });
 
     normalizedAssets.forEach((asset) => {
@@ -230,6 +230,15 @@ export async function POST(req: Request, context: RouteContext) {
 
     if (error) throw error;
 
+    await createProjectSyncOperation({
+      projectId,
+      userId,
+      sourceClient: "website",
+      operationType: "create_folder",
+      websiteDone: true,
+      desktopDone: false,
+    });
+
     return NextResponse.json(normalizeProjectFolder(data));
   } catch (err) {
     console.error("Project folder create error:", err);
@@ -301,9 +310,7 @@ export async function PATCH(req: Request, context: RouteContext) {
     }
 
     if (isMoveRequest && parentFolderId !== null) {
-      const byId = new Map(
-        folderRows.map((folder) => [Number(folder.id), Number(folder.parent_folder_id)]),
-      );
+      const byId = new Map(folderRows.map((folder) => [Number(folder.id), Number(folder.parent_folder_id)]));
       const visited = new Set<number>();
       let current: number | null = parentFolderId;
 
@@ -338,6 +345,15 @@ export async function PATCH(req: Request, context: RouteContext) {
       .single();
 
     if (error) throw error;
+
+    await createProjectSyncOperation({
+      projectId,
+      userId,
+      sourceClient: "website",
+      operationType: isMoveRequest ? "update_folder" : "update_folder",
+      websiteDone: true,
+      desktopDone: false,
+    });
 
     return NextResponse.json(normalizeProjectFolder(data));
   } catch (err) {
@@ -405,6 +421,15 @@ export async function DELETE(req: Request, context: RouteContext) {
       .in("id", ids);
 
     if (folderDeleteError) throw folderDeleteError;
+
+    await createProjectSyncOperation({
+      projectId,
+      userId,
+      sourceClient: "website",
+      operationType: "delete_folder",
+      websiteDone: true,
+      desktopDone: false,
+    });
 
     return NextResponse.json({ deleted_folder_ids: ids });
   } catch (err) {
