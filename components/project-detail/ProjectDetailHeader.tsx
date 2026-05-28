@@ -1,5 +1,5 @@
+import type { ProjectSyncState } from "@/lib/project-detail/projectDetailUtils";
 import type { Project } from "@/lib/types";
-import type { ProjectSyncState } from "../utils/projectDetail";
 
 type ProjectDetailHeaderProps = {
   assetsLoaded: boolean;
