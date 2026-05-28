@@ -14,11 +14,12 @@
 
 .desktop-music-sticky-bar {
   position: sticky;
-  top: 56px;
-  z-index: 90;
+  top: 0;
+  z-index: 100;
   display: flex;
   width: 100%;
   flex-direction: column;
+  overflow: visible;
   background: var(--bg-primary);
   padding: 0 28px;
 }
@@ -74,68 +75,68 @@
   cursor: pointer;
   align-items: center;
   gap: 6px;
-  border: 1px solid var(--border-subtle, var(--divider));
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--bg-hover, var(--bg-row));
+  background: var(--bg-secondary);
   padding: 0 9px;
   color: var(--text-secondary);
   font-size: 11px;
   line-height: 1;
   white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .desktop-tag-chip:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
   color: var(--text-primary);
-  background: var(--bg-tertiary, var(--bg-row-hover));
 }
 
 .desktop-music-filter-row {
   display: flex;
   height: 48px;
-  align-items: center;
-  gap: 1px;
+  align-items: stretch;
+  gap: 0;
   margin: 0 -28px;
-  overflow-x: auto;
-  border-top: 1px solid var(--border, var(--divider));
-  border-bottom: 1px solid var(--border, var(--divider));
+  overflow: visible;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   padding: 0 28px;
-  scrollbar-width: none;
-}
-
-.desktop-music-filter-row::-webkit-scrollbar {
-  display: none;
 }
 
 .desktop-filter-wrap {
   position: relative;
+  display: flex;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .desktop-filter-trigger {
   position: relative;
-  display: inline-flex;
+  display: flex;
   height: 48px;
   cursor: pointer;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   border: 0;
+  border-bottom: 2px solid transparent;
   border-radius: 0;
   background: transparent;
-  padding: 0 12px;
+  padding: 0 10px;
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
-  transition: color 140ms ease;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .desktop-filter-trigger::after {
-  position: absolute;
-  right: 12px;
-  bottom: -1px;
-  left: 12px;
-  height: 1px;
-  background: transparent;
+  width: 6px;
+  height: 6px;
+  margin-left: 2px;
+  transform: translateY(-1px) rotate(45deg);
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
   content: "";
 }
 
@@ -144,31 +145,34 @@
   color: var(--text-primary);
 }
 
-.desktop-filter-trigger.is-active::after {
-  background: var(--text-primary);
+.desktop-filter-trigger.is-active {
+  border-bottom-color: var(--text-primary);
 }
 
 .desktop-filter-dot {
   display: block;
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
   border-radius: 999px;
-  background: var(--accent, #ddff43);
+  background: var(--accent);
 }
 
 .desktop-filter-menu {
   position: absolute;
-  z-index: 160;
+  z-index: 200;
   top: calc(100% + 8px);
   left: 0;
-  min-width: 220px;
-  max-height: 300px;
-  overflow: auto;
+  width: 280px;
+  max-height: min(360px, calc(100vh - 150px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
   padding: 6px;
-  border: 1px solid var(--border, var(--divider));
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--bg-tertiary, var(--bg-panel));
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-ui);
 }
 
 .desktop-filter-option {
@@ -184,39 +188,46 @@
   padding: 0 10px;
   color: var(--text-secondary);
   font-size: 12px;
+  font-weight: 500;
   text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .desktop-filter-option:hover,
 .desktop-filter-option.is-selected {
-  background: var(--bg-hover, var(--bg-row-hover));
+  background: var(--bg-hover-strong);
   color: var(--text-primary);
 }
 
 .desktop-shuffle-button {
   display: inline-flex;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
   flex-shrink: 0;
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  align-self: center;
   margin-left: auto;
-  border: 0;
-  border-radius: 999px;
+  border: 1px solid transparent;
+  border-radius: 9px;
   background: transparent;
-  color: var(--text-secondary);
-  transition: color 140ms ease, background 140ms ease;
+  padding: 0;
+  color: var(--icon-color);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.desktop-shuffle-button:hover {
-  background: var(--bg-hover, var(--bg-row));
+.desktop-shuffle-button:hover,
+.desktop-shuffle-button.is-active {
+  border-color: var(--border-hover);
+  background: var(--icon-button-hover);
   color: var(--text-primary);
 }
 
-.desktop-shuffle-button.is-active {
-  background: var(--accent, #ddff43);
-  color: #000;
+.desktop-shuffle-button svg {
+  width: 14px;
+  height: 14px;
 }
 
 .desktop-music-quick-filters {
@@ -229,24 +240,23 @@
 }
 
 .desktop-quick-filter {
-  min-height: 27px;
   cursor: pointer;
-  border: 1px solid var(--border-subtle, var(--divider));
-  border-radius: 999px;
-  background: transparent;
-  padding: 0 12px;
+  border: 0;
+  border-radius: 0;
+  background: var(--bg-elevated);
+  padding: 3px 8px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.2;
+  text-transform: capitalize;
   white-space: nowrap;
-  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .desktop-quick-filter:hover,
 .desktop-quick-filter.is-active {
-  border-color: var(--border, var(--divider));
-  background: var(--bg-hover, var(--bg-row));
+  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
@@ -306,12 +316,12 @@
 }
 
 .desktop-music-hero h1 {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0;
   color: #fff;
-  font-size: clamp(32px, 4.8vw, 58px);
+  font-size: clamp(42px, 4.45vw, 72px);
   font-weight: 500;
-  letter-spacing: -0.065em;
+  letter-spacing: -0.064em;
   line-height: 0.9;
 }
 
@@ -395,24 +405,25 @@
 
 .desktop-music-list {
   width: 100%;
-  border-top: 1px solid var(--border-subtle, var(--divider));
+  border-top: 1px solid var(--border-subtle);
   transition: margin-top 300ms ease-out;
 }
 
 .desktop-song-card {
+  container-type: inline-size;
   display: grid;
-  grid-template-columns: 40px minmax(150px, 220px) minmax(180px, 1fr) minmax(120px, 200px) auto auto;
+  grid-template-columns: 40px minmax(145px, 220px) minmax(160px, 1fr) minmax(110px, 180px) auto auto;
   align-items: center;
   gap: 16px;
   min-height: 72px;
   cursor: pointer;
-  border-bottom: 1px solid var(--border-subtle, var(--divider));
+  border-bottom: 1px solid var(--border-subtle);
   padding: 14px 16px 14px 32px;
   transition: background 140ms ease;
 }
 
 .desktop-song-card:hover {
-  background: color-mix(in srgb, var(--bg-hover, var(--bg-row)) 30%, transparent);
+  background: color-mix(in srgb, var(--bg-hover) 30%, transparent);
 }
 
 .desktop-song-cover {
@@ -426,7 +437,7 @@
   overflow: hidden;
   border: 0;
   border-radius: 0;
-  background: var(--bg-hover, var(--bg-row));
+  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
@@ -442,7 +453,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--media-overlay-strong, rgba(0, 0, 0, 0.52));
+  background: var(--media-overlay-strong);
   color: #000;
   opacity: 0;
   transition: opacity 140ms ease;
@@ -487,7 +498,7 @@
 .desktop-song-info p {
   overflow: hidden;
   margin: 1px 0 0;
-  color: var(--text-subtle, var(--text-muted));
+  color: var(--text-subtle);
   font-size: 12px;
   line-height: 1.35;
   text-overflow: ellipsis;
@@ -515,7 +526,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: var(--bg-hover-strong, var(--bg-row-hover));
+  background: var(--bg-hover-strong);
   padding: 0 8px;
   color: var(--text-primary);
   font-size: 11px;
@@ -538,7 +549,7 @@
   min-width: 2px;
   max-width: 5px;
   border-radius: 999px;
-  background: var(--waveform-color, rgba(255, 255, 255, 0.3));
+  background: var(--waveform-color);
   opacity: 0.72;
 }
 
@@ -547,7 +558,7 @@
   top: -4px;
   bottom: -4px;
   width: 1px;
-  background: var(--accent, #ddff43);
+  background: var(--accent);
   opacity: 0.8;
 }
 
@@ -604,31 +615,36 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 2px;
+  gap: 6px;
 }
 
 .desktop-song-actions button {
   display: inline-flex;
   width: 28px;
+  min-width: 28px;
   height: 28px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  border: 0;
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
   background: transparent;
-  color: var(--text-secondary);
-  transition: color 140ms ease, background 140ms ease;
+  padding: 0;
+  color: var(--icon-color);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .desktop-song-actions button:hover,
 .desktop-song-actions button.is-active {
-  background: var(--bg-hover, var(--bg-row-hover));
+  border-color: var(--border-hover);
+  background: var(--icon-button-hover);
   color: var(--text-primary);
 }
 
-.desktop-song-actions button.is-active {
-  --favorite-icon-color: var(--accent, #ddff43);
+.desktop-song-actions button.is-active svg {
+  color: var(--text-primary);
+  fill: currentColor;
+  stroke: currentColor;
 }
 
 .desktop-music-empty-state {
@@ -656,6 +672,24 @@
   line-height: 1.6;
 }
 
+@container (max-width: 940px) {
+  .desktop-song-genre-slot {
+    display: none;
+  }
+}
+
+@container (max-width: 760px) {
+  .desktop-song-wave-wrap {
+    display: none;
+  }
+}
+
+@container (max-width: 620px) {
+  .desktop-song-key-bpm {
+    display: none;
+  }
+}
+
 @media (max-width: 1220px) {
   .desktop-music-hero-grid {
     grid-template-columns: 1fr;
@@ -666,11 +700,7 @@
   }
 
   .desktop-song-card {
-    grid-template-columns: 40px minmax(150px, 220px) minmax(180px, 1fr) auto auto;
-  }
-
-  .desktop-song-genre-slot {
-    display: none;
+    grid-template-columns: 40px minmax(150px, 220px) minmax(150px, 1fr) auto auto;
   }
 }
 
@@ -698,10 +728,6 @@
   .desktop-song-card {
     grid-template-columns: 40px minmax(150px, 1fr) auto auto;
   }
-
-  .desktop-song-wave-wrap {
-    display: none;
-  }
 }
 
 @media (max-width: 680px) {
@@ -728,9 +754,5 @@
   .desktop-song-card {
     padding-left: 24px;
     grid-template-columns: 40px minmax(120px, 1fr) auto;
-  }
-
-  .desktop-song-key-bpm {
-    display: none;
   }
 }
