@@ -54,6 +54,11 @@ type FilmwaveSongApiItem = {
   editPoints?: string | null;
 };
 
+type DesktopSongsApiResponse = {
+  songs?: FilmwaveSongApiItem[];
+  error?: string;
+};
+
 function formatDuration(secondsValue: number) {
   if (!Number.isFinite(secondsValue) || secondsValue <= 0) return "0:00";
 
@@ -172,20 +177,18 @@ export function normalizeFilmwaveSong(song: FilmwaveSongApiItem): DesktopSong {
 }
 
 export async function getFilmwaveSongs(apiBaseUrl?: string | null) {
-  const response = await fetch(`${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/songs`, {
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/songs`,
+    { credentials: "include" },
+  );
 
-  const data = await response.json();
+  const data = (await response.json()) as DesktopSongsApiResponse;
 
   if (!response.ok) {
-    const message = typeof data?.error === "string" ? data.error : "Failed to load Filmwave songs";
-    throw new Error(message);
+    throw new Error(data.error || "Failed to load Filmwave songs");
   }
 
-  if (!Array.isArray(data)) return [];
-
-  return data.map((item) => normalizeFilmwaveSong(item as FilmwaveSongApiItem));
+  return (data.songs ?? []).map((item) => normalizeFilmwaveSong(item));
 }
 
 export const desktopSongs: DesktopSong[] = [
