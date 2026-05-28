@@ -1,14 +1,17 @@
+import { load } from "@tauri-apps/plugin-store";
 import { useEffect, useMemo, useState } from "react";
 import {
   completeDesktopProjectSyncOperations,
   getDesktopProjectSyncOperations,
   getFilmwaveProjects,
+  normalizeFilmwaveApiBaseUrl,
   type Project,
 } from "../../lib/mockFilmwaveApi";
 import DesktopProjectsView from "./DesktopProjectsView";
 
 const REALTIME_UPDATED_EVENT = "filmwave:realtime-projects-updated";
 const SYNC_OPERATIONS_POLL_MS = 900;
+const SETTINGS_STORE = "filmwave-settings.json";
 
 type RealtimeProjectsUpdatedDetail = {
   projectIds?: string[];
@@ -59,10 +62,33 @@ export function ProjectsHomeView({
 }: ProjectsHomeViewProps) {
   const [realtimeProjects, setRealtimeProjects] = useState(projects);
   const [activeSyncOperationIds, setActiveSyncOperationIds] = useState<string[]>([]);
+  const [savedApiBaseUrl, setSavedApiBaseUrl] = useState<string | null>(apiBaseUrl ?? null);
+  const [savedDesktopToken, setSavedDesktopToken] = useState<string | null>(desktopToken ?? null);
 
   useEffect(() => {
     setRealtimeProjects(projects);
   }, [projects]);
+
+  useEffect(() => {
+    setSavedApiBaseUrl(apiBaseUrl ?? null);
+  }, [apiBaseUrl]);
+
+  useEffect(() => {
+    setSavedDesktopToken(desktopToken ?? null);
+  }, [desktopToken]);
+
+  useEffect(() => {
+    async function loadSavedConnection() {
+      const store = await load(SETTINGS_STORE);
+      const nextToken = await store.get<string>("desktopToken");
+      const nextApiBaseUrl = await store.get<string>("apiBaseUrl");
+
+      if (nextToken) setSavedDesktopToken(nextToken);
+      if (nextApiBaseUrl) setSavedApiBaseUrl(normalizeFilmwaveApiBaseUrl(nextApiBaseUrl));
+    }
+
+    void loadSavedConnection();
+  }, []);
 
   useEffect(() => {
     function handleRealtimeProjectsUpdated(event: Event) {
@@ -83,7 +109,10 @@ export function ProjectsHomeView({
   }, []);
 
   useEffect(() => {
-    if (!activeProjectId || !desktopToken) {
+    const token = savedDesktopToken;
+    const apiUrl = savedApiBaseUrl;
+
+    if (!activeProjectId || !token) {
       setActiveSyncOperationIds([]);
       return;
     }
@@ -97,9 +126,9 @@ export function ProjectsHomeView({
 
       try {
         const operations = await getDesktopProjectSyncOperations({
-          apiBaseUrl,
+          apiBaseUrl: apiUrl,
           projectId: activeProjectId,
-          token: desktopToken,
+          token,
         });
         const operationIds = operations.map((operation) => operation.id);
 
@@ -111,16 +140,16 @@ export function ProjectsHomeView({
 
         handlingOperation = true;
 
-        const latestProjects = await getFilmwaveProjects(desktopToken, apiBaseUrl);
+        const latestProjects = await getFilmwaveProjects(token, apiUrl);
 
         if (cancelled) return;
 
         setRealtimeProjects(latestProjects);
 
         await completeDesktopProjectSyncOperations({
-          apiBaseUrl,
+          apiBaseUrl: apiUrl,
           projectId: activeProjectId,
-          token: desktopToken,
+          token,
         });
 
         if (!cancelled) setActiveSyncOperationIds([]);
@@ -138,7 +167,7 @@ export function ProjectsHomeView({
       cancelled = true;
       if (intervalId) window.clearInterval(intervalId);
     };
-  }, [activeProjectId, apiBaseUrl, desktopToken]);
+  }, [activeProjectId, savedApiBaseUrl, savedDesktopToken]);
 
   const activeProjectStillExists = useMemo(
     () =>
