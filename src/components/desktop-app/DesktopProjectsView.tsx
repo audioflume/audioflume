@@ -1,9 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
 import { exists } from "@tauri-apps/plugin-fs";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Project, ProjectFileNode } from "../../lib/mockFilmwaveApi";
-import { getProjectNodeLocalPath } from "../../lib/syncEngine";
+import { getProjectFolderPath, getProjectNodeLocalPath } from "../../lib/syncEngine";
 import {
   DesktopFolderGlyph,
   DesktopMusicGlyph,
@@ -80,6 +80,16 @@ function ListViewIcon() {
       <path d="M4.5 6H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
       <path d="M4.5 12H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
       <path d="M4.5 18H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MoreIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 12H5.01" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
+      <path d="M12 12H12.01" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
+      <path d="M19 12H19.01" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -258,6 +268,22 @@ async function startNativeProjectNodeDrag({
   }
 }
 
+async function showProjectInFinder(project: Project, syncFolder: string | null) {
+  if (!syncFolder) {
+    console.warn("Choose a sync folder before revealing a project in Finder.");
+    return;
+  }
+
+  const projectPath = getProjectFolderPath(syncFolder, project);
+
+  if (!(await exists(projectPath))) {
+    console.warn(`Synced project folder does not exist yet: ${projectPath}`);
+    return;
+  }
+
+  await invoke("open_path", { path: projectPath });
+}
+
 // Drag ghost rendered into document.body so it floats above everything,
 // including the Tauri title bar and any z-index stacking contexts.
 function DragGhostOverlay({ ghost }: { ghost: DragGhost }) {
@@ -332,6 +358,90 @@ function ProjectSyncStatus({
       <span>{formatSyncTime(project, syncState)}</span>
       <span className="project-sync-status-dot" />
     </span>
+  );
+}
+
+function ProjectToolbar({
+  project,
+  syncFolder,
+  viewMode,
+  onToggleViewMode,
+}: {
+  project: Project;
+  syncFolder: string | null;
+  viewMode: ProjectFileView;
+  onToggleViewMode: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!menuRef.current) return;
+      if (menuRef.current.contains(event.target as Node)) return;
+      setOpen(false);
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div className="project-toolbar-actions">
+      <button
+        type="button"
+        className="project-toolbar-icon-button"
+        aria-label={
+          viewMode === "grid" ? "Switch to list view" : "Switch to grid view"
+        }
+        title={
+          viewMode === "grid" ? "Switch to list view" : "Switch to grid view"
+        }
+        onClick={onToggleViewMode}
+      >
+        {viewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
+      </button>
+
+      <div ref={menuRef} className="project-more-menu-wrap">
+        <button
+          type="button"
+          className={`project-toolbar-icon-button ${open ? "is-active" : ""}`}
+          aria-label="More project actions"
+          aria-expanded={open}
+          title="More"
+          onClick={() => setOpen((current) => !current)}
+        >
+          <MoreIcon />
+        </button>
+
+        {open && (
+          <div className="project-more-dropdown" role="menu">
+            <button
+              type="button"
+              className="project-more-menu-button"
+              role="menuitem"
+              onClick={() => {
+                setOpen(false);
+                void showProjectInFinder(project, syncFolder);
+              }}
+            >
+              Show in Finder
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -583,6 +693,10 @@ function ProjectDetailView({
     setActiveFolder(null);
   }
 
+  function toggleViewMode() {
+    setViewMode((current) => (current === "grid" ? "list" : "grid"));
+  }
+
   return (
     <section className="desktop-projects-page is-detail project-detail-page">
       {dragGhost && <DragGhostOverlay ghost={dragGhost} />}
@@ -639,24 +753,12 @@ function ProjectDetailView({
             ))}
           </div>
 
-          <div className="project-file-browser-actions">
-            <button
-              type="button"
-              className={`project-toolbar-button ${viewMode === "grid" ? "is-active" : ""}`}
-              aria-label="Grid view"
-              onClick={() => setViewMode("grid")}
-            >
-              <GridViewIcon />
-            </button>
-            <button
-              type="button"
-              className={`project-toolbar-button ${viewMode === "list" ? "is-active" : ""}`}
-              aria-label="List view"
-              onClick={() => setViewMode("list")}
-            >
-              <ListViewIcon />
-            </button>
-          </div>
+          <ProjectToolbar
+            project={project}
+            syncFolder={syncFolder}
+            viewMode={viewMode}
+            onToggleViewMode={toggleViewMode}
+          />
         </div>
 
         <div className="project-file-browser-section">
