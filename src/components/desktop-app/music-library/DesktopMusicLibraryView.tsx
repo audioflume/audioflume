@@ -8,6 +8,7 @@ import {
 import DesktopFilterDropdown from "./DesktopFilterDropdown";
 import DesktopFilterTags from "./DesktopFilterTags";
 import DesktopMusicHero from "./DesktopMusicHero";
+import DesktopMusicPlayer from "./DesktopMusicPlayer";
 import DesktopSongCard from "./DesktopSongCard";
 import type { DesktopMusicFilterKey, DesktopMusicFilterState } from "./musicLibraryTypes";
 import {
@@ -36,6 +37,8 @@ export default function DesktopMusicLibraryView({
   const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
+  const [activeSongId, setActiveSongId] = useState<string | null>(null);
+  const [playerPlaying, setPlayerPlaying] = useState(false);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -94,6 +97,16 @@ export default function DesktopMusicLibraryView({
     });
   }, [filteredSongs, shuffleOrderIds]);
 
+  const activeSong = useMemo(
+    () => songs.find((song) => song.id === activeSongId) ?? null,
+    [activeSongId, songs],
+  );
+
+  const activeSongIndex = useMemo(
+    () => displayedSongs.findIndex((song) => song.id === activeSongId),
+    [activeSongId, displayedSongs],
+  );
+
   const hasActiveFilters = hasActiveDesktopMusicFilters(filters);
   const filterKeys = Object.keys(FILTER_TITLES) as DesktopMusicFilterKey[];
 
@@ -133,8 +146,33 @@ export default function DesktopMusicLibraryView({
     });
   }
 
+  function playSong(song: DesktopSong) {
+    if (activeSongId === song.id) {
+      setPlayerPlaying((playing) => !playing);
+      return;
+    }
+
+    setActiveSongId(song.id);
+    setPlayerPlaying(true);
+  }
+
+  function playSongAtIndex(index: number) {
+    if (!displayedSongs.length) return;
+    const normalizedIndex = (index + displayedSongs.length) % displayedSongs.length;
+    setActiveSongId(displayedSongs[normalizedIndex].id);
+    setPlayerPlaying(true);
+  }
+
+  function playPreviousSong() {
+    playSongAtIndex(activeSongIndex <= 0 ? displayedSongs.length - 1 : activeSongIndex - 1);
+  }
+
+  function playNextSong() {
+    playSongAtIndex(activeSongIndex < 0 ? 0 : activeSongIndex + 1);
+  }
+
   return (
-    <section className="desktop-music-page">
+    <section className={`desktop-music-page${activeSong ? " has-player" : ""}`}>
       <div className="desktop-music-sticky-bar">
         <div
           className="desktop-music-search-row"
@@ -251,7 +289,9 @@ export default function DesktopMusicLibraryView({
             song={song}
             favorite={favoriteIds.has(song.id)}
             markersVisible={filters.markers}
+            isPlaying={activeSongId === song.id && playerPlaying}
             onFavoriteToggle={() => toggleFavorite(song.id)}
+            onPlay={() => playSong(song)}
           />
         ))}
 
@@ -262,6 +302,18 @@ export default function DesktopMusicLibraryView({
           </div>
         )}
       </div>
+
+      {activeSong && (
+        <DesktopMusicPlayer
+          song={activeSong}
+          isPlaying={playerPlaying}
+          favorite={favoriteIds.has(activeSong.id)}
+          onFavoriteToggle={() => toggleFavorite(activeSong.id)}
+          onPlayPause={() => setPlayerPlaying((playing) => !playing)}
+          onPrevious={playPreviousSong}
+          onNext={playNextSong}
+        />
+      )}
     </section>
   );
 }
