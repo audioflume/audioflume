@@ -61,6 +61,16 @@ export async function GET(req: Request, context: RouteContext) {
         }
       };
 
+      const safeClose = () => {
+        if (closed) return;
+        closed = true;
+        try {
+          controller.close();
+        } catch {
+          // The browser/runtime may already have closed the stream.
+        }
+      };
+
       const emitIfMatch = (payload: {
         new?: Record<string, unknown>;
         old?: Record<string, unknown>;
@@ -104,11 +114,10 @@ export async function GET(req: Request, context: RouteContext) {
         safeWrite("heartbeat", { at: new Date().toISOString() });
       }, 25000);
 
-      req.signal.addEventListener("abort", async () => {
-        closed = true;
+      req.signal.addEventListener("abort", () => {
         clearInterval(heartbeat);
-        await supabaseServer.removeChannel(channel);
-        controller.close();
+        void supabaseServer.removeChannel(channel).catch(() => undefined);
+        safeClose();
       });
     },
   });
