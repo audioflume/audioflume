@@ -1126,7 +1126,7 @@ function App() {
           />
         );
       case "music":
-        return <DesktopMusicLibraryView />;
+        return <DesktopMusicLibraryView apiBaseUrl={normalizedApiBaseUrl} />;
       case "playlists":
         return <PlaylistsView />;
       case "discover":
