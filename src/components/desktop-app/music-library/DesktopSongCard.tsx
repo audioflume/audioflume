@@ -44,12 +44,16 @@ export default function DesktopSongCard({
   song,
   favorite,
   markersVisible,
+  isPlaying,
   onFavoriteToggle,
+  onPlay,
 }: {
   song: DesktopMusicSong;
   favorite: boolean;
   markersVisible: boolean;
+  isPlaying: boolean;
   onFavoriteToggle: () => void;
+  onPlay: () => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
   const [waveformWidth, setWaveformWidth] = useState(0);
@@ -100,22 +104,26 @@ export default function DesktopSongCard({
   }, []);
 
   return (
-    <article className="desktop-song-card">
-      <button type="button" className="desktop-song-cover" aria-label="Play song">
-        <span className="desktop-song-cover-text">
-          {song.title.slice(0, 1).toUpperCase()}
-        </span>
+    <article className={`desktop-song-card${isPlaying ? " is-playing" : ""}`}>
+      <button type="button" className="desktop-song-cover" aria-label="Play song" onClick={onPlay}>
+        {song.coverArt ? (
+          <img src={song.coverArt} alt="" className="desktop-song-cover-image" draggable={false} />
+        ) : (
+          <span className="desktop-song-cover-text">
+            {song.title.slice(0, 1).toUpperCase()}
+          </span>
+        )}
         <span className="desktop-song-play-overlay" aria-hidden="true">
-          <PlayIcon />
+          {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </span>
       </button>
 
-      <div className="desktop-song-info">
+      <button type="button" className="desktop-song-info" onClick={onPlay}>
         <h3>{song.title}</h3>
         <p>{song.artist}</p>
-      </div>
+      </button>
 
-      <div className="desktop-song-wave-wrap">
+      <button type="button" className="desktop-song-wave-wrap" onClick={onPlay}>
         <div className="desktop-song-stems-slot">
           {song.markers > 0 && <span>+{song.markers}</span>}
         </div>
@@ -132,7 +140,7 @@ export default function DesktopSongCard({
         </div>
 
         <span className="desktop-song-duration">{song.duration}</span>
-      </div>
+      </button>
 
       <div className="desktop-song-genre-slot">
         <span>{visibleGenres}</span>
@@ -200,6 +208,15 @@ function PlayIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path d="M5 3.5L12 8L5 12.5V3.5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function PauseIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M5 3H7V13H5V3Z" fill="currentColor" />
+      <path d="M9 3H11V13H9V3Z" fill="currentColor" />
     </svg>
   );
 }
