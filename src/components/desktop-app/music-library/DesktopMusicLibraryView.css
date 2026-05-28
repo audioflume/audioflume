@@ -67,20 +67,22 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
+  padding-left: 4px;
 }
 
 .desktop-tag-chip {
   display: inline-flex;
-  height: 23px;
+  height: 24px;
   cursor: pointer;
   align-items: center;
   gap: 6px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--bg-secondary);
+  background: transparent;
   padding: 0 9px;
   color: var(--text-secondary);
   font-size: 11px;
+  font-weight: 500;
   line-height: 1;
   white-space: nowrap;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -119,7 +121,6 @@
   align-items: center;
   gap: 6px;
   border: 0;
-  border-bottom: 2px solid transparent;
   border-radius: 0;
   background: transparent;
   padding: 0 10px;
@@ -127,7 +128,7 @@
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .desktop-filter-trigger::after {
@@ -145,8 +146,23 @@
   color: var(--text-primary);
 }
 
-.desktop-filter-trigger.is-active {
-  border-bottom-color: var(--text-primary);
+.desktop-filter-trigger-icon {
+  flex-shrink: 0;
+}
+
+.desktop-filter-count {
+  display: inline-flex;
+  height: 20px;
+  min-width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  padding: 0 6px;
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
 }
 
 .desktop-filter-dot {
@@ -164,15 +180,23 @@
   top: calc(100% + 8px);
   left: 0;
   width: 280px;
-  max-height: min(360px, calc(100vh - 150px));
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  padding: 6px;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--bg-secondary);
   box-shadow: var(--shadow-ui);
+}
+
+.desktop-filter-menu.is-playlist-menu {
+  width: 300px;
+}
+
+.desktop-filter-menu-scroll {
+  max-height: min(340px, calc(100vh - 180px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding: 6px;
 }
 
 .desktop-filter-option {
@@ -182,6 +206,7 @@
   cursor: pointer;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -193,9 +218,67 @@
   transition: background 0.15s ease, color 0.15s ease;
 }
 
+.desktop-filter-option.is-playlist-option {
+  height: 36px;
+}
+
 .desktop-filter-option:hover,
 .desktop-filter-option.is-selected {
   background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.desktop-filter-option-label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.desktop-filter-option-label > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-filter-option-icon {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.desktop-filter-option:hover .desktop-filter-option-icon,
+.desktop-filter-option-icon.is-selected {
+  color: var(--text-primary);
+}
+
+.desktop-filter-option-icon.is-selected,
+.desktop-filter-option-action.is-selected {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.desktop-filter-option-action {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text-muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.desktop-filter-option:hover .desktop-filter-option-action {
   color: var(--text-primary);
 }
 
@@ -215,13 +298,12 @@
   background: transparent;
   padding: 0;
   color: var(--icon-color);
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .desktop-shuffle-button:hover,
 .desktop-shuffle-button.is-active {
-  border-color: var(--border-hover);
-  background: var(--icon-button-hover);
+  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
@@ -631,13 +713,12 @@
   background: transparent;
   padding: 0;
   color: var(--icon-color);
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .desktop-song-actions button:hover,
 .desktop-song-actions button.is-active {
-  border-color: var(--border-hover);
-  background: var(--icon-button-hover);
+  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
