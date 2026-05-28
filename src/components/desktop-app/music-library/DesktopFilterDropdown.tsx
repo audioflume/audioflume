@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react";
+import CheckIcon from "../../icons/CheckIcon";
+import PlaylistIcon from "../../icons/PlaylistIcon";
+import PlusIcon from "../../icons/PlusIcon";
+import type { DesktopMusicFilterKey } from "./musicLibraryTypes";
 
 export default function DesktopFilterDropdown({
+  filterKey,
   label,
   options,
   selected,
@@ -8,6 +13,7 @@ export default function DesktopFilterDropdown({
   onOpenChange,
   onToggleOption,
 }: {
+  filterKey: DesktopMusicFilterKey;
   label: string;
   options: string[];
   selected: string[];
@@ -16,6 +22,8 @@ export default function DesktopFilterDropdown({
   onToggleOption: (value: string) => void;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const isPlaylistFilter = filterKey === "playlist";
+  const hasActive = selected.length > 0;
 
   useEffect(() => {
     if (!open) return;
@@ -41,27 +49,56 @@ export default function DesktopFilterDropdown({
     <div className="desktop-filter-wrap" ref={ref}>
       <button
         type="button"
-        className={`desktop-filter-trigger${open || selected.length ? " is-active" : ""}`}
+        className={`desktop-filter-trigger${open || hasActive ? " is-active" : ""}`}
         onClick={() => onOpenChange(!open)}
         aria-expanded={open}
       >
+        {isPlaylistFilter && <PlaylistIcon size={13} className="desktop-filter-trigger-icon" />}
         <span>{label}</span>
-        {selected.length > 0 && <span className="desktop-filter-dot" />}
+        {hasActive && <span className="desktop-filter-count">{selected.length}</span>}
       </button>
 
       {open && (
-        <div className="desktop-filter-menu">
-          {options.map((option) => (
-            <button
-              key={option}
-              type="button"
-              className={`desktop-filter-option${selected.includes(option) ? " is-selected" : ""}`}
-              onClick={() => onToggleOption(option)}
-            >
-              <span>{option}</span>
-              {selected.includes(option) && <span>•</span>}
-            </button>
-          ))}
+        <div
+          className={`desktop-filter-menu${isPlaylistFilter ? " is-playlist-menu" : ""}`}
+        >
+          <div className="desktop-filter-menu-scroll">
+            {options.map((option) => {
+              const isSelected = selected.includes(option);
+
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  className={`desktop-filter-option${isSelected ? " is-selected" : ""}${
+                    isPlaylistFilter ? " is-playlist-option" : ""
+                  }`}
+                  onClick={() => onToggleOption(option)}
+                >
+                  <span className="desktop-filter-option-label">
+                    {isPlaylistFilter && (
+                      <span
+                        className={`desktop-filter-option-icon${
+                          isSelected ? " is-selected" : ""
+                        }`}
+                      >
+                        <PlaylistIcon size={13} />
+                      </span>
+                    )}
+                    <span>{option}</span>
+                  </span>
+
+                  <span
+                    className={`desktop-filter-option-action${
+                      isSelected ? " is-selected" : ""
+                    }`}
+                  >
+                    {isSelected ? <CheckIcon size={11} /> : <PlusIcon size={11} />}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
