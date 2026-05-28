@@ -16,6 +16,7 @@ import {
   shuffleDesktopMusicSongs,
 } from "./musicLibraryUtils";
 import "./DesktopMusicLibraryView.css";
+import "./DesktopMusicLibraryRefinements.css";
 
 export default function DesktopMusicLibraryView() {
   const [filters, setFilters] = useState<DesktopMusicFilterState>(EMPTY_FILTERS);
