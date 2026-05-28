@@ -170,6 +170,14 @@ function buildDesktopFileTree({
 
     const filename = getFallbackAssetFilename(asset);
 
+    // Expose sizeBytes from metadata so the desktop sync engine can use it
+    // for accurate move-vs-delete detection. Without this, all local-file
+    // assets have sizeBytes=0 in the manifest, causing name-only matching
+    // that can misclassify a deletion as a move when another file on disk
+    // shares the same filename.
+    const metadata = asset.metadata ?? {};
+    const sizeBytes = Number(metadata.sizeBytes || 0) || undefined;
+
     fileTree.push({
       id: `asset:${asset.id}`,
       type: "file",
@@ -177,6 +185,7 @@ function buildDesktopFileTree({
       path: joinPath([parentPath, filename]),
       parentId: asset.folder_id == null ? null : `folder:${asset.folder_id}`,
       sortOrder: asset.position ?? 0,
+      sizeBytes,
       updatedAt: asset.created_at,
     });
   });
@@ -234,10 +243,15 @@ export async function GET(req: Request) {
 
     const [{ data: folderRows, error: foldersError }, { data: assetRows, error: assetsError }] =
       await Promise.all([
+        // No clerk_user_id filter on folders — project ownership is already
+        // verified above via the projects query. Filtering by clerk_user_id
+        // here excluded folders created from the website (or with a null
+        // clerk_user_id), causing those folders to be missing from the file
+        // tree and their child files to appear at the wrong paths in the
+        // manifest, breaking delete/rename/move detection.
         supabaseServer
           .from("project_folders")
           .select("*")
-          .eq("clerk_user_id", userId)
           .in("project_id", projectIds)
           .order("position", { ascending: true })
           .order("name", { ascending: true }),
