@@ -1,6 +1,7 @@
 import DropdownShell from "@/components/DropdownShell";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
+import MoreIcon from "@/components/icons/MoreIcon";
 import type { ProjectFileView } from "@/lib/project-detail/projectDetailUtils";
 import type { Project } from "@/lib/types";
 
@@ -11,16 +12,6 @@ function FolderPlusIcon() {
       <path d="M19.9 11.7V17.5C19.9 18.3284 19.2284 19 18.4 19H5.5C4.67157 19 4 18.3284 4 17.5V7.5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
       <path d="M18.2 5.4V10.2" stroke="currentColor" strokeWidth="1.55" strokeLinecap="round" />
       <path d="M15.8 7.8H20.6" stroke="currentColor" strokeWidth="1.55" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function MoreIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M6.5 12H6.51" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
-      <path d="M12 12H12.01" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
-      <path d="M17.5 12H17.51" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
     </svg>
   );
 }
