@@ -40,11 +40,16 @@
     padding: 0;
   }
 
+  .desktop-sidebar-section + .desktop-sidebar-section {
+    margin-top: 20px;
+  }
+
   .desktop-app-main {
     padding-left: 98px;
   }
 
-  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+  .desktop-app-main:has(.desktop-projects-page.is-detail),
+  .desktop-app-main:has(.desktop-music-page) {
     padding-left: 74px;
   }
 }
@@ -59,7 +64,8 @@
     padding: 88px 24px 34px 98px;
   }
 
-  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+  .desktop-app-main:has(.desktop-projects-page.is-detail),
+  .desktop-app-main:has(.desktop-music-page) {
     padding: 56px 0 0 74px;
   }
 
