@@ -26,6 +26,13 @@
   white-space: nowrap;
 }
 
+.project-sync-status.is-syncing > span:first-child {
+  display: inline-block;
+  max-width: 42px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .project-sync-status-dot {
   width: 7px;
   height: 7px;
@@ -35,8 +42,13 @@
 }
 
 .project-sync-status.is-syncing .project-sync-status-dot {
-  background: var(--warning);
-  animation: pulse 1s ease-in-out infinite;
+  width: 9px;
+  height: 9px;
+  flex-basis: 9px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  background: transparent;
+  animation: project-sync-spin 0.75s linear infinite;
 }
 
 .project-sync-status.is-error .project-sync-status-dot {
@@ -45,6 +57,12 @@
 
 .project-sync-status.is-success .project-sync-status-dot {
   background: var(--success);
+}
+
+@keyframes project-sync-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .project-more-menu-button.is-danger {
