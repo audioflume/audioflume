@@ -1,6 +1,5 @@
 "use client";
 
-import DropdownShell from "@/components/DropdownShell";
 import EditProjectModal from "@/components/EditProjectModal";
 import FooterBottom from "@/components/FooterBottom";
 import ModalShell from "@/components/ModalShell";
@@ -9,12 +8,9 @@ import ProjectFolderPickerModal from "@/components/ProjectFolderPickerModal";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
-import DownloadIconSmall from "@/components/icons/DownloadIconSmall";
-import EditIcon from "@/components/icons/EditIcon";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import {
-  borderedIconButton9Class,
   modalPrimaryButtonClass,
   quickFilterButtonActiveClass,
   quickFilterButtonClass,
@@ -63,18 +59,27 @@ function isProjectTab(value: string | null): value is ProjectTab {
   return TABS.some((tab) => tab.value === value);
 }
 
-function getDownloadLabel(activeTab: ProjectTab) {
-  if (activeTab === "sound-fx") return "Download all sound FX";
-  if (activeTab === "visual-fx") return "Download all visual FX";
-  if (activeTab === "colour-grading") return "Download all colour grading";
-  return "Download all music";
+function formatSyncTime(
+  date: Date | null,
+  state: "success" | "syncing" | "error",
+) {
+  if (state === "syncing") return "Syncing now";
+  if (state === "error") return "Sync error";
+
+  if (!date) return "Last synced status ready";
+
+  return `Last synced at ${date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  })}`;
 }
 
-function formatProjectDate(project: Project | null) {
-  if (!project?.created_at) return "";
-  const date = new Date(project.created_at);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+function getTimestamp(value: string | null | undefined) {
+  if (!value) return null;
+
+  const time = new Date(value).getTime();
+
+  return Number.isFinite(time) ? time : null;
 }
 
 function FolderPlusIcon() {
@@ -114,6 +119,37 @@ function FolderPlusIcon() {
   );
 }
 
+function MoreIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M6.5 12H6.51"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12 12H12.01"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M17.5 12H17.51"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function ProjectPageSkeleton() {
   return (
     <>
@@ -127,7 +163,10 @@ function ProjectPageSkeleton() {
       </section>
       <div className="project-tabs-row">
         {TABS.map((tab) => (
-          <div key={tab.value} className="project-tab-skeleton project-skeleton-block" />
+          <div
+            key={tab.value}
+            className="project-tab-skeleton project-skeleton-block"
+          />
         ))}
       </div>
       <section className="project-tab-panel">
@@ -155,13 +194,20 @@ function EmptyTabState({ activeTab }: { activeTab: ProjectTab }) {
   return (
     <div className="project-empty">
       <h2>{tab?.label || "Project"} coming soon</h2>
-      <p>This section will hold the {tab?.label.toLowerCase() || "project"} media connected to this project.</p>
+      <p>
+        This section will hold the {tab?.label.toLowerCase() || "project"} media
+        connected to this project.
+      </p>
     </div>
   );
 }
 
 function MusicTabState({
-  projectId, songs, loading, error, onRemoveFromProject,
+  projectId,
+  songs,
+  loading,
+  error,
+  onRemoveFromProject,
 }: {
   projectId: string;
   songs: ProjectSong[];
@@ -170,8 +216,23 @@ function MusicTabState({
   onRemoveFromProject: (songId: string) => void;
 }) {
   if (loading) return <SkeletonSongList />;
-  if (error) return <div className="project-empty"><h2>Couldn&apos;t load project songs</h2><p>{error}</p></div>;
-  if (songs.length === 0) return <div className="project-empty"><h2>No songs yet</h2><p>Add songs from the music library, then they will appear here in this project.</p></div>;
+  if (error)
+    return (
+      <div className="project-empty">
+        <h2>Couldn&apos;t load project songs</h2>
+        <p>{error}</p>
+      </div>
+    );
+  if (songs.length === 0)
+    return (
+      <div className="project-empty">
+        <h2>No songs yet</h2>
+        <p>
+          Add songs from the music library, then they will appear here in this
+          project.
+        </p>
+      </div>
+    );
   return (
     <div>
       {songs.map((song, index) => (
@@ -205,91 +266,170 @@ export default function ProjectDetailPageClient() {
   const [projectSort, setProjectSort] = useState<ProjectSort>("newest");
   const [fileViewMode, setFileViewMode] = useState<ProjectFileView>("grid");
   const [projectSongsLoading, setProjectSongsLoading] = useState(true);
-  const [projectSongsError, setProjectSongsError] = useState<string | null>(null);
+  const [projectSongsError, setProjectSongsError] = useState<string | null>(
+    null,
+  );
   const [projectFoldersLoading, setProjectFoldersLoading] = useState(true);
-  const [projectFoldersError, setProjectFoldersError] = useState<string | null>(null);
+  const [projectFoldersError, setProjectFoldersError] = useState<string | null>(
+    null,
+  );
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [isSavingProject, setIsSavingProject] = useState(false);
-  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(null);
-  const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
+  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(
+    null,
+  );
   const [createFolderOpen, setCreateFolderOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [movingSong, setMovingSong] = useState<ProjectSong | null>(null);
+  const [projectMoreOpen, setProjectMoreOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const tabParam = searchParams.get("tab");
   const folderParam = searchParams.get("folder");
   const activeTab: ProjectTab = isProjectTab(tabParam) ? tabParam : "overview";
-  const activeFolderId = folderParam && Number.isFinite(Number(folderParam)) ? Number(folderParam) : null;
-  const activeDownloadLabel = getDownloadLabel(activeTab);
+  const activeFolderId =
+    folderParam && Number.isFinite(Number(folderParam))
+      ? Number(folderParam)
+      : null;
 
   const project = useMemo(
     () => projects.find((item) => String(item.id) === projectId) ?? null,
     [projects, projectId],
   );
 
-  const projectDate = formatProjectDate(project);
   const totalFileCount = projectAssets.length;
   const assetsLoaded = !projectSongsLoading && !projectFoldersLoading;
+  const syncState =
+    projectSongsLoading || projectFoldersLoading
+      ? "syncing"
+      : projectSongsError || projectFoldersError
+        ? "error"
+        : "success";
+
+  const latestSyncDate = useMemo(() => {
+    const projectFolderTimestamps = projectFolders.map((folder) => {
+      const folderDates = folder as {
+        created_at?: string | null;
+        updated_at?: string | null;
+      };
+
+      return getTimestamp(folderDates.updated_at ?? folderDates.created_at);
+    });
+    const projectAssetTimestamps = projectAssets.map((asset) => {
+      const assetDates = asset as {
+        created_at?: string | null;
+        updated_at?: string | null;
+      };
+
+      return getTimestamp(assetDates.updated_at ?? assetDates.created_at);
+    });
+    const projectSongTimestamps = projectSongs.map((song) =>
+      getTimestamp(song.project_added_at),
+    );
+    const timestamps = [
+      getTimestamp(project?.created_at),
+      ...projectFolderTimestamps,
+      ...projectAssetTimestamps,
+      ...projectSongTimestamps,
+    ].filter((time): time is number => time != null);
+
+    if (timestamps.length === 0) return null;
+
+    return new Date(Math.max(...timestamps));
+  }, [project?.created_at, projectAssets, projectFolders, projectSongs]);
+
+  const syncLabel = formatSyncTime(latestSyncDate, syncState);
 
   const displayedProjectSongs = useMemo(() => {
     const indexedSongs = projectSongs.map((song, index) => ({ song, index }));
-    const filteredSongs = projectSort === "liked"
-      ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
-      : indexedSongs;
+    const filteredSongs =
+      projectSort === "liked"
+        ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
+        : indexedSongs;
     const sortedSongs = [...filteredSongs].sort((a, b) => {
-      if (projectSort === "alphabetical") return a.song.title.localeCompare(b.song.title, undefined, { sensitivity: "base" });
-      const aDate = a.song.project_added_at ? new Date(a.song.project_added_at).getTime() : 0;
-      const bDate = b.song.project_added_at ? new Date(b.song.project_added_at).getTime() : 0;
+      if (projectSort === "alphabetical")
+        return a.song.title.localeCompare(b.song.title, undefined, {
+          sensitivity: "base",
+        });
+      const aDate = a.song.project_added_at
+        ? new Date(a.song.project_added_at).getTime()
+        : 0;
+      const bDate = b.song.project_added_at
+        ? new Date(b.song.project_added_at).getTime()
+        : 0;
       if (projectSort === "oldest") return aDate - bDate || a.index - b.index;
       return bDate - aDate || b.index - a.index;
     });
     return sortedSongs.map(({ song }) => song);
   }, [projectSongs, projectSort, favoriteIdSet]);
 
-  const loadProjectSongs = useCallback(async ({ silent = false }: { silent?: boolean } = {}) => {
-    if (!projectId) return;
-    if (!silent) setProjectSongsLoading(true);
-    setProjectSongsError(null);
-    try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assets?type=song`, { cache: "no-store" });
-      const text = await res.text();
-      const data = text ? JSON.parse(text) : null;
-      if (!res.ok) throw new Error(data?.error || "Failed to load project songs");
-      const nextSongs = Array.isArray(data?.songs) ? (data.songs as ProjectSong[]) : [];
-      const nextAssets = Array.isArray(data?.assets) ? (data.assets as ProjectAsset[]) : [];
-      setProjectSongs(nextSongs.filter((song) => song.id));
-      setProjectAssets(nextAssets.filter((asset) => Number.isFinite(asset.id)));
-    } catch (err) {
-      setProjectSongs([]);
-      setProjectAssets([]);
-      setProjectSongsError(err instanceof Error ? err.message : "Failed to load project songs");
-    } finally {
-      if (!silent) setProjectSongsLoading(false);
-    }
-  }, [projectId]);
+  const loadProjectSongs = useCallback(
+    async ({ silent = false }: { silent?: boolean } = {}) => {
+      if (!projectId) return;
+      if (!silent) setProjectSongsLoading(true);
+      setProjectSongsError(null);
+      try {
+        const res = await fetch(
+          `/api/projects/${encodeURIComponent(projectId)}/assets?type=song`,
+          { cache: "no-store" },
+        );
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+        if (!res.ok)
+          throw new Error(data?.error || "Failed to load project songs");
+        const nextSongs = Array.isArray(data?.songs)
+          ? (data.songs as ProjectSong[])
+          : [];
+        const nextAssets = Array.isArray(data?.assets)
+          ? (data.assets as ProjectAsset[])
+          : [];
+        setProjectSongs(nextSongs.filter((song) => song.id));
+        setProjectAssets(
+          nextAssets.filter((asset) => Number.isFinite(asset.id)),
+        );
+      } catch (err) {
+        setProjectSongs([]);
+        setProjectAssets([]);
+        setProjectSongsError(
+          err instanceof Error ? err.message : "Failed to load project songs",
+        );
+      } finally {
+        if (!silent) setProjectSongsLoading(false);
+      }
+    },
+    [projectId],
+  );
 
-  const loadProjectFolders = useCallback(async ({ silent = false }: { silent?: boolean } = {}) => {
-    if (!projectId) return;
-    if (!silent) setProjectFoldersLoading(true);
-    setProjectFoldersError(null);
-    try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, { cache: "no-store" });
-      const text = await res.text();
-      const data = text ? JSON.parse(text) : null;
-      if (!res.ok) throw new Error(data?.error || "Failed to load project folders");
-      setProjectFolders(Array.isArray(data?.folders) ? data.folders : []);
-      setProjectAssets(Array.isArray(data?.assets) ? data.assets : []);
-    } catch (err) {
-      setProjectFolders([]);
-      setProjectFoldersError(err instanceof Error ? err.message : "Failed to load project folders");
-    } finally {
-      if (!silent) setProjectFoldersLoading(false);
-    }
-  }, [projectId]);
+  const loadProjectFolders = useCallback(
+    async ({ silent = false }: { silent?: boolean } = {}) => {
+      if (!projectId) return;
+      if (!silent) setProjectFoldersLoading(true);
+      setProjectFoldersError(null);
+      try {
+        const res = await fetch(
+          `/api/projects/${encodeURIComponent(projectId)}/folders`,
+          { cache: "no-store" },
+        );
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+        if (!res.ok)
+          throw new Error(data?.error || "Failed to load project folders");
+        setProjectFolders(Array.isArray(data?.folders) ? data.folders : []);
+        setProjectAssets(Array.isArray(data?.assets) ? data.assets : []);
+      } catch (err) {
+        setProjectFolders([]);
+        setProjectFoldersError(
+          err instanceof Error ? err.message : "Failed to load project folders",
+        );
+      } finally {
+        if (!silent) setProjectFoldersLoading(false);
+      }
+    },
+    [projectId],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -300,7 +440,9 @@ export default function ProjectDetailPageClient() {
     }
 
     run();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loadProjectSongs]);
 
   useEffect(() => {
@@ -312,7 +454,9 @@ export default function ProjectDetailPageClient() {
     }
 
     run();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loadProjectFolders]);
 
   // Realtime sync: connect to the server-side SSE events endpoint.
@@ -322,9 +466,9 @@ export default function ProjectDetailPageClient() {
   useEffect(() => {
     if (!projectId) return;
 
-    let refreshTimer: ReturnType<typeof window.setTimeout> | null = null;
+    let refreshTimer: number | null = null;
     let eventSource: EventSource | null = null;
-    let retryTimer: ReturnType<typeof window.setTimeout> | null = null;
+    let retryTimer: number | null = null;
 
     function scheduleRefresh() {
       if (refreshTimer) window.clearTimeout(refreshTimer);
@@ -378,7 +522,9 @@ export default function ProjectDetailPageClient() {
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", nextTab);
     if (nextTab !== "overview") params.delete("folder");
-    router.replace(`/projects/${projectId}?${params.toString()}`, { scroll: false });
+    router.replace(`/projects/${projectId}?${params.toString()}`, {
+      scroll: false,
+    });
   }
 
   function setActiveFolder(nextFolderId: number | null) {
@@ -386,7 +532,9 @@ export default function ProjectDetailPageClient() {
     params.set("tab", "overview");
     if (nextFolderId == null) params.delete("folder");
     else params.set("folder", String(nextFolderId));
-    router.replace(`/projects/${projectId}?${params.toString()}`, { scroll: false });
+    router.replace(`/projects/${projectId}?${params.toString()}`, {
+      scroll: false,
+    });
   }
 
   function showToast(message: string) {
@@ -394,30 +542,70 @@ export default function ProjectDetailPageClient() {
     window.setTimeout(() => setToastMessage(null), 1800);
   }
 
+  function toggleFileViewMode() {
+    setFileViewMode((current) => (current === "grid" ? "list" : "grid"));
+  }
+
+  function closeProjectMoreMenu() {
+    setProjectMoreOpen(false);
+  }
+
   function handleRemoveFromProject(songId: string) {
     setProjectSongs((current) => current.filter((song) => song.id !== songId));
-    setProjectAssets((current) => current.filter((asset) => !(asset.asset_type === "song" && asset.asset_id === songId)));
+    setProjectAssets((current) =>
+      current.filter(
+        (asset) => !(asset.asset_type === "song" && asset.asset_id === songId),
+      ),
+    );
     showToast("Song removed from project");
   }
 
   async function handleMoveSong(song: ProjectSong, folderId: number | null) {
     if (!song.project_asset_id) return;
     const previousFolderId = song.project_folder_id ?? null;
-    setProjectSongs((current) => current.map((item) => (item.id === song.id ? { ...item, project_folder_id: folderId } : item)));
-    setProjectAssets((current) => current.map((asset) => asset.id === song.project_asset_id ? { ...asset, folder_id: folderId } : asset));
+    setProjectSongs((current) =>
+      current.map((item) =>
+        item.id === song.id ? { ...item, project_folder_id: folderId } : item,
+      ),
+    );
+    setProjectAssets((current) =>
+      current.map((asset) =>
+        asset.id === song.project_asset_id
+          ? { ...asset, folder_id: folderId }
+          : asset,
+      ),
+    );
     try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assets`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ asset_id: song.project_asset_id, folder_id: folderId }),
-      });
+      const res = await fetch(
+        `/api/projects/${encodeURIComponent(projectId)}/assets`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            asset_id: song.project_asset_id,
+            folder_id: folderId,
+          }),
+        },
+      );
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
       if (!res.ok) throw new Error(data?.error || "Failed to move file");
       showToast(folderId == null ? "Moved to root" : "Moved file");
     } catch (err) {
-      setProjectSongs((current) => current.map((item) => item.id === song.id ? { ...item, project_folder_id: previousFolderId } : item));
-      setProjectAssets((current) => current.map((asset) => asset.id === song.project_asset_id ? { ...asset, folder_id: previousFolderId } : asset));
+      setProjectSongs((current) =>
+        current.map((item) =>
+          item.id === song.id
+            ? { ...item, project_folder_id: previousFolderId }
+            : item,
+        ),
+      );
+      setProjectAssets((current) =>
+        current.map((asset) =>
+          asset.id === song.project_asset_id
+            ? { ...asset, folder_id: previousFolderId }
+            : asset,
+        ),
+      );
       showToast(err instanceof Error ? err.message : "Couldn't move file");
     } finally {
       setMovingSong(null);
@@ -429,11 +617,18 @@ export default function ProjectDetailPageClient() {
     if (!cleanName || creatingFolder) return;
     setCreatingFolder(true);
     try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: cleanName, parent_folder_id: activeFolderId, asset_type: null }),
-      });
+      const res = await fetch(
+        `/api/projects/${encodeURIComponent(projectId)}/folders`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: cleanName,
+            parent_folder_id: activeFolderId,
+            asset_type: null,
+          }),
+        },
+      );
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
       if (!res.ok) throw new Error(data?.error || "Failed to create folder");
@@ -446,32 +641,6 @@ export default function ProjectDetailPageClient() {
     } finally {
       setCreatingFolder(false);
     }
-  }
-
-  function downloadFiles(songs: ProjectSong[], emptyMessage: string) {
-    const downloadableSongs = songs.filter((song) => song.audioUrl);
-    if (downloadableSongs.length === 0) { showToast(emptyMessage); return; }
-    downloadableSongs.forEach((song, index) => {
-      window.setTimeout(() => {
-        const link = document.createElement("a");
-        link.href = song.audioUrl;
-        link.download = `${song.title || "filmwave-song"}`;
-        link.target = "_blank";
-        link.rel = "noreferrer";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      }, index * 150);
-    });
-    showToast(downloadableSongs.length === 1 ? "Starting 1 download" : `Starting ${downloadableSongs.length} downloads`);
-  }
-
-  function handleDownloadActiveTab() {
-    if (activeTab === "music") return downloadFiles(projectSongs, "No music files to download");
-    if (activeTab === "sound-fx") return showToast("No sound FX files to download yet");
-    if (activeTab === "visual-fx") return showToast("No visual FX files to download yet");
-    if (activeTab === "colour-grading") return showToast("No colour grading files to download yet");
-    downloadFiles(projectSongs, "No project files to download yet");
   }
 
   function openEdit() {
@@ -490,12 +659,28 @@ export default function ProjectDetailPageClient() {
       const res = await fetch(`/api/projects/${editingProject.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: cleanName, description: editDescription.trim() || null }),
+        body: JSON.stringify({
+          name: cleanName,
+          description: editDescription.trim() || null,
+        }),
       });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-      if (!res.ok) { showToast("Couldn't save project"); return; }
-      setProjects((prev) => prev.map((item) => item.id === editingProject.id ? data || { ...item, name: cleanName, description: editDescription.trim() || null } : item));
+      if (!res.ok) {
+        showToast("Couldn't save project");
+        return;
+      }
+      setProjects((prev) =>
+        prev.map((item) =>
+          item.id === editingProject.id
+            ? data || {
+                ...item,
+                name: cleanName,
+                description: editDescription.trim() || null,
+              }
+            : item,
+        ),
+      );
       setEditingProject(null);
       showToast("Project saved");
     } catch {
@@ -505,17 +690,29 @@ export default function ProjectDetailPageClient() {
     }
   }
 
-  async function handleDelete() {
-    if (!editingProject || deletingProjectId) return;
-    const confirmed = window.confirm(`Are you sure you want to delete "${editingProject.name}"? This cannot be undone.`);
+  async function handleDeleteProject(targetProject: Project | null) {
+    if (!targetProject || deletingProjectId) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${targetProject.name}"? This cannot be undone.`,
+    );
+
     if (!confirmed) return showToast("Delete cancelled");
-    const projectIdToDelete = editingProject.id;
+
+    const projectIdToDelete = targetProject.id;
+
     setEditingProject(null);
     setDeletingProjectId(projectIdToDelete);
+
     try {
-      const res = await fetch(`/api/projects/${projectIdToDelete}`, { method: "DELETE" });
+      const res = await fetch(`/api/projects/${projectIdToDelete}`, {
+        method: "DELETE",
+      });
+
       if (res.ok) {
-        setProjects((prev) => prev.filter((item) => item.id !== projectIdToDelete));
+        setProjects((prev) =>
+          prev.filter((item) => item.id !== projectIdToDelete),
+        );
         showToast("Project deleted");
         router.push("/music");
       } else {
@@ -526,6 +723,10 @@ export default function ProjectDetailPageClient() {
     } finally {
       setDeletingProjectId(null);
     }
+  }
+
+  async function handleDelete() {
+    await handleDeleteProject(editingProject);
   }
 
   return (
@@ -583,6 +784,26 @@ export default function ProjectDetailPageClient() {
         .project-detail-skeleton-meta { display: flex; align-items: center; gap: 8px; margin-top: 18px; }
         .project-detail-skeleton-meta-line { width: 72px; height: 8px; }
         .project-detail-skeleton-meta-line.short { width: 140px; }
+        .project-sync-status { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+        .project-sync-status-dot { display: inline-block; width: 7px; height: 7px; flex: 0 0 7px; border-radius: 999px; background: #67ce67; }
+        .project-sync-status.is-syncing .project-sync-status-dot { background: #d9a441; animation: pulse 1s ease-in-out infinite; }
+        .project-sync-status.is-error .project-sync-status-dot { background: #dc584f; }
+        .project-sync-status.is-success .project-sync-status-dot { background: #67ce67; }
+        .project-toolbar-actions { display: flex; align-items: center; gap: 2px; }
+        .project-toolbar-icon-button { display: flex; height: 28px; width: 28px; min-width: 28px; align-items: center; justify-content: center; border: 0; border-radius: 8px; background: transparent; padding: 0; color: var(--icon-color); cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+        .project-toolbar-icon-button:hover, .project-toolbar-icon-button.is-active { background: var(--icon-button-hover); color: var(--text-primary); }
+        .project-toolbar-icon-button svg { width: 14px; height: 14px; }
+        .project-more-menu-wrap { position: relative; display: flex; }
+        .project-more-menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 60; min-width: 172px; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-secondary); padding: 6px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18); }
+        .project-more-menu-button { display: flex; width: 100%; min-height: 34px; align-items: center; border: 0; border-radius: 8px; background: transparent; padding: 0 10px; color: var(--text-primary); cursor: pointer; font-size: 12px; font-weight: 500; text-align: left; transition: background 0.15s ease, color 0.15s ease; }
+        .project-more-menu-button:hover { background: var(--bg-hover); }
+        .project-more-menu-button.is-danger { color: #dc584f; }
+        .project-more-menu-button.is-danger:hover { background: rgba(220, 88, 79, 0.12); color: #dc584f; }
+        .project-browser-grid { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)) !important; column-gap: 8px !important; row-gap: 8px !important; }
+        .project-file-browser .project-folder-card, .project-file-browser .project-file-card { min-height: 100px !important; gap: 9px !important; padding: 8px 6px 4px !important; }
+        .project-folder-card-icon-wrap, .project-file-card-icon-wrap { height: 50px !important; padding-top: 0 !important; }
+        .project-file-browser .project-file-card-title, .project-folder-card-name { font-size: 10.5px !important; line-height: 1.5 !important; }
+        .project-folder-card-meta, .project-file-browser .project-file-card-meta { margin-top: -5px !important; }
         @media (max-width: 760px) {
           .project-detail-shell { padding: 0 18px; }
           .project-tabs-row, .project-sort-row, .project-tab-panel { margin-left: -18px; margin-right: -18px; }
@@ -601,9 +822,17 @@ export default function ProjectDetailPageClient() {
           {loading ? (
             <ProjectPageSkeleton />
           ) : error ? (
-            <div className="project-error"><h2>Couldn&apos;t load project</h2><p>{error}</p></div>
+            <div className="project-error">
+              <h2>Couldn&apos;t load project</h2>
+              <p>{error}</p>
+            </div>
           ) : !project ? (
-            <div className="project-error"><h2>Project not found</h2><p>This project may have been deleted or is no longer available.</p></div>
+            <div className="project-error">
+              <h2>Project not found</h2>
+              <p>
+                This project may have been deleted or is no longer available.
+              </p>
+            </div>
           ) : (
             <>
               <section className="project-detail-hero">
@@ -614,17 +843,23 @@ export default function ProjectDetailPageClient() {
                   {assetsLoaded && (
                     <>
                       <span className="project-detail-dot">·</span>
-                      <span>{totalFileCount} {totalFileCount === 1 ? "file" : "files"}</span>
+                      <span>
+                        {totalFileCount}{" "}
+                        {totalFileCount === 1 ? "file" : "files"}
+                      </span>
                     </>
                   )}
-                  {projectDate && (
-                    <>
-                      <span className="project-detail-dot">·</span>
-                      <span>Created {projectDate}</span>
-                    </>
-                  )}
+                  <span className="project-detail-dot">·</span>
+                  <span className={`project-sync-status is-${syncState}`}>
+                    <span>{syncLabel}</span>
+                    <span className="project-sync-status-dot" />
+                  </span>
                 </div>
-                {project.description && <p className="project-detail-description">{project.description}</p>}
+                {project.description && (
+                  <p className="project-detail-description">
+                    {project.description}
+                  </p>
+                )}
               </section>
 
               <div className="project-tabs-row">
@@ -641,40 +876,6 @@ export default function ProjectDetailPageClient() {
                     </button>
                   );
                 })}
-
-                <div className="project-tabs-row-actions">
-                  {activeTab === "overview" && (
-                    <>
-                      <button
-                        type="button"
-                        className="project-new-folder-button"
-                        onClick={() => setCreateFolderOpen(true)}
-                        aria-label="New folder"
-                        title="New folder"
-                      >
-                        <FolderPlusIcon />
-                      </button>
-                      <button
-                        type="button"
-                        className="project-view-toggle-button"
-                        aria-label={fileViewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
-                        title={fileViewMode === "grid" ? "List view" : "Grid view"}
-                        onClick={() => setFileViewMode(fileViewMode === "grid" ? "list" : "grid")}
-                      >
-                        {fileViewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
-                      </button>
-                    </>
-                  )}
-                  <button
-                    type="button"
-                    onClick={openEdit}
-                    className={borderedIconButton9Class}
-                    aria-label={`Edit ${project.name}`}
-                    title="Edit"
-                  >
-                    <EditIcon />
-                  </button>
-                </div>
               </div>
 
               {activeTab !== "overview" && (
@@ -705,32 +906,98 @@ export default function ProjectDetailPageClient() {
                     onOpenFolder={setActiveFolder}
                     onMoveSong={setMovingSong}
                     downloadSlot={
-                      <DropdownShell
-                        open={downloadMenuOpen}
-                        onOpenChange={setDownloadMenuOpen}
-                        placement="bottom-end"
-                        offsetAmount={8}
-                        flippedOffsetAmount={8}
-                        collisionPadding={{ top: 70, right: 32, bottom: playerVisible ? 85 : 16, left: 16 }}
-                        trigger={({ open }) => (
-                          <button
-                            type="button"
-                            className={`${filterTriggerBaseClass} project-download-trigger ${open ? filterTriggerActiveClass : filterTriggerInactiveClass}`}
-                            aria-label="Download project files"
-                            aria-expanded={open}
-                          >
-                            <span>Download</span>
-                            <DownloadIconSmall />
-                          </button>
-                        )}
-                      >
+                      <div className="project-toolbar-actions">
                         <button
                           type="button"
-                          onClick={() => { setDownloadMenuOpen(false); downloadFiles(projectSongs, "No project files to download yet"); }}
+                          className="project-toolbar-icon-button"
+                          onClick={() => setCreateFolderOpen(true)}
+                          aria-label="New folder"
+                          title="New folder"
                         >
-                          Download all project files
+                          <FolderPlusIcon />
                         </button>
-                      </DropdownShell>
+                        <button
+                          type="button"
+                          className="project-toolbar-icon-button"
+                          aria-label={
+                            fileViewMode === "grid"
+                              ? "Switch to list view"
+                              : "Switch to grid view"
+                          }
+                          title={
+                            fileViewMode === "grid"
+                              ? "Switch to list view"
+                              : "Switch to grid view"
+                          }
+                          onClick={toggleFileViewMode}
+                        >
+                          {fileViewMode === "grid" ? (
+                            <ListViewIcon />
+                          ) : (
+                            <GridViewIcon />
+                          )}
+                        </button>
+                        <div className="project-more-menu-wrap">
+                          <button
+                            type="button"
+                            className={`project-toolbar-icon-button ${projectMoreOpen ? "is-active" : ""}`}
+                            onClick={() => setProjectMoreOpen((open) => !open)}
+                            aria-label="More project actions"
+                            aria-expanded={projectMoreOpen}
+                            title="More"
+                          >
+                            <MoreIcon />
+                          </button>
+                          {projectMoreOpen && (
+                            <div className="project-more-menu" role="menu">
+                              <button
+                                type="button"
+                                className="project-more-menu-button"
+                                role="menuitem"
+                                onClick={() => {
+                                  closeProjectMoreMenu();
+                                  openEdit();
+                                }}
+                              >
+                                Edit project
+                              </button>
+                              <button
+                                type="button"
+                                className="project-more-menu-button"
+                                role="menuitem"
+                                onClick={() => {
+                                  closeProjectMoreMenu();
+                                  showToast("Version history coming soon");
+                                }}
+                              >
+                                Version history
+                              </button>
+                              <button
+                                type="button"
+                                className="project-more-menu-button"
+                                role="menuitem"
+                                onClick={() => {
+                                  closeProjectMoreMenu();
+                                  showToast("Archive project coming soon");
+                                }}
+                              >
+                                Archive project
+                              </button>
+                              <button
+                                type="button"
+                                className="project-more-menu-button is-danger"
+                                role="menuitem"
+                                onClick={() => {
+                                  closeProjectMoreMenu();
+                                  void handleDeleteProject(project);
+                                }}
+                              >
+                                Delete project
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     }
                   />
                 ) : activeTab === "music" ? (
@@ -749,14 +1016,20 @@ export default function ProjectDetailPageClient() {
           )}
 
           {!loading && (
-            <div className="project-footer-wrap" style={{ paddingBottom: playerVisible ? "72px" : "8px" }}>
+            <div
+              className="project-footer-wrap"
+              style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
+            >
               <FooterBottom />
             </div>
           )}
         </div>
       </main>
 
-      <Toast message={toastMessage} bottomOffset={playerVisible ? "88px" : "24px"} />
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
 
       <ProjectFolderPickerModal
         isOpen={!!movingSong}
@@ -767,25 +1040,43 @@ export default function ProjectDetailPageClient() {
         movingSong={movingSong}
         moveItemType="song"
         onClose={() => setMovingSong(null)}
-        onConfirm={(folderId) => { if (!movingSong) return; handleMoveSong(movingSong, folderId); }}
+        onConfirm={(folderId) => {
+          if (!movingSong) return;
+          handleMoveSong(movingSong, folderId);
+        }}
       />
 
       <ModalShell
         isOpen={createFolderOpen}
         title="New Folder"
-        onClose={() => { setCreateFolderOpen(false); setNewFolderName(""); }}
+        onClose={() => {
+          setCreateFolderOpen(false);
+          setNewFolderName("");
+        }}
         closeLabel="Close new folder modal"
         footer={
-          <button type="button" onClick={handleCreateFolder} className={modalPrimaryButtonClass} disabled={creatingFolder || !newFolderName.trim()}>
+          <button
+            type="button"
+            onClick={handleCreateFolder}
+            className={modalPrimaryButtonClass}
+            disabled={creatingFolder || !newFolderName.trim()}
+          >
             {creatingFolder ? "Creating..." : "Create Folder"}
           </button>
         }
       >
-        <label className="block text-[11px] font-medium text-[var(--text-secondary)]">Folder name</label>
+        <label className="block text-[11px] font-medium text-[var(--text-secondary)]">
+          Folder name
+        </label>
         <input
           value={newFolderName}
           onChange={(event) => setNewFolderName(event.target.value)}
-          onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); handleCreateFolder(); } }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              handleCreateFolder();
+            }
+          }}
           autoFocus
           className="mt-2 h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
           placeholder="Client Favorites"
