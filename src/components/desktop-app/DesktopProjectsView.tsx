@@ -397,6 +397,11 @@ function ProjectToolbar({
     };
   }, [open]);
 
+  function handleUnavailableAction(label: string) {
+    console.warn(`${label} is not available in the desktop app yet.`);
+    setOpen(false);
+  }
+
   return (
     <div className="project-toolbar-actions">
       <button
@@ -431,12 +436,44 @@ function ProjectToolbar({
               type="button"
               className="project-more-menu-button"
               role="menuitem"
+              onClick={() => handleUnavailableAction("Edit project")}
+            >
+              Edit project
+            </button>
+            <button
+              type="button"
+              className="project-more-menu-button"
+              role="menuitem"
               onClick={() => {
                 setOpen(false);
                 void showProjectInFinder(project, syncFolder);
               }}
             >
               Show in Finder
+            </button>
+            <button
+              type="button"
+              className="project-more-menu-button"
+              role="menuitem"
+              onClick={() => handleUnavailableAction("Version history")}
+            >
+              Version history
+            </button>
+            <button
+              type="button"
+              className="project-more-menu-button"
+              role="menuitem"
+              onClick={() => handleUnavailableAction("Archive project")}
+            >
+              Archive project
+            </button>
+            <button
+              type="button"
+              className="project-more-menu-button is-danger"
+              role="menuitem"
+              onClick={() => handleUnavailableAction("Delete project")}
+            >
+              Delete project
             </button>
           </div>
         )}
