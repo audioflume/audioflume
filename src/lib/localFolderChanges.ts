@@ -183,12 +183,20 @@ function getLocalChangeBaseline(project: Project, manifest: SyncManifest | null)
   return manifest.fileTree;
 }
 
+// A disk file is a move candidate for a previously-tracked file only when
+// both sizes are known (non-zero) and match. When size is unknown on either
+// side we have no reliable signal beyond the filename — in that case we do
+// NOT treat it as a move, which keeps deletions from being misclassified as
+// moves when another file on disk happens to share the same name.
 function localFileMatchesPreviousNode(localFile: DiskNode, previousFile: ProjectFileNode) {
   const sameName = getNameFromPath(localFile.path) === getNameFromPath(previousFile.path);
-  const previousSize = Number(previousFile.sizeBytes || 0);
-  const sameSize = !previousSize || !localFile.sizeBytes || localFile.sizeBytes === previousSize;
+  if (!sameName) return false;
 
-  return sameName && sameSize;
+  const previousSize = Number(previousFile.sizeBytes || 0);
+  const localSize = Number(localFile.sizeBytes || 0);
+
+  // Both sizes must be known and equal
+  return previousSize > 0 && localSize > 0 && previousSize === localSize;
 }
 
 function createEmptyChanges(): DesktopLocalChanges {
@@ -260,17 +268,11 @@ function detectFolderMoves({
         newFolderFingerprint === oldFolderFingerprint;
 
       // Detect an empty folder rename within the same parent directory.
-      //
-      // Previous code used global counts (missingFolders.length === 1 &&
-      // newFolders.length === 1) which broke whenever the project had any
-      // other new or missing folder anywhere — even in a completely different
-      // part of the tree. This scopes the uniqueness check to the same parent
-      // so unrelated changes elsewhere don't suppress rename detection.
+      // Scoped per-parent so unrelated changes elsewhere don't suppress it.
       const singleEmptyRenameInSameParent = (() => {
         if (oldHasDescendants) return false;
         if (newParentPath !== oldParentPath) return false;
 
-        // Count empty missing folders in this parent
         const emptyMissingInParent = missingFolders.filter((f) => {
           if (getParentPath(f.safePath) !== oldParentPath) return false;
           return (
@@ -279,7 +281,6 @@ function detectFolderMoves({
           );
         });
 
-        // Count empty new folders in this parent (excluding already-matched ones)
         const emptyNewInParent = newFolders.filter((f) => {
           if (usedNewFolderPaths.has(f.path)) return false;
           if (getParentPath(f.path) !== newParentPath) return false;
