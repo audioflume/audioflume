@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import DownloadIconSmall from "../../icons/DownloadIconSmall";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
@@ -14,7 +15,31 @@ export default function DesktopSongCard({
   markersVisible: boolean;
   onFavoriteToggle: () => void;
 }) {
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const actionsRef = useRef<HTMLDivElement | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
+
+  useEffect(() => {
+    if (!actionsOpen) return;
+
+    function onPointerDown(event: MouseEvent) {
+      if (!actionsRef.current?.contains(event.target as Node)) {
+        setActionsOpen(false);
+      }
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setActionsOpen(false);
+    }
+
+    window.addEventListener("mousedown", onPointerDown);
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("mousedown", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [actionsOpen]);
 
   return (
     <article className="desktop-song-card">
@@ -60,7 +85,7 @@ export default function DesktopSongCard({
         <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
       </div>
 
-      <div className="desktop-song-actions">
+      <div className="desktop-song-actions" ref={actionsRef}>
         <button
           type="button"
           onClick={onFavoriteToggle}
@@ -70,9 +95,40 @@ export default function DesktopSongCard({
           <HeartIcon size={14} filled={favorite} />
         </button>
 
-        <button type="button" aria-label="More song actions">
-          <MoreIcon size={14} />
-        </button>
+        <div className="desktop-song-action-menu-wrap">
+          <button
+            type="button"
+            aria-label="Song options"
+            aria-expanded={actionsOpen}
+            className={actionsOpen ? "is-active" : ""}
+            onClick={(event) => {
+              event.stopPropagation();
+              setActionsOpen((open) => !open);
+            }}
+          >
+            <MoreIcon size={14} />
+          </button>
+
+          {actionsOpen && (
+            <div className="desktop-song-action-menu" role="menu">
+              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                Add to Playlist
+              </button>
+              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                Add to Project
+              </button>
+              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                Create New Playlist
+              </button>
+              <button type="button" role="menuitem" disabled>
+                Share Song
+              </button>
+              <button type="button" role="menuitem" disabled>
+                Download Song
+              </button>
+            </div>
+          )}
+        </div>
 
         <button type="button" aria-label="Download song">
           <DownloadIconSmall size={12} />
