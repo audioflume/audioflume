@@ -46,3 +46,12 @@
 .project-sync-status.is-success .project-sync-status-dot {
   background: var(--success);
 }
+
+.project-more-menu-button.is-danger {
+  color: #dc584f;
+}
+
+.project-more-menu-button.is-danger:hover {
+  background: rgba(220, 88, 79, 0.12);
+  color: #dc584f;
+}
