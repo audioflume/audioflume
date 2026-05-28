@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { createProjectSyncOperation } from "@/lib/projectSyncOperations";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
@@ -53,6 +54,47 @@ export async function GET(_req: Request, context: RouteContext) {
 
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to load project sync operations" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function POST(req: Request, context: RouteContext) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const projectId = await getProjectId(context);
+    const project = await getOwnedProject(projectId, userId);
+
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const operationType =
+      typeof body.operationType === "string" && body.operationType.trim()
+        ? body.operationType.trim()
+        : "website_project_change";
+
+    const operationId = await createProjectSyncOperation({
+      projectId,
+      userId,
+      sourceClient: "website",
+      operationType,
+      websiteDone: true,
+      desktopDone: false,
+    });
+
+    return NextResponse.json({ operationId });
+  } catch (error) {
+    console.error("Project sync operation create error:", error);
+
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to create project sync operation" },
       { status: 500 },
     );
   }
