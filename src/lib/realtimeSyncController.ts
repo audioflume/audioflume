@@ -3,7 +3,6 @@ import { listen } from "@tauri-apps/api/event";
 import { load } from "@tauri-apps/plugin-store";
 import {
   applyDesktopLocalChanges,
-  applyDesktopLocalRemovals,
   getFilmwaveProjects,
   normalizeFilmwaveApiBaseUrl,
   type Project,
@@ -13,14 +12,13 @@ import {
   hasDesktopLocalChanges,
 } from "./localFolderChanges";
 import { formatLocalChangesSummary } from "./localChangeDetector";
-import { detectLocalRemovals, syncProjectsToFolder } from "./syncEngine";
+import { syncProjectsToFolder } from "./syncEngine";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const LOCAL_CHANGE_DEBOUNCE_MS = 2500;
-// Matches LOCAL_CHANGE_DEBOUNCE_MS intentionally. Using a shorter debounce for
-// remove events caused a rename split bug: the remove event fired first and
-// triggered a sync before the companion create event arrived, causing renames
-// to be detected as a removal + creation rather than a single folder move.
+// Matches LOCAL_CHANGE_DEBOUNCE_MS intentionally. A shorter debounce for remove
+// events caused renames to be detected as delete + create rather than a move,
+// because the remove event fired a sync before the companion create arrived.
 const LOCAL_REMOVE_DEBOUNCE_MS = 2500;
 const WEBSITE_CHANGE_DEBOUNCE_MS = 1000;
 const SETTINGS_REFRESH_MS = 10000;
@@ -259,31 +257,13 @@ async function runLocalToWebsiteSync(settings: RealtimeSettings) {
     let updatedProjectIds = new Set(projectsToSync.map((project) => String(project.id)));
     let localChangeSummary = "";
 
-    const localRemovals = await detectLocalRemovals({
-      projects: projectsToSync,
-      syncFolder: settings.syncFolder,
-    });
-
-    if (localRemovals.length > 0) {
-      const removalResult = await applyDesktopLocalRemovals({
-        apiBaseUrl: settings.apiBaseUrl,
-        token: settings.desktopToken,
-        removals: localRemovals.map((removal) => ({
-          projectId: removal.projectId,
-          id: removal.id,
-          type: removal.type,
-          name: removal.name,
-          path: removal.path,
-        })),
-      });
-      const removalProjectIds = new Set(localRemovals.map((removal) => String(removal.projectId)));
-      const refreshedProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
-
-      projectsToSync = filterProjectsByIds(refreshedProjects, removalProjectIds);
-      updatedProjectIds = removalProjectIds;
-      localChangeSummary += `Applied ${localRemovals.length} local removal${localRemovals.length === 1 ? "" : "s"}: removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. `;
-    }
-
+    // detectDesktopLocalChanges handles creates, moves, and removals in a
+    // single pass — crucially, it detects moves BEFORE removals, so a file
+    // moved to a new folder is never misclassified as deleted.
+    //
+    // The previous approach ran detectLocalRemovals first, which eagerly
+    // deleted moved files from Supabase before detectDesktopLocalChanges
+    // could identify them as moves, causing the move to silently fail.
     const detected = await detectDesktopLocalChanges({
       projects: projectsToSync,
       syncFolder: settings.syncFolder,
