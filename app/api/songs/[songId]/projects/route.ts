@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { ensureDefaultProjectFolders } from "@/lib/projectFolders";
+import { createProjectSyncOperation } from "@/lib/projectSyncOperations";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type ProjectAssetAddTarget = "root" | "media_folder";
@@ -177,6 +178,15 @@ export async function PATCH(req: Request, context: RouteContext) {
         throw error;
       }
 
+      await createProjectSyncOperation({
+        projectId,
+        userId,
+        sourceClient: "website",
+        operationType: "add_song",
+        websiteDone: true,
+        desktopDone: false,
+      });
+
       return NextResponse.json({ success: true, selected: true });
     }
 
@@ -190,6 +200,15 @@ export async function PATCH(req: Request, context: RouteContext) {
     if (error) {
       throw error;
     }
+
+    await createProjectSyncOperation({
+      projectId,
+      userId,
+      sourceClient: "website",
+      operationType: "remove_song",
+      websiteDone: true,
+      desktopDone: false,
+    });
 
     return NextResponse.json({ success: true, selected: false });
   } catch (err) {
