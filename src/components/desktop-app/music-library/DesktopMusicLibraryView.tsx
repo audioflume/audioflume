@@ -21,6 +21,7 @@ import {
 } from "./musicLibraryUtils";
 import "./DesktopMusicLibraryView.css";
 import "./DesktopMusicLibraryRefinements.css";
+import "./DesktopMusicLibrarySpacing.css";
 
 export default function DesktopMusicLibraryView({
   apiBaseUrl,
