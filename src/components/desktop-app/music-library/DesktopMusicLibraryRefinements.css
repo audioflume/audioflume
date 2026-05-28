@@ -1,3 +1,42 @@
+.desktop-music-page .desktop-music-search-row,
+.desktop-music-page .desktop-music-filter-row {
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  align-items: center !important;
+  box-sizing: border-box;
+}
+
+.desktop-music-page .desktop-music-search-row {
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.desktop-music-page .desktop-music-search-shell {
+  height: 48px !important;
+  align-items: center !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.desktop-music-page .desktop-music-search-icon {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.desktop-music-page .desktop-music-search-input {
+  height: 48px;
+  line-height: 48px;
+  padding: 0;
+}
+
+.desktop-music-page .desktop-filter-trigger {
+  height: 48px !important;
+  align-items: center !important;
+}
+
 .desktop-music-page .desktop-music-filter-tags {
   justify-content: flex-end;
   padding-left: 12px;
@@ -167,7 +206,9 @@
   font-size: 13px;
   font-weight: 500;
   text-align: left;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
 }
 
 .desktop-song-action-menu button:hover:not(:disabled) {
@@ -203,7 +244,8 @@
 
 @media (max-width: 900px) {
   .desktop-app-main:has(.desktop-music-page),
-  .desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-music-page) {
+  .desktop-app-shell.is-sidebar-collapsed
+    .desktop-app-main:has(.desktop-music-page) {
     padding-left: 74px;
   }
 
@@ -230,7 +272,8 @@
 
 @media (max-width: 680px) {
   .desktop-app-main:has(.desktop-music-page),
-  .desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-music-page) {
+  .desktop-app-shell.is-sidebar-collapsed
+    .desktop-app-main:has(.desktop-music-page) {
     padding-left: 74px;
   }
 
