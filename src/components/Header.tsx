@@ -88,7 +88,7 @@ export default function Header({
             className={`desktop-nav-link${activeView === "discover" ? " is-active" : ""}`}
             onClick={() => onActiveViewChange("discover")}
           >
-            <DashboardIcon size={14} />
+            <DashboardIcon />
             Discover
           </button>
 
@@ -97,7 +97,7 @@ export default function Header({
             className={`desktop-nav-link${activeView === "playlists" ? " is-active" : ""}`}
             onClick={() => onActiveViewChange("playlists")}
           >
-            <PlaylistIcon size={14} />
+            <PlaylistIcon size={13} />
             Playlists
           </button>
 
