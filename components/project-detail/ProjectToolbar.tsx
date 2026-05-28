@@ -1,8 +1,8 @@
 import DropdownShell from "@/components/DropdownShell";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
+import type { ProjectFileView } from "@/lib/project-detail/projectDetailUtils";
 import type { Project } from "@/lib/types";
-import type { ProjectFileView } from "../utils/projectDetail";
 
 function FolderPlusIcon() {
   return (
