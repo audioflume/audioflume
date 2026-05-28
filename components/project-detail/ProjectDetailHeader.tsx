@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import type { ProjectSyncState } from "@/lib/project-detail/projectDetailUtils";
 import type { Project } from "@/lib/types";
 
@@ -9,6 +12,12 @@ type ProjectDetailHeaderProps = {
   totalFileCount: number;
 };
 
+type ProjectSyncOperationsResponse = {
+  operations?: Array<{ id: string }>;
+};
+
+const SYNC_OPERATIONS_POLL_MS = 900;
+
 export default function ProjectDetailHeader({
   assetsLoaded,
   project,
@@ -16,6 +25,42 @@ export default function ProjectDetailHeader({
   syncState,
   totalFileCount,
 }: ProjectDetailHeaderProps) {
+  const [hasActiveSyncOperations, setHasActiveSyncOperations] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    let intervalId: number | null = null;
+
+    async function loadSyncOperations() {
+      try {
+        const res = await fetch(
+          `/api/projects/${encodeURIComponent(String(project.id))}/sync-operations`,
+          { cache: "no-store" },
+        );
+        const data = (await res.json()) as ProjectSyncOperationsResponse;
+
+        if (!cancelled) {
+          setHasActiveSyncOperations(Boolean(data.operations?.length));
+        }
+      } catch {
+        if (!cancelled) setHasActiveSyncOperations(false);
+      }
+    }
+
+    void loadSyncOperations();
+    intervalId = window.setInterval(loadSyncOperations, SYNC_OPERATIONS_POLL_MS);
+
+    return () => {
+      cancelled = true;
+      if (intervalId) window.clearInterval(intervalId);
+    };
+  }, [project.id]);
+
+  const visibleSyncState: ProjectSyncState = hasActiveSyncOperations
+    ? "syncing"
+    : syncState;
+  const visibleSyncLabel = hasActiveSyncOperations ? "Syncing" : syncLabel;
+
   return (
     <section className="project-detail-hero">
       <div className="project-detail-kicker">Project</div>
@@ -31,8 +76,8 @@ export default function ProjectDetailHeader({
           </>
         )}
         <span className="project-detail-dot">·</span>
-        <span className={`project-sync-status is-${syncState}`}>
-          <span>{syncLabel}</span>
+        <span className={`project-sync-status is-${visibleSyncState}`}>
+          <span>{visibleSyncLabel}</span>
           <span className="project-sync-status-dot" />
         </span>
       </div>
