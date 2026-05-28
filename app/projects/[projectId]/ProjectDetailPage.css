@@ -52,9 +52,10 @@
 .project-detail-skeleton-meta-line.short { width: 140px; }
 .project-sync-status { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .project-sync-status-dot { display: inline-block; width: 7px; height: 7px; flex: 0 0 7px; border-radius: 999px; background: #67ce67; }
-.project-sync-status.is-syncing .project-sync-status-dot { background: #d9a441; animation: pulse 1s ease-in-out infinite; }
+.project-sync-status.is-syncing .project-sync-status-dot { width: 9px; height: 9px; flex-basis: 9px; border: 1.5px solid currentColor; border-top-color: transparent; background: transparent; animation: project-sync-spin 0.75s linear infinite; }
 .project-sync-status.is-error .project-sync-status-dot { background: #dc584f; }
 .project-sync-status.is-success .project-sync-status-dot { background: #67ce67; }
+@keyframes project-sync-spin { to { transform: rotate(360deg); } }
 .project-toolbar-actions { display: flex; align-items: center; gap: 2px; }
 .project-toolbar-icon-button { display: flex; height: 28px; width: 28px; min-width: 28px; align-items: center; justify-content: center; border: 0; border-radius: 8px; background: transparent; padding: 0; color: var(--icon-color); cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
 .project-toolbar-icon-button:hover, .project-toolbar-icon-button.is-active { background: var(--icon-button-hover); color: var(--text-primary); }
