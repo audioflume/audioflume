@@ -7,26 +7,37 @@ import type { DesktopMusicSong } from "./musicLibraryTypes";
 const WAVEFORM_BAR_WIDTH = 2;
 const WAVEFORM_BAR_GAP = 1;
 const WAVEFORM_MIN_VISIBLE_BARS = 8;
+const WAVEFORM_MAX_VISIBLE_BARS = 220;
+
+function getInterpolatedWaveformHeight(waveform: number[], index: number, total: number) {
+  if (waveform.length === 1 || total <= 1) return waveform[0] ?? 12;
+
+  const sourcePosition = (index / (total - 1)) * (waveform.length - 1);
+  const lowerIndex = Math.floor(sourcePosition);
+  const upperIndex = Math.min(waveform.length - 1, Math.ceil(sourcePosition));
+  const progress = sourcePosition - lowerIndex;
+  const lowerValue = waveform[lowerIndex] ?? 12;
+  const upperValue = waveform[upperIndex] ?? lowerValue;
+
+  return lowerValue + (upperValue - lowerValue) * progress;
+}
 
 function getVisibleWaveformBars(waveform: number[], availableWidth: number) {
   if (!waveform.length) return [];
   if (availableWidth <= 0) return waveform;
 
   const slotWidth = WAVEFORM_BAR_WIDTH + WAVEFORM_BAR_GAP;
-  const visibleCount = Math.max(
-    WAVEFORM_MIN_VISIBLE_BARS,
-    Math.floor((availableWidth + WAVEFORM_BAR_GAP) / slotWidth),
+  const visibleCount = Math.min(
+    WAVEFORM_MAX_VISIBLE_BARS,
+    Math.max(
+      WAVEFORM_MIN_VISIBLE_BARS,
+      Math.floor((availableWidth + WAVEFORM_BAR_GAP) / slotWidth),
+    ),
   );
 
-  if (visibleCount >= waveform.length) return waveform;
-
-  return Array.from({ length: visibleCount }, (_, index) => {
-    const sourceIndex = Math.round(
-      (index / Math.max(1, visibleCount - 1)) * (waveform.length - 1),
-    );
-
-    return waveform[sourceIndex];
-  });
+  return Array.from({ length: visibleCount }, (_, index) =>
+    getInterpolatedWaveformHeight(waveform, index, visibleCount),
+  );
 }
 
 export default function DesktopSongCard({
@@ -112,7 +123,7 @@ export default function DesktopSongCard({
         <div ref={waveformRef} className="desktop-song-wave" aria-hidden="true">
           {visibleWaveform.map((height, index) => (
             <span
-              key={`${song.id}-${index}-${height}`}
+              key={`${song.id}-${index}`}
               style={{ height: `${Math.max(12, height)}%` }}
             />
           ))}
