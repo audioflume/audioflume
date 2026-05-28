@@ -239,11 +239,39 @@ function detectFolderMoves({
         oldHasDescendants &&
         newFileFingerprint === oldFileFingerprint &&
         newFolderFingerprint === oldFolderFingerprint;
-      const singleEmptyRenameInSameParent =
-        !oldHasDescendants &&
-        missingFolders.length === 1 &&
-        newFolders.length === 1 &&
-        newParentPath === oldParentPath;
+
+      // Detect an empty folder rename within the same parent directory.
+      //
+      // Previous code used global counts (missingFolders.length === 1 &&
+      // newFolders.length === 1) which broke whenever the project had any
+      // other new or missing folder anywhere — even in a completely different
+      // part of the tree. This scopes the uniqueness check to the same parent
+      // so unrelated changes elsewhere don't suppress rename detection.
+      const singleEmptyRenameInSameParent = (() => {
+        if (oldHasDescendants) return false;
+        if (newParentPath !== oldParentPath) return false;
+
+        // Count empty missing folders in this parent
+        const emptyMissingInParent = missingFolders.filter((f) => {
+          if (getParentPath(f.safePath) !== oldParentPath) return false;
+          return (
+            !buildDescendantFileFingerprint(f.safePath, previousFiles) &&
+            !buildDescendantFolderFingerprint(f.safePath, previousFolders)
+          );
+        });
+
+        // Count empty new folders in this parent (excluding already-matched ones)
+        const emptyNewInParent = newFolders.filter((f) => {
+          if (usedNewFolderPaths.has(f.path)) return false;
+          if (getParentPath(f.path) !== newParentPath) return false;
+          return (
+            !buildDescendantFileFingerprint(f.path, diskFiles) &&
+            !buildDescendantFolderFingerprint(f.path, diskFolders)
+          );
+        });
+
+        return emptyMissingInParent.length === 1 && emptyNewInParent.length === 1;
+      })();
 
       return sameName || sameTree || singleEmptyRenameInSameParent;
     });
