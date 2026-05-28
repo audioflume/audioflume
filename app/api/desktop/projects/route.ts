@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
 import { normalizeProject } from "@/lib/projects";
 import {
-  ensureDefaultProjectFolders,
   normalizeProjectAsset,
   normalizeProjectFolder,
 } from "@/lib/projectFolders";
@@ -171,10 +170,7 @@ function buildDesktopFileTree({
     const filename = getFallbackAssetFilename(asset);
 
     // Expose sizeBytes from metadata so the desktop sync engine can use it
-    // for accurate move-vs-delete detection. Without this, all local-file
-    // assets have sizeBytes=0 in the manifest, causing name-only matching
-    // that can misclassify a deletion as a move when another file on disk
-    // shares the same filename.
+    // for accurate move-vs-delete detection.
     const metadata = asset.metadata ?? {};
     const sizeBytes = Number(metadata.sizeBytes || 0) || undefined;
 
@@ -225,15 +221,12 @@ export async function GET(req: Request) {
 
     const projects = (projectRows ?? []).map(normalizeProject);
 
-    await Promise.all(
-      projects.map((project) =>
-        ensureDefaultProjectFolders({
-          supabase: supabaseServer,
-          projectId: project.id,
-          userId,
-        }),
-      ),
-    );
+    // NOTE: ensureDefaultProjectFolders is intentionally NOT called here.
+    // The desktop API must return the exact Supabase state without
+    // auto-creating folders — if we recreate default folders here, any
+    // folder the user deletes locally gets immediately restored on the next
+    // getFilmwaveProjects call, causing syncProjectsToFolder to write it
+    // back to disk. Default folder creation belongs only in the web UI.
 
     const projectIds = projects.map((project) => project.id);
 
@@ -243,12 +236,10 @@ export async function GET(req: Request) {
 
     const [{ data: folderRows, error: foldersError }, { data: assetRows, error: assetsError }] =
       await Promise.all([
-        // No clerk_user_id filter on folders — project ownership is already
-        // verified above via the projects query. Filtering by clerk_user_id
-        // here excluded folders created from the website (or with a null
-        // clerk_user_id), causing those folders to be missing from the file
-        // tree and their child files to appear at the wrong paths in the
-        // manifest, breaking delete/rename/move detection.
+        // No clerk_user_id filter — project ownership is already verified
+        // above via the projects query. Filtering by clerk_user_id excluded
+        // folders created from the website or with a null clerk_user_id,
+        // causing path errors in the manifest and breaking detection.
         supabaseServer
           .from("project_folders")
           .select("*")
