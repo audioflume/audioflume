@@ -1,6 +1,10 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SearchIconSmall from "../../icons/SearchIconSmall";
-import { desktopSongs } from "../../../lib/desktopSongs";
+import {
+  desktopSongs,
+  getFilmwaveSongs,
+  type DesktopSong,
+} from "../../../lib/desktopSongs";
 import DesktopFilterDropdown from "./DesktopFilterDropdown";
 import DesktopFilterTags from "./DesktopFilterTags";
 import DesktopMusicHero from "./DesktopMusicHero";
@@ -18,25 +22,59 @@ import {
 import "./DesktopMusicLibraryView.css";
 import "./DesktopMusicLibraryRefinements.css";
 
-export default function DesktopMusicLibraryView() {
+export default function DesktopMusicLibraryView({
+  apiBaseUrl,
+}: {
+  apiBaseUrl?: string | null;
+}) {
+  const [songs, setSongs] = useState<DesktopSong[]>([]);
+  const [songsLoading, setSongsLoading] = useState(true);
+  const [songsError, setSongsError] = useState<string | null>(null);
   const [filters, setFilters] = useState<DesktopMusicFilterState>(EMPTY_FILTERS);
   const [openDropdown, setOpenDropdown] = useState<DesktopMusicFilterKey | null>(null);
   const [musicHeroHovered, setMusicHeroHovered] = useState(false);
   const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
-  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(
-    () => new Set(desktopSongs.filter((song) => song.isFavorite).map((song) => song.id)),
-  );
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSongs() {
+      setSongsLoading(true);
+      setSongsError(null);
+
+      try {
+        const realSongs = await getFilmwaveSongs(apiBaseUrl);
+        if (cancelled) return;
+        setSongs(realSongs);
+        setFavoriteIds((current) => new Set([...current].filter((songId) => realSongs.some((song) => song.id === songId))));
+      } catch (error) {
+        console.error(error);
+        if (cancelled) return;
+        setSongs(desktopSongs);
+        setSongsError(error instanceof Error ? error.message : "Could not load Filmwave songs.");
+      } finally {
+        if (!cancelled) setSongsLoading(false);
+      }
+    }
+
+    void loadSongs();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [apiBaseUrl]);
+
   const filterOptions = useMemo(
-    () => getDesktopMusicFilterOptions(desktopSongs),
-    [],
+    () => getDesktopMusicFilterOptions(songs),
+    [songs],
   );
 
   const filteredSongs = useMemo(
-    () => filterDesktopMusicSongs(desktopSongs, filters),
-    [filters],
+    () => filterDesktopMusicSongs(songs, filters),
+    [songs, filters],
   );
 
   const displayedSongs = useMemo(() => {
@@ -180,10 +218,16 @@ export default function DesktopMusicLibraryView() {
         })}
       </div>
 
+      {songsError && (
+        <div className="desktop-music-load-notice">
+          Could not load live songs. Showing sample tracks. {songsError}
+        </div>
+      )}
+
       <DesktopMusicHero
         hidden={hasActiveFilters}
         shownCount={displayedSongs.length}
-        totalCount={desktopSongs.length}
+        totalCount={songs.length}
         musicHeroHovered={musicHeroHovered}
         desktopSyncHovered={desktopSyncHovered}
         onMusicHeroHoverChange={setMusicHeroHovered}
@@ -194,7 +238,14 @@ export default function DesktopMusicLibraryView() {
         className="desktop-music-list"
         style={{ marginTop: hasActiveFilters ? "16px" : "0px" }}
       >
-        {displayedSongs.map((song) => (
+        {songsLoading && (
+          <div className="desktop-music-empty-state">
+            <h3>Loading music library</h3>
+            <p>Fetching published Filmwave songs from the website.</p>
+          </div>
+        )}
+
+        {!songsLoading && displayedSongs.map((song) => (
           <DesktopSongCard
             key={song.id}
             song={song}
@@ -204,7 +255,7 @@ export default function DesktopMusicLibraryView() {
           />
         ))}
 
-        {displayedSongs.length === 0 && (
+        {!songsLoading && displayedSongs.length === 0 && (
           <div className="desktop-music-empty-state">
             <h3>No songs found</h3>
             <p>Clear a filter or search for a different cue.</p>
