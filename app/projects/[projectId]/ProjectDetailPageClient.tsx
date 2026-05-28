@@ -5,21 +5,19 @@ import FooterBottom from "@/components/FooterBottom";
 import ProjectFileBrowser from "@/components/ProjectFileBrowser";
 import ProjectFolderPickerModal from "@/components/ProjectFolderPickerModal";
 import Toast from "@/components/Toast";
+import CreateFolderModal from "@/components/project-detail/CreateFolderModal";
+import EmptyTabState from "@/components/project-detail/EmptyTabState";
+import MusicTabState from "@/components/project-detail/MusicTabState";
+import ProjectDetailHeader from "@/components/project-detail/ProjectDetailHeader";
+import ProjectPageSkeleton from "@/components/project-detail/ProjectPageSkeleton";
+import ProjectSortRow from "@/components/project-detail/ProjectSortRow";
+import ProjectTabs from "@/components/project-detail/ProjectTabs";
+import ProjectToolbar from "@/components/project-detail/ProjectToolbar";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
 import type { Project, ProjectAsset, ProjectFolder } from "@/lib/types";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import CreateFolderModal from "./components/CreateFolderModal";
-import EmptyTabState from "./components/EmptyTabState";
-import MusicTabState from "./components/MusicTabState";
-import ProjectDetailHeader from "./components/ProjectDetailHeader";
-import ProjectPageSkeleton from "./components/ProjectPageSkeleton";
-import ProjectSortRow from "./components/ProjectSortRow";
-import ProjectTabs from "./components/ProjectTabs";
-import ProjectToolbar from "./components/ProjectToolbar";
-import type { ProjectSong } from "./types";
+import type { ProjectSong } from "@/lib/project-detail/projectDetailTypes";
 import {
   formatSyncTime,
   getTimestamp,
@@ -29,7 +27,9 @@ import {
   type ProjectFileView,
   type ProjectSort,
   type ProjectTab,
-} from "./utils/projectDetail";
+} from "@/lib/project-detail/projectDetailUtils";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./ProjectDetailPage.css";
 
 export default function ProjectDetailPageClient() {
@@ -262,9 +262,9 @@ export default function ProjectDetailPageClient() {
   useEffect(() => {
     if (!projectId) return;
 
-    let refreshTimer: number | null = null;
+    let refreshTimer: ReturnType<typeof window.setTimeout> | null = null;
     let eventSource: EventSource | null = null;
-    let retryTimer: number | null = null;
+    let retryTimer: ReturnType<typeof window.setTimeout> | null = null;
 
     function scheduleRefresh() {
       if (refreshTimer) window.clearTimeout(refreshTimer);
@@ -341,7 +341,6 @@ export default function ProjectDetailPageClient() {
   function toggleFileViewMode() {
     setFileViewMode((current) => (current === "grid" ? "list" : "grid"));
   }
-
 
   function handleRemoveFromProject(songId: string) {
     setProjectSongs((current) => current.filter((song) => song.id !== songId));
@@ -642,7 +641,7 @@ export default function ProjectDetailPageClient() {
         onClose={() => setMovingSong(null)}
         onConfirm={(folderId) => {
           if (!movingSong) return;
-          handleMoveSong(movingSong, folderId);
+          void handleMoveSong(movingSong, folderId);
         }}
       />
 
