@@ -1,4 +1,4 @@
-import { TABS, type ProjectTab } from "../utils/projectDetail";
+import { TABS, type ProjectTab } from "@/lib/project-detail/projectDetailUtils";
 
 export default function EmptyTabState({ activeTab }: { activeTab: ProjectTab }) {
   const tab = TABS.find((item) => item.value === activeTab);
