@@ -133,20 +133,20 @@ export default function DesktopAppShell({
   const [tooltip, setTooltip] = useState<SidebarTooltip>(null);
 
   const libraryLinks: SidebarNavItem[] = [
-    { view: "music", label: "Music Library", icon: <MusicIcon size={16} /> },
-    { view: "playlists", label: "My Playlists", icon: <PlaylistIcon size={16} /> },
+    { view: "music", label: "Music Library", icon: <MusicIcon /> },
+    { view: "playlists", label: "My Playlists", icon: <PlaylistIcon size={14} /> },
     {
       view: "projects",
       label: "Projects",
-      icon: <FolderIcon size={16} />,
+      icon: <FolderIcon />,
       active: activeView === "projects" && !activeProjectId,
       onClick: () => {
         onActiveProjectIdChange(null);
         onActiveViewChange("projects");
       },
     },
-    { label: "Favorites", icon: <HeartIcon size={16} /> },
-    { label: "Sound FX", icon: <WaveformIcon size={16} /> },
+    { label: "Favorites", icon: <HeartIcon /> },
+    { label: "Sound FX", icon: <WaveformIcon /> },
   ];
 
   const projectLinks: SidebarNavItem[] = [
@@ -159,7 +159,7 @@ export default function DesktopAppShell({
     },
     ...projects.map((project) => ({
       label: project.name,
-      icon: <FolderIcon size={16} />,
+      icon: <FolderIcon />,
       active: activeView === "projects" && activeProjectId === project.id,
       onClick: () => {
         onActiveProjectIdChange(project.id);
