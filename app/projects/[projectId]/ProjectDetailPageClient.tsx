@@ -794,8 +794,7 @@ export default function ProjectDetailPageClient() {
         .project-toolbar-icon-button { display: flex; height: 28px; width: 28px; min-width: 28px; align-items: center; justify-content: center; border: 0; border-radius: 8px; background: transparent; padding: 0; color: var(--icon-color); cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
         .project-toolbar-icon-button:hover, .project-toolbar-icon-button.is-active { background: var(--icon-button-hover); color: var(--text-primary); }
         .project-toolbar-icon-button svg { width: 14px; height: 14px; }
-        .project-more-menu-wrap { position: relative; display: flex; }
-        .project-more-menu { min-width: 172px; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-secondary); padding: 6px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18); }
+        .filmwave-dropdown-shell.project-more-dropdown { width: 172px; min-width: 172px; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-secondary); padding: 6px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18); }
         .project-more-menu-button { display: flex; width: 100%; min-height: 34px; align-items: center; border: 0; border-radius: 8px; background: transparent; padding: 0 10px; color: var(--text-primary); cursor: pointer; font-size: 12px; font-weight: 500; text-align: left; transition: background 0.15s ease, color 0.15s ease; }
         .project-more-menu-button:hover { background: var(--bg-hover); }
         .project-more-menu-button.is-danger { color: #dc584f; }
@@ -942,12 +941,12 @@ export default function ProjectDetailPageClient() {
                           open={projectMoreOpen}
                           onOpenChange={setProjectMoreOpen}
                           placement="bottom-end"
-                          className="project-more-dropdown-shell"
+                          className="project-more-dropdown"
                           offsetAmount={8}
                           collisionPadding={{
                             top: 72,
                             right: 16,
-                            bottom: playerVisible ? 96 : 24,
+                            bottom: 88,
                             left: 16,
                           }}
                           trigger={({ open }) => (
@@ -962,52 +961,50 @@ export default function ProjectDetailPageClient() {
                             </button>
                           )}
                         >
-                          <div className="project-more-menu" role="menu">
-                            <button
-                              type="button"
-                              className="project-more-menu-button"
-                              role="menuitem"
-                              onClick={() => {
-                                closeProjectMoreMenu();
-                                openEdit();
-                              }}
-                            >
-                              Edit project
-                            </button>
-                            <button
-                              type="button"
-                              className="project-more-menu-button"
-                              role="menuitem"
-                              onClick={() => {
-                                closeProjectMoreMenu();
-                                showToast("Version history coming soon");
-                              }}
-                            >
-                              Version history
-                            </button>
-                            <button
-                              type="button"
-                              className="project-more-menu-button"
-                              role="menuitem"
-                              onClick={() => {
-                                closeProjectMoreMenu();
-                                showToast("Archive project coming soon");
-                              }}
-                            >
-                              Archive project
-                            </button>
-                            <button
-                              type="button"
-                              className="project-more-menu-button is-danger"
-                              role="menuitem"
-                              onClick={() => {
-                                closeProjectMoreMenu();
-                                void handleDeleteProject(project);
-                              }}
-                            >
-                              Delete project
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            className="project-more-menu-button"
+                            role="menuitem"
+                            onClick={() => {
+                              closeProjectMoreMenu();
+                              openEdit();
+                            }}
+                          >
+                            Edit project
+                          </button>
+                          <button
+                            type="button"
+                            className="project-more-menu-button"
+                            role="menuitem"
+                            onClick={() => {
+                              closeProjectMoreMenu();
+                              showToast("Version history coming soon");
+                            }}
+                          >
+                            Version history
+                          </button>
+                          <button
+                            type="button"
+                            className="project-more-menu-button"
+                            role="menuitem"
+                            onClick={() => {
+                              closeProjectMoreMenu();
+                              showToast("Archive project coming soon");
+                            }}
+                          >
+                            Archive project
+                          </button>
+                          <button
+                            type="button"
+                            className="project-more-menu-button is-danger"
+                            role="menuitem"
+                            onClick={() => {
+                              closeProjectMoreMenu();
+                              void handleDeleteProject(project);
+                            }}
+                          >
+                            Delete project
+                          </button>
                         </DropdownShell>
                       </div>
                     }
