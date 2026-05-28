@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Project } from "../../lib/mockFilmwaveApi";
 import DesktopProjectsView from "./DesktopProjectsView";
 
 const REALTIME_UPDATED_EVENT = "filmwave:realtime-projects-updated";
+const INCOMING_SYNC_STATUS_DURATION_MS = 1200;
 
 type RealtimeProjectsUpdatedDetail = {
   projectIds?: string[];
@@ -48,16 +49,37 @@ export function ProjectsHomeView({
   onActiveProjectIdChange,
 }: ProjectsHomeViewProps) {
   const [realtimeProjects, setRealtimeProjects] = useState(projects);
+  const [incomingSyncing, setIncomingSyncing] = useState(false);
+  const incomingSyncTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     setRealtimeProjects(projects);
   }, [projects]);
 
   useEffect(() => {
+    return () => {
+      if (incomingSyncTimerRef.current) {
+        window.clearTimeout(incomingSyncTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     function handleRealtimeProjectsUpdated(event: Event) {
       const detail = (event as CustomEvent<RealtimeProjectsUpdatedDetail>).detail;
 
       if (!Array.isArray(detail?.projects) || detail.projects.length === 0) return;
+
+      setIncomingSyncing(true);
+
+      if (incomingSyncTimerRef.current) {
+        window.clearTimeout(incomingSyncTimerRef.current);
+      }
+
+      incomingSyncTimerRef.current = window.setTimeout(() => {
+        setIncomingSyncing(false);
+        incomingSyncTimerRef.current = null;
+      }, INCOMING_SYNC_STATUS_DURATION_MS);
 
       setRealtimeProjects((currentProjects) =>
         mergeProjectUpdates(currentProjects, detail.projects ?? []),
@@ -90,7 +112,7 @@ export function ProjectsHomeView({
       projects={realtimeProjects}
       projectsLoading={projectsLoading}
       syncFolder={syncFolder}
-      syncStatus={syncStatus}
+      syncStatus={incomingSyncing ? "Syncing" : syncStatus}
       onActiveProjectIdChange={onActiveProjectIdChange}
     />
   );
