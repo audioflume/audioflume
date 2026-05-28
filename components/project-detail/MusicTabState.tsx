@@ -1,6 +1,6 @@
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
-import type { ProjectSong } from "../types";
+import type { ProjectSong } from "@/lib/project-detail/projectDetailTypes";
 
 type MusicTabStateProps = {
   projectId: string;
