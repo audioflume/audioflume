@@ -5,7 +5,7 @@ import MoreIcon from "../../icons/MoreIcon";
 import type { DesktopMusicSong } from "./musicLibraryTypes";
 
 const WAVEFORM_BAR_WIDTH = 2;
-const WAVEFORM_BAR_GAP = 3;
+const WAVEFORM_BAR_GAP = 1;
 const WAVEFORM_MIN_VISIBLE_BARS = 8;
 
 function getVisibleWaveformBars(waveform: number[], availableWidth: number) {
