@@ -1,13 +1,17 @@
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export type ProjectSyncOperationType =
+  | "website_project_change"
+  | "add_song"
+  | "remove_song"
   | "create_folder"
   | "update_folder"
   | "delete_folder"
   | "move_asset"
   | "delete_asset"
   | "desktop_local_changes"
-  | "desktop_local_removals";
+  | "desktop_local_removals"
+  | (string & {});
 
 export async function createProjectSyncOperation({
   projectId,
