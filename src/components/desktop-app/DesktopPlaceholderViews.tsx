@@ -1,9 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { Project } from "../../lib/mockFilmwaveApi";
+import { useEffect, useMemo, useState } from "react";
+import {
+  completeDesktopProjectSyncOperations,
+  getDesktopProjectSyncOperations,
+  getFilmwaveProjects,
+  type Project,
+} from "../../lib/mockFilmwaveApi";
 import DesktopProjectsView from "./DesktopProjectsView";
 
 const REALTIME_UPDATED_EVENT = "filmwave:realtime-projects-updated";
-const INCOMING_SYNC_STATUS_DURATION_MS = 1200;
+const SYNC_OPERATIONS_POLL_MS = 900;
 
 type RealtimeProjectsUpdatedDetail = {
   projectIds?: string[];
@@ -14,6 +19,8 @@ type RealtimeProjectsUpdatedDetail = {
 
 type ProjectsHomeViewProps = {
   activeProjectId: string | null;
+  apiBaseUrl?: string | null;
+  desktopToken?: string | null;
   projects: Project[];
   projectsLoading: boolean;
   selectedProjectIds: string[];
@@ -42,6 +49,8 @@ function mergeProjectUpdates(currentProjects: Project[], updatedProjects: Projec
 
 export function ProjectsHomeView({
   activeProjectId,
+  apiBaseUrl,
+  desktopToken,
   projects,
   projectsLoading,
   syncFolder,
@@ -49,37 +58,17 @@ export function ProjectsHomeView({
   onActiveProjectIdChange,
 }: ProjectsHomeViewProps) {
   const [realtimeProjects, setRealtimeProjects] = useState(projects);
-  const [incomingSyncing, setIncomingSyncing] = useState(false);
-  const incomingSyncTimerRef = useRef<number | null>(null);
+  const [activeSyncOperationIds, setActiveSyncOperationIds] = useState<string[]>([]);
 
   useEffect(() => {
     setRealtimeProjects(projects);
   }, [projects]);
 
   useEffect(() => {
-    return () => {
-      if (incomingSyncTimerRef.current) {
-        window.clearTimeout(incomingSyncTimerRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     function handleRealtimeProjectsUpdated(event: Event) {
       const detail = (event as CustomEvent<RealtimeProjectsUpdatedDetail>).detail;
 
       if (!Array.isArray(detail?.projects) || detail.projects.length === 0) return;
-
-      setIncomingSyncing(true);
-
-      if (incomingSyncTimerRef.current) {
-        window.clearTimeout(incomingSyncTimerRef.current);
-      }
-
-      incomingSyncTimerRef.current = window.setTimeout(() => {
-        setIncomingSyncing(false);
-        incomingSyncTimerRef.current = null;
-      }, INCOMING_SYNC_STATUS_DURATION_MS);
 
       setRealtimeProjects((currentProjects) =>
         mergeProjectUpdates(currentProjects, detail.projects ?? []),
@@ -92,6 +81,64 @@ export function ProjectsHomeView({
       window.removeEventListener(REALTIME_UPDATED_EVENT, handleRealtimeProjectsUpdated);
     };
   }, []);
+
+  useEffect(() => {
+    if (!activeProjectId || !desktopToken) {
+      setActiveSyncOperationIds([]);
+      return;
+    }
+
+    let cancelled = false;
+    let intervalId: number | null = null;
+    let handlingOperation = false;
+
+    async function pollSyncOperations() {
+      if (handlingOperation) return;
+
+      try {
+        const operations = await getDesktopProjectSyncOperations({
+          apiBaseUrl,
+          projectId: activeProjectId,
+          token: desktopToken,
+        });
+        const operationIds = operations.map((operation) => operation.id);
+
+        if (cancelled) return;
+
+        setActiveSyncOperationIds(operationIds);
+
+        if (operations.length === 0) return;
+
+        handlingOperation = true;
+
+        const latestProjects = await getFilmwaveProjects(desktopToken, apiBaseUrl);
+
+        if (cancelled) return;
+
+        setRealtimeProjects(latestProjects);
+
+        await completeDesktopProjectSyncOperations({
+          apiBaseUrl,
+          projectId: activeProjectId,
+          token: desktopToken,
+        });
+
+        if (!cancelled) setActiveSyncOperationIds([]);
+      } catch (error) {
+        console.warn("Could not process desktop sync operations", error);
+      } finally {
+        handlingOperation = false;
+      }
+    }
+
+    void pollSyncOperations();
+    intervalId = window.setInterval(pollSyncOperations, SYNC_OPERATIONS_POLL_MS);
+
+    return () => {
+      cancelled = true;
+      if (intervalId) window.clearInterval(intervalId);
+    };
+  }, [activeProjectId, apiBaseUrl, desktopToken]);
 
   const activeProjectStillExists = useMemo(
     () =>
@@ -106,13 +153,15 @@ export function ProjectsHomeView({
     }
   }, [activeProjectStillExists, onActiveProjectIdChange]);
 
+  const activeSyncStatus = activeSyncOperationIds.length > 0 ? "Syncing" : syncStatus;
+
   return (
     <DesktopProjectsView
       activeProjectId={activeProjectId}
       projects={realtimeProjects}
       projectsLoading={projectsLoading}
       syncFolder={syncFolder}
-      syncStatus={incomingSyncing ? "Syncing" : syncStatus}
+      syncStatus={activeSyncStatus}
       onActiveProjectIdChange={onActiveProjectIdChange}
     />
   );
