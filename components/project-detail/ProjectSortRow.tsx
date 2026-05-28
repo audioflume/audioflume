@@ -2,7 +2,7 @@ import {
   quickFilterButtonActiveClass,
   quickFilterButtonClass,
 } from "@/components/uiClasses";
-import { SORT_OPTIONS, type ProjectSort } from "../utils/projectDetail";
+import { SORT_OPTIONS, type ProjectSort } from "@/lib/project-detail/projectDetailUtils";
 
 type ProjectSortRowProps = {
   projectSort: ProjectSort;
