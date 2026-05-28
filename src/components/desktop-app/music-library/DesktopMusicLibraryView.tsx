@@ -128,6 +128,7 @@ export default function DesktopMusicLibraryView() {
           {filterKeys.map((filterKey) => (
             <DesktopFilterDropdown
               key={filterKey}
+              filterKey={filterKey}
               label={FILTER_TITLES[filterKey]}
               options={filterOptions[filterKey]}
               selected={filters[filterKey]}
@@ -139,14 +140,14 @@ export default function DesktopMusicLibraryView() {
 
           <button
             type="button"
-            className={`desktop-filter-trigger${filters.markers ? " is-active" : ""}`}
+            className={`desktop-filter-trigger desktop-filter-trigger-markers${filters.markers ? " is-active" : ""}`}
             onClick={() =>
               setFilters((current) => ({ ...current, markers: !current.markers }))
             }
             aria-pressed={filters.markers}
           >
             <span>Markers</span>
-            {filters.markers && <span className="desktop-filter-dot" />}
+            {filters.markers && <span className="desktop-filter-count">1</span>}
           </button>
 
           <button
