@@ -27,7 +27,6 @@ import {
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
-import { supabase } from "@/lib/supabase";
 import type { Project, ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -316,10 +315,16 @@ export default function ProjectDetailPageClient() {
     return () => { cancelled = true; };
   }, [loadProjectFolders]);
 
+  // Realtime sync: connect to the server-side SSE events endpoint.
+  // This uses supabaseServer (service role) on the server, which correctly
+  // receives postgres_changes regardless of RLS — fixing the issue where
+  // the client-side anon supabase connection silently received no events.
   useEffect(() => {
     if (!projectId) return;
 
     let refreshTimer: ReturnType<typeof window.setTimeout> | null = null;
+    let eventSource: EventSource | null = null;
+    let retryTimer: ReturnType<typeof window.setTimeout> | null = null;
 
     function scheduleRefresh() {
       if (refreshTimer) window.clearTimeout(refreshTimer);
@@ -331,33 +336,36 @@ export default function ProjectDetailPageClient() {
       }, 250);
     }
 
-    const channel = supabase
-      .channel(`project-detail-live:${projectId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "project_assets",
-          filter: `project_id=eq.${projectId}`,
-        },
-        scheduleRefresh,
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "project_folders",
-          filter: `project_id=eq.${projectId}`,
-        },
-        scheduleRefresh,
-      )
-      .subscribe();
+    function connect() {
+      if (eventSource) {
+        eventSource.close();
+        eventSource = null;
+      }
+
+      const source = new EventSource(
+        `/api/projects/${encodeURIComponent(projectId)}/events`,
+      );
+
+      source.addEventListener("changed", scheduleRefresh);
+
+      source.onerror = () => {
+        source.close();
+        eventSource = null;
+        retryTimer = window.setTimeout(connect, 5000);
+      };
+
+      eventSource = source;
+    }
+
+    connect();
 
     return () => {
       if (refreshTimer) window.clearTimeout(refreshTimer);
-      void supabase.removeChannel(channel);
+      if (retryTimer) window.clearTimeout(retryTimer);
+      if (eventSource) {
+        eventSource.close();
+        eventSource = null;
+      }
     };
   }, [loadProjectFolders, loadProjectSongs, projectId]);
 
