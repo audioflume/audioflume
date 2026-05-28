@@ -41,10 +41,10 @@ import DesktopAppShell, {
 import {
   CuratedPlaylistsView,
   DiscoverView,
-  MusicLibraryView,
   PlaylistsView,
   ProjectsHomeView,
 } from "./components/desktop-app/DesktopPlaceholderViews";
+import DesktopMusicLibraryView from "./components/desktop-app/DesktopMusicLibraryView";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const DEFAULT_AUTO_SYNC_INTERVAL_MINUTES = 15;
@@ -1126,7 +1126,7 @@ function App() {
           />
         );
       case "music":
-        return <MusicLibraryView />;
+        return <DesktopMusicLibraryView />;
       case "playlists":
         return <PlaylistsView />;
       case "discover":
