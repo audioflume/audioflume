@@ -91,15 +91,15 @@
 }
 
 .desktop-music-page .desktop-song-info {
-  flex: 0 1 240px;
-  min-width: 150px;
-  max-width: 240px;
+  flex: 0 1 190px;
+  min-width: 132px;
+  max-width: 190px;
 }
 
 .desktop-music-page .desktop-song-wave-wrap {
   display: flex !important;
-  flex: 1 1 360px;
-  min-width: 160px;
+  flex: 1 1 520px;
+  min-width: 240px;
   align-items: center;
   gap: 14px;
   overflow: hidden;
@@ -114,7 +114,7 @@
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
-  gap: 3px;
+  gap: 1px;
 }
 
 .desktop-music-page .desktop-song-wave span {
@@ -228,7 +228,7 @@
   }
 
   .desktop-music-page .desktop-song-wave-wrap {
-    flex-basis: 360px;
+    flex-basis: 500px;
   }
 }
 
@@ -238,7 +238,7 @@
   }
 
   .desktop-music-page .desktop-song-wave-wrap {
-    flex-basis: 320px;
+    flex-basis: 460px;
   }
 }
 
@@ -250,18 +250,15 @@
   }
 
   .desktop-music-page .desktop-song-info {
-    flex-basis: 200px;
-    min-width: 132px;
+    flex-basis: 180px;
+    min-width: 124px;
+    max-width: 180px;
   }
 
   .desktop-music-page .desktop-song-wave-wrap {
-    flex-basis: 220px;
-    min-width: 120px;
+    flex-basis: 320px;
+    min-width: 160px;
     gap: 10px;
-  }
-
-  .desktop-music-page .desktop-song-wave {
-    gap: 2px;
   }
 
   .desktop-music-page .desktop-song-stems-slot {
@@ -292,8 +289,8 @@
 
   .desktop-music-page .desktop-song-wave-wrap {
     display: flex !important;
-    flex-basis: 160px;
-    min-width: 92px;
+    flex-basis: 220px;
+    min-width: 120px;
   }
 
   .desktop-music-page .desktop-song-actions {
