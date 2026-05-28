@@ -1,28 +1,14 @@
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
 import { load } from "@tauri-apps/plugin-store";
 import {
-  applyDesktopLocalChanges,
   getFilmwaveProjects,
   normalizeFilmwaveApiBaseUrl,
   type Project,
 } from "./mockFilmwaveApi";
-import {
-  detectDesktopLocalChanges,
-  hasDesktopLocalChanges,
-} from "./localFolderChanges";
-import { formatLocalChangesSummary } from "./localChangeDetector";
 import { syncProjectsToFolder } from "./syncEngine";
 
 const SETTINGS_STORE = "filmwave-settings.json";
-const LOCAL_CHANGE_DEBOUNCE_MS = 2500;
-// Matches LOCAL_CHANGE_DEBOUNCE_MS intentionally. A shorter debounce for remove
-// events caused renames to be detected as delete + create rather than a move,
-// because the remove event fired a sync before the companion create arrived.
-const LOCAL_REMOVE_DEBOUNCE_MS = 2500;
 const WEBSITE_CHANGE_DEBOUNCE_MS = 1000;
 const SETTINGS_REFRESH_MS = 10000;
-const LOCAL_RECONCILE_SWEEP_MS = 20000;
 const WEBSITE_RECONCILE_SWEEP_MS = 30000;
 const MIN_SYNC_GAP_MS = 750;
 
@@ -42,23 +28,11 @@ type ProjectChangePayload = {
   eventType?: string;
 };
 
-type LocalFolderChangePayload = {
-  kind?: string;
-  paths?: string[];
-  syncFolder?: string;
-};
-
-type SyncReason = "local" | "website";
-
 let started = false;
-let currentWatchedFolder: string | null = null;
 let currentEventSource: EventSource | null = null;
-let localChangeTimer: number | null = null;
 let websiteChangeTimer: number | null = null;
 let settingsRefreshTimer: number | null = null;
-let localReconcileSweepTimer: number | null = null;
 let websiteReconcileSweepTimer: number | null = null;
-let queuedLocalSync = false;
 let queuedWebsiteSync = false;
 let pendingWebsiteProjectIds = new Set<string>();
 let syncing = false;
@@ -72,13 +46,7 @@ async function readSettings(): Promise<RealtimeSettings> {
   const projectSource = (await store.get<"mock" | "local-api">("projectSource")) ?? "mock";
   const syncFolder = (await store.get<string>("syncFolder")) ?? null;
 
-  return {
-    apiBaseUrl,
-    autoSyncEnabled,
-    desktopToken,
-    projectSource,
-    syncFolder,
-  };
+  return { apiBaseUrl, autoSyncEnabled, desktopToken, projectSource, syncFolder };
 }
 
 function shouldRunRealtimeSync(settings: RealtimeSettings) {
@@ -125,17 +93,14 @@ function getProjectNames(projects: Project[]) {
 
 function filterProjectsByIds(projects: Project[], projectIds: Set<string>) {
   if (projectIds.size === 0) return projects;
-
   return projects.filter((project) => projectIds.has(String(project.id)));
 }
 
 function dispatchRealtimeUpdated({
   projects,
-  reason,
   updatedProjectIds,
 }: {
   projects: Project[];
-  reason: SyncReason;
   updatedProjectIds: Set<string>;
 }) {
   window.dispatchEvent(
@@ -143,43 +108,20 @@ function dispatchRealtimeUpdated({
       detail: {
         projectIds: [...updatedProjectIds],
         projects,
-        reason,
+        reason: "website",
         updatedAt: new Date().toISOString(),
       },
     }),
   );
 }
 
-function isRemovalFolderChangeEvent(payload: unknown) {
-  if (!payload || typeof payload !== "object") return false;
-
-  const kind = String((payload as LocalFolderChangePayload).kind ?? "").toLowerCase();
-
-  return kind.includes("remove") || kind.includes("delete");
-}
-
-function clearTimer(timer: number | null) {
-  if (timer) window.clearTimeout(timer);
-}
-
-function queueAfterSync(reason: SyncReason, projectIds = new Set<string>()) {
-  if (reason === "local") {
-    queuedLocalSync = true;
-    return;
-  }
-
+function queueAfterSync(projectIds = new Set<string>()) {
   queuedWebsiteSync = true;
-  projectIds.forEach((projectId) => pendingWebsiteProjectIds.add(projectId));
+  projectIds.forEach((id) => pendingWebsiteProjectIds.add(id));
 }
 
 function runQueuedSyncs() {
   if (syncing) return;
-
-  if (queuedLocalSync) {
-    queuedLocalSync = false;
-    scheduleLocalSync(LOCAL_CHANGE_DEBOUNCE_MS);
-    return;
-  }
 
   if (queuedWebsiteSync) {
     queuedWebsiteSync = false;
@@ -187,44 +129,32 @@ function runQueuedSyncs() {
   }
 }
 
-function scheduleLocalSync(delayMs = LOCAL_CHANGE_DEBOUNCE_MS) {
-  clearTimer(localChangeTimer);
-
-  localChangeTimer = window.setTimeout(() => {
-    localChangeTimer = null;
-    void runEventDrivenSync("local");
-  }, Math.max(0, delayMs));
-}
-
 function scheduleWebsiteSync(projectId?: string | number) {
   if (projectId != null) {
     pendingWebsiteProjectIds.add(String(projectId));
   }
 
-  clearTimer(websiteChangeTimer);
+  if (websiteChangeTimer) window.clearTimeout(websiteChangeTimer);
 
   websiteChangeTimer = window.setTimeout(() => {
     const projectIds = new Set(pendingWebsiteProjectIds);
     pendingWebsiteProjectIds.clear();
     websiteChangeTimer = null;
-    void runEventDrivenSync("website", projectIds);
+    void runWebsiteSync(projectIds);
   }, WEBSITE_CHANGE_DEBOUNCE_MS);
 }
 
-async function runEventDrivenSync(reason: SyncReason, projectIds = new Set<string>()) {
+async function runWebsiteSync(projectIds = new Set<string>()) {
   if (syncing) {
-    queueAfterSync(reason, projectIds);
+    queueAfterSync(projectIds);
     return;
   }
 
   const syncGapRemainingMs = MIN_SYNC_GAP_MS - (Date.now() - lastSyncFinishedAt);
 
   if (syncGapRemainingMs > 0) {
-    if (reason === "local") scheduleLocalSync(syncGapRemainingMs);
-    if (reason === "website") {
-      projectIds.forEach((projectId) => pendingWebsiteProjectIds.add(projectId));
-      scheduleWebsiteSync();
-    }
+    projectIds.forEach((id) => pendingWebsiteProjectIds.add(id));
+    scheduleWebsiteSync();
     return;
   }
 
@@ -236,101 +166,11 @@ async function runEventDrivenSync(reason: SyncReason, projectIds = new Set<strin
   syncing = true;
 
   try {
-    if (reason === "local") {
-      await runLocalToWebsiteSync(settings);
-    } else {
-      await runWebsiteToLocalSync(settings, projectIds);
-    }
+    await runWebsiteToLocalSync(settings, projectIds);
   } finally {
     syncing = false;
     lastSyncFinishedAt = Date.now();
     runQueuedSyncs();
-  }
-}
-
-async function runLocalToWebsiteSync(settings: RealtimeSettings) {
-  if (!settings.desktopToken || !settings.syncFolder) return;
-
-  try {
-    const allProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
-    let projectsToSync = allProjects;
-    let updatedProjectIds = new Set(projectsToSync.map((project) => String(project.id)));
-    let localChangeSummary = "";
-
-    // detectDesktopLocalChanges handles creates, moves, and removals in a
-    // single pass — crucially, it detects moves BEFORE removals, so a file
-    // moved to a new folder is never misclassified as deleted.
-    //
-    // The previous approach ran detectLocalRemovals first, which eagerly
-    // deleted moved files from Supabase before detectDesktopLocalChanges
-    // could identify them as moves, causing the move to silently fail.
-    const detected = await detectDesktopLocalChanges({
-      projects: projectsToSync,
-      syncFolder: settings.syncFolder,
-    });
-
-    if (hasDesktopLocalChanges(detected.changes)) {
-      const changeResult = await applyDesktopLocalChanges({
-        apiBaseUrl: settings.apiBaseUrl,
-        token: settings.desktopToken,
-        changes: detected.changes,
-      });
-      const changedProjectIds = new Set(detected.affectedProjectIds.map(String));
-      const refreshedProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
-
-      projectsToSync = filterProjectsByIds(refreshedProjects, changedProjectIds);
-      updatedProjectIds = new Set([...updatedProjectIds, ...changedProjectIds]);
-      localChangeSummary += `Applied local changes: ${formatLocalChangesSummary(changeResult)}. `;
-    }
-
-    if (!localChangeSummary) {
-      await addActivityLogEntry({
-        mode: "auto",
-        status: "info",
-        title: "Realtime local sync skipped",
-        detail: "No manifest-backed local changes found.",
-        projectNames: [],
-      });
-      return;
-    }
-
-    if (projectsToSync.length === 0) {
-      await addActivityLogEntry({
-        mode: "auto",
-        status: "info",
-        title: "Realtime local sync skipped",
-        detail: `${localChangeSummary}No selected projects needed syncing.`,
-        projectNames: [],
-      });
-      return;
-    }
-
-    const result = await syncProjectsToFolder({
-      projects: projectsToSync,
-      syncFolder: settings.syncFolder,
-    });
-
-    dispatchRealtimeUpdated({
-      projects: projectsToSync,
-      reason: "local",
-      updatedProjectIds,
-    });
-
-    await addActivityLogEntry({
-      mode: "auto",
-      status: "success",
-      title: "Realtime local sync complete",
-      detail: `${localChangeSummary}Skipped ${result.skippedFileCount} unchanged files and downloaded ${result.downloadedFileCount} files.`,
-      projectNames: getProjectNames(projectsToSync),
-    });
-  } catch (error) {
-    await addActivityLogEntry({
-      mode: "auto",
-      status: "error",
-      title: "Realtime local sync failed",
-      detail: error instanceof Error ? error.message : "Realtime local sync failed.",
-      projectNames: [],
-    });
   }
 }
 
@@ -346,8 +186,8 @@ async function runWebsiteToLocalSync(settings: RealtimeSettings, projectIds = ne
       await addActivityLogEntry({
         mode: "auto",
         status: "info",
-        title: "Realtime website sync skipped",
-        detail: "No selected projects needed syncing.",
+        title: "Realtime sync skipped",
+        detail: "No projects needed syncing.",
         projectNames: [],
       });
       return;
@@ -358,16 +198,12 @@ async function runWebsiteToLocalSync(settings: RealtimeSettings, projectIds = ne
       syncFolder: settings.syncFolder,
     });
 
-    dispatchRealtimeUpdated({
-      projects: projectsToSync,
-      reason: "website",
-      updatedProjectIds,
-    });
+    dispatchRealtimeUpdated({ projects: projectsToSync, updatedProjectIds });
 
     await addActivityLogEntry({
       mode: "auto",
       status: "success",
-      title: "Realtime website sync complete",
+      title: "Realtime sync complete",
       detail: `Synced after a Filmwave project change. Skipped ${result.skippedFileCount} unchanged files and downloaded ${result.downloadedFileCount} files.`,
       projectNames: getProjectNames(projectsToSync),
     });
@@ -375,31 +211,11 @@ async function runWebsiteToLocalSync(settings: RealtimeSettings, projectIds = ne
     await addActivityLogEntry({
       mode: "auto",
       status: "error",
-      title: "Realtime website sync failed",
-      detail: error instanceof Error ? error.message : "Realtime website sync failed.",
+      title: "Realtime sync failed",
+      detail: error instanceof Error ? error.message : "Realtime sync failed.",
       projectNames: [],
     });
   }
-}
-
-async function refreshLocalFolderWatch(settings: RealtimeSettings) {
-  if (!shouldRunRealtimeSync(settings) || !settings.syncFolder) {
-    if (currentWatchedFolder) {
-      await invoke("stop_sync_folder_watch", { path: currentWatchedFolder }).catch(() => undefined);
-      currentWatchedFolder = null;
-    }
-
-    return;
-  }
-
-  if (settings.syncFolder === currentWatchedFolder) return;
-
-  if (currentWatchedFolder) {
-    await invoke("stop_sync_folder_watch", { path: currentWatchedFolder }).catch(() => undefined);
-  }
-
-  await invoke("watch_sync_folder", { path: settings.syncFolder });
-  currentWatchedFolder = settings.syncFolder;
 }
 
 function closeWebsiteEvents() {
@@ -428,7 +244,6 @@ function refreshWebsiteEvents(settings: RealtimeSettings) {
 
   eventSource.onerror = () => {
     closeWebsiteEvents();
-
     window.setTimeout(async () => {
       const nextSettings = await readSettings();
       refreshWebsiteEvents(nextSettings);
@@ -441,16 +256,6 @@ function refreshWebsiteEvents(settings: RealtimeSettings) {
 async function refreshRealtimeConnections() {
   const settings = await readSettings();
 
-  await refreshLocalFolderWatch(settings).catch((error) => {
-    void addActivityLogEntry({
-      mode: "system",
-      status: "error",
-      title: "Local watcher failed",
-      detail: error instanceof Error ? error.message : "Could not watch local sync folder.",
-      projectNames: [],
-    });
-  });
-
   if (!currentEventSource && shouldRunRealtimeSync(settings)) {
     refreshWebsiteEvents(settings);
   }
@@ -458,11 +263,6 @@ async function refreshRealtimeConnections() {
   if (!shouldRunRealtimeSync(settings)) {
     closeWebsiteEvents();
   }
-}
-
-async function runLocalReconcileSweep() {
-  if (syncing || localChangeTimer) return;
-  scheduleLocalSync(0);
 }
 
 async function runWebsiteReconcileSweep() {
@@ -475,30 +275,14 @@ export function startRealtimeSyncController() {
 
   started = true;
 
-  void listen<LocalFolderChangePayload>("filmwave://local-folder-change", (event) => {
-    const isRemovalEvent = isRemovalFolderChangeEvent(event.payload);
-    scheduleLocalSync(isRemovalEvent ? LOCAL_REMOVE_DEBOUNCE_MS : LOCAL_CHANGE_DEBOUNCE_MS);
-  });
-
-  void listen("filmwave://local-folder-watch-error", (event) => {
-    void addActivityLogEntry({
-      mode: "system",
-      status: "error",
-      title: "Local watcher error",
-      detail: JSON.stringify(event.payload),
-      projectNames: [],
-    });
-  });
+  // The local sync folder is read-only — changes flow website → local only.
+  // No filesystem watcher or local change detection is registered here.
 
   void refreshRealtimeConnections();
 
   settingsRefreshTimer = window.setInterval(() => {
     void refreshRealtimeConnections();
   }, SETTINGS_REFRESH_MS);
-
-  localReconcileSweepTimer = window.setInterval(() => {
-    void runLocalReconcileSweep();
-  }, LOCAL_RECONCILE_SWEEP_MS);
 
   websiteReconcileSweepTimer = window.setInterval(() => {
     void runWebsiteReconcileSweep();
@@ -511,23 +295,13 @@ export function stopRealtimeSyncController() {
   started = false;
   closeWebsiteEvents();
 
-  if (localChangeTimer) window.clearTimeout(localChangeTimer);
   if (websiteChangeTimer) window.clearTimeout(websiteChangeTimer);
   if (settingsRefreshTimer) window.clearInterval(settingsRefreshTimer);
-  if (localReconcileSweepTimer) window.clearInterval(localReconcileSweepTimer);
   if (websiteReconcileSweepTimer) window.clearInterval(websiteReconcileSweepTimer);
 
-  localChangeTimer = null;
   websiteChangeTimer = null;
   settingsRefreshTimer = null;
-  localReconcileSweepTimer = null;
   websiteReconcileSweepTimer = null;
-  queuedLocalSync = false;
   queuedWebsiteSync = false;
   pendingWebsiteProjectIds.clear();
-
-  if (currentWatchedFolder) {
-    void invoke("stop_sync_folder_watch", { path: currentWatchedFolder });
-    currentWatchedFolder = null;
-  }
 }
