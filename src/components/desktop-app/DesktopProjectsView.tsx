@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { exists } from "@tauri-apps/plugin-fs";
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Project, ProjectFileNode } from "../../lib/mockFilmwaveApi";
 import { getProjectNodeLocalPath } from "../../lib/syncEngine";
 import {
@@ -14,6 +15,13 @@ import "./DesktopProjectGridTight.css";
 type ProjectTab = "overview" | "music" | "sound-fx" | "licenses";
 type ProjectFileView = "grid" | "list";
 type ProjectSyncState = "success" | "syncing" | "error";
+
+type DragGhost = {
+  name: string;
+  type: "file" | "folder";
+  x: number;
+  y: number;
+};
 
 type DesktopProjectsViewProps = {
   activeProjectId: string | null;
@@ -159,10 +167,18 @@ async function startNativeProjectNodeDrag({
   node,
   project,
   syncFolder,
+  onGhostStart,
+  onGhostEnd,
+  pointerX,
+  pointerY,
 }: {
   node: ProjectFileNode;
   project: Project;
   syncFolder: string | null;
+  onGhostStart: (ghost: DragGhost) => void;
+  onGhostEnd: () => void;
+  pointerX: number;
+  pointerY: number;
 }) {
   if (!syncFolder) {
     console.warn("Choose a sync folder before dragging project files.");
@@ -176,7 +192,73 @@ async function startNativeProjectNodeDrag({
     return;
   }
 
-  await invoke("start_native_file_drag", { path: localPath });
+  onGhostStart({ name: node.name, type: node.type, x: pointerX, y: pointerY });
+
+  try {
+    await invoke("start_native_file_drag", { path: localPath });
+  } finally {
+    onGhostEnd();
+  }
+}
+
+// Drag ghost rendered into document.body so it floats above everything,
+// including the Tauri title bar and any z-index stacking contexts.
+function DragGhostOverlay({ ghost }: { ghost: DragGhost }) {
+  const isFolder = ghost.type === "folder";
+  const displayName = isFolder
+    ? ghost.name
+    : ghost.name.replace(/\.[^/.]+$/, "");
+
+  const style: React.CSSProperties = {
+    position: "fixed",
+    left: ghost.x + 12,
+    top: ghost.y - 16,
+    pointerEvents: "none",
+    zIndex: 99999,
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    padding: "6px 12px 6px 8px",
+    borderRadius: 8,
+    background: "rgba(30, 30, 34, 0.88)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    border: "1px solid rgba(255,255,255,0.10)",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.45)",
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: 500,
+    letterSpacing: "-0.01em",
+    maxWidth: 260,
+    userSelect: "none",
+    opacity: 0.96,
+  };
+
+  const iconStyle: React.CSSProperties = {
+    flexShrink: 0,
+    width: 18,
+    height: 18,
+    opacity: 0.85,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
+  const nameStyle: React.CSSProperties = {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  };
+
+  return createPortal(
+    <div style={style}>
+      <span style={iconStyle}>
+        {isFolder ? <DesktopFolderGlyph small /> : <DesktopMusicGlyph small />}
+      </span>
+      <span style={nameStyle}>{displayName}</span>
+    </div>,
+    document.body,
+  );
 }
 
 function ProjectSyncStatus({
@@ -264,11 +346,15 @@ function ProjectGridItem({
   project,
   syncFolder,
   onOpenFolder,
+  onGhostStart,
+  onGhostEnd,
 }: {
   node: ProjectFileNode;
   project: Project;
   syncFolder: string | null;
   onOpenFolder: (folder: ProjectFileNode) => void;
+  onGhostStart: (ghost: DragGhost) => void;
+  onGhostEnd: () => void;
 }) {
   if (node.type === "folder") {
     return (
@@ -279,7 +365,12 @@ function ProjectGridItem({
         title={syncFolder ? "Drag synced folder" : "Choose a sync folder before dragging"}
         onPointerDown={(event) => {
           if (event.button !== 0) return;
-          void startNativeProjectNodeDrag({ node, project, syncFolder });
+          void startNativeProjectNodeDrag({
+            node, project, syncFolder,
+            onGhostStart, onGhostEnd,
+            pointerX: event.clientX,
+            pointerY: event.clientY,
+          });
         }}
         onClick={() => onOpenFolder(node)}
         onKeyDown={(event) => {
@@ -303,7 +394,12 @@ function ProjectGridItem({
       title={syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"}
       onPointerDown={(event) => {
         if (event.button !== 0) return;
-        void startNativeProjectNodeDrag({ node, project, syncFolder });
+        void startNativeProjectNodeDrag({
+          node, project, syncFolder,
+          onGhostStart, onGhostEnd,
+          pointerX: event.clientX,
+          pointerY: event.clientY,
+        });
       }}
     >
       <div className="project-file-card-icon-wrap">
@@ -320,11 +416,15 @@ function ProjectListItem({
   project,
   syncFolder,
   onOpenFolder,
+  onGhostStart,
+  onGhostEnd,
 }: {
   node: ProjectFileNode;
   project: Project;
   syncFolder: string | null;
   onOpenFolder: (folder: ProjectFileNode) => void;
+  onGhostStart: (ghost: DragGhost) => void;
+  onGhostEnd: () => void;
 }) {
   if (node.type === "folder") {
     const totalItems = getNodeChildren(project, node).length;
@@ -337,7 +437,12 @@ function ProjectListItem({
         title={syncFolder ? "Drag synced folder" : "Choose a sync folder before dragging"}
         onPointerDown={(event) => {
           if (event.button !== 0) return;
-          void startNativeProjectNodeDrag({ node, project, syncFolder });
+          void startNativeProjectNodeDrag({
+            node, project, syncFolder,
+            onGhostStart, onGhostEnd,
+            pointerX: event.clientX,
+            pointerY: event.clientY,
+          });
         }}
         onClick={() => onOpenFolder(node)}
         onKeyDown={(event) => {
@@ -361,7 +466,12 @@ function ProjectListItem({
       title={syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"}
       onPointerDown={(event) => {
         if (event.button !== 0) return;
-        void startNativeProjectNodeDrag({ node, project, syncFolder });
+        void startNativeProjectNodeDrag({
+          node, project, syncFolder,
+          onGhostStart, onGhostEnd,
+          pointerX: event.clientX,
+          pointerY: event.clientY,
+        });
       }}
     >
       <span className="project-browser-row-name">
@@ -391,6 +501,7 @@ function ProjectDetailView({
   const [activeTab, setActiveTab] = useState<ProjectTab>("overview");
   const [activeFolder, setActiveFolder] = useState<ProjectFileNode | null>(null);
   const [viewMode, setViewMode] = useState<ProjectFileView>("grid");
+  const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
 
   const visibleNodes = useMemo(() => {
     if (activeTab !== "overview") return [];
@@ -409,6 +520,8 @@ function ProjectDetailView({
 
   return (
     <section className="desktop-projects-page is-detail project-detail-page">
+      {dragGhost && <DragGhostOverlay ghost={dragGhost} />}
+
       <div className="project-tabs-row">
         <button type="button" onClick={onBack} aria-label="Back to projects">
           Projects
@@ -494,6 +607,8 @@ function ProjectDetailView({
                     project={project}
                     syncFolder={syncFolder}
                     onOpenFolder={setActiveFolder}
+                    onGhostStart={setDragGhost}
+                    onGhostEnd={() => setDragGhost(null)}
                   />
                 ))}
               </div>
@@ -506,6 +621,8 @@ function ProjectDetailView({
                     project={project}
                     syncFolder={syncFolder}
                     onOpenFolder={setActiveFolder}
+                    onGhostStart={setDragGhost}
+                    onGhostEnd={() => setDragGhost(null)}
                   />
                 ))}
               </div>
