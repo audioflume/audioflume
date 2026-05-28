@@ -9,6 +9,14 @@
   z-index: 2000;
 }
 
+.desktop-music-page .desktop-song-play-overlay {
+  color: #111111 !important;
+}
+
+.desktop-music-page .desktop-song-play-overlay::before {
+  background: #ffffff !important;
+}
+
 html[data-theme="light"] .desktop-music-page .desktop-music-sticky-bar,
 html[data-theme="light"] .desktop-music-page .desktop-music-quick-filters {
   background: var(--bg-primary);
@@ -51,10 +59,13 @@ html[data-theme="light"] .desktop-music-page .desktop-shuffle-button.is-active {
 
 html[data-theme="light"] .desktop-music-page .desktop-song-play-overlay {
   background: var(--media-overlay-strong);
-  color: var(--text-primary);
+  color: #111111 !important;
 }
 
-html[data-theme="light"] .desktop-music-page .desktop-song-play-overlay::before,
+html[data-theme="light"] .desktop-music-page .desktop-song-play-overlay::before {
+  background: #ffffff !important;
+}
+
 html[data-theme="light"] .desktop-music-page .desktop-player-play-button {
   background: var(--text-primary) !important;
   color: var(--bg-primary) !important;
