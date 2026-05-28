@@ -27,10 +27,12 @@
 }
 
 .project-sync-status.is-syncing > span:first-child {
-  display: inline-block;
-  max-width: 42px;
-  overflow: hidden;
-  white-space: nowrap;
+  font-size: 0;
+}
+
+.project-sync-status.is-syncing > span:first-child::before {
+  content: "Syncing";
+  font-size: 11px;
 }
 
 .project-sync-status-dot {
