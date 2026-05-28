@@ -1,0 +1,144 @@
+.desktop-music-page .desktop-music-filter-tags {
+  justify-content: flex-end;
+  padding-left: 12px;
+}
+
+.desktop-music-page .desktop-tag-chip {
+  height: 28px;
+  border-color: transparent;
+  border-radius: 0;
+  background: var(--accent);
+  color: #111111;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.desktop-music-page .desktop-tag-chip:hover {
+  border-color: transparent;
+  background: var(--accent);
+  color: #111111;
+  opacity: 0.86;
+}
+
+.desktop-music-page .desktop-tag-chip span {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.desktop-music-page .desktop-shuffle-button {
+  margin-left: 16px;
+}
+
+.desktop-music-page .desktop-song-card {
+  grid-template-columns:
+    40px minmax(150px, 240px) minmax(220px, 1fr) 54px 64px 86px auto;
+}
+
+.desktop-music-page .desktop-song-wave-wrap {
+  display: flex !important;
+}
+
+.desktop-music-page .desktop-song-genre-slot {
+  display: flex;
+}
+
+.desktop-music-page .desktop-song-key-bpm {
+  display: flex;
+}
+
+@container (max-width: 760px) {
+  .desktop-music-page .desktop-song-card {
+    grid-template-columns: 40px minmax(140px, 1fr) minmax(160px, 0.8fr) 52px auto;
+  }
+
+  .desktop-music-page .desktop-song-wave-wrap {
+    display: flex !important;
+  }
+
+  .desktop-music-page .desktop-song-genre-slot,
+  .desktop-music-page .desktop-song-key-bpm {
+    display: none;
+  }
+}
+
+@media (max-width: 1220px) {
+  .desktop-music-page .desktop-song-card {
+    grid-template-columns: 40px minmax(150px, 220px) minmax(190px, 1fr) 54px 86px auto;
+  }
+
+  .desktop-music-page .desktop-song-genre-slot {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .desktop-app-main:has(.desktop-music-page) {
+    padding-left: 260px;
+  }
+
+  .desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-music-page) {
+    padding-left: 74px;
+  }
+
+  .desktop-music-page .desktop-music-search-row {
+    flex-direction: row;
+    align-items: center;
+    min-height: 48px;
+    gap: 12px;
+    padding: 0;
+  }
+
+  .desktop-music-page .desktop-music-search-shell {
+    width: 320px;
+    padding: 12px 16px 12px 0;
+  }
+
+  .desktop-music-page .desktop-music-filter-tags {
+    width: auto;
+    min-width: 0;
+  }
+
+  .desktop-music-page .desktop-song-card {
+    grid-template-columns: 40px minmax(140px, 1fr) minmax(150px, 0.75fr) 52px auto;
+  }
+
+  .desktop-music-page .desktop-song-wave-wrap {
+    display: flex !important;
+  }
+
+  .desktop-music-page .desktop-song-genre-slot,
+  .desktop-music-page .desktop-song-key-bpm {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .desktop-app-main:has(.desktop-music-page) {
+    padding-left: 260px;
+  }
+
+  .desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-music-page) {
+    padding-left: 74px;
+  }
+
+  .desktop-music-page .desktop-music-sticky-bar {
+    padding: 0 20px;
+  }
+
+  .desktop-music-page .desktop-music-filter-row {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+
+  .desktop-music-page .desktop-music-quick-filters,
+  .desktop-music-page .desktop-music-hero-grid {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .desktop-music-page .desktop-song-card {
+    padding-left: 24px;
+    grid-template-columns: 40px minmax(120px, 1fr) minmax(140px, 0.8fr) auto;
+  }
+}
