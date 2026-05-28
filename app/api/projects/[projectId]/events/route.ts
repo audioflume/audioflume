@@ -20,6 +20,13 @@ function writeSse(
   );
 }
 
+function getPayloadProjectId(payload: {
+  new?: Record<string, unknown>;
+  old?: Record<string, unknown>;
+}) {
+  return String(payload.new?.project_id ?? payload.old?.project_id ?? "");
+}
+
 export async function GET(req: Request, context: RouteContext) {
   const { userId } = await auth();
 
@@ -54,37 +61,37 @@ export async function GET(req: Request, context: RouteContext) {
         }
       };
 
+      const emitIfMatch = (payload: {
+        new?: Record<string, unknown>;
+        old?: Record<string, unknown>;
+      }) => {
+        // No filter on the subscription so DELETE events aren't silently
+        // dropped (Supabase can't filter deletes without REPLICA IDENTITY FULL).
+        // Instead we check project_id here; if it's missing from the payload
+        // (possible on delete without REPLICA IDENTITY FULL) we fire anyway —
+        // the client just does a benign silent refetch.
+        const changedProjectId = getPayloadProjectId(payload);
+        if (!changedProjectId || changedProjectId === projectId) {
+          safeWrite("changed", {
+            projectId,
+            changedAt: new Date().toISOString(),
+          });
+        }
+      };
+
       const channel = supabaseServer
         .channel(
           `project-page-events:${userId}:${projectId}:${crypto.randomUUID()}`,
         )
         .on(
           "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "project_assets",
-            filter: `project_id=eq.${projectId}`,
-          },
-          () =>
-            safeWrite("changed", {
-              projectId,
-              changedAt: new Date().toISOString(),
-            }),
+          { event: "*", schema: "public", table: "project_assets" },
+          emitIfMatch,
         )
         .on(
           "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "project_folders",
-            filter: `project_id=eq.${projectId}`,
-          },
-          () =>
-            safeWrite("changed", {
-              projectId,
-              changedAt: new Date().toISOString(),
-            }),
+          { event: "*", schema: "public", table: "project_folders" },
+          emitIfMatch,
         )
         .subscribe((status) => {
           safeWrite("connection", {
