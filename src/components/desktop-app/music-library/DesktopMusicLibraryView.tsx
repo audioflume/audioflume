@@ -7,7 +7,6 @@ import {
 } from "../../../lib/desktopSongs";
 import DesktopFilterDropdown from "./DesktopFilterDropdown";
 import DesktopFilterTags from "./DesktopFilterTags";
-import DesktopMusicHero from "./DesktopMusicHero";
 import DesktopMusicPlayer from "./DesktopMusicPlayer";
 import DesktopSongCard from "./DesktopSongCard";
 import type { DesktopMusicFilterKey, DesktopMusicFilterState } from "./musicLibraryTypes";
@@ -33,8 +32,6 @@ export default function DesktopMusicLibraryView({
   const [songsError, setSongsError] = useState<string | null>(null);
   const [filters, setFilters] = useState<DesktopMusicFilterState>(EMPTY_FILTERS);
   const [openDropdown, setOpenDropdown] = useState<DesktopMusicFilterKey | null>(null);
-  const [musicHeroHovered, setMusicHeroHovered] = useState(false);
-  const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
   const [activeSongId, setActiveSongId] = useState<string | null>(null);
@@ -52,12 +49,21 @@ export default function DesktopMusicLibraryView({
         const realSongs = await getFilmwaveSongs(apiBaseUrl);
         if (cancelled) return;
         setSongs(realSongs);
-        setFavoriteIds((current) => new Set([...current].filter((songId) => realSongs.some((song) => song.id === songId))));
+        setFavoriteIds(
+          (current) =>
+            new Set(
+              [...current].filter((songId) =>
+                realSongs.some((song) => song.id === songId),
+              ),
+            ),
+        );
       } catch (error) {
         console.error(error);
         if (cancelled) return;
         setSongs(desktopSongs);
-        setSongsError(error instanceof Error ? error.message : "Could not load Filmwave songs.");
+        setSongsError(
+          error instanceof Error ? error.message : "Could not load Filmwave songs.",
+        );
       } finally {
         if (!cancelled) setSongsLoading(false);
       }
@@ -262,16 +268,6 @@ export default function DesktopMusicLibraryView({
         </div>
       )}
 
-      <DesktopMusicHero
-        hidden={hasActiveFilters}
-        shownCount={displayedSongs.length}
-        totalCount={songs.length}
-        musicHeroHovered={musicHeroHovered}
-        desktopSyncHovered={desktopSyncHovered}
-        onMusicHeroHoverChange={setMusicHeroHovered}
-        onDesktopSyncHoverChange={setDesktopSyncHovered}
-      />
-
       <div
         className="desktop-music-list"
         style={{ marginTop: hasActiveFilters ? "16px" : "0px" }}
@@ -283,17 +279,18 @@ export default function DesktopMusicLibraryView({
           </div>
         )}
 
-        {!songsLoading && displayedSongs.map((song) => (
-          <DesktopSongCard
-            key={song.id}
-            song={song}
-            favorite={favoriteIds.has(song.id)}
-            markersVisible={filters.markers}
-            isPlaying={activeSongId === song.id && playerPlaying}
-            onFavoriteToggle={() => toggleFavorite(song.id)}
-            onPlay={() => playSong(song)}
-          />
-        ))}
+        {!songsLoading &&
+          displayedSongs.map((song) => (
+            <DesktopSongCard
+              key={song.id}
+              song={song}
+              favorite={favoriteIds.has(song.id)}
+              markersVisible={filters.markers}
+              isPlaying={activeSongId === song.id && playerPlaying}
+              onFavoriteToggle={() => toggleFavorite(song.id)}
+              onPlay={() => playSong(song)}
+            />
+          ))}
 
         {!songsLoading && displayedSongs.length === 0 && (
           <div className="desktop-music-empty-state">
