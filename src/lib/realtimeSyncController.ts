@@ -17,7 +17,11 @@ import { detectLocalRemovals, syncProjectsToFolder } from "./syncEngine";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const LOCAL_CHANGE_DEBOUNCE_MS = 2500;
-const LOCAL_REMOVE_DEBOUNCE_MS = 700;
+// Matches LOCAL_CHANGE_DEBOUNCE_MS intentionally. Using a shorter debounce for
+// remove events caused a rename split bug: the remove event fired first and
+// triggered a sync before the companion create event arrived, causing renames
+// to be detected as a removal + creation rather than a single folder move.
+const LOCAL_REMOVE_DEBOUNCE_MS = 2500;
 const WEBSITE_CHANGE_DEBOUNCE_MS = 1000;
 const SETTINGS_REFRESH_MS = 10000;
 const LOCAL_RECONCILE_SWEEP_MS = 20000;
