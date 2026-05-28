@@ -15,6 +15,7 @@ import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
 import "./admin-polish.css";
+import "./icon-button-overrides.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
