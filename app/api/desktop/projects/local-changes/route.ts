@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
 import { normalizeProjectFolder } from "@/lib/projectFolders";
+import { createProjectSyncOperation } from "@/lib/projectSyncOperations";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type LocalFileMove = {
@@ -163,12 +164,6 @@ async function getNextAssetPosition(projectId: number, folderId: number | null) 
   return data?.[0]?.position != null ? Number(data[0].position) + 1 : 0;
 }
 
-// Fetch all folders for a project. Does NOT filter by clerk_user_id because:
-// - We use the service-role key which bypasses RLS
-// - Project ownership is already verified upstream via allowedProjectIds
-// - Filtering by clerk_user_id silently excluded folders created from the
-//   website (or with a null clerk_user_id), causing delete/rename/move
-//   operations to fail or produce duplicate folders
 async function getProjectFolders(projectId: number) {
   const { data, error } = await supabaseServer
     .from("project_folders")
@@ -284,6 +279,27 @@ async function getAllowedProjectIds(userId: string, rawProjectIds: unknown[]) {
   return new Set((data ?? []).map((project) => Number(project.id)));
 }
 
+async function createDesktopSyncOperationsForChangedProjects({
+  projectIds,
+  userId,
+}: {
+  projectIds: Set<number>;
+  userId: string;
+}) {
+  await Promise.all(
+    [...projectIds].map((projectId) =>
+      createProjectSyncOperation({
+        projectId,
+        userId,
+        sourceClient: "desktop",
+        operationType: "desktop_local_changes",
+        websiteDone: false,
+        desktopDone: true,
+      }),
+    ),
+  );
+}
+
 export async function POST(req: Request) {
   const userId = getDesktopUserIdFromRequest(req);
 
@@ -293,24 +309,12 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const folderCreates = Array.isArray(body.folderCreates)
-      ? (body.folderCreates as LocalFolderCreate[])
-      : [];
-    const folderMoves = Array.isArray(body.folderMoves)
-      ? (body.folderMoves as LocalFolderMove[])
-      : [];
-    const fileCreates = Array.isArray(body.fileCreates)
-      ? (body.fileCreates as LocalFileCreate[])
-      : [];
-    const fileMoves = Array.isArray(body.fileMoves)
-      ? (body.fileMoves as LocalFileMove[])
-      : [];
-    const fileRemovals = Array.isArray(body.fileRemovals)
-      ? (body.fileRemovals as LocalFileRemoval[])
-      : [];
-    const folderRemovals = Array.isArray(body.folderRemovals)
-      ? (body.folderRemovals as LocalFolderRemoval[])
-      : [];
+    const folderCreates = Array.isArray(body.folderCreates) ? (body.folderCreates as LocalFolderCreate[]) : [];
+    const folderMoves = Array.isArray(body.folderMoves) ? (body.folderMoves as LocalFolderMove[]) : [];
+    const fileCreates = Array.isArray(body.fileCreates) ? (body.fileCreates as LocalFileCreate[]) : [];
+    const fileMoves = Array.isArray(body.fileMoves) ? (body.fileMoves as LocalFileMove[]) : [];
+    const fileRemovals = Array.isArray(body.fileRemovals) ? (body.fileRemovals as LocalFileRemoval[]) : [];
+    const folderRemovals = Array.isArray(body.folderRemovals) ? (body.folderRemovals as LocalFolderRemoval[]) : [];
 
     const allowedProjectIds = await getAllowedProjectIds(userId, [
       ...folderCreates.map((item) => item.projectId),
@@ -328,6 +332,7 @@ export async function POST(req: Request) {
     let removedAssetCount = 0;
     let removedFolderCount = 0;
     let ignoredFileAddCount = Number(body.ignoredFileAddCount || 0);
+    const changedProjectIds = new Set<number>();
 
     const normalizedFolderCreates = folderCreates
       .map((item) => ({
@@ -345,12 +350,9 @@ export async function POST(req: Request) {
 
       if (beforePaths.has(folderCreate.path)) continue;
 
-      await ensureFolderPath({
-        path: folderCreate.path,
-        projectId: folderCreate.projectId,
-        userId,
-      });
+      await ensureFolderPath({ path: folderCreate.path, projectId: folderCreate.projectId, userId });
       createdFolderCount += 1;
+      changedProjectIds.add(folderCreate.projectId);
     }
 
     const normalizedFolderMoves = folderMoves
@@ -370,9 +372,7 @@ export async function POST(req: Request) {
     for (const move of normalizedFolderMoves) {
       const nextName = getNameFromPath(move.path);
       const nextParentPath = getFolderParentPath(move.path);
-      let nextParentFolderId = nextParentPath
-        ? await ensureFolderPath({ path: nextParentPath, projectId: move.projectId, userId })
-        : null;
+      let nextParentFolderId = nextParentPath ? await ensureFolderPath({ path: nextParentPath, projectId: move.projectId, userId }) : null;
 
       const allFolders = await getProjectFolders(move.projectId);
       const descendantIds = getDescendantFolderIds({ allFolders, rootFolderIds: [move.folderId] });
@@ -381,15 +381,9 @@ export async function POST(req: Request) {
         nextParentFolderId = null;
       }
 
-      // No clerk_user_id filter — project ownership already verified via
-      // allowedProjectIds, and filtering by clerk_user_id silently skipped
-      // folders created from the website
       const { error, count } = await supabaseServer
         .from("project_folders")
-        .update({
-          name: nextName,
-          parent_folder_id: nextParentFolderId,
-        })
+        .update({ name: nextName, parent_folder_id: nextParentFolderId })
         .eq("project_id", move.projectId)
         .eq("id", move.folderId)
         .select("id", { count: "exact" });
@@ -397,6 +391,7 @@ export async function POST(req: Request) {
       if (error) throw error;
 
       movedFolderCount += count ?? 0;
+      if ((count ?? 0) > 0) changedProjectIds.add(move.projectId);
     }
 
     for (const create of fileCreates) {
@@ -406,9 +401,7 @@ export async function POST(req: Request) {
       if (!projectId || !nextPath || !allowedProjectIds.has(projectId)) continue;
 
       const parentPath = getParentPathFromFilePath(nextPath);
-      const folderId = parentPath
-        ? await ensureFolderPath({ path: parentPath, projectId, userId })
-        : null;
+      const folderId = parentPath ? await ensureFolderPath({ path: parentPath, projectId, userId }) : null;
       const nextPosition = await getNextAssetPosition(projectId, folderId);
       const filename = getNameFromPath(nextPath);
       const fallbackAssetId = `local:${projectId}:${nextPath}`;
@@ -421,17 +414,14 @@ export async function POST(req: Request) {
           asset_id: fallbackAssetId,
           folder_id: folderId,
           position: nextPosition,
-          metadata: {
-            filename,
-            source: "desktop-local-file",
-            sizeBytes: Number(create.sizeBytes || 0),
-          },
+          metadata: { filename, source: "desktop-local-file", sizeBytes: Number(create.sizeBytes || 0) },
         })
         .select("id", { count: "exact" });
 
       if (error) throw error;
 
       createdFileCount += count ?? 0;
+      if ((count ?? 0) > 0) changedProjectIds.add(projectId);
     }
 
     for (const move of fileMoves) {
@@ -442,9 +432,7 @@ export async function POST(req: Request) {
       if (!projectId || !assetId || !nextPath || !allowedProjectIds.has(projectId)) continue;
 
       const parentPath = getParentPathFromFilePath(nextPath);
-      const folderId = parentPath
-        ? await ensureFolderPath({ path: parentPath, projectId, userId })
-        : null;
+      const folderId = parentPath ? await ensureFolderPath({ path: parentPath, projectId, userId }) : null;
 
       const { error, count } = await supabaseServer
         .from("project_assets")
@@ -456,6 +444,7 @@ export async function POST(req: Request) {
       if (error) throw error;
 
       movedFileCount += count ?? 0;
+      if ((count ?? 0) > 0) changedProjectIds.add(projectId);
     }
 
     for (const removal of fileRemovals) {
@@ -473,6 +462,7 @@ export async function POST(req: Request) {
       if (error) throw error;
 
       removedAssetCount += count ?? 0;
+      if ((count ?? 0) > 0) changedProjectIds.add(projectId);
     }
 
     for (const removal of folderRemovals) {
@@ -482,10 +472,7 @@ export async function POST(req: Request) {
       if (!projectId || !folderId || !allowedProjectIds.has(projectId)) continue;
 
       const folderRows = await getProjectFolders(projectId);
-      const allFolderIdsToDelete = getDescendantFolderIds({
-        allFolders: folderRows,
-        rootFolderIds: [folderId],
-      });
+      const allFolderIdsToDelete = getDescendantFolderIds({ allFolders: folderRows, rootFolderIds: [folderId] });
 
       const { error: assetDeleteError, count: assetCount } = await supabaseServer
         .from("project_assets")
@@ -497,9 +484,6 @@ export async function POST(req: Request) {
 
       removedAssetCount += assetCount ?? 0;
 
-      // No clerk_user_id filter — project ownership already verified via
-      // allowedProjectIds, and filtering by clerk_user_id silently skipped
-      // folders created from the website (or with null clerk_user_id)
       const { error: folderDeleteError, count: folderCount } = await supabaseServer
         .from("project_folders")
         .delete({ count: "exact" })
@@ -509,6 +493,11 @@ export async function POST(req: Request) {
       if (folderDeleteError) throw folderDeleteError;
 
       removedFolderCount += folderCount ?? 0;
+      if ((folderCount ?? 0) > 0 || (assetCount ?? 0) > 0) changedProjectIds.add(projectId);
+    }
+
+    if (changedProjectIds.size > 0) {
+      await createDesktopSyncOperationsForChangedProjects({ projectIds: changedProjectIds, userId });
     }
 
     return NextResponse.json({
@@ -524,12 +513,7 @@ export async function POST(req: Request) {
     console.error("Desktop local changes apply error:", error);
 
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to apply local changes",
-      },
+      { error: error instanceof Error ? error.message : "Failed to apply local changes" },
       { status: 500 },
     );
   }
