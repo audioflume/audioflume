@@ -1,4 +1,4 @@
-import { TABS } from "../utils/projectDetail";
+import { TABS } from "@/lib/project-detail/projectDetailUtils";
 
 export default function ProjectPageSkeleton() {
   return (
