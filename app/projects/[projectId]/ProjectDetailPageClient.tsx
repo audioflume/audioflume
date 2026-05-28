@@ -16,7 +16,6 @@ import ProjectToolbar from "@/components/project-detail/ProjectToolbar";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
-import type { Project, ProjectAsset, ProjectFolder } from "@/lib/types";
 import type { ProjectSong } from "@/lib/project-detail/projectDetailTypes";
 import {
   formatSyncTime,
@@ -28,6 +27,7 @@ import {
   type ProjectSort,
   type ProjectTab,
 } from "@/lib/project-detail/projectDetailUtils";
+import type { Project, ProjectAsset, ProjectFolder } from "@/lib/types";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./ProjectDetailPage.css";
@@ -255,16 +255,12 @@ export default function ProjectDetailPageClient() {
     };
   }, [loadProjectFolders]);
 
-  // Realtime sync: connect to the server-side SSE events endpoint.
-  // This uses supabaseServer (service role) on the server, which correctly
-  // receives postgres_changes regardless of RLS — fixing the issue where
-  // the client-side anon supabase connection silently received no events.
   useEffect(() => {
     if (!projectId) return;
 
-    let refreshTimer: ReturnType<typeof window.setTimeout> | null = null;
+    let refreshTimer: number | null = null;
     let eventSource: EventSource | null = null;
-    let retryTimer: ReturnType<typeof window.setTimeout> | null = null;
+    let retryTimer: number | null = null;
 
     function scheduleRefresh() {
       if (refreshTimer) window.clearTimeout(refreshTimer);
