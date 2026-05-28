@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Project } from "../../lib/mockFilmwaveApi";
 import FolderIcon from "../icons/FolderIcon";
 import HeartIcon from "../icons/HeartIcon";
@@ -130,7 +130,23 @@ export default function DesktopAppShell({
   onActiveViewChange,
 }: DesktopAppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [autoCollapsed, setAutoCollapsed] = useState(false);
   const [tooltip, setTooltip] = useState<SidebarTooltip>(null);
+  const effectivelyCollapsed = collapsed || autoCollapsed;
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 900px)");
+
+    function syncAutoCollapsed() {
+      setAutoCollapsed(mediaQuery.matches);
+      if (mediaQuery.matches) setTooltip(null);
+    }
+
+    syncAutoCollapsed();
+    mediaQuery.addEventListener("change", syncAutoCollapsed);
+
+    return () => mediaQuery.removeEventListener("change", syncAutoCollapsed);
+  }, []);
 
   const libraryLinks: SidebarNavItem[] = [
     { view: "music", label: "Music Library", icon: <MusicIcon /> },
@@ -169,7 +185,7 @@ export default function DesktopAppShell({
   ];
 
   return (
-    <div className={`desktop-app-shell${collapsed ? " is-sidebar-collapsed" : ""}`}>
+    <div className={`desktop-app-shell${effectivelyCollapsed ? " is-sidebar-collapsed" : ""}`}>
       {header}
 
       <aside className="desktop-app-sidebar" data-tauri-drag-region>
@@ -179,11 +195,11 @@ export default function DesktopAppShell({
             className="desktop-sidebar-collapse-button"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             onClick={() => {
-              setCollapsed((value) => !value);
+              if (!autoCollapsed) setCollapsed((value) => !value);
               setTooltip(null);
             }}
           >
-            <CollapseIcon collapsed={collapsed} />
+            <CollapseIcon collapsed={effectivelyCollapsed} />
           </button>
         </div>
 
@@ -194,7 +210,7 @@ export default function DesktopAppShell({
               {libraryLinks.map((item) => (
                 <SidebarNavButton
                   key={item.label}
-                  collapsed={collapsed}
+                  collapsed={effectivelyCollapsed}
                   item={item}
                   activeView={activeView}
                   onActiveViewChange={onActiveViewChange}
@@ -212,7 +228,7 @@ export default function DesktopAppShell({
               {projectLinks.map((item) => (
                 <SidebarNavButton
                   key={item.label}
-                  collapsed={collapsed}
+                  collapsed={effectivelyCollapsed}
                   item={item}
                   activeView={activeView}
                   onActiveViewChange={onActiveViewChange}
@@ -227,7 +243,7 @@ export default function DesktopAppShell({
         </div>
       </aside>
 
-      {tooltip && collapsed && <SidebarTooltipEl label={tooltip.label} top={tooltip.top} />}
+      {tooltip && effectivelyCollapsed && <SidebarTooltipEl label={tooltip.label} top={tooltip.top} />}
 
       <main className="desktop-app-main">{children}</main>
     </div>
