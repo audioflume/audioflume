@@ -1,6 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { createProjectSyncOperation } from "@/lib/projectSyncOperations";
+import {
+  completeProjectSyncOperationsForProject,
+  createProjectSyncOperation,
+} from "@/lib/projectSyncOperations";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
@@ -48,7 +51,19 @@ export async function GET(_req: Request, context: RouteContext) {
 
     if (error) throw error;
 
-    return NextResponse.json({ operations: data ?? [] });
+    const operations = data ?? [];
+    const hasDesktopOriginatedOperation = operations.some(
+      (operation) => operation.source_client === "desktop" && !operation.website_done_at,
+    );
+
+    if (hasDesktopOriginatedOperation) {
+      await completeProjectSyncOperationsForProject({
+        projectId,
+        client: "website",
+      });
+    }
+
+    return NextResponse.json({ operations });
   } catch (error) {
     console.error("Project sync operations fetch error:", error);
 
