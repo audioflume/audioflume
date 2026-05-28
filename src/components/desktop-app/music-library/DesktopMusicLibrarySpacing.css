@@ -1,3 +1,10 @@
 .desktop-music-page .desktop-music-quick-filters {
   padding-bottom: 12px;
 }
+
+.desktop-music-page .desktop-music-player,
+.desktop-app-shell.is-sidebar-collapsed .desktop-music-page .desktop-music-player {
+  right: 0;
+  left: 0;
+  z-index: 2000;
+}
