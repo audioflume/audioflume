@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { normalizeSongRow, attachEditPoints } from "@/lib/songs";
 import { normalizeProjectAsset } from "@/lib/projectFolders";
+import { createProjectSyncOperation } from "@/lib/projectSyncOperations";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
@@ -211,6 +212,15 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     if (error) throw error;
 
+    await createProjectSyncOperation({
+      projectId,
+      userId,
+      sourceClient: "website",
+      operationType: "move_asset",
+      websiteDone: true,
+      desktopDone: false,
+    });
+
     return NextResponse.json(normalizeProjectAsset(data));
   } catch (err) {
     console.error("Project asset update error:", err);
@@ -251,6 +261,15 @@ export async function DELETE(req: Request, context: RouteContext) {
       .eq("project_id", projectId);
 
     if (error) throw error;
+
+    await createProjectSyncOperation({
+      projectId,
+      userId,
+      sourceClient: "website",
+      operationType: "delete_asset",
+      websiteDone: true,
+      desktopDone: false,
+    });
 
     return NextResponse.json({ deleted_asset_id: assetId });
   } catch (err) {
