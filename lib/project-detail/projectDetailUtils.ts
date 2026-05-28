@@ -53,7 +53,7 @@ export function formatSyncTime(
   date: Date | null,
   state: ProjectSyncState,
 ) {
-  if (state === "syncing") return "Syncing now";
+  if (state === "syncing") return "Syncing";
   if (state === "error") return "Sync error";
 
   if (!date) return "Last synced status ready";
