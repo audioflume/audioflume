@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { exists } from "@tauri-apps/plugin-fs";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Project, ProjectFileNode } from "../../lib/mockFilmwaveApi";
 import { getProjectNodeLocalPath } from "../../lib/syncEngine";
@@ -12,7 +12,13 @@ import "./DesktopProjectsView.css";
 import "./DesktopProjectsViewOverrides.css";
 import "./DesktopProjectGridTight.css";
 
-type ProjectTab = "overview" | "music" | "sound-fx" | "licenses";
+type ProjectTab =
+  | "overview"
+  | "music"
+  | "sound-fx"
+  | "visual-fx"
+  | "colour-grading"
+  | "licenses";
 type ProjectFileView = "grid" | "list";
 type ProjectSyncState = "success" | "syncing" | "error";
 
@@ -32,11 +38,23 @@ type DesktopProjectsViewProps = {
   onActiveProjectIdChange: (projectId: string | null) => void;
 };
 
-const TABS: Array<{ label: string; value: ProjectTab }> = [
-  { label: "All Files", value: "overview" },
-  { label: "Music", value: "music" },
-  { label: "Sound FX", value: "sound-fx" },
-  { label: "Licenses", value: "licenses" },
+type ProjectTabDefinition = {
+  label: string;
+  value: ProjectTab;
+};
+
+type MediaTabDefinition = ProjectTabDefinition & {
+  rootFolderName: string;
+};
+
+const ALL_FILES_TAB: ProjectTabDefinition = { label: "All Files", value: "overview" };
+const LICENSES_TAB: ProjectTabDefinition = { label: "Licenses", value: "licenses" };
+
+const MEDIA_TABS: MediaTabDefinition[] = [
+  { label: "Music", value: "music", rootFolderName: "Music" },
+  { label: "Sound FX", value: "sound-fx", rootFolderName: "Sound FX" },
+  { label: "Visual FX", value: "visual-fx", rootFolderName: "Visual FX" },
+  { label: "Colour Grading", value: "colour-grading", rootFolderName: "Colour Grading" },
 ];
 
 const ERROR_SYNC_PATTERNS = ["failed", "error", "could not"];
@@ -119,6 +137,43 @@ function getNodeParentPath(node: ProjectFileNode) {
   return parts.join("/");
 }
 
+function normalizeReservedMediaName(value: string) {
+  return value.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function getRootPathName(path: string) {
+  return path.split("/").filter(Boolean)[0] ?? "";
+}
+
+function projectHasMediaForFolder(project: Project, rootFolderName: string) {
+  const normalizedFolderName = normalizeReservedMediaName(rootFolderName);
+
+  return project.files.some(
+    (node) =>
+      node.type === "file" &&
+      normalizeReservedMediaName(getRootPathName(node.path)) === normalizedFolderName,
+  );
+}
+
+function getVisibleProjectTabs(project: Project): ProjectTabDefinition[] {
+  return [
+    ALL_FILES_TAB,
+    ...MEDIA_TABS.filter((tab) => projectHasMediaForFolder(project, tab.rootFolderName)),
+    LICENSES_TAB,
+  ];
+}
+
+function isEmptyReservedMediaFolder(project: Project, node: ProjectFileNode) {
+  if (node.type !== "folder") return false;
+  if (getNodeDepth(node) !== 1) return false;
+
+  return MEDIA_TABS.some(
+    (tab) =>
+      normalizeReservedMediaName(node.name) === normalizeReservedMediaName(tab.rootFolderName) &&
+      !projectHasMediaForFolder(project, tab.rootFolderName),
+  );
+}
+
 function getNodeChildren(project: Project, folder: ProjectFileNode | null) {
   const folderPath = folder?.path ?? "";
   const expectedDepth = folder ? getNodeDepth(folder) + 1 : 1;
@@ -126,6 +181,8 @@ function getNodeChildren(project: Project, folder: ProjectFileNode | null) {
   return project.files
     .filter((node) => {
       if (node.id === folder?.id) return false;
+      if (!folder && isEmptyReservedMediaFolder(project, node)) return false;
+
       const parentPath = getNodeParentPath(node);
       return parentPath === folderPath && getNodeDepth(node) === expectedDepth;
     })
@@ -498,10 +555,18 @@ function ProjectDetailView({
   syncStatus: string;
   onBack: () => void;
 }) {
+  const visibleTabs = useMemo(() => getVisibleProjectTabs(project), [project]);
   const [activeTab, setActiveTab] = useState<ProjectTab>("overview");
   const [activeFolder, setActiveFolder] = useState<ProjectFileNode | null>(null);
   const [viewMode, setViewMode] = useState<ProjectFileView>("grid");
   const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
+
+  useEffect(() => {
+    if (!visibleTabs.some((tab) => tab.value === activeTab)) {
+      setActiveTab("overview");
+      setActiveFolder(null);
+    }
+  }, [activeTab, visibleTabs]);
 
   const visibleNodes = useMemo(() => {
     if (activeTab !== "overview") return [];
@@ -526,7 +591,7 @@ function ProjectDetailView({
         <button type="button" onClick={onBack} aria-label="Back to projects">
           Projects
         </button>
-        {TABS.map((tab) => (
+        {visibleTabs.map((tab) => (
           <button
             key={tab.value}
             type="button"
