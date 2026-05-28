@@ -163,12 +163,17 @@ async function getNextAssetPosition(projectId: number, folderId: number | null) 
   return data?.[0]?.position != null ? Number(data[0].position) + 1 : 0;
 }
 
-async function getProjectFolders(projectId: number, userId: string) {
+// Fetch all folders for a project. Does NOT filter by clerk_user_id because:
+// - We use the service-role key which bypasses RLS
+// - Project ownership is already verified upstream via allowedProjectIds
+// - Filtering by clerk_user_id silently excluded folders created from the
+//   website (or with a null clerk_user_id), causing delete/rename/move
+//   operations to fail or produce duplicate folders
+async function getProjectFolders(projectId: number) {
   const { data, error } = await supabaseServer
     .from("project_folders")
     .select("id,name,parent_folder_id")
-    .eq("project_id", projectId)
-    .eq("clerk_user_id", userId);
+    .eq("project_id", projectId);
 
   if (error) throw error;
 
@@ -186,7 +191,7 @@ async function ensureFolderPath({
 }) {
   if (!path) return null;
 
-  let folders = await getProjectFolders(projectId, userId);
+  let folders = await getProjectFolders(projectId);
   let { idsByPath } = buildFolderPathMap(folders);
   const existingId = idsByPath.get(path);
 
@@ -222,7 +227,7 @@ async function ensureFolderPath({
 
     const folder = normalizeProjectFolder(data);
     parentFolderId = folder.id;
-    folders = await getProjectFolders(projectId, userId);
+    folders = await getProjectFolders(projectId);
     idsByPath = buildFolderPathMap(folders).idsByPath;
   }
 
@@ -335,7 +340,7 @@ export async function POST(req: Request) {
       .sort((a, b) => a.path.length - b.path.length);
 
     for (const folderCreate of normalizedFolderCreates) {
-      const before = await getProjectFolders(folderCreate.projectId, userId);
+      const before = await getProjectFolders(folderCreate.projectId);
       const beforePaths = buildFolderPathMap(before).idsByPath;
 
       if (beforePaths.has(folderCreate.path)) continue;
@@ -369,13 +374,16 @@ export async function POST(req: Request) {
         ? await ensureFolderPath({ path: nextParentPath, projectId: move.projectId, userId })
         : null;
 
-      const allFolders = await getProjectFolders(move.projectId, userId);
+      const allFolders = await getProjectFolders(move.projectId);
       const descendantIds = getDescendantFolderIds({ allFolders, rootFolderIds: [move.folderId] });
 
       if (nextParentFolderId != null && descendantIds.includes(nextParentFolderId)) {
         nextParentFolderId = null;
       }
 
+      // No clerk_user_id filter — project ownership already verified via
+      // allowedProjectIds, and filtering by clerk_user_id silently skipped
+      // folders created from the website
       const { error, count } = await supabaseServer
         .from("project_folders")
         .update({
@@ -383,7 +391,6 @@ export async function POST(req: Request) {
           parent_folder_id: nextParentFolderId,
         })
         .eq("project_id", move.projectId)
-        .eq("clerk_user_id", userId)
         .eq("id", move.folderId)
         .select("id", { count: "exact" });
 
@@ -474,7 +481,7 @@ export async function POST(req: Request) {
 
       if (!projectId || !folderId || !allowedProjectIds.has(projectId)) continue;
 
-      const folderRows = await getProjectFolders(projectId, userId);
+      const folderRows = await getProjectFolders(projectId);
       const allFolderIdsToDelete = getDescendantFolderIds({
         allFolders: folderRows,
         rootFolderIds: [folderId],
@@ -490,11 +497,13 @@ export async function POST(req: Request) {
 
       removedAssetCount += assetCount ?? 0;
 
+      // No clerk_user_id filter — project ownership already verified via
+      // allowedProjectIds, and filtering by clerk_user_id silently skipped
+      // folders created from the website (or with null clerk_user_id)
       const { error: folderDeleteError, count: folderCount } = await supabaseServer
         .from("project_folders")
         .delete({ count: "exact" })
         .eq("project_id", projectId)
-        .eq("clerk_user_id", userId)
         .in("id", allFolderIdsToDelete);
 
       if (folderDeleteError) throw folderDeleteError;
