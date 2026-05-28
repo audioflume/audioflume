@@ -31,6 +31,20 @@ export type DesktopAccount = {
   imageUrl: string | null;
 };
 
+export type DesktopProjectSyncOperation = {
+  id: string;
+  project_id: number;
+  source_client: "website" | "desktop";
+  operation_type: string;
+  status: "running" | "completed" | "failed";
+  website_done_at: string | null;
+  desktop_done_at: string | null;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+  completed_at: string | null;
+};
+
 export type DesktopLocalRemoval = {
   projectId: string;
   id: string;
@@ -101,6 +115,11 @@ type DesktopAccountApiResponse = {
   error?: string;
 };
 
+type DesktopProjectSyncOperationsApiResponse = {
+  operations?: DesktopProjectSyncOperation[];
+  error?: string;
+};
+
 type DesktopLocalRemovalApiResponse = DesktopLocalRemovalResult & {
   error?: string;
 };
@@ -109,194 +128,10 @@ type DesktopLocalChangesApiResponse = DesktopLocalChangesResult & {
   error?: string;
 };
 
-const mockProjects: Project[] = [
-  {
-    id: "project-documentary",
-    name: "Quiet Documentary Beds",
-    description: "Soft movement, subtle pulse, and grounded cue options.",
-    fileCount: 7,
-    sizeLabel: "412 MB",
-    files: [
-      {
-        id: "doc-loose-brief",
-        type: "file",
-        name: "Creative Brief.txt",
-        path: "Creative Brief.txt",
-        sizeLabel: "4 KB",
-        updatedAt: "2026-05-25T12:00:00.000Z",
-      },
-      {
-        id: "doc-folder-music",
-        type: "folder",
-        name: "Music Selects",
-        path: "Music Selects",
-      },
-      {
-        id: "doc-file-aurora",
-        type: "file",
-        name: "Aurora Bed.txt",
-        path: "Music Selects/Aurora Bed.txt",
-        sizeLabel: "64 MB",
-        updatedAt: "2026-05-25T12:10:00.000Z",
-      },
-      {
-        id: "doc-file-northline",
-        type: "file",
-        name: "Northline Pulse.txt",
-        path: "Music Selects/Northline Pulse.txt",
-        sizeLabel: "71 MB",
-        updatedAt: "2026-05-25T12:20:00.000Z",
-      },
-      {
-        id: "doc-folder-notes",
-        type: "folder",
-        name: "Client Notes",
-        path: "Client Notes",
-      },
-      {
-        id: "doc-file-notes",
-        type: "file",
-        name: "Scene Notes.txt",
-        path: "Client Notes/Scene Notes.txt",
-        sizeLabel: "8 KB",
-        updatedAt: "2026-05-25T12:30:00.000Z",
-      },
-      {
-        id: "doc-loose-license",
-        type: "file",
-        name: "License.txt",
-        path: "License.txt",
-        sizeLabel: "3 KB",
-        updatedAt: "2026-05-25T12:40:00.000Z",
-      },
-    ],
-  },
-  {
-    id: "project-brand-film",
-    name: "Brand Film Selects",
-    description: "Polished motion, warm builds, and clean commercial tracks.",
-    fileCount: 9,
-    sizeLabel: "680 MB",
-    files: [
-      {
-        id: "brand-loose-readme",
-        type: "file",
-        name: "README.txt",
-        path: "README.txt",
-        sizeLabel: "2 KB",
-        updatedAt: "2026-05-25T13:00:00.000Z",
-      },
-      {
-        id: "brand-folder-final",
-        type: "folder",
-        name: "Final Music",
-        path: "Final Music",
-      },
-      {
-        id: "brand-file-clean-pulse",
-        type: "file",
-        name: "Clean Pulse.txt",
-        path: "Final Music/Clean Pulse.txt",
-        sizeLabel: "93 MB",
-        updatedAt: "2026-05-25T13:10:00.000Z",
-      },
-      {
-        id: "brand-file-slow-build",
-        type: "file",
-        name: "Slow Build.txt",
-        path: "Final Music/Slow Build.txt",
-        sizeLabel: "88 MB",
-        updatedAt: "2026-05-25T13:20:00.000Z",
-      },
-      {
-        id: "brand-folder-stems",
-        type: "folder",
-        name: "Artist Stems",
-        path: "Artist Stems",
-      },
-      {
-        id: "brand-folder-clean-stems",
-        type: "folder",
-        name: "Clean Pulse",
-        path: "Artist Stems/Clean Pulse",
-      },
-      {
-        id: "brand-file-drums",
-        type: "file",
-        name: "Drums.txt",
-        path: "Artist Stems/Clean Pulse/Drums.txt",
-        sizeLabel: "35 MB",
-        updatedAt: "2026-05-25T13:30:00.000Z",
-      },
-      {
-        id: "brand-file-bass",
-        type: "file",
-        name: "Bass.txt",
-        path: "Artist Stems/Clean Pulse/Bass.txt",
-        sizeLabel: "28 MB",
-        updatedAt: "2026-05-25T13:40:00.000Z",
-      },
-      {
-        id: "brand-file-synth",
-        type: "file",
-        name: "Synth.txt",
-        path: "Artist Stems/Clean Pulse/Synth.txt",
-        sizeLabel: "41 MB",
-        updatedAt: "2026-05-25T13:50:00.000Z",
-      },
-    ],
-  },
-  {
-    id: "project-travel-reel",
-    name: "Travel Reel Music",
-    description: "Open travel cues, organic rhythm, and light transitions.",
-    fileCount: 5,
-    sizeLabel: "295 MB",
-    files: [
-      {
-        id: "travel-loose-main",
-        type: "file",
-        name: "Main Track.txt",
-        path: "Main Track.txt",
-        sizeLabel: "74 MB",
-        updatedAt: "2026-05-25T14:00:00.000Z",
-      },
-      {
-        id: "travel-loose-alt",
-        type: "file",
-        name: "Alternate Cut.txt",
-        path: "Alternate Cut.txt",
-        sizeLabel: "68 MB",
-        updatedAt: "2026-05-25T14:10:00.000Z",
-      },
-      {
-        id: "travel-folder-references",
-        type: "folder",
-        name: "References",
-        path: "References",
-      },
-      {
-        id: "travel-file-reference",
-        type: "file",
-        name: "Music Direction.txt",
-        path: "References/Music Direction.txt",
-        sizeLabel: "6 KB",
-        updatedAt: "2026-05-25T14:20:00.000Z",
-      },
-      {
-        id: "travel-loose-license",
-        type: "file",
-        name: "License.txt",
-        path: "License.txt",
-        sizeLabel: "3 KB",
-        updatedAt: "2026-05-25T14:30:00.000Z",
-      },
-    ],
-  },
-];
+const mockProjects: Project[] = [];
 
 export function normalizeFilmwaveApiBaseUrl(apiBaseUrl?: string | null) {
-  const trimmed = apiBaseUrl?.trim();
+  const trimmed = typeof apiBaseUrl === "string" ? apiBaseUrl.trim() : "";
   const value = trimmed || DEFAULT_FILMWAVE_API_BASE_URL;
 
   return value.replace(/\/+$/, "");
@@ -382,6 +217,65 @@ export async function getDesktopAccount(token?: string | null, apiBaseUrl?: stri
   }
 
   return data.user ?? null;
+}
+
+export async function getDesktopProjectSyncOperations({
+  apiBaseUrl,
+  projectId,
+  token,
+}: {
+  apiBaseUrl?: string | null;
+  projectId: string;
+  token?: string | null;
+}) {
+  if (!token) return [];
+
+  const response = await fetch(
+    `${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/projects/sync-operations?projectId=${encodeURIComponent(projectId)}`,
+    {
+      credentials: "include",
+      headers: getAuthHeaders(token),
+    },
+  );
+
+  const data = (await response.json()) as DesktopProjectSyncOperationsApiResponse;
+
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to load project sync operations");
+  }
+
+  return data.operations ?? [];
+}
+
+export async function completeDesktopProjectSyncOperations({
+  apiBaseUrl,
+  projectId,
+  token,
+}: {
+  apiBaseUrl?: string | null;
+  projectId: string;
+  token?: string | null;
+}) {
+  if (!token) return;
+
+  const response = await fetch(
+    `${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/projects/sync-operations`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders(token),
+      },
+      body: JSON.stringify({ projectId }),
+    },
+  );
+
+  const data = (await response.json()) as { error?: string };
+
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to complete project sync operations");
+  }
 }
 
 export async function applyDesktopLocalRemovals({
