@@ -210,14 +210,17 @@ aside[data-sidebar] [class*="group/project-row"]:hover span:first-child {
   align-self: center;
   margin-top: auto;
   margin-bottom: auto;
-  margin-left: auto !important;
 }
 
 .filmwave-filter-row > button:last-child {
-  position: sticky;
-  right: 0;
-  z-index: 2;
-  background: var(--bg-primary) !important;
+  margin-left: auto !important;
+}
+
+.filmwave-filter-row > button:last-child:hover,
+.filmwave-filter-row > button:last-child.is-active,
+.filmwave-filter-row > button:last-child[aria-pressed="true"] {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
 }
 
 .filmwave-filter-trigger,
