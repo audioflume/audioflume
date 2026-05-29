@@ -10,6 +10,7 @@ const WAVEFORM_BAR_WIDTH = 2;
 const WAVEFORM_BAR_GAP = 1;
 const WAVEFORM_MIN_VISIBLE_BARS = 8;
 const WAVEFORM_MAX_VISIBLE_BARS = 220;
+const SONG_DRAG_START_DISTANCE = 5;
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
@@ -69,6 +70,7 @@ export default function DesktopSongCard({
   const [waveformWidth, setWaveformWidth] = useState(0);
   const actionsRef = useRef<HTMLDivElement | null>(null);
   const waveformRef = useRef<HTMLDivElement | null>(null);
+  const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
   const isSynced = syncStatus === "synced" && Boolean(syncedPath);
   const visibleWaveform = useMemo(
@@ -122,17 +124,40 @@ export default function DesktopSongCard({
     };
   }, []);
 
-  async function startSyncedSongDrag(event: React.DragEvent<HTMLButtonElement>) {
+  async function startSyncedSongDrag() {
     if (!isSynced || !syncedPath) return;
-
-    event.preventDefault();
-    event.stopPropagation();
 
     try {
       await invoke("start_native_file_drag", { path: syncedPath });
     } catch (error) {
       console.warn("Could not start native song drag", error);
     }
+  }
+
+  function handleSyncedSongPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
+    if (!isSynced) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    songDragStartRef.current = { x: event.clientX, y: event.clientY, started: false };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function handleSyncedSongPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+    const dragStart = songDragStartRef.current;
+
+    if (!isSynced || !dragStart || dragStart.started) return;
+
+    const distance = Math.hypot(event.clientX - dragStart.x, event.clientY - dragStart.y);
+
+    if (distance < SONG_DRAG_START_DISTANCE) return;
+
+    dragStart.started = true;
+    void startSyncedSongDrag();
+  }
+
+  function handleSyncedSongPointerEnd() {
+    songDragStartRef.current = null;
   }
 
   return (
@@ -232,15 +257,19 @@ export default function DesktopSongCard({
           type="button"
           aria-label={isSynced ? "Drag synced song file" : "Sync song"}
           className={`desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`}
-          draggable={isSynced}
           disabled={syncStatus === "syncing"}
           onClick={(event) => {
             event.stopPropagation();
             if (!isSynced) onSync();
           }}
-          onDragStart={startSyncedSongDrag}
+          onPointerDown={handleSyncedSongPointerDown}
+          onPointerMove={handleSyncedSongPointerMove}
+          onPointerUp={handleSyncedSongPointerEnd}
+          onPointerCancel={handleSyncedSongPointerEnd}
         >
-          {isSynced ? <CheckIcon size={12} strokeWidth={3} /> : <SyncIcon size={14} />}
+          <span className="desktop-song-sync-button-inner">
+            {isSynced ? <CheckIcon size={10} strokeWidth={3} /> : <SyncIcon size={14} />}
+          </span>
         </button>
       </div>
     </article>
