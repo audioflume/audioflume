@@ -1,4 +1,5 @@
 import { exists } from "@tauri-apps/plugin-fs";
+import { load } from "@tauri-apps/plugin-store";
 import { useEffect, useMemo, useRef, useState } from "react";
 import SearchIconSmall from "../../icons/SearchIconSmall";
 import {
@@ -27,6 +28,8 @@ import "./DesktopMusicLibraryView.css";
 import "./DesktopMusicLibraryRefinements.css";
 import "./DesktopMusicLibrarySpacing.css";
 
+const SETTINGS_STORE = "filmwave-settings.json";
+
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
 export default function DesktopMusicLibraryView({
@@ -45,10 +48,35 @@ export default function DesktopMusicLibraryView({
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
   const [activeSongId, setActiveSongId] = useState<string | null>(null);
   const [playerPlaying, setPlayerPlaying] = useState(false);
+  const [savedSyncFolder, setSavedSyncFolder] = useState<string | null>(syncFolder ?? null);
   const [syncingSongIds, setSyncingSongIds] = useState<Set<string>>(() => new Set());
   const [syncedSongPaths, setSyncedSongPaths] = useState<Record<string, string>>({});
   const [syncErrorSongIds, setSyncErrorSongIds] = useState<Set<string>>(() => new Set());
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const effectiveSyncFolder = syncFolder ?? savedSyncFolder;
+
+  useEffect(() => {
+    if (syncFolder) setSavedSyncFolder(syncFolder);
+  }, [syncFolder]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSavedSyncFolder() {
+      if (syncFolder) return;
+
+      const store = await load(SETTINGS_STORE);
+      const nextSyncFolder = await store.get<string>("syncFolder");
+
+      if (!cancelled && nextSyncFolder) setSavedSyncFolder(nextSyncFolder);
+    }
+
+    void loadSavedSyncFolder();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [syncFolder]);
 
   useEffect(() => {
     let cancelled = false;
@@ -92,7 +120,7 @@ export default function DesktopMusicLibraryView({
     let cancelled = false;
 
     async function loadSyncedSongs() {
-      if (!syncFolder || songs.length === 0) {
+      if (!effectiveSyncFolder || songs.length === 0) {
         setSyncedSongPaths({});
         return;
       }
@@ -101,7 +129,7 @@ export default function DesktopMusicLibraryView({
 
       await Promise.all(
         songs.map(async (song) => {
-          const localPath = getMusicLibrarySyncedSongPath({ song, syncFolder });
+          const localPath = getMusicLibrarySyncedSongPath({ song, syncFolder: effectiveSyncFolder });
 
           if (await exists(localPath)) {
             nextSyncedSongPaths[song.id] = localPath;
@@ -117,7 +145,7 @@ export default function DesktopMusicLibraryView({
     return () => {
       cancelled = true;
     };
-  }, [songs, syncFolder]);
+  }, [songs, effectiveSyncFolder]);
 
   const filterOptions = useMemo(
     () => getDesktopMusicFilterOptions(songs),
@@ -202,7 +230,7 @@ export default function DesktopMusicLibraryView({
   }
 
   async function syncSong(song: DesktopSong) {
-    if (!syncFolder || syncingSongIds.has(song.id) || syncedSongPaths[song.id]) return;
+    if (!effectiveSyncFolder || syncingSongIds.has(song.id) || syncedSongPaths[song.id]) return;
 
     setSyncingSongIds((current) => new Set(current).add(song.id));
     setSyncErrorSongIds((current) => {
@@ -212,7 +240,7 @@ export default function DesktopMusicLibraryView({
     });
 
     try {
-      const localPath = await syncSongToMusicLibraryFolder({ song, syncFolder });
+      const localPath = await syncSongToMusicLibraryFolder({ song, syncFolder: effectiveSyncFolder });
       setSyncedSongPaths((current) => ({ ...current, [song.id]: localPath }));
     } catch (error) {
       console.error(error);
