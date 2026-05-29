@@ -150,7 +150,7 @@ export default function DesktopFilterDropdown({
     <div className="desktop-filter-wrap" ref={ref}>
       <button
         type="button"
-        className={`desktop-filter-trigger${open || hasActive ? " is-active" : ""}`}
+        className={`desktop-filter-trigger${hasActive ? " is-active" : ""}${open ? " is-open" : ""}`}
         onClick={() => onOpenChange(!open)}
         aria-expanded={open}
       >
