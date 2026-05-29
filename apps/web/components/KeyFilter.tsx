@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import FilterPopover from "@/components/FilterPopover";
 import {
   filterClearButtonClass,
   filterDropdownHeaderClass,
@@ -54,6 +55,7 @@ export default function KeyFilter({ value, onChange }: KeyFilterProps) {
   const [scaleMode, setScaleMode] = useState<ScaleMode>(value?.scale ?? null);
 
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -123,13 +125,12 @@ export default function KeyFilter({ value, onChange }: KeyFilterProps) {
   return (
     <div ref={ref} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((value) => !value)}
         className={`${filterTriggerBaseClass} ${
-          open || hasActive
-            ? filterTriggerActiveClass
-            : filterTriggerInactiveClass
-        }`}
+          hasActive ? filterTriggerActiveClass : filterTriggerInactiveClass
+        } ${open ? "is-open" : ""}`}
       >
         <span>Key</span>
 
@@ -140,64 +141,50 @@ export default function KeyFilter({ value, onChange }: KeyFilterProps) {
         )}
       </button>
 
-      {open && (
-        <div className="absolute left-0 top-full z-50 mt-2 w-[300px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]">
-          <div className={filterDropdownHeaderClass}>
-            <div className={filterDropdownTitleClass}>Key</div>
+      <FilterPopover
+        open={open}
+        triggerRef={triggerRef}
+        width={300}
+        className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]"
+      >
+        <div className={filterDropdownHeaderClass}>
+          <div className={filterDropdownTitleClass}>Key</div>
 
-            {hasActive && (
+          {hasActive && (
+            <button
+              type="button"
+              onClick={clear}
+              className={filterClearButtonClass}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="p-3">
+          <div className={`${filterSegmentWrapClass} grid-cols-2 gap-1.5`}>
+            {(["sharp", "flat"] as const).map((mode) => (
               <button
+                key={mode}
                 type="button"
-                onClick={clear}
-                className={filterClearButtonClass}
+                onClick={() => setAccidental(mode)}
+                className={`${filterSegmentButtonClass} capitalize ${
+                  accidental === mode
+                    ? filterSegmentButtonActiveClass
+                    : filterSegmentButtonInactiveClass
+                }`}
               >
-                Clear
+                {mode === "sharp" ? "Sharp" : "Flat"}
               </button>
-            )}
+            ))}
           </div>
 
-          <div className="p-3">
-            <div className={`${filterSegmentWrapClass} grid-cols-2 gap-1.5`}>
-              {(["sharp", "flat"] as const).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setAccidental(mode)}
-                  className={`${filterSegmentButtonClass} capitalize ${
-                    accidental === mode
-                      ? filterSegmentButtonActiveClass
-                      : filterSegmentButtonInactiveClass
-                  }`}
-                >
-                  {mode === "sharp" ? "Sharp" : "Flat"}
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-3">
-              <div className="grid translate-x-[18px] grid-cols-7 gap-1.5">
-                {accidentals.map((note, index) =>
-                  note === null ? (
-                    <div key={`spacer-${index}`} className="h-8" />
-                  ) : (
-                    <button
-                      key={note}
-                      type="button"
-                      onClick={() => selectNote(note)}
-                      className={`flex h-8 items-center justify-center rounded-md border text-xs font-medium transition-colors ${
-                        selectedNote === note
-                          ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                          : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-                      }`}
-                    >
-                      {note}
-                    </button>
-                  ),
-                )}
-              </div>
-
-              <div className="mt-1.5 grid grid-cols-7 gap-1.5">
-                {NATURALS.map((note) => (
+          <div className="mt-3">
+            <div className="grid translate-x-[18px] grid-cols-7 gap-1.5">
+              {accidentals.map((note, index) =>
+                note === null ? (
+                  <div key={`spacer-${index}`} className="h-8" />
+                ) : (
                   <button
                     key={note}
                     type="button"
@@ -210,29 +197,46 @@ export default function KeyFilter({ value, onChange }: KeyFilterProps) {
                   >
                     {note}
                   </button>
-                ))}
-              </div>
+                ),
+              )}
             </div>
 
-            <div className="mt-[14px] grid grid-cols-2 gap-1.5">
-              {(["major", "minor"] as const).map((mode) => (
+            <div className="mt-1.5 grid grid-cols-7 gap-1.5">
+              {NATURALS.map((note) => (
                 <button
-                  key={mode}
+                  key={note}
                   type="button"
-                  onClick={() => toggleScale(mode)}
-                  className={`flex h-8 items-center justify-center rounded-lg border border-[var(--border)] text-xs font-medium capitalize transition-colors ${
-                    scaleMode === mode
+                  onClick={() => selectNote(note)}
+                  className={`flex h-8 items-center justify-center rounded-md border text-xs font-medium transition-colors ${
+                    selectedNote === note
                       ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                      : filterIntentButtonInactiveClass
+                      : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
                   }`}
                 >
-                  {mode}
+                  {note}
                 </button>
               ))}
             </div>
           </div>
+
+          <div className="mt-[14px] grid grid-cols-2 gap-1.5">
+            {(["major", "minor"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => toggleScale(mode)}
+                className={`flex h-8 items-center justify-center rounded-lg border border-[var(--border)] text-xs font-medium capitalize transition-colors ${
+                  scaleMode === mode
+                    ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                    : filterIntentButtonInactiveClass
+                }`}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
         </div>
-      )}
+      </FilterPopover>
     </div>
   );
 }
