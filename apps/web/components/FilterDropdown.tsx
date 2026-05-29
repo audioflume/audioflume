@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
+import FilterPopover from "@/components/FilterPopover";
 import {
   filterClearButtonClass,
   filterDropdownHeaderClass,
@@ -61,6 +62,7 @@ export default function FilterDropdown({
 }: FilterDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const sections: FilterOptionSection[] =
     optionSections && optionSections.length > 0
       ? optionSections
@@ -91,13 +93,12 @@ export default function FilterDropdown({
   return (
     <div ref={ref} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={`${filterTriggerBaseClass} ${
-          open || hasActive
-            ? filterTriggerActiveClass
-            : filterTriggerInactiveClass
-        }`}
+          hasActive ? filterTriggerActiveClass : filterTriggerInactiveClass
+        } ${open ? "is-open" : ""}`}
       >
         <span>{label}</span>
 
@@ -108,64 +109,65 @@ export default function FilterDropdown({
         )}
       </button>
 
-      {open && (
-        <div
-          className={`absolute left-0 top-full z-50 mt-2 overflow-hidden ${filterDropdownPanelClass}`}
-        >
-          <div className={filterDropdownHeaderClass}>
-            <div className={filterDropdownTitleClass}>{label}</div>
+      <FilterPopover
+        open={open}
+        triggerRef={triggerRef}
+        width={280}
+        className={`overflow-hidden ${filterDropdownPanelClass}`}
+      >
+        <div className={filterDropdownHeaderClass}>
+          <div className={filterDropdownTitleClass}>{label}</div>
 
-            {hasActive && (
-              <button
-                type="button"
-                onClick={() => onChange([])}
-                className={filterClearButtonClass}
-              >
-                Clear
-              </button>
-            )}
-          </div>
+          {hasActive && (
+            <button
+              type="button"
+              onClick={() => onChange([])}
+              className={filterClearButtonClass}
+            >
+              Clear
+            </button>
+          )}
+        </div>
 
-          <div className="max-h-[340px] overflow-y-auto p-1.5">
-            {sections.map((section, sectionIndex) => (
-              <div key={`${section.label || "section"}-${sectionIndex}`}>
-                {section.options.map((option) => {
-                  const isSelected = selected.includes(option);
+        <div className="max-h-[340px] overflow-y-auto p-1.5">
+          {sections.map((section, sectionIndex) => (
+            <div key={`${section.label || "section"}-${sectionIndex}`}>
+              {section.options.map((option) => {
+                const isSelected = selected.includes(option);
 
-                  return (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => toggle(option)}
-                      className={`group ${filterRowButtonClass} ${
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => toggle(option)}
+                    className={`group ${filterRowButtonClass} ${
+                      isSelected
+                        ? filterRowButtonActiveClass
+                        : filterRowButtonInactiveClass
+                    }`}
+                  >
+                    <span className="min-w-0 truncate">{option}</span>
+
+                    <span
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
                         isSelected
-                          ? filterRowButtonActiveClass
-                          : filterRowButtonInactiveClass
+                          ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                          : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                       }`}
                     >
-                      <span className="min-w-0 truncate">{option}</span>
-
-                      <span
-                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
-                          isSelected
-                            ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                            : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
-                        }`}
-                      >
-                        {isSelected ? (
-                          <CheckIcon size={11} />
-                        ) : (
-                          <PlusIcon size={11} />
-                        )}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
+                      {isSelected ? (
+                        <CheckIcon size={11} />
+                      ) : (
+                        <PlusIcon size={11} />
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </div>
-      )}
+      </FilterPopover>
     </div>
   );
 }
