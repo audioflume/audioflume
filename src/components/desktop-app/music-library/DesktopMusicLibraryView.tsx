@@ -1,3 +1,4 @@
+import { exists } from "@tauri-apps/plugin-fs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import SearchIconSmall from "../../icons/SearchIconSmall";
 import {
@@ -5,6 +6,10 @@ import {
   getFilmwaveSongs,
   type DesktopSong,
 } from "../../../lib/desktopSongs";
+import {
+  getMusicLibrarySyncedSongPath,
+  syncSongToMusicLibraryFolder,
+} from "../../../lib/musicLibrarySync";
 import DesktopFilterDropdown from "./DesktopFilterDropdown";
 import DesktopFilterTags from "./DesktopFilterTags";
 import DesktopMusicPlayer from "./DesktopMusicPlayer";
@@ -22,10 +27,14 @@ import "./DesktopMusicLibraryView.css";
 import "./DesktopMusicLibraryRefinements.css";
 import "./DesktopMusicLibrarySpacing.css";
 
+type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
+
 export default function DesktopMusicLibraryView({
   apiBaseUrl,
+  syncFolder,
 }: {
   apiBaseUrl?: string | null;
+  syncFolder?: string | null;
 }) {
   const [songs, setSongs] = useState<DesktopSong[]>([]);
   const [songsLoading, setSongsLoading] = useState(true);
@@ -36,6 +45,9 @@ export default function DesktopMusicLibraryView({
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
   const [activeSongId, setActiveSongId] = useState<string | null>(null);
   const [playerPlaying, setPlayerPlaying] = useState(false);
+  const [syncingSongIds, setSyncingSongIds] = useState<Set<string>>(() => new Set());
+  const [syncedSongPaths, setSyncedSongPaths] = useState<Record<string, string>>({});
+  const [syncErrorSongIds, setSyncErrorSongIds] = useState<Set<string>>(() => new Set());
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -75,6 +87,37 @@ export default function DesktopMusicLibraryView({
       cancelled = true;
     };
   }, [apiBaseUrl]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSyncedSongs() {
+      if (!syncFolder || songs.length === 0) {
+        setSyncedSongPaths({});
+        return;
+      }
+
+      const nextSyncedSongPaths: Record<string, string> = {};
+
+      await Promise.all(
+        songs.map(async (song) => {
+          const localPath = getMusicLibrarySyncedSongPath({ song, syncFolder });
+
+          if (await exists(localPath)) {
+            nextSyncedSongPaths[song.id] = localPath;
+          }
+        }),
+      );
+
+      if (!cancelled) setSyncedSongPaths(nextSyncedSongPaths);
+    }
+
+    void loadSyncedSongs();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [songs, syncFolder]);
 
   const filterOptions = useMemo(
     () => getDesktopMusicFilterOptions(songs),
@@ -149,6 +192,38 @@ export default function DesktopMusicLibraryView({
       else next.add(songId);
       return next;
     });
+  }
+
+  function getSongSyncStatus(songId: string): SongSyncStatus {
+    if (syncingSongIds.has(songId)) return "syncing";
+    if (syncedSongPaths[songId]) return "synced";
+    if (syncErrorSongIds.has(songId)) return "error";
+    return "idle";
+  }
+
+  async function syncSong(song: DesktopSong) {
+    if (!syncFolder || syncingSongIds.has(song.id) || syncedSongPaths[song.id]) return;
+
+    setSyncingSongIds((current) => new Set(current).add(song.id));
+    setSyncErrorSongIds((current) => {
+      const next = new Set(current);
+      next.delete(song.id);
+      return next;
+    });
+
+    try {
+      const localPath = await syncSongToMusicLibraryFolder({ song, syncFolder });
+      setSyncedSongPaths((current) => ({ ...current, [song.id]: localPath }));
+    } catch (error) {
+      console.error(error);
+      setSyncErrorSongIds((current) => new Set(current).add(song.id));
+    } finally {
+      setSyncingSongIds((current) => {
+        const next = new Set(current);
+        next.delete(song.id);
+        return next;
+      });
+    }
   }
 
   function playSong(song: DesktopSong) {
@@ -283,8 +358,11 @@ export default function DesktopMusicLibraryView({
               favorite={favoriteIds.has(song.id)}
               markersVisible={filters.markers}
               isPlaying={activeSongId === song.id && playerPlaying}
+              syncStatus={getSongSyncStatus(song.id)}
+              syncedPath={syncedSongPaths[song.id] ?? null}
               onFavoriteToggle={() => toggleFavorite(song.id)}
               onPlay={() => playSong(song)}
+              onSync={() => syncSong(song)}
             />
           ))}
 
