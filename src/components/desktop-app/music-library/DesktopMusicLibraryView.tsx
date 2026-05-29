@@ -16,7 +16,6 @@ import {
   QUICK_GENRES,
   filterDesktopMusicSongs,
   getDesktopMusicFilterOptions,
-  hasActiveDesktopMusicFilters,
   shuffleDesktopMusicSongs,
 } from "./musicLibraryUtils";
 import "./DesktopMusicLibraryView.css";
@@ -114,7 +113,6 @@ export default function DesktopMusicLibraryView({
     [activeSongId, displayedSongs],
   );
 
-  const hasActiveFilters = hasActiveDesktopMusicFilters(filters);
   const filterKeys = Object.keys(FILTER_TITLES) as DesktopMusicFilterKey[];
 
   function setFilterValue(key: DesktopMusicFilterKey, value: string) {
@@ -269,10 +267,7 @@ export default function DesktopMusicLibraryView({
         </div>
       )}
 
-      <div
-        className="desktop-music-list"
-        style={{ marginTop: hasActiveFilters ? "16px" : "0px" }}
-      >
+      <div className="desktop-music-list">
         {songsLoading && (
           <div className="desktop-music-empty-state">
             <h3>Loading music library</h3>
