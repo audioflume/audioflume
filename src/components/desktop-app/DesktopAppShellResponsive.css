@@ -68,6 +68,8 @@
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
   display: flex;
   justify-content: center;
+  width: 100%;
+  margin-bottom: 8px;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
@@ -107,6 +109,20 @@
   display: none;
 }
 
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head .desktop-sidebar-heading {
+  display: none;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  padding: 0;
+}
+
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
   display: block;
 }
@@ -136,6 +152,7 @@
   .desktop-sidebar-projects-head {
     display: flex;
     justify-content: center;
+    width: 100%;
   }
 
   .desktop-sidebar-heading,
@@ -162,6 +179,20 @@
 
   .desktop-sidebar-heading.has-collapsed-icon .desktop-sidebar-heading-label {
     display: none;
+  }
+
+  .desktop-sidebar-projects-head .desktop-sidebar-heading {
+    display: none;
+  }
+
+  .desktop-sidebar-add-button {
+    display: flex;
+    width: 100%;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 0;
   }
 
   .desktop-sidebar-empty-projects {
