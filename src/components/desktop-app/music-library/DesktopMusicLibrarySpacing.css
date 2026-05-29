@@ -11,9 +11,12 @@
 
 .desktop-music-page .desktop-music-filter-row {
   overflow-x: auto !important;
-  overflow-y: visible !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: none;
+  touch-action: pan-x;
   scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: auto;
 }
 
 .desktop-music-page .desktop-music-filter-row::-webkit-scrollbar {
