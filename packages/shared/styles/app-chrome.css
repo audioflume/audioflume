@@ -1,0 +1,189 @@
+:root {
+  --filmwave-header-height: 56px;
+  --filmwave-header-padding-x: 24px;
+  --filmwave-header-nav-height: 32px;
+  --filmwave-header-nav-radius: 6px;
+
+  --filmwave-sidebar-width-expanded: var(--sidebar-width-expanded, 280px);
+  --filmwave-sidebar-width-collapsed: var(--sidebar-width-collapsed, 76px);
+  --filmwave-sidebar-top: var(--filmwave-header-height);
+  --filmwave-sidebar-link-height: 32px;
+  --filmwave-sidebar-link-radius: 6px;
+  --filmwave-sidebar-padding-x: 20px;
+  --filmwave-sidebar-padding-y: 24px;
+  --filmwave-sidebar-link-padding-x: 10px;
+
+  --filmwave-filter-row-height: 48px;
+  --filmwave-filter-page-padding-x: 28px;
+  --filmwave-filter-trigger-height: 48px;
+  --filmwave-filter-trigger-padding-x: 10px;
+  --filmwave-filter-trigger-font-size: 13px;
+  --filmwave-filter-menu-radius: 12px;
+
+  --filmwave-search-row-height: 48px;
+  --filmwave-search-width: 320px;
+  --filmwave-search-font-size: 15px;
+}
+
+.filmwave-app-header,
+.desktop-header {
+  height: var(--filmwave-header-height);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.filmwave-app-header-inner,
+.desktop-header-inner {
+  height: 100%;
+  padding-right: var(--filmwave-header-padding-x);
+  padding-left: var(--filmwave-header-padding-x);
+}
+
+.filmwave-header-nav-link,
+.desktop-nav-link,
+.desktop-account-trigger {
+  height: var(--filmwave-header-nav-height);
+  border-radius: var(--filmwave-header-nav-radius);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.filmwave-header-nav-link:hover,
+.desktop-nav-link:hover,
+.desktop-nav-link.is-active,
+.desktop-account-trigger:hover,
+.desktop-account-trigger.is-open {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.filmwave-sidebar,
+.desktop-app-sidebar {
+  top: var(--filmwave-sidebar-top);
+  width: var(--filmwave-sidebar-width-expanded);
+  border-right: 1px solid var(--border);
+  background: var(--bg-primary);
+  transition: width 0.2s ease;
+}
+
+body.sidebar-collapsed .filmwave-sidebar,
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
+  width: var(--filmwave-sidebar-width-collapsed);
+}
+
+.desktop-app-sidebar-inner {
+  padding: var(--filmwave-sidebar-padding-y) var(--filmwave-sidebar-padding-x);
+}
+
+.filmwave-sidebar-link,
+.desktop-sidebar-link {
+  height: var(--filmwave-sidebar-link-height);
+  border-radius: var(--filmwave-sidebar-link-radius);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.filmwave-sidebar-link:hover,
+.filmwave-sidebar-link.is-active,
+.desktop-sidebar-link:hover,
+.desktop-sidebar-link.is-active {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-link-icon,
+.filmwave-sidebar-link-icon {
+  color: var(--text-muted);
+}
+
+.filmwave-sidebar-link:hover .filmwave-sidebar-link-icon,
+.filmwave-sidebar-link.is-active .filmwave-sidebar-link-icon,
+.desktop-sidebar-link:hover .desktop-sidebar-link-icon,
+.desktop-sidebar-link.is-active .desktop-sidebar-link-icon {
+  color: var(--text-primary);
+}
+
+.filmwave-search-filter-bar,
+.desktop-music-sticky-bar {
+  background: var(--bg-primary);
+  padding-right: var(--filmwave-filter-page-padding-x);
+  padding-left: var(--filmwave-filter-page-padding-x);
+}
+
+.filmwave-search-row,
+.desktop-music-search-row {
+  min-height: var(--filmwave-search-row-height);
+  align-items: center;
+}
+
+.filmwave-search-shell,
+.desktop-music-search-shell {
+  width: var(--filmwave-search-width);
+  height: var(--filmwave-search-row-height);
+  align-items: center;
+}
+
+.filmwave-search-input,
+.desktop-music-search-input {
+  height: var(--filmwave-search-row-height);
+  color: var(--text-primary);
+  font-size: var(--filmwave-search-font-size);
+  font-weight: 300;
+  line-height: var(--filmwave-search-row-height);
+}
+
+.filmwave-search-input::placeholder,
+.desktop-music-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.filmwave-filter-row,
+.desktop-music-filter-row {
+  height: var(--filmwave-filter-row-height);
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+}
+
+.filmwave-filter-row::-webkit-scrollbar,
+.desktop-music-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filmwave-filter-trigger,
+.desktop-filter-trigger {
+  position: relative;
+  height: var(--filmwave-filter-trigger-height);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding-right: var(--filmwave-filter-trigger-padding-x);
+  padding-left: var(--filmwave-filter-trigger-padding-x);
+  color: var(--text-secondary);
+  font-size: var(--filmwave-filter-trigger-font-size);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.filmwave-filter-trigger:hover,
+.filmwave-filter-trigger.is-active,
+.desktop-filter-trigger:hover,
+.desktop-filter-trigger.is-active {
+  color: var(--text-primary);
+}
+
+.filmwave-filter-menu,
+.desktop-filter-menu {
+  border: 1px solid var(--border);
+  border-radius: var(--filmwave-filter-menu-radius);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-ui);
+}
