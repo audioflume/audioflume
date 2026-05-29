@@ -1,113 +1,29 @@
+import type {
+  FilmwaveDesktopAccount,
+  FilmwaveDesktopLocalChanges,
+  FilmwaveDesktopLocalChangesResult,
+  FilmwaveDesktopLocalRemoval,
+  FilmwaveDesktopLocalRemovalResult,
+  FilmwaveDesktopProject,
+  FilmwaveDesktopProjectApiItem,
+  FilmwaveDesktopProjectFileNode,
+  FilmwaveDesktopProjectSyncOperation,
+} from "@filmwave/shared";
+
 export const DEFAULT_MOCK_UPDATED_AT = "2026-05-25T00:00:00.000Z";
 export const DEFAULT_FILMWAVE_API_BASE_URL = "http://localhost:3000";
 
-export type ProjectFileNode = {
-  id: string;
-  type: "folder" | "file";
-  name: string;
-  path: string;
-  parentId?: string | null;
-  sortOrder?: number;
-  downloadUrl?: string;
-  sizeBytes?: number;
-  sizeLabel?: string;
-  updatedAt?: string;
-};
-
-export type Project = {
-  id: string;
-  name: string;
-  description: string;
-  fileCount: number;
-  sizeBytes?: number;
-  sizeLabel: string;
-  files: ProjectFileNode[];
-};
-
-export type DesktopAccount = {
-  id: string;
-  name: string;
-  email: string | null;
-  imageUrl: string | null;
-};
-
-export type DesktopProjectSyncOperation = {
-  id: string;
-  project_id: number;
-  source_client: "website" | "desktop";
-  operation_type: string;
-  status: "running" | "completed" | "failed";
-  website_done_at: string | null;
-  desktop_done_at: string | null;
-  error_message: string | null;
-  created_at: string;
-  updated_at: string;
-  completed_at: string | null;
-};
-
-export type DesktopLocalRemoval = {
-  projectId: string;
-  id: string;
-  type: "file" | "folder";
-  name?: string;
-  path?: string;
-};
-
-export type DesktopLocalRemovalResult = {
-  removedAssetCount: number;
-  removedFolderCount: number;
-};
-
-export type DesktopLocalChanges = {
-  folderCreates: Array<{
-    projectId: string;
-    path: string;
-  }>;
-  folderMoves: Array<{
-    projectId: string;
-    id: string;
-    path: string;
-  }>;
-  fileCreates: Array<{
-    projectId: string;
-    path: string;
-    sizeBytes?: number;
-  }>;
-  fileMoves: Array<{
-    projectId: string;
-    id: string;
-    path: string;
-  }>;
-  fileRemovals: Array<{
-    projectId: string;
-    id: string;
-  }>;
-  folderRemovals: Array<{
-    projectId: string;
-    id: string;
-  }>;
-  ignoredFileAddCount: number;
-};
-
-export type DesktopLocalChangesResult = {
-  createdFolderCount: number;
-  movedFolderCount: number;
-  createdFileCount: number;
-  movedFileCount: number;
-  removedAssetCount: number;
-  removedFolderCount: number;
-  ignoredFileAddCount: number;
-};
+export type ProjectFileNode = FilmwaveDesktopProjectFileNode;
+export type Project = FilmwaveDesktopProject;
+export type DesktopAccount = FilmwaveDesktopAccount;
+export type DesktopProjectSyncOperation = FilmwaveDesktopProjectSyncOperation;
+export type DesktopLocalRemoval = FilmwaveDesktopLocalRemoval;
+export type DesktopLocalRemovalResult = FilmwaveDesktopLocalRemovalResult;
+export type DesktopLocalChanges = FilmwaveDesktopLocalChanges;
+export type DesktopLocalChangesResult = FilmwaveDesktopLocalChangesResult;
 
 type DesktopProjectsApiResponse = {
-  projects?: Array<{
-    id: string | number;
-    name: string;
-    description?: string | null;
-    fileCount?: number;
-    sizeBytes?: number;
-    files?: ProjectFileNode[];
-  }>;
+  projects?: FilmwaveDesktopProjectApiItem[];
 };
 
 type DesktopAccountApiResponse = {
@@ -162,7 +78,7 @@ function getAuthHeaders(token?: string | null): HeadersInit {
     : {};
 }
 
-function normalizeApiProject(project: NonNullable<DesktopProjectsApiResponse["projects"]>[number]): Project {
+function normalizeApiProject(project: FilmwaveDesktopProjectApiItem): Project {
   const rawSizeBytes = Number(project.sizeBytes || 0);
   const files = Array.isArray(project.files) ? project.files : [];
   const fileCount = Number(project.fileCount || files.filter((file) => file.type === "file").length);
