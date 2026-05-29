@@ -205,111 +205,95 @@ export default function DesktopMusicLibraryView({
             onRemoveShuffle={removeShuffle}
           />
         </div>
+
+        <div className="desktop-music-filter-row">
+          {filterKeys.map((filterKey) => (
+            <DesktopFilterDropdown
+              key={filterKey}
+              filterKey={filterKey}
+              label={FILTER_TITLES[filterKey]}
+              options={filterOptions[filterKey]}
+              selected={filters[filterKey]}
+              open={openDropdown === filterKey}
+              onOpenChange={(open) => setOpenDropdown(open ? filterKey : null)}
+              onToggleOption={(value) => setFilterValue(filterKey, value)}
+            />
+          ))}
+
+          <button
+            type="button"
+            className={`desktop-filter-trigger desktop-filter-trigger-markers${filters.markers ? " is-active" : ""}`}
+            onClick={() =>
+              setFilters((current) => ({ ...current, markers: !current.markers }))
+            }
+            aria-pressed={filters.markers}
+          >
+            <span>Markers</span>
+            {filters.markers && <span className="desktop-filter-count">1</span>}
+          </button>
+
+          <button
+            type="button"
+            className={`desktop-shuffle-button${filters.shuffle ? " is-active" : ""}`}
+            onClick={toggleShuffle}
+            aria-label="Shuffle songs"
+            aria-pressed={filters.shuffle}
+          >
+            <ShuffleIcon />
+          </button>
+        </div>
       </div>
 
-      <div className="desktop-music-layout">
-        <aside className="desktop-music-filter-panel" aria-label="Music filters">
-          <div className="desktop-music-filter-panel-inner">
-            <div className="desktop-music-filter-panel-head">
-              <span>Filters</span>
-              <span>{displayedSongs.length}</span>
-            </div>
+      <div className="desktop-music-quick-filters">
+        {QUICK_GENRES.map((genre) => {
+          const active = filters.genre.includes(genre);
 
-            <div className="desktop-music-filter-panel-controls">
-              {filterKeys.map((filterKey) => (
-                <DesktopFilterDropdown
-                  key={filterKey}
-                  filterKey={filterKey}
-                  label={FILTER_TITLES[filterKey]}
-                  options={filterOptions[filterKey]}
-                  selected={filters[filterKey]}
-                  open={openDropdown === filterKey}
-                  onOpenChange={(open) => setOpenDropdown(open ? filterKey : null)}
-                  onToggleOption={(value) => setFilterValue(filterKey, value)}
-                />
-              ))}
+          return (
+            <button
+              key={genre}
+              type="button"
+              className={`desktop-quick-filter${active ? " is-active" : ""}`}
+              onClick={() => setFilterValue("genre", genre)}
+            >
+              {genre}
+            </button>
+          );
+        })}
+      </div>
 
-              <button
-                type="button"
-                className={`desktop-filter-trigger desktop-filter-trigger-markers${filters.markers ? " is-active" : ""}`}
-                onClick={() =>
-                  setFilters((current) => ({ ...current, markers: !current.markers }))
-                }
-                aria-pressed={filters.markers}
-              >
-                <span>Markers</span>
-                {filters.markers && <span className="desktop-filter-count">1</span>}
-              </button>
-
-              <button
-                type="button"
-                className={`desktop-filter-trigger desktop-filter-trigger-shuffle${filters.shuffle ? " is-active" : ""}`}
-                onClick={toggleShuffle}
-                aria-pressed={filters.shuffle}
-              >
-                <span>Shuffle</span>
-                <ShuffleIcon />
-              </button>
-            </div>
-
-            <div className="desktop-music-filter-panel-section">
-              <div className="desktop-music-filter-panel-label">Quick genres</div>
-              <div className="desktop-music-filter-panel-quick-filters">
-                {QUICK_GENRES.map((genre) => {
-                  const active = filters.genre.includes(genre);
-
-                  return (
-                    <button
-                      key={genre}
-                      type="button"
-                      className={`desktop-quick-filter${active ? " is-active" : ""}`}
-                      onClick={() => setFilterValue("genre", genre)}
-                    >
-                      {genre}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        <div className="desktop-music-results">
-          {songsError && (
-            <div className="desktop-music-load-notice">
-              Could not load live songs. Showing sample tracks. {songsError}
-            </div>
-          )}
-
-          <div className="desktop-music-list">
-            {songsLoading && (
-              <div className="desktop-music-empty-state">
-                <h3>Loading music library</h3>
-                <p>Fetching published Filmwave songs from the website.</p>
-              </div>
-            )}
-
-            {!songsLoading &&
-              displayedSongs.map((song) => (
-                <DesktopSongCard
-                  key={song.id}
-                  song={song}
-                  favorite={favoriteIds.has(song.id)}
-                  markersVisible={filters.markers}
-                  isPlaying={activeSongId === song.id && playerPlaying}
-                  onFavoriteToggle={() => toggleFavorite(song.id)}
-                  onPlay={() => playSong(song)}
-                />
-              ))}
-
-            {!songsLoading && displayedSongs.length === 0 && (
-              <div className="desktop-music-empty-state">
-                <h3>No songs found</h3>
-                <p>Clear a filter or search for a different cue.</p>
-              </div>
-            )}
-          </div>
+      {songsError && (
+        <div className="desktop-music-load-notice">
+          Could not load live songs. Showing sample tracks. {songsError}
         </div>
+      )}
+
+      <div className="desktop-music-list">
+        {songsLoading && (
+          <div className="desktop-music-empty-state">
+            <h3>Loading music library</h3>
+            <p>Fetching published Filmwave songs from the website.</p>
+          </div>
+        )}
+
+        {!songsLoading &&
+          displayedSongs.map((song) => (
+            <DesktopSongCard
+              key={song.id}
+              song={song}
+              favorite={favoriteIds.has(song.id)}
+              markersVisible={filters.markers}
+              isPlaying={activeSongId === song.id && playerPlaying}
+              onFavoriteToggle={() => toggleFavorite(song.id)}
+              onPlay={() => playSong(song)}
+            />
+          ))}
+
+        {!songsLoading && displayedSongs.length === 0 && (
+          <div className="desktop-music-empty-state">
+            <h3>No songs found</h3>
+            <p>Clear a filter or search for a different cue.</p>
+          </div>
+        )}
       </div>
 
       {activeSong && (
