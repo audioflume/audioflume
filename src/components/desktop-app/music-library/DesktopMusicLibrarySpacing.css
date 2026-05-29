@@ -9,6 +9,22 @@
   z-index: 2000;
 }
 
+.desktop-music-page .desktop-music-filter-row {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.desktop-music-page .desktop-music-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.desktop-filter-menu-fixed {
+  position: fixed !important;
+  z-index: 2400 !important;
+}
+
 .desktop-music-page .desktop-song-play-overlay {
   color: #111111 !important;
 }
