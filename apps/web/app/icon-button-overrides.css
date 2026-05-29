@@ -1,18 +1,20 @@
-/* Shared compact icon buttons — matches project toolbar controls. */
+@import "../../../packages/shared/styles/song-card.css";
+
+/* Shared compact icon buttons — matches desktop app song/action controls. */
 
 .filmwave-icon-button,
 .playlist-icon-btn,
 .project-new-folder-button,
 .project-view-toggle-button {
   display: inline-flex !important;
-  height: 28px !important;
   width: 28px !important;
   min-width: 28px !important;
+  height: 28px !important;
   cursor: pointer !important;
   align-items: center !important;
   justify-content: center !important;
-  border: 0 !important;
-  border-radius: 8px !important;
+  border: 1px solid transparent !important;
+  border-radius: 9px !important;
   background: transparent !important;
   padding: 0 !important;
   color: var(--icon-color) !important;
@@ -35,9 +37,17 @@
 .project-view-toggle-button:hover,
 .project-view-toggle-button.is-open,
 .project-view-toggle-button.is-active {
-  border: 0 !important;
-  background: var(--icon-button-hover) !important;
+  border-color: transparent !important;
+  background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
+}
+
+.filmwave-icon-button[aria-label="Remove song from favorites"],
+.filmwave-icon-button[aria-label="Remove song from favorites"] svg,
+.filmwave-icon-button[aria-pressed="true"] svg {
+  color: var(--text-primary) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
 }
 
 .filmwave-icon-button svg,
@@ -49,12 +59,12 @@
 }
 
 .filmwave-icon-button-plain {
-  border: 0 !important;
+  border-color: transparent !important;
   background: transparent !important;
 }
 
 .filmwave-icon-button-flat {
-  border: 0 !important;
+  border-color: transparent !important;
   border-radius: 0 !important;
   background: transparent !important;
 }
