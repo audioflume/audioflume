@@ -265,150 +265,132 @@ export default function MusicPage() {
     setFilters((f) => ({ ...f, keyValue: v }));
   const setSelectedPlaylist = (v: PlaylistRef | null) =>
     setFilters((f) => ({ ...f, selectedPlaylist: v }));
-  const setSelectedVocalFilters = (v: string[]) =>
-    setFilters((f) => ({
-      ...f,
-      instrumental: v.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION),
-      selectedVocals: v.filter(
-        (item) => item !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
-      ),
-    }));
 
-  const playlistSongIdCacheRef = useRef<Record<string, string[]>>({});
-  const searchInputRef = useRef<HTMLInputElement>(null);
-
-  const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
-    useState<Set<string> | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const [playlistSongIds, setPlaylistSongIds] = useState<Set<string> | null>(
+    null,
+  );
+  const [playlistSongIdsLoadingFor, setPlaylistSongIdsLoadingFor] = useState<
+    number | null
+  >(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
   const [musicHeroHovered, setMusicHeroHovered] = useState(false);
   const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
 
+  const { songs, loading: songsLoading, error: songsError } = useSongs();
+  const { currentSong, playSong, setQueue } = usePlayer();
+
+  const selectedVocalFilters = useMemo(() => {
+    const filters = [...selectedVocals];
+    if (instrumental && !filters.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION)) {
+      filters.unshift(INSTRUMENTAL_VOCAL_FILTER_OPTION);
+    }
+    return filters;
+  }, [instrumental, selectedVocals]);
+
+  const setSelectedVocalFilters = (values: string[]) => {
+    const nextInstrumental = values.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
+    const nextVocals = values.filter(
+      (value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
+    );
+
+    setFilters((f) => ({
+      ...f,
+      instrumental: nextInstrumental,
+      selectedVocals: nextVocals,
+    }));
+  };
+
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
-  const shuffleActive = shuffleOrderIds !== null;
-  const searchPlaceholder = selectedPlaylist?.name
-    ? `Search "${selectedPlaylist.name}"`
-    : "Search Music Library";
-  const selectedVocalFilters = instrumental
-    ? [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...selectedVocals]
-    : selectedVocals;
-  const hasActiveFilters =
-    search.trim().length > 0 ||
-    selectedMoods.length > 0 ||
-    selectedGenres.length > 0 ||
-    selectedInstruments.length > 0 ||
-    selectedBuilds.length > 0 ||
-    selectedVocals.length > 0 ||
-    selectedDurations.length > 0 ||
-    selectedEditPoints.length > 0 ||
-    instrumental ||
-    bpmValue !== null ||
-    keyValue !== null ||
-    selectedPlaylist !== null;
-
-  const {
-    songs,
-    loading: songsLoading,
-    error: songsError,
-    refetchSongs,
-  } = useSongs();
-
-  const { currentSong, setQueue } = usePlayer();
-  const playerVisible = !!currentSong;
 
   useEffect(() => {
-    if (!selectedPlaylistId) {
-      setSelectedPlaylistSongIds(null);
-      return;
-    }
-
-    const playlistId = selectedPlaylistId;
-    const cachedIds = playlistSongIdCacheRef.current[playlistId];
-
-    if (cachedIds) {
-      setSelectedPlaylistSongIds(new Set(cachedIds));
-      return;
-    }
-
     let cancelled = false;
 
-    async function loadPlaylistSongs() {
-      setSelectedPlaylistSongIds(null);
-
-      try {
-        const response = await fetch(
-          `/api/playlists/${encodeURIComponent(playlistId)}/songs`,
-        );
-
-        if (!response.ok) {
-          throw new Error("Could not load playlist songs");
-        }
-
-        const data = await response.json();
-        const songIds = getPlaylistSongIdsFromResponse(data);
-        const songIdList = [...songIds];
-
-        playlistSongIdCacheRef.current[playlistId] = songIdList;
-
-        if (!cancelled) {
-          setSelectedPlaylistSongIds(songIds);
-        }
-      } catch {
-        if (!cancelled) {
-          setSelectedPlaylistSongIds(new Set());
-        }
-      }
+    if (!selectedPlaylistId) {
+      setPlaylistSongIds(null);
+      setPlaylistSongIdsLoadingFor(null);
+      return;
     }
 
-    loadPlaylistSongs();
+    setPlaylistSongIds(null);
+    setPlaylistSongIdsLoadingFor(selectedPlaylistId);
+
+    fetch(`/api/playlists/${selectedPlaylistId}/songs`)
+      .then(async (res) => {
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+        if (!res.ok) throw new Error("Failed to load playlist songs");
+        return getPlaylistSongIdsFromResponse(data);
+      })
+      .then((ids) => {
+        if (cancelled) return;
+        setPlaylistSongIds(ids);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setPlaylistSongIds(new Set());
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setPlaylistSongIdsLoadingFor(null);
+      });
 
     return () => {
       cancelled = true;
     };
   }, [selectedPlaylistId]);
 
+  useEffect(() => {
+    setShuffleOrderIds(null);
+  }, [
+    search,
+    selectedMoods,
+    selectedGenres,
+    selectedInstruments,
+    selectedBuilds,
+    selectedVocals,
+    selectedDurations,
+    selectedEditPoints,
+    instrumental,
+    bpmValue,
+    keyValue,
+    selectedPlaylistId,
+  ]);
+
+  const selectedPlaylistSongIds =
+    selectedPlaylistId && playlistSongIdsLoadingFor === selectedPlaylistId
+      ? null
+      : playlistSongIds;
+
   const filteredSongs = useMemo(() => {
     return songs.filter((song) => {
       const q = search.trim().toLowerCase();
+      const matchesSearch =
+        !q ||
+        [song.title, song.artist, song.key, String(song.bpm)]
+          .join(" ")
+          .toLowerCase()
+          .includes(q);
 
-      const searchableText = [
-        song.title,
-        song.artist,
-        song.key,
-        ...song.genres,
-        ...song.moods,
-        ...song.instruments,
-        ...song.builds,
-        ...song.vocals,
-      ]
-        .join(" ")
-        .toLowerCase();
+      const matchesPlaylist =
+        !selectedPlaylistId ||
+        selectedPlaylistSongIds === null ||
+        selectedPlaylistSongIds.has(getSongStableId(song));
 
-      if (q && !searchableText.includes(q)) return false;
-      if (!includesAll(song.moods, selectedMoods)) return false;
-      if (!includesAll(song.genres, selectedGenres)) return false;
-      if (!includesAll(song.instruments, selectedInstruments)) return false;
-      if (!includesAll(song.builds, selectedBuilds)) return false;
-      if (!includesAll(song.vocals, selectedVocals)) return false;
-      if (!songMatchesEditPointFilters(song, selectedEditPoints)) return false;
-      if (!matchesDurationFilter(song.duration, selectedDurations)) {
-        return false;
-      }
-      if (!matchesBpmFilter(song.bpm, bpmValue)) return false;
-      if (!matchesKeyFilter(song.key, keyValue)) return false;
-      if (instrumental && !song.instrumental) return false;
-
-      if (selectedPlaylistId) {
-        if (!selectedPlaylistSongIds) return false;
-
-        const songIds = getSongIdentityValues(song);
-        const isInSelectedPlaylist = songIds.some((songId) =>
-          selectedPlaylistSongIds.has(songId),
-        );
-
-        if (!isInSelectedPlaylist) return false;
-      }
-
-      return true;
+      return (
+        matchesSearch &&
+        includesAll(song.moods, selectedMoods) &&
+        includesAll(song.genres, selectedGenres) &&
+        includesAll(song.instruments, selectedInstruments) &&
+        includesAll(song.builds, selectedBuilds) &&
+        includesAll(song.vocals, selectedVocals) &&
+        matchesDurationFilter(song.duration, selectedDurations) &&
+        songMatchesEditPointFilters(song, selectedEditPoints) &&
+        matchesBpmFilter(song.bpm, bpmValue) &&
+        matchesKeyFilter(song.key, keyValue) &&
+        (!instrumental || song.instrumental) &&
+        matchesPlaylist
+      );
     });
   }, [
     songs,
@@ -420,23 +402,43 @@ export default function MusicPage() {
     selectedVocals,
     selectedDurations,
     selectedEditPoints,
+    instrumental,
     bpmValue,
     keyValue,
-    instrumental,
     selectedPlaylistId,
     selectedPlaylistSongIds,
   ]);
 
-  const displayedSongs = useMemo(() => {
-    const orderedSongs = [...filteredSongs];
+  const hasActiveFilters =
+    search.trim() ||
+    selectedMoods.length > 0 ||
+    selectedGenres.length > 0 ||
+    selectedInstruments.length > 0 ||
+    selectedBuilds.length > 0 ||
+    selectedVocals.length > 0 ||
+    selectedDurations.length > 0 ||
+    selectedEditPoints.length > 0 ||
+    effectiveShowEditPointMarkers ||
+    instrumental ||
+    bpmValue ||
+    keyValue ||
+    selectedPlaylist ||
+    shuffleOrderIds;
 
-    if (!shuffleOrderIds) return orderedSongs;
+  const searchPlaceholder = hasActiveFilters
+    ? "Search filtered results"
+    : "Search the catalog";
+
+  const shuffleActive = shuffleOrderIds !== null;
+
+  const displayedSongs = useMemo(() => {
+    if (!shuffleOrderIds) return filteredSongs;
 
     const orderMap = new Map(
       shuffleOrderIds.map((songId, index) => [songId, index]),
     );
 
-    return [...orderedSongs].sort((a, b) => {
+    return [...filteredSongs].sort((a, b) => {
       const aOrder = orderMap.get(getSongStableId(a));
       const bOrder = orderMap.get(getSongStableId(b));
 
@@ -528,7 +530,7 @@ export default function MusicPage() {
             />
           </div>
 
-          <div className="-mx-7 flex h-12 items-center gap-1 overflow-x-auto border-t border-b border-[var(--border)] px-7">
+          <div className="filmwave-filter-row -mx-7 flex h-12 min-w-0 items-center gap-1 overflow-x-auto overflow-y-hidden border-t border-b border-[var(--border)] px-7 whitespace-nowrap">
             <PlaylistFilter
               selected={selectedPlaylist}
               onChange={setSelectedPlaylist}
@@ -599,7 +601,7 @@ export default function MusicPage() {
                 setShowEditPointMarkers(!effectiveShowEditPointMarkers)
               }
               disabled={!filtersHydrated}
-              className={`${filterTriggerBaseClass} after:content-none ${
+              className={`${filterTriggerBaseClass} shrink-0 after:content-none ${
                 effectiveShowEditPointMarkers
                   ? filterTriggerActiveClass
                   : filterTriggerInactiveClass
@@ -622,7 +624,7 @@ export default function MusicPage() {
                   ),
                 );
               }}
-              className={`${iconButtonClass} ml-auto shrink-0`}
+              className={`${iconButtonClass} shrink-0 self-center`}
               style={
                 shuffleActive
                   ? ({ "--shuffle-icon-color": "#000000" } as React.CSSProperties)
@@ -735,32 +737,32 @@ export default function MusicPage() {
                     onMouseEnter={() => setDesktopSyncHovered(true)}
                     onMouseLeave={() => setDesktopSyncHovered(false)}
                     style={{
-                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.04)), url("${DESKTOP_SYNC_IMAGE}")`,
-                      backgroundSize: `100% 100%, 100% 100%, auto ${desktopSyncHovered ? "104%" : "100%"}`,
+                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08)), url("${DESKTOP_SYNC_IMAGE}")`,
+                      backgroundSize: `100% 100%, 100% 100%, ${desktopSyncHovered ? "106%" : "100%"} auto`,
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                       transition: "background-size 700ms",
                     }}
                   >
-                    <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                      Desktop Sync
-                    </div>
+                    <div className="relative z-10 flex justify-between gap-5">
+                      <div>
+                        <div className="text-[11px] font-medium text-white/64">
+                          Desktop Sync
+                        </div>
+                        <h2 className="mt-2 max-w-[260px] text-[26px] font-medium leading-[0.95] tracking-[-0.055em] text-white">
+                          Drag your library straight into the edit.
+                        </h2>
+                      </div>
 
-                    <div className="max-w-[340px]">
-                      <h2 className="font-[family-name:var(--font-instrument-sans)] text-[30px] font-medium leading-[1.05] tracking-[-0.055em] text-white">
-                        Local files, ready to cut.
-                      </h2>
-
-                      <p className="mt-2 max-w-[320px] text-xs leading-5 text-white/68">
-                        Sync songs to your desktop and drag them straight into
-                        Premiere, Resolve, or your editing timeline.
-                      </p>
-
-                      <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
-                        Desktop Sync
-                        <ArrowUpRightIcon />
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                        <ArrowUpRightIcon size={14} />
                       </div>
                     </div>
+
+                    <p className="relative z-10 max-w-[330px] text-[13px] leading-5 text-white/70">
+                      Keep projects, playlists, and downloaded cues organized across
+                      the web app and local folders.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -768,58 +770,35 @@ export default function MusicPage() {
           </div>
         </div>
 
-        <div
-          className="w-full border-t border-[var(--border-subtle)] transition-[margin-top] duration-300 ease-out"
-          style={{
-            marginTop: hasActiveFilters ? "16px" : "0px",
-          }}
-        >
-          {showSongSkeleton && <SkeletonSongList />}
-
-          {songsError && !songsLoading && (
-            <div className="flex min-h-[240px] flex-col items-center justify-center gap-3 px-8 text-center">
-              <div className="text-sm font-medium text-[var(--text-primary)]">
-                Couldn&apos;t load songs
-              </div>
-
-              <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
+        <section className="px-8 pb-8">
+          <div className="mt-6 overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+            {songsError ? (
+              <div className="px-5 py-8 text-sm text-[var(--text-secondary)]">
                 {songsError}
               </div>
-
-              <button
-                type="button"
-                onClick={refetchSongs}
-                className={primaryPillButtonClass}
-              >
-                Try Again
-              </button>
-            </div>
-          )}
-
-          {!songsError &&
-            !showSongSkeleton &&
-            displayedSongs.map((song, index) => (
-              <SongCard
-                key={song.id}
-                song={song}
-                isFirst={index === 0}
-                isLast={index === displayedSongs.length - 1}
-                highlightedEditPointTypes={selectedEditPoints}
-                showEditPointMarkers={effectiveShowEditPointMarkers}
-              />
-            ))}
-        </div>
-
-        {!songsLoading && (
-          <div
-            className="px-8 pt-10 pb-1"
-            style={{
-              paddingBottom: playerVisible ? "72px" : "8px",
-            }}
-          >
-            <Footer />
+            ) : showSongSkeleton ? (
+              <SkeletonSongList count={8} />
+            ) : displayedSongs.length === 0 ? (
+              <div className="px-5 py-8 text-sm text-[var(--text-secondary)]">
+                No songs match those filters.
+              </div>
+            ) : (
+              displayedSongs.map((song, index) => (
+                <SongCard
+                  key={song.id}
+                  song={song}
+                  active={currentSong?.id === song.id}
+                  isFirst={index === 0}
+                  isLast={index === displayedSongs.length - 1}
+                  showEditPointMarkers={effectiveShowEditPointMarkers}
+                  onPlay={() => playSong(song)}
+                />
+              ))
+            )}
           </div>
-        )}
+        </section>
+
+        <Footer />
       </section>
     </main>
   );
