@@ -1,0 +1,10 @@
+{
+  "name": "filmwave-monorepo",
+  "private": true,
+  "scripts": {
+    "web": "npm --prefix apps/web run dev",
+    "web:build": "npm --prefix apps/web run build",
+    "desktop": "npm --prefix apps/desktop run tauri dev",
+    "desktop:build": "npm --prefix apps/desktop run tauri build"
+  }
+}
