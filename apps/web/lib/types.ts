@@ -1,80 +1,31 @@
-import type { FilmwaveSong } from "@filmwave/shared";
+import type {
+  FilmwaveBpmFilterValue,
+  FilmwaveEditPointMarker,
+  FilmwaveEditPointRange,
+  FilmwaveEditPoints,
+  FilmwaveKeyFilterValue,
+  FilmwavePlaylist,
+  FilmwavePlaylistSong,
+  FilmwaveSong,
+} from "@filmwave/shared";
+
+export type EditPointMarker = FilmwaveEditPointMarker;
+
+export type EditPointRange = FilmwaveEditPointRange;
+
+export type EditPoints = FilmwaveEditPoints;
+
+export type Song = FilmwaveSong;
+
+export type Playlist = FilmwavePlaylist;
+
+export type PlaylistSong = FilmwavePlaylistSong;
+
+export type BpmFilterValue = FilmwaveBpmFilterValue;
+
+export type KeyFilterValue = FilmwaveKeyFilterValue;
 
 export type SharedFilmwaveSong = FilmwaveSong;
-
-export type EditPointMarker = {
-  id: string;
-  label: string;
-  time: number;
-  type?: string;
-  confidence?: number;
-  source?: string;
-};
-
-export type EditPointRange = {
-  id: string;
-  label: string;
-  start: number;
-  end: number;
-};
-
-export type EditPoints = {
-  markers?: EditPointMarker[];
-  ranges?: EditPointRange[];
-};
-
-export type Song = {
-  id: string;
-  title: string;
-  artist: string;
-  audioUrl: string;
-  playbackUrl: string;
-  hlsUrl: string;
-  stems: {
-    name: string;
-    url: string;
-  }[];
-  coverArt: string | null;
-  waveformPeaks: string;
-  duration: number;
-  key: string;
-  bpm: number;
-  genres: string[];
-  moods: string[];
-  instruments: string[];
-  builds: string[];
-  vocals: string[];
-  instrumental: boolean;
-  editPoints: string;
-};
-
-export type Playlist = {
-  id: number;
-  clerk_user_id: string;
-  name: string;
-  cover_image_url: string | null;
-  position: number;
-};
-
-export type PlaylistSong = Song & {
-  playlist_song_id: number;
-  playlist_id: number;
-  song_id: string;
-  position: number;
-  created_at: string;
-};
-
-export type BpmFilterValue = {
-  mode: "range" | "exact";
-  low: number;
-  high: number;
-  exact: number;
-};
-
-export type KeyFilterValue = {
-  note: string;
-  scale: "major" | "minor" | null;
-};
 
 export type PlaylistRef = {
   id: number;
