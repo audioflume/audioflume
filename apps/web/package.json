@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "pkill -f 'next dev' || true && NODE_OPTIONS='--max-old-space-size=8192' next dev",
+    "build": "next build",
+    "vercel-build": "next build",
     "start": "next start",
     "lint": "eslint",
     "r2:backfill-cache": "node scripts/backfill-r2-cache-headers.mjs",
