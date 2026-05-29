@@ -52,13 +52,18 @@
   content: "";
 }
 
-.desktop-music-page .desktop-filter-trigger:hover {
+.desktop-music-page .desktop-filter-trigger:hover,
+.desktop-music-page .desktop-filter-trigger.is-open {
   color: var(--text-primary);
 }
 
 .desktop-music-page .desktop-filter-trigger.is-active {
   border-bottom-color: var(--text-primary);
   color: var(--text-primary);
+}
+
+.desktop-music-page .desktop-filter-trigger.is-open:not(.is-active) {
+  border-bottom-color: transparent;
 }
 
 .desktop-music-page .desktop-filter-trigger-markers::after {
@@ -88,6 +93,16 @@
 .desktop-music-page .desktop-shuffle-button:hover,
 .desktop-music-page .desktop-shuffle-button.is-active {
   background: var(--icon-button-hover);
+  color: var(--text-primary);
+}
+
+.desktop-music-page .desktop-song-actions button.is-active {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.desktop-music-page .desktop-song-actions button.is-active:hover {
+  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
@@ -181,6 +196,16 @@ html[data-theme="light"] .desktop-music-page .desktop-filter-count {
   color: var(--text-primary);
 }
 
+html[data-theme="light"] .desktop-music-page .desktop-song-actions button.is-active {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-actions button.is-active:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced,
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced:hover {
   background: transparent !important;
@@ -194,10 +219,6 @@ html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced
 html[data-theme="light"] .desktop-music-page .desktop-quick-filter:hover,
 html[data-theme="light"] .desktop-music-page .desktop-quick-filter.is-active,
 html[data-theme="light"] .desktop-music-page .desktop-song-actions button:hover,
-html[data-theme="light"]
-  .desktop-music-page
-  .desktop-song-actions
-  button.is-active,
 html[data-theme="light"]
   .desktop-music-page
   .desktop-player-controls
