@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import type { Project } from "../../lib/mockFilmwaveApi";
 import FolderIcon from "../icons/FolderIcon";
 import HeartIcon from "../icons/HeartIcon";
+import LibraryIcon from "../icons/LibraryIcon";
 import MusicIcon from "../icons/MusicIcon";
 import PlaylistIcon from "../icons/PlaylistIcon";
 import WaveformIcon from "../icons/WaveformIcon";
@@ -208,7 +209,7 @@ export default function DesktopAppShell({
           <section className="desktop-sidebar-section">
             <h2 className="desktop-sidebar-heading has-collapsed-icon">
               <span className="desktop-sidebar-heading-icon" aria-hidden="true">
-                <PlaylistIcon size={13} />
+                <LibraryIcon size={14} />
               </span>
               <span className="desktop-sidebar-heading-label">Library</span>
             </h2>
