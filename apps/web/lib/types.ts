@@ -1,3 +1,7 @@
+import type { FilmwaveSong } from "@filmwave/shared";
+
+export type SharedFilmwaveSong = FilmwaveSong;
+
 export type EditPointMarker = {
   id: string;
   label: string;
@@ -86,7 +90,11 @@ export type Project = {
   created_at: string;
 };
 
-export type ProjectAssetType = "song" | "sound-fx" | "visual-fx" | "colour-grading";
+export type ProjectAssetType =
+  | "song"
+  | "sound-fx"
+  | "visual-fx"
+  | "colour-grading";
 
 export type ProjectFolder = {
   id: number;

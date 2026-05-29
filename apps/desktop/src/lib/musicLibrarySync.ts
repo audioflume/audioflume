@@ -1,8 +1,11 @@
+import type { FilmwaveSong } from "@filmwave/shared";
 import { exists, mkdir, writeFile } from "@tauri-apps/plugin-fs";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import type { DesktopSong } from "./desktopSongs";
 
 export const MUSIC_LIBRARY_SYNC_FOLDER_NAME = "Music Library Sync";
+
+type SyncedFilmwaveSong = Pick<FilmwaveSong, "id" | "title" | "audioUrl">;
 
 function sanitizeFileName(value: string) {
   return value
@@ -70,7 +73,9 @@ export async function syncSongToMusicLibraryFolder({
   const response = await tauriFetch(downloadUrl);
 
   if (!response.ok) {
-    throw new Error(`Song sync failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Song sync failed: ${response.status} ${response.statusText}`,
+    );
   }
 
   const contentType = response.headers.get("content-type") ?? "";
