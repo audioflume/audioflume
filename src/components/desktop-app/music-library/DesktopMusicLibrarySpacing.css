@@ -37,13 +37,15 @@
 
 .desktop-music-page .desktop-filter-trigger::after {
   display: block;
-  width: 6px;
-  height: 6px;
-  margin-left: 2px;
-  flex: 0 0 6px;
+  box-sizing: border-box;
+  width: 5px;
+  height: 5px;
+  margin-left: 1px;
+  flex: 0 0 5px;
   transform: translateY(-1px) rotate(45deg);
   border-right: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
+  opacity: 0.92;
   content: "";
 }
 
