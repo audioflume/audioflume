@@ -168,14 +168,23 @@ aside[data-sidebar] [class*="group/project-row"]:hover span:first-child {
   height: var(--filmwave-filter-row-height);
   min-height: var(--filmwave-filter-row-height);
   max-height: var(--filmwave-filter-row-height);
+  min-width: 0;
   align-items: center;
   gap: 0;
+  flex-wrap: nowrap !important;
   overflow-x: auto;
   overflow-y: hidden;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  box-sizing: border-box;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filmwave-filter-row {
+  width: calc(100vw - var(--sidebar-width));
+  max-width: calc(100vw - var(--sidebar-width));
 }
 
 .filmwave-filter-row::-webkit-scrollbar,
@@ -196,6 +205,7 @@ aside[data-sidebar] [class*="group/project-row"]:hover span:first-child {
   align-self: center;
   margin-top: auto;
   margin-bottom: auto;
+  margin-left: 0 !important;
 }
 
 .filmwave-filter-trigger,
