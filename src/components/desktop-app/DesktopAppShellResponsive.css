@@ -35,12 +35,12 @@
 
 .desktop-sidebar-link-label {
   margin-left: 0;
-  transition: opacity 120ms ease, transform 120ms ease;
+  transition: none;
 }
 
 .desktop-sidebar-heading,
 .desktop-sidebar-empty-projects {
-  transition: opacity 120ms ease, transform 120ms ease;
+  transition: none;
 }
 
 .desktop-sidebar-heading.has-collapsed-icon {
