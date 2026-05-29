@@ -1,4 +1,4 @@
-:where(.filmwave-song-card) {
+:where(.filmwave-song-card, .desktop-song-card, .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center) {
   --filmwave-song-card-cover-size: 40px;
   --filmwave-song-card-action-size: 28px;
   --filmwave-song-card-action-radius: 9px;
@@ -14,29 +14,37 @@
   --filmwave-song-card-action-active-color: var(--text-primary);
 }
 
-.filmwave-song-card {
+.filmwave-song-card,
+.desktop-song-card,
+.scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
   min-height: var(--filmwave-song-card-min-height);
   border-bottom: 1px solid var(--border-subtle);
   transition: background 140ms ease;
 }
 
-.filmwave-song-card:hover {
+.filmwave-song-card:hover,
+.desktop-song-card:hover,
+.scroll-mt-48.scroll-mb-40.cursor-pointer.items-center:hover {
   background: var(--filmwave-song-card-hover-bg);
 }
 
 .filmwave-song-card.is-playing,
-.filmwave-song-card.is-current {
+.filmwave-song-card.is-current,
+.desktop-song-card.is-playing {
   background: var(--bg-hover);
 }
 
-.filmwave-song-cover {
+.filmwave-song-cover,
+.desktop-song-cover,
+.scroll-mt-48.scroll-mb-40.cursor-pointer.items-center > button:first-child {
   width: var(--filmwave-song-card-cover-size);
   height: var(--filmwave-song-card-cover-size);
   flex: 0 0 var(--filmwave-song-card-cover-size);
   background: var(--bg-hover);
 }
 
-.filmwave-song-play-overlay {
+.filmwave-song-play-overlay,
+.desktop-song-play-overlay {
   background: var(--media-overlay-strong);
 }
 
@@ -52,40 +60,48 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
-.filmwave-song-title {
+.filmwave-song-title,
+.desktop-song-info h3 {
   color: var(--text-primary);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.35;
 }
 
-.filmwave-song-artist {
+.filmwave-song-artist,
+.desktop-song-info p {
   color: var(--text-subtle);
   font-size: 12px;
   line-height: 1.35;
 }
 
 .filmwave-song-meta,
-.filmwave-song-duration {
+.filmwave-song-duration,
+.desktop-song-duration,
+.desktop-song-key-bpm {
   color: var(--text-secondary);
   font-size: 12px;
 }
 
-.filmwave-song-genre {
+.filmwave-song-genre,
+.desktop-song-genre-slot span {
   color: var(--text-muted);
   font-size: 11px;
   font-weight: 500;
   line-height: 1.25;
 }
 
-.filmwave-song-actions {
+.filmwave-song-actions,
+.desktop-song-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 4px;
 }
 
-.filmwave-song-action-button {
+.filmwave-song-action-button,
+.desktop-song-actions > button,
+.desktop-song-action-menu-wrap > button {
   display: inline-flex;
   width: var(--filmwave-song-card-action-size);
   min-width: var(--filmwave-song-card-action-size);
@@ -103,12 +119,18 @@
 
 .filmwave-song-action-button:hover,
 .filmwave-song-action-button.is-active,
-.filmwave-song-action-button[aria-pressed="true"] {
+.filmwave-song-action-button[aria-pressed="true"],
+.desktop-song-actions > button:hover,
+.desktop-song-actions > button.is-active,
+.desktop-song-action-menu-wrap > button:hover,
+.desktop-song-action-menu-wrap > button.is-active {
   background: var(--filmwave-song-card-action-hover-bg);
   color: var(--filmwave-song-card-action-active-color);
 }
 
-.filmwave-song-action-button svg {
+.filmwave-song-action-button svg,
+.desktop-song-actions > button svg,
+.desktop-song-action-menu-wrap > button svg {
   width: 14px;
   height: 14px;
 }
