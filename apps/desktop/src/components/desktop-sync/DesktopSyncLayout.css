@@ -1,0 +1,56 @@
+.sync-card {
+  padding-top: 0;
+}
+
+.status-row {
+  position: relative;
+  order: 2;
+  min-height: 58px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background: var(--bg-panel);
+  padding: 0 20px;
+}
+
+.account-block {
+  order: 1;
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+}
+
+.section-block.account-block::after,
+.account-block::after {
+  display: none;
+  content: none;
+}
+
+.status-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--divider);
+}
+
+.project-source-block {
+  order: 3;
+}
+
+.api-endpoint-block,
+.settings-block,
+.sync-folder-block {
+  order: 4;
+}
+
+.projects-panel,
+.sync-activity-panel {
+  order: 5;
+}
+
+@media (max-width: 550px) {
+  .status-row {
+    padding: 14px 20px;
+  }
+}

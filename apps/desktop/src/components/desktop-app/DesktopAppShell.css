@@ -1,0 +1,592 @@
+.desktop-app-shell {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.desktop-app-sidebar {
+  position: fixed;
+  top: 56px;
+  bottom: 0;
+  left: 0;
+  z-index: 90;
+  width: 260px;
+  border-right: 1px solid var(--divider);
+  background: var(--bg-primary);
+  transition: width 0.2s ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
+  width: 74px;
+}
+
+.desktop-sidebar-collapse-zone {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  width: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.desktop-sidebar-collapse-button {
+  display: flex;
+  height: 56px;
+  width: 16px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  opacity: 0;
+  padding: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.desktop-sidebar-collapse-zone:hover .desktop-sidebar-collapse-button,
+.desktop-sidebar-collapse-button:focus-visible {
+  opacity: 0.35;
+}
+
+.desktop-sidebar-collapse-button:hover {
+  color: var(--text-secondary);
+  opacity: 0.55;
+}
+
+.desktop-sidebar-collapse-icon {
+  transition: transform 0.2s ease;
+}
+
+.desktop-sidebar-collapse-icon.is-collapsed {
+  transform: rotate(180deg);
+}
+
+.desktop-app-sidebar-inner {
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px 20px;
+  transition: padding 0.2s ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar-inner {
+  padding: 24px 20px;
+}
+
+.desktop-sidebar-section {
+  border-bottom: 1px solid var(--divider);
+  padding-bottom: 20px;
+}
+
+.desktop-sidebar-section + .desktop-sidebar-section {
+  margin-top: 20px;
+}
+
+.desktop-sidebar-section.is-projects-section {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.desktop-sidebar-heading {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.desktop-sidebar-projects-head {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+}
+
+.desktop-sidebar-heading {
+  margin: 0 0 8px;
+  padding: 0 10px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading {
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-8px);
+  opacity: 0;
+}
+
+.desktop-sidebar-projects-head {
+  justify-content: space-between;
+  margin-bottom: 8px;
+  transition: justify-content 0.2s ease, padding 0.2s ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.desktop-sidebar-projects-head .desktop-sidebar-heading {
+  margin: 0;
+}
+
+.desktop-sidebar-add-button {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease, width 0.2s ease, height 0.2s ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+}
+
+.desktop-sidebar-add-button:hover,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button:hover {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-nav {
+  display: grid;
+  gap: 2px;
+}
+
+.desktop-sidebar-link {
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0 10px;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease, padding 0.2s ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
+  justify-content: center;
+  padding: 0;
+}
+
+.desktop-sidebar-link:hover,
+.desktop-sidebar-link.is-active {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-link-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.desktop-sidebar-link:hover .desktop-sidebar-link-icon,
+.desktop-sidebar-link.is-active .desktop-sidebar-link-icon {
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-link-label {
+  min-width: 0;
+  overflow: hidden;
+  margin-left: 10px;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: opacity 0.15s ease, transform 0.15s ease, width 0.15s ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
+  width: 0;
+  margin-left: 0;
+  transform: translateX(4px);
+  opacity: 0;
+}
+
+.desktop-sidebar-empty-projects {
+  padding: 6px 10px 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
+  display: none;
+}
+
+.desktop-sidebar-tooltip {
+  pointer-events: none;
+  position: fixed;
+  z-index: 140;
+  left: 63px;
+  transform: translateY(-50%);
+}
+
+.desktop-sidebar-tooltip-border {
+  border-radius: 6px;
+  background: var(--divider);
+  padding: 1px;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+}
+
+.desktop-sidebar-tooltip-inner {
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+  box-shadow: var(--shadow-ui, 0 12px 30px rgba(0, 0, 0, 0.16));
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 7px 14px 7px 20px;
+  white-space: nowrap;
+}
+
+.desktop-app-main {
+  min-height: 100vh;
+  padding: 88px 24px 34px 284px;
+  transition: padding-left 0.2s ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-main {
+  padding-left: 98px;
+}
+
+.desktop-app-main:has(.desktop-projects-page.is-detail) {
+  padding: 56px 0 0 260px;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-projects-page.is-detail) {
+  padding-left: 74px;
+}
+
+.desktop-view {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.desktop-view-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.desktop-view-eyebrow {
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.desktop-view-title {
+  color: var(--text-primary);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.desktop-view-description {
+  max-width: 560px;
+  margin-top: 9px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.desktop-view-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  gap: 14px;
+}
+
+.desktop-panel {
+  border-radius: 22px;
+  background: var(--bg-panel);
+  padding: 18px;
+}
+
+.desktop-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.desktop-panel-title {
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.desktop-panel-copy {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.desktop-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.desktop-stat-card,
+.desktop-feature-row,
+.desktop-project-card,
+.desktop-song-row,
+.desktop-playlist-card {
+  background: var(--bg-panel-2);
+}
+
+.desktop-stat-card {
+  min-height: 86px;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.desktop-stat-value {
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.desktop-stat-label {
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.desktop-feature-list,
+.desktop-project-list,
+.desktop-song-list,
+.desktop-playlist-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.desktop-feature-row,
+.desktop-project-card,
+.desktop-song-row,
+.desktop-playlist-card {
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.desktop-project-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.desktop-project-card-title,
+.desktop-song-title,
+.desktop-playlist-title {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-project-card-meta,
+.desktop-song-meta,
+.desktop-playlist-meta,
+.desktop-feature-row p {
+  margin-top: 5px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.desktop-project-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  background: var(--bg-control);
+  padding: 6px 8px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.desktop-project-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.desktop-project-actions,
+.desktop-song-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.desktop-project-actions span,
+.desktop-song-tags span {
+  border-radius: 999px;
+  background: var(--bg-control);
+  padding: 6px 8px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.desktop-search-shell {
+  border-radius: 999px;
+  background: var(--bg-panel);
+  padding: 16px 18px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.desktop-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+
+.desktop-filter-pill {
+  border-radius: 999px;
+  background: var(--bg-panel-2);
+  padding: 8px 11px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.desktop-song-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.desktop-song-play {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--bg-control);
+  color: var(--text-primary);
+  font-size: 11px;
+}
+
+.desktop-playlist-grid {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.desktop-playlist-card {
+  min-height: 210px;
+}
+
+.desktop-playlist-art {
+  height: 120px;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 25% 25%, rgba(221, 255, 67, 0.22), transparent 32%),
+    linear-gradient(135deg, var(--bg-control), var(--bg-panel));
+  margin-bottom: 12px;
+}
+
+.desktop-settings-view .sync-card {
+  width: 100%;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .desktop-app-sidebar {
+    width: 74px;
+  }
+
+  .desktop-sidebar-heading,
+  .desktop-sidebar-link-label,
+  .desktop-sidebar-empty-projects {
+    display: none;
+  }
+
+  .desktop-sidebar-link {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .desktop-app-main {
+    padding-left: 98px;
+  }
+
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+    padding-left: 74px;
+  }
+
+  .desktop-view-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .desktop-app-sidebar {
+    display: none;
+  }
+
+  .desktop-app-main,
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+    padding-left: 24px;
+  }
+
+  .desktop-view-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .desktop-stat-grid,
+  .desktop-playlist-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-set-theme",
+    "core:window:allow-set-background-color",
+    "dialog:default",
+    "store:default",
+    "opener:default",
+    "fs:default",
+    "fs:allow-home-write-recursive",
+    "fs:allow-home-read-recursive",
+    "fs:scope-home-recursive",
+    "fs:allow-desktop-write-recursive",
+    "fs:allow-desktop-read-recursive",
+    "fs:scope-desktop-recursive",
+    "fs:allow-document-write-recursive",
+    "fs:allow-document-read-recursive",
+    "fs:scope-document-recursive",
+    "fs:allow-download-write-recursive",
+    "fs:allow-download-read-recursive",
+    "fs:scope-download-recursive",
+    "http:default",
+    "deep-link:default",
+    "deep-link:allow-register",
+    "deep-link:allow-unregister",
+    "deep-link:allow-is-registered",
+    "deep-link:allow-get-current",
+    {
+      "identifier": "http:allow-fetch",
+      "allow": [
+        {
+          "url": "https://**"
+        },
+        {
+          "url": "http://localhost:**"
+        },
+        {
+          "url": "http://127.0.0.1:**"
+        }
+      ]
+    }
+  ]
+}

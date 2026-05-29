@@ -1,0 +1,299 @@
+.desktop-music-page .desktop-music-quick-filters {
+  padding-bottom: 12px;
+}
+
+.desktop-music-page .desktop-music-player,
+.desktop-app-shell.is-sidebar-collapsed
+  .desktop-music-page
+  .desktop-music-player {
+  right: 0;
+  left: 0;
+  z-index: 2000;
+}
+
+.desktop-music-page .desktop-music-filter-row {
+  gap: 4px;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: none;
+  touch-action: pan-x;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: auto;
+}
+
+.desktop-music-page .desktop-music-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.desktop-music-page .desktop-filter-trigger {
+  height: 48px;
+  gap: 6px;
+  border-bottom: 2px solid transparent;
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.desktop-music-page .desktop-filter-trigger::after {
+  display: block;
+  width: 5px;
+  height: 5px;
+  margin-left: 2px;
+  flex: 0 0 5px;
+  transform: translateY(-1px) rotate(45deg);
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  opacity: 0.92;
+  content: "";
+}
+
+.desktop-music-page .desktop-filter-trigger:hover,
+.desktop-music-page .desktop-filter-trigger.is-open {
+  color: var(--text-primary);
+}
+
+.desktop-music-page .desktop-filter-trigger.is-active {
+  border-bottom-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.desktop-music-page .desktop-filter-trigger.is-open:not(.is-active) {
+  border-bottom-color: transparent;
+}
+
+.desktop-music-page .desktop-filter-trigger-markers::after {
+  content: none;
+}
+
+.desktop-music-page .desktop-filter-count {
+  height: 20px;
+  min-width: 20px;
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.desktop-music-page .desktop-shuffle-button {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  align-self: center;
+  margin-left: auto;
+  border-color: transparent;
+  background: transparent;
+  color: var(--icon-color);
+}
+
+.desktop-music-page .desktop-shuffle-button:hover,
+.desktop-music-page .desktop-shuffle-button.is-active {
+  background: var(--icon-button-hover);
+  color: var(--text-primary);
+}
+
+.desktop-music-page .desktop-song-actions button.is-active {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.desktop-music-page .desktop-song-actions button.is-active:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.desktop-music-page .desktop-song-sync-button {
+  overflow: visible;
+}
+
+.desktop-music-page .desktop-song-sync-button-inner {
+  display: inline-flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+}
+
+.desktop-music-page .desktop-song-sync-button.is-syncing {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.desktop-music-page .desktop-song-sync-button.is-syncing svg {
+  animation: desktop-song-sync-spin 0.85s linear infinite;
+}
+
+.desktop-music-page .desktop-song-sync-button.is-synced {
+  cursor: grab;
+  background: transparent !important;
+  color: #111111 !important;
+}
+
+.desktop-music-page .desktop-song-sync-button.is-synced .desktop-song-sync-button-inner {
+  width: 21px;
+  height: 21px;
+  border-radius: 999px;
+  background: var(--accent) !important;
+}
+
+.desktop-music-page .desktop-song-sync-button.is-synced:active {
+  cursor: grabbing;
+}
+
+.desktop-music-page .desktop-song-sync-button.is-synced:hover {
+  background: transparent !important;
+  color: #111111 !important;
+}
+
+@keyframes desktop-song-sync-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.desktop-filter-menu-fixed {
+  position: fixed !important;
+  z-index: 2400 !important;
+}
+
+.desktop-music-page .desktop-song-play-overlay {
+  color: #111111 !important;
+}
+
+.desktop-music-page .desktop-song-play-overlay::before {
+  background: #ffffff !important;
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-music-sticky-bar,
+html[data-theme="light"] .desktop-music-page .desktop-music-quick-filters {
+  background: var(--bg-primary);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-music-filter-row,
+html[data-theme="light"] .desktop-music-page .desktop-music-list,
+html[data-theme="light"] .desktop-music-page .desktop-song-card {
+  border-color: var(--border-subtle);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-card:hover {
+  background: var(--bg-hover);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-cover,
+html[data-theme="light"] .desktop-music-page .desktop-player-cover,
+html[data-theme="light"] .desktop-music-page .desktop-quick-filter {
+  background: var(--bg-elevated);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-stems-slot span,
+html[data-theme="light"] .desktop-music-page .desktop-filter-count {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-actions button.is-active {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-actions button.is-active:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced,
+html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced:hover {
+  background: transparent !important;
+  color: #111111 !important;
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced .desktop-song-sync-button-inner {
+  background: var(--accent) !important;
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-quick-filter:hover,
+html[data-theme="light"] .desktop-music-page .desktop-quick-filter.is-active,
+html[data-theme="light"] .desktop-music-page .desktop-song-actions button:hover,
+html[data-theme="light"]
+  .desktop-music-page
+  .desktop-player-controls
+  button:hover,
+html[data-theme="light"]
+  .desktop-music-page
+  .desktop-player-actions
+  button:hover,
+html[data-theme="light"]
+  .desktop-music-page
+  .desktop-player-actions
+  button.is-active,
+html[data-theme="light"] .desktop-music-page .desktop-shuffle-button:hover,
+html[data-theme="light"] .desktop-music-page .desktop-shuffle-button.is-active {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-play-overlay {
+  background: var(--media-overlay-strong);
+  color: #111111 !important;
+}
+
+html[data-theme="light"]
+  .desktop-music-page
+  .desktop-song-play-overlay::before {
+  background: #ffffff !important;
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-player-play-button {
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-filter-menu,
+html[data-theme="light"] .desktop-music-page .desktop-song-action-menu {
+  background: var(--bg-primary);
+  border-color: var(--border);
+  box-shadow: var(--shadow-ui);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-filter-option:hover,
+html[data-theme="light"] .desktop-music-page .desktop-filter-option.is-selected,
+html[data-theme="light"]
+  .desktop-music-page
+  .desktop-song-action-menu
+  button:hover:not(:disabled) {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-filter-option-icon {
+  background: var(--bg-elevated);
+}
+
+html[data-theme="light"]
+  .desktop-music-page
+  .desktop-filter-option-icon.is-selected,
+html[data-theme="light"]
+  .desktop-music-page
+  .desktop-filter-option-action.is-selected {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+html[data-theme="light"] .desktop-music-player {
+  background: color-mix(in srgb, var(--bg-primary) 94%, transparent);
+  border-top-color: var(--border);
+  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="light"] .desktop-player-progress::before {
+  background: var(--bg-elevated);
+}
+
+html[data-theme="light"] .desktop-player-progress span {
+  background: var(--text-primary);
+}
