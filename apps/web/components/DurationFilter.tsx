@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import FilterPopover from "@/components/FilterPopover";
 import {
   filterClearButtonClass,
   filterDropdownHeaderClass,
@@ -23,36 +24,11 @@ const MIN = 0;
 const MAX = 300;
 
 const INTENTS = [
-  {
-    title: "Short",
-    detail: "< 1:00",
-    low: 0,
-    high: 60,
-  },
-  {
-    title: "Quick",
-    detail: "1–2min",
-    low: 60,
-    high: 120,
-  },
-  {
-    title: "Standard",
-    detail: "2–3min",
-    low: 120,
-    high: 180,
-  },
-  {
-    title: "Long",
-    detail: "3–4min",
-    low: 180,
-    high: 240,
-  },
-  {
-    title: "Extended",
-    detail: "4:00+",
-    low: 240,
-    high: 300,
-  },
+  { title: "Short", detail: "< 1:00", low: 0, high: 60 },
+  { title: "Quick", detail: "1–2min", low: 60, high: 120 },
+  { title: "Standard", detail: "2–3min", low: 120, high: 180 },
+  { title: "Long", detail: "3–4min", low: 180, high: 240 },
+  { title: "Extended", detail: "4:00+", low: 240, high: 300 },
 ];
 
 function formatTime(seconds: number) {
@@ -93,34 +69,26 @@ function parseSelectedDuration(selected: string[]) {
   if (first === "4:00+") return { low: 240, high: 300 };
 
   if (first.endsWith("+")) {
-    return {
-      low: parseTime(first.replace("+", "")),
-      high: MAX,
-    };
+    return { low: parseTime(first.replace("+", "")), high: MAX };
   }
 
   if (first.includes(" - ")) {
     const [lowValue, highValue] = first.split(" - ");
 
-    return {
-      low: parseTime(lowValue),
-      high: parseTime(highValue),
-    };
+    return { low: parseTime(lowValue), high: parseTime(highValue) };
   }
 
   return { low: MIN, high: MAX };
 }
 
-export default function DurationFilter({
-  selected,
-  onChange,
-}: DurationFilterProps) {
+export default function DurationFilter({ selected, onChange }: DurationFilterProps) {
   const [open, setOpen] = useState(false);
   const initial = parseSelectedDuration(selected);
   const [low, setLow] = useState(initial.low);
   const [high, setHigh] = useState(initial.high);
 
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const rangeRef = useRef<HTMLDivElement>(null);
   const lowRef = useRef(low);
   const highRef = useRef(high);
@@ -193,7 +161,6 @@ export default function DurationFilter({
         lowRef.current = nextLow;
         setLow(nextLow);
         emitChange(nextLow, highRef.current);
-
         return;
       }
 
@@ -207,7 +174,6 @@ export default function DurationFilter({
     function onUp() {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseup", onUp);
-
       emitChange();
     }
 
@@ -239,13 +205,12 @@ export default function DurationFilter({
   return (
     <div ref={ref} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={`${filterTriggerBaseClass} ${
-          open || hasActive
-            ? filterTriggerActiveClass
-            : filterTriggerInactiveClass
-        }`}
+          hasActive ? filterTriggerActiveClass : filterTriggerInactiveClass
+        } ${open ? "is-open" : ""}`}
       >
         <span>Duration</span>
 
@@ -256,112 +221,87 @@ export default function DurationFilter({
         )}
       </button>
 
-      {open && (
-        <div className="absolute left-0 top-full z-50 mt-2 w-[320px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]">
-          <div className={filterDropdownHeaderClass}>
-            <div className={filterDropdownTitleClass}>Duration</div>
+      <FilterPopover
+        open={open}
+        triggerRef={triggerRef}
+        width={320}
+        className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]"
+      >
+        <div className={filterDropdownHeaderClass}>
+          <div className={filterDropdownTitleClass}>Duration</div>
 
-            {hasActive && (
-              <button
-                type="button"
-                onClick={clear}
-                className={filterClearButtonClass}
-              >
-                Clear
-              </button>
-            )}
+          {hasActive && (
+            <button type="button" onClick={clear} className={filterClearButtonClass}>
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="p-3">
+          <div className={filterSummaryClass}>
+            <span className="text-[11px] font-medium text-[var(--text-muted)]">
+              {formatTime(low)}
+            </span>
+            <span className={filterSummaryLabelClass}>Range</span>
+            <span className="text-[11px] font-medium text-[var(--text-muted)]">
+              {high === MAX ? `${formatTime(high)}+` : formatTime(high)}
+            </span>
           </div>
 
-          <div className="p-3">
-            <div className={filterSummaryClass}>
-              <span className="text-[11px] font-medium text-[var(--text-muted)]">
-                {formatTime(low)}
-              </span>
-
-              <span className={filterSummaryLabelClass}>Range</span>
-
-              <span className="text-[11px] font-medium text-[var(--text-muted)]">
-                {high === MAX ? `${formatTime(high)}+` : formatTime(high)}
-              </span>
-            </div>
-
-            <div className="mt-5 px-1">
+          <div className="mt-5 px-1">
+            <div ref={rangeRef} className="relative h-[3px] cursor-pointer rounded-full bg-[var(--bg-tertiary)]">
               <div
-                ref={rangeRef}
-                className="relative h-[3px] cursor-pointer rounded-full bg-[var(--bg-tertiary)]"
-              >
+                className="absolute top-0 h-full rounded-full bg-[var(--text-primary)]"
+                style={{ left: `${activeStart}%`, width: `${Math.max(0, activeEnd - activeStart)}%` }}
+              />
+              {(["low", "high"] as const).map((handle) => (
                 <div
-                  className="absolute top-0 h-full rounded-full bg-[var(--text-primary)]"
-                  style={{
-                    left: `${activeStart}%`,
-                    width: `${Math.max(0, activeEnd - activeStart)}%`,
+                  key={handle}
+                  className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-[var(--bg-secondary)] bg-[var(--text-primary)] shadow-sm active:cursor-grabbing"
+                  style={{ left: `${toPercent(handle === "low" ? low : high)}%` }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startDrag(handle);
                   }}
                 />
-
-                {(["low", "high"] as const).map((handle) => (
-                  <div
-                    key={handle}
-                    className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-[var(--bg-secondary)] bg-[var(--text-primary)] shadow-sm active:cursor-grabbing"
-                    style={{
-                      left: `${toPercent(handle === "low" ? low : high)}%`,
-                    }}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      startDrag(handle);
-                    }}
-                  />
-                ))}
-              </div>
-
-              <div className="mt-3 flex justify-between text-[10px] font-medium text-[var(--text-muted)]">
-                <span>0:00</span>
-                <span>5:00+</span>
-              </div>
+              ))}
             </div>
 
-            <div className="mt-3 grid grid-cols-5 gap-1.5">
-              {INTENTS.map((intent) => {
-                const isSelected = low === intent.low && high === intent.high;
-
-                return (
-                  <button
-                    key={intent.title}
-                    type="button"
-                    onClick={() => {
-                      if (isSelected) {
-                        clear();
-                        return;
-                      }
-
-                      applyIntent(intent.low, intent.high);
-                    }}
-                    className={`flex h-[54px] flex-col items-start justify-center rounded-lg px-2 text-left transition ${
-                      isSelected
-                        ? filterIntentButtonActiveClass
-                        : filterIntentButtonInactiveClass
-                    }`}
-                  >
-                    <span className="text-[10px] font-medium leading-none">
-                      {intent.title}
-                    </span>
-
-                    <span
-                      className={`mt-1.5 text-[10px] leading-none ${
-                        isSelected
-                          ? "text-[var(--text-secondary)]"
-                          : "text-[var(--text-muted)]"
-                      }`}
-                    >
-                      {intent.detail}
-                    </span>
-                  </button>
-                );
-              })}
+            <div className="mt-3 flex justify-between text-[10px] font-medium text-[var(--text-muted)]">
+              <span>0:00</span>
+              <span>5:00+</span>
             </div>
           </div>
+
+          <div className="mt-3 grid grid-cols-5 gap-1.5">
+            {INTENTS.map((intent) => {
+              const isSelected = low === intent.low && high === intent.high;
+              return (
+                <button
+                  key={intent.title}
+                  type="button"
+                  onClick={() => {
+                    if (isSelected) {
+                      clear();
+                      return;
+                    }
+                    applyIntent(intent.low, intent.high);
+                  }}
+                  className={`flex h-[54px] flex-col items-start justify-center rounded-lg px-2 text-left transition ${
+                    isSelected ? filterIntentButtonActiveClass : filterIntentButtonInactiveClass
+                  }`}
+                >
+                  <span className="text-[10px] font-medium leading-none">{intent.title}</span>
+                  <span className={`mt-1.5 text-[10px] leading-none ${isSelected ? "text-[var(--text-secondary)]" : "text-[var(--text-muted)]"}`}>
+                    {intent.detail}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      )}
+      </FilterPopover>
     </div>
   );
 }
