@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
+import FilterPopover from "@/components/FilterPopover";
 import {
   filterClearButtonClass,
   filterDropdownHeaderClass,
@@ -50,6 +51,7 @@ export default function PlaylistFilter({
   const [playlistsLoaded, setPlaylistsLoaded] = useState(false);
   const [loadError, setLoadError] = useState("");
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const { userId } = useAuth();
 
   useEffect(() => {
@@ -120,13 +122,12 @@ export default function PlaylistFilter({
   return (
     <div ref={ref} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={`${filterTriggerBaseClass} ${
-          open || hasActive
-            ? filterTriggerActiveClass
-            : filterTriggerInactiveClass
-        }`}
+          hasActive ? filterTriggerActiveClass : filterTriggerInactiveClass
+        } ${open ? "is-open" : ""}`}
       >
         <PlaylistIcon size={13} className="shrink-0" />
 
@@ -139,101 +140,104 @@ export default function PlaylistFilter({
         )}
       </button>
 
-      {open && (
-        <div className="absolute left-0 top-full z-50 mt-2 w-[300px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]">
-          <div className={filterDropdownHeaderClass}>
-            <div className={filterDropdownTitleClass}>Playlists</div>
+      <FilterPopover
+        open={open}
+        triggerRef={triggerRef}
+        width={300}
+        className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]"
+      >
+        <div className={filterDropdownHeaderClass}>
+          <div className={filterDropdownTitleClass}>Playlists</div>
 
-            {hasActive && (
-              <button
-                type="button"
-                onClick={clear}
-                className={filterClearButtonClass}
-              >
-                Clear
-              </button>
-            )}
+          {hasActive && (
+            <button
+              type="button"
+              onClick={clear}
+              className={filterClearButtonClass}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {showSkeleton ? (
+          <div className="p-1.5">
+            <PlaylistFilterSkeleton />
           </div>
+        ) : loadError ? (
+          <div className="p-1.5">
+            <div className="rounded-lg bg-[var(--bg-primary)] px-3 py-3">
+              <div className="text-xs font-medium text-[var(--danger)]">
+                Couldn&apos;t load playlists
+              </div>
 
-          {showSkeleton ? (
-            <div className="p-1.5">
-              <PlaylistFilterSkeleton />
-            </div>
-          ) : loadError ? (
-            <div className="p-1.5">
-              <div className="rounded-lg bg-[var(--bg-primary)] px-3 py-3">
-                <div className="text-xs font-medium text-[var(--danger)]">
-                  Couldn&apos;t load playlists
-                </div>
-
-                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
-                  {loadError}
-                </div>
+              <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+                {loadError}
               </div>
             </div>
-          ) : playlists.length === 0 ? (
-            <div className="p-1.5">
-              <div className="rounded-lg bg-[var(--bg-primary)] px-3 py-3">
-                <div className="text-xs font-medium text-[var(--text-primary)]">
-                  No playlists found
-                </div>
+          </div>
+        ) : playlists.length === 0 ? (
+          <div className="p-1.5">
+            <div className="rounded-lg bg-[var(--bg-primary)] px-3 py-3">
+              <div className="text-xs font-medium text-[var(--text-primary)]">
+                No playlists found
+              </div>
 
-                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
-                  Create a playlist first, then use this filter to narrow your
-                  library.
-                </div>
+              <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+                Create a playlist first, then use this filter to narrow your
+                library.
               </div>
             </div>
-          ) : (
-            <div className="max-h-[min(340px,calc(100vh-180px))] overflow-y-auto p-1.5">
-              {playlists.map((playlist) => {
-                const isSelected = selected?.id === playlist.id;
+          </div>
+        ) : (
+          <div className="max-h-[min(340px,calc(100vh-180px))] overflow-y-auto p-1.5">
+            {playlists.map((playlist) => {
+              const isSelected = selected?.id === playlist.id;
 
-                return (
-                  <button
-                    key={playlist.id}
-                    type="button"
-                    onClick={() => toggle(playlist)}
-                    className={`group ${filterRowButtonClass} h-9 ${
-                      isSelected
-                        ? filterRowButtonActiveClass
-                        : filterRowButtonInactiveClass
-                    }`}
-                  >
-                    <span className="flex min-w-0 items-center gap-2.5">
-                      <span
-                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
-                          isSelected
-                            ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                            : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
-                        }`}
-                      >
-                        <PlaylistIcon size={13} />
-                      </span>
-
-                      <span className="min-w-0 truncate">{playlist.name}</span>
-                    </span>
-
+              return (
+                <button
+                  key={playlist.id}
+                  type="button"
+                  onClick={() => toggle(playlist)}
+                  className={`group ${filterRowButtonClass} h-9 ${
+                    isSelected
+                      ? filterRowButtonActiveClass
+                      : filterRowButtonInactiveClass
+                  }`}
+                >
+                  <span className="flex min-w-0 items-center gap-2.5">
                     <span
                       className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
                         isSelected
                           ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                          : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                          : "bg-[var(--bg-primary)] text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                       }`}
                     >
-                      {isSelected ? (
-                        <CheckIcon size={12} />
-                      ) : (
-                        <PlusIcon size={12} />
-                      )}
+                      <PlaylistIcon size={13} />
                     </span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
+
+                    <span className="min-w-0 truncate">{playlist.name}</span>
+                  </span>
+
+                  <span
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition ${
+                      isSelected
+                        ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                        : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                    }`}
+                  >
+                    {isSelected ? (
+                      <CheckIcon size={12} />
+                    ) : (
+                      <PlusIcon size={12} />
+                    )}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </FilterPopover>
     </div>
   );
 }
