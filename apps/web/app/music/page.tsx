@@ -278,7 +278,7 @@ export default function MusicPage() {
   const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
 
   const { songs, loading: songsLoading, error: songsError } = useSongs();
-  const { currentSong, playSong, setQueue } = usePlayer();
+  const { setQueue } = usePlayer();
 
   const selectedVocalFilters = useMemo(() => {
     const filters = [...selectedVocals];
@@ -409,21 +409,22 @@ export default function MusicPage() {
     selectedPlaylistSongIds,
   ]);
 
-  const hasActiveFilters =
+  const hasActiveFilters = Boolean(
     search.trim() ||
-    selectedMoods.length > 0 ||
-    selectedGenres.length > 0 ||
-    selectedInstruments.length > 0 ||
-    selectedBuilds.length > 0 ||
-    selectedVocals.length > 0 ||
-    selectedDurations.length > 0 ||
-    selectedEditPoints.length > 0 ||
-    effectiveShowEditPointMarkers ||
-    instrumental ||
-    bpmValue ||
-    keyValue ||
-    selectedPlaylist ||
-    shuffleOrderIds;
+      selectedMoods.length > 0 ||
+      selectedGenres.length > 0 ||
+      selectedInstruments.length > 0 ||
+      selectedBuilds.length > 0 ||
+      selectedVocals.length > 0 ||
+      selectedDurations.length > 0 ||
+      selectedEditPoints.length > 0 ||
+      effectiveShowEditPointMarkers ||
+      instrumental ||
+      bpmValue ||
+      keyValue ||
+      selectedPlaylist ||
+      shuffleOrderIds,
+  );
 
   const searchPlaceholder = hasActiveFilters
     ? "Search filtered results"
@@ -777,7 +778,7 @@ export default function MusicPage() {
                 {songsError}
               </div>
             ) : showSongSkeleton ? (
-              <SkeletonSongList count={8} />
+              <SkeletonSongList />
             ) : displayedSongs.length === 0 ? (
               <div className="px-5 py-8 text-sm text-[var(--text-secondary)]">
                 No songs match those filters.
@@ -787,11 +788,9 @@ export default function MusicPage() {
                 <SongCard
                   key={song.id}
                   song={song}
-                  active={currentSong?.id === song.id}
                   isFirst={index === 0}
                   isLast={index === displayedSongs.length - 1}
                   showEditPointMarkers={effectiveShowEditPointMarkers}
-                  onPlay={() => playSong(song)}
                 />
               ))
             )}

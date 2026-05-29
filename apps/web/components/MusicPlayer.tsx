@@ -564,19 +564,19 @@ export default function MusicPlayer() {
     <>
       <div
         ref={playerRef}
-        className="fixed bottom-0 left-0 right-0 z-[45] grid h-[72px] items-center justify-between overflow-visible border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4"
+        className="filmwave-music-player grid h-[72px] items-center justify-between px-4"
         style={{ gridTemplateColumns, columnGap: `${mainGap}px` }}
       >
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="filmwave-player-song">
           {currentSong.coverArt ? (
-            <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-none">
+            <div className="filmwave-player-cover">
               <Image src={currentSong.coverArt} alt={currentSong.title} fill sizes="40px" className="object-cover" />
             </div>
           ) : (
-            <div className="h-10 w-10 flex-shrink-0 rounded-none bg-[var(--bg-hover)]" />
+            <div className="filmwave-player-cover" />
           )}
-          <div className="min-w-0">
-            <div title={currentSong.title} className="truncate text-sm font-medium text-[var(--text-primary)]">
+          <div className="filmwave-player-song-copy">
+            <div title={currentSong.title} className="filmwave-player-title">
               {currentSong.title}
             </div>
             <div
@@ -598,7 +598,7 @@ export default function MusicPlayer() {
           </div>
         </div>
 
-        <div className="flex flex-shrink-0 items-center justify-center gap-[clamp(12px,2vw,24px)]">
+        <div className="filmwave-player-controls">
           <button
             type="button"
             onClick={() => navigateTrack("prev")}
@@ -727,7 +727,7 @@ export default function MusicPlayer() {
 
         {showRightMeta && (
           <div
-            className="flex flex-shrink-0 items-center text-xs text-[var(--text-secondary)]"
+            className="filmwave-player-meta"
             style={{ gap: `${metaGap}px` }}
           >
             {showKey && <span className="whitespace-nowrap">{currentSong.key || "—"}</span>}
@@ -736,7 +736,7 @@ export default function MusicPlayer() {
         )}
 
         <div
-          className="flex flex-shrink-0 items-center justify-end gap-0.5"
+          className="filmwave-player-actions"
           style={{ marginLeft: `${metaToActionsGap - mainGap}px` }}
         >
           <IconButton
