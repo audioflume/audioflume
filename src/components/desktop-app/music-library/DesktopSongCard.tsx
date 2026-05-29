@@ -1,13 +1,17 @@
+import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useMemo, useRef, useState } from "react";
-import DownloadIconSmall from "../../icons/DownloadIconSmall";
+import CheckIcon from "../../icons/CheckIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
+import SyncIcon from "../../icons/SyncIcon";
 import type { DesktopMusicSong } from "./musicLibraryTypes";
 
 const WAVEFORM_BAR_WIDTH = 2;
 const WAVEFORM_BAR_GAP = 1;
 const WAVEFORM_MIN_VISIBLE_BARS = 8;
 const WAVEFORM_MAX_VISIBLE_BARS = 220;
+
+type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
 function getInterpolatedWaveformHeight(waveform: number[], index: number, total: number) {
   if (waveform.length === 1 || total <= 1) return waveform[0] ?? 12;
@@ -45,21 +49,28 @@ export default function DesktopSongCard({
   favorite,
   markersVisible,
   isPlaying,
+  syncStatus = "idle",
+  syncedPath,
   onFavoriteToggle,
   onPlay,
+  onSync,
 }: {
   song: DesktopMusicSong;
   favorite: boolean;
   markersVisible: boolean;
   isPlaying: boolean;
+  syncStatus?: SongSyncStatus;
+  syncedPath?: string | null;
   onFavoriteToggle: () => void;
   onPlay: () => void;
+  onSync: () => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
   const [waveformWidth, setWaveformWidth] = useState(0);
   const actionsRef = useRef<HTMLDivElement | null>(null);
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
+  const isSynced = syncStatus === "synced" && Boolean(syncedPath);
   const visibleWaveform = useMemo(
     () => getVisibleWaveformBars(song.waveform, waveformWidth),
     [song.waveform, waveformWidth],
@@ -91,8 +102,13 @@ export default function DesktopSongCard({
     const element = waveformRef.current;
     if (!element) return;
 
+    let frame = 0;
+
     function updateWidth() {
-      setWaveformWidth(element.clientWidth);
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        setWaveformWidth(element.clientWidth);
+      });
     }
 
     updateWidth();
@@ -100,8 +116,24 @@ export default function DesktopSongCard({
     const resizeObserver = new ResizeObserver(updateWidth);
     resizeObserver.observe(element);
 
-    return () => resizeObserver.disconnect();
+    return () => {
+      cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+    };
   }, []);
+
+  async function startSyncedSongDrag(event: React.DragEvent<HTMLButtonElement>) {
+    if (!isSynced || !syncedPath) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+      await invoke("start_native_file_drag", { path: syncedPath });
+    } catch (error) {
+      console.warn("Could not start native song drag", error);
+    }
+  }
 
   return (
     <article className={`desktop-song-card${isPlaying ? " is-playing" : ""}`}>
@@ -190,14 +222,25 @@ export default function DesktopSongCard({
                 Share Song
               </button>
               <button type="button" role="menuitem" disabled>
-                Download Song
+                Sync Song
               </button>
             </div>
           )}
         </div>
 
-        <button type="button" aria-label="Download song">
-          <DownloadIconSmall size={12} />
+        <button
+          type="button"
+          aria-label={isSynced ? "Drag synced song file" : "Sync song"}
+          className={`desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`}
+          draggable={isSynced}
+          disabled={syncStatus === "syncing"}
+          onClick={(event) => {
+            event.stopPropagation();
+            if (!isSynced) onSync();
+          }}
+          onDragStart={startSyncedSongDrag}
+        >
+          {isSynced ? <CheckIcon size={12} strokeWidth={3} /> : <SyncIcon size={14} />}
         </button>
       </div>
     </article>
