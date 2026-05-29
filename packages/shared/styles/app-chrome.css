@@ -166,19 +166,36 @@ aside[data-sidebar] [class*="group/project-row"]:hover span:first-child {
 .desktop-music-filter-row,
 .sticky.top-\[56px\].z-\[90\] > div:nth-child(2) {
   height: var(--filmwave-filter-row-height);
-  align-items: stretch;
+  min-height: var(--filmwave-filter-row-height);
+  max-height: var(--filmwave-filter-row-height);
+  align-items: center;
   gap: 0;
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: hidden;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   scrollbar-width: none;
+  overscroll-behavior-x: contain;
 }
 
 .filmwave-filter-row::-webkit-scrollbar,
 .desktop-music-filter-row::-webkit-scrollbar,
 .sticky.top-\[56px\].z-\[90\] > div:nth-child(2)::-webkit-scrollbar {
   display: none;
+}
+
+.filmwave-filter-row > *,
+.desktop-music-filter-row > *,
+.sticky.top-\[56px\].z-\[90\] > div:nth-child(2) > * {
+  flex: 0 0 auto;
+}
+
+.filmwave-filter-row > button:last-child,
+.desktop-music-filter-row > button:last-child,
+.sticky.top-\[56px\].z-\[90\] > div:nth-child(2) > button:last-child {
+  align-self: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .filmwave-filter-trigger,
