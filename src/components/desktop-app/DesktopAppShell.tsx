@@ -209,7 +209,7 @@ export default function DesktopAppShell({
           <section className="desktop-sidebar-section">
             <h2 className="desktop-sidebar-heading has-collapsed-icon">
               <span className="desktop-sidebar-heading-icon" aria-hidden="true">
-                <LibraryIcon />
+                <LibraryIcon size={16} />
               </span>
               <span className="desktop-sidebar-heading-label">Library</span>
             </h2>
