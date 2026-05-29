@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import FilterPopover from "@/components/FilterPopover";
 import {
   filterClearButtonClass,
   filterDropdownHeaderClass,
@@ -36,6 +37,7 @@ export default function BPMFilter({ value, onChange }: BPMFilterProps) {
   const [exact, setExact] = useState(value?.exact || MIN);
 
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const rangeRef = useRef<HTMLDivElement>(null);
 
   const modeRef = useRef<Mode>(mode);
@@ -230,13 +232,12 @@ export default function BPMFilter({ value, onChange }: BPMFilterProps) {
   return (
     <div ref={ref} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((value) => !value)}
         className={`${filterTriggerBaseClass} ${
-          open || hasActive
-            ? filterTriggerActiveClass
-            : filterTriggerInactiveClass
-        }`}
+          hasActive ? filterTriggerActiveClass : filterTriggerInactiveClass
+        } ${open ? "is-open" : ""}`}
       >
         <span>BPM</span>
 
@@ -247,210 +248,213 @@ export default function BPMFilter({ value, onChange }: BPMFilterProps) {
         )}
       </button>
 
-      {open && (
-        <div className="absolute left-0 top-full z-50 mt-2 w-[300px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]">
-          <div className={filterDropdownHeaderClass}>
-            <div className={filterDropdownTitleClass}>BPM</div>
+      <FilterPopover
+        open={open}
+        triggerRef={triggerRef}
+        width={300}
+        className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]"
+      >
+        <div className={filterDropdownHeaderClass}>
+          <div className={filterDropdownTitleClass}>BPM</div>
 
-            {hasActive && (
-              <button
-                type="button"
-                onClick={clear}
-                className={filterClearButtonClass}
-              >
-                Clear
-              </button>
-            )}
+          {hasActive && (
+            <button
+              type="button"
+              onClick={clear}
+              className={filterClearButtonClass}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="p-3">
+          <div className={`${filterSegmentWrapClass} grid-cols-2 gap-1.5`}>
+            <button
+              type="button"
+              onClick={setRangeMode}
+              className={`${filterSegmentButtonClass} ${
+                mode === "range"
+                  ? filterSegmentButtonActiveClass
+                  : filterSegmentButtonInactiveClass
+              }`}
+            >
+              Range
+            </button>
+
+            <button
+              type="button"
+              onClick={setExactMode}
+              className={`${filterSegmentButtonClass} ${
+                mode === "exact"
+                  ? filterSegmentButtonActiveClass
+                  : filterSegmentButtonInactiveClass
+              }`}
+            >
+              Exact
+            </button>
           </div>
 
-          <div className="p-3">
-            <div className={`${filterSegmentWrapClass} grid-cols-2 gap-1.5`}>
-              <button
-                type="button"
-                onClick={setRangeMode}
-                className={`${filterSegmentButtonClass} ${
-                  mode === "range"
-                    ? filterSegmentButtonActiveClass
-                    : filterSegmentButtonInactiveClass
-                }`}
-              >
-                Range
-              </button>
-
-              <button
-                type="button"
-                onClick={setExactMode}
-                className={`${filterSegmentButtonClass} ${
-                  mode === "exact"
-                    ? filterSegmentButtonActiveClass
-                    : filterSegmentButtonInactiveClass
-                }`}
-              >
-                Exact
-              </button>
-            </div>
-
-            <div className="mt-3 grid gap-2">
-              {mode === "range" ? (
-                <div className="grid grid-cols-2 gap-2">
-                  <label>
-                    <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                      Low
-                    </div>
-
-                    <input
-                      type="number"
-                      min={MIN}
-                      max={MAX}
-                      value={low}
-                      onChange={(e) => setLow(Number(e.target.value))}
-                      onBlur={() => applyRangeLow(low)}
-                      className={`${filterInputClass} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
-                    />
-                  </label>
-
-                  <label>
-                    <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                      High
-                    </div>
-
-                    <input
-                      type="number"
-                      min={MIN}
-                      max={MAX}
-                      value={high}
-                      onChange={(e) => setHigh(Number(e.target.value))}
-                      onBlur={() => applyRangeHigh(high)}
-                      className={`${filterInputClass} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
-                    />
-                  </label>
-                </div>
-              ) : (
+          <div className="mt-3 grid gap-2">
+            {mode === "range" ? (
+              <div className="grid grid-cols-2 gap-2">
                 <label>
                   <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                    Exact BPM
+                    Low
                   </div>
 
                   <input
                     type="number"
                     min={MIN}
                     max={MAX}
-                    value={exact}
-                    onChange={(e) => setExact(Number(e.target.value))}
-                    onBlur={() => applyExact(exact)}
+                    value={low}
+                    onChange={(e) => setLow(Number(e.target.value))}
+                    onBlur={() => applyRangeLow(low)}
                     className={`${filterInputClass} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
                   />
                 </label>
+
+                <label>
+                  <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                    High
+                  </div>
+
+                  <input
+                    type="number"
+                    min={MIN}
+                    max={MAX}
+                    value={high}
+                    onChange={(e) => setHigh(Number(e.target.value))}
+                    onBlur={() => applyRangeHigh(high)}
+                    className={`${filterInputClass} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+                  />
+                </label>
+              </div>
+            ) : (
+              <label>
+                <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                  Exact BPM
+                </div>
+
+                <input
+                  type="number"
+                  min={MIN}
+                  max={MAX}
+                  value={exact}
+                  onChange={(e) => setExact(Number(e.target.value))}
+                  onBlur={() => applyExact(exact)}
+                  className={`${filterInputClass} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+                />
+              </label>
+            )}
+          </div>
+
+          <div className="mt-5 px-1">
+            <div
+              ref={rangeRef}
+              className="relative h-[3px] cursor-pointer rounded-full bg-[var(--bg-tertiary)]"
+              onClick={(e) => {
+                if (modeRef.current === "exact") {
+                  const nextExact = getValueFromMouse(e);
+
+                  setExact(nextExact);
+                  exactRef.current = nextExact;
+                  emitChange(
+                    "exact",
+                    lowRef.current,
+                    highRef.current,
+                    nextExact,
+                  );
+                }
+              }}
+            >
+              <div
+                className="absolute top-0 h-full rounded-full bg-[var(--text-primary)]"
+                style={{
+                  left: `${activeStart}%`,
+                  width: `${Math.max(0, activeEnd - activeStart)}%`,
+                }}
+              />
+
+              {mode === "range" ? (
+                <>
+                  {(["low", "high"] as const).map((handle) => (
+                    <div
+                      key={handle}
+                      className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-[var(--bg-secondary)] bg-[var(--text-primary)] shadow-sm active:cursor-grabbing"
+                      style={{
+                        left: `${toPercent(handle === "low" ? low : high)}%`,
+                      }}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        startDrag(handle);
+                      }}
+                    />
+                  ))}
+                </>
+              ) : (
+                <div
+                  className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-[var(--bg-secondary)] bg-[var(--text-primary)] shadow-sm active:cursor-grabbing"
+                  style={{
+                    left: `${toPercent(exact)}%`,
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startDrag("exact");
+                  }}
+                />
               )}
             </div>
 
-            <div className="mt-5 px-1">
-              <div
-                ref={rangeRef}
-                className="relative h-[3px] cursor-pointer rounded-full bg-[var(--bg-tertiary)]"
-                onClick={(e) => {
-                  if (modeRef.current === "exact") {
-                    const nextExact = getValueFromMouse(e);
+            <div className="mt-3 flex justify-between text-[10px] font-medium text-[var(--text-muted)]">
+              <span>{MIN}</span>
+              <span>{MAX}</span>
+            </div>
+          </div>
 
-                    setExact(nextExact);
-                    exactRef.current = nextExact;
+          <div className="mt-2 grid grid-cols-4 gap-1.5">
+            {PRESETS.map((preset) => {
+              const isSelected =
+                value?.mode === "exact" && value.exact === preset;
+
+              return (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => {
+                    if (isSelected) {
+                      setExact(MIN);
+                      exactRef.current = MIN;
+                      onChange(null);
+                      return;
+                    }
+
+                    setMode("exact");
+                    modeRef.current = "exact";
+                    setExact(preset);
+                    exactRef.current = preset;
                     emitChange(
                       "exact",
                       lowRef.current,
                       highRef.current,
-                      nextExact,
+                      preset,
                     );
-                  }
-                }}
-              >
-                <div
-                  className="absolute top-0 h-full rounded-full bg-[var(--text-primary)]"
-                  style={{
-                    left: `${activeStart}%`,
-                    width: `${Math.max(0, activeEnd - activeStart)}%`,
                   }}
-                />
-
-                {mode === "range" ? (
-                  <>
-                    {(["low", "high"] as const).map((handle) => (
-                      <div
-                        key={handle}
-                        className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-[var(--bg-secondary)] bg-[var(--text-primary)] shadow-sm active:cursor-grabbing"
-                        style={{
-                          left: `${toPercent(handle === "low" ? low : high)}%`,
-                        }}
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          startDrag(handle);
-                        }}
-                      />
-                    ))}
-                  </>
-                ) : (
-                  <div
-                    className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-[var(--bg-secondary)] bg-[var(--text-primary)] shadow-sm active:cursor-grabbing"
-                    style={{
-                      left: `${toPercent(exact)}%`,
-                    }}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      startDrag("exact");
-                    }}
-                  />
-                )}
-              </div>
-
-              <div className="mt-3 flex justify-between text-[10px] font-medium text-[var(--text-muted)]">
-                <span>{MIN}</span>
-                <span>{MAX}</span>
-              </div>
-            </div>
-
-            <div className="mt-2 grid grid-cols-4 gap-1.5">
-              {PRESETS.map((preset) => {
-                const isSelected =
-                  value?.mode === "exact" && value.exact === preset;
-
-                return (
-                  <button
-                    key={preset}
-                    type="button"
-                    onClick={() => {
-                      if (isSelected) {
-                        setExact(MIN);
-                        exactRef.current = MIN;
-                        onChange(null);
-                        return;
-                      }
-
-                      setMode("exact");
-                      modeRef.current = "exact";
-                      setExact(preset);
-                      exactRef.current = preset;
-                      emitChange(
-                        "exact",
-                        lowRef.current,
-                        highRef.current,
-                        preset,
-                      );
-                    }}
-                    className={`${filterSegmentButtonClass} ${
-                      isSelected
-                        ? filterSegmentButtonActiveClass
-                        : `bg-[var(--bg-primary)] ${filterSegmentButtonInactiveClass}`
-                    }`}
-                  >
-                    {preset}
-                  </button>
-                );
-              })}
-            </div>
+                  className={`${filterSegmentButtonClass} ${
+                    isSelected
+                      ? filterSegmentButtonActiveClass
+                      : `bg-[var(--bg-primary)] ${filterSegmentButtonInactiveClass}`
+                  }`}
+                >
+                  {preset}
+                </button>
+              );
+            })}
           </div>
         </div>
-      )}
+      </FilterPopover>
     </div>
   );
 }
