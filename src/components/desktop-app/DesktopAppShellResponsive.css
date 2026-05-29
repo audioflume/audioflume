@@ -43,13 +43,31 @@
   transition: opacity 120ms ease, transform 120ms ease;
 }
 
+.desktop-sidebar-heading.has-collapsed-icon {
+  position: relative;
+}
+
+.desktop-sidebar-heading-icon {
+  display: none;
+  width: 100%;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  opacity: 0.42;
+}
+
+.desktop-sidebar-heading-label {
+  display: inline-flex;
+}
+
 .desktop-sidebar-projects-head {
   transition: none;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
@@ -69,6 +87,24 @@
   display: flex;
   transform: translateX(-8px);
   opacity: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon {
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  transform: none;
+  opacity: 1;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon .desktop-sidebar-heading-icon {
+  display: flex;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon .desktop-sidebar-heading-label {
+  display: none;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
@@ -99,7 +135,7 @@
 
   .desktop-sidebar-projects-head {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .desktop-sidebar-heading,
@@ -108,6 +144,24 @@
     display: flex;
     transform: translateX(-8px);
     opacity: 0;
+  }
+
+  .desktop-sidebar-heading.has-collapsed-icon {
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+    transform: none;
+    opacity: 1;
+  }
+
+  .desktop-sidebar-heading.has-collapsed-icon .desktop-sidebar-heading-icon {
+    display: flex;
+  }
+
+  .desktop-sidebar-heading.has-collapsed-icon .desktop-sidebar-heading-label {
+    display: none;
   }
 
   .desktop-sidebar-empty-projects {
