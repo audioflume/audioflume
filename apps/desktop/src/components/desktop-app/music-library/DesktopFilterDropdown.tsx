@@ -16,6 +16,15 @@ type DropdownPosition = {
   width: number;
 };
 
+function getDropdownLeftLimit() {
+  const sidebar = document.querySelector<HTMLElement>(".desktop-app-sidebar");
+  const rect = sidebar?.getBoundingClientRect();
+
+  if (!rect || rect.width <= 0) return DROPDOWN_EDGE_PADDING;
+
+  return Math.max(DROPDOWN_EDGE_PADDING, rect.right + DROPDOWN_EDGE_PADDING);
+}
+
 export default function DesktopFilterDropdown({
   filterKey,
   label,
@@ -48,11 +57,13 @@ export default function DesktopFilterDropdown({
       if (!trigger) return;
 
       const rect = trigger.getBoundingClientRect();
-      const maxWidth = Math.max(180, window.innerWidth - DROPDOWN_EDGE_PADDING * 2);
+      const leftLimit = getDropdownLeftLimit();
+      const rightLimit = window.innerWidth - DROPDOWN_EDGE_PADDING;
+      const maxWidth = Math.max(180, rightLimit - leftLimit);
       const width = Math.min(dropdownWidth, maxWidth);
       const preferredLeft = rect.left;
-      const maxLeft = window.innerWidth - width - DROPDOWN_EDGE_PADDING;
-      const left = Math.max(DROPDOWN_EDGE_PADDING, Math.min(preferredLeft, maxLeft));
+      const maxLeft = rightLimit - width;
+      const left = Math.max(leftLimit, Math.min(preferredLeft, maxLeft));
       const top = rect.bottom + DROPDOWN_TOP_OFFSET;
 
       setDropdownPosition({ left, top, width });
