@@ -1,19 +1,19 @@
 // components/filterUiClasses.ts
 
 export const filterTriggerBaseClass =
-  "flex h-12 cursor-pointer items-center gap-1.5 border-b-2 border-transparent px-2.5 text-[13px] font-medium transition-colors after:translate-y-[-1px] after:ml-0.5 after:h-1.5 after:w-1.5 after:rotate-45 after:border-b after:border-r after:border-current after:content-['']";
+  "filmwave-filter-trigger flex h-12 cursor-pointer items-center gap-1.5 border-b-2 border-transparent px-2.5 text-[13px] font-medium transition-colors after:translate-y-[-1px] after:ml-0.5 after:h-1.5 after:w-1.5 after:rotate-45 after:border-b after:border-r after:border-current after:content-['']";
 
 export const filterTriggerActiveClass =
-  "border-[var(--text-primary)] text-[var(--text-primary)]";
+  "is-active border-[var(--text-primary)] text-[var(--text-primary)]";
 
 export const filterTriggerInactiveClass =
   "text-[var(--text-secondary)] hover:text-[var(--text-primary)]";
 
 export const filterDropdownPanelClass =
-  "w-[280px] rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]";
+  "filmwave-filter-menu w-[280px] rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]";
 
 export const filterDropdownWidePanelClass =
-  "w-[320px] rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]";
+  "filmwave-filter-menu w-[320px] rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]";
 
 export const filterDropdownHeaderClass = "hidden";
 
