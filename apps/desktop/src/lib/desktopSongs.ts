@@ -1,58 +1,7 @@
+import type { FilmwaveDesktopSong, FilmwaveSongApiItem } from "@filmwave/shared";
 import { normalizeFilmwaveApiBaseUrl } from "./mockFilmwaveApi";
 
-export type DesktopSong = {
-  id: string;
-  title: string;
-  artist: string;
-  genre: string;
-  mood: string;
-  bpm: number;
-  key: string;
-  duration: string;
-  durationSeconds: number;
-  build: string;
-  vocals: string;
-  instruments: string[];
-  playlists: string[];
-  cuePoints: number;
-  markers: number;
-  waveform: number[];
-  audioUrl: string;
-  playbackUrl: string;
-  hlsUrl: string;
-  coverArt: string | null;
-  stems: {
-    name: string;
-    url: string;
-  }[];
-  editPoints: string;
-  isFavorite?: boolean;
-};
-
-type FilmwaveSongApiItem = {
-  id: string | number;
-  title?: string | null;
-  artist?: string | null;
-  audioUrl?: string | null;
-  playbackUrl?: string | null;
-  hlsUrl?: string | null;
-  coverArt?: string | null;
-  stems?: Array<{
-    name?: string | null;
-    url?: string | null;
-  }>;
-  waveformPeaks?: string | number[] | null;
-  duration?: number | string | null;
-  key?: string | null;
-  bpm?: number | string | null;
-  genres?: string[] | null;
-  moods?: string[] | null;
-  instruments?: string[] | null;
-  builds?: string[] | null;
-  vocals?: string[] | null;
-  instrumental?: boolean | null;
-  editPoints?: string | null;
-};
+export type DesktopSong = FilmwaveDesktopSong;
 
 type DesktopSongsApiResponse = {
   songs?: FilmwaveSongApiItem[];
