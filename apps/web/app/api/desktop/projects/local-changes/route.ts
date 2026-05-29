@@ -381,17 +381,18 @@ export async function POST(req: Request) {
         nextParentFolderId = null;
       }
 
-      const { error, count } = await supabaseServer
+      const { data, error } = await supabaseServer
         .from("project_folders")
         .update({ name: nextName, parent_folder_id: nextParentFolderId })
         .eq("project_id", move.projectId)
         .eq("id", move.folderId)
-        .select("id", { count: "exact" });
+        .select("id");
 
       if (error) throw error;
 
-      movedFolderCount += count ?? 0;
-      if ((count ?? 0) > 0) changedProjectIds.add(move.projectId);
+      const count = data?.length ?? 0;
+      movedFolderCount += count;
+      if (count > 0) changedProjectIds.add(move.projectId);
     }
 
     for (const create of fileCreates) {
@@ -406,7 +407,7 @@ export async function POST(req: Request) {
       const filename = getNameFromPath(nextPath);
       const fallbackAssetId = `local:${projectId}:${nextPath}`;
 
-      const { error, count } = await supabaseServer
+      const { data, error } = await supabaseServer
         .from("project_assets")
         .insert({
           project_id: projectId,
@@ -416,12 +417,13 @@ export async function POST(req: Request) {
           position: nextPosition,
           metadata: { filename, source: "desktop-local-file", sizeBytes: Number(create.sizeBytes || 0) },
         })
-        .select("id", { count: "exact" });
+        .select("id");
 
       if (error) throw error;
 
-      createdFileCount += count ?? 0;
-      if ((count ?? 0) > 0) changedProjectIds.add(projectId);
+      const count = data?.length ?? 0;
+      createdFileCount += count;
+      if (count > 0) changedProjectIds.add(projectId);
     }
 
     for (const move of fileMoves) {
@@ -434,17 +436,18 @@ export async function POST(req: Request) {
       const parentPath = getParentPathFromFilePath(nextPath);
       const folderId = parentPath ? await ensureFolderPath({ path: parentPath, projectId, userId }) : null;
 
-      const { error, count } = await supabaseServer
+      const { data, error } = await supabaseServer
         .from("project_assets")
         .update({ folder_id: folderId })
         .eq("project_id", projectId)
         .eq("id", assetId)
-        .select("id", { count: "exact" });
+        .select("id");
 
       if (error) throw error;
 
-      movedFileCount += count ?? 0;
-      if ((count ?? 0) > 0) changedProjectIds.add(projectId);
+      const count = data?.length ?? 0;
+      movedFileCount += count;
+      if (count > 0) changedProjectIds.add(projectId);
     }
 
     for (const removal of fileRemovals) {

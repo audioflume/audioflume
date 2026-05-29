@@ -309,7 +309,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const removals = Array.isArray(body.removals)
-      ? body.removals.map(normalizeRemoval).filter((item): item is NormalizedRemoval => Boolean(item))
+      ? (body.removals as LocalRemovalRequestItem[]).map(normalizeRemoval).filter((item): item is NormalizedRemoval => Boolean(item))
       : [];
 
     if (removals.length === 0) {

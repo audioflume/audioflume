@@ -116,6 +116,8 @@ function normalizeSongRow(row: SupabaseSongRow): Song {
     title: String(row.title || ""),
     artist: String(row.artist || ""),
     audioUrl: String(row.audio_url || ""),
+    playbackUrl: String(row.audio_url || ""),
+    hlsUrl: "",
     coverArt: row.cover_url ? String(row.cover_url) : null,
     stems: parseStems(row.stems),
     waveformPeaks: String(row.waveform_peaks || "[]"),

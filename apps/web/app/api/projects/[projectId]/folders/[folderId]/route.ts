@@ -9,6 +9,11 @@ type RouteContext = {
     | { projectId: string; folderId: string };
 };
 
+type FolderParentRow = {
+  id: number;
+  parent_folder_id: number | null;
+};
+
 async function getParams(context: RouteContext) {
   return context.params;
 }
@@ -50,13 +55,16 @@ async function wouldCreateCycle({
 
     visited.add(currentParentId);
 
-    const { data, error } = await supabaseServer
+    const folderLookup = await supabaseServer
       .from("project_folders")
       .select("id,parent_folder_id")
       .eq("id", currentParentId)
       .eq("project_id", projectId)
       .eq("clerk_user_id", userId)
       .single();
+
+    const data = folderLookup.data as FolderParentRow | null;
+    const error = folderLookup.error;
 
     if (error || !data) return true;
 
