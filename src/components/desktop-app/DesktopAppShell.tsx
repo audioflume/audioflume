@@ -165,24 +165,25 @@ export default function DesktopAppShell({
     { label: "Sound FX", icon: <WaveformIcon /> },
   ];
 
-  const projectLinks: SidebarNavItem[] = [
-    {
-      label: "New Project",
-      icon: <PlusIcon />,
-      onClick: () => {
-        // Create-project flow will be wired up when the desktop project create API is added.
-      },
+  const projectLinks: SidebarNavItem[] = projects.map((project) => ({
+    label: project.name,
+    icon: <FolderIcon />,
+    active: activeView === "projects" && activeProjectId === project.id,
+    onClick: () => {
+      onActiveProjectIdChange(project.id);
+      onActiveViewChange("projects");
     },
-    ...projects.map((project) => ({
-      label: project.name,
-      icon: <FolderIcon />,
-      active: activeView === "projects" && activeProjectId === project.id,
-      onClick: () => {
-        onActiveProjectIdChange(project.id);
-        onActiveViewChange("projects");
-      },
-    })),
-  ];
+  }));
+
+  function handleCreateProject() {
+    // Create-project flow will be wired up when the desktop project create API is added.
+  }
+
+  function showNewProjectTooltip(element: HTMLElement) {
+    if (!effectivelyCollapsed) return;
+    const rect = element.getBoundingClientRect();
+    setTooltip({ label: "New Project", top: rect.top + rect.height / 2 });
+  }
 
   return (
     <div className={`desktop-app-shell${effectivelyCollapsed ? " is-sidebar-collapsed" : ""}`}>
@@ -205,7 +206,12 @@ export default function DesktopAppShell({
 
         <div className="desktop-app-sidebar-inner">
           <section className="desktop-sidebar-section">
-            <h2 className="desktop-sidebar-heading">Library</h2>
+            <h2 className="desktop-sidebar-heading has-collapsed-icon">
+              <span className="desktop-sidebar-heading-icon" aria-hidden="true">
+                <PlaylistIcon size={13} />
+              </span>
+              <span className="desktop-sidebar-heading-label">Library</span>
+            </h2>
             <nav className="desktop-sidebar-nav" aria-label="Library navigation">
               {libraryLinks.map((item) => (
                 <SidebarNavButton
@@ -223,6 +229,21 @@ export default function DesktopAppShell({
           <section className="desktop-sidebar-section is-projects-section">
             <div className="desktop-sidebar-projects-head">
               <h2 className="desktop-sidebar-heading">Projects</h2>
+              <button
+                type="button"
+                className="desktop-sidebar-add-button"
+                aria-label="New Project"
+                onMouseEnter={(event) => showNewProjectTooltip(event.currentTarget)}
+                onMouseLeave={() => setTooltip(null)}
+                onFocus={(event) => showNewProjectTooltip(event.currentTarget)}
+                onBlur={() => setTooltip(null)}
+                onClick={() => {
+                  setTooltip(null);
+                  handleCreateProject();
+                }}
+              >
+                <PlusIcon />
+              </button>
             </div>
             <nav className="desktop-sidebar-nav" aria-label="Projects navigation">
               {projectLinks.map((item) => (
