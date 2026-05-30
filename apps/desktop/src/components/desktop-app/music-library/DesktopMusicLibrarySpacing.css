@@ -1,90 +1,5 @@
-.desktop-music-page .desktop-music-quick-filters {
+.desktop-music-page .filmwave-search-filter-quick-row {
   padding-bottom: 12px;
-}
-
-.desktop-music-page .desktop-music-filter-row {
-  gap: 4px;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  overscroll-behavior-x: contain;
-  overscroll-behavior-y: none;
-  touch-action: pan-x;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: auto;
-}
-
-.desktop-music-page .desktop-music-filter-row::-webkit-scrollbar {
-  display: none;
-}
-
-.desktop-music-page .desktop-filter-trigger {
-  height: 48px;
-  gap: 6px;
-  border-bottom: 2px solid transparent;
-  padding: 0 10px;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.desktop-music-page .desktop-filter-trigger::after {
-  display: block;
-  width: 5px;
-  height: 5px;
-  margin-left: 2px;
-  flex: 0 0 5px;
-  transform: translateY(-1px) rotate(45deg);
-  border-right: 1px solid currentColor;
-  border-bottom: 1px solid currentColor;
-  opacity: 0.92;
-  content: "";
-}
-
-.desktop-music-page .desktop-filter-trigger:hover,
-.desktop-music-page .desktop-filter-trigger.is-open {
-  color: var(--text-primary);
-}
-
-.desktop-music-page .desktop-filter-trigger.is-active {
-  border-bottom-color: var(--text-primary);
-  color: var(--text-primary);
-}
-
-.desktop-music-page .desktop-filter-trigger.is-open:not(.is-active) {
-  border-bottom-color: transparent;
-}
-
-.desktop-music-page .desktop-filter-trigger-markers::after {
-  content: none;
-}
-
-.desktop-music-page .desktop-filter-count {
-  height: 20px;
-  min-width: 20px;
-  padding: 0 6px;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1;
-}
-
-.desktop-music-page .desktop-shuffle-button {
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  align-self: center;
-  margin-left: auto;
-  border-color: transparent;
-  background: transparent;
-  color: var(--icon-color);
-}
-
-.desktop-music-page .desktop-shuffle-button:hover,
-.desktop-music-page .desktop-shuffle-button.is-active {
-  background: var(--icon-button-hover);
-  color: var(--text-primary);
 }
 
 .desktop-music-page .desktop-song-actions button.is-active {
@@ -160,12 +75,12 @@
   background: #ffffff !important;
 }
 
-html[data-theme="light"] .desktop-music-page .desktop-music-sticky-bar,
-html[data-theme="light"] .desktop-music-page .desktop-music-quick-filters {
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-sticky,
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-quick-row {
   background: var(--bg-primary);
 }
 
-html[data-theme="light"] .desktop-music-page .desktop-music-filter-row,
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-row,
 html[data-theme="light"] .desktop-music-page .desktop-music-list,
 html[data-theme="light"] .desktop-music-page .desktop-song-card {
   border-color: var(--border-subtle);
@@ -176,7 +91,7 @@ html[data-theme="light"] .desktop-music-page .desktop-song-card:hover {
 }
 
 html[data-theme="light"] .desktop-music-page .desktop-song-cover,
-html[data-theme="light"] .desktop-music-page .desktop-quick-filter {
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-quick-button {
   background: var(--bg-elevated);
 }
 
@@ -206,8 +121,8 @@ html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced
   background: var(--accent) !important;
 }
 
-html[data-theme="light"] .desktop-music-page .desktop-quick-filter:hover,
-html[data-theme="light"] .desktop-music-page .desktop-quick-filter.is-active,
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-quick-button:hover,
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-quick-button.is-active,
 html[data-theme="light"] .desktop-music-page .desktop-song-actions button:hover,
 html[data-theme="light"] .desktop-music-page .desktop-shuffle-button:hover,
 html[data-theme="light"] .desktop-music-page .desktop-shuffle-button.is-active {
@@ -218,41 +133,4 @@ html[data-theme="light"] .desktop-music-page .desktop-shuffle-button.is-active {
 html[data-theme="light"] .desktop-music-page .desktop-song-play-overlay {
   background: var(--media-overlay-strong);
   color: #111111 !important;
-}
-
-html[data-theme="light"]
-  .desktop-music-page
-  .desktop-song-play-overlay::before {
-  background: #ffffff !important;
-}
-
-html[data-theme="light"] .desktop-music-page .desktop-filter-menu,
-html[data-theme="light"] .desktop-music-page .desktop-song-action-menu {
-  background: var(--bg-primary);
-  border-color: var(--border);
-  box-shadow: var(--shadow-ui);
-}
-
-html[data-theme="light"] .desktop-music-page .desktop-filter-option:hover,
-html[data-theme="light"] .desktop-music-page .desktop-filter-option.is-selected,
-html[data-theme="light"]
-  .desktop-music-page
-  .desktop-song-action-menu
-  button:hover:not(:disabled) {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
-}
-
-html[data-theme="light"] .desktop-music-page .desktop-filter-option-icon {
-  background: var(--bg-elevated);
-}
-
-html[data-theme="light"]
-  .desktop-music-page
-  .desktop-filter-option-icon.is-selected,
-html[data-theme="light"]
-  .desktop-music-page
-  .desktop-filter-option-action.is-selected {
-  background: var(--text-primary);
-  color: var(--bg-primary);
 }
