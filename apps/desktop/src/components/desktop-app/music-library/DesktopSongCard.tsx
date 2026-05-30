@@ -104,8 +104,13 @@ export default function DesktopSongCard({
   ) : null;
 
   return (
-    <article className={`desktop-song-card${isPlaying ? " is-playing" : ""}`}>
-      <button type="button" className="desktop-song-cover" aria-label="Play song" onClick={onPlay}>
+    <article className={`filmwave-song-card desktop-song-card${isPlaying ? " is-playing" : ""}`}>
+      <button
+        type="button"
+        className="filmwave-song-cover desktop-song-cover"
+        aria-label="Play song"
+        onClick={onPlay}
+      >
         {song.coverArt ? (
           <img src={song.coverArt} alt="" className="desktop-song-cover-image" draggable={false} />
         ) : (
@@ -113,18 +118,18 @@ export default function DesktopSongCard({
             {song.title.slice(0, 1).toUpperCase()}
           </span>
         )}
-        <span className="desktop-song-play-overlay" aria-hidden="true">
+        <span className="filmwave-song-play-overlay desktop-song-play-overlay" aria-hidden="true">
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </span>
       </button>
 
-      <button type="button" className="desktop-song-info" onClick={onPlay}>
-        <h3>{song.title}</h3>
-        <p>{song.artist}</p>
+      <button type="button" className="filmwave-song-info desktop-song-info" onClick={onPlay}>
+        <h3 className="filmwave-song-title desktop-song-title">{song.title}</h3>
+        <p className="filmwave-song-artist desktop-song-artist">{song.artist}</p>
       </button>
 
-      <button type="button" className="desktop-song-wave-wrap" onClick={onPlay}>
-        <div className="desktop-song-stems-slot">
+      <button type="button" className="filmwave-song-wave-wrap desktop-song-wave-wrap" onClick={onPlay}>
+        <div className="filmwave-song-stems-slot desktop-song-stems-slot">
           {song.markers > 0 && <span>+{song.markers}</span>}
         </div>
 
@@ -132,28 +137,28 @@ export default function DesktopSongCard({
           peaks={song.waveform}
           progress={isPlaying ? 0.001 : 0}
           overlay={markerOverlay}
-          className="desktop-song-wave filmwave-song-wave-canvas"
+          className="filmwave-song-wave desktop-song-wave filmwave-song-wave-canvas"
           canvasClassName="desktop-song-wave-canvas"
         />
 
-        <span className="desktop-song-duration">{song.duration}</span>
+        <span className="filmwave-song-duration desktop-song-duration">{song.duration}</span>
       </button>
 
-      <div className="desktop-song-genre-slot">
-        <span>{visibleGenres}</span>
+      <div className="filmwave-song-genre-slot desktop-song-genre-slot">
+        <span className="filmwave-song-genre desktop-song-genre">{visibleGenres}</span>
       </div>
 
-      <div className="desktop-song-key-bpm">
-        <span>{song.key || "—"}</span>
-        <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
+      <div className="filmwave-song-key-bpm desktop-song-key-bpm">
+        <span className="filmwave-song-key desktop-song-key">{song.key || "—"}</span>
+        <span className="filmwave-song-bpm desktop-song-bpm">{song.bpm ? `${song.bpm} BPM` : "—"}</span>
       </div>
 
-      <div className="desktop-song-actions" ref={actionsRef}>
+      <div className="filmwave-song-actions desktop-song-actions" ref={actionsRef}>
         <button
           type="button"
           onClick={onFavoriteToggle}
           aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
-          className={favorite ? "is-active" : ""}
+          className={`filmwave-song-action-button${favorite ? " is-active" : ""}`}
         >
           <HeartIcon size={14} filled={favorite} />
         </button>
@@ -163,7 +168,7 @@ export default function DesktopSongCard({
             type="button"
             aria-label="Song options"
             aria-expanded={actionsOpen}
-            className={actionsOpen ? "is-active" : ""}
+            className={`filmwave-song-action-button${actionsOpen ? " is-active" : ""}`}
             onClick={(event) => {
               event.stopPropagation();
               setActionsOpen((open) => !open);
@@ -196,7 +201,7 @@ export default function DesktopSongCard({
         <button
           type="button"
           aria-label={isSynced ? "Drag synced song file" : "Sync song"}
-          className={`desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`}
+          className={`filmwave-song-action-button desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`}
           disabled={syncStatus === "syncing"}
           onClick={(event) => {
             event.stopPropagation();
