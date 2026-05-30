@@ -6,7 +6,8 @@
   --filmwave-sidebar-row-radius: 6px;
   --filmwave-sidebar-section-gap: 20px;
   --filmwave-sidebar-x-padding: 20px;
-  --filmwave-sidebar-y-padding: 24px;
+  --filmwave-sidebar-y-padding-top: 24px;
+  --filmwave-sidebar-y-padding-bottom: 24px;
   --filmwave-sidebar-row-padding-x: 10px;
   --filmwave-sidebar-icon-size: 16px;
   --filmwave-sidebar-label-gap: 10px;
@@ -18,7 +19,9 @@
   bottom: 0;
   left: 0;
   z-index: 90;
+  display: flex;
   width: var(--filmwave-sidebar-expanded-width);
+  flex-direction: column;
   overflow: hidden;
   border-right: 1px solid var(--border);
   background: var(--bg-primary);
@@ -79,11 +82,11 @@
 
 .desktop-app-sidebar-inner {
   display: flex;
-  height: 100%;
+  flex: 1 1 auto;
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: var(--filmwave-sidebar-y-padding) var(--filmwave-sidebar-x-padding);
+  padding: var(--filmwave-sidebar-y-padding-top) var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom);
 }
 
 .desktop-sidebar-section {
@@ -100,26 +103,34 @@
   padding-bottom: 0;
 }
 
-.desktop-sidebar-heading,
-.desktop-sidebar-projects-head {
-  min-height: 24px;
-}
-
 .desktop-sidebar-heading {
+  position: relative;
   display: flex;
+  width: 100%;
   height: 16px;
+  min-height: 16px;
   margin: 0 0 8px;
   align-items: center;
-  padding: 0 var(--filmwave-sidebar-row-padding-x);
+  justify-content: center;
+  overflow: hidden;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.desktop-sidebar-heading-label {
+  position: absolute;
+  left: var(--filmwave-sidebar-row-padding-x);
+  display: inline-flex;
   color: var(--text-muted);
   font-size: 11px;
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-}
-
-.desktop-sidebar-heading.has-collapsed-icon {
-  position: relative;
+  transform: translateX(0);
+  opacity: 1;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
 }
 
 .desktop-sidebar-heading-icon {
@@ -138,27 +149,31 @@
     transform 150ms ease;
 }
 
-.desktop-sidebar-heading-label {
-  display: inline-flex;
-  transition:
-    opacity 150ms ease,
-    transform 150ms ease;
-}
-
 .desktop-sidebar-projects-head {
   display: flex;
   height: 24px;
+  min-height: 24px;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
+  border-radius: var(--filmwave-sidebar-row-radius);
   padding: 0 var(--filmwave-sidebar-row-padding-x);
+  transition: padding 200ms ease;
 }
 
 .desktop-sidebar-projects-head .desktop-sidebar-heading {
+  position: relative;
+  width: auto;
   height: auto;
   min-height: 0;
   margin: 0;
-  padding: 0;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+.desktop-sidebar-projects-head .desktop-sidebar-heading-label {
+  position: relative;
+  left: auto;
 }
 
 .desktop-sidebar-add-button {
@@ -212,6 +227,9 @@
   background: transparent;
   color: var(--text-secondary);
   padding: 0 var(--filmwave-sidebar-row-padding-x);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
   text-align: left;
   transition:
     background 150ms ease,
@@ -241,6 +259,7 @@
 }
 
 .desktop-sidebar-link-label {
+  width: auto;
   min-width: 0;
   overflow: hidden;
   margin-left: var(--filmwave-sidebar-label-gap);
@@ -250,6 +269,8 @@
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transform: translateX(0);
+  opacity: 1;
   transition:
     opacity 150ms ease,
     transform 150ms ease,
@@ -267,7 +288,7 @@
   pointer-events: none;
   position: fixed;
   z-index: 140;
-  left: calc(var(--filmwave-sidebar-collapsed-width) - 13px);
+  left: calc(var(--filmwave-sidebar-collapsed-width) - 11px);
   transform: translateY(-50%);
 }
 
@@ -291,25 +312,8 @@
   white-space: nowrap;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar-inner {
-  padding-right: var(--filmwave-sidebar-x-padding);
-  padding-left: var(--filmwave-sidebar-x-padding);
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
-  justify-content: flex-start;
-  padding: 0 var(--filmwave-sidebar-row-padding-x);
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon {
-  width: var(--filmwave-sidebar-icon-size);
-  flex: 0 0 var(--filmwave-sidebar-icon-size);
-  margin: 0;
-}
-
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
   width: 0;
-  margin-left: var(--filmwave-sidebar-label-gap);
   pointer-events: none;
   transform: translateX(4px);
   opacity: 0;
@@ -319,11 +323,6 @@
   pointer-events: none;
   transform: translateX(-4px);
   opacity: 0;
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon {
-  justify-content: center;
-  padding: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon .desktop-sidebar-heading-icon {
@@ -343,6 +342,7 @@
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
   width: 100%;
   height: var(--filmwave-sidebar-row-height);
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
