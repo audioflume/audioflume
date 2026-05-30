@@ -1,3 +1,15 @@
+import {
+  SidebarCollapseControl,
+  SidebarEmptyState,
+  SidebarInner,
+  SidebarLinkRow,
+  SidebarNav,
+  SidebarProjectsHeader,
+  SidebarSection,
+  SidebarSectionHeading,
+  SidebarShell,
+  type SidebarTooltipState,
+} from "@filmwave/shared";
 import { useEffect, useState, type ReactNode } from "react";
 import type { Project } from "../../lib/mockFilmwaveApi";
 import FolderIcon from "../icons/FolderIcon";
@@ -37,11 +49,6 @@ type SidebarNavItem = {
   onClick?: () => void;
 };
 
-type SidebarTooltip = {
-  label: string;
-  top: number;
-} | null;
-
 function PlusIcon() {
   return (
     <span className="desktop-sidebar-plus-icon" aria-hidden="true">
@@ -65,87 +72,6 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
   );
 }
 
-function SidebarTooltipEl({ label, top }: { label: string; top: number }) {
-  return (
-    <div className="desktop-sidebar-tooltip" style={{ top }}>
-      <div className="desktop-sidebar-tooltip-border">
-        <div className="desktop-sidebar-tooltip-inner">{label}</div>
-      </div>
-    </div>
-  );
-}
-
-function SidebarSectionHeading({
-  label,
-  collapsed,
-  icon,
-}: {
-  label: string;
-  collapsed: boolean;
-  icon: ReactNode;
-}) {
-  return (
-    <div className="desktop-sidebar-heading">
-      <div className="desktop-sidebar-heading-inner">
-        <span className="desktop-sidebar-heading-label">{label}</span>
-        <span
-          className={`desktop-sidebar-heading-icon${collapsed ? " is-visible" : ""}`}
-          aria-hidden="true"
-        >
-          {icon}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function SidebarNavButton({
-  collapsed,
-  item,
-  activeView,
-  onActiveViewChange,
-  onTooltipChange,
-}: {
-  collapsed: boolean;
-  item: SidebarNavItem;
-  activeView: DesktopAppView;
-  onActiveViewChange: (view: DesktopAppView) => void;
-  onTooltipChange: (tooltip: SidebarTooltip) => void;
-}) {
-  const isActive = item.active ?? item.view === activeView;
-
-  function showTooltip(element: HTMLElement) {
-    if (!collapsed) return;
-    const rect = element.getBoundingClientRect();
-    onTooltipChange({ label: item.label, top: rect.top + rect.height / 2 });
-  }
-
-  return (
-    <button
-      type="button"
-      className={`desktop-sidebar-link${isActive ? " is-active" : ""}`}
-      aria-label={item.label}
-      onMouseEnter={(event) => showTooltip(event.currentTarget)}
-      onMouseLeave={() => onTooltipChange(null)}
-      onFocus={(event) => showTooltip(event.currentTarget)}
-      onBlur={() => onTooltipChange(null)}
-      onClick={() => {
-        onTooltipChange(null);
-        if (item.onClick) {
-          item.onClick();
-          return;
-        }
-        if (item.view) onActiveViewChange(item.view);
-      }}
-    >
-      <span className="desktop-sidebar-link-icon" aria-hidden="true">
-        {item.icon}
-      </span>
-      <span className="desktop-sidebar-link-label">{item.label}</span>
-    </button>
-  );
-}
-
 export default function DesktopAppShell({
   activeProjectId,
   activeView,
@@ -157,7 +83,7 @@ export default function DesktopAppShell({
 }: DesktopAppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [autoCollapsed, setAutoCollapsed] = useState(false);
-  const [tooltip, setTooltip] = useState<SidebarTooltip>(null);
+  const [tooltip, setTooltip] = useState<SidebarTooltipState>(null);
   const effectivelyCollapsed = collapsed || autoCollapsed;
 
   useEffect(() => {
@@ -205,97 +131,70 @@ export default function DesktopAppShell({
     // Create-project flow will be wired up when the desktop project create API is added.
   }
 
-  function showNewProjectTooltip(element: HTMLElement) {
-    if (!effectivelyCollapsed) return;
-    const rect = element.getBoundingClientRect();
-    setTooltip({ label: "New Project", top: rect.top + rect.height / 2 });
-  }
-
   return (
-    <div className={`desktop-app-shell${effectivelyCollapsed ? " is-sidebar-collapsed" : ""}`}>
-      {header}
+    <SidebarShell collapsed={effectivelyCollapsed} header={header} tooltip={tooltip} main={children}>
+      <SidebarCollapseControl
+        collapsed={effectivelyCollapsed}
+        icon={<CollapseIcon collapsed={effectivelyCollapsed} />}
+        onToggle={() => {
+          if (!autoCollapsed) setCollapsed((value) => !value);
+          setTooltip(null);
+        }}
+      />
 
-      <aside className="desktop-app-sidebar" data-tauri-drag-region>
-        <div className="desktop-sidebar-collapse-zone">
-          <div className="desktop-sidebar-collapse-zone-inner">
-            <button
-              type="button"
-              className="desktop-sidebar-collapse-button"
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              onClick={() => {
-                if (!autoCollapsed) setCollapsed((value) => !value);
-                setTooltip(null);
-              }}
-            >
-              <CollapseIcon collapsed={effectivelyCollapsed} />
-            </button>
-          </div>
-        </div>
+      <SidebarInner>
+        <SidebarSection>
+          <SidebarSectionHeading
+            label="Library"
+            collapsed={effectivelyCollapsed}
+            icon={<LibraryIcon size={16} />}
+          />
+          <SidebarNav label="Library navigation">
+            {libraryLinks.map((item) => (
+              <SidebarLinkRow
+                key={item.label}
+                collapsed={effectivelyCollapsed}
+                label={item.label}
+                icon={item.icon}
+                active={item.active ?? item.view === activeView}
+                onTooltipChange={setTooltip}
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                    return;
+                  }
+                  if (item.view) onActiveViewChange(item.view);
+                }}
+              />
+            ))}
+          </SidebarNav>
+        </SidebarSection>
 
-        <div className="desktop-app-sidebar-inner">
-          <div className="desktop-sidebar-section">
-            <SidebarSectionHeading
-              label="Library"
-              collapsed={effectivelyCollapsed}
-              icon={<LibraryIcon size={16} />}
-            />
-            <nav className="desktop-sidebar-nav" aria-label="Library navigation">
-              {libraryLinks.map((item) => (
-                <SidebarNavButton
-                  key={item.label}
-                  collapsed={effectivelyCollapsed}
-                  item={item}
-                  activeView={activeView}
-                  onActiveViewChange={onActiveViewChange}
-                  onTooltipChange={setTooltip}
-                />
-              ))}
-            </nav>
-          </div>
-
-          <div className="desktop-sidebar-section is-projects-section">
-            <div className="desktop-sidebar-projects-head">
-              <span className="desktop-sidebar-projects-label">Projects</span>
-              <div className="desktop-sidebar-project-actions">
-                <button
-                  type="button"
-                  className="desktop-sidebar-add-button"
-                  aria-label="New Project"
-                  onMouseEnter={(event) => showNewProjectTooltip(event.currentTarget)}
-                  onMouseLeave={() => setTooltip(null)}
-                  onFocus={(event) => showNewProjectTooltip(event.currentTarget)}
-                  onBlur={() => setTooltip(null)}
-                  onClick={() => {
-                    setTooltip(null);
-                    handleCreateProject();
-                  }}
-                >
-                  <PlusIcon />
-                </button>
-              </div>
-            </div>
-            <nav className="desktop-sidebar-nav" aria-label="Projects navigation">
-              {projectLinks.map((item) => (
-                <SidebarNavButton
-                  key={item.label}
-                  collapsed={effectivelyCollapsed}
-                  item={item}
-                  activeView={activeView}
-                  onActiveViewChange={onActiveViewChange}
-                  onTooltipChange={setTooltip}
-                />
-              ))}
-              {projects.length === 0 && (
-                <div className="desktop-sidebar-empty-projects">No projects yet</div>
-              )}
-            </nav>
-          </div>
-        </div>
-      </aside>
-
-      {tooltip && effectivelyCollapsed && <SidebarTooltipEl label={tooltip.label} top={tooltip.top} />}
-
-      <main className="desktop-app-main">{children}</main>
-    </div>
+        <SidebarSection projects>
+          <SidebarProjectsHeader
+            label="Projects"
+            collapsed={effectivelyCollapsed}
+            actionLabel="New Project"
+            actionIcon={<PlusIcon />}
+            onActionClick={handleCreateProject}
+            onTooltipChange={setTooltip}
+          />
+          <SidebarNav label="Projects navigation">
+            {projectLinks.map((item) => (
+              <SidebarLinkRow
+                key={item.label}
+                collapsed={effectivelyCollapsed}
+                label={item.label}
+                icon={item.icon}
+                active={item.active ?? item.view === activeView}
+                onTooltipChange={setTooltip}
+                onClick={item.onClick}
+              />
+            ))}
+            {projects.length === 0 && <SidebarEmptyState>No projects yet</SidebarEmptyState>}
+          </SidebarNav>
+        </SidebarSection>
+      </SidebarInner>
+    </SidebarShell>
   );
 }
