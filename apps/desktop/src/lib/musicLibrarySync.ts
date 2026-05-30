@@ -1,11 +1,8 @@
-import type { FilmwaveSong } from "@filmwave/shared";
 import { exists, mkdir, writeFile } from "@tauri-apps/plugin-fs";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import type { DesktopSong } from "./desktopSongs";
 
 export const MUSIC_LIBRARY_SYNC_FOLDER_NAME = "Music Library Sync";
-
-type SyncedFilmwaveSong = Pick<FilmwaveSong, "id" | "title" | "audioUrl">;
 
 function sanitizeFileName(value: string) {
   return value
