@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  SearchFilterChrome,
+  SearchFilterInput,
+  SearchFilterQuickButton,
+} from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
@@ -45,8 +50,6 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import {
   iconButtonClass,
   primaryPillButtonClass,
-  quickFilterButtonClass,
-  quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
 import {
   filterDotClass,
@@ -465,24 +468,23 @@ export default function MusicPage() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
-        <div className="sticky top-[56px] z-[90] flex w-full flex-col gap-0 bg-[var(--bg-primary)] px-7 pt-0 pb-0">
-          <div
-            className="flex cursor-text items-center gap-3"
-            onClick={() => searchInputRef.current?.focus()}
-          >
-            <div className="flex w-[320px] flex-shrink-0 items-center gap-2 py-3 pr-4">
-              <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
-
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder={searchPlaceholder}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-transparent text-[15px] font-[300] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
-              />
-            </div>
-
+        <SearchFilterChrome
+          onSearchRowClick={() => searchInputRef.current?.focus()}
+          search={
+            <SearchFilterInput
+              icon={<SearchIcon className="shrink-0 text-[var(--text-muted)]" />}
+              input={
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder={searchPlaceholder}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              }
+            />
+          }
+          tags={
             <FilterTags
               selectedMoods={selectedMoods}
               selectedGenres={selectedGenres}
@@ -529,152 +531,151 @@ export default function MusicPage() {
               onRemovePlaylist={() => setSelectedPlaylist(null)}
               onRemoveShuffle={() => setShuffleOrderIds(null)}
             />
-          </div>
+          }
+          filters={
+            <>
+              <PlaylistFilter
+                selected={selectedPlaylist}
+                onChange={setSelectedPlaylist}
+              />
 
-          <div className="filmwave-filter-row -mx-7 flex h-12 min-w-0 items-center gap-1 overflow-x-auto overflow-y-hidden border-t border-b border-[var(--border)] px-7 whitespace-nowrap">
-            <PlaylistFilter
-              selected={selectedPlaylist}
-              onChange={setSelectedPlaylist}
-            />
+              <FilterDropdown
+                label="Mood"
+                options={MOOD_OPTIONS}
+                selected={selectedMoods}
+                onChange={setSelectedMoods}
+              />
 
-            <FilterDropdown
-              label="Mood"
-              options={MOOD_OPTIONS}
-              selected={selectedMoods}
-              onChange={setSelectedMoods}
-            />
+              <FilterDropdown
+                label="Genre"
+                options={GENRE_OPTIONS}
+                selected={selectedGenres}
+                onChange={setSelectedGenres}
+              />
 
-            <FilterDropdown
-              label="Genre"
-              options={GENRE_OPTIONS}
-              selected={selectedGenres}
-              onChange={setSelectedGenres}
-            />
+              <FilterDropdown
+                label="Instruments"
+                options={INSTRUMENT_OPTIONS}
+                selected={selectedInstruments}
+                onChange={setSelectedInstruments}
+              />
 
-            <FilterDropdown
-              label="Instruments"
-              options={INSTRUMENT_OPTIONS}
-              selected={selectedInstruments}
-              onChange={setSelectedInstruments}
-            />
+              <FilterDropdown
+                label="Vocals"
+                options={VOCAL_FILTER_OPTIONS}
+                selected={selectedVocalFilters}
+                onChange={setSelectedVocalFilters}
+              />
 
-            <FilterDropdown
-              label="Vocals"
-              options={VOCAL_FILTER_OPTIONS}
-              selected={selectedVocalFilters}
-              onChange={setSelectedVocalFilters}
-            />
+              <FilterDropdown
+                label="Build"
+                options={BUILD_OPTIONS}
+                selected={selectedBuilds}
+                onChange={setSelectedBuilds}
+              />
 
-            <FilterDropdown
-              label="Build"
-              options={BUILD_OPTIONS}
-              selected={selectedBuilds}
-              onChange={setSelectedBuilds}
-            />
+              <BPMFilter value={bpmValue} onChange={setBpmValue} />
 
-            <BPMFilter value={bpmValue} onChange={setBpmValue} />
+              <KeyFilter value={keyValue} onChange={setKeyValue} />
 
-            <KeyFilter value={keyValue} onChange={setKeyValue} />
+              <DurationFilter
+                selected={selectedDurations}
+                onChange={setSelectedDurations}
+              />
 
-            <DurationFilter
-              selected={selectedDurations}
-              onChange={setSelectedDurations}
-            />
-
-            <FilterDropdown
-              label="Cue Points"
-              options={EDIT_POINT_FILTER_OPTIONS.map((option) => option.label)}
-              selected={EDIT_POINT_FILTER_OPTIONS.filter((option) =>
-                selectedEditPoints.includes(option.type),
-              ).map((option) => option.label)}
-              onChange={(labels) =>
-                setSelectedEditPoints(
-                  EDIT_POINT_FILTER_OPTIONS.filter((option) =>
-                    labels.includes(option.label),
-                  ).map((option) => option.type),
-                )
-              }
-            />
-
-            <button
-              type="button"
-              onClick={() =>
-                setShowEditPointMarkers(!effectiveShowEditPointMarkers)
-              }
-              disabled={!filtersHydrated}
-              className={`${filterTriggerBaseClass} shrink-0 after:content-none ${
-                effectiveShowEditPointMarkers
-                  ? filterTriggerActiveClass
-                  : filterTriggerInactiveClass
-              } ${filtersHydrated ? "" : "opacity-60"}`}
-              aria-pressed={effectiveShowEditPointMarkers}
-            >
-              <span>Markers</span>
-              {effectiveShowEditPointMarkers && (
-                <span className={filterDotClass} />
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                const shuffledSongs = shuffleSongList(filteredSongs);
-                setShuffleOrderIds(
-                  shuffledSongs.map((song, index) =>
-                    getSongStableId(song, index),
-                  ),
-                );
-              }}
-              className={`${iconButtonClass} shrink-0 self-center`}
-              style={
-                shuffleActive
-                  ? ({ "--shuffle-icon-color": "#000000" } as React.CSSProperties)
-                  : undefined
-              }
-              aria-label="Shuffle songs"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                fill="var(--shuffle-icon-color, currentColor)"
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"
-                />
-                <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-1.5 bg-[var(--bg-primary)] px-8 pt-4 pb-0">
-          {QUICK_FILTERS.map((filter) => {
-            const isActive = selectedGenres.includes(filter);
-
-            return (
-              <button
-                key={filter}
-                type="button"
-                onClick={() =>
-                  setSelectedGenres(
-                    isActive
-                      ? selectedGenres.filter((genre) => genre !== filter)
-                      : [...selectedGenres, filter],
+              <FilterDropdown
+                label="Cue Points"
+                options={EDIT_POINT_FILTER_OPTIONS.map((option) => option.label)}
+                selected={EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+                  selectedEditPoints.includes(option.type),
+                ).map((option) => option.label)}
+                onChange={(labels) =>
+                  setSelectedEditPoints(
+                    EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+                      labels.includes(option.label),
+                    ).map((option) => option.type),
                   )
                 }
-                className={`${quickFilterButtonClass} ${
-                  isActive ? quickFilterButtonActiveClass : ""
-                }`}
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setShowEditPointMarkers(!effectiveShowEditPointMarkers)
+                }
+                disabled={!filtersHydrated}
+                className={`${filterTriggerBaseClass} shrink-0 after:content-none ${
+                  effectiveShowEditPointMarkers
+                    ? filterTriggerActiveClass
+                    : filterTriggerInactiveClass
+                } ${filtersHydrated ? "" : "opacity-60"}`}
+                aria-pressed={effectiveShowEditPointMarkers}
               >
-                {filter}
+                <span>Markers</span>
+                {effectiveShowEditPointMarkers && (
+                  <span className={filterDotClass} />
+                )}
               </button>
-            );
-          })}
-        </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const shuffledSongs = shuffleSongList(filteredSongs);
+                  setShuffleOrderIds(
+                    shuffledSongs.map((song, index) =>
+                      getSongStableId(song, index),
+                    ),
+                  );
+                }}
+                className={`${iconButtonClass} shrink-0 self-center`}
+                style={
+                  shuffleActive
+                    ? ({ "--shuffle-icon-color": "#000000" } as React.CSSProperties)
+                    : undefined
+                }
+                aria-label="Shuffle songs"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  fill="var(--shuffle-icon-color, currentColor)"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"
+                  />
+                  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
+                </svg>
+              </button>
+            </>
+          }
+          quickFilters={
+            <>
+              {QUICK_FILTERS.map((filter) => {
+                const isActive = selectedGenres.includes(filter);
+
+                return (
+                  <SearchFilterQuickButton
+                    key={filter}
+                    active={isActive}
+                    onClick={() =>
+                      setSelectedGenres(
+                        isActive
+                          ? selectedGenres.filter((genre) => genre !== filter)
+                          : [...selectedGenres, filter],
+                      )
+                    }
+                  >
+                    {filter}
+                  </SearchFilterQuickButton>
+                );
+              })}
+            </>
+          }
+        />
 
         <div
           className="grid overflow-hidden"
@@ -760,9 +761,9 @@ export default function MusicPage() {
                       </div>
                     </div>
 
-                    <p className="relative z-10 max-w-[330px] text-[13px] leading-5 text-white/70">
-                      Keep projects, playlists, and downloaded cues organized across
-                      the web app and local folders.
+                    <p className="relative z-10 max-w-[360px] text-[13px] leading-6 text-white/72">
+                      Keep projects, playlists, and downloaded cues organized
+                      across the web app and local folders.
                     </p>
                   </div>
                 </div>
@@ -771,33 +772,26 @@ export default function MusicPage() {
           </div>
         </div>
 
-        <section className="pb-8">
-          <div className="mt-6">
-            {songsError ? (
-              <div className="px-8 py-8 text-sm text-[var(--text-secondary)]">
-                {songsError}
-              </div>
-            ) : showSongSkeleton ? (
-              <SkeletonSongList />
-            ) : displayedSongs.length === 0 ? (
-              <div className="px-8 py-8 text-sm text-[var(--text-secondary)]">
-                No songs match those filters.
-              </div>
-            ) : (
-              displayedSongs.map((song, index) => (
-                <SongCard
-                  key={song.id}
-                  song={song}
-                  isFirst={index === 0}
-                  isLast={index === displayedSongs.length - 1}
-                  showEditPointMarkers={effectiveShowEditPointMarkers}
-                />
-              ))
-            )}
-          </div>
-        </section>
+        {songsError && (
+          <div className="px-8 py-4 text-sm text-red-400">{songsError}</div>
+        )}
 
-        <Footer className="px-8" />
+        {showSongSkeleton ? (
+          <SkeletonSongList />
+        ) : (
+          <div>
+            {displayedSongs.map((song, index) => (
+              <SongCard
+                key={song.id}
+                song={song}
+                index={index}
+                showEditPointMarkers={effectiveShowEditPointMarkers}
+              />
+            ))}
+          </div>
+        )}
+
+        <Footer />
       </section>
     </main>
   );
