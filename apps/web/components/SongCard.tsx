@@ -186,9 +186,11 @@ export default function SongCard({
   ) : (
     <PlayIconSmall size={15} />
   );
-  const showWaveform = cardWidth > 600;
+  const showWaveform = cardWidth > 560;
   const visibleGenres = song.genres.slice(0, 3);
-  const showGenreSlot = cardWidth > 1180;
+  const showGenreSlot = cardWidth > 1080;
+  const showKeyMeta = cardWidth > 700;
+  const showBpmMeta = cardWidth > 820;
   const stems = getSongStems(song);
   const hasStems = stems.length > 0;
   const favorited = isFavorite(song.id);
@@ -262,7 +264,7 @@ export default function SongCard({
     <>
       <div
         ref={cardRef}
-        className={`group flex w-full scroll-mt-48 scroll-mb-40 cursor-pointer items-center gap-4 pl-8 pr-4 py-4 transition-colors ${
+        className={`filmwave-song-card group w-full scroll-mt-48 scroll-mb-40 cursor-pointer transition-colors ${
           isCurrentSong
             ? "bg-[var(--bg-hover)]"
             : "hover:bg-[color-mix(in_srgb,var(--bg-hover)_30%,transparent)]"
@@ -271,7 +273,7 @@ export default function SongCard({
       >
         <button
           type="button"
-          className="relative h-10 w-10 flex-shrink-0 cursor-pointer overflow-hidden rounded-none"
+          className="filmwave-song-cover relative cursor-pointer overflow-hidden rounded-none"
           onClick={() => togglePlayPause(song)}
           aria-label={actuallyPlaying ? "Pause song" : "Play song"}
         >
@@ -282,28 +284,28 @@ export default function SongCard({
           )}
 
           <div
-            className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] transition-opacity ${
+            className={`filmwave-song-play-overlay absolute inset-0 flex items-center justify-center transition-opacity ${
               isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
             }`}
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(0,0,0,0.22)]">
+            <span className="filmwave-song-play-button">
               {displayIcon}
             </span>
           </div>
         </button>
 
-        <div className="flex min-w-0 max-w-[220px] flex-1 flex-col">
-          <span className="truncate text-sm font-medium text-[var(--text-primary)]">
+        <div className="filmwave-song-info">
+          <span className="filmwave-song-title truncate">
             {song.title}
           </span>
-          <span className="truncate text-xs text-[var(--text-subtle)]">
+          <span className="filmwave-song-artist truncate">
             {song.artist}
           </span>
         </div>
 
         {showWaveform && (
-          <div className="flex min-w-0 flex-1 items-center justify-center gap-4">
-            <div className="flex w-10 flex-shrink-0 justify-center">
+          <div className="filmwave-song-wave-wrap">
+            <div className="filmwave-song-stems-slot">
               {hasStems ? (
                 <DropdownShell
                   open={stemsOpen}
@@ -348,7 +350,7 @@ export default function SongCard({
               )}
             </div>
 
-            <div className="w-full min-w-0">
+            <div className="filmwave-song-wave">
               <Waveform
                 song={song}
                 highlightedEditPointTypes={highlightedEditPointTypes}
@@ -356,29 +358,33 @@ export default function SongCard({
               />
             </div>
 
-            <span className="flex-shrink-0 text-right text-xs text-[var(--text-secondary)]">
+            <span className="filmwave-song-duration">
               {formatDuration(song.duration)}
             </span>
           </div>
         )}
 
-        <div className="ml-auto flex min-w-0 flex-shrink-0 items-center gap-0">
+        <div className="filmwave-song-tail ml-auto">
           {showGenreSlot && (
-            <div className="mx-8 flex w-[clamp(120px,11vw,200px)] flex-shrink-0 items-center justify-end overflow-hidden">
-              <span className="line-clamp-2 text-right text-[11px] font-medium leading-[1.25] text-[var(--text-muted)]">
+            <div className="filmwave-song-genre-slot">
+              <span className="filmwave-song-genre line-clamp-2">
                 {visibleGenres.length > 0 ? visibleGenres.join(", ") : ""}
               </span>
             </div>
           )}
 
-          <div className="mr-[clamp(0px,3vw,43px)] flex items-center gap-6 text-xs text-[var(--text-secondary)]">
-            <span className="w-[56px] text-right">{song.key || "—"}</span>
-            <span className="w-[72px] text-right tabular-nums max-[645px]:hidden">
-              {song.bpm ? `${song.bpm} BPM` : "—"}
-            </span>
-          </div>
+          {(showKeyMeta || showBpmMeta) && (
+            <div className="filmwave-song-key-bpm filmwave-song-meta">
+              {showKeyMeta && <span className="filmwave-song-key">{song.key || "—"}</span>}
+              {showBpmMeta && (
+                <span className="filmwave-song-bpm tabular-nums">
+                  {song.bpm ? `${song.bpm} BPM` : "—"}
+                </span>
+              )}
+            </div>
+          )}
 
-          <div className="flex items-center justify-end gap-0.5">
+          <div className="filmwave-song-actions">
             <IconButton
               label={favorited ? "Remove song from favorites" : "Favorite song"}
               active={favorited}

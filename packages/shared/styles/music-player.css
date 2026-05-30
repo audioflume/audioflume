@@ -1,0 +1,293 @@
+:where(.filmwave-music-player) {
+  --filmwave-player-height: 72px;
+  --filmwave-player-padding-x: 16px;
+  --filmwave-player-main-gap: 18px;
+  --filmwave-player-cover-size: 40px;
+  --filmwave-player-control-gap: clamp(12px, 2vw, 24px);
+  --filmwave-player-meta-gap: 18px;
+  --filmwave-player-action-gap: 2px;
+  --filmwave-player-top-glow: 0 -30px 90px rgba(0, 0, 0, 0.07);
+  --filmwave-player-top-glow-start: rgba(0, 0, 0, 0.055);
+  --filmwave-player-top-glow-mid: rgba(0, 0, 0, 0.026);
+}
+
+.filmwave-music-player {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 45;
+  min-height: var(--filmwave-player-height);
+  overflow: visible;
+  border-top: 1px solid var(--border);
+  background: var(--bg-secondary);
+  box-shadow: var(--filmwave-player-top-glow);
+}
+
+.filmwave-music-player::before {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  left: 0;
+  height: 72px;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    var(--filmwave-player-top-glow-start),
+    var(--filmwave-player-top-glow-mid) 42%,
+    transparent
+  );
+  content: "";
+}
+
+.filmwave-music-player[data-platform="desktop"] {
+  z-index: 2000;
+  display: grid;
+  height: var(--filmwave-player-height);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--filmwave-player-padding-x);
+}
+
+.filmwave-player-song {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.filmwave-player-cover {
+  position: relative;
+  display: flex;
+  width: var(--filmwave-player-cover-size);
+  height: var(--filmwave-player-cover-size);
+  flex: 0 0 var(--filmwave-player-cover-size);
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.filmwave-player-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.filmwave-player-song-copy {
+  min-width: 0;
+}
+
+.filmwave-player-title,
+.filmwave-player-artist {
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filmwave-player-title {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.filmwave-player-artist {
+  margin-top: 1px;
+  color: var(--text-subtle);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.filmwave-player-controls,
+.filmwave-player-actions,
+.filmwave-player-meta,
+.filmwave-player-progress-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.filmwave-player-controls,
+.filmwave-player-actions,
+.filmwave-player-meta {
+  flex-shrink: 0;
+}
+
+.filmwave-player-controls {
+  justify-content: center;
+  gap: var(--filmwave-player-control-gap);
+}
+
+.filmwave-player-controls button {
+  display: inline-flex;
+  flex-shrink: 0;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--text-primary);
+  transition: color 0.15s ease;
+}
+
+.filmwave-player-controls button:hover {
+  color: var(--text-secondary);
+}
+
+.filmwave-player-progress-wrap {
+  min-width: 0;
+  overflow: visible;
+  gap: 16px;
+}
+
+.filmwave-player-time,
+.filmwave-player-meta span {
+  flex-shrink: 0;
+  color: var(--icon-color);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.filmwave-player-time:first-child {
+  width: 40px;
+  text-align: right;
+}
+
+.filmwave-player-progress {
+  position: relative;
+  height: 24px;
+  min-width: 120px;
+  flex: 1;
+  cursor: pointer;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.filmwave-player-progress::before {
+  position: absolute;
+  top: 11px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--waveform-color, var(--bg-elevated));
+  content: "";
+}
+
+.filmwave-player-progress span {
+  position: absolute;
+  top: 11px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  transform-origin: left center;
+  border-radius: 999px;
+  background: var(--waveform-progress, var(--text-primary));
+}
+
+.filmwave-player-waveform-row {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: 16px;
+  overflow: visible;
+}
+
+.filmwave-player-waveform {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  height: 24px;
+  min-width: 80px;
+  flex: 1;
+  cursor: pointer;
+  align-items: center;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.filmwave-player-waveform-canvas {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+}
+
+.filmwave-player-compact-time {
+  white-space: nowrap;
+  color: var(--icon-color);
+  font-size: 12px;
+}
+
+.filmwave-player-meta {
+  justify-content: flex-end;
+  gap: var(--filmwave-player-meta-gap);
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.filmwave-player-actions {
+  justify-content: flex-end;
+  gap: var(--filmwave-player-action-gap);
+}
+
+/* Shared compact icon buttons used by player actions across web and desktop. */
+.filmwave-icon-button {
+  display: inline-flex;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  padding: 0;
+  color: var(--icon-color);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.filmwave-icon-button:hover,
+.filmwave-icon-button.is-open,
+.filmwave-icon-button.is-active,
+.filmwave-icon-button[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.filmwave-icon-button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.filmwave-icon-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.filmwave-icon-button-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+html[data-theme="light"] .filmwave-music-player,
+.light .filmwave-music-player {
+  --filmwave-player-top-glow: 0 -30px 90px rgba(0, 0, 0, 0.04);
+  --filmwave-player-top-glow-start: rgba(0, 0, 0, 0.032);
+  --filmwave-player-top-glow-mid: rgba(0, 0, 0, 0.014);
+}
