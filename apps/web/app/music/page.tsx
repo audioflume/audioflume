@@ -1,25 +1,22 @@
 "use client";
 
 import {
+  BUILD_OPTIONS,
+  GENRE_OPTIONS,
+  INSTRUMENT_OPTIONS,
+  MOOD_OPTIONS,
+  MUSIC_FILTER_STORAGE_KEY_PREFIX,
+  QUICK_FILTERS,
   SearchFilterChrome,
   SearchFilterInput,
   SearchFilterQuickButton,
+  VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
-import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
+import type { BpmFilterValue, KeyFilterValue, PlaylistRef, Song } from "@/lib/types";
 import {
-  MOOD_OPTIONS,
-  GENRE_OPTIONS,
-  INSTRUMENT_OPTIONS,
-  BUILD_OPTIONS,
-  VOCALS_OPTIONS,
-  QUICK_FILTERS,
-  MUSIC_FILTER_STORAGE_KEY_PREFIX,
-} from "@/lib/constants";
-import {
-  includesAll,
   matchesDurationFilter,
   matchesBpmFilter,
   matchesKeyFilter,
@@ -203,6 +200,39 @@ function shuffleSongList<T>(songs: T[]) {
   return bestShuffle;
 }
 
+function selectedValuesMatch(songValues: string[], selectedValues: string[]) {
+  if (selectedValues.length === 0) return true;
+
+  const normalizedSongValues = songValues.map((value) => value.toLowerCase());
+  const searchableText = normalizedSongValues.join(" ");
+
+  return selectedValues.every((selectedValue) => {
+    const normalizedSelectedValue = selectedValue.toLowerCase();
+
+    return (
+      normalizedSongValues.includes(normalizedSelectedValue) ||
+      searchableText.includes(normalizedSelectedValue)
+    );
+  });
+}
+
+function getSongSearchText(song: Song) {
+  return [
+    song.title,
+    song.artist,
+    song.key,
+    String(song.bpm),
+    ...song.genres,
+    ...song.moods,
+    ...song.instruments,
+    ...song.builds,
+    ...song.vocals,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
 export default function MusicPage() {
   const { userId } = useAuth();
   const musicFilterStorageKey = userId
@@ -236,50 +266,47 @@ export default function MusicPage() {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const search = filters.search;
-  const selectedMoods = filters.moods;
-  const selectedGenres = filters.genres;
-  const selectedInstruments = filters.instruments;
-  const selectedBuilds = filters.builds;
-  const selectedVocals = filters.vocals;
-  const selectedDurations = filters.durations;
-  const selectedEditPoints = filters.editPoints;
+  const selectedMoods = filters.selectedMoods;
+  const selectedGenres = filters.selectedGenres;
+  const selectedInstruments = filters.selectedInstruments;
+  const selectedBuilds = filters.selectedBuilds;
+  const selectedVocals = filters.selectedVocals;
+  const selectedDurations = filters.selectedDurations;
+  const selectedEditPoints = filters.selectedEditPoints;
   const instrumental = filters.instrumental;
-  const bpmValue = filters.bpm;
-  const keyValue = filters.key;
-  const selectedPlaylist = filters.playlist;
+  const bpmValue = filters.bpmValue;
+  const keyValue = filters.keyValue;
+  const selectedPlaylist = filters.selectedPlaylist;
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
 
   const shuffleActive = shuffleOrderIds !== null;
 
-  function updateFilters(nextFilters: typeof filters) {
-    setFilters(nextFilters);
-  }
-
-  const setSearch = (value: string) => updateFilters({ ...filters, search: value });
+  const setSearch = (value: string) =>
+    setFilters((current) => ({ ...current, search: value }));
   const setSelectedMoods = (values: string[]) =>
-    updateFilters({ ...filters, moods: values });
+    setFilters((current) => ({ ...current, selectedMoods: values }));
   const setSelectedGenres = (values: string[]) =>
-    updateFilters({ ...filters, genres: values });
+    setFilters((current) => ({ ...current, selectedGenres: values }));
   const setSelectedInstruments = (values: string[]) =>
-    updateFilters({ ...filters, instruments: values });
+    setFilters((current) => ({ ...current, selectedInstruments: values }));
   const setSelectedBuilds = (values: string[]) =>
-    updateFilters({ ...filters, builds: values });
+    setFilters((current) => ({ ...current, selectedBuilds: values }));
   const setSelectedVocals = (values: string[]) =>
-    updateFilters({ ...filters, vocals: values });
+    setFilters((current) => ({ ...current, selectedVocals: values }));
   const setSelectedDurations = (values: string[]) =>
-    updateFilters({ ...filters, durations: values });
+    setFilters((current) => ({ ...current, selectedDurations: values }));
   const setSelectedEditPoints = (values: string[]) =>
-    updateFilters({ ...filters, editPoints: values });
+    setFilters((current) => ({ ...current, selectedEditPoints: values }));
   const setInstrumental = (value: boolean) =>
-    updateFilters({ ...filters, instrumental: value });
+    setFilters((current) => ({ ...current, instrumental: value }));
   const setBpmValue = (value: BpmFilterValue | null) =>
-    updateFilters({ ...filters, bpm: value });
+    setFilters((current) => ({ ...current, bpmValue: value }));
   const setKeyValue = (value: KeyFilterValue | null) =>
-    updateFilters({ ...filters, key: value });
+    setFilters((current) => ({ ...current, keyValue: value }));
   const setSelectedPlaylist = (value: PlaylistRef | null) =>
-    updateFilters({ ...filters, playlist: value });
+    setFilters((current) => ({ ...current, selectedPlaylist: value }));
   const setShowEditPointMarkers = (value: boolean) =>
-    updateFilters({ ...filters, showEditPointMarkers: value });
+    setFilters((current) => ({ ...current, showEditPointMarkers: value }));
 
   const selectedVocalFilters = instrumental
     ? [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...selectedVocals]
@@ -288,11 +315,13 @@ export default function MusicPage() {
   const setSelectedVocalFilters = (values: string[]) => {
     const hasInstrumental = values.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
 
-    updateFilters({
-      ...filters,
+    setFilters((current) => ({
+      ...current,
       instrumental: hasInstrumental,
-      vocals: values.filter((value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION),
-    });
+      selectedVocals: values.filter(
+        (value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
+      ),
+    }));
   };
 
   const hasActiveFilters =
@@ -365,60 +394,25 @@ export default function MusicPage() {
     const playlistIds = selectedPlaylistSongIds;
 
     return songs.filter((song) => {
-      const record = getRecord(song);
-      const fields =
-        typeof record.fields === "object" && record.fields !== null
-          ? getRecord(record.fields)
-          : null;
-
       if (selectedPlaylistId) {
         if (!playlistIds) return false;
         const identityValues = getSongIdentityValues(song);
         if (!identityValues.some((id) => playlistIds.has(id))) return false;
       }
 
-      const title = getStringFromRecord(record, ["title", "name"]).toLowerCase();
-      const artist = getStringFromRecord(record, ["artist", "artistName"]).toLowerCase();
-      const key = getStringFromRecord(record, ["key"]).toLowerCase();
-      const genre = getStringFromRecord(record, ["genre"]).toLowerCase();
-      const mood = getStringFromRecord(record, ["mood"]).toLowerCase();
-      const instruments = getStringFromRecord(record, ["instruments", "instrument"]).toLowerCase();
-      const build = getStringFromRecord(record, ["build"]).toLowerCase();
-      const vocals = getStringFromRecord(record, ["vocals"]).toLowerCase();
-      const album = fields ? getStringFromRecord(fields, ["Album", "album"]).toLowerCase() : "";
-      const tags = fields ? getStringFromRecord(fields, ["Tags", "tags"]).toLowerCase() : "";
-      const tempo = fields ? getStringFromRecord(fields, ["Tempo", "tempo"]).toLowerCase() : "";
-      const description = fields ? getStringFromRecord(fields, ["Description", "description"]).toLowerCase() : "";
-
-      if (
-        searchQuery &&
-        ![
-          title,
-          artist,
-          key,
-          genre,
-          mood,
-          instruments,
-          build,
-          vocals,
-          album,
-          tags,
-          tempo,
-          description,
-        ].some((value) => value.includes(searchQuery))
-      ) {
+      if (searchQuery && !getSongSearchText(song).includes(searchQuery)) {
         return false;
       }
 
-      if (!includesAll(mood, selectedMoods)) return false;
-      if (!includesAll(genre, selectedGenres)) return false;
-      if (!includesAll(instruments, selectedInstruments)) return false;
-      if (!includesAll(build, selectedBuilds)) return false;
-      if (!includesAll(vocals, selectedVocals)) return false;
-      if (instrumental && !vocals.includes("instrumental")) return false;
-      if (!matchesDurationFilter(song, selectedDurations)) return false;
-      if (!matchesBpmFilter(song, bpmValue)) return false;
-      if (!matchesKeyFilter(song, keyValue)) return false;
+      if (!selectedValuesMatch(song.moods, selectedMoods)) return false;
+      if (!selectedValuesMatch(song.genres, selectedGenres)) return false;
+      if (!selectedValuesMatch(song.instruments, selectedInstruments)) return false;
+      if (!selectedValuesMatch(song.builds, selectedBuilds)) return false;
+      if (!selectedValuesMatch(song.vocals, selectedVocals)) return false;
+      if (instrumental && !song.instrumental) return false;
+      if (!matchesDurationFilter(song.duration, selectedDurations)) return false;
+      if (!matchesBpmFilter(song.bpm, bpmValue)) return false;
+      if (!matchesKeyFilter(song.key, keyValue)) return false;
       if (!songMatchesEditPointFilters(song, selectedEditPoints)) return false;
 
       return true;
@@ -538,21 +532,21 @@ export default function MusicPage() {
 
               <FilterDropdown
                 label="Mood"
-                options={MOOD_OPTIONS}
+                options={[...MOOD_OPTIONS]}
                 selected={selectedMoods}
                 onChange={setSelectedMoods}
               />
 
               <FilterDropdown
                 label="Genre"
-                options={GENRE_OPTIONS}
+                options={[...GENRE_OPTIONS]}
                 selected={selectedGenres}
                 onChange={setSelectedGenres}
               />
 
               <FilterDropdown
                 label="Instruments"
-                options={INSTRUMENT_OPTIONS}
+                options={[...INSTRUMENT_OPTIONS]}
                 selected={selectedInstruments}
                 onChange={setSelectedInstruments}
               />
@@ -566,7 +560,7 @@ export default function MusicPage() {
 
               <FilterDropdown
                 label="Build"
-                options={BUILD_OPTIONS}
+                options={[...BUILD_OPTIONS]}
                 selected={selectedBuilds}
                 onChange={setSelectedBuilds}
               />
