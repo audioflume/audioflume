@@ -18,7 +18,7 @@
   top: var(--filmwave-sidebar-top-offset);
   bottom: 0;
   left: 0;
-  z-index: 120;
+  z-index: var(--filmwave-z-sidebar);
   display: flex;
   width: var(--filmwave-sidebar-expanded-width);
   flex-direction: column;
@@ -325,7 +325,7 @@ body.sidebar-collapsed .desktop-sidebar-empty-projects,
 
 .desktop-sidebar-tooltip {
   position: fixed;
-  z-index: 1000;
+  z-index: var(--filmwave-z-tooltip);
   left: calc(var(--filmwave-sidebar-collapsed-width) + 8px);
   pointer-events: none;
   transform: translateY(-50%);
