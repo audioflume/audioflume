@@ -10,6 +10,7 @@ import "./DesktopAppShell.css";
 import "./DesktopAppShellResponsive.css";
 import "./DesktopScrollLock.css";
 import "../../../../../packages/shared/styles/sidebar.css";
+import "./DesktopSidebarWebsiteMatch.css";
 
 export type DesktopAppView =
   | "projects"
