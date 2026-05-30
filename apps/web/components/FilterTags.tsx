@@ -1,3 +1,7 @@
+import {
+  SearchFilterTag,
+  SearchFilterTagList,
+} from "@filmwave/shared";
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
 import { getEditPointFilterLabel } from "@/lib/editPointUtils";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
@@ -154,29 +158,20 @@ export default function FilterTags({
   if (tags.length === 0) return null;
 
   return (
-    <div className="relative z-10 flex flex-1 pointer-events-none flex-wrap items-center justify-end gap-1">
+    <SearchFilterTagList>
       {tags.map((tag) => (
-        <span
+        <SearchFilterTag
           key={tag.id}
-          className="pointer-events-auto flex cursor-default items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium text-black"
-          style={{ backgroundColor: "var(--accent)" }}
-          onClick={(event) => event.stopPropagation()}
+          icon={
+            tag.type === "playlist" ? (
+              <PlaylistIcon size={11} className="shrink-0" />
+            ) : undefined
+          }
+          onRemove={tag.onRemove}
         >
-          {tag.type === "playlist" && (
-            <PlaylistIcon size={11} className="shrink-0" />
-          )}
-
           {tag.label}
-
-          <button
-            type="button"
-            onClick={tag.onRemove}
-            className="flex cursor-pointer items-center text-sm leading-none transition-opacity hover:opacity-60"
-          >
-            ×
-          </button>
-        </span>
+        </SearchFilterTag>
       ))}
-    </div>
+    </SearchFilterTagList>
   );
 }
