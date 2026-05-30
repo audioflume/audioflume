@@ -18,7 +18,7 @@
   top: var(--filmwave-sidebar-top-offset);
   bottom: 0;
   left: 0;
-  z-index: var(--filmwave-z-sidebar);
+  z-index: 120;
   display: flex;
   width: var(--filmwave-sidebar-expanded-width);
   flex-direction: column;
@@ -284,32 +284,13 @@
   color: var(--text-primary);
 }
 
-body.sidebar-collapsed .desktop-sidebar-projects-head,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
-  height: var(--filmwave-sidebar-row-height);
   justify-content: center;
-  margin-bottom: 2px;
-  padding: 0;
 }
 
-body.sidebar-collapsed .desktop-sidebar-projects-label,
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
-  display: none;
-}
-
-body.sidebar-collapsed .desktop-sidebar-project-actions,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
-body.sidebar-collapsed .desktop-sidebar-add-button,
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
-  width: 100%;
-  height: var(--filmwave-sidebar-row-height);
-  border-radius: var(--filmwave-sidebar-row-radius);
+  display: none;
 }
 
 .desktop-sidebar-empty-projects {
@@ -318,14 +299,13 @@ body.sidebar-collapsed .desktop-sidebar-add-button,
   font-size: 12px;
 }
 
-body.sidebar-collapsed .desktop-sidebar-empty-projects,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
   display: none;
 }
 
 .desktop-sidebar-tooltip {
   position: fixed;
-  z-index: var(--filmwave-z-tooltip);
+  z-index: 1000;
   left: calc(var(--filmwave-sidebar-collapsed-width) + 8px);
   pointer-events: none;
   transform: translateY(-50%);
