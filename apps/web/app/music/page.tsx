@@ -23,6 +23,7 @@ import {
 } from "@/lib/filterUtils";
 import {
   EDIT_POINT_FILTER_OPTIONS,
+  isCoreEditPointType,
   songMatchesEditPointFilters,
 } from "@/lib/editPointUtils";
 import { getRecord, getStringFromRecord } from "@/lib/utils";
@@ -280,6 +281,7 @@ export default function MusicPage() {
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
 
   const shuffleActive = shuffleOrderIds !== null;
+  const highlightedEditPointTypes = selectedEditPoints.filter(isCoreEditPointType);
 
   const setSearch = (value: string) =>
     setFilters((current) => ({ ...current, search: value }));
@@ -778,6 +780,7 @@ export default function MusicPage() {
                 key={getSongStableId(song, index)}
                 song={song}
                 index={index}
+                highlightedEditPointTypes={highlightedEditPointTypes}
                 showEditPointMarkers={effectiveShowEditPointMarkers}
               />
             ))}
