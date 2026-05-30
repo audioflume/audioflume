@@ -1,8 +1,18 @@
 import { SharedMusicPlayer } from "@filmwave/shared";
+import { exists } from "@tauri-apps/plugin-fs";
+import { load } from "@tauri-apps/plugin-store";
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  getMusicLibrarySyncedSongPath,
+  syncSongToMusicLibraryFolder,
+} from "../../../lib/musicLibrarySync";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
 import type { DesktopMusicSong } from "./musicLibraryTypes";
+
+const SETTINGS_STORE = "filmwave-settings.json";
+
+type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
 function getAudioSource(song: DesktopMusicSong) {
   return song.playbackUrl || song.audioUrl || song.hlsUrl || "";
@@ -12,33 +22,69 @@ export default function DesktopMusicPlayer({
   song,
   isPlaying,
   favorite,
-  syncStatus,
   onPlayPause,
   onPrevious,
   onNext,
   onFavoriteToggle,
-  onSync,
 }: {
   song: DesktopMusicSong;
   isPlaying: boolean;
   favorite: boolean;
-  syncStatus: "idle" | "syncing" | "synced" | "error";
   onPlayPause: () => void;
   onPrevious: () => void;
   onNext: () => void;
   onFavoriteToggle: () => void;
-  onSync: () => void;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(song.durationSeconds || 0);
+  const [syncFolder, setSyncFolder] = useState<string | null>(null);
+  const [syncStatus, setSyncStatus] = useState<SongSyncStatus>("idle");
 
   const audioSource = useMemo(() => getAudioSource(song), [song]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSyncFolder() {
+      const store = await load(SETTINGS_STORE);
+      const nextSyncFolder = await store.get<string>("syncFolder");
+
+      if (!cancelled) setSyncFolder(nextSyncFolder ?? null);
+    }
+
+    void loadSyncFolder();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     setCurrentTime(0);
     setDuration(song.durationSeconds || 0);
   }, [song.id, song.durationSeconds]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function checkSyncedStatus() {
+      setSyncStatus("idle");
+
+      if (!syncFolder) return;
+
+      const localPath = getMusicLibrarySyncedSongPath({ song, syncFolder });
+      const synced = await exists(localPath);
+
+      if (!cancelled) setSyncStatus(synced ? "synced" : "idle");
+    }
+
+    void checkSyncedStatus();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [song, syncFolder]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -66,6 +112,20 @@ export default function DesktopMusicPlayer({
     setCurrentTime(nextTime);
   }
 
+  async function syncSong() {
+    if (!syncFolder || syncStatus === "syncing" || syncStatus === "synced") return;
+
+    setSyncStatus("syncing");
+
+    try {
+      await syncSongToMusicLibraryFolder({ song, syncFolder });
+      setSyncStatus("synced");
+    } catch (error) {
+      console.error(error);
+      setSyncStatus("error");
+    }
+  }
+
   const syncLabel =
     syncStatus === "synced"
       ? "Song synced"
@@ -73,7 +133,9 @@ export default function DesktopMusicPlayer({
         ? "Syncing song"
         : syncStatus === "error"
           ? "Retry sync"
-          : "Sync song";
+          : syncFolder
+            ? "Sync song"
+            : "Choose a sync folder to sync songs";
 
   return (
     <>
@@ -137,8 +199,8 @@ export default function DesktopMusicPlayer({
               className={`filmwave-icon-button filmwave-icon-button-plain${
                 syncStatus === "synced" ? " is-active" : ""
               }`}
-              disabled={syncStatus === "syncing"}
-              onClick={onSync}
+              disabled={!syncFolder || syncStatus === "syncing" || syncStatus === "synced"}
+              onClick={syncSong}
             >
               <SyncIcon spinning={syncStatus === "syncing"} />
             </button>
