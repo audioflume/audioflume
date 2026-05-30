@@ -51,34 +51,22 @@ function parseEditPointCount(editPoints: string | null | undefined) {
 }
 
 function normalizeWaveform(value: FilmwaveSongApiItem["waveformPeaks"]) {
-  let peaks: number[] = [];
-
   if (Array.isArray(value)) {
-    peaks = value.map(Number).filter(Number.isFinite);
-  } else if (typeof value === "string") {
+    return value.map(Number).filter(Number.isFinite);
+  }
+
+  if (typeof value === "string") {
     try {
       const parsed = JSON.parse(value) as unknown;
-      if (Array.isArray(parsed)) {
-        peaks = parsed.map(Number).filter(Number.isFinite);
-      }
+      return Array.isArray(parsed)
+        ? parsed.map(Number).filter(Number.isFinite)
+        : [];
     } catch {
-      peaks = [];
+      return [];
     }
   }
 
-  if (!peaks.length) {
-    return [22, 36, 48, 62, 50, 72, 58, 80, 64, 44, 52, 38];
-  }
-
-  const sampled = peaks.length > 80
-    ? peaks.filter((_, index) => index % Math.ceil(peaks.length / 80) === 0)
-    : peaks;
-  const maxPeak = Math.max(...sampled.map((peak) => Math.abs(peak)), 1);
-
-  return sampled.slice(0, 80).map((peak) => {
-    const normalized = Math.abs(peak) / maxPeak;
-    return Math.max(12, Math.round(normalized * 100));
-  });
+  return [];
 }
 
 export function normalizeFilmwaveSong(song: FilmwaveSongApiItem): DesktopSong {
