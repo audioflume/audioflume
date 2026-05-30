@@ -153,7 +153,7 @@
 
 .filmwave-song-wave-wrap {
   display: flex;
-  min-width: 220px;
+  min-width: 0;
   flex: 1 1 520px;
   align-items: center;
   gap: 14px;
@@ -230,7 +230,7 @@
   }
 
   .filmwave-song-wave-wrap {
-    min-width: 160px;
+    min-width: 0;
     flex-basis: 320px;
     gap: 10px;
   }
