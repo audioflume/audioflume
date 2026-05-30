@@ -9,6 +9,7 @@ import WaveformIcon from "../icons/WaveformIcon";
 import "./DesktopAppShell.css";
 import "./DesktopAppShellResponsive.css";
 import "./DesktopScrollLock.css";
+import "../../../../../packages/shared/styles/sidebar.css";
 
 export type DesktopAppView =
   | "projects"
