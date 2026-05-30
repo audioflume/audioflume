@@ -2,6 +2,15 @@
 
 import type { CSSProperties, ReactNode } from "react";
 
+type MusicLibraryFrameProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+export function MusicLibraryFrame({ children, className = "" }: MusicLibraryFrameProps) {
+  return <section className={`filmwave-music-library-frame${className ? ` ${className}` : ""}`}>{children}</section>;
+}
+
 type SearchFilterChromeProps = {
   search: ReactNode;
   tags?: ReactNode;
