@@ -284,13 +284,32 @@
   color: var(--text-primary);
 }
 
+body.sidebar-collapsed .desktop-sidebar-projects-head,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
+  height: var(--filmwave-sidebar-row-height);
+  justify-content: center;
+  margin-bottom: 2px;
+  padding: 0;
+}
+
+body.sidebar-collapsed .desktop-sidebar-projects-label,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
+  display: none;
+}
+
+body.sidebar-collapsed .desktop-sidebar-project-actions,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions {
+  display: flex;
+  width: 100%;
+  align-items: center;
   justify-content: center;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions {
-  display: none;
+body.sidebar-collapsed .desktop-sidebar-add-button,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+  width: 100%;
+  height: var(--filmwave-sidebar-row-height);
+  border-radius: var(--filmwave-sidebar-row-radius);
 }
 
 .desktop-sidebar-empty-projects {
@@ -299,6 +318,7 @@
   font-size: 12px;
 }
 
+body.sidebar-collapsed .desktop-sidebar-empty-projects,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
   display: none;
 }
