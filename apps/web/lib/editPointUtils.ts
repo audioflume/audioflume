@@ -40,6 +40,52 @@ const EDIT_POINT_ORDER = new Map<string, number>(
   CORE_EDIT_POINT_TYPES.map((type, index) => [type, index]),
 );
 
+const EDIT_POINT_TYPE_ALIASES: Record<string, EditPointFilterType> = {
+  first_hit: "first_hit",
+  firsthit: "first_hit",
+  first_hit_point: "first_hit",
+  hit: "first_hit",
+  intro_hit: "first_hit",
+  main_drop: "drop",
+  drop: "drop",
+  primary_drop: "drop",
+  peak: "drop",
+  impact: "drop",
+  break: "break",
+  breakdown: "break",
+  bridge: "break",
+  button_ending: "button_ending",
+  button: "button_ending",
+  ending: "button_ending",
+  end: "button_ending",
+  outro: "button_ending",
+  fast_intro: "fast_intro",
+  drop_before_60: "drop_before_60",
+  drop_before_60s: "drop_before_60",
+  clean_button_ending: "clean_button_ending",
+  break_after_midpoint: "break_after_midpoint",
+  no_long_intro: "no_long_intro",
+};
+
+function toEditPointKey(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replaceAll("/", " ")
+    .replaceAll("-", " ")
+    .replaceAll(".", "")
+    .replace(/\s+/g, "_");
+}
+
+export function normalizeEditPointType(value: string) {
+  const key = toEditPointKey(value);
+  const option = EDIT_POINT_FILTER_OPTIONS.find(
+    (item) => item.type === key || toEditPointKey(item.label) === key || toEditPointKey(item.tagLabel) === key,
+  );
+
+  return option?.type ?? EDIT_POINT_TYPE_ALIASES[key] ?? key;
+}
+
 export function parseEditPoints(value: Song["editPoints"]): EditPoints {
   if (!value) {
     return {
@@ -64,7 +110,7 @@ export function parseEditPoints(value: Song["editPoints"]): EditPoints {
 }
 
 export function getMarkerType(marker: EditPointMarker) {
-  return marker.type || marker.label.toLowerCase().replaceAll(" ", "_");
+  return normalizeEditPointType(marker.type || marker.label || "");
 }
 
 export function getSongEditPointMarkers(song: Song) {
@@ -88,14 +134,17 @@ export function getSongCuePointMarkers(song: Song) {
 }
 
 export function songHasEditPointType(song: Song, type: string) {
+  const normalizedType = normalizeEditPointType(type);
+
   return getSongEditPointMarkers(song).some(
-    (marker) => getMarkerType(marker) === type,
+    (marker) => getMarkerType(marker) === normalizedType,
   );
 }
 
 function getMarkerTime(song: Song, type: string) {
+  const normalizedType = normalizeEditPointType(type);
   const marker = getSongEditPointMarkers(song).find(
-    (item) => getMarkerType(item) === type,
+    (item) => getMarkerType(item) === normalizedType,
   );
 
   const time = Number(marker?.time);
@@ -104,8 +153,10 @@ function getMarkerTime(song: Song, type: string) {
 }
 
 export function songMatchesEditPointFilter(song: Song, type: string) {
-  if (CORE_EDIT_POINT_TYPES.includes(type as typeof CORE_EDIT_POINT_TYPES[number])) {
-    return songHasEditPointType(song, type);
+  const normalizedType = normalizeEditPointType(type);
+
+  if (CORE_EDIT_POINT_TYPES.includes(normalizedType as typeof CORE_EDIT_POINT_TYPES[number])) {
+    return songHasEditPointType(song, normalizedType);
   }
 
   const firstHit = getMarkerTime(song, "first_hit");
@@ -114,22 +165,22 @@ export function songMatchesEditPointFilter(song: Song, type: string) {
   const buttonEnding = getMarkerTime(song, "button_ending");
   const duration = Number(song.duration);
 
-  if (type === "fast_intro") {
+  if (normalizedType === "fast_intro") {
     return firstHit !== null && firstHit <= 20;
   }
 
-  if (type === "drop_before_60") {
+  if (normalizedType === "drop_before_60") {
     return drop !== null && drop <= 60;
   }
 
-  if (type === "clean_button_ending") {
+  if (normalizedType === "clean_button_ending") {
     if (buttonEnding === null) return false;
     if (!Number.isFinite(duration) || duration <= 0) return true;
 
     return buttonEnding >= duration - 30;
   }
 
-  if (type === "break_after_midpoint") {
+  if (normalizedType === "break_after_midpoint") {
     return (
       breakPoint !== null &&
       Number.isFinite(duration) &&
@@ -138,11 +189,11 @@ export function songMatchesEditPointFilter(song: Song, type: string) {
     );
   }
 
-  if (type === "no_long_intro") {
+  if (normalizedType === "no_long_intro") {
     return firstHit !== null && firstHit <= 35;
   }
 
-  return songHasEditPointType(song, type);
+  return songHasEditPointType(song, normalizedType);
 }
 
 export function songMatchesEditPointFilters(song: Song, selectedTypes: string[]) {
@@ -152,9 +203,11 @@ export function songMatchesEditPointFilters(song: Song, selectedTypes: string[])
 }
 
 export function getEditPointFilterLabel(type: string) {
+  const normalizedType = normalizeEditPointType(type);
+
   return (
-    EDIT_POINT_FILTER_OPTIONS.find((option) => option.type === type)?.tagLabel ||
-    type.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
+    EDIT_POINT_FILTER_OPTIONS.find((option) => option.type === normalizedType)?.tagLabel ||
+    normalizedType.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
   );
 }
 
