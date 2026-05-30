@@ -1,6 +1,6 @@
-import { buildWaveformPercentBars } from "@filmwave/shared";
+import { SharedWaveformCanvas } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CheckIcon from "../../icons/CheckIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
@@ -33,16 +33,10 @@ export default function DesktopSongCard({
   onSync: () => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
-  const [waveformWidth, setWaveformWidth] = useState(0);
   const actionsRef = useRef<HTMLDivElement | null>(null);
-  const waveformRef = useRef<HTMLDivElement | null>(null);
   const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
   const isSynced = syncStatus === "synced" && Boolean(syncedPath);
-  const visibleWaveform = useMemo(
-    () => buildWaveformPercentBars(song.waveform, waveformWidth),
-    [song.waveform, waveformWidth],
-  );
 
   useEffect(() => {
     if (!actionsOpen) return;
@@ -65,30 +59,6 @@ export default function DesktopSongCard({
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [actionsOpen]);
-
-  useEffect(() => {
-    if (!waveformRef.current) return;
-    const waveformElement: HTMLDivElement = waveformRef.current;
-
-    let frame = 0;
-
-    function updateWidth() {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        setWaveformWidth(waveformElement.clientWidth);
-      });
-    }
-
-    updateWidth();
-
-    const resizeObserver = new ResizeObserver(updateWidth);
-    resizeObserver.observe(waveformElement);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-    };
-  }, []);
 
   async function startSyncedSongDrag() {
     if (!isSynced || !syncedPath) return;
@@ -126,6 +96,13 @@ export default function DesktopSongCard({
     songDragStartRef.current = null;
   }
 
+  const markerOverlay = markersVisible ? (
+    <>
+      <i style={{ left: "34%" }} />
+      <i style={{ left: "68%" }} />
+    </>
+  ) : null;
+
   return (
     <article className={`desktop-song-card${isPlaying ? " is-playing" : ""}`}>
       <button type="button" className="desktop-song-cover" aria-label="Play song" onClick={onPlay}>
@@ -151,16 +128,13 @@ export default function DesktopSongCard({
           {song.markers > 0 && <span>+{song.markers}</span>}
         </div>
 
-        <div ref={waveformRef} className="desktop-song-wave" aria-hidden="true">
-          {visibleWaveform.map((height, index) => (
-            <span
-              key={`${song.id}-${index}`}
-              style={{ height: `${Math.max(12, height)}%` }}
-            />
-          ))}
-          {markersVisible && <i style={{ left: "34%" }} />}
-          {markersVisible && <i style={{ left: "68%" }} />}
-        </div>
+        <SharedWaveformCanvas
+          peaks={song.waveform}
+          progress={isPlaying ? 0.001 : 0}
+          overlay={markerOverlay}
+          className="desktop-song-wave filmwave-song-wave-canvas"
+          canvasClassName="desktop-song-wave-canvas"
+        />
 
         <span className="desktop-song-duration">{song.duration}</span>
       </button>
