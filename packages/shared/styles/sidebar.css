@@ -18,7 +18,7 @@
   top: var(--filmwave-sidebar-top-offset);
   bottom: 0;
   left: 0;
-  z-index: 90;
+  z-index: 120;
   display: flex;
   width: var(--filmwave-sidebar-expanded-width);
   flex-direction: column;
@@ -219,34 +219,32 @@
   min-width: 0;
   overflow: hidden;
   margin-left: var(--filmwave-sidebar-label-gap);
-  color: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
+  opacity: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
-  opacity: 1;
   transition:
     opacity 150ms ease,
-    width 150ms ease;
+    margin 150ms ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
+  justify-content: center;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
   width: 0;
-  pointer-events: none;
+  margin-left: 0;
   opacity: 0;
 }
 
 .desktop-sidebar-projects-head {
-  position: relative;
   display: flex;
   height: 24px;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   margin-bottom: 8px;
-  border-radius: var(--filmwave-sidebar-row-radius);
   padding: 0 var(--filmwave-sidebar-row-padding-x);
-  transition: padding 200ms ease;
 }
 
 .desktop-sidebar-projects-label {
@@ -259,7 +257,7 @@
 }
 
 .desktop-sidebar-project-actions {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
 }
@@ -272,7 +270,7 @@
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: var(--filmwave-sidebar-row-radius);
+  border-radius: 6px;
   background: transparent;
   color: var(--text-muted);
   padding: 0;
@@ -286,40 +284,19 @@
   color: var(--text-primary);
 }
 
-.desktop-sidebar-plus-icon {
-  display: inline-flex;
-  width: var(--filmwave-sidebar-icon-size);
-  height: var(--filmwave-sidebar-icon-size);
-  align-items: center;
-  justify-content: center;
-  color: inherit;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 1;
-}
-
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
   justify-content: center;
-  padding: 0;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
-  pointer-events: none;
-  position: absolute;
-  opacity: 0;
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
-  width: 100%;
-  height: var(--filmwave-sidebar-row-height);
-  padding: 0 var(--filmwave-sidebar-row-padding-x);
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions {
+  display: none;
 }
 
 .desktop-sidebar-empty-projects {
-  padding: 6px var(--filmwave-sidebar-row-padding-x) 0;
   color: var(--text-muted);
+  padding: 4px var(--filmwave-sidebar-row-padding-x) 0;
   font-size: 12px;
-  line-height: 1.35;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
@@ -327,43 +304,28 @@
 }
 
 .desktop-sidebar-tooltip {
-  pointer-events: none;
   position: fixed;
-  z-index: 140;
-  left: calc(var(--filmwave-sidebar-collapsed-width) - 11px);
+  z-index: 1000;
+  left: calc(var(--filmwave-sidebar-collapsed-width) + 8px);
+  pointer-events: none;
   transform: translateY(-50%);
 }
 
 .desktop-sidebar-tooltip-border {
-  border-radius: 6px;
-  background: var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
   padding: 1px;
-  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
 }
 
 .desktop-sidebar-tooltip-inner {
-  border-radius: 6px;
-  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
   color: var(--text-primary);
-  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
-  box-shadow: var(--shadow-ui);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1;
-  padding: 7px 14px 7px 20px;
+  padding: 7px 9px;
   white-space: nowrap;
-}
-
-.desktop-app-main {
-  transition: padding-left 200ms ease;
-}
-
-@media (max-width: 768px) {
-  .desktop-app-sidebar {
-    width: var(--filmwave-sidebar-collapsed-width);
-  }
-
-  .desktop-app-main {
-    padding-left: calc(var(--filmwave-sidebar-collapsed-width) + 24px);
-  }
+  box-shadow: var(--shadow-ui);
 }
