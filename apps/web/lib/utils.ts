@@ -12,6 +12,15 @@ export function getStringFromRecord(
     if (typeof value === "string" && value.trim()) {
       return value.trim();
     }
+
+    if (Array.isArray(value)) {
+      const text = value
+        .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+        .join(" ")
+        .trim();
+
+      if (text) return text;
+    }
   }
 
   return "";
