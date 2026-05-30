@@ -2,6 +2,7 @@
 @import "../../../packages/shared/styles/song-card.css";
 @import "../../../packages/shared/styles/music-player.css";
 @import "../../../packages/shared/styles/sidebar.css";
+@import "../../../packages/shared/styles/search-filter-chrome.css";
 
 :root {
   --bg-primary: #111111;
@@ -18,68 +19,54 @@
   --bg-control-hover: rgba(255, 255, 255, 0.12);
   --bg-hover: rgba(255, 255, 255, 0.04);
   --bg-hover-strong: rgba(255, 255, 255, 0.08);
-  --icon-button-hover: rgba(255, 255, 255, 0.18);
-  --divider: rgba(255, 255, 255, 0.07);
   --border: rgba(255, 255, 255, 0.1);
   --border-subtle: rgba(255, 255, 255, 0.03);
+  --border-strong: rgba(255, 255, 255, 0.16);
   --border-hover: rgba(255, 255, 255, 0.2);
   --text-primary: #ffffff;
   --text-secondary: #808080;
   --text-muted: rgba(255, 255, 255, 0.3);
   --text-subtle: rgba(255, 255, 255, 0.4);
   --icon-color: rgba(255, 255, 255, 0.4);
-  --accent: #ddff43;
-  --accent-2: #fb8f61;
-  --success: #48b571;
-  --warning: #d9a441;
-  --error: #dc584f;
-  --status-success: #48b571;
-  --status-warning: #d9a441;
-  --status-error: #dc584f;
   --waveform-color: rgba(255, 255, 255, 0.3);
   --waveform-progress: #ffffff;
-  --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.15);
-  --media-overlay-strong: rgba(0, 0, 0, 0.46);
+  --accent: #ddff43;
+  --accent-contrast: #111111;
+  --danger: #ff5d57;
+  --success: #7ed957;
+  --warning: #ffd166;
   --sidebar-width-expanded: 280px;
   --sidebar-width-collapsed: 76px;
-  font-family:
-    "Instrument Sans",
-    Arial,
-    Helvetica,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.15);
   color: var(--text-primary);
   background: var(--bg-primary);
-  -webkit-font-smoothing: antialiased;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
-html,
-body,
-#root {
-  min-width: 600px;
-  min-height: 100vh;
-  margin: 0;
-  background: var(--bg-primary);
-}
-
-html {
-  overflow-x: hidden;
-  overscroll-behavior-x: none;
-}
-
 body {
+  margin: 0;
+  min-width: 760px;
+  min-height: 100vh;
+  overflow: hidden;
   background: var(--bg-primary);
   color: var(--text-primary);
-  overscroll-behavior-y: contain;
 }
 
-#root {
-  overflow-x: hidden;
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
 }
