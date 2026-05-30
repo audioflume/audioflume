@@ -15,6 +15,7 @@ type SidebarShellProps = {
   main?: ReactNode;
   className?: string;
   sidebarClassName?: string;
+  sidebarStyle?: CSSProperties;
   mainClassName?: string;
 };
 
@@ -26,12 +27,13 @@ export function SidebarShell({
   main,
   className = "desktop-app-shell",
   sidebarClassName = "desktop-app-sidebar",
+  sidebarStyle,
   mainClassName = "desktop-app-main",
 }: SidebarShellProps) {
   return (
     <div className={`${className}${collapsed ? " is-sidebar-collapsed" : ""}`}>
       {header}
-      <aside className={sidebarClassName} data-tauri-drag-region>
+      <aside className={sidebarClassName} style={sidebarStyle} data-sidebar data-tauri-drag-region>
         {children}
       </aside>
       {tooltip && <SidebarTooltip label={tooltip.label} top={tooltip.top} />}
@@ -176,6 +178,7 @@ type SidebarProjectsHeaderProps = {
   actionIcon: ReactNode;
   onActionClick: () => void;
   onTooltipChange: (tooltip: SidebarTooltipState) => void;
+  beforeAction?: ReactNode;
 };
 
 export function SidebarProjectsHeader({
@@ -185,6 +188,7 @@ export function SidebarProjectsHeader({
   actionIcon,
   onActionClick,
   onTooltipChange,
+  beforeAction,
 }: SidebarProjectsHeaderProps) {
   function showTooltip(element: HTMLElement) {
     if (!collapsed) return;
@@ -196,6 +200,7 @@ export function SidebarProjectsHeader({
     <div className="desktop-sidebar-projects-head">
       <span className="desktop-sidebar-projects-label">{label}</span>
       <div className="desktop-sidebar-project-actions">
+        {beforeAction}
         <button
           type="button"
           className="desktop-sidebar-add-button"
