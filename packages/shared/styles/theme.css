@@ -32,6 +32,15 @@
   --waveform-color: rgba(255, 255, 255, 0.3);
   --waveform-progress: #ffffff;
 
+  --cue-marker-color: var(--accent);
+  --cue-marker-width: 1.5px;
+  --cue-marker-width-active: 2px;
+  --cue-marker-width-muted: 1px;
+  --cue-marker-opacity: 0.95;
+  --cue-marker-opacity-muted: 0.3;
+  --cue-point-range: rgba(221, 255, 67, 0.1);
+  --cue-point-range-strong: rgba(221, 255, 67, 0.16);
+
   --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.15);
   --media-overlay-strong: rgba(0, 0, 0, 0.45);
 
@@ -84,6 +93,9 @@
 
   --waveform-color: rgba(17, 17, 17, 0.28);
   --waveform-progress: #111111;
+
+  --cue-point-range: rgba(17, 17, 17, 0.08);
+  --cue-point-range-strong: rgba(17, 17, 17, 0.13);
 
   --shadow-ui: 0 18px 55px rgba(0, 0, 0, 0.12);
   --media-overlay-strong: rgba(255, 255, 255, 0.62);
