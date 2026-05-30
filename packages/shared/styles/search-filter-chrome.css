@@ -20,7 +20,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 .filmwave-search-filter-sticky {
   position: sticky;
   top: 56px;
-  z-index: 90;
+  z-index: 80;
   display: flex;
   width: 100%;
   flex-direction: column;
