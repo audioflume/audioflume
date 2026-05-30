@@ -218,233 +218,247 @@ export default function MusicPage() {
     filters,
     setFilters,
     hydrated: filtersHydrated,
-  } = useFilterPersistence({
-    storageKey: musicFilterStorageKey,
-    authLoaded,
-  });
+    hasSavedState,
+  } = useFilterPersistence(musicFilterStorageKey);
 
   const {
-    search,
-    selectedMoods,
-    selectedGenres,
-    selectedInstruments,
-    selectedBuilds,
-    selectedVocals,
-    selectedDurations,
-    selectedEditPoints,
-    showEditPointMarkers,
-    instrumental,
-    bpmValue,
-    keyValue,
-    selectedPlaylist,
-  } = filters;
+    songs,
+    loading: songsLoading,
+    error: songsError,
+  } = useSongs();
 
-  const effectiveShowEditPointMarkers = filtersHydrated
-    ? showEditPointMarkers
-    : false;
+  const { currentSong } = usePlayer();
+  const playerVisible = Boolean(currentSong);
 
-  const setSearch = (v: string) => setFilters((f) => ({ ...f, search: v }));
-  const setSelectedMoods = (v: string[]) =>
-    setFilters((f) => ({ ...f, selectedMoods: v }));
-  const setSelectedGenres = (v: string[]) =>
-    setFilters((f) => ({ ...f, selectedGenres: v }));
-  const setSelectedInstruments = (v: string[]) =>
-    setFilters((f) => ({ ...f, selectedInstruments: v }));
-  const setSelectedBuilds = (v: string[]) =>
-    setFilters((f) => ({ ...f, selectedBuilds: v }));
-  const setSelectedVocals = (v: string[]) =>
-    setFilters((f) => ({ ...f, selectedVocals: v }));
-  const setSelectedDurations = (v: string[]) =>
-    setFilters((f) => ({ ...f, selectedDurations: v }));
-  const setSelectedEditPoints = (v: string[]) =>
-    setFilters((f) => ({ ...f, selectedEditPoints: v }));
-  const setShowEditPointMarkers = (v: boolean) =>
-    setFilters((f) => ({ ...f, showEditPointMarkers: v }));
-  const setInstrumental = (v: boolean) =>
-    setFilters((f) => ({ ...f, instrumental: v }));
-  const setBpmValue = (v: BpmFilterValue | null) =>
-    setFilters((f) => ({ ...f, bpmValue: v }));
-  const setKeyValue = (v: KeyFilterValue | null) =>
-    setFilters((f) => ({ ...f, keyValue: v }));
-  const setSelectedPlaylist = (v: PlaylistRef | null) =>
-    setFilters((f) => ({ ...f, selectedPlaylist: v }));
-
-  const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const [playlistSongIds, setPlaylistSongIds] = useState<Set<string> | null>(
-    null,
-  );
-  const [playlistSongIdsLoadingFor, setPlaylistSongIdsLoadingFor] = useState<
-    number | null
-  >(null);
-  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
   const [musicHeroHovered, setMusicHeroHovered] = useState(false);
   const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
+  const [playlistSongIdsByPlaylistId, setPlaylistSongIdsByPlaylistId] = useState<
+    Record<string, Set<string>>
+  >({});
+  const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
+    useState<Set<string> | null>(null);
+  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
 
-  const { songs, loading: songsLoading, error: songsError } = useSongs();
-  const { setQueue } = usePlayer();
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
-  const selectedVocalFilters = useMemo(() => {
-    const filters = [...selectedVocals];
-    if (instrumental && !filters.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION)) {
-      filters.unshift(INSTRUMENTAL_VOCAL_FILTER_OPTION);
-    }
-    return filters;
-  }, [instrumental, selectedVocals]);
-
-  const setSelectedVocalFilters = (values: string[]) => {
-    const nextInstrumental = values.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
-    const nextVocals = values.filter(
-      (value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
-    );
-
-    setFilters((f) => ({
-      ...f,
-      instrumental: nextInstrumental,
-      selectedVocals: nextVocals,
-    }));
-  };
-
+  const search = filters.search;
+  const selectedMoods = filters.moods;
+  const selectedGenres = filters.genres;
+  const selectedInstruments = filters.instruments;
+  const selectedBuilds = filters.builds;
+  const selectedVocals = filters.vocals;
+  const selectedDurations = filters.durations;
+  const selectedEditPoints = filters.editPoints;
+  const instrumental = filters.instrumental;
+  const bpmValue = filters.bpm;
+  const keyValue = filters.key;
+  const selectedPlaylist = filters.playlist;
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
 
-  useEffect(() => {
-    let cancelled = false;
+  function updateFilters(nextFilters: typeof filters) {
+    setFilters(nextFilters);
+  }
 
-    if (!selectedPlaylistId) {
-      setPlaylistSongIds(null);
-      setPlaylistSongIdsLoadingFor(null);
-      return;
-    }
-
-    setPlaylistSongIds(null);
-    setPlaylistSongIdsLoadingFor(selectedPlaylistId);
-
-    fetch(`/api/playlists/${selectedPlaylistId}/songs`)
-      .then(async (res) => {
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : null;
-        if (!res.ok) throw new Error("Failed to load playlist songs");
-        return getPlaylistSongIdsFromResponse(data);
-      })
-      .then((ids) => {
-        if (cancelled) return;
-        setPlaylistSongIds(ids);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setPlaylistSongIds(new Set());
-      })
-      .finally(() => {
-        if (cancelled) return;
-        setPlaylistSongIdsLoadingFor(null);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [selectedPlaylistId]);
-
-  useEffect(() => {
-    setShuffleOrderIds(null);
-  }, [
-    search,
-    selectedMoods,
-    selectedGenres,
-    selectedInstruments,
-    selectedBuilds,
-    selectedVocals,
-    selectedDurations,
-    selectedEditPoints,
-    instrumental,
-    bpmValue,
-    keyValue,
-    selectedPlaylistId,
-  ]);
-
-  const selectedPlaylistSongIds =
-    selectedPlaylistId && playlistSongIdsLoadingFor === selectedPlaylistId
-      ? null
-      : playlistSongIds;
-
-  const filteredSongs = useMemo(() => {
-    return songs.filter((song) => {
-      const q = search.trim().toLowerCase();
-      const matchesSearch =
-        !q ||
-        [song.title, song.artist, song.key, String(song.bpm)]
-          .join(" ")
-          .toLowerCase()
-          .includes(q);
-
-      const matchesPlaylist =
-        !selectedPlaylistId ||
-        selectedPlaylistSongIds === null ||
-        selectedPlaylistSongIds.has(getSongStableId(song));
-
-      return (
-        matchesSearch &&
-        includesAll(song.moods, selectedMoods) &&
-        includesAll(song.genres, selectedGenres) &&
-        includesAll(song.instruments, selectedInstruments) &&
-        includesAll(song.builds, selectedBuilds) &&
-        includesAll(song.vocals, selectedVocals) &&
-        matchesDurationFilter(song.duration, selectedDurations) &&
-        songMatchesEditPointFilters(song, selectedEditPoints) &&
-        matchesBpmFilter(song.bpm, bpmValue) &&
-        matchesKeyFilter(song.key, keyValue) &&
-        (!instrumental || song.instrumental) &&
-        matchesPlaylist
-      );
+  const setSearch = (value: string) =>
+    updateFilters({
+      ...filters,
+      search: value,
     });
-  }, [
-    songs,
-    search,
-    selectedMoods,
-    selectedGenres,
-    selectedInstruments,
-    selectedBuilds,
-    selectedVocals,
-    selectedDurations,
-    selectedEditPoints,
-    instrumental,
-    bpmValue,
-    keyValue,
-    selectedPlaylistId,
-    selectedPlaylistSongIds,
-  ]);
 
-  const hasActiveFilters = Boolean(
-    search.trim() ||
-      selectedMoods.length > 0 ||
-      selectedGenres.length > 0 ||
-      selectedInstruments.length > 0 ||
-      selectedBuilds.length > 0 ||
-      selectedVocals.length > 0 ||
-      selectedDurations.length > 0 ||
-      selectedEditPoints.length > 0 ||
-      effectiveShowEditPointMarkers ||
-      instrumental ||
-      bpmValue ||
-      keyValue ||
-      selectedPlaylist ||
-      shuffleOrderIds,
-  );
+  const setSelectedMoods = (values: string[]) =>
+    updateFilters({ ...filters, moods: values });
+
+  const setSelectedGenres = (values: string[]) =>
+    updateFilters({ ...filters, genres: values });
+
+  const setSelectedInstruments = (values: string[]) =>
+    updateFilters({ ...filters, instruments: values });
+
+  const setSelectedBuilds = (values: string[]) =>
+    updateFilters({ ...filters, builds: values });
+
+  const setSelectedVocals = (values: string[]) =>
+    updateFilters({ ...filters, vocals: values });
+
+  const setSelectedDurations = (values: string[]) =>
+    updateFilters({ ...filters, durations: values });
+
+  const setSelectedEditPoints = (values: string[]) =>
+    updateFilters({ ...filters, editPoints: values });
+
+  const setInstrumental = (value: boolean) =>
+    updateFilters({ ...filters, instrumental: value });
+
+  const setBpmValue = (value: BpmFilterValue | null) =>
+    updateFilters({ ...filters, bpm: value });
+
+  const setKeyValue = (value: KeyFilterValue | null) =>
+    updateFilters({ ...filters, key: value });
+
+  const setSelectedPlaylist = (value: PlaylistRef | null) =>
+    updateFilters({ ...filters, playlist: value });
+
+  const selectedVocalFilters = instrumental
+    ? [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...selectedVocals]
+    : selectedVocals;
+
+  const setSelectedVocalFilters = (values: string[]) => {
+    const hasInstrumental = values.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
+
+    updateFilters({
+      ...filters,
+      instrumental: hasInstrumental,
+      vocals: values.filter((value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION),
+    });
+  };
+
+  const hasActiveFilters =
+    search.trim().length > 0 ||
+    selectedMoods.length > 0 ||
+    selectedGenres.length > 0 ||
+    selectedInstruments.length > 0 ||
+    selectedBuilds.length > 0 ||
+    selectedVocals.length > 0 ||
+    selectedDurations.length > 0 ||
+    selectedEditPoints.length > 0 ||
+    instrumental ||
+    bpmValue !== null ||
+    keyValue !== null ||
+    selectedPlaylist !== null ||
+    shuffleOrderIds !== null;
 
   const searchPlaceholder = hasActiveFilters
     ? "Search filtered results"
     : "Search the catalog";
 
-  const shuffleActive = shuffleOrderIds !== null;
+  const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
+
+  useEffect(() => {
+    if (!authLoaded || !userId || !selectedPlaylistId) return;
+    if (playlistSongIdsByPlaylistId[selectedPlaylistId]) {
+      setSelectedPlaylistSongIds(playlistSongIdsByPlaylistId[selectedPlaylistId]);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadPlaylistSongs() {
+      setSelectedPlaylistSongIds(null);
+
+      try {
+        const res = await fetch(`/api/playlists/${selectedPlaylistId}/songs`);
+        if (!res.ok) throw new Error("Failed to load playlist songs");
+        const data = await res.json();
+        const ids = getPlaylistSongIdsFromResponse(data);
+
+        if (cancelled) return;
+
+        setPlaylistSongIdsByPlaylistId((current) => ({
+          ...current,
+          [selectedPlaylistId]: ids,
+        }));
+        setSelectedPlaylistSongIds(ids);
+      } catch (error) {
+        console.error(error);
+        if (!cancelled) setSelectedPlaylistSongIds(new Set());
+      }
+    }
+
+    void loadPlaylistSongs();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authLoaded, playlistSongIdsByPlaylistId, selectedPlaylistId, userId]);
+
+  useEffect(() => {
+    if (!selectedPlaylistId) {
+      setSelectedPlaylistSongIds(null);
+    }
+  }, [selectedPlaylistId]);
+
+  const filteredSongs = useMemo(() => {
+    if (!filtersHydrated) return [];
+
+    const searchQuery = search.toLowerCase().trim();
+    const playlistIds = selectedPlaylistSongIds;
+
+    return songs.filter((song, index) => {
+      const record = getRecord(song);
+      const fields =
+        typeof record.fields === "object" && record.fields !== null
+          ? getRecord(record.fields)
+          : null;
+
+      if (selectedPlaylistId) {
+        if (!playlistIds) return false;
+        const identityValues = getSongIdentityValues(song);
+        if (!identityValues.some((id) => playlistIds.has(id))) return false;
+      }
+
+      const title = getStringFromRecord(record, ["title", "name"]).toLowerCase();
+      const artist = getStringFromRecord(record, ["artist", "artistName"]).toLowerCase();
+      const key = getStringFromRecord(record, ["key"]).toLowerCase();
+      const genre = getStringFromRecord(record, ["genre"]).toLowerCase();
+      const mood = getStringFromRecord(record, ["mood"]).toLowerCase();
+      const instruments = getStringFromRecord(record, ["instruments", "instrument"]).toLowerCase();
+      const build = getStringFromRecord(record, ["build"]).toLowerCase();
+      const vocals = getStringFromRecord(record, ["vocals"]).toLowerCase();
+      const album = fields ? getStringFromRecord(fields, ["Album", "album"]).toLowerCase() : "";
+      const tags = fields ? getStringFromRecord(fields, ["Tags", "tags"]).toLowerCase() : "";
+      const tempo = fields ? getStringFromRecord(fields, ["Tempo", "tempo"]).toLowerCase() : "";
+      const description = fields ? getStringFromRecord(fields, ["Description", "description"]).toLowerCase() : "";
+
+      if (
+        searchQuery &&
+        ![title, artist, key, genre, mood, instruments, build, vocals, album, tags, tempo, description].some((value) =>
+          value.includes(searchQuery),
+        )
+      ) {
+        return false;
+      }
+
+      if (!includesAll(mood, selectedMoods)) return false;
+      if (!includesAll(genre, selectedGenres)) return false;
+      if (!includesAll(instruments, selectedInstruments)) return false;
+      if (!includesAll(build, selectedBuilds)) return false;
+      if (!includesAll(vocals, selectedVocals)) return false;
+      if (instrumental && !vocals.includes("instrumental")) return false;
+      if (!matchesDurationFilter(song, selectedDurations)) return false;
+      if (!matchesBpmFilter(song, bpmValue)) return false;
+      if (!matchesKeyFilter(song, keyValue)) return false;
+      if (!songMatchesEditPointFilters(song, selectedEditPoints)) return false;
+
+      return true;
+    });
+  }, [
+    bpmValue,
+    filtersHydrated,
+    instrumental,
+    keyValue,
+    search,
+    selectedBuilds,
+    selectedDurations,
+    selectedEditPoints,
+    selectedGenres,
+    selectedInstruments,
+    selectedMoods,
+    selectedPlaylistId,
+    selectedPlaylistSongIds,
+    selectedVocals,
+    songs,
+  ]);
 
   const displayedSongs = useMemo(() => {
     if (!shuffleOrderIds) return filteredSongs;
 
-    const orderMap = new Map(
-      shuffleOrderIds.map((songId, index) => [songId, index]),
-    );
+    const orderMap = new Map(shuffleOrderIds.map((songId, index) => [songId, index]));
 
     return [...filteredSongs].sort((a, b) => {
-      const aOrder = orderMap.get(getSongStableId(a));
-      const bOrder = orderMap.get(getSongStableId(b));
+      const aId = getSongStableId(a);
+      const bId = getSongStableId(b);
+      const aOrder = orderMap.get(aId);
+      const bOrder = orderMap.get(bId);
 
       if (aOrder === undefined && bOrder === undefined) return 0;
       if (aOrder === undefined) return 1;
@@ -453,10 +467,6 @@ export default function MusicPage() {
       return aOrder - bOrder;
     });
   }, [filteredSongs, shuffleOrderIds]);
-
-  useEffect(() => {
-    setQueue(displayedSongs.filter((song) => song.audioUrl));
-  }, [displayedSongs, setQueue]);
 
   const loadingPlaylistSongs =
     !!selectedPlaylistId && selectedPlaylistSongIds === null;
@@ -473,15 +483,10 @@ export default function MusicPage() {
           search={
             <SearchFilterInput
               icon={<SearchIcon className="shrink-0 text-[var(--text-muted)]" />}
-              input={
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder={searchPlaceholder}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              }
+              inputRef={searchInputRef}
+              value={search}
+              placeholder={searchPlaceholder}
+              onChange={(e) => setSearch(e.target.value)}
             />
           }
           tags={
@@ -761,10 +766,10 @@ export default function MusicPage() {
                       </div>
                     </div>
 
-                    <p className="relative z-10 max-w-[360px] text-[13px] leading-6 text-white/72">
+                    <div className="relative z-10 max-w-[320px] text-[14px] leading-6 text-white/72">
                       Keep projects, playlists, and downloaded cues organized
                       across the web app and local folders.
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -773,16 +778,18 @@ export default function MusicPage() {
         </div>
 
         {songsError && (
-          <div className="px-8 py-4 text-sm text-red-400">{songsError}</div>
+          <div className="px-8 py-4 text-sm text-[var(--danger)]">
+            Failed to load songs. Showing cached results where available.
+          </div>
         )}
 
         {showSongSkeleton ? (
           <SkeletonSongList />
         ) : (
-          <div>
+          <div className="pb-6">
             {displayedSongs.map((song, index) => (
               <SongCard
-                key={song.id}
+                key={getSongStableId(song, index)}
                 song={song}
                 index={index}
                 showEditPointMarkers={effectiveShowEditPointMarkers}
@@ -791,7 +798,7 @@ export default function MusicPage() {
           </div>
         )}
 
-        <Footer />
+        <Footer playerPadding={playerVisible} />
       </section>
     </main>
   );
