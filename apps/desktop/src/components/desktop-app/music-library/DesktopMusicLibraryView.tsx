@@ -1,3 +1,8 @@
+import {
+  SearchFilterChrome,
+  SearchFilterInput,
+  SearchFilterQuickButton,
+} from "@filmwave/shared";
 import { exists } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -281,24 +286,24 @@ export default function DesktopMusicLibraryView({
 
   return (
     <section className={`desktop-music-page${activeSong ? " has-player" : ""}`}>
-      <div className="desktop-music-sticky-bar">
-        <div
-          className="desktop-music-search-row"
-          onClick={() => searchInputRef.current?.focus()}
-        >
-          <div className="desktop-music-search-shell">
-            <SearchIconSmall size={13} className="desktop-music-search-icon" />
-            <input
-              ref={searchInputRef}
-              value={filters.search}
-              onChange={(event) =>
-                setFilters((current) => ({ ...current, search: event.target.value }))
-              }
-              placeholder="Search Music Library"
-              className="desktop-music-search-input"
-            />
-          </div>
-
+      <SearchFilterChrome
+        onSearchRowClick={() => searchInputRef.current?.focus()}
+        search={
+          <SearchFilterInput
+            icon={<SearchIconSmall size={13} />}
+            input={
+              <input
+                ref={searchInputRef}
+                value={filters.search}
+                onChange={(event) =>
+                  setFilters((current) => ({ ...current, search: event.target.value }))
+                }
+                placeholder="Search Music Library"
+              />
+            }
+          />
+        }
+        tags={
           <DesktopFilterTags
             filters={filters}
             onRemoveFilter={removeFilterValue}
@@ -307,62 +312,63 @@ export default function DesktopMusicLibraryView({
             }
             onRemoveShuffle={removeShuffle}
           />
-        </div>
+        }
+        filters={
+          <>
+            {filterKeys.map((filterKey) => (
+              <DesktopFilterDropdown
+                key={filterKey}
+                filterKey={filterKey}
+                label={FILTER_TITLES[filterKey]}
+                options={filterOptions[filterKey]}
+                selected={filters[filterKey]}
+                open={openDropdown === filterKey}
+                onOpenChange={(open) => setOpenDropdown(open ? filterKey : null)}
+                onToggleOption={(value) => setFilterValue(filterKey, value)}
+              />
+            ))}
 
-        <div className="desktop-music-filter-row">
-          {filterKeys.map((filterKey) => (
-            <DesktopFilterDropdown
-              key={filterKey}
-              filterKey={filterKey}
-              label={FILTER_TITLES[filterKey]}
-              options={filterOptions[filterKey]}
-              selected={filters[filterKey]}
-              open={openDropdown === filterKey}
-              onOpenChange={(open) => setOpenDropdown(open ? filterKey : null)}
-              onToggleOption={(value) => setFilterValue(filterKey, value)}
-            />
-          ))}
-
-          <button
-            type="button"
-            className={`desktop-filter-trigger desktop-filter-trigger-markers${filters.markers ? " is-active" : ""}`}
-            onClick={() =>
-              setFilters((current) => ({ ...current, markers: !current.markers }))
-            }
-            aria-pressed={filters.markers}
-          >
-            <span>Markers</span>
-            {filters.markers && <span className="desktop-filter-count">1</span>}
-          </button>
-
-          <button
-            type="button"
-            className={`desktop-shuffle-button${filters.shuffle ? " is-active" : ""}`}
-            onClick={toggleShuffle}
-            aria-label="Shuffle songs"
-            aria-pressed={filters.shuffle}
-          >
-            <ShuffleIcon />
-          </button>
-        </div>
-      </div>
-
-      <div className="desktop-music-quick-filters">
-        {QUICK_GENRES.map((genre) => {
-          const active = filters.genre.includes(genre);
-
-          return (
             <button
-              key={genre}
               type="button"
-              className={`desktop-quick-filter${active ? " is-active" : ""}`}
-              onClick={() => setFilterValue("genre", genre)}
+              className={`desktop-filter-trigger desktop-filter-trigger-markers${filters.markers ? " is-active" : ""}`}
+              onClick={() =>
+                setFilters((current) => ({ ...current, markers: !current.markers }))
+              }
+              aria-pressed={filters.markers}
             >
-              {genre}
+              <span>Markers</span>
+              {filters.markers && <span className="desktop-filter-count" />}
             </button>
-          );
-        })}
-      </div>
+
+            <button
+              type="button"
+              className={`desktop-shuffle-button${filters.shuffle ? " is-active" : ""}`}
+              onClick={toggleShuffle}
+              aria-label="Shuffle songs"
+              aria-pressed={filters.shuffle}
+            >
+              <ShuffleIcon />
+            </button>
+          </>
+        }
+        quickFilters={
+          <>
+            {QUICK_GENRES.map((genre) => {
+              const active = filters.genre.includes(genre);
+
+              return (
+                <SearchFilterQuickButton
+                  key={genre}
+                  active={active}
+                  onClick={() => setFilterValue("genre", genre)}
+                >
+                  {genre}
+                </SearchFilterQuickButton>
+              );
+            })}
+          </>
+        }
+      />
 
       {songsError && (
         <div className="desktop-music-load-notice">
