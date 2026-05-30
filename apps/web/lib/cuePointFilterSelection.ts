@@ -3,9 +3,20 @@ import { MUSIC_FILTER_STORAGE_KEY_PREFIX } from "@/lib/constants";
 export const CUE_POINT_FILTER_SELECTION_EVENT =
   "filmwave:cue-point-filter-selection";
 
+const CORE_CUE_POINT_TYPES = new Set([
+  "first_hit",
+  "drop",
+  "break",
+  "button_ending",
+]);
+
 type CuePointFilterSelectionEventDetail = {
   selectedTypes: string[];
 };
+
+function getCoreCuePointTypes(selectedTypes: string[]) {
+  return selectedTypes.filter((type) => CORE_CUE_POINT_TYPES.has(type));
+}
 
 export function getStoredCuePointFilterSelection() {
   if (typeof window === "undefined") return [];
@@ -38,7 +49,7 @@ export function notifyCuePointFilterSelection(selectedTypes: string[]) {
     new CustomEvent<CuePointFilterSelectionEventDetail>(
       CUE_POINT_FILTER_SELECTION_EVENT,
       {
-        detail: { selectedTypes },
+        detail: { selectedTypes: getCoreCuePointTypes(selectedTypes) },
       },
     ),
   );
