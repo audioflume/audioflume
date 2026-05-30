@@ -1,0 +1,351 @@
+:where(:root) {
+  --filmwave-sidebar-expanded-width: var(--sidebar-width-expanded, 280px);
+  --filmwave-sidebar-collapsed-width: var(--sidebar-width-collapsed, 76px);
+  --filmwave-sidebar-top-offset: 56px;
+  --filmwave-sidebar-row-height: 32px;
+  --filmwave-sidebar-row-radius: 6px;
+  --filmwave-sidebar-section-gap: 20px;
+  --filmwave-sidebar-x-padding: 20px;
+  --filmwave-sidebar-y-padding: 24px;
+  --filmwave-sidebar-row-padding-x: 10px;
+  --filmwave-sidebar-icon-size: 16px;
+  --filmwave-sidebar-label-gap: 10px;
+}
+
+.desktop-app-sidebar {
+  position: fixed;
+  top: var(--filmwave-sidebar-top-offset);
+  bottom: 0;
+  left: 0;
+  z-index: 90;
+  width: var(--filmwave-sidebar-expanded-width);
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+  background: var(--bg-primary);
+  will-change: width;
+  transition: width 200ms ease;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
+  width: var(--filmwave-sidebar-collapsed-width);
+}
+
+.desktop-sidebar-collapse-zone {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  width: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.desktop-sidebar-collapse-button {
+  display: flex;
+  width: 16px;
+  height: 56px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  opacity: 0;
+  padding: 0;
+  transition:
+    opacity 150ms ease,
+    color 150ms ease;
+}
+
+.desktop-sidebar-collapse-zone:hover .desktop-sidebar-collapse-button,
+.desktop-sidebar-collapse-button:focus-visible {
+  opacity: 0.35;
+}
+
+.desktop-sidebar-collapse-button:hover {
+  color: var(--text-secondary);
+  opacity: 0.55;
+}
+
+.desktop-sidebar-collapse-icon {
+  transition: transform 200ms ease;
+}
+
+.desktop-sidebar-collapse-icon.is-collapsed {
+  transform: rotate(180deg);
+}
+
+.desktop-app-sidebar-inner {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--filmwave-sidebar-y-padding) var(--filmwave-sidebar-x-padding);
+}
+
+.desktop-sidebar-section {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--filmwave-sidebar-section-gap);
+}
+
+.desktop-sidebar-section + .desktop-sidebar-section {
+  margin-top: var(--filmwave-sidebar-section-gap);
+}
+
+.desktop-sidebar-section.is-projects-section {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.desktop-sidebar-heading,
+.desktop-sidebar-projects-head {
+  min-height: 24px;
+}
+
+.desktop-sidebar-heading {
+  display: flex;
+  height: 16px;
+  margin: 0 0 8px;
+  align-items: center;
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.desktop-sidebar-heading.has-collapsed-icon {
+  position: relative;
+}
+
+.desktop-sidebar-heading-icon {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  width: var(--filmwave-sidebar-icon-size);
+  height: var(--filmwave-sidebar-icon-size);
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateX(-50%) scale(0.9);
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+.desktop-sidebar-heading-label {
+  display: inline-flex;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+.desktop-sidebar-projects-head {
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
+}
+
+.desktop-sidebar-projects-head .desktop-sidebar-heading {
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.desktop-sidebar-add-button {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--filmwave-sidebar-row-radius);
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.desktop-sidebar-add-button:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-plus-icon {
+  display: inline-flex;
+  width: var(--filmwave-sidebar-icon-size);
+  height: var(--filmwave-sidebar-icon-size);
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.desktop-sidebar-nav {
+  display: grid;
+  gap: 2px;
+}
+
+.desktop-sidebar-link {
+  display: flex;
+  width: 100%;
+  height: var(--filmwave-sidebar-row-height);
+  cursor: pointer;
+  align-items: center;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--filmwave-sidebar-row-radius);
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
+  text-align: left;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.desktop-sidebar-link:hover,
+.desktop-sidebar-link.is-active {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-link-icon {
+  display: flex;
+  width: var(--filmwave-sidebar-icon-size);
+  height: var(--filmwave-sidebar-icon-size);
+  flex: 0 0 var(--filmwave-sidebar-icon-size);
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color 150ms ease;
+}
+
+.desktop-sidebar-link:hover .desktop-sidebar-link-icon,
+.desktop-sidebar-link.is-active .desktop-sidebar-link-icon {
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-link-label {
+  min-width: 0;
+  overflow: hidden;
+  margin-left: var(--filmwave-sidebar-label-gap);
+  color: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease,
+    width 150ms ease;
+}
+
+.desktop-sidebar-empty-projects {
+  padding: 6px var(--filmwave-sidebar-row-padding-x) 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.desktop-sidebar-tooltip {
+  pointer-events: none;
+  position: fixed;
+  z-index: 140;
+  left: calc(var(--filmwave-sidebar-collapsed-width) - 13px);
+  transform: translateY(-50%);
+}
+
+.desktop-sidebar-tooltip-border {
+  border-radius: 6px;
+  background: var(--border);
+  padding: 1px;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+}
+
+.desktop-sidebar-tooltip-inner {
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+  box-shadow: var(--shadow-ui);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 7px 14px 7px 20px;
+  white-space: nowrap;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
+  justify-content: flex-start;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
+  width: 0;
+  pointer-events: none;
+  transform: translateX(4px);
+  opacity: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading-label {
+  pointer-events: none;
+  transform: translateX(-4px);
+  opacity: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon {
+  justify-content: center;
+  padding: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon .desktop-sidebar-heading-icon {
+  opacity: 0.3;
+  transform: translateX(-50%) scale(1);
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
+  justify-content: center;
+  padding: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head .desktop-sidebar-heading {
+  display: none;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+  width: 100%;
+  height: var(--filmwave-sidebar-row-height);
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
+  display: none;
+}
+
+.desktop-app-main {
+  transition: padding-left 200ms ease;
+}
+
+@media (max-width: 768px) {
+  .desktop-app-sidebar {
+    width: var(--filmwave-sidebar-collapsed-width);
+  }
+
+  .desktop-app-main {
+    padding-left: calc(var(--filmwave-sidebar-collapsed-width) + 24px);
+  }
+}
