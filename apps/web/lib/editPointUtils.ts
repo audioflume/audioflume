@@ -67,6 +67,16 @@ const EDIT_POINT_TYPE_ALIASES: Record<string, EditPointFilterType> = {
   no_long_intro: "no_long_intro",
 };
 
+let cuePointDiagnosticCount = 0;
+const MAX_CUE_POINT_DIAGNOSTIC_LOGS = 25;
+
+function shouldLogCuePointDiagnostics() {
+  return (
+    typeof window !== "undefined" &&
+    cuePointDiagnosticCount < MAX_CUE_POINT_DIAGNOSTIC_LOGS
+  );
+}
+
 function toEditPointKey(value: string) {
   return value
     .trim()
@@ -232,7 +242,35 @@ export function songMatchesEditPointFilter(song: Song, type: string) {
 export function songMatchesEditPointFilters(song: Song, selectedTypes: string[]) {
   if (selectedTypes.length === 0) return true;
 
-  return selectedTypes.every((type) => songMatchesEditPointFilter(song, type));
+  const markers = getSongEditPointMarkers(song);
+  const markerSummary = markers.map((marker) => ({
+    rawType: marker.type,
+    label: marker.label,
+    normalizedType: getMarkerType(marker),
+    time: marker.time,
+  }));
+  const matchSummary = selectedTypes.map((type) => ({
+    selectedType: type,
+    normalizedSelectedType: normalizeEditPointType(type),
+    matches: songMatchesEditPointFilter(song, type),
+  }));
+  const result = matchSummary.every((item) => item.matches);
+
+  if (shouldLogCuePointDiagnostics()) {
+    cuePointDiagnosticCount += 1;
+    console.log("[Filmwave cue filter diagnostic]", {
+      songId: song.id,
+      title: song.title,
+      selectedTypes,
+      markerCount: markers.length,
+      markerSummary,
+      matchSummary,
+      result,
+      rawEditPoints: song.editPoints,
+    });
+  }
+
+  return result;
 }
 
 export function getEditPointFilterLabel(type: string) {
