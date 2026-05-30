@@ -132,23 +132,41 @@
 }
 
 .desktop-music-page .desktop-song-stems-slot {
+  display: flex;
   flex: 0 0 40px;
+  justify-content: center;
 }
 
 .desktop-music-page .desktop-song-wave {
+  position: relative;
   display: flex !important;
+  height: 24px;
   flex: 1 1 auto;
   min-width: 0;
-  overflow: hidden;
-  gap: 1px;
+  cursor: pointer;
+  align-items: center;
+  overflow: visible;
 }
 
-.desktop-music-page .desktop-song-wave span {
+.desktop-music-page .desktop-song-wave-canvas {
+  position: relative;
+  z-index: 0;
   display: block;
-  flex: 0 0 2px;
-  width: 2px;
-  min-width: 2px;
-  max-width: 2px;
+  width: 100%;
+  height: 100%;
+}
+
+.desktop-music-page .desktop-song-wave i {
+  position: absolute;
+  top: 50%;
+  z-index: 20;
+  height: 38px;
+  width: var(--cue-marker-width);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: var(--cue-marker-color);
+  opacity: var(--cue-marker-opacity);
+  pointer-events: none;
 }
 
 .desktop-music-page .desktop-song-duration {
