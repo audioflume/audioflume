@@ -1,5 +1,16 @@
 "use client";
 
+import {
+  SidebarCollapseControl,
+  SidebarInner,
+  SidebarLinkRow,
+  SidebarNav,
+  SidebarProjectsHeader,
+  SidebarSection,
+  SidebarSectionHeading,
+  SidebarShell,
+  type SidebarTooltipState,
+} from "@filmwave/shared";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -53,11 +64,6 @@ const aiLinks = [
   { label: "Story Match", href: "/scene-mood-finder", icon: "scene" },
 ];
 
-type SidebarTooltip = {
-  label: string;
-  top: number;
-} | null;
-
 type ProjectMenuState = {
   project: Project;
   top: number;
@@ -72,9 +78,7 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
       viewBox="0 0 7 10"
       fill="none"
       aria-hidden="true"
-      className={`transition-transform duration-200 ${
-        collapsed ? "rotate-180" : ""
-      }`}
+      className={collapsed ? "desktop-sidebar-collapse-icon is-collapsed" : "desktop-sidebar-collapse-icon"}
     >
       <path d="M6.2 1L1.8 5L6.2 9V1Z" fill="currentColor" />
     </svg>
@@ -124,150 +128,8 @@ function sortProjectsByPosition(projects: Project[]) {
   });
 }
 
-function SidebarTooltipEl({ label, top }: { label: string; top: number }) {
-  return (
-    <div
-      className="pointer-events-none fixed z-[140]"
-      style={{
-        left: "calc(var(--sidebar-width-collapsed) - 11px)",
-        top,
-        transform: "translateY(-50%)",
-      }}
-    >
-      <div
-        className="rounded-md bg-[var(--border)] p-px"
-        style={{
-          clipPath: "polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%)",
-        }}
-      >
-        <div
-          className="rounded-md px-3.5 py-1.5 pl-5 text-[12px] font-medium whitespace-nowrap text-[var(--text-primary)] shadow-[var(--shadow-ui)]"
-          style={{
-            backgroundColor: "var(--bg-primary)",
-            clipPath: "polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%)",
-          }}
-        >
-          {label}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SectionHeading({
-  label,
-  collapsed,
-  ready,
-  icon,
-}: {
-  label: string;
-  collapsed: boolean;
-  ready: boolean;
-  icon: "library" | "ai";
-}) {
-  return (
-    <div className="mb-2 flex h-[16px] items-center justify-center overflow-hidden">
-      <div className="relative flex h-[16px] w-full items-center justify-center">
-        <span
-          className={`absolute left-2.5 text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] ${
-            ready ? "transition-[opacity,transform] duration-150" : ""
-          } ${
-            collapsed
-              ? "pointer-events-none -translate-x-1 opacity-0"
-              : "translate-x-0 opacity-100"
-          }`}
-        >
-          {label}
-        </span>
-
-        <span
-          className={`absolute left-1/2 flex h-4 w-4 -translate-x-1/2 items-center justify-center text-[var(--text-muted)] ${
-            ready ? "transition-[opacity,transform] duration-150" : ""
-          } ${
-            collapsed
-              ? "scale-100 opacity-[0.3]"
-              : "pointer-events-none scale-90 opacity-0"
-          }`}
-          aria-hidden="true"
-        >
-          {icon === "library" ? <LibraryIcon /> : <AiIcon />}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function SidebarLink({
-  label,
-  href,
-  icon,
-  collapsed,
-  ready,
-  onTooltipChange,
-}: {
-  label: string;
-  href: string;
-  icon?: string;
-  collapsed: boolean;
-  ready: boolean;
-  onTooltipChange: (tooltip: SidebarTooltip) => void;
-}) {
-  const pathname = usePathname();
-
-  const active =
-    href === "/music"
-      ? pathname === "/music"
-      : pathname === href || pathname.startsWith(`${href}/`);
-
-  function showTooltip(element: HTMLElement) {
-    if (!collapsed) return;
-    const rect = element.getBoundingClientRect();
-    onTooltipChange({ label, top: rect.top + rect.height / 2 });
-  }
-
-  function hideTooltip() {
-    onTooltipChange(null);
-  }
-
-  return (
-    <Link
-      href={href}
-      aria-label={label}
-      onMouseEnter={(event) => showTooltip(event.currentTarget)}
-      onMouseLeave={hideTooltip}
-      onFocus={(event) => showTooltip(event.currentTarget)}
-      onBlur={hideTooltip}
-      className={`group flex h-8 items-center rounded-md px-2.5 text-[13px] font-medium transition ${
-        active
-          ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
-          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-      }`}
-    >
-      {icon && (
-        <span
-          className={`flex h-4 w-4 shrink-0 items-center justify-center transition ${
-            active
-              ? "text-[var(--text-primary)]"
-              : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
-          }`}
-        >
-          <MainIcon icon={icon} />
-        </span>
-      )}
-
-      <span
-        className={`ml-2.5 min-w-0 truncate ${
-          ready ? "transition-[opacity,transform,width] duration-150" : ""
-        } ${
-          collapsed
-            ? "w-0 translate-x-1 opacity-0"
-            : "w-auto translate-x-0 opacity-100"
-        }`}
-      >
-        {label}
-      </span>
-    </Link>
-  );
+function isHrefActive(pathname: string, href: string) {
+  return href === "/music" ? pathname === "/music" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
 function ProjectMenu({
@@ -329,17 +191,15 @@ function ProjectMenu({
 function ProjectLink({
   project,
   collapsed,
-  ready,
   menuOpen,
   onOpenMenu,
   onTooltipChange,
 }: {
   project: Project;
   collapsed: boolean;
-  ready: boolean;
   menuOpen: boolean;
   onOpenMenu: (project: Project, element: HTMLElement) => void;
-  onTooltipChange: (tooltip: SidebarTooltip) => void;
+  onTooltipChange: (tooltip: SidebarTooltipState) => void;
 }) {
   const pathname = usePathname();
   const href = `/projects/${project.id}`;
@@ -357,36 +217,18 @@ function ProjectLink({
 
   return (
     <div
-      className={`group/project-row flex h-8 items-center rounded-md px-2.5 text-[13px] font-medium transition ${
-        active
-          ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
-          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-      }`}
+      className={`desktop-sidebar-link group/project-row${active ? " is-active" : ""}`}
       onMouseEnter={(event) => showTooltip(event.currentTarget)}
       onMouseLeave={hideTooltip}
       onFocus={(event) => showTooltip(event.currentTarget)}
       onBlur={hideTooltip}
     >
       <Link href={href} aria-label={project.name} className="flex min-w-0 flex-1 items-center">
-        <span
-          className={`flex h-4 w-4 shrink-0 items-center justify-center transition ${
-            active
-              ? "text-[var(--text-primary)]"
-              : "text-[var(--text-muted)] group-hover/project-row:text-[var(--text-primary)]"
-          }`}
-        >
+        <span className="desktop-sidebar-link-icon">
           <FolderIcon />
         </span>
 
-        <span
-          className={`ml-2.5 min-w-0 truncate ${
-            ready ? "transition-[opacity,transform,width] duration-150" : ""
-          } ${
-            collapsed
-              ? "w-0 translate-x-1 opacity-0"
-              : "w-auto translate-x-0 opacity-100"
-          }`}
-        >
+        <span className="desktop-sidebar-link-label">
           {project.name}
         </span>
       </Link>
@@ -414,11 +256,9 @@ function ProjectLink({
 
 function SortableProjectLink({
   project,
-  ready,
   dragActive,
 }: {
   project: Project;
-  ready: boolean;
   dragActive: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: project.id });
@@ -429,23 +269,15 @@ function SortableProjectLink({
       style={{ transform: CSS.Transform.toString(transform), transition }}
       {...attributes}
       {...listeners}
-      className={`group/project-row flex h-8 cursor-grab touch-none items-center rounded-md px-2.5 text-[13px] font-medium text-[var(--text-secondary)] transition active:cursor-grabbing ${
-        dragActive ? "" : "hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+      className={`desktop-sidebar-link group/project-row cursor-grab touch-none active:cursor-grabbing ${
+        dragActive ? "" : ""
       } ${isDragging ? "relative z-50 opacity-45" : "opacity-100"}`}
     >
-      <span
-        className={`flex h-4 w-4 shrink-0 items-center justify-center text-[var(--text-muted)] ${
-          dragActive ? "" : "group-hover/project-row:text-[var(--text-primary)]"
-        }`}
-      >
+      <span className="desktop-sidebar-link-icon">
         <DragIconSmall />
       </span>
 
-      <span
-        className={`ml-2.5 min-w-0 flex-1 truncate ${
-          ready ? "transition-[opacity,transform,width] duration-150" : ""
-        }`}
-      >
+      <span className="desktop-sidebar-link-label flex-1">
         {project.name}
       </span>
     </div>
@@ -457,7 +289,7 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
   const pathname = usePathname();
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
-  const [tooltip, setTooltip] = useState<SidebarTooltip>(null);
+  const [tooltip, setTooltip] = useState<SidebarTooltipState>(null);
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [forceCollapsed, setForceCollapsed] = useState(false);
   const [ready, setReady] = useState(false);
@@ -662,103 +494,79 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
     }
   }
 
+  const alphabeticalAction = !sidebarCollapsed && reorderMode ? (
+    <button
+      type="button"
+      onClick={restoreAlphabeticalOrder}
+      className="h-6 cursor-pointer rounded-md px-2 text-[10px] font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+    >
+      Alphabetical
+    </button>
+  ) : null;
+
   return (
     <>
-      <aside
-        className={`group/sidebar fixed left-0 z-30 flex flex-col border-r border-[var(--border)] bg-[var(--bg-primary)] ${
-          ready ? "transition-[width] duration-200" : ""
-        }`}
-        data-sidebar
-        style={{
-          top: "56px",
-          bottom: playerVisible ? "64px" : "0px",
-          width: sidebarCollapsed ? "var(--sidebar-width-collapsed)" : "var(--sidebar-width-expanded)",
-        }}
+      <SidebarShell
+        collapsed={sidebarCollapsed}
+        className={ready ? "desktop-app-shell is-ready" : "desktop-app-shell"}
+        tooltip={tooltip}
+        sidebarStyle={{ bottom: playerVisible ? "64px" : "0px" }}
       >
-        <div className="absolute top-0 right-0 bottom-0 z-20 flex w-4 items-center justify-center">
-          <div className="group/collapse-zone flex h-full w-4 items-center justify-center">
-            <button
-              suppressHydrationWarning
-              type="button"
-              onClick={() => { setCollapsed((value) => !value); setTooltip(null); setProjectMenu(null); }}
-              className="flex h-14 w-4 cursor-pointer items-center justify-center text-[var(--text-muted)] opacity-0 transition-opacity duration-150 group-hover/collapse-zone:opacity-35 hover:opacity-55 hover:text-[var(--text-secondary)]"
-              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              <CollapseIcon collapsed={sidebarCollapsed} />
-            </button>
-          </div>
-        </div>
+        <SidebarCollapseControl
+          collapsed={sidebarCollapsed}
+          icon={<CollapseIcon collapsed={sidebarCollapsed} />}
+          onToggle={() => { setCollapsed((value) => !value); setTooltip(null); setProjectMenu(null); }}
+        />
 
-        <div className="flex flex-1 flex-col overflow-y-auto px-5 pt-6 pb-6">
-          <div className="border-b border-[var(--border)] pb-5">
-            <SectionHeading label="Library" collapsed={sidebarCollapsed} ready={ready} icon="library" />
-            <div className="space-y-[2px]">
+        <SidebarInner>
+          <SidebarSection>
+            <SidebarSectionHeading label="Library" collapsed={sidebarCollapsed} icon={<LibraryIcon />} />
+            <SidebarNav label="Library navigation">
               {mainLinks.map((link) => (
-                <SidebarLink key={link.href} label={link.label} href={link.href} icon={link.icon} collapsed={sidebarCollapsed} ready={ready} onTooltipChange={setTooltip} />
+                <SidebarLinkRow
+                  key={link.href}
+                  label={link.label}
+                  icon={<MainIcon icon={link.icon} />}
+                  collapsed={sidebarCollapsed}
+                  active={isHrefActive(pathname, link.href)}
+                  onTooltipChange={setTooltip}
+                  onClick={() => router.push(link.href)}
+                />
               ))}
-            </div>
-          </div>
+            </SidebarNav>
+          </SidebarSection>
 
-          <div className="mt-5 border-b border-[var(--border)] pb-5">
-            <SectionHeading label="AI Tools" collapsed={sidebarCollapsed} ready={ready} icon="ai" />
-            <div className="space-y-[2px]">
+          <SidebarSection>
+            <SidebarSectionHeading label="AI Tools" collapsed={sidebarCollapsed} icon={<AiIcon />} />
+            <SidebarNav label="AI tools navigation">
               {aiLinks.map((link) => (
-                <SidebarLink key={link.href} label={link.label} href={link.href} icon={link.icon} collapsed={sidebarCollapsed} ready={ready} onTooltipChange={setTooltip} />
+                <SidebarLinkRow
+                  key={link.href}
+                  label={link.label}
+                  icon={<MainIcon icon={link.icon} />}
+                  collapsed={sidebarCollapsed}
+                  active={isHrefActive(pathname, link.href)}
+                  onTooltipChange={setTooltip}
+                  onClick={() => router.push(link.href)}
+                />
               ))}
-            </div>
-          </div>
+            </SidebarNav>
+          </SidebarSection>
 
-          <div className="mt-5 flex flex-col">
-            <div
-              className={`relative mb-2 flex h-[24px] items-center rounded-md ${
-                ready ? "transition-[padding] duration-200" : ""
-              } ${sidebarCollapsed ? "justify-center px-0" : "justify-between px-2.5"}`}
-            >
-              <span
-                className={`text-[11px] font-medium whitespace-nowrap text-[var(--text-muted)] ${
-                  ready ? "transition-[opacity,transform] duration-150" : ""
-                } ${
-                  sidebarCollapsed
-                    ? "pointer-events-none absolute -translate-x-2 opacity-0"
-                    : "relative translate-x-0 opacity-100"
-                }`}
-              >
-                Projects
-              </span>
-
-              <div className="flex items-center gap-1">
-                {!sidebarCollapsed && reorderMode && (
-                  <button
-                    type="button"
-                    onClick={restoreAlphabeticalOrder}
-                    className="h-6 cursor-pointer rounded-md px-2 text-[10px] font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-                  >
-                    Alphabetical
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (reorderMode) { finishReorderMode(); return; }
-                    setProjectMenu(null);
-                    setIsCreateProjectOpen(true);
-                  }}
-                  onMouseEnter={(event) => {
-                    if (!sidebarCollapsed) return;
-                    const rect = event.currentTarget.getBoundingClientRect();
-                    setTooltip({ label: reorderMode ? "Save Order" : "New Project", top: rect.top + rect.height / 2 });
-                  }}
-                  onMouseLeave={() => setTooltip(null)}
-                  className={`flex cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] ${
-                    sidebarCollapsed ? "h-8 w-full px-2.5" : "h-6 w-6"
-                  }`}
-                  aria-label={reorderMode ? "Save project order" : "Create new project"}
-                >
-                  {reorderMode ? <CheckIcon /> : <PlusIcon />}
-                </button>
-              </div>
-            </div>
+          <SidebarSection projects>
+            <SidebarProjectsHeader
+              label="Projects"
+              collapsed={sidebarCollapsed}
+              actionLabel={reorderMode ? "Save Order" : "New Project"}
+              actionIcon={reorderMode ? <CheckIcon /> : <PlusIcon />}
+              beforeAction={alphabeticalAction}
+              onActionClick={() => {
+                if (reorderMode) { finishReorderMode(); return; }
+                setProjectMenu(null);
+                setIsCreateProjectOpen(true);
+              }}
+              onTooltipChange={setTooltip}
+            />
 
             {reorderMode && !sidebarCollapsed ? (
               <DndContext
@@ -769,35 +577,32 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
                 onDragCancel={handleProjectDragCancel}
               >
                 <SortableContext items={displayedProjects.map((project) => project.id)} strategy={verticalListSortingStrategy}>
-                  <div className="space-y-[2px]">
+                  <SidebarNav label="Projects navigation">
                     {displayedProjects.map((project) => (
-                      <SortableProjectLink key={project.id} project={project} ready={ready} dragActive={activeDragProjectId !== null} />
+                      <SortableProjectLink key={project.id} project={project} dragActive={activeDragProjectId !== null} />
                     ))}
-                  </div>
+                  </SidebarNav>
                 </SortableContext>
               </DndContext>
             ) : (
-              <div className="space-y-[2px]">
+              <SidebarNav label="Projects navigation">
                 {displayedProjects.map((project) => (
                   <ProjectLink
                     key={project.id}
                     project={project}
                     collapsed={sidebarCollapsed}
-                    ready={ready}
                     menuOpen={projectMenu?.project.id === project.id}
                     onOpenMenu={openProjectMenu}
                     onTooltipChange={setTooltip}
                   />
                 ))}
-              </div>
+              </SidebarNav>
             )}
-          </div>
-        </div>
-      </aside>
+          </SidebarSection>
+        </SidebarInner>
+      </SidebarShell>
 
       <ProjectMenu menu={projectMenu} onClose={() => setProjectMenu(null)} onEdit={openEditProject} onStartReorder={startReorderMode} onDelete={handleDeleteProject} />
-
-      {tooltip && sidebarCollapsed && <SidebarTooltipEl label={tooltip.label} top={tooltip.top} />}
 
       <CreateProjectModal
         isOpen={isCreateProjectOpen}
