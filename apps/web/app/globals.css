@@ -73,6 +73,10 @@
   --admin-sidebar-width: 280px;
 }
 
+body.sidebar-collapsed {
+  --sidebar-width: var(--sidebar-width-collapsed);
+}
+
 :root aside[data-sidebar] {
   width: var(--sidebar-width-expanded);
 }
