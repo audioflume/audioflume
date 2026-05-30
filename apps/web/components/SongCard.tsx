@@ -186,6 +186,7 @@ export default function SongCard({
   ) : (
     <PlayIconSmall size={15} />
   );
+  const showWaveform = cardWidth > 500;
   const visibleGenres = song.genres.slice(0, 3);
   const showGenreSlot = cardWidth > 1080;
   const showKeyMeta = cardWidth > 700;
@@ -302,7 +303,8 @@ export default function SongCard({
           </span>
         </div>
 
-        <div className="filmwave-song-wave-wrap">
+        {showWaveform && (
+          <div className="filmwave-song-wave-wrap">
             <div className="filmwave-song-stems-slot">
               {hasStems ? (
                 <DropdownShell
@@ -360,6 +362,7 @@ export default function SongCard({
               {formatDuration(song.duration)}
             </span>
           </div>
+        )}
 
         <div className="filmwave-song-tail ml-auto">
           {showGenreSlot && (
