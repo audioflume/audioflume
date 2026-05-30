@@ -142,6 +142,7 @@ export default function SongCard({
   playlistId,
   projectId,
   highlightedEditPointTypes = [],
+  showEditPointMarkers: showEditPointMarkersProp,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
@@ -167,7 +168,8 @@ export default function SongCard({
   const { togglePlayPause, seekTo, registerWaveform, unregisterWaveform } = usePlayer();
 
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showEditPointMarkers } = useUserPreferences();
+  const { showEditPointMarkers: userPreferenceShowEditPointMarkers } = useUserPreferences();
+  const showEditPointMarkers = showEditPointMarkersProp ?? userPreferenceShowEditPointMarkers;
   const { playlists, setPlaylists } = usePlaylists();
 
   const [cardWidth, setCardWidth] = useState(0);
