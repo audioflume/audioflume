@@ -8,9 +8,9 @@ import {
   setStoredEditPointMarkerVisibility,
 } from "@/lib/editPointMarkerVisibility";
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-type FilterState = {
+export type MusicFilterState = {
   search: string;
   selectedMoods: string[];
   selectedGenres: string[];
@@ -26,20 +26,17 @@ type FilterState = {
   selectedPlaylist: PlaylistRef | null;
 };
 
-type FilterStateCompat = {
-  search: string;
-  moods: string[];
-  genres: string[];
-  instruments: string[];
-  builds: string[];
-  vocals: string[];
-  durations: string[];
-  editPoints: string[];
-  showEditPointMarkers: boolean;
-  instrumental: boolean;
-  bpm: BpmFilterValue | null;
-  key: KeyFilterValue | null;
-  playlist: PlaylistRef | null;
+type LegacyMusicFilterState = Partial<MusicFilterState> & {
+  moods?: unknown;
+  genres?: unknown;
+  instruments?: unknown;
+  builds?: unknown;
+  vocals?: unknown;
+  durations?: unknown;
+  editPoints?: unknown;
+  bpm?: unknown;
+  key?: unknown;
+  playlist?: unknown;
 };
 
 type UseFilterPersistenceProps = {
@@ -47,7 +44,7 @@ type UseFilterPersistenceProps = {
   authLoaded: boolean;
 };
 
-const baseDefaultState: FilterState = {
+const baseDefaultState: MusicFilterState = {
   search: "",
   selectedMoods: [],
   selectedGenres: [],
@@ -63,74 +60,69 @@ const baseDefaultState: FilterState = {
   selectedPlaylist: null,
 };
 
-function withCompatAliases(state: FilterState): FilterStateCompat {
-  return {
-    search: state.search,
-    moods: state.selectedMoods,
-    genres: state.selectedGenres,
-    instruments: state.selectedInstruments,
-    builds: state.selectedBuilds,
-    vocals: state.selectedVocals,
-    durations: state.selectedDurations,
-    editPoints: state.selectedEditPoints,
-    showEditPointMarkers: state.showEditPointMarkers,
-    instrumental: state.instrumental,
-    bpm: state.bpmValue,
-    key: state.keyValue,
-    playlist: state.selectedPlaylist,
-  };
+function stringArray(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
 }
 
-function normalizeCompatAliases(state: FilterState | Partial<FilterStateCompat>): FilterState {
+function normalizeFilterState(value: unknown): MusicFilterState {
+  const parsed =
+    typeof value === "object" && value !== null
+      ? (value as LegacyMusicFilterState)
+      : {};
+
   return {
-    search: typeof state.search === "string" ? state.search : "",
-    selectedMoods: Array.isArray("selectedMoods" in state ? state.selectedMoods : undefined)
-      ? (state as FilterState).selectedMoods
-      : Array.isArray(state.moods)
-        ? state.moods
-        : [],
-    selectedGenres: Array.isArray("selectedGenres" in state ? state.selectedGenres : undefined)
-      ? (state as FilterState).selectedGenres
-      : Array.isArray(state.genres)
-        ? state.genres
-        : [],
-    selectedInstruments: Array.isArray("selectedInstruments" in state ? state.selectedInstruments : undefined)
-      ? (state as FilterState).selectedInstruments
-      : Array.isArray(state.instruments)
-        ? state.instruments
-        : [],
-    selectedBuilds: Array.isArray("selectedBuilds" in state ? state.selectedBuilds : undefined)
-      ? (state as FilterState).selectedBuilds
-      : Array.isArray(state.builds)
-        ? state.builds
-        : [],
-    selectedVocals: Array.isArray("selectedVocals" in state ? state.selectedVocals : undefined)
-      ? (state as FilterState).selectedVocals
-      : Array.isArray(state.vocals)
-        ? state.vocals
-        : [],
-    selectedDurations: Array.isArray("selectedDurations" in state ? state.selectedDurations : undefined)
-      ? (state as FilterState).selectedDurations
-      : Array.isArray(state.durations)
-        ? state.durations
-        : [],
-    selectedEditPoints: Array.isArray("selectedEditPoints" in state ? state.selectedEditPoints : undefined)
-      ? (state as FilterState).selectedEditPoints
-      : Array.isArray(state.editPoints)
-        ? state.editPoints
-        : [],
+    search: typeof parsed.search === "string" ? parsed.search : "",
+    selectedMoods: stringArray(parsed.selectedMoods).length
+      ? stringArray(parsed.selectedMoods)
+      : stringArray(parsed.moods),
+    selectedGenres: stringArray(parsed.selectedGenres).length
+      ? stringArray(parsed.selectedGenres)
+      : stringArray(parsed.genres),
+    selectedInstruments: stringArray(parsed.selectedInstruments).length
+      ? stringArray(parsed.selectedInstruments)
+      : stringArray(parsed.instruments),
+    selectedBuilds: stringArray(parsed.selectedBuilds).length
+      ? stringArray(parsed.selectedBuilds)
+      : stringArray(parsed.builds),
+    selectedVocals: stringArray(parsed.selectedVocals).length
+      ? stringArray(parsed.selectedVocals)
+      : stringArray(parsed.vocals),
+    selectedDurations: stringArray(parsed.selectedDurations).length
+      ? stringArray(parsed.selectedDurations)
+      : stringArray(parsed.durations),
+    selectedEditPoints: stringArray(parsed.selectedEditPoints).length
+      ? stringArray(parsed.selectedEditPoints)
+      : stringArray(parsed.editPoints),
     showEditPointMarkers:
-      typeof state.showEditPointMarkers === "boolean"
-        ? state.showEditPointMarkers
-        : true,
-    instrumental: typeof state.instrumental === "boolean" ? state.instrumental : false,
-    bpmValue: "bpmValue" in state ? state.bpmValue : state.bpm ?? null,
-    keyValue: "keyValue" in state ? state.keyValue : state.key ?? null,
-    selectedPlaylist: "selectedPlaylist" in state ? state.selectedPlaylist : state.playlist ?? null,
+      typeof parsed.showEditPointMarkers === "boolean"
+        ? parsed.showEditPointMarkers
+        : getStoredEditPointMarkerVisibility(),
+    instrumental:
+      typeof parsed.instrumental === "boolean" ? parsed.instrumental : false,
+    bpmValue:
+      parsed.bpmValue !== undefined
+        ? (parsed.bpmValue as BpmFilterValue | null)
+        : parsed.bpm !== undefined
+          ? (parsed.bpm as BpmFilterValue | null)
+          : null,
+    keyValue:
+      parsed.keyValue !== undefined
+        ? (parsed.keyValue as KeyFilterValue | null)
+        : parsed.key !== undefined
+          ? (parsed.key as KeyFilterValue | null)
+          : null,
+    selectedPlaylist:
+      parsed.selectedPlaylist !== undefined
+        ? (parsed.selectedPlaylist as PlaylistRef | null)
+        : parsed.playlist !== undefined
+          ? (parsed.playlist as PlaylistRef | null)
+          : null,
   };
 }
 
-function getDefaultState(): FilterState {
+function getDefaultState(): MusicFilterState {
   return {
     ...baseDefaultState,
     selectedEditPoints: getStoredCuePointFilterSelection(),
@@ -148,34 +140,6 @@ function getEditPointMarkerVisibilityFromEvent(event: Event) {
   return getStoredEditPointMarkerVisibility();
 }
 
-function normalizeFilterState(parsed: Record<string, unknown>): FilterState {
-  return normalizeCompatAliases({
-    search: typeof parsed.search === "string" ? parsed.search : "",
-    selectedMoods: Array.isArray(parsed.selectedMoods) ? parsed.selectedMoods : parsed.moods,
-    selectedGenres: Array.isArray(parsed.selectedGenres) ? parsed.selectedGenres : parsed.genres,
-    selectedInstruments: Array.isArray(parsed.selectedInstruments)
-      ? parsed.selectedInstruments
-      : parsed.instruments,
-    selectedBuilds: Array.isArray(parsed.selectedBuilds) ? parsed.selectedBuilds : parsed.builds,
-    selectedVocals: Array.isArray(parsed.selectedVocals) ? parsed.selectedVocals : parsed.vocals,
-    selectedDurations: Array.isArray(parsed.selectedDurations)
-      ? parsed.selectedDurations
-      : parsed.durations,
-    selectedEditPoints: Array.isArray(parsed.selectedEditPoints)
-      ? parsed.selectedEditPoints
-      : parsed.editPoints,
-    showEditPointMarkers: getStoredEditPointMarkerVisibility(),
-    instrumental:
-      typeof parsed.instrumental === "boolean" ? parsed.instrumental : false,
-    bpmValue: (parsed.bpmValue as BpmFilterValue | null) ?? (parsed.bpm as BpmFilterValue | null) ?? null,
-    keyValue: (parsed.keyValue as KeyFilterValue | null) ?? (parsed.key as KeyFilterValue | null) ?? null,
-    selectedPlaylist:
-      (parsed.selectedPlaylist as PlaylistRef | null) ??
-      (parsed.playlist as PlaylistRef | null) ??
-      null,
-  });
-}
-
 export function useFilterPersistence(
   propsOrStorageKey: UseFilterPersistenceProps | string | null,
 ) {
@@ -190,22 +154,13 @@ export function useFilterPersistence(
 
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
-  const [filters, setRawFilters] = useState<FilterState>(baseDefaultState);
-
-  const compatFilters = useMemo(() => withCompatAliases(filters), [filters]);
-
-  const setFilters = (next: Partial<FilterStateCompat> | FilterState | ((current: FilterStateCompat) => Partial<FilterStateCompat> | FilterState)) => {
-    setRawFilters((current) => {
-      const resolved = typeof next === "function" ? next(withCompatAliases(current)) : next;
-      return normalizeCompatAliases(resolved);
-    });
-  };
+  const [filters, setFilters] = useState<MusicFilterState>(baseDefaultState);
 
   useEffect(() => {
     const handleEditPointMarkerVisibility = (event: Event) => {
       const visible = getEditPointMarkerVisibilityFromEvent(event);
 
-      setRawFilters((current) =>
+      setFilters((current) =>
         current.showEditPointMarkers === visible
           ? current
           : { ...current, showEditPointMarkers: visible },
@@ -237,7 +192,7 @@ export function useFilterPersistence(
     if (!storageKey) {
       const defaultState = getDefaultState();
 
-      setRawFilters(defaultState);
+      setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
       setHydrated(true);
       setHydratedKey(null);
@@ -249,7 +204,7 @@ export function useFilterPersistence(
     if (!saved) {
       const defaultState = getDefaultState();
 
-      setRawFilters(defaultState);
+      setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
       setHydrated(true);
       setHydratedKey(storageKey);
@@ -257,16 +212,15 @@ export function useFilterPersistence(
     }
 
     try {
-      const parsed = JSON.parse(saved);
-      const normalizedState = normalizeFilterState(parsed);
+      const normalizedState = normalizeFilterState(JSON.parse(saved));
 
-      setRawFilters(normalizedState);
+      setFilters(normalizedState);
       notifyCuePointFilterSelection(normalizedState.selectedEditPoints);
     } catch {
       const defaultState = getDefaultState();
 
       sessionStorage.removeItem(storageKey);
-      setRawFilters(defaultState);
+      setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
     } finally {
       setHydrated(true);
@@ -284,5 +238,5 @@ export function useFilterPersistence(
     setStoredEditPointMarkerVisibility(filters.showEditPointMarkers);
   }, [hydrated, hydratedKey, storageKey, filters]);
 
-  return { filters: compatFilters, setFilters, hydrated };
+  return { filters, setFilters, hydrated };
 }
