@@ -1,6 +1,7 @@
 @import "../../../packages/shared/styles/app-chrome.css";
 @import "../../../packages/shared/styles/song-card.css";
 @import "../../../packages/shared/styles/music-player.css";
+@import "../../../packages/shared/styles/sidebar.css";
 
 :root {
   --bg-primary: #111111;
@@ -39,6 +40,8 @@
   --waveform-progress: #ffffff;
   --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.15);
   --media-overlay-strong: rgba(0, 0, 0, 0.46);
+  --sidebar-width-expanded: 280px;
+  --sidebar-width-collapsed: 76px;
   font-family:
     "Instrument Sans",
     Arial,
@@ -78,46 +81,5 @@ body {
 }
 
 #root {
-  isolation: isolate;
-}
-
-button,
-input {
-  font: inherit;
-}
-
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.app-shell {
-  min-height: 100vh;
-  padding: 88px 24px 34px;
-  background: var(--bg-primary);
-}
-
-.app-shell::before,
-.app-shell::after {
-  display: none;
-}
-
-.sync-card {
-  position: relative;
-  width: min(1180px, 100%);
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.eyebrow {
-  display: flex;
-  width: 100%;
-  min-height: 24px;
-  align-items: center;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  overflow-x: hidden;
 }
