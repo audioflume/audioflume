@@ -87,7 +87,10 @@ export function buildWaveformBars(
       }
     }
 
-    return Math.max(minBarHeight, Math.min(maxBarHeight, barPeak * maxBarHeight));
+    return Math.max(
+      minBarHeight,
+      Math.min(maxBarHeight, barPeak * maxBarHeight),
+    );
   });
 }
 
@@ -121,20 +124,26 @@ export function buildWaveformPercentBars(
   const slotWidth = barWidth + barGap;
   const visibleCount = Math.min(
     maxVisibleBars,
-    Math.max(
-      minVisibleBars,
-      Math.floor((width + barGap) / slotWidth),
-    ),
+    Math.max(minVisibleBars, Math.floor((width + barGap) / slotWidth)),
   );
 
   if (visibleCount <= 1) {
-    return [Math.max(minPercent, Math.min(maxPercent, (normalizedPeaks[0] ?? 0) * maxPercent))];
+    return [
+      Math.max(
+        minPercent,
+        Math.min(maxPercent, (normalizedPeaks[0] ?? 0) * maxPercent),
+      ),
+    ];
   }
 
   return Array.from({ length: visibleCount }, (_, index) => {
-    const sourcePosition = (index / (visibleCount - 1)) * (normalizedPeaks.length - 1);
+    const sourcePosition =
+      (index / (visibleCount - 1)) * (normalizedPeaks.length - 1);
     const lowerIndex = Math.floor(sourcePosition);
-    const upperIndex = Math.min(normalizedPeaks.length - 1, Math.ceil(sourcePosition));
+    const upperIndex = Math.min(
+      normalizedPeaks.length - 1,
+      Math.ceil(sourcePosition),
+    );
     const progress = sourcePosition - lowerIndex;
     const lowerValue = normalizedPeaks[lowerIndex] ?? 0;
     const upperValue = normalizedPeaks[upperIndex] ?? lowerValue;
@@ -200,7 +209,13 @@ export function drawWaveformBarsToCanvas({
 
   for (let index = 0; index < bars.length; index += 1) {
     const barHeight = bars[index];
-    context.fillStyle = index < progressBars ? colors.progressColor : colors.inactiveColor;
-    context.fillRect(index * barTotal, midY - barHeight / 2, barWidth, barHeight);
+    context.fillStyle =
+      index < progressBars ? colors.progressColor : colors.inactiveColor;
+    context.fillRect(
+      index * barTotal,
+      midY - barHeight / 2,
+      barWidth,
+      barHeight,
+    );
   }
 }

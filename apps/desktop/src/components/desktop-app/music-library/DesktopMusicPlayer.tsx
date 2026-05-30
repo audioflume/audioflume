@@ -80,7 +80,12 @@ export default function DesktopMusicPlayer({
 
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
   const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
+<<<<<<< HEAD
   const showCompactTime = !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
+=======
+  const showCompactTime =
+    !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
+>>>>>>> main
   const showKey = playerWidth >= KEY_MIN_WIDTH;
   const showBpm = playerWidth >= BPM_MIN_WIDTH;
   const showRightMeta = showKey || showBpm;
@@ -91,7 +96,15 @@ export default function DesktopMusicPlayer({
   const metaGap = 24 + compressionProgress * 30;
   const progressToMetaGap = 22 + compressionProgress * 24;
   const metaToActionsGap = 18 + compressionProgress * 18;
+<<<<<<< HEAD
   const songInfoWidth = clampNumber(150 + ((playerWidth - 620) / 580) * 50, 150, 200);
+=======
+  const songInfoWidth = clampNumber(
+    150 + ((playerWidth - 620) / 580) * 50,
+    150,
+    200,
+  );
+>>>>>>> main
   const waveformMaxWidth = 390 + compressionProgress * 260;
   const progressGroupMaxWidth = waveformMaxWidth + 112;
 
@@ -131,6 +144,7 @@ export default function DesktopMusicPlayer({
     });
   }, []);
 
+<<<<<<< HEAD
   const schedulePlayerCanvasDraw = useCallback((forceResize = false) => {
     if (playerCanvasAnimationFrameRef.current != null) return;
 
@@ -139,6 +153,21 @@ export default function DesktopMusicPlayer({
       drawPlayerCanvas(forceResize);
     });
   }, [drawPlayerCanvas]);
+=======
+  const schedulePlayerCanvasDraw = useCallback(
+    (forceResize = false) => {
+      if (playerCanvasAnimationFrameRef.current != null) return;
+
+      playerCanvasAnimationFrameRef.current = window.requestAnimationFrame(
+        () => {
+          playerCanvasAnimationFrameRef.current = null;
+          drawPlayerCanvas(forceResize);
+        },
+      );
+    },
+    [drawPlayerCanvas],
+  );
+>>>>>>> main
 
   useEffect(() => {
     waveformBarsRef.current = waveformBars;
@@ -148,7 +177,13 @@ export default function DesktopMusicPlayer({
 
   useEffect(() => {
     const observer = new MutationObserver(() => schedulePlayerCanvasDraw(true));
+<<<<<<< HEAD
     observer.observe(document.documentElement, { attributeFilter: ["class", "data-theme"] });
+=======
+    observer.observe(document.documentElement, {
+      attributeFilter: ["class", "data-theme"],
+    });
+>>>>>>> main
 
     return () => {
       observer.disconnect();
@@ -221,7 +256,9 @@ export default function DesktopMusicPlayer({
     if (isPlaying) {
       const playPromise = audio.play();
       if (playPromise) {
-        playPromise.catch((error) => console.warn("Could not play audio", error));
+        playPromise.catch((error) =>
+          console.warn("Could not play audio", error),
+        );
       }
     } else {
       audio.pause();
@@ -233,7 +270,10 @@ export default function DesktopMusicPlayer({
     if (!audio || !duration) return;
 
     const rect = event.currentTarget.getBoundingClientRect();
-    const nextProgress = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+    const nextProgress = Math.min(
+      1,
+      Math.max(0, (event.clientX - rect.left) / rect.width),
+    );
     const nextTime = nextProgress * duration;
 
     waveformProgressRef.current = nextProgress;
@@ -244,22 +284,39 @@ export default function DesktopMusicPlayer({
 
   return (
     <div
+<<<<<<< HEAD
       ref={playerRef}
       className="filmwave-music-player desktop-music-player"
       data-platform="desktop"
       style={{ gridTemplateColumns, columnGap: `${mainGap}px` }}
+=======
+      className="filmwave-music-player desktop-music-player"
+      data-platform="desktop"
+>>>>>>> main
     >
       <audio
         ref={audioRef}
         src={audioSource}
-        onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
-        onLoadedMetadata={(event) => setDuration(event.currentTarget.duration || song.durationSeconds || 0)}
+        onTimeUpdate={(event) =>
+          setCurrentTime(event.currentTarget.currentTime)
+        }
+        onLoadedMetadata={(event) =>
+          setDuration(event.currentTarget.duration || song.durationSeconds || 0)
+        }
         onEnded={onNext}
       />
 
       <div className="filmwave-player-song desktop-player-song">
         <div className="filmwave-player-cover desktop-player-cover">
+<<<<<<< HEAD
           {song.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : <span>{song.title.slice(0, 1).toUpperCase()}</span>}
+=======
+          {song.coverArt ? (
+            <img src={song.coverArt} alt="" draggable={false} />
+          ) : (
+            <span>{song.title.slice(0, 1).toUpperCase()}</span>
+          )}
+>>>>>>> main
         </div>
         <div className="filmwave-player-song-copy desktop-player-song-copy">
           <h3 className="filmwave-player-title">{song.title}</h3>
@@ -271,7 +328,15 @@ export default function DesktopMusicPlayer({
         <button type="button" aria-label="Previous song" onClick={onPrevious}>
           <SkipBackIcon />
         </button>
+<<<<<<< HEAD
         <button type="button" aria-label={isPlaying ? "Pause song" : "Play song"} onClick={onPlayPause}>
+=======
+        <button
+          type="button"
+          aria-label={isPlaying ? "Pause song" : "Play song"}
+          onClick={onPlayPause}
+        >
+>>>>>>> main
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
         <button type="button" aria-label="Next song" onClick={onNext}>
@@ -279,6 +344,7 @@ export default function DesktopMusicPlayer({
         </button>
       </div>
 
+<<<<<<< HEAD
       {(showWaveform || showCompactTime) && (
         <div
           className="filmwave-player-progress-wrap desktop-player-progress-wrap"
@@ -326,6 +392,29 @@ export default function DesktopMusicPlayer({
         className="filmwave-player-actions desktop-player-actions filmwave-icon-button-group"
         style={{ marginLeft: `${metaToActionsGap - mainGap}px` }}
       >
+=======
+      <div className="filmwave-player-progress-wrap desktop-player-progress-wrap">
+        <span className="filmwave-player-time">{formatTime(currentTime)}</span>
+        <button
+          type="button"
+          className="filmwave-player-progress desktop-player-progress"
+          aria-label="Seek"
+          onClick={seek}
+        >
+          <span style={{ transform: `scaleX(${progress})` }} />
+        </button>
+        <span className="filmwave-player-time">
+          {formatTime(duration || song.durationSeconds)}
+        </span>
+      </div>
+
+      <div className="filmwave-player-meta desktop-player-meta">
+        <span>{song.key || "—"}</span>
+        <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
+      </div>
+
+      <div className="filmwave-player-actions desktop-player-actions filmwave-icon-button-group">
+>>>>>>> main
         <button
           type="button"
           aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
@@ -335,6 +424,7 @@ export default function DesktopMusicPlayer({
         >
           <HeartIcon size={14} filled={favorite} />
         </button>
+<<<<<<< HEAD
         <button type="button" aria-label="Song options" className="filmwave-icon-button filmwave-icon-button-plain">
           <MoreIcon size={14} />
         </button>
@@ -344,6 +434,31 @@ export default function DesktopMusicPlayer({
           </a>
         ) : (
           <button type="button" aria-label="Download song" className="filmwave-icon-button filmwave-icon-button-plain" disabled>
+=======
+        <button
+          type="button"
+          aria-label="Song options"
+          className="filmwave-icon-button filmwave-icon-button-plain"
+        >
+          <MoreIcon size={14} />
+        </button>
+        {audioSource ? (
+          <a
+            href={audioSource}
+            download
+            aria-label="Download song"
+            className="filmwave-icon-button filmwave-icon-button-plain"
+          >
+            <DownloadIconSmall size={12} />
+          </a>
+        ) : (
+          <button
+            type="button"
+            aria-label="Download song"
+            className="filmwave-icon-button filmwave-icon-button-plain"
+            disabled
+          >
+>>>>>>> main
             <DownloadIconSmall size={12} />
           </button>
         )}
@@ -354,7 +469,17 @@ export default function DesktopMusicPlayer({
 
 function PlayIcon() {
   return (
+<<<<<<< HEAD
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+=======
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+>>>>>>> main
       <polygon points="5,3 19,12 5,21" />
     </svg>
   );
@@ -362,7 +487,17 @@ function PlayIcon() {
 
 function PauseIcon() {
   return (
+<<<<<<< HEAD
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+=======
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+>>>>>>> main
       <rect x="6" y="4" width="4" height="16" />
       <rect x="14" y="4" width="4" height="16" />
     </svg>
@@ -371,7 +506,17 @@ function PauseIcon() {
 
 function SkipBackIcon() {
   return (
+<<<<<<< HEAD
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+=======
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+>>>>>>> main
       <polygon points="19,20 9,12 19,4" />
       <rect x="5" y="4" width="2" height="16" />
     </svg>
@@ -380,7 +525,17 @@ function SkipBackIcon() {
 
 function SkipForwardIcon() {
   return (
+<<<<<<< HEAD
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+=======
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+>>>>>>> main
       <polygon points="5,4 15,12 5,20" />
       <rect x="17" y="4" width="2" height="16" />
     </svg>
