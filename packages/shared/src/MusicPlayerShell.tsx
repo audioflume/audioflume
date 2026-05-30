@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -9,16 +8,8 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import {
-  buildWaveformBars,
-  createWaveformCanvasDrawCache,
-  drawWaveformBarsToCanvas,
-  type WaveformCanvasDrawCache,
-  type WaveformColors,
-} from "./waveform";
+import SharedWaveformCanvas from "./SharedWaveformCanvas";
 
-const BAR_WIDTH = 2;
-const BAR_GAP = 1;
 const WAVEFORM_MIN_WIDTH = 780;
 const FULL_COMPACT_TIME_MIN_WIDTH = 620;
 const COMPACT_TIME_MIN_WIDTH = 500;
@@ -77,15 +68,6 @@ function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function getWaveformColors(): WaveformColors {
-  const styles = getComputedStyle(document.documentElement);
-
-  return {
-    progressColor: styles.getPropertyValue("--waveform-progress").trim(),
-    inactiveColor: styles.getPropertyValue("--waveform-color").trim(),
-  };
-}
-
 function PrevIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -142,17 +124,7 @@ export default function MusicPlayerShell({
   onLayoutChange,
 }: MusicPlayerShellProps) {
   const playerRef = useRef<HTMLDivElement>(null);
-  const waveformRef = useRef<HTMLDivElement>(null);
-  const playerCanvasRef = useRef<HTMLCanvasElement>(null);
-  const waveformBarsRef = useRef<number[]>([]);
-  const waveformProgressRef = useRef(0);
-  const playerCanvasAnimationFrameRef = useRef<number | null>(null);
-  const playerCanvasDrawCacheRef = useRef<WaveformCanvasDrawCache>(
-    createWaveformCanvasDrawCache(),
-  );
-
   const [playerWidth, setPlayerWidth] = useState(0);
-  const [waveformWidth, setWaveformWidth] = useState(0);
 
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
   const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
@@ -193,40 +165,6 @@ export default function MusicPlayerShell({
       ? Math.max(0, Math.min(1, currentTime / duration))
       : 0;
 
-  const waveformBars = useMemo(
-    () => buildWaveformBars(waveformPeaks, waveformWidth),
-    [waveformPeaks, waveformWidth],
-  );
-
-  const drawPlayerCanvas = useCallback((forceResize = false) => {
-    const canvas = playerCanvasRef.current;
-    const bars = waveformBarsRef.current;
-
-    if (!canvas || !bars.length) return;
-
-    drawWaveformBarsToCanvas({
-      canvas,
-      bars,
-      progress: waveformProgressRef.current,
-      cache: playerCanvasDrawCacheRef.current,
-      colors: getWaveformColors(),
-      forceResize,
-      options: { barWidth: BAR_WIDTH, barGap: BAR_GAP },
-    });
-  }, []);
-
-  const schedulePlayerCanvasDraw = useCallback(
-    (forceResize = false) => {
-      if (playerCanvasAnimationFrameRef.current != null) return;
-
-      playerCanvasAnimationFrameRef.current = window.requestAnimationFrame(() => {
-        playerCanvasAnimationFrameRef.current = null;
-        drawPlayerCanvas(forceResize);
-      });
-    },
-    [drawPlayerCanvas],
-  );
-
   const gridTemplateColumns = [
     `${songInfoWidth}px`,
     "auto",
@@ -244,27 +182,6 @@ export default function MusicPlayerShell({
   useEffect(() => {
     onLayoutChange?.(layout);
   }, [layout, onLayoutChange]);
-
-  useEffect(() => {
-    waveformBarsRef.current = waveformBars;
-    waveformProgressRef.current = progress;
-    schedulePlayerCanvasDraw();
-  }, [waveformBars, progress, schedulePlayerCanvasDraw]);
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => schedulePlayerCanvasDraw(true));
-    observer.observe(document.documentElement, {
-      attributeFilter: ["class", "data-theme"],
-    });
-
-    return () => {
-      observer.disconnect();
-      if (playerCanvasAnimationFrameRef.current != null) {
-        window.cancelAnimationFrame(playerCanvasAnimationFrameRef.current);
-        playerCanvasAnimationFrameRef.current = null;
-      }
-    };
-  }, [schedulePlayerCanvasDraw]);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -288,45 +205,6 @@ export default function MusicPlayerShell({
       window.clearTimeout(timeout);
     };
   }, [song.id]);
-
-  useEffect(() => {
-    if (!showWaveform) {
-      setWaveformWidth(0);
-      return;
-    }
-
-    const waveform = waveformRef.current;
-    if (!waveform) return;
-
-    const updateWidth = () => {
-      setWaveformWidth(Math.floor(waveform.getBoundingClientRect().width));
-      schedulePlayerCanvasDraw(true);
-    };
-
-    updateWidth();
-
-    const resizeObserver = new ResizeObserver(updateWidth);
-    resizeObserver.observe(waveform);
-    window.addEventListener("resize", updateWidth);
-
-    const timeout = window.setTimeout(updateWidth, 50);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", updateWidth);
-      window.clearTimeout(timeout);
-    };
-  }, [song.id, showWaveform, schedulePlayerCanvasDraw]);
-
-  function handleWaveformClick(event: React.MouseEvent<HTMLDivElement>) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    if (!rect.width) return;
-    const nextProgress = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-
-    waveformProgressRef.current = nextProgress;
-    onSeek(nextProgress);
-    schedulePlayerCanvasDraw();
-  }
 
   const renderedDuration = duration || song.durationSeconds || 0;
   const waveformEndSlot = renderWaveformEndSlot?.(layout);
@@ -389,27 +267,12 @@ export default function MusicPlayerShell({
             <div className="filmwave-player-waveform-row">
               <span className="filmwave-player-time">{formatTime(currentTime)}</span>
 
-              <div
-                ref={waveformRef}
-                data-player-waveform-slot
-                className="filmwave-player-waveform"
-                role="button"
-                tabIndex={0}
-                aria-label="Seek"
-                onClick={handleWaveformClick}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                  }
-                }}
-              >
-                {waveformOverlay}
-                <canvas
-                  ref={playerCanvasRef}
-                  className="filmwave-player-waveform-canvas"
-                  style={{ display: "block" }}
-                />
-              </div>
+              <SharedWaveformCanvas
+                peaks={waveformPeaks}
+                progress={progress}
+                onSeek={onSeek}
+                overlay={waveformOverlay}
+              />
 
               <span className="filmwave-player-time">{formatTime(renderedDuration)}</span>
               {waveformEndSlot}
