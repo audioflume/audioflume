@@ -282,7 +282,9 @@
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
+  height: var(--filmwave-sidebar-row-height);
   justify-content: center;
+  margin-bottom: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
@@ -298,6 +300,12 @@
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions > :not(.desktop-sidebar-add-button) {
   display: none;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+  width: 100%;
+  height: var(--filmwave-sidebar-row-height);
+  border-radius: var(--filmwave-sidebar-row-radius);
 }
 
 .desktop-sidebar-empty-projects {
