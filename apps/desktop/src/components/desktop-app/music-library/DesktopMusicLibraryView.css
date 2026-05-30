@@ -176,23 +176,14 @@
   display: grid;
   grid-template-columns: 40px minmax(145px, 220px) minmax(160px, 1fr) minmax(110px, 180px) auto auto;
   align-items: center;
-  gap: 16px;
-  min-height: 72px;
+  gap: var(--filmwave-song-card-gap);
   cursor: pointer;
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 14px 16px 14px 32px;
-  transition: background 140ms ease;
-}
-
-.desktop-song-card:hover {
-  background: color-mix(in srgb, var(--bg-hover) 30%, transparent);
+  padding: var(--filmwave-song-card-padding-y) var(--filmwave-song-card-padding-right) var(--filmwave-song-card-padding-y) var(--filmwave-song-card-padding-left);
 }
 
 .desktop-song-cover {
   position: relative;
   display: flex;
-  width: 40px;
-  height: 40px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -228,7 +219,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.24);
   color: #fff;
   opacity: 0;
   transition: opacity 140ms ease;
@@ -252,14 +242,16 @@
 
 .desktop-song-title {
   color: var(--text-primary);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.35;
 }
 
 .desktop-song-artist {
   margin-top: 4px;
-  color: var(--text-secondary);
-  font-size: 13px;
+  color: var(--text-subtle);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .desktop-song-waveform {
@@ -272,7 +264,7 @@
   align-items: center;
   gap: 14px;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .desktop-song-duration,
@@ -284,28 +276,29 @@
 .desktop-song-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-end;
+  gap: 4px;
 }
 
 .desktop-song-icon-button {
   display: flex;
-  width: 28px;
-  height: 28px;
+  width: var(--filmwave-song-card-action-size);
+  height: var(--filmwave-song-card-action-size);
   cursor: pointer;
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--filmwave-song-card-action-radius);
   background: transparent;
   padding: 0;
-  color: var(--text-muted);
+  color: var(--filmwave-song-card-action-color);
   transition: color 140ms ease, background 140ms ease;
 }
 
 .desktop-song-icon-button:hover,
 .desktop-song-icon-button.is-active {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+  background: var(--filmwave-song-card-action-hover-bg);
+  color: var(--filmwave-song-card-action-active-color);
 }
 
 .desktop-music-empty-state {
