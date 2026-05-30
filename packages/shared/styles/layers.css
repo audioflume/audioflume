@@ -1,0 +1,7 @@
+:where(:root) {
+  --filmwave-z-search-filter: 80;
+  --filmwave-z-sidebar: 100;
+  --filmwave-z-header: 120;
+  --filmwave-z-menu: 140;
+  --filmwave-z-tooltip: 1000;
+}
