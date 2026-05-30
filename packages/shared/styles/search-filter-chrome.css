@@ -1,3 +1,22 @@
+.filmwave-music-library-frame {
+  min-height: 100vh;
+  padding-top: 56px;
+  margin-left: var(--sidebar-width, var(--sidebar-width-expanded, 280px));
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: margin-left 200ms ease;
+}
+
+body.sidebar-collapsed .filmwave-music-library-frame,
+.desktop-app-shell.is-sidebar-collapsed .filmwave-music-library-frame {
+  margin-left: var(--sidebar-width-collapsed, 76px);
+}
+
+.desktop-app-main .filmwave-music-library-frame {
+  margin-left: 0;
+  padding-top: 0;
+}
+
 .filmwave-search-filter-sticky {
   position: sticky;
   top: 56px;
@@ -8,6 +27,10 @@
   gap: 0;
   background: var(--bg-primary);
   padding: 0 28px;
+}
+
+.desktop-app-main .filmwave-search-filter-sticky {
+  top: 0;
 }
 
 .filmwave-search-filter-search-row {
@@ -138,7 +161,8 @@
 .filmwave-filter-trigger:hover,
 .filmwave-filter-trigger.is-active,
 .desktop-filter-trigger:hover,
-.desktop-filter-trigger.is-active {
+.desktop-filter-trigger.is-active,
+.desktop-filter-trigger.is-open {
   color: var(--text-primary);
 }
 
@@ -149,12 +173,15 @@
 
 .filmwave-filter-trigger::after,
 .desktop-filter-trigger::after {
-  width: 6px;
-  height: 6px;
+  display: block;
+  width: 5px;
+  height: 5px;
   margin-left: 2px;
-  transform: translateY(-1px) rotate(45deg);
+  flex: 0 0 5px;
+  transform: translateY(-2px) rotate(45deg);
   border-right: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
+  opacity: 0.92;
   content: "";
 }
 
