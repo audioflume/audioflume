@@ -75,6 +75,7 @@ export default function DesktopMusicPlayer({
   const [waveformWidth, setWaveformWidth] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(song.durationSeconds || 0);
+
   const audioSource = useMemo(() => getAudioSource(song), [song]);
   const progress = duration > 0 ? Math.min(1, currentTime / duration) : 0;
 
@@ -164,6 +165,7 @@ export default function DesktopMusicPlayer({
 
     return () => {
       observer.disconnect();
+
       if (playerCanvasAnimationFrameRef.current != null) {
         window.cancelAnimationFrame(playerCanvasAnimationFrameRef.current);
         playerCanvasAnimationFrameRef.current = null;
@@ -180,9 +182,11 @@ export default function DesktopMusicPlayer({
     };
 
     updateWidth();
+
     const resizeObserver = new ResizeObserver(updateWidth);
     resizeObserver.observe(player);
     window.addEventListener("resize", updateWidth);
+
     const timeout = window.setTimeout(updateWidth, 50);
 
     return () => {
@@ -207,9 +211,11 @@ export default function DesktopMusicPlayer({
     };
 
     updateWidth();
+
     const resizeObserver = new ResizeObserver(updateWidth);
     resizeObserver.observe(waveform);
     window.addEventListener("resize", updateWidth);
+
     const timeout = window.setTimeout(updateWidth, 50);
 
     return () => {
@@ -232,6 +238,7 @@ export default function DesktopMusicPlayer({
 
     if (isPlaying) {
       const playPromise = audio.play();
+
       if (playPromise) {
         playPromise.catch((error) =>
           console.warn("Could not play audio", error),
@@ -261,8 +268,10 @@ export default function DesktopMusicPlayer({
 
   return (
     <div
+      ref={playerRef}
       className="filmwave-music-player desktop-music-player"
       data-platform="desktop"
+      style={{ gridTemplateColumns, columnGap: `${mainGap}px` }}
     >
       <audio
         ref={audioRef}
@@ -284,6 +293,7 @@ export default function DesktopMusicPlayer({
             <span>{song.title.slice(0, 1).toUpperCase()}</span>
           )}
         </div>
+
         <div className="filmwave-player-song-copy desktop-player-song-copy">
           <h3 className="filmwave-player-title">{song.title}</h3>
           <p className="filmwave-player-artist">{song.artist}</p>
@@ -294,6 +304,7 @@ export default function DesktopMusicPlayer({
         <button type="button" aria-label="Previous song" onClick={onPrevious}>
           <SkipBackIcon />
         </button>
+
         <button
           type="button"
           aria-label={isPlaying ? "Pause song" : "Play song"}
@@ -301,41 +312,82 @@ export default function DesktopMusicPlayer({
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
+
         <button type="button" aria-label="Next song" onClick={onNext}>
           <SkipForwardIcon />
         </button>
       </div>
 
-      <div className="filmwave-player-progress-wrap desktop-player-progress-wrap">
-        <span className="filmwave-player-time">{formatTime(currentTime)}</span>
-        <button
-          type="button"
-          className="filmwave-player-progress desktop-player-progress"
-          aria-label="Seek"
-          onClick={seek}
+      {(showWaveform || showCompactTime) && (
+        <div
+          className="filmwave-player-progress-wrap desktop-player-progress-wrap"
+          style={{
+            marginLeft: `${controlsToProgressGap - mainGap}px`,
+            marginRight: `${progressToMetaGap - mainGap}px`,
+          }}
         >
-          <span style={{ transform: `scaleX(${progress})` }} />
-        </button>
-        <span className="filmwave-player-time">
-          {formatTime(duration || song.durationSeconds)}
-        </span>
-      </div>
+          {showWaveform ? (
+            <div className="filmwave-player-waveform-row">
+              <span className="filmwave-player-time">
+                {formatTime(currentTime)}
+              </span>
 
-      <div className="filmwave-player-meta desktop-player-meta">
-        <span>{song.key || "—"}</span>
-        <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
-      </div>
+              <button
+                ref={waveformRef}
+                type="button"
+                className="filmwave-player-waveform"
+                aria-label="Seek"
+                onClick={seek}
+              >
+                <canvas
+                  ref={playerCanvasRef}
+                  className="filmwave-player-waveform-canvas"
+                  style={{ display: "block" }}
+                />
+              </button>
 
-      <div className="filmwave-player-actions desktop-player-actions filmwave-icon-button-group">
+              <span className="filmwave-player-time">
+                {formatTime(duration || song.durationSeconds)}
+              </span>
+            </div>
+          ) : (
+            <div className="filmwave-player-compact-time">
+              {showFullCompactTime
+                ? `${formatTime(currentTime)} / ${formatTime(
+                    duration || song.durationSeconds,
+                  )}`
+                : formatTime(currentTime)}
+            </div>
+          )}
+        </div>
+      )}
+
+      {showRightMeta && (
+        <div
+          className="filmwave-player-meta desktop-player-meta"
+          style={{ gap: `${metaGap}px` }}
+        >
+          {showKey && <span>{song.key || "—"}</span>}
+          {showBpm && <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>}
+        </div>
+      )}
+
+      <div
+        className="filmwave-player-actions desktop-player-actions filmwave-icon-button-group"
+        style={{ marginLeft: `${metaToActionsGap - mainGap}px` }}
+      >
         <button
           type="button"
           aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
           aria-pressed={favorite}
-          className={`filmwave-icon-button filmwave-icon-button-plain${favorite ? " is-active" : ""}`}
+          className={`filmwave-icon-button filmwave-icon-button-plain${
+            favorite ? " is-active" : ""
+          }`}
           onClick={onFavoriteToggle}
         >
           <HeartIcon size={14} filled={favorite} />
         </button>
+
         <button
           type="button"
           aria-label="Song options"
@@ -343,6 +395,7 @@ export default function DesktopMusicPlayer({
         >
           <MoreIcon size={14} />
         </button>
+
         {audioSource ? (
           <a
             href={audioSource}

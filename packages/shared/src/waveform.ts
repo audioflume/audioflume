@@ -87,7 +87,69 @@ export function buildWaveformBars(
       }
     }
 
-    return Math.max(minBarHeight, Math.min(maxBarHeight, barPeak * maxBarHeight));
+    return Math.max(
+      minBarHeight,
+      Math.min(maxBarHeight, barPeak * maxBarHeight),
+    );
+  });
+}
+
+export function buildWaveformPercentBars(
+  peaks: readonly number[],
+  width: number,
+  {
+    barWidth = DEFAULT_WAVEFORM_BAR_WIDTH,
+    barGap = DEFAULT_WAVEFORM_BAR_GAP,
+    minVisibleBars = 8,
+    maxVisibleBars = 220,
+    minPercent = 12,
+    maxPercent = 100,
+  }: WaveformBarOptions & {
+    minVisibleBars?: number;
+    maxVisibleBars?: number;
+    minPercent?: number;
+    maxPercent?: number;
+  } = {},
+) {
+  if (!peaks.length) return [];
+
+  const normalizedPeaks = normalizeWaveformPeaks(peaks);
+
+  if (width <= 0) {
+    return normalizedPeaks.map((peak) =>
+      Math.max(minPercent, Math.min(maxPercent, peak * maxPercent)),
+    );
+  }
+
+  const slotWidth = barWidth + barGap;
+  const visibleCount = Math.min(
+    maxVisibleBars,
+    Math.max(minVisibleBars, Math.floor((width + barGap) / slotWidth)),
+  );
+
+  if (visibleCount <= 1) {
+    return [
+      Math.max(
+        minPercent,
+        Math.min(maxPercent, (normalizedPeaks[0] ?? 0) * maxPercent),
+      ),
+    ];
+  }
+
+  return Array.from({ length: visibleCount }, (_, index) => {
+    const sourcePosition =
+      (index / (visibleCount - 1)) * (normalizedPeaks.length - 1);
+    const lowerIndex = Math.floor(sourcePosition);
+    const upperIndex = Math.min(
+      normalizedPeaks.length - 1,
+      Math.ceil(sourcePosition),
+    );
+    const progress = sourcePosition - lowerIndex;
+    const lowerValue = normalizedPeaks[lowerIndex] ?? 0;
+    const upperValue = normalizedPeaks[upperIndex] ?? lowerValue;
+    const value = lowerValue + (upperValue - lowerValue) * progress;
+
+    return Math.max(minPercent, Math.min(maxPercent, value * maxPercent));
   });
 }
 
@@ -147,7 +209,13 @@ export function drawWaveformBarsToCanvas({
 
   for (let index = 0; index < bars.length; index += 1) {
     const barHeight = bars[index];
-    context.fillStyle = index < progressBars ? colors.progressColor : colors.inactiveColor;
-    context.fillRect(index * barTotal, midY - barHeight / 2, barWidth, barHeight);
+    context.fillStyle =
+      index < progressBars ? colors.progressColor : colors.inactiveColor;
+    context.fillRect(
+      index * barTotal,
+      midY - barHeight / 2,
+      barWidth,
+      barHeight,
+    );
   }
 }

@@ -1,3 +1,4 @@
+import { buildWaveformPercentBars } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useMemo, useRef, useState } from "react";
 import CheckIcon from "../../icons/CheckIcon";
@@ -6,44 +7,9 @@ import MoreIcon from "../../icons/MoreIcon";
 import SyncIcon from "../../icons/SyncIcon";
 import type { DesktopMusicSong } from "./musicLibraryTypes";
 
-const WAVEFORM_BAR_WIDTH = 2;
-const WAVEFORM_BAR_GAP = 1;
-const WAVEFORM_MIN_VISIBLE_BARS = 8;
-const WAVEFORM_MAX_VISIBLE_BARS = 220;
 const SONG_DRAG_START_DISTANCE = 5;
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
-
-function getInterpolatedWaveformHeight(waveform: number[], index: number, total: number) {
-  if (waveform.length === 1 || total <= 1) return waveform[0] ?? 12;
-
-  const sourcePosition = (index / (total - 1)) * (waveform.length - 1);
-  const lowerIndex = Math.floor(sourcePosition);
-  const upperIndex = Math.min(waveform.length - 1, Math.ceil(sourcePosition));
-  const progress = sourcePosition - lowerIndex;
-  const lowerValue = waveform[lowerIndex] ?? 12;
-  const upperValue = waveform[upperIndex] ?? lowerValue;
-
-  return lowerValue + (upperValue - lowerValue) * progress;
-}
-
-function getVisibleWaveformBars(waveform: number[], availableWidth: number) {
-  if (!waveform.length) return [];
-  if (availableWidth <= 0) return waveform;
-
-  const slotWidth = WAVEFORM_BAR_WIDTH + WAVEFORM_BAR_GAP;
-  const visibleCount = Math.min(
-    WAVEFORM_MAX_VISIBLE_BARS,
-    Math.max(
-      WAVEFORM_MIN_VISIBLE_BARS,
-      Math.floor((availableWidth + WAVEFORM_BAR_GAP) / slotWidth),
-    ),
-  );
-
-  return Array.from({ length: visibleCount }, (_, index) =>
-    getInterpolatedWaveformHeight(waveform, index, visibleCount),
-  );
-}
 
 export default function DesktopSongCard({
   song,
@@ -74,7 +40,7 @@ export default function DesktopSongCard({
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
   const isSynced = syncStatus === "synced" && Boolean(syncedPath);
   const visibleWaveform = useMemo(
-    () => getVisibleWaveformBars(song.waveform, waveformWidth),
+    () => buildWaveformPercentBars(song.waveform, waveformWidth),
     [song.waveform, waveformWidth],
   );
 
