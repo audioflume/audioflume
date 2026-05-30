@@ -1,10 +1,11 @@
+import { QUICK_FILTERS } from "@filmwave/shared";
 import type {
   DesktopMusicFilterOptions,
   DesktopMusicFilterState,
   DesktopMusicSong,
 } from "./musicLibraryTypes";
 
-export const QUICK_GENRES = ["Ambient", "Cinematic", "Commercial", "Indie"];
+export const QUICK_GENRES = [...QUICK_FILTERS];
 
 export const FILTER_TITLES = {
   playlist: "Playlists",
