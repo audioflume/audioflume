@@ -3,6 +3,7 @@
 @import "../../../packages/shared/styles/layers.css";
 @import "../../../packages/shared/styles/app-chrome.css";
 @import "../../../packages/shared/styles/sidebar.css";
+@import "../../../packages/shared/styles/sidebar-player-boundary.css";
 @import "../../../packages/shared/styles/search-filter-chrome.css";
 
 body.sidebar-collapsed {
