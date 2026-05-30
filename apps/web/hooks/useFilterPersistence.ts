@@ -26,7 +26,8 @@ type FilterState = {
   selectedPlaylist: PlaylistRef | null;
 };
 
-type FilterStateCompat = FilterState & {
+type FilterStateCompat = {
+  search: string;
   moods: string[];
   genres: string[];
   instruments: string[];
@@ -34,6 +35,8 @@ type FilterStateCompat = FilterState & {
   vocals: string[];
   durations: string[];
   editPoints: string[];
+  showEditPointMarkers: boolean;
+  instrumental: boolean;
   bpm: BpmFilterValue | null;
   key: KeyFilterValue | null;
   playlist: PlaylistRef | null;
@@ -62,7 +65,7 @@ const baseDefaultState: FilterState = {
 
 function withCompatAliases(state: FilterState): FilterStateCompat {
   return {
-    ...state,
+    search: state.search,
     moods: state.selectedMoods,
     genres: state.selectedGenres,
     instruments: state.selectedInstruments,
@@ -70,6 +73,8 @@ function withCompatAliases(state: FilterState): FilterStateCompat {
     vocals: state.selectedVocals,
     durations: state.selectedDurations,
     editPoints: state.selectedEditPoints,
+    showEditPointMarkers: state.showEditPointMarkers,
+    instrumental: state.instrumental,
     bpm: state.bpmValue,
     key: state.keyValue,
     playlist: state.selectedPlaylist,
@@ -79,38 +84,38 @@ function withCompatAliases(state: FilterState): FilterStateCompat {
 function normalizeCompatAliases(state: FilterState | Partial<FilterStateCompat>): FilterState {
   return {
     search: typeof state.search === "string" ? state.search : "",
-    selectedMoods: Array.isArray(state.selectedMoods)
-      ? state.selectedMoods
+    selectedMoods: Array.isArray("selectedMoods" in state ? state.selectedMoods : undefined)
+      ? (state as FilterState).selectedMoods
       : Array.isArray(state.moods)
         ? state.moods
         : [],
-    selectedGenres: Array.isArray(state.selectedGenres)
-      ? state.selectedGenres
+    selectedGenres: Array.isArray("selectedGenres" in state ? state.selectedGenres : undefined)
+      ? (state as FilterState).selectedGenres
       : Array.isArray(state.genres)
         ? state.genres
         : [],
-    selectedInstruments: Array.isArray(state.selectedInstruments)
-      ? state.selectedInstruments
+    selectedInstruments: Array.isArray("selectedInstruments" in state ? state.selectedInstruments : undefined)
+      ? (state as FilterState).selectedInstruments
       : Array.isArray(state.instruments)
         ? state.instruments
         : [],
-    selectedBuilds: Array.isArray(state.selectedBuilds)
-      ? state.selectedBuilds
+    selectedBuilds: Array.isArray("selectedBuilds" in state ? state.selectedBuilds : undefined)
+      ? (state as FilterState).selectedBuilds
       : Array.isArray(state.builds)
         ? state.builds
         : [],
-    selectedVocals: Array.isArray(state.selectedVocals)
-      ? state.selectedVocals
+    selectedVocals: Array.isArray("selectedVocals" in state ? state.selectedVocals : undefined)
+      ? (state as FilterState).selectedVocals
       : Array.isArray(state.vocals)
         ? state.vocals
         : [],
-    selectedDurations: Array.isArray(state.selectedDurations)
-      ? state.selectedDurations
+    selectedDurations: Array.isArray("selectedDurations" in state ? state.selectedDurations : undefined)
+      ? (state as FilterState).selectedDurations
       : Array.isArray(state.durations)
         ? state.durations
         : [],
-    selectedEditPoints: Array.isArray(state.selectedEditPoints)
-      ? state.selectedEditPoints
+    selectedEditPoints: Array.isArray("selectedEditPoints" in state ? state.selectedEditPoints : undefined)
+      ? (state as FilterState).selectedEditPoints
       : Array.isArray(state.editPoints)
         ? state.editPoints
         : [],
@@ -119,9 +124,9 @@ function normalizeCompatAliases(state: FilterState | Partial<FilterStateCompat>)
         ? state.showEditPointMarkers
         : true,
     instrumental: typeof state.instrumental === "boolean" ? state.instrumental : false,
-    bpmValue: state.bpmValue ?? state.bpm ?? null,
-    keyValue: state.keyValue ?? state.key ?? null,
-    selectedPlaylist: state.selectedPlaylist ?? state.playlist ?? null,
+    bpmValue: "bpmValue" in state ? state.bpmValue : state.bpm ?? null,
+    keyValue: "keyValue" in state ? state.keyValue : state.key ?? null,
+    selectedPlaylist: "selectedPlaylist" in state ? state.selectedPlaylist : state.playlist ?? null,
   };
 }
 
@@ -189,7 +194,7 @@ export function useFilterPersistence(
 
   const compatFilters = useMemo(() => withCompatAliases(filters), [filters]);
 
-  const setFilters: typeof setRawFilters = (next) => {
+  const setFilters = (next: Partial<FilterStateCompat> | FilterState | ((current: FilterStateCompat) => Partial<FilterStateCompat> | FilterState)) => {
     setRawFilters((current) => {
       const resolved = typeof next === "function" ? next(withCompatAliases(current)) : next;
       return normalizeCompatAliases(resolved);
