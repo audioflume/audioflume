@@ -134,3 +134,112 @@
   width: 14px;
   height: 14px;
 }
+
+.filmwave-song-card {
+  display: flex;
+  align-items: center;
+  gap: var(--filmwave-song-card-gap);
+  overflow: visible;
+  padding: var(--filmwave-song-card-padding-y) var(--filmwave-song-card-padding-right) var(--filmwave-song-card-padding-y) var(--filmwave-song-card-padding-left);
+}
+
+.filmwave-song-info {
+  display: flex;
+  min-width: 132px;
+  max-width: 220px;
+  flex: 0 1 190px;
+  flex-direction: column;
+}
+
+.filmwave-song-wave-wrap {
+  display: flex;
+  min-width: 220px;
+  flex: 1 1 520px;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.filmwave-song-stems-slot {
+  display: flex;
+  flex: 0 0 40px;
+  justify-content: center;
+}
+
+.filmwave-song-wave {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.filmwave-song-duration {
+  flex: 0 0 48px;
+  width: 48px;
+  text-align: right;
+}
+
+.filmwave-song-genre-slot {
+  display: flex;
+  min-width: 96px;
+  max-width: 170px;
+  flex: 0 1 150px;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.filmwave-song-genre {
+  overflow: hidden;
+  text-align: right;
+}
+
+.filmwave-song-key-bpm {
+  display: flex;
+  width: 140px;
+  min-width: 140px;
+  flex: 0 0 140px;
+  justify-content: flex-end;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.filmwave-song-key {
+  width: 48px;
+  min-width: 0;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filmwave-song-bpm {
+  width: 64px;
+  min-width: 64px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .filmwave-song-card {
+    padding-left: 24px;
+    gap: 12px;
+  }
+
+  .filmwave-song-info {
+    min-width: 124px;
+    max-width: 180px;
+    flex-basis: 180px;
+  }
+
+  .filmwave-song-wave-wrap {
+    min-width: 160px;
+    flex-basis: 320px;
+    gap: 10px;
+  }
+}
+
+.filmwave-song-tail {
+  display: flex;
+  min-width: 0;
+  flex-shrink: 0;
+  align-items: center;
+  gap: clamp(12px, 2.4vw, 36px);
+}

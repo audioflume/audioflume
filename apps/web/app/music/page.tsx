@@ -772,7 +772,7 @@ export default function MusicPage() {
         </div>
 
         <section className="px-8 pb-8">
-          <div className="mt-6 overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+          <div className="mt-6">
             {songsError ? (
               <div className="px-5 py-8 text-sm text-[var(--text-secondary)]">
                 {songsError}

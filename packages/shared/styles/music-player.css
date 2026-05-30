@@ -36,7 +36,10 @@
 .filmwave-music-player[data-platform="desktop"] {
   z-index: 2000;
   display: grid;
-  grid-template-columns: minmax(180px, 300px) 132px minmax(220px, 1fr) 150px 104px;
+  grid-template-columns: minmax(180px, 300px) 132px minmax(
+      220px,
+      1fr
+    ) 150px 104px;
   align-items: center;
   justify-content: space-between;
   gap: var(--filmwave-player-main-gap);
@@ -214,7 +217,9 @@
   padding: 0;
   color: var(--icon-color);
   text-decoration: none;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .filmwave-icon-button:hover,
@@ -266,7 +271,8 @@
     padding-left: 16px;
   }
 
-  .filmwave-music-player[data-platform="desktop"] .filmwave-player-progress-wrap {
+  .filmwave-music-player[data-platform="desktop"]
+    .filmwave-player-progress-wrap {
     display: none;
   }
 }

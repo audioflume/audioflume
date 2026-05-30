@@ -101,22 +101,22 @@ export default function DesktopSongCard({
   }, [actionsOpen]);
 
   useEffect(() => {
-    const element = waveformRef.current;
-    if (!element) return;
+    if (!waveformRef.current) return;
+    const waveformElement: HTMLDivElement = waveformRef.current;
 
     let frame = 0;
 
     function updateWidth() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        setWaveformWidth(element.clientWidth);
+        setWaveformWidth(waveformElement.clientWidth);
       });
     }
 
     updateWidth();
 
     const resizeObserver = new ResizeObserver(updateWidth);
-    resizeObserver.observe(element);
+    resizeObserver.observe(waveformElement);
 
     return () => {
       cancelAnimationFrame(frame);
