@@ -6,9 +6,7 @@
   --filmwave-player-control-gap: clamp(12px, 2vw, 24px);
   --filmwave-player-meta-gap: 18px;
   --filmwave-player-action-gap: 2px;
-  --filmwave-player-top-glow: 0 -30px 90px rgba(0, 0, 0, 0.07);
-  --filmwave-player-top-glow-start: rgba(0, 0, 0, 0.055);
-  --filmwave-player-top-glow-mid: rgba(0, 0, 0, 0.026);
+  --filmwave-player-top-glow: 0 -18px 50px rgba(0, 0, 0, 0.16);
 }
 
 .filmwave-music-player {
@@ -29,24 +27,23 @@
   right: 0;
   bottom: 100%;
   left: 0;
-  height: 72px;
+  height: 28px;
   pointer-events: none;
-  background: linear-gradient(
-    to top,
-    var(--filmwave-player-top-glow-start),
-    var(--filmwave-player-top-glow-mid) 42%,
-    transparent
-  );
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.18), transparent);
   content: "";
 }
 
 .filmwave-music-player[data-platform="desktop"] {
   z-index: 2000;
   display: grid;
-  height: var(--filmwave-player-height);
+  grid-template-columns: minmax(180px, 300px) 132px minmax(
+      220px,
+      1fr
+    ) 150px 104px;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--filmwave-player-padding-x);
+  gap: var(--filmwave-player-main-gap);
+  padding: 10px 28px;
 }
 
 .filmwave-player-song {
@@ -193,43 +190,6 @@
   background: var(--waveform-progress, var(--text-primary));
 }
 
-.filmwave-player-waveform-row {
-  display: flex;
-  width: 100%;
-  min-width: 0;
-  align-items: center;
-  gap: 16px;
-  overflow: visible;
-}
-
-.filmwave-player-waveform {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  height: 24px;
-  min-width: 80px;
-  flex: 1;
-  cursor: pointer;
-  align-items: center;
-  overflow: visible;
-  border: 0;
-  background: transparent;
-  padding: 0;
-}
-
-.filmwave-player-waveform-canvas {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-}
-
-.filmwave-player-compact-time {
-  white-space: nowrap;
-  color: var(--icon-color);
-  font-size: 12px;
-}
-
 .filmwave-player-meta {
   justify-content: flex-end;
   gap: var(--filmwave-player-meta-gap);
@@ -257,7 +217,9 @@
   padding: 0;
   color: var(--icon-color);
   text-decoration: none;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .filmwave-icon-button:hover,
@@ -285,9 +247,37 @@
   gap: 2px;
 }
 
+@media (max-width: 1260px) {
+  .filmwave-music-player[data-platform="desktop"] {
+    grid-template-columns: minmax(170px, 280px) 120px minmax(180px, 1fr) 104px;
+  }
+
+  .filmwave-music-player[data-platform="desktop"] .filmwave-player-meta {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .filmwave-music-player[data-platform="desktop"] {
+    grid-template-columns: minmax(140px, 1fr) 120px minmax(140px, 1fr) 92px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 680px) {
+  .filmwave-music-player[data-platform="desktop"] {
+    grid-template-columns: minmax(120px, 1fr) 104px 84px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .filmwave-music-player[data-platform="desktop"]
+    .filmwave-player-progress-wrap {
+    display: none;
+  }
+}
+
 html[data-theme="light"] .filmwave-music-player,
 .light .filmwave-music-player {
-  --filmwave-player-top-glow: 0 -30px 90px rgba(0, 0, 0, 0.04);
-  --filmwave-player-top-glow-start: rgba(0, 0, 0, 0.032);
-  --filmwave-player-top-glow-mid: rgba(0, 0, 0, 0.014);
+  --filmwave-player-top-glow: 0 -18px 50px rgba(0, 0, 0, 0.08);
 }
