@@ -1,0 +1,28 @@
+.desktop-sidebar-link,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
+  justify-content: flex-start;
+  padding: 0 10px;
+}
+
+.desktop-sidebar-link-icon,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin: 0;
+}
+
+.desktop-sidebar-link-label,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
+  margin-left: 10px;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
+  width: 0;
+  opacity: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon {
+  justify-content: center;
+  padding: 0;
+}
