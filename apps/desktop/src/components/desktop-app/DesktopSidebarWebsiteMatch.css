@@ -1,3 +1,15 @@
+.desktop-app-sidebar {
+  width: var(--sidebar-width-expanded, 280px);
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
+  width: var(--sidebar-width-collapsed, 76px);
+}
+
+.desktop-sidebar-tooltip {
+  left: calc(var(--sidebar-width-collapsed, 76px) - 11px);
+}
+
 .desktop-sidebar-link,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
   justify-content: flex-start;
