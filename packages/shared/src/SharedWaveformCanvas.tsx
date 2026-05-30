@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
+  type PointerEvent,
   type ReactNode,
 } from "react";
 import {
@@ -39,6 +40,7 @@ export type SharedWaveformCanvasProps = {
   canvasClassName?: string;
   ariaLabel?: string;
   options?: WaveformBarOptions;
+  onPointerEnter?: () => void;
 };
 
 export default function SharedWaveformCanvas({
@@ -50,6 +52,7 @@ export default function SharedWaveformCanvas({
   canvasClassName = "filmwave-player-waveform-canvas",
   ariaLabel = "Seek",
   options,
+  onPointerEnter,
 }: SharedWaveformCanvasProps) {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -162,6 +165,14 @@ export default function SharedWaveformCanvas({
     scheduleDraw();
   }
 
+  function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    if (!onSeek) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    seek(event.clientX);
+  }
+
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -176,7 +187,8 @@ export default function SharedWaveformCanvas({
       role={onSeek ? "button" : undefined}
       tabIndex={onSeek ? 0 : undefined}
       aria-label={onSeek ? ariaLabel : undefined}
-      onClick={onSeek ? (event) => seek(event.clientX) : undefined}
+      onPointerEnter={onPointerEnter}
+      onPointerDown={onSeek ? handlePointerDown : undefined}
       onKeyDown={onSeek ? handleKeyDown : undefined}
     >
       {overlay}
