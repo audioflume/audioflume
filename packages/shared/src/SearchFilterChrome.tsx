@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import type { ChangeEvent, CSSProperties, ReactNode, Ref } from "react";
 
 type MusicLibraryFrameProps = {
   children: ReactNode;
@@ -51,17 +51,68 @@ export function SearchFilterChrome({
 
 type SearchFilterInputProps = {
   icon: ReactNode;
-  input: ReactNode;
+  input?: ReactNode;
+  value?: string;
+  placeholder?: string;
+  inputRef?: Ref<HTMLInputElement>;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function SearchFilterInput({ icon, input }: SearchFilterInputProps) {
+export function SearchFilterInput({
+  icon,
+  input,
+  value,
+  placeholder,
+  inputRef,
+  onChange,
+}: SearchFilterInputProps) {
   return (
     <>
       <span className="filmwave-search-filter-search-icon" aria-hidden="true">
         {icon}
       </span>
-      {input}
+      {input ?? (
+        <input
+          ref={inputRef}
+          type="text"
+          value={value ?? ""}
+          placeholder={placeholder}
+          onChange={onChange}
+        />
+      )}
     </>
+  );
+}
+
+export function SearchFilterTagList({ children }: { children: ReactNode }) {
+  return <div className="filmwave-search-filter-tag-list">{children}</div>;
+}
+
+export function SearchFilterTag({
+  children,
+  icon,
+  onRemove,
+}: {
+  children: ReactNode;
+  icon?: ReactNode;
+  onRemove: () => void;
+}) {
+  return (
+    <span
+      className="filmwave-search-filter-tag"
+      onClick={(event) => event.stopPropagation()}
+    >
+      {icon && <span className="filmwave-search-filter-tag-icon">{icon}</span>}
+      <span>{children}</span>
+      <button
+        type="button"
+        className="filmwave-search-filter-tag-remove"
+        onClick={onRemove}
+        aria-label={`Remove ${typeof children === "string" ? children : "filter"}`}
+      >
+        ×
+      </button>
+    </span>
   );
 }
 
