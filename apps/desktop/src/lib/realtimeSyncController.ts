@@ -7,10 +7,9 @@ import {
 import { syncProjectsToFolder } from "./syncEngine";
 
 const SETTINGS_STORE = "filmwave-settings.json";
-const WEBSITE_CHANGE_DEBOUNCE_MS = 1000;
+const WEBSITE_CHANGE_DEBOUNCE_MS = 3000;
 const SETTINGS_REFRESH_MS = 10000;
-const WEBSITE_RECONCILE_SWEEP_MS = 30000;
-const MIN_SYNC_GAP_MS = 750;
+const MIN_SYNC_GAP_MS = 10000;
 
 const REALTIME_UPDATED_EVENT = "filmwave:realtime-projects-updated";
 
@@ -30,13 +29,16 @@ type ProjectChangePayload = {
 
 let started = false;
 let currentEventSource: EventSource | null = null;
+let currentEventSourceUrl: string | null = null;
 let websiteChangeTimer: number | null = null;
 let settingsRefreshTimer: number | null = null;
-let websiteReconcileSweepTimer: number | null = null;
 let queuedWebsiteSync = false;
 let pendingWebsiteProjectIds = new Set<string>();
 let syncing = false;
 let lastSyncFinishedAt = 0;
+let lastProjectFetchKey: string | null = null;
+let lastProjectFetchStartedAt = 0;
+let projectFetchPromise: Promise<Project[]> | null = null;
 
 async function readSettings(): Promise<RealtimeSettings> {
   const store = await load(SETTINGS_STORE);
@@ -154,7 +156,14 @@ async function runWebsiteSync(projectIds = new Set<string>()) {
 
   if (syncGapRemainingMs > 0) {
     projectIds.forEach((id) => pendingWebsiteProjectIds.add(id));
-    scheduleWebsiteSync();
+    if (!websiteChangeTimer) {
+      websiteChangeTimer = window.setTimeout(() => {
+        const nextProjectIds = new Set(pendingWebsiteProjectIds);
+        pendingWebsiteProjectIds.clear();
+        websiteChangeTimer = null;
+        void runWebsiteSync(nextProjectIds);
+      }, syncGapRemainingMs);
+    }
     return;
   }
 
@@ -174,11 +183,34 @@ async function runWebsiteSync(projectIds = new Set<string>()) {
   }
 }
 
+async function getProjectsForRealtimeSync(settings: RealtimeSettings) {
+  if (!settings.desktopToken) return [];
+
+  const fetchKey = `${settings.apiBaseUrl}:${settings.desktopToken}`;
+  const now = Date.now();
+
+  if (
+    projectFetchPromise &&
+    lastProjectFetchKey === fetchKey &&
+    now - lastProjectFetchStartedAt < 5000
+  ) {
+    return projectFetchPromise;
+  }
+
+  lastProjectFetchKey = fetchKey;
+  lastProjectFetchStartedAt = now;
+  projectFetchPromise = getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl).finally(() => {
+    projectFetchPromise = null;
+  });
+
+  return projectFetchPromise;
+}
+
 async function runWebsiteToLocalSync(settings: RealtimeSettings, projectIds = new Set<string>()) {
   if (!settings.desktopToken || !settings.syncFolder) return;
 
   try {
-    const allProjects = await getFilmwaveProjects(settings.desktopToken, settings.apiBaseUrl);
+    const allProjects = await getProjectsForRealtimeSync(settings);
     const projectsToSync = filterProjectsByIds(allProjects, projectIds);
     const updatedProjectIds = new Set(projectsToSync.map((project) => String(project.id)));
 
@@ -221,17 +253,24 @@ async function runWebsiteToLocalSync(settings: RealtimeSettings, projectIds = ne
 function closeWebsiteEvents() {
   currentEventSource?.close();
   currentEventSource = null;
+  currentEventSourceUrl = null;
 }
 
 function refreshWebsiteEvents(settings: RealtimeSettings) {
-  closeWebsiteEvents();
-
-  if (!shouldRunRealtimeSync(settings) || !settings.desktopToken) return;
+  if (!shouldRunRealtimeSync(settings) || !settings.desktopToken) {
+    closeWebsiteEvents();
+    return;
+  }
 
   const url = new URL(`${settings.apiBaseUrl}/api/desktop/projects/events`);
   url.searchParams.set("token", settings.desktopToken);
+  const nextEventSourceUrl = url.toString();
 
-  const eventSource = new EventSource(url.toString());
+  if (currentEventSource && currentEventSourceUrl === nextEventSourceUrl) return;
+
+  closeWebsiteEvents();
+
+  const eventSource = new EventSource(nextEventSourceUrl);
 
   eventSource.addEventListener("project-change", (event) => {
     try {
@@ -251,23 +290,12 @@ function refreshWebsiteEvents(settings: RealtimeSettings) {
   };
 
   currentEventSource = eventSource;
+  currentEventSourceUrl = nextEventSourceUrl;
 }
 
 async function refreshRealtimeConnections() {
   const settings = await readSettings();
-
-  if (!currentEventSource && shouldRunRealtimeSync(settings)) {
-    refreshWebsiteEvents(settings);
-  }
-
-  if (!shouldRunRealtimeSync(settings)) {
-    closeWebsiteEvents();
-  }
-}
-
-async function runWebsiteReconcileSweep() {
-  if (syncing || websiteChangeTimer) return;
-  scheduleWebsiteSync();
+  refreshWebsiteEvents(settings);
 }
 
 export function startRealtimeSyncController() {
@@ -277,16 +305,13 @@ export function startRealtimeSyncController() {
 
   // The local sync folder is read-only — changes flow website → local only.
   // No filesystem watcher or local change detection is registered here.
+  // Project data is fetched only after explicit website project-change events.
 
   void refreshRealtimeConnections();
 
   settingsRefreshTimer = window.setInterval(() => {
     void refreshRealtimeConnections();
   }, SETTINGS_REFRESH_MS);
-
-  websiteReconcileSweepTimer = window.setInterval(() => {
-    void runWebsiteReconcileSweep();
-  }, WEBSITE_RECONCILE_SWEEP_MS);
 }
 
 export function stopRealtimeSyncController() {
@@ -297,11 +322,11 @@ export function stopRealtimeSyncController() {
 
   if (websiteChangeTimer) window.clearTimeout(websiteChangeTimer);
   if (settingsRefreshTimer) window.clearInterval(settingsRefreshTimer);
-  if (websiteReconcileSweepTimer) window.clearInterval(websiteReconcileSweepTimer);
 
   websiteChangeTimer = null;
   settingsRefreshTimer = null;
-  websiteReconcileSweepTimer = null;
   queuedWebsiteSync = false;
   pendingWebsiteProjectIds.clear();
+  projectFetchPromise = null;
+  lastProjectFetchKey = null;
 }
