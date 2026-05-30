@@ -75,6 +75,30 @@ function SidebarTooltipEl({ label, top }: { label: string; top: number }) {
   );
 }
 
+function SidebarSectionHeading({
+  label,
+  collapsed,
+  icon,
+}: {
+  label: string;
+  collapsed: boolean;
+  icon: ReactNode;
+}) {
+  return (
+    <div className="desktop-sidebar-heading">
+      <div className="desktop-sidebar-heading-inner">
+        <span className="desktop-sidebar-heading-label">{label}</span>
+        <span
+          className={`desktop-sidebar-heading-icon${collapsed ? " is-visible" : ""}`}
+          aria-hidden="true"
+        >
+          {icon}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function SidebarNavButton({
   collapsed,
   item,
@@ -193,27 +217,28 @@ export default function DesktopAppShell({
 
       <aside className="desktop-app-sidebar" data-tauri-drag-region>
         <div className="desktop-sidebar-collapse-zone">
-          <button
-            type="button"
-            className="desktop-sidebar-collapse-button"
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            onClick={() => {
-              if (!autoCollapsed) setCollapsed((value) => !value);
-              setTooltip(null);
-            }}
-          >
-            <CollapseIcon collapsed={effectivelyCollapsed} />
-          </button>
+          <div className="desktop-sidebar-collapse-zone-inner">
+            <button
+              type="button"
+              className="desktop-sidebar-collapse-button"
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              onClick={() => {
+                if (!autoCollapsed) setCollapsed((value) => !value);
+                setTooltip(null);
+              }}
+            >
+              <CollapseIcon collapsed={effectivelyCollapsed} />
+            </button>
+          </div>
         </div>
 
         <div className="desktop-app-sidebar-inner">
-          <section className="desktop-sidebar-section">
-            <h2 className="desktop-sidebar-heading has-collapsed-icon">
-              <span className="desktop-sidebar-heading-icon" aria-hidden="true">
-                <LibraryIcon size={16} />
-              </span>
-              <span className="desktop-sidebar-heading-label">Library</span>
-            </h2>
+          <div className="desktop-sidebar-section">
+            <SidebarSectionHeading
+              label="Library"
+              collapsed={effectivelyCollapsed}
+              icon={<LibraryIcon size={16} />}
+            />
             <nav className="desktop-sidebar-nav" aria-label="Library navigation">
               {libraryLinks.map((item) => (
                 <SidebarNavButton
@@ -226,26 +251,28 @@ export default function DesktopAppShell({
                 />
               ))}
             </nav>
-          </section>
+          </div>
 
-          <section className="desktop-sidebar-section is-projects-section">
+          <div className="desktop-sidebar-section is-projects-section">
             <div className="desktop-sidebar-projects-head">
-              <h2 className="desktop-sidebar-heading">Projects</h2>
-              <button
-                type="button"
-                className="desktop-sidebar-add-button"
-                aria-label="New Project"
-                onMouseEnter={(event) => showNewProjectTooltip(event.currentTarget)}
-                onMouseLeave={() => setTooltip(null)}
-                onFocus={(event) => showNewProjectTooltip(event.currentTarget)}
-                onBlur={() => setTooltip(null)}
-                onClick={() => {
-                  setTooltip(null);
-                  handleCreateProject();
-                }}
-              >
-                <PlusIcon />
-              </button>
+              <span className="desktop-sidebar-projects-label">Projects</span>
+              <div className="desktop-sidebar-project-actions">
+                <button
+                  type="button"
+                  className="desktop-sidebar-add-button"
+                  aria-label="New Project"
+                  onMouseEnter={(event) => showNewProjectTooltip(event.currentTarget)}
+                  onMouseLeave={() => setTooltip(null)}
+                  onFocus={(event) => showNewProjectTooltip(event.currentTarget)}
+                  onBlur={() => setTooltip(null)}
+                  onClick={() => {
+                    setTooltip(null);
+                    handleCreateProject();
+                  }}
+                >
+                  <PlusIcon />
+                </button>
+              </div>
             </div>
             <nav className="desktop-sidebar-nav" aria-label="Projects navigation">
               {projectLinks.map((item) => (
@@ -262,7 +289,7 @@ export default function DesktopAppShell({
                 <div className="desktop-sidebar-empty-projects">No projects yet</div>
               )}
             </nav>
-          </section>
+          </div>
         </div>
       </aside>
 
