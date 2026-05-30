@@ -93,7 +93,8 @@
   flex: 1 1 auto;
   flex-direction: column;
   overflow-y: auto;
-  padding: var(--filmwave-sidebar-y-padding-top) var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom);
+  padding: var(--filmwave-sidebar-y-padding-top)
+    var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom);
 }
 
 .desktop-sidebar-section {
@@ -285,6 +286,7 @@
   height: var(--filmwave-sidebar-row-height);
   justify-content: center;
   margin-bottom: 0;
+  padding: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
@@ -294,11 +296,14 @@
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions {
   display: flex;
   width: 100%;
+  height: var(--filmwave-sidebar-row-height);
   align-items: center;
   justify-content: center;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions > :not(.desktop-sidebar-add-button) {
+.desktop-app-shell.is-sidebar-collapsed
+  .desktop-sidebar-project-actions
+  > :not(.desktop-sidebar-add-button) {
   display: none;
 }
 
