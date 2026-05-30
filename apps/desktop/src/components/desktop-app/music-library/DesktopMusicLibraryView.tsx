@@ -190,6 +190,14 @@ export default function DesktopMusicLibraryView({
   );
 
   const filterKeys = Object.keys(FILTER_TITLES) as DesktopMusicFilterKey[];
+  const hasActiveFilters =
+    filters.search.trim().length > 0 ||
+    filterKeys.some((filterKey) => filters[filterKey].length > 0) ||
+    filters.markers ||
+    filters.shuffle;
+  const searchPlaceholder = hasActiveFilters
+    ? "Search filtered results"
+    : "Search the catalog";
 
   function setFilterValue(key: DesktopMusicFilterKey, value: string) {
     setFilters((current) => ({
@@ -291,15 +299,11 @@ export default function DesktopMusicLibraryView({
         search={
           <SearchFilterInput
             icon={<SearchIconSmall size={13} />}
-            input={
-              <input
-                ref={searchInputRef}
-                value={filters.search}
-                onChange={(event) =>
-                  setFilters((current) => ({ ...current, search: event.target.value }))
-                }
-                placeholder="Search Music Library"
-              />
+            inputRef={searchInputRef}
+            value={filters.search}
+            placeholder={searchPlaceholder}
+            onChange={(event) =>
+              setFilters((current) => ({ ...current, search: event.target.value }))
             }
           />
         }
