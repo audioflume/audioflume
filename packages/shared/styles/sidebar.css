@@ -137,9 +137,7 @@
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  transition:
-    opacity 150ms ease,
-    transform 150ms ease;
+  transition: opacity 150ms ease;
 }
 
 .desktop-sidebar-heading-icon {
@@ -165,7 +163,6 @@
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading-label {
   pointer-events: none;
-  transform: translateX(-4px);
   opacity: 0;
 }
 
@@ -228,18 +225,15 @@
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transform: translateX(0);
   opacity: 1;
   transition:
     opacity 150ms ease,
-    transform 150ms ease,
     width 150ms ease;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
   width: 0;
   pointer-events: none;
-  transform: translateX(4px);
   opacity: 0;
 }
 
@@ -261,9 +255,7 @@
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  transition:
-    opacity 150ms ease,
-    transform 150ms ease;
+  transition: opacity 150ms ease;
 }
 
 .desktop-sidebar-project-actions {
@@ -314,7 +306,6 @@
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
   pointer-events: none;
   position: absolute;
-  transform: translateX(-8px);
   opacity: 0;
 }
 
