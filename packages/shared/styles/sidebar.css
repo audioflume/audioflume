@@ -25,7 +25,6 @@
   overflow: hidden;
   border-right: 1px solid var(--border);
   background: var(--bg-primary);
-  will-change: width;
   transition: width 200ms ease;
 }
 
@@ -41,6 +40,14 @@
   z-index: 20;
   display: flex;
   width: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.desktop-sidebar-collapse-zone-inner {
+  display: flex;
+  width: 16px;
+  height: 100%;
   align-items: center;
   justify-content: center;
 }
@@ -62,7 +69,7 @@
     color 150ms ease;
 }
 
-.desktop-sidebar-collapse-zone:hover .desktop-sidebar-collapse-button,
+.desktop-sidebar-collapse-zone-inner:hover .desktop-sidebar-collapse-button,
 .desktop-sidebar-collapse-button:focus-visible {
   opacity: 0.35;
 }
@@ -84,7 +91,6 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  overflow-x: hidden;
   overflow-y: auto;
   padding: var(--filmwave-sidebar-y-padding-top) var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom);
 }
@@ -99,35 +105,38 @@
 }
 
 .desktop-sidebar-section.is-projects-section {
+  display: flex;
+  flex-direction: column;
   border-bottom: 0;
   padding-bottom: 0;
 }
 
 .desktop-sidebar-heading {
+  display: flex;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.desktop-sidebar-heading-inner {
   position: relative;
   display: flex;
   width: 100%;
   height: 16px;
-  min-height: 16px;
-  margin: 0 0 8px;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  color: var(--text-muted);
-  line-height: 1;
 }
 
 .desktop-sidebar-heading-label {
   position: absolute;
   left: var(--filmwave-sidebar-row-padding-x);
-  display: inline-flex;
   color: var(--text-muted);
   font-size: 11px;
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  transform: translateX(0);
-  opacity: 1;
   transition:
     opacity 150ms ease,
     transform 150ms ease;
@@ -149,65 +158,15 @@
     transform 150ms ease;
 }
 
-.desktop-sidebar-projects-head {
-  display: flex;
-  height: 24px;
-  min-height: 24px;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  border-radius: var(--filmwave-sidebar-row-radius);
-  padding: 0 var(--filmwave-sidebar-row-padding-x);
-  transition: padding 200ms ease;
+.desktop-sidebar-heading-icon.is-visible {
+  opacity: 0.3;
+  transform: translateX(-50%) scale(1);
 }
 
-.desktop-sidebar-projects-head .desktop-sidebar-heading {
-  position: relative;
-  width: auto;
-  height: auto;
-  min-height: 0;
-  margin: 0;
-  justify-content: flex-start;
-  overflow: visible;
-}
-
-.desktop-sidebar-projects-head .desktop-sidebar-heading-label {
-  position: relative;
-  left: auto;
-}
-
-.desktop-sidebar-add-button {
-  display: flex;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: var(--filmwave-sidebar-row-radius);
-  background: transparent;
-  color: var(--text-muted);
-  padding: 0;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
-}
-
-.desktop-sidebar-add-button:hover {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
-}
-
-.desktop-sidebar-plus-icon {
-  display: inline-flex;
-  width: var(--filmwave-sidebar-icon-size);
-  height: var(--filmwave-sidebar-icon-size);
-  align-items: center;
-  justify-content: center;
-  color: inherit;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 1;
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading-label {
+  pointer-events: none;
+  transform: translateX(-4px);
+  opacity: 0;
 }
 
 .desktop-sidebar-nav {
@@ -277,11 +236,103 @@
     width 150ms ease;
 }
 
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
+  width: 0;
+  pointer-events: none;
+  transform: translateX(4px);
+  opacity: 0;
+}
+
+.desktop-sidebar-projects-head {
+  position: relative;
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  border-radius: var(--filmwave-sidebar-row-radius);
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
+  transition: padding 200ms ease;
+}
+
+.desktop-sidebar-projects-label {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+.desktop-sidebar-project-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.desktop-sidebar-add-button {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--filmwave-sidebar-row-radius);
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.desktop-sidebar-add-button:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-plus-icon {
+  display: inline-flex;
+  width: var(--filmwave-sidebar-icon-size);
+  height: var(--filmwave-sidebar-icon-size);
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
+  justify-content: center;
+  padding: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-8px);
+  opacity: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+  width: 100%;
+  height: var(--filmwave-sidebar-row-height);
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
+}
+
 .desktop-sidebar-empty-projects {
   padding: 6px var(--filmwave-sidebar-row-padding-x) 0;
   color: var(--text-muted);
   font-size: 12px;
   line-height: 1.35;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
+  display: none;
 }
 
 .desktop-sidebar-tooltip {
@@ -310,43 +361,6 @@
   line-height: 1;
   padding: 7px 14px 7px 20px;
   white-space: nowrap;
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
-  width: 0;
-  pointer-events: none;
-  transform: translateX(4px);
-  opacity: 0;
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading-label {
-  pointer-events: none;
-  transform: translateX(-4px);
-  opacity: 0;
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon .desktop-sidebar-heading-icon {
-  opacity: 0.3;
-  transform: translateX(-50%) scale(1);
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
-  justify-content: center;
-  padding: 0;
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head .desktop-sidebar-heading {
-  display: none;
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
-  width: 100%;
-  height: var(--filmwave-sidebar-row-height);
-  padding: 0 var(--filmwave-sidebar-row-padding-x);
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
-  display: none;
 }
 
 .desktop-app-main {
