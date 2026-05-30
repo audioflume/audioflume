@@ -1,77 +1,9 @@
 @import "tailwindcss";
+@import "../../../packages/shared/styles/theme.css";
+@import "../../../packages/shared/styles/layers.css";
+@import "../../../packages/shared/styles/app-chrome.css";
 @import "../../../packages/shared/styles/sidebar.css";
 @import "../../../packages/shared/styles/search-filter-chrome.css";
-
-:root {
-  /* Base surfaces */
-  --bg-primary: #111111;
-  --bg-secondary: #111111;
-  --bg-tertiary: #171717;
-  --bg-tertiary-hover: #1e1e1e;
-  --bg-card: rgba(255, 255, 255, 0.04);
-  --bg-elevated: rgba(255, 255, 255, 0.08);
-
-  /* Interactive states */
-  --bg-hover: rgba(255, 255, 255, 0.04);
-  --bg-hover-strong: rgba(255, 255, 255, 0.08);
-  --icon-button-hover: rgba(255, 255, 255, 0.18);
-
-  /* Borders */
-  --border: rgba(255, 255, 255, 0.1);
-  --border-subtle: rgba(255, 255, 255, 0.03);
-  --border-hover: rgba(255, 255, 255, 0.2);
-
-  /* Text */
-  --text-primary: #ffffff;
-  --text-secondary: #808080;
-  --text-muted: rgba(255, 255, 255, 0.3);
-  --text-subtle: rgba(255, 255, 255, 0.4);
-
-  /* Icons */
-  --icon-color: rgba(255, 255, 255, 0.4);
-
-  /* Waveforms */
-  --waveform-color: rgba(255, 255, 255, 0.3);
-  --waveform-progress: #ffffff;
-
-  /* Shadows */
-  --shadow-ui: 0 18px 50px rgba(0, 0, 0, 0.15);
-
-  /* Cue points */
-  --cue-point-marker: #ddff43;
-  --cue-point-marker-soft: rgba(221, 255, 67, 0.14);
-  --cue-point-marker-secondary: #ddff43;
-  --cue-point-marker-active: #fb8f61;
-  --cue-point-marker-active-soft: rgba(251, 143, 97, 0.18);
-  --cue-point-range: rgba(221, 255, 67, 0.2);
-  --cue-point-range-strong: rgba(251, 143, 97, 0.16);
-
-  /* Front-end cue marker controls */
-  --cue-marker-color: var(--cue-point-marker);
-  --cue-marker-width: 0.5px;
-  --cue-marker-width-active: 0.5px;
-  --cue-marker-width-muted: 0.5px;
-  --cue-marker-opacity: 1;
-  --cue-marker-opacity-muted: 0.2;
-
-  /* Backwards compatibility */
-  --edit-point-marker: var(--cue-point-marker);
-  --edit-point-marker-soft: var(--cue-point-marker-soft);
-  --edit-point-marker-secondary: var(--cue-point-marker-secondary);
-  --edit-point-marker-active: var(--cue-point-marker-active);
-  --edit-point-marker-active-soft: var(--cue-point-marker-active-soft);
-  --edit-point-range: var(--cue-point-range);
-  --edit-point-range-strong: var(--cue-point-range-strong);
-
-  /* ─── Sidebar expanded ─────────────────────────── */
-
-  /* Layout */
-  --sidebar-width-expanded: 280px;
-  --sidebar-width-collapsed: 76px;
-  --sidebar-width: var(--sidebar-width-expanded);
-
-  --admin-sidebar-width: 280px;
-}
 
 body.sidebar-collapsed {
   --sidebar-width: var(--sidebar-width-collapsed);
@@ -89,19 +21,6 @@ body.sidebar-collapsed {
 
 body.sidebar-collapsed aside[data-sidebar] {
   width: var(--sidebar-width-collapsed);
-}
-
-/* ─── Shared brand / utility colours ─────────────────────────── */
-
-:root {
-  --accent: #ddff43;
-  --accent-2: #fb8f61;
-  --accent-contrast: #111111;
-  --accent-2-contrast: #ffffff;
-
-  --danger: #ff5d57;
-  --danger-hover: rgba(255, 93, 87, 0.1);
-  --danger-contrast: #ffffff;
 }
 
 .danger-hover {
