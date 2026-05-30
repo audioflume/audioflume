@@ -79,19 +79,11 @@
 
 .desktop-music-page .desktop-song-card {
   position: relative;
-  display: flex !important;
-  grid-template-columns: none !important;
-  align-items: center;
-  gap: 18px;
   overflow: visible;
 }
 
 .desktop-music-page .desktop-song-card:has(.desktop-song-action-menu) {
   z-index: 40;
-}
-
-.desktop-music-page .desktop-song-cover {
-  flex: 0 0 40px;
 }
 
 .desktop-music-page .desktop-song-cover-image {
@@ -107,9 +99,6 @@
 }
 
 .desktop-music-page .desktop-song-info {
-  flex: 0 1 190px;
-  min-width: 132px;
-  max-width: 190px;
   cursor: pointer;
   align-items: flex-start;
   border: 0;
@@ -119,30 +108,16 @@
 }
 
 .desktop-music-page .desktop-song-wave-wrap {
-  display: flex !important;
-  flex: 1 1 520px;
-  min-width: 240px;
   cursor: pointer;
-  align-items: center;
-  gap: 14px;
-  overflow: hidden;
   border: 0;
   background: transparent;
   padding: 0;
-}
-
-.desktop-music-page .desktop-song-stems-slot {
-  display: flex;
-  flex: 0 0 40px;
-  justify-content: center;
 }
 
 .desktop-music-page .desktop-song-wave {
   position: relative;
   display: flex !important;
   height: 24px;
-  flex: 1 1 auto;
-  min-width: 0;
   cursor: pointer;
   align-items: center;
   overflow: visible;
@@ -167,51 +142,6 @@
   background: var(--cue-marker-color);
   opacity: var(--cue-marker-opacity);
   pointer-events: none;
-}
-
-.desktop-music-page .desktop-song-duration {
-  flex: 0 0 48px;
-  width: 48px;
-  text-align: right;
-}
-
-.desktop-music-page .desktop-song-genre-slot {
-  flex: 0 1 150px;
-  min-width: 100px;
-  max-width: 150px;
-}
-
-.desktop-music-page .desktop-song-key-bpm {
-  display: flex;
-  flex: 0 0 140px;
-  width: 140px;
-  min-width: 140px;
-  justify-content: flex-end;
-  gap: 14px;
-  overflow: hidden;
-}
-
-.desktop-music-page .desktop-song-key-bpm span:first-child {
-  width: 48px;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.desktop-music-page .desktop-song-key-bpm span:last-child {
-  width: 64px;
-  min-width: 64px;
-}
-
-.desktop-music-page .desktop-song-actions {
-  position: relative;
-  z-index: 3;
-  flex: 0 0 100px;
-  width: 100px;
-  min-width: 100px;
-  margin-left: auto;
-  justify-content: flex-end;
-  gap: 4px;
 }
 
 .desktop-song-action-menu-wrap {
