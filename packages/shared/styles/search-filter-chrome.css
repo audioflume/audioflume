@@ -103,6 +103,10 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   scrollbar-width: none;
 }
 
+.filmwave-search-filter-row > * {
+  flex: 0 0 auto;
+}
+
 .filmwave-search-filter-quick-row {
   display: flex;
   flex-wrap: wrap;
@@ -178,7 +182,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   height: 5px;
   margin-left: 2px;
   flex: 0 0 5px;
-  transform: translateY(-2px) rotate(45deg);
+  transform: translateY(-1px) rotate(45deg);
   border-right: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
   opacity: 0.92;
