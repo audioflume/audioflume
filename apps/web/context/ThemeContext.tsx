@@ -31,6 +31,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     window.localStorage.setItem(OLD_THEME_STORAGE_KEY, nextTheme);
     document.cookie = `filmwave-theme-mode=${nextTheme};path=/;max-age=31536000`;
     document.documentElement.classList.toggle("light", nextTheme === "light");
+    document.documentElement.dataset.theme = nextTheme;
   };
 
   useEffect(() => {
