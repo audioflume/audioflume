@@ -1,3 +1,7 @@
+import {
+  SearchFilterTag,
+  SearchFilterTagList,
+} from "@filmwave/shared";
 import type {
   DesktopMusicFilterKey,
   DesktopMusicFilterState,
@@ -18,51 +22,25 @@ export default function DesktopFilterTags({
   const filterKeys = Object.keys(FILTER_TITLES) as DesktopMusicFilterKey[];
 
   return (
-    <div className="desktop-music-filter-tags" aria-label="Active filters">
+    <SearchFilterTagList>
       {filterKeys.flatMap((key) =>
         filters[key].map((value) => (
-          <button
+          <SearchFilterTag
             key={`${key}-${value}`}
-            className="desktop-tag-chip"
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              onRemoveFilter(key, value);
-            }}
+            onRemove={() => onRemoveFilter(key, value)}
           >
             {value}
-            <span aria-hidden="true">×</span>
-          </button>
+          </SearchFilterTag>
         )),
       )}
 
       {filters.markers && (
-        <button
-          className="desktop-tag-chip"
-          type="button"
-          onClick={(event) => {
-            event.stopPropagation();
-            onRemoveMarkers();
-          }}
-        >
-          Markers
-          <span aria-hidden="true">×</span>
-        </button>
+        <SearchFilterTag onRemove={onRemoveMarkers}>Markers</SearchFilterTag>
       )}
 
       {filters.shuffle && (
-        <button
-          className="desktop-tag-chip"
-          type="button"
-          onClick={(event) => {
-            event.stopPropagation();
-            onRemoveShuffle();
-          }}
-        >
-          Shuffle
-          <span aria-hidden="true">×</span>
-        </button>
+        <SearchFilterTag onRemove={onRemoveShuffle}>Shuffle</SearchFilterTag>
       )}
-    </div>
+    </SearchFilterTagList>
   );
 }
