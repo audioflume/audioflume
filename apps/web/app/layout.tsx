@@ -53,11 +53,17 @@ export default async function RootLayout({
     cookieStore.get("filmwave-sidebar-collapsed")?.value === "true";
 
   const themeMode = cookieStore.get("filmwave-theme-mode")?.value;
-  const htmlClassName = themeMode === "light" ? "light" : undefined;
+  const normalizedThemeMode = themeMode === "light" ? "light" : "dark";
+  const htmlClassName = normalizedThemeMode === "light" ? "light" : undefined;
 
   return (
     <ClerkProvider>
-      <html lang="en" className={htmlClassName} suppressHydrationWarning>
+      <html
+        lang="en"
+        className={htmlClassName}
+        data-theme={normalizedThemeMode}
+        suppressHydrationWarning
+      >
         <head>
           {/*
            * Preconnect to the R2 CDN so the TCP + TLS handshake is already
