@@ -1,5 +1,6 @@
 @import "../../../packages/shared/styles/app-chrome.css";
 @import "../../../packages/shared/styles/song-card.css";
+@import "../../../packages/shared/styles/music-player.css";
 
 :root {
   --bg-primary: #111111;

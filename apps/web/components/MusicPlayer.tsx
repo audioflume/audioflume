@@ -1,5 +1,13 @@
 "use client";
 
+import {
+  buildWaveformBars,
+  createWaveformCanvasDrawCache,
+  drawWaveformBarsToCanvas,
+  parseWaveformPeaks,
+  type WaveformCanvasDrawCache,
+  type WaveformColors,
+} from "@filmwave/shared";
 import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import AddToProjectModal from "@/components/AddToProjectModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
@@ -46,14 +54,6 @@ const NEXT_CUE_SKIP_AHEAD_SECONDS = 0.25;
 
 type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
 
-type PlayerCanvasDrawCache = {
-  cssWidth: number;
-  cssHeight: number;
-  dpr: number;
-  progressColor: string;
-  inactiveColor: string;
-};
-
 function formatTime(s: number) {
   if (!s || !isFinite(s)) return "0:00";
   const m = Math.floor(s / 60);
@@ -65,52 +65,13 @@ function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function getWaveformColors() {
+function getWaveformColors(): WaveformColors {
   const styles = getComputedStyle(document.documentElement);
 
   return {
     progressColor: styles.getPropertyValue("--waveform-progress").trim(),
     inactiveColor: styles.getPropertyValue("--waveform-color").trim(),
   };
-}
-
-function createPlayerCanvasDrawCache(): PlayerCanvasDrawCache {
-  return {
-    cssWidth: 0,
-    cssHeight: 0,
-    dpr: 0,
-    progressColor: "",
-    inactiveColor: "",
-  };
-}
-
-function normalizePeaks(peaks: number[]) {
-  let maxVal = 0;
-  for (let i = 0; i < peaks.length; i++) {
-    const v = Math.abs(Number(peaks[i]) || 0);
-    if (v > maxVal) maxVal = v;
-  }
-  if (maxVal <= 0) return peaks.map(() => 0);
-  return peaks.map((peak) => Math.abs(Number(peak) || 0) / maxVal);
-}
-
-function buildWaveformBars(peaks: number[], width: number) {
-  if (!peaks.length || width <= 0) return [];
-  const barCount = Math.max(1, Math.floor(width / BAR_TOTAL));
-  const normalizedPeaks = normalizePeaks(peaks);
-  const samplesPerBar = normalizedPeaks.length / barCount;
-  return Array.from({ length: barCount }, (_, i) => {
-    const start = Math.floor(i * samplesPerBar);
-    const end = Math.min(
-      normalizedPeaks.length,
-      Math.floor((i + 1) * samplesPerBar),
-    );
-    let barPeak = 0;
-    for (let j = start; j < end; j++) {
-      if (normalizedPeaks[j] > barPeak) barPeak = normalizedPeaks[j];
-    }
-    return Math.max(2, Math.min(20, barPeak * 20));
-  });
 }
 
 function getCueLabel(marker: CuePointMarker) {
@@ -208,8 +169,8 @@ export default function MusicPlayer() {
   const waveformBarsRef = useRef<number[]>([]);
   const waveformProgressRef = useRef(0);
   const playerCanvasAnimationFrameRef = useRef<number | null>(null);
-  const playerCanvasDrawCacheRef = useRef<PlayerCanvasDrawCache>(
-    createPlayerCanvasDrawCache(),
+  const playerCanvasDrawCacheRef = useRef<WaveformCanvasDrawCache>(
+    createWaveformCanvasDrawCache(),
   );
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
@@ -296,42 +257,15 @@ export default function MusicPlayer() {
 
     if (!canvas || !bars.length) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const w = canvas.clientWidth;
-    const h = canvas.clientHeight || 24;
-
-    if (w < 4) return;
-
-    const cache = playerCanvasDrawCacheRef.current;
-    const sizeChanged =
-      forceResize || cache.cssWidth !== w || cache.cssHeight !== h || cache.dpr !== dpr;
-
-    if (sizeChanged) {
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      cache.cssWidth = w;
-      cache.cssHeight = h;
-      cache.dpr = dpr;
-    }
-
-    if (!cache.progressColor || !cache.inactiveColor) {
-      Object.assign(cache, getWaveformColors());
-    }
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, w, h);
-
-    const midY = h / 2;
-    const progressBars = Math.floor(bars.length * prog);
-
-    for (let i = 0; i < bars.length; i++) {
-      const x = i * BAR_TOTAL;
-      ctx.fillStyle = i < progressBars ? cache.progressColor : cache.inactiveColor;
-      ctx.fillRect(x, midY - bars[i] / 2, BAR_WIDTH, bars[i]);
-    }
+    drawWaveformBarsToCanvas({
+      canvas,
+      bars,
+      progress: prog,
+      cache: playerCanvasDrawCacheRef.current,
+      colors: getWaveformColors(),
+      forceResize,
+      options: { barWidth: BAR_WIDTH, barGap: BAR_GAP },
+    });
   }, []);
 
   const schedulePlayerCanvasDraw = useCallback((forceResize = false) => {
@@ -351,11 +285,7 @@ export default function MusicPlayer() {
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
-      playerCanvasDrawCacheRef.current = {
-        ...playerCanvasDrawCacheRef.current,
-        ...getWaveformColors(),
-      };
-      schedulePlayerCanvasDraw();
+      schedulePlayerCanvasDraw(true);
     });
     observer.observe(document.documentElement, { attributeFilter: ["class"] });
     return () => {
@@ -438,19 +368,7 @@ export default function MusicPlayer() {
       setPeaks([]);
       return;
     }
-    try {
-      const parsed = JSON.parse(currentSong.waveformPeaks);
-      setPeaks(
-        Array.isArray(parsed)
-          ? parsed.map((v) => {
-              const n = Number(v);
-              return Number.isFinite(n) ? n : 0;
-            })
-          : [],
-      );
-    } catch {
-      setPeaks([]);
-    }
+    setPeaks(parseWaveformPeaks(currentSong.waveformPeaks));
   }, [currentSong?.id, currentSong?.waveformPeaks]);
 
   useEffect(() => {
@@ -564,19 +482,19 @@ export default function MusicPlayer() {
     <>
       <div
         ref={playerRef}
-        className="fixed bottom-0 left-0 right-0 z-[45] grid h-[72px] items-center justify-between overflow-visible border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4"
+        className="filmwave-music-player grid h-[72px] items-center justify-between px-4"
         style={{ gridTemplateColumns, columnGap: `${mainGap}px` }}
       >
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="filmwave-player-song">
           {currentSong.coverArt ? (
-            <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-none">
+            <div className="filmwave-player-cover">
               <Image src={currentSong.coverArt} alt={currentSong.title} fill sizes="40px" className="object-cover" />
             </div>
           ) : (
-            <div className="h-10 w-10 flex-shrink-0 rounded-none bg-[var(--bg-hover)]" />
+            <div className="filmwave-player-cover" />
           )}
-          <div className="min-w-0">
-            <div title={currentSong.title} className="truncate text-sm font-medium text-[var(--text-primary)]">
+          <div className="filmwave-player-song-copy">
+            <div title={currentSong.title} className="filmwave-player-title">
               {currentSong.title}
             </div>
             <div
@@ -598,7 +516,7 @@ export default function MusicPlayer() {
           </div>
         </div>
 
-        <div className="flex flex-shrink-0 items-center justify-center gap-[clamp(12px,2vw,24px)]">
+        <div className="filmwave-player-controls">
           <button
             type="button"
             onClick={() => navigateTrack("prev")}
@@ -727,7 +645,7 @@ export default function MusicPlayer() {
 
         {showRightMeta && (
           <div
-            className="flex flex-shrink-0 items-center text-xs text-[var(--text-secondary)]"
+            className="filmwave-player-meta"
             style={{ gap: `${metaGap}px` }}
           >
             {showKey && <span className="whitespace-nowrap">{currentSong.key || "—"}</span>}
@@ -736,7 +654,7 @@ export default function MusicPlayer() {
         )}
 
         <div
-          className="flex flex-shrink-0 items-center justify-end gap-0.5"
+          className="filmwave-player-actions"
           style={{ marginLeft: `${metaToActionsGap - mainGap}px` }}
         >
           <IconButton
