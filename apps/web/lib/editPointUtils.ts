@@ -74,16 +74,37 @@ function toEditPointKey(value: string) {
     .replaceAll("/", " ")
     .replaceAll("-", " ")
     .replaceAll(".", "")
+    .replace(/[^a-z0-9\s_]/g, "")
     .replace(/\s+/g, "_");
 }
 
-export function normalizeEditPointType(value: string) {
+function getExplicitNormalizedEditPointType(value: string) {
   const key = toEditPointKey(value);
   const option = EDIT_POINT_FILTER_OPTIONS.find(
-    (item) => item.type === key || toEditPointKey(item.label) === key || toEditPointKey(item.tagLabel) === key,
+    (item) =>
+      item.type === key ||
+      toEditPointKey(item.label) === key ||
+      toEditPointKey(item.tagLabel) === key,
   );
 
-  return option?.type ?? EDIT_POINT_TYPE_ALIASES[key] ?? key;
+  return option?.type ?? EDIT_POINT_TYPE_ALIASES[key] ?? null;
+}
+
+function inferNormalizedEditPointType(value: string) {
+  const key = toEditPointKey(value);
+
+  if (!key) return null;
+  if (key.includes("first") && key.includes("hit")) return "first_hit";
+  if (key.includes("main") && key.includes("drop")) return "drop";
+  if (key.includes("drop") || key.includes("impact") || key.includes("peak")) return "drop";
+  if (key.includes("break") || key.includes("breakdown") || key.includes("bridge")) return "break";
+  if (key.includes("button") || key.includes("ending") || key.includes("outro")) return "button_ending";
+
+  return null;
+}
+
+export function normalizeEditPointType(value: string) {
+  return getExplicitNormalizedEditPointType(value) ?? inferNormalizedEditPointType(value) ?? toEditPointKey(value);
 }
 
 export function parseEditPoints(value: Song["editPoints"]): EditPoints {
@@ -110,6 +131,18 @@ export function parseEditPoints(value: Song["editPoints"]): EditPoints {
 }
 
 export function getMarkerType(marker: EditPointMarker) {
+  const typeMatch = marker.type
+    ? getExplicitNormalizedEditPointType(marker.type) ?? inferNormalizedEditPointType(marker.type)
+    : null;
+
+  if (typeMatch) return typeMatch;
+
+  const labelMatch = marker.label
+    ? getExplicitNormalizedEditPointType(marker.label) ?? inferNormalizedEditPointType(marker.label)
+    : null;
+
+  if (labelMatch) return labelMatch;
+
   return normalizeEditPointType(marker.type || marker.label || "");
 }
 
