@@ -1,0 +1,12 @@
+:where(:root) {
+  --filmwave-player-height: 72px;
+  --filmwave-sidebar-bottom-offset: 0px;
+}
+
+:where(body:has(.filmwave-music-player), .desktop-app-shell:has(.filmwave-music-player)) {
+  --filmwave-sidebar-bottom-offset: var(--filmwave-player-height);
+}
+
+.desktop-app-sidebar {
+  bottom: var(--filmwave-sidebar-bottom-offset) !important;
+}
