@@ -771,16 +771,16 @@ export default function MusicPage() {
           </div>
         </div>
 
-        <section className="px-8 pb-8">
+        <section className="pb-8">
           <div className="mt-6">
             {songsError ? (
-              <div className="px-5 py-8 text-sm text-[var(--text-secondary)]">
+              <div className="px-8 py-8 text-sm text-[var(--text-secondary)]">
                 {songsError}
               </div>
             ) : showSongSkeleton ? (
               <SkeletonSongList />
             ) : displayedSongs.length === 0 ? (
-              <div className="px-5 py-8 text-sm text-[var(--text-secondary)]">
+              <div className="px-8 py-8 text-sm text-[var(--text-secondary)]">
                 No songs match those filters.
               </div>
             ) : (
@@ -797,7 +797,7 @@ export default function MusicPage() {
           </div>
         </section>
 
-        <Footer />
+        <Footer className="px-8" />
       </section>
     </main>
   );
