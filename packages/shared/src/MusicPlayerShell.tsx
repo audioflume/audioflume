@@ -157,8 +157,6 @@ export default function MusicPlayerShell({
     150,
     200,
   );
-  const waveformMaxWidth = 390 + compressionProgress * 260;
-  const progressGroupMaxWidth = waveformMaxWidth + 112;
 
   const progress =
     duration > 0 && Number.isFinite(duration)
@@ -168,11 +166,7 @@ export default function MusicPlayerShell({
   const gridTemplateColumns = [
     `${songInfoWidth}px`,
     "auto",
-    showWaveform
-      ? `minmax(192px, ${progressGroupMaxWidth}px)`
-      : showCompactTime
-        ? "auto"
-        : "",
+    showWaveform ? "minmax(192px, 1fr)" : showCompactTime ? "auto" : "",
     showRightMeta ? "auto" : "",
     "auto",
   ]
