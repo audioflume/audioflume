@@ -11,6 +11,7 @@
   --filmwave-sidebar-row-padding-x: 10px;
   --filmwave-sidebar-icon-size: 16px;
   --filmwave-sidebar-label-gap: 10px;
+  --filmwave-sidebar-label-width: 180px;
 }
 
 .desktop-app-sidebar {
@@ -216,21 +217,20 @@
 }
 
 .desktop-sidebar-link-label {
-  width: auto;
-  min-width: 0;
+  width: var(--filmwave-sidebar-label-width);
+  min-width: var(--filmwave-sidebar-label-width);
   overflow: hidden;
   margin-left: var(--filmwave-sidebar-label-gap);
   opacity: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition:
-    opacity 150ms ease,
-    margin 150ms ease;
+  transition: opacity 150ms ease;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
-  width: 0;
-  margin-left: 0;
+  width: var(--filmwave-sidebar-label-width);
+  min-width: var(--filmwave-sidebar-label-width);
+  margin-left: var(--filmwave-sidebar-label-gap);
   opacity: 0;
 }
 
