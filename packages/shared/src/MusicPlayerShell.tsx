@@ -19,7 +19,6 @@ import {
 
 const BAR_WIDTH = 2;
 const BAR_GAP = 1;
-
 const WAVEFORM_MIN_WIDTH = 780;
 const FULL_COMPACT_TIME_MIN_WIDTH = 620;
 const COMPACT_TIME_MIN_WIDTH = 500;
@@ -137,7 +136,7 @@ export default function MusicPlayerShell({
   subtitle,
   waveformOverlay,
   renderWaveformEndSlot,
-  className = "filmwave-music-player grid h-[72px] items-center justify-between px-4",
+  className = "filmwave-music-player",
   dataPlatform,
   style,
   onLayoutChange,
@@ -172,15 +171,7 @@ export default function MusicPlayerShell({
       showBpm,
       showRightMeta,
     }),
-    [
-      playerWidth,
-      showWaveform,
-      showFullCompactTime,
-      showCompactTime,
-      showKey,
-      showBpm,
-      showRightMeta,
-    ],
+    [playerWidth, showWaveform, showFullCompactTime, showCompactTime, showKey, showBpm, showRightMeta],
   );
 
   const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
@@ -210,14 +201,13 @@ export default function MusicPlayerShell({
   const drawPlayerCanvas = useCallback((forceResize = false) => {
     const canvas = playerCanvasRef.current;
     const bars = waveformBarsRef.current;
-    const prog = waveformProgressRef.current;
 
     if (!canvas || !bars.length) return;
 
     drawWaveformBarsToCanvas({
       canvas,
       bars,
-      progress: prog,
+      progress: waveformProgressRef.current,
       cache: playerCanvasDrawCacheRef.current,
       colors: getWaveformColors(),
       forceResize,
@@ -262,10 +252,11 @@ export default function MusicPlayerShell({
   }, [waveformBars, progress, schedulePlayerCanvasDraw]);
 
   useEffect(() => {
-    const observer = new MutationObserver(() => {
-      schedulePlayerCanvasDraw(true);
+    const observer = new MutationObserver(() => schedulePlayerCanvasDraw(true));
+    observer.observe(document.documentElement, {
+      attributeFilter: ["class", "data-theme"],
     });
-    observer.observe(document.documentElement, { attributeFilter: ["class", "data-theme"] });
+
     return () => {
       observer.disconnect();
       if (playerCanvasAnimationFrameRef.current != null) {
@@ -278,18 +269,23 @@ export default function MusicPlayerShell({
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
+
     const updateWidth = () => {
       setPlayerWidth(Math.floor(player.getBoundingClientRect().width));
     };
+
     updateWidth();
-    const ro = new ResizeObserver(updateWidth);
-    ro.observe(player);
+
+    const resizeObserver = new ResizeObserver(updateWidth);
+    resizeObserver.observe(player);
     window.addEventListener("resize", updateWidth);
-    const t = window.setTimeout(updateWidth, 50);
+
+    const timeout = window.setTimeout(updateWidth, 50);
+
     return () => {
-      ro.disconnect();
+      resizeObserver.disconnect();
       window.removeEventListener("resize", updateWidth);
-      window.clearTimeout(t);
+      window.clearTimeout(timeout);
     };
   }, [song.id]);
 
@@ -298,21 +294,27 @@ export default function MusicPlayerShell({
       setWaveformWidth(0);
       return;
     }
+
     const waveform = waveformRef.current;
     if (!waveform) return;
+
     const updateWidth = () => {
       setWaveformWidth(Math.floor(waveform.getBoundingClientRect().width));
       schedulePlayerCanvasDraw(true);
     };
+
     updateWidth();
-    const ro = new ResizeObserver(updateWidth);
-    ro.observe(waveform);
+
+    const resizeObserver = new ResizeObserver(updateWidth);
+    resizeObserver.observe(waveform);
     window.addEventListener("resize", updateWidth);
-    const t = window.setTimeout(updateWidth, 50);
+
+    const timeout = window.setTimeout(updateWidth, 50);
+
     return () => {
-      ro.disconnect();
+      resizeObserver.disconnect();
       window.removeEventListener("resize", updateWidth);
-      window.clearTimeout(t);
+      window.clearTimeout(timeout);
     };
   }, [song.id, showWaveform, schedulePlayerCanvasDraw]);
 
@@ -337,93 +339,83 @@ export default function MusicPlayerShell({
       style={{ ...style, gridTemplateColumns, columnGap: `${mainGap}px` }}
     >
       <div className="filmwave-player-song">
-        {cover ??
-          (song.coverArt ? (
-            <div className="filmwave-player-cover">
+        {cover ?? (
+          <div className="filmwave-player-cover">
+            {song.coverArt ? (
               <img src={song.coverArt} alt="" draggable={false} />
-            </div>
-          ) : (
-            <div className="filmwave-player-cover" />
-          ))}
+            ) : (
+              <span>{song.title.slice(0, 1).toUpperCase()}</span>
+            )}
+          </div>
+        )}
+
         <div className="filmwave-player-song-copy">
           <div title={song.title} className="filmwave-player-title">
             {song.title}
           </div>
-          <div
-            title={typeof subtitle === "string" ? subtitle : song.artist}
-            className="flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--text-subtle)]"
-          >
-            {subtitle ?? <span className="truncate">{song.artist}</span>}
+          <div className="filmwave-player-artist" title={song.artist}>
+            {subtitle ?? song.artist}
           </div>
         </div>
       </div>
 
       <div className="filmwave-player-controls">
-        <button
-          type="button"
-          onClick={onPrevious}
-          className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
-          aria-label="Previous song"
-        >
+        <button type="button" onClick={onPrevious} aria-label="Previous song">
           <PrevIcon />
         </button>
 
         <button
           type="button"
           onClick={onPlayPause}
-          className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
           aria-label={isPlaying ? "Pause song" : "Play song"}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
 
-        <button
-          type="button"
-          onClick={onNext}
-          className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
-          aria-label="Next song"
-        >
+        <button type="button" onClick={onNext} aria-label="Next song">
           <NextIcon />
         </button>
       </div>
 
       {(showWaveform || showCompactTime) && (
         <div
-          className="relative z-10 flex min-w-0 items-center justify-center overflow-visible"
+          className="filmwave-player-progress-wrap"
           style={{
             marginLeft: `${controlsToProgressGap - mainGap}px`,
             marginRight: `${progressToMetaGap - mainGap}px`,
           }}
         >
           {showWaveform ? (
-            <div className="flex w-full min-w-0 items-center gap-4 overflow-visible">
-              <span className="w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]">
-                {formatTime(currentTime)}
-              </span>
+            <div className="filmwave-player-waveform-row">
+              <span className="filmwave-player-time">{formatTime(currentTime)}</span>
 
               <div
                 ref={waveformRef}
                 data-player-waveform-slot
-                className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-visible"
+                className="filmwave-player-waveform"
+                role="button"
+                tabIndex={0}
+                aria-label="Seek"
                 onClick={handleWaveformClick}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                  }
+                }}
               >
                 {waveformOverlay}
-
                 <canvas
                   ref={playerCanvasRef}
-                  className="relative z-10 h-full w-full"
+                  className="filmwave-player-waveform-canvas"
                   style={{ display: "block" }}
                 />
               </div>
 
-              <span className="w-10 flex-shrink-0 text-xs text-[var(--icon-color)]">
-                {formatTime(renderedDuration)}
-              </span>
-
+              <span className="filmwave-player-time">{formatTime(renderedDuration)}</span>
               {waveformEndSlot}
             </div>
           ) : (
-            <div className="whitespace-nowrap text-xs text-[var(--icon-color)]">
+            <div className="filmwave-player-compact-time">
               {showFullCompactTime
                 ? `${formatTime(currentTime)} / ${formatTime(renderedDuration)}`
                 : formatTime(currentTime)}
@@ -434,8 +426,8 @@ export default function MusicPlayerShell({
 
       {showRightMeta && (
         <div className="filmwave-player-meta" style={{ gap: `${metaGap}px` }}>
-          {showKey && <span className="whitespace-nowrap">{song.key || "—"}</span>}
-          {showBpm && <span className="whitespace-nowrap">{song.bpm ? `${song.bpm} BPM` : "—"}</span>}
+          {showKey && <span>{song.key || "—"}</span>}
+          {showBpm && <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>}
         </div>
       )}
 
