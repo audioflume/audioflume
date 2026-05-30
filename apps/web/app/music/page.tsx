@@ -47,10 +47,7 @@ import SongCard from "@/components/SongCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
-import {
-  iconButtonClass,
-  primaryPillButtonClass,
-} from "@/components/uiClasses";
+import { iconButtonClass } from "@/components/uiClasses";
 import {
   filterDotClass,
   filterTriggerActiveClass,
@@ -200,16 +197,14 @@ function shuffleSongList<T>(songs: T[]) {
       bestMovedCount = movedCount;
     }
 
-    if (movedCount >= Math.floor(songs.length * 0.85)) {
-      break;
-    }
+    if (movedCount >= Math.floor(songs.length * 0.85)) break;
   }
 
   return bestShuffle;
 }
 
 export default function MusicPage() {
-  const { userId, isLoaded: authLoaded } = useAuth();
+  const { userId } = useAuth();
   const musicFilterStorageKey = userId
     ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${userId}`
     : null;
@@ -218,7 +213,6 @@ export default function MusicPage() {
     filters,
     setFilters,
     hydrated: filtersHydrated,
-    hasSavedState,
   } = useFilterPersistence(musicFilterStorageKey);
 
   const {
@@ -255,48 +249,37 @@ export default function MusicPage() {
   const selectedPlaylist = filters.playlist;
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
 
+  const shuffleActive = shuffleOrderIds !== null;
+
   function updateFilters(nextFilters: typeof filters) {
     setFilters(nextFilters);
   }
 
-  const setSearch = (value: string) =>
-    updateFilters({
-      ...filters,
-      search: value,
-    });
-
+  const setSearch = (value: string) => updateFilters({ ...filters, search: value });
   const setSelectedMoods = (values: string[]) =>
     updateFilters({ ...filters, moods: values });
-
   const setSelectedGenres = (values: string[]) =>
     updateFilters({ ...filters, genres: values });
-
   const setSelectedInstruments = (values: string[]) =>
     updateFilters({ ...filters, instruments: values });
-
   const setSelectedBuilds = (values: string[]) =>
     updateFilters({ ...filters, builds: values });
-
   const setSelectedVocals = (values: string[]) =>
     updateFilters({ ...filters, vocals: values });
-
   const setSelectedDurations = (values: string[]) =>
     updateFilters({ ...filters, durations: values });
-
   const setSelectedEditPoints = (values: string[]) =>
     updateFilters({ ...filters, editPoints: values });
-
   const setInstrumental = (value: boolean) =>
     updateFilters({ ...filters, instrumental: value });
-
   const setBpmValue = (value: BpmFilterValue | null) =>
     updateFilters({ ...filters, bpm: value });
-
   const setKeyValue = (value: KeyFilterValue | null) =>
     updateFilters({ ...filters, key: value });
-
   const setSelectedPlaylist = (value: PlaylistRef | null) =>
     updateFilters({ ...filters, playlist: value });
+  const setShowEditPointMarkers = (value: boolean) =>
+    updateFilters({ ...filters, showEditPointMarkers: value });
 
   const selectedVocalFilters = instrumental
     ? [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...selectedVocals]
@@ -325,7 +308,7 @@ export default function MusicPage() {
     bpmValue !== null ||
     keyValue !== null ||
     selectedPlaylist !== null ||
-    shuffleOrderIds !== null;
+    shuffleActive;
 
   const searchPlaceholder = hasActiveFilters
     ? "Search filtered results"
@@ -334,7 +317,7 @@ export default function MusicPage() {
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
   useEffect(() => {
-    if (!authLoaded || !userId || !selectedPlaylistId) return;
+    if (!userId || !selectedPlaylistId) return;
     if (playlistSongIdsByPlaylistId[selectedPlaylistId]) {
       setSelectedPlaylistSongIds(playlistSongIdsByPlaylistId[selectedPlaylistId]);
       return;
@@ -369,12 +352,10 @@ export default function MusicPage() {
     return () => {
       cancelled = true;
     };
-  }, [authLoaded, playlistSongIdsByPlaylistId, selectedPlaylistId, userId]);
+  }, [playlistSongIdsByPlaylistId, selectedPlaylistId, userId]);
 
   useEffect(() => {
-    if (!selectedPlaylistId) {
-      setSelectedPlaylistSongIds(null);
-    }
+    if (!selectedPlaylistId) setSelectedPlaylistSongIds(null);
   }, [selectedPlaylistId]);
 
   const filteredSongs = useMemo(() => {
@@ -383,7 +364,7 @@ export default function MusicPage() {
     const searchQuery = search.toLowerCase().trim();
     const playlistIds = selectedPlaylistSongIds;
 
-    return songs.filter((song, index) => {
+    return songs.filter((song) => {
       const record = getRecord(song);
       const fields =
         typeof record.fields === "object" && record.fields !== null
@@ -411,9 +392,20 @@ export default function MusicPage() {
 
       if (
         searchQuery &&
-        ![title, artist, key, genre, mood, instruments, build, vocals, album, tags, tempo, description].some((value) =>
-          value.includes(searchQuery),
-        )
+        ![
+          title,
+          artist,
+          key,
+          genre,
+          mood,
+          instruments,
+          build,
+          vocals,
+          album,
+          tags,
+          tempo,
+          description,
+        ].some((value) => value.includes(searchQuery))
       ) {
         return false;
       }
