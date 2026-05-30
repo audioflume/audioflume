@@ -41,7 +41,7 @@ export default function Footer({
   return (
     <footer
       ref={footerRef}
-      className={`text-[11px] font-medium text-[var(--text-muted)] ${className}`}
+      className={`px-8 pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
       style={{
         paddingBottom: playerPadding
           ? playerVisible
