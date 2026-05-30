@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../../../packages/shared/styles/sidebar.css";
+@import "../../../packages/shared/styles/search-filter-chrome.css";
 
 :root {
   /* Base surfaces */
