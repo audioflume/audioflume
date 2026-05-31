@@ -26,7 +26,6 @@
   overflow: hidden;
   border-right: 1px solid var(--border);
   background: var(--bg-primary);
-  font-family: var(--filmwave-font-ui);
   transition: width 200ms ease;
 }
 
