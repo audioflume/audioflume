@@ -1,5 +1,6 @@
 import {
   EDIT_POINT_FILTER_OPTIONS,
+  FilterTrigger,
   getMusicLibrarySearchPlaceholder,
   isCoreEditPointType,
   normalizeEditPointType,
@@ -329,17 +330,14 @@ export default function DesktopMusicLibraryView({
               />
             ))}
 
-            <button
-              type="button"
-              className={`desktop-filter-trigger desktop-filter-trigger-markers${filters.markers ? " is-active" : ""}`}
+            <FilterTrigger
+              label="Markers"
+              active={filters.markers}
+              hideChevron
               onClick={() =>
                 setFilters((current) => ({ ...current, markers: !current.markers }))
               }
-              aria-pressed={filters.markers}
-            >
-              <span>Markers</span>
-              {filters.markers && <span className="desktop-filter-count" />}
-            </button>
+            />
 
             <button
               type="button"
