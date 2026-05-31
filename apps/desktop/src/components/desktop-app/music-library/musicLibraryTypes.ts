@@ -1,19 +1,24 @@
+import type {
+  FilmwaveBpmFilterValue,
+  FilmwaveKeyFilterValue,
+  MusicPlaylistFilterRef,
+} from "@filmwave/shared";
 import type { DesktopSong } from "../../../lib/desktopSongs";
 
 export type DesktopMusicFilterKey =
-  | "playlist"
   | "mood"
   | "genre"
   | "instrument"
   | "vocal"
   | "build"
-  | "bpm"
-  | "key"
-  | "duration"
   | "cuePoint";
 
 export type DesktopMusicFilterState = Record<DesktopMusicFilterKey, string[]> & {
   search: string;
+  selectedPlaylist: MusicPlaylistFilterRef | null;
+  selectedDurations: string[];
+  bpmValue: FilmwaveBpmFilterValue | null;
+  keyValue: FilmwaveKeyFilterValue | null;
   markers: boolean;
   shuffle: boolean;
 };
