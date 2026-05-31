@@ -1,6 +1,7 @@
 export * from "./types";
 export * from "./waveform";
 export * from "./musicFilters";
+export * from "./musicLibraryFiltering";
 export * from "./editPointUtils";
 export { default as MusicPlayerShell } from "./MusicPlayerShell";
 export type { MusicPlayerShellLayout } from "./MusicPlayerShell";
