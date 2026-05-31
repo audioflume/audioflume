@@ -13,6 +13,28 @@ export type FilterTriggerProps = {
   onClick: () => void;
 };
 
+function FilterChevron() {
+  return (
+    <svg
+      className="filmwave-filter-trigger-chevron"
+      width="8"
+      height="8"
+      viewBox="0 0 8 8"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M1.5 3L4 5.5L6.5 3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function FilterTrigger({
   label,
   icon,
@@ -32,7 +54,7 @@ export function FilterTrigger({
       onClick={onClick}
       disabled={disabled}
       className={`filmwave-filter-trigger${active ? " is-active" : ""}${open ? " is-open" : ""}${hideChevron ? " no-chevron" : ""}${className ? ` ${className}` : ""}`}
-      aria-expanded={open}
+      aria-expanded={hideChevron ? undefined : open}
       aria-pressed={hideChevron ? active : undefined}
     >
       {icon && <span className="filmwave-filter-trigger-icon">{icon}</span>}
@@ -40,6 +62,7 @@ export function FilterTrigger({
       {active && typeof count === "number" && (
         <span className="filmwave-filter-count">{count}</span>
       )}
+      {!hideChevron && <FilterChevron />}
     </button>
   );
 }
