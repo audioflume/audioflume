@@ -1,17 +1,10 @@
 import {
-  SearchFilterTag,
-  SearchFilterTagList,
+  MusicFilterTags,
+  type MusicFilterTagItem,
 } from "@filmwave/shared";
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
 import { getEditPointFilterLabel } from "@/lib/editPointUtils";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-
-type FilterTag = {
-  id: string;
-  label: string;
-  onRemove: () => void;
-  type?: "playlist";
-};
 
 type FilterTagsProps = {
   selectedMoods: string[];
@@ -66,7 +59,7 @@ export default function FilterTags({
   onRemovePlaylist,
   onRemoveShuffle,
 }: FilterTagsProps) {
-  const tags: FilterTag[] = [
+  const tags: MusicFilterTagItem[] = [
     ...selectedMoods.map((value) => ({
       id: `mood-${value}`,
       label: value,
@@ -145,7 +138,7 @@ export default function FilterTags({
           {
             id: `playlist-${selectedPlaylist.id}`,
             label: selectedPlaylist.name,
-            type: "playlist" as const,
+            icon: <PlaylistIcon size={11} className="shrink-0" />,
             onRemove: onRemovePlaylist,
           },
         ]
@@ -155,23 +148,5 @@ export default function FilterTags({
       : []),
   ];
 
-  if (tags.length === 0) return null;
-
-  return (
-    <SearchFilterTagList>
-      {tags.map((tag) => (
-        <SearchFilterTag
-          key={tag.id}
-          icon={
-            tag.type === "playlist" ? (
-              <PlaylistIcon size={11} className="shrink-0" />
-            ) : undefined
-          }
-          onRemove={tag.onRemove}
-        >
-          {tag.label}
-        </SearchFilterTag>
-      ))}
-    </SearchFilterTagList>
-  );
+  return <MusicFilterTags tags={tags} />;
 }
