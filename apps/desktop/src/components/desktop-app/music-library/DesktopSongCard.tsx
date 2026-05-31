@@ -22,6 +22,7 @@ export default function DesktopSongCard({
   favorite,
   markersVisible,
   selectedCuePointTypes = [],
+  isSelected,
   isPlaying,
   playbackProgress = 0,
   syncStatus = "idle",
@@ -36,6 +37,7 @@ export default function DesktopSongCard({
   favorite: boolean;
   markersVisible: boolean;
   selectedCuePointTypes?: string[];
+  isSelected: boolean;
   isPlaying: boolean;
   playbackProgress?: number;
   syncStatus?: SongSyncStatus;
@@ -47,6 +49,7 @@ export default function DesktopSongCard({
   onSync: () => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [visualProgress, setVisualProgress] = useState(playbackProgress);
   const actionsRef = useRef<HTMLDivElement | null>(null);
   const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
@@ -68,6 +71,10 @@ export default function DesktopSongCard({
       selectedCuePointTypeSet.has(getMarkerType(marker)),
     );
   }, [cuePoints, markersVisible, selectedCuePointTypeSet]);
+
+  useEffect(() => {
+    setVisualProgress(playbackProgress);
+  }, [playbackProgress, song.id]);
 
   useEffect(() => {
     if (!actionsOpen) return;
@@ -127,6 +134,15 @@ export default function DesktopSongCard({
     songDragStartRef.current = null;
   }
 
+  function handleWaveformSeek(progress: number) {
+    const safeProgress = Number.isFinite(progress)
+      ? Math.max(0, Math.min(1, progress))
+      : 0;
+
+    setVisualProgress(safeProgress);
+    onSeek(safeProgress);
+  }
+
   const markerOverlay = visibleCuePoints.length > 0 ? (
     <>
       {visibleCuePoints.map((marker) => {
@@ -140,7 +156,10 @@ export default function DesktopSongCard({
   ) : null;
 
   return (
-    <article ref={cardRef} className={`filmwave-song-card desktop-song-card${isPlaying ? " is-playing" : ""}`}>
+    <article
+      ref={cardRef}
+      className={`filmwave-song-card desktop-song-card${isSelected ? " is-current" : ""}${isPlaying ? " is-playing" : ""}`}
+    >
       <button
         type="button"
         className="filmwave-song-cover desktop-song-cover"
@@ -173,8 +192,8 @@ export default function DesktopSongCard({
 
         <SharedWaveformCanvas
           peaks={song.waveform}
-          progress={playbackProgress}
-          onSeek={onSeek}
+          progress={visualProgress}
+          onSeek={handleWaveformSeek}
           overlay={markerOverlay}
           className="filmwave-song-wave desktop-song-wave filmwave-song-wave-canvas"
           canvasClassName="desktop-song-wave-canvas"
