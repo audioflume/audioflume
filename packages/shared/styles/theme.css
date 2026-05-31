@@ -104,4 +104,5 @@
 :where(body) {
   background: var(--bg-primary);
   color: var(--text-primary);
+  font-family: var(--font-satoshi);
 }
