@@ -12,6 +12,7 @@ export * from "./SidebarShell";
 export * from "./SearchFilterChrome";
 export * from "./FilterTrigger";
 export * from "./FilterPopover";
+export * from "./MusicMultiSelectFilter";
 export * from "./MusicPlaylistFilter";
 export * from "./MusicBpmFilter";
 export * from "./MusicKeyFilter";
