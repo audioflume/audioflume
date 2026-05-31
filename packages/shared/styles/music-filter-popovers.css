@@ -48,6 +48,21 @@
   padding: 12px;
 }
 
+.filmwave-filter-trigger-active-label {
+  display: inline-flex;
+  height: 20px;
+  min-width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  padding: 0 6px;
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+}
+
 .filmwave-filter-segment-wrap {
   display: grid;
   width: 100%;
@@ -71,6 +86,7 @@
   font-family: inherit;
   font-size: 12px;
   font-weight: 500;
+  text-transform: capitalize;
   transition:
     background 150ms ease,
     color 150ms ease;
@@ -130,10 +146,6 @@
 .filmwave-filter-range-area {
   margin-top: 20px;
   padding: 0 4px;
-}
-
-.filmwave-filter-range-area.is-duration {
-  margin-top: 18px;
 }
 
 .filmwave-filter-range-track {
@@ -238,8 +250,41 @@
   color: var(--bg-primary);
 }
 
-.filmwave-key-scale-wrap {
-  margin-top: 12px;
+.filmwave-key-scale-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.filmwave-key-scale-button {
+  display: flex;
+  height: 32px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-key-scale-button:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.filmwave-key-scale-button.is-active {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .filmwave-filter-summary {
@@ -252,6 +297,10 @@
   border-radius: 8px;
   background: var(--bg-tertiary);
   padding: 0 12px;
+}
+
+.filmwave-filter-summary.is-duration-range {
+  margin-top: 0;
 }
 
 .filmwave-filter-summary-label {
@@ -272,6 +321,12 @@
   white-space: nowrap;
 }
 
+.filmwave-filter-duration-summary-value {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+}
+
 .filmwave-filter-intent-grid {
   display: grid;
   gap: 6px;
@@ -279,23 +334,24 @@
 
 .filmwave-filter-intent-grid.is-five {
   grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 12px;
 }
 
 .filmwave-filter-intent-button {
   display: flex;
-  min-height: 40px;
+  height: 54px;
   cursor: pointer;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 8px;
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-secondary);
-  padding: 8px;
-  text-align: center;
+  padding: 0 8px;
+  text-align: left;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   transition:
     background 150ms ease,
@@ -303,15 +359,25 @@
 }
 
 .filmwave-filter-intent-button small {
+  margin-top: 6px;
   color: var(--text-muted);
   font-size: 10px;
   font-weight: 500;
+  line-height: 1;
+}
+
+.filmwave-filter-intent-button span {
+  line-height: 1;
 }
 
 .filmwave-filter-intent-button:hover,
 .filmwave-filter-intent-button.is-active {
   background: var(--bg-hover-strong);
   color: var(--text-primary);
+}
+
+.filmwave-filter-intent-button.is-active small {
+  color: var(--text-secondary);
 }
 
 .filmwave-filter-menu-pad {
