@@ -6,6 +6,7 @@ export type FilterTriggerProps = {
   active?: boolean;
   open?: boolean;
   count?: number;
+  showActiveDot?: boolean;
   hideChevron?: boolean;
   disabled?: boolean;
   className?: string;
@@ -41,6 +42,7 @@ export function FilterTrigger({
   active = false,
   open = false,
   count,
+  showActiveDot = false,
   hideChevron = false,
   disabled = false,
   className = "",
@@ -62,6 +64,7 @@ export function FilterTrigger({
       {active && typeof count === "number" && (
         <span className="filmwave-filter-count">{count}</span>
       )}
+      {active && showActiveDot && <span className="filmwave-filter-dot" />}
       {!hideChevron && <FilterChevron />}
     </button>
   );
