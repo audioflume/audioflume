@@ -3,6 +3,7 @@
 import {
   BUILD_OPTIONS,
   GENRE_OPTIONS,
+  getMusicLibrarySearchPlaceholder,
   INSTRUMENT_OPTIONS,
   MOOD_OPTIONS,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
@@ -341,9 +342,7 @@ export default function MusicPage() {
     selectedPlaylist !== null ||
     shuffleActive;
 
-  const searchPlaceholder = hasActiveFilters
-    ? "Search filtered results"
-    : "Search the catalog";
+  const searchPlaceholder = getMusicLibrarySearchPlaceholder(selectedPlaylist?.name);
 
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
@@ -470,7 +469,7 @@ export default function MusicPage() {
           onSearchRowClick={() => searchInputRef.current?.focus()}
           search={
             <SearchFilterInput
-              icon={<SearchIcon className="shrink-0 text-[var(--text-muted)]" />}
+              icon={<SearchIcon />}
               inputRef={searchInputRef}
               value={search}
               placeholder={searchPlaceholder}
