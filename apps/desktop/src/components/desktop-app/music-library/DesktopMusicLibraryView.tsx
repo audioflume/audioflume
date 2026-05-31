@@ -1,5 +1,6 @@
 import {
   EDIT_POINT_FILTER_OPTIONS,
+  getMusicLibrarySearchPlaceholder,
   isCoreEditPointType,
   normalizeEditPointType,
   SearchFilterChrome,
@@ -196,14 +197,7 @@ export default function DesktopMusicLibraryView({
   const selectedCoreCuePointTypes = filters.cuePoint
     .map(normalizeEditPointType)
     .filter(isCoreEditPointType);
-  const hasActiveFilters =
-    filters.search.trim().length > 0 ||
-    filterKeys.some((filterKey) => filters[filterKey].length > 0) ||
-    filters.markers ||
-    filters.shuffle;
-  const searchPlaceholder = hasActiveFilters
-    ? "Search filtered results"
-    : "Search the catalog";
+  const searchPlaceholder = getMusicLibrarySearchPlaceholder(filters.playlist[0]);
 
   function setFilterValue(key: DesktopMusicFilterKey, value: string) {
     setFilters((current) => ({
@@ -304,7 +298,7 @@ export default function DesktopMusicLibraryView({
         onSearchRowClick={() => searchInputRef.current?.focus()}
         search={
           <SearchFilterInput
-            icon={<SearchIconSmall size={13} />}
+            icon={<SearchIconSmall />}
             inputRef={searchInputRef}
             value={filters.search}
             placeholder={searchPlaceholder}
@@ -317,9 +311,6 @@ export default function DesktopMusicLibraryView({
           <DesktopFilterTags
             filters={filters}
             onRemoveFilter={removeFilterValue}
-            onRemoveMarkers={() =>
-              setFilters((current) => ({ ...current, markers: false }))
-            }
             onRemoveShuffle={removeShuffle}
           />
         }
