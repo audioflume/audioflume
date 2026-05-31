@@ -208,9 +208,7 @@ export default function DesktopSongCard({
           ariaLabel={`Seek ${song.title}`}
         />
 
-        <button type="button" className="filmwave-song-duration desktop-song-duration" onClick={onPlay}>
-          {song.duration}
-        </button>
+        <span className="filmwave-song-duration desktop-song-duration">{song.duration}</span>
       </div>
 
       <div className="filmwave-song-genre-slot desktop-song-genre-slot">
