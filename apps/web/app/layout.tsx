@@ -1,6 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -16,6 +16,11 @@ import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
 import "./admin-polish.css";
 import "./icon-button-overrides.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -67,7 +72,7 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
         <body
-          className={`${geistMono.variable} antialiased${
+          className={`${geistSans.variable} ${geistMono.variable} antialiased${
             sidebarCollapsed ? " sidebar-collapsed" : ""
           }`}
           suppressHydrationWarning
