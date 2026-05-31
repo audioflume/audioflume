@@ -1,11 +1,15 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
+type HeaderDragSurfaceProps = HTMLAttributes<HTMLDivElement> & {
+  "data-tauri-drag-region"?: boolean | string;
+};
+
 type HeaderShellProps = {
   logo: ReactNode;
   actions: ReactNode;
   className?: string;
   innerClassName?: string;
-  dragSurfaceProps?: HTMLAttributes<HTMLDivElement>;
+  dragSurfaceProps?: HeaderDragSurfaceProps;
   onPointerDownCapture?: HTMLAttributes<HTMLElement>["onPointerDownCapture"];
 };
 
