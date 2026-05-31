@@ -1,5 +1,6 @@
 "use client";
 
+import { HeaderChevron, HeaderShell } from "@filmwave/shared";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
@@ -8,28 +9,6 @@ import DashboardIcon from "@/components/icons/DashboardIcon";
 import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import UserMenu from "@/components/UserMenu";
-import { navLinkClass } from "@/components/uiClasses";
-
-function ChevronIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      className={`transition-transform ${open ? "rotate-180" : ""}`}
-    >
-      <path
-        d="M7 10L12 15L17 10"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 export default function Header() {
   const { user } = useUser();
@@ -206,19 +185,20 @@ export default function Header() {
     : "";
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-[110] h-14 border-b border-[var(--border)] bg-[var(--bg-primary)]">
-      <div className="flex h-full items-center justify-between px-6">
-        <Link href="/music" className="flex items-center text-[var(--text-primary)]" aria-label="Filmwave Home">
-          <FilmwaveLogoIcon className="h-[22px] w-auto" />
+    <HeaderShell
+      logo={
+        <Link href="/music" className="filmwave-header-logo-action" aria-label="Filmwave Home">
+          <FilmwaveLogoIcon className="filmwave-header-logo-mark" />
         </Link>
-
-        <div className="relative flex h-full items-center gap-1" ref={menuRef}>
-          <Link href="/discover" className={navLinkClass}>
+      }
+      actions={
+        <div className="filmwave-header-actions" ref={menuRef}>
+          <Link href="/discover" className="filmwave-header-nav-link">
             <DashboardIcon />
             Discover
           </Link>
 
-          <Link href="/curated-playlists" className={navLinkClass}>
+          <Link href="/curated-playlists" className="filmwave-header-nav-link">
             <PlaylistIcon size={13} />
             Playlists
           </Link>
@@ -226,48 +206,34 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setMenuOpen((prev) => !prev)}
-            className={`group flex h-8 cursor-pointer items-center gap-2 text-xs font-medium transition ${
-              menuOpen
-                ? "text-[var(--text-primary)]"
-                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-            }`}
+            className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
             aria-label="Open user menu"
             aria-expanded={menuOpen}
           >
-            <span
-              className={`flex h-8 items-center gap-1.5 rounded-md px-2.5 transition ${
-                menuOpen
-                  ? "bg-[var(--bg-hover)]"
-                  : "group-hover:bg-[var(--bg-hover)]"
-              }`}
-            >
-              <span className="hidden max-w-[150px] truncate leading-none sm:block">
+            <span className="filmwave-header-account-label">
+              <span className="filmwave-header-account-name">
                 {user?.fullName || "Account"}
               </span>
 
-              <ChevronIcon open={menuOpen} />
+              <HeaderChevron open={menuOpen} />
             </span>
 
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--bg-secondary)] text-[10px] font-semibold leading-none text-[var(--text-primary)]">
+            <span className="filmwave-header-avatar">
               {profileImage ? (
-                <img
-                  src={profileImage}
-                  alt="Profile"
-                  className="h-full w-full object-cover"
-                />
+                <img src={profileImage} alt="Profile" />
               ) : (
                 initials
               )}
-            </div>
+            </span>
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 top-full z-[120] mt-2">
+            <div className="filmwave-header-menu-wrap">
               <UserMenu onClose={() => setMenuOpen(false)} />
             </div>
           )}
         </div>
-      </div>
-    </header>
+      }
+    />
   );
 }
