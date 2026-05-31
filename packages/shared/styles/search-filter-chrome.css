@@ -35,6 +35,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 
 .filmwave-search-filter-search-row {
   display: flex;
+  height: 48px;
   min-height: 48px;
   cursor: text;
   align-items: center;
