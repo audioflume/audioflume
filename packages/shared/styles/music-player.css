@@ -159,6 +159,11 @@
   white-space: nowrap;
 }
 
+.filmwave-player-meta span:first-child {
+  width: 44px;
+  text-align: right;
+}
+
 .filmwave-player-meta span:last-child {
   width: 48px;
   text-align: right;
