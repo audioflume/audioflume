@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./waveform";
+export * from "./playbackControls";
 export * from "./musicFilters";
 export * from "./musicLibraryFiltering";
 export * from "./editPointUtils";
