@@ -3,6 +3,7 @@ import {
   getSongCuePointMarkers,
   normalizeEditPointType,
   SharedWaveformCanvas,
+  type SharedWaveformCanvasHandle,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useMemo, useRef, useState, type Ref } from "react";
@@ -25,6 +26,7 @@ export default function DesktopSongCard({
   isSelected,
   isPlaying,
   playbackProgress = 0,
+  pendingSeekProgress = null,
   syncStatus = "idle",
   syncedPath,
   cardRef,
@@ -40,6 +42,7 @@ export default function DesktopSongCard({
   isSelected: boolean;
   isPlaying: boolean;
   playbackProgress?: number;
+  pendingSeekProgress?: number | null;
   syncStatus?: SongSyncStatus;
   syncedPath?: string | null;
   cardRef?: Ref<HTMLElement>;
@@ -49,8 +52,9 @@ export default function DesktopSongCard({
   onSync: () => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
-  const [visualProgress, setVisualProgress] = useState(playbackProgress);
+  const [visualProgress, setVisualProgress] = useState(pendingSeekProgress ?? playbackProgress);
   const actionsRef = useRef<HTMLDivElement | null>(null);
+  const waveformRef = useRef<SharedWaveformCanvasHandle | null>(null);
   const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
   const isSynced = syncStatus === "synced" && Boolean(syncedPath);
@@ -73,8 +77,10 @@ export default function DesktopSongCard({
   }, [cuePoints, markersVisible, selectedCuePointTypeSet]);
 
   useEffect(() => {
-    setVisualProgress(playbackProgress);
-  }, [playbackProgress, song.id]);
+    const nextProgress = pendingSeekProgress ?? playbackProgress;
+    setVisualProgress(nextProgress);
+    waveformRef.current?.seekTo(nextProgress);
+  }, [pendingSeekProgress, playbackProgress, song.id]);
 
   useEffect(() => {
     if (!actionsOpen) return;
@@ -140,6 +146,7 @@ export default function DesktopSongCard({
       : 0;
 
     setVisualProgress(safeProgress);
+    waveformRef.current?.seekTo(safeProgress);
     onSeek(safeProgress);
   }
 
@@ -191,6 +198,7 @@ export default function DesktopSongCard({
         </div>
 
         <SharedWaveformCanvas
+          ref={waveformRef}
           peaks={song.waveform}
           progress={visualProgress}
           onSeek={handleWaveformSeek}
