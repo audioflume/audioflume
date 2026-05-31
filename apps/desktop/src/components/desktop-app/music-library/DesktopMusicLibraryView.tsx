@@ -47,8 +47,7 @@ import "./DesktopMusicLibraryRefinements.css";
 import "./DesktopMusicLibrarySpacing.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
-const TRACK_SCROLL_TOP_PADDING = 112;
-const TRACK_SCROLL_BOTTOM_PADDING = 104;
+const TRACK_SCROLL_EDGE_PADDING = 12;
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
@@ -239,12 +238,15 @@ export default function DesktopMusicLibraryView({
   const searchPlaceholder = getMusicLibrarySearchPlaceholder(filters.selectedPlaylist?.name);
 
   useEffect(() => {
+    const duration = activeSong?.durationSeconds || 0;
+    const activeSeekRequest = seekRequest?.songId === activeSongId ? seekRequest : null;
+
     setPlaybackProgress({
       songId: activeSongId,
-      currentTime: 0,
-      duration: activeSong?.durationSeconds || 0,
+      currentTime: activeSeekRequest ? duration * activeSeekRequest.progress : 0,
+      duration,
     });
-  }, [activeSongId, activeSong?.durationSeconds]);
+  }, [activeSongId, activeSong?.durationSeconds, seekRequest]);
 
   useEffect(() => {
     const songId = scrollRequestedSongIdRef.current;
@@ -257,12 +259,35 @@ export default function DesktopMusicLibraryView({
       if (!card) return;
 
       const rect = card.getBoundingClientRect();
-      const visibleTop = TRACK_SCROLL_TOP_PADDING;
-      const visibleBottom = window.innerHeight - TRACK_SCROLL_BOTTOM_PADDING;
+      const searchFilter = document.querySelector<HTMLElement>(".filmwave-search-filter-sticky");
+      const player = document.querySelector<HTMLElement>(".desktop-music-player");
+      const searchFilterRect = searchFilter?.getBoundingClientRect();
+      const playerRect = player?.getBoundingClientRect();
+      const visibleTop = Math.max(
+        TRACK_SCROLL_EDGE_PADDING,
+        (searchFilterRect?.bottom ?? 0) + TRACK_SCROLL_EDGE_PADDING,
+      );
+      const visibleBottom = Math.min(
+        window.innerHeight - TRACK_SCROLL_EDGE_PADDING,
+        (playerRect?.top ?? window.innerHeight) - TRACK_SCROLL_EDGE_PADDING,
+      );
 
       if (rect.top >= visibleTop && rect.bottom <= visibleBottom) return;
 
-      card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      if (rect.top < visibleTop) {
+        window.scrollBy({
+          top: rect.top - visibleTop,
+          behavior: "smooth",
+        });
+        return;
+      }
+
+      if (rect.bottom > visibleBottom) {
+        window.scrollBy({
+          top: rect.bottom - visibleBottom,
+          behavior: "smooth",
+        });
+      }
     });
   }, [activeSongId]);
 
@@ -345,7 +370,7 @@ export default function DesktopMusicLibraryView({
   }
 
   function seekSong(song: DesktopSong, progress: number) {
-    const shouldPlay = activeSongId === song.id ? playerPlaying : playerPlaying;
+    const shouldPlay = playerPlaying;
     const safeProgress = Number.isFinite(progress)
       ? Math.max(0, Math.min(1, progress))
       : 0;
@@ -590,6 +615,7 @@ export default function DesktopMusicLibraryView({
               favorite={favoriteIds.has(song.id)}
               markersVisible={filters.markers}
               selectedCuePointTypes={selectedCoreCuePointTypes}
+              isSelected={activeSongId === song.id}
               isPlaying={activeSongId === song.id && playerPlaying}
               playbackProgress={getSongPlaybackProgress(song.id)}
               syncStatus={getSongSyncStatus(song.id)}
