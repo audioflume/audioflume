@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../../../packages/shared/styles/fonts.css";
 @import "../../../packages/shared/styles/theme.css";
 @import "../../../packages/shared/styles/layers.css";
 @import "../../../packages/shared/styles/app-chrome.css";
