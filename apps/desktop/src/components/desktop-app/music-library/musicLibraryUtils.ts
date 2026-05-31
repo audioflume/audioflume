@@ -1,4 +1,8 @@
-import { QUICK_FILTERS } from "@filmwave/shared";
+import {
+  EDIT_POINT_FILTER_OPTIONS,
+  QUICK_FILTERS,
+  songMatchesEditPointFilters,
+} from "@filmwave/shared";
 import type {
   DesktopMusicFilterOptions,
   DesktopMusicFilterState,
@@ -79,7 +83,7 @@ export function getDesktopMusicFilterOptions(
     bpm: ["60–90", "90–120", "120+"],
     key: unique(songs.map((song) => song.key)),
     duration: ["Under 2:00", "2:00–3:00", "Over 3:00"],
-    cuePoint: ["First Hit", "Intro End", "Drop", "Break", "Button Ending"],
+    cuePoint: EDIT_POINT_FILTER_OPTIONS.map((option) => option.label),
   };
 }
 
@@ -88,6 +92,9 @@ export function filterDesktopMusicSongs(
   filters: DesktopMusicFilterState,
 ) {
   const query = filters.search.trim().toLowerCase();
+  const selectedCuePointTypes = EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+    filters.cuePoint.includes(option.label),
+  ).map((option) => option.type);
 
   return songs.filter((song) => {
     const searchableText = [
@@ -138,7 +145,7 @@ export function filterDesktopMusicSongs(
     ) {
       return false;
     }
-    if (filters.cuePoint.length && song.cuePoints <= 0) return false;
+    if (!songMatchesEditPointFilters(song, selectedCuePointTypes)) return false;
 
     return true;
   });
