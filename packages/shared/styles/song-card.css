@@ -26,6 +26,7 @@
   overflow: visible;
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--filmwave-song-card-padding-y) var(--filmwave-song-card-padding-right) var(--filmwave-song-card-padding-y) var(--filmwave-song-card-padding-left);
+  font-family: var(--filmwave-font-ui);
   transition: background 140ms ease;
 }
 
@@ -199,6 +200,7 @@
   border: 0;
   background: transparent;
   padding: 0;
+  font-family: inherit;
   text-align: left;
 }
 
@@ -214,6 +216,7 @@
   border: 0;
   background: transparent;
   padding: 0;
+  font-family: inherit;
 }
 
 .filmwave-song-stems-slot,
