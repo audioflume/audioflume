@@ -21,6 +21,7 @@
   overflow: visible;
   border-top: 1px solid var(--border);
   background: var(--bg-secondary);
+  font-family: var(--filmwave-font-ui);
   box-shadow: var(--filmwave-player-top-glow);
 }
 
@@ -137,6 +138,7 @@
   background: transparent;
   padding: 0;
   color: var(--text-primary);
+  font-family: inherit;
   transition: color 0.15s ease;
 }
 
@@ -259,6 +261,7 @@
   background: transparent;
   padding: 0;
   color: var(--icon-color);
+  font-family: inherit;
   text-decoration: none;
   transition:
     background 0.15s ease,
