@@ -272,6 +272,14 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   line-height: 1;
 }
 
+.filmwave-filter-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
 .desktop-filter-count {
   display: inline-flex;
   width: 6px;
