@@ -6,7 +6,7 @@ export * from "./editPointUtils";
 export { default as MusicPlayerShell } from "./MusicPlayerShell";
 export type { MusicPlayerShellLayout } from "./MusicPlayerShell";
 export { default as SharedWaveformCanvas } from "./SharedWaveformCanvas";
-export type { SharedWaveformCanvasProps } from "./SharedWaveformCanvas";
+export type { SharedWaveformCanvasHandle, SharedWaveformCanvasProps } from "./SharedWaveformCanvas";
 export * from "./SidebarShell";
 export * from "./SearchFilterChrome";
 export * from "./FilterTrigger";
