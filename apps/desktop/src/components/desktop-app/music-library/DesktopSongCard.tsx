@@ -5,7 +5,7 @@ import {
   SharedWaveformCanvas,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type Ref } from "react";
 import CheckIcon from "../../icons/CheckIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
@@ -26,8 +26,10 @@ export default function DesktopSongCard({
   playbackProgress = 0,
   syncStatus = "idle",
   syncedPath,
+  cardRef,
   onFavoriteToggle,
   onPlay,
+  onSeek,
   onSync,
 }: {
   song: DesktopMusicSong;
@@ -38,8 +40,10 @@ export default function DesktopSongCard({
   playbackProgress?: number;
   syncStatus?: SongSyncStatus;
   syncedPath?: string | null;
+  cardRef?: Ref<HTMLElement>;
   onFavoriteToggle: () => void;
   onPlay: () => void;
+  onSeek: (progress: number) => void;
   onSync: () => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
@@ -136,7 +140,7 @@ export default function DesktopSongCard({
   ) : null;
 
   return (
-    <article className={`filmwave-song-card desktop-song-card${isPlaying ? " is-playing" : ""}`}>
+    <article ref={cardRef} className={`filmwave-song-card desktop-song-card${isPlaying ? " is-playing" : ""}`}>
       <button
         type="button"
         className="filmwave-song-cover desktop-song-cover"
@@ -162,7 +166,7 @@ export default function DesktopSongCard({
         <p className="filmwave-song-artist desktop-song-artist">{song.artist}</p>
       </button>
 
-      <button type="button" className="filmwave-song-wave-wrap desktop-song-wave-wrap" onClick={onPlay}>
+      <div className="filmwave-song-wave-wrap desktop-song-wave-wrap">
         <div className="filmwave-song-stems-slot desktop-song-stems-slot">
           {song.markers > 0 && <span>+{song.markers}</span>}
         </div>
@@ -170,13 +174,17 @@ export default function DesktopSongCard({
         <SharedWaveformCanvas
           peaks={song.waveform}
           progress={playbackProgress}
+          onSeek={onSeek}
           overlay={markerOverlay}
           className="filmwave-song-wave desktop-song-wave filmwave-song-wave-canvas"
           canvasClassName="desktop-song-wave-canvas"
+          ariaLabel={`Seek ${song.title}`}
         />
 
-        <span className="filmwave-song-duration desktop-song-duration">{song.duration}</span>
-      </button>
+        <button type="button" className="filmwave-song-duration desktop-song-duration" onClick={onPlay}>
+          {song.duration}
+        </button>
+      </div>
 
       <div className="filmwave-song-genre-slot desktop-song-genre-slot">
         <span className="filmwave-song-genre desktop-song-genre">{visibleGenres}</span>
