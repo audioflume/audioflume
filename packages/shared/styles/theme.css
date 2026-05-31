@@ -1,6 +1,8 @@
 :where(:root) {
   color-scheme: dark;
 
+  --filmwave-font-ui: var(--font-instrument-sans, "Instrument Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+
   --bg-primary: #111111;
   --bg-secondary: #111111;
   --bg-tertiary: #171717;
