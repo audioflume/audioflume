@@ -1,5 +1,6 @@
 "use client";
 
+import { FilterTrigger } from "@filmwave/shared";
 import type { PlaylistRef } from "@/lib/types";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
@@ -15,9 +16,6 @@ import {
   filterRowButtonActiveClass,
   filterRowButtonClass,
   filterRowButtonInactiveClass,
-  filterTriggerActiveClass,
-  filterTriggerBaseClass,
-  filterTriggerInactiveClass,
 } from "@/components/filterUiClasses";
 
 type PlaylistFilterProps = {
@@ -121,24 +119,15 @@ export default function PlaylistFilter({
 
   return (
     <div ref={ref} className="relative">
-      <button
-        ref={triggerRef}
-        type="button"
+      <FilterTrigger
+        buttonRef={triggerRef}
+        label="Playlists"
+        icon={<PlaylistIcon size={13} />}
+        active={hasActive}
+        open={open}
+        count={hasActive ? 1 : 0}
         onClick={() => setOpen((v) => !v)}
-        className={`${filterTriggerBaseClass} ${
-          hasActive ? filterTriggerActiveClass : filterTriggerInactiveClass
-        } ${open ? "is-open" : ""}`}
-      >
-        <PlaylistIcon size={13} className="shrink-0" />
-
-        <span>Playlists</span>
-
-        {hasActive && (
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--bg-elevated)] px-1.5 text-[10px] font-medium text-[var(--text-primary)]">
-            1
-          </span>
-        )}
-      </button>
+      />
 
       <FilterPopover
         open={open}
@@ -226,11 +215,7 @@ export default function PlaylistFilter({
                         : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
                     }`}
                   >
-                    {isSelected ? (
-                      <CheckIcon size={12} />
-                    ) : (
-                      <PlusIcon size={12} />
-                    )}
+                    {isSelected ? <CheckIcon size={11} /> : <PlusIcon size={11} />}
                   </span>
                 </button>
               );
