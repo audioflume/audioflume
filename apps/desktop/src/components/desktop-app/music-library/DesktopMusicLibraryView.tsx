@@ -1,4 +1,7 @@
 import {
+  EDIT_POINT_FILTER_OPTIONS,
+  isCoreEditPointType,
+  normalizeEditPointType,
   SearchFilterChrome,
   SearchFilterInput,
   SearchFilterQuickButton,
@@ -190,6 +193,9 @@ export default function DesktopMusicLibraryView({
   );
 
   const filterKeys = Object.keys(FILTER_TITLES) as DesktopMusicFilterKey[];
+  const selectedCoreCuePointTypes = filters.cuePoint
+    .map(normalizeEditPointType)
+    .filter(isCoreEditPointType);
   const hasActiveFilters =
     filters.search.trim().length > 0 ||
     filterKeys.some((filterKey) => filters[filterKey].length > 0) ||
@@ -417,6 +423,11 @@ export default function DesktopMusicLibraryView({
           song={activeSong}
           isPlaying={playerPlaying}
           favorite={favoriteIds.has(activeSong.id)}
+          markersVisible={filters.markers}
+          selectedCuePointTypes={selectedCoreCuePointTypes}
+          onMarkersVisibleChange={(visible) =>
+            setFilters((current) => ({ ...current, markers: visible }))
+          }
           onFavoriteToggle={() => toggleFavorite(activeSong.id)}
           onPlayPause={() => setPlayerPlaying((playing) => !playing)}
           onPrevious={playPreviousSong}
