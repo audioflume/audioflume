@@ -200,7 +200,9 @@ export default function DesktopMusicLibraryView({
     [activeSongId, displayedSongs],
   );
 
-  const filterKeys = Object.keys(FILTER_TITLES) as DesktopMusicFilterKey[];
+  const filterKeys = (Object.keys(FILTER_TITLES) as DesktopMusicFilterKey[]).filter(
+    (filterKey) => filterKey !== "cuePoint",
+  );
   const selectedCoreCuePointTypes = filters.cuePoint
     .map(normalizeEditPointType)
     .filter(isCoreEditPointType);
@@ -380,6 +382,16 @@ export default function DesktopMusicLibraryView({
               onChange={(selectedDurations) =>
                 setFilters((current) => ({ ...current, selectedDurations }))
               }
+            />
+
+            <DesktopFilterDropdown
+              filterKey="cuePoint"
+              label={FILTER_TITLES.cuePoint}
+              options={filterOptions.cuePoint}
+              selected={filters.cuePoint}
+              open={openDropdown === "cuePoint"}
+              onOpenChange={(open) => setOpenDropdown(open ? "cuePoint" : null)}
+              onToggleOption={(value) => setFilterValue("cuePoint", value)}
             />
 
             <FilterTrigger
