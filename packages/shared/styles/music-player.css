@@ -367,9 +367,13 @@
 }
 
 .filmwave-player-marker-toggle[aria-pressed="true"] {
-  --edit-points-icon-color: var(--bg-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  --edit-points-icon-color: var(--text-primary);
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.filmwave-player-marker-toggle[aria-pressed="true"]:hover {
+  background: var(--bg-hover);
 }
 
 .filmwave-icon-button:disabled {
