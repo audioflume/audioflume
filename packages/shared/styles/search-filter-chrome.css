@@ -4,6 +4,7 @@
   margin-left: var(--sidebar-width, var(--sidebar-width-expanded, 280px));
   background: var(--bg-primary);
   color: var(--text-primary);
+  font-family: var(--filmwave-font-ui);
   transition: margin-left 200ms ease;
 }
 
@@ -61,6 +62,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   border: 0;
   background: transparent;
   color: var(--text-primary);
+  font-family: inherit;
   font-size: 15px;
   font-weight: 300;
   outline: none;
@@ -205,6 +207,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   background: transparent;
   padding: 0 10px;
   color: var(--text-secondary);
+  font-family: inherit;
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
@@ -266,6 +269,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--bg-secondary);
+  font-family: var(--filmwave-font-ui);
   box-shadow: var(--shadow-ui);
 }
 
@@ -308,6 +312,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   background: transparent;
   padding: 0 10px;
   color: var(--text-secondary);
+  font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   text-align: left;
@@ -395,6 +400,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   background: transparent;
   padding: 0 9px;
   color: var(--text-secondary);
+  font-family: var(--filmwave-font-ui);
   font-size: 11px;
   font-weight: 500;
   line-height: 1;
