@@ -81,7 +81,7 @@ export default function DesktopAppShell({
   onActiveProjectIdChange,
   onActiveViewChange,
 }: DesktopAppShellProps) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [autoCollapsed, setAutoCollapsed] = useState(false);
   const [tooltip, setTooltip] = useState<SidebarTooltipState>(null);
   const effectivelyCollapsed = collapsed || autoCollapsed;
