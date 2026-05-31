@@ -119,7 +119,9 @@ export default function DesktopSongCard({
           </span>
         )}
         <span className="filmwave-song-play-overlay desktop-song-play-overlay" aria-hidden="true">
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          <span className="filmwave-song-play-button">
+            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          </span>
         </span>
       </button>
 
