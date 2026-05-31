@@ -1,5 +1,6 @@
 "use client";
 
+import { FilterTrigger } from "@filmwave/shared";
 import { useEffect, useRef, useState } from "react";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
@@ -12,9 +13,6 @@ import {
   filterRowButtonActiveClass,
   filterRowButtonClass,
   filterRowButtonInactiveClass,
-  filterTriggerActiveClass,
-  filterTriggerBaseClass,
-  filterTriggerInactiveClass,
 } from "@/components/filterUiClasses";
 
 type FilterOptionSection = {
@@ -92,22 +90,14 @@ export default function FilterDropdown({
 
   return (
     <div ref={ref} className="relative">
-      <button
-        ref={triggerRef}
-        type="button"
+      <FilterTrigger
+        buttonRef={triggerRef}
+        label={label}
+        active={hasActive}
+        open={open}
+        count={selected.length}
         onClick={() => setOpen((v) => !v)}
-        className={`${filterTriggerBaseClass} ${
-          hasActive ? filterTriggerActiveClass : filterTriggerInactiveClass
-        } ${open ? "is-open" : ""}`}
-      >
-        <span>{label}</span>
-
-        {hasActive && (
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--bg-elevated)] px-1.5 text-[10px] font-medium text-[var(--text-primary)]">
-            {selected.length}
-          </span>
-        )}
-      </button>
+      />
 
       <FilterPopover
         open={open}
