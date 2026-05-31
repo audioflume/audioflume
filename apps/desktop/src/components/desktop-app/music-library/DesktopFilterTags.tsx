@@ -11,12 +11,10 @@ import { FILTER_TITLES } from "./musicLibraryUtils";
 export default function DesktopFilterTags({
   filters,
   onRemoveFilter,
-  onRemoveMarkers,
   onRemoveShuffle,
 }: {
   filters: DesktopMusicFilterState;
   onRemoveFilter: (key: DesktopMusicFilterKey, value: string) => void;
-  onRemoveMarkers: () => void;
   onRemoveShuffle: () => void;
 }) {
   const filterKeys = Object.keys(FILTER_TITLES) as DesktopMusicFilterKey[];
@@ -32,10 +30,6 @@ export default function DesktopFilterTags({
             {value}
           </SearchFilterTag>
         )),
-      )}
-
-      {filters.markers && (
-        <SearchFilterTag onRemove={onRemoveMarkers}>Markers</SearchFilterTag>
       )}
 
       {filters.shuffle && (
