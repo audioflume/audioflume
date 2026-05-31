@@ -401,6 +401,7 @@ export default function DesktopMusicLibraryView({
               song={song}
               favorite={favoriteIds.has(song.id)}
               markersVisible={filters.markers}
+              selectedCuePointTypes={selectedCoreCuePointTypes}
               isPlaying={activeSongId === song.id && playerPlaying}
               syncStatus={getSongSyncStatus(song.id)}
               syncedPath={syncedSongPaths[song.id] ?? null}
