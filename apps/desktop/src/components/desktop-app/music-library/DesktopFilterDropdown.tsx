@@ -1,3 +1,4 @@
+import { FilterTrigger } from "@filmwave/shared";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import CheckIcon from "../../icons/CheckIcon";
@@ -43,6 +44,7 @@ export default function DesktopFilterDropdown({
   onToggleOption: (value: string) => void;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState<DropdownPosition | null>(null);
   const isPlaylistFilter = filterKey === "playlist";
@@ -53,7 +55,7 @@ export default function DesktopFilterDropdown({
     if (!open) return;
 
     function updatePosition() {
-      const trigger = ref.current;
+      const trigger = triggerRef.current;
       if (!trigger) return;
 
       const rect = trigger.getBoundingClientRect();
@@ -159,16 +161,15 @@ export default function DesktopFilterDropdown({
 
   return (
     <div className="desktop-filter-wrap" ref={ref}>
-      <button
-        type="button"
-        className={`desktop-filter-trigger${hasActive ? " is-active" : ""}${open ? " is-open" : ""}`}
+      <FilterTrigger
+        buttonRef={triggerRef}
+        label={label}
+        icon={isPlaylistFilter ? <PlaylistIcon size={13} /> : undefined}
+        active={hasActive}
+        open={open}
+        count={selected.length}
         onClick={() => onOpenChange(!open)}
-        aria-expanded={open}
-      >
-        {isPlaylistFilter && <PlaylistIcon size={13} className="desktop-filter-trigger-icon" />}
-        <span>{label}</span>
-        {hasActive && <span className="desktop-filter-count">{selected.length}</span>}
-      </button>
+      />
 
       {dropdownMenu}
     </div>
