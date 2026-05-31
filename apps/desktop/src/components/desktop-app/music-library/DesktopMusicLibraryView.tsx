@@ -3,6 +3,10 @@ import {
   FilterTrigger,
   getMusicLibrarySearchPlaceholder,
   isCoreEditPointType,
+  MusicBpmFilter,
+  MusicDurationFilter,
+  MusicKeyFilter,
+  MusicPlaylistFilter,
   normalizeEditPointType,
   SearchFilterChrome,
   SearchFilterInput,
@@ -11,6 +15,9 @@ import {
 import { exists } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
 import { useEffect, useMemo, useRef, useState } from "react";
+import CheckIcon from "../../icons/CheckIcon";
+import PlaylistIcon from "../../icons/PlaylistIcon";
+import PlusIcon from "../../icons/PlusIcon";
 import SearchIconSmall from "../../icons/SearchIconSmall";
 import {
   desktopSongs,
@@ -32,6 +39,7 @@ import {
   QUICK_GENRES,
   filterDesktopMusicSongs,
   getDesktopMusicFilterOptions,
+  getDesktopPlaylistFilterOptions,
   shuffleDesktopMusicSongs,
 } from "./musicLibraryUtils";
 import "./DesktopMusicLibraryView.css";
@@ -157,10 +165,8 @@ export default function DesktopMusicLibraryView({
     };
   }, [songs, effectiveSyncFolder]);
 
-  const filterOptions = useMemo(
-    () => getDesktopMusicFilterOptions(songs),
-    [songs],
-  );
+  const filterOptions = useMemo(() => getDesktopMusicFilterOptions(), []);
+  const playlistOptions = useMemo(() => getDesktopPlaylistFilterOptions(songs), [songs]);
 
   const filteredSongs = useMemo(
     () => filterDesktopMusicSongs(songs, filters),
@@ -198,7 +204,7 @@ export default function DesktopMusicLibraryView({
   const selectedCoreCuePointTypes = filters.cuePoint
     .map(normalizeEditPointType)
     .filter(isCoreEditPointType);
-  const searchPlaceholder = getMusicLibrarySearchPlaceholder(filters.playlist[0]);
+  const searchPlaceholder = getMusicLibrarySearchPlaceholder(filters.selectedPlaylist?.name);
 
   function setFilterValue(key: DesktopMusicFilterKey, value: string) {
     setFilters((current) => ({
@@ -312,11 +318,36 @@ export default function DesktopMusicLibraryView({
           <DesktopFilterTags
             filters={filters}
             onRemoveFilter={removeFilterValue}
+            onRemovePlaylist={() =>
+              setFilters((current) => ({ ...current, selectedPlaylist: null }))
+            }
+            onRemoveBpm={() =>
+              setFilters((current) => ({ ...current, bpmValue: null }))
+            }
+            onRemoveKey={() =>
+              setFilters((current) => ({ ...current, keyValue: null }))
+            }
+            onRemoveDuration={() =>
+              setFilters((current) => ({ ...current, selectedDurations: [] }))
+            }
             onRemoveShuffle={removeShuffle}
           />
         }
         filters={
           <>
+            <MusicPlaylistFilter
+              selected={filters.selectedPlaylist}
+              playlists={playlistOptions}
+              loading={songsLoading}
+              loaded={!songsLoading}
+              playlistIcon={<PlaylistIcon size={13} />}
+              checkIcon={<CheckIcon size={11} />}
+              plusIcon={<PlusIcon size={11} />}
+              onChange={(selectedPlaylist) =>
+                setFilters((current) => ({ ...current, selectedPlaylist }))
+              }
+            />
+
             {filterKeys.map((filterKey) => (
               <DesktopFilterDropdown
                 key={filterKey}
@@ -329,6 +360,27 @@ export default function DesktopMusicLibraryView({
                 onToggleOption={(value) => setFilterValue(filterKey, value)}
               />
             ))}
+
+            <MusicBpmFilter
+              value={filters.bpmValue}
+              onChange={(bpmValue) =>
+                setFilters((current) => ({ ...current, bpmValue }))
+              }
+            />
+
+            <MusicKeyFilter
+              value={filters.keyValue}
+              onChange={(keyValue) =>
+                setFilters((current) => ({ ...current, keyValue }))
+              }
+            />
+
+            <MusicDurationFilter
+              selected={filters.selectedDurations}
+              onChange={(selectedDurations) =>
+                setFilters((current) => ({ ...current, selectedDurations }))
+              }
+            />
 
             <FilterTrigger
               label="Markers"
