@@ -15,6 +15,7 @@ import {
   syncSongToMusicLibraryFolder,
 } from "../../../lib/musicLibrarySync";
 import CheckIcon from "../../icons/CheckIcon";
+import EditPointsIcon from "../../icons/EditPointsIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
 import SyncIcon from "../../icons/SyncIcon";
@@ -69,16 +70,6 @@ function CueNextIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function MarkerIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 4V20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M7 8H17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M8.5 16H15.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -238,7 +229,7 @@ export default function DesktopMusicPlayer({
           key={marker.id}
           type="button"
           aria-label={`Jump to ${label}`}
-          className="filmwave-player-cue-marker group/player-cue-point"
+          className="filmwave-player-cue-marker"
           style={{ left: `${left}%` }}
           onClick={(event) => {
             event.preventDefault();
@@ -360,12 +351,10 @@ export default function DesktopMusicPlayer({
               type="button"
               aria-label={markersVisible ? "Hide cue markers" : "Show cue markers"}
               aria-pressed={markersVisible}
-              className={`filmwave-icon-button filmwave-icon-button-plain${
-                markersVisible ? " is-active" : ""
-              }`}
+              className="filmwave-icon-button filmwave-icon-button-plain filmwave-player-marker-toggle"
               onClick={() => onMarkersVisibleChange(!markersVisible)}
             >
-              <MarkerIcon />
+              <EditPointsIcon />
             </button>
 
             <button
