@@ -28,6 +28,12 @@ const NEXT_CUE_SKIP_AHEAD_SECONDS = 0.25;
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
 
+type DesktopMusicPlayerProgress = {
+  songId: string;
+  currentTime: number;
+  duration: number;
+};
+
 function getAudioSource(song: DesktopMusicSong) {
   return song.playbackUrl || song.audioUrl || song.hlsUrl || "";
 }
@@ -85,6 +91,7 @@ export default function DesktopMusicPlayer({
   onPrevious,
   onNext,
   onFavoriteToggle,
+  onProgressChange,
 }: {
   song: DesktopMusicSong;
   isPlaying: boolean;
@@ -96,6 +103,7 @@ export default function DesktopMusicPlayer({
   onPrevious: () => void;
   onNext: () => void;
   onFavoriteToggle: () => void;
+  onProgressChange?: (progress: DesktopMusicPlayerProgress) => void;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -184,6 +192,14 @@ export default function DesktopMusicPlayer({
     setCurrentTime(0);
     setDuration(song.durationSeconds || 0);
   }, [song.id, song.durationSeconds]);
+
+  useEffect(() => {
+    onProgressChange?.({
+      songId: song.id,
+      currentTime,
+      duration: duration || song.durationSeconds || 0,
+    });
+  }, [currentTime, duration, onProgressChange, song.durationSeconds, song.id]);
 
   useEffect(() => {
     const audio = audioRef.current;
