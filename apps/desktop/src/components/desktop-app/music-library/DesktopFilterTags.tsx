@@ -1,6 +1,6 @@
 import {
-  SearchFilterTag,
-  SearchFilterTagList,
+  MusicFilterTags,
+  type MusicFilterTagItem,
 } from "@filmwave/shared";
 import type {
   DesktopMusicFilterKey,
@@ -42,33 +42,36 @@ export default function DesktopFilterTags({
   const bpmLabel = getBpmLabel(filters);
   const keyLabel = getKeyLabel(filters);
   const durationLabel = filters.selectedDurations[0] ?? null;
+  const tags: MusicFilterTagItem[] = [
+    ...(filters.selectedPlaylist
+      ? [
+          {
+            id: `playlist-${filters.selectedPlaylist.id}`,
+            label: filters.selectedPlaylist.name,
+            onRemove: onRemovePlaylist,
+          },
+        ]
+      : []),
+    ...filterKeys.flatMap((key) =>
+      filters[key].map((value) => ({
+        id: `${key}-${value}`,
+        label: value,
+        onRemove: () => onRemoveFilter(key, value),
+      })),
+    ),
+    ...(bpmLabel
+      ? [{ id: "bpm", label: bpmLabel, onRemove: onRemoveBpm }]
+      : []),
+    ...(keyLabel
+      ? [{ id: "key", label: keyLabel, onRemove: onRemoveKey }]
+      : []),
+    ...(durationLabel
+      ? [{ id: "duration", label: durationLabel, onRemove: onRemoveDuration }]
+      : []),
+    ...(filters.shuffle
+      ? [{ id: "shuffle", label: "Shuffle", onRemove: onRemoveShuffle }]
+      : []),
+  ];
 
-  return (
-    <SearchFilterTagList>
-      {filters.selectedPlaylist && (
-        <SearchFilterTag onRemove={onRemovePlaylist}>
-          {filters.selectedPlaylist.name}
-        </SearchFilterTag>
-      )}
-
-      {filterKeys.flatMap((key) =>
-        filters[key].map((value) => (
-          <SearchFilterTag
-            key={`${key}-${value}`}
-            onRemove={() => onRemoveFilter(key, value)}
-          >
-            {value}
-          </SearchFilterTag>
-        )),
-      )}
-
-      {bpmLabel && <SearchFilterTag onRemove={onRemoveBpm}>{bpmLabel}</SearchFilterTag>}
-      {keyLabel && <SearchFilterTag onRemove={onRemoveKey}>{keyLabel}</SearchFilterTag>}
-      {durationLabel && <SearchFilterTag onRemove={onRemoveDuration}>{durationLabel}</SearchFilterTag>}
-
-      {filters.shuffle && (
-        <SearchFilterTag onRemove={onRemoveShuffle}>Shuffle</SearchFilterTag>
-      )}
-    </SearchFilterTagList>
-  );
+  return <MusicFilterTags tags={tags} />;
 }
