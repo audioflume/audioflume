@@ -154,7 +154,7 @@
 .filmwave-player-time,
 .filmwave-player-meta span {
   flex-shrink: 0;
-  color: var(--icon-color);
+  color: var(--text-secondary);
   font-size: 12px;
   white-space: nowrap;
 }
@@ -346,7 +346,7 @@
 
 .filmwave-player-compact-time {
   white-space: nowrap;
-  color: var(--icon-color);
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
