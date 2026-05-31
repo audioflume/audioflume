@@ -76,13 +76,18 @@ export type FilmwaveDesktopSong = {
   title: string;
   artist: string;
   genre: string;
+  genres: string[];
   mood: string;
+  moods: string[];
   bpm: number;
   key: string;
   duration: string;
   durationSeconds: number;
   build: string;
+  builds: string[];
   vocals: string;
+  vocalTags: string[];
+  instrumental: boolean;
   instruments: string[];
   playlists: string[];
   cuePoints: number;
