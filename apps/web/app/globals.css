@@ -45,11 +45,11 @@ body.sidebar-collapsed aside[data-sidebar] {
 /* ─── Music list spacing ─────────────────────────── */
 
 main > section > div[aria-hidden] ~ div.pb-6 {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-subtle);
 }
 
 main > section > div[aria-hidden="true"] ~ div.pb-6 {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 /* ─── Shared media overlay colours ─────────────────────────── */
