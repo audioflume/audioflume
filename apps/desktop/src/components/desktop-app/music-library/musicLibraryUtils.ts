@@ -1,7 +1,18 @@
 import {
+  BPM_FILTER_OPTIONS,
+  BUILD_OPTIONS,
+  DURATION_FILTER_OPTIONS,
   EDIT_POINT_FILTER_OPTIONS,
+  filterMusicLibrarySongs,
+  GENRE_OPTIONS,
+  INSTRUMENT_OPTIONS,
+  INSTRUMENTAL_VOCAL_FILTER_OPTION,
+  KEY_FILTER_OPTIONS,
+  MOOD_OPTIONS,
+  parseBpmFilterLabel,
+  parseKeyFilterLabel,
   QUICK_FILTERS,
-  songMatchesEditPointFilters,
+  VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import type {
   DesktopMusicFilterOptions,
@@ -52,37 +63,19 @@ function unique(items: string[]) {
   );
 }
 
-function getDurationSeconds(duration: string) {
-  const [minutes, seconds] = duration.split(":").map(Number);
-  if (!Number.isFinite(minutes) || !Number.isFinite(seconds)) return 0;
-  return minutes * 60 + seconds;
-}
-
-function matchesDurationFilter(duration: string, selected: string[]) {
-  if (!selected.length) return true;
-  const seconds = getDurationSeconds(duration);
-
-  return selected.some((value) => {
-    if (value === "Under 2:00") return seconds > 0 && seconds < 120;
-    if (value === "2:00–3:00") return seconds >= 120 && seconds <= 180;
-    if (value === "Over 3:00") return seconds > 180;
-    return true;
-  });
-}
-
 export function getDesktopMusicFilterOptions(
   songs: DesktopMusicSong[],
 ): DesktopMusicFilterOptions {
   return {
     playlist: unique(songs.flatMap((song) => song.playlists)),
-    mood: unique(songs.map((song) => song.mood)),
-    genre: unique(songs.map((song) => song.genre)),
-    instrument: unique(songs.flatMap((song) => song.instruments)),
-    vocal: unique(songs.map((song) => song.vocals)),
-    build: unique(songs.map((song) => song.build)),
-    bpm: ["60–90", "90–120", "120+"],
-    key: unique(songs.map((song) => song.key)),
-    duration: ["Under 2:00", "2:00–3:00", "Over 3:00"],
+    mood: [...MOOD_OPTIONS],
+    genre: [...GENRE_OPTIONS],
+    instrument: [...INSTRUMENT_OPTIONS],
+    vocal: [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...VOCALS_OPTIONS],
+    build: [...BUILD_OPTIONS],
+    bpm: [...BPM_FILTER_OPTIONS],
+    key: [...KEY_FILTER_OPTIONS],
+    duration: [...DURATION_FILTER_OPTIONS],
     cuePoint: EDIT_POINT_FILTER_OPTIONS.map((option) => option.label),
   };
 }
@@ -91,63 +84,55 @@ export function filterDesktopMusicSongs(
   songs: DesktopMusicSong[],
   filters: DesktopMusicFilterState,
 ) {
-  const query = filters.search.trim().toLowerCase();
-  const selectedCuePointTypes = EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+  const selectedEditPoints = EDIT_POINT_FILTER_OPTIONS.filter((option) =>
     filters.cuePoint.includes(option.label),
   ).map((option) => option.type);
+  const selectedBpmFilters = filters.bpm.flatMap((value) => {
+    const parsed = parseBpmFilterLabel(value);
+    return parsed ? [parsed] : [];
+  });
+  const selectedKeyFilters = filters.key.flatMap((value) => {
+    const parsed = parseKeyFilterLabel(value);
+    return parsed ? [parsed] : [];
+  });
 
   return songs.filter((song) => {
-    const searchableText = [
-      song.title,
-      song.artist,
-      song.genre,
-      song.mood,
-      song.key,
-      song.vocals,
-      song.build,
-      ...song.instruments,
-      ...song.playlists,
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    if (query && !searchableText.includes(query)) return false;
     if (
       filters.playlist.length &&
       !filters.playlist.some((value) => song.playlists.includes(value))
     ) {
       return false;
     }
-    if (filters.mood.length && !filters.mood.includes(song.mood)) return false;
-    if (filters.genre.length && !filters.genre.includes(song.genre)) return false;
-    if (
-      filters.instrument.length &&
-      !filters.instrument.some((value) => song.instruments.includes(value))
-    ) {
-      return false;
-    }
-    if (filters.vocal.length && !filters.vocal.includes(song.vocals)) {
-      return false;
-    }
-    if (filters.build.length && !filters.build.includes(song.build)) {
-      return false;
-    }
-    if (filters.key.length && !filters.key.includes(song.key)) return false;
-    if (!matchesDurationFilter(song.duration, filters.duration)) return false;
-    if (
-      filters.bpm.length &&
-      !filters.bpm.some((value) => {
-        if (value === "60–90") return song.bpm >= 60 && song.bpm <= 90;
-        if (value === "90–120") return song.bpm >= 90 && song.bpm <= 120;
-        if (value === "120+") return song.bpm >= 120;
-        return true;
-      })
-    ) {
-      return false;
-    }
-    if (!songMatchesEditPointFilters(song, selectedCuePointTypes)) return false;
 
-    return true;
+    if (selectedBpmFilters.length > 0) {
+      const matchesAnyBpm = selectedBpmFilters.some((bpmValue) =>
+        filterMusicLibrarySongs([song], { bpmValue }).length > 0,
+      );
+
+      if (!matchesAnyBpm) return false;
+    }
+
+    if (selectedKeyFilters.length > 0) {
+      const matchesAnyKey = selectedKeyFilters.some((keyValue) =>
+        filterMusicLibrarySongs([song], { keyValue }).length > 0,
+      );
+
+      if (!matchesAnyKey) return false;
+    }
+
+    return filterMusicLibrarySongs([song], {
+      search: filters.search,
+      selectedMoods: filters.mood,
+      selectedGenres: filters.genre,
+      selectedInstruments: filters.instrument,
+      selectedBuilds: filters.build,
+      selectedVocals: filters.vocal.filter(
+        (value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
+      ),
+      selectedDurations: filters.duration,
+      selectedEditPoints,
+      instrumental: filters.vocal.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION),
+    }).length > 0;
   });
 }
 
