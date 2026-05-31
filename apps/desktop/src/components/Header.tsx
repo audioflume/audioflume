@@ -1,3 +1,4 @@
+import { HeaderShell } from "@filmwave/shared";
 import { useEffect, useState } from "react";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import FilmwaveLogoIcon from "./icons/FilmwaveLogoIcon";
@@ -36,6 +37,17 @@ function getInitialTheme(): ThemeMode {
   return savedTheme === "light" ? "light" : "dark";
 }
 
+function blurActiveElementFromHeaderClick(event: React.PointerEvent<HTMLElement>) {
+  const target = event.target as HTMLElement | null;
+
+  if (target?.closest("button, a, input, textarea, select, [role='button'], [data-header-interactive]")) {
+    return;
+  }
+
+  const activeElement = document.activeElement;
+  if (activeElement instanceof HTMLElement) activeElement.blur();
+}
+
 export default function Header({
   account,
   accountLoading,
@@ -67,25 +79,30 @@ export default function Header({
   }, [theme]);
 
   return (
-    <header className="desktop-header" data-tauri-drag-region>
-      <div className="desktop-header-inner" data-tauri-drag-region>
+    <HeaderShell
+      className="desktop-header"
+      innerClassName="desktop-header-inner"
+      onPointerDownCapture={blurActiveElementFromHeaderClick}
+      dragSurfaceProps={{ "data-tauri-drag-region": true }}
+      logo={
         <button
           type="button"
-          className="desktop-header-logo-button"
+          className="filmwave-header-logo-action desktop-header-logo-button"
           aria-label="Filmwave Desktop home"
           onClick={() => onActiveViewChange("projects")}
         >
           <FilmwaveLogoIcon
-            className="desktop-header-logo-mark"
+            className="filmwave-header-logo-mark desktop-header-logo-mark"
             width={115}
             height={22}
           />
         </button>
-
-        <div className="desktop-header-actions">
+      }
+      actions={
+        <>
           <button
             type="button"
-            className={`desktop-nav-link${activeView === "discover" ? " is-active" : ""}`}
+            className={`filmwave-header-nav-link desktop-nav-link${activeView === "discover" ? " is-active" : ""}`}
             onClick={() => onActiveViewChange("discover")}
           >
             <DashboardIcon />
@@ -94,7 +111,7 @@ export default function Header({
 
           <button
             type="button"
-            className={`desktop-nav-link${activeView === "playlists" ? " is-active" : ""}`}
+            className={`filmwave-header-nav-link desktop-nav-link${activeView === "playlists" ? " is-active" : ""}`}
             onClick={() => onActiveViewChange("playlists")}
           >
             <PlaylistIcon size={13} />
@@ -111,8 +128,8 @@ export default function Header({
             theme={theme}
             onThemeChange={setTheme}
           />
-        </div>
-      </div>
-    </header>
+        </>
+      }
+    />
   );
 }
