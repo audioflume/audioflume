@@ -14,7 +14,7 @@ import {
 } from "@filmwave/shared";
 import { exists } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CheckIcon from "../../icons/CheckIcon";
 import PlaylistIcon from "../../icons/PlaylistIcon";
 import PlusIcon from "../../icons/PlusIcon";
@@ -30,7 +30,7 @@ import {
 } from "../../../lib/musicLibrarySync";
 import DesktopFilterDropdown from "./DesktopFilterDropdown";
 import DesktopFilterTags from "./DesktopFilterTags";
-import DesktopMusicPlayer from "./DesktopMusicPlayer";
+import DesktopMusicPlayer, { type DesktopMusicPlayerSeekRequest } from "./DesktopMusicPlayer";
 import DesktopSongCard from "./DesktopSongCard";
 import type { DesktopMusicFilterKey, DesktopMusicFilterState } from "./musicLibraryTypes";
 import {
@@ -47,6 +47,8 @@ import "./DesktopMusicLibraryRefinements.css";
 import "./DesktopMusicLibrarySpacing.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
+const TRACK_SCROLL_TOP_PADDING = 112;
+const TRACK_SCROLL_BOTTOM_PADDING = 104;
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
@@ -55,6 +57,19 @@ type DesktopPlaybackProgress = {
   currentTime: number;
   duration: number;
 };
+
+function shouldIgnorePlaybackShortcutTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+
+  const tagName = target.tagName.toLowerCase();
+
+  return (
+    tagName === "input" ||
+    tagName === "textarea" ||
+    tagName === "select" ||
+    target.isContentEditable
+  );
+}
 
 export default function DesktopMusicLibraryView({
   apiBaseUrl,
@@ -77,11 +92,15 @@ export default function DesktopMusicLibraryView({
     currentTime: 0,
     duration: 0,
   });
+  const [seekRequest, setSeekRequest] = useState<DesktopMusicPlayerSeekRequest | null>(null);
   const [savedSyncFolder, setSavedSyncFolder] = useState<string | null>(syncFolder ?? null);
   const [syncingSongIds, setSyncingSongIds] = useState<Set<string>>(() => new Set());
   const [syncedSongPaths, setSyncedSongPaths] = useState<Record<string, string>>({});
   const [syncErrorSongIds, setSyncErrorSongIds] = useState<Set<string>>(() => new Set());
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const songCardRefs = useRef(new Map<string, HTMLElement>());
+  const seekRequestIdRef = useRef(0);
+  const scrollRequestedSongIdRef = useRef<string | null>(null);
   const effectiveSyncFolder = syncFolder ?? savedSyncFolder;
 
   useEffect(() => {
@@ -227,6 +246,26 @@ export default function DesktopMusicLibraryView({
     });
   }, [activeSongId, activeSong?.durationSeconds]);
 
+  useEffect(() => {
+    const songId = scrollRequestedSongIdRef.current;
+    if (!songId || songId !== activeSongId) return;
+
+    scrollRequestedSongIdRef.current = null;
+
+    window.requestAnimationFrame(() => {
+      const card = songCardRefs.current.get(songId);
+      if (!card) return;
+
+      const rect = card.getBoundingClientRect();
+      const visibleTop = TRACK_SCROLL_TOP_PADDING;
+      const visibleBottom = window.innerHeight - TRACK_SCROLL_BOTTOM_PADDING;
+
+      if (rect.top >= visibleTop && rect.bottom <= visibleBottom) return;
+
+      card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    });
+  }, [activeSongId]);
+
   function setFilterValue(key: DesktopMusicFilterKey, value: string) {
     setFilters((current) => ({
       ...current,
@@ -305,20 +344,87 @@ export default function DesktopMusicLibraryView({
     setPlayerPlaying(true);
   }
 
-  function playSongAtIndex(index: number) {
+  function seekSong(song: DesktopSong, progress: number) {
+    const shouldPlay = activeSongId === song.id ? playerPlaying : playerPlaying;
+    const safeProgress = Number.isFinite(progress)
+      ? Math.max(0, Math.min(1, progress))
+      : 0;
+    const duration = song.durationSeconds || 0;
+
+    if (activeSongId !== song.id) {
+      setActiveSongId(song.id);
+    }
+
+    setPlayerPlaying(shouldPlay);
+    setPlaybackProgress({
+      songId: song.id,
+      currentTime: duration * safeProgress,
+      duration,
+    });
+    setSeekRequest({
+      id: ++seekRequestIdRef.current,
+      songId: song.id,
+      progress: safeProgress,
+      shouldPlay,
+    });
+  }
+
+  const playSongAtIndex = useCallback((index: number, shouldPlay = playerPlaying) => {
     if (!displayedSongs.length) return;
-    const normalizedIndex = (index + displayedSongs.length) % displayedSongs.length;
-    setActiveSongId(displayedSongs[normalizedIndex].id);
-    setPlayerPlaying(true);
-  }
 
-  function playPreviousSong() {
-    playSongAtIndex(activeSongIndex <= 0 ? displayedSongs.length - 1 : activeSongIndex - 1);
-  }
+    if (index < 0 || index >= displayedSongs.length) {
+      setPlayerPlaying(false);
+      return;
+    }
 
-  function playNextSong() {
-    playSongAtIndex(activeSongIndex < 0 ? 0 : activeSongIndex + 1);
-  }
+    const nextSong = displayedSongs[index];
+
+    scrollRequestedSongIdRef.current = nextSong.id;
+    setActiveSongId(nextSong.id);
+    setPlayerPlaying(shouldPlay);
+  }, [displayedSongs, playerPlaying]);
+
+  const playPreviousSong = useCallback(() => {
+    if (activeSongIndex === -1) return;
+    playSongAtIndex(activeSongIndex - 1);
+  }, [activeSongIndex, playSongAtIndex]);
+
+  const playNextSong = useCallback(() => {
+    if (activeSongIndex === -1) {
+      playSongAtIndex(0);
+      return;
+    }
+
+    playSongAtIndex(activeSongIndex + 1);
+  }, [activeSongIndex, playSongAtIndex]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (shouldIgnorePlaybackShortcutTarget(event.target)) return;
+
+      if (event.code === "Space") {
+        if (!activeSongId) return;
+        event.preventDefault();
+        setPlayerPlaying((playing) => !playing);
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        playNextSong();
+        return;
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        playPreviousSong();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeSongId, playNextSong, playPreviousSong]);
 
   function getSongPlaybackProgress(songId: string) {
     if (playbackProgress.songId !== songId || playbackProgress.duration <= 0) return 0;
@@ -488,8 +594,13 @@ export default function DesktopMusicLibraryView({
               playbackProgress={getSongPlaybackProgress(song.id)}
               syncStatus={getSongSyncStatus(song.id)}
               syncedPath={syncedSongPaths[song.id] ?? null}
+              cardRef={(node) => {
+                if (node) songCardRefs.current.set(song.id, node);
+                else songCardRefs.current.delete(song.id);
+              }}
               onFavoriteToggle={() => toggleFavorite(song.id)}
               onPlay={() => playSong(song)}
+              onSeek={(progress) => seekSong(song, progress)}
               onSync={() => syncSong(song)}
             />
           ))}
@@ -509,6 +620,7 @@ export default function DesktopMusicLibraryView({
           favorite={favoriteIds.has(activeSong.id)}
           markersVisible={filters.markers}
           selectedCuePointTypes={selectedCoreCuePointTypes}
+          seekRequest={seekRequest}
           onMarkersVisibleChange={(visible) =>
             setFilters((current) => ({ ...current, markers: visible }))
           }
@@ -535,7 +647,7 @@ function ShuffleIcon() {
     >
       <path
         fillRule="evenodd"
-        d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"
+        d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.260-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"
       />
       <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
     </svg>
