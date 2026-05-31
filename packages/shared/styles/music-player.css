@@ -289,9 +289,14 @@
 }
 
 .filmwave-player-cue-button {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
   display: flex;
   width: 24px;
+  min-width: 24px;
   height: 24px;
+  flex-shrink: 0;
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -299,6 +304,9 @@
   border-radius: 999px;
   background: transparent;
   color: var(--text-secondary);
+  font: inherit;
+  line-height: 1;
+  padding: 0;
   transition:
     background 150ms ease,
     color 150ms ease;
@@ -317,6 +325,13 @@
 .filmwave-player-cue-button:disabled:hover {
   background: transparent;
   color: var(--text-secondary);
+}
+
+.filmwave-player-cue-button svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
 }
 
 .filmwave-player-compact-time {
