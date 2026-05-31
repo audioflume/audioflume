@@ -34,6 +34,13 @@ type DesktopMusicPlayerProgress = {
   duration: number;
 };
 
+export type DesktopMusicPlayerSeekRequest = {
+  id: number;
+  songId: string;
+  progress: number;
+  shouldPlay: boolean;
+};
+
 function getAudioSource(song: DesktopMusicSong) {
   return song.playbackUrl || song.audioUrl || song.hlsUrl || "";
 }
@@ -86,6 +93,7 @@ export default function DesktopMusicPlayer({
   favorite,
   markersVisible,
   selectedCuePointTypes = [],
+  seekRequest,
   onMarkersVisibleChange,
   onPlayPause,
   onPrevious,
@@ -98,6 +106,7 @@ export default function DesktopMusicPlayer({
   favorite: boolean;
   markersVisible: boolean;
   selectedCuePointTypes?: string[];
+  seekRequest?: DesktopMusicPlayerSeekRequest | null;
   onMarkersVisibleChange: (visible: boolean) => void;
   onPlayPause: () => void;
   onPrevious: () => void;
@@ -106,6 +115,7 @@ export default function DesktopMusicPlayer({
   onProgressChange?: (progress: DesktopMusicPlayerProgress) => void;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const handledSeekRequestIdRef = useRef<number | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(song.durationSeconds || 0);
   const [syncFolder, setSyncFolder] = useState<string | null>(null);
@@ -226,6 +236,47 @@ export default function DesktopMusicPlayer({
     audio.currentTime = nextTime;
     setCurrentTime(nextTime);
   }
+
+  useEffect(() => {
+    if (!seekRequest || seekRequest.songId !== song.id) return;
+    if (handledSeekRequestIdRef.current === seekRequest.id) return;
+
+    handledSeekRequestIdRef.current = seekRequest.id;
+
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const safeProgress = Number.isFinite(seekRequest.progress)
+      ? Math.max(0, Math.min(1, seekRequest.progress))
+      : 0;
+
+    const applySeek = () => {
+      const nextDuration = audio.duration && Number.isFinite(audio.duration)
+        ? audio.duration
+        : song.durationSeconds || duration;
+
+      if (!nextDuration) return;
+
+      const nextTime = safeProgress * nextDuration;
+      audio.currentTime = nextTime;
+      setCurrentTime(nextTime);
+      setDuration(nextDuration);
+
+      if (seekRequest.shouldPlay && audio.paused) {
+        audio.play().catch((error) =>
+          console.warn("Could not play audio after seek", error),
+        );
+      } else if (!seekRequest.shouldPlay && !audio.paused) {
+        audio.pause();
+      }
+    };
+
+    if (audio.duration && Number.isFinite(audio.duration)) {
+      applySeek();
+    } else {
+      audio.addEventListener("loadedmetadata", applySeek, { once: true });
+    }
+  }, [duration, seekRequest, song.durationSeconds, song.id]);
 
   function jumpToCuePoint(marker: CuePointMarker | null) {
     if (!marker || !duration) return;
