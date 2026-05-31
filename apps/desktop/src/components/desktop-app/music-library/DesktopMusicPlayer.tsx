@@ -24,7 +24,6 @@ import type { DesktopMusicSong } from "./musicLibraryTypes";
 const SETTINGS_STORE = "filmwave-settings.json";
 const PREVIOUS_CUE_SKIP_BACK_SECONDS = 1.35;
 const NEXT_CUE_SKIP_AHEAD_SECONDS = 0.25;
-const CUE_JUMP_BUTTON_CLASS = "flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]";
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
@@ -44,13 +43,19 @@ function getAdjacentCuePoint(
   direction: "previous" | "next",
 ) {
   if (cuePoints.length === 0) return null;
+
   const sortedCuePoints = [...cuePoints].sort((a, b) => a.time - b.time);
+
   if (direction === "next") {
     const threshold = currentTime + NEXT_CUE_SKIP_AHEAD_SECONDS;
     return sortedCuePoints.find((marker) => marker.time > threshold) || sortedCuePoints[0];
   }
+
   const threshold = currentTime - PREVIOUS_CUE_SKIP_BACK_SECONDS;
-  return [...sortedCuePoints].reverse().find((marker) => marker.time < threshold) || sortedCuePoints[sortedCuePoints.length - 1];
+  return (
+    [...sortedCuePoints].reverse().find((marker) => marker.time < threshold) ||
+    sortedCuePoints[sortedCuePoints.length - 1]
+  );
 }
 
 function CuePreviousIcon() {
@@ -99,28 +104,56 @@ export default function DesktopMusicPlayer({
   const [syncStatus, setSyncStatus] = useState<SongSyncStatus>("idle");
 
   const audioSource = useMemo(() => getAudioSource(song), [song]);
-  const normalizedSelectedCuePointTypes = useMemo(() => selectedCuePointTypes.map(normalizeEditPointType), [selectedCuePointTypes]);
-  const selectedCuePointTypeSet = useMemo(() => new Set(normalizedSelectedCuePointTypes), [normalizedSelectedCuePointTypes]);
+  const normalizedSelectedCuePointTypes = useMemo(
+    () => selectedCuePointTypes.map(normalizeEditPointType),
+    [selectedCuePointTypes],
+  );
+  const selectedCuePointTypeSet = useMemo(
+    () => new Set(normalizedSelectedCuePointTypes),
+    [normalizedSelectedCuePointTypes],
+  );
   const cuePoints = useMemo(() => getSongCuePointMarkers(song), [song]);
   const hasSelectedCuePointTypes = selectedCuePointTypeSet.size > 0;
   const visibleCuePoints = useMemo(() => {
     if (!markersVisible) return [];
     if (!hasSelectedCuePointTypes) return cuePoints;
-    return cuePoints.filter((marker) => selectedCuePointTypeSet.has(getMarkerType(marker)));
+
+    return cuePoints.filter((marker) =>
+      selectedCuePointTypeSet.has(getMarkerType(marker)),
+    );
   }, [cuePoints, hasSelectedCuePointTypes, markersVisible, selectedCuePointTypeSet]);
-  const previousCuePoint = useMemo(() => getAdjacentCuePoint(visibleCuePoints, currentTime, "previous"), [visibleCuePoints, currentTime]);
-  const nextCuePoint = useMemo(() => getAdjacentCuePoint(visibleCuePoints, currentTime, "next"), [visibleCuePoints, currentTime]);
+  const previousCuePoint = useMemo(
+    () => getAdjacentCuePoint(visibleCuePoints, currentTime, "previous"),
+    [visibleCuePoints, currentTime],
+  );
+  const nextCuePoint = useMemo(
+    () => getAdjacentCuePoint(visibleCuePoints, currentTime, "next"),
+    [visibleCuePoints, currentTime],
+  );
   const isSynced = syncStatus === "synced";
-  const syncLabel = syncStatus === "synced" ? "Song synced" : syncStatus === "syncing" ? "Syncing song" : syncStatus === "error" ? "Retry sync" : syncFolder ? "Sync song" : "Choose a sync folder to sync songs";
+  const syncLabel =
+    syncStatus === "synced"
+      ? "Song synced"
+      : syncStatus === "syncing"
+        ? "Syncing song"
+        : syncStatus === "error"
+          ? "Retry sync"
+          : syncFolder
+            ? "Sync song"
+            : "Choose a sync folder to sync songs";
 
   useEffect(() => {
     let cancelled = false;
+
     async function loadSyncFolder() {
       const store = await load(SETTINGS_STORE);
       const nextSyncFolder = await store.get<string>("syncFolder");
+
       if (!cancelled) setSyncFolder(nextSyncFolder ?? null);
     }
+
     void loadSyncFolder();
+
     return () => {
       cancelled = true;
     };
@@ -128,14 +161,20 @@ export default function DesktopMusicPlayer({
 
   useEffect(() => {
     let cancelled = false;
+
     async function checkSyncedStatus() {
       setSyncStatus("idle");
+
       if (!syncFolder) return;
+
       const localPath = getMusicLibrarySyncedSongPath({ song, syncFolder });
       const synced = await exists(localPath);
+
       if (!cancelled) setSyncStatus(synced ? "synced" : "idle");
     }
+
     void checkSyncedStatus();
+
     return () => {
       cancelled = true;
     };
@@ -149,9 +188,15 @@ export default function DesktopMusicPlayer({
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !audioSource) return;
+
     if (isPlaying) {
       const playPromise = audio.play();
-      if (playPromise) playPromise.catch((error) => console.warn("Could not play audio", error));
+
+      if (playPromise) {
+        playPromise.catch((error) =>
+          console.warn("Could not play audio", error),
+        );
+      }
     } else {
       audio.pause();
     }
@@ -160,6 +205,7 @@ export default function DesktopMusicPlayer({
   function seek(progress: number) {
     const audio = audioRef.current;
     if (!audio || !duration) return;
+
     const nextTime = progress * duration;
     audio.currentTime = nextTime;
     setCurrentTime(nextTime);
@@ -172,27 +218,65 @@ export default function DesktopMusicPlayer({
 
   function renderCueMarkerOverlay() {
     if (!markersVisible) return null;
+
     return visibleCuePoints.map((marker) => {
       const label = getCueLabel(marker);
       const progressValue = duration ? marker.time / duration : 0;
       const left = Math.max(0, Math.min(100, progressValue * 100));
+
       return (
-        <button key={marker.id} type="button" aria-label={`Jump to ${label}`} className="filmwave-player-cue-marker" style={{ left: `${left}%` }} onClick={(event) => { event.preventDefault(); event.stopPropagation(); jumpToCuePoint(marker); }}>
-          <span className="filmwave-player-cue-marker-line" style={{ width: hasSelectedCuePointTypes ? "var(--cue-marker-width-active)" : "var(--cue-marker-width)", opacity: "var(--cue-marker-opacity)" }} />
-          <span className="filmwave-player-cue-marker-label">{label} · {formatEditPointTime(marker.time)}</span>
+        <button
+          key={marker.id}
+          type="button"
+          aria-label={`Jump to ${label}`}
+          className="filmwave-player-cue-marker"
+          style={{ left: `${left}%` }}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            jumpToCuePoint(marker);
+          }}
+        >
+          <span
+            className="filmwave-player-cue-marker-line"
+            style={{
+              width: hasSelectedCuePointTypes ? "var(--cue-marker-width-active)" : "var(--cue-marker-width)",
+              opacity: "var(--cue-marker-opacity)",
+            }}
+          />
+          <span className="filmwave-player-cue-marker-label">
+            {label} · {formatEditPointTime(marker.time)}
+          </span>
         </button>
       );
     });
   }
 
   function renderCueControls(layout: MusicPlayerShellLayout) {
-    if (!markersVisible || !layout.showWaveform || layout.playerWidth < 940 || visibleCuePoints.length === 0) return null;
+    if (!markersVisible || !layout.showWaveform || layout.playerWidth < 940 || visibleCuePoints.length === 0) {
+      return null;
+    }
+
     return (
-      <div className="flex flex-shrink-0 items-center gap-1">
-        <button type="button" title={previousCuePoint ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}` : "Previous cue"} aria-label="Jump to previous cue point" onClick={() => jumpToCuePoint(previousCuePoint)} disabled={!previousCuePoint} className={CUE_JUMP_BUTTON_CLASS}>
+      <div className="filmwave-player-cue-controls">
+        <button
+          type="button"
+          title={previousCuePoint ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}` : "Previous cue"}
+          aria-label="Jump to previous cue point"
+          onClick={() => jumpToCuePoint(previousCuePoint)}
+          disabled={!previousCuePoint}
+          className="filmwave-player-cue-button"
+        >
           <CuePreviousIcon />
         </button>
-        <button type="button" title={nextCuePoint ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}` : "Next cue"} aria-label="Jump to next cue point" onClick={() => jumpToCuePoint(nextCuePoint)} disabled={!nextCuePoint} className={CUE_JUMP_BUTTON_CLASS}>
+        <button
+          type="button"
+          title={nextCuePoint ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}` : "Next cue"}
+          aria-label="Jump to next cue point"
+          onClick={() => jumpToCuePoint(nextCuePoint)}
+          disabled={!nextCuePoint}
+          className="filmwave-player-cue-button"
+        >
           <CueNextIcon />
         </button>
       </div>
@@ -201,7 +285,9 @@ export default function DesktopMusicPlayer({
 
   async function syncSong() {
     if (!syncFolder || syncStatus === "syncing" || syncStatus === "synced") return;
+
     setSyncStatus("syncing");
+
     try {
       await syncSongToMusicLibraryFolder({ song, syncFolder });
       setSyncStatus("synced");
@@ -213,9 +299,28 @@ export default function DesktopMusicPlayer({
 
   return (
     <>
-      <audio ref={audioRef} src={audioSource} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => setDuration(event.currentTarget.duration || song.durationSeconds || 0)} onEnded={onNext} />
+      <audio
+        ref={audioRef}
+        src={audioSource}
+        onTimeUpdate={(event) =>
+          setCurrentTime(event.currentTarget.currentTime)
+        }
+        onLoadedMetadata={(event) =>
+          setDuration(event.currentTarget.duration || song.durationSeconds || 0)
+        }
+        onEnded={onNext}
+      />
+
       <MusicPlayerShell
-        song={{ id: song.id, title: song.title, artist: song.artist, coverArt: song.coverArt, key: song.key, bpm: song.bpm, durationSeconds: song.durationSeconds }}
+        song={{
+          id: song.id,
+          title: song.title,
+          artist: song.artist,
+          coverArt: song.coverArt,
+          key: song.key,
+          bpm: song.bpm,
+          durationSeconds: song.durationSeconds,
+        }}
         isPlaying={isPlaying}
         currentTime={currentTime}
         duration={duration || song.durationSeconds || 0}
@@ -230,17 +335,53 @@ export default function DesktopMusicPlayer({
         dataPlatform="desktop"
         actions={
           <>
-            <button type="button" aria-label={favorite ? "Remove song from favorites" : "Favorite song"} aria-pressed={favorite} className={`filmwave-icon-button filmwave-icon-button-plain${favorite ? " is-active" : ""}`} onClick={onFavoriteToggle}>
+            <button
+              type="button"
+              aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
+              aria-pressed={favorite}
+              className={`filmwave-icon-button filmwave-icon-button-plain${
+                favorite ? " is-active" : ""
+              }`}
+              onClick={onFavoriteToggle}
+            >
               <HeartIcon size={14} filled={favorite} />
             </button>
-            <button type="button" aria-label={markersVisible ? "Hide cue markers" : "Show cue markers"} aria-pressed={markersVisible} className="filmwave-icon-button filmwave-icon-button-plain filmwave-player-marker-toggle" onClick={() => onMarkersVisibleChange(!markersVisible)}>
+
+            <button
+              type="button"
+              aria-label={markersVisible ? "Hide cue markers" : "Show cue markers"}
+              aria-pressed={markersVisible}
+              className="filmwave-icon-button filmwave-icon-button-plain filmwave-player-marker-toggle"
+              onClick={() => onMarkersVisibleChange(!markersVisible)}
+            >
               <EditPointsIcon />
             </button>
-            <button type="button" aria-label="Song options" className="filmwave-icon-button filmwave-icon-button-plain">
+
+            <button
+              type="button"
+              aria-label="Song options"
+              className="filmwave-icon-button filmwave-icon-button-plain"
+            >
               <MoreIcon size={14} />
             </button>
-            <button type="button" aria-label={syncLabel} title={syncLabel} aria-pressed={isSynced} className={`filmwave-icon-button filmwave-icon-button-plain desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`} disabled={!syncFolder || syncStatus === "syncing" || isSynced} onClick={(event) => { event.stopPropagation(); void syncSong(); }}>
-              <span className="desktop-song-sync-button-inner">{isSynced ? <CheckIcon size={10} strokeWidth={3} /> : <SyncIcon size={14} />}</span>
+
+            <button
+              type="button"
+              aria-label={syncLabel}
+              title={syncLabel}
+              aria-pressed={isSynced}
+              className={`filmwave-icon-button filmwave-icon-button-plain desktop-song-sync-button${
+                isSynced ? " is-synced" : ""
+              }${syncStatus === "syncing" ? " is-syncing" : ""}`}
+              disabled={!syncFolder || syncStatus === "syncing" || isSynced}
+              onClick={(event) => {
+                event.stopPropagation();
+                void syncSong();
+              }}
+            >
+              <span className="desktop-song-sync-button-inner">
+                {isSynced ? <CheckIcon size={10} strokeWidth={3} /> : <SyncIcon size={14} />}
+              </span>
             </button>
           </>
         }
