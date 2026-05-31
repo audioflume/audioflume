@@ -116,6 +116,7 @@ export default function DesktopMusicPlayer({
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const handledSeekRequestIdRef = useRef<number | null>(null);
+  const pendingSeekRequestRef = useRef<DesktopMusicPlayerSeekRequest | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(song.durationSeconds || 0);
   const [syncFolder, setSyncFolder] = useState<string | null>(null);
@@ -199,6 +200,15 @@ export default function DesktopMusicPlayer({
   }, [song, syncFolder]);
 
   useEffect(() => {
+    const pendingSeekRequest = pendingSeekRequestRef.current;
+
+    if (pendingSeekRequest?.songId === song.id) {
+      const nextDuration = song.durationSeconds || 0;
+      setCurrentTime(nextDuration * pendingSeekRequest.progress);
+      setDuration(nextDuration);
+      return;
+    }
+
     setCurrentTime(0);
     setDuration(song.durationSeconds || 0);
   }, [song.id, song.durationSeconds]);
@@ -242,6 +252,7 @@ export default function DesktopMusicPlayer({
     if (handledSeekRequestIdRef.current === seekRequest.id) return;
 
     handledSeekRequestIdRef.current = seekRequest.id;
+    pendingSeekRequestRef.current = seekRequest;
 
     const audio = audioRef.current;
     if (!audio) return;
@@ -251,6 +262,8 @@ export default function DesktopMusicPlayer({
       : 0;
 
     const applySeek = () => {
+      if (pendingSeekRequestRef.current?.id !== seekRequest.id) return;
+
       const nextDuration = audio.duration && Number.isFinite(audio.duration)
         ? audio.duration
         : song.durationSeconds || duration;
@@ -261,6 +274,8 @@ export default function DesktopMusicPlayer({
       audio.currentTime = nextTime;
       setCurrentTime(nextTime);
       setDuration(nextDuration);
+
+      pendingSeekRequestRef.current = null;
 
       if (seekRequest.shouldPlay && audio.paused) {
         audio.play().catch((error) =>
