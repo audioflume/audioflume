@@ -37,7 +37,8 @@
 
 .filmwave-song-card.is-playing,
 .filmwave-song-card.is-current,
-.desktop-song-card.is-playing {
+.desktop-song-card.is-playing,
+.desktop-song-card.is-current {
   background: var(--bg-hover);
 }
 
@@ -82,8 +83,10 @@
 
 .filmwave-song-card:hover .filmwave-song-play-overlay,
 .filmwave-song-card.is-playing .filmwave-song-play-overlay,
+.filmwave-song-card.is-current .filmwave-song-play-overlay,
 .desktop-song-card:hover .desktop-song-play-overlay,
-.desktop-song-card.is-playing .desktop-song-play-overlay {
+.desktop-song-card.is-playing .desktop-song-play-overlay,
+.desktop-song-card.is-current .desktop-song-play-overlay {
   opacity: 1;
 }
 
@@ -236,97 +239,4 @@
   width: 48px;
   text-align: right;
   white-space: nowrap;
-}
-
-.filmwave-song-genre-slot,
-.desktop-song-genre-slot {
-  display: flex;
-  min-width: 0;
-  max-width: 170px;
-  flex: 0 1 150px;
-  justify-content: flex-end;
-  overflow: hidden;
-}
-
-.filmwave-song-genre,
-.desktop-song-genre {
-  overflow: hidden;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.filmwave-song-key-bpm,
-.desktop-song-key-bpm {
-  display: flex;
-  width: 140px;
-  min-width: 0;
-  flex: 0 1 140px;
-  justify-content: flex-end;
-  gap: 14px;
-  overflow: hidden;
-}
-
-.filmwave-song-key,
-.desktop-song-key {
-  width: 48px;
-  min-width: 0;
-  overflow: hidden;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.filmwave-song-bpm,
-.desktop-song-bpm {
-  width: 64px;
-  min-width: 0;
-  overflow: hidden;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@container (max-width: 1060px) {
-  .filmwave-song-genre-slot,
-  .desktop-song-genre-slot {
-    display: none;
-  }
-}
-
-@container (max-width: 900px) {
-  .filmwave-song-key-bpm,
-  .desktop-song-key-bpm {
-    display: none;
-  }
-}
-
-@container (max-width: 760px) {
-  .filmwave-song-stems-slot,
-  .desktop-song-stems-slot {
-    display: none;
-  }
-}
-
-@container (max-width: 620px) {
-  .filmwave-song-duration,
-  .desktop-song-duration {
-    flex-basis: 42px;
-    width: 42px;
-  }
-}
-
-@container (max-width: 520px) {
-  .filmwave-song-actions,
-  .desktop-song-actions {
-    gap: 2px;
-  }
-}
-
-.filmwave-song-tail {
-  display: flex;
-  min-width: 0;
-  flex-shrink: 0;
-  align-items: center;
-  gap: clamp(12px, 2.4vw, 36px);
 }
