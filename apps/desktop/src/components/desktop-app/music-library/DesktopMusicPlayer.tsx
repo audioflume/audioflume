@@ -141,13 +141,19 @@ export default function DesktopMusicPlayer({
       selectedCuePointTypeSet.has(getMarkerType(marker)),
     );
   }, [cuePoints, hasSelectedCuePointTypes, markersVisible, selectedCuePointTypeSet]);
+  const isUnhandledSeekRequest =
+    seekRequest?.songId === song.id && handledSeekRequestIdRef.current !== seekRequest.id;
+  const displayDuration = duration || song.durationSeconds || 0;
+  const displayCurrentTime = isUnhandledSeekRequest && displayDuration
+    ? Math.max(0, Math.min(displayDuration, seekRequest.progress * displayDuration))
+    : currentTime;
   const previousCuePoint = useMemo(
-    () => getAdjacentCuePoint(visibleCuePoints, currentTime, "previous"),
-    [visibleCuePoints, currentTime],
+    () => getAdjacentCuePoint(visibleCuePoints, displayCurrentTime, "previous"),
+    [visibleCuePoints, displayCurrentTime],
   );
   const nextCuePoint = useMemo(
-    () => getAdjacentCuePoint(visibleCuePoints, currentTime, "next"),
-    [visibleCuePoints, currentTime],
+    () => getAdjacentCuePoint(visibleCuePoints, displayCurrentTime, "next"),
+    [visibleCuePoints, displayCurrentTime],
   );
   const isSynced = syncStatus === "synced";
   const syncLabel =
@@ -201,25 +207,35 @@ export default function DesktopMusicPlayer({
 
   useEffect(() => {
     const pendingSeekRequest = pendingSeekRequestRef.current;
+    const nextDuration = song.durationSeconds || 0;
+    const activeSeekRequest =
+      seekRequest?.songId === song.id && handledSeekRequestIdRef.current !== seekRequest.id
+        ? seekRequest
+        : null;
 
     if (pendingSeekRequest?.songId === song.id) {
-      const nextDuration = song.durationSeconds || 0;
       setCurrentTime(nextDuration * pendingSeekRequest.progress);
+      setDuration(nextDuration);
+      return;
+    }
+
+    if (activeSeekRequest) {
+      setCurrentTime(nextDuration * activeSeekRequest.progress);
       setDuration(nextDuration);
       return;
     }
 
     setCurrentTime(0);
     setDuration(song.durationSeconds || 0);
-  }, [song.id, song.durationSeconds]);
+  }, [seekRequest, song.id, song.durationSeconds]);
 
   useEffect(() => {
     onProgressChange?.({
       songId: song.id,
-      currentTime,
-      duration: duration || song.durationSeconds || 0,
+      currentTime: displayCurrentTime,
+      duration: displayDuration,
     });
-  }, [currentTime, duration, onProgressChange, song.durationSeconds, song.id]);
+  }, [displayCurrentTime, displayDuration, onProgressChange, song.id]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -240,9 +256,9 @@ export default function DesktopMusicPlayer({
 
   function seek(progress: number) {
     const audio = audioRef.current;
-    if (!audio || !duration) return;
+    if (!audio || !displayDuration) return;
 
-    const nextTime = progress * duration;
+    const nextTime = progress * displayDuration;
     audio.currentTime = nextTime;
     setCurrentTime(nextTime);
   }
@@ -294,8 +310,8 @@ export default function DesktopMusicPlayer({
   }, [duration, seekRequest, song.durationSeconds, song.id]);
 
   function jumpToCuePoint(marker: CuePointMarker | null) {
-    if (!marker || !duration) return;
-    seek(Math.max(0, Math.min(1, marker.time / duration)));
+    if (!marker || !displayDuration) return;
+    seek(Math.max(0, Math.min(1, marker.time / displayDuration)));
   }
 
   function renderCueMarkerOverlay() {
@@ -303,7 +319,7 @@ export default function DesktopMusicPlayer({
 
     return visibleCuePoints.map((marker) => {
       const label = getCueLabel(marker);
-      const progressValue = duration ? marker.time / duration : 0;
+      const progressValue = displayDuration ? marker.time / displayDuration : 0;
       const left = Math.max(0, Math.min(100, progressValue * 100));
 
       return (
@@ -404,8 +420,8 @@ export default function DesktopMusicPlayer({
           durationSeconds: song.durationSeconds,
         }}
         isPlaying={isPlaying}
-        currentTime={currentTime}
-        duration={duration || song.durationSeconds || 0}
+        currentTime={displayCurrentTime}
+        duration={displayDuration}
         waveformPeaks={song.waveform}
         waveformOverlay={renderCueMarkerOverlay()}
         renderWaveformEndSlot={renderCueControls}
