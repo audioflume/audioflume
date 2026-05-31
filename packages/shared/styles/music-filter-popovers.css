@@ -504,6 +504,11 @@
   color: var(--bg-primary);
 }
 
+.filmwave-filter-row-button:hover .filmwave-filter-row-icon.is-active,
+.filmwave-filter-row-button:hover .filmwave-filter-row-action.is-active {
+  color: var(--bg-primary);
+}
+
 .filmwave-filter-row-text {
   min-width: 0;
   overflow: hidden;
