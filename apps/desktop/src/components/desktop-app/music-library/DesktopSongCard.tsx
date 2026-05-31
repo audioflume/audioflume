@@ -1,6 +1,11 @@
-import { SharedWaveformCanvas } from "@filmwave/shared";
+import {
+  getMarkerType,
+  getSongCuePointMarkers,
+  normalizeEditPointType,
+  SharedWaveformCanvas,
+} from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import CheckIcon from "../../icons/CheckIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
@@ -15,6 +20,7 @@ export default function DesktopSongCard({
   song,
   favorite,
   markersVisible,
+  selectedCuePointTypes = [],
   isPlaying,
   syncStatus = "idle",
   syncedPath,
@@ -25,6 +31,7 @@ export default function DesktopSongCard({
   song: DesktopMusicSong;
   favorite: boolean;
   markersVisible: boolean;
+  selectedCuePointTypes?: string[];
   isPlaying: boolean;
   syncStatus?: SongSyncStatus;
   syncedPath?: string | null;
@@ -37,6 +44,23 @@ export default function DesktopSongCard({
   const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
   const isSynced = syncStatus === "synced" && Boolean(syncedPath);
+  const normalizedSelectedCuePointTypes = useMemo(
+    () => selectedCuePointTypes.map(normalizeEditPointType),
+    [selectedCuePointTypes],
+  );
+  const selectedCuePointTypeSet = useMemo(
+    () => new Set(normalizedSelectedCuePointTypes),
+    [normalizedSelectedCuePointTypes],
+  );
+  const cuePoints = useMemo(() => getSongCuePointMarkers(song), [song]);
+  const visibleCuePoints = useMemo(() => {
+    if (!markersVisible) return [];
+    if (selectedCuePointTypeSet.size === 0) return cuePoints;
+
+    return cuePoints.filter((marker) =>
+      selectedCuePointTypeSet.has(getMarkerType(marker)),
+    );
+  }, [cuePoints, markersVisible, selectedCuePointTypeSet]);
 
   useEffect(() => {
     if (!actionsOpen) return;
@@ -96,10 +120,15 @@ export default function DesktopSongCard({
     songDragStartRef.current = null;
   }
 
-  const markerOverlay = markersVisible ? (
+  const markerOverlay = visibleCuePoints.length > 0 ? (
     <>
-      <i style={{ left: "34%" }} />
-      <i style={{ left: "68%" }} />
+      {visibleCuePoints.map((marker) => {
+        const duration = Number(song.durationSeconds || 0);
+        const progress = duration > 0 ? marker.time / duration : 0;
+        const left = Math.max(0, Math.min(100, progress * 100));
+
+        return <i key={marker.id} style={{ left: `${left}%` }} />;
+      })}
     </>
   ) : null;
 
