@@ -33,7 +33,6 @@ body > header {
   border-bottom: 1px solid var(--border);
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--filmwave-font-ui);
   box-shadow: none;
 }
 
