@@ -37,7 +37,7 @@ function getInitialTheme(): ThemeMode {
   return savedTheme === "light" ? "light" : "dark";
 }
 
-function blurActiveElementFromHeaderClick(event: PointerEvent<HTMLElement>) {
+function handleHeaderSurfacePointerDown(event: PointerEvent<HTMLElement>) {
   const target = event.target as HTMLElement | null;
 
   if (target?.closest("button, a, input, textarea, select, [role='button'], [data-header-interactive]")) {
@@ -46,6 +46,14 @@ function blurActiveElementFromHeaderClick(event: PointerEvent<HTMLElement>) {
 
   const activeElement = document.activeElement;
   if (activeElement instanceof HTMLElement) activeElement.blur();
+
+  document.dispatchEvent(
+    new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    }),
+  );
 }
 
 export default function Header({
@@ -82,7 +90,7 @@ export default function Header({
     <HeaderShell
       className="desktop-header"
       innerClassName="desktop-header-inner"
-      onPointerDownCapture={blurActiveElementFromHeaderClick}
+      onPointerDownCapture={handleHeaderSurfacePointerDown}
       dragSurfaceProps={{ "data-tauri-drag-region": true }}
       logo={
         <button
