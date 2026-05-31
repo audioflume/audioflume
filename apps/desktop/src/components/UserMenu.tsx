@@ -1,6 +1,6 @@
+import { HeaderChevron } from "@filmwave/shared";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
-import ChevronDownIcon from "./icons/ChevronDownIcon";
 import DarkMode from "./icons/DarkMode";
 import LightMode from "./icons/LightMode";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
@@ -78,22 +78,24 @@ export default function UserMenu({
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className={`desktop-account-trigger ${open ? "is-open" : ""}`}
+        className={`filmwave-header-account-trigger desktop-account-trigger${open ? " is-open" : ""}`}
         aria-label="Open user menu"
         aria-expanded={open}
       >
-        <span className="desktop-account-trigger-label">
-          <span className="desktop-account-name">{isSignedIn ? accountName : "Account"}</span>
-          <ChevronDownIcon className={`desktop-header-chevron ${open ? "is-open" : ""}`} size={13} />
+        <span className="filmwave-header-account-label desktop-account-trigger-label">
+          <span className="filmwave-header-account-name desktop-account-name">
+            {isSignedIn ? accountName : "Account"}
+          </span>
+          <HeaderChevron open={open} />
         </span>
 
-        <span className="desktop-account-avatar">
+        <span className="filmwave-header-avatar desktop-account-avatar">
           {account?.imageUrl ? <img src={account.imageUrl} alt="" /> : getAccountInitial(account)}
         </span>
       </button>
 
       {open && (
-        <div className="desktop-user-menu-wrap">
+        <div className="filmwave-header-menu-wrap desktop-user-menu-wrap">
           <div className="desktop-user-menu">
             <div className="desktop-user-menu-head">
               <div className="desktop-user-menu-name">{isSignedIn ? accountName : "Filmwave Desktop"}</div>
