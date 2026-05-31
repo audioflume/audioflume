@@ -25,6 +25,66 @@ body.sidebar-collapsed aside[data-sidebar] {
   width: var(--sidebar-width-collapsed);
 }
 
+.filmwave-dropdown-shell {
+  display: grid;
+  gap: 4px;
+  width: max-content;
+  min-width: 178px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  padding: 6px;
+  box-shadow: var(--shadow-ui);
+}
+
+.filmwave-dropdown-shell button {
+  display: flex;
+  width: 100%;
+  min-height: 34px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: flex-start;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-dropdown-shell button:hover:not(:disabled) {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.filmwave-dropdown-shell button:disabled {
+  cursor: default;
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+
+.filmwave-dropdown-shell button.danger-hover {
+  color: var(--danger);
+}
+
+.filmwave-dropdown-shell button.danger-hover:hover:not(:disabled) {
+  background: var(--danger-hover);
+  color: var(--danger);
+}
+
+.song-more-dropdown {
+  min-width: 178px;
+}
+
 .danger-hover {
   color: var(--danger);
 }
