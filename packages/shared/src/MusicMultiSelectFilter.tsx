@@ -192,7 +192,7 @@ export function MusicMultiSelectFilter({
           {sections.map((section, sectionIndex) => (
             <div key={`${section.label || "section"}-${sectionIndex}`}>
               {section.label && (
-                <div className="filmwave-filter-section-label">{section.label}</div>
+                <div className="filmwave-filter-field-label">{section.label}</div>
               )}
 
               {section.options.map((option) => {
