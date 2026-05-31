@@ -4,7 +4,6 @@
   margin-left: var(--sidebar-width, var(--sidebar-width-expanded, 280px));
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--filmwave-font-ui);
   transition: margin-left 200ms ease;
 }
 
@@ -269,7 +268,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--bg-secondary);
-  font-family: var(--filmwave-font-ui);
   box-shadow: var(--shadow-ui);
 }
 
@@ -400,7 +398,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   background: transparent;
   padding: 0 9px;
   color: var(--text-secondary);
-  font-family: var(--filmwave-font-ui);
   font-size: 11px;
   font-weight: 500;
   line-height: 1;
