@@ -50,6 +50,12 @@ const SETTINGS_STORE = "filmwave-settings.json";
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
+type DesktopPlaybackProgress = {
+  songId: string | null;
+  currentTime: number;
+  duration: number;
+};
+
 export default function DesktopMusicLibraryView({
   apiBaseUrl,
   syncFolder,
@@ -66,6 +72,11 @@ export default function DesktopMusicLibraryView({
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
   const [activeSongId, setActiveSongId] = useState<string | null>(null);
   const [playerPlaying, setPlayerPlaying] = useState(false);
+  const [playbackProgress, setPlaybackProgress] = useState<DesktopPlaybackProgress>({
+    songId: null,
+    currentTime: 0,
+    duration: 0,
+  });
   const [savedSyncFolder, setSavedSyncFolder] = useState<string | null>(syncFolder ?? null);
   const [syncingSongIds, setSyncingSongIds] = useState<Set<string>>(() => new Set());
   const [syncedSongPaths, setSyncedSongPaths] = useState<Record<string, string>>({});
@@ -208,6 +219,14 @@ export default function DesktopMusicLibraryView({
     .filter(isCoreEditPointType);
   const searchPlaceholder = getMusicLibrarySearchPlaceholder(filters.selectedPlaylist?.name);
 
+  useEffect(() => {
+    setPlaybackProgress({
+      songId: activeSongId,
+      currentTime: 0,
+      duration: activeSong?.durationSeconds || 0,
+    });
+  }, [activeSongId, activeSong?.durationSeconds]);
+
   function setFilterValue(key: DesktopMusicFilterKey, value: string) {
     setFilters((current) => ({
       ...current,
@@ -299,6 +318,15 @@ export default function DesktopMusicLibraryView({
 
   function playNextSong() {
     playSongAtIndex(activeSongIndex < 0 ? 0 : activeSongIndex + 1);
+  }
+
+  function getSongPlaybackProgress(songId: string) {
+    if (playbackProgress.songId !== songId || playbackProgress.duration <= 0) return 0;
+
+    return Math.max(
+      0,
+      Math.min(1, playbackProgress.currentTime / playbackProgress.duration),
+    );
   }
 
   return (
@@ -457,6 +485,7 @@ export default function DesktopMusicLibraryView({
               markersVisible={filters.markers}
               selectedCuePointTypes={selectedCoreCuePointTypes}
               isPlaying={activeSongId === song.id && playerPlaying}
+              playbackProgress={getSongPlaybackProgress(song.id)}
               syncStatus={getSongSyncStatus(song.id)}
               syncedPath={syncedSongPaths[song.id] ?? null}
               onFavoriteToggle={() => toggleFavorite(song.id)}
@@ -487,6 +516,7 @@ export default function DesktopMusicLibraryView({
           onPlayPause={() => setPlayerPlaying((playing) => !playing)}
           onPrevious={playPreviousSong}
           onNext={playNextSong}
+          onProgressChange={setPlaybackProgress}
         />
       )}
     </section>
