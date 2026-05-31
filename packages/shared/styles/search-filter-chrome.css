@@ -228,6 +228,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 
 .filmwave-filter-trigger:hover,
 .filmwave-filter-trigger.is-active,
+.filmwave-filter-trigger.is-open,
 .desktop-filter-trigger:hover,
 .desktop-filter-trigger.is-active,
 .desktop-filter-trigger.is-open {
@@ -253,13 +254,31 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   content: "";
 }
 
+.filmwave-filter-trigger.no-chevron::after,
 .filmwave-filter-trigger.after\:content-none::after,
 .desktop-filter-trigger-markers::after {
   content: none;
 }
 
+.filmwave-filter-trigger-icon,
 .desktop-filter-trigger-icon {
+  display: inline-flex;
   flex-shrink: 0;
+}
+
+.filmwave-filter-count {
+  display: inline-flex;
+  height: 20px;
+  min-width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  padding: 0 6px;
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
 }
 
 .desktop-filter-count {
