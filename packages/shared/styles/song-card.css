@@ -35,6 +35,10 @@
   background: var(--filmwave-song-card-hover-bg);
 }
 
+html[data-theme="light"] .desktop-music-page .desktop-song-card:hover:not(.is-current):not(.is-playing) {
+  background: var(--filmwave-song-card-hover-bg);
+}
+
 .filmwave-song-card.is-playing,
 .filmwave-song-card.is-current,
 .desktop-song-card.is-playing,
