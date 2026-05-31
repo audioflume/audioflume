@@ -1,5 +1,5 @@
 import { HeaderShell } from "@filmwave/shared";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type PointerEvent } from "react";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import FilmwaveLogoIcon from "./icons/FilmwaveLogoIcon";
 import DashboardIcon from "./icons/DashboardIcon";
@@ -37,7 +37,7 @@ function getInitialTheme(): ThemeMode {
   return savedTheme === "light" ? "light" : "dark";
 }
 
-function blurActiveElementFromHeaderClick(event: React.PointerEvent<HTMLElement>) {
+function blurActiveElementFromHeaderClick(event: PointerEvent<HTMLElement>) {
   const target = event.target as HTMLElement | null;
 
   if (target?.closest("button, a, input, textarea, select, [role='button'], [data-header-interactive]")) {
