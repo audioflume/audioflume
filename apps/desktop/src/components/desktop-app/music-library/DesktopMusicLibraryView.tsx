@@ -333,6 +333,7 @@ export default function DesktopMusicLibraryView({
             <FilterTrigger
               label="Markers"
               active={filters.markers}
+              showActiveDot
               hideChevron
               onClick={() =>
                 setFilters((current) => ({ ...current, markers: !current.markers }))
