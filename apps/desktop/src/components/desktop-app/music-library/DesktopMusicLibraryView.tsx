@@ -70,6 +70,24 @@ function shouldIgnorePlaybackShortcutTarget(target: EventTarget | null) {
   );
 }
 
+function getScrollContainer(element: HTMLElement) {
+  let parent = element.parentElement;
+
+  while (parent) {
+    const style = window.getComputedStyle(parent);
+    const overflowY = style.overflowY;
+    const canScroll =
+      (overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay") &&
+      parent.scrollHeight > parent.clientHeight;
+
+    if (canScroll) return parent;
+
+    parent = parent.parentElement;
+  }
+
+  return null;
+}
+
 export default function DesktopMusicLibraryView({
   apiBaseUrl,
   syncFolder,
@@ -91,6 +109,7 @@ export default function DesktopMusicLibraryView({
     currentTime: 0,
     duration: 0,
   });
+  const [pendingSeekProgressBySongId, setPendingSeekProgressBySongId] = useState<Record<string, number>>({});
   const [seekRequest, setSeekRequest] = useState<DesktopMusicPlayerSeekRequest | null>(null);
   const [savedSyncFolder, setSavedSyncFolder] = useState<string | null>(syncFolder ?? null);
   const [syncingSongIds, setSyncingSongIds] = useState<Set<string>>(() => new Set());
@@ -239,14 +258,16 @@ export default function DesktopMusicLibraryView({
 
   useEffect(() => {
     const duration = activeSong?.durationSeconds || 0;
+    const pendingSeekProgress = activeSongId ? pendingSeekProgressBySongId[activeSongId] : undefined;
     const activeSeekRequest = seekRequest?.songId === activeSongId ? seekRequest : null;
+    const progress = pendingSeekProgress ?? activeSeekRequest?.progress;
 
     setPlaybackProgress({
       songId: activeSongId,
-      currentTime: activeSeekRequest ? duration * activeSeekRequest.progress : 0,
+      currentTime: progress !== undefined ? duration * progress : 0,
       duration,
     });
-  }, [activeSongId, activeSong?.durationSeconds, seekRequest]);
+  }, [activeSongId, activeSong?.durationSeconds, pendingSeekProgressBySongId, seekRequest]);
 
   useEffect(() => {
     const songId = scrollRequestedSongIdRef.current;
@@ -258,36 +279,34 @@ export default function DesktopMusicLibraryView({
       const card = songCardRefs.current.get(songId);
       if (!card) return;
 
+      const scrollContainer = getScrollContainer(card);
       const rect = card.getBoundingClientRect();
+      const containerRect = scrollContainer?.getBoundingClientRect();
       const searchFilter = document.querySelector<HTMLElement>(".filmwave-search-filter-sticky");
       const player = document.querySelector<HTMLElement>(".desktop-music-player");
       const searchFilterRect = searchFilter?.getBoundingClientRect();
       const playerRect = player?.getBoundingClientRect();
       const visibleTop = Math.max(
-        TRACK_SCROLL_EDGE_PADDING,
+        (containerRect?.top ?? 0) + TRACK_SCROLL_EDGE_PADDING,
         (searchFilterRect?.bottom ?? 0) + TRACK_SCROLL_EDGE_PADDING,
       );
       const visibleBottom = Math.min(
-        window.innerHeight - TRACK_SCROLL_EDGE_PADDING,
+        (containerRect?.bottom ?? window.innerHeight) - TRACK_SCROLL_EDGE_PADDING,
         (playerRect?.top ?? window.innerHeight) - TRACK_SCROLL_EDGE_PADDING,
       );
 
       if (rect.top >= visibleTop && rect.bottom <= visibleBottom) return;
 
-      if (rect.top < visibleTop) {
-        window.scrollBy({
-          top: rect.top - visibleTop,
-          behavior: "smooth",
-        });
+      const scrollDelta = rect.top < visibleTop
+        ? rect.top - visibleTop
+        : rect.bottom - visibleBottom;
+
+      if (scrollContainer) {
+        scrollContainer.scrollBy({ top: scrollDelta, behavior: "smooth" });
         return;
       }
 
-      if (rect.bottom > visibleBottom) {
-        window.scrollBy({
-          top: rect.bottom - visibleBottom,
-          behavior: "smooth",
-        });
-      }
+      window.scrollBy({ top: scrollDelta, behavior: "smooth" });
     });
   }, [activeSongId]);
 
@@ -376,6 +395,11 @@ export default function DesktopMusicLibraryView({
       : 0;
     const duration = song.durationSeconds || 0;
 
+    setPendingSeekProgressBySongId((current) => ({
+      ...current,
+      [song.id]: safeProgress,
+    }));
+
     if (activeSongId !== song.id) {
       setActiveSongId(song.id);
     }
@@ -391,6 +415,27 @@ export default function DesktopMusicLibraryView({
       songId: song.id,
       progress: safeProgress,
       shouldPlay,
+    });
+  }
+
+  function handlePlaybackProgressChange(nextProgress: DesktopPlaybackProgress) {
+    setPlaybackProgress(nextProgress);
+
+    if (!nextProgress.songId || nextProgress.duration <= 0) return;
+
+    setPendingSeekProgressBySongId((current) => {
+      const pendingProgress = current[nextProgress.songId];
+      if (pendingProgress === undefined) return current;
+
+      const nextPlaybackProgress = Math.max(
+        0,
+        Math.min(1, nextProgress.currentTime / nextProgress.duration),
+      );
+
+      if (Math.abs(nextPlaybackProgress - pendingProgress) > 0.015) return current;
+
+      const { [nextProgress.songId]: _removed, ...rest } = current;
+      return rest;
     });
   }
 
@@ -618,6 +663,7 @@ export default function DesktopMusicLibraryView({
               isSelected={activeSongId === song.id}
               isPlaying={activeSongId === song.id && playerPlaying}
               playbackProgress={getSongPlaybackProgress(song.id)}
+              pendingSeekProgress={pendingSeekProgressBySongId[song.id] ?? null}
               syncStatus={getSongSyncStatus(song.id)}
               syncedPath={syncedSongPaths[song.id] ?? null}
               cardRef={(node) => {
@@ -654,7 +700,7 @@ export default function DesktopMusicLibraryView({
           onPlayPause={() => setPlayerPlaying((playing) => !playing)}
           onPrevious={playPreviousSong}
           onNext={playNextSong}
-          onProgressChange={setPlaybackProgress}
+          onProgressChange={handlePlaybackProgressChange}
         />
       )}
     </section>
