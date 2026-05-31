@@ -1,30 +1,5 @@
-import { FilterTrigger } from "@filmwave/shared";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import CheckIcon from "../../icons/CheckIcon";
-import PlaylistIcon from "../../icons/PlaylistIcon";
-import PlusIcon from "../../icons/PlusIcon";
+import { MusicMultiSelectFilter } from "@filmwave/shared";
 import type { DesktopMusicFilterKey } from "./musicLibraryTypes";
-
-const DROPDOWN_EDGE_PADDING = 12;
-const DROPDOWN_TOP_OFFSET = 8;
-const DEFAULT_DROPDOWN_WIDTH = 280;
-const PLAYLIST_DROPDOWN_WIDTH = 300;
-
-type DropdownPosition = {
-  left: number;
-  top: number;
-  width: number;
-};
-
-function getDropdownLeftLimit() {
-  const sidebar = document.querySelector<HTMLElement>(".desktop-app-sidebar");
-  const rect = sidebar?.getBoundingClientRect();
-
-  if (!rect || rect.width <= 0) return DROPDOWN_EDGE_PADDING;
-
-  return Math.max(DROPDOWN_EDGE_PADDING, rect.right + DROPDOWN_EDGE_PADDING);
-}
 
 export default function DesktopFilterDropdown({
   filterKey,
@@ -43,135 +18,15 @@ export default function DesktopFilterDropdown({
   onOpenChange: (open: boolean) => void;
   onToggleOption: (value: string) => void;
 }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState<DropdownPosition | null>(null);
-  const isPlaylistFilter = filterKey === "playlist";
-  const hasActive = selected.length > 0;
-  const dropdownWidth = isPlaylistFilter ? PLAYLIST_DROPDOWN_WIDTH : DEFAULT_DROPDOWN_WIDTH;
-
-  useLayoutEffect(() => {
-    if (!open) return;
-
-    function updatePosition() {
-      const trigger = triggerRef.current;
-      if (!trigger) return;
-
-      const rect = trigger.getBoundingClientRect();
-      const leftLimit = getDropdownLeftLimit();
-      const rightLimit = window.innerWidth - DROPDOWN_EDGE_PADDING;
-      const maxWidth = Math.max(180, rightLimit - leftLimit);
-      const width = Math.min(dropdownWidth, maxWidth);
-      const preferredLeft = rect.left;
-      const maxLeft = rightLimit - width;
-      const left = Math.max(leftLimit, Math.min(preferredLeft, maxLeft));
-      const top = rect.bottom + DROPDOWN_TOP_OFFSET;
-
-      setDropdownPosition({ left, top, width });
-    }
-
-    updatePosition();
-
-    window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition, true);
-
-    return () => {
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition, true);
-    };
-  }, [dropdownWidth, open]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    function onPointerDown(event: MouseEvent) {
-      const target = event.target as Node;
-      const triggerContainsTarget = ref.current?.contains(target);
-      const menuContainsTarget = menuRef.current?.contains(target);
-
-      if (!triggerContainsTarget && !menuContainsTarget) onOpenChange(false);
-    }
-
-    function onEsc(event: KeyboardEvent) {
-      if (event.key === "Escape") onOpenChange(false);
-    }
-
-    window.addEventListener("mousedown", onPointerDown);
-    window.addEventListener("keydown", onEsc);
-
-    return () => {
-      window.removeEventListener("mousedown", onPointerDown);
-      window.removeEventListener("keydown", onEsc);
-    };
-  }, [open, onOpenChange]);
-
-  const dropdownMenu = open && dropdownPosition
-    ? createPortal(
-        <div
-          ref={menuRef}
-          className={`desktop-filter-menu desktop-filter-menu-fixed${isPlaylistFilter ? " is-playlist-menu" : ""}`}
-          style={{
-            left: `${dropdownPosition.left}px`,
-            top: `${dropdownPosition.top}px`,
-            width: `${dropdownPosition.width}px`,
-          }}
-        >
-          <div className="desktop-filter-menu-scroll">
-            {options.map((option) => {
-              const isSelected = selected.includes(option);
-
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  className={`desktop-filter-option${isSelected ? " is-selected" : ""}${
-                    isPlaylistFilter ? " is-playlist-option" : ""
-                  }`}
-                  onClick={() => onToggleOption(option)}
-                >
-                  <span className="desktop-filter-option-label">
-                    {isPlaylistFilter && (
-                      <span
-                        className={`desktop-filter-option-icon${
-                          isSelected ? " is-selected" : ""
-                        }`}
-                      >
-                        <PlaylistIcon size={13} />
-                      </span>
-                    )}
-                    <span>{option}</span>
-                  </span>
-
-                  <span
-                    className={`desktop-filter-option-action${
-                      isSelected ? " is-selected" : ""
-                    }`}
-                  >
-                    {isSelected ? <CheckIcon size={11} /> : <PlusIcon size={11} />}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>,
-        document.body,
-      )
-    : null;
-
   return (
-    <div className="desktop-filter-wrap" ref={ref}>
-      <FilterTrigger
-        buttonRef={triggerRef}
-        label={label}
-        icon={isPlaylistFilter ? <PlaylistIcon size={13} /> : undefined}
-        active={hasActive}
-        open={open}
-        count={selected.length}
-        onClick={() => onOpenChange(!open)}
-      />
-
-      {dropdownMenu}
-    </div>
+    <MusicMultiSelectFilter
+      label={label}
+      options={options}
+      selected={selected}
+      open={open}
+      onOpenChange={onOpenChange}
+      onToggleOption={onToggleOption}
+      width={filterKey === "playlist" ? 300 : 280}
+    />
   );
 }
