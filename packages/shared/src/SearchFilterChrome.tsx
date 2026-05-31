@@ -105,6 +105,24 @@ export function SearchFilterTagList({ children }: { children: ReactNode }) {
   return <div className="filmwave-search-filter-tag-list">{children}</div>;
 }
 
+function SearchFilterTagRemoveIcon() {
+  return (
+    <svg
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden="true"
+      className="filmwave-search-filter-tag-remove-icon"
+    >
+      <path
+        d="M3.25 3.25L8.75 8.75M8.75 3.25L3.25 8.75"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function SearchFilterTag({
   children,
   icon,
@@ -127,7 +145,7 @@ export function SearchFilterTag({
         onClick={onRemove}
         aria-label={`Remove ${typeof children === "string" ? children : "filter"}`}
       >
-        ×
+        <SearchFilterTagRemoveIcon />
       </button>
     </span>
   );
