@@ -1,7 +1,12 @@
 import {
   EDIT_POINT_FILTER_OPTIONS,
   FilterTrigger,
+  clampPlaybackProgress,
+  getAdjacentTrackIndex,
   getMusicLibrarySearchPlaceholder,
+  getPlaybackShortcutAction,
+  getProgressFromTime,
+  getSeekTimeFromProgress,
   isCoreEditPointType,
   MusicBpmFilter,
   MusicDurationFilter,
@@ -11,6 +16,8 @@ import {
   SearchFilterChrome,
   SearchFilterInput,
   SearchFilterQuickButton,
+  shouldClearPendingSeekProgress,
+  shouldIgnorePlaybackShortcutTarget,
 } from "@filmwave/shared";
 import { exists } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
@@ -56,19 +63,6 @@ type DesktopPlaybackProgress = {
   currentTime: number;
   duration: number;
 };
-
-function shouldIgnorePlaybackShortcutTarget(target: EventTarget | null) {
-  if (!(target instanceof HTMLElement)) return false;
-
-  const tagName = target.tagName.toLowerCase();
-
-  return (
-    tagName === "input" ||
-    tagName === "textarea" ||
-    tagName === "select" ||
-    target.isContentEditable
-  );
-}
 
 function getScrollContainer(element: HTMLElement) {
   let parent = element.parentElement;
@@ -264,7 +258,7 @@ export default function DesktopMusicLibraryView({
 
     setPlaybackProgress({
       songId: activeSongId,
-      currentTime: progress !== undefined ? duration * progress : 0,
+      currentTime: progress !== undefined ? getSeekTimeFromProgress(progress, duration) : 0,
       duration,
     });
   }, [activeSongId, activeSong?.durationSeconds, pendingSeekProgressBySongId, seekRequest]);
@@ -390,9 +384,7 @@ export default function DesktopMusicLibraryView({
 
   function seekSong(song: DesktopSong, progress: number) {
     const shouldPlay = playerPlaying;
-    const safeProgress = Number.isFinite(progress)
-      ? Math.max(0, Math.min(1, progress))
-      : 0;
+    const safeProgress = clampPlaybackProgress(progress);
     const duration = song.durationSeconds || 0;
 
     setPendingSeekProgressBySongId((current) => ({
@@ -407,7 +399,7 @@ export default function DesktopMusicLibraryView({
     setPlayerPlaying(shouldPlay);
     setPlaybackProgress({
       songId: song.id,
-      currentTime: duration * safeProgress,
+      currentTime: getSeekTimeFromProgress(safeProgress, duration),
       duration,
     });
     setSeekRequest({
@@ -427,12 +419,9 @@ export default function DesktopMusicLibraryView({
       const pendingProgress = current[nextProgress.songId];
       if (pendingProgress === undefined) return current;
 
-      const nextPlaybackProgress = Math.max(
-        0,
-        Math.min(1, nextProgress.currentTime / nextProgress.duration),
-      );
+      const nextPlaybackProgress = getProgressFromTime(nextProgress.currentTime, nextProgress.duration);
 
-      if (Math.abs(nextPlaybackProgress - pendingProgress) > 0.015) return current;
+      if (!shouldClearPendingSeekProgress({ playbackProgress: nextPlaybackProgress, pendingProgress })) return current;
 
       const { [nextProgress.songId]: _removed, ...rest } = current;
       return rest;
@@ -455,9 +444,19 @@ export default function DesktopMusicLibraryView({
   }, [displayedSongs, playerPlaying]);
 
   const playPreviousSong = useCallback(() => {
-    if (activeSongIndex === -1) return;
-    playSongAtIndex(activeSongIndex - 1);
-  }, [activeSongIndex, playSongAtIndex]);
+    const previousIndex = getAdjacentTrackIndex({
+      currentIndex: activeSongIndex,
+      queueLength: displayedSongs.length,
+      direction: "prev",
+    });
+
+    if (previousIndex === null) {
+      if (activeSongIndex !== -1) setPlayerPlaying(false);
+      return;
+    }
+
+    playSongAtIndex(previousIndex);
+  }, [activeSongIndex, displayedSongs.length, playSongAtIndex]);
 
   const playNextSong = useCallback(() => {
     if (activeSongIndex === -1) {
@@ -465,28 +464,42 @@ export default function DesktopMusicLibraryView({
       return;
     }
 
-    playSongAtIndex(activeSongIndex + 1);
-  }, [activeSongIndex, playSongAtIndex]);
+    const nextIndex = getAdjacentTrackIndex({
+      currentIndex: activeSongIndex,
+      queueLength: displayedSongs.length,
+      direction: "next",
+    });
+
+    if (nextIndex === null) {
+      setPlayerPlaying(false);
+      return;
+    }
+
+    playSongAtIndex(nextIndex);
+  }, [activeSongIndex, displayedSongs.length, playSongAtIndex]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (shouldIgnorePlaybackShortcutTarget(event.target)) return;
 
-      if (event.code === "Space") {
+      const action = getPlaybackShortcutAction(event);
+      if (!action) return;
+
+      if (action === "toggle-play-pause") {
         if (!activeSongId) return;
         event.preventDefault();
         setPlayerPlaying((playing) => !playing);
         return;
       }
 
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
+      event.preventDefault();
+
+      if (action === "next-track") {
         playNextSong();
         return;
       }
 
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
+      if (action === "previous-track") {
         playPreviousSong();
       }
     }
@@ -499,10 +512,7 @@ export default function DesktopMusicLibraryView({
   function getSongPlaybackProgress(songId: string) {
     if (playbackProgress.songId !== songId || playbackProgress.duration <= 0) return 0;
 
-    return Math.max(
-      0,
-      Math.min(1, playbackProgress.currentTime / playbackProgress.duration),
-    );
+    return getProgressFromTime(playbackProgress.currentTime, playbackProgress.duration);
   }
 
   return (
