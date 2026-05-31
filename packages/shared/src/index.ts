@@ -9,3 +9,4 @@ export type { SharedWaveformCanvasProps } from "./SharedWaveformCanvas";
 export * from "./SidebarShell";
 export * from "./SearchFilterChrome";
 export * from "./FilterTrigger";
+export * from "./HeaderShell";
