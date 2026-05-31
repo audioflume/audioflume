@@ -403,6 +403,11 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   color: var(--bg-primary);
 }
 
+.desktop-filter-option:hover .desktop-filter-option-icon.is-selected,
+.desktop-filter-option:hover .desktop-filter-option-action.is-selected {
+  color: var(--bg-primary);
+}
+
 .desktop-filter-option-action {
   display: flex;
   width: 20px;
