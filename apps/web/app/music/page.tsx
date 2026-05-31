@@ -253,7 +253,7 @@ export default function MusicPage() {
     error: songsError,
   } = useSongs();
 
-  const { currentSong } = usePlayer();
+  const { currentSong, setQueue } = usePlayer();
   const playerVisible = Boolean(currentSong);
 
   const [musicHeroHovered, setMusicHeroHovered] = useState(false);
@@ -454,6 +454,10 @@ export default function MusicPage() {
       return aOrder - bOrder;
     });
   }, [filteredSongs, shuffleOrderIds]);
+
+  useEffect(() => {
+    setQueue(displayedSongs);
+  }, [displayedSongs, setQueue]);
 
   const loadingPlaylistSongs =
     !!selectedPlaylistId && selectedPlaylistSongIds === null;
