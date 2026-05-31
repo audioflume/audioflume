@@ -109,13 +109,15 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 }
 
 .filmwave-search-filter-tag {
+  box-sizing: border-box;
   display: inline-flex;
+  height: 19px;
   min-width: 0;
   cursor: default;
   align-items: center;
   gap: 6px;
   background: var(--accent);
-  padding: 2px 8px;
+  padding: 0 8px;
   color: var(--accent-contrast, #111111);
   font-size: 11px;
   font-weight: 500;
@@ -141,7 +143,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   padding: 0;
   color: inherit;
   opacity: 0.9;
-  transition: opacity 150ms ease;
 }
 
 .filmwave-search-filter-tag-remove-icon {
@@ -149,10 +150,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   width: 9px;
   height: 9px;
   flex-shrink: 0;
-}
-
-.filmwave-search-filter-tag-remove:hover {
-  opacity: 0.6;
 }
 
 .filmwave-search-filter-row {
