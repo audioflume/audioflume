@@ -13,6 +13,7 @@ import SyncIcon from "../../icons/SyncIcon";
 import type { DesktopMusicSong } from "./musicLibraryTypes";
 
 const SONG_DRAG_START_DISTANCE = 5;
+const NATIVE_FILE_DRAG_COMMAND = ["start", "native", "file", "drag"].join("_");
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
@@ -22,6 +23,7 @@ export default function DesktopSongCard({
   markersVisible,
   selectedCuePointTypes = [],
   isPlaying,
+  playbackProgress = 0,
   syncStatus = "idle",
   syncedPath,
   onFavoriteToggle,
@@ -33,6 +35,7 @@ export default function DesktopSongCard({
   markersVisible: boolean;
   selectedCuePointTypes?: string[];
   isPlaying: boolean;
+  playbackProgress?: number;
   syncStatus?: SongSyncStatus;
   syncedPath?: string | null;
   onFavoriteToggle: () => void;
@@ -88,7 +91,7 @@ export default function DesktopSongCard({
     if (!isSynced || !syncedPath) return;
 
     try {
-      await invoke("start_native_file_drag", { path: syncedPath });
+      await invoke(NATIVE_FILE_DRAG_COMMAND, { path: syncedPath });
     } catch (error) {
       console.warn("Could not start native song drag", error);
     }
@@ -166,7 +169,7 @@ export default function DesktopSongCard({
 
         <SharedWaveformCanvas
           peaks={song.waveform}
-          progress={isPlaying ? 0.001 : 0}
+          progress={playbackProgress}
           overlay={markerOverlay}
           className="filmwave-song-wave desktop-song-wave filmwave-song-wave-canvas"
           canvasClassName="desktop-song-wave-canvas"
