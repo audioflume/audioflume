@@ -21,7 +21,6 @@
   overflow: visible;
   border-top: 1px solid var(--border);
   background: var(--bg-secondary);
-  font-family: var(--filmwave-font-ui);
   box-shadow: var(--filmwave-player-top-glow);
 }
 
