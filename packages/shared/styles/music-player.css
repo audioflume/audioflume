@@ -229,6 +229,96 @@
   height: 100%;
 }
 
+.filmwave-player-cue-marker {
+  position: absolute;
+  top: 50%;
+  z-index: 30;
+  width: 16px;
+  height: 34px;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.filmwave-player-cue-marker-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: var(--cue-marker-color);
+}
+
+.filmwave-player-cue-marker-label {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  transform: translate(-50%, 4px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-primary);
+  padding: 4px 10px;
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+.filmwave-player-cue-marker:hover .filmwave-player-cue-marker-label {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.filmwave-player-cue-controls {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.filmwave-player-cue-button {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-player-cue-button:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.filmwave-player-cue-button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.filmwave-player-cue-button:disabled:hover {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
 .filmwave-player-compact-time {
   white-space: nowrap;
   color: var(--icon-color);
