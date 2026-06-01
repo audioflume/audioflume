@@ -9,6 +9,7 @@
 @import "../../../packages/shared/styles/search-filter-chrome.css";
 @import "../../../packages/shared/styles/music-filter-popovers.css";
 @import "../../../packages/shared/styles/music-library-states.css";
+@import "../../../packages/shared/styles/music-shared-controls.css";
 
 :root {
   color: var(--text-primary);
