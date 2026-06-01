@@ -34,10 +34,12 @@
   animation: desktop-song-sync-spin 0.85s linear infinite;
 }
 
-.desktop-music-page .desktop-song-sync-button.is-synced {
+.desktop-music-page .desktop-song-sync-button.is-synced,
+.desktop-music-page .desktop-song-sync-button.is-synced:hover {
   cursor: grab;
   background: var(--bg-hover-strong) !important;
   color: #ffffff !important;
+  opacity: 1;
 }
 
 .desktop-music-page .desktop-song-sync-button.is-synced .desktop-song-sync-button-inner {
@@ -46,11 +48,6 @@
 
 .desktop-music-page .desktop-song-sync-button.is-synced:active {
   cursor: grabbing;
-}
-
-.desktop-music-page .desktop-song-sync-button.is-synced:hover {
-  background: var(--bg-tertiary) !important;
-  color: #ffffff !important;
 }
 
 @keyframes desktop-song-sync-spin {
@@ -110,12 +107,9 @@ html[data-theme="light"] .desktop-music-page .desktop-song-actions button.is-act
 
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced,
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced:hover {
-  background: #ffffff !important;
-  color: #111111 !important;
-}
-
-html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced:hover {
-  background: var(--bg-elevated) !important;
+  background: var(--bg-hover-strong) !important;
+  color: #ffffff !important;
+  opacity: 1;
 }
 
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced .desktop-song-sync-button-inner {
