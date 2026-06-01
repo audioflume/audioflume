@@ -10,7 +10,6 @@ import {
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useMemo, useRef, useState, type Ref } from "react";
-import CheckIcon from "../../icons/CheckIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
 import SyncIcon from "../../icons/SyncIcon";
@@ -253,7 +252,7 @@ export default function DesktopSongCard({
             onPointerCancel={handleSyncedSongPointerEnd}
           >
             <span className="desktop-song-sync-button-inner">
-              {isSynced ? <CheckIcon size={10} strokeWidth={3} /> : <SyncIcon size={14} />}
+              {isSynced ? <SyncedFileIcon /> : <SyncIcon size={14} />}
             </span>
           </button>
         </div>
@@ -275,6 +274,36 @@ function PauseIcon() {
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path d="M5 3H7V13H5V3Z" fill="currentColor" />
       <path d="M9 3H11V13H9V3Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function SyncedFileIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect
+        x="3.75"
+        y="4.25"
+        width="10.5"
+        height="10.5"
+        rx="2.75"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="3.1 2.8"
+      />
+      <rect
+        x="9.75"
+        y="9.25"
+        width="10.5"
+        height="10.5"
+        rx="2.75"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
