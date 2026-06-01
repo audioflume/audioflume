@@ -10,6 +10,7 @@ import {
 import { useFavorites } from "@/context/FavoritesContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
+import { SongCardStemsSlot } from "@filmwave/shared";
 import Waveform from "./Waveform";
 import Image from "next/image";
 import type { Song } from "@/lib/types";
@@ -17,7 +18,6 @@ import SongMoreDropdown from "@/components/SongMoreDropdown";
 import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import AddToProjectModal from "@/components/AddToProjectModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
-import DropdownShell from "@/components/DropdownShell";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -190,7 +190,6 @@ export default function SongCard({
   const showKeyMeta = cardWidth > 700;
   const showBpmMeta = cardWidth > 820;
   const stems = getSongStems(song);
-  const hasStems = stems.length > 0;
   const favorited = isFavorite(song.id);
 
   async function handleCreatePlaylist() {
@@ -305,48 +304,11 @@ export default function SongCard({
         {showWaveform && (
           <div className="filmwave-song-wave-wrap">
             <div className="filmwave-song-stems-slot">
-              {hasStems ? (
-                <DropdownShell
-                  open={stemsOpen}
-                  onOpenChange={setStemsOpen}
-                  placement="bottom-start"
-                  offsetAmount={8}
-                  flippedOffsetAmount={8}
-                  collisionPadding={{
-                    top: 163,
-                    right: 16,
-                    bottom: playerVisible ? 85 : 13,
-                    left: 16,
-                  }}
-                  className="w-[168px] min-w-[168px]"
-                  trigger={() => (
-                    <button
-                      type="button"
-                      className="flex h-6 min-w-8 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-hover-strong)] px-2 text-[11px] font-semibold text-[var(--text-primary)] transition hover:bg-[var(--bg-tertiary)]"
-                      aria-label="Show stems"
-                      aria-expanded={stemsOpen}
-                    >
-                      +{stems.length}
-                    </button>
-                  )}
-                >
-                  {stems.map((stem) => (
-                    <a
-                      key={`${stem.name}-${stem.url}`}
-                      href={stem.url}
-                      download
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => setStemsOpen(false)}
-                      className="truncate"
-                    >
-                      {stem.name}
-                    </a>
-                  ))}
-                </DropdownShell>
-              ) : (
-                <div className="h-6 w-8 opacity-0" />
-              )}
+              <SongCardStemsSlot
+                stems={stems}
+                open={stemsOpen}
+                onOpenChange={setStemsOpen}
+              />
             </div>
 
             <div className="filmwave-song-wave">
