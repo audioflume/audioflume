@@ -10,7 +10,7 @@ import {
 import { useFavorites } from "@/context/FavoritesContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
-import { SongCardStemsSlot } from "@filmwave/shared";
+import { SongCardShell, SongCardStemsSlot } from "@filmwave/shared";
 import Waveform from "./Waveform";
 import Image from "next/image";
 import type { Song } from "@/lib/types";
@@ -177,7 +177,7 @@ export default function SongCard({
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<string | null>(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLElement>(null);
 
   const displayIcon = actuallyPlaying ? (
     <PauseIcon size={15} />
@@ -265,113 +265,76 @@ export default function SongCard({
 
   return (
     <>
-      <div
-        ref={cardRef}
-        data-song-card-id={song.id}
-        className={`filmwave-song-card group w-full scroll-mt-48 scroll-mb-40 cursor-pointer transition-colors ${
-          isCurrentSong
-            ? "is-current bg-[var(--bg-hover)]"
-            : "hover:bg-[color-mix(in_srgb,var(--bg-hover)_30%,transparent)]"
+      <SongCardShell
+        cardRef={cardRef}
+        dataSongCardId={song.id}
+        className={`group w-full scroll-mt-48 scroll-mb-40 cursor-pointer transition-colors${
+          isCurrentSong ? " is-current" : ""
         }`}
-        style={{ borderBottom: "1px solid var(--border-subtle)" }}
-      >
-        <button
-          type="button"
-          className="filmwave-song-cover relative cursor-pointer overflow-hidden rounded-none"
-          onClick={() => togglePlayPause(song)}
-          aria-label={actuallyPlaying ? "Pause song" : "Play song"}
-        >
-          {coverArtUrl ? (
+        coverLabel={actuallyPlaying ? "Pause song" : "Play song"}
+        onCoverClick={() => togglePlayPause(song)}
+        cover={
+          coverArtUrl ? (
             <Image src={coverArtUrl} alt={song.title} fill sizes="40px" className="object-cover" />
           ) : (
             <div className="h-10 w-10 bg-[var(--bg-hover)]" />
-          )}
-
-          <div
-            className={`filmwave-song-play-overlay absolute inset-0 flex items-center justify-center transition-opacity ${
-              isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-            }`}
-          >
-            <span className="filmwave-song-play-button">{displayIcon}</span>
-          </div>
-        </button>
-
-        <div className="filmwave-song-info">
-          <span className="filmwave-song-title truncate">{song.title}</span>
-          <span className="filmwave-song-artist truncate">{song.artist}</span>
-        </div>
-
-        {showWaveform && (
-          <div className="filmwave-song-wave-wrap">
-            <div className="filmwave-song-stems-slot">
-              <SongCardStemsSlot
-                stems={stems}
-                open={stemsOpen}
-                onOpenChange={setStemsOpen}
-              />
-            </div>
-
-            <div className="filmwave-song-wave">
-              <Waveform
-                song={song}
-                highlightedEditPointTypes={highlightedEditPointTypes}
-                showEditPointMarkers={showEditPointMarkers}
-              />
-            </div>
-
-            <span className="filmwave-song-duration">{formatDuration(song.duration)}</span>
-          </div>
-        )}
-
-        {showGenreSlot && (
-          <div className="filmwave-song-genre-slot">
-            <span className="filmwave-song-genre line-clamp-2">
-              {visibleGenres.length > 0 ? visibleGenres.join(", ") : ""}
-            </span>
-          </div>
-        )}
-
-        {(showKeyMeta || showBpmMeta) && (
-          <div className="filmwave-song-key-bpm filmwave-song-meta">
-            {showKeyMeta && <span className="filmwave-song-key">{song.key || "—"}</span>}
-            {showBpmMeta && (
-              <span className="filmwave-song-bpm tabular-nums">
-                {song.bpm ? `${song.bpm} BPM` : "—"}
-              </span>
-            )}
-          </div>
-        )}
-
-        <div className="filmwave-song-actions">
-          <IconButton
-            label={favorited ? "Remove song from favorites" : "Favorite song"}
-            active={favorited}
-            onClick={() => toggleFavorite(song)}
-          >
-            <HeartIcon filled={favorited} />
-          </IconButton>
-
-          <SongMoreDropdown
-            open={moreOpen}
-            onOpenChange={setMoreOpen}
-            onAddToPlaylist={() => setPlaylistModalOpen(true)}
-            onAddToProject={() => setProjectModalOpen(true)}
-            onCreatePlaylist={() => setCreatePlaylistOpen(true)}
-            onRemoveFromPlaylist={playlistId ? handleRemoveFromPlaylist : undefined}
-            onRemoveFromProject={projectId ? handleRemoveFromProject : undefined}
-            collisionPadding={{
-              top: 163,
-              right: 16,
-              bottom: playerVisible ? 85 : 13,
-              left: 16,
-            }}
+          )
+        }
+        playOverlay={displayIcon}
+        title={song.title}
+        artist={song.artist}
+        stems={
+          <SongCardStemsSlot
+            stems={stems}
+            open={stemsOpen}
+            onOpenChange={setStemsOpen}
           />
+        }
+        waveform={
+          showWaveform ? (
+            <Waveform
+              song={song}
+              highlightedEditPointTypes={highlightedEditPointTypes}
+              showEditPointMarkers={showEditPointMarkers}
+            />
+          ) : null
+        }
+        duration={showWaveform ? formatDuration(song.duration) : null}
+        genre={showGenreSlot ? (visibleGenres.length > 0 ? visibleGenres.join(", ") : "") : null}
+        keyMeta={showKeyMeta ? song.key || "—" : null}
+        bpmMeta={showBpmMeta ? (song.bpm ? `${song.bpm} BPM` : "—") : null}
+        actions={
+          <>
+            <IconButton
+              label={favorited ? "Remove song from favorites" : "Favorite song"}
+              active={favorited}
+              onClick={() => toggleFavorite(song)}
+            >
+              <HeartIcon filled={favorited} />
+            </IconButton>
 
-          <IconButton label="Download song">
-            <DownloadIcon />
-          </IconButton>
-        </div>
-      </div>
+            <SongMoreDropdown
+              open={moreOpen}
+              onOpenChange={setMoreOpen}
+              onAddToPlaylist={() => setPlaylistModalOpen(true)}
+              onAddToProject={() => setProjectModalOpen(true)}
+              onCreatePlaylist={() => setCreatePlaylistOpen(true)}
+              onRemoveFromPlaylist={playlistId ? handleRemoveFromPlaylist : undefined}
+              onRemoveFromProject={projectId ? handleRemoveFromProject : undefined}
+              collisionPadding={{
+                top: 163,
+                right: 16,
+                bottom: playerVisible ? 85 : 13,
+                left: 16,
+              }}
+            />
+
+            <IconButton label="Download song">
+              <DownloadIcon />
+            </IconButton>
+          </>
+        }
+      />
 
       {playlistModalOpen && (
         <AddToPlaylistModal
