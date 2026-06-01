@@ -11,6 +11,7 @@
   --sync-control-hover: var(--bg-control-hover);
   --sync-border: var(--border);
   --sync-border-strong: var(--border-strong);
+  --sync-project-row: var(--bg-panel);
   --sync-console-row: transparent;
   --sync-console-text: var(--text-primary);
 }
@@ -23,12 +24,14 @@ html[data-theme="light"] .desktop-settings-view {
   --sync-control-hover: var(--bg-control-hover);
   --sync-border: var(--border);
   --sync-border-strong: var(--border-strong);
+  --sync-project-row: var(--bg-panel);
   --sync-console-row: transparent;
   --sync-console-text: var(--text-primary);
 }
 
 .desktop-settings-view .desktop-view-header {
   grid-column: 2;
+  grid-row: 1;
   margin-bottom: 0;
   padding-bottom: 22px;
   border-bottom: 1px solid var(--sync-border);
@@ -175,6 +178,10 @@ html[data-theme="light"] .desktop-settings-view {
   gap: 24px;
 }
 
+.section-block > :last-child {
+  justify-self: end;
+}
+
 .section-block h2,
 .projects-panel h2 {
   margin: 0;
@@ -293,7 +300,8 @@ html[data-theme="light"] .desktop-settings-view {
 .secondary-button,
 .source-toggle button {
   display: inline-flex;
-  height: 34px;
+  min-width: 72px;
+  height: 30px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -372,11 +380,13 @@ input:focus {
 
 .source-toggle {
   display: inline-flex;
+  width: max-content;
   flex-shrink: 0;
   align-items: center;
+  justify-self: end;
   gap: 3px;
   border-radius: 999px;
-  background: var(--sync-control);
+  background: transparent;
   padding: 4px;
 }
 
@@ -460,6 +470,7 @@ input:focus {
 .project-list {
   display: grid;
   gap: 6px;
+  background: transparent !important;
 }
 
 .project-row {
@@ -470,7 +481,7 @@ input:focus {
   gap: 10px;
   border: 1px solid transparent;
   border-radius: 10px;
-  background: transparent;
+  background: var(--sync-project-row);
   color: inherit;
   padding: 10px;
   text-align: left;
@@ -578,6 +589,7 @@ button.project-row:hover,
 
 .sync-card > .projects-panel:last-child .project-list {
   gap: 0;
+  background: transparent !important;
 }
 
 .sync-card > .projects-panel:last-child .project-row {
@@ -648,8 +660,13 @@ button.project-row:hover,
   .desktop-sync-settings-sidebar {
     position: static;
     grid-column: 1;
-    grid-row: auto;
+    grid-row: 1;
     margin-bottom: 18px;
+  }
+
+  .desktop-settings-view .desktop-view-header {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .desktop-sync-settings-nav {
@@ -663,7 +680,6 @@ button.project-row:hover,
     flex: 0 0 auto;
   }
 
-  .desktop-settings-view .desktop-view-header,
   .status-row,
   .section-block,
   .projects-panel {
@@ -683,11 +699,17 @@ button.project-row:hover,
     grid-template-columns: 1fr;
   }
 
+  .section-block > :last-child,
   .button-group,
   .settings-form,
   .token-form {
     width: 100%;
     justify-content: flex-end;
+    justify-self: end;
+  }
+
+  .source-toggle {
+    width: max-content;
   }
 
   .project-row {
