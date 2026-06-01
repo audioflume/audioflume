@@ -1,8 +1,8 @@
 .realtime-toggle {
   position: relative;
   display: inline-flex;
-  width: 72px;
-  min-width: 72px;
+  width: 58px;
+  min-width: 58px;
   height: 30px;
   min-height: 30px;
   cursor: pointer;
@@ -38,7 +38,7 @@
 }
 
 .realtime-toggle.is-on .realtime-toggle-knob {
-  transform: translateX(42px);
+  transform: translateX(28px);
 }
 
 .realtime-toggle:hover .realtime-toggle-knob {
