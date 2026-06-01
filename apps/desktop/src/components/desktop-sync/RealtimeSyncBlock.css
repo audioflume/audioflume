@@ -1,16 +1,16 @@
 .realtime-toggle {
   position: relative;
   display: inline-flex;
-  width: 42px;
-  min-width: 42px;
-  height: 24px;
-  min-height: 24px;
+  width: 58px;
+  min-width: 58px;
+  height: 34px;
+  min-height: 34px;
   cursor: pointer;
   align-items: center;
   border: 0;
   border-radius: 999px;
   background: var(--bg-control);
-  padding: 3px;
+  padding: 4px;
   transition: background 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -25,8 +25,8 @@
 
 .realtime-toggle-knob {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
   background: var(--text-primary);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
@@ -38,7 +38,7 @@
 }
 
 .realtime-toggle.is-on .realtime-toggle-knob {
-  transform: translateX(18px);
+  transform: translateX(24px);
 }
 
 .realtime-toggle:hover .realtime-toggle-knob {
