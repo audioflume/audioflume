@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 function getDefaultSkeletonCount() {
   if (typeof window === "undefined") return 8;
@@ -68,6 +68,6 @@ export function MusicLibraryEmptyState({
   );
 }
 
-export function MusicLibraryLoadNotice({ children }: { children: React.ReactNode }) {
+export function MusicLibraryLoadNotice({ children }: { children: ReactNode }) {
   return <div className="filmwave-music-library-load-notice">{children}</div>;
 }
