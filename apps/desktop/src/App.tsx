@@ -725,14 +725,18 @@ function App() {
       console.error(error);
       setSyncStatus("Local check failed");
       setLastSyncReport(
-        error instanceof Error ? error.message : "Could not check local removals.",
+        error instanceof Error
+          ? error.message
+          : "Could not check local removals.",
       );
       await addSyncActivityLogEntry({
         mode: "local",
         status: "error",
         title: "Local removal check failed",
         detail:
-          error instanceof Error ? error.message : "Could not check local removals.",
+          error instanceof Error
+            ? error.message
+            : "Could not check local removals.",
         projectNames: getProjectNames(selectedProjects),
       });
     } finally {
@@ -816,14 +820,18 @@ function App() {
       console.error(error);
       setSyncStatus("Apply failed");
       setLastSyncReport(
-        error instanceof Error ? error.message : "Could not apply local removals.",
+        error instanceof Error
+          ? error.message
+          : "Could not apply local removals.",
       );
       await addSyncActivityLogEntry({
         mode: "local",
         status: "error",
         title: "Apply local removals failed",
         detail:
-          error instanceof Error ? error.message : "Could not apply local removals.",
+          error instanceof Error
+            ? error.message
+            : "Could not apply local removals.",
         projectNames: pendingProjectNames,
       });
     } finally {
@@ -834,7 +842,8 @@ function App() {
 
   function toggleProject(projectId: string) {
     setSelectedProjectIds((current) => {
-      if (current.includes(projectId)) return current.filter((id) => id !== projectId);
+      if (current.includes(projectId))
+        return current.filter((id) => id !== projectId);
       return [...current, projectId];
     });
     setLocalRemovals([]);
@@ -850,7 +859,9 @@ function App() {
       console.error(error);
       setSyncStatus("Could not open folder");
       setLastSyncReport(
-        error instanceof Error ? error.message : "Could not open the synced folder.",
+        error instanceof Error
+          ? error.message
+          : "Could not open the synced folder.",
       );
     } finally {
       window.setTimeout(() => setOpeningFolder(false), 500);
@@ -877,7 +888,11 @@ function App() {
 
     try {
       setSyncing(true);
-      setSyncStatus(options.automatic ? "Fallback syncing..." : "Checking local removals...");
+      setSyncStatus(
+        options.automatic
+          ? "Fallback syncing..."
+          : "Checking local removals...",
+      );
       setLastSyncReport(null);
       setLocalRemovals([]);
       setSyncProgress(null);
@@ -967,7 +982,9 @@ function App() {
       await addSyncActivityLogEntry({
         mode: options.automatic ? "auto" : "manual",
         status: "success",
-        title: options.automatic ? "Fallback sync complete" : "Manual sync complete",
+        title: options.automatic
+          ? "Fallback sync complete"
+          : "Manual sync complete",
         detail: `${autoRemovalSummary}${formatSyncReport(result)}`,
         projectNames: getProjectNames(latestSelectedProjects),
       });
@@ -985,14 +1002,20 @@ function App() {
       console.error(error);
       setSyncStatus(options.automatic ? "Fallback sync failed" : "Sync failed");
       setLastSyncReport(
-        error instanceof Error ? error.message : "An unknown sync error occurred.",
+        error instanceof Error
+          ? error.message
+          : "An unknown sync error occurred.",
       );
       await addSyncActivityLogEntry({
         mode: options.automatic ? "auto" : "manual",
         status: "error",
-        title: options.automatic ? "Fallback sync failed" : "Manual sync failed",
+        title: options.automatic
+          ? "Fallback sync failed"
+          : "Manual sync failed",
         detail:
-          error instanceof Error ? error.message : "An unknown sync error occurred.",
+          error instanceof Error
+            ? error.message
+            : "An unknown sync error occurred.",
         projectNames: runProjectNames,
       });
     } finally {
@@ -1019,7 +1042,8 @@ function App() {
           <div className="desktop-view-eyebrow">Settings</div>
           <h1 className="desktop-view-title">Desktop Sync</h1>
           <p className="desktop-view-description">
-            Control account connection, project source, realtime sync, fallback checks, local folder, and sync activity.
+            Control account connection, project source, realtime sync, fallback
+            checks, local folder, and sync activity.
           </p>
         </div>
       </div>
