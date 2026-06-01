@@ -689,6 +689,9 @@ export default function DesktopMusicLibraryView({
           markersVisible={filters.markers}
           selectedCuePointTypes={selectedCoreCuePointTypes}
           seekRequest={seekRequest}
+          syncStatus={getSongSyncStatus(activeSong.id)}
+          syncedPath={syncedSongPaths[activeSong.id] ?? null}
+          canSync={Boolean(effectiveSyncFolder)}
           onMarkersVisibleChange={(visible) =>
             setFilters((current) => ({ ...current, markers: visible }))
           }
@@ -697,6 +700,7 @@ export default function DesktopMusicLibraryView({
           onPrevious={playPreviousSong}
           onNext={playNextSong}
           onProgressChange={handlePlaybackProgressChange}
+          onSync={() => syncSong(activeSong)}
         />
       )}
     </section>
