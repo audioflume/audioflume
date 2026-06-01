@@ -4,6 +4,7 @@
   max-width: 1180px;
   grid-template-columns: 220px minmax(0, 1fr);
   column-gap: 34px;
+  align-items: start;
   --sync-surface: transparent;
   --sync-surface-alt: transparent;
   --sync-surface-raised: var(--bg-secondary);
@@ -37,18 +38,15 @@ html[data-theme="light"] .desktop-settings-view {
   border-bottom: 1px solid var(--sync-border);
 }
 
+.desktop-settings-view .desktop-view-eyebrow,
+.desktop-settings-view .desktop-view-description {
+  display: none;
+}
+
 .desktop-settings-view .desktop-view-title {
   font-size: 24px;
   font-weight: 500;
   letter-spacing: -0.03em;
-}
-
-.desktop-settings-view .desktop-view-description {
-  max-width: 660px;
-  margin-top: 12px;
-  color: var(--text-secondary);
-  font-size: 13px;
-  line-height: 1.45;
 }
 
 .sync-card {
@@ -126,7 +124,7 @@ html[data-theme="light"] .desktop-settings-view {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 0;
+  padding: 20px 0;
 }
 
 .status-row-label {
@@ -167,7 +165,7 @@ html[data-theme="light"] .desktop-settings-view {
 
 .section-block,
 .projects-panel {
-  padding: 18px 0;
+  padding: 20px 0;
 }
 
 .section-block {
@@ -176,6 +174,10 @@ html[data-theme="light"] .desktop-settings-view {
   grid-template-columns: minmax(0, 1fr) minmax(220px, auto);
   align-items: center;
   gap: 24px;
+}
+
+.section-block:has(.realtime-toggle) {
+  height: 128px;
 }
 
 .section-block > :last-child {
@@ -324,9 +326,13 @@ html[data-theme="light"] .desktop-settings-view {
   color: var(--bg-primary);
 }
 
-.secondary-button,
-.source-toggle button {
+.secondary-button {
   background: var(--sync-control);
+  color: var(--text-secondary);
+}
+
+.source-toggle button {
+  background: transparent;
   color: var(--text-secondary);
 }
 
@@ -386,7 +392,7 @@ input:focus {
   justify-self: end;
   gap: 3px;
   border-radius: 999px;
-  background: transparent;
+  background: var(--sync-control);
   padding: 4px;
 }
 
@@ -394,7 +400,6 @@ input:focus {
   height: 30px;
   min-width: 72px;
   border-radius: 999px;
-  background: transparent;
 }
 
 .progress-panel,
