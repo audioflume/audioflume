@@ -10,7 +10,11 @@ import {
 import { useFavorites } from "@/context/FavoritesContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
-import { SongCardShell, SongCardStemsSlot } from "@filmwave/shared";
+import {
+  getSongStemsFromRecord,
+  SongCardShell,
+  SongCardStemsSlot,
+} from "@filmwave/shared";
 import Waveform from "./Waveform";
 import Image from "next/image";
 import type { Song } from "@/lib/types";
@@ -189,7 +193,7 @@ export default function SongCard({
   const showGenreSlot = cardWidth > 1080;
   const showKeyMeta = cardWidth > 700;
   const showBpmMeta = cardWidth > 820;
-  const stems = getSongStems(song);
+  const stems = getSongStemsFromRecord(song);
   const favorited = isFavorite(song.id);
 
   async function handleCreatePlaylist() {
