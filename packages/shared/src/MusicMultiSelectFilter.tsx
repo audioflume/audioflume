@@ -192,7 +192,15 @@ export function MusicMultiSelectFilter({
           {sections.map((section, sectionIndex) => (
             <div key={`${section.label || "section"}-${sectionIndex}`}>
               {section.label && (
-                <div className="filmwave-filter-field-label">{section.label}</div>
+                <div
+                  className="desktop-sidebar-projects-label"
+                  style={{
+                    display: "block",
+                    margin: `${sectionIndex === 0 ? 10 : 16}px 10px 8px`,
+                  }}
+                >
+                  {section.label}
+                </div>
               )}
 
               {section.options.map((option) => {
