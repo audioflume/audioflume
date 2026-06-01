@@ -1,0 +1,86 @@
+.filmwave-music-library-skeleton-list {
+  width: 100%;
+}
+
+.filmwave-music-library-skeleton-card {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 16px 32px;
+  animation: skeleton-fade-in 0.3s ease-out both;
+}
+
+.filmwave-music-library-skeleton-card:nth-child(1) { animation-delay: 0s; }
+.filmwave-music-library-skeleton-card:nth-child(2) { animation-delay: 0.04s; }
+.filmwave-music-library-skeleton-card:nth-child(3) { animation-delay: 0.08s; }
+.filmwave-music-library-skeleton-card:nth-child(4) { animation-delay: 0.12s; }
+.filmwave-music-library-skeleton-card:nth-child(5) { animation-delay: 0.16s; }
+.filmwave-music-library-skeleton-card:nth-child(6) { animation-delay: 0.2s; }
+.filmwave-music-library-skeleton-card:nth-child(7) { animation-delay: 0.24s; }
+.filmwave-music-library-skeleton-card:nth-child(8) { animation-delay: 0.28s; }
+.filmwave-music-library-skeleton-card:nth-child(9) { animation-delay: 0.32s; }
+.filmwave-music-library-skeleton-card:nth-child(10) { animation-delay: 0.36s; }
+.filmwave-music-library-skeleton-card:nth-child(11) { animation-delay: 0.4s; }
+.filmwave-music-library-skeleton-card:nth-child(12) { animation-delay: 0.44s; }
+
+.filmwave-music-library-skeleton-cover {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.filmwave-music-library-skeleton-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filmwave-music-library-skeleton-line {
+  height: 8px;
+}
+
+.filmwave-music-library-skeleton-line.is-wide {
+  width: 98%;
+}
+
+.filmwave-music-library-skeleton-line.is-narrow {
+  width: 92%;
+}
+
+.filmwave-music-library-empty-state {
+  display: flex;
+  min-height: 220px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.filmwave-music-library-empty-state h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.filmwave-music-library-empty-state p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.filmwave-music-library-load-notice {
+  padding: 16px 32px;
+  color: var(--danger);
+  font-size: 14px;
+  line-height: 1.5;
+}
