@@ -10,6 +10,11 @@
 @import "../../../packages/shared/styles/music-library-states.css";
 @import "../../../packages/shared/styles/music-shared-controls.css";
 
+button:focus,
+button:focus-visible {
+  outline: none;
+}
+
 body.sidebar-collapsed {
   --sidebar-width: var(--sidebar-width-collapsed);
 }
