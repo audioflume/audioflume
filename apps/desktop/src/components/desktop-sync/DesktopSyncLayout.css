@@ -680,6 +680,7 @@ button.project-row:hover,
     width: 100%;
     max-width: none;
     grid-template-columns: minmax(0, 1fr);
+    padding-top: 20px;
   }
 
   .desktop-sync-settings-sidebar {
@@ -688,18 +689,27 @@ button.project-row:hover,
     grid-row: 1;
     width: 100%;
     margin-bottom: 0;
+    padding-top: 20px;
     overflow: hidden;
   }
 
   .desktop-sync-settings-header {
     grid-column: 1;
     grid-row: 2;
-    margin-bottom: 18px;
+    padding-top: 20px;
+    padding-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 0;
   }
 
   .sync-card {
     grid-column: 1;
     grid-row: 3;
+  }
+
+  .status-row {
+    border-top: 1px solid var(--sync-border);
+    margin-top: 20px;
   }
 
   .desktop-sync-settings-nav {
@@ -722,8 +732,7 @@ button.project-row:hover,
 }
 
 @media (max-width: 620px) {
-  .status-row,
-  .section-block,
+  .section-block:not(:has(.realtime-toggle)),
   .projects-header {
     align-items: flex-start;
     flex-direction: column;
@@ -734,14 +743,13 @@ button.project-row:hover,
   }
 
   .section-block:has(.realtime-toggle) {
-    height: 150px;
+    height: auto;
   }
 
   .section-block > :last-child,
   .button-group,
   .settings-form,
   .token-form {
-    width: 100%;
     justify-content: flex-end;
     justify-self: end;
   }
