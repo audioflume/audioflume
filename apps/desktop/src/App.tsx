@@ -1048,8 +1048,9 @@ function App() {
         </div>
       </div>
 
+      <SettingsBreadcrumb />
+
       <section className="sync-card">
-        <SettingsBreadcrumb />
         <SyncStatusRow syncStatus={syncStatus} syncing={syncing} />
 
         <AccountBlock
