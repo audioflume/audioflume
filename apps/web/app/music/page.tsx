@@ -2,11 +2,16 @@
 
 import {
   BUILD_OPTIONS,
+  EDIT_POINT_FILTER_OPTIONS,
+  FilterTrigger,
+  filterMusicLibrarySongs,
   GENRE_OPTIONS,
   getMusicLibrarySearchPlaceholder,
   INSTRUMENT_OPTIONS,
+  isCoreEditPointType,
   MOOD_OPTIONS,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
+  MusicShuffleButton,
   QUICK_FILTERS,
   SearchFilterChrome,
   SearchFilterInput,
@@ -16,17 +21,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
-import type { BpmFilterValue, KeyFilterValue, PlaylistRef, Song } from "@/lib/types";
-import {
-  matchesDurationFilter,
-  matchesBpmFilter,
-  matchesKeyFilter,
-} from "@/lib/filterUtils";
-import {
-  EDIT_POINT_FILTER_OPTIONS,
-  isCoreEditPointType,
-  songMatchesEditPointFilters,
-} from "@/lib/editPointUtils";
+import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
 import { getRecord, getStringFromRecord } from "@/lib/utils";
 
 import { useFilterPersistence } from "@/hooks/useFilterPersistence";
@@ -46,13 +41,6 @@ import SongCard from "@/components/SongCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
-import { iconButtonClass } from "@/components/uiClasses";
-import {
-  filterDotClass,
-  filterTriggerActiveClass,
-  filterTriggerBaseClass,
-  filterTriggerInactiveClass,
-} from "@/components/filterUiClasses";
 
 const INSTRUMENTAL_VOCAL_FILTER_OPTION = "Instrumental";
 const VOCAL_FILTER_OPTIONS = [
@@ -200,39 +188,6 @@ function shuffleSongList<T>(songs: T[]) {
   }
 
   return bestShuffle;
-}
-
-function selectedValuesMatch(songValues: string[], selectedValues: string[]) {
-  if (selectedValues.length === 0) return true;
-
-  const normalizedSongValues = songValues.map((value) => value.toLowerCase());
-  const searchableText = normalizedSongValues.join(" ");
-
-  return selectedValues.every((selectedValue) => {
-    const normalizedSelectedValue = selectedValue.toLowerCase();
-
-    return (
-      normalizedSongValues.includes(normalizedSelectedValue) ||
-      searchableText.includes(normalizedSelectedValue)
-    );
-  });
-}
-
-function getSongSearchText(song: Song) {
-  return [
-    song.title,
-    song.artist,
-    song.key,
-    String(song.bpm),
-    ...song.genres,
-    ...song.moods,
-    ...song.instruments,
-    ...song.builds,
-    ...song.vocals,
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
 }
 
 export default function MusicPage() {
@@ -391,32 +346,26 @@ export default function MusicPage() {
   const filteredSongs = useMemo(() => {
     if (!filtersHydrated) return [];
 
-    const searchQuery = search.toLowerCase().trim();
-    const playlistIds = selectedPlaylistSongIds;
+    const playlistSongs = selectedPlaylistId
+      ? songs.filter((song) => {
+          if (!selectedPlaylistSongIds) return false;
+          const identityValues = getSongIdentityValues(song);
+          return identityValues.some((id) => selectedPlaylistSongIds.has(id));
+        })
+      : songs;
 
-    return songs.filter((song) => {
-      if (selectedPlaylistId) {
-        if (!playlistIds) return false;
-        const identityValues = getSongIdentityValues(song);
-        if (!identityValues.some((id) => playlistIds.has(id))) return false;
-      }
-
-      if (searchQuery && !getSongSearchText(song).includes(searchQuery)) {
-        return false;
-      }
-
-      if (!selectedValuesMatch(song.moods, selectedMoods)) return false;
-      if (!selectedValuesMatch(song.genres, selectedGenres)) return false;
-      if (!selectedValuesMatch(song.instruments, selectedInstruments)) return false;
-      if (!selectedValuesMatch(song.builds, selectedBuilds)) return false;
-      if (!selectedValuesMatch(song.vocals, selectedVocals)) return false;
-      if (instrumental && !song.instrumental) return false;
-      if (!matchesDurationFilter(song.duration, selectedDurations)) return false;
-      if (!matchesBpmFilter(song.bpm, bpmValue)) return false;
-      if (!matchesKeyFilter(song.key, keyValue)) return false;
-      if (!songMatchesEditPointFilters(song, selectedEditPoints)) return false;
-
-      return true;
+    return filterMusicLibrarySongs(playlistSongs, {
+      search,
+      selectedMoods,
+      selectedGenres,
+      selectedInstruments,
+      selectedBuilds,
+      selectedVocals,
+      selectedDurations,
+      selectedEditPoints,
+      instrumental,
+      bpmValue,
+      keyValue,
     });
   }, [
     bpmValue,
@@ -594,27 +543,19 @@ export default function MusicPage() {
                 }
               />
 
-              <button
-                type="button"
+              <FilterTrigger
+                label="Markers"
+                active={effectiveShowEditPointMarkers}
+                showActiveDot
+                hideChevron
+                disabled={!filtersHydrated}
                 onClick={() =>
                   setShowEditPointMarkers(!effectiveShowEditPointMarkers)
                 }
-                disabled={!filtersHydrated}
-                className={`${filterTriggerBaseClass} shrink-0 after:content-none ${
-                  effectiveShowEditPointMarkers
-                    ? filterTriggerActiveClass
-                    : filterTriggerInactiveClass
-                } ${filtersHydrated ? "" : "opacity-60"}`}
-                aria-pressed={effectiveShowEditPointMarkers}
-              >
-                <span>Markers</span>
-                {effectiveShowEditPointMarkers && (
-                  <span className={filterDotClass} />
-                )}
-              </button>
+              />
 
-              <button
-                type="button"
+              <MusicShuffleButton
+                active={shuffleActive}
                 onClick={() => {
                   const shuffledSongs = shuffleSongList(filteredSongs);
                   setShuffleOrderIds(
@@ -623,29 +564,7 @@ export default function MusicPage() {
                     ),
                   );
                 }}
-                className={`${iconButtonClass} shrink-0 self-center`}
-                style={
-                  shuffleActive
-                    ? ({ "--shuffle-icon-color": "#000000" } as React.CSSProperties)
-                    : undefined
-                }
-                aria-label="Shuffle songs"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  fill="var(--shuffle-icon-color, currentColor)"
-                  viewBox="0 0 16 16"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"
-                  />
-                  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
-                </svg>
-              </button>
+              />
             </>
           }
           quickFilters={
