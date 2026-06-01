@@ -5,6 +5,7 @@ import type { ReactNode, Ref } from "react";
 type SongCardShellProps = {
   cardRef?: Ref<HTMLElement>;
   className?: string;
+  dataSongCardId?: string;
   cover: ReactNode;
   coverLabel: string;
   playOverlay: ReactNode;
@@ -24,6 +25,7 @@ type SongCardShellProps = {
 export function SongCardShell({
   cardRef,
   className = "",
+  dataSongCardId,
   cover,
   coverLabel,
   playOverlay,
@@ -42,7 +44,7 @@ export function SongCardShell({
   const rootClassName = `filmwave-song-card${className ? ` ${className}` : ""}`;
 
   return (
-    <article ref={cardRef} className={rootClassName}>
+    <article ref={cardRef} data-song-card-id={dataSongCardId} className={rootClassName}>
       <button
         type="button"
         className="filmwave-song-cover"
