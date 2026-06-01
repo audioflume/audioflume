@@ -2,6 +2,7 @@
   display: grid;
   width: min(1180px, 100%);
   max-width: 1180px;
+  min-width: 0;
   grid-template-columns: 220px minmax(0, 1fr);
   column-gap: 34px;
   align-items: start;
@@ -33,6 +34,7 @@ html[data-theme="light"] .desktop-settings-view {
 .desktop-settings-view .desktop-view-header {
   grid-column: 2;
   grid-row: 1;
+  min-width: 0;
   margin-bottom: 0;
   padding-bottom: 22px;
   border-bottom: 1px solid var(--sync-border);
@@ -58,16 +60,17 @@ html[data-theme="light"] .desktop-settings-view {
 }
 
 .desktop-sync-settings-sidebar {
-  position: sticky;
-  top: 88px;
+  position: static;
   grid-column: 1;
   grid-row: 1 / span 20;
   align-self: start;
+  min-width: 0;
 }
 
 .desktop-sync-settings-nav {
   display: grid;
   gap: 4px;
+  min-width: 0;
 }
 
 .desktop-sync-settings-nav-item {
@@ -111,6 +114,7 @@ html[data-theme="light"] .desktop-settings-view {
 .section-block,
 .projects-panel {
   grid-column: 2;
+  min-width: 0;
   border: 0;
   border-bottom: 1px solid var(--sync-border);
   border-radius: 0;
@@ -286,6 +290,7 @@ html[data-theme="light"] .desktop-settings-view {
 .token-form,
 .local-removal-actions {
   display: flex;
+  min-width: 0;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
@@ -357,6 +362,7 @@ html[data-theme="light"] .desktop-settings-view {
 input {
   height: 34px;
   min-width: 0;
+  max-width: 100%;
   border: 1px solid var(--sync-border);
   border-radius: 999px;
   background: var(--sync-surface-raised);
@@ -481,6 +487,7 @@ input:focus {
 .project-row {
   display: grid;
   width: 100%;
+  min-width: 0;
   grid-template-columns: 22px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
@@ -657,31 +664,48 @@ button.project-row:hover,
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   .desktop-settings-view {
-    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
   }
 
   .desktop-sync-settings-sidebar {
     position: static;
     grid-column: 1;
     grid-row: 1;
+    width: 100%;
+    max-width: 100%;
     margin-bottom: 18px;
+    overflow: hidden;
   }
 
   .desktop-settings-view .desktop-view-header {
     grid-column: 1;
     grid-row: 2;
+    min-width: 0;
   }
 
   .desktop-sync-settings-nav {
     display: flex;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     overflow-x: auto;
+    overflow-y: hidden;
     padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .desktop-sync-settings-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .desktop-sync-settings-nav-item {
     width: auto;
+    max-width: max-content;
     flex: 0 0 auto;
   }
 
@@ -689,6 +713,7 @@ button.project-row:hover,
   .section-block,
   .projects-panel {
     grid-column: 1;
+    min-width: 0;
   }
 }
 
@@ -702,6 +727,10 @@ button.project-row:hover,
 
   .section-block {
     grid-template-columns: 1fr;
+  }
+
+  .section-block:has(.realtime-toggle) {
+    height: 150px;
   }
 
   .section-block > :last-child,
