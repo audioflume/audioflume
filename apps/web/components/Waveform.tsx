@@ -4,11 +4,7 @@ import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useRef } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
-import {
-  getEditPointFilterLabel,
-  getMarkerType,
-  parseEditPoints,
-} from "@/lib/editPointUtils";
+import { parseEditPoints, SongCardCuePointOverlay } from "@filmwave/shared";
 
 type WaveformDrawCache = {
   cssWidth: number;
@@ -110,17 +106,6 @@ function drawWaveform(
   }
 }
 
-function formatMarkerTime(secondsValue: number) {
-  const seconds = Number(secondsValue);
-
-  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
-
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
 export default function Waveform({
   song,
   compact = false,
@@ -165,19 +150,6 @@ export default function Waveform({
     () => parseEditPoints(song.editPoints),
     [song.editPoints],
   );
-
-  const highlightedTypeSet = useMemo(
-    () => new Set(highlightedEditPointTypes),
-    [highlightedEditPointTypes],
-  );
-
-  const hasHighlightedTypes = highlightedTypeSet.size > 0;
-
-  const getPercent = (time: number) => {
-    if (!song.duration) return 0;
-
-    return Math.max(0, Math.min(100, (time / song.duration) * 100));
-  };
 
   const cancelScheduledRedraw = () => {
     if (animationFrameRef.current == null) return;
@@ -313,80 +285,15 @@ export default function Waveform({
       onPointerEnter={preloadSongSource}
       onPointerDown={handlePointerDown}
     >
-      {shouldShowEditPointMarkers &&
-        editPoints.ranges?.map((range) => {
-          const left = getPercent(range.start);
-          const right = getPercent(range.end);
-          const width = Math.max(0, right - left);
-          const label = range.label.toLowerCase();
-
-          const isStrong =
-            label.includes("drop") ||
-            label.includes("impact") ||
-            label.includes("peak");
-
-          return (
-            <div
-              key={range.id}
-              className="pointer-events-none absolute z-10"
-              style={{
-                top: "50%",
-                height: compact ? "18px" : "34px",
-                transform: "translateY(-50%)",
-                left: `${left}%`,
-                width: `${width}%`,
-                background: isStrong
-                  ? "var(--cue-point-range-strong)"
-                  : "var(--cue-point-range)",
-              }}
-            />
-          );
-        })}
-
-      {shouldShowEditPointMarkers &&
-        editPoints.markers?.map((marker) => {
-          const markerType = getMarkerType(marker);
-          const selected = highlightedTypeSet.has(markerType);
-          const hidden = hasHighlightedTypes && !selected;
-
-          if (hidden) return null;
-
-          const label = marker.label || getEditPointFilterLabel(markerType);
-          const markerTime = formatMarkerTime(marker.time);
-          const progress = song.duration ? marker.time / song.duration : 0;
-
-          return (
-            <button
-              key={marker.id}
-              type="button"
-              className="group/edit-point-marker absolute top-1/2 z-20 h-[38px] w-5 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
-              style={{
-                left: `${getPercent(marker.time)}%`,
-              }}
-              aria-label={`Play from ${label} at ${markerTime}`}
-              onPointerDown={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                seekToProgress(Math.max(0, Math.min(1, progress)));
-              }}
-            >
-              <span
-                className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full transition-[width,opacity] duration-150 group-hover/edit-point-marker:opacity-100"
-                style={{
-                  width: hasHighlightedTypes
-                    ? "var(--cue-marker-width-active)"
-                    : "var(--cue-marker-width)",
-                  opacity: "var(--cue-marker-opacity)",
-                  background: "var(--cue-marker-color)",
-                }}
-              />
-
-              <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-40 flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/edit-point-marker:translate-y-0 group-hover/edit-point-marker:opacity-100">
-                {label} · {markerTime}
-              </span>
-            </button>
-          );
-        })}
+      {shouldShowEditPointMarkers && (
+        <SongCardCuePointOverlay
+          editPoints={editPoints}
+          duration={song.duration}
+          highlightedEditPointTypes={highlightedEditPointTypes}
+          compact={compact}
+          onSeek={seekToProgress}
+        />
+      )}
 
       <canvas
         ref={canvasRef}
