@@ -7,23 +7,18 @@ import {
   normalizeEditPointType,
   type MusicPlayerShellLayout,
 } from "@filmwave/shared";
-import { exists } from "@tauri-apps/plugin-fs";
-import { load } from "@tauri-apps/plugin-store";
+import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  getMusicLibrarySyncedSongPath,
-  syncSongToMusicLibraryFolder,
-} from "../../../lib/musicLibrarySync";
-import CheckIcon from "../../icons/CheckIcon";
 import EditPointsIcon from "../../icons/EditPointsIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
 import SyncIcon from "../../icons/SyncIcon";
 import type { DesktopMusicSong } from "./musicLibraryTypes";
 
-const SETTINGS_STORE = "filmwave-settings.json";
 const PREVIOUS_CUE_SKIP_BACK_SECONDS = 1.35;
 const NEXT_CUE_SKIP_AHEAD_SECONDS = 0.25;
+const SONG_DRAG_START_DISTANCE = 5;
+const NATIVE_FILE_DRAG_COMMAND = ["start", "native", "file", "drag"].join("_");
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 type CuePointMarker = ReturnType<typeof getSongCuePointMarkers>[number];
@@ -94,12 +89,16 @@ export default function DesktopMusicPlayer({
   markersVisible,
   selectedCuePointTypes = [],
   seekRequest,
+  syncStatus = "idle",
+  syncedPath,
+  canSync,
   onMarkersVisibleChange,
   onPlayPause,
   onPrevious,
   onNext,
   onFavoriteToggle,
   onProgressChange,
+  onSync,
 }: {
   song: DesktopMusicSong;
   isPlaying: boolean;
@@ -107,20 +106,23 @@ export default function DesktopMusicPlayer({
   markersVisible: boolean;
   selectedCuePointTypes?: string[];
   seekRequest?: DesktopMusicPlayerSeekRequest | null;
+  syncStatus?: SongSyncStatus;
+  syncedPath?: string | null;
+  canSync: boolean;
   onMarkersVisibleChange: (visible: boolean) => void;
   onPlayPause: () => void;
   onPrevious: () => void;
   onNext: () => void;
   onFavoriteToggle: () => void;
   onProgressChange?: (progress: DesktopMusicPlayerProgress) => void;
+  onSync: () => void;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const handledSeekRequestIdRef = useRef<number | null>(null);
   const pendingSeekRequestRef = useRef<DesktopMusicPlayerSeekRequest | null>(null);
+  const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(song.durationSeconds || 0);
-  const [syncFolder, setSyncFolder] = useState<string | null>(null);
-  const [syncStatus, setSyncStatus] = useState<SongSyncStatus>("idle");
 
   const audioSource = useMemo(() => getAudioSource(song), [song]);
   const normalizedSelectedCuePointTypes = useMemo(
@@ -155,55 +157,17 @@ export default function DesktopMusicPlayer({
     () => getAdjacentCuePoint(visibleCuePoints, displayCurrentTime, "next"),
     [visibleCuePoints, displayCurrentTime],
   );
-  const isSynced = syncStatus === "synced";
+  const isSynced = syncStatus === "synced" && Boolean(syncedPath);
   const syncLabel =
-    syncStatus === "synced"
-      ? "Song synced"
+    isSynced
+      ? "Drag synced song file"
       : syncStatus === "syncing"
         ? "Syncing song"
         : syncStatus === "error"
           ? "Retry sync"
-          : syncFolder
+          : canSync
             ? "Sync song"
             : "Choose a sync folder to sync songs";
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadSyncFolder() {
-      const store = await load(SETTINGS_STORE);
-      const nextSyncFolder = await store.get<string>("syncFolder");
-
-      if (!cancelled) setSyncFolder(nextSyncFolder ?? null);
-    }
-
-    void loadSyncFolder();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function checkSyncedStatus() {
-      setSyncStatus("idle");
-
-      if (!syncFolder) return;
-
-      const localPath = getMusicLibrarySyncedSongPath({ song, syncFolder });
-      const synced = await exists(localPath);
-
-      if (!cancelled) setSyncStatus(synced ? "synced" : "idle");
-    }
-
-    void checkSyncedStatus();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [song, syncFolder]);
 
   useEffect(() => {
     const pendingSeekRequest = pendingSeekRequestRef.current;
@@ -309,6 +273,42 @@ export default function DesktopMusicPlayer({
     }
   }, [duration, seekRequest, song.durationSeconds, song.id]);
 
+  async function startSyncedSongDrag() {
+    if (!isSynced || !syncedPath) return;
+
+    try {
+      await invoke(NATIVE_FILE_DRAG_COMMAND, { path: syncedPath });
+    } catch (error) {
+      console.warn("Could not start native song drag", error);
+    }
+  }
+
+  function handleSyncedSongPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
+    if (!isSynced) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    songDragStartRef.current = { x: event.clientX, y: event.clientY, started: false };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function handleSyncedSongPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+    const dragStart = songDragStartRef.current;
+
+    if (!isSynced || !dragStart || dragStart.started) return;
+
+    const distance = Math.hypot(event.clientX - dragStart.x, event.clientY - dragStart.y);
+
+    if (distance < SONG_DRAG_START_DISTANCE) return;
+
+    dragStart.started = true;
+    void startSyncedSongDrag();
+  }
+
+  function handleSyncedSongPointerEnd() {
+    songDragStartRef.current = null;
+  }
+
   function jumpToCuePoint(marker: CuePointMarker | null) {
     if (!marker || !displayDuration) return;
     seek(Math.max(0, Math.min(1, marker.time / displayDuration)));
@@ -379,20 +379,6 @@ export default function DesktopMusicPlayer({
         </button>
       </div>
     );
-  }
-
-  async function syncSong() {
-    if (!syncFolder || syncStatus === "syncing" || syncStatus === "synced") return;
-
-    setSyncStatus("syncing");
-
-    try {
-      await syncSongToMusicLibraryFolder({ song, syncFolder });
-      setSyncStatus("synced");
-    } catch (error) {
-      console.error(error);
-      setSyncStatus("error");
-    }
   }
 
   return (
@@ -471,19 +457,53 @@ export default function DesktopMusicPlayer({
               className={`filmwave-icon-button filmwave-icon-button-plain desktop-song-sync-button${
                 isSynced ? " is-synced" : ""
               }${syncStatus === "syncing" ? " is-syncing" : ""}`}
-              disabled={!syncFolder || syncStatus === "syncing" || isSynced}
+              disabled={syncStatus === "syncing" || (!canSync && !isSynced)}
               onClick={(event) => {
                 event.stopPropagation();
-                void syncSong();
+                if (!isSynced) onSync();
               }}
+              onPointerDown={handleSyncedSongPointerDown}
+              onPointerMove={handleSyncedSongPointerMove}
+              onPointerUp={handleSyncedSongPointerEnd}
+              onPointerCancel={handleSyncedSongPointerEnd}
             >
               <span className="desktop-song-sync-button-inner">
-                {isSynced ? <CheckIcon size={10} strokeWidth={3} /> : <SyncIcon size={14} />}
+                {isSynced ? <SyncedFileIcon /> : <SyncIcon size={14} />}
               </span>
             </button>
           </>
         }
       />
     </>
+  );
+}
+
+function SyncedFileIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect
+        x="3.75"
+        y="4.25"
+        width="10.5"
+        height="10.5"
+        rx="2.75"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="3.1 2.8"
+      />
+      <rect
+        x="9.75"
+        y="9.25"
+        width="10.5"
+        height="10.5"
+        rx="2.75"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
