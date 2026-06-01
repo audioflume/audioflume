@@ -739,7 +739,7 @@ button.project-row:hover,
   }
 
   .section-block {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) 58px;
   }
 
   .section-block:has(.realtime-toggle) {

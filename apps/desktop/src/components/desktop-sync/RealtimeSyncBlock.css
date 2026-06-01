@@ -11,6 +11,7 @@
   border-radius: 999px;
   background: var(--bg-control);
   padding: 4px;
+  overflow: hidden;
   transition: background 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
