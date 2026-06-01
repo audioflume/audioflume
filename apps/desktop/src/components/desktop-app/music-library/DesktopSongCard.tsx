@@ -2,10 +2,10 @@ import {
   getSongCuePointMarkers,
   normalizeEditPointType,
   parseEditPoints,
-  SharedWaveformCanvas,
   SongCardCuePointOverlay,
   SongCardShell,
   SongCardStemsSlot,
+  SongCardWaveform,
   type SharedWaveformCanvasHandle,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
@@ -179,14 +179,12 @@ export default function DesktopSongCard({
         />
       }
       waveform={
-        <SharedWaveformCanvas
+        <SongCardWaveform
           ref={waveformRef}
           peaks={song.waveform}
           progress={visualProgress}
           onSeek={handleWaveformSeek}
           overlay={markerOverlay}
-          className="filmwave-song-wave-canvas"
-          canvasClassName="desktop-song-wave-canvas"
           ariaLabel={`Seek ${song.title}`}
         />
       }
