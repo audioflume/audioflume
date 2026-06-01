@@ -36,8 +36,8 @@
 
 .desktop-music-page .desktop-song-sync-button.is-synced {
   cursor: grab;
-  background: var(--accent) !important;
-  color: #111111 !important;
+  background: var(--bg-hover-strong) !important;
+  color: #ffffff !important;
 }
 
 .desktop-music-page .desktop-song-sync-button.is-synced .desktop-song-sync-button-inner {
@@ -49,9 +49,8 @@
 }
 
 .desktop-music-page .desktop-song-sync-button.is-synced:hover {
-  background: var(--accent) !important;
-  color: #111111 !important;
-  opacity: 0.86;
+  background: var(--bg-tertiary) !important;
+  color: #ffffff !important;
 }
 
 @keyframes desktop-song-sync-spin {
@@ -111,8 +110,12 @@ html[data-theme="light"] .desktop-music-page .desktop-song-actions button.is-act
 
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced,
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced:hover {
-  background: var(--accent) !important;
+  background: #ffffff !important;
   color: #111111 !important;
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced:hover {
+  background: var(--bg-elevated) !important;
 }
 
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced .desktop-song-sync-button-inner {
