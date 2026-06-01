@@ -48,10 +48,6 @@ type PlayerProgressStore = {
   getSnapshot: () => PlayerProgressSnapshot;
 };
 
-// Fine-grained playback store — used by useIsCurrentSong / useIsCurrentSongPlaying.
-// Emits on every song change or play/pause toggle.
-// SongCards subscribe with a boolean snapshot so only the 2 affected cards re-render
-// instead of all 50+ when currentSong changes.
 type PlaybackStore = {
   subscribe: (listener: () => void) => () => void;
   getSongId: () => string | null;
@@ -81,6 +77,7 @@ const PLAYER_STORAGE_KEY = "filmwave-player-state";
 const CLOSE_PLAYER_EVENT = "filmwave:close-player";
 const PLAYER_BROADCAST_CHANNEL = "filmwave-player";
 const STORAGE_WRITE_INTERVAL_MS = 5000;
+const TRACK_SCROLL_EDGE_PADDING = 12;
 
 function createTabId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -143,6 +140,30 @@ function canPlayNativeHls(audio: HTMLAudioElement) {
   return Boolean(audio.canPlayType("application/vnd.apple.mpegurl"));
 }
 
+function scrollSongCardIntoView(songId: string) {
+  window.requestAnimationFrame(() => {
+    const selector = `[data-song-card-id="${CSS.escape(songId)}"]`;
+    const card = document.querySelector<HTMLElement>(selector);
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const searchFilter = document.querySelector<HTMLElement>(".filmwave-search-filter-sticky");
+    const player = document.querySelector<HTMLElement>(".filmwave-music-player");
+    const searchFilterRect = searchFilter?.getBoundingClientRect();
+    const playerRect = player?.getBoundingClientRect();
+    const visibleTop = (searchFilterRect?.bottom ?? 0) + TRACK_SCROLL_EDGE_PADDING;
+    const visibleBottom = (playerRect?.top ?? window.innerHeight) - TRACK_SCROLL_EDGE_PADDING;
+
+    if (rect.top >= visibleTop && rect.bottom <= visibleBottom) return;
+
+    const scrollDelta = rect.top < visibleTop
+      ? rect.top - visibleTop
+      : rect.bottom - visibleBottom;
+
+    window.scrollBy({ top: scrollDelta, behavior: "smooth" });
+  });
+}
+
 function writeStoredPlayerState({
   currentSong,
   currentTime,
@@ -172,9 +193,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const currentSongRef = useRef<Song | null>(null);
   const currentTimeRef = useRef(0);
   const durationRef = useRef(0);
-
-  // Refs mirroring React state — used by the fine-grained playback store so
-  // useSyncExternalStore snapshots always read the latest value synchronously.
   const isPlayingRef = useRef(false);
 
   const progressSnapshotRef = useRef<PlayerProgressSnapshot>({
@@ -182,8 +200,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     duration: 0,
   });
   const progressSubscribersRef = useRef<Set<() => void>>(new Set());
-
-  // Separate subscriber set for the fine-grained playback store (song id + playing).
   const playbackSubscribersRef = useRef<Set<() => void>>(new Set());
 
   const queueRef = useRef<Song[]>([]);
@@ -202,14 +218,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] = useState(false);
 
-  // ─── Playback store helpers ────────────────────────────────────────────────
-
   const emitPlaybackUpdate = useCallback(() => {
     playbackSubscribersRef.current.forEach((l) => l());
   }, []);
 
-  // Wrapper so every setIsPlaying call also updates the ref + notifies the
-  // fine-grained playback store in the same synchronous tick.
   const setIsPlayingState = useCallback(
     (value: boolean) => {
       isPlayingRef.current = value;
@@ -236,8 +248,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     [subscribeToPlayback, getPlaybackSongId, getPlaybackIsPlaying],
   );
 
-  // ─── Progress store helpers ────────────────────────────────────────────────
-
   const emitProgressUpdate = useCallback(() => {
     progressSnapshotRef.current = {
       currentTime: currentTimeRef.current,
@@ -260,8 +270,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     }),
     [subscribeToProgress, getProgressSnapshot],
   );
-
-  // ─── Broadcast helpers ─────────────────────────────────────────────────────
 
   const postPlayerMessage = useCallback((message: PlayerBroadcastMessage) => {
     channelRef.current?.postMessage(message);
@@ -304,8 +312,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     },
     [emitProgressUpdate],
   );
-
-  // ─── HLS helpers ──────────────────────────────────────────────────────────
 
   const destroyHls = useCallback(() => {
     pendingPlayAfterManifestRef.current = false;
@@ -391,8 +397,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     audio.load();
   }, [destroyHls]);
 
-  // ─── Audio element (created once) ─────────────────────────────────────────
-
   function getAudio(): HTMLAudioElement {
     if (!audioRef.current) {
       const audio = new Audio();
@@ -450,6 +454,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
 
         playSongDirectlyRef.current(nextSong, true);
+        scrollSongCardIntoView(nextSong.id);
       });
 
       audio.addEventListener("timeupdate", () => {
@@ -499,8 +504,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
     return audioRef.current;
   }
-
-  // ─── Playback actions ──────────────────────────────────────────────────────
 
   const safePlay = useCallback(() => {
     const audio = getAudio();
@@ -571,12 +574,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       if (!audio.paused) audio.pause();
 
-      // Update song ref BEFORE emitting so snapshot readers see the new id
       currentSongRef.current = song;
       setCurrentSong(song);
       setCurrentTimeState(0);
       setDurationState(song.duration || 0);
-      emitPlaybackUpdate(); // notify fine-grained subscribers immediately
+      emitPlaybackUpdate();
 
       lastStorageWriteTimeRef.current = Date.now();
       writeStoredPlayerState({ currentSong: song, currentTime: 0, duration: song.duration || 0 });
@@ -691,15 +693,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      const nextSong = queue[nextIdx];
       const shouldPlay = forcePlay || !audioRef.current?.paused;
-      playSongDirectly(queue[nextIdx], shouldPlay);
+      playSongDirectly(nextSong, shouldPlay);
+      scrollSongCardIntoView(nextSong.id);
     },
     [playSongDirectly, postPausedState, setIsPlayingState],
   );
 
   navigateTrackRef.current = navigateTrack;
-
-  // ─── Effects ───────────────────────────────────────────────────────────────
 
   useEffect(() => {
     window.localStorage.removeItem(PLAYER_STORAGE_KEY);
@@ -823,8 +825,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [safePause, safePlay]);
 
-  // ─── Context value ─────────────────────────────────────────────────────────
-
   const playerValue = useMemo(() => {
     const value = {
       currentSong,
@@ -869,12 +869,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// ─── Public hooks ─────────────────────────────────────────────────────────────
-
-export function usePlayer() {
+function usePlayerContext() {
   const ctx = useContext(PlayerContext);
   if (!ctx) throw new Error("usePlayer must be used within PlayerProvider");
   return ctx;
+}
+
+export function usePlayer() {
+  return usePlayerContext();
 }
 
 export function usePlayerProgress() {
@@ -883,13 +885,7 @@ export function usePlayerProgress() {
   return useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
 }
 
-/**
- * Returns true only when this specific song is the current song.
- * Uses useSyncExternalStore with a boolean snapshot so only the 2 SongCards
- * that actually changed (old current → new current) re-render on song switch.
- * All other SongCards are completely skipped.
- */
-export function useIsCurrentSong(songId: string): boolean {
+export function useIsCurrentSong(songId: string) {
   const store = useContext(PlaybackStoreContext);
   if (!store) throw new Error("useIsCurrentSong must be used within PlayerProvider");
   return useSyncExternalStore(
@@ -899,12 +895,7 @@ export function useIsCurrentSong(songId: string): boolean {
   );
 }
 
-/**
- * Returns true only when this song is current AND playing.
- * Combines both checks into one subscription so the play/pause icon
- * only re-renders in the one SongCard that needs it.
- */
-export function useIsCurrentSongPlaying(songId: string): boolean {
+export function useIsCurrentSongPlaying(songId: string) {
   const store = useContext(PlaybackStoreContext);
   if (!store) throw new Error("useIsCurrentSongPlaying must be used within PlayerProvider");
   return useSyncExternalStore(
@@ -914,16 +905,12 @@ export function useIsCurrentSongPlaying(songId: string): boolean {
   );
 }
 
-/**
- * Returns true when any song is loaded in the player.
- * Used to determine bottom collision padding for dropdowns.
- */
-export function useHasCurrentSong(): boolean {
+export function useHasCurrentSong() {
   const store = useContext(PlaybackStoreContext);
   if (!store) throw new Error("useHasCurrentSong must be used within PlayerProvider");
   return useSyncExternalStore(
     store.subscribe,
-    () => store.getSongId() !== null,
+    () => Boolean(store.getSongId()),
     () => false,
   );
 }
