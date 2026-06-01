@@ -1,6 +1,9 @@
 import {
   EDIT_POINT_FILTER_OPTIONS,
   FilterTrigger,
+  MusicLibraryEmptyState,
+  MusicLibraryLoadNotice,
+  MusicLibrarySkeletonList,
   clampPlaybackProgress,
   getAdjacentTrackIndex,
   getMusicLibrarySearchPlaceholder,
@@ -649,18 +652,13 @@ export default function DesktopMusicLibraryView({
       />
 
       {songsError && (
-        <div className="desktop-music-load-notice">
+        <MusicLibraryLoadNotice>
           Could not load live songs. Showing sample tracks. {songsError}
-        </div>
+        </MusicLibraryLoadNotice>
       )}
 
       <div className="desktop-music-list">
-        {songsLoading && (
-          <div className="desktop-music-empty-state">
-            <h3>Loading music library</h3>
-            <p>Fetching published Filmwave songs from the website.</p>
-          </div>
-        )}
+        {songsLoading && <MusicLibrarySkeletonList />}
 
         {!songsLoading &&
           displayedSongs.map((song) => (
@@ -687,12 +685,7 @@ export default function DesktopMusicLibraryView({
             />
           ))}
 
-        {!songsLoading && displayedSongs.length === 0 && (
-          <div className="desktop-music-empty-state">
-            <h3>No songs found</h3>
-            <p>Clear a filter or search for a different cue.</p>
-          </div>
-        )}
+        {!songsLoading && displayedSongs.length === 0 && <MusicLibraryEmptyState />}
       </div>
 
       {activeSong && (
