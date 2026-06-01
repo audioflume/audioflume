@@ -1,8 +1,9 @@
 import {
-  getMarkerType,
   getSongCuePointMarkers,
   normalizeEditPointType,
+  parseEditPoints,
   SharedWaveformCanvas,
+  SongCardCuePointOverlay,
   SongCardShell,
   SongCardStemsSlot,
   type SharedWaveformCanvasHandle,
@@ -65,19 +66,8 @@ export default function DesktopSongCard({
     () => selectedCuePointTypes.map(normalizeEditPointType),
     [selectedCuePointTypes],
   );
-  const selectedCuePointTypeSet = useMemo(
-    () => new Set(normalizedSelectedCuePointTypes),
-    [normalizedSelectedCuePointTypes],
-  );
+  const editPoints = useMemo(() => parseEditPoints(song.editPoints), [song.editPoints]);
   const cuePoints = useMemo(() => getSongCuePointMarkers(song), [song]);
-  const visibleCuePoints = useMemo(() => {
-    if (!markersVisible) return [];
-    if (selectedCuePointTypeSet.size === 0) return cuePoints;
-
-    return cuePoints.filter((marker) =>
-      selectedCuePointTypeSet.has(getMarkerType(marker)),
-    );
-  }, [cuePoints, markersVisible, selectedCuePointTypeSet]);
 
   useEffect(() => {
     const nextProgress = pendingSeekProgress ?? playbackProgress;
@@ -153,16 +143,13 @@ export default function DesktopSongCard({
     onSeek(safeProgress);
   }
 
-  const markerOverlay = visibleCuePoints.length > 0 ? (
-    <>
-      {visibleCuePoints.map((marker) => {
-        const duration = Number(song.durationSeconds || 0);
-        const progress = duration > 0 ? marker.time / duration : 0;
-        const left = Math.max(0, Math.min(100, progress * 100));
-
-        return <i key={marker.id} style={{ left: `${left}%` }} />;
-      })}
-    </>
+  const markerOverlay = markersVisible && cuePoints.length > 0 ? (
+    <SongCardCuePointOverlay
+      editPoints={editPoints}
+      duration={song.durationSeconds}
+      highlightedEditPointTypes={normalizedSelectedCuePointTypes}
+      onSeek={handleWaveformSeek}
+    />
   ) : null;
 
   return (
