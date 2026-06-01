@@ -268,6 +268,7 @@ export default function SongCard({
     <>
       <div
         ref={cardRef}
+        data-song-card-id={song.id}
         className={`filmwave-song-card group w-full scroll-mt-48 scroll-mb-40 cursor-pointer transition-colors ${
           isCurrentSong
             ? "is-current bg-[var(--bg-hover)]"
