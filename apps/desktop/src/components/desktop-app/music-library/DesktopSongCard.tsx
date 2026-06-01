@@ -4,6 +4,7 @@ import {
   normalizeEditPointType,
   SharedWaveformCanvas,
   SongCardShell,
+  SongCardStemsSlot,
   type SharedWaveformCanvasHandle,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
@@ -53,6 +54,7 @@ export default function DesktopSongCard({
   onSync: () => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [stemsOpen, setStemsOpen] = useState(false);
   const [visualProgress, setVisualProgress] = useState(pendingSeekProgress ?? playbackProgress);
   const actionsRef = useRef<HTMLDivElement | null>(null);
   const waveformRef = useRef<SharedWaveformCanvasHandle | null>(null);
@@ -182,7 +184,13 @@ export default function DesktopSongCard({
       playOverlay={isPlaying ? <PauseIcon /> : <PlayIcon />}
       title={song.title}
       artist={song.artist}
-      stems={song.markers > 0 ? <span>+{song.markers}</span> : null}
+      stems={
+        <SongCardStemsSlot
+          stems={song.stems}
+          open={stemsOpen}
+          onOpenChange={setStemsOpen}
+        />
+      }
       waveform={
         <SharedWaveformCanvas
           ref={waveformRef}
