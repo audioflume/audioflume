@@ -4,8 +4,8 @@ import {
   filterMusicLibrarySongs,
   GENRE_OPTIONS,
   INSTRUMENT_OPTIONS,
-  INSTRUMENTAL_VOCAL_FILTER_OPTION,
   MOOD_OPTIONS,
+  normalizeDesktopMusicLibraryFilters,
   QUICK_FILTERS,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
@@ -53,7 +53,7 @@ export function getDesktopMusicFilterOptions(): DesktopMusicFilterOptions {
     mood: [...MOOD_OPTIONS],
     genre: [...GENRE_OPTIONS],
     instrument: [...INSTRUMENT_OPTIONS],
-    vocal: [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...VOCALS_OPTIONS],
+    vocal: [...VOCALS_OPTIONS],
     build: [...BUILD_OPTIONS],
     cuePoint: EDIT_POINT_FILTER_OPTIONS.map((option) => option.label),
   };
@@ -71,10 +71,6 @@ export function filterDesktopMusicSongs(
   songs: DesktopMusicSong[],
   filters: DesktopMusicFilterState,
 ) {
-  const selectedEditPoints = EDIT_POINT_FILTER_OPTIONS.filter((option) =>
-    filters.cuePoint.includes(option.label),
-  ).map((option) => option.type);
-
   return songs.filter((song) => {
     if (
       filters.selectedPlaylist &&
@@ -83,21 +79,10 @@ export function filterDesktopMusicSongs(
       return false;
     }
 
-    return filterMusicLibrarySongs([song], {
-      search: filters.search,
-      selectedMoods: filters.mood,
-      selectedGenres: filters.genre,
-      selectedInstruments: filters.instrument,
-      selectedBuilds: filters.build,
-      selectedVocals: filters.vocal.filter(
-        (value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
-      ),
-      selectedDurations: filters.selectedDurations,
-      selectedEditPoints,
-      instrumental: filters.vocal.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION),
-      bpmValue: filters.bpmValue,
-      keyValue: filters.keyValue,
-    }).length > 0;
+    return filterMusicLibrarySongs(
+      [song],
+      normalizeDesktopMusicLibraryFilters(filters),
+    ).length > 0;
   });
 }
 
