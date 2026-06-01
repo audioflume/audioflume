@@ -34,8 +34,7 @@ html[data-theme="light"] .desktop-settings-view {
 .sync-card {
   display: grid;
   min-width: 0;
-  grid-template-columns: 190px minmax(0, 1fr);
-  column-gap: 34px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
 }
 
@@ -44,24 +43,31 @@ html[data-theme="light"] .desktop-settings-view {
 }
 
 .desktop-sync-settings-sidebar {
-  position: sticky;
-  top: 88px;
-  grid-column: 1;
-  grid-row: 1 / span 20;
-  align-self: start;
+  position: static;
+  width: 100%;
   min-width: 0;
-  margin-top: 0;
+  margin-bottom: 18px;
 }
 
 .desktop-sync-settings-nav {
-  display: grid;
-  gap: 2px;
+  display: flex;
+  width: 100%;
   min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 2px;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.desktop-sync-settings-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .desktop-sync-settings-nav-item {
   display: flex;
-  width: 100%;
+  width: auto;
+  flex: 0 0 auto;
   height: var(--filmwave-sidebar-row-height, 32px);
   cursor: pointer;
   align-items: center;
@@ -76,6 +82,7 @@ html[data-theme="light"] .desktop-settings-view {
   font-weight: 500;
   line-height: 1;
   text-align: left;
+  white-space: nowrap;
   transition:
     background 150ms ease,
     color 150ms ease;
@@ -97,7 +104,7 @@ html[data-theme="light"] .desktop-settings-view {
 }
 
 .desktop-sync-settings-header {
-  grid-column: 2;
+  grid-column: 1;
   min-width: 0;
   padding-bottom: 22px;
   border-bottom: 1px solid var(--sync-border);
@@ -115,7 +122,7 @@ html[data-theme="light"] .desktop-settings-view {
 .status-row,
 .section-block,
 .projects-panel {
-  grid-column: 2;
+  grid-column: 1;
   min-width: 0;
   border: 0;
   border-bottom: 1px solid var(--sync-border);
@@ -670,55 +677,6 @@ button.project-row:hover,
   .desktop-settings-view {
     width: 100%;
     max-width: none;
-  }
-
-  .sync-card {
-    grid-template-columns: minmax(0, 1fr);
-    column-gap: 0;
-  }
-
-  .desktop-sync-settings-sidebar {
-    position: static;
-    grid-column: 1;
-    grid-row: 1;
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 18px;
-    overflow: hidden;
-  }
-
-  .desktop-sync-settings-header {
-    grid-column: 1;
-    grid-row: 2;
-    min-width: 0;
-  }
-
-  .desktop-sync-settings-nav {
-    display: flex;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-
-  .desktop-sync-settings-nav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .desktop-sync-settings-nav-item {
-    width: auto;
-    max-width: max-content;
-    flex: 0 0 auto;
-  }
-
-  .status-row,
-  .section-block,
-  .projects-panel {
-    grid-column: 1;
-    min-width: 0;
   }
 }
 
