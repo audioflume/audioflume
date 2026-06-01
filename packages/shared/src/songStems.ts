@@ -1,13 +1,14 @@
-import { getRecord } from "./objectUtils";
 import type { FilmwaveStem } from "./music";
+
+function getRecord(value: unknown) {
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : {};
+}
 
 function getStemNameFromUrl(url: string, index: number) {
   const decodedUrl = decodeURIComponent(url);
-  const filename =
-    decodedUrl
-      .split("/")
-      .pop()
-      ?.replace(/\.[^/.]+$/, "") || "";
+  const filename = decodedUrl.split("/").pop()?.replace(/\.[^.]+$/, "") || "";
 
   if (filename) {
     return filename
