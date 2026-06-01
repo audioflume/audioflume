@@ -156,6 +156,14 @@ html[data-theme="light"] .desktop-music-page .desktop-song-card:hover:not(.is-cu
   gap: 4px;
 }
 
+.desktop-song-actions-inner {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
 .filmwave-song-action-button,
 .desktop-song-actions > button,
 .desktop-song-action-menu-wrap > button {
@@ -233,6 +241,22 @@ html[data-theme="light"] .desktop-music-page .desktop-song-card:hover:not(.is-cu
   min-width: 0;
   flex: 1 1 auto;
   overflow: visible;
+}
+
+.filmwave-song-wave > [data-player-waveform-slot] {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 24px;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  overflow: visible;
+}
+
+.filmwave-song-wave > [data-player-waveform-slot] canvas {
+  width: 100%;
+  height: 100%;
 }
 
 .filmwave-song-duration,
