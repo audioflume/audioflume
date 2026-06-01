@@ -7,10 +7,17 @@ import {
   filterMusicLibrarySongs,
   GENRE_OPTIONS,
   getMusicLibrarySearchPlaceholder,
+  getMusicSongIdentityValues,
+  getMusicSongStableId,
+  getPlaylistSongIdsFromResponse,
   INSTRUMENT_OPTIONS,
   isCoreEditPointType,
   MOOD_OPTIONS,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
+  MusicBpmFilter,
+  MusicDurationFilter,
+  MusicKeyFilter,
+  MusicMultiSelectFilter,
   MusicShuffleButton,
   QUICK_FILTERS,
   SearchFilterChrome,
@@ -22,19 +29,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
-import { getRecord, getStringFromRecord } from "@/lib/utils";
 
 import { useFilterPersistence } from "@/hooks/useFilterPersistence";
 import { useSongs } from "@/hooks/useSongs";
 
 import { usePlayer } from "@/context/PlayerContext";
 
-import BPMFilter from "@/components/BPMFilter";
-import DurationFilter from "@/components/DurationFilter";
-import FilterDropdown from "@/components/FilterDropdown";
 import FilterTags from "@/components/FilterTags";
 import Footer from "@/components/Footer";
-import KeyFilter from "@/components/KeyFilter";
 import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
@@ -53,111 +55,6 @@ const MUSIC_HERO_IMAGE =
 
 const DESKTOP_SYNC_IMAGE =
   "https://images.unsplash.com/photo-1686519093104-3140c6dcf284?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-
-function getSongIdentityValues(song: unknown) {
-  const record = getRecord(song);
-  const fields =
-    typeof record.fields === "object" && record.fields !== null
-      ? getRecord(record.fields)
-      : null;
-
-  const values = [
-    getStringFromRecord(record, [
-      "id",
-      "songId",
-      "song_id",
-      "airtableId",
-      "airtable_id",
-      "airtableRecordId",
-      "recordId",
-    ]),
-    fields
-      ? getStringFromRecord(fields, [
-          "id",
-          "songId",
-          "song_id",
-          "airtableId",
-          "airtable_id",
-          "airtableRecordId",
-          "recordId",
-        ])
-      : "",
-  ];
-
-  return values.filter(Boolean);
-}
-
-function getSongStableId(song: unknown, fallbackIndex = 0) {
-  return getSongIdentityValues(song)[0] || String(fallbackIndex);
-}
-
-function getPlaylistSongIdsFromResponse(data: unknown) {
-  const record = getRecord(data);
-
-  const rows = Array.isArray(data)
-    ? data
-    : Array.isArray(record.songs)
-      ? record.songs
-      : Array.isArray(record.playlistSongs)
-        ? record.playlistSongs
-        : Array.isArray(record.items)
-          ? record.items
-          : Array.isArray(record.data)
-            ? record.data
-            : [];
-
-  const ids = new Set<string>();
-
-  rows.forEach((row) => {
-    const rowRecord = getRecord(row);
-    const fields =
-      typeof rowRecord.fields === "object" && rowRecord.fields !== null
-        ? getRecord(rowRecord.fields)
-        : null;
-    const song =
-      typeof rowRecord.song === "object" && rowRecord.song !== null
-        ? getRecord(rowRecord.song)
-        : null;
-
-    [
-      getStringFromRecord(rowRecord, [
-        "id",
-        "songId",
-        "song_id",
-        "airtableId",
-        "airtable_id",
-        "airtableRecordId",
-        "recordId",
-      ]),
-      fields
-        ? getStringFromRecord(fields, [
-            "id",
-            "songId",
-            "song_id",
-            "airtableId",
-            "airtable_id",
-            "airtableRecordId",
-            "recordId",
-          ])
-        : "",
-      song
-        ? getStringFromRecord(song, [
-            "id",
-            "songId",
-            "song_id",
-            "airtableId",
-            "airtable_id",
-            "airtableRecordId",
-            "recordId",
-          ])
-        : "",
-    ].forEach((id) => {
-      if (id) ids.add(id);
-    });
-  });
-
-  return ids;
-}
 
 function shuffleSongList<T>(songs: T[]) {
   if (songs.length < 2) return [...songs];
@@ -349,7 +246,7 @@ export default function MusicPage() {
     const playlistSongs = selectedPlaylistId
       ? songs.filter((song) => {
           if (!selectedPlaylistSongIds) return false;
-          const identityValues = getSongIdentityValues(song);
+          const identityValues = getMusicSongIdentityValues(song);
           return identityValues.some((id) => selectedPlaylistSongIds.has(id));
         })
       : songs;
@@ -391,8 +288,8 @@ export default function MusicPage() {
     const orderMap = new Map(shuffleOrderIds.map((songId, index) => [songId, index]));
 
     return [...filteredSongs].sort((a, b) => {
-      const aId = getSongStableId(a);
-      const bId = getSongStableId(b);
+      const aId = getMusicSongStableId(a);
+      const bId = getMusicSongStableId(b);
       const aOrder = orderMap.get(aId);
       const bOrder = orderMap.get(bId);
 
@@ -484,51 +381,51 @@ export default function MusicPage() {
                 onChange={setSelectedPlaylist}
               />
 
-              <FilterDropdown
+              <MusicMultiSelectFilter
                 label="Mood"
                 options={[...MOOD_OPTIONS]}
                 selected={selectedMoods}
                 onChange={setSelectedMoods}
               />
 
-              <FilterDropdown
+              <MusicMultiSelectFilter
                 label="Genre"
                 options={[...GENRE_OPTIONS]}
                 selected={selectedGenres}
                 onChange={setSelectedGenres}
               />
 
-              <FilterDropdown
+              <MusicMultiSelectFilter
                 label="Instruments"
                 options={[...INSTRUMENT_OPTIONS]}
                 selected={selectedInstruments}
                 onChange={setSelectedInstruments}
               />
 
-              <FilterDropdown
+              <MusicMultiSelectFilter
                 label="Vocals"
                 options={VOCAL_FILTER_OPTIONS}
                 selected={selectedVocalFilters}
                 onChange={setSelectedVocalFilters}
               />
 
-              <FilterDropdown
+              <MusicMultiSelectFilter
                 label="Build"
                 options={[...BUILD_OPTIONS]}
                 selected={selectedBuilds}
                 onChange={setSelectedBuilds}
               />
 
-              <BPMFilter value={bpmValue} onChange={setBpmValue} />
+              <MusicBpmFilter value={bpmValue} onChange={setBpmValue} />
 
-              <KeyFilter value={keyValue} onChange={setKeyValue} />
+              <MusicKeyFilter value={keyValue} onChange={setKeyValue} />
 
-              <DurationFilter
+              <MusicDurationFilter
                 selected={selectedDurations}
                 onChange={setSelectedDurations}
               />
 
-              <FilterDropdown
+              <MusicMultiSelectFilter
                 label="Cue Points"
                 options={EDIT_POINT_FILTER_OPTIONS.map((option) => option.label)}
                 selected={EDIT_POINT_FILTER_OPTIONS.filter((option) =>
@@ -560,7 +457,7 @@ export default function MusicPage() {
                   const shuffledSongs = shuffleSongList(filteredSongs);
                   setShuffleOrderIds(
                     shuffledSongs.map((song, index) =>
-                      getSongStableId(song, index),
+                      getMusicSongStableId(song, index),
                     ),
                   );
                 }}
@@ -694,12 +591,14 @@ export default function MusicPage() {
         )}
 
         {showSongSkeleton ? (
-          <SkeletonSongList />
+          <div className={`${hasActiveFilters ? "mt-4" : ""} border-t border-[var(--border-subtle)]`}>
+            <SkeletonSongList />
+          </div>
         ) : (
-          <div className="pb-6">
+          <div className={`${hasActiveFilters ? "mt-4" : ""} border-t border-[var(--border-subtle)] pb-6`}>
             {displayedSongs.map((song, index) => (
               <SongCard
-                key={getSongStableId(song, index)}
+                key={getMusicSongStableId(song, index)}
                 song={song}
                 index={index}
                 highlightedEditPointTypes={highlightedEditPointTypes}
