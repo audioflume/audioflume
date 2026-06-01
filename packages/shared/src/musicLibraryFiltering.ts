@@ -2,7 +2,10 @@ import type {
   FilmwaveBpmFilterValue,
   FilmwaveKeyFilterValue,
 } from "./music";
-import { songMatchesEditPointFilters } from "./editPointUtils";
+import {
+  EDIT_POINT_FILTER_OPTIONS,
+  songMatchesEditPointFilters,
+} from "./editPointUtils";
 
 export const INSTRUMENTAL_VOCAL_FILTER_OPTION = "Instrumental";
 
@@ -86,6 +89,63 @@ export type MusicLibraryFilterValues = {
   bpmValue?: FilmwaveBpmFilterValue | null;
   keyValue?: FilmwaveKeyFilterValue | null;
 };
+
+export type DesktopMusicLibraryFilterValues = {
+  search?: string;
+  mood?: string[];
+  genre?: string[];
+  instrument?: string[];
+  vocal?: string[];
+  build?: string[];
+  selectedDurations?: string[];
+  cuePoint?: string[];
+  bpmValue?: FilmwaveBpmFilterValue | null;
+  keyValue?: FilmwaveKeyFilterValue | null;
+};
+
+export function getSelectedEditPointTypesFromLabels(labels: string[] = []) {
+  return EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+    labels.includes(option.label),
+  ).map((option) => option.type);
+}
+
+export function normalizeDesktopMusicLibraryFilters(
+  filters: DesktopMusicLibraryFilterValues,
+): MusicLibraryFilterValues {
+  const vocals = filters.vocal ?? [];
+
+  return {
+    search: filters.search ?? "",
+    selectedMoods: filters.mood ?? [],
+    selectedGenres: filters.genre ?? [],
+    selectedInstruments: filters.instrument ?? [],
+    selectedBuilds: filters.build ?? [],
+    selectedVocals: vocals.filter(
+      (value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
+    ),
+    selectedDurations: filters.selectedDurations ?? [],
+    selectedEditPoints: getSelectedEditPointTypesFromLabels(filters.cuePoint),
+    instrumental: vocals.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION),
+    bpmValue: filters.bpmValue ?? null,
+    keyValue: filters.keyValue ?? null,
+  };
+}
+
+export function hasActiveMusicLibraryFilters(filters: MusicLibraryFilterValues) {
+  return Boolean(
+    filters.search?.trim() ||
+      filters.selectedMoods?.length ||
+      filters.selectedGenres?.length ||
+      filters.selectedInstruments?.length ||
+      filters.selectedBuilds?.length ||
+      filters.selectedVocals?.length ||
+      filters.selectedDurations?.length ||
+      filters.selectedEditPoints?.length ||
+      filters.instrumental ||
+      filters.bpmValue ||
+      filters.keyValue,
+  );
+}
 
 function toStringArray(value: unknown): string[] {
   if (Array.isArray(value)) {
