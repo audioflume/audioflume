@@ -284,7 +284,13 @@ html[data-theme="light"] .desktop-settings-view {
 .folder-path {
   max-width: 100%;
   overflow: hidden;
-  font-family: var(--font-geist-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-family: var(
+    --font-geist-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace
+  );
   font-size: 12px !important;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -681,12 +687,19 @@ button.project-row:hover,
     grid-column: 1;
     grid-row: 1;
     width: 100%;
-    margin-bottom: 18px;
+    margin-bottom: 0;
     overflow: hidden;
+  }
+
+  .desktop-sync-settings-header {
+    grid-column: 1;
+    grid-row: 2;
+    margin-bottom: 18px;
   }
 
   .sync-card {
     grid-column: 1;
+    grid-row: 3;
   }
 
   .desktop-sync-settings-nav {
