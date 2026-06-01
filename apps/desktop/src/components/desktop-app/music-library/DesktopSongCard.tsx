@@ -3,6 +3,7 @@ import {
   getSongCuePointMarkers,
   normalizeEditPointType,
   SharedWaveformCanvas,
+  SongCardShell,
   type SharedWaveformCanvasHandle,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
@@ -163,128 +164,108 @@ export default function DesktopSongCard({
   ) : null;
 
   return (
-    <article
-      ref={cardRef}
-      className={`filmwave-song-card desktop-song-card${isSelected ? " is-current" : ""}${isPlaying ? " is-playing" : ""}`}
-    >
-      <button
-        type="button"
-        className="filmwave-song-cover desktop-song-cover"
-        aria-label="Play song"
-        onClick={onPlay}
-      >
-        {song.coverArt ? (
+    <SongCardShell
+      cardRef={cardRef}
+      className={`desktop-song-card${isSelected ? " is-current" : ""}${isPlaying ? " is-playing" : ""}`}
+      coverLabel="Play song"
+      onCoverClick={onPlay}
+      onInfoClick={onPlay}
+      cover={
+        song.coverArt ? (
           <img src={song.coverArt} alt="" className="desktop-song-cover-image" draggable={false} />
         ) : (
           <span className="desktop-song-cover-text">
             {song.title.slice(0, 1).toUpperCase()}
           </span>
-        )}
-        <span className="filmwave-song-play-overlay desktop-song-play-overlay" aria-hidden="true">
-          <span className="filmwave-song-play-button">
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
-          </span>
-        </span>
-      </button>
-
-      <button type="button" className="filmwave-song-info desktop-song-info" onClick={onPlay}>
-        <h3 className="filmwave-song-title desktop-song-title">{song.title}</h3>
-        <p className="filmwave-song-artist desktop-song-artist">{song.artist}</p>
-      </button>
-
-      <div className="filmwave-song-wave-wrap desktop-song-wave-wrap">
-        <div className="filmwave-song-stems-slot desktop-song-stems-slot">
-          {song.markers > 0 && <span>+{song.markers}</span>}
-        </div>
-
+        )
+      }
+      playOverlay={isPlaying ? <PauseIcon /> : <PlayIcon />}
+      title={song.title}
+      artist={song.artist}
+      stems={song.markers > 0 ? <span>+{song.markers}</span> : null}
+      waveform={
         <SharedWaveformCanvas
           ref={waveformRef}
           peaks={song.waveform}
           progress={visualProgress}
           onSeek={handleWaveformSeek}
           overlay={markerOverlay}
-          className="filmwave-song-wave desktop-song-wave filmwave-song-wave-canvas"
+          className="filmwave-song-wave-canvas"
           canvasClassName="desktop-song-wave-canvas"
           ariaLabel={`Seek ${song.title}`}
         />
-
-        <span className="filmwave-song-duration desktop-song-duration">{song.duration}</span>
-      </div>
-
-      <div className="filmwave-song-genre-slot desktop-song-genre-slot">
-        <span className="filmwave-song-genre desktop-song-genre">{visibleGenres}</span>
-      </div>
-
-      <div className="filmwave-song-key-bpm desktop-song-key-bpm">
-        <span className="filmwave-song-key desktop-song-key">{song.key || "—"}</span>
-        <span className="filmwave-song-bpm desktop-song-bpm">{song.bpm ? `${song.bpm} BPM` : "—"}</span>
-      </div>
-
-      <div className="filmwave-song-actions desktop-song-actions" ref={actionsRef}>
-        <button
-          type="button"
-          onClick={onFavoriteToggle}
-          aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
-          className={`filmwave-song-action-button${favorite ? " is-active" : ""}`}
-        >
-          <HeartIcon size={14} filled={favorite} />
-        </button>
-
-        <div className="desktop-song-action-menu-wrap">
+      }
+      duration={song.duration}
+      genre={visibleGenres}
+      keyMeta={song.key || "—"}
+      bpmMeta={song.bpm ? `${song.bpm} BPM` : "—"}
+      actions={
+        <div ref={actionsRef} className="desktop-song-actions-inner">
           <button
             type="button"
-            aria-label="Song options"
-            aria-expanded={actionsOpen}
-            className={`filmwave-song-action-button${actionsOpen ? " is-active" : ""}`}
-            onClick={(event) => {
-              event.stopPropagation();
-              setActionsOpen((open) => !open);
-            }}
+            onClick={onFavoriteToggle}
+            aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
+            className={`filmwave-song-action-button${favorite ? " is-active" : ""}`}
           >
-            <MoreIcon size={14} />
+            <HeartIcon size={14} filled={favorite} />
           </button>
 
-          {actionsOpen && (
-            <div className="desktop-song-action-menu" role="menu">
-              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
-                Add to Playlist
-              </button>
-              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
-                Add to Project
-              </button>
-              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
-                Create New Playlist
-              </button>
-              <button type="button" role="menuitem" disabled>
-                Share Song
-              </button>
-              <button type="button" role="menuitem" disabled>
-                Sync Song
-              </button>
-            </div>
-          )}
-        </div>
+          <div className="desktop-song-action-menu-wrap">
+            <button
+              type="button"
+              aria-label="Song options"
+              aria-expanded={actionsOpen}
+              className={`filmwave-song-action-button${actionsOpen ? " is-active" : ""}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                setActionsOpen((open) => !open);
+              }}
+            >
+              <MoreIcon size={14} />
+            </button>
 
-        <button
-          type="button"
-          aria-label={isSynced ? "Drag synced song file" : "Sync song"}
-          className={`filmwave-song-action-button desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`}
-          disabled={syncStatus === "syncing"}
-          onClick={(event) => {
-            event.stopPropagation();
-            if (!isSynced) onSync();
-          }}
-          onPointerDown={handleSyncedSongPointerDown}
-          onPointerMove={handleSyncedSongPointerMove}
-          onPointerUp={handleSyncedSongPointerEnd}
-          onPointerCancel={handleSyncedSongPointerEnd}
-        >
-          <span className="desktop-song-sync-button-inner">
-            {isSynced ? <CheckIcon size={10} strokeWidth={3} /> : <SyncIcon size={14} />}
-          </span>
-        </button>
-      </div>
-    </article>
+            {actionsOpen && (
+              <div className="desktop-song-action-menu" role="menu">
+                <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                  Add to Playlist
+                </button>
+                <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                  Add to Project
+                </button>
+                <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                  Create New Playlist
+                </button>
+                <button type="button" role="menuitem" disabled>
+                  Share Song
+                </button>
+                <button type="button" role="menuitem" disabled>
+                  Sync Song
+                </button>
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            aria-label={isSynced ? "Drag synced song file" : "Sync song"}
+            className={`filmwave-song-action-button desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`}
+            disabled={syncStatus === "syncing"}
+            onClick={(event) => {
+              event.stopPropagation();
+              if (!isSynced) onSync();
+            }}
+            onPointerDown={handleSyncedSongPointerDown}
+            onPointerMove={handleSyncedSongPointerMove}
+            onPointerUp={handleSyncedSongPointerEnd}
+            onPointerCancel={handleSyncedSongPointerEnd}
+          >
+            <span className="desktop-song-sync-button-inner">
+              {isSynced ? <CheckIcon size={10} strokeWidth={3} /> : <SyncIcon size={14} />}
+            </span>
+          </button>
+        </div>
+      }
+    />
   );
 }
 
