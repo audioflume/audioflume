@@ -1,0 +1,42 @@
+.filmwave-song-card.is-current .filmwave-song-play-overlay,
+.desktop-song-card.is-current .desktop-song-play-overlay,
+.desktop-song-card.is-current .filmwave-song-play-overlay {
+  opacity: 1;
+}
+
+.filmwave-music-shuffle-button {
+  display: inline-flex;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: center;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  padding: 0;
+  color: var(--icon-color);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.filmwave-music-shuffle-button:hover,
+.filmwave-music-shuffle-button.is-active,
+.filmwave-music-shuffle-button[aria-pressed="true"] {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.filmwave-music-shuffle-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+html[data-theme="light"] .filmwave-music-shuffle-button.is-active,
+html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
+  color: #000000;
+}
