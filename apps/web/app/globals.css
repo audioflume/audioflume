@@ -7,6 +7,7 @@
 @import "../../../packages/shared/styles/sidebar-player-boundary.css";
 @import "../../../packages/shared/styles/search-filter-chrome.css";
 @import "../../../packages/shared/styles/music-filter-popovers.css";
+@import "../../../packages/shared/styles/music-library-states.css";
 
 body.sidebar-collapsed {
   --sidebar-width: var(--sidebar-width-collapsed);
@@ -78,107 +79,6 @@ body.sidebar-collapsed aside[data-sidebar] {
 }
 
 .filmwave-dropdown-shell button.danger-hover:hover:not(:disabled) {
-  background: var(--danger-hover);
+  background: var(--danger-bg);
   color: var(--danger);
 }
-
-.song-more-dropdown {
-  min-width: 178px;
-}
-
-.music-player-more-menu {
-  z-index: 9999;
-  display: grid;
-  gap: 4px;
-  width: max-content;
-  min-width: 190px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-secondary);
-  padding: 6px;
-  box-shadow: var(--shadow-ui);
-}
-
-.music-player-more-menu button,
-.music-player-more-menu a {
-  display: flex;
-  width: 100%;
-  min-height: 34px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--text-secondary);
-  padding: 0 10px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
-  text-align: left;
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
-}
-
-.music-player-more-menu button:hover:not(:disabled),
-.music-player-more-menu a:hover {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
-}
-
-.music-player-more-menu button:disabled {
-  cursor: default;
-  color: var(--text-muted);
-  opacity: 0.55;
-}
-
-.music-player-more-menu-divider {
-  height: 1px;
-  margin: 4px 0;
-  background: var(--border);
-}
-
-.music-player-more-menu-close {
-  color: var(--danger) !important;
-}
-
-.music-player-more-menu-close:hover {
-  background: var(--danger-hover) !important;
-  color: var(--danger) !important;
-}
-
-.danger-hover {
-  color: var(--danger);
-}
-
-.danger-hover:hover {
-  background: var(--danger-hover);
-  color: var(--danger);
-}
-
-.danger-icon-hover {
-  color: var(--text-muted);
-}
-
-.danger-icon-hover:hover {
-  background: var(--danger-hover);
-  color: var(--danger);
-}
-
-/* ─── Music list spacing ─────────────────────────── */
-
-main > section > div[aria-hidden] ~ div.pb-6 {
-  border-top: 1px solid var(--border-subtle);
-}
-
-main > section > div[aria-hidden="true"] ~ div.pb-6 {
-  margin-top: 12px;
-}
-
-/* ─── Shared media overlay colours ─────────────────────────── */
