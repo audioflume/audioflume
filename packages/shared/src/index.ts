@@ -21,4 +21,5 @@ export * from "./MusicDurationFilter";
 export * from "./SongCardShell";
 export * from "./SongCardStemsSlot";
 export * from "./SongCardCuePointOverlay";
+export * from "./SongCardWaveform";
 export * from "./HeaderShell";
