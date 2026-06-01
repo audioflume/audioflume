@@ -107,7 +107,7 @@ html[data-theme="light"] .desktop-music-page .desktop-song-actions button.is-act
 
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced,
 html[data-theme="light"] .desktop-music-page .desktop-song-sync-button.is-synced:hover {
-  background: color-mix(in srgb, var(--bg-hover-strong) 96%, var(--text-primary) 4%) !important;
+  background: var(--bg-hover-strong) !important;
   color: var(--text-primary) !important;
   opacity: 1;
 }
