@@ -30,3 +30,4 @@ export * from "./MusicLibraryStates";
 export * from "./MusicShuffleButton";
 export * from "./HeaderShell";
 export * from "./UserMenuShell";
+export * from "./SettingsSideNav";
