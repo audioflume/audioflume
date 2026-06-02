@@ -12,11 +12,6 @@ body {
     color 0.18s ease;
 }
 
-html[data-theme="light"] .desktop-header {
-  background: var(--bg-primary);
-  border-bottom-color: var(--divider);
-}
-
 .desktop-header {
   position: fixed;
   top: 0;
@@ -24,7 +19,7 @@ html[data-theme="light"] .desktop-header {
   right: 0;
   z-index: 110;
   height: 56px;
-  border-bottom: 1px solid var(--divider);
+  border-bottom: 1px solid var(--border);
   background: var(--bg-primary);
   color: var(--text-primary);
   user-select: none;
@@ -38,114 +33,8 @@ html[data-theme="light"] .desktop-header {
   padding: 0 24px;
 }
 
-.desktop-header-logo-button {
-  display: flex;
-  height: 32px;
-  cursor: pointer;
-  align-items: center;
-  border: 0;
-  background: transparent;
-  color: var(--text-primary);
-  padding: 0;
-}
-
-.desktop-header-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.desktop-header-logo-mark {
-  display: block;
-  flex-shrink: 0;
-  color: var(--text-primary);
-}
-
-.desktop-header-actions {
-  position: relative;
-  display: flex;
-  height: 100%;
-  align-items: center;
-  gap: 4px;
-}
-
-.desktop-nav-link,
-.desktop-account-trigger {
-  display: flex;
-  height: 32px;
-  cursor: pointer;
-  align-items: center;
-  gap: 6px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--text-secondary);
-  padding: 0 10px;
-  font-size: 12px;
-  font-weight: 500;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
-}
-
-.desktop-nav-link:hover,
-.desktop-account-trigger:hover,
-.desktop-account-trigger.is-open {
-  background: var(--bg-row-hover);
-  color: var(--text-primary);
-}
-
-.desktop-user-menu-root {
-  position: relative;
-}
-
-.desktop-account-trigger {
-  gap: 8px;
-  padding-right: 2px;
-}
-
-.desktop-account-trigger-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.desktop-account-name {
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.desktop-header-chevron {
-  transition: transform 0.15s ease;
-}
-
-.desktop-header-chevron.is-open {
-  transform: rotate(180deg);
-}
-
-.desktop-account-avatar {
-  display: flex;
-  width: 32px;
-  height: 32px;
-  flex: 0 0 32px;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 50%;
-  background: var(--bg-control);
-  color: var(--text-secondary);
-}
-
-.desktop-account-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+@media (max-width: 550px) {
+  .desktop-user-menu-wrap .filmwave-user-menu {
+    width: min(300px, calc(100vw - 24px));
+  }
 }

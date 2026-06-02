@@ -8,7 +8,6 @@ import UserMenu from "./UserMenu";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
 import type { DesktopAppView } from "./desktop-app/DesktopAppShell";
 import "./Header.css";
-import "./HeaderOverrides.css";
 
 const THEME_STORAGE_KEY = "filmwave-theme";
 
@@ -95,12 +94,12 @@ export default function Header({
       logo={
         <button
           type="button"
-          className="filmwave-header-logo-action desktop-header-logo-button"
+          className="filmwave-header-logo-action"
           aria-label="Filmwave Desktop home"
           onClick={() => onActiveViewChange("projects")}
         >
           <FilmwaveLogoIcon
-            className="filmwave-header-logo-mark desktop-header-logo-mark"
+            className="filmwave-header-logo-mark"
             width={115}
             height={22}
           />
@@ -110,7 +109,7 @@ export default function Header({
         <>
           <button
             type="button"
-            className={`filmwave-header-nav-link desktop-nav-link${activeView === "discover" ? " is-active" : ""}`}
+            className={`filmwave-header-nav-link${activeView === "discover" ? " is-active" : ""}`}
             onClick={() => onActiveViewChange("discover")}
           >
             <DashboardIcon />
@@ -119,7 +118,7 @@ export default function Header({
 
           <button
             type="button"
-            className={`filmwave-header-nav-link desktop-nav-link${activeView === "playlists" ? " is-active" : ""}`}
+            className={`filmwave-header-nav-link${activeView === "playlists" ? " is-active" : ""}`}
             onClick={() => onActiveViewChange("playlists")}
           >
             <PlaylistIcon size={13} />

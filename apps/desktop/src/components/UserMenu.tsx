@@ -60,22 +60,22 @@ export default function UserMenu({
   }, [open]);
 
   return (
-    <div ref={menuRef} className="desktop-user-menu-root">
+    <div ref={menuRef} className="filmwave-header-actions">
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className={`filmwave-header-account-trigger desktop-account-trigger${open ? " is-open" : ""}`}
+        className={`filmwave-header-account-trigger${open ? " is-open" : ""}`}
         aria-label="Open user menu"
         aria-expanded={open}
       >
-        <span className="filmwave-header-account-label desktop-account-trigger-label">
-          <span className="filmwave-header-account-name desktop-account-name">
+        <span className="filmwave-header-account-label">
+          <span className="filmwave-header-account-name">
             {isSignedIn ? accountName : "Account"}
           </span>
           <HeaderChevron open={open} />
         </span>
 
-        <span className="filmwave-header-avatar desktop-account-avatar">
+        <span className="filmwave-header-avatar">
           {account?.imageUrl ? (
             <img src={account.imageUrl} alt="" />
           ) : (
@@ -85,7 +85,7 @@ export default function UserMenu({
       </button>
 
       {open && (
-        <div className="filmwave-header-menu-wrap desktop-user-menu-wrap">
+        <div className="filmwave-header-menu-wrap">
           <UserMenuPanel>
             <UserMenuHeader title={isSignedIn ? accountName : "Filmwave Desktop"} detail={accountEmail} />
 
