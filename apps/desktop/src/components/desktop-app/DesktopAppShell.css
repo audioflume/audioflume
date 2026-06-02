@@ -5,7 +5,8 @@
 }
 
 .desktop-app-main {
-  min-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
   padding: 88px 24px 34px calc(var(--sidebar-width-expanded, 280px) + 24px);
 }
 
