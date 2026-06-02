@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
 import { usePlayer } from "@/context/PlayerContext";
-import { AccountHero, ArrowIcon } from "./AccountUI";
+import { AccountHero } from "./AccountUI";
 import { heroConfig, navItems } from "./accountData";
 import type { AccountSection } from "./accountTypes";
 import MembershipSection from "./sections/MembershipSection";
@@ -13,6 +13,7 @@ import ProfileSection from "./sections/ProfileSection";
 import SecuritySection from "./sections/SecuritySection";
 import SettingsSection from "./sections/SettingsSection";
 import SupportSection from "./sections/SupportSection";
+import { SettingsSideNav } from "@filmwave/shared";
 
 type AccountSettingsShellProps = {
   section: AccountSection;
@@ -37,38 +38,19 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-[padding-left] duration-200 ease-out md:pl-[var(--sidebar-width,240px)]">
       <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
-        <aside className="border-r border-[var(--border)] bg-[var(--bg-primary)] px-4 pb-24 pt-[88px] lg:sticky lg:top-0 lg:h-screen">
-          <div className="mb-6">
-            <div className="text-xs font-medium text-[var(--text-muted)]">Account</div>
-            <div className="mt-1 text-lg font-medium tracking-[-0.04em] text-[var(--text-primary)]">Filmwave</div>
-          </div>
-
-          <nav className="grid gap-0.5" aria-label="Account sections">
-            {navItems.map((item) => {
-              const active = pathname === item.href || section === item.section;
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`group flex min-h-[48px] items-center justify-between gap-3 rounded-lg px-2.5 py-2 text-left transition ${
-                    active
-                      ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                  }`}
-                >
-                  <span className="min-w-0">
-                    <span className="block text-xs font-medium">{item.label}</span>
-                    <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">{item.helper}</span>
-                  </span>
-                  <span className={`text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)] ${active ? "opacity-100" : "opacity-0"}`}>
-                    <ArrowIcon />
-                  </span>
-                </Link>
-              );
-            })}
-          </nav>
-        </aside>
+        <SettingsSideNav
+          kicker="Account"
+          title="Filmwave"
+          ariaLabel="Account sections"
+          linkComponent={Link}
+          className="lg:sticky lg:top-0 lg:h-screen"
+          items={navItems.map((item) => ({
+            label: item.label,
+            helper: item.helper,
+            href: item.href,
+            active: pathname === item.href || section === item.section,
+          }))}
+        />
 
         <section className="min-w-0 px-5 pt-[88px] md:px-8 xl:px-10">
           <div className="mx-auto max-w-[1180px]">
