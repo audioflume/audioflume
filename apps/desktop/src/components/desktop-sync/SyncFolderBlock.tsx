@@ -16,13 +16,13 @@ export default function SyncFolderBlock({
   onOpenLastSyncedFolder,
 }: SyncFolderBlockProps) {
   return (
-    <div className="section-block sync-folder-block">
-      <div>
+    <div className="settings-row">
+      <div className="settings-row-label">
         <h2>Sync folder</h2>
         <p className="folder-path">{syncFolder ?? "No folder selected"}</p>
       </div>
 
-      <div className="button-group">
+      <div className="settings-row-control">
         <button
           type="button"
           className="secondary-button"
