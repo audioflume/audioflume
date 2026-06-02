@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import DarkMode from "./icons/DarkMode";
 import LightMode from "./icons/LightMode";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
-import "./UserMenu.css";
 
 type ThemeMode = "dark" | "light";
 
@@ -24,20 +23,22 @@ function getAccountInitial(account: DesktopAccount | null) {
   return value.trim().charAt(0).toUpperCase() || "F";
 }
 
-function ThemeOption({
+function ThemeButton({
   active,
   children,
+  className,
   onClick,
 }: {
   active: boolean;
   children: ReactNode;
+  className: string;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
-      className={`desktop-user-dock-theme-option${active ? " is-active" : ""}`}
       onClick={onClick}
+      className={`${className} ${active ? "is-active" : ""}`}
       aria-pressed={active}
     >
       {children}
@@ -59,7 +60,7 @@ export default function UserMenu({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const accountName =
-    account?.name ?? (accountLoading ? "Loading account..." : "Filmwave Desktop");
+    account?.name ?? (accountLoading ? "Loading account..." : "Filmwave user");
   const accountEmail =
     account?.email ?? (isSignedIn ? "Connected to Filmwave" : "Not connected");
 
@@ -101,78 +102,72 @@ export default function UserMenu({
 
       {open && (
         <div className="filmwave-header-menu-wrap desktop-user-menu-wrap">
-          <div className="desktop-user-dock-menu">
-
-            {/* Identity */}
-            <div className="desktop-user-dock-identity">
-              <span className="desktop-user-dock-avatar">
-                {account?.imageUrl ? (
-                  <img src={account.imageUrl} alt="" />
-                ) : (
-                  getAccountInitial(account)
-                )}
-              </span>
-              <div className="desktop-user-dock-copy">
-                <strong>{isSignedIn ? accountName : "Filmwave Desktop"}</strong>
-                <span>{accountEmail}</span>
+          <div className="desktop-user-menu">
+            <div className="desktop-user-menu-head">
+              <div className="desktop-user-menu-name">
+                {isSignedIn ? accountName : "Filmwave Desktop"}
               </div>
+              <div className="desktop-user-menu-plan">{accountEmail}</div>
             </div>
 
-            {/* Actions */}
-            <div className="desktop-user-dock-actions" aria-label="Account actions">
+            <div className="desktop-user-menu-actions">
               <button
                 type="button"
-                className="desktop-user-dock-action"
-                onClick={() => { setOpen(false); onOpenSyncSettings(); }}
+                className="desktop-user-menu-action"
+                onClick={() => {
+                  setOpen(false);
+                  onOpenSyncSettings();
+                }}
               >
-                <div className="desktop-user-dock-action-icon">⇄</div>
-                <div className="desktop-user-dock-action-copy">
-                  <span>Desktop Sync</span>
-                  <small>Manage local folders</small>
-                </div>
+                <span>Desktop Sync</span>
               </button>
 
               <button
                 type="button"
-                className="desktop-user-dock-action"
-                onClick={() => { setOpen(false); void onOpenSignIn(); }}
+                className="desktop-user-menu-action"
+                onClick={() => {
+                  setOpen(false);
+                  void onOpenSignIn();
+                }}
               >
-                <div className="desktop-user-dock-action-icon">↻</div>
-                <div className="desktop-user-dock-action-copy">
-                  <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
-                  <small>{isSignedIn ? "Refresh session" : "Connect account"}</small>
-                </div>
+                <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
               </button>
 
               {isSignedIn && (
                 <button
                   type="button"
-                  className="desktop-user-dock-action"
-                  onClick={() => { setOpen(false); void onSignOut(); }}
+                  className="desktop-user-menu-action"
+                  onClick={() => {
+                    setOpen(false);
+                    void onSignOut();
+                  }}
                 >
-                  <div className="desktop-user-dock-action-icon">→</div>
-                  <div className="desktop-user-dock-action-copy">
-                    <span>Sign out</span>
-                    <small>Disconnect this app</small>
-                  </div>
+                  <span>Sign out</span>
                 </button>
               )}
             </div>
 
-            {/* Footer: theme */}
-            <div className="desktop-user-dock-footer">
-              <div className="desktop-user-dock-theme" aria-label="Theme">
-                <ThemeOption active={theme === "dark"} onClick={() => onThemeChange("dark")}>
+            <div className="desktop-theme-menu">
+              <div className="desktop-theme-toggle" aria-label="Theme setting">
+                <ThemeButton
+                  active={theme === "dark"}
+                  className="is-dark"
+                  onClick={() => onThemeChange("dark")}
+                >
                   <DarkMode size={12} />
-                  Dark
-                </ThemeOption>
-                <ThemeOption active={theme === "light"} onClick={() => onThemeChange("light")}>
+                  <span>Dark</span>
+                </ThemeButton>
+
+                <ThemeButton
+                  active={theme === "light"}
+                  className="is-light"
+                  onClick={() => onThemeChange("light")}
+                >
                   <LightMode size={13} />
-                  Light
-                </ThemeOption>
+                  <span>Light</span>
+                </ThemeButton>
               </div>
             </div>
-
           </div>
         </div>
       )}
