@@ -1,0 +1,268 @@
+.desktop-command-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 140;
+  width: 360px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-ui);
+}
+
+.desktop-command-menu-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--divider);
+  padding: 12px 14px;
+}
+
+.desktop-command-menu-label,
+.desktop-command-footer-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.desktop-command-menu-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.desktop-command-menu-state::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--text-muted);
+}
+
+.desktop-command-menu-state.is-online::before {
+  background: #76d954;
+}
+
+.desktop-command-account {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 14px 16px;
+}
+
+.desktop-command-account-copy {
+  min-width: 0;
+}
+
+.desktop-command-account-copy strong,
+.desktop-command-account-copy span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-command-account-copy strong {
+  color: var(--text-primary);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.desktop-command-account-copy span {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.desktop-command-avatar {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--bg-control);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.desktop-command-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.desktop-command-actions {
+  display: grid;
+  border-top: 1px solid var(--divider);
+}
+
+.desktop-command-action {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  cursor: pointer;
+  border: 0;
+  border-bottom: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text-primary);
+  padding: 14px;
+  font-family: inherit;
+  text-align: left;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.desktop-command-action:hover {
+  background: var(--bg-hover-strong);
+}
+
+.desktop-command-action-index {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.desktop-command-action-main {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.desktop-command-action-main strong,
+.desktop-command-action-main small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-command-action-main strong {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.desktop-command-action-main small {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.desktop-command-action-arrow {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1;
+  text-align: right;
+  transform: translateX(-2px);
+  transition:
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.desktop-command-action:hover .desktop-command-action-arrow {
+  color: var(--text-primary);
+  transform: translateX(1px);
+}
+
+.desktop-command-action.is-muted .desktop-command-action-main strong {
+  color: var(--text-secondary);
+}
+
+.desktop-command-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.desktop-command-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border-radius: 999px;
+  background: var(--bg-panel-2);
+  padding: 3px;
+}
+
+.desktop-command-theme-option {
+  display: inline-flex;
+  height: 28px;
+  min-width: 74px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0 11px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.desktop-command-theme-option:hover,
+.desktop-command-theme-option.is-active {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .desktop-command-menu {
+  background: #f5f5f2;
+  border-color: var(--border);
+  box-shadow: var(--shadow-ui);
+}
+
+html[data-theme="light"] .desktop-command-theme {
+  background: var(--bg-panel-2);
+}
+
+html[data-theme="light"] .desktop-command-theme-option.is-active,
+html[data-theme="light"] .desktop-command-theme-option:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .desktop-command-action:hover {
+  background: rgba(17, 17, 17, 0.045);
+}
+
+.desktop-user-menu,
+.desktop-user-menu-profile,
+.desktop-user-menu-section,
+.desktop-theme-menu,
+.desktop-user-menu-card,
+.desktop-user-menu-primary,
+.desktop-user-menu-kicker,
+.desktop-user-menu-actions,
+.desktop-user-menu-action,
+.desktop-user-menu-head {
+  display: none;
+}
