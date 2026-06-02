@@ -7,7 +7,6 @@ import {
   UserMenuAction,
   UserMenuActions,
   UserMenuExitAction,
-  UserMenuHeader,
   UserMenuPanel,
   UserMenuThemeToggle,
 } from "@filmwave/shared";
@@ -45,8 +44,6 @@ export default function UserMenu({
 
   const accountName =
     account?.name ?? (accountLoading ? "Loading account..." : "Filmwave user");
-  const accountEmail =
-    account?.email ?? (isSignedIn ? "Connected to Filmwave" : "Not connected");
 
   useEffect(() => {
     function handlePointerDown(event: PointerEvent) {
@@ -87,12 +84,10 @@ export default function UserMenu({
       {open && (
         <div className="filmwave-header-menu-wrap">
           <UserMenuPanel>
-            <UserMenuHeader title={isSignedIn ? accountName : "Filmwave Desktop"} detail={accountEmail} />
-
             <UserMenuActions>
               <UserMenuAction
                 label="Desktop Sync"
-                helper="Local folders and project syncing"
+                helper=""
                 onClick={() => {
                   setOpen(false);
                   onOpenSyncSettings();
@@ -101,11 +96,7 @@ export default function UserMenu({
 
               <UserMenuAction
                 label={isSignedIn ? "Reconnect" : "Sign in"}
-                helper={
-                  isSignedIn
-                    ? "Refresh your Filmwave connection"
-                    : "Connect this desktop app"
-                }
+                helper=""
                 onClick={() => {
                   setOpen(false);
                   void onOpenSignIn();
