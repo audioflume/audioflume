@@ -2,6 +2,7 @@ import {
   getSongCuePointMarkers,
   normalizeEditPointType,
   parseEditPoints,
+  SongActionButton,
   SongCardCuePointOverlay,
   SongCardShell,
   SongCardStemsSlot,
@@ -9,7 +10,7 @@ import {
   type SharedWaveformCanvasHandle,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type Ref } from "react";
+import { useEffect, useMemo, useRef, useState, type Ref } from "react";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
 import SyncIcon from "../../icons/SyncIcon";
@@ -67,9 +68,6 @@ export default function DesktopSongCard({
   );
   const editPoints = useMemo(() => parseEditPoints(song.editPoints), [song.editPoints]);
   const cuePoints = useMemo(() => getSongCuePointMarkers(song), [song]);
-  const favoriteButtonStyle = favorite
-    ? ({ "--favorite-icon-color": "var(--text-primary)" } as CSSProperties)
-    : undefined;
 
   useEffect(() => {
     const nextProgress = pendingSeekProgress ?? playbackProgress;
@@ -196,29 +194,27 @@ export default function DesktopSongCard({
       bpmMeta={song.bpm ? `${song.bpm} BPM` : "—"}
       actions={
         <div ref={actionsRef} className="desktop-song-actions-inner">
-          <button
-            type="button"
+          <SongActionButton
+            label={favorite ? "Remove song from favorites" : "Favorite song"}
+            active={favorite}
+            activeMode="plain-icon"
             onClick={onFavoriteToggle}
-            aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
-            className="filmwave-song-action-button"
-            style={favoriteButtonStyle}
           >
             <HeartIcon size={14} filled={favorite} />
-          </button>
+          </SongActionButton>
 
           <div className="desktop-song-action-menu-wrap">
-            <button
-              type="button"
-              aria-label="Song options"
+            <SongActionButton
+              label="Song options"
+              active={actionsOpen}
               aria-expanded={actionsOpen}
-              className={`filmwave-song-action-button${actionsOpen ? " is-active" : ""}`}
               onClick={(event) => {
                 event.stopPropagation();
                 setActionsOpen((open) => !open);
               }}
             >
               <MoreIcon size={14} />
-            </button>
+            </SongActionButton>
 
             {actionsOpen && (
               <div className="desktop-song-action-menu" role="menu">
@@ -241,10 +237,9 @@ export default function DesktopSongCard({
             )}
           </div>
 
-          <button
-            type="button"
-            aria-label={isSynced ? "Drag synced song file" : "Sync song"}
-            className={`filmwave-song-action-button desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`}
+          <SongActionButton
+            label={isSynced ? "Drag synced song file" : "Sync song"}
+            className={`desktop-song-sync-button${isSynced ? " is-synced" : ""}${syncStatus === "syncing" ? " is-syncing" : ""}`}
             disabled={syncStatus === "syncing"}
             onClick={(event) => {
               event.stopPropagation();
@@ -258,7 +253,7 @@ export default function DesktopSongCard({
             <span className="desktop-song-sync-button-inner">
               {isSynced ? <SyncedFileIcon /> : <SyncIcon size={14} />}
             </span>
-          </button>
+          </SongActionButton>
         </div>
       }
     />
@@ -285,29 +280,8 @@ function PauseIcon() {
 function SyncedFileIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect
-        x="3.75"
-        y="4.25"
-        width="10.5"
-        height="10.5"
-        rx="2.75"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray="3.1 2.8"
-      />
-      <rect
-        x="9.75"
-        y="9.25"
-        width="10.5"
-        height="10.5"
-        rx="2.75"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <rect x="3.75" y="4.25" width="10.5" height="10.5" rx="2.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3.1 2.8" />
+      <rect x="9.75" y="9.25" width="10.5" height="10.5" rx="2.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
