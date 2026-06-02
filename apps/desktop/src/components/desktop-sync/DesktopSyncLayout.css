@@ -31,7 +31,7 @@ html[data-theme="light"] .desktop-settings-view {
   --sync-control: var(--bg-control);
   --sync-control-hover: var(--bg-control-hover);
   --sync-surface-raised: var(--bg-secondary);
-  --sync-project-row: var(--bg-panel);
+  --sync-project-row: transparent;
   --sync-console-text: var(--text-primary);
 }
 
@@ -131,8 +131,6 @@ html[data-theme="light"] .desktop-settings-view {
 
 /* ─────────────────────────────────────────────
    ROW STRUCTURE
-   Each row: left label, right control.
-   No shared grid. Each row is a flex row.
    ───────────────────────────────────────────── */
 
 .settings-row {
@@ -538,6 +536,7 @@ input:focus {
   padding: var(--row-padding);
   border-bottom: 1px solid var(--sync-border);
   min-width: 0;
+  background: transparent;
 }
 
 .projects-header {
@@ -588,7 +587,7 @@ input:focus {
   padding: 10px;
   border: 1px solid transparent;
   border-radius: 10px;
-  background: var(--sync-project-row);
+  background: transparent;
   text-align: left;
   width: 100%;
   min-width: 0;
@@ -723,6 +722,47 @@ button.project-row:hover,
   text-transform: uppercase;
 }
 
+/* ── Light mode overrides ── */
+html[data-theme="light"] .source-toggle button.is-active {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .primary-button {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+html[data-theme="light"] .primary-button:hover:not(:disabled) {
+  background: #2a2a2a;
+  color: #ffffff;
+}
+
+html[data-theme="light"] .secondary-button:hover:not(:disabled) {
+  background: var(--bg-control-hover);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .token-form input,
+html[data-theme="light"] .api-endpoint-control input {
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .token-form input:focus,
+html[data-theme="light"] .api-endpoint-control input:focus {
+  border-color: var(--border-hover);
+}
+
+html[data-theme="light"] .progress-track {
+  background: var(--bg-elevated);
+}
+
+html[data-theme="light"] .progress-fill {
+  background: var(--text-primary);
+}
+
 /* ── Animation ── */
 @keyframes desktop-sync-pulse {
   0%,
@@ -736,7 +776,7 @@ button.project-row:hover,
   }
 }
 
-/* ── Responsive: only move sidebar nav to top ── */
+/* ── Responsive ── */
 @media (max-width: 900px) {
   .desktop-settings-view {
     grid-template-columns: minmax(0, 1fr);
