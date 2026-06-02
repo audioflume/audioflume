@@ -18,7 +18,8 @@
   padding: 56px 0 0 var(--sidebar-width-expanded, 280px);
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-projects-page.is-detail) {
+.desktop-app-shell.is-sidebar-collapsed
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
   padding-left: var(--sidebar-width-collapsed, 76px);
 }
 

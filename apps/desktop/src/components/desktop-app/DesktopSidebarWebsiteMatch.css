@@ -34,7 +34,8 @@
   opacity: 0;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading.has-collapsed-icon {
+.desktop-app-shell.is-sidebar-collapsed
+  .desktop-sidebar-heading.has-collapsed-icon {
   justify-content: center;
   padding: 0;
 }

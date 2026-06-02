@@ -3,7 +3,10 @@ import { exists } from "@tauri-apps/plugin-fs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Project, ProjectFileNode } from "../../lib/mockFilmwaveApi";
-import { getProjectFolderPath, getProjectNodeLocalPath } from "../../lib/syncEngine";
+import {
+  getProjectFolderPath,
+  getProjectNodeLocalPath,
+} from "../../lib/syncEngine";
 import {
   DesktopFolderGlyph,
   DesktopMusicGlyph,
@@ -47,49 +50,160 @@ type MediaTabDefinition = ProjectTabDefinition & {
   rootFolderName: string;
 };
 
-const ALL_FILES_TAB: ProjectTabDefinition = { label: "All Files", value: "overview" };
-const LICENSES_TAB: ProjectTabDefinition = { label: "Licenses", value: "licenses" };
+const ALL_FILES_TAB: ProjectTabDefinition = {
+  label: "All Files",
+  value: "overview",
+};
+const LICENSES_TAB: ProjectTabDefinition = {
+  label: "Licenses",
+  value: "licenses",
+};
 
 const MEDIA_TABS: MediaTabDefinition[] = [
   { label: "Music", value: "music", rootFolderName: "Music" },
   { label: "Sound FX", value: "sound-fx", rootFolderName: "Sound FX" },
   { label: "Visual FX", value: "visual-fx", rootFolderName: "Visual FX" },
-  { label: "Colour Grading", value: "colour-grading", rootFolderName: "Colour Grading" },
+  {
+    label: "Colour Grading",
+    value: "colour-grading",
+    rootFolderName: "Colour Grading",
+  },
 ];
 
 const ERROR_SYNC_PATTERNS = ["failed", "error", "could not"];
-const SYNCING_PATTERNS = ["syncing", "refreshing", "checking", "applying", "updating"];
+const SYNCING_PATTERNS = [
+  "syncing",
+  "refreshing",
+  "checking",
+  "applying",
+  "updating",
+];
 
 function GridViewIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="4" y="4" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="14" y="4" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="4" y="14" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="14" y="14" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <rect
+        x="4"
+        y="4"
+        width="6"
+        height="6"
+        rx="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="14"
+        y="4"
+        width="6"
+        height="6"
+        rx="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="4"
+        y="14"
+        width="6"
+        height="6"
+        rx="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="14"
+        y="14"
+        width="6"
+        height="6"
+        rx="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
     </svg>
   );
 }
 
 function ListViewIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M8 6H20" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
-      <path d="M8 12H20" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
-      <path d="M8 18H20" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
-      <path d="M4.5 6H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M4.5 12H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M4.5 18H4.51" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 6H20"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 12H20"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 18H20"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.5 6H4.51"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.5 12H4.51"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.5 18H4.51"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
 function MoreIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 12H5.01" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
-      <path d="M12 12H12.01" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
-      <path d="M19 12H19.01" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5 12H5.01"
+        stroke="currentColor"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12 12H12.01"
+        stroke="currentColor"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M19 12H19.01"
+        stroke="currentColor"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -101,7 +215,9 @@ function formatFileCount(count: number) {
 function getProjectSyncState(syncStatus: string): ProjectSyncState {
   const normalizedStatus = syncStatus.toLowerCase();
 
-  if (ERROR_SYNC_PATTERNS.some((pattern) => normalizedStatus.includes(pattern))) {
+  if (
+    ERROR_SYNC_PATTERNS.some((pattern) => normalizedStatus.includes(pattern))
+  ) {
     return "error";
   }
 
@@ -161,14 +277,17 @@ function projectHasMediaForFolder(project: Project, rootFolderName: string) {
   return project.files.some(
     (node) =>
       node.type === "file" &&
-      normalizeReservedMediaName(getRootPathName(node.path)) === normalizedFolderName,
+      normalizeReservedMediaName(getRootPathName(node.path)) ===
+        normalizedFolderName,
   );
 }
 
 function getVisibleProjectTabs(project: Project): ProjectTabDefinition[] {
   return [
     ALL_FILES_TAB,
-    ...MEDIA_TABS.filter((tab) => projectHasMediaForFolder(project, tab.rootFolderName)),
+    ...MEDIA_TABS.filter((tab) =>
+      projectHasMediaForFolder(project, tab.rootFolderName),
+    ),
     LICENSES_TAB,
   ];
 }
@@ -179,7 +298,8 @@ function isEmptyReservedMediaFolder(project: Project, node: ProjectFileNode) {
 
   return MEDIA_TABS.some(
     (tab) =>
-      normalizeReservedMediaName(node.name) === normalizeReservedMediaName(tab.rootFolderName) &&
+      normalizeReservedMediaName(node.name) ===
+        normalizeReservedMediaName(tab.rootFolderName) &&
       !projectHasMediaForFolder(project, tab.rootFolderName),
   );
 }
@@ -209,7 +329,10 @@ function getFolderFileCount(project: Project, folder: ProjectFileNode) {
   ).length;
 }
 
-function getFolderChain(project: Project, activeFolder: ProjectFileNode | null) {
+function getFolderChain(
+  project: Project,
+  activeFolder: ProjectFileNode | null,
+) {
   if (!activeFolder) return [];
 
   const chain: ProjectFileNode[] = [];
@@ -227,7 +350,9 @@ function getFolderChain(project: Project, activeFolder: ProjectFileNode | null) 
 }
 
 function getFileArtist(node: ProjectFileNode) {
-  return node.path.includes("/") ? getNodeParentPath(node).split("/").pop() : "Filmwave";
+  return node.path.includes("/")
+    ? getNodeParentPath(node).split("/").pop()
+    : "Filmwave";
 }
 
 async function startNativeProjectNodeDrag({
@@ -268,7 +393,10 @@ async function startNativeProjectNodeDrag({
   }
 }
 
-async function showProjectInFinder(project: Project, syncFolder: string | null) {
+async function showProjectInFinder(
+  project: Project,
+  syncFolder: string | null,
+) {
   if (!syncFolder) {
     console.warn("Choose a sync folder before revealing a project in Finder.");
     return;
@@ -507,8 +635,12 @@ function ProjectListView({
         {projectsLoading ? (
           <div className="desktop-project-list-button" role="status">
             <div>
-              <div className="desktop-project-list-name">Loading projects...</div>
-              <div className="desktop-project-list-meta">Fetching your Filmwave project list.</div>
+              <div className="desktop-project-list-name">
+                Loading projects...
+              </div>
+              <div className="desktop-project-list-meta">
+                Fetching your Filmwave project list.
+              </div>
             </div>
           </div>
         ) : projects.length > 0 ? (
@@ -533,7 +665,9 @@ function ProjectListView({
         ) : (
           <div className="desktop-project-list-button" role="status">
             <div>
-              <div className="desktop-project-list-name">No projects loaded</div>
+              <div className="desktop-project-list-name">
+                No projects loaded
+              </div>
               <div className="desktop-project-list-meta">
                 Connect your Filmwave account in Desktop Sync settings.
               </div>
@@ -566,12 +700,19 @@ function ProjectGridItem({
         role="button"
         tabIndex={0}
         className="project-folder-card"
-        title={syncFolder ? "Drag synced folder" : "Choose a sync folder before dragging"}
+        title={
+          syncFolder
+            ? "Drag synced folder"
+            : "Choose a sync folder before dragging"
+        }
         onPointerDown={(event) => {
           if (event.button !== 0) return;
           void startNativeProjectNodeDrag({
-            node, project, syncFolder,
-            onGhostStart, onGhostEnd,
+            node,
+            project,
+            syncFolder,
+            onGhostStart,
+            onGhostEnd,
             pointerX: event.clientX,
             pointerY: event.clientY,
           });
@@ -595,12 +736,17 @@ function ProjectGridItem({
   return (
     <div
       className="project-file-card"
-      title={syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"}
+      title={
+        syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"
+      }
       onPointerDown={(event) => {
         if (event.button !== 0) return;
         void startNativeProjectNodeDrag({
-          node, project, syncFolder,
-          onGhostStart, onGhostEnd,
+          node,
+          project,
+          syncFolder,
+          onGhostStart,
+          onGhostEnd,
           pointerX: event.clientX,
           pointerY: event.clientY,
         });
@@ -609,7 +755,9 @@ function ProjectGridItem({
       <div className="project-file-card-icon-wrap">
         <DesktopMusicGlyph />
       </div>
-      <div className="project-file-card-title">{node.name.replace(/\.[^/.]+$/, "")}</div>
+      <div className="project-file-card-title">
+        {node.name.replace(/\.[^/.]+$/, "")}
+      </div>
       <div className="project-file-card-meta">{getFileArtist(node)}</div>
     </div>
   );
@@ -638,12 +786,19 @@ function ProjectListItem({
         role="button"
         tabIndex={0}
         className="project-browser-row project-folder-row"
-        title={syncFolder ? "Drag synced folder" : "Choose a sync folder before dragging"}
+        title={
+          syncFolder
+            ? "Drag synced folder"
+            : "Choose a sync folder before dragging"
+        }
         onPointerDown={(event) => {
           if (event.button !== 0) return;
           void startNativeProjectNodeDrag({
-            node, project, syncFolder,
-            onGhostStart, onGhostEnd,
+            node,
+            project,
+            syncFolder,
+            onGhostStart,
+            onGhostEnd,
             pointerX: event.clientX,
             pointerY: event.clientY,
           });
@@ -667,12 +822,17 @@ function ProjectListItem({
   return (
     <div
       className="project-browser-row project-file-row"
-      title={syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"}
+      title={
+        syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"
+      }
       onPointerDown={(event) => {
         if (event.button !== 0) return;
         void startNativeProjectNodeDrag({
-          node, project, syncFolder,
-          onGhostStart, onGhostEnd,
+          node,
+          project,
+          syncFolder,
+          onGhostStart,
+          onGhostEnd,
           pointerX: event.clientX,
           pointerY: event.clientY,
         });
@@ -682,7 +842,9 @@ function ProjectListItem({
         <span className="project-file-list-icon-wrap">
           <DesktopMusicGlyph small />
         </span>
-        <span className="project-browser-row-title">{node.name.replace(/\.[^/.]+$/, "")}</span>
+        <span className="project-browser-row-title">
+          {node.name.replace(/\.[^/.]+$/, "")}
+        </span>
       </span>
       <span className="project-browser-row-muted">{getFileArtist(node)}</span>
       <span className="project-browser-row-muted">Music</span>
@@ -704,7 +866,9 @@ function ProjectDetailView({
 }) {
   const visibleTabs = useMemo(() => getVisibleProjectTabs(project), [project]);
   const [activeTab, setActiveTab] = useState<ProjectTab>("overview");
-  const [activeFolder, setActiveFolder] = useState<ProjectFileNode | null>(null);
+  const [activeFolder, setActiveFolder] = useState<ProjectFileNode | null>(
+    null,
+  );
   const [viewMode, setViewMode] = useState<ProjectFileView>("grid");
   const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
 
@@ -800,7 +964,9 @@ function ProjectDetailView({
 
         <div className="project-file-browser-section">
           {activeTab !== "overview" ? (
-            <div className="project-empty-state">This tab will mirror website media types next.</div>
+            <div className="project-empty-state">
+              This tab will mirror website media types next.
+            </div>
           ) : visibleNodes.length > 0 ? (
             viewMode === "grid" ? (
               <div className="project-browser-grid">
