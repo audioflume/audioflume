@@ -50,17 +50,6 @@ html[data-theme="light"] .desktop-header {
   border-bottom-color: var(--divider);
 }
 
-html[data-theme="light"] .section-block,
-html[data-theme="light"] .projects-panel {
-  background: var(--bg-panel);
-}
-
-html[data-theme="light"] .project-list,
-html[data-theme="light"] .progress-panel,
-html[data-theme="light"] .sync-report {
-  background: var(--bg-panel-2);
-}
-
 html[data-theme="light"] .source-toggle,
 html[data-theme="light"] .secondary-button,
 html[data-theme="light"] .desktop-account-avatar {
