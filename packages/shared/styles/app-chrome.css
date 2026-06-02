@@ -130,7 +130,7 @@ body > header > div {
 .filmwave-header-nav-link.is-active,
 .filmwave-header-account-trigger:hover,
 .filmwave-header-account-trigger.is-open {
-  background: var(--bg-hover);
+  background: var(--bg-row-hover);
   color: var(--text-primary);
 }
 
@@ -167,14 +167,14 @@ body > header > div {
 
 .filmwave-header-avatar {
   display: flex;
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   border-radius: 999px;
-  background: var(--bg-secondary);
+  background: var(--bg-control);
   color: var(--text-primary);
   font-size: 10px;
   font-weight: 600;
