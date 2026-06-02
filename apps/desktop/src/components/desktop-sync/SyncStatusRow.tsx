@@ -10,7 +10,7 @@ export default function SyncStatusRow({
   syncing,
 }: SyncStatusRowProps) {
   return (
-    <div className="status-row">
+    <div className="settings-row is-status">
       <span className="status-row-label">Sync status</span>
 
       <div className={`status-pill ${syncing ? "is-syncing" : ""}`}>
