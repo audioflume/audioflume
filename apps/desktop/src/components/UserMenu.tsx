@@ -122,26 +122,24 @@ export default function UserMenu({
               </span>
             </div>
 
-            <div className="desktop-user-menu-card">
-              <div>
-                <span className="desktop-user-menu-kicker">Local workspace</span>
-                <strong>Desktop Sync</strong>
-                <p>Manage folders, project syncing, and realtime updates.</p>
-              </div>
-
+            <div className="desktop-user-menu-section">
               <button
                 type="button"
-                className="desktop-user-menu-primary"
+                className="desktop-user-menu-row"
                 onClick={() => {
                   setOpen(false);
                   onOpenSyncSettings();
                 }}
               >
-                Open
+                <span className="desktop-user-menu-row-icon" aria-hidden="true">
+                  ↳
+                </span>
+                <span>
+                  <strong>Desktop Sync</strong>
+                  <small>Folders, projects, and realtime sync</small>
+                </span>
               </button>
-            </div>
 
-            <div className="desktop-user-menu-section">
               <button
                 type="button"
                 className="desktop-user-menu-row"
