@@ -20,7 +20,7 @@
   max-width: 1180px;
   min-width: 0;
   display: grid;
-  grid-template-columns: 190px 1fr;
+  grid-template-columns: 190px minmax(0, 1fr);
   column-gap: 34px;
   align-items: start;
 }
@@ -46,12 +46,14 @@ html[data-theme="light"] .desktop-settings-view {
   grid-column: 1;
   grid-row: 1 / span 20;
   align-self: start;
+  min-width: 0;
 }
 
 .desktop-sync-settings-nav {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .desktop-sync-settings-nav-item {
@@ -96,15 +98,24 @@ html[data-theme="light"] .desktop-settings-view {
 }
 
 /* ── Content column ── */
+.desktop-sync-settings-main,
+.sync-card {
+  min-width: 0;
+}
+
+.desktop-sync-settings-main {
+  grid-column: 2;
+}
+
 .sync-card {
   grid-column: 2;
-  min-width: 0;
   container-type: inline-size;
   container-name: sync-card;
 }
 
 .desktop-sync-settings-header {
   grid-column: 2;
+  min-width: 0;
   padding-bottom: 22px;
   border-bottom: 1px solid var(--sync-border);
 }
@@ -162,9 +173,16 @@ html[data-theme="light"] .desktop-settings-view {
 .settings-row-control {
   flex: 0 1 auto;
   min-width: 0;
+  max-width: 100%;
   display: flex;
   align-items: center;
   gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.settings-row-control::-webkit-scrollbar {
+  display: none;
 }
 
 /* ── Status row ── */
@@ -309,7 +327,15 @@ html[data-theme="light"] .desktop-settings-view {
   padding: 4px;
   border-radius: 999px;
   background: var(--sync-control);
-  flex-shrink: 0;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.source-toggle::-webkit-scrollbar {
+  display: none;
 }
 
 .source-toggle button {
@@ -376,15 +402,18 @@ input:focus {
   gap: 8px;
   flex: 0 1 auto;
   min-width: 0;
+  max-width: 100%;
 }
 
 .api-endpoint-control input {
-  width: 300px;
+  width: min(300px, 100%);
 }
 
 .api-endpoint-buttons {
   display: flex;
   gap: 8px;
+  max-width: 100%;
+  min-width: 0;
 }
 
 /* ── Token form ── */
@@ -395,10 +424,11 @@ input:focus {
   margin-top: 12px;
   flex-wrap: wrap;
   min-width: 0;
+  max-width: 100%;
 }
 
 .token-form input {
-  width: 220px;
+  width: min(220px, 100%);
 }
 
 /* ── Folder path ── */
@@ -429,6 +459,7 @@ input:focus {
   border: 1px solid var(--sync-border);
   border-radius: 12px;
   padding: 10px;
+  min-width: 0;
 }
 
 .progress-header {
@@ -438,6 +469,7 @@ input:focus {
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 500;
+  min-width: 0;
 }
 
 .progress-track {
@@ -472,6 +504,7 @@ input:focus {
 
 .sync-report p {
   margin: 0;
+  min-width: 0;
   font-size: 12px;
   color: var(--text-secondary);
   line-height: 1.4;
@@ -487,6 +520,7 @@ input:focus {
   margin-top: 8px;
   font-size: 10px;
   color: var(--text-muted);
+  min-width: 0;
 }
 
 .local-removal-actions {
@@ -495,6 +529,8 @@ input:focus {
   gap: 8px;
   margin-top: 10px;
   flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* ── Projects panel ── */
@@ -510,6 +546,7 @@ input:focus {
   justify-content: space-between;
   gap: 18px;
   margin-bottom: 14px;
+  min-width: 0;
 }
 
 .projects-header h2 {
@@ -533,12 +570,14 @@ input:focus {
   gap: 8px;
   flex: 0 1 auto;
   min-width: 0;
+  max-width: 100%;
   flex-wrap: wrap;
 }
 
 .project-list {
   display: grid;
   gap: 6px;
+  min-width: 0;
 }
 
 .project-row {
@@ -700,7 +739,7 @@ button.project-row:hover,
 /* ── Responsive: only move sidebar nav to top ── */
 @media (max-width: 600px) {
   .desktop-settings-view {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     width: 100%;
     max-width: none;
   }
@@ -728,14 +767,23 @@ button.project-row:hover,
     flex-shrink: 0;
   }
 
-  .desktop-sync-settings-header {
+  .desktop-sync-settings-main,
+  .desktop-sync-settings-header,
+  .sync-card {
     grid-column: 1;
+    min-width: 0;
+  }
+
+  .desktop-sync-settings-main {
     grid-row: 2;
   }
 
+  .desktop-sync-settings-header {
+    grid-row: auto;
+  }
+
   .sync-card {
-    grid-column: 1;
-    grid-row: 3;
+    grid-row: auto;
   }
 
   .settings-row.is-status {
