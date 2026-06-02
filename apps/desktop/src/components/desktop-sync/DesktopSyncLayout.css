@@ -1,33 +1,37 @@
+/* ─────────────────────────────────────────────
+   DESKTOP SYNC SETTINGS — LAYOUT
+   ───────────────────────────────────────────── */
+
+/* CSS variables */
+.desktop-settings-view {
+  --sync-border: var(--border);
+  --sync-border-strong: var(--border-strong);
+  --sync-control: var(--bg-control);
+  --sync-control-hover: var(--bg-control-hover);
+  --sync-surface-raised: var(--bg-secondary);
+  --sync-project-row: var(--bg-panel);
+  --sync-console-text: var(--text-primary);
+  --row-padding: 20px 0;
+}
+
+/* Page grid: sidebar | content */
 .desktop-settings-view {
   width: min(1180px, 100%);
   max-width: 1180px;
   min-width: 0;
   display: grid;
-  grid-template-columns: 190px minmax(0, 1fr);
+  grid-template-columns: 190px 1fr;
   column-gap: 34px;
   align-items: start;
-  --sync-surface: transparent;
-  --sync-surface-alt: transparent;
-  --sync-surface-raised: var(--bg-secondary);
-  --sync-control: var(--bg-control);
-  --sync-control-hover: var(--bg-control-hover);
-  --sync-border: var(--border);
-  --sync-border-strong: var(--border-strong);
-  --sync-project-row: var(--bg-panel);
-  --sync-console-row: transparent;
-  --sync-console-text: var(--text-primary);
 }
 
 html[data-theme="light"] .desktop-settings-view {
-  --sync-surface: transparent;
-  --sync-surface-alt: transparent;
-  --sync-surface-raised: var(--bg-secondary);
-  --sync-control: var(--bg-control);
-  --sync-control-hover: var(--bg-control-hover);
   --sync-border: var(--border);
   --sync-border-strong: var(--border-strong);
+  --sync-control: var(--bg-control);
+  --sync-control-hover: var(--bg-control-hover);
+  --sync-surface-raised: var(--bg-secondary);
   --sync-project-row: var(--bg-panel);
-  --sync-console-row: transparent;
   --sync-console-text: var(--text-primary);
 }
 
@@ -35,41 +39,39 @@ html[data-theme="light"] .desktop-settings-view {
   display: none;
 }
 
+/* ── Sidebar ── */
 .desktop-sync-settings-sidebar {
   position: sticky;
-  top: 0px;
+  top: 0;
   grid-column: 1;
   grid-row: 1 / span 20;
   align-self: start;
-  min-width: 0;
 }
 
 .desktop-sync-settings-nav {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 2px;
-  min-width: 0;
 }
 
 .desktop-sync-settings-nav-item {
   display: flex;
-  width: 100%;
-  height: var(--filmwave-sidebar-row-height, 32px);
-  cursor: pointer;
   align-items: center;
-  gap: var(--filmwave-sidebar-label-gap, 10px);
+  gap: 10px;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
   border: 0;
-  border-radius: var(--filmwave-sidebar-row-radius, 6px);
+  border-radius: 6px;
   background: transparent;
   color: var(--text-secondary);
-  padding: 0 var(--filmwave-sidebar-row-padding-x, 10px);
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
   line-height: 1;
   text-align: left;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
 }
 
 .desktop-sync-settings-nav-item:hover,
@@ -81,15 +83,24 @@ html[data-theme="light"] .desktop-settings-view {
 .desktop-sync-settings-nav-icon {
   width: 14px;
   height: 14px;
-  flex: 0 0 14px;
+  flex-shrink: 0;
   border-radius: 4px;
   border: 1.5px solid currentColor;
   opacity: 0.76;
 }
 
-.desktop-sync-settings-header {
+.settings-breadcrumb {
+  display: none;
+}
+
+/* ── Content column ── */
+.sync-card {
   grid-column: 2;
   min-width: 0;
+}
+
+.desktop-sync-settings-header {
+  grid-column: 2;
   padding-bottom: 22px;
   border-bottom: 1px solid var(--sync-border);
 }
@@ -103,81 +114,34 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1.1;
 }
 
-.settings-breadcrumb {
-  display: none;
-}
+/* ─────────────────────────────────────────────
+   ROW STRUCTURE
+   Each row: left label, right control.
+   No shared grid. Each row is a flex row.
+   ───────────────────────────────────────────── */
 
-.sync-card {
-  grid-column: 2;
-  min-width: 0;
-}
-
-/* ── Every settings row ── */
-.status-row,
-.section-block,
-.projects-panel {
+.settings-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
-  min-width: 0;
-  padding: 20px 0;
+  gap: 32px;
+  padding: var(--row-padding);
   border-bottom: 1px solid var(--sync-border);
+  min-width: 0;
 }
 
-/* Status row is centered vertically since it's always one line */
-.status-row {
+/* Status row: single-line, vertically centered */
+.settings-row.is-status {
   align-items: center;
 }
 
-/* Left label column */
-.section-block > div:first-child,
-.projects-panel > div:first-child {
+/* Label side */
+.settings-row-label {
   flex: 1 1 0;
   min-width: 0;
 }
 
-/* Right controls column — never shrinks, sits at top */
-.section-block > :last-child:not(div:first-child),
-.projects-panel > :last-child:not(div:first-child) {
-  flex: 0 0 auto;
-}
-
-.status-row-label {
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1;
-}
-
-.status-pill,
-.status-pill:hover {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: transparent !important;
-  color: var(--text-secondary);
-  padding: 0;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
-}
-
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--text-muted);
-}
-
-.status-pill.is-syncing .status-dot {
-  background: var(--success);
-  animation: desktop-sync-pulse 1s ease-in-out infinite;
-}
-
-.section-block h2,
-.projects-panel h2 {
+.settings-row-label h2 {
   margin: 0;
   color: var(--text-primary);
   font-size: 14px;
@@ -186,56 +150,83 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1.2;
 }
 
-.section-block p,
-.projects-panel p {
-  margin: 6px 0 0;
+.settings-row-label p {
+  margin: 5px 0 0;
   color: var(--text-secondary);
   font-size: 12px;
   line-height: 1.4;
 }
 
-/* ── Account block ── */
-.account-profile,
-.account-profile-main,
-.account-name,
-.account-email {
-  background: transparent !important;
+/* Control side */
+.settings-row-control {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.account-profile {
+/* ── Status row specifics ── */
+.status-row-label {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.status-pill {
   display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.status-pill.is-syncing .status-dot {
+  background: var(--success);
+  animation: desktop-sync-pulse 1s ease-in-out infinite;
+}
+
+/* ── Account block ── */
+.account-profile {
+  display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 12px;
 }
 
 .account-avatar {
-  display: flex;
   width: 34px;
   height: 34px;
-  align-items: center;
-  justify-content: center;
+  border-radius: 50%;
   overflow: hidden;
-  border-radius: 999px;
   background: var(--sync-control);
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .account-avatar img {
-  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.account-profile-main {
-  display: grid;
-  gap: 4px;
+  display: block;
 }
 
 .account-name {
+  display: block;
   color: var(--text-primary);
   font-size: 13px;
   font-weight: 600;
@@ -243,92 +234,126 @@ html[data-theme="light"] .desktop-settings-view {
 }
 
 .account-email {
+  display: block;
   color: var(--text-secondary);
   font-size: 12px;
   line-height: 1;
-}
-
-/* ── Button / form groups ── */
-.button-group,
-.settings-form,
-.token-form,
-.local-removal-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.token-form {
-  margin-top: 12px;
-}
-
-.settings-form {
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.settings-form-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  margin-top: 4px;
 }
 
 /* ── Buttons ── */
-.primary-button,
-.secondary-button,
-.source-toggle button {
+.btn-primary,
+.btn-secondary {
   display: inline-flex;
-  min-width: 72px;
-  height: 30px;
-  cursor: pointer;
   align-items: center;
   justify-content: center;
+  height: 30px;
+  min-width: 72px;
+  padding: 0 14px;
   border: 0;
   border-radius: 999px;
-  padding: 0 14px;
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
-  transition:
-    background 150ms ease,
-    color 150ms ease,
-    opacity 150ms ease;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, opacity 150ms ease;
 }
 
+/* Legacy class support */
 .primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 72px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
   background: var(--text-primary);
   color: var(--bg-primary);
-}
-
-.secondary-button {
-  background: var(--sync-control);
-  color: var(--text-secondary);
-}
-
-.source-toggle button {
-  background: transparent;
-  color: var(--text-secondary);
+  transition: opacity 150ms ease;
 }
 
 .primary-button:hover:not(:disabled) {
   opacity: 0.86;
 }
 
-.secondary-button:hover:not(:disabled),
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 72px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--sync-control);
+  color: var(--text-secondary);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: var(--sync-control-hover);
+  color: var(--text-primary);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
+/* ── Source / interval toggle ── */
+.source-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--sync-control);
+  flex-shrink: 0;
+}
+
+.source-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 72px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
 .source-toggle button:hover:not(:disabled),
 .source-toggle button.is-active {
   background: var(--sync-control-hover);
   color: var(--text-primary);
 }
 
-.primary-button:disabled,
-.secondary-button:disabled,
 .source-toggle button:disabled {
   cursor: default;
   opacity: 0.42;
@@ -337,16 +362,16 @@ html[data-theme="light"] .desktop-settings-view {
 /* ── Input ── */
 input {
   height: 34px;
-  min-width: 0;
-  max-width: 100%;
+  padding: 0 13px;
   border: 1px solid var(--sync-border);
   border-radius: 999px;
   background: var(--sync-surface-raised);
   color: var(--text-primary);
-  padding: 0 13px;
   font-family: inherit;
   font-size: 12px;
   outline: none;
+  min-width: 0;
+  max-width: 100%;
 }
 
 input::placeholder {
@@ -357,29 +382,50 @@ input:focus {
   border-color: var(--sync-border-strong);
 }
 
-.token-form input {
-  width: min(280px, 100%);
-}
-
-.settings-form input {
-  width: min(320px, 100%);
-}
-
-/* ── Source toggle ── */
-.source-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  border-radius: 999px;
-  background: var(--sync-control);
-  padding: 4px;
+/* ── API endpoint control: stacked ── */
+.api-endpoint-control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
   flex-shrink: 0;
 }
 
-.source-toggle button {
-  height: 30px;
-  min-width: 72px;
-  border-radius: 999px;
+.api-endpoint-control input {
+  width: 300px;
+}
+
+.api-endpoint-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Token form (sign-in) ── */
+.token-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.token-form input {
+  width: 220px;
+}
+
+/* ── Folder path ── */
+.folder-path {
+  font-family: var(--font-geist-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 12px !important;
+  color: var(--text-secondary) !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.refresh-meta {
+  color: var(--text-secondary) !important;
 }
 
 /* ── Progress / reports ── */
@@ -388,7 +434,6 @@ input:focus {
   margin-bottom: 10px;
   border: 1px solid var(--sync-border);
   border-radius: 12px;
-  background: transparent;
   padding: 10px;
 }
 
@@ -403,10 +448,10 @@ input:focus {
 
 .progress-track {
   height: 4px;
-  overflow: hidden;
   margin-top: 8px;
   border-radius: 999px;
   background: var(--sync-control);
+  overflow: hidden;
 }
 
 .progress-fill {
@@ -425,14 +470,17 @@ input:focus {
 .sync-report-dot {
   width: 6px;
   height: 6px;
-  flex: 0 0 6px;
+  flex-shrink: 0;
   margin-top: 5px;
-  border-radius: 999px;
+  border-radius: 50%;
   background: var(--text-muted);
 }
 
 .sync-report p {
   margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 .local-removals-report .sync-report-dot {
@@ -443,31 +491,25 @@ input:focus {
   display: grid;
   gap: 4px;
   margin-top: 8px;
-  color: var(--text-muted);
-  font-family: inherit;
   font-size: 10px;
+  color: var(--text-muted);
 }
 
 .local-removal-actions {
+  display: flex;
   justify-content: flex-end;
+  gap: 8px;
   margin-top: 10px;
-}
-
-.refresh-meta,
-.folder-path {
-  color: var(--text-secondary) !important;
-}
-
-.folder-path {
-  max-width: 100%;
-  overflow: hidden;
-  font-family: var(--font-geist-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
-  font-size: 12px !important;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex-wrap: wrap;
 }
 
 /* ── Projects panel ── */
+.projects-panel {
+  padding: var(--row-padding);
+  border-bottom: 1px solid var(--sync-border);
+  min-width: 0;
+}
+
 .projects-header {
   display: flex;
   align-items: flex-start;
@@ -476,33 +518,53 @@ input:focus {
   margin-bottom: 14px;
 }
 
+.projects-header h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.projects-header p {
+  margin: 5px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
 .project-list {
   display: grid;
   gap: 6px;
-  background: transparent !important;
 }
 
 .project-row {
   display: grid;
-  width: 100%;
-  min-width: 0;
-  grid-template-columns: 22px minmax(0, 1fr) auto;
+  grid-template-columns: 22px 1fr auto;
   align-items: center;
   gap: 10px;
+  padding: 10px;
   border: 1px solid transparent;
   border-radius: 10px;
   background: var(--sync-project-row);
-  color: inherit;
-  padding: 10px;
   text-align: left;
+  width: 100%;
+  min-width: 0;
 }
 
 button.project-row {
   cursor: pointer;
   font-family: inherit;
-  transition:
-    border-color 150ms ease,
-    background 150ms ease;
+  color: inherit;
+  transition: border-color 150ms ease, background 150ms ease;
 }
 
 button.project-row:hover,
@@ -512,17 +574,17 @@ button.project-row:hover,
 }
 
 .project-check {
-  display: flex;
   width: 22px;
   height: 22px;
-  align-items: center;
-  justify-content: center;
   border: 1px solid var(--sync-border);
   border-radius: 7px;
   background: transparent;
   color: var(--text-primary);
   font-size: 10px;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .project-row.is-selected .project-check {
@@ -532,26 +594,26 @@ button.project-row:hover,
 }
 
 .project-main {
-  display: grid;
   min-width: 0;
+  display: grid;
   gap: 4px;
 }
 
 .project-name {
-  overflow: hidden;
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 600;
   line-height: 1.1;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .project-description {
-  overflow: hidden;
   color: var(--text-secondary);
   font-size: 11px;
   line-height: 1.2;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -576,24 +638,13 @@ button.project-row:hover,
   pointer-events: none;
 }
 
-.sync-card > .projects-panel:last-child .projects-header {
-  border-bottom: 1px solid var(--sync-border);
-  margin-bottom: 0;
-  padding-bottom: 10px;
-}
-
-.sync-card > .projects-panel:last-child .projects-header h2 {
-  font-size: 14px;
-  letter-spacing: -0.01em;
-}
-
+/* Sync activity log project rows */
 .sync-card > .projects-panel:last-child .project-list {
   gap: 0;
-  background: transparent !important;
 }
 
 .sync-card > .projects-panel:last-child .project-row {
-  grid-template-columns: 18px minmax(0, 1fr) auto;
+  grid-template-columns: 18px 1fr auto;
   gap: 8px;
   border: 0;
   border-radius: 0;
@@ -613,10 +664,10 @@ button.project-row:hover,
   width: 6px;
   height: 6px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 50%;
   background: var(--text-muted);
-  color: transparent;
   font-size: 0;
+  color: transparent;
 }
 
 .sync-card > .projects-panel:last-child .project-name {
@@ -637,25 +688,18 @@ button.project-row:hover,
   text-transform: uppercase;
 }
 
+/* ── Animation ── */
 @keyframes desktop-sync-pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-    transform: scale(0.85);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1);
-  }
+  0%, 100% { opacity: 0.45; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1); }
 }
 
-/* ── Responsive ── */
+/* ── Responsive: collapse to single column ── */
 @media (max-width: 900px) {
   .desktop-settings-view {
+    grid-template-columns: 1fr;
     width: 100%;
     max-width: none;
-    grid-template-columns: minmax(0, 1fr);
     padding-top: 20px;
   }
 
@@ -663,35 +707,12 @@ button.project-row:hover,
     position: static;
     grid-column: 1;
     grid-row: 1;
-    width: 100%;
     margin-bottom: 0;
-    overflow: hidden;
-  }
-
-  .desktop-sync-settings-header {
-    grid-column: 1;
-    grid-row: 2;
-    padding-top: 20px;
-    padding-bottom: 0;
-    border-bottom: none;
-    margin-bottom: 0;
-  }
-
-  .sync-card {
-    grid-column: 1;
-    grid-row: 3;
-  }
-
-  .status-row {
-    border-top: 1px solid var(--sync-border);
-    margin-top: 20px;
   }
 
   .desktop-sync-settings-nav {
-    display: flex;
-    width: 100%;
+    flex-direction: row;
     overflow-x: auto;
-    overflow-y: hidden;
     padding-bottom: 4px;
     scrollbar-width: none;
   }
@@ -702,23 +723,57 @@ button.project-row:hover,
 
   .desktop-sync-settings-nav-item {
     width: auto;
-    flex: 0 0 auto;
+    flex-shrink: 0;
+  }
+
+  .desktop-sync-settings-header {
+    grid-column: 1;
+    grid-row: 2;
+    padding-top: 20px;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .sync-card {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .settings-row.is-status {
+    border-top: 1px solid var(--sync-border);
+    margin-top: 20px;
+  }
+
+  .api-endpoint-control input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .api-endpoint-control {
+    max-width: 300px;
   }
 }
 
 @media (max-width: 620px) {
-  .section-block,
-  .projects-header {
+  .settings-row {
     flex-wrap: wrap;
   }
 
-  .section-block > div:first-child {
+  .settings-row-label {
     flex: 1 1 100%;
   }
 
-  .section-block > :last-child:not(div:first-child) {
-    flex: 0 0 auto;
+  .settings-row-control {
     margin-left: auto;
+  }
+
+  .api-endpoint-control {
+    width: 100%;
+    max-width: none;
+  }
+
+  .api-endpoint-control input {
+    width: 100%;
   }
 
   .realtime-toggle {
@@ -726,15 +781,14 @@ button.project-row:hover,
   }
 
   .project-row {
-    grid-template-columns: 22px minmax(0, 1fr);
+    grid-template-columns: 22px 1fr;
   }
 
   .project-meta {
     grid-column: 2;
-    justify-content: flex-start;
   }
 
   .sync-card > .projects-panel:last-child .project-row {
-    grid-template-columns: 18px minmax(0, 1fr);
+    grid-template-columns: 18px 1fr;
   }
 }
