@@ -36,7 +36,7 @@ function ThemeOption({
   return (
     <button
       type="button"
-      className={`desktop-command-theme-option${active ? " is-active" : ""}`}
+      className={`desktop-user-dock-theme-option${active ? " is-active" : ""}`}
       onClick={onClick}
       aria-pressed={active}
     >
@@ -101,83 +101,69 @@ export default function UserMenu({
 
       {open && (
         <div className="filmwave-header-menu-wrap desktop-user-menu-wrap">
-          <div className="desktop-command-menu">
-            <div className="desktop-command-menu-topline">
-              <span className="desktop-command-menu-label">Filmwave Desktop</span>
-              <span className={`desktop-command-menu-state${isSignedIn ? " is-online" : ""}`}>
-                {isSignedIn ? "Online" : "Offline"}
-              </span>
-            </div>
-
-            <div className="desktop-command-account">
-              <div className="desktop-command-account-copy">
-                <strong>{isSignedIn ? accountName : "Account required"}</strong>
-                <span>{accountEmail}</span>
-              </div>
-              <span className="desktop-command-avatar">
+          <div className="desktop-user-dock-menu">
+            <div className="desktop-user-dock-identity">
+              <span className="desktop-user-dock-avatar">
                 {account?.imageUrl ? (
                   <img src={account.imageUrl} alt="" />
                 ) : (
                   getAccountInitial(account)
                 )}
               </span>
+
+              <div className="desktop-user-dock-copy">
+                <strong>{isSignedIn ? accountName : "Filmwave Desktop"}</strong>
+                <span>{accountEmail}</span>
+              </div>
             </div>
 
-            <div className="desktop-command-actions" aria-label="Account actions">
+            <div className="desktop-user-dock-actions" aria-label="Account actions">
               <button
                 type="button"
-                className="desktop-command-action"
+                className="desktop-user-dock-action"
                 onClick={() => {
                   setOpen(false);
                   onOpenSyncSettings();
                 }}
               >
-                <span className="desktop-command-action-index">01</span>
-                <span className="desktop-command-action-main">
-                  <strong>Desktop Sync</strong>
-                  <small>Folder, source, and project sync settings</small>
-                </span>
-                <span className="desktop-command-action-arrow">→</span>
+                <span>Desktop Sync</span>
+                <small>Manage local folders</small>
               </button>
 
               <button
                 type="button"
-                className="desktop-command-action"
+                className="desktop-user-dock-action"
                 onClick={() => {
                   setOpen(false);
                   void onOpenSignIn();
                 }}
               >
-                <span className="desktop-command-action-index">02</span>
-                <span className="desktop-command-action-main">
-                  <strong>{isSignedIn ? "Reconnect" : "Sign in"}</strong>
-                  <small>{isSignedIn ? "Refresh the active Filmwave session" : "Connect this app to your account"}</small>
-                </span>
-                <span className="desktop-command-action-arrow">→</span>
+                <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
+                <small>{isSignedIn ? "Refresh session" : "Connect account"}</small>
               </button>
 
               {isSignedIn && (
                 <button
                   type="button"
-                  className="desktop-command-action is-muted"
+                  className="desktop-user-dock-action"
                   onClick={() => {
                     setOpen(false);
                     void onSignOut();
                   }}
                 >
-                  <span className="desktop-command-action-index">03</span>
-                  <span className="desktop-command-action-main">
-                    <strong>Sign out</strong>
-                    <small>End this desktop session</small>
-                  </span>
-                  <span className="desktop-command-action-arrow">→</span>
+                  <span>Sign out</span>
+                  <small>Disconnect app</small>
                 </button>
               )}
             </div>
 
-            <div className="desktop-command-footer">
-              <span className="desktop-command-footer-label">Mode</span>
-              <div className="desktop-command-theme" aria-label="Theme setting">
+            <div className="desktop-user-dock-footer">
+              <div className="desktop-user-dock-status">
+                <span className={isSignedIn ? "is-online" : ""} />
+                {isSignedIn ? "Connected" : "Offline"}
+              </div>
+
+              <div className="desktop-user-dock-theme" aria-label="Theme setting">
                 <ThemeOption active={theme === "dark"} onClick={() => onThemeChange("dark")}>
                   <DarkMode size={12} />
                   <span>Dark</span>
