@@ -97,6 +97,8 @@ html[data-theme="light"] .desktop-settings-view {
 .sync-card {
   grid-column: 2;
   min-width: 0;
+  container-type: inline-size;
+  container-name: sync-card;
 }
 
 .desktop-sync-settings-header {
@@ -130,12 +132,10 @@ html[data-theme="light"] .desktop-settings-view {
   min-width: 0;
 }
 
-/* Status row: single-line, vertically centered */
 .settings-row.is-status {
   align-items: center;
 }
 
-/* Label side */
 .settings-row-label {
   flex: 1 1 0;
   min-width: 0;
@@ -157,7 +157,6 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1.4;
 }
 
-/* Control side */
 .settings-row-control {
   flex-shrink: 0;
   display: flex;
@@ -165,7 +164,7 @@ html[data-theme="light"] .desktop-settings-view {
   gap: 8px;
 }
 
-/* ── Status row specifics ── */
+/* ── Status row ── */
 .status-row-label {
   color: var(--text-primary);
   font-size: 14px;
@@ -242,26 +241,6 @@ html[data-theme="light"] .desktop-settings-view {
 }
 
 /* ── Buttons ── */
-.btn-primary,
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  min-width: 72px;
-  padding: 0 14px;
-  border: 0;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background 150ms ease, color 150ms ease, opacity 150ms ease;
-}
-
-/* Legacy class support */
 .primary-button {
   display: inline-flex;
   align-items: center;
@@ -382,7 +361,7 @@ input:focus {
   border-color: var(--sync-border-strong);
 }
 
-/* ── API endpoint control: stacked ── */
+/* ── API endpoint control ── */
 .api-endpoint-control {
   display: flex;
   flex-direction: column;
@@ -400,7 +379,7 @@ input:focus {
   gap: 8px;
 }
 
-/* ── Token form (sign-in) ── */
+/* ── Token form ── */
 .token-form {
   display: flex;
   align-items: center;
@@ -638,7 +617,6 @@ button.project-row:hover,
   pointer-events: none;
 }
 
-/* Sync activity log project rows */
 .sync-card > .projects-panel:last-child .project-list {
   gap: 0;
 }
@@ -694,7 +672,7 @@ button.project-row:hover,
   50% { opacity: 1; transform: scale(1); }
 }
 
-/* ── Responsive: collapse to single column ── */
+/* ── Responsive: sidebar collapses to horizontal nav ── */
 @media (max-width: 900px) {
   .desktop-settings-view {
     grid-template-columns: 1fr;
@@ -707,7 +685,6 @@ button.project-row:hover,
     position: static;
     grid-column: 1;
     grid-row: 1;
-    margin-bottom: 0;
   }
 
   .desktop-sync-settings-nav {
@@ -743,20 +720,13 @@ button.project-row:hover,
     border-top: 1px solid var(--sync-border);
     margin-top: 20px;
   }
-
-  .api-endpoint-control input {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .api-endpoint-control {
-    max-width: 300px;
-  }
 }
 
-@media (max-width: 620px) {
+/* ── Container query: row wraps when content column < 600px ── */
+@container sync-card (max-width: 600px) {
   .settings-row {
     flex-wrap: wrap;
+    gap: 16px;
   }
 
   .settings-row-label {
@@ -769,7 +739,6 @@ button.project-row:hover,
 
   .api-endpoint-control {
     width: 100%;
-    max-width: none;
   }
 
   .api-endpoint-control input {
