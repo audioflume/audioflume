@@ -9,7 +9,7 @@ import {
   type SharedWaveformCanvasHandle,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useMemo, useRef, useState, type Ref } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type Ref } from "react";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
 import SyncIcon from "../../icons/SyncIcon";
@@ -67,6 +67,9 @@ export default function DesktopSongCard({
   );
   const editPoints = useMemo(() => parseEditPoints(song.editPoints), [song.editPoints]);
   const cuePoints = useMemo(() => getSongCuePointMarkers(song), [song]);
+  const favoriteButtonStyle = favorite
+    ? ({ "--favorite-icon-color": "var(--text-primary)" } as CSSProperties)
+    : undefined;
 
   useEffect(() => {
     const nextProgress = pendingSeekProgress ?? playbackProgress;
@@ -197,7 +200,8 @@ export default function DesktopSongCard({
             type="button"
             onClick={onFavoriteToggle}
             aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
-            className={`filmwave-song-action-button${favorite ? " is-active" : ""}`}
+            className="filmwave-song-action-button"
+            style={favoriteButtonStyle}
           >
             <HeartIcon size={14} filled={favorite} />
           </button>
