@@ -129,7 +129,6 @@ html[data-theme="light"] .desktop-settings-view {
 
 .status-row {
   display: flex;
-  min-height: 48px;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
@@ -179,14 +178,12 @@ html[data-theme="light"] .desktop-settings-view {
 
 .section-block {
   display: grid;
-  min-height: 72px;
   grid-template-columns: minmax(0, 1fr) minmax(220px, auto);
   align-items: center;
   gap: 24px;
 }
 
 .section-block:has(.realtime-toggle) {
-  height: 128px;
   align-items: start;
 }
 
@@ -213,7 +210,7 @@ html[data-theme="light"] .desktop-settings-view {
 }
 
 .account-block {
-  min-height: 104px;
+  align-items: start;
 }
 
 .account-profile,
@@ -728,5 +725,46 @@ button.project-row:hover,
   .desktop-sync-settings-nav-item {
     width: auto;
     flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .section-block:not(:has(.realtime-toggle)),
+  .projects-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-block {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .section-block > :last-child,
+  .button-group,
+  .settings-form,
+  .token-form {
+    justify-content: flex-end;
+    justify-self: end;
+  }
+
+  .realtime-toggle {
+    overflow: hidden;
+  }
+
+  .source-toggle {
+    width: max-content;
+  }
+
+  .project-row {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .project-meta {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .sync-card > .projects-panel:last-child .project-row {
+    grid-template-columns: 18px minmax(0, 1fr);
   }
 }
