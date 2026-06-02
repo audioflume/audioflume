@@ -10,6 +10,7 @@
 @import "../../../packages/shared/styles/music-library-states.css";
 @import "../../../packages/shared/styles/music-shared-controls.css";
 @import "../../../packages/shared/styles/user-menu.css";
+@import "../../../packages/shared/styles/settings-side-nav.css";
 
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
