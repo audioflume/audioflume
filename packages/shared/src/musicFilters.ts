@@ -67,6 +67,7 @@ export const GENRE_OPTIONS = [
   "Pop",
   "R&B",
   "Rock",
+  "Retro",
   "Score",
   "Soul",
   "Trap",
