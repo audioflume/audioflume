@@ -23,8 +23,8 @@ export default function RealtimeSyncBlock({
   onChangeAutoSyncEnabled,
 }: RealtimeSyncBlockProps) {
   return (
-    <div className="section-block settings-block">
-      <div>
+    <div className="settings-row">
+      <div className="settings-row-label">
         <h2>Realtime sync</h2>
         <p>{autoSyncDescription}</p>
         <p className="refresh-meta">
@@ -32,16 +32,18 @@ export default function RealtimeSyncBlock({
         </p>
       </div>
 
-      <button
-        type="button"
-        className={`realtime-toggle ${autoSyncEnabled ? "is-on" : "is-off"}`}
-        role="switch"
-        aria-checked={autoSyncEnabled}
-        aria-label="Realtime sync setting"
-        onClick={() => onChangeAutoSyncEnabled(!autoSyncEnabled)}
-      >
-        <span className="realtime-toggle-knob" aria-hidden="true" />
-      </button>
+      <div className="settings-row-control">
+        <button
+          type="button"
+          className={`realtime-toggle ${autoSyncEnabled ? "is-on" : "is-off"}`}
+          role="switch"
+          aria-checked={autoSyncEnabled}
+          aria-label="Realtime sync setting"
+          onClick={() => onChangeAutoSyncEnabled(!autoSyncEnabled)}
+        >
+          <span className="realtime-toggle-knob" aria-hidden="true" />
+        </button>
+      </div>
     </div>
   );
 }
