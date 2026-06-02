@@ -37,7 +37,7 @@ html[data-theme="light"] .desktop-settings-view {
 
 .desktop-sync-settings-sidebar {
   position: sticky;
-  top: 24px;
+  top: 0px;
   grid-column: 1;
   grid-row: 1 / span 20;
   align-self: start;
@@ -728,46 +728,5 @@ button.project-row:hover,
   .desktop-sync-settings-nav-item {
     width: auto;
     flex: 0 0 auto;
-  }
-}
-
-@media (max-width: 620px) {
-  .section-block:not(:has(.realtime-toggle)),
-  .projects-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .section-block {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .section-block:has(.realtime-toggle) {
-    height: auto;
-  }
-
-  .section-block > :last-child,
-  .button-group,
-  .settings-form,
-  .token-form {
-    justify-content: flex-end;
-    justify-self: end;
-  }
-
-  .source-toggle {
-    width: max-content;
-  }
-
-  .project-row {
-    grid-template-columns: 22px minmax(0, 1fr);
-  }
-
-  .project-meta {
-    grid-column: 2;
-    justify-content: flex-start;
-  }
-
-  .sync-card > .projects-panel:last-child .project-row {
-    grid-template-columns: 18px minmax(0, 1fr);
   }
 }
