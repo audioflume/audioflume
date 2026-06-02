@@ -109,30 +109,38 @@ html[data-theme="light"] .desktop-settings-view {
 
 .sync-card {
   grid-column: 2;
-  display: grid;
   min-width: 0;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
 }
 
+/* ── Every settings row ── */
 .status-row,
 .section-block,
 .projects-panel {
-  grid-column: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
   min-width: 0;
-  border: 0;
+  padding: 20px 0;
   border-bottom: 1px solid var(--sync-border);
-  border-radius: 0;
-  background: transparent !important;
-  box-shadow: none;
 }
 
+/* Status row is centered vertically since it's always one line */
 .status-row {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 20px 0;
+}
+
+/* Left label column */
+.section-block > div:first-child,
+.projects-panel > div:first-child {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Right controls column — never shrinks, sits at top */
+.section-block > :last-child:not(div:first-child),
+.projects-panel > :last-child:not(div:first-child) {
+  flex: 0 0 auto;
 }
 
 .status-row-label {
@@ -141,16 +149,13 @@ html[data-theme="light"] .desktop-settings-view {
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1;
-  text-transform: none;
 }
 
 .status-pill,
 .status-pill:hover {
   display: inline-flex;
-  min-height: 0;
   align-items: center;
   gap: 8px;
-  border-radius: 0;
   background: transparent !important;
   color: var(--text-secondary);
   padding: 0;
@@ -171,28 +176,6 @@ html[data-theme="light"] .desktop-settings-view {
   animation: desktop-sync-pulse 1s ease-in-out infinite;
 }
 
-.section-block,
-.projects-panel {
-  padding: 20px 0;
-}
-
-.section-block {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, auto);
-  align-items: center;
-  gap: 24px;
-}
-
-.section-block:has(.realtime-toggle),
-.section-block:has(.settings-form),
-.account-block {
-  align-items: start;
-}
-
-.section-block > :last-child {
-  justify-self: end;
-}
-
 .section-block h2,
 .projects-panel h2 {
   margin: 0;
@@ -211,6 +194,7 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1.4;
 }
 
+/* ── Account block ── */
 .account-profile,
 .account-profile-main,
 .account-name,
@@ -264,52 +248,36 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1;
 }
 
-.projects-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 14px;
-}
-
-.refresh-meta,
-.folder-path {
-  color: var(--text-secondary) !important;
-}
-
-.folder-path {
-  max-width: 100%;
-  overflow: hidden;
-  font-family: var(
-    --font-geist-mono,
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    monospace
-  );
-  font-size: 12px !important;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
+/* ── Button / form groups ── */
 .button-group,
 .settings-form,
 .token-form,
 .local-removal-actions {
   display: flex;
-  min-width: 0;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
+  flex-shrink: 0;
 }
 
-.token-form,
-.settings-form {
+.token-form {
   margin-top: 12px;
-  justify-content: flex-end;
 }
 
+.settings-form {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.settings-form-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ── Buttons ── */
 .primary-button,
 .secondary-button,
 .source-toggle button {
@@ -366,6 +334,7 @@ html[data-theme="light"] .desktop-settings-view {
   opacity: 0.42;
 }
 
+/* ── Input ── */
 input {
   height: 34px;
   min-width: 0;
@@ -386,7 +355,6 @@ input::placeholder {
 
 input:focus {
   border-color: var(--sync-border-strong);
-  background: var(--sync-surface-raised);
 }
 
 .token-form input {
@@ -394,19 +362,18 @@ input:focus {
 }
 
 .settings-form input {
-  width: min(360px, 100%);
+  width: min(320px, 100%);
 }
 
+/* ── Source toggle ── */
 .source-toggle {
   display: inline-flex;
-  width: max-content;
-  flex-shrink: 0;
   align-items: center;
-  justify-self: end;
   gap: 3px;
   border-radius: 999px;
   background: var(--sync-control);
   padding: 4px;
+  flex-shrink: 0;
 }
 
 .source-toggle button {
@@ -415,6 +382,7 @@ input:focus {
   border-radius: 999px;
 }
 
+/* ── Progress / reports ── */
 .progress-panel,
 .sync-report {
   margin-bottom: 10px;
@@ -483,6 +451,29 @@ input:focus {
 .local-removal-actions {
   justify-content: flex-end;
   margin-top: 10px;
+}
+
+.refresh-meta,
+.folder-path {
+  color: var(--text-secondary) !important;
+}
+
+.folder-path {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--font-geist-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 12px !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Projects panel ── */
+.projects-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
 }
 
 .project-list {
@@ -592,18 +583,8 @@ button.project-row:hover,
 }
 
 .sync-card > .projects-panel:last-child .projects-header h2 {
-  font-family: inherit;
   font-size: 14px;
   letter-spacing: -0.01em;
-  text-transform: none;
-}
-
-.sync-card > .projects-panel:last-child .projects-header p,
-.sync-card > .projects-panel:last-child .project-description,
-.sync-card > .projects-panel:last-child .project-meta,
-.sync-card > .projects-panel:last-child .project-name,
-.sync-card > .projects-panel:last-child .project-meta span {
-  font-family: inherit;
 }
 
 .sync-card > .projects-panel:last-child .project-list {
@@ -639,14 +620,12 @@ button.project-row:hover,
 }
 
 .sync-card > .projects-panel:last-child .project-name {
-  color: var(--sync-console-text);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
 .sync-card > .projects-panel:last-child .project-description {
-  color: var(--text-secondary);
   font-size: 10px;
 }
 
@@ -671,6 +650,7 @@ button.project-row:hover,
   }
 }
 
+/* ── Responsive ── */
 @media (max-width: 900px) {
   .desktop-settings-view {
     width: 100%;
@@ -727,30 +707,22 @@ button.project-row:hover,
 }
 
 @media (max-width: 620px) {
-  .section-block:not(:has(.realtime-toggle)),
+  .section-block,
   .projects-header {
-    align-items: flex-start;
-    flex-direction: column;
+    flex-wrap: wrap;
   }
 
-  .section-block {
-    grid-template-columns: minmax(0, 1fr) auto;
+  .section-block > div:first-child {
+    flex: 1 1 100%;
   }
 
-  .section-block > :last-child,
-  .button-group,
-  .settings-form,
-  .token-form {
-    justify-content: flex-end;
-    justify-self: end;
+  .section-block > :last-child:not(div:first-child) {
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 
   .realtime-toggle {
     overflow: hidden;
-  }
-
-  .source-toggle {
-    width: max-content;
   }
 
   .project-row {
