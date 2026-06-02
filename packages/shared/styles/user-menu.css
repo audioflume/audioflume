@@ -1,4 +1,4 @@
-/* ── User menu: flat, sharp corners, elevated background ── */
+/* ── User menu ── */
 
 .filmwave-user-menu {
   width: 280px;
@@ -9,9 +9,9 @@
   box-shadow: var(--filmwave-menu-shadow);
 }
 
-/* Shared menu tokens — used by user menu, dropdown shell, player menu, desktop card menu */
+/* Shared menu tokens */
 :root {
-  --filmwave-menu-bg: #282828;
+  --filmwave-menu-bg: #1f1f1f;
   --filmwave-menu-hover: rgba(255, 255, 255, 0.1);
   --filmwave-menu-text: #ffffff;
   --filmwave-menu-text-muted: #b3b3b3;
@@ -110,13 +110,7 @@ html[data-theme="light"] {
 }
 
 .filmwave-user-menu-action-helper {
-  margin-top: 2px;
-  overflow: hidden;
-  color: var(--filmwave-menu-text-muted);
-  font-size: 11px;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: none;
 }
 
 .filmwave-user-menu-action-arrow {
@@ -157,8 +151,8 @@ html[data-theme="light"] {
   font-size: 11px;
 }
 
+/* No border-top divider between actions and theme toggle */
 .filmwave-user-menu-theme-wrap {
-  border-top: 1px solid var(--filmwave-menu-separator);
   padding: 8px;
 }
 
