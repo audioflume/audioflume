@@ -60,7 +60,7 @@ export default function UserMenu({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const accountName =
-    account?.name ?? (accountLoading ? "Loading account..." : "Filmwave user");
+    account?.name ?? (accountLoading ? "Loading account..." : "Filmwave Desktop");
   const accountEmail =
     account?.email ?? (isSignedIn ? "Connected to Filmwave" : "Not connected");
 
@@ -103,51 +103,84 @@ export default function UserMenu({
       {open && (
         <div className="filmwave-header-menu-wrap desktop-user-menu-wrap">
           <div className="desktop-user-menu">
-            <div className="desktop-user-menu-head">
-              <div className="desktop-user-menu-name">
-                {isSignedIn ? accountName : "Filmwave Desktop"}
+            <div className="desktop-user-menu-profile">
+              <span className="desktop-user-menu-avatar">
+                {account?.imageUrl ? (
+                  <img src={account.imageUrl} alt="" />
+                ) : (
+                  getAccountInitial(account)
+                )}
+              </span>
+
+              <div className="desktop-user-menu-copy">
+                <strong>{isSignedIn ? accountName : "Filmwave Desktop"}</strong>
+                <span>{accountEmail}</span>
               </div>
-              <div className="desktop-user-menu-plan">{accountEmail}</div>
+
+              <span className={`desktop-user-menu-status${isSignedIn ? " is-connected" : ""}`}>
+                {isSignedIn ? "Connected" : "Offline"}
+              </span>
             </div>
 
-            <div className="desktop-user-menu-actions">
+            <div className="desktop-user-menu-card">
+              <div>
+                <span className="desktop-user-menu-kicker">Local workspace</span>
+                <strong>Desktop Sync</strong>
+                <p>Manage folders, project syncing, and realtime updates.</p>
+              </div>
+
               <button
                 type="button"
-                className="desktop-user-menu-action"
+                className="desktop-user-menu-primary"
                 onClick={() => {
                   setOpen(false);
                   onOpenSyncSettings();
                 }}
               >
-                <span>Desktop Sync</span>
+                Open
               </button>
+            </div>
 
+            <div className="desktop-user-menu-section">
               <button
                 type="button"
-                className="desktop-user-menu-action"
+                className="desktop-user-menu-row"
                 onClick={() => {
                   setOpen(false);
                   void onOpenSignIn();
                 }}
               >
-                <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
+                <span className="desktop-user-menu-row-icon" aria-hidden="true">
+                  ↻
+                </span>
+                <span>
+                  <strong>{isSignedIn ? "Reconnect account" : "Sign in to Filmwave"}</strong>
+                  <small>{isSignedIn ? "Refresh your Filmwave connection" : "Connect this desktop app"}</small>
+                </span>
               </button>
 
               {isSignedIn && (
                 <button
                   type="button"
-                  className="desktop-user-menu-action"
+                  className="desktop-user-menu-row"
                   onClick={() => {
                     setOpen(false);
                     void onSignOut();
                   }}
                 >
-                  <span>Sign out</span>
+                  <span className="desktop-user-menu-row-icon" aria-hidden="true">
+                    ⎋
+                  </span>
+                  <span>
+                    <strong>Sign out</strong>
+                    <small>Disconnect this desktop session</small>
+                  </span>
                 </button>
               )}
             </div>
 
             <div className="desktop-theme-menu">
+              <div className="desktop-theme-menu-label">Appearance</div>
               <div className="desktop-theme-toggle" aria-label="Theme setting">
                 <ThemeButton
                   active={theme === "dark"}
