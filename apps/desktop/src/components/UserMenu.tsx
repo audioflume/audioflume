@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import DarkMode from "./icons/DarkMode";
 import LightMode from "./icons/LightMode";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
+import "./UserMenu.css";
 
 type ThemeMode = "dark" | "light";
 
