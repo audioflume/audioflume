@@ -1,31 +1,60 @@
+/* ── User menu: flat, sharp corners, elevated background ── */
+
 .filmwave-user-menu {
-  width: 300px;
+  width: 280px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-secondary);
-  box-shadow: var(--shadow-ui);
+  border: 0;
+  border-radius: 4px;
+  background: var(--filmwave-menu-bg);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode: elevated charcoal */
+:root {
+  --filmwave-menu-bg: #282828;
+  --filmwave-menu-hover: rgba(255, 255, 255, 0.1);
+  --filmwave-menu-text: #ffffff;
+  --filmwave-menu-text-muted: #b3b3b3;
+  --filmwave-menu-separator: rgba(255, 255, 255, 0.1);
+  --filmwave-menu-theme-bg: rgba(0, 0, 0, 0.25);
+  --filmwave-menu-theme-active: #ffffff;
+  --filmwave-menu-theme-active-text: #111111;
+  --filmwave-menu-theme-hover: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="light"] {
+  --filmwave-menu-bg: #ffffff;
+  --filmwave-menu-hover: rgba(0, 0, 0, 0.06);
+  --filmwave-menu-text: #111111;
+  --filmwave-menu-text-muted: #6a6a6a;
+  --filmwave-menu-separator: rgba(0, 0, 0, 0.08);
+  --filmwave-menu-theme-bg: rgba(0, 0, 0, 0.06);
+  --filmwave-menu-theme-active: #111111;
+  --filmwave-menu-theme-active-text: #ffffff;
+  --filmwave-menu-theme-hover: rgba(0, 0, 0, 0.08);
 }
 
 .filmwave-user-menu-head {
-  border-bottom: 1px solid var(--border);
-  padding: 12px;
+  border-bottom: 1px solid var(--filmwave-menu-separator);
+  padding: 14px 16px 12px;
 }
 
 .filmwave-user-menu-title {
   overflow: hidden;
-  color: var(--text-primary);
+  color: var(--filmwave-menu-text);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .filmwave-user-menu-detail {
-  margin-top: 2px;
+  margin-top: 3px;
   overflow: hidden;
-  color: var(--text-muted);
+  color: var(--filmwave-menu-text-muted);
   font-size: 11px;
   line-height: 1.2;
   text-overflow: ellipsis;
@@ -34,33 +63,30 @@
 
 .filmwave-user-menu-actions {
   display: grid;
-  gap: 4px;
-  padding: 6px;
+  padding: 4px 0;
 }
 
 .filmwave-user-menu-action {
   display: flex;
-  height: 44px;
+  height: 40px;
   cursor: pointer;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 0;
   background: transparent;
-  color: var(--text-primary);
-  padding: 0 12px;
+  color: var(--filmwave-menu-text);
+  padding: 0 16px;
   font-family: inherit;
   text-align: left;
   text-decoration: none;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: background 100ms ease;
 }
 
 .filmwave-user-menu-action:hover {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
+  background: var(--filmwave-menu-hover);
+  color: var(--filmwave-menu-text);
 }
 
 .filmwave-user-menu-action-copy {
@@ -69,9 +95,9 @@
 
 .filmwave-user-menu-action-title {
   overflow: hidden;
-  color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 500;
+  color: var(--filmwave-menu-text);
+  font-size: 13px;
+  font-weight: 400;
   line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -80,7 +106,7 @@
 .filmwave-user-menu-action-helper {
   margin-top: 2px;
   overflow: hidden;
-  color: var(--text-muted);
+  color: var(--filmwave-menu-text-muted);
   font-size: 11px;
   line-height: 1.2;
   text-overflow: ellipsis;
@@ -89,111 +115,79 @@
 
 .filmwave-user-menu-action-arrow {
   display: inline-flex;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
-  transition: color 150ms ease;
-}
-
-.filmwave-user-menu-action:hover .filmwave-user-menu-action-arrow {
-  color: var(--text-primary);
+  color: var(--filmwave-menu-text-muted);
 }
 
 .filmwave-user-menu-exit {
   display: flex;
-  height: 36px;
+  height: 40px;
   cursor: pointer;
   align-items: center;
   justify-content: space-between;
   border: 0;
-  border-radius: 8px;
+  border-radius: 0;
   background: transparent;
-  color: var(--text-primary);
-  padding: 0 12px;
+  color: var(--filmwave-menu-text);
+  padding: 0 16px;
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 400;
   text-align: left;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: background 100ms ease;
 }
 
 .filmwave-user-menu-exit:hover {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
+  background: var(--filmwave-menu-hover);
 }
 
 .filmwave-user-menu-exit span:last-child {
-  color: var(--text-muted);
+  color: var(--filmwave-menu-text-muted);
   font-size: 11px;
 }
 
 .filmwave-user-menu-theme-wrap {
-  border-top: 1px solid var(--border);
-  padding: 6px;
+  border-top: 1px solid var(--filmwave-menu-separator);
+  padding: 8px;
 }
 
 .filmwave-user-menu-theme {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  border-radius: 10px;
-  background: var(--bg-primary);
-  padding: 4px;
+  gap: 4px;
+  border-radius: 3px;
+  background: var(--filmwave-menu-theme-bg);
+  padding: 3px;
 }
 
 .filmwave-user-menu-theme-option {
   display: inline-flex;
-  height: 32px;
+  height: 30px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
   border: 0;
-  border-radius: 7px;
+  border-radius: 2px;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--filmwave-menu-text-muted);
   font-family: inherit;
   font-size: 11px;
   font-weight: 500;
   line-height: 1;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: background 100ms ease, color 100ms ease;
 }
 
-.filmwave-user-menu-theme-option.is-dark:hover,
-.filmwave-user-menu-theme-option.is-light:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+.filmwave-user-menu-theme-option:hover {
+  background: var(--filmwave-menu-theme-hover);
+  color: var(--filmwave-menu-text);
 }
 
-.filmwave-user-menu-theme-option.is-dark.is-active,
-.filmwave-user-menu-theme-option.is-light.is-active {
-  background: #ffffff;
-  color: #111111;
-}
-
-html[data-theme="light"] .filmwave-user-menu-theme {
-  background: #e9e9e6;
-}
-
-html[data-theme="light"] .filmwave-user-menu-theme-option.is-dark:hover,
-html[data-theme="light"] .filmwave-user-menu-theme-option.is-light:hover {
-  background: rgba(0, 0, 0, 0.065);
-  color: #111111;
-}
-
-html[data-theme="light"] .filmwave-user-menu-theme-option.is-dark.is-active {
-  background: #111111;
-  color: #ffffff;
-}
-
-html[data-theme="light"] .filmwave-user-menu-theme-option.is-light.is-active {
-  background: #ffffff;
-  color: #111111;
+.filmwave-user-menu-theme-option.is-active {
+  background: var(--filmwave-menu-theme-active);
+  color: var(--filmwave-menu-theme-active-text);
 }
