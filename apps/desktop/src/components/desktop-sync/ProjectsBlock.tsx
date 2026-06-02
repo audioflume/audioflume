@@ -117,7 +117,7 @@ export default function ProjectsBlock({
             <div className="local-removal-list">
               {localRemovals.slice(0, 5).map((removal) => (
                 <span key={`${removal.projectId}-${removal.id}`}>
-                  {removal.type === "folder" ? "Folder" : "File"}: {" "}
+                  {removal.type === "folder" ? "Folder" : "File"}:{" "}
                   {removal.path}
                 </span>
               ))}
