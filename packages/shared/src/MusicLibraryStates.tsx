@@ -2,9 +2,9 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 
-function getDefaultSkeletonCount() {
-  if (typeof window === "undefined") return 8;
+const DEFAULT_SKELETON_COUNT = 8;
 
+function getWindowSkeletonCount() {
   const cardHeight = 73;
   const reservedHeight = 56 + 48 + 48 + 44;
   const available = window.innerHeight - reservedHeight;
@@ -26,7 +26,8 @@ export function MusicLibrarySkeletonCard() {
 }
 
 export function MusicLibrarySkeletonList({ count }: { count?: number }) {
-  const [resolvedCount, setResolvedCount] = useState(count ?? getDefaultSkeletonCount());
+  // Always start with a fixed count so SSR and initial client render agree
+  const [resolvedCount, setResolvedCount] = useState(count ?? DEFAULT_SKELETON_COUNT);
 
   useEffect(() => {
     if (count !== undefined) {
@@ -35,7 +36,7 @@ export function MusicLibrarySkeletonList({ count }: { count?: number }) {
     }
 
     function calculate() {
-      setResolvedCount(getDefaultSkeletonCount());
+      setResolvedCount(getWindowSkeletonCount());
     }
 
     calculate();
