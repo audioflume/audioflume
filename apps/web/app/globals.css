@@ -92,3 +92,54 @@ body.sidebar-collapsed aside[data-sidebar] {
   background: var(--danger-bg);
   color: var(--danger);
 }
+
+/* ─── Add to playlist modal polish ─────────────────────────── */
+
+[class*="max-w-[430px]"][class*="h-[420px]"] [class*="-mx-5"] {
+  background: var(--bg-primary) !important;
+  border-top: 1px solid var(--border);
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] [class*="space-y-1"] {
+  padding: 0 !important;
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] [class*="space-y-1"] > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0 !important;
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] button[class*="min-h-[52px]"],
+[class*="max-w-[430px]"][class*="h-[420px]"] form[class*="items-start"] {
+  min-height: 48px !important;
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 8px 16px !important;
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] button[class*="min-h-[52px]"]:hover {
+  background: var(--bg-hover) !important;
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] button[class*="min-h-[52px]"][class*="bg-[var(--bg-primary)]"] {
+  background: transparent !important;
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] button[class*="min-h-[52px]"][class*="bg-[var(--bg-primary)]"]:hover {
+  background: var(--bg-hover) !important;
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] [class*="h-9"][class*="w-9"] {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 0 !important;
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] button[class*="min-h-[52px]"] [class*="h-8"][class*="w-8"] {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+[class*="max-w-[430px]"][class*="h-[420px]"] input {
+  border-radius: 0 !important;
+}
