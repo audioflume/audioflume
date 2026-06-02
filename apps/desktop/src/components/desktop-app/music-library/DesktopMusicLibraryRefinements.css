@@ -150,49 +150,52 @@
   display: inline-flex;
 }
 
+/* ── Desktop song card action menu ── */
+/* Uses shared --filmwave-menu-* tokens from user-menu.css */
+
 .desktop-song-action-menu {
   position: absolute;
   right: -2px;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   z-index: 500;
-  display: grid;
-  width: 260px;
-  gap: 0;
+  min-width: 200px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--bg-secondary);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.42);
-  padding: 7px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--filmwave-menu-bg);
+  padding: 4px 0;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .desktop-song-action-menu button {
   display: flex;
   width: 100%;
-  height: 36px;
+  height: 40px;
   cursor: pointer;
   align-items: center;
   justify-content: flex-start;
   border: 0;
-  border-radius: 9px;
+  border-radius: 0;
   background: transparent;
-  color: var(--text-secondary);
-  padding: 0 11px;
+  color: var(--filmwave-menu-text);
+  padding: 0 16px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 400;
   text-align: left;
-  transition:
-    color 0.15s ease,
-    background 0.15s ease;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 100ms ease;
 }
 
 .desktop-song-action-menu button:hover:not(:disabled) {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
+  background: var(--filmwave-menu-hover);
+  color: var(--filmwave-menu-text);
 }
 
 .desktop-song-action-menu button:disabled {
   cursor: default;
-  color: var(--text-muted);
+  color: var(--filmwave-menu-text-muted);
   opacity: 0.65;
 }
