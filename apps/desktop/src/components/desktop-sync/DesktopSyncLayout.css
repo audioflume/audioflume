@@ -737,4 +737,9 @@ button.project-row:hover,
     grid-column: 1;
     grid-row: 3;
   }
+
+  .settings-row.is-status {
+    border-top: 1px solid var(--sync-border);
+    margin-top: 20px;
+  }
 }
