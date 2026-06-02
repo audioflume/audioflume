@@ -187,6 +187,7 @@ html[data-theme="light"] .desktop-settings-view {
 
 .section-block:has(.realtime-toggle) {
   height: 128px;
+  align-items: start;
 }
 
 .section-block > :last-child {
