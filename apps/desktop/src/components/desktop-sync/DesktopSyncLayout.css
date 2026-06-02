@@ -697,20 +697,18 @@ button.project-row:hover,
   }
 }
 
-/* ── Responsive: sidebar collapses to horizontal nav ── */
+/* ── Responsive: only move sidebar nav to top ── */
 @media (max-width: 600px) {
   .desktop-settings-view {
     grid-template-columns: 1fr;
     width: 100%;
     max-width: none;
-    padding-top: 20px;
   }
 
   .desktop-sync-settings-sidebar {
     position: static;
     grid-column: 1;
     grid-row: 1;
-    min-width: 0;
   }
 
   .desktop-sync-settings-nav {
@@ -733,81 +731,10 @@ button.project-row:hover,
   .desktop-sync-settings-header {
     grid-column: 1;
     grid-row: 2;
-    min-width: 0;
-    padding-top: 20px;
-    padding-bottom: 0;
-    border-bottom: none;
   }
 
   .sync-card {
     grid-column: 1;
     grid-row: 3;
-    min-width: 0;
-  }
-
-  .settings-row.is-status {
-    border-top: 1px solid var(--sync-border);
-    margin-top: 20px;
-  }
-}
-
-/* ── Container query: row wraps when content column < 600px ── */
-@container sync-card (max-width: 600px) {
-  .settings-row {
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .settings-row-label {
-    flex: 1 1 100%;
-  }
-
-  .settings-row-control {
-    width: 100%;
-    flex: 1 1 100%;
-    min-width: 0;
-    justify-content: flex-end;
-    margin-left: 0;
-  }
-
-  .api-endpoint-control {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .api-endpoint-control input,
-  .token-form input {
-    width: min(100%, 300px);
-  }
-
-  .api-endpoint-buttons,
-  .button-group,
-  .local-removal-actions,
-  .token-form {
-    max-width: 100%;
-    min-width: 0;
-    justify-content: flex-end;
-  }
-
-  .source-toggle {
-    max-width: 100%;
-    min-width: 0;
-    overflow-x: auto;
-  }
-
-  .realtime-toggle {
-    overflow: hidden;
-  }
-
-  .project-row {
-    grid-template-columns: 22px minmax(0, 1fr);
-  }
-
-  .project-meta {
-    grid-column: 2;
-  }
-
-  .sync-card > .projects-panel:last-child .project-row {
-    grid-template-columns: 18px minmax(0, 1fr);
   }
 }
