@@ -106,8 +106,8 @@ body > header > div {
   gap: 4px;
 }
 
-.filmwave-header-nav-link,
-.filmwave-header-account-trigger {
+/* Nav links: full button gets hover background */
+.filmwave-header-nav-link {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
   cursor: pointer;
@@ -127,23 +127,54 @@ body > header > div {
 }
 
 .filmwave-header-nav-link:hover,
-.filmwave-header-nav-link.is-active,
-.filmwave-header-account-trigger:hover,
-.filmwave-header-account-trigger.is-open {
+.filmwave-header-nav-link.is-active {
   background: var(--bg-row-hover);
   color: var(--text-primary);
 }
 
+/* Account trigger: button itself never gets background —
+   only the inner label span does, so the avatar stays outside the hover zone */
 .filmwave-header-account-trigger {
+  display: inline-flex;
+  height: var(--filmwave-header-nav-height);
+  cursor: pointer;
+  align-items: center;
   gap: 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  color: var(--text-secondary);
+  padding: 0;
   padding-right: 2px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: color 150ms ease;
 }
 
+.filmwave-header-account-trigger:hover,
+.filmwave-header-account-trigger.is-open {
+  background: transparent !important;
+  color: var(--text-primary);
+}
+
+/* Label span (name + chevron) is what gets the hover pill */
 .filmwave-header-account-label {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
   align-items: center;
   gap: 6px;
+  padding: 0 10px;
+  border-radius: var(--filmwave-header-nav-radius);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.filmwave-header-account-trigger:hover .filmwave-header-account-label,
+.filmwave-header-account-trigger.is-open .filmwave-header-account-label {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
 }
 
 .filmwave-header-account-name {
