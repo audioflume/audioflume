@@ -1,3 +1,5 @@
+import "./SyncProjectsBlock.css";
+
 type SyncActivityLogEntry = {
   id: string;
   createdAt: string;
@@ -29,57 +31,46 @@ export default function SyncActivityBlock({
   onClearSyncActivityLog,
 }: SyncActivityBlockProps) {
   return (
-    <div className="projects-panel">
-      <div className="projects-header">
-        <div>
-          <h2>Sync activity</h2>
-          <p>Last {maxEntries} sync events, local removals, and errors.</p>
+    <div className="dss-projects">
+      <div className="dss-projects-header">
+        <div className="dss-projects-header-label">
+          <h2 className="dss-projects-title">Sync activity</h2>
+          <p className="dss-projects-meta">Last {maxEntries} sync events, local removals, and errors.</p>
         </div>
-
-        <button
-          type="button"
-          className="secondary-button"
-          disabled={syncActivityLog.length === 0}
-          onClick={onClearSyncActivityLog}
-        >
-          Clear log
-        </button>
+        <div className="dss-projects-actions">
+          <button
+            type="button"
+            className="dss-btn"
+            disabled={syncActivityLog.length === 0}
+            onClick={onClearSyncActivityLog}
+          >
+            Clear log
+          </button>
+        </div>
       </div>
 
-      <div className="project-list">
+      <div className="dss-project-list">
         {syncActivityLog.length === 0 ? (
-          <div className="project-row is-loading">
-            <span className="project-check" aria-hidden="true" />
-            <span className="project-main">
-              <span className="project-name">No sync activity yet</span>
-              <span className="project-description">
-                Manual syncs, auto-syncs, local removals, and errors will appear
-                here.
-              </span>
-            </span>
+          <div className="dss-project-row">
+            <span className="dss-project-check">·</span>
+            <span className="dss-project-name">No sync activity yet</span>
           </div>
         ) : (
           syncActivityLog.map((entry) => (
-            <div key={entry.id} className="project-row is-loading">
-              <span className="project-check" aria-hidden="true">
-                {entry.status === "success"
-                  ? "✓"
-                  : entry.status === "error"
-                    ? "!"
-                    : "•"}
+            <div key={entry.id} className="dss-project-row">
+              <span className="dss-project-check">
+                {entry.status === "success" ? "✓" : entry.status === "error" ? "!" : "·"}
               </span>
-              <span className="project-main">
-                <span className="project-name">
+              <span className="dss-project-info">
+                <span className="dss-project-name">
                   {entry.title} · {formatLogTime(entry.createdAt)}
                 </span>
-                <span className="project-description">{entry.detail}</span>
+                <span className="dss-project-desc">{entry.detail}</span>
                 {entry.projectNames.length > 0 && (
-                  <span className="project-description">
-                    Projects: {entry.projectNames.join(", ")}
-                  </span>
+                  <span className="dss-project-desc">Projects: {entry.projectNames.join(", ")}</span>
                 )}
               </span>
-              <span className="project-meta">
+              <span className="dss-project-tags">
                 <span>{entry.mode}</span>
                 <span>{entry.status}</span>
               </span>
