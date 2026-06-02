@@ -11,6 +11,10 @@
 @import "../../../packages/shared/styles/music-shared-controls.css";
 @import "../../../packages/shared/styles/user-menu.css";
 
+:root {
+  --modal-backdrop: rgba(0, 0, 0, 0.55);
+}
+
 body {
   letter-spacing: -0.005em;
 }
