@@ -18,6 +18,26 @@ type UserMenuProps = {
   onThemeChange: (theme: ThemeMode) => void;
 };
 
+function ArrowIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M9 6L15 12L9 18"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function getAccountInitial(account: DesktopAccount | null) {
   const value = account?.name || account?.email || "F";
   return value.trim().charAt(0).toUpperCase() || "F";
@@ -119,7 +139,15 @@ export default function UserMenu({
                   onOpenSyncSettings();
                 }}
               >
-                <span>Desktop Sync</span>
+                <span className="desktop-user-menu-action-copy">
+                  <span className="desktop-user-menu-action-title">Desktop Sync</span>
+                  <span className="desktop-user-menu-action-helper">
+                    Local folders and project syncing
+                  </span>
+                </span>
+                <span className="desktop-user-menu-action-arrow">
+                  <ArrowIcon />
+                </span>
               </button>
 
               <button
@@ -130,7 +158,19 @@ export default function UserMenu({
                   void onOpenSignIn();
                 }}
               >
-                <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
+                <span className="desktop-user-menu-action-copy">
+                  <span className="desktop-user-menu-action-title">
+                    {isSignedIn ? "Reconnect" : "Sign in"}
+                  </span>
+                  <span className="desktop-user-menu-action-helper">
+                    {isSignedIn
+                      ? "Refresh your Filmwave connection"
+                      : "Connect this desktop app"}
+                  </span>
+                </span>
+                <span className="desktop-user-menu-action-arrow">
+                  <ArrowIcon />
+                </span>
               </button>
 
               {isSignedIn && (
@@ -142,7 +182,15 @@ export default function UserMenu({
                     void onSignOut();
                   }}
                 >
-                  <span>Sign out</span>
+                  <span className="desktop-user-menu-action-copy">
+                    <span className="desktop-user-menu-action-title">Sign out</span>
+                    <span className="desktop-user-menu-action-helper">
+                      Disconnect this desktop session
+                    </span>
+                  </span>
+                  <span className="desktop-user-menu-action-arrow">
+                    <ArrowIcon />
+                  </span>
                 </button>
               )}
             </div>
