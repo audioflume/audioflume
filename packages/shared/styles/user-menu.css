@@ -94,15 +94,11 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-radius: 9px;
   color: var(--text-muted);
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .filmwave-user-menu-action:hover .filmwave-user-menu-action-arrow {
-  background: var(--icon-button-hover);
   color: var(--text-primary);
 }
 
