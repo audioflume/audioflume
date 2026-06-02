@@ -183,6 +183,12 @@ function App() {
     ? Math.round((syncProgress.completedFiles / syncProgress.totalFiles) * 100)
     : 0;
 
+  // Reset scroll on every view change — mirrors Next.js page navigation behaviour
+  useEffect(() => {
+    const main = document.querySelector<HTMLElement>("main.desktop-app-main");
+    if (main) main.scrollTop = 0;
+  }, [activeView]);
+
   async function persistSyncActivityLog(nextLog: SyncActivityLogEntry[]) {
     const store = await load(SETTINGS_STORE);
 
