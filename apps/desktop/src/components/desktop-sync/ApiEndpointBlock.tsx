@@ -28,20 +28,22 @@ export default function ApiEndpointBlock({
           placeholder="https://your-filmwave-domain.com"
           autoComplete="off"
         />
-        <button
-          type="button"
-          className="secondary-button"
-          onClick={onSaveApiBaseUrl}
-        >
-          Save
-        </button>
-        <button
-          type="button"
-          className="secondary-button"
-          onClick={onResetApiBaseUrl}
-        >
-          Local
-        </button>
+        <div className="settings-form-row">
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={onSaveApiBaseUrl}
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={onResetApiBaseUrl}
+          >
+            Local
+          </button>
+        </div>
       </div>
     </div>
   );
