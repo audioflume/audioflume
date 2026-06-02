@@ -143,18 +143,12 @@ html[data-theme="light"] .desktop-theme-menu {
   border-color: var(--divider);
 }
 
-html[data-theme="light"] .desktop-user-menu-card,
 html[data-theme="light"] .desktop-user-menu-row:hover {
   background: rgba(17, 17, 17, 0.045);
 }
 
-html[data-theme="light"] .desktop-user-menu-primary {
-  background: var(--text-primary);
-  color: var(--bg-primary);
-}
-
 html[data-theme="light"] .desktop-user-menu-row-icon {
-  background: var(--bg-primary);
+  color: var(--text-muted);
 }
 
 html[data-theme="light"] .desktop-theme-toggle {
@@ -311,7 +305,7 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
   top: calc(100% + 10px);
   right: 0;
   z-index: 120;
-  width: 340px;
+  width: 320px;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -380,9 +374,9 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
   align-items: center;
   gap: 6px;
   border-radius: 999px;
-  background: var(--bg-control);
+  background: transparent;
   color: var(--text-secondary);
-  padding: 5px 8px;
+  padding: 0;
   font-size: 10px;
   font-weight: 600;
   line-height: 1;
@@ -401,71 +395,10 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
   background: #76d954;
 }
 
-.desktop-user-menu-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 14px;
-  margin: 10px;
-  border-radius: 14px;
-  background: var(--bg-row);
-  padding: 12px;
-}
-
-.desktop-user-menu-kicker {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--text-muted);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.desktop-user-menu-card strong {
-  display: block;
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.1;
-}
-
-.desktop-user-menu-card p {
-  margin: 5px 0 0;
-  color: var(--text-secondary);
-  font-size: 11px;
-  line-height: 1.35;
-}
-
-.desktop-user-menu-primary {
-  display: inline-flex;
-  height: 30px;
-  min-width: 58px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 999px;
-  background: var(--text-primary);
-  color: var(--bg-primary);
-  padding: 0 13px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-  transition: opacity 150ms ease;
-}
-
-.desktop-user-menu-primary:hover {
-  opacity: 0.86;
-}
-
 .desktop-user-menu-section {
   display: grid;
-  gap: 2px;
-  padding: 0 8px 8px;
+  gap: 0;
+  padding: 6px 0;
 }
 
 .desktop-user-menu-row {
@@ -474,12 +407,12 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
   min-width: 0;
   cursor: pointer;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 0;
   background: transparent;
   color: var(--text-primary);
-  padding: 9px;
+  padding: 11px 14px;
   font-family: inherit;
   text-align: left;
   transition:
@@ -493,14 +426,13 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
 
 .desktop-user-menu-row-icon {
   display: flex;
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
   align-items: center;
   justify-content: center;
-  border-radius: 9px;
-  background: var(--bg-control);
-  color: var(--text-secondary);
+  background: transparent;
+  color: var(--text-muted);
   font-size: 13px;
   line-height: 1;
 }
@@ -578,6 +510,9 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
   color: var(--text-primary);
 }
 
+.desktop-user-menu-card,
+.desktop-user-menu-primary,
+.desktop-user-menu-kicker,
 .desktop-user-menu-actions,
 .desktop-user-menu-action,
 .desktop-user-menu-head {
