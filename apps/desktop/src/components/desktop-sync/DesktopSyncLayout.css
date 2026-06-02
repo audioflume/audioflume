@@ -183,7 +183,9 @@ html[data-theme="light"] .desktop-settings-view {
   gap: 24px;
 }
 
-.section-block:has(.realtime-toggle) {
+.section-block:has(.realtime-toggle),
+.section-block:has(.settings-form),
+.account-block {
   align-items: start;
 }
 
@@ -207,10 +209,6 @@ html[data-theme="light"] .desktop-settings-view {
   color: var(--text-secondary);
   font-size: 12px;
   line-height: 1.4;
-}
-
-.account-block {
-  align-items: start;
 }
 
 .account-profile,
