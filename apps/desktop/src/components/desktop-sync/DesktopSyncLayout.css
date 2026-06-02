@@ -790,7 +790,7 @@ button.project-row:hover,
   }
 
   .settings-row.is-status {
-    border-top: 0;
+    border-top: 1px solid var(--sync-border);
     margin-top: 28px;
   }
 }
