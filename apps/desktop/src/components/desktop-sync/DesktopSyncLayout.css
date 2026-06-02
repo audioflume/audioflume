@@ -19,8 +19,6 @@
   width: min(1180px, 100%);
   max-width: 1180px;
   min-width: 0;
-  display: grid;
-  grid-template-columns: 190px minmax(0, 1fr);
   column-gap: 34px;
   align-items: start;
 }
@@ -208,10 +206,18 @@ html[data-theme="light"] .desktop-settings-view {
   flex-shrink: 0;
 }
 
-.status-dot.is-green { background: var(--success); }
-.status-dot.is-yellow { background: var(--warning); }
-.status-dot.is-red { background: var(--danger); }
-.status-dot.is-grey { background: var(--text-muted); }
+.status-dot.is-green {
+  background: var(--success);
+}
+.status-dot.is-yellow {
+  background: var(--warning);
+}
+.status-dot.is-red {
+  background: var(--danger);
+}
+.status-dot.is-grey {
+  background: var(--text-muted);
+}
 
 .status-pill.is-syncing .status-dot {
   background: var(--success);
@@ -778,64 +784,5 @@ html[data-theme="light"] .progress-fill {
   50% {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-/* ── Responsive ── */
-@media (max-width: 900px) {
-  .desktop-settings-view {
-    grid-template-columns: minmax(0, 1fr);
-    width: 100%;
-    max-width: none;
-  }
-
-  .desktop-sync-settings-sidebar {
-    position: static;
-    grid-column: 1;
-    grid-row: 1;
-    margin-bottom: 28px;
-  }
-
-  .desktop-sync-settings-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-
-  .desktop-sync-settings-nav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .desktop-sync-settings-nav-item {
-    width: auto;
-    flex-shrink: 0;
-  }
-
-  .desktop-sync-settings-main,
-  .desktop-sync-settings-header,
-  .sync-card {
-    grid-column: 1;
-    min-width: 0;
-  }
-
-  .desktop-sync-settings-main {
-    grid-row: 2;
-  }
-
-  .desktop-sync-settings-header {
-    grid-row: auto;
-    padding-bottom: 0;
-    border-bottom: 0;
-  }
-
-  .sync-card {
-    grid-row: auto;
-  }
-
-  .settings-row.is-status {
-    border-top: 1px solid var(--sync-border);
-    margin-top: 28px;
   }
 }
