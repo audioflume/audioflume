@@ -6,12 +6,10 @@
   border: 0;
   border-radius: 4px;
   background: var(--filmwave-menu-bg);
-  box-shadow:
-    0 16px 48px rgba(0, 0, 0, 0.5),
-    0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--filmwave-menu-shadow);
 }
 
-/* Dark mode: elevated charcoal */
+/* Shared menu tokens — used by user menu, dropdown shell, player menu, desktop card menu */
 :root {
   --filmwave-menu-bg: #282828;
   --filmwave-menu-hover: rgba(255, 255, 255, 0.1);
@@ -22,6 +20,11 @@
   --filmwave-menu-theme-active: #ffffff;
   --filmwave-menu-theme-active-text: #111111;
   --filmwave-menu-theme-hover: rgba(255, 255, 255, 0.12);
+  --filmwave-menu-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.28),
+    0 2px 8px rgba(0, 0, 0, 0.18);
+  --filmwave-menu-item-radius: 3px;
+  --filmwave-menu-item-mx: 4px;
 }
 
 html[data-theme="light"] {
@@ -34,6 +37,9 @@ html[data-theme="light"] {
   --filmwave-menu-theme-active: #111111;
   --filmwave-menu-theme-active-text: #ffffff;
   --filmwave-menu-theme-hover: rgba(0, 0, 0, 0.08);
+  --filmwave-menu-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.07);
 }
 
 .filmwave-user-menu-head {
@@ -63,7 +69,7 @@ html[data-theme="light"] {
 
 .filmwave-user-menu-actions {
   display: grid;
-  padding: 4px 0;
+  padding: 4px;
 }
 
 .filmwave-user-menu-action {
@@ -74,10 +80,10 @@ html[data-theme="light"] {
   justify-content: space-between;
   gap: 12px;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--filmwave-menu-item-radius);
   background: transparent;
   color: var(--filmwave-menu-text);
-  padding: 0 16px;
+  padding: 0 12px;
   font-family: inherit;
   text-align: left;
   text-decoration: none;
@@ -129,15 +135,17 @@ html[data-theme="light"] {
   cursor: pointer;
   align-items: center;
   justify-content: space-between;
+  margin: 0 4px;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--filmwave-menu-item-radius);
   background: transparent;
   color: var(--filmwave-menu-text);
-  padding: 0 16px;
+  padding: 0 12px;
   font-family: inherit;
   font-size: 13px;
   font-weight: 400;
   text-align: left;
+  width: calc(100% - 8px);
   transition: background 100ms ease;
 }
 
