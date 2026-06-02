@@ -119,7 +119,8 @@
   display: flex !important;
   height: 24px;
   cursor: pointer;
-  align-items: center;
+  /* stretch so canvas fills full height without fractional-pixel centering */
+  align-items: stretch;
   overflow: visible;
 }
 
