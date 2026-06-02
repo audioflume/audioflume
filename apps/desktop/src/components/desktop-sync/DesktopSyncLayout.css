@@ -71,7 +71,9 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1;
   text-align: left;
   cursor: pointer;
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .desktop-sync-settings-nav-item:hover,
@@ -282,7 +284,9 @@ html[data-theme="light"] .desktop-settings-view {
   cursor: pointer;
   background: var(--sync-control);
   color: var(--text-secondary);
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .secondary-button:hover:not(:disabled) {
@@ -324,7 +328,9 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .source-toggle button:hover:not(:disabled),
@@ -394,7 +400,13 @@ input:focus {
 
 /* ── Folder path ── */
 .folder-path {
-  font-family: var(--font-geist-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-family: var(
+    --font-geist-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace
+  );
   font-size: 12px !important;
   color: var(--text-secondary) !important;
   overflow: hidden;
@@ -543,7 +555,9 @@ button.project-row {
   cursor: pointer;
   font-family: inherit;
   color: inherit;
-  transition: border-color 150ms ease, background 150ms ease;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
 }
 
 button.project-row:hover,
@@ -668,12 +682,19 @@ button.project-row:hover,
 
 /* ── Animation ── */
 @keyframes desktop-sync-pulse {
-  0%, 100% { opacity: 0.45; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1); }
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ── Responsive: sidebar collapses to horizontal nav ── */
-@media (max-width: 900px) {
+@media (max-width: 600px) {
   .desktop-settings-view {
     grid-template-columns: 1fr;
     width: 100%;
