@@ -712,12 +712,10 @@ export default function MusicPlayer() {
           {currentSong.audioUrl ? (
             <a href={currentSong.audioUrl} download>
               <span>Download Song</span>
-              <DownloadIcon />
             </a>
           ) : (
             <button type="button" disabled><span>Download Song</span></button>
           )}
-          <div className="music-player-more-menu-divider" />
           <button type="button" onClick={handleClosePlayer} className="music-player-more-menu-close danger-hover">
             <span>Close Player</span>
             <CloseIcon />
