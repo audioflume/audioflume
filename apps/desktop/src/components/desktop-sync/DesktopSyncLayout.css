@@ -737,7 +737,7 @@ button.project-row:hover,
 }
 
 /* ── Responsive: only move sidebar nav to top ── */
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   .desktop-settings-view {
     grid-template-columns: minmax(0, 1fr);
     width: 100%;
