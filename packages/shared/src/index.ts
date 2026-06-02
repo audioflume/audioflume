@@ -20,6 +20,7 @@ export * from "./MusicFilterTags";
 export * from "./MusicPlaylistFilter";
 export * from "./MusicBpmFilter";
 export * from "./MusicKeyFilter";
+export * from "./MusicDurationFilter";
 export * from "./SongCardShell";
 export * from "./SongCardStemsSlot";
 export * from "./SongCardCuePointOverlay";
