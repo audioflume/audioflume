@@ -409,6 +409,7 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
   cursor: pointer;
   align-items: center;
   border: 0;
+  border-bottom: 1px solid var(--divider);
   border-radius: 10px;
   background: transparent;
   color: var(--text-secondary);
@@ -416,6 +417,10 @@ html[data-theme="light"] .desktop-theme-toggle button.is-light.is-active {
   font-size: 12px;
   font-weight: 500;
   text-align: left;
+}
+
+.desktop-user-menu-action:last-child {
+  border-bottom: 0;
 }
 
 .desktop-user-menu-action:hover {
