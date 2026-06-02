@@ -748,6 +748,7 @@ button.project-row:hover,
     position: static;
     grid-column: 1;
     grid-row: 1;
+    margin-bottom: 28px;
   }
 
   .desktop-sync-settings-nav {
@@ -780,6 +781,8 @@ button.project-row:hover,
 
   .desktop-sync-settings-header {
     grid-row: auto;
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
   .sync-card {
@@ -787,7 +790,7 @@ button.project-row:hover,
   }
 
   .settings-row.is-status {
-    border-top: 1px solid var(--sync-border);
-    margin-top: 20px;
+    border-top: 0;
+    margin-top: 28px;
   }
 }
