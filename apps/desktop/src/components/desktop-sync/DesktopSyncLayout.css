@@ -208,6 +208,11 @@ html[data-theme="light"] .desktop-settings-view {
   flex-shrink: 0;
 }
 
+.status-dot.is-green { background: var(--success); }
+.status-dot.is-yellow { background: var(--warning); }
+.status-dot.is-red { background: var(--danger); }
+.status-dot.is-grey { background: var(--text-muted); }
+
 .status-pill.is-syncing .status-dot {
   background: var(--success);
   animation: desktop-sync-pulse 1s ease-in-out infinite;
