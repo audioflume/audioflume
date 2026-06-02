@@ -23,22 +23,20 @@ function getAccountInitial(account: DesktopAccount | null) {
   return value.trim().charAt(0).toUpperCase() || "F";
 }
 
-function ThemeButton({
+function ThemeOption({
   active,
   children,
-  className,
   onClick,
 }: {
   active: boolean;
   children: ReactNode;
-  className: string;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
+      className={`desktop-command-theme-option${active ? " is-active" : ""}`}
       onClick={onClick}
-      className={`${className} ${active ? "is-active" : ""}`}
       aria-pressed={active}
     >
       {children}
@@ -102,101 +100,91 @@ export default function UserMenu({
 
       {open && (
         <div className="filmwave-header-menu-wrap desktop-user-menu-wrap">
-          <div className="desktop-user-menu">
-            <div className="desktop-user-menu-profile">
-              <span className="desktop-user-menu-avatar">
+          <div className="desktop-command-menu">
+            <div className="desktop-command-menu-topline">
+              <span className="desktop-command-menu-label">Filmwave Desktop</span>
+              <span className={`desktop-command-menu-state${isSignedIn ? " is-online" : ""}`}>
+                {isSignedIn ? "Online" : "Offline"}
+              </span>
+            </div>
+
+            <div className="desktop-command-account">
+              <div className="desktop-command-account-copy">
+                <strong>{isSignedIn ? accountName : "Account required"}</strong>
+                <span>{accountEmail}</span>
+              </div>
+              <span className="desktop-command-avatar">
                 {account?.imageUrl ? (
                   <img src={account.imageUrl} alt="" />
                 ) : (
                   getAccountInitial(account)
                 )}
               </span>
-
-              <div className="desktop-user-menu-copy">
-                <strong>{isSignedIn ? accountName : "Filmwave Desktop"}</strong>
-                <span>{accountEmail}</span>
-              </div>
-
-              <span className={`desktop-user-menu-status${isSignedIn ? " is-connected" : ""}`}>
-                {isSignedIn ? "Connected" : "Offline"}
-              </span>
             </div>
 
-            <div className="desktop-user-menu-section">
+            <div className="desktop-command-actions" aria-label="Account actions">
               <button
                 type="button"
-                className="desktop-user-menu-row"
+                className="desktop-command-action"
                 onClick={() => {
                   setOpen(false);
                   onOpenSyncSettings();
                 }}
               >
-                <span className="desktop-user-menu-row-icon" aria-hidden="true">
-                  ↳
-                </span>
-                <span>
+                <span className="desktop-command-action-index">01</span>
+                <span className="desktop-command-action-main">
                   <strong>Desktop Sync</strong>
-                  <small>Folders, projects, and realtime sync</small>
+                  <small>Folder, source, and project sync settings</small>
                 </span>
+                <span className="desktop-command-action-arrow">→</span>
               </button>
 
               <button
                 type="button"
-                className="desktop-user-menu-row"
+                className="desktop-command-action"
                 onClick={() => {
                   setOpen(false);
                   void onOpenSignIn();
                 }}
               >
-                <span className="desktop-user-menu-row-icon" aria-hidden="true">
-                  ↻
+                <span className="desktop-command-action-index">02</span>
+                <span className="desktop-command-action-main">
+                  <strong>{isSignedIn ? "Reconnect" : "Sign in"}</strong>
+                  <small>{isSignedIn ? "Refresh the active Filmwave session" : "Connect this app to your account"}</small>
                 </span>
-                <span>
-                  <strong>{isSignedIn ? "Reconnect account" : "Sign in to Filmwave"}</strong>
-                  <small>{isSignedIn ? "Refresh your Filmwave connection" : "Connect this desktop app"}</small>
-                </span>
+                <span className="desktop-command-action-arrow">→</span>
               </button>
 
               {isSignedIn && (
                 <button
                   type="button"
-                  className="desktop-user-menu-row"
+                  className="desktop-command-action is-muted"
                   onClick={() => {
                     setOpen(false);
                     void onSignOut();
                   }}
                 >
-                  <span className="desktop-user-menu-row-icon" aria-hidden="true">
-                    ⎋
-                  </span>
-                  <span>
+                  <span className="desktop-command-action-index">03</span>
+                  <span className="desktop-command-action-main">
                     <strong>Sign out</strong>
-                    <small>Disconnect this desktop session</small>
+                    <small>End this desktop session</small>
                   </span>
+                  <span className="desktop-command-action-arrow">→</span>
                 </button>
               )}
             </div>
 
-            <div className="desktop-theme-menu">
-              <div className="desktop-theme-menu-label">Appearance</div>
-              <div className="desktop-theme-toggle" aria-label="Theme setting">
-                <ThemeButton
-                  active={theme === "dark"}
-                  className="is-dark"
-                  onClick={() => onThemeChange("dark")}
-                >
+            <div className="desktop-command-footer">
+              <span className="desktop-command-footer-label">Mode</span>
+              <div className="desktop-command-theme" aria-label="Theme setting">
+                <ThemeOption active={theme === "dark"} onClick={() => onThemeChange("dark")}>
                   <DarkMode size={12} />
                   <span>Dark</span>
-                </ThemeButton>
-
-                <ThemeButton
-                  active={theme === "light"}
-                  className="is-light"
-                  onClick={() => onThemeChange("light")}
-                >
+                </ThemeOption>
+                <ThemeOption active={theme === "light"} onClick={() => onThemeChange("light")}>
                   <LightMode size={13} />
                   <span>Light</span>
-                </ThemeButton>
+                </ThemeOption>
               </div>
             </div>
           </div>
