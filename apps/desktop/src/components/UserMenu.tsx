@@ -120,7 +120,6 @@ export default function UserMenu({
                 }}
               >
                 <span>Desktop Sync</span>
-                <span>Open sync settings</span>
               </button>
 
               <button
@@ -132,11 +131,6 @@ export default function UserMenu({
                 }}
               >
                 <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
-                <span>
-                  {isSignedIn
-                    ? "Refresh desktop access"
-                    : "Connect your Filmwave account"}
-                </span>
               </button>
 
               {isSignedIn && (
@@ -149,7 +143,6 @@ export default function UserMenu({
                   }}
                 >
                   <span>Sign out</span>
-                  <span>Disconnect this desktop app</span>
                 </button>
               )}
             </div>
