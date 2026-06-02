@@ -1,4 +1,5 @@
 import "./DesktopSyncLayout.css";
+import "./DesktopSyncSideNavOverrides.css";
 
 type SyncStatusRowProps = {
   syncStatus: string;
@@ -39,13 +40,8 @@ function getStatusState(
     return { dot: "green", label: "Realtime sync on" };
   }
 
-  // Fallback only (realtime off but signed in)
-  if (!autoSyncEnabled && autoSyncIntervalMinutes > 0 && isSignedIn) {
-    return { dot: "yellow", label: `Fallback every ${autoSyncIntervalMinutes}m` };
-  }
-
-  // Signed in, no auto sync
-  return { dot: "grey", label: syncStatus };
+  // Signed in but realtime sync off
+  return { dot: "yellow", label: `Connected · Fallback every ${autoSyncIntervalMinutes} min` };
 }
 
 export default function SyncStatusRow({
@@ -55,7 +51,7 @@ export default function SyncStatusRow({
   autoSyncIntervalMinutes,
   isSignedIn,
 }: SyncStatusRowProps) {
-  const { dot, label } = getStatusState(
+  const status = getStatusState(
     syncing,
     autoSyncEnabled,
     autoSyncIntervalMinutes,
@@ -65,11 +61,10 @@ export default function SyncStatusRow({
 
   return (
     <div className="settings-row is-status">
-      <span className="status-row-label">Sync status</span>
-
-      <div className={`status-pill${syncing ? " is-syncing" : ""}`}>
-        <span className={`status-dot is-${dot}`} />
-        {label}
+      <div className="status-row-label">Sync status</div>
+      <div className={`status-pill is-${status.dot}${syncing ? " is-syncing" : ""}`}>
+        <span className={`status-dot is-${status.dot}`} />
+        <span>{status.label}</span>
       </div>
     </div>
   );
