@@ -59,8 +59,10 @@ export default function UserMenu({
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const accountName = account?.name ?? (accountLoading ? "Loading account..." : "Filmwave user");
-  const accountEmail = account?.email ?? (isSignedIn ? "Connected to Filmwave" : "Not connected");
+  const accountName =
+    account?.name ?? (accountLoading ? "Loading account..." : "Filmwave user");
+  const accountEmail =
+    account?.email ?? (isSignedIn ? "Connected to Filmwave" : "Not connected");
 
   useEffect(() => {
     function handlePointerDown(event: PointerEvent) {
@@ -90,7 +92,11 @@ export default function UserMenu({
         </span>
 
         <span className="filmwave-header-avatar desktop-account-avatar">
-          {account?.imageUrl ? <img src={account.imageUrl} alt="" /> : getAccountInitial(account)}
+          {account?.imageUrl ? (
+            <img src={account.imageUrl} alt="" />
+          ) : (
+            getAccountInitial(account)
+          )}
         </span>
       </button>
 
@@ -98,7 +104,9 @@ export default function UserMenu({
         <div className="filmwave-header-menu-wrap desktop-user-menu-wrap">
           <div className="desktop-user-menu">
             <div className="desktop-user-menu-head">
-              <div className="desktop-user-menu-name">{isSignedIn ? accountName : "Filmwave Desktop"}</div>
+              <div className="desktop-user-menu-name">
+                {isSignedIn ? accountName : "Filmwave Desktop"}
+              </div>
               <div className="desktop-user-menu-plan">{accountEmail}</div>
             </div>
 
@@ -124,7 +132,11 @@ export default function UserMenu({
                 }}
               >
                 <span>{isSignedIn ? "Reconnect" : "Sign in"}</span>
-                <span>{isSignedIn ? "Refresh desktop access" : "Connect your Filmwave account"}</span>
+                <span>
+                  {isSignedIn
+                    ? "Refresh desktop access"
+                    : "Connect your Filmwave account"}
+                </span>
               </button>
 
               {isSignedIn && (
