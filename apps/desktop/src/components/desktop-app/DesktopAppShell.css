@@ -4,6 +4,9 @@
   color: var(--text-primary);
 }
 
+/* Main content: left padding is handled per-page internally.
+   This way the sidebar transition never causes a padding-left
+   change on navigation between pages. */
 .desktop-app-main {
   min-height: 100vh;
   padding: 88px 24px 34px calc(var(--sidebar-width-expanded, 280px) + 24px);
@@ -14,14 +17,23 @@
   padding-left: calc(var(--sidebar-width-collapsed, 76px) + 24px);
 }
 
-/* Projects detail is full-bleed — no side padding */
-.desktop-app-main:has(.desktop-projects-page.is-detail) {
-  padding: 56px 0 0 var(--sidebar-width-expanded, 280px);
+/* Projects detail and music page: full-bleed, no outer side padding.
+   Internal layout handles its own spacing. */
+.desktop-app-main:has(.desktop-projects-page.is-detail),
+.desktop-app-main:has(.desktop-music-page) {
+  padding-left: var(--sidebar-width-expanded, 280px);
+  padding-right: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed
-  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+  .desktop-app-main:has(.desktop-projects-page.is-detail),
+.desktop-app-shell.is-sidebar-collapsed
+  .desktop-app-main:has(.desktop-music-page) {
   padding-left: var(--sidebar-width-collapsed, 76px);
+}
+
+.desktop-app-main:has(.desktop-projects-page.is-detail) {
+  padding-top: 56px;
 }
 
 .desktop-view {
