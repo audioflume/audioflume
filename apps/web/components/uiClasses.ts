@@ -40,10 +40,10 @@ export const modalTitleClass =
   "min-w-0 font-[family-name:var(--font-instrument-sans)] text-[24px] font-medium tracking-[-0.045em] text-[var(--text-primary)]";
 
 export const modalFieldLabelClass =
-  "mb-1.5 block text-[11px] font-medium text-[var(--text-muted)]";
+  "block text-[11px] font-medium text-[var(--text-secondary)]";
 
 export const modalInputClass =
-  "h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
+  "mt-2 h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
 
 export const modalTextareaClass =
   "w-full resize-none rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
