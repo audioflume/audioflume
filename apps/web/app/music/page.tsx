@@ -508,7 +508,7 @@ export default function MusicPage() {
                 <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
                   <div className="group relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white">
                     <div
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.025]"
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
                       style={{ backgroundImage: `url("${MUSIC_HERO_IMAGE}")` }}
                     />
                     <div
@@ -552,8 +552,10 @@ export default function MusicPage() {
 
                   <div className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between">
                     <div
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.025]"
-                      style={{ backgroundImage: `url("${DESKTOP_SYNC_IMAGE}")` }}
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
+                      style={{
+                        backgroundImage: `url("${DESKTOP_SYNC_IMAGE}")`,
+                      }}
                     />
                     <div
                       className="absolute inset-0"
