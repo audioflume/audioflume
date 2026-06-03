@@ -157,7 +157,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   display: flex;
   height: 48px;
   min-width: 0;
-  align-items: center;
+  align-items: stretch;
   gap: 4px;
   margin: 0 -28px;
   overflow-x: auto;
@@ -209,6 +209,46 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 .filmwave-search-filter-quick-button:hover,
 .filmwave-search-filter-quick-button.is-active {
   background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* ── Active line indicator ──
+   Shared between music filter triggers, project tabs, and any
+   future tab-style navigation. Change --active-line-width to
+   adjust thickness everywhere at once. */
+
+:root {
+  --active-line-width: 2px;
+}
+
+.filmwave-active-line-trigger {
+  position: relative;
+  display: inline-flex;
+  height: 100%;
+  cursor: pointer;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  border: 0;
+  border-bottom: var(--active-line-width) solid transparent;
+  background: transparent;
+  padding: 0 10px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 150ms ease, border-color 150ms ease;
+  /* Compensate for border-bottom so text stays vertically centred */
+  padding-top: var(--active-line-width);
+}
+
+.filmwave-active-line-trigger:hover {
+  color: var(--text-primary);
+}
+
+.filmwave-active-line-trigger.is-active {
+  border-bottom-color: var(--text-primary);
   color: var(--text-primary);
 }
 

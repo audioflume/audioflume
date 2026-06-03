@@ -1,13 +1,14 @@
 // components/filterUiClasses.ts
+// Active bottom-line indicator is handled by .filmwave-active-line-trigger
+// in search-filter-chrome.css — change --active-line-width there to adjust thickness.
 
 export const filterTriggerBaseClass =
-  "filmwave-filter-trigger flex h-12 cursor-pointer items-center gap-1.5 border-b-2 border-transparent px-2.5 text-[13px] font-medium transition-colors";
+  "filmwave-active-line-trigger";
 
 export const filterTriggerActiveClass =
-  "is-active border-[var(--text-primary)] text-[var(--text-primary)]";
+  "is-active";
 
-export const filterTriggerInactiveClass =
-  "text-[var(--text-secondary)] hover:text-[var(--text-primary)]";
+export const filterTriggerInactiveClass = "";
 
 export const filterDropdownPanelClass =
   "filmwave-filter-menu w-[280px] rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] shadow-[var(--shadow-ui)]";
