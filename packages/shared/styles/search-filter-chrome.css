@@ -222,7 +222,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   flex-shrink: 0;
   gap: 6px;
   border: 0;
-  border-bottom: 2px solid transparent;
   border-radius: 0;
   background: transparent;
   padding: 0 10px;
@@ -231,9 +230,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
-  transition:
-    border-color 150ms ease,
-    color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .filmwave-filter-trigger:hover,
@@ -243,11 +240,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 .desktop-filter-trigger.is-active,
 .desktop-filter-trigger.is-open {
   color: var(--text-primary);
-}
-
-.filmwave-filter-trigger.is-active,
-.desktop-filter-trigger.is-active {
-  border-bottom-color: var(--text-primary);
 }
 
 .filmwave-filter-trigger-icon,
