@@ -9,7 +9,7 @@
   --filmwave-song-card-gap: 18px;
   --filmwave-song-card-min-height: 72px;
   --filmwave-song-card-hover-bg: color-mix(in srgb, var(--bg-hover) 55%, transparent);
-  --filmwave-song-card-action-hover-bg: var(--bg-hover-strong);
+  --filmwave-song-card-action-hover-bg: var(--bg-hover);
   --filmwave-song-card-action-color: var(--icon-color);
   --filmwave-song-card-action-active-color: var(--text-primary);
 }
