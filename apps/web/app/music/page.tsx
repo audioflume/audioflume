@@ -514,7 +514,7 @@ export default function MusicPage() {
                     onMouseLeave={() => setMusicHeroHovered(false)}
                     style={{
                       backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
-                      backgroundSize: `100% 100%, 100% 100%, ${musicHeroHovered ? "102.5%" : "100%"} auto`,
+                      backgroundSize: `100% 100%, 100% 100%, ${musicHeroHovered ? "106%" : "100%"} auto`,
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                       transition: "background-size 0.7s ease",
@@ -557,7 +557,7 @@ export default function MusicPage() {
                     onMouseLeave={() => setDesktopSyncHovered(false)}
                     style={{
                       backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08)), url("${DESKTOP_SYNC_IMAGE}")`,
-                      backgroundSize: `100% 100%, 100% 100%, ${desktopSyncHovered ? "102.5%" : "100%"} auto`,
+                      backgroundSize: `100% 100%, 100% 100%, ${desktopSyncHovered ? "106%" : "100%"} auto`,
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                       transition: "background-size 0.7s ease",
