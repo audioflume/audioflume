@@ -1,12 +1,12 @@
 // components/filterUiClasses.ts
-// Active bottom-line indicator is handled by .filmwave-active-line-trigger
-// in search-filter-chrome.css — change --active-line-width there to adjust thickness.
+// The active bottom-line indicator is a ::after pseudo-element on
+// .filmwave-filter-trigger / .filmwave-active-line-trigger defined in
+// packages/shared/styles/search-filter-chrome.css.
+// Change --active-line-width there to adjust thickness on all platforms.
 
-export const filterTriggerBaseClass =
-  "filmwave-active-line-trigger";
+export const filterTriggerBaseClass = "filmwave-filter-trigger";
 
-export const filterTriggerActiveClass =
-  "is-active";
+export const filterTriggerActiveClass = "is-active";
 
 export const filterTriggerInactiveClass = "";
 

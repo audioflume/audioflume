@@ -55,7 +55,7 @@ export function FilterTrigger({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`filmwave-filter-trigger filmwave-active-line-trigger${active ? " is-active" : ""}${open ? " is-open" : ""}${hideChevron ? " no-chevron" : ""}${className ? ` ${className}` : ""}`}
+      className={`filmwave-filter-trigger${active ? " is-active" : ""}${open ? " is-open" : ""}${hideChevron ? " no-chevron" : ""}${className ? ` ${className}` : ""}`}
       aria-expanded={hideChevron ? undefined : open}
       aria-pressed={hideChevron ? active : undefined}
     >

@@ -157,7 +157,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   display: flex;
   height: 48px;
   min-width: 0;
-  align-items: stretch;
+  align-items: center;
   gap: 4px;
   margin: 0 -28px;
   overflow-x: auto;
@@ -212,81 +212,68 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   color: var(--text-primary);
 }
 
-/* ── Active line indicator ──
-   Applied to .filmwave-filter-trigger and .filmwave-active-line-trigger
-   (project tabs, any future tab-style nav).
-   Change --active-line-width here to adjust thickness everywhere. */
+/* ── Active bottom-line indicator ──
+   Used on .filmwave-filter-trigger (music page, desktop)
+   and .filmwave-active-line-trigger (project tabs).
+   Uses ::after pseudo-element so it is completely independent
+   of button height, container align-items, or platform differences.
+   Change --active-line-width to adjust thickness everywhere. */
 
 :root {
   --active-line-width: 2px;
 }
 
-/* Standalone tab trigger (project tabs, no filter chevron) */
-.filmwave-active-line-trigger {
-  display: inline-flex;
-  height: 100%;
-  cursor: pointer;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 6px;
-  border: 0;
-  border-bottom: var(--active-line-width) solid transparent;
-  background: transparent;
-  padding: 0 10px;
-  /* nudge content up by line width to stay visually centred */
-  padding-top: var(--active-line-width);
-  color: var(--text-secondary);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-  transition: color 150ms ease, border-color 150ms ease;
-}
-
-.filmwave-active-line-trigger:hover {
-  color: var(--text-primary);
-}
-
-.filmwave-active-line-trigger.is-active {
-  border-bottom-color: var(--text-primary);
-  color: var(--text-primary);
-}
-
-/* Filter trigger: fixed 48px height, sits inside a 48px row.
-   Bottom border acts as the active indicator flush with the row edge. */
 .filmwave-filter-trigger,
-.desktop-filter-trigger {
+.desktop-filter-trigger,
+.filmwave-active-line-trigger {
   position: relative;
-  display: flex;
+  display: inline-flex;
   height: 48px;
   cursor: pointer;
   align-items: center;
   flex-shrink: 0;
   gap: 6px;
   border: 0;
-  border-bottom: var(--active-line-width) solid transparent;
-  /* push content up so border sits flush at bottom without shifting text */
-  padding: var(--active-line-width) 10px 0;
   border-radius: 0;
   background: transparent;
+  padding: 0 10px;
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
-  transition: color 150ms ease, border-color 150ms ease;
+  transition: color 150ms ease;
+}
+
+/* The indicator line — absolutely positioned at the bottom.
+   Independent of height, stretch, or border interactions. */
+.filmwave-filter-trigger::after,
+.desktop-filter-trigger::after,
+.filmwave-active-line-trigger::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--active-line-width);
+  background: transparent;
+  transition: background 150ms ease;
+}
+
+.filmwave-filter-trigger.is-active::after,
+.desktop-filter-trigger.is-active::after,
+.filmwave-active-line-trigger.is-active::after {
+  background: var(--text-primary);
 }
 
 .filmwave-filter-trigger:hover,
+.filmwave-filter-trigger.is-active,
 .filmwave-filter-trigger.is-open,
 .desktop-filter-trigger:hover,
-.desktop-filter-trigger.is-open {
-  color: var(--text-primary);
-}
-
-.filmwave-filter-trigger.is-active,
-.desktop-filter-trigger.is-active {
-  border-bottom-color: var(--text-primary);
+.desktop-filter-trigger.is-active,
+.desktop-filter-trigger.is-open,
+.filmwave-active-line-trigger:hover,
+.filmwave-active-line-trigger.is-active {
   color: var(--text-primary);
 }
 
@@ -302,7 +289,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   display: block;
   width: 10px;
   height: 10px;
-  margin-left: 0px;
   flex: 0 0 10px;
   transform: translateY(1px);
   opacity: 0.92;
