@@ -1,26 +1,16 @@
-.desktop-music-page .desktop-music-search-row,
-.desktop-music-page .desktop-music-filter-row {
-  height: 48px !important;
-  min-height: 48px !important;
-  max-height: 48px !important;
-  align-items: center !important;
-  /* overflow-y visible so ::after indicator on buttons is not clipped */
-  overflow-y: visible !important;
-  box-sizing: border-box;
-}
+/* search/filter rows — shared CSS in search-filter-chrome.css already sets
+   height: 48px and overflow-y: visible. These rules only add what's
+   desktop-specific: the flex-direction/wrap reset for the search row
+   and the input height/padding tweaks. No !important needed. */
 
 .desktop-music-page .desktop-music-search-row {
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 
 .desktop-music-page .desktop-music-search-shell {
-  height: 48px !important;
-  align-items: center !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  height: 48px;
+  align-items: center;
 }
 
 .desktop-music-page .desktop-music-search-icon {
@@ -117,7 +107,7 @@
 
 .desktop-music-page .desktop-song-wave {
   position: relative;
-  display: flex !important;
+  display: flex;
   height: 24px;
   cursor: pointer;
   align-items: stretch;
