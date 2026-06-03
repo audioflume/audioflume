@@ -12,6 +12,7 @@
   --filmwave-sidebar-icon-size: 16px;
   --filmwave-sidebar-label-gap: 10px;
   --filmwave-sidebar-label-width: 180px;
+  --filmwave-sidebar-nav-gap: 2px;
 }
 
 .desktop-app-sidebar {
@@ -171,7 +172,7 @@
 
 .desktop-sidebar-nav {
   display: grid;
-  gap: 2px;
+  gap: var(--filmwave-sidebar-nav-gap);
 }
 
 .desktop-sidebar-link {
