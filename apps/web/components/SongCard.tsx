@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   usePlayer,
   useIsCurrentSong,
@@ -172,6 +172,7 @@ export default function SongCard({
   const showEditPointMarkers = showEditPointMarkersProp ?? userPreferenceShowEditPointMarkers;
   const { playlists, setPlaylists } = usePlaylists();
 
+  const [cardWidth, setCardWidth] = useState(0);
   const [moreOpen, setMoreOpen] = useState(false);
   const [stemsOpen, setStemsOpen] = useState(false);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
@@ -187,7 +188,11 @@ export default function SongCard({
   ) : (
     <PlayIconSmall size={15} />
   );
+  const showWaveform = cardWidth > 500;
   const visibleGenres = song.genres.slice(0, 3);
+  const showGenreSlot = cardWidth > 1080;
+  const showKeyMeta = cardWidth > 700;
+  const showBpmMeta = cardWidth > 820;
   const stems = getSongStemsFromRecord(song);
   const favorited = isFavorite(song.id);
 
@@ -253,6 +258,15 @@ export default function SongCard({
       ? song.coverArt
       : null;
 
+  useEffect(() => {
+    if (!cardRef.current) return;
+    const ro = new ResizeObserver((entries) => {
+      setCardWidth(entries[0].contentRect.width);
+    });
+    ro.observe(cardRef.current);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <>
       <SongCardShell
@@ -281,16 +295,18 @@ export default function SongCard({
           />
         }
         waveform={
-          <Waveform
-            song={song}
-            highlightedEditPointTypes={highlightedEditPointTypes}
-            showEditPointMarkers={showEditPointMarkers}
-          />
+          showWaveform ? (
+            <Waveform
+              song={song}
+              highlightedEditPointTypes={highlightedEditPointTypes}
+              showEditPointMarkers={showEditPointMarkers}
+            />
+          ) : null
         }
-        duration={formatDuration(song.duration)}
-        genre={visibleGenres.length > 0 ? visibleGenres.join(", ") : ""}
-        keyMeta={song.key || "—"}
-        bpmMeta={song.bpm ? `${song.bpm} BPM` : "—"}
+        duration={showWaveform ? formatDuration(song.duration) : null}
+        genre={showGenreSlot ? (visibleGenres.length > 0 ? visibleGenres.join(", ") : "") : null}
+        keyMeta={showKeyMeta ? song.key || "—" : null}
+        bpmMeta={showBpmMeta ? (song.bpm ? `${song.bpm} BPM` : "—") : null}
         actions={
           <>
             <IconButton
