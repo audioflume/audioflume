@@ -1,12 +1,19 @@
-.filmwave-dropdown-shell,
-.filmwave-dropdown-shell.song-more-dropdown,
-.filmwave-dropdown-shell.desktop-song-action-menu,
+.filmwave-dropdown-shell {
+  box-sizing: border-box;
+  display: grid;
+  width: 200px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  background: var(--filmwave-menu-bg);
+  padding: 4px;
+  box-shadow: var(--filmwave-menu-shadow);
+}
+
 .project-more-dropdown.project-more-dropdown {
   box-sizing: border-box;
   display: grid;
   width: 200px;
-  min-width: 200px;
-  max-width: 200px;
   overflow: hidden;
   border: 0;
   border-radius: 4px;
@@ -18,6 +25,7 @@
 .filmwave-dropdown-shell button,
 .filmwave-dropdown-shell a,
 .project-more-dropdown .project-more-menu-button.project-more-menu-button {
+  box-sizing: border-box;
   display: flex;
   width: 100%;
   height: 40px;
