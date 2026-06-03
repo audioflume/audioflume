@@ -437,11 +437,6 @@
   opacity: 1 !important;
 }
 
-.project-context-menu {
-  display: flex !important;
-  flex-direction: column !important;
-}
-
 .project-context-menu:has(> button:nth-child(4)) > button:nth-child(1) {
   order: 2 !important;
 }
