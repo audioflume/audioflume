@@ -56,6 +56,7 @@ import {
 import "./DesktopMusicLibraryView.css";
 import "./DesktopMusicLibraryRefinements.css";
 import "./DesktopMusicLibrarySpacing.css";
+import "./DesktopSongDropdownOverrides.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const TRACK_SCROLL_EDGE_PADDING = 12;
