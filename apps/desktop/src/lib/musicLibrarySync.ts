@@ -2,7 +2,7 @@ import { exists, mkdir, writeFile } from "@tauri-apps/plugin-fs";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import type { DesktopSong } from "./desktopSongs";
 
-export const MUSIC_LIBRARY_SYNC_FOLDER_NAME = "Music Library Sync";
+export const MUSIC_LIBRARY_SYNC_FOLDER_NAME = "Music Library";
 
 function sanitizeFileName(value: string) {
   return value

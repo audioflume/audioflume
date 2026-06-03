@@ -90,8 +90,10 @@ function sanitizeRelativePath(path: string) {
   return sanitizeProjectRelativePath(path);
 }
 
+const PROJECTS_SYNC_FOLDER_NAME = "Projects";
+
 export function getProjectFolderPath(syncFolder: string, project: Project) {
-  return `${syncFolder}/${sanitizeFolderName(project.name)}`;
+  return `${syncFolder}/${PROJECTS_SYNC_FOLDER_NAME}/${sanitizeFolderName(project.name)}`;
 }
 
 export function getProjectNodeLocalPath({
