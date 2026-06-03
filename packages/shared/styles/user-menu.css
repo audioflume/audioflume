@@ -162,11 +162,12 @@ html[data-theme="light"] {
   grid-template-columns: 1fr 1fr;
   gap: 4px;
   border-radius: 0;
-  padding: 3px;
 }
 
 .filmwave-user-menu-theme-option {
+  box-sizing: border-box;
   display: inline-flex;
+  width: 100%;
   height: 30px;
   cursor: pointer;
   align-items: center;
