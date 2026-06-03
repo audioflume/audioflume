@@ -82,10 +82,6 @@ export default function CreateProjectModal({
       title="New Project"
       onClose={clearAndClose}
       closeLabel="Close create project modal"
-      maxWidth="max-w-[430px]"
-      maxHeight="320px"
-      bodyClassName="px-5 py-5"
-      footerClassName="justify-end"
       footer={
         <button
           type="button"
