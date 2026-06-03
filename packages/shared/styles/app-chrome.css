@@ -112,4 +112,160 @@ body > header > div {
   cursor: pointer;
   border: 0;
   background: transparent;
+  padding: 0;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.filmwave-header-logo-mark {
+  display: block;
+  width: auto;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--text-primary);
+}
+
+.filmwave-header-drag-surface {
+  height: 100%;
+  min-width: 24px;
+  flex: 1 1 auto;
+}
+
+.filmwave-header-actions {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Nav links: full button gets hover background */
+.filmwave-header-nav-link {
+  display: inline-flex;
+  height: var(--filmwave-header-nav-height);
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  border-radius: var(--filmwave-header-nav-radius);
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.filmwave-header-nav-link:hover,
+.filmwave-header-nav-link.is-active {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+}
+
+/* Account trigger: button itself never gets background —
+   only the inner label span does, so the avatar stays outside the hover zone */
+.filmwave-header-account-trigger {
+  display: inline-flex;
+  height: var(--filmwave-header-nav-height);
+  cursor: pointer;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  color: var(--text-secondary);
+  padding: 0;
+  padding-right: 2px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.filmwave-header-account-trigger:hover,
+.filmwave-header-account-trigger.is-open {
+  background: transparent !important;
+  color: var(--text-primary);
+}
+
+/* Label span (name + chevron) is what gets the hover pill */
+.filmwave-header-account-label {
+  display: inline-flex;
+  height: var(--filmwave-header-nav-height);
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border-radius: var(--filmwave-header-nav-radius);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.filmwave-header-account-trigger:hover .filmwave-header-account-label,
+.filmwave-header-account-trigger.is-open .filmwave-header-account-label {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+}
+
+.filmwave-header-account-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filmwave-header-chevron {
+  display: block;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  transition: transform 150ms ease;
+}
+
+.filmwave-header-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.filmwave-header-avatar {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--bg-control);
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.filmwave-header-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.filmwave-header-menu-wrap {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: var(--filmwave-z-menu);
+}
+
+@media (max-width: 550px) {
+  .filmwave-header-nav-link {
+    display: none;
+  }
+
+  .filmwave-header-account-name {
+    display: none;
+  }
 }
