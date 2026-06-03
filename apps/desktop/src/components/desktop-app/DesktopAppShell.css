@@ -7,6 +7,8 @@
 .desktop-app-main {
   min-height: 100vh;
   padding: 88px 24px 34px calc(var(--sidebar-width-expanded, 280px) + 24px);
+  /* Match sidebar width transition so content reflows fluidly */
+  transition: padding-left 200ms ease;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-app-main {
