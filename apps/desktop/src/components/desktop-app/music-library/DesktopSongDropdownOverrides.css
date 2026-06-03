@@ -1,6 +1,1 @@
-.filmwave-dropdown-shell.desktop-song-action-menu {
-  right: auto !important;
-  width: 200px;
-  min-width: 200px;
-  max-width: 200px;
-}
+/* Dropdown sizing is owned by packages/shared/styles/dropdown-shell.css. */
