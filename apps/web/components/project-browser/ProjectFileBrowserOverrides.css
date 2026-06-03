@@ -27,8 +27,8 @@
   left: var(--sidebar-width) !important;
   right: 0 !important;
   z-index: 109 !important;
-  height: 49px !important;
-  min-height: 49px !important;
+  height: 48px !important;
+  min-height: 48px !important;
   flex-wrap: nowrap !important;
   gap: 22px !important;
   row-gap: 0 !important;
@@ -48,8 +48,9 @@
 
 .project-tabs-row > button {
   flex: 0 0 auto !important;
-  height: 49px !important;
+  height: 48px !important;
   border: 0 !important;
+  border-bottom: var(--filmwave-active-line-width) solid transparent !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding: 0 !important;
@@ -62,10 +63,16 @@
   margin-left: 0 !important;
 }
 
+.project-tabs-row > button.is-active,
 .project-tabs-row > button[class*="border-[var(--text-primary)]"],
 .project-tabs-row > button:hover {
   background: transparent !important;
   color: var(--text-primary) !important;
+}
+
+.project-tabs-row > button.is-active,
+.project-tabs-row > button[class*="border-[var(--text-primary)]"] {
+  border-bottom-color: var(--filmwave-active-line-color) !important;
 }
 
 .project-tabs-row-actions {
@@ -118,8 +125,7 @@
 }
 
 .project-tabs-row-actions .project-new-folder-button svg path:nth-of-type(3),
-.project-tabs-row-actions .project-new-folder-button svg path:nth-of-type(4) {
-  transform: scale(1.18);
+.project-tabs-row-actions .project-view-toggle-button svg path:nth-of-type(3) {
   transform-box: fill-box;
   transform-origin: center;
   stroke-width: 1.65 !important;
@@ -130,7 +136,7 @@
   position: relative !important;
   display: block !important;
   min-height: 176px !important;
-  margin-top: 49px !important;
+  margin-top: 48px !important;
   margin-left: -32px !important;
   margin-right: -32px !important;
   border-bottom: 1px solid var(--border) !important;
@@ -252,7 +258,7 @@
 .project-file-browser-actions {
   display: flex !important;
   flex-shrink: 0 !important;
-  align-items: center !important;
+  align-items: center;
 }
 
 .project-detail-page .project-file-browser-section {
@@ -448,20 +454,4 @@
 
 .project-context-menu > button:nth-child(n + 3) {
   order: 3 !important;
-}
-
-.project-file-browser [role="button"] {
-  touch-action: none;
-}
-
-.project-file-browser .project-folder-card,
-.project-file-browser .project-file-card,
-.project-browser-row {
-  cursor: grab !important;
-}
-
-.project-file-browser .project-folder-card:active,
-.project-file-browser .project-file-card:active,
-.project-browser-row:active {
-  cursor: grabbing !important;
 }
