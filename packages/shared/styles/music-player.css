@@ -9,6 +9,7 @@
   --filmwave-player-top-glow: 0 -30px 90px rgba(0, 0, 0, 0.07);
   --filmwave-player-top-glow-start: rgba(0, 0, 0, 0.055);
   --filmwave-player-top-glow-mid: rgba(0, 0, 0, 0.026);
+  --filmwave-square-icon-hover-bg: var(--bg-hover-strong);
 }
 
 .filmwave-music-player {
@@ -387,7 +388,7 @@
 .filmwave-icon-button.is-active,
 .filmwave-icon-button[aria-pressed="true"] {
   border-color: transparent;
-  background: var(--bg-hover);
+  background: var(--filmwave-square-icon-hover-bg);
   color: var(--text-primary);
 }
 
@@ -398,7 +399,7 @@
 }
 
 .filmwave-player-marker-toggle[aria-pressed="true"]:hover {
-  background: var(--bg-hover);
+  background: var(--filmwave-square-icon-hover-bg);
 }
 
 .filmwave-icon-button:disabled {
