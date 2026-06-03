@@ -33,6 +33,8 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   top: 0;
 }
 
+/* Search row — border drawn via box-shadow so it ignores
+   the parent's padding and spans the full viewport width */
 .filmwave-search-filter-search-row {
   box-sizing: border-box;
   display: flex;
@@ -41,7 +43,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   cursor: text;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 0 var(--border);
 }
 
 .filmwave-search-filter-search-shell {
@@ -153,6 +155,8 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   flex-shrink: 0;
 }
 
+/* Filter row — uses negative margins to break out of parent padding
+   so the border spans the full width */
 .filmwave-search-filter-row {
   box-sizing: border-box;
   display: flex;
@@ -163,6 +167,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   margin: 0 -28px;
   overflow-x: auto;
   overflow-y: hidden;
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 0 28px;
   white-space: nowrap;
@@ -213,11 +218,10 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 }
 
 /* ── Active bottom-line indicator ──
-   Used on .filmwave-filter-trigger (music page, desktop)
-   and .filmwave-active-line-trigger (project tabs).
-   Uses ::after pseudo-element so it is completely independent
-   of button height, container align-items, or platform differences.
-   Change --active-line-width to adjust thickness everywhere. */
+   ::after sits at bottom: -1px so it draws OVER the container's
+   border-bottom rather than stacking on top of it.
+   This means the visual thickness is always --active-line-width,
+   never --active-line-width + 1px border. */
 
 :root {
   --active-line-width: 2px;
@@ -245,14 +249,12 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   transition: color 150ms ease;
 }
 
-/* The indicator line — absolutely positioned at the bottom.
-   Independent of height, stretch, or border interactions. */
 .filmwave-filter-trigger::after,
 .desktop-filter-trigger::after,
 .filmwave-active-line-trigger::after {
   content: "";
   position: absolute;
-  bottom: 0;
+  bottom: -1px;
   left: 0;
   right: 0;
   height: var(--active-line-width);
