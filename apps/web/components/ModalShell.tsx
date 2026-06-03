@@ -109,7 +109,7 @@ export default function ModalShell({
         <div
           className={`min-h-0 flex-1 ${bodyClassName ?? defaultBodyClassName} ${
             bodyScroll ? "overflow-y-auto" : "overflow-hidden"
-          } [&_input:not([type=file])]:rounded-none [&_input:not([type=file])]:border-[var(--border)] [&_input:not([type=file])]:bg-[var(--bg-primary)] [&_input:not([type=file])]:outline-none [&_input:not([type=file])]:focus:border-[var(--border)] [&_textarea]:rounded-none [&_textarea]:border-[var(--border)] [&_textarea]:bg-[var(--bg-primary)] [&_textarea]:outline-none [&_textarea]:focus:border-[var(--border)]`}
+          } [&_label]:text-[var(--text-secondary)] [&_input:not([type=file])]:rounded-none [&_input:not([type=file])]:border-[var(--border)] [&_input:not([type=file])]:bg-[var(--bg-primary)] [&_input:not([type=file])]:outline-none [&_input:not([type=file])]:focus:border-[var(--border)] [&_textarea]:rounded-none [&_textarea]:border-[var(--border)] [&_textarea]:bg-[var(--bg-primary)] [&_textarea]:outline-none [&_textarea]:focus:border-[var(--border)]`}
         >
           {children}
         </div>
