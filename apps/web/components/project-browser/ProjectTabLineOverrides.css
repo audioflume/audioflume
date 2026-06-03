@@ -1,0 +1,7 @@
+.project-tabs-row > button.filmwave-active-line-trigger {
+  border-bottom: var(--filmwave-active-line-width) solid transparent !important;
+}
+
+.project-tabs-row > button.filmwave-active-line-trigger.is-active {
+  border-bottom-color: var(--filmwave-active-line-color) !important;
+}
