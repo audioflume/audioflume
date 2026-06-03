@@ -3,7 +3,7 @@ export const iconButtonClass =
   "filmwave-icon-button filmwave-icon-button-plain";
 
 export const iconButtonActiveClass =
-  "bg-[var(--icon-button-hover)] text-[var(--text-primary)]";
+  "is-open text-[var(--text-primary)]";
 
 // Alias of iconButtonClass — kept for backwards compatibility
 export const smallIconButtonClass =
