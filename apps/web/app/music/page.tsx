@@ -104,8 +104,6 @@ export default function MusicPage() {
   const { currentSong, setQueue } = usePlayer();
   const playerVisible = Boolean(currentSong);
 
-  const [musicHeroHovered, setMusicHeroHovered] = useState(false);
-  const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
   const [playlistSongIdsByPlaylistId, setPlaylistSongIdsByPlaylistId] =
     useState<Record<string, Set<string>>>({});
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
@@ -508,18 +506,19 @@ export default function MusicPage() {
             <div className="px-8 pt-5 pb-8">
               <div className="overflow-hidden">
                 <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
-                  <div
-                    className="relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white"
-                    onMouseEnter={() => setMusicHeroHovered(true)}
-                    onMouseLeave={() => setMusicHeroHovered(false)}
-                    style={{
-                      backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
-                      backgroundSize: `100% 100%, 100% 100%, ${musicHeroHovered ? "106%" : "100%"} auto`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      transition: "background-size 0.7s ease",
-                    }}
-                  >
+                  <div className="group relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.025]"
+                      style={{ backgroundImage: `url("${MUSIC_HERO_IMAGE}")` }}
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%)",
+                      }}
+                    />
+
                     <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
                       <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
                         <MusicIcon size={11} />
@@ -551,18 +550,19 @@ export default function MusicPage() {
                     </div>
                   </div>
 
-                  <div
-                    className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between"
-                    onMouseEnter={() => setDesktopSyncHovered(true)}
-                    onMouseLeave={() => setDesktopSyncHovered(false)}
-                    style={{
-                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08)), url("${DESKTOP_SYNC_IMAGE}")`,
-                      backgroundSize: `100% 100%, 100% 100%, ${desktopSyncHovered ? "106%" : "100%"} auto`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      transition: "background-size 0.7s ease",
-                    }}
-                  >
+                  <div className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.025]"
+                      style={{ backgroundImage: `url("${DESKTOP_SYNC_IMAGE}")` }}
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08))",
+                      }}
+                    />
+
                     <div className="relative z-10 flex justify-between gap-5">
                       <div>
                         <div className="text-[11px] font-medium text-white/64">
