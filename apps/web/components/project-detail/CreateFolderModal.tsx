@@ -1,5 +1,9 @@
 import ModalShell from "@/components/ModalShell";
-import { modalPrimaryButtonClass } from "@/components/uiClasses";
+import {
+  modalFieldLabelClass,
+  modalInputClass,
+  modalPrimaryButtonClass,
+} from "@/components/uiClasses";
 
 type CreateFolderModalProps = {
   creatingFolder: boolean;
@@ -35,7 +39,7 @@ export default function CreateFolderModal({
         </button>
       }
     >
-      <label className="block text-[11px] font-medium text-[var(--text-secondary)]">
+      <label className={modalFieldLabelClass}>
         Folder name
       </label>
       <input
@@ -48,7 +52,7 @@ export default function CreateFolderModal({
           }
         }}
         autoFocus
-        className="mt-2 h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+        className={modalInputClass}
         placeholder="Client Favorites"
       />
     </ModalShell>
