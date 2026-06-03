@@ -5,9 +5,7 @@
 /* Shared compact icon buttons — matches desktop app song/action controls. */
 
 .filmwave-icon-button,
-.playlist-icon-btn,
-.project-new-folder-button,
-.project-view-toggle-button {
+.playlist-icon-btn {
   display: inline-flex !important;
   width: 28px !important;
   min-width: 28px !important;
@@ -32,13 +30,7 @@
 .playlist-icon-btn:hover,
 .playlist-icon-btn.is-open,
 .playlist-icon-btn.is-active,
-.playlist-icon-btn[aria-pressed="true"],
-.project-new-folder-button:hover,
-.project-new-folder-button.is-open,
-.project-new-folder-button.is-active,
-.project-view-toggle-button:hover,
-.project-view-toggle-button.is-open,
-.project-view-toggle-button.is-active {
+.playlist-icon-btn[aria-pressed="true"] {
   border-color: transparent !important;
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
@@ -53,9 +45,7 @@
 }
 
 .filmwave-icon-button svg,
-.playlist-icon-btn svg,
-.project-new-folder-button svg,
-.project-view-toggle-button svg {
+.playlist-icon-btn svg {
   width: 14px !important;
   height: 14px !important;
 }
@@ -78,9 +68,7 @@
 }
 
 .filmwave-icon-button-group,
-.playlists-control-right,
-.project-tabs-row-actions,
-.project-toolbar-actions {
+.playlists-control-right {
   display: flex !important;
   align-items: center !important;
   gap: 2px !important;
