@@ -1,4 +1,5 @@
 import {
+  DropdownShell,
   getSongCuePointMarkers,
   normalizeEditPointType,
   parseEditPoints,
@@ -18,6 +19,12 @@ import type { DesktopMusicSong } from "./musicLibraryTypes";
 
 const SONG_DRAG_START_DISTANCE = 5;
 const NATIVE_FILE_DRAG_COMMAND = ["start", "native", "file", "drag"].join("_");
+const SONG_CARD_DROPDOWN_COLLISION_PADDING = {
+  top: 163,
+  right: 16,
+  bottom: 85,
+  left: 16,
+};
 
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
@@ -57,7 +64,6 @@ export default function DesktopSongCard({
   const [actionsOpen, setActionsOpen] = useState(false);
   const [stemsOpen, setStemsOpen] = useState(false);
   const [visualProgress, setVisualProgress] = useState(pendingSeekProgress ?? playbackProgress);
-  const actionsRef = useRef<HTMLDivElement | null>(null);
   const waveformRef = useRef<SharedWaveformCanvasHandle | null>(null);
   const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
@@ -74,28 +80,6 @@ export default function DesktopSongCard({
     setVisualProgress(nextProgress);
     waveformRef.current?.seekTo(nextProgress);
   }, [pendingSeekProgress, playbackProgress, song.id]);
-
-  useEffect(() => {
-    if (!actionsOpen) return;
-
-    function onPointerDown(event: MouseEvent) {
-      if (!actionsRef.current?.contains(event.target as Node)) {
-        setActionsOpen(false);
-      }
-    }
-
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setActionsOpen(false);
-    }
-
-    window.addEventListener("mousedown", onPointerDown);
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("mousedown", onPointerDown);
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [actionsOpen]);
 
   async function startSyncedSongDrag() {
     if (!isSynced || !syncedPath) return;
@@ -193,7 +177,7 @@ export default function DesktopSongCard({
       keyMeta={song.key || "—"}
       bpmMeta={song.bpm ? `${song.bpm} BPM` : "—"}
       actions={
-        <div ref={actionsRef} className="desktop-song-actions-inner">
+        <div className="desktop-song-actions-inner">
           <SongActionButton
             label={favorite ? "Remove song from favorites" : "Favorite song"}
             active={favorite}
@@ -204,34 +188,39 @@ export default function DesktopSongCard({
           </SongActionButton>
 
           <div className="desktop-song-action-menu-wrap">
-            <SongActionButton
-              label="Song options"
-              active={actionsOpen}
-              aria-expanded={actionsOpen}
-              onClick={(event) => {
-                event.stopPropagation();
-                setActionsOpen((open) => !open);
-              }}
+            <DropdownShell
+              open={actionsOpen}
+              onOpenChange={setActionsOpen}
+              placement="bottom-end"
+              strategy="absolute"
+              usePortal={false}
+              className="desktop-song-action-menu"
+              offsetAmount={6}
+              flippedOffsetAmount={6}
+              collisionPadding={SONG_CARD_DROPDOWN_COLLISION_PADDING}
+              trigger={({ open }) => (
+                <SongActionButton
+                  label="Song options"
+                  active={open}
+                  aria-expanded={open}
+                >
+                  <MoreIcon size={14} />
+                </SongActionButton>
+              )}
             >
-              <MoreIcon size={14} />
-            </SongActionButton>
-
-            {actionsOpen && (
-              <div className="desktop-song-action-menu" role="menu">
-                <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
-                  Add to Playlist
-                </button>
-                <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
-                  Add to Project
-                </button>
-                <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
-                  Create New Playlist
-                </button>
-                <button type="button" role="menuitem" disabled>
-                  Download Song
-                </button>
-              </div>
-            )}
+              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                Add to Playlist
+              </button>
+              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                Add to Project
+              </button>
+              <button type="button" role="menuitem" onClick={() => setActionsOpen(false)}>
+                Create New Playlist
+              </button>
+              <button type="button" role="menuitem" disabled>
+                Download Song
+              </button>
+            </DropdownShell>
           </div>
 
           <SongActionButton
