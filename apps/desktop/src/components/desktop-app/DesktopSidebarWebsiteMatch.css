@@ -34,8 +34,8 @@
   opacity: 0;
 }
 
-/* In collapsed mode, constrain each link to a square so the
-   2px nav gap is visible between buttons */
+/* Collapsed: constrain nav links and add button to square
+   so the 2px nav gap is visually apparent between buttons */
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-nav {
   align-items: center;
 }
@@ -43,6 +43,16 @@
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
   width: 36px;
   padding: 0;
+  justify-content: center;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+  width: 36px;
+  height: var(--filmwave-sidebar-row-height);
+  border-radius: var(--filmwave-sidebar-row-radius);
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions {
   justify-content: center;
 }
 
