@@ -289,7 +289,7 @@
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
   height: var(--filmwave-sidebar-row-height);
   justify-content: center;
-  margin-bottom: 0;
+  margin-bottom: var(--filmwave-sidebar-nav-gap);
   padding: 0;
 }
 
@@ -311,8 +311,6 @@
   display: none;
 }
 
-/* Collapsed add button: same 36px width as collapsed nav links
-   so the gap between it and adjacent project links is visible */
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
   width: 36px;
   height: var(--filmwave-sidebar-row-height);
