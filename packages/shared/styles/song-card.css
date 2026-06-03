@@ -159,6 +159,18 @@ html[data-theme="light"]
   gap: var(--filmwave-song-card-gap);
 }
 
+.filmwave-song-key-bpm:not(:has(.filmwave-song-bpm)),
+.desktop-song-key-bpm:not(:has(.desktop-song-bpm)) {
+  min-width: 46px;
+  gap: 0;
+}
+
+.filmwave-song-key-bpm:not(:has(.filmwave-song-key)),
+.desktop-song-key-bpm:not(:has(.desktop-song-key)) {
+  min-width: 62px;
+  gap: 0;
+}
+
 .filmwave-song-key,
 .desktop-song-key {
   min-width: 46px;
@@ -518,13 +530,23 @@ html[data-theme="light"]
 }
 
 @container (max-width: 620px) {
+  .filmwave-song-bpm,
+  .desktop-song-bpm,
   .filmwave-song-bpm-slot,
   .desktop-song-bpm-slot {
     display: none;
   }
+
+  .filmwave-song-key-bpm,
+  .desktop-song-key-bpm {
+    min-width: 46px;
+    gap: 0;
+  }
 }
 
 @container (max-width: 520px) {
+  .filmwave-song-key-bpm,
+  .desktop-song-key-bpm,
   .filmwave-song-key-slot,
   .desktop-song-key-slot {
     display: none;
