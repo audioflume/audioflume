@@ -73,7 +73,6 @@ export default function ProjectToolbar({
         open={projectMoreOpen}
         onOpenChange={onProjectMoreOpenChange}
         placement="bottom-end"
-        className="project-more-dropdown"
         offsetAmount={8}
         collisionPadding={{
           top: 72,
@@ -95,7 +94,6 @@ export default function ProjectToolbar({
       >
         <button
           type="button"
-          className="project-more-menu-button"
           role="menuitem"
           onClick={() => {
             closeMenu();
@@ -106,7 +104,6 @@ export default function ProjectToolbar({
         </button>
         <button
           type="button"
-          className="project-more-menu-button"
           role="menuitem"
           onClick={() => {
             closeMenu();
@@ -117,7 +114,6 @@ export default function ProjectToolbar({
         </button>
         <button
           type="button"
-          className="project-more-menu-button"
           role="menuitem"
           onClick={() => {
             closeMenu();
@@ -128,7 +124,7 @@ export default function ProjectToolbar({
         </button>
         <button
           type="button"
-          className="project-more-menu-button is-danger"
+          className="danger-hover"
           role="menuitem"
           onClick={() => {
             closeMenu();
