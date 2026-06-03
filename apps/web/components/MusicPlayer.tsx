@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  DropdownShell,
   buildWaveformBars,
   createWaveformCanvasDrawCache,
   drawWaveformBarsToCanvas,
@@ -34,7 +35,6 @@ import Image from "next/image";
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -172,8 +172,6 @@ export default function MusicPlayer() {
   const playerCanvasDrawCacheRef = useRef<WaveformCanvasDrawCache>(
     createWaveformCanvasDrawCache(),
   );
-  const moreButtonRef = useRef<HTMLButtonElement>(null);
-  const moreMenuRef = useRef<HTMLDivElement>(null);
 
   const [playerWidth, setPlayerWidth] = useState(0);
   const [waveformWidth, setWaveformWidth] = useState(0);
@@ -188,7 +186,6 @@ export default function MusicPlayer() {
   const [selectedCuePointTypes, setSelectedCuePointTypes] = useState<string[]>(
     () => getStoredCuePointFilterSelection(),
   );
-  const [moreMenuPosition, setMoreMenuPosition] = useState({ top: 0, left: 0 });
 
   const effectiveShowEditPointMarkers = showEditPointMarkers;
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
@@ -311,23 +308,6 @@ export default function MusicPlayer() {
     .filter(Boolean)
     .join(" ");
 
-  const updateMoreMenuPosition = useCallback(() => {
-    const trigger = moreButtonRef.current;
-    const menu = moreMenuRef.current;
-    if (!trigger || !menu) return;
-    const triggerRect = trigger.getBoundingClientRect();
-    const menuRect = menu.getBoundingClientRect();
-    const viewportPadding = 16;
-    const playerGap = 6;
-    const left = clampNumber(
-      triggerRect.right - menuRect.width,
-      viewportPadding,
-      window.innerWidth - menuRect.width - viewportPadding,
-    );
-    const top = Math.max(viewportPadding, triggerRect.top - menuRect.height - playerGap);
-    setMoreMenuPosition({ top, left });
-  }, []);
-
   useEffect(() => {
     const syncCuePointFilterSelection = (event?: Event) => {
       const customEvent = event as CustomEvent<{ selectedTypes?: string[] }>;
@@ -393,42 +373,6 @@ export default function MusicPlayer() {
       window.clearTimeout(t);
     };
   }, [currentSong?.id, showWaveform, schedulePlayerCanvasDraw]);
-
-  useLayoutEffect(() => {
-    if (!moreOpen) return;
-    updateMoreMenuPosition();
-    const frame = window.requestAnimationFrame(updateMoreMenuPosition);
-    return () => window.cancelAnimationFrame(frame);
-  }, [moreOpen, updateMoreMenuPosition]);
-
-  useEffect(() => {
-    if (!moreOpen) return;
-    const handlePositionUpdate = () => updateMoreMenuPosition();
-    window.addEventListener("resize", handlePositionUpdate);
-    window.addEventListener("scroll", handlePositionUpdate, true);
-    return () => {
-      window.removeEventListener("resize", handlePositionUpdate);
-      window.removeEventListener("scroll", handlePositionUpdate, true);
-    };
-  }, [moreOpen, updateMoreMenuPosition]);
-
-  useEffect(() => {
-    if (!moreOpen) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (moreButtonRef.current?.contains(target) || moreMenuRef.current?.contains(target)) return;
-      setMoreOpen(false);
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMoreOpen(false);
-    };
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [moreOpen]);
 
   if (!currentSong) return null;
 
@@ -674,16 +618,49 @@ export default function MusicPlayer() {
             <EditPointsIcon />
           </IconButton>
 
-          <button
-            ref={moreButtonRef}
-            type="button"
-            aria-label="Song options"
-            aria-expanded={moreOpen}
-            onClick={(e) => { e.stopPropagation(); setMoreOpen((open) => !open); }}
-            className={`${iconButtonClass} ${moreOpen ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)]" : ""}`}
+          <DropdownShell
+            open={moreOpen}
+            onOpenChange={setMoreOpen}
+            placement="top-end"
+            offsetAmount={8}
+            collisionPadding={{
+              top: 72,
+              right: 16,
+              bottom: 88,
+              left: 16,
+            }}
+            trigger={({ open }) => (
+              <button
+                type="button"
+                aria-label="Song options"
+                aria-expanded={open}
+                className={`${iconButtonClass} ${open ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)]" : ""}`}
+              >
+                <MoreIcon />
+              </button>
+            )}
           >
-            <MoreIcon />
-          </button>
+            <button type="button" onClick={() => { setMoreOpen(false); setAddToPlaylistOpen(true); }}>
+              <span>Add to Playlist</span>
+            </button>
+            <button type="button" onClick={() => { setMoreOpen(false); setAddToProjectOpen(true); }}>
+              <span>Add to Project</span>
+            </button>
+            <button type="button" onClick={() => { setMoreOpen(false); setCreatePlaylistOpen(true); }}>
+              <span>Create New Playlist</span>
+            </button>
+            {currentSong.audioUrl ? (
+              <a href={currentSong.audioUrl} download onClick={() => setMoreOpen(false)}>
+                <span>Download Song</span>
+              </a>
+            ) : (
+              <button type="button" disabled><span>Download Song</span></button>
+            )}
+            <button type="button" onClick={handleClosePlayer} className="danger-hover">
+              <span>Close Player</span>
+              <CloseIcon />
+            </button>
+          </DropdownShell>
 
           {currentSong.audioUrl && (
             <a href={currentSong.audioUrl} download aria-label="Download song" className={iconButtonClass}>
@@ -692,36 +669,6 @@ export default function MusicPlayer() {
           )}
         </div>
       </div>
-
-      {moreOpen && (
-        <div
-          ref={moreMenuRef}
-          className="music-player-more-menu fixed"
-          style={{ top: `${moreMenuPosition.top}px`, left: `${moreMenuPosition.left}px` }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button type="button" onClick={() => { setMoreOpen(false); setAddToPlaylistOpen(true); }}>
-            <span>Add to Playlist</span>
-          </button>
-          <button type="button" onClick={() => { setMoreOpen(false); setAddToProjectOpen(true); }}>
-            <span>Add to Project</span>
-          </button>
-          <button type="button" onClick={() => { setMoreOpen(false); setCreatePlaylistOpen(true); }}>
-            <span>Create New Playlist</span>
-          </button>
-          {currentSong.audioUrl ? (
-            <a href={currentSong.audioUrl} download>
-              <span>Download Song</span>
-            </a>
-          ) : (
-            <button type="button" disabled><span>Download Song</span></button>
-          )}
-          <button type="button" onClick={handleClosePlayer} className="music-player-more-menu-close danger-hover">
-            <span>Close Player</span>
-            <CloseIcon />
-          </button>
-        </div>
-      )}
 
       <AddToPlaylistModal isOpen={addToPlaylistOpen} song={currentSong} onClose={() => setAddToPlaylistOpen(false)} />
       <AddToProjectModal isOpen={addToProjectOpen} song={currentSong} onClose={() => setAddToProjectOpen(false)} />
