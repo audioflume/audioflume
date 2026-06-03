@@ -32,14 +32,18 @@
 .filmwave-active-line-trigger,
 .filmwave-filter-trigger,
 .desktop-filter-trigger,
-.project-tabs-row > button:not(.project-toolbar-icon-button):not(.project-toolbar-button) {
+.project-tabs-row
+  > button:not(.project-toolbar-icon-button):not(.project-toolbar-button) {
   position: relative;
 }
 
 .filmwave-active-line-trigger::after,
 .filmwave-filter-trigger::after,
 .desktop-filter-trigger::after,
-.project-tabs-row > button:not(.project-toolbar-icon-button):not(.project-toolbar-button)::after {
+.project-tabs-row
+  > button:not(.project-toolbar-icon-button):not(
+    .project-toolbar-button
+  )::after {
   content: "";
   position: absolute;
   right: 0;
@@ -60,15 +64,22 @@
 .desktop-filter-trigger:hover,
 .desktop-filter-trigger.is-active,
 .desktop-filter-trigger.is-open,
-.project-tabs-row > button:not(.project-toolbar-icon-button):not(.project-toolbar-button):hover,
-.project-tabs-row > button:not(.project-toolbar-icon-button):not(.project-toolbar-button).is-active {
+.project-tabs-row
+  > button:not(.project-toolbar-icon-button):not(.project-toolbar-button):hover,
+.project-tabs-row
+  > button:not(.project-toolbar-icon-button):not(
+    .project-toolbar-button
+  ).is-active {
   color: var(--text-primary);
 }
 
 .filmwave-active-line-trigger.is-active::after,
 .filmwave-filter-trigger.is-active::after,
 .desktop-filter-trigger.is-active::after,
-.project-tabs-row > button:not(.project-toolbar-icon-button):not(.project-toolbar-button).is-active::after {
+.project-tabs-row
+  > button:not(.project-toolbar-icon-button):not(
+    .project-toolbar-button
+  ).is-active::after {
   background: var(--filmwave-active-line-color);
 }
 
@@ -170,7 +181,9 @@ body > header > div {
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .filmwave-header-nav-link:hover,
@@ -215,7 +228,9 @@ body > header > div {
   gap: 6px;
   padding: 0 10px;
   border-radius: var(--filmwave-header-nav-radius);
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .filmwave-header-account-trigger:hover .filmwave-header-account-label,
