@@ -162,7 +162,6 @@ html[data-theme="light"] {
   grid-template-columns: 1fr 1fr;
   gap: 4px;
   border-radius: 0;
-  background: var(--filmwave-menu-theme-bg);
   padding: 3px;
 }
 
