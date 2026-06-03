@@ -1,9 +1,23 @@
-.desktop-app-main:has(.desktop-music-page) {
+.desktop-app-main:has(.desktop-persistent-music-view.is-active .desktop-music-page) {
   padding: 56px 0 0 var(--sidebar-width-expanded, 280px);
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-music-page) {
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-persistent-music-view.is-active .desktop-music-page) {
   padding-left: var(--sidebar-width-collapsed, 76px);
+}
+
+.desktop-persistent-music-view.is-background .desktop-music-page > :not(.desktop-music-player) {
+  display: none;
+}
+
+.desktop-persistent-music-view.is-background .desktop-music-page {
+  min-height: 0;
+}
+
+.desktop-app-main:has(.desktop-persistent-music-view.is-background .desktop-music-player) > .desktop-view,
+.desktop-app-main:has(.desktop-persistent-music-view.is-background .desktop-music-player) > .desktop-settings-view,
+.desktop-app-main:has(.desktop-persistent-music-view.is-background .desktop-music-player) > .desktop-projects-page {
+  padding-bottom: 92px;
 }
 
 .desktop-music-page {
