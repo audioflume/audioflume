@@ -47,13 +47,15 @@
 }
 
 .filmwave-filter-trigger,
-.desktop-filter-trigger {
+.desktop-filter-trigger,
+.project-tabs-row > button:not(.project-toolbar-icon-button):not(.project-toolbar-button) {
   border-bottom-width: var(--filmwave-active-line-width);
   border-bottom-style: solid;
 }
 
 .filmwave-filter-trigger.is-active,
-.desktop-filter-trigger.is-active {
+.desktop-filter-trigger.is-active,
+.project-tabs-row > button:not(.project-toolbar-icon-button):not(.project-toolbar-button).is-active {
   border-bottom-color: var(--filmwave-active-line-color);
 }
 
