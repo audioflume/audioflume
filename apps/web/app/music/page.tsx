@@ -99,20 +99,15 @@ export default function MusicPage() {
     hydrated: filtersHydrated,
   } = useFilterPersistence(musicFilterStorageKey);
 
-  const {
-    songs,
-    loading: songsLoading,
-    error: songsError,
-  } = useSongs();
+  const { songs, loading: songsLoading, error: songsError } = useSongs();
 
   const { currentSong, setQueue } = usePlayer();
   const playerVisible = Boolean(currentSong);
 
   const [musicHeroHovered, setMusicHeroHovered] = useState(false);
   const [desktopSyncHovered, setDesktopSyncHovered] = useState(false);
-  const [playlistSongIdsByPlaylistId, setPlaylistSongIdsByPlaylistId] = useState<
-    Record<string, Set<string>>
-  >({});
+  const [playlistSongIdsByPlaylistId, setPlaylistSongIdsByPlaylistId] =
+    useState<Record<string, Set<string>>>({});
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
@@ -134,7 +129,8 @@ export default function MusicPage() {
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
 
   const shuffleActive = shuffleOrderIds !== null;
-  const highlightedEditPointTypes = selectedEditPoints.filter(isCoreEditPointType);
+  const highlightedEditPointTypes =
+    selectedEditPoints.filter(isCoreEditPointType);
 
   const setSearch = (value: string) =>
     setFilters((current) => ({ ...current, search: value }));
@@ -194,14 +190,19 @@ export default function MusicPage() {
     selectedPlaylist !== null ||
     shuffleActive;
 
-  const searchPlaceholder = getMusicLibrarySearchPlaceholder(selectedPlaylist?.name);
+  const searchPlaceholder = getMusicLibrarySearchPlaceholder(
+    selectedPlaylist?.name,
+  );
 
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
   useEffect(() => {
     if (!userId || !selectedPlaylistId) return;
-    if (playlistSongIdsByPlaylistId[selectedPlaylistId]) {
-      setSelectedPlaylistSongIds(playlistSongIdsByPlaylistId[selectedPlaylistId]);
+
+    const playlistId = selectedPlaylistId;
+
+    if (playlistSongIdsByPlaylistId[playlistId]) {
+      setSelectedPlaylistSongIds(playlistSongIdsByPlaylistId[playlistId]);
       return;
     }
 
@@ -211,7 +212,7 @@ export default function MusicPage() {
       setSelectedPlaylistSongIds(null);
 
       try {
-        const res = await fetch(`/api/playlists/${selectedPlaylistId}/songs`);
+        const res = await fetch(`/api/playlists/${playlistId}/songs`);
         if (!res.ok) throw new Error("Failed to load playlist songs");
         const data = await res.json();
         const ids = getPlaylistSongIdsFromResponse(data);
@@ -220,7 +221,7 @@ export default function MusicPage() {
 
         setPlaylistSongIdsByPlaylistId((current) => ({
           ...current,
-          [selectedPlaylistId]: ids,
+          [playlistId]: ids,
         }));
         setSelectedPlaylistSongIds(ids);
       } catch (error) {
@@ -285,7 +286,9 @@ export default function MusicPage() {
   const displayedSongs = useMemo(() => {
     if (!shuffleOrderIds) return filteredSongs;
 
-    const orderMap = new Map(shuffleOrderIds.map((songId, index) => [songId, index]));
+    const orderMap = new Map(
+      shuffleOrderIds.map((songId, index) => [songId, index]),
+    );
 
     return [...filteredSongs].sort((a, b) => {
       const aId = getMusicSongStableId(a);
@@ -427,7 +430,9 @@ export default function MusicPage() {
 
               <MusicMultiSelectFilter
                 label="Cue Points"
-                options={EDIT_POINT_FILTER_OPTIONS.map((option) => option.label)}
+                options={EDIT_POINT_FILTER_OPTIONS.map(
+                  (option) => option.label,
+                )}
                 selected={EDIT_POINT_FILTER_OPTIONS.filter((option) =>
                   selectedEditPoints.includes(option.type),
                 ).map((option) => option.label)}
@@ -509,10 +514,10 @@ export default function MusicPage() {
                     onMouseLeave={() => setMusicHeroHovered(false)}
                     style={{
                       backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%), url("${MUSIC_HERO_IMAGE}")`,
-                      backgroundSize: `100% 100%, 100% 100%, ${musicHeroHovered ? "104%" : "100%"} auto`,
+                      backgroundSize: `100% 100%, 100% 100%, ${musicHeroHovered ? "102.5%" : "100%"} auto`,
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
-                      transition: "background-size 700ms",
+                      transition: "background-size 0.7s ease",
                     }}
                   >
                     <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
@@ -529,8 +534,8 @@ export default function MusicPage() {
                         <div className="mt-5 flex flex-wrap items-end gap-5">
                           <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
                             Move through the library like a visual treatment —
-                            documentary warmth, after-dark tension, open travel cues,
-                            and polished brand motion.
+                            documentary warmth, after-dark tension, open travel
+                            cues, and polished brand motion.
                           </p>
 
                           <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
@@ -552,10 +557,10 @@ export default function MusicPage() {
                     onMouseLeave={() => setDesktopSyncHovered(false)}
                     style={{
                       backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08)), url("${DESKTOP_SYNC_IMAGE}")`,
-                      backgroundSize: `100% 100%, 100% 100%, ${desktopSyncHovered ? "106%" : "100%"} auto`,
+                      backgroundSize: `100% 100%, 100% 100%, ${desktopSyncHovered ? "102.5%" : "100%"} auto`,
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
-                      transition: "background-size 700ms",
+                      transition: "background-size 0.7s ease",
                     }}
                   >
                     <div className="relative z-10 flex justify-between gap-5">
@@ -591,16 +596,19 @@ export default function MusicPage() {
         )}
 
         {showSongSkeleton ? (
-          <div className={`${hasActiveFilters ? "mt-3" : ""} border-t border-[var(--border-subtle)]`}>
+          <div
+            className={`${hasActiveFilters ? "mt-3" : ""} border-t border-[var(--border-subtle)]`}
+          >
             <SkeletonSongList />
           </div>
         ) : (
-          <div className={`${hasActiveFilters ? "mt-3" : ""} border-t border-[var(--border-subtle)] pb-6`}>
+          <div
+            className={`${hasActiveFilters ? "mt-3" : ""} border-t border-[var(--border-subtle)] pb-6`}
+          >
             {displayedSongs.map((song, index) => (
               <SongCard
                 key={getMusicSongStableId(song, index)}
                 song={song}
-                index={index}
                 highlightedEditPointTypes={highlightedEditPointTypes}
                 showEditPointMarkers={effectiveShowEditPointMarkers}
               />
