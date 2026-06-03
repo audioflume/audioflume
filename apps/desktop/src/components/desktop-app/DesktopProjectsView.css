@@ -109,11 +109,12 @@
   background: var(--bg-primary);
 }
 
+/* Match height and stretch to music filter row so ::after indicator sits flush */
 .project-tabs-row {
-  height: 49px;
-  min-height: 49px;
+  height: 48px;
+  min-height: 48px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 8px;
   overflow-x: auto;
   overflow-y: hidden;
