@@ -78,7 +78,11 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
       viewBox="0 0 7 10"
       fill="none"
       aria-hidden="true"
-      className={collapsed ? "desktop-sidebar-collapse-icon is-collapsed" : "desktop-sidebar-collapse-icon"}
+      className={
+        collapsed
+          ? "desktop-sidebar-collapse-icon is-collapsed"
+          : "desktop-sidebar-collapse-icon"
+      }
     >
       <path d="M6.2 1L1.8 5L6.2 9V1Z" fill="currentColor" />
     </svg>
@@ -129,7 +133,9 @@ function sortProjectsByPosition(projects: Project[]) {
 }
 
 function isHrefActive(pathname: string, href: string) {
-  return href === "/music" ? pathname === "/music" : pathname === href || pathname.startsWith(`${href}/`);
+  return href === "/music"
+    ? pathname === "/music"
+    : pathname === href || pathname.startsWith(`${href}/`);
 }
 
 function ProjectMenu({
@@ -157,29 +163,36 @@ function ProjectMenu({
       />
 
       <div
-        className="fixed z-[150] w-[190px] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-1 shadow-[var(--shadow-ui)]"
+        className="filmwave-dropdown-shell fixed z-[150]"
         style={{ top: menu.top, left: menu.left }}
       >
         <button
           type="button"
-          className="flex h-9 w-full cursor-pointer items-center rounded-lg px-3 text-left text-[12px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-          onClick={() => { onClose(); onEdit(menu.project); }}
+          onClick={() => {
+            onClose();
+            onEdit(menu.project);
+          }}
         >
           Edit details
         </button>
 
         <button
           type="button"
-          className="flex h-9 w-full cursor-pointer items-center rounded-lg px-3 text-left text-[12px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-          onClick={() => { onClose(); onStartReorder(); }}
+          onClick={() => {
+            onClose();
+            onStartReorder();
+          }}
         >
           Reorder
         </button>
 
         <button
           type="button"
-          className="danger-hover flex h-9 w-full cursor-pointer items-center rounded-lg px-3 text-left text-[12px] font-medium transition"
-          onClick={() => { onClose(); onDelete(menu.project); }}
+          className="danger-hover"
+          onClick={() => {
+            onClose();
+            onDelete(menu.project);
+          }}
         >
           Delete Project
         </button>
@@ -223,14 +236,16 @@ function ProjectLink({
       onFocus={(event) => showTooltip(event.currentTarget)}
       onBlur={hideTooltip}
     >
-      <Link href={href} aria-label={project.name} className="flex min-w-0 flex-1 items-center">
+      <Link
+        href={href}
+        aria-label={project.name}
+        className="flex min-w-0 flex-1 items-center"
+      >
         <span className="desktop-sidebar-link-icon">
           <FolderIcon />
         </span>
 
-        <span className="desktop-sidebar-link-label">
-          {project.name}
-        </span>
+        <span className="desktop-sidebar-link-label">{project.name}</span>
       </Link>
 
       {!collapsed && (
@@ -261,7 +276,14 @@ function SortableProjectLink({
   project: Project;
   dragActive: boolean;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: project.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: project.id });
 
   return (
     <div
@@ -277,14 +299,16 @@ function SortableProjectLink({
         <DragIconSmall />
       </span>
 
-      <span className="desktop-sidebar-link-label flex-1">
-        {project.name}
-      </span>
+      <span className="desktop-sidebar-link-label flex-1">{project.name}</span>
     </div>
   );
 }
 
-export default function Sidebar({ initialCollapsed = false }: { initialCollapsed?: boolean }) {
+export default function Sidebar({
+  initialCollapsed = false,
+}: {
+  initialCollapsed?: boolean;
+}) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -296,32 +320,43 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
   const [projectOrder, setProjectOrder] = useState<number[]>([]);
   const [reorderMode, setReorderMode] = useState(false);
   const [projectMenu, setProjectMenu] = useState<ProjectMenuState>(null);
-  const [activeDragProjectId, setActiveDragProjectId] = useState<number | null>(null);
+  const [activeDragProjectId, setActiveDragProjectId] = useState<number | null>(
+    null,
+  );
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [isSavingProject, setIsSavingProject] = useState(false);
-  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(null);
+  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(
+    null,
+  );
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const { currentSong } = usePlayer();
   const { projects, setProjects } = useProjectsContext();
-  const { sidebarProjectSortMode, setSidebarProjectSortMode } = useUserPreferences();
+  const { sidebarProjectSortMode, setSidebarProjectSortMode } =
+    useUserPreferences();
 
   const playerVisible = !!currentSong;
   const sidebarCollapsed = collapsed || forceCollapsed;
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+  );
 
   const displayedProjects = useMemo(() => {
-    const projectMap = new Map(projects.map((project) => [project.id, project]));
+    const projectMap = new Map(
+      projects.map((project) => [project.id, project]),
+    );
 
     if (sidebarProjectSortMode === "custom") {
       if (projectOrder.length > 0) {
         const orderedProjects = projectOrder
           .map((projectId) => projectMap.get(projectId))
           .filter((project): project is Project => Boolean(project));
-        const missingProjects = projects.filter((project) => !projectOrder.includes(project.id));
+        const missingProjects = projects.filter(
+          (project) => !projectOrder.includes(project.id),
+        );
         return [...orderedProjects, ...sortProjectsByPosition(missingProjects)];
       }
       return sortProjectsByPosition(projects);
@@ -330,17 +365,27 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
     return sortProjectsByName(projects);
   }, [projectOrder, projects, sidebarProjectSortMode]);
 
-  useEffect(() => { requestAnimationFrame(() => { setReady(true); }); }, []);
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      setReady(true);
+    });
+  }, []);
 
   useEffect(() => {
     setProjectOrder((current) => {
       const projectIds = projects.map((project) => project.id);
       const projectIdSet = new Set(projectIds);
-      const nextOrder = current.filter((projectId) => projectIdSet.has(projectId));
+      const nextOrder = current.filter((projectId) =>
+        projectIdSet.has(projectId),
+      );
       for (const projectId of projectIds) {
         if (!nextOrder.includes(projectId)) nextOrder.push(projectId);
       }
-      if (nextOrder.length === current.length && nextOrder.every((projectId, index) => projectId === current[index])) return current;
+      if (
+        nextOrder.length === current.length &&
+        nextOrder.every((projectId, index) => projectId === current[index])
+      )
+        return current;
       return nextOrder;
     });
   }, [projects]);
@@ -422,13 +467,19 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
     setActiveDragProjectId(null);
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    const oldIndex = displayedProjects.findIndex((project) => project.id === active.id);
-    const newIndex = displayedProjects.findIndex((project) => project.id === over.id);
+    const oldIndex = displayedProjects.findIndex(
+      (project) => project.id === active.id,
+    );
+    const newIndex = displayedProjects.findIndex(
+      (project) => project.id === over.id,
+    );
     if (oldIndex < 0 || newIndex < 0) return;
     updateProjectOrder(arrayMove(displayedProjects, oldIndex, newIndex));
   }
 
-  function handleProjectDragCancel() { setActiveDragProjectId(null); }
+  function handleProjectDragCancel() {
+    setActiveDragProjectId(null);
+  }
 
   function openProjectMenu(project: Project, element: HTMLElement) {
     const rect = element.getBoundingClientRect();
@@ -448,21 +499,34 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
   async function handleSaveProject() {
     if (!editingProject || isSavingProject) return;
     const cleanName = editName.trim();
-    if (!cleanName) { showToast("Project name required"); return; }
+    if (!cleanName) {
+      showToast("Project name required");
+      return;
+    }
     setIsSavingProject(true);
     try {
       const res = await fetch(`/api/projects/${editingProject.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: cleanName, description: editDescription.trim() || null }),
+        body: JSON.stringify({
+          name: cleanName,
+          description: editDescription.trim() || null,
+        }),
       });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-      if (!res.ok) { showToast("Couldn't save project"); return; }
+      if (!res.ok) {
+        showToast("Couldn't save project");
+        return;
+      }
       setProjects((current) =>
         current.map((project) =>
           project.id === editingProject.id
-            ? data || { ...project, name: cleanName, description: editDescription.trim() || null }
+            ? data || {
+                ...project,
+                name: cleanName,
+                description: editDescription.trim() || null,
+              }
             : project,
         ),
       );
@@ -477,14 +541,28 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
 
   async function handleDeleteProject(project: Project) {
     if (deletingProjectId) return;
-    const confirmed = window.confirm(`Are you sure you want to delete "${project.name}"? This cannot be undone.`);
-    if (!confirmed) { showToast("Delete cancelled"); return; }
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
+    );
+    if (!confirmed) {
+      showToast("Delete cancelled");
+      return;
+    }
     setDeletingProjectId(project.id);
     try {
-      const res = await fetch(`/api/projects/${project.id}`, { method: "DELETE" });
-      if (!res.ok) { showToast("Couldn't delete project"); return; }
-      setProjects((current) => current.filter((currentProject) => currentProject.id !== project.id));
-      setProjectOrder((current) => current.filter((projectId) => projectId !== project.id));
+      const res = await fetch(`/api/projects/${project.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        showToast("Couldn't delete project");
+        return;
+      }
+      setProjects((current) =>
+        current.filter((currentProject) => currentProject.id !== project.id),
+      );
+      setProjectOrder((current) =>
+        current.filter((projectId) => projectId !== project.id),
+      );
       if (pathname === `/projects/${project.id}`) router.push("/music");
       showToast("Project deleted");
     } catch {
@@ -494,15 +572,16 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
     }
   }
 
-  const alphabeticalAction = !sidebarCollapsed && reorderMode ? (
-    <button
-      type="button"
-      onClick={restoreAlphabeticalOrder}
-      className="h-6 cursor-pointer rounded-md px-2 text-[10px] font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-    >
-      Alphabetical
-    </button>
-  ) : null;
+  const alphabeticalAction =
+    !sidebarCollapsed && reorderMode ? (
+      <button
+        type="button"
+        onClick={restoreAlphabeticalOrder}
+        className="h-6 cursor-pointer rounded-md px-2 text-[10px] font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+      >
+        Alphabetical
+      </button>
+    ) : null;
 
   return (
     <>
@@ -515,12 +594,20 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
         <SidebarCollapseControl
           collapsed={sidebarCollapsed}
           icon={<CollapseIcon collapsed={sidebarCollapsed} />}
-          onToggle={() => { setCollapsed((value) => !value); setTooltip(null); setProjectMenu(null); }}
+          onToggle={() => {
+            setCollapsed((value) => !value);
+            setTooltip(null);
+            setProjectMenu(null);
+          }}
         />
 
         <SidebarInner>
           <SidebarSection>
-            <SidebarSectionHeading label="Library" collapsed={sidebarCollapsed} icon={<LibraryIcon />} />
+            <SidebarSectionHeading
+              label="Library"
+              collapsed={sidebarCollapsed}
+              icon={<LibraryIcon />}
+            />
             <SidebarNav label="Library navigation">
               {mainLinks.map((link) => (
                 <SidebarLinkRow
@@ -537,7 +624,11 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
           </SidebarSection>
 
           <SidebarSection>
-            <SidebarSectionHeading label="AI Tools" collapsed={sidebarCollapsed} icon={<AiIcon />} />
+            <SidebarSectionHeading
+              label="AI Tools"
+              collapsed={sidebarCollapsed}
+              icon={<AiIcon />}
+            />
             <SidebarNav label="AI tools navigation">
               {aiLinks.map((link) => (
                 <SidebarLinkRow
@@ -561,7 +652,10 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
               actionIcon={reorderMode ? <CheckIcon /> : <PlusIcon />}
               beforeAction={alphabeticalAction}
               onActionClick={() => {
-                if (reorderMode) { finishReorderMode(); return; }
+                if (reorderMode) {
+                  finishReorderMode();
+                  return;
+                }
                 setProjectMenu(null);
                 setIsCreateProjectOpen(true);
               }}
@@ -576,10 +670,17 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
                 onDragEnd={handleProjectDragEnd}
                 onDragCancel={handleProjectDragCancel}
               >
-                <SortableContext items={displayedProjects.map((project) => project.id)} strategy={verticalListSortingStrategy}>
+                <SortableContext
+                  items={displayedProjects.map((project) => project.id)}
+                  strategy={verticalListSortingStrategy}
+                >
                   <SidebarNav label="Projects navigation">
                     {displayedProjects.map((project) => (
-                      <SortableProjectLink key={project.id} project={project} dragActive={activeDragProjectId !== null} />
+                      <SortableProjectLink
+                        key={project.id}
+                        project={project}
+                        dragActive={activeDragProjectId !== null}
+                      />
                     ))}
                   </SidebarNav>
                 </SortableContext>
@@ -602,7 +703,13 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
         </SidebarInner>
       </SidebarShell>
 
-      <ProjectMenu menu={projectMenu} onClose={() => setProjectMenu(null)} onEdit={openEditProject} onStartReorder={startReorderMode} onDelete={handleDeleteProject} />
+      <ProjectMenu
+        menu={projectMenu}
+        onClose={() => setProjectMenu(null)}
+        onEdit={openEditProject}
+        onStartReorder={startReorderMode}
+        onDelete={handleDeleteProject}
+      />
 
       <CreateProjectModal
         isOpen={isCreateProjectOpen}
@@ -610,18 +717,26 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
         onProjectCreated={(project) => {
           setProjects((current) => {
             const nextProjects = [...current, project];
-            return sidebarProjectSortMode === "custom" ? sortProjectsByPosition(nextProjects) : sortProjectsByName(nextProjects);
+            return sidebarProjectSortMode === "custom"
+              ? sortProjectsByPosition(nextProjects)
+              : sortProjectsByName(nextProjects);
           });
           setProjectOrder((current) => {
-            if (sidebarProjectSortMode === "custom") return [...current, project.id];
-            return sortProjectsByName([...projects, project]).map((item) => item.id);
+            if (sidebarProjectSortMode === "custom")
+              return [...current, project.id];
+            return sortProjectsByName([...projects, project]).map(
+              (item) => item.id,
+            );
           });
           setIsCreateProjectOpen(false);
           showToast("Project created");
         }}
       />
 
-      <Toast message={toastMessage} bottomOffset={playerVisible ? "88px" : "24px"} />
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
 
       <EditProjectModal
         isOpen={!!editingProject}
@@ -632,7 +747,11 @@ export default function Sidebar({ initialCollapsed = false }: { initialCollapsed
         onNameChange={setEditName}
         onDescriptionChange={setEditDescription}
         onSave={handleSaveProject}
-        onDelete={() => { if (!editingProject) return; handleDeleteProject(editingProject); setEditingProject(null); }}
+        onDelete={() => {
+          if (!editingProject) return;
+          handleDeleteProject(editingProject);
+          setEditingProject(null);
+        }}
         onClose={() => setEditingProject(null)}
       />
     </>
