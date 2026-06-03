@@ -32,7 +32,7 @@
 .playlist-icon-btn.is-active,
 .playlist-icon-btn[aria-pressed="true"] {
   border-color: transparent !important;
-  background: var(--bg-hover) !important;
+  background: var(--filmwave-square-icon-hover-bg) !important;
   color: var(--text-primary) !important;
 }
 
@@ -64,7 +64,7 @@
 .filmwave-icon-button.filmwave-icon-button-flat:hover,
 .filmwave-icon-button.filmwave-icon-button-flat.is-open,
 .filmwave-icon-button.filmwave-icon-button-flat[aria-pressed="true"] {
-  background: var(--bg-hover) !important;
+  background: var(--filmwave-square-icon-hover-bg) !important;
 }
 
 .filmwave-icon-button-group,
