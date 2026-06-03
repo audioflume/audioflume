@@ -8,7 +8,7 @@ import {
   type MusicPlayerShellLayout,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import EditPointsIcon from "../../icons/EditPointsIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import MoreIcon from "../../icons/MoreIcon";
@@ -82,6 +82,15 @@ function CueNextIcon() {
   );
 }
 
+function CloseIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function DesktopMusicPlayer({
   song,
   isPlaying,
@@ -99,6 +108,7 @@ export default function DesktopMusicPlayer({
   onFavoriteToggle,
   onProgressChange,
   onSync,
+  onClosePlayer,
 }: {
   song: DesktopMusicSong;
   isPlaying: boolean;
@@ -116,13 +126,18 @@ export default function DesktopMusicPlayer({
   onFavoriteToggle: () => void;
   onProgressChange?: (progress: DesktopMusicPlayerProgress) => void;
   onSync: () => void;
+  onClosePlayer?: () => void;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const handledSeekRequestIdRef = useRef<number | null>(null);
   const pendingSeekRequestRef = useRef<DesktopMusicPlayerSeekRequest | null>(null);
   const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
+  const moreButtonRef = useRef<HTMLButtonElement | null>(null);
+  const moreMenuRef = useRef<HTMLDivElement | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(song.durationSeconds || 0);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [moreMenuPosition, setMoreMenuPosition] = useState({ top: 0, left: 0 });
 
   const audioSource = useMemo(() => getAudioSource(song), [song]);
   const normalizedSelectedCuePointTypes = useMemo(
@@ -169,6 +184,24 @@ export default function DesktopMusicPlayer({
             ? "Sync song"
             : "Choose a sync folder to sync songs";
 
+  const updateMoreMenuPosition = useCallback(() => {
+    const trigger = moreButtonRef.current;
+    const menu = moreMenuRef.current;
+    if (!trigger || !menu) return;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const menuRect = menu.getBoundingClientRect();
+    const viewportPadding = 16;
+    const playerGap = 6;
+    const left = Math.max(
+      viewportPadding,
+      Math.min(triggerRect.right - menuRect.width, window.innerWidth - menuRect.width - viewportPadding),
+    );
+    const top = Math.max(viewportPadding, triggerRect.top - menuRect.height - playerGap);
+
+    setMoreMenuPosition({ top, left });
+  }, []);
+
   useEffect(() => {
     const pendingSeekRequest = pendingSeekRequestRef.current;
     const nextDuration = song.durationSeconds || 0;
@@ -194,6 +227,10 @@ export default function DesktopMusicPlayer({
   }, [seekRequest, song.id, song.durationSeconds]);
 
   useEffect(() => {
+    setMoreOpen(false);
+  }, [song.id]);
+
+  useEffect(() => {
     onProgressChange?.({
       songId: song.id,
       currentTime: displayCurrentTime,
@@ -217,6 +254,49 @@ export default function DesktopMusicPlayer({
       audio.pause();
     }
   }, [audioSource, isPlaying]);
+
+  useLayoutEffect(() => {
+    if (!moreOpen) return;
+
+    updateMoreMenuPosition();
+    const frame = window.requestAnimationFrame(updateMoreMenuPosition);
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [moreOpen, updateMoreMenuPosition]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+
+    const handlePositionUpdate = () => updateMoreMenuPosition();
+    window.addEventListener("resize", handlePositionUpdate);
+    window.addEventListener("scroll", handlePositionUpdate, true);
+
+    return () => {
+      window.removeEventListener("resize", handlePositionUpdate);
+      window.removeEventListener("scroll", handlePositionUpdate, true);
+    };
+  }, [moreOpen, updateMoreMenuPosition]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (moreButtonRef.current?.contains(target) || moreMenuRef.current?.contains(target)) return;
+      setMoreOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMoreOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [moreOpen]);
 
   function seek(progress: number) {
     const audio = audioRef.current;
@@ -312,6 +392,11 @@ export default function DesktopMusicPlayer({
   function jumpToCuePoint(marker: CuePointMarker | null) {
     if (!marker || !displayDuration) return;
     seek(Math.max(0, Math.min(1, marker.time / displayDuration)));
+  }
+
+  function handleClosePlayer() {
+    setMoreOpen(false);
+    onClosePlayer?.();
   }
 
   function renderCueMarkerOverlay() {
@@ -442,9 +527,15 @@ export default function DesktopMusicPlayer({
             </button>
 
             <button
+              ref={moreButtonRef}
               type="button"
               aria-label="Song options"
-              className="filmwave-icon-button filmwave-icon-button-plain"
+              aria-expanded={moreOpen}
+              className={`filmwave-icon-button filmwave-icon-button-plain${moreOpen ? " is-open" : ""}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                setMoreOpen((open) => !open);
+              }}
             >
               <MoreIcon size={14} />
             </button>
@@ -474,6 +565,42 @@ export default function DesktopMusicPlayer({
           </>
         }
       />
+
+      {moreOpen && (
+        <div
+          ref={moreMenuRef}
+          className="music-player-more-menu desktop-music-player-more-menu"
+          style={{
+            position: "fixed",
+            top: `${moreMenuPosition.top}px`,
+            left: `${moreMenuPosition.left}px`,
+          }}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <button type="button" onClick={() => setMoreOpen(false)}>
+            <span>Add to Playlist</span>
+          </button>
+          <button type="button" onClick={() => setMoreOpen(false)}>
+            <span>Add to Project</span>
+          </button>
+          <button type="button" onClick={() => setMoreOpen(false)}>
+            <span>Create New Playlist</span>
+          </button>
+          {song.audioUrl ? (
+            <a href={song.audioUrl} download>
+              <span>Download Song</span>
+            </a>
+          ) : (
+            <button type="button" disabled>
+              <span>Download Song</span>
+            </button>
+          )}
+          <button type="button" onClick={handleClosePlayer} className="music-player-more-menu-close danger-hover">
+            <span>Close Player</span>
+            <CloseIcon />
+          </button>
+        </div>
+      )}
     </>
   );
 }
