@@ -34,6 +34,18 @@
   opacity: 0;
 }
 
+/* In collapsed mode, constrain each link to a square so the
+   2px nav gap is visible between buttons */
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-nav {
+  align-items: center;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
+  width: 36px;
+  padding: 0;
+  justify-content: center;
+}
+
 .desktop-app-shell.is-sidebar-collapsed
   .desktop-sidebar-heading.has-collapsed-icon {
   justify-content: center;
