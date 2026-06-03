@@ -111,7 +111,7 @@
 .project-tabs-row-actions .project-view-toggle-button:hover,
 .project-tabs-row-actions > button[aria-label^="Edit"]:hover {
   border-color: var(--border-hover) !important;
-  background: var(--icon-button-hover) !important;
+  background: var(--bg-hover-strong) !important;
   color: var(--text-primary) !important;
 }
 
