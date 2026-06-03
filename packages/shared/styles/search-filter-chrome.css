@@ -41,6 +41,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   cursor: text;
   align-items: center;
   gap: 12px;
+  border-bottom: 1px solid var(--border);
 }
 
 .filmwave-search-filter-search-shell {
@@ -162,7 +163,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   margin: 0 -28px;
   overflow-x: auto;
   overflow-y: hidden;
-  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 0 28px;
   white-space: nowrap;
