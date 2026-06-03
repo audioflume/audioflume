@@ -27,7 +27,7 @@
 .filmwave-music-shuffle-button:hover,
 .filmwave-music-shuffle-button.is-active,
 .filmwave-music-shuffle-button[aria-pressed="true"] {
-  background: var(--bg-hover);
+  background: var(--filmwave-square-icon-hover-bg);
   color: var(--text-primary);
 }
 
