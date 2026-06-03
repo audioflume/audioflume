@@ -6,12 +6,26 @@ import {
   useLayoutEffect,
   useRef,
 } from "react";
-import {
-  FloatingPortal,
-  Padding,
-  Placement,
-  Strategy,
-} from "@floating-ui/react";
+import { createPortal } from "react-dom";
+
+type Padding =
+  | number
+  | {
+      top?: number;
+      right?: number;
+      bottom?: number;
+      left?: number;
+    };
+
+type Placement =
+  | "top"
+  | "top-start"
+  | "top-end"
+  | "bottom"
+  | "bottom-start"
+  | "bottom-end";
+
+type Strategy = "fixed" | "absolute";
 
 type DropdownShellProps = {
   open: boolean;
@@ -418,7 +432,7 @@ export default function DropdownShell({
       </div>
 
       {open &&
-        (usePortal ? <FloatingPortal>{dropdown}</FloatingPortal> : dropdown)}
+        (usePortal ? createPortal(dropdown, document.body) : dropdown)}
     </>
   );
 }
