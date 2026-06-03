@@ -113,6 +113,15 @@
   flex-direction: column;
   border-bottom: 0;
   padding-bottom: 0;
+  gap: 0;
+}
+
+/* In collapsed mode the projects section uses flex gap instead of
+   margin-bottom on the header — this way the total height of the
+   header row is unchanged and folder buttons don't shift. */
+.desktop-app-shell.is-sidebar-collapsed
+  .desktop-sidebar-section.is-projects-section {
+  gap: var(--filmwave-sidebar-nav-gap);
 }
 
 .desktop-sidebar-heading {
@@ -248,6 +257,16 @@
   padding: 0 var(--filmwave-sidebar-row-padding-x);
 }
 
+/* Collapsed: height grows to 32px (+8px) so reduce margin by same
+   amount to keep total height+margin = 32px. The 2px gap between
+   the + button and folder links comes from the parent flex gap above. */
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
+  height: var(--filmwave-sidebar-row-height);
+  justify-content: center;
+  margin-bottom: 0;
+  padding: 0;
+}
+
 .desktop-sidebar-projects-label {
   color: var(--text-muted);
   font-size: 11px;
@@ -284,15 +303,6 @@
 .desktop-sidebar-add-button:hover {
   background: var(--bg-hover-strong);
   color: var(--text-primary);
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
-  height: var(--filmwave-sidebar-row-height);
-  justify-content: center;
-  /* height grows from 24px to 32px (+8px), so reduce margin by same
-     amount and add nav-gap, keeping total height+margin identical */
-  margin-bottom: var(--filmwave-sidebar-nav-gap);
-  padding: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
