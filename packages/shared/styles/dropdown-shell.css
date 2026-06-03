@@ -1,8 +1,7 @@
 .filmwave-dropdown-shell,
 .project-more-dropdown.project-more-dropdown {
   display: grid;
-  width: max-content;
-  min-width: 180px;
+  width: 200px;
   overflow: hidden;
   border: 0;
   border-radius: 4px;
