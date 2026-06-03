@@ -6,7 +6,7 @@
 .project-detail-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
 .project-detail-dot { color: var(--text-muted); }
 .project-detail-description { margin-top: 16px; max-width: 520px; font-size: 12px; line-height: 1.65; color: var(--text-secondary); }
-.project-tabs-row { position: sticky; top: 56px; z-index: 109; display: flex; min-height: 49px; flex-wrap: wrap; align-items: stretch; gap: 8px; row-gap: 8px; margin-left: -32px; margin-right: -32px; border-bottom: 1px solid var(--border); background: var(--bg-primary); padding: 0 32px; }
+.project-tabs-row { position: sticky; top: 56px; z-index: 109; display: flex; height: 48px; min-height: 48px; align-items: center; gap: 8px; margin-left: -32px; margin-right: -32px; border-bottom: 1px solid var(--border); background: var(--bg-primary); padding: 0 32px; overflow-x: auto; overflow-y: visible; }
 .project-tab-skeleton { width: 86px; height: 28px; border-radius: 6px; }
 .project-sort-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -32px; margin-right: -32px; background: var(--bg-primary); padding: 16px 32px; }
 .project-tab-panel { margin-left: -32px; margin-right: -32px; }
