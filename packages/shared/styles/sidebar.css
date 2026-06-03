@@ -329,15 +329,15 @@
 .desktop-sidebar-tooltip {
   position: fixed;
   z-index: 1000;
-  left: calc(var(--filmwave-sidebar-collapsed-width) + 8px);
+  left: calc(var(--filmwave-sidebar-collapsed-width) + 4px);
   pointer-events: none;
   transform: translateY(-50%);
 }
 
 .desktop-sidebar-tooltip-border {
   border-radius: 8px;
-  background: var(--bg-primary);
-  padding: 1px;
+  background: transparent;
+  padding: 0;
 }
 
 .desktop-sidebar-tooltip-inner {
