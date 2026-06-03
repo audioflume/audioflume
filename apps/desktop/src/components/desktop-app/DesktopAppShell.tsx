@@ -20,7 +20,6 @@ import PlaylistIcon from "../icons/PlaylistIcon";
 import WaveformIcon from "../icons/WaveformIcon";
 import DesktopMusicLibraryView from "./music-library/DesktopMusicLibraryView";
 import "./DesktopAppShell.css";
-import "./DesktopAppShellResponsive.css";
 import "./DesktopScrollLock.css";
 import "../../../../../packages/shared/styles/sidebar.css";
 
