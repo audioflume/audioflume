@@ -149,6 +149,28 @@ html[data-theme="light"]
   font-size: 12px;
 }
 
+.filmwave-song-key-bpm,
+.desktop-song-key-bpm {
+  display: flex;
+  min-width: calc(46px + var(--filmwave-song-card-gap) + 62px);
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--filmwave-song-card-gap);
+}
+
+.filmwave-song-key,
+.desktop-song-key {
+  min-width: 46px;
+  text-align: right;
+}
+
+.filmwave-song-bpm,
+.desktop-song-bpm {
+  min-width: 62px;
+  text-align: right;
+}
+
 .filmwave-song-genre,
 .desktop-song-genre,
 .desktop-song-genre-slot span {
