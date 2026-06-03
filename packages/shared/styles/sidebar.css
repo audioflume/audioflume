@@ -121,9 +121,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* Same bottom gap as nav items so spacing is consistent
-     in both expanded and collapsed states */
-  margin-bottom: calc(8px + var(--filmwave-sidebar-nav-gap));
+  margin-bottom: 8px;
 }
 
 .desktop-sidebar-heading-inner {
@@ -246,9 +244,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  /* Same bottom gap as nav items so spacing is consistent
-     in both expanded and collapsed states — nothing shifts */
-  margin-bottom: calc(8px + var(--filmwave-sidebar-nav-gap));
+  margin-bottom: 8px;
   padding: 0 var(--filmwave-sidebar-row-padding-x);
 }
 
@@ -293,8 +289,9 @@
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
   height: var(--filmwave-sidebar-row-height);
   justify-content: center;
-  /* Keep the same margin-bottom as expanded — nothing shifts on collapse */
-  margin-bottom: calc(8px + var(--filmwave-sidebar-nav-gap));
+  /* height grows from 24px to 32px (+8px), so reduce margin by same
+     amount and add nav-gap, keeping total height+margin identical */
+  margin-bottom: var(--filmwave-sidebar-nav-gap);
   padding: 0;
 }
 
