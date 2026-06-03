@@ -37,7 +37,9 @@ type DesktopAppShellProps = {
   activeView: DesktopAppView;
   header: ReactNode;
   children: ReactNode;
+  musicApiBaseUrl?: string | null;
   projects: Project[];
+  syncFolder?: string | null;
   onActiveProjectIdChange: (projectId: string | null) => void;
   onActiveViewChange: (view: DesktopAppView) => void;
 };
@@ -78,7 +80,9 @@ export default function DesktopAppShell({
   activeView,
   header,
   children,
+  musicApiBaseUrl,
   projects,
+  syncFolder,
   onActiveProjectIdChange,
   onActiveViewChange,
 }: DesktopAppShellProps) {
@@ -140,7 +144,7 @@ export default function DesktopAppShell({
           activeView === "music" ? " is-active" : " is-background"
         }`}
       >
-        <DesktopMusicLibraryView />
+        <DesktopMusicLibraryView apiBaseUrl={musicApiBaseUrl} syncFolder={syncFolder} />
       </div>
     </>
   );
