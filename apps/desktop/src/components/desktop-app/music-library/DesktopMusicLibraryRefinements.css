@@ -3,7 +3,8 @@
   height: 48px !important;
   min-height: 48px !important;
   max-height: 48px !important;
-  align-items: center !important;
+  /* stretch so filter triggers fill full height for the bottom-border indicator */
+  align-items: stretch !important;
   box-sizing: border-box;
 }
 
@@ -32,14 +33,15 @@
   padding: 0;
 }
 
+/* Remove height/align override — shared .filmwave-filter-trigger handles this */
 .desktop-music-page .desktop-filter-trigger {
-  height: 48px !important;
-  align-items: center !important;
+  height: 48px;
 }
 
 .desktop-music-page .desktop-music-filter-tags {
   justify-content: flex-end;
   padding-left: 12px;
+  align-self: center;
 }
 
 .desktop-music-page .desktop-tag-chip {
