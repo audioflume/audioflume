@@ -17,6 +17,7 @@ import "./globals.css";
 import "./admin-polish.css";
 import "./icon-button-overrides.css";
 import "./player-action-overrides.css";
+import "./playlist-grid-overrides.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
