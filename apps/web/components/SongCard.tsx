@@ -188,7 +188,7 @@ export default function SongCard({
   ) : (
     <PlayIconSmall size={15} />
   );
-  const showWaveform = cardWidth > 500;
+  const showWaveform = true;
   const visibleGenres = song.genres.slice(0, 3);
   const showGenreSlot = cardWidth > 1080;
   const showKeyMeta = cardWidth > 700;
