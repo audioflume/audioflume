@@ -109,24 +109,7 @@
   background: var(--bg-primary);
 }
 
-/* Match height and stretch to music filter row so ::after indicator sits flush */
-.project-tabs-row {
-  height: 48px;
-  min-height: 48px;
-  display: flex;
-  align-items: stretch;
-  gap: 8px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  border-bottom: 1px solid var(--divider);
-  background: var(--bg-primary);
-  padding: 0 32px;
-  scrollbar-width: none;
-}
-
-.project-tabs-row::-webkit-scrollbar {
-  display: none;
-}
+/* .project-tabs-row is defined in DesktopProjectsViewOverrides.css */
 
 .project-toolbar-button,
 .project-toolbar-icon-button {
@@ -265,14 +248,6 @@
   top: calc(100% + 8px);
   right: 0;
   z-index: 80;
-  width: 190px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--divider);
-  border-radius: 14px;
-  background: var(--bg-panel);
-  padding: 8px;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
 }
 
 .project-more-menu-button {
