@@ -1,0 +1,15 @@
+:where(:root) {
+  --filmwave-project-toolbar-hover-bg: var(--bg-hover-strong);
+}
+
+.project-detail-page .project-toolbar-actions .project-toolbar-button:hover,
+.project-detail-page .project-toolbar-actions .project-toolbar-button.is-active,
+.project-detail-page .project-toolbar-actions .project-toolbar-icon-button:hover,
+.project-detail-page .project-toolbar-actions .project-toolbar-icon-button.is-active,
+.project-detail-page .project-tabs-row-actions .project-new-folder-button:hover,
+.project-detail-page .project-tabs-row-actions .project-view-toggle-button:hover,
+.project-detail-page .project-tabs-row-actions > button[aria-label^="Edit"]:hover,
+.project-detail-page .project-tabs-row-actions > button[aria-label^="Edit"].is-active {
+  background: var(--filmwave-project-toolbar-hover-bg) !important;
+  color: var(--text-primary) !important;
+}
