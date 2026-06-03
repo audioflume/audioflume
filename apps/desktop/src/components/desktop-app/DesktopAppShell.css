@@ -7,12 +7,14 @@
 .desktop-app-main {
   min-height: 100vh;
   padding: 88px 24px 34px calc(var(--sidebar-width-expanded, 280px) + 24px);
+  transition: padding-left 200ms ease;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-app-main {
   padding-left: calc(var(--sidebar-width-collapsed, 76px) + 24px);
 }
 
+/* Projects detail is full-bleed — no side padding */
 .desktop-app-main:has(.desktop-projects-page.is-detail) {
   padding: 56px 0 0 var(--sidebar-width-expanded, 280px);
 }

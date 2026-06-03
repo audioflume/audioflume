@@ -3,8 +3,7 @@
     padding-left: calc(var(--sidebar-width-collapsed, 76px) + 22px);
   }
 
-  .desktop-app-main:has(.desktop-projects-page.is-detail),
-  .desktop-app-main:has(.desktop-music-page) {
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
     padding-left: var(--sidebar-width-collapsed, 76px);
   }
 }
@@ -14,8 +13,7 @@
     padding: 88px 24px 34px calc(var(--sidebar-width-collapsed, 76px) + 22px);
   }
 
-  .desktop-app-main:has(.desktop-projects-page.is-detail),
-  .desktop-app-main:has(.desktop-music-page) {
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
     padding: 56px 0 0 var(--sidebar-width-collapsed, 76px);
   }
 
