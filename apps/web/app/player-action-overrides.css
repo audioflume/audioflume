@@ -1,0 +1,50 @@
+/* Scope SongActionButton player usage to the same compact button styling as the desktop player. */
+
+.filmwave-player-actions .filmwave-song-action-button {
+  display: inline-flex !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  cursor: pointer !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid transparent !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--icon-color) !important;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease !important;
+}
+
+.filmwave-player-actions .filmwave-song-action-button:hover,
+.filmwave-player-actions .filmwave-song-action-button.is-open,
+.filmwave-player-actions .filmwave-song-action-button.is-active,
+.filmwave-player-actions .filmwave-song-action-button[aria-pressed="true"] {
+  border-color: transparent !important;
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.filmwave-player-actions .filmwave-song-action-button[aria-label="Remove song from favorites"],
+.filmwave-player-actions .filmwave-song-action-button[aria-label="Remove song from favorites"] svg,
+.filmwave-player-actions .filmwave-song-action-button[aria-pressed="true"] svg {
+  color: var(--text-primary) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+.filmwave-player-actions .filmwave-song-action-button svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.filmwave-player-actions .filmwave-song-action-button.is-plain-active-icon {
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+.filmwave-player-actions .filmwave-song-action-button.is-plain-active-icon:hover {
+  background: var(--bg-hover) !important;
+}
