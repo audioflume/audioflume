@@ -52,8 +52,8 @@ export default function UserMenu({
       }
     }
 
-    if (open) window.addEventListener("pointerdown", handlePointerDown);
-    return () => window.removeEventListener("pointerdown", handlePointerDown);
+    if (open) document.addEventListener("pointerdown", handlePointerDown, true);
+    return () => document.removeEventListener("pointerdown", handlePointerDown, true);
   }, [open]);
 
   return (
