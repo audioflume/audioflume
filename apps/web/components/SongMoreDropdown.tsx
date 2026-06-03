@@ -93,10 +93,6 @@ export default function SongMoreDropdown({
         </button>
 
         <button type="button" disabled>
-          Share Song
-        </button>
-
-        <button type="button" disabled>
           Download Song
         </button>
 
