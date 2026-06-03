@@ -32,13 +32,7 @@ import {
   getSongCuePointMarkers,
 } from "@/lib/editPointUtils";
 import Image from "next/image";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const BAR_WIDTH = 2;
 const BAR_GAP = 1;
@@ -128,22 +122,62 @@ const PauseIcon = () => (
 );
 
 const CuePreviousIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M15 6L9 12L15 18"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 const CueNextIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M9 6L15 12L9 18"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 function CloseIcon() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M6 6L18 18"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M18 6L6 18"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -161,7 +195,8 @@ export default function MusicPlayer() {
   const { currentTime, duration } = usePlayerProgress();
 
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
+  const { showEditPointMarkers, setShowEditPointMarkers } =
+    useUserPreferences();
 
   const playerRef = useRef<HTMLDivElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
@@ -181,7 +216,9 @@ export default function MusicPlayer() {
   const [addToProjectOpen, setAddToProjectOpen] = useState(false);
   const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
-  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<string | null>(null);
+  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<
+    string | null
+  >(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const [selectedCuePointTypes, setSelectedCuePointTypes] = useState<string[]>(
     () => getStoredCuePointFilterSelection(),
@@ -190,7 +227,8 @@ export default function MusicPlayer() {
   const effectiveShowEditPointMarkers = showEditPointMarkers;
   const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
   const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
-  const showCompactTime = !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
+  const showCompactTime =
+    !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
   const showKey = playerWidth >= KEY_MIN_WIDTH;
   const showBpm = playerWidth >= BPM_MIN_WIDTH;
   const showRightMeta = showKey || showBpm;
@@ -211,7 +249,12 @@ export default function MusicPlayer() {
     return cuePoints.filter((marker) =>
       selectedCuePointTypeSet.has(getMarkerType(marker)),
     );
-  }, [cuePoints, effectiveShowEditPointMarkers, hasSelectedCuePointTypes, selectedCuePointTypeSet]);
+  }, [
+    cuePoints,
+    effectiveShowEditPointMarkers,
+    hasSelectedCuePointTypes,
+    selectedCuePointTypeSet,
+  ]);
 
   const previousCuePoint = useMemo(
     () => getAdjacentCuePoint(visibleCuePoints, currentTime, "previous"),
@@ -233,7 +276,11 @@ export default function MusicPlayer() {
   const metaGap = 24 + compressionProgress * 30;
   const progressToMetaGap = 22 + compressionProgress * 24;
   const metaToActionsGap = 18 + compressionProgress * 18;
-  const songInfoWidth = clampNumber(150 + ((playerWidth - 620) / 580) * 50, 150, 200);
+  const songInfoWidth = clampNumber(
+    150 + ((playerWidth - 620) / 580) * 50,
+    150,
+    200,
+  );
   const waveformMaxWidth = 390 + compressionProgress * 260;
   const progressGroupMaxWidth = waveformMaxWidth + 112;
 
@@ -265,14 +312,19 @@ export default function MusicPlayer() {
     });
   }, []);
 
-  const schedulePlayerCanvasDraw = useCallback((forceResize = false) => {
-    if (playerCanvasAnimationFrameRef.current != null) return;
+  const schedulePlayerCanvasDraw = useCallback(
+    (forceResize = false) => {
+      if (playerCanvasAnimationFrameRef.current != null) return;
 
-    playerCanvasAnimationFrameRef.current = window.requestAnimationFrame(() => {
-      playerCanvasAnimationFrameRef.current = null;
-      drawPlayerCanvas(forceResize);
-    });
-  }, [drawPlayerCanvas]);
+      playerCanvasAnimationFrameRef.current = window.requestAnimationFrame(
+        () => {
+          playerCanvasAnimationFrameRef.current = null;
+          drawPlayerCanvas(forceResize);
+        },
+      );
+    },
+    [drawPlayerCanvas],
+  );
 
   useEffect(() => {
     waveformBarsRef.current = waveformBars;
@@ -313,14 +365,22 @@ export default function MusicPlayer() {
       const customEvent = event as CustomEvent<{ selectedTypes?: string[] }>;
       const selectedTypes = customEvent?.detail?.selectedTypes;
       setSelectedCuePointTypes(
-        Array.isArray(selectedTypes) ? selectedTypes : getStoredCuePointFilterSelection(),
+        Array.isArray(selectedTypes)
+          ? selectedTypes
+          : getStoredCuePointFilterSelection(),
       );
     };
     syncCuePointFilterSelection();
-    window.addEventListener(CUE_POINT_FILTER_SELECTION_EVENT, syncCuePointFilterSelection);
+    window.addEventListener(
+      CUE_POINT_FILTER_SELECTION_EVENT,
+      syncCuePointFilterSelection,
+    );
     window.addEventListener("storage", syncCuePointFilterSelection);
     return () => {
-      window.removeEventListener(CUE_POINT_FILTER_SELECTION_EVENT, syncCuePointFilterSelection);
+      window.removeEventListener(
+        CUE_POINT_FILTER_SELECTION_EVENT,
+        syncCuePointFilterSelection,
+      );
       window.removeEventListener("storage", syncCuePointFilterSelection);
     };
   }, []);
@@ -379,7 +439,10 @@ export default function MusicPlayer() {
   const handleWaveformClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     if (!rect.width) return;
-    const nextProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const nextProgress = Math.max(
+      0,
+      Math.min(1, (e.clientX - rect.left) / rect.width),
+    );
 
     waveformProgressRef.current = nextProgress;
     seekTo(currentSong, nextProgress, isPlaying);
@@ -388,7 +451,10 @@ export default function MusicPlayer() {
 
   const jumpToCuePoint = (marker: CuePointMarker | null) => {
     if (!marker || !currentSong.duration) return;
-    const nextProgress = Math.max(0, Math.min(1, marker.time / currentSong.duration));
+    const nextProgress = Math.max(
+      0,
+      Math.min(1, marker.time / currentSong.duration),
+    );
     waveformProgressRef.current = nextProgress;
     seekTo(currentSong, nextProgress, isPlaying);
     schedulePlayerCanvasDraw();
@@ -401,9 +467,15 @@ export default function MusicPlayer() {
       const res = await fetch("/api/playlists", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newPlaylistName, cover_image_url: newPlaylistCoverPreview }),
+        body: JSON.stringify({
+          name: newPlaylistName,
+          cover_image_url: newPlaylistCoverPreview,
+        }),
       });
-      if (!res.ok) { console.error("Failed to create playlist"); return; }
+      if (!res.ok) {
+        console.error("Failed to create playlist");
+        return;
+      }
       setNewPlaylistName("");
       setNewPlaylistCoverPreview(null);
       setCreatePlaylistOpen(false);
@@ -432,7 +504,13 @@ export default function MusicPlayer() {
         <div className="filmwave-player-song">
           {currentSong.coverArt ? (
             <div className="filmwave-player-cover">
-              <Image src={currentSong.coverArt} alt={currentSong.title} fill sizes="40px" className="object-cover" />
+              <Image
+                src={currentSong.coverArt}
+                alt={currentSong.title}
+                fill
+                sizes="40px"
+                className="object-cover"
+              />
             </div>
           ) : (
             <div className="filmwave-player-cover" />
@@ -442,7 +520,11 @@ export default function MusicPlayer() {
               {currentSong.title}
             </div>
             <div
-              title={remotePlayingInAnotherTab ? "Playing in another tab" : currentSong.artist}
+              title={
+                remotePlayingInAnotherTab
+                  ? "Playing in another tab"
+                  : currentSong.artist
+              }
               className="flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--text-subtle)]"
             >
               {remotePlayingInAnotherTab ? (
@@ -451,7 +533,9 @@ export default function MusicPlayer() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--text-muted)] opacity-40" />
                     <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--text-muted)]" />
                   </span>
-                  <span className="truncate text-[var(--text-muted)]">Playing in another tab</span>
+                  <span className="truncate text-[var(--text-muted)]">
+                    Playing in another tab
+                  </span>
                 </>
               ) : (
                 <span className="truncate">{currentSong.artist}</span>
@@ -511,9 +595,15 @@ export default function MusicPlayer() {
                 >
                   {visibleCuePoints.map((marker) => {
                     const markerType = getMarkerType(marker);
-                    const label = marker.label || getEditPointFilterLabel(markerType);
-                    const progressValue = currentSong.duration ? marker.time / currentSong.duration : 0;
-                    const left = Math.max(0, Math.min(100, progressValue * 100));
+                    const label =
+                      marker.label || getEditPointFilterLabel(markerType);
+                    const progressValue = currentSong.duration
+                      ? marker.time / currentSong.duration
+                      : 0;
+                    const left = Math.max(
+                      0,
+                      Math.min(100, progressValue * 100),
+                    );
                     return (
                       <button
                         key={marker.id}
@@ -530,7 +620,9 @@ export default function MusicPlayer() {
                         <span
                           className="absolute left-1/2 top-0 h-full -translate-x-1/2 rounded-full bg-[var(--cue-marker-color)]"
                           style={{
-                            width: hasSelectedCuePointTypes ? "var(--cue-marker-width-active)" : "var(--cue-marker-width)",
+                            width: hasSelectedCuePointTypes
+                              ? "var(--cue-marker-width-active)"
+                              : "var(--cue-marker-width)",
                             opacity: "var(--cue-marker-opacity)",
                           }}
                         />
@@ -556,7 +648,11 @@ export default function MusicPlayer() {
                   <div className="flex flex-shrink-0 items-center gap-1">
                     <button
                       type="button"
-                      title={previousCuePoint ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}` : "Previous cue"}
+                      title={
+                        previousCuePoint
+                          ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}`
+                          : "Previous cue"
+                      }
                       aria-label="Jump to previous cue point"
                       onClick={() => jumpToCuePoint(previousCuePoint)}
                       disabled={!previousCuePoint}
@@ -566,7 +662,11 @@ export default function MusicPlayer() {
                     </button>
                     <button
                       type="button"
-                      title={nextCuePoint ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}` : "Next cue"}
+                      title={
+                        nextCuePoint
+                          ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}`
+                          : "Next cue"
+                      }
                       aria-label="Jump to next cue point"
                       onClick={() => jumpToCuePoint(nextCuePoint)}
                       disabled={!nextCuePoint}
@@ -588,12 +688,17 @@ export default function MusicPlayer() {
         )}
 
         {showRightMeta && (
-          <div
-            className="filmwave-player-meta"
-            style={{ gap: `${metaGap}px` }}
-          >
-            {showKey && <span className="whitespace-nowrap">{currentSong.key || "—"}</span>}
-            {showBpm && <span className="whitespace-nowrap">{currentSong.bpm ? `${currentSong.bpm} BPM` : "—"}</span>}
+          <div className="filmwave-player-meta" style={{ gap: `${metaGap}px` }}>
+            {showKey && (
+              <span className="whitespace-nowrap">
+                {currentSong.key || "—"}
+              </span>
+            )}
+            {showBpm && (
+              <span className="whitespace-nowrap">
+                {currentSong.bpm ? `${currentSong.bpm} BPM` : "—"}
+              </span>
+            )}
           </div>
         )}
 
@@ -610,9 +715,10 @@ export default function MusicPlayer() {
           </IconButton>
 
           <IconButton
-            label={showEditPointMarkers ? "Hide cue markers" : "Show cue markers"}
+            label={
+              showEditPointMarkers ? "Hide cue markers" : "Show cue markers"
+            }
             active={showEditPointMarkers}
-            activeClassName="bg-[var(--text-primary)] text-[var(--bg-primary)]"
             onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
           >
             <EditPointsIcon />
@@ -626,7 +732,7 @@ export default function MusicPlayer() {
             collisionPadding={{
               top: 72,
               right: 16,
-              bottom: 88,
+              bottom: 58,
               left: 16,
             }}
             trigger={({ open }) => (
@@ -640,38 +746,79 @@ export default function MusicPlayer() {
               </button>
             )}
           >
-            <button type="button" onClick={() => { setMoreOpen(false); setAddToPlaylistOpen(true); }}>
+            <button
+              type="button"
+              onClick={() => {
+                setMoreOpen(false);
+                setAddToPlaylistOpen(true);
+              }}
+            >
               <span>Add to Playlist</span>
             </button>
-            <button type="button" onClick={() => { setMoreOpen(false); setAddToProjectOpen(true); }}>
+            <button
+              type="button"
+              onClick={() => {
+                setMoreOpen(false);
+                setAddToProjectOpen(true);
+              }}
+            >
               <span>Add to Project</span>
             </button>
-            <button type="button" onClick={() => { setMoreOpen(false); setCreatePlaylistOpen(true); }}>
+            <button
+              type="button"
+              onClick={() => {
+                setMoreOpen(false);
+                setCreatePlaylistOpen(true);
+              }}
+            >
               <span>Create New Playlist</span>
             </button>
             {currentSong.audioUrl ? (
-              <a href={currentSong.audioUrl} download onClick={() => setMoreOpen(false)}>
+              <a
+                href={currentSong.audioUrl}
+                download
+                onClick={() => setMoreOpen(false)}
+              >
                 <span>Download Song</span>
               </a>
             ) : (
-              <button type="button" disabled><span>Download Song</span></button>
+              <button type="button" disabled>
+                <span>Download Song</span>
+              </button>
             )}
-            <button type="button" onClick={handleClosePlayer} className="danger-hover">
+            <button
+              type="button"
+              onClick={handleClosePlayer}
+              className="danger-hover"
+            >
               <span>Close Player</span>
               <CloseIcon />
             </button>
           </DropdownShell>
 
           {currentSong.audioUrl && (
-            <a href={currentSong.audioUrl} download aria-label="Download song" className={iconButtonClass}>
+            <a
+              href={currentSong.audioUrl}
+              download
+              aria-label="Download song"
+              className={iconButtonClass}
+            >
               <DownloadIcon />
             </a>
           )}
         </div>
       </div>
 
-      <AddToPlaylistModal isOpen={addToPlaylistOpen} song={currentSong} onClose={() => setAddToPlaylistOpen(false)} />
-      <AddToProjectModal isOpen={addToProjectOpen} song={currentSong} onClose={() => setAddToProjectOpen(false)} />
+      <AddToPlaylistModal
+        isOpen={addToPlaylistOpen}
+        song={currentSong}
+        onClose={() => setAddToPlaylistOpen(false)}
+      />
+      <AddToProjectModal
+        isOpen={addToProjectOpen}
+        song={currentSong}
+        onClose={() => setAddToProjectOpen(false)}
+      />
       <CreatePlaylistModal
         isOpen={createPlaylistOpen}
         name={newPlaylistName}

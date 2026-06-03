@@ -57,7 +57,10 @@ function getAdjacentCuePoint(
 
   if (direction === "next") {
     const threshold = currentTime + NEXT_CUE_SKIP_AHEAD_SECONDS;
-    return sortedCuePoints.find((marker) => marker.time > threshold) || sortedCuePoints[0];
+    return (
+      sortedCuePoints.find((marker) => marker.time > threshold) ||
+      sortedCuePoints[0]
+    );
   }
 
   const threshold = currentTime - PREVIOUS_CUE_SKIP_BACK_SECONDS;
@@ -69,25 +72,65 @@ function getAdjacentCuePoint(
 
 function CuePreviousIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M15 6L9 12L15 18"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
 function CueNextIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M9 6L15 12L9 18"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
 function CloseIcon() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M6 6L18 18"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M18 6L6 18"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -131,8 +174,14 @@ export default function DesktopMusicPlayer({
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const handledSeekRequestIdRef = useRef<number | null>(null);
-  const pendingSeekRequestRef = useRef<DesktopMusicPlayerSeekRequest | null>(null);
-  const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
+  const pendingSeekRequestRef = useRef<DesktopMusicPlayerSeekRequest | null>(
+    null,
+  );
+  const songDragStartRef = useRef<{
+    x: number;
+    y: number;
+    started: boolean;
+  } | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(song.durationSeconds || 0);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -156,13 +205,23 @@ export default function DesktopMusicPlayer({
     return cuePoints.filter((marker) =>
       selectedCuePointTypeSet.has(getMarkerType(marker)),
     );
-  }, [cuePoints, hasSelectedCuePointTypes, markersVisible, selectedCuePointTypeSet]);
+  }, [
+    cuePoints,
+    hasSelectedCuePointTypes,
+    markersVisible,
+    selectedCuePointTypeSet,
+  ]);
   const isUnhandledSeekRequest =
-    seekRequest?.songId === song.id && handledSeekRequestIdRef.current !== seekRequest.id;
+    seekRequest?.songId === song.id &&
+    handledSeekRequestIdRef.current !== seekRequest.id;
   const displayDuration = duration || song.durationSeconds || 0;
-  const displayCurrentTime = isUnhandledSeekRequest && displayDuration
-    ? Math.max(0, Math.min(displayDuration, seekRequest.progress * displayDuration))
-    : currentTime;
+  const displayCurrentTime =
+    isUnhandledSeekRequest && displayDuration
+      ? Math.max(
+          0,
+          Math.min(displayDuration, seekRequest.progress * displayDuration),
+        )
+      : currentTime;
   const previousCuePoint = useMemo(
     () => getAdjacentCuePoint(visibleCuePoints, displayCurrentTime, "previous"),
     [visibleCuePoints, displayCurrentTime],
@@ -172,22 +231,22 @@ export default function DesktopMusicPlayer({
     [visibleCuePoints, displayCurrentTime],
   );
   const isSynced = syncStatus === "synced" && Boolean(syncedPath);
-  const syncLabel =
-    isSynced
-      ? "Drag synced song file"
-      : syncStatus === "syncing"
-        ? "Syncing song"
-        : syncStatus === "error"
-          ? "Retry sync"
-          : canSync
-            ? "Sync song"
-            : "Choose a sync folder to sync songs";
+  const syncLabel = isSynced
+    ? "Drag synced song file"
+    : syncStatus === "syncing"
+      ? "Syncing song"
+      : syncStatus === "error"
+        ? "Retry sync"
+        : canSync
+          ? "Sync song"
+          : "Choose a sync folder to sync songs";
 
   useEffect(() => {
     const pendingSeekRequest = pendingSeekRequestRef.current;
     const nextDuration = song.durationSeconds || 0;
     const activeSeekRequest =
-      seekRequest?.songId === song.id && handledSeekRequestIdRef.current !== seekRequest.id
+      seekRequest?.songId === song.id &&
+      handledSeekRequestIdRef.current !== seekRequest.id
         ? seekRequest
         : null;
 
@@ -263,9 +322,10 @@ export default function DesktopMusicPlayer({
     const applySeek = () => {
       if (pendingSeekRequestRef.current?.id !== seekRequest.id) return;
 
-      const nextDuration = audio.duration && Number.isFinite(audio.duration)
-        ? audio.duration
-        : song.durationSeconds || duration;
+      const nextDuration =
+        audio.duration && Number.isFinite(audio.duration)
+          ? audio.duration
+          : song.durationSeconds || duration;
 
       if (!nextDuration) return;
 
@@ -277,9 +337,11 @@ export default function DesktopMusicPlayer({
       pendingSeekRequestRef.current = null;
 
       if (seekRequest.shouldPlay && audio.paused) {
-        audio.play().catch((error) =>
-          console.warn("Could not play audio after seek", error),
-        );
+        audio
+          .play()
+          .catch((error) =>
+            console.warn("Could not play audio after seek", error),
+          );
       } else if (!seekRequest.shouldPlay && !audio.paused) {
         audio.pause();
       }
@@ -302,21 +364,32 @@ export default function DesktopMusicPlayer({
     }
   }
 
-  function handleSyncedSongPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
+  function handleSyncedSongPointerDown(
+    event: React.PointerEvent<HTMLButtonElement>,
+  ) {
     if (!isSynced) return;
 
     event.preventDefault();
     event.stopPropagation();
-    songDragStartRef.current = { x: event.clientX, y: event.clientY, started: false };
+    songDragStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      started: false,
+    };
     event.currentTarget.setPointerCapture(event.pointerId);
   }
 
-  function handleSyncedSongPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+  function handleSyncedSongPointerMove(
+    event: React.PointerEvent<HTMLButtonElement>,
+  ) {
     const dragStart = songDragStartRef.current;
 
     if (!isSynced || !dragStart || dragStart.started) return;
 
-    const distance = Math.hypot(event.clientX - dragStart.x, event.clientY - dragStart.y);
+    const distance = Math.hypot(
+      event.clientX - dragStart.x,
+      event.clientY - dragStart.y,
+    );
 
     if (distance < SONG_DRAG_START_DISTANCE) return;
 
@@ -364,7 +437,9 @@ export default function DesktopMusicPlayer({
           <span
             className="filmwave-player-cue-marker-line"
             style={{
-              width: hasSelectedCuePointTypes ? "var(--cue-marker-width-active)" : "var(--cue-marker-width)",
+              width: hasSelectedCuePointTypes
+                ? "var(--cue-marker-width-active)"
+                : "var(--cue-marker-width)",
               opacity: "var(--cue-marker-opacity)",
             }}
           />
@@ -377,7 +452,12 @@ export default function DesktopMusicPlayer({
   }
 
   function renderCueControls(layout: MusicPlayerShellLayout) {
-    if (!markersVisible || !layout.showWaveform || layout.playerWidth < 940 || visibleCuePoints.length === 0) {
+    if (
+      !markersVisible ||
+      !layout.showWaveform ||
+      layout.playerWidth < 940 ||
+      visibleCuePoints.length === 0
+    ) {
       return null;
     }
 
@@ -385,7 +465,11 @@ export default function DesktopMusicPlayer({
       <div className="filmwave-player-cue-controls">
         <button
           type="button"
-          title={previousCuePoint ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}` : "Previous cue"}
+          title={
+            previousCuePoint
+              ? `Previous cue · ${getCueLabel(previousCuePoint)} · ${formatEditPointTime(previousCuePoint.time)}`
+              : "Previous cue"
+          }
           aria-label="Jump to previous cue point"
           onClick={() => jumpToCuePoint(previousCuePoint)}
           disabled={!previousCuePoint}
@@ -395,7 +479,11 @@ export default function DesktopMusicPlayer({
         </button>
         <button
           type="button"
-          title={nextCuePoint ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}` : "Next cue"}
+          title={
+            nextCuePoint
+              ? `Next cue · ${getCueLabel(nextCuePoint)} · ${formatEditPointTime(nextCuePoint.time)}`
+              : "Next cue"
+          }
           aria-label="Jump to next cue point"
           onClick={() => jumpToCuePoint(nextCuePoint)}
           disabled={!nextCuePoint}
@@ -449,7 +537,9 @@ export default function DesktopMusicPlayer({
           <>
             <button
               type="button"
-              aria-label={favorite ? "Remove song from favorites" : "Favorite song"}
+              aria-label={
+                favorite ? "Remove song from favorites" : "Favorite song"
+              }
               aria-pressed={favorite}
               className={`filmwave-icon-button filmwave-icon-button-plain${
                 favorite ? " is-active" : ""
@@ -461,7 +551,9 @@ export default function DesktopMusicPlayer({
 
             <button
               type="button"
-              aria-label={markersVisible ? "Hide cue markers" : "Show cue markers"}
+              aria-label={
+                markersVisible ? "Hide cue markers" : "Show cue markers"
+              }
               aria-pressed={markersVisible}
               className="filmwave-icon-button filmwave-icon-button-plain filmwave-player-marker-toggle"
               onClick={() => onMarkersVisibleChange(!markersVisible)}
@@ -477,7 +569,7 @@ export default function DesktopMusicPlayer({
               collisionPadding={{
                 top: 72,
                 right: 16,
-                bottom: 88,
+                bottom: 58,
                 left: 16,
               }}
               trigger={({ open }) => (
@@ -501,7 +593,11 @@ export default function DesktopMusicPlayer({
                 <span>Create New Playlist</span>
               </button>
               {song.audioUrl ? (
-                <a href={song.audioUrl} download onClick={() => setMoreOpen(false)}>
+                <a
+                  href={song.audioUrl}
+                  download
+                  onClick={() => setMoreOpen(false)}
+                >
                   <span>Download Song</span>
                 </a>
               ) : (
@@ -509,7 +605,11 @@ export default function DesktopMusicPlayer({
                   <span>Download Song</span>
                 </button>
               )}
-              <button type="button" onClick={handleClosePlayer} className="danger-hover">
+              <button
+                type="button"
+                onClick={handleClosePlayer}
+                className="danger-hover"
+              >
                 <span>Close Player</span>
                 <CloseIcon />
               </button>
@@ -546,7 +646,13 @@ export default function DesktopMusicPlayer({
 
 function SyncedFileIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <rect
         x="3.75"
         y="4.25"
