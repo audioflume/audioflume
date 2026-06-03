@@ -25,8 +25,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   width: 100%;
   flex-direction: column;
   background: var(--bg-primary);
-  /* Padding here is purely for inner content spacing.
-     Both rows use negative margins to break out and span full width. */
   padding: 0 28px;
 }
 
@@ -34,9 +32,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   top: 0;
 }
 
-/* ── Search row ──
-   Breaks out of sticky padding with negative margins so the
-   border-bottom spans the full viewport width. */
 .filmwave-search-filter-search-row {
   box-sizing: border-box;
   display: flex;
@@ -159,9 +154,9 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   flex-shrink: 0;
 }
 
-/* ── Filter row ──
-   Same negative-margin pattern as search row.
-   border-bottom spans full width. */
+/* Filter row — negative margins so border spans full width.
+   overflow-y: visible is critical so the ::after indicator
+   on buttons is not clipped. */
 .filmwave-search-filter-row {
   box-sizing: border-box;
   display: flex;
@@ -171,7 +166,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   gap: 4px;
   margin: 0 -28px;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;
   border-bottom: 1px solid var(--border);
   padding: 0 28px;
   white-space: nowrap;
@@ -221,12 +216,12 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   color: var(--text-primary);
 }
 
-/* ── Active indicator ──
-   border-bottom on the button itself.
-   margin-bottom: -1px pulls the border down to overlap the row's
-   border-bottom so only one line is visible at the correct thickness.
-   No ::after, no box-shadow, no absolute positioning.
-   Change --active-line-width to adjust everywhere. */
+/* ── Active line indicator ──
+   ::after pseudo-element, position: absolute, bottom: 0.
+   The button is position: relative and height: 48px.
+   The row has overflow-y: visible so the indicator is never clipped.
+   This is the only approach that works reliably across all containers
+   and both platforms. --active-line-width controls thickness. */
 
 :root {
   --active-line-width: 2px;
@@ -243,33 +238,45 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   flex-shrink: 0;
   gap: 6px;
   border: 0;
-  border-bottom: var(--active-line-width) solid transparent;
   border-radius: 0;
   background: transparent;
-  /* padding-top offsets border-bottom so text stays vertically centred */
-  padding: var(--active-line-width) 10px 0;
+  padding: 0 10px;
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
-  /* Pull border-bottom down to overlap row border — one line, correct thickness */
-  margin-bottom: -1px;
-  transition: color 150ms ease, border-color 150ms ease;
+  transition: color 150ms ease;
+}
+
+.filmwave-filter-trigger::after,
+.desktop-filter-trigger::after,
+.filmwave-active-line-trigger::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--active-line-width);
+  background: transparent;
+  transition: background 150ms ease;
+  pointer-events: none;
+}
+
+.filmwave-filter-trigger.is-active::after,
+.desktop-filter-trigger.is-active::after,
+.filmwave-active-line-trigger.is-active::after {
+  background: var(--text-primary);
 }
 
 .filmwave-filter-trigger:hover,
+.filmwave-filter-trigger.is-active,
 .filmwave-filter-trigger.is-open,
 .desktop-filter-trigger:hover,
-.desktop-filter-trigger.is-open,
-.filmwave-active-line-trigger:hover {
-  color: var(--text-primary);
-}
-
-.filmwave-filter-trigger.is-active,
 .desktop-filter-trigger.is-active,
+.desktop-filter-trigger.is-open,
+.filmwave-active-line-trigger:hover,
 .filmwave-active-line-trigger.is-active {
-  border-bottom-color: var(--text-primary);
   color: var(--text-primary);
 }
 
@@ -497,8 +504,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   background: transparent;
   padding: 0;
   color: var(--icon-color);
-  /* reset margin-bottom from filter trigger */
-  margin-bottom: 0;
   transition:
     background 150ms ease,
     color 150ms ease;

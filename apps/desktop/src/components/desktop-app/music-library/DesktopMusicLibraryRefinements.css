@@ -4,6 +4,8 @@
   min-height: 48px !important;
   max-height: 48px !important;
   align-items: center !important;
+  /* overflow-y visible so ::after indicator on buttons is not clipped */
+  overflow-y: visible !important;
   box-sizing: border-box;
 }
 
