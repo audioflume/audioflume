@@ -76,29 +76,29 @@
 :global(.project-view-toggle-button),
 :global(.project-new-folder-button) {
   display: flex;
-  height: 28px;
-  width: 28px;
+  height: var(--filmwave-project-toolbar-button-size, 28px);
+  width: var(--filmwave-project-toolbar-button-size, 28px);
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  background: var(--bg-secondary);
-  color: var(--icon-color);
+  border: 1px solid var(--filmwave-project-toolbar-button-border, transparent);
+  border-radius: var(--filmwave-project-toolbar-button-radius, 9px);
+  background: var(--filmwave-project-toolbar-button-bg, transparent);
+  color: var(--filmwave-project-toolbar-button-color, var(--icon-color));
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 :global(.project-view-toggle-button svg),
 :global(.project-new-folder-button svg) {
-  height: 15px;
-  width: 15px;
+  height: 14px;
+  width: 14px;
 }
 
 :global(.project-view-toggle-button:hover),
 :global(.project-new-folder-button:hover) {
-  border-color: var(--text-muted);
-  background: var(--icon-button-hover);
-  color: var(--text-primary);
+  border-color: var(--filmwave-project-toolbar-hover-border, transparent);
+  background: var(--filmwave-project-toolbar-hover-bg, var(--bg-hover-strong));
+  color: var(--filmwave-project-toolbar-hover-color, var(--text-primary));
 }
 
 :global(.project-file-browser-section) {
