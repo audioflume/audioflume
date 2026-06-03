@@ -177,7 +177,7 @@ body > header > div {
   padding: 0 10px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   text-decoration: none;
   transition: color 150ms ease;
@@ -205,7 +205,7 @@ body > header > div {
   padding-right: 2px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   text-decoration: none;
   transition: color 150ms ease;
