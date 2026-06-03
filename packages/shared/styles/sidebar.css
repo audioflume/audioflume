@@ -121,7 +121,9 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 8px;
+  /* Same bottom gap as nav items so spacing is consistent
+     in both expanded and collapsed states */
+  margin-bottom: calc(8px + var(--filmwave-sidebar-nav-gap));
 }
 
 .desktop-sidebar-heading-inner {
@@ -244,7 +246,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 8px;
+  /* Same bottom gap as nav items so spacing is consistent
+     in both expanded and collapsed states — nothing shifts */
+  margin-bottom: calc(8px + var(--filmwave-sidebar-nav-gap));
   padding: 0 var(--filmwave-sidebar-row-padding-x);
 }
 
@@ -289,7 +293,8 @@
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
   height: var(--filmwave-sidebar-row-height);
   justify-content: center;
-  margin-bottom: var(--filmwave-sidebar-nav-gap);
+  /* Keep the same margin-bottom as expanded — nothing shifts on collapse */
+  margin-bottom: calc(8px + var(--filmwave-sidebar-nav-gap));
   padding: 0;
 }
 
