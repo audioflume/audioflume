@@ -14,12 +14,13 @@
   padding-left: calc(var(--sidebar-width-collapsed, 76px) + 24px);
 }
 
-/* Only music page and projects DETAIL are full-bleed.
-   Projects list and sync settings keep normal padding. */
+/* Music page and projects detail: full-bleed vertically,
+   internal layout handles its own horizontal spacing */
 .desktop-app-main:has(.desktop-projects-page.is-detail),
 .desktop-app-main:has(.desktop-music-page) {
   padding-left: var(--sidebar-width-expanded, 280px);
   padding-right: 0;
+  padding-bottom: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed
