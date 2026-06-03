@@ -16,6 +16,7 @@ import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
 import "./admin-polish.css";
 import "./icon-button-overrides.css";
+import "./player-action-overrides.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
