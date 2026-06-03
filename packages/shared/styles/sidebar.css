@@ -311,8 +311,10 @@
   display: none;
 }
 
+/* Collapsed add button: same 36px width as collapsed nav links
+   so the gap between it and adjacent project links is visible */
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
-  width: 100%;
+  width: 36px;
   height: var(--filmwave-sidebar-row-height);
   border-radius: var(--filmwave-sidebar-row-radius);
 }
