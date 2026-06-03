@@ -2,6 +2,7 @@
 @import "../../../packages/shared/styles/theme.css";
 @import "../../../packages/shared/styles/layers.css";
 @import "../../../packages/shared/styles/app-chrome.css";
+@import "../../../packages/shared/styles/dropdown-shell.css";
 @import "../../../packages/shared/styles/user-menu.css";
 @import "../../../packages/shared/styles/song-card.css";
 @import "../../../packages/shared/styles/music-player.css";
