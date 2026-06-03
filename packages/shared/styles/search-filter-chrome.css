@@ -213,16 +213,16 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 }
 
 /* ── Active line indicator ──
-   Shared between music filter triggers, project tabs, and any
-   future tab-style navigation. Change --active-line-width to
-   adjust thickness everywhere at once. */
+   Applied to .filmwave-filter-trigger and .filmwave-active-line-trigger
+   (project tabs, any future tab-style nav).
+   Change --active-line-width here to adjust thickness everywhere. */
 
 :root {
   --active-line-width: 2px;
 }
 
+/* Standalone tab trigger (project tabs, no filter chevron) */
 .filmwave-active-line-trigger {
-  position: relative;
   display: inline-flex;
   height: 100%;
   cursor: pointer;
@@ -233,14 +233,14 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   border-bottom: var(--active-line-width) solid transparent;
   background: transparent;
   padding: 0 10px;
+  /* nudge content up by line width to stay visually centred */
+  padding-top: var(--active-line-width);
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
   transition: color 150ms ease, border-color 150ms ease;
-  /* Compensate for border-bottom so text stays vertically centred */
-  padding-top: var(--active-line-width);
 }
 
 .filmwave-active-line-trigger:hover {
@@ -252,6 +252,8 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   color: var(--text-primary);
 }
 
+/* Filter trigger: fixed 48px height, sits inside a 48px row.
+   Bottom border acts as the active indicator flush with the row edge. */
 .filmwave-filter-trigger,
 .desktop-filter-trigger {
   position: relative;
@@ -262,23 +264,29 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   flex-shrink: 0;
   gap: 6px;
   border: 0;
+  border-bottom: var(--active-line-width) solid transparent;
+  /* push content up so border sits flush at bottom without shifting text */
+  padding: var(--active-line-width) 10px 0;
   border-radius: 0;
   background: transparent;
-  padding: 0 10px;
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
-  transition: color 150ms ease;
+  transition: color 150ms ease, border-color 150ms ease;
 }
 
 .filmwave-filter-trigger:hover,
-.filmwave-filter-trigger.is-active,
 .filmwave-filter-trigger.is-open,
 .desktop-filter-trigger:hover,
-.desktop-filter-trigger.is-active,
 .desktop-filter-trigger.is-open {
+  color: var(--text-primary);
+}
+
+.filmwave-filter-trigger.is-active,
+.desktop-filter-trigger.is-active {
+  border-bottom-color: var(--text-primary);
   color: var(--text-primary);
 }
 
