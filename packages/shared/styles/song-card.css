@@ -1,4 +1,8 @@
-:where(.filmwave-song-card, .desktop-song-card, .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center) {
+:where(
+  .filmwave-song-card,
+  .desktop-song-card,
+  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
+) {
   --filmwave-song-card-cover-size: 40px;
   --filmwave-song-card-action-size: 28px;
   --filmwave-song-card-action-radius: 9px;
@@ -8,8 +12,12 @@
   --filmwave-song-card-padding-y: 14px;
   --filmwave-song-card-gap: 18px;
   --filmwave-song-card-min-height: 72px;
-  --filmwave-song-card-hover-bg: color-mix(in srgb, var(--bg-hover) 55%, transparent);
-  --filmwave-song-card-action-hover-bg: var(--bg-hover);
+  --filmwave-song-card-hover-bg: color-mix(
+    in srgb,
+    var(--bg-hover) 55%,
+    transparent
+  );
+  --filmwave-song-card-action-hover-bg: var(--bg-hover-strong);
   --filmwave-song-card-action-color: var(--icon-color);
   --filmwave-song-card-action-active-color: var(--text-primary);
 }
@@ -25,7 +33,9 @@
   gap: var(--filmwave-song-card-gap);
   overflow: visible;
   border-bottom: 1px solid var(--border-subtle);
-  padding: var(--filmwave-song-card-padding-y) var(--filmwave-song-card-padding-right) var(--filmwave-song-card-padding-y) var(--filmwave-song-card-padding-left);
+  padding: var(--filmwave-song-card-padding-y)
+    var(--filmwave-song-card-padding-right) var(--filmwave-song-card-padding-y)
+    var(--filmwave-song-card-padding-left);
   transition: background 140ms ease;
 }
 
@@ -35,7 +45,9 @@
   background: var(--filmwave-song-card-hover-bg);
 }
 
-html[data-theme="light"] .desktop-music-page .desktop-song-card:hover:not(.is-current):not(.is-playing) {
+html[data-theme="light"]
+  .desktop-music-page
+  .desktop-song-card:hover:not(.is-current):not(.is-playing) {
   background: var(--filmwave-song-card-hover-bg);
 }
 
@@ -179,7 +191,9 @@ html[data-theme="light"] .desktop-music-page .desktop-song-card:hover:not(.is-cu
   background: transparent;
   padding: 0;
   color: var(--filmwave-song-card-action-color);
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .filmwave-song-action-button:hover,
