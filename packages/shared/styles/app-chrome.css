@@ -164,7 +164,6 @@ body > header > div {
   gap: 4px;
 }
 
-/* Nav links: full button gets hover background */
 .filmwave-header-nav-link {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
@@ -181,14 +180,12 @@ body > header > div {
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .filmwave-header-nav-link:hover,
 .filmwave-header-nav-link.is-active {
-  background: var(--bg-row-hover);
+  background: transparent;
   color: var(--text-primary);
 }
 
@@ -228,14 +225,12 @@ body > header > div {
   gap: 6px;
   padding: 0 10px;
   border-radius: var(--filmwave-header-nav-radius);
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .filmwave-header-account-trigger:hover .filmwave-header-account-label,
 .filmwave-header-account-trigger.is-open .filmwave-header-account-label {
-  background: var(--bg-row-hover);
+  background: transparent;
   color: var(--text-primary);
 }
 
