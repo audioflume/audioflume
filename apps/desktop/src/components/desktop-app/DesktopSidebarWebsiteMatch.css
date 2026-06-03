@@ -1,3 +1,5 @@
+/* Sidebar width — these use the legacy CSS variable names that
+   DesktopAppShell reads; sidebar.css uses the filmwave-prefixed versions */
 .desktop-app-sidebar {
   width: var(--sidebar-width-expanded, 280px);
 }
@@ -10,32 +12,14 @@
   left: calc(var(--sidebar-width-collapsed, 76px) - 11px);
 }
 
-.desktop-sidebar-link,
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
-  justify-content: flex-start;
-  padding: 0 10px;
-}
-
-.desktop-sidebar-link-icon,
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  margin: 0;
-}
-
-.desktop-sidebar-link-label,
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
-  margin-left: 10px;
-}
-
+/* Collapsed: hide label by collapsing its width */
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
   width: 0;
   opacity: 0;
 }
 
-/* Collapsed: constrain nav links and add button to square
-   so the 2px nav gap is visually apparent between buttons */
+/* Collapsed: constrain nav links to square so the nav gap
+   is visually apparent between buttons */
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-nav {
   align-items: center;
 }
@@ -48,8 +32,6 @@
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
   width: 36px;
-  height: var(--filmwave-sidebar-row-height);
-  border-radius: var(--filmwave-sidebar-row-radius);
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions {

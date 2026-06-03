@@ -8,7 +8,6 @@
   align-items: center;
   gap: 8px;
   overflow-x: auto;
-  /* overflow-y visible so ::after indicator on buttons is not clipped */
   overflow-y: visible;
   border-bottom: 1px solid var(--divider);
   background: var(--bg-primary);
@@ -70,7 +69,7 @@
 }
 
 .project-sync-status.is-error .project-sync-status-dot {
-  background: var(--error);
+  background: var(--danger);
 }
 
 .project-sync-status.is-success .project-sync-status-dot {

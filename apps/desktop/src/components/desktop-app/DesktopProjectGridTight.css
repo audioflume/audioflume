@@ -8,13 +8,13 @@
 .project-file-browser .project-file-card {
   min-height: 100px;
   gap: 9px;
-  padding: 8px 6px px;
+  padding: 8px 6px 4px;
 }
 
 .project-folder-card-icon-wrap,
 .project-file-card-icon-wrap {
   height: 50px;
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .project-file-browser .project-file-card-title,
