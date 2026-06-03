@@ -24,7 +24,7 @@ export default function ProjectTabs({ activeTab, tabs, onTabChange }: Props) {
             key={tab.value}
             type="button"
             onClick={() => onTabChange(tab.value)}
-            className={`${filterTriggerBaseClass} ${
+            className={`filmwave-active-line-trigger ${filterTriggerBaseClass} ${
               isActive ? filterTriggerActiveClass : filterTriggerInactiveClass
             }`}
           >
