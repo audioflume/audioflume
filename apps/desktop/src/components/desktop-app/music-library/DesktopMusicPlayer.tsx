@@ -137,6 +137,7 @@ export default function DesktopMusicPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(song.durationSeconds || 0);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [playerClosed, setPlayerClosed] = useState(false);
   const [moreMenuPosition, setMoreMenuPosition] = useState({ top: 0, left: 0 });
 
   const audioSource = useMemo(() => getAudioSource(song), [song]);
@@ -228,6 +229,7 @@ export default function DesktopMusicPlayer({
 
   useEffect(() => {
     setMoreOpen(false);
+    setPlayerClosed(false);
   }, [song.id]);
 
   useEffect(() => {
@@ -396,6 +398,8 @@ export default function DesktopMusicPlayer({
 
   function handleClosePlayer() {
     setMoreOpen(false);
+    setPlayerClosed(true);
+    audioRef.current?.pause();
     onClosePlayer?.();
   }
 
@@ -465,6 +469,8 @@ export default function DesktopMusicPlayer({
       </div>
     );
   }
+
+  if (playerClosed) return null;
 
   return (
     <>
