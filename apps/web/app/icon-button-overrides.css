@@ -1,7 +1,3 @@
-@import "../../../packages/shared/styles/app-chrome.css";
-@import "../../../packages/shared/styles/song-card.css";
-@import "../../../packages/shared/styles/music-player.css";
-
 /* Shared compact icon buttons — matches desktop app song/action controls. */
 
 .filmwave-icon-button,
