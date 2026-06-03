@@ -56,6 +56,7 @@ import {
 import "./DesktopMusicLibraryView.css";
 import "./DesktopMusicLibraryRefinements.css";
 import "./DesktopMusicLibrarySpacing.css";
+import "./DesktopSongDropdownOverrides.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const TRACK_SCROLL_EDGE_PADDING = 12;
@@ -367,227 +368,340 @@ export default function DesktopMusicLibraryView({
     } catch (error) {
       console.error(error);
       setSyncErrorSongIds((current) => new Set(current).add(song.id));
+    } finally {
+      setSyncingSongIds((current) => {
+        const next = new Set(current);
+        next.delete(song.id);
+        return next;
+      });
     }
   }
 
-  const activeSyncStatus = activeSongId ? getSongSyncStatus(activeSongId) : "idle";
-
-  function handleSongPlay(song: DesktopSong) {
+  function playSong(song: DesktopSong) {
     if (activeSongId === song.id) {
-      setPlayerPlaying((current) => !current);
+      setPlayerPlaying((playing) => !playing);
       return;
     }
 
     setActiveSongId(song.id);
-    setPendingSeekProgressBySongId((current) => {
-      const next = { ...current };
-      delete next[song.id];
-      return next;
-    });
     setPlayerPlaying(true);
-    scrollRequestedSongIdRef.current = song.id;
   }
 
-  function handleSeek(songId: string, progress: number, keepPlaying: boolean) {
+  function seekSong(song: DesktopSong, progress: number) {
+    const shouldPlay = playerPlaying;
+    const safeProgress = clampPlaybackProgress(progress);
+    const duration = song.durationSeconds || 0;
+
     setPendingSeekProgressBySongId((current) => ({
       ...current,
-      [songId]: progress,
+      [song.id]: safeProgress,
     }));
-    setSeekRequest({ songId, progress, keepPlaying, requestId: ++seekRequestIdRef.current });
-  }
 
-  function navigateTrack(direction: "previous" | "next") {
-    if (displayedSongs.length === 0) return;
+    if (activeSongId !== song.id) {
+      setActiveSongId(song.id);
+    }
 
-    const currentIndex = activeSongIndex >= 0 ? activeSongIndex : 0;
-    const nextIndex = getAdjacentTrackIndex(currentIndex, displayedSongs.length, direction);
-    const nextSong = displayedSongs[nextIndex];
-    if (!nextSong) return;
-
-    setActiveSongId(nextSong.id);
-    setPendingSeekProgressBySongId((current) => {
-      const next = { ...current };
-      delete next[nextSong.id];
-      return next;
+    setPlayerPlaying(shouldPlay);
+    setPlaybackProgress({
+      songId: song.id,
+      currentTime: getSeekTimeFromProgress(safeProgress, duration),
+      duration,
     });
-    setPlayerPlaying(true);
-    scrollRequestedSongIdRef.current = nextSong.id;
-  }
-
-  function clearPendingSeekProgress(songId: string) {
-    setPendingSeekProgressBySongId((current) => {
-      if (!shouldClearPendingSeekProgress(current[songId])) return current;
-      const next = { ...current };
-      delete next[songId];
-      return next;
+    setSeekRequest({
+      id: ++seekRequestIdRef.current,
+      songId: song.id,
+      progress: safeProgress,
+      shouldPlay,
     });
   }
 
-  function handleKeyboardShortcut(event: KeyboardEvent) {
-    if (shouldIgnorePlaybackShortcutTarget(event.target)) return;
-    const action = getPlaybackShortcutAction(event);
-    if (!action) return;
+  function handlePlaybackProgressChange(nextProgress: DesktopPlaybackProgress) {
+    setPlaybackProgress(nextProgress);
 
-    if (action === "toggle") {
-      event.preventDefault();
-      if (activeSongId) setPlayerPlaying((current) => !current);
+    if (!nextProgress.songId || nextProgress.duration <= 0) return;
+
+    setPendingSeekProgressBySongId((current) => {
+      const pendingProgress = current[nextProgress.songId];
+      if (pendingProgress === undefined) return current;
+
+      const nextPlaybackProgress = getProgressFromTime(nextProgress.currentTime, nextProgress.duration);
+
+      if (!shouldClearPendingSeekProgress({ playbackProgress: nextPlaybackProgress, pendingProgress })) return current;
+
+      const { [nextProgress.songId]: _removed, ...rest } = current;
+      return rest;
+    });
+  }
+
+  const playSongAtIndex = useCallback((index: number, shouldPlay = playerPlaying) => {
+    if (!displayedSongs.length) return;
+
+    if (index < 0 || index >= displayedSongs.length) {
+      setPlayerPlaying(false);
       return;
     }
 
-    event.preventDefault();
-    navigateTrack(action);
-  }
+    const nextSong = displayedSongs[index];
+
+    scrollRequestedSongIdRef.current = nextSong.id;
+    setActiveSongId(nextSong.id);
+    setPlayerPlaying(shouldPlay);
+  }, [displayedSongs, playerPlaying]);
+
+  const playPreviousSong = useCallback(() => {
+    const previousIndex = getAdjacentTrackIndex({
+      currentIndex: activeSongIndex,
+      queueLength: displayedSongs.length,
+      direction: "prev",
+    });
+
+    if (previousIndex === null) {
+      if (activeSongIndex !== -1) setPlayerPlaying(false);
+      return;
+    }
+
+    playSongAtIndex(previousIndex);
+  }, [activeSongIndex, displayedSongs.length, playSongAtIndex]);
+
+  const playNextSong = useCallback(() => {
+    if (activeSongIndex === -1) {
+      playSongAtIndex(0);
+      return;
+    }
+
+    const nextIndex = getAdjacentTrackIndex({
+      currentIndex: activeSongIndex,
+      queueLength: displayedSongs.length,
+      direction: "next",
+    });
+
+    if (nextIndex === null) {
+      setPlayerPlaying(false);
+      return;
+    }
+
+    playSongAtIndex(nextIndex);
+  }, [activeSongIndex, displayedSongs.length, playSongAtIndex]);
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyboardShortcut);
-    return () => window.removeEventListener("keydown", handleKeyboardShortcut);
-  });
+    function handleKeyDown(event: KeyboardEvent) {
+      if (shouldIgnorePlaybackShortcutTarget(event.target)) return;
 
-  const filterControls = (
-    <>
-      {filterKeys.map((filterKey) => {
-        const FilterComponent =
-          filterKey === "key"
-            ? MusicKeyFilter
-            : filterKey === "bpm"
-              ? MusicBpmFilter
-              : filterKey === "duration"
-                ? MusicDurationFilter
-                : MusicPlaylistFilter;
+      const action = getPlaybackShortcutAction(event);
+      if (!action) return;
 
-        return (
-          <FilterTrigger
-            key={filterKey}
-            title={FILTER_TITLES[filterKey]}
-            selectedCount={filters[filterKey].length}
-            open={openDropdown === filterKey}
-            onOpenChange={(open) => setOpenDropdown(open ? filterKey : null)}
-            options={filterOptions[filterKey]}
-            selectedValues={filters[filterKey]}
-            onToggle={(value) => setFilterValue(filterKey, value)}
-            onClear={() => setFilters((current) => ({ ...current, [filterKey]: [] }))}
-            renderPanel={({ close }) => (
-              <FilterComponent
-                selectedValues={filters[filterKey]}
-                options={filterOptions[filterKey]}
-                onToggle={(value: string) => setFilterValue(filterKey, value)}
-                onClear={() => setFilters((current) => ({ ...current, [filterKey]: [] }))}
-                onClose={close}
-              />
-            )}
-          />
-        );
-      })}
-    </>
-  );
+      if (action === "toggle-play-pause") {
+        if (!activeSongId) return;
+        event.preventDefault();
+        setPlayerPlaying((playing) => !playing);
+        return;
+      }
+
+      event.preventDefault();
+
+      if (action === "next-track") {
+        playNextSong();
+        return;
+      }
+
+      if (action === "previous-track") {
+        playPreviousSong();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeSongId, playNextSong, playPreviousSong]);
+
+  function getSongPlaybackProgress(songId: string) {
+    if (playbackProgress.songId !== songId || playbackProgress.duration <= 0) return 0;
+
+    return getProgressFromTime(playbackProgress.currentTime, playbackProgress.duration);
+  }
 
   return (
-    <section className="desktop-music-page">
+    <section className={`desktop-music-page${activeSong ? " has-player" : ""}`}>
       <SearchFilterChrome
-        title="Music Library"
-        description="Search, preview, and sync Filmwave tracks directly into your local music folder."
-        searchSlot={
+        onSearchRowClick={() => searchInputRef.current?.focus()}
+        search={
           <SearchFilterInput
-            ref={searchInputRef}
+            icon={<SearchIconSmall />}
+            inputRef={searchInputRef}
             value={filters.search}
             placeholder={searchPlaceholder}
-            icon={<SearchIconSmall />}
-            onChange={(value) => setFilters((current) => ({ ...current, search: value }))}
-            onClear={() => setFilters((current) => ({ ...current, search: "" }))}
+            onChange={(event) =>
+              setFilters((current) => ({ ...current, search: event.target.value }))
+            }
           />
         }
-        filterSlot={filterControls}
-        actionSlot={
-          <button
-            type="button"
-            className={`search-filter-shuffle-action${filters.shuffle ? " is-active" : ""}`}
-            onClick={filters.shuffle ? removeShuffle : toggleShuffle}
-          >
-            <MusicShuffleButton active={filters.shuffle} />
-          </button>
+        tags={
+          <DesktopFilterTags
+            filters={filters}
+            onRemoveFilter={removeFilterValue}
+            onRemovePlaylist={() =>
+              setFilters((current) => ({ ...current, selectedPlaylist: null }))
+            }
+            onRemoveBpm={() =>
+              setFilters((current) => ({ ...current, bpmValue: null }))
+            }
+            onRemoveKey={() =>
+              setFilters((current) => ({ ...current, keyValue: null }))
+            }
+            onRemoveDuration={() =>
+              setFilters((current) => ({ ...current, selectedDurations: [] }))
+            }
+            onRemoveShuffle={removeShuffle}
+          />
+        }
+        filters={
+          <>
+            <MusicPlaylistFilter
+              selected={filters.selectedPlaylist}
+              playlists={playlistOptions}
+              loading={songsLoading}
+              loaded={!songsLoading}
+              playlistIcon={<PlaylistIcon size={13} />}
+              checkIcon={<CheckIcon size={11} />}
+              plusIcon={<PlusIcon size={11} />}
+              onChange={(selectedPlaylist) =>
+                setFilters((current) => ({ ...current, selectedPlaylist }))
+              }
+            />
+
+            {filterKeys.map((filterKey) => (
+              <DesktopFilterDropdown
+                key={filterKey}
+                filterKey={filterKey}
+                label={FILTER_TITLES[filterKey]}
+                options={filterOptions[filterKey]}
+                selected={filters[filterKey]}
+                open={openDropdown === filterKey}
+                onOpenChange={(open) => setOpenDropdown(open ? filterKey : null)}
+                onToggleOption={(value) => setFilterValue(filterKey, value)}
+              />
+            ))}
+
+            <MusicBpmFilter
+              value={filters.bpmValue}
+              onChange={(bpmValue) =>
+                setFilters((current) => ({ ...current, bpmValue }))
+              }
+            />
+
+            <MusicKeyFilter
+              value={filters.keyValue}
+              onChange={(keyValue) =>
+                setFilters((current) => ({ ...current, keyValue }))
+              }
+            />
+
+            <MusicDurationFilter
+              selected={filters.selectedDurations}
+              onChange={(selectedDurations) =>
+                setFilters((current) => ({ ...current, selectedDurations }))
+              }
+            />
+
+            <DesktopFilterDropdown
+              filterKey="cuePoint"
+              label={FILTER_TITLES.cuePoint}
+              options={filterOptions.cuePoint}
+              selected={filters.cuePoint}
+              open={openDropdown === "cuePoint"}
+              onOpenChange={(open) => setOpenDropdown(open ? "cuePoint" : null)}
+              onToggleOption={(value) => setFilterValue("cuePoint", value)}
+            />
+
+            <FilterTrigger
+              label="Markers"
+              active={filters.markers}
+              showActiveDot
+              hideChevron
+              onClick={() =>
+                setFilters((current) => ({ ...current, markers: !current.markers }))
+              }
+            />
+
+            <MusicShuffleButton active={filters.shuffle} onClick={toggleShuffle} />
+          </>
+        }
+        quickFilters={
+          <>
+            {QUICK_GENRES.map((genre) => {
+              const active = filters.genre.includes(genre);
+
+              return (
+                <SearchFilterQuickButton
+                  key={genre}
+                  active={active}
+                  onClick={() => setFilterValue("genre", genre)}
+                >
+                  {genre}
+                </SearchFilterQuickButton>
+              );
+            })}
+          </>
         }
       />
 
-      <DesktopFilterTags
-        filters={filters}
-        filterTitles={FILTER_TITLES}
-        filterOptions={filterOptions}
-        onRemove={removeFilterValue}
-        onClearAll={() => setFilters(EMPTY_FILTERS)}
-      />
-
-      {songsLoading ? (
-        <MusicLibrarySkeletonList count={6} />
-      ) : songsError ? (
-        <MusicLibraryLoadNotice
-          title="Using sample library"
-          message={songsError}
-        />
-      ) : displayedSongs.length === 0 ? (
-        <MusicLibraryEmptyState
-          title="No tracks match those filters"
-          message="Try clearing a filter or searching for a different mood, genre, or instrument."
-          actionLabel="Clear filters"
-          onAction={() => setFilters(EMPTY_FILTERS)}
-        />
-      ) : (
-        <div className="desktop-music-list" aria-label="Desktop music library">
-          {displayedSongs.map((song) => {
-            const syncStatus = getSongSyncStatus(song.id);
-            return (
-              <DesktopSongCard
-                key={song.id}
-                song={song}
-                active={song.id === activeSongId}
-                playing={song.id === activeSongId && playerPlaying}
-                favorite={favoriteIds.has(song.id)}
-                syncStatus={syncStatus}
-                syncedPath={syncedSongPaths[song.id]}
-                onPlay={() => handleSongPlay(song)}
-                onFavoriteToggle={() => toggleFavorite(song.id)}
-                onSync={() => syncSong(song)}
-                ref={(element) => {
-                  if (element) songCardRefs.current.set(song.id, element);
-                  else songCardRefs.current.delete(song.id);
-                }}
-              />
-            );
-          })}
-        </div>
+      {songsError && (
+        <MusicLibraryLoadNotice>
+          Could not load live songs. Showing sample tracks. {songsError}
+        </MusicLibraryLoadNotice>
       )}
+
+      <div className="desktop-music-list">
+        {songsLoading && <MusicLibrarySkeletonList />}
+
+        {!songsLoading &&
+          displayedSongs.map((song) => (
+            <DesktopSongCard
+              key={song.id}
+              song={song}
+              favorite={favoriteIds.has(song.id)}
+              markersVisible={filters.markers}
+              selectedCuePointTypes={selectedCoreCuePointTypes}
+              isSelected={activeSongId === song.id}
+              isPlaying={activeSongId === song.id && playerPlaying}
+              playbackProgress={getSongPlaybackProgress(song.id)}
+              pendingSeekProgress={pendingSeekProgressBySongId[song.id] ?? null}
+              syncStatus={getSongSyncStatus(song.id)}
+              syncedPath={syncedSongPaths[song.id] ?? null}
+              cardRef={(node) => {
+                if (node) songCardRefs.current.set(song.id, node);
+                else songCardRefs.current.delete(song.id);
+              }}
+              onFavoriteToggle={() => toggleFavorite(song.id)}
+              onPlay={() => playSong(song)}
+              onSeek={(progress) => seekSong(song, progress)}
+              onSync={() => syncSong(song)}
+            />
+          ))}
+
+        {!songsLoading && displayedSongs.length === 0 && <MusicLibraryEmptyState />}
+      </div>
 
       {activeSong && (
         <DesktopMusicPlayer
           song={activeSong}
           isPlaying={playerPlaying}
-          currentTime={playbackProgress.songId === activeSong.id ? playbackProgress.currentTime : 0}
-          duration={playbackProgress.songId === activeSong.id ? playbackProgress.duration : activeSong.durationSeconds}
-          seekRequest={seekRequest}
           favorite={favoriteIds.has(activeSong.id)}
-          markersVisible={filters.cuePoint.length > 0}
-          syncStatus={activeSyncStatus}
-          syncedPath={syncedSongPaths[activeSong.id]}
-          onPrevious={() => navigateTrack("previous")}
-          onPlayPause={() => setPlayerPlaying((current) => !current)}
-          onNext={() => navigateTrack("next")}
-          onSeek={(progress, keepPlaying) => handleSeek(activeSong.id, progress, keepPlaying)}
-          onSeekComplete={() => clearPendingSeekProgress(activeSong.id)}
-          onFavoriteToggle={() => toggleFavorite(activeSong.id)}
+          markersVisible={filters.markers}
+          selectedCuePointTypes={selectedCoreCuePointTypes}
+          seekRequest={seekRequest}
+          syncStatus={getSongSyncStatus(activeSong.id)}
+          syncedPath={syncedSongPaths[activeSong.id] ?? null}
+          canSync={Boolean(effectiveSyncFolder)}
           onMarkersVisibleChange={(visible) =>
-            setFilters((current) => ({
-              ...current,
-              cuePoint: visible
-                ? current.cuePoint.length > 0
-                  ? current.cuePoint
-                  : EDIT_POINT_FILTER_OPTIONS.map((option) => option.value)
-                : [],
-            }))
+            setFilters((current) => ({ ...current, markers: visible }))
           }
+          onFavoriteToggle={() => toggleFavorite(activeSong.id)}
+          onPlayPause={() => setPlayerPlaying((playing) => !playing)}
+          onPrevious={playPreviousSong}
+          onNext={playNextSong}
+          onProgressChange={handlePlaybackProgressChange}
           onSync={() => syncSong(activeSong)}
-          onClose={() => {
-            setPlayerPlaying(false);
-            setActiveSongId(null);
-          }}
         />
       )}
     </section>
