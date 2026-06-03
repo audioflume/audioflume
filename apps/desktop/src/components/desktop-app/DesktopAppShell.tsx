@@ -18,6 +18,7 @@ import LibraryIcon from "../icons/LibraryIcon";
 import MusicIcon from "../icons/MusicIcon";
 import PlaylistIcon from "../icons/PlaylistIcon";
 import WaveformIcon from "../icons/WaveformIcon";
+import DesktopMusicLibraryView from "./music-library/DesktopMusicLibraryView";
 import "./DesktopAppShell.css";
 import "./DesktopAppShellResponsive.css";
 import "./DesktopScrollLock.css";
@@ -131,8 +132,21 @@ export default function DesktopAppShell({
     // Create-project flow will be wired up when the desktop project create API is added.
   }
 
+  const main = (
+    <>
+      {activeView !== "music" && children}
+      <div
+        className={`desktop-persistent-music-view${
+          activeView === "music" ? " is-active" : " is-background"
+        }`}
+      >
+        <DesktopMusicLibraryView />
+      </div>
+    </>
+  );
+
   return (
-    <SidebarShell collapsed={effectivelyCollapsed} header={header} tooltip={tooltip} main={children}>
+    <SidebarShell collapsed={effectivelyCollapsed} header={header} tooltip={tooltip} main={main}>
       <SidebarCollapseControl
         collapsed={effectivelyCollapsed}
         icon={<CollapseIcon collapsed={effectivelyCollapsed} />}
