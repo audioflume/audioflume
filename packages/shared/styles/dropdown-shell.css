@@ -1,5 +1,5 @@
 .filmwave-dropdown-shell,
-.project-more-dropdown {
+.project-more-dropdown.project-more-dropdown {
   display: grid;
   width: max-content;
   min-width: 180px;
@@ -13,7 +13,7 @@
 
 .filmwave-dropdown-shell button,
 .filmwave-dropdown-shell a,
-.project-more-dropdown .project-more-menu-button {
+.project-more-dropdown .project-more-menu-button.project-more-menu-button {
   display: flex;
   width: 100%;
   height: 40px;
@@ -37,13 +37,13 @@
 
 .filmwave-dropdown-shell button:hover:not(:disabled),
 .filmwave-dropdown-shell a:hover,
-.project-more-dropdown .project-more-menu-button:hover:not(:disabled) {
+.project-more-dropdown .project-more-menu-button.project-more-menu-button:hover:not(:disabled) {
   background: var(--filmwave-menu-hover);
   color: var(--filmwave-menu-text);
 }
 
 .filmwave-dropdown-shell button:disabled,
-.project-more-dropdown .project-more-menu-button:disabled {
+.project-more-dropdown .project-more-menu-button.project-more-menu-button:disabled {
   cursor: default;
   color: var(--filmwave-menu-text-muted);
   opacity: 0.55;
