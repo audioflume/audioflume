@@ -1,15 +1,58 @@
 :where(:root) {
+  --filmwave-project-toolbar-button-size: 28px;
+  --filmwave-project-toolbar-button-radius: 9px;
+  --filmwave-project-toolbar-button-bg: transparent;
+  --filmwave-project-toolbar-button-border: transparent;
+  --filmwave-project-toolbar-button-color: var(--icon-color);
   --filmwave-project-toolbar-hover-bg: var(--bg-hover-strong);
+  --filmwave-project-toolbar-hover-border: transparent;
+  --filmwave-project-toolbar-hover-color: var(--text-primary);
 }
 
-.project-detail-page .project-toolbar-actions .project-toolbar-button:hover,
-.project-detail-page .project-toolbar-actions .project-toolbar-button.is-active,
-.project-detail-page .project-toolbar-actions .project-toolbar-icon-button:hover,
-.project-detail-page .project-toolbar-actions .project-toolbar-icon-button.is-active,
-.project-detail-page .project-tabs-row-actions .project-new-folder-button:hover,
-.project-detail-page .project-tabs-row-actions .project-view-toggle-button:hover,
-.project-detail-page .project-tabs-row-actions > button[aria-label^="Edit"]:hover,
-.project-detail-page .project-tabs-row-actions > button[aria-label^="Edit"].is-active {
-  background: var(--filmwave-project-toolbar-hover-bg) !important;
-  color: var(--text-primary) !important;
+.project-toolbar-actions,
+.project-tabs-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.project-toolbar-button,
+.project-toolbar-icon-button,
+.project-new-folder-button,
+.project-view-toggle-button {
+  display: inline-flex;
+  width: var(--filmwave-project-toolbar-button-size);
+  min-width: var(--filmwave-project-toolbar-button-size);
+  height: var(--filmwave-project-toolbar-button-size);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--filmwave-project-toolbar-button-border);
+  border-radius: var(--filmwave-project-toolbar-button-radius);
+  background: var(--filmwave-project-toolbar-button-bg);
+  padding: 0;
+  color: var(--filmwave-project-toolbar-button-color);
+  line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.project-toolbar-button:hover,
+.project-toolbar-button.is-active,
+.project-toolbar-icon-button:hover,
+.project-toolbar-icon-button.is-active,
+.project-new-folder-button:hover,
+.project-new-folder-button.is-active,
+.project-view-toggle-button:hover,
+.project-view-toggle-button.is-active {
+  border-color: var(--filmwave-project-toolbar-hover-border);
+  background: var(--filmwave-project-toolbar-hover-bg);
+  color: var(--filmwave-project-toolbar-hover-color);
+}
+
+.project-toolbar-button svg,
+.project-toolbar-icon-button svg,
+.project-new-folder-button svg,
+.project-view-toggle-button svg {
+  width: 14px;
+  height: 14px;
 }
