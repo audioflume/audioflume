@@ -23,7 +23,7 @@
 .filmwave-player-actions .filmwave-song-action-button.is-active,
 .filmwave-player-actions .filmwave-song-action-button[aria-pressed="true"] {
   border-color: transparent !important;
-  background: var(--bg-hover) !important;
+  background: var(--filmwave-square-icon-hover-bg) !important;
   color: var(--text-primary) !important;
 }
 
@@ -46,5 +46,5 @@
 }
 
 .filmwave-player-actions .filmwave-song-action-button.is-plain-active-icon:hover {
-  background: var(--bg-hover) !important;
+  background: var(--filmwave-square-icon-hover-bg) !important;
 }
