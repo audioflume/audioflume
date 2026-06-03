@@ -10,6 +10,7 @@
 @import "../../../packages/shared/styles/music-library-states.css";
 @import "../../../packages/shared/styles/music-shared-controls.css";
 @import "../../../packages/shared/styles/project-toolbar.css";
+@import "../../../packages/shared/styles/dropdown-shell.css";
 @import "../../../packages/shared/styles/user-menu.css";
 @import "../../../packages/shared/styles/settings-side-nav.css";
 
@@ -42,62 +43,4 @@ body.sidebar-collapsed {
 
 body.sidebar-collapsed aside[data-sidebar] {
   width: var(--sidebar-width-collapsed);
-}
-
-/* ─── Dropdown shell ─────────────────────────── */
-
-.filmwave-dropdown-shell {
-  display: grid;
-  width: max-content;
-  min-width: 180px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 4px;
-  background: var(--filmwave-menu-bg);
-  padding: 4px;
-  box-shadow: var(--filmwave-menu-shadow);
-}
-
-.filmwave-dropdown-shell button,
-.filmwave-dropdown-shell a {
-  display: flex;
-  width: 100%;
-  height: 40px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: flex-start;
-  border: 0;
-  border-radius: var(--filmwave-menu-item-radius);
-  background: transparent;
-  color: var(--filmwave-menu-text);
-  padding: 0 12px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1;
-  text-align: left;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 100ms ease;
-}
-
-.filmwave-dropdown-shell button:hover:not(:disabled),
-.filmwave-dropdown-shell a:hover {
-  background: var(--filmwave-menu-hover);
-  color: var(--filmwave-menu-text);
-}
-
-.filmwave-dropdown-shell button:disabled {
-  cursor: default;
-  color: var(--filmwave-menu-text-muted);
-  opacity: 0.55;
-}
-
-.filmwave-dropdown-shell button.danger-hover {
-  color: var(--danger);
-}
-
-.filmwave-dropdown-shell button.danger-hover:hover:not(:disabled) {
-  background: var(--danger-hover);
-  color: var(--danger);
 }
