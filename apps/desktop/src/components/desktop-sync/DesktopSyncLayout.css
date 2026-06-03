@@ -1,7 +1,4 @@
-/* ─────────────────────────────────────────────
-   DESKTOP SYNC SETTINGS — LAYOUT
-   ───────────────────────────────────────────── */
-
+/* ── CSS variables ── */
 .desktop-settings-view {
   --sync-border: var(--border);
   --sync-border-strong: var(--border-strong);
@@ -10,7 +7,7 @@
   --sync-surface-raised: var(--bg-secondary);
   --sync-project-row: var(--bg-panel);
   --sync-console-text: var(--text-primary);
-  --row-padding: 20px 0;
+  --row-padding: 20px 24px;
   --sync-page-padding-x: 24px;
 }
 
@@ -20,7 +17,6 @@
   min-width: 0;
   column-gap: 34px;
   align-items: start;
-  padding: 0 var(--sync-page-padding-x);
 }
 
 html[data-theme="light"] .desktop-settings-view {
@@ -71,9 +67,7 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1;
   text-align: left;
   cursor: pointer;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: background 150ms ease, color 150ms ease;
 }
 
 .desktop-sync-settings-nav-item:hover,
@@ -91,9 +85,7 @@ html[data-theme="light"] .desktop-settings-view {
   opacity: 0.76;
 }
 
-.settings-breadcrumb {
-  display: none;
-}
+.settings-breadcrumb { display: none; }
 
 /* ── Content column ── */
 .desktop-sync-settings-main,
@@ -101,9 +93,7 @@ html[data-theme="light"] .desktop-settings-view {
   min-width: 0;
 }
 
-.desktop-sync-settings-main {
-  grid-column: 2;
-}
+.desktop-sync-settings-main { grid-column: 2; }
 
 .sync-card {
   grid-column: 2;
@@ -111,10 +101,11 @@ html[data-theme="light"] .desktop-settings-view {
   container-name: sync-card;
 }
 
+/* Title header: padded content, full-width border */
 .desktop-sync-settings-header {
   grid-column: 2;
   min-width: 0;
-  padding-bottom: 22px;
+  padding: 0 var(--sync-page-padding-x) 22px;
   border-bottom: 1px solid var(--sync-border);
 }
 
@@ -127,23 +118,21 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1.1;
 }
 
-/* ─────────────────────────────────────────────
-   ROW STRUCTURE
-   ───────────────────────────────────────────── */
-
+/* ── Row structure ──
+   Content is padded 24px each side.
+   The border-bottom is full width via negative margins. */
 .settings-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 32px;
-  padding: var(--row-padding);
+  padding: 20px var(--sync-page-padding-x);
+  margin: 0;
   border-bottom: 1px solid var(--sync-border);
   min-width: 0;
 }
 
-.settings-row.is-status {
-  align-items: center;
-}
+.settings-row.is-status { align-items: center; }
 
 .settings-row-label {
   flex: 1 1 0;
@@ -177,9 +166,7 @@ html[data-theme="light"] .desktop-settings-view {
   scrollbar-width: none;
 }
 
-.settings-row-control::-webkit-scrollbar {
-  display: none;
-}
+.settings-row-control::-webkit-scrollbar { display: none; }
 
 /* ── Status row ── */
 .status-row-label {
@@ -302,9 +289,7 @@ html[data-theme="light"] .desktop-settings-view {
   cursor: pointer;
   background: var(--sync-control);
   color: var(--text-secondary);
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: background 150ms ease, color 150ms ease;
 }
 
 .secondary-button:hover:not(:disabled) {
@@ -352,9 +337,7 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: background 150ms ease, color 150ms ease;
 }
 
 .source-toggle button:hover:not(:disabled),
@@ -513,7 +496,7 @@ input:focus { border-color: var(--sync-border-strong); }
 
 /* ── Projects panel ── */
 .projects-panel {
-  padding: var(--row-padding);
+  padding: 20px var(--sync-page-padding-x);
   border-bottom: 1px solid var(--sync-border);
   min-width: 0;
   background: transparent;
@@ -577,9 +560,7 @@ button.project-row {
   cursor: pointer;
   font-family: inherit;
   color: inherit;
-  transition:
-    border-color 150ms ease,
-    background 150ms ease;
+  transition: border-color 150ms ease, background 150ms ease;
 }
 
 button.project-row:hover,
