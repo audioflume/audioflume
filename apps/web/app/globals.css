@@ -9,6 +9,8 @@
 @import "../../../packages/shared/styles/music-filter-popovers.css";
 @import "../../../packages/shared/styles/music-library-states.css";
 @import "../../../packages/shared/styles/music-shared-controls.css";
+@import "../../../packages/shared/styles/song-card.css";
+@import "../../../packages/shared/styles/music-player.css";
 @import "../../../packages/shared/styles/project-toolbar.css";
 @import "../../../packages/shared/styles/dropdown-shell.css";
 @import "../../../packages/shared/styles/user-menu.css";
