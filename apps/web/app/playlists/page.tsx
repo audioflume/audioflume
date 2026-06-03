@@ -183,7 +183,14 @@ function CreatePlaylistTile({
 }
 
 function PlaylistMenu({
-  playlist, open, onOpenChange, onEdit, onReorder, onDelete, playerVisible, viewMode,
+  playlist,
+  open,
+  onOpenChange,
+  onEdit,
+  onReorder,
+  onDelete,
+  playerVisible,
+  viewMode,
 }: {
   playlist: Playlist;
   open: boolean;
@@ -205,7 +212,12 @@ function PlaylistMenu({
         offsetAmount={5}
         flippedOffsetAmount={5}
         crossAxisOffset={0}
-        collisionPadding={{ top: 68, right: 16, bottom: playerVisible ? 85 : 13, left: 16 }}
+        collisionPadding={{
+          top: 68,
+          right: 16,
+          bottom: playerVisible ? 85 : 13,
+          left: 16,
+        }}
         trigger={({ open }) => (
           <button
             type="button"
@@ -220,17 +232,33 @@ function PlaylistMenu({
           </button>
         )}
       >
-        <button type="button" onClick={onEdit}>Edit Details</button>
-        <button type="button" onClick={onReorder}>Reorder</button>
-        <button type="button" className="danger-hover" onClick={onDelete}>Delete</button>
+        <button type="button" onClick={onEdit}>
+          Edit Details
+        </button>
+        <button type="button" onClick={onReorder}>
+          Reorder
+        </button>
+        <button type="button" className="danger-hover" onClick={onDelete}>
+          Delete
+        </button>
       </DropdownShell>
     </div>
   );
 }
 
 function SortablePlaylistItem({
-  playlist, index, isEditing, isDeleting, openMenuId, setOpenMenuId,
-  startReorder, openEdit, handleDeletePlaylist, playerVisible, viewMode, playlistStats,
+  playlist,
+  index,
+  isEditing,
+  isDeleting,
+  openMenuId,
+  setOpenMenuId,
+  startReorder,
+  openEdit,
+  handleDeletePlaylist,
+  playerVisible,
+  viewMode,
+  playlistStats,
 }: {
   playlist: Playlist;
   index: number;
@@ -249,7 +277,14 @@ function SortablePlaylistItem({
   const cover = getPlaylistCover(playlist);
   const playlistHref = `/playlists/${playlist.id}`;
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: playlist.id,
     disabled: !isEditing,
   });
@@ -264,15 +299,31 @@ function SortablePlaylistItem({
   if (viewMode === "list") {
     if (isEditing) {
       return (
-        <div ref={setNodeRef} className="playlist-index-row is-reordering" style={style} {...attributes} {...listeners}>
-          <div className="playlist-row-handle"><ReorderHandleIcon /></div>
-          <div className="playlist-row-number">{String(index + 1).padStart(2, "0")}</div>
-          <PlaylistArtwork playlist={playlist} index={index} className="playlist-row-cover" />
+        <div
+          ref={setNodeRef}
+          className="playlist-index-row is-reordering"
+          style={style}
+          {...attributes}
+          {...listeners}
+        >
+          <div className="playlist-row-handle">
+            <ReorderHandleIcon />
+          </div>
+          <div className="playlist-row-number">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+          <PlaylistArtwork
+            playlist={playlist}
+            index={index}
+            className="playlist-row-cover"
+          />
           <div className="playlist-row-main">
             <span>{playlist.name}</span>
             <small>{formatGenres(stats?.topGenres ?? [])}</small>
           </div>
-          <div className="playlist-row-count">{formatSongCount(stats?.songCount ?? 0)}</div>
+          <div className="playlist-row-count">
+            {formatSongCount(stats?.songCount ?? 0)}
+          </div>
         </div>
       );
     }
@@ -280,25 +331,43 @@ function SortablePlaylistItem({
     return (
       <div ref={setNodeRef} className="playlist-index-row-shell" style={style}>
         <Link href={playlistHref} className="playlist-index-row">
-          <div className="playlist-row-number">{String(index + 1).padStart(2, "0")}</div>
-          <PlaylistArtwork playlist={playlist} index={index} className="playlist-row-cover" />
+          <div className="playlist-row-number">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+          <PlaylistArtwork
+            playlist={playlist}
+            index={index}
+            className="playlist-row-cover"
+          />
           <div className="playlist-row-main">
             <span>{playlist.name}</span>
             <small>{formatGenres(stats?.topGenres ?? [])}</small>
           </div>
-          <div className="playlist-row-count">{formatSongCount(stats?.songCount ?? 0)}</div>
+          <div className="playlist-row-count">
+            {formatSongCount(stats?.songCount ?? 0)}
+          </div>
         </Link>
         {isDeleting && (
           <div className="playlist-deleting-overlay">
-            <LoadingSpinner size={24} stroke={7} color="var(--media-overlay-contrast)" />
+            <LoadingSpinner
+              size={24}
+              stroke={7}
+              color="var(--media-overlay-contrast)"
+            />
           </div>
         )}
         <PlaylistMenu
-          playlist={playlist} viewMode={viewMode}
+          playlist={playlist}
+          viewMode={viewMode}
           open={openMenuId === playlist.id}
-          onOpenChange={(nextOpen) => setOpenMenuId(nextOpen ? playlist.id : null)}
+          onOpenChange={(nextOpen) =>
+            setOpenMenuId(nextOpen ? playlist.id : null)
+          }
           onEdit={() => openEdit(playlist)}
-          onReorder={() => { setOpenMenuId(null); startReorder(); }}
+          onReorder={() => {
+            setOpenMenuId(null);
+            startReorder();
+          }}
           onDelete={() => handleDeletePlaylist(playlist)}
           playerVisible={playerVisible}
         />
@@ -308,12 +377,28 @@ function SortablePlaylistItem({
 
   if (isEditing) {
     return (
-      <div ref={setNodeRef} className="playlist-gallery-card is-reordering" style={style} {...attributes} {...listeners}>
+      <div
+        ref={setNodeRef}
+        className="playlist-gallery-card is-reordering"
+        style={style}
+        {...attributes}
+        {...listeners}
+      >
         <div className="playlist-gallery-art-wrap">
-          <PlaylistArtwork playlist={playlist} index={index} className="playlist-gallery-art" />
-          {!cover && <div className="playlist-gallery-letters">{playlist.name.slice(0, 2).toUpperCase()}</div>}
+          <PlaylistArtwork
+            playlist={playlist}
+            index={index}
+            className="playlist-gallery-art"
+          />
+          {!cover && (
+            <div className="playlist-gallery-letters">
+              {playlist.name.slice(0, 2).toUpperCase()}
+            </div>
+          )}
           <div className="playlist-gallery-top-row">
-            <div className="playlist-gallery-handle"><ReorderHandleIcon /></div>
+            <div className="playlist-gallery-handle">
+              <ReorderHandleIcon />
+            </div>
           </div>
           <div className="playlist-gallery-content">
             <h3>{playlist.name}</h3>
@@ -325,13 +410,27 @@ function SortablePlaylistItem({
   }
 
   return (
-    <div ref={setNodeRef} className={`playlist-gallery-card ${openMenuId === playlist.id ? "is-menu-open" : ""}`} style={style}>
+    <div
+      ref={setNodeRef}
+      className={`playlist-gallery-card ${openMenuId === playlist.id ? "is-menu-open" : ""}`}
+      style={style}
+    >
       <Link href={playlistHref} className="playlist-gallery-link">
         <div className="playlist-gallery-art-wrap">
-          <PlaylistArtwork playlist={playlist} index={index} className="playlist-gallery-art" />
-          {!cover && <div className="playlist-gallery-letters">{playlist.name.slice(0, 2).toUpperCase()}</div>}
+          <PlaylistArtwork
+            playlist={playlist}
+            index={index}
+            className="playlist-gallery-art"
+          />
+          {!cover && (
+            <div className="playlist-gallery-letters">
+              {playlist.name.slice(0, 2).toUpperCase()}
+            </div>
+          )}
           <div className="playlist-gallery-top-row">
-            <div className="playlist-gallery-arrow"><ArrowUpRightIcon /></div>
+            <div className="playlist-gallery-arrow">
+              <ArrowUpRightIcon />
+            </div>
           </div>
           <div className="playlist-gallery-content">
             <h3>{playlist.name}</h3>
@@ -341,15 +440,25 @@ function SortablePlaylistItem({
       </Link>
       {isDeleting && (
         <div className="playlist-deleting-overlay">
-          <LoadingSpinner size={24} stroke={7} color="var(--media-overlay-contrast)" />
+          <LoadingSpinner
+            size={24}
+            stroke={7}
+            color="var(--media-overlay-contrast)"
+          />
         </div>
       )}
       <PlaylistMenu
-        playlist={playlist} viewMode={viewMode}
+        playlist={playlist}
+        viewMode={viewMode}
         open={openMenuId === playlist.id}
-        onOpenChange={(nextOpen) => setOpenMenuId(nextOpen ? playlist.id : null)}
+        onOpenChange={(nextOpen) =>
+          setOpenMenuId(nextOpen ? playlist.id : null)
+        }
         onEdit={() => openEdit(playlist)}
-        onReorder={() => { setOpenMenuId(null); startReorder(); }}
+        onReorder={() => {
+          setOpenMenuId(null);
+          startReorder();
+        }}
         onDelete={() => handleDeletePlaylist(playlist)}
         playerVisible={playerVisible}
       />
@@ -357,18 +466,38 @@ function SortablePlaylistItem({
   );
 }
 
-function DragPreview({ playlist, index, viewMode, stats }: { playlist: Playlist; index: number; viewMode: PlaylistViewMode; stats?: PlaylistStats; }) {
+function DragPreview({
+  playlist,
+  index,
+  viewMode,
+  stats,
+}: {
+  playlist: Playlist;
+  index: number;
+  viewMode: PlaylistViewMode;
+  stats?: PlaylistStats;
+}) {
   if (viewMode === "list") {
     return (
       <div className="playlist-index-row is-reordering drag-preview-row">
-        <div className="playlist-row-handle"><ReorderHandleIcon /></div>
-        <div className="playlist-row-number">{String(index + 1).padStart(2, "0")}</div>
-        <PlaylistArtwork playlist={playlist} index={index} className="playlist-row-cover" />
+        <div className="playlist-row-handle">
+          <ReorderHandleIcon />
+        </div>
+        <div className="playlist-row-number">
+          {String(index + 1).padStart(2, "0")}
+        </div>
+        <PlaylistArtwork
+          playlist={playlist}
+          index={index}
+          className="playlist-row-cover"
+        />
         <div className="playlist-row-main">
           <span>{playlist.name}</span>
           <small>{formatGenres(stats?.topGenres ?? [])}</small>
         </div>
-        <div className="playlist-row-count">{formatSongCount(stats?.songCount ?? 0)}</div>
+        <div className="playlist-row-count">
+          {formatSongCount(stats?.songCount ?? 0)}
+        </div>
       </div>
     );
   }
@@ -376,9 +505,15 @@ function DragPreview({ playlist, index, viewMode, stats }: { playlist: Playlist;
   return (
     <div className="playlist-gallery-card drag-preview-card">
       <div className="playlist-gallery-art-wrap">
-        <PlaylistArtwork playlist={playlist} index={index} className="playlist-gallery-art" />
+        <PlaylistArtwork
+          playlist={playlist}
+          index={index}
+          className="playlist-gallery-art"
+        />
         <div className="playlist-gallery-content">
-          <div className="playlist-gallery-kicker">{formatGenres(stats?.topGenres ?? [])}</div>
+          <div className="playlist-gallery-kicker">
+            {formatGenres(stats?.topGenres ?? [])}
+          </div>
           <h3>{playlist.name}</h3>
           <p>{formatSongCount(stats?.songCount ?? 0)}</p>
         </div>
@@ -390,18 +525,36 @@ function DragPreview({ playlist, index, viewMode, stats }: { playlist: Playlist;
 export default function PlaylistsPage() {
   const { user } = useUser();
   const { currentSong } = usePlayer();
-  const { playlistViewMode: viewMode, setPlaylistViewMode: setViewMode, playlistSortMode: sortMode, setPlaylistSortMode: setSortMode, preferencesLoaded } = useUserPreferences();
-  const { playlists, setPlaylists, loading, error: playlistsError, refetchPlaylists } = usePlaylists();
+  const {
+    playlistViewMode: viewMode,
+    setPlaylistViewMode: setViewMode,
+    playlistSortMode: sortMode,
+    setPlaylistSortMode: setSortMode,
+    preferencesLoaded,
+  } = useUserPreferences();
+  const {
+    playlists,
+    setPlaylists,
+    loading,
+    error: playlistsError,
+    refetchPlaylists,
+  } = usePlaylists();
   const playerVisible = !!currentSong;
 
-  const [playlistStats, setPlaylistStats] = useState<Record<number, PlaylistStats>>({});
-  const [reorderSnapshot, setReorderSnapshot] = useState<Playlist[] | null>(null);
+  const [playlistStats, setPlaylistStats] = useState<
+    Record<number, PlaylistStats>
+  >({});
+  const [reorderSnapshot, setReorderSnapshot] = useState<Playlist[] | null>(
+    null,
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [editingPlaylist, setEditingPlaylist] = useState<Playlist | null>(null);
   const [showNewModal, setShowNewModal] = useState(false);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const [isSavingPlaylist, setIsSavingPlaylist] = useState(false);
-  const [deletingPlaylistId, setDeletingPlaylistId] = useState<number | null>(null);
+  const [deletingPlaylistId, setDeletingPlaylistId] = useState<number | null>(
+    null,
+  );
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [openSortMenu, setOpenSortMenu] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -410,29 +563,50 @@ export default function PlaylistsPage() {
   const [editCoverPreview, setEditCoverPreview] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
   const [newCoverPreview, setNewCoverPreview] = useState<string | null>(null);
-  const [skeletonViewMode, setSkeletonViewMode] = useState<PlaylistViewMode>("grid");
+  const [skeletonViewMode, setSkeletonViewMode] =
+    useState<PlaylistViewMode>("grid");
   const [skeletonViewModeLoaded, setSkeletonViewModeLoaded] = useState(false);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
 
   const displayedPlaylists = useMemo(() => {
-    if (sortMode === "alphabetical") return [...playlists].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+    if (sortMode === "alphabetical")
+      return [...playlists].sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+      );
     return playlists;
   }, [playlists, sortMode]);
 
-  const playlistIdsKey = useMemo(() => playlists.map((playlist) => playlist.id).join(","), [playlists]);
+  const playlistIdsKey = useMemo(
+    () => playlists.map((playlist) => playlist.id).join(","),
+    [playlists],
+  );
 
-  const totalSongs = useMemo(() => Object.values(playlistStats).reduce((total, stats) => total + stats.songCount, 0), [playlistStats]);
+  const totalSongs = useMemo(
+    () =>
+      Object.values(playlistStats).reduce(
+        (total, stats) => total + stats.songCount,
+        0,
+      ),
+    [playlistStats],
+  );
 
   const allGenres = useMemo(() => {
     const genres = new Set<string>();
-    Object.values(playlistStats).forEach((stats) => { stats.topGenres.forEach((genre) => genres.add(genre)); });
+    Object.values(playlistStats).forEach((stats) => {
+      stats.topGenres.forEach((genre) => genres.add(genre));
+    });
     return [...genres].slice(0, 4);
   }, [playlistStats]);
 
   useEffect(() => {
-    const savedViewMode = window.localStorage.getItem(PLAYLIST_SKELETON_VIEW_MODE_KEY);
-    if (savedViewMode === "grid" || savedViewMode === "list") setSkeletonViewMode(savedViewMode);
+    const savedViewMode = window.localStorage.getItem(
+      PLAYLIST_SKELETON_VIEW_MODE_KEY,
+    );
+    if (savedViewMode === "grid" || savedViewMode === "list")
+      setSkeletonViewMode(savedViewMode);
     setSkeletonViewModeLoaded(true);
   }, []);
 
@@ -444,12 +618,18 @@ export default function PlaylistsPage() {
   }, [preferencesLoaded, viewMode]);
 
   useEffect(() => {
-    if (!playlists.length) { setPlaylistStats({}); return; }
+    if (!playlists.length) {
+      setPlaylistStats({});
+      return;
+    }
     let cancelled = false;
     async function loadPlaylistStats() {
       try {
         const res = await fetch("/api/playlists/stats", { cache: "no-store" });
-        if (!res.ok) { if (!cancelled) setPlaylistStats({}); return; }
+        if (!res.ok) {
+          if (!cancelled) setPlaylistStats({});
+          return;
+        }
         const data = await res.json();
         if (!cancelled) setPlaylistStats(data?.stats ?? {});
       } catch {
@@ -457,83 +637,184 @@ export default function PlaylistsPage() {
       }
     }
     loadPlaylistStats();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [playlistIdsKey, playlists.length]);
 
-  const showToast = (message: string) => { setToastMessage(message); window.setTimeout(() => setToastMessage(null), 1800); };
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  };
 
-  const startReorder = () => { setOpenMenuId(null); setOpenSortMenu(false); setSortMode("custom"); setReorderSnapshot(playlists); setIsEditing(true); };
+  const startReorder = () => {
+    setOpenMenuId(null);
+    setOpenSortMenu(false);
+    setSortMode("custom");
+    setReorderSnapshot(playlists);
+    setIsEditing(true);
+  };
 
   const handleCancelReorder = () => {
     if (reorderSnapshot) setPlaylists(reorderSnapshot);
-    setActiveId(null); setOpenMenuId(null); setOpenSortMenu(false); setReorderSnapshot(null); setIsEditing(false);
+    setActiveId(null);
+    setOpenMenuId(null);
+    setOpenSortMenu(false);
+    setReorderSnapshot(null);
+    setIsEditing(false);
     showToast("Reorder cancelled");
   };
 
   const handleSaveReorder = async () => {
-    const reordered = playlists.map((playlist, index) => ({ ...playlist, position: index }));
+    const reordered = playlists.map((playlist, index) => ({
+      ...playlist,
+      position: index,
+    }));
     setPlaylists(reordered);
     try {
-      const res = await fetch("/api/playlists/reorder", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ playlists: reordered.map((p) => ({ id: p.id, position: p.position })) }) });
-      if (!res.ok) { console.error("Failed to save playlist order:", res.statusText); return; }
-      setOpenMenuId(null); setOpenSortMenu(false); setReorderSnapshot(null); setIsEditing(false);
+      const res = await fetch("/api/playlists/reorder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          playlists: reordered.map((p) => ({ id: p.id, position: p.position })),
+        }),
+      });
+      if (!res.ok) {
+        console.error("Failed to save playlist order:", res.statusText);
+        return;
+      }
+      setOpenMenuId(null);
+      setOpenSortMenu(false);
+      setReorderSnapshot(null);
+      setIsEditing(false);
       showToast("Order saved");
-    } catch (err) { console.error("Failed to save playlist order:", err); }
+    } catch (err) {
+      console.error("Failed to save playlist order:", err);
+    }
   };
 
-  const openEdit = (playlist: Playlist) => { setOpenMenuId(null); setOpenSortMenu(false); setEditingPlaylist(playlist); setEditName(playlist.name); setEditCoverPreview(playlist.cover_image_url ?? null); };
+  const openEdit = (playlist: Playlist) => {
+    setOpenMenuId(null);
+    setOpenSortMenu(false);
+    setEditingPlaylist(playlist);
+    setEditName(playlist.name);
+    setEditCoverPreview(playlist.cover_image_url ?? null);
+  };
 
   const handleSaveEdit = async () => {
     if (!editingPlaylist || isSavingPlaylist) return;
     setIsSavingPlaylist(true);
     try {
-      const res = await fetch(`/api/playlists/${editingPlaylist.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: editName, cover_image_url: editCoverPreview }) });
+      const res = await fetch(`/api/playlists/${editingPlaylist.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editName,
+          cover_image_url: editCoverPreview,
+        }),
+      });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-      if (!res.ok) { console.error("Failed to save playlist:", data || res.statusText); return; }
-      setPlaylists((prev) => prev.map((p) => p.id === editingPlaylist.id ? data || { ...p, name: editName, cover_image_url: editCoverPreview } : p));
+      if (!res.ok) {
+        console.error("Failed to save playlist:", data || res.statusText);
+        return;
+      }
+      setPlaylists((prev) =>
+        prev.map((p) =>
+          p.id === editingPlaylist.id
+            ? data || {
+                ...p,
+                name: editName,
+                cover_image_url: editCoverPreview,
+              }
+            : p,
+        ),
+      );
       showToast("Changes saved");
       setEditingPlaylist(null);
-    } finally { setIsSavingPlaylist(false); }
+    } finally {
+      setIsSavingPlaylist(false);
+    }
   };
 
   const handleDelete = async () => {
     if (!editingPlaylist || deletingPlaylistId) return;
-    const confirmed = window.confirm(`Are you sure you want to delete "${editingPlaylist.name}"? This cannot be undone.`);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${editingPlaylist.name}"? This cannot be undone.`,
+    );
     if (!confirmed) return;
     const playlistId = editingPlaylist.id;
-    setEditingPlaylist(null); setDeletingPlaylistId(playlistId);
+    setEditingPlaylist(null);
+    setDeletingPlaylistId(playlistId);
     try {
-      const res = await fetch(`/api/playlists/${playlistId}`, { method: "DELETE" });
-      if (res.ok) { setPlaylists((prev) => prev.filter((p) => p.id !== playlistId)); showToast("Playlist deleted"); }
-    } finally { setDeletingPlaylistId(null); }
+      const res = await fetch(`/api/playlists/${playlistId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setPlaylists((prev) => prev.filter((p) => p.id !== playlistId));
+        showToast("Playlist deleted");
+      }
+    } finally {
+      setDeletingPlaylistId(null);
+    }
   };
 
   const handleDeletePlaylist = async (playlist: Playlist) => {
     if (deletingPlaylistId) return;
-    const confirmed = window.confirm(`Are you sure you want to delete "${playlist.name}"? This cannot be undone.`);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${playlist.name}"? This cannot be undone.`,
+    );
     if (!confirmed) return;
-    setOpenMenuId(null); setOpenSortMenu(false); setDeletingPlaylistId(playlist.id);
+    setOpenMenuId(null);
+    setOpenSortMenu(false);
+    setDeletingPlaylistId(playlist.id);
     try {
-      const res = await fetch(`/api/playlists/${playlist.id}`, { method: "DELETE" });
-      if (res.ok) { setPlaylists((prev) => prev.filter((p) => p.id !== playlist.id)); showToast("Playlist deleted"); }
-    } finally { setDeletingPlaylistId(null); }
+      const res = await fetch(`/api/playlists/${playlist.id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setPlaylists((prev) => prev.filter((p) => p.id !== playlist.id));
+        showToast("Playlist deleted");
+      }
+    } finally {
+      setDeletingPlaylistId(null);
+    }
   };
 
   const handleCreate = async () => {
     if (!newName.trim() || !user || isCreatingPlaylist) return;
     setIsCreatingPlaylist(true);
     try {
-      const res = await fetch("/api/playlists", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newName, cover_image_url: newCoverPreview, position: playlists.length }) });
+      const res = await fetch("/api/playlists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newName,
+          cover_image_url: newCoverPreview,
+          position: playlists.length,
+        }),
+      });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-      if (!res.ok) { console.error("Failed to create playlist:", data || res.statusText); return; }
-      if (data) { setPlaylists((prev) => [...prev, data]); showToast("Playlist created"); }
-      setNewName(""); setNewCoverPreview(null); setShowNewModal(false);
-    } finally { setIsCreatingPlaylist(false); }
+      if (!res.ok) {
+        console.error("Failed to create playlist:", data || res.statusText);
+        return;
+      }
+      if (data) {
+        setPlaylists((prev) => [...prev, data]);
+        showToast("Playlist created");
+      }
+      setNewName("");
+      setNewCoverPreview(null);
+      setShowNewModal(false);
+    } finally {
+      setIsCreatingPlaylist(false);
+    }
   };
 
-  const handleDragStart = (event: DragStartEvent) => { setActiveId(event.active.id as number); };
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as number);
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -541,13 +822,20 @@ export default function PlaylistsPage() {
     if (!over || active.id === over.id) return;
     const oldIndex = playlists.findIndex((p) => p.id === active.id);
     const newIndex = playlists.findIndex((p) => p.id === over.id);
-    setPlaylists(arrayMove(playlists, oldIndex, newIndex).map((p, i) => ({ ...p, position: i })));
+    setPlaylists(
+      arrayMove(playlists, oldIndex, newIndex).map((p, i) => ({
+        ...p,
+        position: i,
+      })),
+    );
   };
 
   const activePlaylist = playlists.find((p) => p.id === activeId);
   const activeIndex = playlists.findIndex((p) => p.id === activeId);
   const showSkeleton = loading || !preferencesLoaded;
-  const resolvedSkeletonViewMode = preferencesLoaded ? viewMode : skeletonViewMode;
+  const resolvedSkeletonViewMode = preferencesLoaded
+    ? viewMode
+    : skeletonViewMode;
 
   return (
     <>
@@ -644,7 +932,7 @@ export default function PlaylistsPage() {
         .playlist-create-row .playlist-create-mark { width: 34px; height: 34px; grid-column: 1; }
         .playlist-create-row .playlist-create-copy { grid-column: 2; align-items: center; text-align: center; }
         .playlist-create-row:hover { border-color: var(--border-hover); background: var(--bg-hover); transform: translateY(-1px); }
-        .playlist-create-mark { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); color: var(--text-primary); transition: background 0.15s ease; }
+        .playlist-create-mark { width: 38px; height: 38px; border-radius: 0; display: flex; align-items: center; justify-content: center; background: var(--bg-card); color: var(--text-primary); transition: background 0.15s ease; }
         .playlist-create-card:hover .playlist-create-mark, .playlist-create-row:hover .playlist-create-mark { background: var(--bg-hover-strong); }
         .playlist-create-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
         .playlist-create-copy span { font-size: 14px; font-weight: 500; color: var(--text-primary); }
@@ -702,29 +990,47 @@ export default function PlaylistsPage() {
               <span>{playlists.length} playlists</span>
               <span className="playlists-dot">·</span>
               <span>{formatSongCount(totalSongs)}</span>
-              {allGenres.length > 0 && (<><span className="playlists-dot">·</span><span>{allGenres.join(" · ")}</span></>)}
+              {allGenres.length > 0 && (
+                <>
+                  <span className="playlists-dot">·</span>
+                  <span>{allGenres.join(" · ")}</span>
+                </>
+              )}
             </div>
           </section>
 
           <section className="playlists-control-bar">
             <div className="playlists-control-left">
-              <span className="playlists-control-label">{isEditing ? "Reorder mode" : "Collection index"}</span>
+              <span className="playlists-control-label">
+                {isEditing ? "Reorder mode" : "Collection index"}
+              </span>
             </div>
             {!isEditing && preferencesLoaded && (
               <div className="playlists-control-right">
-                <button type="button" className="playlist-action-btn" onClick={() => setShowNewModal(true)}>
+                <button
+                  type="button"
+                  className="playlist-action-btn"
+                  onClick={() => setShowNewModal(true)}
+                >
                   <PlusIcon size={16} />
                   New Playlist
                 </button>
                 <button
                   type="button"
                   className="playlist-icon-btn"
-                  aria-label={viewMode === "grid" ? "Switch to index view" : "Switch to gallery view"}
+                  aria-label={
+                    viewMode === "grid"
+                      ? "Switch to index view"
+                      : "Switch to gallery view"
+                  }
                   onClick={() => {
                     const nextViewMode = viewMode === "grid" ? "list" : "grid";
                     setViewMode(nextViewMode);
                     setSkeletonViewMode(nextViewMode);
-                    localStorage.setItem(PLAYLIST_SKELETON_VIEW_MODE_KEY, nextViewMode);
+                    localStorage.setItem(
+                      PLAYLIST_SKELETON_VIEW_MODE_KEY,
+                      nextViewMode,
+                    );
                     setOpenSortMenu(false);
                   }}
                 >
@@ -737,15 +1043,42 @@ export default function PlaylistsPage() {
                   className="playlist-sort-dropdown"
                   offsetAmount={6}
                   flippedOffsetAmount={6}
-                  collisionPadding={{ top: 112, right: 16, bottom: playerVisible ? 96 : 24, left: 16 }}
+                  collisionPadding={{
+                    top: 112,
+                    right: 16,
+                    bottom: playerVisible ? 96 : 24,
+                    left: 16,
+                  }}
                   trigger={({ open }) => (
-                    <button type="button" className={"playlist-icon-btn" + (open ? " is-open" : "")} aria-label="Sort playlists">
+                    <button
+                      type="button"
+                      className={"playlist-icon-btn" + (open ? " is-open" : "")}
+                      aria-label="Sort playlists"
+                    >
                       <SortIcon />
                     </button>
                   )}
                 >
-                  <button type="button" className={sortMode === "custom" ? "is-active" : ""} onClick={() => { setSortMode("custom"); setOpenSortMenu(false); }}>Custom</button>
-                  <button type="button" className={sortMode === "alphabetical" ? "is-active" : ""} onClick={() => { setSortMode("alphabetical"); setOpenSortMenu(false); }}>Alphabetical</button>
+                  <button
+                    type="button"
+                    className={sortMode === "custom" ? "is-active" : ""}
+                    onClick={() => {
+                      setSortMode("custom");
+                      setOpenSortMenu(false);
+                    }}
+                  >
+                    Custom
+                  </button>
+                  <button
+                    type="button"
+                    className={sortMode === "alphabetical" ? "is-active" : ""}
+                    onClick={() => {
+                      setSortMode("alphabetical");
+                      setOpenSortMenu(false);
+                    }}
+                  >
+                    Alphabetical
+                  </button>
                 </DropdownShell>
               </div>
             )}
@@ -755,26 +1088,71 @@ export default function PlaylistsPage() {
             <div className="playlist-edit-banner">
               <span>Drag playlists into the order you want.</span>
               <div className="playlist-edit-actions">
-                <button type="button" className="playlist-edit-cancel" onClick={handleCancelReorder}>Cancel</button>
-                <button type="button" className="playlist-edit-save" onClick={handleSaveReorder}>Save</button>
+                <button
+                  type="button"
+                  className="playlist-edit-cancel"
+                  onClick={handleCancelReorder}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="playlist-edit-save"
+                  onClick={handleSaveReorder}
+                >
+                  Save
+                </button>
               </div>
             </div>
           )}
 
           {playlistsError && !showSkeleton ? (
             <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 text-center">
-              <div className="text-sm font-medium text-[var(--text-primary)]">Couldn&apos;t load playlists</div>
-              <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">{playlistsError}</div>
-              <button type="button" onClick={refetchPlaylists} className="playlist-icon-btn">Try</button>
+              <div className="text-sm font-medium text-[var(--text-primary)]">
+                Couldn&apos;t load playlists
+              </div>
+              <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
+                {playlistsError}
+              </div>
+              <button
+                type="button"
+                onClick={refetchPlaylists}
+                className="playlist-icon-btn"
+              >
+                Try
+              </button>
             </div>
           ) : showSkeleton ? (
-            skeletonViewModeLoaded ? <SkeletonLibrary viewMode={resolvedSkeletonViewMode} /> : <div className="playlist-skeleton-reserve" />
+            skeletonViewModeLoaded ? (
+              <SkeletonLibrary viewMode={resolvedSkeletonViewMode} />
+            ) : (
+              <div className="playlist-skeleton-reserve" />
+            )
           ) : (
             <section className="playlist-library">
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-                <SortableContext items={displayedPlaylists.map((p) => p.id)} strategy={rectSortingStrategy}>
-                  <div className={viewMode === "grid" ? "playlist-gallery" : "playlist-index"}>
-                    {!isEditing && <CreatePlaylistTile viewMode={viewMode} onClick={() => setShowNewModal(true)} />}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={displayedPlaylists.map((p) => p.id)}
+                  strategy={rectSortingStrategy}
+                >
+                  <div
+                    className={
+                      viewMode === "grid"
+                        ? "playlist-gallery"
+                        : "playlist-index"
+                    }
+                  >
+                    {!isEditing && (
+                      <CreatePlaylistTile
+                        viewMode={viewMode}
+                        onClick={() => setShowNewModal(true)}
+                      />
+                    )}
                     {displayedPlaylists.map((playlist, index) => (
                       <SortablePlaylistItem
                         key={playlist.id}
@@ -795,19 +1173,32 @@ export default function PlaylistsPage() {
                   </div>
                 </SortableContext>
                 <DragOverlay>
-                  {activePlaylist && <DragPreview playlist={activePlaylist} index={Math.max(activeIndex, 0)} viewMode={viewMode} stats={playlistStats[activePlaylist.id]} />}
+                  {activePlaylist && (
+                    <DragPreview
+                      playlist={activePlaylist}
+                      index={Math.max(activeIndex, 0)}
+                      viewMode={viewMode}
+                      stats={playlistStats[activePlaylist.id]}
+                    />
+                  )}
                 </DragOverlay>
               </DndContext>
             </section>
           )}
 
-          <div className="pt-12 pb-1" style={{ paddingBottom: playerVisible ? "72px" : "8px" }}>
+          <div
+            className="pt-12 pb-1"
+            style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
+          >
             <Footer />
           </div>
         </div>
       </main>
 
-      <Toast message={toastMessage} bottomOffset={playerVisible ? "88px" : "24px"} />
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
 
       <EditPlaylistModal
         isOpen={!!editingPlaylist}
