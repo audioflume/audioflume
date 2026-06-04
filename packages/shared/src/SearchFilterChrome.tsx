@@ -56,7 +56,7 @@ export function SearchFilterChrome({
         style={stickyTop !== undefined ? { top: stickyTop } : undefined}
       >
         <div className="filmwave-search-filter-search-row" onClick={onSearchRowClick}>
-          <div className="filmwave-search-filter-search-shell">{search}</div>
+          {search}
           {tags && <div className="filmwave-search-filter-tags">{tags}</div>}
         </div>
 
@@ -91,7 +91,7 @@ export function SearchFilterInput({
   onChange,
 }: SearchFilterInputProps) {
   return (
-    <>
+    <div className="filmwave-search-filter-search-shell">
       <span className="filmwave-search-filter-search-icon" aria-hidden="true">
         {icon}
       </span>
@@ -104,7 +104,7 @@ export function SearchFilterInput({
           onChange={onChange}
         />
       )}
-    </>
+    </div>
   );
 }
 
