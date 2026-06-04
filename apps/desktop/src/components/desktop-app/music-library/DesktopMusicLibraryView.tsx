@@ -27,7 +27,7 @@ import {
 } from "@filmwave/shared";
 import { exists } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type WheelEvent } from "react";
 import CheckIcon from "../../icons/CheckIcon";
 import PlaylistIcon from "../../icons/PlaylistIcon";
 import PlusIcon from "../../icons/PlusIcon";
@@ -537,8 +537,23 @@ export default function DesktopMusicLibraryView({
     return getProgressFromTime(playbackProgress.currentTime, playbackProgress.duration);
   }
 
+  function handleMusicPageWheelCapture(event: WheelEvent<HTMLElement>) {
+    const target = event.target instanceof Element ? event.target : null;
+    const filterRow = target?.closest<HTMLElement>(".filmwave-search-filter-row");
+
+    if (!filterRow) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    filterRow.scrollLeft += event.deltaX + (event.shiftKey ? event.deltaY : 0);
+  }
+
   return (
-    <section className={`desktop-music-page${activeSong ? " has-player" : ""}`}>
+    <section
+      className={`desktop-music-page${activeSong ? " has-player" : ""}`}
+      onWheelCapture={handleMusicPageWheelCapture}
+    >
       <SearchFilterChrome
         onSearchRowClick={() => searchInputRef.current?.focus()}
         search={
