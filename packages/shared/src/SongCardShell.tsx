@@ -44,7 +44,11 @@ export function SongCardShell({
   const rootClassName = `filmwave-song-card${className ? ` ${className}` : ""}`;
 
   return (
-    <article ref={cardRef} data-song-card-id={dataSongCardId} className={rootClassName}>
+    <article
+      ref={cardRef}
+      data-song-card-id={dataSongCardId}
+      className={rootClassName}
+    >
       <button
         type="button"
         className="filmwave-song-cover"
@@ -57,7 +61,11 @@ export function SongCardShell({
         </span>
       </button>
 
-      <button type="button" className="filmwave-song-info" onClick={onInfoClick}>
+      <button
+        type="button"
+        className="filmwave-song-info"
+        onClick={onInfoClick}
+      >
         <span className="filmwave-song-title">{title}</span>
         <span className="filmwave-song-artist">{artist}</span>
       </button>
@@ -66,7 +74,9 @@ export function SongCardShell({
         <div className="filmwave-song-wave-wrap">
           <div className="filmwave-song-stems-slot">{stems}</div>
           <div className="filmwave-song-wave">{waveform}</div>
-          {duration && <span className="filmwave-song-duration">{duration}</span>}
+          {duration && (
+            <span className="filmwave-song-duration">{duration}</span>
+          )}
         </div>
       )}
 
