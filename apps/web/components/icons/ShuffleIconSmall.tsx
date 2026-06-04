@@ -7,47 +7,35 @@ export default function ShuffleIconSmall({ size = 15 }: ShuffleIconSmallProps) {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 468.15 402.11"
       fill="none"
       aria-hidden="true"
     >
       <path
-        d="M4 7H7.2C9.2 7 10.6 8.2 12 10.2L12.8 11.4"
+        d="M0,316.54h74.19c45.57,0,87.69-24.27,110.54-63.7l60.01-103.56c22.85-39.43,64.97-63.7,110.54-63.7h94.1"
         stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
+        strokeWidth="26"
+        strokeMiterlimit="10"
+      />
+      <polyline
+        points="375.1 7.78 452.6 85.28 375.1 162.78"
+        stroke="currentColor"
+        strokeWidth="26"
+        strokeMiterlimit="10"
+        fill="none"
       />
       <path
-        d="M17 5L20 8L17 11"
+        d="M0,85.57h74.19c45.57,0,87.69,24.27,110.54,63.7l60.01,103.56c22.85,39.43,64.97,63.7,110.54,63.7h94.1"
         stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        strokeWidth="26"
+        strokeMiterlimit="10"
       />
-      <path
-        d="M14.5 8H20"
+      <polyline
+        points="375.1 394.33 452.6 316.83 375.1 239.33"
         stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 17H7.2C9.2 17 10.6 15.8 12 13.8L12.8 12.6"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M17 13L20 16L17 19"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.5 16H20"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
+        strokeWidth="26"
+        strokeMiterlimit="10"
+        fill="none"
       />
     </svg>
   );
