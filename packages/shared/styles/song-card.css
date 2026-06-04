@@ -482,6 +482,16 @@ html[data-theme="light"]
   white-space: nowrap;
 }
 
+.filmwave-song-tail {
+  display: flex;
+  min-width: 0;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(12px, 2.4vw, 36px);
+  margin-left: auto;
+}
+
 @container (max-width: 1060px) {
   .filmwave-song-genre-slot,
   .desktop-song-genre-slot {
@@ -516,12 +526,16 @@ html[data-theme="light"]
   .desktop-song-actions {
     gap: 2px;
   }
-}
 
-.filmwave-song-tail {
-  display: flex;
-  min-width: 0;
-  flex-shrink: 0;
-  align-items: center;
-  gap: clamp(12px, 2.4vw, 36px);
+  .filmwave-song-info,
+  .desktop-song-info {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+
+  .filmwave-song-tail {
+    flex: 0 0 auto;
+    gap: 12px;
+    margin-left: auto;
+  }
 }
