@@ -1,0 +1,28 @@
+.desktop-settings-view {
+  position: relative;
+}
+
+.desktop-sync-settings-header {
+  padding-right: max(var(--sync-page-padding-x), 220px);
+}
+
+.sync-card > .settings-row.is-status:first-child {
+  position: absolute;
+  top: 0;
+  right: var(--sync-page-padding-x);
+  z-index: 2;
+  display: flex;
+  min-height: 27px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  border-bottom: 0;
+}
+
+.sync-card > .settings-row.is-status:first-child .status-row-label {
+  display: none;
+}
+
+.sync-card > .settings-row.is-status:first-child .status-pill {
+  white-space: nowrap;
+}
