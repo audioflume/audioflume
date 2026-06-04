@@ -521,7 +521,7 @@ html[data-theme="light"]
   }
 }
 
-@container (max-width: 520px) {
+@container (max-width: 500px) {
   .filmwave-song-actions,
   .desktop-song-actions {
     gap: 2px;
