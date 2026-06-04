@@ -3,7 +3,7 @@
 import type { ReactNode, Ref } from "react";
 
 type SongCardShellProps = {
-  cardRef?: Ref<HTMLElement>;
+  cardRef?: Ref<HTMLArticleElement>;
   className?: string;
   dataSongCardId?: string;
   cover: ReactNode;
