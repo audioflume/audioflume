@@ -31,7 +31,8 @@ export default function AccountBlock({
 }: AccountBlockProps) {
   return (
     <div className="settings-row account-settings-row">
-      <div className="settings-row-label">
+      <div className="account-module-copy">
+        <span className="account-module-kicker">Signed in</span>
         <h2>Account</h2>
         <p>{accountDescription}</p>
         {!isSignedIn && (
@@ -52,30 +53,27 @@ export default function AccountBlock({
             </button>
           </div>
         )}
-        {isSignedIn && (
-          <div className="account-profile-card">
-            <div className="account-avatar">
-              {account?.imageUrl ? (
-                <img src={account.imageUrl} alt="" />
-              ) : (
-                getAccountInitial(account)
-              )}
-            </div>
-            <div className="account-profile-main">
-              <span className="account-name">
-                {account?.name ?? (accountLoading ? "Loading..." : "Filmwave user")}
-              </span>
-              <span className="account-email">
-                {account?.email ?? "Connected to Filmwave"}
-              </span>
-              <span className="account-connected-line">
-                <span className="account-connected-dot" />
-                Filmwave account connected
-              </span>
-            </div>
-          </div>
-        )}
       </div>
+
+      {isSignedIn && (
+        <div className="account-profile-card">
+          <div className="account-avatar">
+            {account?.imageUrl ? (
+              <img src={account.imageUrl} alt="" />
+            ) : (
+              getAccountInitial(account)
+            )}
+          </div>
+          <div className="account-profile-main">
+            <span className="account-name">
+              {account?.name ?? (accountLoading ? "Loading..." : "Filmwave user")}
+            </span>
+            <span className="account-email">
+              {account?.email ?? "Connected to Filmwave"}
+            </span>
+          </div>
+        </div>
+      )}
 
       <div className="settings-row-control account-actions">
         <button type="button" className="primary-button" onClick={onOpenSignIn}>
