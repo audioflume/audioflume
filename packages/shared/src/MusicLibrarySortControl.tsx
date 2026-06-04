@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { FilterPopover } from "./FilterPopover";
-import { FilterTrigger } from "./FilterTrigger";
-import { MusicCheckIcon } from "./MusicIcons";
+import { useState } from "react";
+import DropdownShell from "./DropdownShell";
 
 export type MusicLibrarySortValue = "recent" | "downloaded" | "relevant" | "random";
 
@@ -17,6 +15,27 @@ export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
   { value: "random", label: "Random" },
 ];
 
+function SortChevron() {
+  return (
+    <svg
+      width="8"
+      height="8"
+      viewBox="0 0 8 8"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M1.5 3L4 5.5L6.5 3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function MusicLibrarySortControl({
   value,
   onChange,
@@ -25,74 +44,43 @@ export function MusicLibrarySortControl({
   onChange: (value: MusicLibrarySortValue) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const selectedOption = MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === value) ?? MUSIC_LIBRARY_SORT_OPTIONS[0];
-
-  useEffect(() => {
-    if (!open) return;
-
-    function handleClickOutside(event: MouseEvent) {
-      if (!wrapperRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscape);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [open]);
+  const selectedOption =
+    MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === value) ??
+    MUSIC_LIBRARY_SORT_OPTIONS[0];
 
   return (
-    <div ref={wrapperRef} className="filmwave-filter-popover-wrap filmwave-music-sort-wrap">
-      <FilterTrigger
-        buttonRef={triggerRef}
-        label={selectedOption.label}
-        open={open}
-        className="filmwave-music-sort-trigger"
-        onClick={() => setOpen(!open)}
-      />
-
-      <FilterPopover
-        open={open}
-        triggerRef={triggerRef}
-        width={190}
-        className="filmwave-filter-panel filmwave-music-sort-panel"
-      >
-        <div className="filmwave-playlist-filter-scroll">
-          {MUSIC_LIBRARY_SORT_OPTIONS.map((option) => {
-            const selected = option.value === value;
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                className={`filmwave-filter-row-button${selected ? " is-active" : ""}`}
-                onClick={() => {
-                  onChange(option.value);
-                  setOpen(false);
-                }}
-              >
-                <span className="filmwave-filter-row-label">
-                  <span className="filmwave-filter-row-text">{option.label}</span>
-                </span>
-
-                <span className={`filmwave-filter-row-action${selected ? " is-active" : ""}`}>
-                  {selected ? <MusicCheckIcon size={11} /> : null}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </FilterPopover>
-    </div>
+    <DropdownShell
+      open={open}
+      onOpenChange={setOpen}
+      placement="bottom-end"
+      className="filmwave-music-sort-dropdown"
+      offsetAmount={6}
+      flippedOffsetAmount={6}
+      collisionPadding={{ top: 163, right: 16, bottom: 85, left: 16 }}
+      trigger={({ open: triggerOpen }) => (
+        <button
+          type="button"
+          className={`filmwave-music-sort-button${triggerOpen ? " is-open" : ""}`}
+          aria-expanded={triggerOpen}
+        >
+          <span>{selectedOption.label}</span>
+          <SortChevron />
+        </button>
+      )}
+    >
+      {MUSIC_LIBRARY_SORT_OPTIONS.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          role="menuitem"
+          onClick={() => {
+            onChange(option.value);
+            setOpen(false);
+          }}
+        >
+          {option.label}
+        </button>
+      ))}
+    </DropdownShell>
   );
 }
