@@ -83,14 +83,14 @@ export function SongCardShell({
         </div>
       )}
 
-      {!waveform && duration ? (
-        <div className="filmwave-song-compact-tail">
-          <span className="filmwave-song-duration">{duration}</span>
-          <div className="filmwave-song-actions">{actions}</div>
-        </div>
-      ) : (
+      <div className="filmwave-song-compact-tail">
+        {duration && (
+          <span className="filmwave-song-duration filmwave-song-compact-duration">
+            {duration}
+          </span>
+        )}
         <div className="filmwave-song-actions">{actions}</div>
-      )}
+      </div>
     </article>
   );
 }
