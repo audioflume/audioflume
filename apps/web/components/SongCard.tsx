@@ -253,6 +253,24 @@ export default function SongCard({
     setMoreOpen(false);
   }
 
+  async function handleDownloadSong() {
+    try {
+      const res = await fetch(`/api/songs/${encodeURIComponent(song.id)}/download`, {
+        method: "POST",
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data?.downloadUrl) {
+        console.error("Failed to prepare song download", data);
+        return;
+      }
+
+      window.open(String(data.downloadUrl), "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("Failed to download song", error);
+    }
+  }
+
   const coverArtUrl =
     typeof song.coverArt === "string" && song.coverArt.trim()
       ? song.coverArt
@@ -333,7 +351,7 @@ export default function SongCard({
               }}
             />
 
-            <IconButton label="Download song">
+            <IconButton label="Download song" onClick={handleDownloadSong}>
               <DownloadIcon />
             </IconButton>
           </>
