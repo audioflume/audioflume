@@ -28,6 +28,7 @@ export * from "./SongCardCuePointOverlay";
 export * from "./SongCardWaveform";
 export * from "./SongActionButton";
 export * from "./MusicLibraryStates";
+export * from "./ShuffleIconSmall";
 export * from "./MusicShuffleButton";
 export * from "./MusicLibrarySortControl";
 export * from "./HeaderShell";
