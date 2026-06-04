@@ -29,7 +29,7 @@ export default function AccountBlock({
   onSignOut,
 }: AccountBlockProps) {
   return (
-    <div className="settings-row">
+    <div className="settings-row account-settings-row">
       <div className="settings-row-label">
         <h2>Account</h2>
         <p>{accountDescription}</p>
@@ -52,7 +52,7 @@ export default function AccountBlock({
           </div>
         )}
         {isSignedIn && (
-          <div className="account-profile">
+          <div className="account-profile-card">
             <div className="account-avatar">
               {account?.imageUrl ? (
                 <img src={account.imageUrl} alt="" />
@@ -60,19 +60,23 @@ export default function AccountBlock({
                 getAccountInitial(account)
               )}
             </div>
-            <div>
+            <div className="account-profile-main">
               <span className="account-name">
                 {account?.name ?? (accountLoading ? "Loading..." : "Filmwave user")}
               </span>
               <span className="account-email">
                 {account?.email ?? "Connected to Filmwave"}
               </span>
+              <span className="account-connected-line">
+                <span className="account-connected-dot" />
+                Filmwave account connected
+              </span>
             </div>
           </div>
         )}
       </div>
 
-      <div className="settings-row-control">
+      <div className="settings-row-control account-actions">
         <button type="button" className="primary-button" onClick={onOpenSignIn}>
           {isSignedIn ? "Reconnect" : "Sign in"}
         </button>
