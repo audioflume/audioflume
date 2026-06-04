@@ -6,6 +6,7 @@
 @import "../../../packages/shared/styles/sidebar.css";
 @import "../../../packages/shared/styles/sidebar-player-boundary.css";
 @import "../../../packages/shared/styles/search-filter-chrome.css";
+@import "../../../packages/shared/styles/collapsible-search-pill.css";
 @import "../../../packages/shared/styles/music-filter-popovers.css";
 @import "../../../packages/shared/styles/music-library-states.css";
 @import "../../../packages/shared/styles/music-shared-controls.css";
@@ -47,7 +48,7 @@ body.sidebar-collapsed {
   width: var(--sidebar-width-collapsed);
 }
 
-/* ─── Sidebar collapse ─────────────────────────── */
+/* ─── Sidebar collapse ───────────────────────────────────── */
 
 body.sidebar-collapsed aside[data-sidebar] {
   width: var(--sidebar-width-collapsed);
