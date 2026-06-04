@@ -3,7 +3,7 @@
 import { useState } from "react";
 import DropdownShell from "./DropdownShell";
 
-export type MusicLibrarySortValue = "recent" | "downloaded" | "relevant" | "random";
+export type MusicLibrarySortValue = "recent" | "downloaded" | "random";
 
 export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
   value: MusicLibrarySortValue;
@@ -11,7 +11,6 @@ export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
 }> = [
   { value: "recent", label: "Most Recent" },
   { value: "downloaded", label: "Most Popular" },
-  { value: "relevant", label: "Most Relevant" },
   { value: "random", label: "Random" },
 ];
 
