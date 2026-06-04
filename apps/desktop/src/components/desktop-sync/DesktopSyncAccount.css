@@ -1,78 +1,22 @@
-.account-settings-row {
-  display: grid;
-  gap: 18px;
-  margin: 18px var(--sync-page-padding-x);
-  border: 0;
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.07), transparent 34%),
-    var(--sync-surface-raised);
-  padding: 22px;
-}
-
-.account-module-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  min-width: 0;
-}
-
-.account-module-copy {
-  flex: 1 1 0;
-  min-width: 0;
-}
-
-.account-module-copy h2 {
-  margin: 0;
-  color: var(--text-primary);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-}
-
-.account-module-copy p {
-  max-width: 420px;
-  margin: 7px 0 0;
-  color: var(--text-secondary);
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.account-actions {
-  flex: 0 0 auto;
-  padding-top: 0;
-}
-
-.account-identity-panel,
-.account-connect-panel {
-  min-width: 0;
-  border: 1px solid var(--sync-border);
-  border-radius: 18px;
-  background: var(--bg-primary);
-}
-
-.account-identity-panel {
-  display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
+.account-profile {
+  display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px;
+  gap: 10px;
+  max-width: 100%;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: var(--sync-control);
+  padding: 6px 12px 6px 6px;
 }
 
-.account-connect-panel {
-  padding: 14px;
-}
-
-.account-identity-panel .account-avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+.account-profile .account-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
   overflow: hidden;
   background: var(--sync-control-hover);
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -80,37 +24,18 @@
   flex-shrink: 0;
 }
 
-.account-identity-panel .account-name {
+.account-profile .account-name {
   display: block;
-  overflow: hidden;
   color: var(--text-primary);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1;
 }
 
-.account-identity-panel .account-email {
+.account-profile .account-email {
   display: block;
-  overflow: hidden;
-  margin-top: 6px;
   color: var(--text-secondary);
   font-size: 12px;
-  line-height: 1.15;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@container sync-card (max-width: 760px) {
-  .account-module-header {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .account-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
+  line-height: 1;
+  margin-top: 4px;
 }
