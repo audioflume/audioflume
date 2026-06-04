@@ -25,6 +25,7 @@ import {
   SearchFilterChrome,
   SearchFilterInput,
   SearchFilterQuickButton,
+  sortMusicLibrarySongsByRelevance,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -242,18 +243,8 @@ export default function MusicPage() {
     if (!selectedPlaylistId) setSelectedPlaylistSongIds(null);
   }, [selectedPlaylistId]);
 
-  const filteredSongs = useMemo(() => {
-    if (!filtersHydrated) return [];
-
-    const playlistSongs = selectedPlaylistId
-      ? songs.filter((song) => {
-          if (!selectedPlaylistSongIds) return false;
-          const identityValues = getMusicSongIdentityValues(song);
-          return identityValues.some((id) => selectedPlaylistSongIds.has(id));
-        })
-      : songs;
-
-    return filterMusicLibrarySongs(playlistSongs, {
+  const relevanceFilters = useMemo(
+    () => ({
       search,
       selectedMoods,
       selectedGenres,
@@ -265,22 +256,39 @@ export default function MusicPage() {
       instrumental,
       bpmValue,
       keyValue,
-    });
+    }),
+    [
+      bpmValue,
+      instrumental,
+      keyValue,
+      search,
+      selectedBuilds,
+      selectedDurations,
+      selectedEditPoints,
+      selectedGenres,
+      selectedInstruments,
+      selectedMoods,
+      selectedVocals,
+    ],
+  );
+
+  const filteredSongs = useMemo(() => {
+    if (!filtersHydrated) return [];
+
+    const playlistSongs = selectedPlaylistId
+      ? songs.filter((song) => {
+          if (!selectedPlaylistSongIds) return false;
+          const identityValues = getMusicSongIdentityValues(song);
+          return identityValues.some((id) => selectedPlaylistSongIds.has(id));
+        })
+      : songs;
+
+    return filterMusicLibrarySongs(playlistSongs, relevanceFilters);
   }, [
-    bpmValue,
     filtersHydrated,
-    instrumental,
-    keyValue,
-    search,
-    selectedBuilds,
-    selectedDurations,
-    selectedEditPoints,
-    selectedGenres,
-    selectedInstruments,
-    selectedMoods,
+    relevanceFilters,
     selectedPlaylistId,
     selectedPlaylistSongIds,
-    selectedVocals,
     songs,
   ]);
 
@@ -307,6 +315,10 @@ export default function MusicPage() {
       return [...filteredSongs].sort((a, b) => b.downloadCount - a.downloadCount);
     }
 
+    if (sortOrder === "relevant") {
+      return sortMusicLibrarySongsByRelevance(filteredSongs, relevanceFilters);
+    }
+
     if (sortOrder !== "random" || !shuffleOrderIds) return filteredSongs;
 
     const orderMap = new Map(
@@ -325,7 +337,7 @@ export default function MusicPage() {
 
       return aOrder - bOrder;
     });
-  }, [filteredSongs, shuffleOrderIds, sortOrder]);
+  }, [filteredSongs, relevanceFilters, shuffleOrderIds, sortOrder]);
 
   useEffect(() => {
     setQueue(displayedSongs);
