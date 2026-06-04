@@ -19,17 +19,50 @@ export function MusicShuffleButton({
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="14"
-        height="14"
-        fill="currentColor"
-        viewBox="0 0 16 16"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
         aria-hidden="true"
       >
         <path
-          fillRule="evenodd"
-          d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"
+          d="M3.75 7H7.1C8.9 7 10.3 8.08 11.68 9.9L12.38 10.82"
+          stroke="currentColor"
+          strokeWidth="2.35"
+          strokeLinecap="square"
         />
-        <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
+        <path
+          d="M15.5 4.25L20.25 7.75L15.5 11.25"
+          stroke="currentColor"
+          strokeWidth="2.35"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+        />
+        <path
+          d="M14.25 7.75H20.25"
+          stroke="currentColor"
+          strokeWidth="2.35"
+          strokeLinecap="square"
+        />
+        <path
+          d="M3.75 17H7.1C8.9 17 10.3 15.92 11.68 14.1L12.38 13.18"
+          stroke="currentColor"
+          strokeWidth="2.35"
+          strokeLinecap="square"
+        />
+        <path
+          d="M15.5 12.75L20.25 16.25L15.5 19.75"
+          stroke="currentColor"
+          strokeWidth="2.35"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+        />
+        <path
+          d="M14.25 16.25H20.25"
+          stroke="currentColor"
+          strokeWidth="2.35"
+          strokeLinecap="square"
+        />
       </svg>
     </button>
   );
