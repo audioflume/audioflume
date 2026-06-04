@@ -7,7 +7,7 @@ export default function EditPointsIcon({ size = 14 }: EditPointsIconProps) {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 302.66 440.13"
+      viewBox="-20 -30 342.66 500.13"
       fill="none"
       aria-hidden="true"
     >
