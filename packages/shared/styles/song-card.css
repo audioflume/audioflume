@@ -483,13 +483,11 @@ html[data-theme="light"]
 }
 
 .filmwave-song-compact-tail {
-  display: flex;
-  min-width: 0;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-left: auto;
+  display: contents;
+}
+
+.filmwave-song-compact-duration {
+  display: none;
 }
 
 @container (max-width: 1060px) {
@@ -522,6 +520,25 @@ html[data-theme="light"]
 }
 
 @container (max-width: 500px) {
+  .filmwave-song-wave-wrap,
+  .desktop-song-wave-wrap {
+    display: none;
+  }
+
+  .filmwave-song-compact-tail {
+    display: flex;
+    min-width: 0;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  .filmwave-song-compact-duration {
+    display: inline-flex;
+  }
+
   .filmwave-song-actions,
   .desktop-song-actions {
     gap: 2px;
