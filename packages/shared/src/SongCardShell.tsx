@@ -70,24 +70,27 @@ export function SongCardShell({
         </div>
       )}
 
-      <div className="filmwave-song-tail">
-        {!waveform && duration && <span className="filmwave-song-duration">{duration}</span>}
+      {genre && (
+        <div className="filmwave-song-genre-slot">
+          <span className="filmwave-song-genre">{genre}</span>
+        </div>
+      )}
 
-        {genre && (
-          <div className="filmwave-song-genre-slot">
-            <span className="filmwave-song-genre">{genre}</span>
-          </div>
-        )}
+      {(keyMeta || bpmMeta) && (
+        <div className="filmwave-song-key-bpm filmwave-song-meta">
+          {keyMeta && <span className="filmwave-song-key">{keyMeta}</span>}
+          {bpmMeta && <span className="filmwave-song-bpm">{bpmMeta}</span>}
+        </div>
+      )}
 
-        {(keyMeta || bpmMeta) && (
-          <div className="filmwave-song-key-bpm filmwave-song-meta">
-            {keyMeta && <span className="filmwave-song-key">{keyMeta}</span>}
-            {bpmMeta && <span className="filmwave-song-bpm">{bpmMeta}</span>}
-          </div>
-        )}
-
+      {!waveform && duration ? (
+        <div className="filmwave-song-compact-tail">
+          <span className="filmwave-song-duration">{duration}</span>
+          <div className="filmwave-song-actions">{actions}</div>
+        </div>
+      ) : (
         <div className="filmwave-song-actions">{actions}</div>
-      </div>
+      )}
     </article>
   );
 }
