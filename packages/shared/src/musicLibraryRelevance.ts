@@ -60,8 +60,8 @@ function scoreSelectedValues(songValues: unknown, selectedValues: string[], weig
     const normalizedSelectedValue = normalizeText(selectedValue);
     if (!normalizedSelectedValue) return score;
 
-    if (normalizedSongValues.includes(normalizedSelectedValue)) return score + weight * 2;
-    if (searchableText.includes(normalizedSelectedValue)) return score + weight;
+    if (normalizedSongValues.includes(normalizedSelectedValue)) return score + weight * 3;
+    if (searchableText.includes(normalizedSelectedValue)) return score + weight * 2;
 
     return score;
   }, 0);
@@ -108,26 +108,26 @@ export function scoreMusicLibrarySongRelevance(
   let score = 0;
 
   if (query) {
-    score += scoreTextField(song.title, query, 24);
-    score += scoreTextField(song.artist, query, 14);
+    score += scoreTextField(song.title, query, 36);
+    score += scoreTextField(song.artist, query, 22);
     score += scoreTextField(song.key, query, 4);
 
-    score += scoreSelectedValues(song.genres ?? song.genre, [query], 12);
-    score += scoreSelectedValues(song.moods ?? song.mood, [query], 12);
-    score += scoreSelectedValues(song.instruments, [query], 10);
-    score += scoreSelectedValues(song.builds ?? song.build, [query], 8);
-    score += scoreSelectedValues(song.vocals, [query], 6);
+    score += scoreSelectedValues(song.moods ?? song.mood, [query], 34);
+    score += scoreSelectedValues(song.genres ?? song.genre, [query], 34);
+    score += scoreSelectedValues(song.instruments, [query], 30);
+    score += scoreSelectedValues(song.vocals, [query], 24);
+    score += scoreSelectedValues(song.builds ?? song.build, [query], 22);
 
-    if (getSongSearchText(song).includes(query)) score += 5;
+    if (getSongSearchText(song).includes(query)) score += 8;
   }
 
-  score += scoreSelectedValues(song.moods ?? song.mood, filters.selectedMoods ?? [], 10);
-  score += scoreSelectedValues(song.genres ?? song.genre, filters.selectedGenres ?? [], 10);
-  score += scoreSelectedValues(song.instruments, filters.selectedInstruments ?? [], 8);
-  score += scoreSelectedValues(song.builds ?? song.build, filters.selectedBuilds ?? [], 6);
-  score += scoreSelectedValues(song.vocals, filters.selectedVocals ?? [], 6);
+  score += scoreSelectedValues(song.moods ?? song.mood, filters.selectedMoods ?? [], 34);
+  score += scoreSelectedValues(song.genres ?? song.genre, filters.selectedGenres ?? [], 34);
+  score += scoreSelectedValues(song.instruments, filters.selectedInstruments ?? [], 30);
+  score += scoreSelectedValues(song.vocals, filters.selectedVocals ?? [], 24);
+  score += scoreSelectedValues(song.builds ?? song.build, filters.selectedBuilds ?? [], 22);
 
-  if (filters.instrumental && song.instrumental) score += 6;
+  if (filters.instrumental && song.instrumental) score += 24;
   score += scoreBpm(song.bpm, filters.bpmValue);
   score += scoreKey(song.key, filters.keyValue);
 
