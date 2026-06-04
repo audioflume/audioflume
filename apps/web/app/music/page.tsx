@@ -2,6 +2,7 @@
 
 import {
   BUILD_OPTIONS,
+  CollapsibleSearchPill,
   EDIT_POINT_FILTER_OPTIONS,
   FilterTrigger,
   filterMusicLibrarySongs,
@@ -23,7 +24,6 @@ import {
   MusicShuffleButton,
   QUICK_FILTERS,
   SearchFilterChrome,
-  SearchFilterInput,
   SearchFilterQuickButton,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
@@ -344,12 +344,19 @@ export default function MusicPage() {
         <SearchFilterChrome
           onSearchRowClick={() => searchInputRef.current?.focus()}
           search={
-            <SearchFilterInput
-              icon={<SearchIcon />}
+            <CollapsibleSearchPill
+              searchIcon={<SearchIcon />}
               inputRef={searchInputRef}
               value={search}
               placeholder={searchPlaceholder}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={setSearch}
+              playlistSlot={
+                <PlaylistFilter
+                  selected={selectedPlaylist}
+                  onChange={setSelectedPlaylist}
+                  iconOnly
+                />
+              }
             />
           }
           tags={
@@ -402,11 +409,6 @@ export default function MusicPage() {
           }
           filters={
             <>
-              <PlaylistFilter
-                selected={selectedPlaylist}
-                onChange={setSelectedPlaylist}
-              />
-
               <MusicMultiSelectFilter
                 label="Mood"
                 options={[...MOOD_OPTIONS]}
