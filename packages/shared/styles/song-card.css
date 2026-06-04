@@ -520,8 +520,7 @@ html[data-theme="light"]
 }
 
 @container (max-width: 500px) {
-  .filmwave-song-wave-wrap,
-  .desktop-song-wave-wrap {
+  .filmwave-song-wave-wrap {
     display: none;
   }
 
@@ -539,13 +538,11 @@ html[data-theme="light"]
     display: inline-flex;
   }
 
-  .filmwave-song-actions,
-  .desktop-song-actions {
+  .filmwave-song-actions {
     gap: 2px;
   }
 
-  .filmwave-song-info,
-  .desktop-song-info {
+  .filmwave-song-info {
     flex: 1 1 auto;
     max-width: none;
   }
