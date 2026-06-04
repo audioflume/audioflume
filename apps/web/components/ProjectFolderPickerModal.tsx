@@ -323,9 +323,9 @@ export default function ProjectFolderPickerModal({
                                 onClick={() => setSelectedFolderId(folder.id)}
                                 className={`group flex h-8 w-full flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
                                   isSelected
-                                    ? "bg-white text-[#111111] [.light_&]:bg-[var(--bg-primary)] [.light_&]:text-[var(--text-primary)]"
+                                    ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
                                     : isAncestor
-                                      ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                                      ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
                                       : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                                 }`}
                               >
@@ -333,7 +333,7 @@ export default function ProjectFolderPickerModal({
                                   <FolderGlyph small />
                                   <span className="truncate">{folder.name}</span>
                                 </span>
-                                <span className={`${isSelected ? "text-[#111111] [.light_&]:text-[var(--text-muted)]" : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"} transition`}>›</span>
+                                <span className="text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">›</span>
                               </button>
                             );
                           })}
@@ -368,9 +368,9 @@ export default function ProjectFolderPickerModal({
                                   onClick={() => setSelectedFolderId(folder.id)}
                                   className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
                                     isSelected
-                                      ? "bg-white text-[#111111] [.light_&]:bg-[var(--bg-primary)] [.light_&]:text-[var(--text-primary)]"
+                                      ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
                                       : isAncestor
-                                        ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                                        ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
                                         : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                                   }`}
                                 >
@@ -378,7 +378,7 @@ export default function ProjectFolderPickerModal({
                                     <FolderGlyph small />
                                     <span className="truncate">{folder.name}</span>
                                   </span>
-                                  <span className={`${isSelected ? "text-[#111111] [.light_&]:text-[var(--text-muted)]" : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"} transition`}>›</span>
+                                  <span className="text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">›</span>
                                 </button>
                               );
                             })}
