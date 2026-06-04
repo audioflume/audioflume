@@ -4,6 +4,28 @@
   opacity: 1;
 }
 
+.filmwave-search-filter-quick-row {
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.filmwave-search-filter-quick-list {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.filmwave-search-filter-quick-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
 .filmwave-music-shuffle-button {
   display: inline-flex;
   width: 28px;
@@ -32,8 +54,27 @@
 }
 
 .filmwave-music-shuffle-button svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+}
+
+.filmwave-music-sort-wrap {
+  flex: 0 0 auto;
+}
+
+.filmwave-music-sort-trigger {
+  height: 28px;
+  background: var(--bg-elevated);
+  padding: 0 8px;
+  font-size: 11px;
+}
+
+.filmwave-music-sort-trigger::after {
+  display: none;
+}
+
+.filmwave-music-sort-panel .filmwave-playlist-filter-scroll {
+  max-height: none;
 }
 
 html[data-theme="light"] .filmwave-music-shuffle-button.is-active,
