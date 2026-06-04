@@ -181,7 +181,7 @@ export default function SongCard({
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<string | null>(null);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
-  const cardRef = useRef<HTMLElement | null>(null);
+  const cardRef = useRef<HTMLArticleElement | null>(null);
 
   const displayIcon = actuallyPlaying ? (
     <PauseIcon size={15} />
