@@ -12,34 +12,18 @@ export default function EditPointsIcon({ size = 14 }: EditPointsIconProps) {
       aria-hidden="true"
     >
       <path
-        d="M6 5V19"
+        d="M7.5 19V5.25"
         stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="1.9"
+        strokeWidth="2.2"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
-        d="M18 5V19"
+        d="M7.5 5.25H17.25V10.25H7.5"
         stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="1.9"
+        strokeWidth="2.2"
         strokeLinecap="round"
-      />
-      <path
-        d="M9 8.5H15"
-        stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9 15.5H15"
-        stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 10.5V13.5"
-        stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="1.9"
-        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
