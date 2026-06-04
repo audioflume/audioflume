@@ -188,7 +188,6 @@ export default function SongCard({
   ) : (
     <PlayIconSmall size={15} />
   );
-  const showWaveform = cardWidth > 500;
   const visibleGenres = song.genres.slice(0, 3);
   const showGenreSlot = cardWidth > 1080;
   const showKeyMeta = cardWidth > 700;
@@ -314,13 +313,11 @@ export default function SongCard({
           />
         }
         waveform={
-          showWaveform ? (
-            <Waveform
-              song={song}
-              highlightedEditPointTypes={highlightedEditPointTypes}
-              showEditPointMarkers={showEditPointMarkers}
-            />
-          ) : null
+          <Waveform
+            song={song}
+            highlightedEditPointTypes={highlightedEditPointTypes}
+            showEditPointMarkers={showEditPointMarkers}
+          />
         }
         duration={durationLabel}
         genre={showGenreSlot ? (visibleGenres.length > 0 ? visibleGenres.join(", ") : "") : null}
