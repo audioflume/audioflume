@@ -29,6 +29,7 @@ export * from "./SongCardWaveform";
 export * from "./SongActionButton";
 export * from "./MusicLibraryStates";
 export * from "./MusicShuffleButton";
+export * from "./MusicLibrarySortControl";
 export * from "./HeaderShell";
 export * from "./UserMenuShell";
 export * from "./SettingsSideNav";
