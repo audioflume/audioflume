@@ -205,14 +205,12 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   line-height: 1.2;
   text-transform: capitalize;
   white-space: nowrap;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .filmwave-search-filter-quick-button:hover,
 .filmwave-search-filter-quick-button.is-active {
-  background: var(--bg-hover);
+  background: var(--bg-elevated);
   color: var(--text-primary);
 }
 
@@ -440,82 +438,124 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 
 .desktop-filter-option:hover .desktop-filter-option-icon.is-selected,
 .desktop-filter-option:hover .desktop-filter-option-action.is-selected {
+  background: var(--text-primary);
   color: var(--bg-primary);
 }
 
 .desktop-filter-option-action {
   display: flex;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  color: var(--text-muted);
-  transition:
-    background 150ms ease,
-    color 150ms ease;
-}
-
-.desktop-filter-option:hover .desktop-filter-option-action {
-  color: var(--text-primary);
-}
-
-.desktop-tag-chip {
-  display: inline-flex;
-  height: 24px;
-  cursor: pointer;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--border);
   border-radius: 999px;
-  background: transparent;
-  padding: 0 9px;
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
+  background: var(--bg-primary);
+  color: transparent;
   transition:
     background 150ms ease,
-    border-color 150ms ease,
     color 150ms ease;
 }
 
-.desktop-tag-chip:hover {
-  border-color: var(--border-hover);
-  background: var(--bg-hover);
-  color: var(--text-primary);
+.desktop-filter-empty,
+.filmwave-filter-empty {
+  padding: 18px;
+  color: var(--text-muted);
+  font-size: 12px;
 }
 
-.desktop-shuffle-button {
-  display: inline-flex;
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  flex-shrink: 0;
+.filmwave-filter-row-button {
+  display: flex;
+  width: 100%;
+  height: 32px;
   cursor: pointer;
   align-items: center;
-  justify-content: center;
-  align-self: center;
-  margin-left: auto;
-  border: 1px solid transparent;
-  border-radius: 9px;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  border-radius: 8px;
   background: transparent;
-  padding: 0;
-  color: var(--icon-color);
+  padding: 0 10px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
   transition:
     background 150ms ease,
     color 150ms ease;
 }
 
-.desktop-shuffle-button:hover,
-.desktop-shuffle-button.is-active {
-  background: var(--bg-hover);
+.filmwave-filter-row-button:hover,
+.filmwave-filter-row-button.is-active {
+  background: var(--bg-hover-strong);
   color: var(--text-primary);
 }
 
-.desktop-shuffle-button svg {
-  width: 14px;
-  height: 14px;
+.filmwave-filter-row-label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.filmwave-filter-row-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filmwave-filter-row-action {
+  display: flex;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: transparent;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-filter-row-button.is-active .filmwave-filter-row-action,
+.filmwave-filter-row-action.is-active {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.filmwave-filter-row-button:hover .filmwave-filter-row-action.is-active {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.filmwave-filter-popover-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.filmwave-filter-popover {
+  z-index: var(--filmwave-z-menu);
+  width: var(--filmwave-filter-popover-width, 280px);
+}
+
+.filmwave-filter-panel {
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-ui);
+}
+
+.filmwave-filter-panel-scroll {
+  max-height: min(340px, calc(100vh - 180px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
 }
