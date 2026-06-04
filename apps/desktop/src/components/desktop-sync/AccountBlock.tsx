@@ -31,11 +31,26 @@ export default function AccountBlock({
 }: AccountBlockProps) {
   return (
     <div className="settings-row account-settings-row">
-      <div className="account-module-copy">
-        <span className="account-module-kicker">Signed in</span>
-        <h2>Account</h2>
-        <p>{accountDescription}</p>
-        {!isSignedIn && (
+      <div className="account-module-header">
+        <div className="account-module-copy">
+          <h2>Account</h2>
+          <p>{accountDescription}</p>
+        </div>
+
+        <div className="settings-row-control account-actions">
+          <button type="button" className="primary-button" onClick={onOpenSignIn}>
+            {isSignedIn ? "Reconnect" : "Sign in"}
+          </button>
+          {isSignedIn && (
+            <button type="button" className="secondary-button" onClick={onSignOut}>
+              Sign out
+            </button>
+          )}
+        </div>
+      </div>
+
+      {!isSignedIn && (
+        <div className="account-connect-panel">
           <div className="token-form">
             <input
               type="password"
@@ -52,11 +67,11 @@ export default function AccountBlock({
               Connect
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {isSignedIn && (
-        <div className="account-profile-card">
+        <div className="account-identity-panel">
           <div className="account-avatar">
             {account?.imageUrl ? (
               <img src={account.imageUrl} alt="" />
@@ -74,17 +89,6 @@ export default function AccountBlock({
           </div>
         </div>
       )}
-
-      <div className="settings-row-control account-actions">
-        <button type="button" className="primary-button" onClick={onOpenSignIn}>
-          {isSignedIn ? "Reconnect" : "Sign in"}
-        </button>
-        {isSignedIn && (
-          <button type="button" className="secondary-button" onClick={onSignOut}>
-            Sign out
-          </button>
-        )}
-      </div>
     </div>
   );
 }
