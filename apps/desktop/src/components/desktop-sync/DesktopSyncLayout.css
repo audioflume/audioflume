@@ -221,10 +221,14 @@ html[data-theme="light"] .desktop-settings-view {
 
 /* ── Account block ── */
 .account-profile {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
+  max-width: 100%;
   margin-top: 12px;
+  border-radius: 999px;
+  background: var(--sync-control);
+  padding: 6px 12px 6px 6px;
 }
 
 .account-avatar {
@@ -232,7 +236,7 @@ html[data-theme="light"] .desktop-settings-view {
   height: 34px;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--sync-control);
+  background: var(--sync-control-hover);
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 600;
