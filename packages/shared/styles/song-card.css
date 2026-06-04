@@ -482,13 +482,13 @@ html[data-theme="light"]
   white-space: nowrap;
 }
 
-.filmwave-song-tail {
+.filmwave-song-compact-tail {
   display: flex;
   min-width: 0;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: flex-end;
-  gap: clamp(12px, 2.4vw, 36px);
+  gap: 12px;
   margin-left: auto;
 }
 
@@ -531,11 +531,5 @@ html[data-theme="light"]
   .desktop-song-info {
     flex: 1 1 auto;
     max-width: none;
-  }
-
-  .filmwave-song-tail {
-    flex: 0 0 auto;
-    gap: 12px;
-    margin-left: auto;
   }
 }
