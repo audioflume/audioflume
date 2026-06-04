@@ -36,6 +36,7 @@
 
 .desktop-music-page .filmwave-search-filter-row {
   overflow-y: hidden;
+  overscroll-behavior-x: contain;
   overscroll-behavior-y: none;
 }
 
