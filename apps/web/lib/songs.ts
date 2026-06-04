@@ -104,6 +104,7 @@ export function normalizeSongRow(row: any): Song {
     vocals: Array.isArray(row.vocals) ? row.vocals : [],
     instrumental: Boolean(row.instrumental),
     editPoints: String(row.edit_points || emptyEditPoints()),
+    downloadCount: Number(row.download_count || 0),
   };
 }
 
