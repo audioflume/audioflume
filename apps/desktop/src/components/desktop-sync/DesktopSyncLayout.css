@@ -12,9 +12,7 @@
 }
 
 .desktop-settings-view {
-  width: min(1180px, 100%);
-  max-width: 1180px;
-  min-width: 0;
+  width: 100%;
   column-gap: 34px;
   align-items: start;
 }
@@ -67,7 +65,9 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1;
   text-align: left;
   cursor: pointer;
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .desktop-sync-settings-nav-item:hover,
@@ -85,7 +85,9 @@ html[data-theme="light"] .desktop-settings-view {
   opacity: 0.76;
 }
 
-.settings-breadcrumb { display: none; }
+.settings-breadcrumb {
+  display: none;
+}
 
 /* ── Content column ── */
 .desktop-sync-settings-main,
@@ -93,7 +95,9 @@ html[data-theme="light"] .desktop-settings-view {
   min-width: 0;
 }
 
-.desktop-sync-settings-main { grid-column: 2; }
+.desktop-sync-settings-main {
+  grid-column: 2;
+}
 
 .sync-card {
   grid-column: 2;
@@ -132,7 +136,9 @@ html[data-theme="light"] .desktop-settings-view {
   min-width: 0;
 }
 
-.settings-row.is-status { align-items: center; }
+.settings-row.is-status {
+  align-items: center;
+}
 
 .settings-row-label {
   flex: 1 1 0;
@@ -166,7 +172,9 @@ html[data-theme="light"] .desktop-settings-view {
   scrollbar-width: none;
 }
 
-.settings-row-control::-webkit-scrollbar { display: none; }
+.settings-row-control::-webkit-scrollbar {
+  display: none;
+}
 
 /* ── Status row ── */
 .status-row-label {
@@ -193,10 +201,18 @@ html[data-theme="light"] .desktop-settings-view {
   flex-shrink: 0;
 }
 
-.status-dot.is-green { background: var(--success); }
-.status-dot.is-yellow { background: var(--warning); }
-.status-dot.is-red { background: var(--danger); }
-.status-dot.is-grey { background: var(--text-muted); }
+.status-dot.is-green {
+  background: var(--success);
+}
+.status-dot.is-yellow {
+  background: var(--warning);
+}
+.status-dot.is-red {
+  background: var(--danger);
+}
+.status-dot.is-grey {
+  background: var(--text-muted);
+}
 
 .status-pill.is-syncing .status-dot {
   background: var(--success);
@@ -270,7 +286,9 @@ html[data-theme="light"] .desktop-settings-view {
   transition: opacity 150ms ease;
 }
 
-.primary-button:hover:not(:disabled) { opacity: 0.86; }
+.primary-button:hover:not(:disabled) {
+  opacity: 0.86;
+}
 
 .secondary-button {
   display: inline-flex;
@@ -289,7 +307,9 @@ html[data-theme="light"] .desktop-settings-view {
   cursor: pointer;
   background: var(--sync-control);
   color: var(--text-secondary);
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .secondary-button:hover:not(:disabled) {
@@ -318,7 +338,9 @@ html[data-theme="light"] .desktop-settings-view {
   scrollbar-width: none;
 }
 
-.source-toggle::-webkit-scrollbar { display: none; }
+.source-toggle::-webkit-scrollbar {
+  display: none;
+}
 
 .source-toggle button {
   display: inline-flex;
@@ -337,7 +359,9 @@ html[data-theme="light"] .desktop-settings-view {
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .source-toggle button:hover:not(:disabled),
@@ -366,8 +390,12 @@ input {
   max-width: 100%;
 }
 
-input::placeholder { color: var(--text-muted); }
-input:focus { border-color: var(--sync-border-strong); }
+input::placeholder {
+  color: var(--text-muted);
+}
+input:focus {
+  border-color: var(--sync-border-strong);
+}
 
 /* ── API endpoint ── */
 .api-endpoint-control {
@@ -380,7 +408,9 @@ input:focus { border-color: var(--sync-border-strong); }
   max-width: 100%;
 }
 
-.api-endpoint-control input { width: min(300px, 100%); }
+.api-endpoint-control input {
+  width: min(300px, 100%);
+}
 
 .api-endpoint-buttons {
   display: flex;
@@ -400,11 +430,19 @@ input:focus { border-color: var(--sync-border-strong); }
   max-width: 100%;
 }
 
-.token-form input { width: min(220px, 100%); }
+.token-form input {
+  width: min(220px, 100%);
+}
 
 /* ── Folder path ── */
 .folder-path {
-  font-family: var(--font-geist-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-family: var(
+    --font-geist-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace
+  );
   font-size: 12px !important;
   color: var(--text-secondary) !important;
   overflow: hidden;
@@ -413,7 +451,9 @@ input:focus { border-color: var(--sync-border-strong); }
   max-width: 100%;
 }
 
-.refresh-meta { color: var(--text-secondary) !important; }
+.refresh-meta {
+  color: var(--text-secondary) !important;
+}
 
 /* ── Progress / reports ── */
 .progress-panel,
@@ -473,7 +513,9 @@ input:focus { border-color: var(--sync-border-strong); }
   line-height: 1.4;
 }
 
-.local-removals-report .sync-report-dot { background: var(--danger); }
+.local-removals-report .sync-report-dot {
+  background: var(--danger);
+}
 
 .local-removal-list {
   display: grid;
@@ -560,7 +602,9 @@ button.project-row {
   cursor: pointer;
   font-family: inherit;
   color: inherit;
-  transition: border-color 150ms ease, background 150ms ease;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
 }
 
 button.project-row:hover,
@@ -630,9 +674,13 @@ button.project-row:hover,
   padding: 4px 7px;
 }
 
-.project-row.is-loading { pointer-events: none; }
+.project-row.is-loading {
+  pointer-events: none;
+}
 
-.sync-card > .projects-panel:last-child .project-list { gap: 0; }
+.sync-card > .projects-panel:last-child .project-list {
+  gap: 0;
+}
 
 .sync-card > .projects-panel:last-child .project-row {
   grid-template-columns: 18px minmax(0, 1fr) auto;
@@ -647,7 +695,9 @@ button.project-row:hover,
   border-top: 1px solid var(--sync-border);
 }
 
-.sync-card > .projects-panel:last-child .project-row:hover { background: transparent; }
+.sync-card > .projects-panel:last-child .project-row:hover {
+  background: transparent;
+}
 
 .sync-card > .projects-panel:last-child .project-check {
   width: 6px;
@@ -665,7 +715,9 @@ button.project-row:hover,
   letter-spacing: 0.02em;
 }
 
-.sync-card > .projects-panel:last-child .project-description { font-size: 10px; }
+.sync-card > .projects-panel:last-child .project-description {
+  font-size: 10px;
+}
 
 .sync-card > .projects-panel:last-child .project-meta span {
   border-radius: 4px;
@@ -708,11 +760,22 @@ html[data-theme="light"] .api-endpoint-control input:focus {
   border-color: var(--border-hover);
 }
 
-html[data-theme="light"] .progress-track { background: var(--bg-elevated); }
-html[data-theme="light"] .progress-fill { background: var(--text-primary); }
+html[data-theme="light"] .progress-track {
+  background: var(--bg-elevated);
+}
+html[data-theme="light"] .progress-fill {
+  background: var(--text-primary);
+}
 
 /* ── Animation ── */
 @keyframes desktop-sync-pulse {
-  0%, 100% { opacity: 0.45; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1); }
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

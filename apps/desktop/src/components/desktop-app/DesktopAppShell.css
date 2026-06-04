@@ -35,7 +35,7 @@
 }
 
 .desktop-view {
-  width: min(1180px, 100%);
+  width: 100%;
   margin: 0 auto;
 }
 
