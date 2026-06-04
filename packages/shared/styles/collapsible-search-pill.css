@@ -1,0 +1,106 @@
+.filmwave-search-pill {
+  position: relative;
+  display: inline-flex;
+  height: 32px;
+  width: 280px;
+  flex-shrink: 0;
+  align-items: center;
+  overflow: visible;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-primary);
+  cursor: text;
+  transition:
+    width 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms ease,
+    background 200ms ease;
+}
+
+.filmwave-search-pill.is-collapsed {
+  width: 32px;
+  cursor: default;
+  border-color: transparent;
+  background: transparent;
+}
+
+.filmwave-search-pill-icon-btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+.filmwave-search-pill-icon-circle {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.filmwave-search-pill-icon-btn:hover .filmwave-search-pill-icon-circle {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.filmwave-search-pill-body {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+
+.filmwave-search-pill-body.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.filmwave-search-pill-input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  outline: none;
+  padding: 0 8px;
+}
+
+.filmwave-search-pill-input::placeholder {
+  color: var(--text-muted);
+}
+
+.filmwave-search-pill-playlist {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding-right: 3px;
+  border-left: 1px solid var(--border);
+  margin-left: 4px;
+}
+
+/* Playlist trigger inside pill — icon + chevron only, no active underline */
+.filmwave-search-pill-playlist .filmwave-filter-trigger {
+  height: 28px;
+  border-radius: 999px;
+  padding: 0 8px;
+}
+
+.filmwave-search-pill-playlist .filmwave-filter-trigger::after {
+  display: none;
+}

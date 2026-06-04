@@ -34,3 +34,4 @@ export * from "./MusicLibrarySortControl";
 export * from "./HeaderShell";
 export * from "./UserMenuShell";
 export * from "./SettingsSideNav";
+export * from "./CollapsibleSearchPill";
