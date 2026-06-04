@@ -255,10 +255,10 @@ export default function ProjectFolderPickerModal({
       footer={
         <>
           <div className="flex min-w-0 flex-1 items-center gap-2">
-            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
+            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--filmwave-menu-bg)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
               From: <span className="font-medium text-[var(--text-primary)]">{sourceLabel}</span>
             </div>
-            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
+            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--filmwave-menu-bg)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
               Into: <span className="font-medium text-[var(--text-primary)]">{destinationLabel}</span>
             </div>
           </div>
