@@ -57,6 +57,7 @@ export function MusicLibrarySortControl({
       offsetAmount={6}
       flippedOffsetAmount={6}
       collisionPadding={{ top: 163, right: 16, bottom: 85, left: 16 }}
+      elevateTrigger={false}
       trigger={({ open: triggerOpen }) => (
         <button
           type="button"
