@@ -30,27 +30,11 @@ export default function AccountBlock({
   onSignOut,
 }: AccountBlockProps) {
   return (
-    <div className="settings-row account-settings-row">
-      <div className="account-module-header">
-        <div className="account-module-copy">
-          <h2>Account</h2>
-          <p>{accountDescription}</p>
-        </div>
-
-        <div className="settings-row-control account-actions">
-          <button type="button" className="primary-button" onClick={onOpenSignIn}>
-            {isSignedIn ? "Reconnect" : "Sign in"}
-          </button>
-          {isSignedIn && (
-            <button type="button" className="secondary-button" onClick={onSignOut}>
-              Sign out
-            </button>
-          )}
-        </div>
-      </div>
-
-      {!isSignedIn && (
-        <div className="account-connect-panel">
+    <div className="settings-row">
+      <div className="settings-row-label">
+        <h2>Account</h2>
+        <p>{accountDescription}</p>
+        {!isSignedIn && (
           <div className="token-form">
             <input
               type="password"
@@ -67,28 +51,38 @@ export default function AccountBlock({
               Connect
             </button>
           </div>
-        </div>
-      )}
+        )}
+        {isSignedIn && (
+          <div className="account-profile">
+            <div className="account-avatar">
+              {account?.imageUrl ? (
+                <img src={account.imageUrl} alt="" />
+              ) : (
+                getAccountInitial(account)
+              )}
+            </div>
+            <div>
+              <span className="account-name">
+                {account?.name ?? (accountLoading ? "Loading..." : "Filmwave user")}
+              </span>
+              <span className="account-email">
+                {account?.email ?? "Connected to Filmwave"}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
 
-      {isSignedIn && (
-        <div className="account-identity-panel">
-          <div className="account-avatar">
-            {account?.imageUrl ? (
-              <img src={account.imageUrl} alt="" />
-            ) : (
-              getAccountInitial(account)
-            )}
-          </div>
-          <div className="account-profile-main">
-            <span className="account-name">
-              {account?.name ?? (accountLoading ? "Loading..." : "Filmwave user")}
-            </span>
-            <span className="account-email">
-              {account?.email ?? "Connected to Filmwave"}
-            </span>
-          </div>
-        </div>
-      )}
+      <div className="settings-row-control">
+        <button type="button" className="primary-button" onClick={onOpenSignIn}>
+          {isSignedIn ? "Reconnect" : "Sign in"}
+        </button>
+        {isSignedIn && (
+          <button type="button" className="secondary-button" onClick={onSignOut}>
+            Sign out
+          </button>
+        )}
+      </div>
     </div>
   );
 }
