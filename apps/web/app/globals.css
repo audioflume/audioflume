@@ -20,7 +20,13 @@
   --modal-backdrop: rgba(0, 0, 0, 0.55);
 }
 
+html,
 body {
+  overscroll-behavior-x: none;
+}
+
+body {
+  overflow-x: clip;
   letter-spacing: -0.005em;
 }
 
