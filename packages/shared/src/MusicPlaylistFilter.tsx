@@ -18,6 +18,7 @@ type MusicPlaylistFilterProps = {
   playlistIcon: ReactNode;
   checkIcon: ReactNode;
   plusIcon: ReactNode;
+  iconOnly?: boolean;
   onOpen?: () => void;
   onChange: (selected: MusicPlaylistFilterRef | null) => void;
 };
@@ -44,6 +45,7 @@ export function MusicPlaylistFilter({
   playlistIcon,
   checkIcon,
   plusIcon,
+  iconOnly = false,
   onOpen,
   onChange,
 }: MusicPlaylistFilterProps) {
@@ -78,11 +80,12 @@ export function MusicPlaylistFilter({
     <div ref={ref} className="filmwave-filter-popover-wrap">
       <FilterTrigger
         buttonRef={triggerRef}
-        label="Playlists"
+        label={iconOnly ? "" : "Playlists"}
         icon={playlistIcon}
         active={hasActive}
         open={open}
-        count={hasActive ? 1 : 0}
+        count={iconOnly ? undefined : hasActive ? 1 : 0}
+        showActiveDot={iconOnly && hasActive}
         onClick={() => setOpen((current) => !current)}
       />
       <FilterPopover open={open} triggerRef={triggerRef} width={300} className="filmwave-filter-panel">
