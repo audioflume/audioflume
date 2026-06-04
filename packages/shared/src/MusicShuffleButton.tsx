@@ -26,42 +26,32 @@ export function MusicShuffleButton({
         aria-hidden="true"
       >
         <path
-          d="M3.75 7H7.1C8.9 7 10.3 8.08 11.68 9.9L12.38 10.82"
+          d="M3 6H6.55C8.95 6 10.65 7.28 12.22 9.42L13.72 11.48C15.1 13.38 16.38 14.5 18.45 14.5H20"
           stroke="currentColor"
-          strokeWidth="2.35"
-          strokeLinecap="square"
-        />
-        <path
-          d="M15.5 4.25L20.25 7.75L15.5 11.25"
-          stroke="currentColor"
-          strokeWidth="2.35"
-          strokeLinecap="square"
+          strokeWidth="2.65"
+          strokeLinecap="butt"
           strokeLinejoin="miter"
         />
         <path
-          d="M14.25 7.75H20.25"
+          d="M3 18H6.55C8.95 18 10.65 16.72 12.22 14.58L13.72 12.52C15.1 10.62 16.38 9.5 18.45 9.5H20"
           stroke="currentColor"
-          strokeWidth="2.35"
-          strokeLinecap="square"
-        />
-        <path
-          d="M3.75 17H7.1C8.9 17 10.3 15.92 11.68 14.1L12.38 13.18"
-          stroke="currentColor"
-          strokeWidth="2.35"
-          strokeLinecap="square"
-        />
-        <path
-          d="M15.5 12.75L20.25 16.25L15.5 19.75"
-          stroke="currentColor"
-          strokeWidth="2.35"
-          strokeLinecap="square"
+          strokeWidth="2.65"
+          strokeLinecap="butt"
           strokeLinejoin="miter"
         />
         <path
-          d="M14.25 16.25H20.25"
+          d="M17 5.5L21 9.5L17 13.5"
           stroke="currentColor"
-          strokeWidth="2.35"
-          strokeLinecap="square"
+          strokeWidth="2.65"
+          strokeLinecap="butt"
+          strokeLinejoin="miter"
+        />
+        <path
+          d="M17 10.5L21 14.5L17 18.5"
+          stroke="currentColor"
+          strokeWidth="2.65"
+          strokeLinecap="butt"
+          strokeLinejoin="miter"
         />
       </svg>
     </button>
