@@ -26,55 +26,64 @@
   margin-left: auto;
 }
 
-.filmwave-music-shuffle-button {
+.filmwave-music-shuffle-button,
+.filmwave-music-sort-button {
+  box-sizing: border-box;
   display: inline-flex;
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
+  height: auto;
+  min-height: 0;
   cursor: pointer;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  align-self: center;
-  border: 1px solid transparent;
-  border-radius: 9px;
-  background: transparent;
-  padding: 0;
-  color: var(--icon-color);
+  border: 0;
+  border-radius: 0;
+  background: var(--bg-elevated);
+  padding: 3px 8px;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
   transition:
-    background 0.15s ease,
-    color 0.15s ease;
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-music-shuffle-button {
+  width: 20px;
+  min-width: 20px;
+  padding: 3px;
+}
+
+.filmwave-music-sort-button {
+  gap: 5px;
 }
 
 .filmwave-music-shuffle-button:hover,
 .filmwave-music-shuffle-button.is-active,
-.filmwave-music-shuffle-button[aria-pressed="true"] {
-  background: var(--filmwave-square-icon-hover-bg);
+.filmwave-music-shuffle-button[aria-pressed="true"],
+.filmwave-music-sort-button:hover,
+.filmwave-music-sort-button.is-open {
+  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
 .filmwave-music-shuffle-button svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
-.filmwave-music-sort-wrap {
-  flex: 0 0 auto;
+.filmwave-music-sort-button svg {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  opacity: 0.9;
 }
 
-.filmwave-music-sort-trigger {
-  height: 28px;
-  background: var(--bg-elevated);
-  padding: 0 8px;
-  font-size: 11px;
-}
-
-.filmwave-music-sort-trigger::after {
-  display: none;
-}
-
-.filmwave-music-sort-panel .filmwave-playlist-filter-scroll {
-  max-height: none;
+.filmwave-music-sort-dropdown {
+  width: 190px;
 }
 
 html[data-theme="light"] .filmwave-music-shuffle-button.is-active,
