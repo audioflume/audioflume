@@ -46,9 +46,7 @@
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  transition:
-    background 150ms ease,
-    color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .filmwave-music-shuffle-button {
@@ -66,13 +64,13 @@
 .filmwave-music-shuffle-button[aria-pressed="true"],
 .filmwave-music-sort-button:hover,
 .filmwave-music-sort-button.is-open {
-  background: var(--bg-hover);
+  background: var(--bg-elevated);
   color: var(--text-primary);
 }
 
 .filmwave-music-shuffle-button svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 .filmwave-music-sort-button svg {
