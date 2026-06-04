@@ -167,6 +167,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   margin: 0 -28px;
   overflow-x: auto;
   overflow-y: visible;
+  overscroll-behavior-y: none;
   border-bottom: 1px solid var(--border);
   padding: 0 28px;
   white-space: nowrap;
