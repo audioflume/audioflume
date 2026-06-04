@@ -33,6 +33,7 @@ type SearchFilterChromeProps = {
   tags?: ReactNode;
   filters: ReactNode;
   quickFilters?: ReactNode;
+  quickActions?: ReactNode;
   stickyTop?: CSSProperties["top"];
   className?: string;
   onSearchRowClick?: () => void;
@@ -43,6 +44,7 @@ export function SearchFilterChrome({
   tags,
   filters,
   quickFilters,
+  quickActions,
   stickyTop,
   className = "",
   onSearchRowClick,
@@ -61,7 +63,12 @@ export function SearchFilterChrome({
         <div className="filmwave-search-filter-row">{filters}</div>
       </div>
 
-      {quickFilters && <div className="filmwave-search-filter-quick-row">{quickFilters}</div>}
+      {(quickFilters || quickActions) && (
+        <div className="filmwave-search-filter-quick-row">
+          {quickFilters && <div className="filmwave-search-filter-quick-list">{quickFilters}</div>}
+          {quickActions && <div className="filmwave-search-filter-quick-actions">{quickActions}</div>}
+        </div>
+      )}
     </>
   );
 }
