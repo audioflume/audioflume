@@ -12,14 +12,14 @@ export default function EditPointsIcon({ size = 14 }: EditPointsIconProps) {
       aria-hidden="true"
     >
       <path
-        d="M7.5 19V5.25"
+        d="M7.75 19V5.25"
         stroke="var(--edit-points-icon-color, currentColor)"
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M7.5 5.25H17.25V10.25H7.5"
+        d="M7.75 5.25L17.25 7.25V11.25L7.75 10.25"
         stroke="var(--edit-points-icon-color, currentColor)"
         strokeWidth="2.2"
         strokeLinecap="round"
