@@ -3,7 +3,6 @@ export * from "./waveform";
 export * from "./playbackControls";
 export * from "./musicFilters";
 export * from "./musicLibraryFiltering";
-export * from "./musicLibraryRelevance";
 export * from "./editPointUtils";
 export * from "./songStems";
 export * from "./musicPlaylistIdentity";
