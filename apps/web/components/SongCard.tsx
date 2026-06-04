@@ -195,6 +195,7 @@ export default function SongCard({
   const showBpmMeta = cardWidth > 820;
   const stems = getSongStemsFromRecord(song);
   const favorited = isFavorite(song.id);
+  const durationLabel = formatDuration(song.duration);
 
   async function handleCreatePlaylist() {
     if (!newPlaylistName.trim() || isCreatingPlaylist) return;
@@ -321,7 +322,7 @@ export default function SongCard({
             />
           ) : null
         }
-        duration={showWaveform ? formatDuration(song.duration) : null}
+        duration={durationLabel}
         genre={showGenreSlot ? (visibleGenres.length > 0 ? visibleGenres.join(", ") : "") : null}
         keyMeta={showKeyMeta ? song.key || "—" : null}
         bpmMeta={showBpmMeta ? (song.bpm ? `${song.bpm} BPM` : "—") : null}
