@@ -17,6 +17,8 @@ import {
   MusicBpmFilter,
   MusicDurationFilter,
   MusicKeyFilter,
+  MusicLibrarySortControl,
+  type MusicLibrarySortValue,
   MusicMultiSelectFilter,
   MusicShuffleButton,
   QUICK_FILTERS,
@@ -109,6 +111,7 @@ export default function MusicPage() {
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
+  const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -126,7 +129,7 @@ export default function MusicPage() {
   const selectedPlaylist = filters.selectedPlaylist;
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
 
-  const shuffleActive = shuffleOrderIds !== null;
+  const shuffleActive = sortOrder === "random";
   const highlightedEditPointTypes =
     selectedEditPoints.filter(isCoreEditPointType);
 
@@ -281,8 +284,30 @@ export default function MusicPage() {
     songs,
   ]);
 
+  function setRandomSort() {
+    const shuffledSongs = shuffleSongList(filteredSongs);
+    setShuffleOrderIds(
+      shuffledSongs.map((song, index) => getMusicSongStableId(song, index)),
+    );
+    setSortOrder("random");
+  }
+
+  function handleSortChange(value: MusicLibrarySortValue) {
+    if (value === "random") {
+      setRandomSort();
+      return;
+    }
+
+    setSortOrder(value);
+    setShuffleOrderIds(null);
+  }
+
   const displayedSongs = useMemo(() => {
-    if (!shuffleOrderIds) return filteredSongs;
+    if (sortOrder === "downloaded") {
+      return [...filteredSongs].sort((a, b) => b.downloadCount - a.downloadCount);
+    }
+
+    if (sortOrder !== "random" || !shuffleOrderIds) return filteredSongs;
 
     const orderMap = new Map(
       shuffleOrderIds.map((songId, index) => [songId, index]),
@@ -300,7 +325,7 @@ export default function MusicPage() {
 
       return aOrder - bOrder;
     });
-  }, [filteredSongs, shuffleOrderIds]);
+  }, [filteredSongs, shuffleOrderIds, sortOrder]);
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -372,7 +397,7 @@ export default function MusicPage() {
               onRemoveBpm={() => setBpmValue(null)}
               onRemoveKey={() => setKeyValue(null)}
               onRemovePlaylist={() => setSelectedPlaylist(null)}
-              onRemoveShuffle={() => setShuffleOrderIds(null)}
+              onRemoveShuffle={() => handleSortChange("recent")}
             />
           }
           filters={
@@ -453,18 +478,6 @@ export default function MusicPage() {
                   setShowEditPointMarkers(!effectiveShowEditPointMarkers)
                 }
               />
-
-              <MusicShuffleButton
-                active={shuffleActive}
-                onClick={() => {
-                  const shuffledSongs = shuffleSongList(filteredSongs);
-                  setShuffleOrderIds(
-                    shuffledSongs.map((song, index) =>
-                      getMusicSongStableId(song, index),
-                    ),
-                  );
-                }}
-              />
             </>
           }
           quickFilters={
@@ -488,6 +501,12 @@ export default function MusicPage() {
                   </SearchFilterQuickButton>
                 );
               })}
+            </>
+          }
+          quickActions={
+            <>
+              <MusicShuffleButton active={shuffleActive} onClick={setRandomSort} />
+              <MusicLibrarySortControl value={sortOrder} onChange={handleSortChange} />
             </>
           }
         />
