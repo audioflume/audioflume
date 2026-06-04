@@ -17,14 +17,14 @@ export default function EditPointsIcon({ size = 14 }: EditPointsIconProps) {
         x2="11"
         y2="13.68"
         stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="36"
+        strokeWidth="46"
         strokeMiterlimit="10"
         strokeLinecap="round"
       />
       <polygon
         points="11 235.89 291.66 174.16 291.66 75.41 11 13.68 11 235.89"
         stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="36"
+        strokeWidth="46"
         strokeMiterlimit="10"
         strokeLinejoin="round"
       />
