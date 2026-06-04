@@ -1,4 +1,5 @@
 import type { DesktopAccount } from "../../lib/mockFilmwaveApi";
+import "./DesktopSyncAccount.css";
 
 type AccountBlockProps = {
   account: DesktopAccount | null;
