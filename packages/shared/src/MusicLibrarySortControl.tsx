@@ -10,7 +10,7 @@ export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
   label: string;
 }> = [
   { value: "recent", label: "Most Recent" },
-  { value: "downloaded", label: "Most Downloaded" },
+  { value: "downloaded", label: "Most Popular" },
   { value: "relevant", label: "Most Relevant" },
   { value: "random", label: "Random" },
 ];
