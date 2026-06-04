@@ -1,4 +1,5 @@
 import "./DesktopSyncLayout.css";
+import "./DesktopSyncTitleStatus.css";
 
 type SyncStatusRowProps = {
   syncStatus: string;
