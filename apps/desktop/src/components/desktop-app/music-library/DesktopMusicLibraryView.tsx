@@ -1,4 +1,5 @@
 import {
+  CollapsibleSearchPill,
   EDIT_POINT_FILTER_OPTIONS,
   FilterTrigger,
   MusicLibraryEmptyState,
@@ -20,7 +21,6 @@ import {
   MusicPlaylistFilter,
   normalizeEditPointType,
   SearchFilterChrome,
-  SearchFilterInput,
   SearchFilterQuickButton,
   shouldClearPendingSeekProgress,
   shouldIgnorePlaybackShortcutTarget,
@@ -58,6 +58,7 @@ import {
 import "./DesktopMusicLibraryView.css";
 import "./DesktopMusicLibraryRefinements.css";
 import "./DesktopMusicLibrarySpacing.css";
+import "./DesktopCollapsibleSearchPill.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const TRACK_SCROLL_EDGE_PADDING = 12;
@@ -557,13 +558,28 @@ export default function DesktopMusicLibraryView({
       <SearchFilterChrome
         onSearchRowClick={() => searchInputRef.current?.focus()}
         search={
-          <SearchFilterInput
-            icon={<SearchIconSmall />}
+          <CollapsibleSearchPill
+            searchIcon={<SearchIconSmall />}
             inputRef={searchInputRef}
             value={filters.search}
             placeholder={searchPlaceholder}
-            onChange={(event) =>
-              setFilters((current) => ({ ...current, search: event.target.value }))
+            onChange={(value) =>
+              setFilters((current) => ({ ...current, search: value }))
+            }
+            playlistSlot={
+              <MusicPlaylistFilter
+                selected={filters.selectedPlaylist}
+                playlists={playlistOptions}
+                loading={songsLoading}
+                loaded={!songsLoading}
+                playlistIcon={<PlaylistIcon size={13} />}
+                checkIcon={<CheckIcon size={11} />}
+                plusIcon={<PlusIcon size={11} />}
+                iconOnly
+                onChange={(selectedPlaylist) =>
+                  setFilters((current) => ({ ...current, selectedPlaylist }))
+                }
+              />
             }
           />
         }
@@ -588,19 +604,6 @@ export default function DesktopMusicLibraryView({
         }
         filters={
           <>
-            <MusicPlaylistFilter
-              selected={filters.selectedPlaylist}
-              playlists={playlistOptions}
-              loading={songsLoading}
-              loaded={!songsLoading}
-              playlistIcon={<PlaylistIcon size={13} />}
-              checkIcon={<CheckIcon size={11} />}
-              plusIcon={<PlusIcon size={11} />}
-              onChange={(selectedPlaylist) =>
-                setFilters((current) => ({ ...current, selectedPlaylist }))
-              }
-            />
-
             {filterKeys.map((filterKey) => (
               <DesktopFilterDropdown
                 key={filterKey}

@@ -1,0 +1,22 @@
+/* Playlist filter inside the CollapsibleSearchPill — scoped overrides */
+
+/* The MusicPlaylistFilter inside the pill renders a filmwave-filter-popover-wrap
+   containing a filmwave-filter-trigger. We override sizing and remove the
+   active underline indicator so it reads as an icon button, not a filter row item. */
+
+.filmwave-search-pill-playlist .filmwave-filter-trigger {
+  height: 28px !important;
+  min-height: 28px !important;
+  border-radius: 999px !important;
+  padding: 0 8px !important;
+  border-bottom: none !important;
+}
+
+.filmwave-search-pill-playlist .filmwave-filter-trigger::after {
+  display: none !important;
+}
+
+/* Ensure the popover from MusicPlaylistFilter clears the pill boundary */
+.filmwave-search-pill-playlist .filmwave-filter-popover-wrap {
+  position: static;
+}
