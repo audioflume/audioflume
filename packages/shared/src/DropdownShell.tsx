@@ -41,6 +41,7 @@ type DropdownShellProps = {
   strategy?: Strategy;
   usePortal?: boolean;
   anchorPoint?: { x: number; y: number } | null;
+  elevateTrigger?: boolean;
 };
 
 type FrozenSide = "top" | "bottom";
@@ -102,6 +103,7 @@ export default function DropdownShell({
   strategy: _strategy = "fixed",
   usePortal = true,
   anchorPoint = null,
+  elevateTrigger = true,
 }: DropdownShellProps) {
   const referenceRef = useRef<HTMLDivElement>(null);
   const floatingRef = useRef<HTMLDivElement>(null);
@@ -418,7 +420,7 @@ export default function DropdownShell({
           display: "inline-flex",
           width: "fit-content",
           position: "relative",
-          zIndex: open ? 10000 : undefined,
+          zIndex: elevateTrigger && open ? 10000 : undefined,
         }}
         onPointerDown={(event) => {
           event.stopPropagation();
