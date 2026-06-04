@@ -8,7 +8,7 @@
 
 .sync-card > .settings-row.is-status:first-child {
   position: absolute;
-  top: 3px;
+  top: 4px;
   right: var(--sync-page-padding-x);
   z-index: 2;
   display: flex;
