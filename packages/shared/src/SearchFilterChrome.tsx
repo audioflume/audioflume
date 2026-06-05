@@ -55,25 +55,19 @@ export function SearchFilterChrome({
         className={`filmwave-search-filter-sticky${className ? ` ${className}` : ""}`}
         style={stickyTop !== undefined ? { top: stickyTop } : undefined}
       >
-        {/* Combined row: pill + filter buttons in one line */}
-        <div className="filmwave-search-filter-combined-row">
-          <div
-            className="filmwave-search-filter-pill-slot"
-            onClick={onSearchRowClick}
-          >
+        {/*
+          Single scrollable row — pill and all filter buttons are direct
+          flex children so they scroll together horizontally.
+        */}
+        <div
+          className="filmwave-search-filter-combined-row"
+          onClick={onSearchRowClick}
+        >
+          <div className="filmwave-search-filter-pill-slot" onClick={onSearchRowClick}>
             {search}
           </div>
-          <div className="filmwave-search-filter-row filmwave-search-filter-row--inline">
-            {filters}
-          </div>
+          {filters}
         </div>
-
-        {/* Tags row — only shown when there are active filter tags */}
-        {tags && (
-          <div className="filmwave-search-filter-tags-row">
-            <div className="filmwave-search-filter-tags">{tags}</div>
-          </div>
-        )}
       </div>
 
       {(quickFilters || quickActions) && (
