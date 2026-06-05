@@ -191,6 +191,37 @@ export default function MusicPage() {
     selectedPlaylist !== null ||
     shuffleActive;
 
+  // Clear all: only dropdown filters, not search/shuffle/markers
+  const hasActiveClearableFilters =
+    selectedMoods.length > 0 ||
+    selectedGenres.length > 0 ||
+    selectedInstruments.length > 0 ||
+    selectedBuilds.length > 0 ||
+    selectedVocals.length > 0 ||
+    selectedDurations.length > 0 ||
+    selectedEditPoints.length > 0 ||
+    instrumental ||
+    bpmValue !== null ||
+    keyValue !== null ||
+    selectedPlaylist !== null;
+
+  function clearAllFilters() {
+    setFilters((current) => ({
+      ...current,
+      selectedMoods: [],
+      selectedGenres: [],
+      selectedInstruments: [],
+      selectedBuilds: [],
+      selectedVocals: [],
+      selectedDurations: [],
+      selectedEditPoints: [],
+      instrumental: false,
+      bpmValue: null,
+      keyValue: null,
+      selectedPlaylist: null,
+    }));
+  }
+
   const searchPlaceholder = getMusicLibrarySearchPlaceholder(
     selectedPlaylist?.name,
   );
@@ -481,6 +512,17 @@ export default function MusicPage() {
                 }
               />
             </>
+          }
+          clearAll={
+            hasActiveClearableFilters ? (
+              <button
+                type="button"
+                className="filmwave-filter-clear-all"
+                onClick={clearAllFilters}
+              >
+                Clear all
+              </button>
+            ) : undefined
           }
           quickFilters={
             <>
