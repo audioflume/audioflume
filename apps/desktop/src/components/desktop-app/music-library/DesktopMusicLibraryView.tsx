@@ -217,7 +217,6 @@ export default function DesktopMusicLibraryView({
 
   const filterOptions = useMemo(() => getDesktopMusicFilterOptions(), []);
   const playlistOptions = useMemo(() => getDesktopPlaylistFilterOptions(songs), [songs]);
-
   const filteredSongs = useMemo(
     () => filterDesktopMusicSongs(songs, filters),
     [songs, filters],
@@ -595,21 +594,6 @@ export default function DesktopMusicLibraryView({
             onChange={(value) =>
               setFilters((current) => ({ ...current, search: value }))
             }
-            playlistSlot={
-              <MusicPlaylistFilter
-                selected={filters.selectedPlaylist}
-                playlists={playlistOptions}
-                loading={songsLoading}
-                loaded={!songsLoading}
-                playlistIcon={<PlaylistIcon size={13} />}
-                checkIcon={<CheckIcon size={11} />}
-                plusIcon={<PlusIcon size={11} />}
-                iconOnly
-                onChange={(selectedPlaylist) =>
-                  setFilters((current) => ({ ...current, selectedPlaylist }))
-                }
-              />
-            }
           />
         }
         tags={
@@ -633,6 +617,19 @@ export default function DesktopMusicLibraryView({
         }
         filters={
           <>
+            <MusicPlaylistFilter
+              selected={filters.selectedPlaylist}
+              playlists={playlistOptions}
+              loading={songsLoading}
+              loaded={!songsLoading}
+              playlistIcon={<PlaylistIcon size={13} />}
+              checkIcon={<CheckIcon size={11} />}
+              plusIcon={<PlusIcon size={11} />}
+              onChange={(selectedPlaylist) =>
+                setFilters((current) => ({ ...current, selectedPlaylist }))
+              }
+            />
+
             {filterKeys.map((filterKey) => (
               <DesktopFilterDropdown
                 key={filterKey}
