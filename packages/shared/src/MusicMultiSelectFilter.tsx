@@ -166,6 +166,7 @@ export function MusicMultiSelectFilter({
         count={selected.length}
         disabled={disabled}
         onClick={() => setOpen(!isOpen)}
+        onClear={onChange ? clear : undefined}
       />
 
       <FilterPopover
