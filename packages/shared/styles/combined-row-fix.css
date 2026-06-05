@@ -9,8 +9,6 @@
   padding: 0 28px;
   border-bottom: 1px solid var(--border);
   overflow-x: auto;
-  /* clip prevents the 1px vertical scroll wiggle without clipping
-     position:absolute children like the active-line ::after indicators */
   overflow-y: clip;
   overscroll-behavior: none;
   scrollbar-width: none;
@@ -19,4 +17,9 @@
 
 .filmwave-search-filter-combined-row::-webkit-scrollbar {
   display: none;
+}
+
+/* Larger gap between pill and first filter button */
+.filmwave-search-filter-pill-slot {
+  padding-right: 16px;
 }
