@@ -188,8 +188,7 @@ export default function MusicPage() {
     instrumental ||
     bpmValue !== null ||
     keyValue !== null ||
-    selectedPlaylist !== null ||
-    shuffleActive;
+    selectedPlaylist !== null;
 
   // Clear all: only dropdown filters, not search/shuffle/markers
   const hasActiveClearableFilters =
