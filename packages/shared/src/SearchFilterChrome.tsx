@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ChangeEvent, type CSSProperties, type ReactNode, type Ref } from "react";
+import { useRef, type ChangeEvent, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref } from "react";
 
 type MusicLibraryFrameProps = {
   children: ReactNode;
@@ -54,7 +54,21 @@ export function SearchFilterChrome({
   const combinedRowRef = useRef<HTMLDivElement | null>(null);
 
   function resetCombinedRowScroll() {
-    combinedRowRef.current?.scrollTo({ left: 0, behavior: "smooth" });
+    const row = combinedRowRef.current;
+    if (!row) return;
+
+    row.scrollLeft = 0;
+    row.scrollTo({ left: 0, behavior: "auto" });
+
+    window.requestAnimationFrame(() => {
+      row.scrollLeft = 0;
+      row.scrollTo({ left: 0, behavior: "auto" });
+    });
+  }
+
+  function handleClearAllKeyDownCapture(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    resetCombinedRowScroll();
   }
 
   return (
@@ -74,7 +88,9 @@ export function SearchFilterChrome({
           {clearAll && (
             <div
               className="filmwave-search-filter-clear-all-slot"
-              onClick={resetCombinedRowScroll}
+              onPointerDownCapture={resetCombinedRowScroll}
+              onClickCapture={resetCombinedRowScroll}
+              onKeyDownCapture={handleClearAllKeyDownCapture}
             >
               {clearAll}
             </div>
