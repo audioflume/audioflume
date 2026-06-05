@@ -32,6 +32,7 @@ type SearchFilterChromeProps = {
   search: ReactNode;
   tags?: ReactNode;
   filters: ReactNode;
+  clearAll?: ReactNode;
   quickFilters?: ReactNode;
   quickActions?: ReactNode;
   stickyTop?: CSSProperties["top"];
@@ -43,6 +44,7 @@ export function SearchFilterChrome({
   search,
   tags,
   filters,
+  clearAll,
   quickFilters,
   quickActions,
   stickyTop,
@@ -55,12 +57,6 @@ export function SearchFilterChrome({
         className={`filmwave-search-filter-sticky${className ? ` ${className}` : ""}`}
         style={stickyTop !== undefined ? { top: stickyTop } : undefined}
       >
-        {/*
-          Single scrollable row — pill and all filter buttons are direct
-          flex children so they scroll together horizontally.
-          onSearchRowClick is ONLY on the pill slot, not the whole row,
-          so clicking filter buttons doesn’t trigger a focus-scroll.
-        */}
         <div className="filmwave-search-filter-combined-row">
           <div
             className="filmwave-search-filter-pill-slot"
@@ -69,6 +65,11 @@ export function SearchFilterChrome({
             {search}
           </div>
           {filters}
+          {clearAll && (
+            <div className="filmwave-search-filter-clear-all-slot">
+              {clearAll}
+            </div>
+          )}
         </div>
       </div>
 
