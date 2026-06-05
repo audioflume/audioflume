@@ -121,7 +121,11 @@ function DiscoverSectionHeadingSkeleton({ wide = false }: { wide?: boolean }) {
           className={wide ? "h-5 w-52 rounded-md" : "h-5 w-40 rounded-md"}
         />
         <DiscoverSkeletonBlock
-          className={wide ? "mt-2 h-2.5 w-72 rounded-full" : "mt-2 h-2.5 w-64 rounded-full"}
+          className={
+            wide
+              ? "mt-2 h-2.5 w-72 rounded-full"
+              : "mt-2 h-2.5 w-64 rounded-full"
+          }
         />
       </div>
       <DiscoverSkeletonBlock className="hidden h-3 w-16 rounded-full sm:block" />
@@ -352,7 +356,10 @@ function DiscoverPageSkeleton() {
           <DiscoverSkeletonBlock className="h-2.5 flex-1 rounded-full" />
           <div className="hidden items-center gap-1.5 lg:flex">
             {Array.from({ length: 4 }).map((_, index) => (
-              <DiscoverSkeletonBlock key={index} className="h-7 w-20 rounded-full" />
+              <DiscoverSkeletonBlock
+                key={index}
+                className="h-7 w-20 rounded-full"
+              />
             ))}
           </div>
           <DiscoverSkeletonBlock className="hidden h-9 w-28 shrink-0 rounded-full sm:block" />
@@ -521,7 +528,7 @@ function FullWidthSearchBar() {
       <form
         onSubmit={handleSubmit}
         onClick={() => searchInputRef.current?.focus()}
-        className="group flex min-h-[58px] w-full cursor-text items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-4 transition hover:bg-[var(--bg-hover)] focus-within:bg-[var(--bg-hover)]"
+        className="group flex min-h-[58px] w-full cursor-text items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-[11px] transition hover:bg-[var(--bg-hover)] focus-within:bg-[var(--bg-hover)]"
       >
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-focus-within:text-[var(--text-primary)]">
           <SearchIcon size={15} />
@@ -809,7 +816,11 @@ function ProductionStylesSection({ blocks }: { blocks: CuratedPlaylist[] }) {
   );
 }
 
-function CuratedPlaylistsSection({ playlists }: { playlists: CuratedPlaylist[] }) {
+function CuratedPlaylistsSection({
+  playlists,
+}: {
+  playlists: CuratedPlaylist[];
+}) {
   if (playlists.length === 0) return null;
 
   return (
