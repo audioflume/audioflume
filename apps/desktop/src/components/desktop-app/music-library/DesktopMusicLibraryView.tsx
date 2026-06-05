@@ -280,6 +280,35 @@ export default function DesktopMusicLibraryView({
     .filter(isCoreEditPointType);
   const searchPlaceholder = getMusicLibrarySearchPlaceholder(filters.selectedPlaylist?.name);
 
+  // Clear all: dropdown filters only, not search/shuffle/markers
+  const hasActiveClearableFilters =
+    filters.mood.length > 0 ||
+    filters.genre.length > 0 ||
+    filters.instrument.length > 0 ||
+    filters.vocal.length > 0 ||
+    filters.build.length > 0 ||
+    filters.cuePoint.length > 0 ||
+    filters.selectedDurations.length > 0 ||
+    filters.bpmValue !== null ||
+    filters.keyValue !== null ||
+    filters.selectedPlaylist !== null;
+
+  function clearAllFilters() {
+    setFilters((current) => ({
+      ...current,
+      mood: [],
+      genre: [],
+      instrument: [],
+      vocal: [],
+      build: [],
+      cuePoint: [],
+      selectedDurations: [],
+      bpmValue: null,
+      keyValue: null,
+      selectedPlaylist: null,
+    }));
+  }
+
   useEffect(() => {
     const duration = activeSong?.durationSeconds || 0;
     const pendingSeekProgress = activeSongId ? pendingSeekProgressBySongId[activeSongId] : undefined;
@@ -658,6 +687,17 @@ export default function DesktopMusicLibraryView({
               }
             />
           </>
+        }
+        clearAll={
+          hasActiveClearableFilters ? (
+            <button
+              type="button"
+              className="filmwave-filter-clear-all"
+              onClick={clearAllFilters}
+            >
+              Clear all
+            </button>
+          ) : undefined
         }
         quickFilters={
           <>
