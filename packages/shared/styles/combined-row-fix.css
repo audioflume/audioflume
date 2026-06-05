@@ -44,7 +44,7 @@
   height: 100%;
   align-items: center;
   justify-content: center;
-  transition: opacity 120ms ease;
+  transition: none;
 }
 
 .filmwave-filter-count-clear {
@@ -54,7 +54,7 @@
   font-size: 13px;
   font-weight: 500;
   line-height: 0;
-  transform: translateY(-0.5px);
+  transform: translateY(-1.5px);
 }
 
 .filmwave-filter-count.is-clearable:hover .filmwave-filter-count-value,
