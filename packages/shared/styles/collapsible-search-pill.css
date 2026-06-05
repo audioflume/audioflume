@@ -72,6 +72,40 @@
   pointer-events: auto;
 }
 
+/* Clear button — X icon, sits between circle and divider */
+.filmwave-search-pill-clear {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 4px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.filmwave-search-pill-clear:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+/* Divider — partial height so there’s space top and bottom */
+.filmwave-search-pill-divider {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1px;
+  height: 16px;
+  margin: 0 4px;
+  background: var(--border);
+  border-radius: 1px;
+}
+
 .filmwave-search-pill-input {
   min-width: 0;
   flex: 1;
@@ -98,7 +132,6 @@
   margin-left: -2px;
 }
 
-/* Custom pill playlist trigger — uses header-matched chevron via PillPlaylistChevron component */
 .filmwave-pill-playlist-trigger {
   height: 26px !important;
   border-radius: 999px !important;

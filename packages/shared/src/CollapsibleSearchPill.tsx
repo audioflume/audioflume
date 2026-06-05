@@ -25,6 +25,8 @@ export function CollapsibleSearchPill({
   const resolvedRef =
     (inputRef as React.RefObject<HTMLInputElement> | null) ?? innerRef;
 
+  const hasValue = value.length > 0;
+
   function handleIconClick(e: React.MouseEvent) {
     e.stopPropagation();
     if (collapsed) {
@@ -33,6 +35,12 @@ export function CollapsibleSearchPill({
     } else {
       setCollapsed(true);
     }
+  }
+
+  function handleClear(e: React.MouseEvent) {
+    e.stopPropagation();
+    onChange("");
+    resolvedRef.current?.focus();
   }
 
   useEffect(() => {
@@ -63,6 +71,26 @@ export function CollapsibleSearchPill({
           bodyVisible && !collapsed ? " is-visible" : ""
         }`}
       >
+        {hasValue && (
+          <>
+            <button
+              type="button"
+              className="filmwave-search-pill-clear"
+              onClick={handleClear}
+              aria-label="Clear search"
+            >
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                <path
+                  d="M2 2L8 8M8 2L2 8"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+            <span className="filmwave-search-pill-divider" aria-hidden="true" />
+          </>
+        )}
         <input
           ref={resolvedRef}
           type="text"
