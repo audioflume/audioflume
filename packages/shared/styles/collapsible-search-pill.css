@@ -72,7 +72,7 @@
   pointer-events: auto;
 }
 
-/* Clear button — X icon, sits between circle and divider */
+/* Clear button — icon-only, no background change on hover */
 .filmwave-search-pill-clear {
   display: inline-flex;
   flex-shrink: 0;
@@ -87,11 +87,10 @@
   color: var(--text-muted);
   cursor: pointer;
   padding: 0;
-  transition: background 150ms ease, color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .filmwave-search-pill-clear:hover {
-  background: var(--bg-hover-strong);
   color: var(--text-primary);
 }
 
