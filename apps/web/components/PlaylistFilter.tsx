@@ -14,11 +14,13 @@ import { supabase } from "@/lib/supabase";
 type PlaylistFilterProps = {
   selected: PlaylistRef | null;
   onChange: (selected: PlaylistRef | null) => void;
+  iconOnly?: boolean;
 };
 
 export default function PlaylistFilter({
   selected,
   onChange,
+  iconOnly = false,
 }: PlaylistFilterProps) {
   const [playlists, setPlaylists] = useState<PlaylistRef[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,6 +80,7 @@ export default function PlaylistFilter({
       playlistIcon={<MusicPlaylistIcon size={13} />}
       checkIcon={<MusicCheckIcon size={11} />}
       plusIcon={<MusicPlusIcon size={11} />}
+      iconOnly={iconOnly}
       onOpen={loadPlaylists}
       onChange={onChange}
     />
