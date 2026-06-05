@@ -18,17 +18,17 @@ function FilterChevron() {
   return (
     <svg
       className="filmwave-filter-trigger-chevron"
-      width="8"
-      height="8"
-      viewBox="0 0 8 8"
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
       focusable="false"
     >
       <path
-        d="M1.5 3L4 5.5L6.5 3"
+        d="M7 10L12 15L17 10"
         stroke="currentColor"
-        strokeWidth="1.2"
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
