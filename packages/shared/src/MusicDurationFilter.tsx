@@ -23,13 +23,11 @@ function formatTime(seconds: number) {
   const cleanSeconds = Math.max(MIN, Math.min(MAX, Math.round(seconds)));
   const mins = Math.floor(cleanSeconds / 60);
   const secs = cleanSeconds % 60;
-
   return `${mins}:${String(secs).padStart(2, "0")}`;
 }
 
 function parseTime(value: string) {
   const [minutes = "0", seconds = "0"] = value.split(":");
-
   return Number(minutes) * 60 + Number(seconds);
 }
 
@@ -39,34 +37,46 @@ function formatDurationLabel(low: number, high: number) {
   if (low === 120 && high === 180) return "2:00 - 3:00";
   if (low === 180 && high === 240) return "3:00 - 4:00";
   if (low === 240 && high === 300) return "4:00+";
-
   if (high === MAX) return `${formatTime(low)}+`;
-
   return `${formatTime(low)} - ${formatTime(high)}`;
 }
 
 function parseSelectedDuration(selected: string[]) {
   const first = selected[0];
-
   if (!first) return { low: MIN, high: MAX };
-
   if (first === "0:00 - 1:00") return { low: 0, high: 60 };
   if (first === "1:00 - 2:00") return { low: 60, high: 120 };
   if (first === "2:00 - 3:00") return { low: 120, high: 180 };
   if (first === "3:00 - 4:00") return { low: 180, high: 240 };
   if (first === "4:00+") return { low: 240, high: 300 };
-
-  if (first.endsWith("+")) {
-    return { low: parseTime(first.replace("+", "")), high: MAX };
-  }
-
+  if (first.endsWith("+")) return { low: parseTime(first.replace("+", "")), high: MAX };
   if (first.includes(" - ")) {
     const [lowValue, highValue] = first.split(" - ");
-
     return { low: parseTime(lowValue), high: parseTime(highValue) };
   }
-
   return { low: MIN, high: MAX };
+}
+
+function FilterChevron() {
+  return (
+    <svg
+      className="filmwave-filter-trigger-chevron"
+      width="8"
+      height="8"
+      viewBox="0 0 8 8"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M1.5 3L4 5.5L6.5 3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterProps) {
@@ -81,17 +91,11 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
   const lowRef = useRef(low);
   const highRef = useRef(high);
 
-  useEffect(() => {
-    lowRef.current = low;
-  }, [low]);
-
-  useEffect(() => {
-    highRef.current = high;
-  }, [high]);
+  useEffect(() => { lowRef.current = low; }, [low]);
+  useEffect(() => { highRef.current = high; }, [high]);
 
   useEffect(() => {
     const next = parseSelectedDuration(selected);
-
     setLow(next.low);
     setHigh(next.high);
     lowRef.current = next.low;
@@ -100,13 +104,9 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
@@ -120,68 +120,45 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
 
   function getValueFromMouse(e: MouseEvent | React.MouseEvent) {
     if (!rangeRef.current) return MIN;
-
     const rect = rangeRef.current.getBoundingClientRect();
-    const percent = Math.max(
-      0,
-      Math.min(100, ((e.clientX - rect.left) / rect.width) * 100),
-    );
-
+    const percent = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
     return fromPercent(percent);
   }
 
   function emitChange(nextLow = lowRef.current, nextHigh = highRef.current) {
-    if (nextLow === MIN && nextHigh === MAX) {
-      onChange([]);
-      return;
-    }
-
+    if (nextLow === MIN && nextHigh === MAX) { onChange([]); return; }
     onChange([formatDurationLabel(nextLow, nextHigh)]);
   }
 
   function startDrag(handle: "low" | "high") {
     function onMove(e: MouseEvent) {
       const value = getValueFromMouse(e);
-
       if (handle === "low") {
         const nextLow = Math.min(value, highRef.current - 5);
-
-        lowRef.current = nextLow;
-        setLow(nextLow);
-        emitChange(nextLow, highRef.current);
+        lowRef.current = nextLow; setLow(nextLow); emitChange(nextLow, highRef.current);
         return;
       }
-
       const nextHigh = Math.max(value, lowRef.current + 5);
-
-      highRef.current = nextHigh;
-      setHigh(nextHigh);
-      emitChange(lowRef.current, nextHigh);
+      highRef.current = nextHigh; setHigh(nextHigh); emitChange(lowRef.current, nextHigh);
     }
-
     function onUp() {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseup", onUp);
       emitChange();
     }
-
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseup", onUp);
   }
 
   function clear() {
-    setLow(MIN);
-    setHigh(MAX);
-    lowRef.current = MIN;
-    highRef.current = MAX;
+    setLow(MIN); setHigh(MAX);
+    lowRef.current = MIN; highRef.current = MAX;
     onChange([]);
   }
 
   function applyIntent(nextLow: number, nextHigh: number) {
-    setLow(nextLow);
-    setHigh(nextHigh);
-    lowRef.current = nextLow;
-    highRef.current = nextHigh;
+    setLow(nextLow); setHigh(nextHigh);
+    lowRef.current = nextLow; highRef.current = nextHigh;
     emitChange(nextLow, nextHigh);
   }
 
@@ -198,33 +175,27 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
         onClick={() => setOpen((current) => !current)}
         className={`filmwave-filter-trigger${hasActive ? " is-active" : ""}${
           open ? " is-open" : ""
-        } no-chevron`}
+        }`}
+        aria-expanded={open}
       >
         <span>Duration</span>
-
         {hasActive && (
-          <span className="filmwave-filter-trigger-active-label">
-            {activeLabel}
-          </span>
+          <span className="filmwave-filter-trigger-active-label">{activeLabel}</span>
         )}
+        <FilterChevron />
       </button>
 
       <FilterPopover open={open} triggerRef={triggerRef} width={320} className="filmwave-filter-panel">
         <div className="filmwave-filter-dropdown-header">
           <div className="filmwave-filter-dropdown-title">Duration</div>
-
           {hasActive && (
-            <button type="button" onClick={clear} className="filmwave-filter-clear-button">
-              Clear
-            </button>
+            <button type="button" onClick={clear} className="filmwave-filter-clear-button">Clear</button>
           )}
         </div>
 
         <div className="filmwave-filter-body">
           <div className="filmwave-filter-summary is-duration-range">
-            <span className="filmwave-filter-duration-summary-value">
-              {formatTime(low)}
-            </span>
+            <span className="filmwave-filter-duration-summary-value">{formatTime(low)}</span>
             <span className="filmwave-filter-summary-label">Range</span>
             <span className="filmwave-filter-duration-summary-value">
               {high === MAX ? `${formatTime(high)}+` : formatTime(high)}
@@ -235,26 +206,17 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
             <div ref={rangeRef} className="filmwave-filter-range-track">
               <div
                 className="filmwave-filter-range-fill"
-                style={{
-                  left: `${activeStart}%`,
-                  width: `${Math.max(0, activeEnd - activeStart)}%`,
-                }}
+                style={{ left: `${activeStart}%`, width: `${Math.max(0, activeEnd - activeStart)}%` }}
               />
-
               {(["low", "high"] as const).map((handle) => (
                 <div
                   key={handle}
                   className="filmwave-filter-range-handle"
                   style={{ left: `${toPercent(handle === "low" ? low : high)}%` }}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    startDrag(handle);
-                  }}
+                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); startDrag(handle); }}
                 />
               ))}
             </div>
-
             <div className="filmwave-filter-range-labels">
               <span>0:00</span>
               <span>5:00+</span>
@@ -264,19 +226,11 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
           <div className="filmwave-filter-intent-grid is-five">
             {INTENTS.map((intent) => {
               const isSelected = low === intent.low && high === intent.high;
-
               return (
                 <button
                   key={intent.title}
                   type="button"
-                  onClick={() => {
-                    if (isSelected) {
-                      clear();
-                      return;
-                    }
-
-                    applyIntent(intent.low, intent.high);
-                  }}
+                  onClick={() => { if (isSelected) { clear(); return; } applyIntent(intent.low, intent.high); }}
                   className={`filmwave-filter-intent-button${isSelected ? " is-active" : ""}`}
                 >
                   <span>{intent.title}</span>

@@ -20,7 +20,7 @@
 }
 
 .filmwave-search-filter-pill-slot {
-  padding-right: 16px;
+  padding-right: 13px;
   transition: padding-right 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -29,7 +29,7 @@
   padding-right: 4px;
 }
 
-/* When sidebar is collapsed, reduce left padding */
+/* When sidebar is collapsed, reduce left padding so filters sit closer to sidebar */
 body.sidebar-collapsed .filmwave-search-filter-sticky,
 .desktop-app-shell.is-sidebar-collapsed .filmwave-search-filter-sticky {
   padding-left: 20px;

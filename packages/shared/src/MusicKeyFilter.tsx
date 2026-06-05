@@ -27,6 +27,28 @@ function formatScaleLabel(scale: ScaleMode) {
   return scale === "major" ? "Maj" : "Min";
 }
 
+function FilterChevron() {
+  return (
+    <svg
+      className="filmwave-filter-trigger-chevron"
+      width="8"
+      height="8"
+      viewBox="0 0 8 8"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M1.5 3L4 5.5L6.5 3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
   const [open, setOpen] = useState(false);
   const [accidental, setAccidental] = useState<AccidentalMode>(
@@ -67,11 +89,7 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     setSelectedNote(nextNote);
 
     if (nextNote) {
-      onChange({
-        note: nextNote,
-        scale: scaleMode,
-      });
-
+      onChange({ note: nextNote, scale: scaleMode });
       return;
     }
 
@@ -84,10 +102,7 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     setScaleMode(next);
 
     if (selectedNote) {
-      onChange({
-        note: selectedNote,
-        scale: next,
-      });
+      onChange({ note: selectedNote, scale: next });
     }
   }
 
@@ -112,21 +127,21 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
         onClick={() => setOpen((current) => !current)}
         className={`filmwave-filter-trigger${hasActive ? " is-active" : ""}${
           open ? " is-open" : ""
-        } no-chevron`}
+        }`}
+        aria-expanded={open}
       >
         <span>Key</span>
-
         {hasActive && (
           <span className="filmwave-filter-trigger-active-label">
             {activeLabel}
           </span>
         )}
+        <FilterChevron />
       </button>
 
       <FilterPopover open={open} triggerRef={triggerRef} width={300} className="filmwave-filter-panel">
         <div className="filmwave-filter-dropdown-header">
           <div className="filmwave-filter-dropdown-title">Key</div>
-
           {hasActive && (
             <button type="button" onClick={clear} className="filmwave-filter-clear-button">
               Clear
