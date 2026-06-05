@@ -34,10 +34,12 @@
   color: var(--text-primary);
 }
 
-.desktop-music-page .filmwave-search-filter-row {
-  overflow-y: hidden;
-  overscroll-behavior-x: none;
-  overscroll-behavior-y: none;
+/* The combined row is handled by shared CSS + combined-row-fix.css.
+   Just prevent vertical scroll bleed on the filter row. */
+.desktop-music-page .filmwave-search-filter-combined-row {
+  overflow-x: auto;
+  overflow-y: clip;
+  overscroll-behavior: none;
 }
 
 .desktop-music-load-notice {

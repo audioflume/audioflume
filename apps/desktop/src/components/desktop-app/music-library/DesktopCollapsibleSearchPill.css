@@ -1,22 +1,13 @@
-/* Playlist filter inside the CollapsibleSearchPill — scoped overrides */
+/*
+  Desktop CollapsibleSearchPill overrides.
+  The shared collapsible-search-pill.css handles all pill styling.
+  This file only contains desktop-specific adjustments.
+*/
 
-/* The MusicPlaylistFilter inside the pill renders a filmwave-filter-popover-wrap
-   containing a filmwave-filter-trigger. We override sizing and remove the
-   active underline indicator so it reads as an icon button, not a filter row item. */
+/* The custom pill playlist trigger (filmwave-pill-playlist-trigger) is
+   styled by collapsible-search-pill.css. No overrides needed here. */
 
-.filmwave-search-pill-playlist .filmwave-filter-trigger {
-  height: 28px !important;
-  min-height: 28px !important;
-  border-radius: 999px !important;
-  padding: 0 8px !important;
-  border-bottom: none !important;
-}
-
-.filmwave-search-pill-playlist .filmwave-filter-trigger::after {
-  display: none !important;
-}
-
-/* Ensure the popover from MusicPlaylistFilter clears the pill boundary */
+/* Ensure the playlist filter popover escapes the pill's overflow context */
 .filmwave-search-pill-playlist .filmwave-filter-popover-wrap {
   position: static;
 }
