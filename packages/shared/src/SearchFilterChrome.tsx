@@ -1,6 +1,14 @@
 "use client";
 
-import { useRef, type ChangeEvent, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref } from "react";
+import {
+  useEffect,
+  useRef,
+  type ChangeEvent,
+  type CSSProperties,
+  type KeyboardEvent,
+  type ReactNode,
+  type Ref,
+} from "react";
 
 type MusicLibraryFrameProps = {
   children: ReactNode;
@@ -52,6 +60,7 @@ export function SearchFilterChrome({
   onSearchRowClick,
 }: SearchFilterChromeProps) {
   const combinedRowRef = useRef<HTMLDivElement | null>(null);
+  const hadClearAllRef = useRef(Boolean(clearAll));
 
   function resetCombinedRowScroll() {
     const row = combinedRowRef.current;
@@ -64,12 +73,28 @@ export function SearchFilterChrome({
       row.scrollLeft = 0;
       row.scrollTo({ left: 0, behavior: "auto" });
     });
+
+    window.setTimeout(() => {
+      row.scrollLeft = 0;
+      row.scrollTo({ left: 0, behavior: "auto" });
+    }, 0);
   }
 
   function handleClearAllKeyDownCapture(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key !== "Enter" && event.key !== " ") return;
     resetCombinedRowScroll();
   }
+
+  useEffect(() => {
+    const hadClearAll = hadClearAllRef.current;
+    const hasClearAll = Boolean(clearAll);
+
+    if (hadClearAll && !hasClearAll) {
+      resetCombinedRowScroll();
+    }
+
+    hadClearAllRef.current = hasClearAll;
+  }, [clearAll]);
 
   return (
     <>
