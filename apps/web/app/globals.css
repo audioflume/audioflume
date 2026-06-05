@@ -37,6 +37,11 @@ button:focus-visible {
   outline: none;
 }
 
+form:has(input[placeholder="Search by scene, mood, artist, genre, instrument, or title..."]) {
+  padding-left: 11px;
+  padding-right: 11px;
+}
+
 body.sidebar-collapsed {
   --sidebar-width: var(--sidebar-width-collapsed);
 }
