@@ -15,6 +15,7 @@ type MusicMultiSelectFilterProps = {
   selected: string[];
   onChange?: (selected: string[]) => void;
   onToggleOption?: (option: string) => void;
+  onClear?: () => void;
   optionSections?: MusicMultiSelectFilterSection[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -96,6 +97,7 @@ export function MusicMultiSelectFilter({
   selected,
   onChange,
   onToggleOption,
+  onClear,
   optionSections,
   open,
   onOpenChange,
@@ -153,8 +155,15 @@ export function MusicMultiSelectFilter({
   }
 
   function clear() {
+    if (onClear) {
+      onClear();
+      return;
+    }
+
     onChange?.([]);
   }
+
+  const canClear = Boolean(onClear || onChange);
 
   return (
     <div ref={wrapperRef} className="filmwave-filter-popover-wrap">
@@ -166,7 +175,7 @@ export function MusicMultiSelectFilter({
         count={selected.length}
         disabled={disabled}
         onClick={() => setOpen(!isOpen)}
-        onClear={onChange ? clear : undefined}
+        onClear={canClear ? clear : undefined}
       />
 
       <FilterPopover
@@ -178,7 +187,7 @@ export function MusicMultiSelectFilter({
         <div className="filmwave-filter-dropdown-header">
           <div className="filmwave-filter-dropdown-title">{label}</div>
 
-          {hasActive && onChange && (
+          {hasActive && canClear && (
             <button
               type="button"
               onClick={clear}
