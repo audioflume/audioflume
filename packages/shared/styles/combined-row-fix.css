@@ -28,6 +28,41 @@
   padding-right: 4px;
 }
 
+/* Clearable filter count */
+.filmwave-filter-count {
+  position: relative;
+}
+
+.filmwave-filter-count.is-clearable {
+  cursor: pointer;
+}
+
+.filmwave-filter-count-value,
+.filmwave-filter-count-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 120ms ease;
+}
+
+.filmwave-filter-count-clear {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.filmwave-filter-count.is-clearable:hover .filmwave-filter-count-value,
+.filmwave-filter-count.is-clearable:focus-visible .filmwave-filter-count-value {
+  opacity: 0;
+}
+
+.filmwave-filter-count.is-clearable:hover .filmwave-filter-count-clear,
+.filmwave-filter-count.is-clearable:focus-visible .filmwave-filter-count-clear {
+  opacity: 1;
+}
+
 /* Clear all slot — pushes to the right edge when the row has spare room */
 .filmwave-search-filter-clear-all-slot {
   display: inline-flex;
