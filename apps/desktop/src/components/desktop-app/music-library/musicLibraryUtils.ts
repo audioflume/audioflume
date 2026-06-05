@@ -4,6 +4,7 @@ import {
   filterMusicLibrarySongs,
   GENRE_OPTIONS,
   INSTRUMENT_OPTIONS,
+  INSTRUMENTAL_VOCAL_FILTER_OPTION,
   MOOD_OPTIONS,
   normalizeDesktopMusicLibraryFilters,
   QUICK_FILTERS,
@@ -53,7 +54,7 @@ export function getDesktopMusicFilterOptions(): DesktopMusicFilterOptions {
     mood: [...MOOD_OPTIONS],
     genre: [...GENRE_OPTIONS],
     instrument: [...INSTRUMENT_OPTIONS],
-    vocal: [...VOCALS_OPTIONS],
+    vocal: [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...VOCALS_OPTIONS],
     build: [...BUILD_OPTIONS],
     cuePoint: EDIT_POINT_FILTER_OPTIONS.map((option) => option.label),
   };
