@@ -84,13 +84,15 @@
   font-weight: 400;
   outline: none;
   padding: 0 4px 0 7px;
+  /* Prevent the browser scrolling the row to show the input when focused */
+  scroll-margin: 0;
 }
 
 .filmwave-search-pill-input::placeholder {
   color: var(--text-muted);
 }
 
-/* Playlist slot — no divider, tight against the input */
+/* Playlist slot — no divider */
 .filmwave-search-pill-playlist {
   display: inline-flex;
   flex-shrink: 0;
@@ -103,15 +105,16 @@
 .filmwave-search-pill-playlist .filmwave-filter-trigger {
   height: 26px;
   border-radius: 999px;
-  padding: 0 5px;
-  gap: 2px;
+  /* Tighter gap between playlist icon and chevron */
+  gap: 1px;
+  padding: 0 5px 0 4px;
 }
 
 .filmwave-search-pill-playlist .filmwave-filter-trigger::after {
   display: none;
 }
 
-/* Match the header user-menu chevron: 12x12, same path and stroke */
+/* Chevron matches HeaderChevron exactly */
 .filmwave-search-pill-playlist .filmwave-filter-trigger-chevron {
   width: 12px;
   height: 12px;

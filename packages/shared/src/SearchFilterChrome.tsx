@@ -58,12 +58,14 @@ export function SearchFilterChrome({
         {/*
           Single scrollable row — pill and all filter buttons are direct
           flex children so they scroll together horizontally.
+          onSearchRowClick is ONLY on the pill slot, not the whole row,
+          so clicking filter buttons doesn’t trigger a focus-scroll.
         */}
-        <div
-          className="filmwave-search-filter-combined-row"
-          onClick={onSearchRowClick}
-        >
-          <div className="filmwave-search-filter-pill-slot" onClick={onSearchRowClick}>
+        <div className="filmwave-search-filter-combined-row">
+          <div
+            className="filmwave-search-filter-pill-slot"
+            onClick={onSearchRowClick}
+          >
             {search}
           </div>
           {filters}
