@@ -1,4 +1,4 @@
-import type { ReactNode, Ref } from "react";
+import type { KeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
 
 export type FilterTriggerProps = {
   label: ReactNode;
@@ -12,6 +12,7 @@ export type FilterTriggerProps = {
   className?: string;
   buttonRef?: Ref<HTMLButtonElement>;
   onClick: () => void;
+  onClear?: () => void;
 };
 
 function FilterChevron() {
@@ -48,7 +49,24 @@ export function FilterTrigger({
   className = "",
   buttonRef,
   onClick,
+  onClear,
 }: FilterTriggerProps) {
+  function handleCountClear(event: MouseEvent<HTMLSpanElement>) {
+    if (!onClear) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    onClear();
+  }
+
+  function handleCountKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
+    if (!onClear || (event.key !== "Enter" && event.key !== " ")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    onClear();
+  }
+
   return (
     <button
       ref={buttonRef}
@@ -62,7 +80,17 @@ export function FilterTrigger({
       {icon && <span className="filmwave-filter-trigger-icon">{icon}</span>}
       <span>{label}</span>
       {active && typeof count === "number" && (
-        <span className="filmwave-filter-count">{count}</span>
+        <span
+          className={`filmwave-filter-count${onClear ? " is-clearable" : ""}`}
+          role={onClear ? "button" : undefined}
+          tabIndex={onClear ? 0 : undefined}
+          aria-label={onClear ? `Clear ${typeof label === "string" ? label : "filter"}` : undefined}
+          onClick={handleCountClear}
+          onKeyDown={handleCountKeyDown}
+        >
+          <span className="filmwave-filter-count-value">{count}</span>
+          {onClear && <span className="filmwave-filter-count-clear" aria-hidden="true">×</span>}
+        </span>
       )}
       {active && showActiveDot && <span className="filmwave-filter-dot" />}
       {!hideChevron && <FilterChevron />}
