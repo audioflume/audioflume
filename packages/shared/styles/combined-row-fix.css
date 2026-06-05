@@ -1,0 +1,22 @@
+.filmwave-search-filter-combined-row {
+  box-sizing: border-box;
+  display: flex;
+  height: 48px;
+  min-height: 48px;
+  align-items: center;
+  gap: 0;
+  margin: 0 -28px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  /* clip prevents the 1px vertical scroll wiggle without clipping
+     position:absolute children like the active-line ::after indicators */
+  overflow-y: clip;
+  overscroll-behavior: none;
+  scrollbar-width: none;
+  cursor: default;
+}
+
+.filmwave-search-filter-combined-row::-webkit-scrollbar {
+  display: none;
+}
