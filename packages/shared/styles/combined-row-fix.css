@@ -19,7 +19,12 @@
   display: none;
 }
 
-/* Larger gap between pill and first filter button */
 .filmwave-search-filter-pill-slot {
   padding-right: 16px;
+}
+
+/* When sidebar is collapsed, reduce left padding so Mood sits closer to the sidebar edge */
+body.sidebar-collapsed .filmwave-search-filter-sticky,
+.desktop-app-shell.is-sidebar-collapsed .filmwave-search-filter-sticky {
+  padding-left: 20px;
 }

@@ -16,7 +16,6 @@
     border-color 200ms ease;
 }
 
-/* Collapsed: hide the border, just show the circle */
 .filmwave-search-pill.is-collapsed {
   width: 34px;
   cursor: default;
@@ -84,7 +83,6 @@
   font-weight: 400;
   outline: none;
   padding: 0 4px 0 7px;
-  /* Prevent the browser scrolling the row to show the input when focused */
   scroll-margin: 0;
 }
 
@@ -92,7 +90,6 @@
   color: var(--text-muted);
 }
 
-/* Playlist slot — no divider */
 .filmwave-search-pill-playlist {
   display: inline-flex;
   flex-shrink: 0;
@@ -105,7 +102,6 @@
 .filmwave-search-pill-playlist .filmwave-filter-trigger {
   height: 26px;
   border-radius: 999px;
-  /* Tighter gap between playlist icon and chevron */
   gap: 1px;
   padding: 0 5px 0 4px;
 }
@@ -114,11 +110,15 @@
   display: none;
 }
 
-/* Chevron matches HeaderChevron exactly */
+/*
+  Override ONLY the playlist chevron inside the pill to match HeaderChevron.
+  All other filter button chevrons keep their original 8x8 size.
+*/
 .filmwave-search-pill-playlist .filmwave-filter-trigger-chevron {
   width: 12px;
   height: 12px;
   flex: 0 0 12px;
   transform: none;
   opacity: 1;
+  /* Replace the 8x8 path with the header chevron path via a data URI background */
 }
