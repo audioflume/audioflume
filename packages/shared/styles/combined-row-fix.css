@@ -83,20 +83,20 @@
   height: 26px;
   flex-shrink: 0;
   cursor: pointer;
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 999px;
-  background: transparent;
+  background: var(--bg-elevated);
   padding: 0 10px;
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
-  transition: border-color 150ms ease, color 150ms ease;
+  transition: color 150ms ease, background 150ms ease;
 }
 
 .filmwave-filter-clear-all:hover {
-  border-color: var(--border-hover);
+  background: var(--bg-hover-strong);
   color: var(--text-primary);
 }
 
