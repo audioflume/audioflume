@@ -1,8 +1,8 @@
 .filmwave-search-pill {
   position: relative;
   display: inline-flex;
-  height: 28px;
-  width: 240px;
+  height: 32px;
+  width: 256px;
   flex-shrink: 0;
   align-items: center;
   overflow: visible;
@@ -16,9 +16,9 @@
     border-color 200ms ease;
 }
 
-/* Collapsed: shrink to just the icon circle size, but keep the border */
+/* Collapsed: shrink to just the circle + 2px padding each side */
 .filmwave-search-pill.is-collapsed {
-  width: 28px;
+  width: 34px;
   cursor: default;
 }
 
@@ -31,14 +31,13 @@
   background: transparent;
   padding: 0;
   cursor: pointer;
-  /* Sit flush against the pill border */
-  margin-left: -1px;
+  margin-left: 3px;
 }
 
 .filmwave-search-pill-icon-circle {
   display: inline-flex;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
@@ -83,26 +82,28 @@
   font-size: 13px;
   font-weight: 400;
   outline: none;
-  padding: 0 6px;
+  padding: 0 4px 0 6px;
 }
 
 .filmwave-search-pill-input::placeholder {
   color: var(--text-muted);
 }
 
-/* No divider between input and playlist slot */
+/* Playlist slot — no divider, tight against the input */
 .filmwave-search-pill-playlist {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  padding-right: 2px;
+  padding-right: 3px;
+  margin-left: -2px;
 }
 
 /* Playlist trigger inside pill — icon + chevron only, no active underline */
 .filmwave-search-pill-playlist .filmwave-filter-trigger {
   height: 26px;
   border-radius: 999px;
-  padding: 0 6px;
+  padding: 0 5px;
+  gap: 2px;
 }
 
 .filmwave-search-pill-playlist .filmwave-filter-trigger::after {

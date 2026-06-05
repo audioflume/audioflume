@@ -32,7 +32,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   top: 0;
 }
 
-/* Combined row: search pill + filter buttons side by side */
+/* Single combined row: pill + filter buttons, scrolls together horizontally */
 .filmwave-search-filter-combined-row {
   box-sizing: border-box;
   display: flex;
@@ -47,23 +47,26 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   overflow-y: visible;
   overscroll-behavior-y: none;
   scrollbar-width: none;
+  /* Allow the pill's popover and filter active indicators to overflow */
+  clip-path: none;
 }
 
 .filmwave-search-filter-combined-row::-webkit-scrollbar {
   display: none;
 }
 
-/* Pill slot — shrinks/grows with the pill's own width transition */
+/* Pill slot inside the combined row */
 .filmwave-search-filter-pill-slot {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   height: 100%;
   cursor: text;
+  /* Gap to first filter button equals the gap between filter buttons */
   padding-right: 8px;
 }
 
-/* Filter buttons inline — no border, no fixed height override needed */
+/* Filter buttons inline — no separate border or margins */
 .filmwave-search-filter-row--inline {
   display: flex;
   flex: 1;
@@ -78,7 +81,26 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   white-space: nowrap;
 }
 
-/* Keep legacy .filmwave-search-filter-row for any other usages */
+/* Tags row — hidden entirely; tags are shown via quick-filter chips instead */
+.filmwave-search-filter-tags-row {
+  display: none;
+}
+
+/* Legacy standalone search row (kept for backward compat) */
+.filmwave-search-filter-search-row {
+  box-sizing: border-box;
+  display: flex;
+  height: 48px;
+  min-height: 48px;
+  cursor: text;
+  align-items: center;
+  gap: 12px;
+  margin: 0 -28px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Legacy standalone filter row */
 .filmwave-search-filter-row {
   box-sizing: border-box;
   display: flex;
@@ -93,39 +115,15 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   border-bottom: 1px solid var(--border);
   padding: 0 28px;
   white-space: nowrap;
+  scrollbar-width: none;
 }
 
 .filmwave-search-filter-row::-webkit-scrollbar {
   display: none;
 }
 
-.filmwave-search-filter-row {
-  scrollbar-width: none;
-}
-
 .filmwave-search-filter-row > * {
   flex: 0 0 auto;
-}
-
-/* Tags row — shown below the combined row when filters are active */
-.filmwave-search-filter-tags-row {
-  display: flex;
-  align-items: center;
-  min-height: 32px;
-  padding: 4px 0;
-}
-
-.filmwave-search-filter-search-row {
-  box-sizing: border-box;
-  display: flex;
-  height: 48px;
-  min-height: 48px;
-  cursor: text;
-  align-items: center;
-  gap: 12px;
-  margin: 0 -28px;
-  padding: 0 28px;
-  border-bottom: 1px solid var(--border);
 }
 
 .filmwave-search-filter-search-shell {
