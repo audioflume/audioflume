@@ -98,27 +98,19 @@
   margin-left: -2px;
 }
 
-/* Playlist trigger inside pill — icon + chevron only, no active underline */
-.filmwave-search-pill-playlist .filmwave-filter-trigger {
-  height: 26px;
-  border-radius: 999px;
-  gap: 1px;
-  padding: 0 5px 0 4px;
+/* Custom pill playlist trigger — uses header-matched chevron via PillPlaylistChevron component */
+.filmwave-pill-playlist-trigger {
+  height: 26px !important;
+  border-radius: 999px !important;
+  gap: 1px !important;
+  padding: 0 5px 0 4px !important;
 }
 
-.filmwave-search-pill-playlist .filmwave-filter-trigger::after {
-  display: none;
+.filmwave-pill-playlist-trigger::after {
+  display: none !important;
 }
 
-/*
-  Override ONLY the playlist chevron inside the pill to match HeaderChevron.
-  All other filter button chevrons keep their original 8x8 size.
-*/
-.filmwave-search-pill-playlist .filmwave-filter-trigger-chevron {
-  width: 12px;
-  height: 12px;
-  flex: 0 0 12px;
-  transform: none;
-  opacity: 1;
-  /* Replace the 8x8 path with the header chevron path via a data URI background */
+.filmwave-pill-playlist-chevron {
+  flex-shrink: 0;
+  opacity: 0.92;
 }

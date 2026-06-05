@@ -23,6 +23,28 @@ type MusicPlaylistFilterProps = {
   onChange: (selected: MusicPlaylistFilterRef | null) => void;
 };
 
+/* Chevron matching HeaderChevron exactly — only used in icon-only pill mode */
+function PillPlaylistChevron() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className="filmwave-pill-playlist-chevron"
+    >
+      <path
+        d="M7 10L12 15L17 10"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function PlaylistFilterSkeleton() {
   return (
     <div className="filmwave-playlist-filter-skeleton">
@@ -78,16 +100,30 @@ export function MusicPlaylistFilter({
 
   return (
     <div ref={ref} className="filmwave-filter-popover-wrap">
-      <FilterTrigger
-        buttonRef={triggerRef}
-        label={iconOnly ? "" : "Playlists"}
-        icon={playlistIcon}
-        active={hasActive}
-        open={open}
-        count={iconOnly ? undefined : hasActive ? 1 : 0}
-        showActiveDot={false}
-        onClick={() => setOpen((current) => !current)}
-      />
+      {iconOnly ? (
+        /* Icon-only pill mode: custom button with header-matched chevron */
+        <button
+          ref={triggerRef}
+          type="button"
+          onClick={() => setOpen((current) => !current)}
+          className={`filmwave-filter-trigger filmwave-pill-playlist-trigger${hasActive ? " is-active" : ""}${open ? " is-open" : ""}`}
+          aria-expanded={open}
+        >
+          <span className="filmwave-filter-trigger-icon">{playlistIcon}</span>
+          <PillPlaylistChevron />
+        </button>
+      ) : (
+        <FilterTrigger
+          buttonRef={triggerRef}
+          label="Playlists"
+          icon={playlistIcon}
+          active={hasActive}
+          open={open}
+          count={hasActive ? 1 : 0}
+          showActiveDot={false}
+          onClick={() => setOpen((current) => !current)}
+        />
+      )}
       <FilterPopover open={open} triggerRef={triggerRef} width={300} className="filmwave-filter-panel">
         <div className="filmwave-filter-dropdown-header">
           <div className="filmwave-filter-dropdown-title">Playlists</div>
