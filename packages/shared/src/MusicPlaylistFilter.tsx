@@ -85,7 +85,7 @@ export function MusicPlaylistFilter({
         active={hasActive}
         open={open}
         count={iconOnly ? undefined : hasActive ? 1 : 0}
-        showActiveDot={iconOnly && hasActive}
+        showActiveDot={false}
         onClick={() => setOpen((current) => !current)}
       />
       <FilterPopover open={open} triggerRef={triggerRef} width={300} className="filmwave-filter-panel">
