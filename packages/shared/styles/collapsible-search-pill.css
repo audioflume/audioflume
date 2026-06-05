@@ -8,7 +8,7 @@
   overflow: visible;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--bg-elevated);
+  background: transparent;
   cursor: text;
   align-self: center;
   transition:
@@ -44,7 +44,9 @@
   border-radius: 999px;
   background: var(--bg-elevated);
   color: var(--text-muted);
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .filmwave-search-pill-icon-circle svg {
