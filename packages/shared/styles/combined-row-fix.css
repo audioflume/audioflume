@@ -80,18 +80,17 @@
 .filmwave-filter-clear-all {
   display: inline-flex;
   align-items: center;
-  height: 20px;
+  height: 26px;
   flex-shrink: 0;
   cursor: pointer;
   border: 0;
   border-radius: 999px;
   background: var(--bg-elevated);
-  padding: 0 8px;
+  padding: 0 10px;
   color: var(--text-secondary);
   font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  line-height: 1;
   white-space: nowrap;
   transition: color 150ms ease, background 150ms ease;
 }
