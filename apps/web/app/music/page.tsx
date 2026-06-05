@@ -380,13 +380,6 @@ export default function MusicPage() {
               value={search}
               placeholder={searchPlaceholder}
               onChange={setSearch}
-              playlistSlot={
-                <PlaylistFilter
-                  selected={selectedPlaylist}
-                  onChange={setSelectedPlaylist}
-                  iconOnly
-                />
-              }
             />
           }
           tags={
@@ -439,6 +432,11 @@ export default function MusicPage() {
           }
           filters={
             <>
+              <PlaylistFilter
+                selected={selectedPlaylist}
+                onChange={setSelectedPlaylist}
+              />
+
               <MusicMultiSelectFilter
                 label="Mood"
                 options={[...MOOD_OPTIONS]}
