@@ -9,6 +9,7 @@ export default function DesktopFilterDropdown({
   open,
   onOpenChange,
   onToggleOption,
+  onClear,
 }: {
   filterKey: DesktopMusicFilterKey;
   label: string;
@@ -17,6 +18,7 @@ export default function DesktopFilterDropdown({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onToggleOption: (value: string) => void;
+  onClear?: () => void;
 }) {
   return (
     <MusicMultiSelectFilter
@@ -26,6 +28,7 @@ export default function DesktopFilterDropdown({
       open={open}
       onOpenChange={onOpenChange}
       onToggleOption={onToggleOption}
+      onClear={onClear}
       width={filterKey === "playlist" ? 300 : 280}
     />
   );
