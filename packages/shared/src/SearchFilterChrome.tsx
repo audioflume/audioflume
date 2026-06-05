@@ -1,6 +1,6 @@
 "use client";
 
-import type { ChangeEvent, CSSProperties, ReactNode, Ref } from "react";
+import { useRef, type ChangeEvent, type CSSProperties, type ReactNode, type Ref } from "react";
 
 type MusicLibraryFrameProps = {
   children: ReactNode;
@@ -51,13 +51,19 @@ export function SearchFilterChrome({
   className = "",
   onSearchRowClick,
 }: SearchFilterChromeProps) {
+  const combinedRowRef = useRef<HTMLDivElement | null>(null);
+
+  function resetCombinedRowScroll() {
+    combinedRowRef.current?.scrollTo({ left: 0, behavior: "smooth" });
+  }
+
   return (
     <>
       <div
         className={`filmwave-search-filter-sticky${className ? ` ${className}` : ""}`}
         style={stickyTop !== undefined ? { top: stickyTop } : undefined}
       >
-        <div className="filmwave-search-filter-combined-row">
+        <div ref={combinedRowRef} className="filmwave-search-filter-combined-row">
           <div
             className="filmwave-search-filter-pill-slot"
             onClick={onSearchRowClick}
@@ -66,7 +72,10 @@ export function SearchFilterChrome({
           </div>
           {filters}
           {clearAll && (
-            <div className="filmwave-search-filter-clear-all-slot">
+            <div
+              className="filmwave-search-filter-clear-all-slot"
+              onClick={resetCombinedRowScroll}
+            >
               {clearAll}
             </div>
           )}
