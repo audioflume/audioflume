@@ -32,6 +32,89 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   top: 0;
 }
 
+/* Combined row: search pill + filter buttons side by side */
+.filmwave-search-filter-combined-row {
+  box-sizing: border-box;
+  display: flex;
+  height: 48px;
+  min-height: 48px;
+  align-items: center;
+  margin: 0 -28px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+  gap: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior-y: none;
+  scrollbar-width: none;
+}
+
+.filmwave-search-filter-combined-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Pill slot — shrinks/grows with the pill's own width transition */
+.filmwave-search-filter-pill-slot {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 100%;
+  cursor: text;
+  padding-right: 8px;
+}
+
+/* Filter buttons inline — no border, no fixed height override needed */
+.filmwave-search-filter-row--inline {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+  align-items: stretch;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+/* Keep legacy .filmwave-search-filter-row for any other usages */
+.filmwave-search-filter-row {
+  box-sizing: border-box;
+  display: flex;
+  height: 48px;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  margin: 0 -28px;
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior-y: none;
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  white-space: nowrap;
+}
+
+.filmwave-search-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filmwave-search-filter-row {
+  scrollbar-width: none;
+}
+
+.filmwave-search-filter-row > * {
+  flex: 0 0 auto;
+}
+
+/* Tags row — shown below the combined row when filters are active */
+.filmwave-search-filter-tags-row {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 0;
+}
+
 .filmwave-search-filter-search-row {
   box-sizing: border-box;
   display: flex;
@@ -154,37 +237,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   flex-shrink: 0;
 }
 
-/* Filter row — negative margins so border spans full width.
-   overflow-y: visible is critical so the ::after indicator
-   on buttons is not clipped. */
-.filmwave-search-filter-row {
-  box-sizing: border-box;
-  display: flex;
-  height: 48px;
-  min-width: 0;
-  align-items: center;
-  gap: 4px;
-  margin: 0 -28px;
-  overflow-x: auto;
-  overflow-y: visible;
-  overscroll-behavior-y: none;
-  border-bottom: 1px solid var(--border);
-  padding: 0 28px;
-  white-space: nowrap;
-}
-
-.filmwave-search-filter-row::-webkit-scrollbar {
-  display: none;
-}
-
-.filmwave-search-filter-row {
-  scrollbar-width: none;
-}
-
-.filmwave-search-filter-row > * {
-  flex: 0 0 auto;
-}
-
 .filmwave-search-filter-quick-row {
   display: flex;
   flex-wrap: wrap;
@@ -214,13 +266,6 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   background: var(--bg-elevated);
   color: var(--text-primary);
 }
-
-/* ── Active line indicator ──
-   ::after pseudo-element, position: absolute, bottom: 0.
-   The button is position: relative and height: 48px.
-   The row has overflow-y: visible so the indicator is never clipped.
-   This is the only approach that works reliably across all containers
-   and both platforms. --active-line-width controls thickness. */
 
 :root {
   --active-line-width: 2px;
