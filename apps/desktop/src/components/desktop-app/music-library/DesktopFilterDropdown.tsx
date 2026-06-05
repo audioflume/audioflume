@@ -20,6 +20,15 @@ export default function DesktopFilterDropdown({
   onToggleOption: (value: string) => void;
   onClear?: () => void;
 }) {
+  function clearSelectedOptions() {
+    if (onClear) {
+      onClear();
+      return;
+    }
+
+    selected.forEach((value) => onToggleOption(value));
+  }
+
   return (
     <MusicMultiSelectFilter
       label={label}
@@ -28,7 +37,7 @@ export default function DesktopFilterDropdown({
       open={open}
       onOpenChange={onOpenChange}
       onToggleOption={onToggleOption}
-      onClear={onClear}
+      onClear={selected.length > 0 ? clearSelectedOptions : undefined}
       width={filterKey === "playlist" ? 300 : 280}
     />
   );
