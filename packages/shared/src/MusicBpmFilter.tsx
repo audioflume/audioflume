@@ -148,13 +148,12 @@ export function MusicBpmFilter({ value, onChange }: MusicBpmFilterProps) {
   }
 
   const hasActive = value !== null;
-  const activeLabel = value ? (value.mode === "exact" ? `${value.exact}` : `${value.low}–${value.high}`) : null;
   const activeStart = mode === "range" ? toPercent(low) : 0;
   const activeEnd = mode === "range" ? toPercent(high) : toPercent(exact);
 
   return (
     <div ref={ref} className="filmwave-filter-popover-wrap">
-      <FilterTrigger buttonRef={triggerRef} label="BPM" active={hasActive} open={open} count={hasActive ? 1 : 0} onClick={() => setOpen((current) => !current)} />
+      <FilterTrigger buttonRef={triggerRef} label="BPM" active={hasActive} open={open} count={hasActive ? 1 : 0} onClick={() => setOpen((current) => !current)} onClear={hasActive ? clear : undefined} />
       <FilterPopover open={open} triggerRef={triggerRef} width={300} className="filmwave-filter-panel">
         <div className="filmwave-filter-dropdown-header">
           <div className="filmwave-filter-dropdown-title">BPM</div>
