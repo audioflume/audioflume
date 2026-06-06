@@ -154,7 +154,6 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
         activeLabel={durationActiveLabel ?? undefined}
         active={hasActive}
         open={open}
-        count={hasActive ? 1 : 0}
         onClick={() => setOpen((current) => !current)}
         onClear={hasActive ? clear : undefined}
       />
