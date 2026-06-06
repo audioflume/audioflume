@@ -94,7 +94,7 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
   const accidentals =
     accidental === "sharp" ? SHARP_ACCIDENTALS : FLAT_ACCIDENTALS;
   const hasActive = value !== null;
-  const activeLabel = value
+  const keyActiveLabel = value
     ? [value.note, formatScaleLabel(value.scale)].filter(Boolean).join(" ")
     : null;
 
@@ -102,7 +102,8 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     <div ref={ref} className="filmwave-filter-popover-wrap">
       <FilterTrigger
         buttonRef={triggerRef}
-        label={activeLabel && hasActive ? `Key · ${activeLabel}` : "Key"}
+        label="Key"
+        activeLabel={keyActiveLabel ?? undefined}
         active={hasActive}
         open={open}
         count={hasActive ? 1 : 0}
