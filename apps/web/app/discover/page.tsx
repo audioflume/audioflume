@@ -170,7 +170,7 @@ function DiscoverProductionSkeleton() {
   return (
     <section className="@container mt-12 discover-skeleton-section">
       <DiscoverSectionHeadingSkeleton wide />
-      <div className="grid gap-4 @[480px]:grid-cols-2 @[900px]:grid-cols-4">
+      <div className="grid gap-4 @min-[480px]:grid-cols-2 @min-[900px]:grid-cols-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <DiscoverLargeCardSkeleton key={index} className="min-h-[245px]" />
         ))}
@@ -369,7 +369,7 @@ function DiscoverPageSkeleton() {
           <DiscoverLargeCardSkeleton className="min-h-[420px]" />
           <div className="@container grid gap-4">
             <DiscoverLargeCardSkeleton className="min-h-[204px]" />
-            <div className="grid gap-4 @[480px]:grid-cols-2">
+            <div className="grid gap-4 @min-[480px]:grid-cols-2">
               <DiscoverLargeCardSkeleton className="min-h-[188px]" />
               <DiscoverLargeCardSkeleton className="min-h-[188px]" />
             </div>
@@ -729,7 +729,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
           {side && <DiscoverySideCard playlist={side} />}
 
           {minis.length > 0 && (
-            <div className="grid gap-4 @[480px]:grid-cols-2">
+            <div className="grid gap-4 @min-[480px]:grid-cols-2">
               {minis.slice(0, 2).map((playlist) => (
                 <DiscoveryMiniCard key={playlist.id} playlist={playlist} />
               ))}
@@ -807,7 +807,7 @@ function ProductionStylesSection({ blocks }: { blocks: CuratedPlaylist[] }) {
         </Link>
       </div>
 
-      <div className="grid gap-4 @[480px]:grid-cols-2 @[900px]:grid-cols-4">
+      <div className="grid gap-4 @min-[480px]:grid-cols-2 @min-[900px]:grid-cols-4">
         {blocks.map((playlist) => (
           <ProductionStyleCard key={playlist.id} playlist={playlist} />
         ))}
