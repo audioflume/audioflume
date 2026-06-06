@@ -1,4 +1,3 @@
-import { useLayoutEffect, useRef, useState } from "react";
 import type { KeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
 
 export type FilterTriggerProps = {
@@ -54,16 +53,7 @@ export function FilterTrigger({
   onClick,
   onClear,
 }: FilterTriggerProps) {
-  const activeLabelRef = useRef<HTMLSpanElement>(null);
-  const [activeLabelWidth, setActiveLabelWidth] = useState<number | undefined>(undefined);
-
   const activeLabelIsClearable = active && activeLabel != null && !!onClear;
-
-  // Measure the pill's natural width once so it stays locked when the × overlays it.
-  useLayoutEffect(() => {
-    if (!activeLabelIsClearable || !activeLabelRef.current) return;
-    setActiveLabelWidth(activeLabelRef.current.offsetWidth);
-  }, [activeLabelIsClearable, activeLabel]);
 
   function handleCountClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
@@ -107,32 +97,18 @@ export function FilterTrigger({
       <span>{label}</span>
       {active && activeLabel != null && (
         <span
-          ref={activeLabelRef}
           className={`filmwave-filter-trigger-active-label${activeLabelIsClearable ? " is-clearable" : ""}`}
           role={activeLabelIsClearable ? "button" : undefined}
           tabIndex={activeLabelIsClearable ? 0 : undefined}
           aria-label={activeLabelIsClearable ? `Clear ${typeof label === "string" ? label : "filter"}` : undefined}
           onClick={activeLabelIsClearable ? handleActiveLabelClear : undefined}
           onKeyDown={activeLabelIsClearable ? handleActiveLabelKeyDown : undefined}
-          style={
-            activeLabelIsClearable
-              ? {
-                  position: "relative",
-                  width: activeLabelWidth !== undefined ? `${activeLabelWidth}px` : undefined,
-                }
-              : undefined
-          }
         >
           {/* Label text — fades out on hover via CSS */}
           <span className="filmwave-filter-active-label-value">{activeLabel}</span>
-          {/* × overlay — fades in on hover via CSS, styled to match .filmwave-filter-count-clear */}
+          {/* × overlay — fades in on hover via CSS, same styling as .filmwave-filter-count-clear */}
           {activeLabelIsClearable && (
-            <span
-              className="filmwave-filter-active-label-clear"
-              aria-hidden="true"
-            >
-              ×
-            </span>
+            <span className="filmwave-filter-active-label-clear" aria-hidden="true">×</span>
           )}
         </span>
       )}
