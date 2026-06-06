@@ -5,7 +5,6 @@ import {
   useRef,
   type ChangeEvent,
   type CSSProperties,
-  type KeyboardEvent,
   type ReactNode,
   type Ref,
 } from "react";
@@ -80,11 +79,6 @@ export function SearchFilterChrome({
     }, 0);
   }
 
-  function handleClearAllKeyDownCapture(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    resetCombinedRowScroll();
-  }
-
   useEffect(() => {
     const hadClearAll = hadClearAllRef.current;
     const hasClearAll = Boolean(clearAll);
@@ -111,12 +105,7 @@ export function SearchFilterChrome({
           </div>
           {filters}
           {clearAll && (
-            <div
-              className="filmwave-search-filter-clear-all-slot"
-              onPointerDownCapture={resetCombinedRowScroll}
-              onClickCapture={resetCombinedRowScroll}
-              onKeyDownCapture={handleClearAllKeyDownCapture}
-            >
+            <div className="filmwave-search-filter-clear-all-slot">
               {clearAll}
             </div>
           )}
