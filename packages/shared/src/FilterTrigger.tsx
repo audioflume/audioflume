@@ -54,19 +54,16 @@ export function FilterTrigger({
   onClick,
   onClear,
 }: FilterTriggerProps) {
-  const [activeLabelHovered, setActiveLabelHovered] = useState(false);
   const activeLabelRef = useRef<HTMLSpanElement>(null);
   const [activeLabelWidth, setActiveLabelWidth] = useState<number | undefined>(undefined);
 
   const activeLabelIsClearable = active && activeLabel != null && !!onClear;
 
-  // Measure the natural width of the pill when not hovered, so we can lock it
-  // and prevent the pill from resizing when the text swaps to "×".
+  // Measure the pill's natural width once so it stays locked when the × overlays it.
   useLayoutEffect(() => {
     if (!activeLabelIsClearable || !activeLabelRef.current) return;
-    if (activeLabelHovered) return; // don't re-measure while showing ×
     setActiveLabelWidth(activeLabelRef.current.offsetWidth);
-  }, [activeLabelIsClearable, activeLabel, activeLabelHovered]);
+  }, [activeLabelIsClearable, activeLabel]);
 
   function handleCountClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
@@ -115,23 +112,28 @@ export function FilterTrigger({
           role={activeLabelIsClearable ? "button" : undefined}
           tabIndex={activeLabelIsClearable ? 0 : undefined}
           aria-label={activeLabelIsClearable ? `Clear ${typeof label === "string" ? label : "filter"}` : undefined}
-          onMouseEnter={activeLabelIsClearable ? () => setActiveLabelHovered(true) : undefined}
-          onMouseLeave={activeLabelIsClearable ? () => setActiveLabelHovered(false) : undefined}
           onClick={activeLabelIsClearable ? handleActiveLabelClear : undefined}
           onKeyDown={activeLabelIsClearable ? handleActiveLabelKeyDown : undefined}
           style={
             activeLabelIsClearable
               ? {
+                  position: "relative",
                   width: activeLabelWidth !== undefined ? `${activeLabelWidth}px` : undefined,
-                  textAlign: "center",
-                  display: "inline-flex",
-                  justifyContent: "center",
-                  overflow: "hidden",
                 }
               : undefined
           }
         >
-          {activeLabelIsClearable && activeLabelHovered ? "×" : activeLabel}
+          {/* Label text — fades out on hover via CSS */}
+          <span className="filmwave-filter-active-label-value">{activeLabel}</span>
+          {/* × overlay — fades in on hover via CSS, styled to match .filmwave-filter-count-clear */}
+          {activeLabelIsClearable && (
+            <span
+              className="filmwave-filter-active-label-clear"
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          )}
         </span>
       )}
       {active && typeof count === "number" && !activeLabelIsClearable && (
