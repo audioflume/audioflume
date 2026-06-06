@@ -562,7 +562,7 @@ function FullWidthSearchBar() {
         <button
           type="submit"
           onClick={(event) => event.stopPropagation()}
-          className="hidden h-9 shrink-0 cursor-pointer items-center rounded-full bg-[var(--text-primary)] px=10 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 sm:flex"
+          className="hidden h-9 shrink-0 cursor-pointer items-center rounded-full bg-[var(--text-primary)] px-10 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 sm:flex"
         >
           Search
         </button>
