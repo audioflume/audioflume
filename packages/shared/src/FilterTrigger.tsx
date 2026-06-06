@@ -2,6 +2,7 @@ import type { KeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
 
 export type FilterTriggerProps = {
   label: ReactNode;
+  activeLabel?: ReactNode;
   icon?: ReactNode;
   active?: boolean;
   open?: boolean;
@@ -39,6 +40,7 @@ function FilterChevron() {
 
 export function FilterTrigger({
   label,
+  activeLabel,
   icon,
   active = false,
   open = false,
@@ -79,6 +81,9 @@ export function FilterTrigger({
     >
       {icon && <span className="filmwave-filter-trigger-icon">{icon}</span>}
       <span>{label}</span>
+      {active && activeLabel && (
+        <span className="filmwave-filter-trigger-active-label">{activeLabel}</span>
+      )}
       {active && typeof count === "number" && (
         <span
           className={`filmwave-filter-count${onClear ? " is-clearable" : ""}`}
