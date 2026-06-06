@@ -6,7 +6,7 @@
   flex-shrink: 0;
   align-items: center;
   overflow: visible;
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   border-radius: 999px;
   background: transparent;
   cursor: text;
