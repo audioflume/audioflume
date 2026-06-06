@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useRef, type ChangeEvent, type CSSProperties, type ReactNode, type Ref } from "react";
+import {
+  useEffect,
+  useRef,
+  type ChangeEvent,
+  type CSSProperties,
+  type ReactNode,
+  type Ref,
+} from "react";
 
 type MusicLibraryFrameProps = {
   children: ReactNode;
@@ -14,8 +21,4 @@ function formatSearchPlaylistName(value: string) {
 }
 
 export function getMusicLibrarySearchPlaceholder(playlistName?: string | null) {
-  const formattedPlaylistName = playlistName ? formatSearchPlaylistName(playlistName) : "";
-  return formattedPlaylistName ? `Search "${formattedPlaylistName}"` : "Search Music Library";
-}
-
-export function MusicLibraryFrame({ children
+  const
