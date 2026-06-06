@@ -5,6 +5,7 @@ import {
   useRef,
   type ChangeEvent,
   type CSSProperties,
+  type PointerEvent,
   type ReactNode,
   type Ref,
 } from "react";
@@ -31,8 +32,17 @@ export function getMusicLibrarySearchPlaceholder(playlistName?: string | null) {
     : "Search Music Library";
 }
 
-export function MusicLibraryFrame({ children, className = "" }: MusicLibraryFrameProps) {
-  return <section className={`filmwave-music-library-frame${className ? ` ${className}` : ""}`}>{children}</section>;
+export function MusicLibraryFrame({
+  children,
+  className = "",
+}: MusicLibraryFrameProps) {
+  return (
+    <section
+      className={`filmwave-music-library-frame${className ? ` ${className}` : ""}`}
+    >
+      {children}
+    </section>
+  );
 }
 
 type SearchFilterChromeProps = {
@@ -60,6 +70,8 @@ export function SearchFilterChrome({
 }: SearchFilterChromeProps) {
   const combinedRowRef = useRef<HTMLDivElement | null>(null);
   const hadClearAllRef = useRef(Boolean(clearAll));
+  const slideAnimationRef = useRef<number | null>(null);
+  const handledSearchPointerDownRef = useRef(false);
 
   function resetCombinedRowScroll() {
     const row = combinedRowRef.current;
@@ -90,16 +102,103 @@ export function SearchFilterChrome({
     hadClearAllRef.current = hasClearAll;
   }, [clearAll]);
 
+  useEffect(() => {
+    return () => {
+      if (slideAnimationRef.current !== null) {
+        window.cancelAnimationFrame(slideAnimationRef.current);
+      }
+    };
+  }, []);
+
+  function slideCombinedRowLeft(onComplete?: () => void) {
+    const row = combinedRowRef.current;
+    if (!row) {
+      onComplete?.();
+      return;
+    }
+
+    if (slideAnimationRef.current !== null) {
+      window.cancelAnimationFrame(slideAnimationRef.current);
+      slideAnimationRef.current = null;
+    }
+
+    const scrollRow = row;
+    const start = scrollRow.scrollLeft;
+
+    if (start <= 0) {
+      scrollRow.scrollLeft = 0;
+      onComplete?.();
+      return;
+    }
+
+    const duration = 240;
+    const startTime = performance.now();
+
+    function animate(now: number) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      scrollRow.scrollLeft = start * (1 - eased);
+
+      if (progress < 1) {
+        slideAnimationRef.current = window.requestAnimationFrame(animate);
+        return;
+      }
+
+      scrollRow.scrollLeft = 0;
+      slideAnimationRef.current = null;
+      onComplete?.();
+    }
+
+    slideAnimationRef.current = window.requestAnimationFrame(animate);
+  }
+
+  function handleSearchPointerDown(event: PointerEvent<HTMLDivElement>) {
+    if (event.button !== 0) return;
+
+    const row = combinedRowRef.current;
+    if (!row || row.scrollLeft <= 0) return;
+
+    event.preventDefault();
+    handledSearchPointerDownRef.current = true;
+
+    slideCombinedRowLeft(() => {
+      onSearchRowClick?.();
+    });
+  }
+
+  function handleSearchClick() {
+    if (handledSearchPointerDownRef.current) {
+      handledSearchPointerDownRef.current = false;
+      return;
+    }
+
+    const row = combinedRowRef.current;
+
+    if (row && row.scrollLeft > 0) {
+      slideCombinedRowLeft(() => {
+        onSearchRowClick?.();
+      });
+      return;
+    }
+
+    onSearchRowClick?.();
+  }
+
   return (
     <>
       <div
         className={`filmwave-search-filter-sticky${className ? ` ${className}` : ""}`}
         style={stickyTop !== undefined ? { top: stickyTop } : undefined}
       >
-        <div ref={combinedRowRef} className="filmwave-search-filter-combined-row">
+        <div
+          ref={combinedRowRef}
+          className="filmwave-search-filter-combined-row"
+        >
           <div
             className="filmwave-search-filter-pill-slot"
-            onClick={onSearchRowClick}
+            onPointerDown={handleSearchPointerDown}
+            onClick={handleSearchClick}
           >
             {search}
           </div>
@@ -114,8 +213,16 @@ export function SearchFilterChrome({
 
       {(quickFilters || quickActions) && (
         <div className="filmwave-search-filter-quick-row">
-          {quickFilters && <div className="filmwave-search-filter-quick-list">{quickFilters}</div>}
-          {quickActions && <div className="filmwave-search-filter-quick-actions">{quickActions}</div>}
+          {quickFilters && (
+            <div className="filmwave-search-filter-quick-list">
+              {quickFilters}
+            </div>
+          )}
+          {quickActions && (
+            <div className="filmwave-search-filter-quick-actions">
+              {quickActions}
+            </div>
+          )}
         </div>
       )}
     </>

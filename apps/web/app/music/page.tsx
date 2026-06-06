@@ -334,7 +334,9 @@ export default function MusicPage() {
 
   const displayedSongs = useMemo(() => {
     if (sortOrder === "downloaded") {
-      return [...filteredSongs].sort((a, b) => b.downloadCount - a.downloadCount);
+      return [...filteredSongs].sort(
+        (a, b) => b.downloadCount - a.downloadCount,
+      );
     }
 
     if (sortOrder !== "random" || !shuffleOrderIds) return filteredSongs;
@@ -546,8 +548,14 @@ export default function MusicPage() {
           }
           quickActions={
             <>
-              <MusicShuffleButton active={shuffleActive} onClick={setRandomSort} />
-              <MusicLibrarySortControl value={sortOrder} onChange={handleSortChange} />
+              <MusicShuffleButton
+                active={shuffleActive}
+                onClick={setRandomSort}
+              />
+              <MusicLibrarySortControl
+                value={sortOrder}
+                onChange={handleSortChange}
+              />
             </>
           }
         />
