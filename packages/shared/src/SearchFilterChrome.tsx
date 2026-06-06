@@ -1,14 +1,21 @@
 "use client";
 
-import { useEffect, useRef, type ChangeEvent, type CSSProperties, type ReactNode, type Ref } from "react";
+import {
+  useEffect,
+  useRef,
+  type ChangeEvent,
+  type CSSProperties,
+  type ReactNode,
+  type Ref,
+} from "react";
 
-type MusicLibraryFrameProps = { children: ReactNode; className?: string };
+type MusicLibraryFrameProps = {
+  children: ReactNode;
+  className?: string;
+};
 
-type SearchFilterChromeProps = {
-  search: ReactNode;
-  tags?: ReactNode;
-  filters: ReactNode;
-  clearAll?: ReactNode;
-  quickFilters?: ReactNode;
-  quickActions?: ReactNode;
-  sticky
+function formatSearchPlaylistName(value: string) {
+  const trimmedValue = value.trim();
+  if (!trimmedValue) return "";
+
+  return trimmedValue.charAt(0).toUpperCase() +
