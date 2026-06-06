@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { FilmwaveKeyFilterValue } from "./music";
 import { FilterPopover } from "./FilterPopover";
+import { FilterTrigger } from "./FilterTrigger";
 
 type AccidentalMode = "sharp" | "flat";
 type ScaleMode = "major" | "minor" | null;
@@ -25,28 +26,6 @@ function getAccidentalModeFromNote(note: string | null): AccidentalMode {
 function formatScaleLabel(scale: ScaleMode) {
   if (!scale) return "";
   return scale === "major" ? "Maj" : "Min";
-}
-
-function FilterChevron() {
-  return (
-    <svg
-      className="filmwave-filter-trigger-chevron"
-      width="8"
-      height="8"
-      viewBox="0 0 8 8"
-      fill="none"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M1.5 3L4 5.5L6.5 3"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
 }
 
 export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
@@ -121,23 +100,15 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
 
   return (
     <div ref={ref} className="filmwave-filter-popover-wrap">
-      <button
-        ref={triggerRef}
-        type="button"
+      <FilterTrigger
+        buttonRef={triggerRef}
+        label={activeLabel && hasActive ? `Key · ${activeLabel}` : "Key"}
+        active={hasActive}
+        open={open}
+        count={hasActive ? 1 : 0}
         onClick={() => setOpen((current) => !current)}
-        className={`filmwave-filter-trigger${hasActive ? " is-active" : ""}${
-          open ? " is-open" : ""
-        }`}
-        aria-expanded={open}
-      >
-        <span>Key</span>
-        {hasActive && (
-          <span className="filmwave-filter-trigger-active-label">
-            {activeLabel}
-          </span>
-        )}
-        <FilterChevron />
-      </button>
+        onClear={hasActive ? clear : undefined}
+      />
 
       <FilterPopover open={open} triggerRef={triggerRef} width={300} className="filmwave-filter-panel">
         <div className="filmwave-filter-dropdown-header">
