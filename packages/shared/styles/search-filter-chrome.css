@@ -283,8 +283,8 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   content: "";
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 4px;
+  right: 4px;
   height: var(--active-line-width);
   background: transparent;
   transition: background 150ms ease;
