@@ -142,7 +142,7 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
   }
 
   const hasActive = selected.length > 0;
-  const activeLabel = hasActive ? selected[0] : null;
+  const durationActiveLabel = hasActive ? selected[0] : null;
   const activeStart = toPercent(low);
   const activeEnd = toPercent(high);
 
@@ -150,7 +150,8 @@ export function MusicDurationFilter({ selected, onChange }: MusicDurationFilterP
     <div ref={ref} className="filmwave-filter-popover-wrap">
       <FilterTrigger
         buttonRef={triggerRef}
-        label={activeLabel && hasActive ? `Duration · ${activeLabel}` : "Duration"}
+        label="Duration"
+        activeLabel={durationActiveLabel ?? undefined}
         active={hasActive}
         open={open}
         count={hasActive ? 1 : 0}
