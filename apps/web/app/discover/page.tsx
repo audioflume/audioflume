@@ -365,7 +365,7 @@ function DiscoverPageSkeleton() {
           <DiscoverSkeletonBlock className="hidden h-9 w-28 shrink-0 rounded-full sm:block" />
         </div>
 
-        <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
+        <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
           <DiscoverLargeCardSkeleton className="min-h-[420px]" />
           <div className="grid gap-4">
             <DiscoverLargeCardSkeleton className="min-h-[204px]" />
@@ -701,7 +701,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
   const [hero, side, ...minis] = blocks;
 
   return (
-    <section className="@container">
+    <section>
       <div className="mb-6 grid gap-6 @min-[700px]:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] @min-[700px]:items-end">
         <div>
           <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
@@ -722,7 +722,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
 
       <FullWidthSearchBar />
 
-      <div className="mt-4 grid gap-4 @min-[600px]:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
         {hero && <DiscoveryHeroCard playlist={hero} />}
 
         <div className="grid gap-4">
