@@ -17,4 +17,575 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   padding-top: 0;
 }
 
-.filmwave-search
+.filmwave-search-filter-sticky {
+  position: sticky;
+  top: 56px;
+  z-index: var(--filmwave-z-search-filter);
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  background: var(--bg-primary);
+  padding: 0 28px;
+}
+
+.desktop-app-main .filmwave-search-filter-sticky {
+  top: 0;
+}
+
+/*
+  Single combined row — pill + every filter button are direct flex children.
+  The whole row scrolls horizontally together on narrow windows.
+  overflow-y: visible keeps the ::after active-line indicators from clipping.
+*/
+.filmwave-search-filter-combined-row {
+  box-sizing: border-box;
+  display: flex;
+  height: 48px;
+  min-height: 48px;
+  align-items: center;
+  gap: 0;
+  margin: 0 -28px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior-y: none;
+  scrollbar-width: none;
+  cursor: default;
+}
+
+.filmwave-search-filter-combined-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Pill wrapper — gives the pill its right-side gap before the first filter button */
+.filmwave-search-filter-pill-slot {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 100%;
+  padding-right: 8px;
+  cursor: text;
+}
+
+/* Legacy standalone rows kept for backward compat */
+.filmwave-search-filter-search-row {
+  box-sizing: border-box;
+  display: flex;
+  height: 48px;
+  min-height: 48px;
+  cursor: text;
+  align-items: center;
+  gap: 12px;
+  margin: 0 -28px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.filmwave-search-filter-row {
+  box-sizing: border-box;
+  display: flex;
+  height: 48px;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  margin: 0 -28px;
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior-y: none;
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.filmwave-search-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filmwave-search-filter-row > * {
+  flex: 0 0 auto;
+}
+
+/* Tags row — hidden; active filters are indicated via the pill dot */
+.filmwave-search-filter-tags-row {
+  display: none;
+}
+
+.filmwave-search-filter-search-shell {
+  display: flex;
+  width: 320px;
+  height: 100%;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px 0 0;
+}
+
+.filmwave-search-filter-search-icon {
+  display: inline-flex;
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.filmwave-search-filter-search-icon svg {
+  display: block;
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.filmwave-search-filter-search-shell input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 300;
+  outline: none;
+}
+
+.filmwave-search-filter-search-shell input::placeholder {
+  color: var(--text-muted);
+}
+
+.filmwave-search-filter-tags {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-left: 4px;
+}
+
+.filmwave-search-filter-tag-list {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.filmwave-search-filter-tag {
+  box-sizing: border-box;
+  display: inline-flex;
+  height: 19px;
+  min-width: 0;
+  cursor: default;
+  align-items: center;
+  gap: 4px;
+  background: var(--accent);
+  padding: 0 5px 0 8px;
+  color: var(--accent-contrast, #111111);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  pointer-events: auto;
+  white-space: nowrap;
+}
+
+.filmwave-search-filter-tag-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.filmwave-search-filter-tag-remove {
+  display: inline-flex;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.filmwave-search-filter-tag-remove-icon {
+  display: block;
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+}
+
+.filmwave-search-filter-quick-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-primary);
+  padding: 12px 32px 0;
+}
+
+.filmwave-search-filter-quick-button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  background: var(--bg-elevated);
+  padding: 3px 8px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-transform: capitalize;
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+
+.filmwave-search-filter-quick-button:hover,
+.filmwave-search-filter-quick-button.is-active {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+:root {
+  --active-line-width: 2px;
+}
+
+.filmwave-filter-trigger,
+.desktop-filter-trigger,
+.filmwave-active-line-trigger {
+  position: relative;
+  display: inline-flex;
+  height: 48px;
+  cursor: pointer;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0 10px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+
+.filmwave-filter-trigger::after,
+.desktop-filter-trigger::after,
+.filmwave-active-line-trigger::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 4px;
+  right: 4px;
+  height: var(--active-line-width);
+  background: transparent;
+  transition: background 150ms ease;
+  pointer-events: none;
+}
+
+.filmwave-filter-trigger.is-active::after,
+.desktop-filter-trigger.is-active::after,
+.filmwave-active-line-trigger.is-active::after {
+  background: var(--text-primary);
+}
+
+.filmwave-filter-trigger:hover,
+.filmwave-filter-trigger.is-active,
+.filmwave-filter-trigger.is-open,
+.desktop-filter-trigger:hover,
+.desktop-filter-trigger.is-active,
+.desktop-filter-trigger.is-open,
+.filmwave-active-line-trigger:hover,
+.filmwave-active-line-trigger.is-active {
+  color: var(--text-primary);
+}
+
+.filmwave-filter-trigger-icon,
+.desktop-filter-trigger-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.filmwave-filter-trigger-chevron {
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  transform: translateY(1px);
+  opacity: 0.92;
+}
+
+.filmwave-filter-count {
+  display: inline-flex;
+  height: 20px;
+  min-width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  padding: 0 6px;
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.filmwave-filter-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.desktop-filter-count {
+  display: inline-flex;
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: transparent;
+  font-size: 0;
+}
+
+.filmwave-filter-menu,
+.desktop-filter-menu {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-ui);
+}
+
+.desktop-filter-menu {
+  position: absolute;
+  z-index: var(--filmwave-z-menu);
+  top: calc(100% + 8px);
+  left: 0;
+  width: 280px;
+}
+
+.desktop-filter-menu-fixed {
+  position: fixed;
+  top: auto;
+  left: auto;
+}
+
+.desktop-filter-menu.is-playlist-menu {
+  width: 300px;
+}
+
+.desktop-filter-menu-scroll {
+  max-height: min(340px, calc(100vh - 180px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+}
+
+.desktop-filter-option {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  padding: 0 10px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.desktop-filter-option.is-playlist-option {
+  height: 36px;
+}
+
+.desktop-filter-option:hover,
+.desktop-filter-option.is-selected {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.desktop-filter-option-label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.desktop-filter-option-label > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-filter-option-icon {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.desktop-filter-option:hover .desktop-filter-option-icon,
+.desktop-filter-option-icon.is-selected {
+  color: var(--text-primary);
+}
+
+.desktop-filter-option-icon.is-selected,
+.desktop-filter-option-action.is-selected {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.desktop-filter-option:hover .desktop-filter-option-icon.is-selected,
+.desktop-filter-option:hover .desktop-filter-option-action.is-selected {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.desktop-filter-option-action {
+  display: flex;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: transparent;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.desktop-filter-empty,
+.filmwave-filter-empty {
+  padding: 18px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.filmwave-filter-row-button {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  padding: 0 10px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-filter-row-button:hover,
+.filmwave-filter-row-button.is-active {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.filmwave-filter-row-label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.filmwave-filter-row-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filmwave-filter-row-action {
+  display: flex;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: transparent;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-filter-row-button.is-active .filmwave-filter-row-action,
+.filmwave-filter-row-action.is-active {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.filmwave-filter-row-button:hover .filmwave-filter-row-action.is-active {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.filmwave-filter-popover-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.filmwave-filter-popover {
+  z-index: var(--filmwave-z-menu);
+  width: var(--filmwave-filter-popover-width, 280px);
+}
+
+.filmwave-filter-panel {
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-ui);
+}
+
+.filmwave-filter-panel-scroll {
+  max-height: min(340px, calc(100vh - 180px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+}
