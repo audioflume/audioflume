@@ -11,4 +11,4 @@ type SearchFilterChromeProps = {
   clearAll?: ReactNode;
   quickFilters?: ReactNode;
   quickActions?: ReactNode;
-  stickyTop?: CSSProperties
+  sticky
