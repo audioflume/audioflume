@@ -106,7 +106,6 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
         activeLabel={keyActiveLabel ?? undefined}
         active={hasActive}
         open={open}
-        count={hasActive ? 1 : 0}
         onClick={() => setOpen((current) => !current)}
         onClear={hasActive ? clear : undefined}
       />
