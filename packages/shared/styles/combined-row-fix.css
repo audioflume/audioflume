@@ -67,6 +67,41 @@
   opacity: 1;
 }
 
+/* Clearable active label (Key / BPM / Duration pill) */
+.filmwave-filter-trigger-active-label.is-clearable {
+  cursor: pointer;
+}
+
+.filmwave-filter-active-label-value,
+.filmwave-filter-active-label-clear {
+  display: inline-flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  transition: none;
+}
+
+.filmwave-filter-active-label-clear {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 0;
+  transform: translateY(-1.5px);
+}
+
+.filmwave-filter-trigger-active-label.is-clearable:hover .filmwave-filter-active-label-value,
+.filmwave-filter-trigger-active-label.is-clearable:focus-visible .filmwave-filter-active-label-value {
+  opacity: 0;
+}
+
+.filmwave-filter-trigger-active-label.is-clearable:hover .filmwave-filter-active-label-clear,
+.filmwave-filter-trigger-active-label.is-clearable:focus-visible .filmwave-filter-active-label-clear {
+  opacity: 1;
+}
+
 /* Clear all slot — pushes to the right edge when the row has spare room */
 .filmwave-search-filter-clear-all-slot {
   display: inline-flex;
