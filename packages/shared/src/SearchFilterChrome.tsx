@@ -1,24 +1,21 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  type ChangeEvent,
-  type CSSProperties,
-  type ReactNode,
-  type Ref,
-} from "react";
+import { useEffect, useRef, type ChangeEvent, type CSSProperties, type ReactNode, type Ref } from "react";
 
-type MusicLibraryFrameProps = {
-  children: ReactNode;
+type MusicLibraryFrameProps = { children: ReactNode; className?: string };
+
+type SearchFilterChromeProps = {
+  search: ReactNode;
+  tags?: ReactNode;
+  filters: ReactNode;
+  clearAll?: ReactNode;
+  quickFilters?: ReactNode;
+  quickActions?: ReactNode;
+  stickyTop?: CSSProperties["top"];
   className?: string;
+  onSearchRowClick?: () => void;
 };
 
-function formatSearchPlaylistName(value: string) {
-  const trimmedValue = value.trim();
-  if (!trimmedValue) return "";
-  return trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
-}
-
-export function getMusicLibrarySearchPlaceholder(playlistName?: string | null) {
-  const
+type SearchFilterInputProps = {
+  icon: ReactNode;
+  input
