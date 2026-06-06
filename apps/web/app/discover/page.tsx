@@ -562,7 +562,7 @@ function FullWidthSearchBar() {
         <button
           type="submit"
           onClick={(event) => event.stopPropagation()}
-          className="hidden h-9 shrink-0 cursor-pointer items-center rounded-full bg-[var(--text-primary)] px-10 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 sm:flex"
+          className="hidden h-9 shrink-0 cursor-pointer items-center rounded-full bg-[var(--text-primary)] px=10 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 sm:flex"
         >
           Search
         </button>
@@ -702,7 +702,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
 
   return (
     <section>
-      <div className="mb-6 grid gap-6 @min-[700px]:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] @min-[700px]:items-end">
+      <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
         <div>
           <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <MusicIcon size={13} />
@@ -714,7 +714,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
           </h1>
         </div>
 
-        <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] @min-[700px]:justify-self-end">
+        <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">
           Move through the library like a visual treatment — documentary warmth,
           after-dark tension, open travel cues, and polished brand motion.
         </p>
