@@ -701,8 +701,8 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
   const [hero, side, ...minis] = blocks;
 
   return (
-    <section>
-      <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
+    <section className="@container">
+      <div className="mb-6 grid gap-6 @min-[700px]:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] @min-[700px]:items-end">
         <div>
           <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <MusicIcon size={13} />
@@ -714,7 +714,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
           </h1>
         </div>
 
-        <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">
+        <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] @min-[700px]:justify-self-end">
           Move through the library like a visual treatment — documentary warmth,
           after-dark tension, open travel cues, and polished brand motion.
         </p>
@@ -722,7 +722,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
 
       <FullWidthSearchBar />
 
-      <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
+      <div className="mt-4 grid gap-4 @min-[600px]:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
         {hero && <DiscoveryHeroCard playlist={hero} />}
 
         <div className="@container grid gap-4">
