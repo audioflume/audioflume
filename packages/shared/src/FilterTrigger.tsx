@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { KeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
 
 export type FilterTriggerProps = {
@@ -55,10 +55,21 @@ export function FilterTrigger({
   onClear,
 }: FilterTriggerProps) {
   const [activeLabelHovered, setActiveLabelHovered] = useState(false);
+  const activeLabelRef = useRef<HTMLSpanElement>(null);
+  const [activeLabelWidth, setActiveLabelWidth] = useState<number | undefined>(undefined);
+
+  const activeLabelIsClearable = active && activeLabel != null && !!onClear;
+
+  // Measure the natural width of the pill when not hovered, so we can lock it
+  // and prevent the pill from resizing when the text swaps to "×".
+  useLayoutEffect(() => {
+    if (!activeLabelIsClearable || !activeLabelRef.current) return;
+    if (activeLabelHovered) return; // don't re-measure while showing ×
+    setActiveLabelWidth(activeLabelRef.current.offsetWidth);
+  }, [activeLabelIsClearable, activeLabel, activeLabelHovered]);
 
   function handleCountClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
-
     event.preventDefault();
     event.stopPropagation();
     onClear();
@@ -66,7 +77,6 @@ export function FilterTrigger({
 
   function handleCountKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
     if (!onClear || (event.key !== "Enter" && event.key !== " ")) return;
-
     event.preventDefault();
     event.stopPropagation();
     onClear();
@@ -74,7 +84,6 @@ export function FilterTrigger({
 
   function handleActiveLabelClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
-
     event.preventDefault();
     event.stopPropagation();
     onClear();
@@ -82,15 +91,10 @@ export function FilterTrigger({
 
   function handleActiveLabelKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
     if (!onClear || (event.key !== "Enter" && event.key !== " ")) return;
-
     event.preventDefault();
     event.stopPropagation();
     onClear();
   }
-
-  // When activeLabel is present and onClear is provided, the label pill itself
-  // acts as the clear button — no separate count badge needed.
-  const activeLabelIsClearable = active && activeLabel != null && !!onClear;
 
   return (
     <button
@@ -106,6 +110,7 @@ export function FilterTrigger({
       <span>{label}</span>
       {active && activeLabel != null && (
         <span
+          ref={activeLabelRef}
           className={`filmwave-filter-trigger-active-label${activeLabelIsClearable ? " is-clearable" : ""}`}
           role={activeLabelIsClearable ? "button" : undefined}
           tabIndex={activeLabelIsClearable ? 0 : undefined}
@@ -114,7 +119,17 @@ export function FilterTrigger({
           onMouseLeave={activeLabelIsClearable ? () => setActiveLabelHovered(false) : undefined}
           onClick={activeLabelIsClearable ? handleActiveLabelClear : undefined}
           onKeyDown={activeLabelIsClearable ? handleActiveLabelKeyDown : undefined}
-          style={activeLabelIsClearable ? { minWidth: "1ch" } : undefined}
+          style={
+            activeLabelIsClearable
+              ? {
+                  width: activeLabelWidth !== undefined ? `${activeLabelWidth}px` : undefined,
+                  textAlign: "center",
+                  display: "inline-flex",
+                  justifyContent: "center",
+                  overflow: "hidden",
+                }
+              : undefined
+          }
         >
           {activeLabelIsClearable && activeLabelHovered ? "×" : activeLabel}
         </span>
