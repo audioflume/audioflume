@@ -35,18 +35,10 @@ export function MusicBpmFilter({ value, onChange }: MusicBpmFilterProps) {
   const highRef = useRef(high);
   const exactRef = useRef(exact);
 
-  useEffect(() => {
-    modeRef.current = mode;
-  }, [mode]);
-  useEffect(() => {
-    lowRef.current = low;
-  }, [low]);
-  useEffect(() => {
-    highRef.current = high;
-  }, [high]);
-  useEffect(() => {
-    exactRef.current = exact;
-  }, [exact]);
+  useEffect(() => { modeRef.current = mode; }, [mode]);
+  useEffect(() => { lowRef.current = low; }, [low]);
+  useEffect(() => { highRef.current = high; }, [high]);
+  useEffect(() => { exactRef.current = exact; }, [exact]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -96,20 +88,17 @@ export function MusicBpmFilter({ value, onChange }: MusicBpmFilterProps) {
       const val = getValueFromMouse(e);
       if (handle === "low") {
         const nextLow = Math.min(val, highRef.current - 1);
-        lowRef.current = nextLow;
-        setLow(nextLow);
+        lowRef.current = nextLow; setLow(nextLow);
         emitChange(modeRef.current, nextLow, highRef.current, exactRef.current);
         return;
       }
       if (handle === "high") {
         const nextHigh = Math.max(val, lowRef.current + 1);
-        highRef.current = nextHigh;
-        setHigh(nextHigh);
+        highRef.current = nextHigh; setHigh(nextHigh);
         emitChange(modeRef.current, lowRef.current, nextHigh, exactRef.current);
         return;
       }
-      exactRef.current = val;
-      setExact(val);
+      exactRef.current = val; setExact(val);
       emitChange(modeRef.current, lowRef.current, highRef.current, val);
     }
     function onUp() {
@@ -122,44 +111,45 @@ export function MusicBpmFilter({ value, onChange }: MusicBpmFilterProps) {
   }
 
   function clear() {
-    setLow(MIN);
-    setHigh(MAX);
-    setExact(MIN);
-    lowRef.current = MIN;
-    highRef.current = MAX;
-    exactRef.current = MIN;
+    setLow(MIN); setHigh(MAX); setExact(MIN);
+    lowRef.current = MIN; highRef.current = MAX; exactRef.current = MIN;
     onChange(null);
   }
 
   function applyRangeLow(nextLow: number) {
     const cleaned = Math.min(Math.max(nextLow, MIN), highRef.current - 1);
-    setLow(cleaned);
-    lowRef.current = cleaned;
+    setLow(cleaned); lowRef.current = cleaned;
     emitChange("range", cleaned, highRef.current, exactRef.current);
   }
 
   function applyRangeHigh(nextHigh: number) {
     const cleaned = Math.max(Math.min(nextHigh, MAX), lowRef.current + 1);
-    setHigh(cleaned);
-    highRef.current = cleaned;
+    setHigh(cleaned); highRef.current = cleaned;
     emitChange("range", lowRef.current, cleaned, exactRef.current);
   }
 
   function applyExact(nextExact: number) {
     const cleaned = Math.min(Math.max(nextExact, MIN), MAX);
-    setExact(cleaned);
-    exactRef.current = cleaned;
+    setExact(cleaned); exactRef.current = cleaned;
     emitChange("exact", lowRef.current, highRef.current, cleaned);
   }
 
   const hasActive = value !== null;
   const activeStart = mode === "range" ? toPercent(low) : 0;
   const activeEnd = mode === "range" ? toPercent(high) : toPercent(exact);
-  const bpmLabel = hasActive ? `BPM · ${formatBpmLabel(value)}` : "BPM";
 
   return (
     <div ref={ref} className="filmwave-filter-popover-wrap">
-      <FilterTrigger buttonRef={triggerRef} label={bpmLabel} active={hasActive} open={open} count={hasActive ? 1 : 0} onClick={() => setOpen((current) => !current)} onClear={hasActive ? clear : undefined} />
+      <FilterTrigger
+        buttonRef={triggerRef}
+        label="BPM"
+        activeLabel={hasActive ? formatBpmLabel(value) : undefined}
+        active={hasActive}
+        open={open}
+        count={hasActive ? 1 : 0}
+        onClick={() => setOpen((current) => !current)}
+        onClear={hasActive ? clear : undefined}
+      />
       <FilterPopover open={open} triggerRef={triggerRef} width={300} className="filmwave-filter-panel">
         <div className="filmwave-filter-dropdown-header">
           <div className="filmwave-filter-dropdown-title">BPM</div>
