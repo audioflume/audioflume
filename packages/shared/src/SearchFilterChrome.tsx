@@ -19,16 +19,3 @@ function formatSearchPlaylistName(value: string) {
   if (!trimmedValue) return "";
 
   return trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
-}
-
-export function getMusicLibrarySearchPlaceholder(playlistName?: string | null) {
-  const formattedPlaylistName = playlistName
-    ? formatSearchPlaylistName(playlistName)
-    : "";
-
-  return formattedPlaylistName
-    ? `Search "${formattedPlaylistName}"`
-    : "Search Music Library";
-}
-
-export function MusicLibraryFrame({ children,
