@@ -11,11 +11,4 @@ type SearchFilterChromeProps = {
   clearAll?: ReactNode;
   quickFilters?: ReactNode;
   quickActions?: ReactNode;
-  stickyTop?: CSSProperties["top"];
-  className?: string;
-  onSearchRowClick?: () => void;
-};
-
-type SearchFilterInputProps = {
-  icon: ReactNode;
-  input
+  stickyTop?: CSSProperties
