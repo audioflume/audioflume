@@ -27,4 +27,8 @@ export function getMusicLibrarySearchPlaceholder(playlistName?: string | null) {
     : "";
 
   return formattedPlaylistName
-    ? `Search
+    ? `Search "${formattedPlaylistName}"`
+    : "Search Music Library";
+}
+
+export function MusicLibraryFrame({ children,
