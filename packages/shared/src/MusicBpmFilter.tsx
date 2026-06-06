@@ -146,7 +146,6 @@ export function MusicBpmFilter({ value, onChange }: MusicBpmFilterProps) {
         activeLabel={hasActive ? formatBpmLabel(value) : undefined}
         active={hasActive}
         open={open}
-        count={hasActive ? 1 : 0}
         onClick={() => setOpen((current) => !current)}
         onClear={hasActive ? clear : undefined}
       />
