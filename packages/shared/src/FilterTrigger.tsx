@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { KeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
 
 export type FilterTriggerProps = {
@@ -53,6 +54,8 @@ export function FilterTrigger({
   onClick,
   onClear,
 }: FilterTriggerProps) {
+  const [activeLabelHovered, setActiveLabelHovered] = useState(false);
+
   function handleCountClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
 
@@ -69,6 +72,26 @@ export function FilterTrigger({
     onClear();
   }
 
+  function handleActiveLabelClear(event: MouseEvent<HTMLSpanElement>) {
+    if (!onClear) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    onClear();
+  }
+
+  function handleActiveLabelKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
+    if (!onClear || (event.key !== "Enter" && event.key !== " ")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    onClear();
+  }
+
+  // When activeLabel is present and onClear is provided, the label pill itself
+  // acts as the clear button — no separate count badge needed.
+  const activeLabelIsClearable = active && activeLabel != null && !!onClear;
+
   return (
     <button
       ref={buttonRef}
@@ -81,10 +104,22 @@ export function FilterTrigger({
     >
       {icon && <span className="filmwave-filter-trigger-icon">{icon}</span>}
       <span>{label}</span>
-      {active && activeLabel && (
-        <span className="filmwave-filter-trigger-active-label">{activeLabel}</span>
+      {active && activeLabel != null && (
+        <span
+          className={`filmwave-filter-trigger-active-label${activeLabelIsClearable ? " is-clearable" : ""}`}
+          role={activeLabelIsClearable ? "button" : undefined}
+          tabIndex={activeLabelIsClearable ? 0 : undefined}
+          aria-label={activeLabelIsClearable ? `Clear ${typeof label === "string" ? label : "filter"}` : undefined}
+          onMouseEnter={activeLabelIsClearable ? () => setActiveLabelHovered(true) : undefined}
+          onMouseLeave={activeLabelIsClearable ? () => setActiveLabelHovered(false) : undefined}
+          onClick={activeLabelIsClearable ? handleActiveLabelClear : undefined}
+          onKeyDown={activeLabelIsClearable ? handleActiveLabelKeyDown : undefined}
+          style={activeLabelIsClearable ? { minWidth: "1ch" } : undefined}
+        >
+          {activeLabelIsClearable && activeLabelHovered ? "×" : activeLabel}
+        </span>
       )}
-      {active && typeof count === "number" && (
+      {active && typeof count === "number" && !activeLabelIsClearable && (
         <span
           className={`filmwave-filter-count${onClear ? " is-clearable" : ""}`}
           role={onClear ? "button" : undefined}
