@@ -168,9 +168,9 @@ function DiscoverCompactSongsSkeleton() {
 
 function DiscoverProductionSkeleton() {
   return (
-    <section className="mt-12 discover-skeleton-section">
+    <section className="@container mt-12 discover-skeleton-section">
       <DiscoverSectionHeadingSkeleton wide />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 @[480px]:grid-cols-2 @[900px]:grid-cols-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <DiscoverLargeCardSkeleton key={index} className="min-h-[245px]" />
         ))}
@@ -367,9 +367,9 @@ function DiscoverPageSkeleton() {
 
         <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
           <DiscoverLargeCardSkeleton className="min-h-[420px]" />
-          <div className="grid gap-4">
+          <div className="@container grid gap-4">
             <DiscoverLargeCardSkeleton className="min-h-[204px]" />
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 @[480px]:grid-cols-2">
               <DiscoverLargeCardSkeleton className="min-h-[188px]" />
               <DiscoverLargeCardSkeleton className="min-h-[188px]" />
             </div>
@@ -725,11 +725,11 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
       <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
         {hero && <DiscoveryHeroCard playlist={hero} />}
 
-        <div className="grid gap-4">
+        <div className="@container grid gap-4">
           {side && <DiscoverySideCard playlist={side} />}
 
           {minis.length > 0 && (
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 @[480px]:grid-cols-2">
               {minis.slice(0, 2).map((playlist) => (
                 <DiscoveryMiniCard key={playlist.id} playlist={playlist} />
               ))}
@@ -788,7 +788,7 @@ function ProductionStylesSection({ blocks }: { blocks: CuratedPlaylist[] }) {
   if (blocks.length === 0) return null;
 
   return (
-    <section className="mt-12">
+    <section className="@container mt-12">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
@@ -807,7 +807,7 @@ function ProductionStylesSection({ blocks }: { blocks: CuratedPlaylist[] }) {
         </Link>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 @[480px]:grid-cols-2 @[900px]:grid-cols-4">
         {blocks.map((playlist) => (
           <ProductionStyleCard key={playlist.id} playlist={playlist} />
         ))}
