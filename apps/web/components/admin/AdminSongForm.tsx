@@ -822,7 +822,7 @@ function MultiSelectPills({
   selected,
   onChange,
 }: {
-  options: string[];
+  options: readonly string[];
   selected: string[];
   onChange: (selected: string[]) => void;
 }) {

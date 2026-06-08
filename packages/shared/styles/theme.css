@@ -33,6 +33,7 @@
   --waveform-color: rgba(255, 255, 255, 0.3);
   --waveform-progress: #ffffff;
 
+  --cue-point-marker: rgba(255, 255, 255, 0.72);
   --cue-marker-color: var(--accent);
   --cue-marker-width: 1.5px;
   --cue-marker-width-active: 2px;
@@ -95,6 +96,7 @@
   --waveform-color: rgba(17, 17, 17, 0.28);
   --waveform-progress: #111111;
 
+  --cue-point-marker: rgba(17, 17, 17, 0.55);
   --cue-point-range: rgba(17, 17, 17, 0.08);
   --cue-point-range-strong: rgba(17, 17, 17, 0.13);
 
