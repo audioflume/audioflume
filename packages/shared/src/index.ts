@@ -35,3 +35,4 @@ export * from "./HeaderShell";
 export * from "./UserMenuShell";
 export * from "./SettingsSideNav";
 export * from "./CollapsibleSearchPill";
+export * from "./ProjectBrowserGlyphs";
