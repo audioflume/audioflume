@@ -1,16 +1,20 @@
 .project-folder-card-icon-wrap,
-.project-file-card-icon-wrap {
+.project-file-card-icon-wrap,
+.project-file-browser .project-folder-card-icon-wrap,
+.project-file-browser .project-file-card-icon-wrap {
   display: flex;
   height: 54px;
   align-items: center;
   justify-content: center;
 }
 
-.project-file-card-icon-wrap {
+.project-file-card-icon-wrap,
+.project-file-browser .project-file-card-icon-wrap {
   position: relative;
 }
 
-.project-file-list-icon-wrap {
+.project-file-list-icon-wrap,
+.project-file-browser .project-file-list-icon-wrap {
   position: relative;
   display: flex;
   width: 22px;
@@ -20,7 +24,8 @@
   justify-content: center;
 }
 
-.project-folder-glyph {
+.project-folder-glyph,
+.project-file-browser .project-folder-glyph {
   position: relative;
   display: block;
   width: 62px;
@@ -28,7 +33,8 @@
   filter: none;
 }
 
-.project-folder-glyph-tab {
+.project-folder-glyph-tab,
+.project-file-browser .project-folder-glyph-tab {
   position: absolute;
   left: 0;
   top: 6px;
@@ -41,7 +47,8 @@
     inset 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
-.project-folder-glyph-body {
+.project-folder-glyph-body,
+.project-file-browser .project-folder-glyph-body {
   position: absolute;
   left: 0;
   right: 0;
@@ -58,7 +65,8 @@
     0 1px 1px rgba(0, 0, 0, 0.42);
 }
 
-.project-folder-glyph-body::before {
+.project-folder-glyph-body::before,
+.project-file-browser .project-folder-glyph-body::before {
   content: "";
   position: absolute;
   left: 4px;
@@ -69,7 +77,8 @@
   background: rgba(255, 255, 255, 0.18);
 }
 
-.project-folder-glyph-body::after {
+.project-folder-glyph-body::after,
+.project-file-browser .project-folder-glyph-body::after {
   content: "";
   position: absolute;
   left: 5px;
@@ -80,12 +89,14 @@
   background: rgba(0, 0, 0, 0.55);
 }
 
-.project-folder-glyph.small {
+.project-folder-glyph.small,
+.project-file-browser .project-folder-glyph.small {
   width: 19px;
   height: 16px;
 }
 
-.project-folder-glyph.small .project-folder-glyph-tab {
+.project-folder-glyph.small .project-folder-glyph-tab,
+.project-file-browser .project-folder-glyph.small .project-folder-glyph-tab {
   left: 0;
   top: 2px;
   width: 9px;
@@ -93,17 +104,21 @@
   border-radius: 1px 2px 0 0;
 }
 
-.project-folder-glyph.small .project-folder-glyph-body {
+.project-folder-glyph.small .project-folder-glyph-body,
+.project-file-browser .project-folder-glyph.small .project-folder-glyph-body {
   height: 13px;
   border-radius: 2px;
 }
 
 .project-folder-glyph.small .project-folder-glyph-body::before,
-.project-folder-glyph.small .project-folder-glyph-body::after {
+.project-folder-glyph.small .project-folder-glyph-body::after,
+.project-file-browser .project-folder-glyph.small .project-folder-glyph-body::before,
+.project-file-browser .project-folder-glyph.small .project-folder-glyph-body::after {
   display: none;
 }
 
-.project-music-glyph {
+.project-music-glyph,
+.project-file-browser .project-music-glyph {
   display: flex;
   height: 44px;
   width: 44px;
@@ -118,7 +133,8 @@
   font-size: 20px;
 }
 
-.project-music-glyph.small {
+.project-music-glyph.small,
+.project-file-browser .project-music-glyph.small {
   height: 22px;
   width: 22px;
   border-radius: 5px;
