@@ -79,7 +79,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   gap: 12px;
   margin: 0 -28px;
   padding: 0 28px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: px solid var(--border);
 }
 
 .filmwave-search-filter-row {

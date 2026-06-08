@@ -910,7 +910,11 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   const playerVisible = !!currentSong;
 
   const userEmail = user?.primaryEmailAddress?.emailAddress;
-  const isAdmin = !!userEmail && ADMIN_EMAILS.includes(userEmail);
+  const isAdminByRole =
+    (user?.publicMetadata as Record<string, unknown> | undefined)?.role ===
+    "admin";
+  const isAdminByEmail = !!userEmail && ADMIN_EMAILS.includes(userEmail);
+  const isAdmin = isAdminByRole || isAdminByEmail;
   const isEditMode = mode === "edit";
 
   const [title, setTitle] = useState("");

@@ -114,7 +114,10 @@ function dedupeCanonicalMarkers(markers: EditPointMarker[]) {
       return;
     }
 
-    if (markerPriority === existingPriority && marker.confidence >= existing.confidence) {
+    if (
+      markerPriority === existingPriority &&
+      marker.confidence >= existing.confidence
+    ) {
       markerByType.set(marker.type, marker);
     }
   });
@@ -164,7 +167,8 @@ export default function AdminSongEditPointsSection({
 }: AdminSongEditPointsSectionProps) {
   const [markers, setMarkers] = useState<EditPointMarker[]>([]);
   const [resolvedAudioUrl, setResolvedAudioUrl] = useState(audioUrl);
-  const [resolvedWaveformPeaks, setResolvedWaveformPeaks] = useState(waveformPeaks);
+  const [resolvedWaveformPeaks, setResolvedWaveformPeaks] =
+    useState(waveformPeaks);
   const [resolvedDuration, setResolvedDuration] = useState(duration);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -208,9 +212,12 @@ export default function AdminSongEditPointsSection({
     setError("");
 
     try {
-      const res = await fetch(`/api/admin/songs/${songId}/analyze-edit-points`, {
-        method: "POST",
-      });
+      const res = await fetch(
+        `/api/admin/songs/${songId}/analyze-edit-points`,
+        {
+          method: "POST",
+        },
+      );
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
@@ -220,7 +227,9 @@ export default function AdminSongEditPointsSection({
       await loadEditPoints();
       onDirtyChange?.(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to re-analyze cue points.");
+      setError(
+        err instanceof Error ? err.message : "Failed to re-analyze cue points.",
+      );
     } finally {
       setIsReAnalyzing(false);
     }
@@ -259,7 +268,9 @@ export default function AdminSongEditPointsSection({
         setResolvedDuration(song.duration || "");
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load song data.");
+          setError(
+            err instanceof Error ? err.message : "Failed to load song data.",
+          );
         }
       } finally {
         if (!cancelled) {
@@ -292,7 +303,9 @@ export default function AdminSongEditPointsSection({
         await loadEditPoints();
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load cue points.");
+          setError(
+            err instanceof Error ? err.message : "Failed to load cue points.",
+          );
         }
       } finally {
         if (!cancelled) {
@@ -315,7 +328,8 @@ export default function AdminSongEditPointsSection({
           Save the song first to review cue points.
         </div>
         <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
-          Once the song exists in Supabase, the waveform cue point manager will appear here.
+          Once the song exists in Supabase, the waveform cue point manager will
+          appear here.
         </p>
       </div>
     );
@@ -346,7 +360,8 @@ export default function AdminSongEditPointsSection({
           Audio and waveform data required
         </div>
         <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
-          Add or keep an audio file and waveform peaks before reviewing cue points.
+          Add or keep an audio file and waveform peaks before reviewing cue
+          points.
         </p>
       </div>
     );
