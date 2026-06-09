@@ -349,11 +349,9 @@ function getFileArtist(node: ProjectFileNode) {
     : "Filmwave";
 }
 
-// Resolve the bundled app icon once, to use as the single drag-preview ghost.
-let cachedDragIconPromise: Promise<string | null> | null = null;
-
+// Resolve the bundled folder/file drag preview icons once.
 const dragPreviewIconPromises: Partial<
-  Record<ProjectFileNode["type"], Promise<string | null>>
+  Record<"folder" | "file", Promise<string | null>>
 > = {};
 
 async function getDragPreviewIcon(nodeType: ProjectFileNode["type"]) {
