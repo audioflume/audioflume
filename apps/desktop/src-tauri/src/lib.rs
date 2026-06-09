@@ -54,8 +54,8 @@ fn open_path(path: String) -> Result<(), String> {
 fn start_native_file_drag(window: WebviewWindow, path: String) -> Result<(), String> {
     #[cfg(target_os = "macos")]
     {
-        use cocoa::appkit::{NSWindow};
-        use cocoa::base::{id, nil, YES};
+        use cocoa::appkit::NSWindow;
+        use cocoa::base::{id, nil, NO};
         use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
         use objc::{msg_send, sel, sel_impl};
         use std::path::Path;
@@ -65,58 +65,56 @@ fn start_native_file_drag(window: WebviewWindow, path: String) -> Result<(), Str
         }
 
         let window_clone = window.clone();
-        window
-            .run_on_main_thread(move || {
-                let ns_window = match window_clone.ns_window() {
-                    Ok(w) => w as id,
-                    Err(e) => {
-                        eprintln!("Could not access native window: {}", e);
-                        return;
-                    }
-                };
 
-                unsafe {
-                    let _pool = NSAutoreleasePool::new(nil);
-                    let content_view: id = ns_window.contentView();
-
-                    if content_view == nil {
-                        eprintln!("Could not access native window content view.");
-                        return;
-                    }
-
-                    // Use the window's currentEvent — this is reliable even
-                    // across the async bridge because we are now on the main
-                    // thread where AppKit processes events.
-                    let event: id = msg_send![ns_window, currentEvent];
-
-                    if event == nil {
-                        eprintln!("No current event on window.");
-                        return;
-                    }
-
-                    let path_ns_string: id = NSString::alloc(nil).init_str(&path);
-
-                    // Place the drag rect 1×1 at a far-offscreen position so
-                    // the system file-icon ghost never appears on screen.
-                    // Our JS DragGhostOverlay provides the visible ghost.
-                    let offscreen_rect = NSRect::new(
-                        NSPoint::new(-9999.0, -9999.0),
-                        NSSize::new(1.0, 1.0),
-                    );
-
-                    let started: bool = msg_send![content_view,
-                        dragFile: path_ns_string
-                        fromRect: offscreen_rect
-                        slideBack: YES
-                        event: event
-                    ];
-
-                    if !started {
-                        eprintln!("dragFile:fromRect:slideBack:event: returned NO.");
-                    }
+        // dragFile:fromRect:slideBack:event: blocks the main thread for the
+        // entire drag session. We dispatch it to main via run_on_main_thread
+        // so it runs during the live mouse event, but we do NOT await the
+        // result — the command returns immediately to JS so the next drag
+        // attempt is never blocked by the previous one completing.
+        let _ = window.run_on_main_thread(move || {
+            let ns_window = match window_clone.ns_window() {
+                Ok(w) => w as id,
+                Err(e) => {
+                    eprintln!("Could not access native window: {}", e);
+                    return;
                 }
-            })
-            .map_err(|e| format!("run_on_main_thread failed: {}", e))?;
+            };
+
+            unsafe {
+                let _pool = NSAutoreleasePool::new(nil);
+                let content_view: id = ns_window.contentView();
+
+                if content_view == nil {
+                    eprintln!("Could not access native window content view.");
+                    return;
+                }
+
+                let event: id = msg_send![ns_window, currentEvent];
+
+                if event == nil {
+                    eprintln!("No current event on window.");
+                    return;
+                }
+
+                let path_ns_string: id = NSString::alloc(nil).init_str(&path);
+
+                // Use the cursor position for the drag rect so the system
+                // ghost appears at the cursor. slideBack: NO prevents the
+                // fly-back animation when the drag is cancelled.
+                let window_point: NSPoint = msg_send![event, locationInWindow];
+                let drag_rect = NSRect::new(
+                    NSPoint::new(window_point.x - 16.0, window_point.y - 16.0),
+                    NSSize::new(32.0, 32.0),
+                );
+
+                let _started: bool = msg_send![content_view,
+                    dragFile: path_ns_string
+                    fromRect: drag_rect
+                    slideBack: NO
+                    event: event
+                ];
+            }
+        });
 
         return Ok(());
     }
