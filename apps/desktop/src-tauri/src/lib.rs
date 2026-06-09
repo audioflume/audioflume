@@ -98,13 +98,13 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
         let drag_image: id = msg_send![workspace, iconForFile: path_string];
         let _: () = msg_send![drag_image, setSize: NSSize::new(64.0, 64.0)];
 
-        let current_event: id = msg_send![ns_window, currentEvent];
+        let event: id = msg_send![ns_window, currentEvent];
 
-        if current_event == nil {
+        if event == nil {
             return Err("Could not access current drag event.".to_string());
         }
 
-        let window_point: NSPoint = msg_send![current_event, locationInWindow];
+        let window_point: NSPoint = msg_send![event, locationInWindow];
         let view_point: NSPoint = msg_send![content_view, convertPoint: window_point fromView: nil];
         let drag_frame = NSRect::new(
             NSPoint::new(view_point.x - 32.0, view_point.y - 32.0),
@@ -112,29 +112,8 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
         );
         let _: () = msg_send![dragging_item, setDraggingFrame: drag_frame contents: drag_image];
 
-        let modifier_flags: u64 = msg_send![current_event, modifierFlags];
-        let timestamp: f64 = msg_send![current_event, timestamp];
-        let event_number: i64 = msg_send![current_event, eventNumber];
-        let window_number: i64 = msg_send![ns_window, windowNumber];
-        let event_class = class!(NSEvent);
-        let drag_event: id = msg_send![event_class,
-            mouseEventWithType: 6u64
-            location: window_point
-            modifierFlags: modifier_flags
-            timestamp: timestamp
-            windowNumber: window_number
-            context: nil
-            eventNumber: event_number
-            clickCount: 1i64
-            pressure: 1.0f64
-        ];
-
-        if drag_event == nil {
-            return Err("Could not create native drag event.".to_string());
-        }
-
         let dragging_items: id = NSArray::arrayWithObject(nil, dragging_item);
-        let session: id = msg_send![content_view, beginDraggingSessionWithItems: dragging_items event: drag_event source: content_view];
+        let session: id = msg_send![content_view, beginDraggingSessionWithItems: dragging_items event: event source: content_view];
         let _: () = msg_send![session, setAnimatesToStartingPositionsOnCancelOrFail: YES];
     }
 
