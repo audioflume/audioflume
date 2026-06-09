@@ -92,16 +92,27 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
         let dragging_item_class = class!(NSDraggingItem);
         let dragging_item: id = msg_send![dragging_item_class, alloc];
         let dragging_item: id = msg_send![dragging_item, initWithPasteboardWriter: pasteboard_item];
-        let drag_frame = NSRect::new(NSPoint::new(0.0, 0.0), NSSize::new(1.0, 1.0));
-        let _: () = msg_send![dragging_item, setDraggingFrame: drag_frame contents: nil];
 
-        let dragging_items: id = NSArray::arrayWithObject(nil, dragging_item);
+        let workspace_class = class!(NSWorkspace);
+        let workspace: id = msg_send![workspace_class, sharedWorkspace];
+        let drag_image: id = msg_send![workspace, iconForFile: path_string];
+        let _: () = msg_send![drag_image, setSize: NSSize::new(64.0, 64.0)];
+
         let event: id = msg_send![ns_window, currentEvent];
 
         if event == nil {
             return Err("Could not access current drag event.".to_string());
         }
 
+        let window_point: NSPoint = msg_send![event, locationInWindow];
+        let view_point: NSPoint = msg_send![content_view, convertPoint: window_point fromView: nil];
+        let drag_frame = NSRect::new(
+            NSPoint::new(view_point.x - 32.0, view_point.y - 32.0),
+            NSSize::new(64.0, 64.0),
+        );
+        let _: () = msg_send![dragging_item, setDraggingFrame: drag_frame contents: drag_image];
+
+        let dragging_items: id = NSArray::arrayWithObject(nil, dragging_item);
         let session: id = msg_send![content_view, beginDraggingSessionWithItems: dragging_items event: event source: content_view];
         let _: () = msg_send![session, setAnimatesToStartingPositionsOnCancelOrFail: YES];
     }
