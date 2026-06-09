@@ -265,7 +265,6 @@
   padding-top: 16px !important;
 }
 
-
 .project-browser-grid {
   grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)) !important;
   column-gap: 12px !important;
@@ -295,6 +294,27 @@
   height: 54px !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+.project-drag-preview.is-grid-preview {
+  width: 132px !important;
+  min-width: 132px !important;
+  max-width: 132px !important;
+  background: transparent !important;
+}
+
+.project-drag-preview.is-grid-preview .project-folder-card,
+.project-drag-preview.is-grid-preview .project-file-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.project-drag-preview.is-grid-preview .project-folder-card:hover,
+.project-drag-preview.is-grid-preview .project-file-card:hover,
+.project-drag-preview.is-grid-preview .project-file-card.is-active {
+  background: transparent !important;
 }
 
 .project-folder-card-name,
