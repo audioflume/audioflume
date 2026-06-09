@@ -54,19 +54,16 @@ fn open_path(path: String) -> Result<(), String> {
 fn start_native_file_drag(window: WebviewWindow, path: String) -> Result<(), String> {
     #[cfg(target_os = "macos")]
     {
-        use cocoa::appkit::{NSApp, NSWindow};
-        use cocoa::base::{id, nil};
-        use cocoa::foundation::{NSAutoreleasePool, NSArray, NSPoint, NSRect, NSSize, NSString};
-        use objc::{class, msg_send, sel, sel_impl};
+        use cocoa::appkit::{NSWindow};
+        use cocoa::base::{id, nil, YES};
+        use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
+        use objc::{msg_send, sel, sel_impl};
         use std::path::Path;
 
         if !Path::new(&path).exists() {
             return Err(format!("Drag path does not exist: {}", path));
         }
 
-        // beginDraggingSessionWithItems must be called on the main thread
-        // during a live mouse event. Clone window so we can move it into the
-        // closure while still calling run_on_main_thread on the original.
         let window_clone = window.clone();
         window
             .run_on_main_thread(move || {
@@ -87,46 +84,36 @@ fn start_native_file_drag(window: WebviewWindow, path: String) -> Result<(), Str
                         return;
                     }
 
-                    let ns_app: id = NSApp();
-                    let event: id = msg_send![ns_app, currentEvent];
+                    // Use the window's currentEvent — this is reliable even
+                    // across the async bridge because we are now on the main
+                    // thread where AppKit processes events.
+                    let event: id = msg_send![ns_window, currentEvent];
 
                     if event == nil {
-                        eprintln!("No current event available.");
+                        eprintln!("No current event on window.");
                         return;
                     }
 
-                    let window_point: NSPoint = msg_send![event, locationInWindow];
-                    let view_point: NSPoint =
-                        msg_send![content_view, convertPoint: window_point fromView: nil];
+                    let path_ns_string: id = NSString::alloc(nil).init_str(&path);
 
-                    let file_url_string = format!("file://{}", path);
-                    let url_ns_string: id = NSString::alloc(nil).init_str(&file_url_string);
-                    let file_url: id = msg_send![class!(NSURL), URLWithString: url_ns_string];
-
-                    // 1×1 transparent drag image suppresses the macOS system ghost.
-                    let dragging_item: id = msg_send![class!(NSDraggingItem), alloc];
-                    let dragging_item: id =
-                        msg_send![dragging_item, initWithPasteboardWriter: file_url];
-
-                    let drag_image: id = msg_send![class!(NSImage), alloc];
-                    let drag_image: id =
-                        msg_send![drag_image, initWithSize: NSSize::new(1.0, 1.0)];
-                    let drag_frame = NSRect::new(
-                        NSPoint::new(view_point.x, view_point.y),
+                    // Place the drag rect 1×1 at a far-offscreen position so
+                    // the system file-icon ghost never appears on screen.
+                    // Our JS DragGhostOverlay provides the visible ghost.
+                    let offscreen_rect = NSRect::new(
+                        NSPoint::new(-9999.0, -9999.0),
                         NSSize::new(1.0, 1.0),
                     );
-                    let _: () = msg_send![dragging_item,
-                        setDraggingFrame: drag_frame
-                        contents: drag_image
-                    ];
 
-                    let items_array: id = NSArray::arrayWithObject(nil, dragging_item);
-
-                    let _session: id = msg_send![content_view,
-                        beginDraggingSessionWithItems: items_array
+                    let started: bool = msg_send![content_view,
+                        dragFile: path_ns_string
+                        fromRect: offscreen_rect
+                        slideBack: YES
                         event: event
-                        source: content_view
                     ];
+
+                    if !started {
+                        eprintln!("dragFile:fromRect:slideBack:event: returned NO.");
+                    }
                 }
             })
             .map_err(|e| format!("run_on_main_thread failed: {}", e))?;
