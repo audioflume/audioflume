@@ -7,9 +7,16 @@ use std::{
 use tauri::{AppHandle, Emitter, WebviewWindow};
 
 static WATCHERS: OnceLock<Mutex<HashMap<String, RecommendedWatcher>>> = OnceLock::new();
+#[cfg(target_os = "macos")]
+static LAST_DRAG_SESSION: OnceLock<Mutex<usize>> = OnceLock::new();
 
 fn watchers() -> &'static Mutex<HashMap<String, RecommendedWatcher>> {
     WATCHERS.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+#[cfg(target_os = "macos")]
+fn last_drag_session() -> &'static Mutex<usize> {
+    LAST_DRAG_SESSION.get_or_init(|| Mutex::new(0))
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -122,7 +129,24 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
         if session == nil {
             println!("[filmwave drag] session nil path={}", path);
         } else {
-            println!("[filmwave drag] session created path={}", path);
+            let retained_session: id = msg_send![session, retain];
+            let retained_session_ptr = retained_session as usize;
+            let previous_session_ptr = {
+                let mut stored_session = last_drag_session()
+                    .lock()
+                    .map_err(|error| error.to_string())?;
+                let previous_session_ptr = *stored_session;
+                *stored_session = retained_session_ptr;
+                previous_session_ptr
+            };
+
+            if previous_session_ptr != 0 {
+                let previous_session = previous_session_ptr as id;
+                let _: () = msg_send![previous_session, release];
+                println!("[filmwave drag] released previous session");
+            }
+
+            println!("[filmwave drag] session retained path={}", path);
         }
 
         let _: () = msg_send![session, setAnimatesToStartingPositionsOnCancelOrFail: YES];
