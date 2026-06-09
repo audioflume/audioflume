@@ -265,10 +265,6 @@
   padding-top: 16px !important;
 }
 
-.project-folder-glyph-body::before,
-.project-folder-glyph-body::after {
-  display: none !important;
-}
 
 .project-browser-grid {
   grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)) !important;
