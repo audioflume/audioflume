@@ -321,10 +321,6 @@
   background: var(--bg-row-hover);
 }
 
-
-
-
-
 .project-folder-card-name,
 .project-file-browser .project-file-card-title {
   max-width: 100%;
@@ -354,7 +350,6 @@
 .project-folder-card-meta {
   margin-top: -6px;
 }
-
 
 .project-browser-list {
   overflow: visible;
@@ -408,7 +403,6 @@
   white-space: nowrap;
 }
 
-
 .project-empty-state {
   min-height: 180px;
   display: grid;
@@ -417,3 +411,12 @@
   font-size: 13px;
 }
 
+.project-file-browser .project-folder-card,
+.project-file-browser .project-file-card,
+.project-browser-row,
+.project-folder-card *,
+.project-file-card *,
+.project-browser-row * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
