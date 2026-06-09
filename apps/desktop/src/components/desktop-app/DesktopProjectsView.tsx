@@ -350,7 +350,9 @@ function getFileArtist(node: ProjectFileNode) {
 }
 
 // Resolve the bundled app icon once, to use as the single drag-preview ghost.
-const dragPreviewIconPromises: Partial<Record<"folder" | "file", Promise<string | null>>> = {};
+const dragPreviewIconPromises: Partial<
+  Record<"folder" | "file", Promise<string | null>>
+> = {};
 
 async function getDragPreviewIcon(nodeType: ProjectFileNode["type"]) {
   const iconType = nodeType === "folder" ? "folder" : "file";
@@ -389,14 +391,16 @@ async function handleNodeDragStart(
   const icon = await getDragPreviewIcon(node.type);
 
   if (!icon) {
-    console.error("Native file drag failed: drag preview icon could not be resolved.");
+    console.error(
+      "Native file drag failed: drag preview icon could not be resolved.",
+    );
     return;
   }
 
   try {
     await startDrag({
       item: [localPath],
-      icon,
+      icon: localPath,
       mode: "copy",
     });
   } catch (error) {
