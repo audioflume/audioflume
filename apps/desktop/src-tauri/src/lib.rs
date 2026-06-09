@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
     sync::{Mutex, OnceLock},
 };
-use tauri::{AppHandle, Emitter, Manager, WebviewWindow};
+use tauri::{AppHandle, Emitter, WebviewWindow};
 
 static WATCHERS: OnceLock<Mutex<HashMap<String, RecommendedWatcher>>> = OnceLock::new();
 
@@ -64,12 +64,13 @@ fn start_native_file_drag(window: WebviewWindow, path: String) -> Result<(), Str
             return Err(format!("Drag path does not exist: {}", path));
         }
 
-        // beginDraggingSessionWithItems must be called synchronously on the
-        // main thread during a live mouse event. Tauri invoke handlers run on
-        // a background thread, so we dispatch back to main via run_on_main_thread.
+        // beginDraggingSessionWithItems must be called on the main thread
+        // during a live mouse event. Clone window so we can move it into the
+        // closure while still calling run_on_main_thread on the original.
+        let window_clone = window.clone();
         window
             .run_on_main_thread(move || {
-                let ns_window = match window.ns_window() {
+                let ns_window = match window_clone.ns_window() {
                     Ok(w) => w as id,
                     Err(e) => {
                         eprintln!("Could not access native window: {}", e);
@@ -100,8 +101,7 @@ fn start_native_file_drag(window: WebviewWindow, path: String) -> Result<(), Str
 
                     let file_url_string = format!("file://{}", path);
                     let url_ns_string: id = NSString::alloc(nil).init_str(&file_url_string);
-                    let file_url: id =
-                        msg_send![class!(NSURL), URLWithString: url_ns_string];
+                    let file_url: id = msg_send![class!(NSURL), URLWithString: url_ns_string];
 
                     // 1×1 transparent drag image suppresses the macOS system ghost.
                     let dragging_item: id = msg_send![class!(NSDraggingItem), alloc];
