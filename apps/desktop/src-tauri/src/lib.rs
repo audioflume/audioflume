@@ -59,10 +59,7 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
     use objc::{msg_send, sel, sel_impl};
     use std::path::Path;
 
-    println!("[filmwave drag] requested path={}", path);
-
     if !Path::new(&path).exists() {
-        println!("[filmwave drag] rejected missing path={}", path);
         return Err(format!("Drag path does not exist: {}", path));
     }
 
@@ -75,7 +72,6 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
         let content_view: id = ns_window.contentView();
 
         if content_view == nil {
-            println!("[filmwave drag] missing content view");
             return Err("Could not access native window content view.".to_string());
         }
 
@@ -83,22 +79,11 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
         let event: id = msg_send![ns_window, currentEvent];
 
         if event == nil {
-            println!("[filmwave drag] missing currentEvent path={}", path);
             return Err("Could not access current drag event.".to_string());
         }
 
-        let event_type: u64 = msg_send![event, type];
-        let event_number: i64 = msg_send![event, eventNumber];
-        let click_count: i64 = msg_send![event, clickCount];
         let window_point: NSPoint = msg_send![event, locationInWindow];
-        println!(
-            "[filmwave drag] event type={} number={} click_count={} window_point=({}, {})",
-            event_type, event_number, click_count, window_point.x, window_point.y
-        );
-
         let view_point: NSPoint = msg_send![content_view, convertPoint: window_point fromView: nil];
-        println!("[filmwave drag] view_point=({}, {})", view_point.x, view_point.y);
-
         let drag_frame = NSRect::new(
             NSPoint::new(view_point.x - 32.0, view_point.y - 32.0),
             NSSize::new(64.0, 64.0),
@@ -110,8 +95,6 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
             slideBack: YES
             event: event
         ];
-
-        println!("[filmwave drag] direct file drag started={} path={}", started, path);
 
         if !started {
             return Err("Native file drag did not start.".to_string());
