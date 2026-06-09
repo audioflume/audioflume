@@ -7,16 +7,9 @@ use std::{
 use tauri::{AppHandle, Emitter, WebviewWindow};
 
 static WATCHERS: OnceLock<Mutex<HashMap<String, RecommendedWatcher>>> = OnceLock::new();
-#[cfg(target_os = "macos")]
-static LAST_DRAG_SESSION: OnceLock<Mutex<usize>> = OnceLock::new();
 
 fn watchers() -> &'static Mutex<HashMap<String, RecommendedWatcher>> {
     WATCHERS.get_or_init(|| Mutex::new(HashMap::new()))
-}
-
-#[cfg(target_os = "macos")]
-fn last_drag_session() -> &'static Mutex<usize> {
-    LAST_DRAG_SESSION.get_or_init(|| Mutex::new(0))
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -62,8 +55,8 @@ fn open_path(path: String) -> Result<(), String> {
 fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(), String> {
     use cocoa::appkit::NSWindow;
     use cocoa::base::{id, nil, YES};
-    use cocoa::foundation::{NSArray, NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString, NSURL};
-    use objc::{class, msg_send, sel, sel_impl};
+    use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
+    use objc::{msg_send, sel, sel_impl};
     use std::path::Path;
 
     println!("[filmwave drag] requested path={}", path);
@@ -87,17 +80,6 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
         }
 
         let path_string = NSString::alloc(nil).init_str(&path);
-        let file_url: id = NSURL::fileURLWithPath_(nil, path_string);
-
-        let dragging_item_class = class!(NSDraggingItem);
-        let dragging_item: id = msg_send![dragging_item_class, alloc];
-        let dragging_item: id = msg_send![dragging_item, initWithPasteboardWriter: file_url];
-
-        let workspace_class = class!(NSWorkspace);
-        let workspace: id = msg_send![workspace_class, sharedWorkspace];
-        let drag_image: id = msg_send![workspace, iconForFile: path_string];
-        let _: () = msg_send![drag_image, setSize: NSSize::new(64.0, 64.0)];
-
         let event: id = msg_send![ns_window, currentEvent];
 
         if event == nil {
@@ -121,35 +103,19 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
             NSPoint::new(view_point.x - 32.0, view_point.y - 32.0),
             NSSize::new(64.0, 64.0),
         );
-        let _: () = msg_send![dragging_item, setDraggingFrame: drag_frame contents: drag_image];
 
-        let dragging_items: id = NSArray::arrayWithObject(nil, dragging_item);
-        let session: id = msg_send![content_view, beginDraggingSessionWithItems: dragging_items event: event source: content_view];
+        let started: bool = msg_send![content_view,
+            dragFile: path_string
+            fromRect: drag_frame
+            slideBack: YES
+            event: event
+        ];
 
-        if session == nil {
-            println!("[filmwave drag] session nil path={}", path);
-        } else {
-            let retained_session: id = msg_send![session, retain];
-            let retained_session_ptr = retained_session as usize;
-            let previous_session_ptr = {
-                let mut stored_session = last_drag_session()
-                    .lock()
-                    .map_err(|error| error.to_string())?;
-                let previous_session_ptr = *stored_session;
-                *stored_session = retained_session_ptr;
-                previous_session_ptr
-            };
+        println!("[filmwave drag] direct file drag started={} path={}", started, path);
 
-            if previous_session_ptr != 0 {
-                let previous_session = previous_session_ptr as id;
-                let _: () = msg_send![previous_session, release];
-                println!("[filmwave drag] released previous session");
-            }
-
-            println!("[filmwave drag] session retained path={}", path);
+        if !started {
+            return Err("Native file drag did not start.".to_string());
         }
-
-        let _: () = msg_send![session, setAnimatesToStartingPositionsOnCancelOrFail: YES];
     }
 
     Ok(())
