@@ -393,6 +393,68 @@ async function startNativeProjectNodeDrag({
   }
 }
 
+function startNativeProjectNodeDragOnMove({
+  event,
+  node,
+  project,
+  syncFolder,
+  onGhostStart,
+  onGhostEnd,
+}: {
+  event: React.PointerEvent<HTMLElement>;
+  node: ProjectFileNode;
+  project: Project;
+  syncFolder: string | null;
+  onGhostStart: (ghost: DragGhost) => void;
+  onGhostEnd: () => void;
+}) {
+  if (event.button !== 0) return;
+
+  event.preventDefault();
+
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const pointerId = event.pointerId;
+  const dragThreshold = 6;
+
+  function cleanup() {
+    window.removeEventListener("pointermove", handlePointerMove);
+    window.removeEventListener("pointerup", handlePointerEnd);
+    window.removeEventListener("pointercancel", handlePointerEnd);
+  }
+
+  function handlePointerEnd(pointerEvent: PointerEvent) {
+    if (pointerEvent.pointerId !== pointerId) return;
+    cleanup();
+  }
+
+  function handlePointerMove(pointerEvent: PointerEvent) {
+    if (pointerEvent.pointerId !== pointerId) return;
+
+    const distanceX = pointerEvent.clientX - startX;
+    const distanceY = pointerEvent.clientY - startY;
+
+    if (Math.hypot(distanceX, distanceY) < dragThreshold) return;
+
+    cleanup();
+    pointerEvent.preventDefault();
+
+    void startNativeProjectNodeDrag({
+      node,
+      project,
+      syncFolder,
+      onGhostStart,
+      onGhostEnd,
+      pointerX: pointerEvent.clientX,
+      pointerY: pointerEvent.clientY,
+    });
+  }
+
+  window.addEventListener("pointermove", handlePointerMove, { passive: false });
+  window.addEventListener("pointerup", handlePointerEnd);
+  window.addEventListener("pointercancel", handlePointerEnd);
+}
+
 async function showProjectInFinder(
   project: Project,
   syncFolder: string | null,
@@ -704,15 +766,13 @@ function ProjectGridItem({
             : "Choose a sync folder before dragging"
         }
         onPointerDown={(event) => {
-          if (event.button !== 0) return;
-          void startNativeProjectNodeDrag({
+          startNativeProjectNodeDragOnMove({
+            event,
             node,
             project,
             syncFolder,
             onGhostStart,
             onGhostEnd,
-            pointerX: event.clientX,
-            pointerY: event.clientY,
           });
         }}
         onClick={() => onOpenFolder(node)}
@@ -738,17 +798,15 @@ function ProjectGridItem({
         syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"
       }
       onPointerDown={(event) => {
-        if (event.button !== 0) return;
-        void startNativeProjectNodeDrag({
-          node,
-          project,
-          syncFolder,
-          onGhostStart,
-          onGhostEnd,
-          pointerX: event.clientX,
-          pointerY: event.clientY,
-        });
-      }}
+          startNativeProjectNodeDragOnMove({
+            event,
+            node,
+            project,
+            syncFolder,
+            onGhostStart,
+            onGhostEnd,
+          });
+        }}
     >
       <div className="project-file-card-icon-wrap">
         <DesktopMusicGlyph />
@@ -790,15 +848,13 @@ function ProjectListItem({
             : "Choose a sync folder before dragging"
         }
         onPointerDown={(event) => {
-          if (event.button !== 0) return;
-          void startNativeProjectNodeDrag({
+          startNativeProjectNodeDragOnMove({
+            event,
             node,
             project,
             syncFolder,
             onGhostStart,
             onGhostEnd,
-            pointerX: event.clientX,
-            pointerY: event.clientY,
           });
         }}
         onClick={() => onOpenFolder(node)}
@@ -824,17 +880,15 @@ function ProjectListItem({
         syncFolder ? "Drag synced file" : "Choose a sync folder before dragging"
       }
       onPointerDown={(event) => {
-        if (event.button !== 0) return;
-        void startNativeProjectNodeDrag({
-          node,
-          project,
-          syncFolder,
-          onGhostStart,
-          onGhostEnd,
-          pointerX: event.clientX,
-          pointerY: event.clientY,
-        });
-      }}
+          startNativeProjectNodeDragOnMove({
+            event,
+            node,
+            project,
+            syncFolder,
+            onGhostStart,
+            onGhostEnd,
+          });
+        }}
     >
       <span className="project-browser-row-name">
         <span className="project-file-list-icon-wrap">
