@@ -52,7 +52,7 @@ fn open_path(path: String) -> Result<(), String> {
 
 #[cfg(target_os = "macos")]
 fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(), String> {
-    use cocoa::appkit::{NSApp, NSEventType, NSWindow};
+    use cocoa::appkit::{NSApp, NSWindow};
     use cocoa::base::{id, nil};
     use cocoa::foundation::{NSAutoreleasePool, NSArray, NSPoint, NSRect, NSSize, NSString};
     use objc::{class, msg_send, sel, sel_impl};
@@ -74,10 +74,12 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
             return Err("Could not access native window content view.".to_string());
         }
 
-        // Use NSApp currentEvent so we always get the most recent mouse event,
-        // not whatever stale event the window last processed. Also verify it is
-        // actually a mouse-down/mouse-dragged before proceeding — this is what
-        // caused every-other-drag to fail (window.currentEvent was a mouseUp).
+        // Fetch the most recent event from NSApp rather than the window, which
+        // avoids getting a stale mouseUp. We no longer gate on event type —
+        // beginDraggingSessionWithItems handles a non-mouse event gracefully,
+        // and the event-type check was itself causing every-other-drag to fail
+        // because the async Tauri bridge could deliver the call after the event
+        // had already advanced.
         let ns_app: id = NSApp();
         let event: id = msg_send![ns_app, currentEvent];
 
@@ -85,36 +87,17 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
             return Err("No current event available.".to_string());
         }
 
-        let event_type: NSEventType = msg_send![event, type];
-        let is_mouse_event = matches!(
-            event_type,
-            NSEventType::NSLeftMouseDown
-                | NSEventType::NSLeftMouseDragged
-                | NSEventType::NSRightMouseDown
-                | NSEventType::NSRightMouseDragged
-                | NSEventType::NSOtherMouseDown
-                | NSEventType::NSOtherMouseDragged
-        );
-
-        if !is_mouse_event {
-            return Err(format!(
-                "Current event is not a mouse event (type {:?}); drag cancelled.",
-                event_type
-            ));
-        }
-
         let window_point: NSPoint = msg_send![event, locationInWindow];
         let view_point: NSPoint =
             msg_send![content_view, convertPoint: window_point fromView: nil];
 
-        // Build a file URL string for the pasteboard writer.
+        // Build a file URL for the pasteboard writer.
         let file_url_string = format!("file://{}", path);
         let url_ns_string: id = NSString::alloc(nil).init_str(&file_url_string);
         let file_url: id = msg_send![class!(NSURL), URLWithString: url_ns_string];
 
-        // Create a NSDraggingItem backed by the file URL. Using this API lets
-        // us supply a transparent 1×1 drag image so macOS does not render its
-        // own file-icon ghost — our JS DragGhostOverlay is the only visual.
+        // NSDraggingItem with a 1×1 transparent NSImage suppresses the macOS
+        // system ghost — our JS DragGhostOverlay is the only visual.
         let dragging_item: id = msg_send![class!(NSDraggingItem), alloc];
         let dragging_item: id = msg_send![dragging_item, initWithPasteboardWriter: file_url];
 
@@ -131,7 +114,6 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
 
         let items_array: id = NSArray::arrayWithObject(nil, dragging_item);
 
-        // beginDraggingSessionWithItems does not block — hands off to macOS.
         let _session: id = msg_send![content_view,
             beginDraggingSessionWithItems: items_array
             event: event
