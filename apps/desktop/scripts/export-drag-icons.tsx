@@ -12,4 +12,5 @@ import MusicIcon from "../src/components/icons/MusicIcon";
 const outputDir = path.resolve("src-tauri/icons");
 
 function getSvgInnerMarkup(svg: string) {
-  const
+  const firstClose = svg.indexOf(">");
+  const lastOpen = svg
