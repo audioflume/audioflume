@@ -12,7 +12,6 @@ fn watchers() -> &'static Mutex<HashMap<String, RecommendedWatcher>> {
     WATCHERS.get_or_init(|| Mutex::new(HashMap::new()))
 }
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
@@ -53,10 +52,12 @@ fn open_path(path: String) -> Result<(), String> {
 
 #[cfg(target_os = "macos")]
 fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(), String> {
-    use cocoa::appkit::NSWindow;
-    use cocoa::base::{id, nil, YES};
-    use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
-    use objc::{msg_send, sel, sel_impl};
+    use cocoa::appkit::{NSApp, NSEventType, NSPasteboard, NSPasteboardTypeFileURL, NSWindow};
+    use cocoa::base::{id, nil, YES, NO};
+    use cocoa::foundation::{
+        NSAutoreleasePool, NSArray, NSPoint, NSRect, NSSize, NSString, NSURL,
+    };
+    use objc::{class, msg_send, sel, sel_impl};
     use std::path::Path;
 
     if !Path::new(&path).exists() {
@@ -75,30 +76,75 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
             return Err("Could not access native window content view.".to_string());
         }
 
-        let path_string = NSString::alloc(nil).init_str(&path);
-        let event: id = msg_send![ns_window, currentEvent];
+        // Use NSApp currentEvent so we always get the most recent mouse event,
+        // not whatever stale event the window last processed. Also verify it is
+        // actually a mouse-down/mouse-dragged before proceeding — this is what
+        // caused every-other-drag to fail (previousEvent was a mouseUp).
+        let ns_app: id = NSApp();
+        let event: id = msg_send![ns_app, currentEvent];
 
         if event == nil {
-            return Err("Could not access current drag event.".to_string());
+            return Err("No current event available.".to_string());
+        }
+
+        let event_type: NSEventType = msg_send![event, type];
+        let is_mouse_event = matches!(
+            event_type,
+            NSEventType::NSLeftMouseDown
+                | NSEventType::NSLeftMouseDragged
+                | NSEventType::NSRightMouseDown
+                | NSEventType::NSRightMouseDragged
+                | NSEventType::NSOtherMouseDown
+                | NSEventType::NSOtherMouseDragged
+        );
+
+        if !is_mouse_event {
+            return Err(format!(
+                "Current event is not a mouse event (type {:?}); drag cancelled.",
+                event_type
+            ));
         }
 
         let window_point: NSPoint = msg_send![event, locationInWindow];
-        let view_point: NSPoint = msg_send![content_view, convertPoint: window_point fromView: nil];
-        let drag_frame = NSRect::new(
-            NSPoint::new(view_point.x - 32.0, view_point.y - 32.0),
-            NSSize::new(64.0, 64.0),
-        );
+        let view_point: NSPoint =
+            msg_send![content_view, convertPoint: window_point fromView: nil];
 
-        let started: bool = msg_send![content_view,
-            dragFile: path_string
-            fromRect: drag_frame
-            slideBack: YES
-            event: event
+        // Build a pasteboard with the file URL so the drag carries real data.
+        let pasteboard: id = msg_send![class!(NSPasteboard), pasteboardWithUniqueName];
+        let file_url_string = format!("file://{}", path);
+        let url_ns_string: id = NSString::alloc(nil).init_str(&file_url_string);
+        let file_url: id = msg_send![class!(NSURL), URLWithString: url_ns_string];
+        let url_array: id = NSArray::arrayWithObject(nil, file_url);
+        let _: bool = msg_send![pasteboard, writeObjects: url_array];
+
+        // Create a NSDraggingItem with the file URL. This API lets us provide
+        // a transparent 1×1 drag image so macOS does not show its own file
+        // icon ghost (which was the second duplicate-image bug).
+        let dragging_item: id = msg_send![class!(NSDraggingItem), alloc];
+        let dragging_item: id = msg_send![dragging_item, initWithPasteboardWriter: file_url];
+
+        // Provide a 1×1 transparent NSImage as the drag image so the system
+        // ghost is invisible. Our JS DragGhostOverlay handles the visual.
+        let drag_image: id = msg_send![class!(NSImage), alloc];
+        let drag_image: id =
+            msg_send![drag_image, initWithSize: NSSize::new(1.0, 1.0)];
+        let drag_frame = NSRect::new(
+            NSPoint::new(view_point.x, view_point.y),
+            NSSize::new(1.0, 1.0),
+        );
+        let _: () = msg_send![dragging_item,
+            setDraggingFrame: drag_frame
+            contents: drag_image
         ];
 
-        if !started {
-            return Err("Native file drag did not start.".to_string());
-        }
+        let items_array: id = NSArray::arrayWithObject(nil, dragging_item);
+
+        // beginDraggingSessionWithItems does not block — it hands off to macOS.
+        let _session: id = msg_send![content_view,
+            beginDraggingSessionWithItems: items_array
+            event: event
+            source: content_view
+        ];
     }
 
     Ok(())
