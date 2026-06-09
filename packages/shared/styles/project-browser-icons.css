@@ -34,6 +34,12 @@
   filter: none !important;
 }
 
+.project-folder-card-icon-wrap .project-folder-glyph,
+.project-file-browser .project-folder-card-icon-wrap .project-folder-glyph {
+  transform: scale(0.9) !important;
+  transform-origin: center center !important;
+}
+
 .project-folder-glyph-tab,
 .project-file-browser .project-folder-glyph-tab {
   position: absolute !important;
