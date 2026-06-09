@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
     sync::{Mutex, OnceLock},
 };
-use tauri::{AppHandle, Emitter, WebviewWindow};
+use tauri::{AppHandle, Emitter, Manager, WebviewWindow};
 
 static WATCHERS: OnceLock<Mutex<HashMap<String, RecommendedWatcher>>> = OnceLock::new();
 
@@ -50,85 +50,88 @@ fn open_path(path: String) -> Result<(), String> {
     }
 }
 
-#[cfg(target_os = "macos")]
-fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(), String> {
-    use cocoa::appkit::{NSApp, NSWindow};
-    use cocoa::base::{id, nil};
-    use cocoa::foundation::{NSAutoreleasePool, NSArray, NSPoint, NSRect, NSSize, NSString};
-    use objc::{class, msg_send, sel, sel_impl};
-    use std::path::Path;
-
-    if !Path::new(&path).exists() {
-        return Err(format!("Drag path does not exist: {}", path));
-    }
-
-    let ns_window = window
-        .ns_window()
-        .map_err(|error| format!("Could not access native window: {}", error))? as id;
-
-    unsafe {
-        let _pool = NSAutoreleasePool::new(nil);
-        let content_view: id = ns_window.contentView();
-
-        if content_view == nil {
-            return Err("Could not access native window content view.".to_string());
-        }
-
-        // Fetch the most recent event from NSApp rather than the window, which
-        // avoids getting a stale mouseUp. We no longer gate on event type —
-        // beginDraggingSessionWithItems handles a non-mouse event gracefully,
-        // and the event-type check was itself causing every-other-drag to fail
-        // because the async Tauri bridge could deliver the call after the event
-        // had already advanced.
-        let ns_app: id = NSApp();
-        let event: id = msg_send![ns_app, currentEvent];
-
-        if event == nil {
-            return Err("No current event available.".to_string());
-        }
-
-        let window_point: NSPoint = msg_send![event, locationInWindow];
-        let view_point: NSPoint =
-            msg_send![content_view, convertPoint: window_point fromView: nil];
-
-        // Build a file URL for the pasteboard writer.
-        let file_url_string = format!("file://{}", path);
-        let url_ns_string: id = NSString::alloc(nil).init_str(&file_url_string);
-        let file_url: id = msg_send![class!(NSURL), URLWithString: url_ns_string];
-
-        // NSDraggingItem with a 1×1 transparent NSImage suppresses the macOS
-        // system ghost — our JS DragGhostOverlay is the only visual.
-        let dragging_item: id = msg_send![class!(NSDraggingItem), alloc];
-        let dragging_item: id = msg_send![dragging_item, initWithPasteboardWriter: file_url];
-
-        let drag_image: id = msg_send![class!(NSImage), alloc];
-        let drag_image: id = msg_send![drag_image, initWithSize: NSSize::new(1.0, 1.0)];
-        let drag_frame = NSRect::new(
-            NSPoint::new(view_point.x, view_point.y),
-            NSSize::new(1.0, 1.0),
-        );
-        let _: () = msg_send![dragging_item,
-            setDraggingFrame: drag_frame
-            contents: drag_image
-        ];
-
-        let items_array: id = NSArray::arrayWithObject(nil, dragging_item);
-
-        let _session: id = msg_send![content_view,
-            beginDraggingSessionWithItems: items_array
-            event: event
-            source: content_view
-        ];
-    }
-
-    Ok(())
-}
-
 #[tauri::command]
 fn start_native_file_drag(window: WebviewWindow, path: String) -> Result<(), String> {
     #[cfg(target_os = "macos")]
     {
-        return start_native_file_drag_macos(window, path);
+        use cocoa::appkit::{NSApp, NSWindow};
+        use cocoa::base::{id, nil};
+        use cocoa::foundation::{NSAutoreleasePool, NSArray, NSPoint, NSRect, NSSize, NSString};
+        use objc::{class, msg_send, sel, sel_impl};
+        use std::path::Path;
+
+        if !Path::new(&path).exists() {
+            return Err(format!("Drag path does not exist: {}", path));
+        }
+
+        // beginDraggingSessionWithItems must be called synchronously on the
+        // main thread during a live mouse event. Tauri invoke handlers run on
+        // a background thread, so we dispatch back to main via run_on_main_thread.
+        window
+            .run_on_main_thread(move || {
+                let ns_window = match window.ns_window() {
+                    Ok(w) => w as id,
+                    Err(e) => {
+                        eprintln!("Could not access native window: {}", e);
+                        return;
+                    }
+                };
+
+                unsafe {
+                    let _pool = NSAutoreleasePool::new(nil);
+                    let content_view: id = ns_window.contentView();
+
+                    if content_view == nil {
+                        eprintln!("Could not access native window content view.");
+                        return;
+                    }
+
+                    let ns_app: id = NSApp();
+                    let event: id = msg_send![ns_app, currentEvent];
+
+                    if event == nil {
+                        eprintln!("No current event available.");
+                        return;
+                    }
+
+                    let window_point: NSPoint = msg_send![event, locationInWindow];
+                    let view_point: NSPoint =
+                        msg_send![content_view, convertPoint: window_point fromView: nil];
+
+                    let file_url_string = format!("file://{}", path);
+                    let url_ns_string: id = NSString::alloc(nil).init_str(&file_url_string);
+                    let file_url: id =
+                        msg_send![class!(NSURL), URLWithString: url_ns_string];
+
+                    // 1×1 transparent drag image suppresses the macOS system ghost.
+                    let dragging_item: id = msg_send![class!(NSDraggingItem), alloc];
+                    let dragging_item: id =
+                        msg_send![dragging_item, initWithPasteboardWriter: file_url];
+
+                    let drag_image: id = msg_send![class!(NSImage), alloc];
+                    let drag_image: id =
+                        msg_send![drag_image, initWithSize: NSSize::new(1.0, 1.0)];
+                    let drag_frame = NSRect::new(
+                        NSPoint::new(view_point.x, view_point.y),
+                        NSSize::new(1.0, 1.0),
+                    );
+                    let _: () = msg_send![dragging_item,
+                        setDraggingFrame: drag_frame
+                        contents: drag_image
+                    ];
+
+                    let items_array: id = NSArray::arrayWithObject(nil, dragging_item);
+
+                    let _session: id = msg_send![content_view,
+                        beginDraggingSessionWithItems: items_array
+                        event: event
+                        source: content_view
+                    ];
+                }
+            })
+            .map_err(|e| format!("run_on_main_thread failed: {}", e))?;
+
+        return Ok(());
     }
 
     #[cfg(not(target_os = "macos"))]
