@@ -355,10 +355,6 @@ function getFileArtist(node: ProjectFileNode) {
     : "Filmwave";
 }
 
-// Tracks whether a native drag is currently in-flight. Prevents a second
-// pointerdown from starting another drag before the first invoke resolves.
-let nativeDragInFlight = false;
-
 async function startNativeProjectNodeDrag({
   node,
   project,
@@ -381,9 +377,6 @@ async function startNativeProjectNodeDrag({
     return;
   }
 
-  if (nativeDragInFlight) return;
-  nativeDragInFlight = true;
-
   const localPath = getProjectNodeLocalPath({ node, project, syncFolder });
 
   onGhostStart({ name: node.name, type: node.type, x: pointerX, y: pointerY });
@@ -392,7 +385,6 @@ async function startNativeProjectNodeDrag({
     await invoke("start_native_file_drag", { path: localPath });
   } finally {
     onGhostEnd();
-    nativeDragInFlight = false;
   }
 }
 
@@ -412,13 +404,10 @@ function startNativeProjectNodeDragOnMove({
   onGhostEnd: () => void;
 }) {
   if (event.button !== 0) return;
-  if (nativeDragInFlight) return;
 
-  // Release pointer capture immediately so the element doesn't swallow
-  // subsequent pointerdown events after the drag ends.
-  const target = event.currentTarget;
-  target.releasePointerCapture(event.pointerId);
-
+  // Release pointer capture immediately so the element doesn't retain implicit
+  // capture after the drag, which would swallow the next pointerdown.
+  event.currentTarget.releasePointerCapture(event.pointerId);
   event.preventDefault();
 
   const startX = event.clientX;
@@ -483,19 +472,7 @@ async function showProjectInFinder(
   await invoke("open_path", { path: projectPath });
 }
 
-// The ghost is rendered offscreen initially (via transform) so that
-// WKWebView doesn't snapshot it as the native drag image. It slides
-// into view on the next frame via CSS transition.
 function DragGhostOverlay({ ghost }: { ghost: DragGhost }) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    // Defer one frame so the element is in the DOM before we make it visible,
-    // ensuring WKWebView has already taken its drag-image snapshot offscreen.
-    const frame = requestAnimationFrame(() => setVisible(true));
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
   const isFolder = ghost.type === "folder";
   const displayName = isFolder
     ? ghost.name
@@ -503,9 +480,8 @@ function DragGhostOverlay({ ghost }: { ghost: DragGhost }) {
 
   const style: React.CSSProperties = {
     position: "fixed",
-    // Start far offscreen; transition into position once visible=true.
-    left: visible ? ghost.x + 12 : -9999,
-    top: visible ? ghost.y - 16 : -9999,
+    left: ghost.x + 12,
+    top: ghost.y - 16,
     pointerEvents: "none",
     zIndex: 99999,
     display: "flex",
@@ -524,8 +500,7 @@ function DragGhostOverlay({ ghost }: { ghost: DragGhost }) {
     letterSpacing: "-0.01em",
     maxWidth: 260,
     userSelect: "none",
-    opacity: visible ? 0.96 : 0,
-    transition: "opacity 80ms ease",
+    opacity: 0.96,
   };
 
   const iconStyle: React.CSSProperties = {
