@@ -13,4 +13,4 @@ const outputDir = path.resolve("src-tauri/icons");
 
 function getSvgInnerMarkup(svg: string) {
   const firstClose = svg.indexOf(">");
-  const lastOpen = svg
+  const last
