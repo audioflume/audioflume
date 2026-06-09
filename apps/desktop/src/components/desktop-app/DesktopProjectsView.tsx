@@ -352,17 +352,23 @@ function getFileArtist(node: ProjectFileNode) {
 // Resolve the bundled app icon once, to use as the single drag-preview ghost.
 let cachedDragIconPromise: Promise<string | null> | null = null;
 
-async function getDragPreviewIcon() {
-  if (!cachedDragIconPromise) {
-    cachedDragIconPromise = resolveResource("icons/128x128.png")
-      .catch(() => resolveResource("icons/icon.png"))
-      .catch((error) => {
-        console.warn("Could not resolve drag preview icon.", error);
-        return null;
-      });
+const dragPreviewIconPromises: Partial<
+  Record<ProjectFileNode["type"], Promise<string | null>>
+> = {};
+
+async function getDragPreviewIcon(nodeType: ProjectFileNode["type"]) {
+  const iconType = nodeType === "folder" ? "folder" : "file";
+
+  if (!dragPreviewIconPromises[iconType]) {
+    dragPreviewIconPromises[iconType] = resolveResource(
+      iconType === "folder" ? "icons/drag-folder.png" : "icons/drag-file.png",
+    ).catch((error) => {
+      console.warn("Could not resolve drag preview icon.", error);
+      return null;
+    });
   }
 
-  return cachedDragIconPromise;
+  return dragPreviewIconPromises[iconType] ?? null;
 }
 
 // Native drag-out via tauri-plugin-drag. Called from the element's onDragStart,
@@ -383,10 +389,12 @@ async function handleNodeDragStart(
   }
 
   const localPath = getProjectNodeLocalPath({ node, project, syncFolder });
-  const icon = await getDragPreviewIcon();
+  const icon = await getDragPreviewIcon(node.type);
 
   if (!icon) {
-    console.error("Native file drag failed: drag preview icon could not be resolved.");
+    console.error(
+      "Native file drag failed: drag preview icon could not be resolved.",
+    );
     return;
   }
 
