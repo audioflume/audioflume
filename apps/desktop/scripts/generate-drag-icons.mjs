@@ -1,17 +1,13 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { deflateSync } from "node:zlib";
 
-const outputDir = path.resolve(process.cwd(), "src-tauri/icons");
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const outputDir = path.resolve(scriptDir, "../src-tauri/icons");
 const size = 128;
 
-function crc32(buffer) {
-  let crc = 0xffffffff;
-
-  for (let index = 0; index < buffer.length; index += 1) {
-    crc ^= buffer[index];
-
-    for (let bit = 0; bit < 8; bit += 1) {
-      crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
-    }
-  }
+const COLORS = {
+  folder: [109, 109, 104, 255],
+  folderDark: [82, 82, 78, 255],
+  folderShadow: [35
