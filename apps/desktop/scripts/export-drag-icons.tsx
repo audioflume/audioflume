@@ -11,4 +11,5 @@ import MusicIcon from "../src/components/icons/MusicIcon";
 
 const outputDir = path.resolve(process.cwd(), "src-tauri/icons");
 
-function getSvgBody
+function withSize(svg: string) {
+  const close
