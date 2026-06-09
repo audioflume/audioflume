@@ -81,22 +81,10 @@ fn start_native_file_drag_macos(window: WebviewWindow, path: String) -> Result<(
 
         let path_string = NSString::alloc(nil).init_str(&path);
         let file_url: id = NSURL::fileURLWithPath_(nil, path_string);
-        let absolute_string: id = msg_send![file_url, absoluteString];
-        let file_url_type = NSString::alloc(nil).init_str("public.file-url");
-
-        let pasteboard_item_class = class!(NSPasteboardItem);
-        let pasteboard_item: id = msg_send![pasteboard_item_class, alloc];
-        let pasteboard_item: id = msg_send![pasteboard_item, init];
-        let wrote: bool = msg_send![pasteboard_item, setString: absolute_string forType: file_url_type];
-
-        if !wrote {
-            println!("[filmwave drag] failed pasteboard write path={}", path);
-            return Err("Could not prepare drag pasteboard item.".to_string());
-        }
 
         let dragging_item_class = class!(NSDraggingItem);
         let dragging_item: id = msg_send![dragging_item_class, alloc];
-        let dragging_item: id = msg_send![dragging_item, initWithPasteboardWriter: pasteboard_item];
+        let dragging_item: id = msg_send![dragging_item, initWithPasteboardWriter: file_url];
 
         let workspace_class = class!(NSWorkspace);
         let workspace: id = msg_send![workspace_class, sharedWorkspace];
