@@ -382,11 +382,22 @@ async function handleNodeDragStart(
   const localPath = getProjectNodeLocalPath({ node, project, syncFolder });
   const icon = await getDragPreviewIcon();
 
+  if (!icon) {
+    console.error("Native file drag failed: drag preview icon could not be resolved.");
+    return;
+  }
+
   try {
-    await startDrag({
-      item: [localPath],
-      icon: icon ?? "",
-    });
+    await startDrag(
+      {
+        item: [localPath],
+        icon,
+        mode: "copy",
+      },
+      (result) => {
+        console.log("Native file drag result:", result);
+      },
+    );
   } catch (error) {
     console.error("Native file drag failed:", error);
   }

@@ -34,12 +34,18 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "resources": [
+      "icons/128x128.png",
+      "icons/icon.png"
     ]
   },
   "plugins": {
     "deep-link": {
       "desktop": {
-        "schemes": ["filmwave"]
+        "schemes": [
+          "filmwave"
+        ]
       }
     }
   }
