@@ -11,6 +11,5 @@ import MusicIcon from "../src/components/icons/MusicIcon";
 
 const outputDir = path.resolve("src-tauri/icons");
 
-function normalizeSvg(svg: string) {
-  return svg
-    .replace(/<svg([^>]*)>/, '<svg$
+function getSvgInnerMarkup(svg: string) {
+  const
