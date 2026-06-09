@@ -9,8 +9,6 @@ import path from "node:path";
 import FolderIcon from "../src/components/icons/FolderIcon";
 import MusicIcon from "../src/components/icons/MusicIcon";
 
-const outputDir = path.resolve("src-tauri/icons");
+const outputDir = path.resolve(process.cwd(), "src-tauri/icons");
 
-function getSvgInnerMarkup(svg: string) {
-  const firstClose = svg.indexOf(">");
-  const last
+function getSvgBody
