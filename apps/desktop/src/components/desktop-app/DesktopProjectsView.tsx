@@ -379,11 +379,6 @@ async function startNativeProjectNodeDrag({
 
   const localPath = getProjectNodeLocalPath({ node, project, syncFolder });
 
-  if (!(await exists(localPath))) {
-    console.warn(`Synced path does not exist yet: ${localPath}`);
-    return;
-  }
-
   onGhostStart({ name: node.name, type: node.type, x: pointerX, y: pointerY });
 
   try {

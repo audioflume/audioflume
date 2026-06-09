@@ -310,11 +310,6 @@
   transition: background 0.15s ease;
 }
 
-.project-file-browser .project-folder-card:active,
-.project-file-browser .project-file-card:active {
-  cursor: grabbing;
-}
-
 .project-file-browser .project-folder-card:hover,
 .project-file-browser .project-file-card:hover,
 .project-file-browser .project-file-card.is-active {
@@ -419,4 +414,5 @@
 .project-browser-row * {
   user-select: none !important;
   -webkit-user-select: none !important;
+  cursor: grab;
 }
