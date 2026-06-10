@@ -349,171 +349,181 @@ function getFileArtist(node: ProjectFileNode) {
     : "Filmwave";
 }
 
-const dragPreviewIconPromises: Partial<
-  Record<"folder" | "file", Promise<string | null>>
-> = {};
+// ─── Drag ghost generation ────────────────────────────────────────────────────
+//
+// Generates a crisp 2x-DPR PNG per dragged node showing a dark pill with the
+// node's icon and display name — matching the existing in-app ghost overlay
+// style but rendered as a native OS drag image so it appears on every drag.
+//
+// Cached per node.id so each unique file/folder gets its own named ghost.
+// Written to the app cache dir as a temp file, which is the path format
+// tauri-plugin-drag accepts.
 
-function svgToPngBytes(svgElement: SVGSVGElement): Promise<Uint8Array> {
+const GHOST_CACHE = new Map<string, Promise<string | null>>();
+
+// Inline SVG source strings. These are self-contained and safe to serialize
+// to a Blob URL for canvas drawImage without touching the live DOM.
+
+const FOLDER_SVG_SOURCE = `<svg width="62" height="54" viewBox="0 0 62 54" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fwft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b3b3b"/>
+      <stop offset="1" stop-color="#252525"/>
+    </linearGradient>
+    <linearGradient id="fwfb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3a3a"/>
+      <stop offset="0.48" stop-color="#242424"/>
+      <stop offset="1" stop-color="#151515"/>
+    </linearGradient>
+  </defs>
+  <path d="M0 10 a4 4 0 0 1 4 -4 h20 a5 5 0 0 1 5 5 v3 H0 Z" fill="url(#fwft)"/>
+  <path d="M4 6.5 h20" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-linecap="round"/>
+  <rect x="0" y="11" width="62" height="43" rx="5" fill="url(#fwfb)"/>
+  <rect x="1" y="12" width="60" height="1.4" rx="0.7" fill="rgba(255,255,255,0.22)"/>
+  <rect x="1" y="52.4" width="60" height="1" rx="0.5" fill="rgba(0,0,0,0.72)"/>
+</svg>`;
+
+// Note fill is a light grey so it reads against the dark ghost background.
+const MUSIC_SVG_SOURCE = `<svg width="48.83" height="66.94" viewBox="0 0 48.83 66.94" xmlns="http://www.w3.org/2000/svg">
+  <path d="M48.62,15.64c-2-9.61-18.89-7.59-19.97-15.64h-3.76v54.49c-2.33-2.42-6.6-4.04-11.5-4.04-7.39,0-13.38,3.69-13.38,8.25s5.99,8.25,13.38,8.25c.15,0,.3-.01.45-.01.16,0,.32.01.49.01,7.91,0,14.32-3.69,14.32-8.25V11.74c3.46,4,12.53,2.97,14.12,7.65.66,1.93-.05,3.81-2.16,6.31l2.43,1.94c3.44-3.95,6.66-6.82,5.59-12Z" fill="rgba(210,210,210,0.9)"/>
+</svg>`;
+
+function loadSvgAsImage(
+  svgSource: string,
+  nativeWidth: number,
+  nativeHeight: number,
+): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    const iconWrap =
-      svgElement.closest(".project-file-card-icon-wrap") ||
-      svgElement.closest(".project-folder-card-icon-wrap") ||
-      svgElement.closest(".desktop-project-file-icon-wrap") ||
-      svgElement.closest(".desktop-project-folder-icon-wrap") ||
-      svgElement.parentElement;
-
-    if (!(iconWrap instanceof HTMLElement)) {
-      reject(new Error("Could not find icon wrapper."));
-      return;
-    }
-
-    const wrapRect = iconWrap.getBoundingClientRect();
-    const svgRect = svgElement.getBoundingClientRect();
-
-    const isMusicFileIcon =
-      svgElement.closest(".project-file-card-icon-wrap") ||
-      svgElement.closest(".desktop-project-file-icon-wrap");
-
-    const canvasWidth = isMusicFileIcon ? 44 : Math.ceil(wrapRect.width);
-    const canvasHeight = isMusicFileIcon ? 44 : Math.ceil(wrapRect.height);
-
-    const svgWidth = isMusicFileIcon ? 20 : svgRect.width;
-    const svgHeight = isMusicFileIcon ? 20 : svgRect.height;
-
-    const svgX = isMusicFileIcon
-      ? (canvasWidth - svgWidth) / 2
-      : svgRect.left - wrapRect.left;
-
-    const svgY = isMusicFileIcon
-      ? (canvasHeight - svgHeight) / 2
-      : svgRect.top - wrapRect.top;
-
-    const renderScale = Math.max(2, Math.ceil(window.devicePixelRatio || 1));
-
-    const clonedSvg = svgElement.cloneNode(true) as SVGSVGElement;
-    const computedStyle = window.getComputedStyle(svgElement);
-
-    clonedSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    clonedSvg.setAttribute("width", String(svgWidth));
-    clonedSvg.setAttribute("height", String(svgHeight));
-    clonedSvg.style.color = computedStyle.color;
-
-    const svgString = new XMLSerializer().serializeToString(clonedSvg);
-    const svgBlob = new Blob([svgString], {
+    const blob = new Blob([svgSource], {
       type: "image/svg+xml;charset=utf-8",
     });
-
-    const svgUrl = URL.createObjectURL(svgBlob);
-    const image = new Image();
-
-    image.onload = async () => {
-      try {
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.ceil(canvasWidth * renderScale);
-        canvas.height = Math.ceil(canvasHeight * renderScale);
-
-        const context = canvas.getContext("2d");
-
-        if (!context) {
-          throw new Error("Could not create canvas context.");
-        }
-
-        context.scale(renderScale, renderScale);
-        context.clearRect(0, 0, canvasWidth, canvasHeight);
-
-        if (isMusicFileIcon) {
-          const radius = 8;
-
-          context.fillStyle = "#f4f4f1";
-          context.strokeStyle = "rgba(0, 0, 0, 0.08)";
-          context.lineWidth = 1;
-
-          context.beginPath();
-          context.moveTo(radius, 0);
-          context.lineTo(canvasWidth - radius, 0);
-          context.quadraticCurveTo(canvasWidth, 0, canvasWidth, radius);
-          context.lineTo(canvasWidth, canvasHeight - radius);
-          context.quadraticCurveTo(
-            canvasWidth,
-            canvasHeight,
-            canvasWidth - radius,
-            canvasHeight,
-          );
-          context.lineTo(radius, canvasHeight);
-          context.quadraticCurveTo(0, canvasHeight, 0, canvasHeight - radius);
-          context.lineTo(0, radius);
-          context.quadraticCurveTo(0, 0, radius, 0);
-          context.closePath();
-
-          context.fill();
-          context.stroke();
-        }
-
-        context.drawImage(image, svgX, svgY, svgWidth, svgHeight);
-
-        const pngBlob = await new Promise<Blob>((resolveBlob, rejectBlob) => {
-          canvas.toBlob((blob) => {
-            if (!blob) {
-              rejectBlob(new Error("Could not create PNG blob."));
-              return;
-            }
-
-            resolveBlob(blob);
-          }, "image/png");
-        });
-
-        const arrayBuffer = await pngBlob.arrayBuffer();
-        resolve(new Uint8Array(arrayBuffer));
-      } catch (error) {
-        reject(error);
-      } finally {
-        URL.revokeObjectURL(svgUrl);
-      }
+    const url = URL.createObjectURL(blob);
+    const img = new Image(nativeWidth, nativeHeight);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
     };
-
-    image.onerror = () => {
-      URL.revokeObjectURL(svgUrl);
-      reject(new Error("Could not load SVG preview image."));
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("SVG image load failed"));
     };
-
-    image.src = svgUrl;
+    img.src = url;
   });
 }
 
-async function getDragPreviewIcon(
-  cardElement: HTMLElement,
+async function generateDragGhostPng(
+  nodeId: string,
   nodeType: ProjectFileNode["type"],
-) {
-  const iconType = nodeType === "folder" ? "folder" : "file";
+  displayName: string,
+): Promise<string | null> {
+  // Render at 2x so the ghost is crisp on Retina displays.
+  const DPR = 2;
 
-  if (!dragPreviewIconPromises[iconType]) {
-    dragPreviewIconPromises[iconType] = (async () => {
-      const svgElement = cardElement.querySelector("svg");
+  // Ghost pill layout constants (all values in logical pixels at 1x).
+  const PAD_LEFT = 8;
+  const PAD_RIGHT = 12;
+  const PAD_V = 10;
+  const ICON_SIZE = 18; // icon display height
+  const ICON_GAP = 8; // gap between icon and text
+  const MAX_TEXT_WIDTH = 220;
+  const BORDER_RADIUS = 8;
+  const GHOST_FONT = `500 13px -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif`;
 
-      if (!(svgElement instanceof SVGSVGElement)) {
-        return null;
-      }
+  // Measure text width on a throwaway canvas so we can size the pill correctly.
+  const measurer = document.createElement("canvas").getContext("2d");
+  if (!measurer) return null;
+  measurer.font = GHOST_FONT;
+  const rawTextWidth = measurer.measureText(displayName).width;
+  const textWidth = Math.min(rawTextWidth, MAX_TEXT_WIDTH);
 
-      const pngBytes = await svgToPngBytes(svgElement);
-      const cacheDir = await appCacheDir();
-      const iconPath = await join(cacheDir, `filmwave-drag-${iconType}.png`);
+  const ghostWidth = PAD_LEFT + ICON_SIZE + ICON_GAP + textWidth + PAD_RIGHT;
+  const ghostHeight = PAD_V * 2 + ICON_SIZE;
 
-      await writeFile(iconPath, pngBytes);
+  // Create the 2x canvas.
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.ceil(ghostWidth * DPR);
+  canvas.height = Math.ceil(ghostHeight * DPR);
 
-      return iconPath;
-    })().catch((error) => {
-      console.warn("Could not create drag preview icon.", error);
-      return null;
-    });
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+
+  ctx.scale(DPR, DPR);
+
+  // Dark pill background.
+  ctx.fillStyle = "rgba(28, 28, 32, 0.92)";
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.10)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(BORDER_RADIUS, 0);
+  ctx.lineTo(ghostWidth - BORDER_RADIUS, 0);
+  ctx.quadraticCurveTo(ghostWidth, 0, ghostWidth, BORDER_RADIUS);
+  ctx.lineTo(ghostWidth, ghostHeight - BORDER_RADIUS);
+  ctx.quadraticCurveTo(ghostWidth, ghostHeight, ghostWidth - BORDER_RADIUS, ghostHeight);
+  ctx.lineTo(BORDER_RADIUS, ghostHeight);
+  ctx.quadraticCurveTo(0, ghostHeight, 0, ghostHeight - BORDER_RADIUS);
+  ctx.lineTo(0, BORDER_RADIUS);
+  ctx.quadraticCurveTo(0, 0, BORDER_RADIUS, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Icon — drawn at ICON_SIZE, vertically centered.
+  const iconY = (ghostHeight - ICON_SIZE) / 2;
+  try {
+    if (nodeType === "folder") {
+      // Folder is 62x54; preserve aspect: display width = ICON_SIZE * (62/54)
+      const folderAspect = 62 / 54;
+      const folderW = ICON_SIZE * folderAspect;
+      const folderH = ICON_SIZE;
+      const img = await loadSvgAsImage(FOLDER_SVG_SOURCE, 62, 54);
+      ctx.drawImage(img, PAD_LEFT, iconY, folderW, folderH);
+    } else {
+      // Music note is 48.83x66.94; preserve aspect at ICON_SIZE height
+      const noteAspect = 48.83 / 66.94;
+      const noteW = ICON_SIZE * noteAspect;
+      const noteH = ICON_SIZE;
+      // Center the narrower note horizontally within the ICON_SIZE slot
+      const noteX = PAD_LEFT + (ICON_SIZE - noteW) / 2;
+      const img = await loadSvgAsImage(MUSIC_SVG_SOURCE, 49, 67);
+      ctx.drawImage(img, noteX, iconY, noteW, noteH);
+    }
+  } catch {
+    // Icon failed — ghost renders text-only, which is acceptable.
   }
 
-  return dragPreviewIconPromises[iconType] ?? null;
+  // Filename text — clipped to MAX_TEXT_WIDTH, vertically centered.
+  const textX = PAD_LEFT + ICON_SIZE + ICON_GAP;
+  const textY = ghostHeight / 2;
+  ctx.font = GHOST_FONT;
+  ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
+  ctx.textBaseline = "middle";
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(textX, 0, MAX_TEXT_WIDTH, ghostHeight);
+  ctx.clip();
+  ctx.fillText(displayName, textX, textY);
+  ctx.restore();
+
+  // Export to PNG bytes and write to the app cache dir.
+  const pngBlob = await new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(new Error("toBlob failed"))),
+      "image/png",
+    ),
+  );
+
+  const bytes = new Uint8Array(await pngBlob.arrayBuffer());
+  const cacheDir = await appCacheDir();
+  // Use a short stable filename per node so temp files don't pile up.
+  const safeId = nodeId.replace(/[^a-zA-Z0-9]/g, "_").slice(0, 40);
+  const iconPath = await join(cacheDir, `filmwave-drag-${safeId}.png`);
+  await writeFile(iconPath, bytes);
+
+  return iconPath;
 }
 
-// Native drag-out via tauri-plugin-drag. Called from the element's onDragStart,
-// which fires synchronously inside the real OS drag gesture — the plugin then
-// hands the file to the OS with a single clean preview icon. No pointermove
-// threshold, pointer-capture juggling, or custom ghost overlay required.
+// ─── Drag handler ─────────────────────────────────────────────────────────────
+
 async function handleNodeDragStart(
   event: React.DragEvent<HTMLElement>,
   node: ProjectFileNode,
@@ -528,25 +538,35 @@ async function handleNodeDragStart(
   }
 
   const localPath = getProjectNodeLocalPath({ node, project, syncFolder });
-  const icon = await getDragPreviewIcon(event.currentTarget, node.type);
+  const displayName =
+    node.type === "file" ? node.name.replace(/\.[^/.]+$/, "") : node.name;
+
+  // Cache by node.id — each file/folder gets its own named ghost PNG.
+  if (!GHOST_CACHE.has(node.id)) {
+    GHOST_CACHE.set(
+      node.id,
+      generateDragGhostPng(node.id, node.type, displayName).catch((error) => {
+        console.warn("Drag ghost generation failed:", error);
+        return null;
+      }),
+    );
+  }
+
+  const icon = await GHOST_CACHE.get(node.id)!;
 
   if (!icon) {
-    console.error(
-      "Native file drag failed: drag preview icon could not be resolved.",
-    );
+    console.error("Native file drag failed: ghost icon could not be generated.");
     return;
   }
 
   try {
-    await startDrag({
-      item: [localPath],
-      icon,
-      mode: "copy",
-    });
+    await startDrag({ item: [localPath], icon });
   } catch (error) {
     console.error("Native file drag failed:", error);
   }
 }
+
+// ─── Finder reveal ────────────────────────────────────────────────────────────
 
 async function showProjectInFinder(
   project: Project,
@@ -566,6 +586,8 @@ async function showProjectInFinder(
 
   await invoke("open_path", { path: projectPath });
 }
+
+// ─── UI components ────────────────────────────────────────────────────────────
 
 function ProjectSyncStatus({
   project,
