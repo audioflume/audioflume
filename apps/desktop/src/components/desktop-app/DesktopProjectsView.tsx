@@ -75,13 +75,7 @@ const SYNCING_PATTERNS = [
 
 function GridViewIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <rect x="4" y="4" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
       <rect x="14" y="4" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
       <rect x="4" y="14" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
@@ -119,8 +113,8 @@ function formatFileCount(count: number) {
 
 function getProjectSyncState(syncStatus: string): ProjectSyncState {
   const normalizedStatus = syncStatus.toLowerCase();
-  if (ERROR_SYNC_PATTERNS.some((pattern) => normalizedStatus.includes(pattern))) return "error";
-  if (SYNCING_PATTERNS.some((pattern) => normalizedStatus.includes(pattern))) return "syncing";
+  if (ERROR_SYNC_PATTERNS.some((p) => normalizedStatus.includes(p))) return "error";
+  if (SYNCING_PATTERNS.some((p) => normalizedStatus.includes(p))) return "syncing";
   return "success";
 }
 
@@ -226,12 +220,13 @@ function getFileArtist(node: ProjectFileNode) {
 
 // ─── Drag ghost generation ────────────────────────────────────────────────────
 //
-// Renders a dark pill PNG per node (icon + filename) at 2x DPR for Retina
-// crispness, writes it to the app cache dir, and passes the path to startDrag.
-// Cached per node.id so each file/folder gets its own named ghost.
+// Renders a card-style PNG ghost that matches the website's grid card layout:
+// icon centered on top, display name centered below (and artist for files).
+// Rendered at 2x DPR for Retina crispness. Cached per node.id.
 
 const GHOST_CACHE = new Map<string, Promise<string | null>>();
 
+// Folder SVG — matches FolderGlyph from ProjectBrowserGlyphs
 const FOLDER_SVG_SOURCE = `<svg width="62" height="54" viewBox="0 0 62 54" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="fwft" x1="0" y1="0" x2="0" y2="1">
@@ -251,8 +246,9 @@ const FOLDER_SVG_SOURCE = `<svg width="62" height="54" viewBox="0 0 62 54" xmlns
   <rect x="1" y="52.4" width="60" height="1" rx="0.5" fill="rgba(0,0,0,0.72)"/>
 </svg>`;
 
+// Music note SVG — user-provided artwork, light fill so it reads on dark tile
 const MUSIC_SVG_SOURCE = `<svg width="48.83" height="66.94" viewBox="0 0 48.83 66.94" xmlns="http://www.w3.org/2000/svg">
-  <path d="M48.62,15.64c-2-9.61-18.89-7.59-19.97-15.64h-3.76v54.49c-2.33-2.42-6.6-4.04-11.5-4.04-7.39,0-13.38,3.69-13.38,8.25s5.99,8.25,13.38,8.25c.15,0,.3-.01.45-.01.16,0,.32.01.49.01,7.91,0,14.32-3.69,14.32-8.25V11.74c3.46,4,12.53,2.97,14.12,7.65.66,1.93-.05,3.81-2.16,6.31l2.43,1.94c3.44-3.95,6.66-6.82,5.59-12Z" fill="rgba(210,210,210,0.9)"/>
+  <path d="M48.62,15.64c-2-9.61-18.89-7.59-19.97-15.64h-3.76v54.49c-2.33-2.42-6.6-4.04-11.5-4.04-7.39,0-13.38,3.69-13.38,8.25s5.99,8.25,13.38,8.25c.15,0,.3-.01.45-.01.16,0,.32.01.49.01,7.91,0,14.32-3.69,14.32-8.25V11.74c3.46,4,12.53,2.97,14.12,7.65.66,1.93-.05,3.81-2.16,6.31l2.43,1.94c3.44-3.95,6.66-6.82,5.59-12Z" fill="rgba(180,180,180,0.85)"/>
 </svg>`;
 
 function loadSvgAsImage(svgSource: string, nativeWidth: number, nativeHeight: number): Promise<HTMLImageElement> {
@@ -266,83 +262,141 @@ function loadSvgAsImage(svgSource: string, nativeWidth: number, nativeHeight: nu
   });
 }
 
+// Truncate text to fit within maxWidth using canvas measurement.
+function truncateText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  let truncated = text;
+  while (truncated.length > 1 && ctx.measureText(truncated + "\u2026").width > maxWidth) {
+    truncated = truncated.slice(0, -1);
+  }
+  return truncated + "\u2026";
+}
+
 async function generateDragGhostPng(
   nodeId: string,
   nodeType: ProjectFileNode["type"],
   displayName: string,
+  artistName: string | undefined,
 ): Promise<string | null> {
   const DPR = 2;
-  const PAD_LEFT = 8;
-  const PAD_RIGHT = 12;
-  const PAD_V = 10;
-  const ICON_SIZE = 18;
-  const ICON_GAP = 8;
-  const MAX_TEXT_WIDTH = 220;
-  const BORDER_RADIUS = 8;
-  const GHOST_FONT = `500 13px -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif`;
 
-  const measurer = document.createElement("canvas").getContext("2d");
-  if (!measurer) return null;
-  measurer.font = GHOST_FONT;
-  const textWidth = Math.min(measurer.measureText(displayName).width, MAX_TEXT_WIDTH);
+  // Card layout constants (logical pixels at 1x, matching the grid card style)
+  const CARD_WIDTH = 120;
+  const CARD_PAD_H = 12;
+  const CARD_PAD_TOP = 14;
+  const CARD_PAD_BOTTOM = 14;
+  const ICON_AREA_HEIGHT = nodeType === "folder" ? 54 : 44; // matches glyph heights
+  const ICON_GAP = 10; // gap between icon bottom and name
+  const NAME_FONT = `500 13px -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif`;
+  const ARTIST_FONT = `400 11px -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif`;
+  const LINE_HEIGHT_NAME = 17;
+  const LINE_HEIGHT_ARTIST = 15;
+  const BORDER_RADIUS = 10;
 
-  const ghostWidth = PAD_LEFT + ICON_SIZE + ICON_GAP + textWidth + PAD_RIGHT;
-  const ghostHeight = PAD_V * 2 + ICON_SIZE;
+  // Total card height: top pad + icon + gap + name + (artist?) + bottom pad
+  const hasArtist = nodeType === "file" && artistName;
+  const CARD_HEIGHT =
+    CARD_PAD_TOP +
+    ICON_AREA_HEIGHT +
+    ICON_GAP +
+    LINE_HEIGHT_NAME +
+    (hasArtist ? LINE_HEIGHT_ARTIST + 2 : 0) +
+    CARD_PAD_BOTTOM;
 
   const canvas = document.createElement("canvas");
-  canvas.width = Math.ceil(ghostWidth * DPR);
-  canvas.height = Math.ceil(ghostHeight * DPR);
+  canvas.width = Math.ceil(CARD_WIDTH * DPR);
+  canvas.height = Math.ceil(CARD_HEIGHT * DPR);
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
   ctx.scale(DPR, DPR);
 
-  // Dark pill background
-  ctx.fillStyle = "rgba(28, 28, 32, 0.92)";
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.10)";
+  // Card background — dark, matching project-folder-card / project-file-card
+  ctx.fillStyle = "rgba(32, 32, 36, 0.96)";
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(BORDER_RADIUS, 0);
-  ctx.lineTo(ghostWidth - BORDER_RADIUS, 0);
-  ctx.quadraticCurveTo(ghostWidth, 0, ghostWidth, BORDER_RADIUS);
-  ctx.lineTo(ghostWidth, ghostHeight - BORDER_RADIUS);
-  ctx.quadraticCurveTo(ghostWidth, ghostHeight, ghostWidth - BORDER_RADIUS, ghostHeight);
-  ctx.lineTo(BORDER_RADIUS, ghostHeight);
-  ctx.quadraticCurveTo(0, ghostHeight, 0, ghostHeight - BORDER_RADIUS);
+  ctx.lineTo(CARD_WIDTH - BORDER_RADIUS, 0);
+  ctx.quadraticCurveTo(CARD_WIDTH, 0, CARD_WIDTH, BORDER_RADIUS);
+  ctx.lineTo(CARD_WIDTH, CARD_HEIGHT - BORDER_RADIUS);
+  ctx.quadraticCurveTo(CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH - BORDER_RADIUS, CARD_HEIGHT);
+  ctx.lineTo(BORDER_RADIUS, CARD_HEIGHT);
+  ctx.quadraticCurveTo(0, CARD_HEIGHT, 0, CARD_HEIGHT - BORDER_RADIUS);
   ctx.lineTo(0, BORDER_RADIUS);
   ctx.quadraticCurveTo(0, 0, BORDER_RADIUS, 0);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
 
-  // Icon
-  const iconY = (ghostHeight - ICON_SIZE) / 2;
+  // Icon — centered horizontally in the card
+  const iconAreaTop = CARD_PAD_TOP;
   try {
     if (nodeType === "folder") {
-      const folderW = ICON_SIZE * (62 / 54);
+      // Folder is 62x54; display at natural size centered
+      const folderW = 62;
+      const folderH = 54;
+      const folderX = (CARD_WIDTH - folderW) / 2;
       const img = await loadSvgAsImage(FOLDER_SVG_SOURCE, 62, 54);
-      ctx.drawImage(img, PAD_LEFT, iconY, folderW, ICON_SIZE);
+      ctx.drawImage(img, folderX, iconAreaTop, folderW, folderH);
     } else {
-      const noteW = ICON_SIZE * (48.83 / 66.94);
-      const noteX = PAD_LEFT + (ICON_SIZE - noteW) / 2;
+      // Music tile: dark rounded square 44x44 with note inside
+      const tileSize = 44;
+      const tileX = (CARD_WIDTH - tileSize) / 2;
+      const tileY = iconAreaTop;
+      const tileRadius = 8;
+
+      // Draw tile background
+      ctx.fillStyle = "#2a2a2e";
+      ctx.strokeStyle = "rgba(255,255,255,0.10)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(tileX + tileRadius, tileY);
+      ctx.lineTo(tileX + tileSize - tileRadius, tileY);
+      ctx.quadraticCurveTo(tileX + tileSize, tileY, tileX + tileSize, tileY + tileRadius);
+      ctx.lineTo(tileX + tileSize, tileY + tileSize - tileRadius);
+      ctx.quadraticCurveTo(tileX + tileSize, tileY + tileSize, tileX + tileSize - tileRadius, tileY + tileSize);
+      ctx.lineTo(tileX + tileRadius, tileY + tileSize);
+      ctx.quadraticCurveTo(tileX, tileY + tileSize, tileX, tileY + tileSize - tileRadius);
+      ctx.lineTo(tileX, tileY + tileRadius);
+      ctx.quadraticCurveTo(tileX, tileY, tileX + tileRadius, tileY);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Draw note inside tile, centered
+      const noteH = 16;
+      const noteW = noteH * (48.83 / 66.94);
+      const noteX = tileX + (tileSize - noteW) / 2;
+      const noteY = tileY + (tileSize - noteH) / 2;
       const img = await loadSvgAsImage(MUSIC_SVG_SOURCE, 49, 67);
-      ctx.drawImage(img, noteX, iconY, noteW, ICON_SIZE);
+      ctx.drawImage(img, noteX, noteY, noteW, noteH);
     }
   } catch {
-    // Icon failed — text-only ghost is acceptable
+    // Icon failed — text still renders
   }
 
-  // Filename text
-  ctx.font = GHOST_FONT;
-  ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
+  // Name text — centered, truncated
+  const textAreaLeft = CARD_PAD_H;
+  const textMaxWidth = CARD_WIDTH - CARD_PAD_H * 2;
+  const nameY = CARD_PAD_TOP + ICON_AREA_HEIGHT + ICON_GAP + LINE_HEIGHT_NAME / 2;
+
+  ctx.font = NAME_FONT;
+  ctx.fillStyle = "rgba(255, 255, 255, 0.90)";
   ctx.textBaseline = "middle";
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(PAD_LEFT + ICON_SIZE + ICON_GAP, 0, MAX_TEXT_WIDTH, ghostHeight);
-  ctx.clip();
-  ctx.fillText(displayName, PAD_LEFT + ICON_SIZE + ICON_GAP, ghostHeight / 2);
-  ctx.restore();
+  ctx.textAlign = "center";
+  const truncatedName = truncateText(ctx, displayName, textMaxWidth);
+  ctx.fillText(truncatedName, CARD_WIDTH / 2, nameY);
+
+  // Artist text (files only) — centered, muted
+  if (hasArtist) {
+    const artistY = nameY + LINE_HEIGHT_NAME / 2 + 2 + LINE_HEIGHT_ARTIST / 2;
+    ctx.font = ARTIST_FONT;
+    ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+    const truncatedArtist = truncateText(ctx, artistName!, textMaxWidth);
+    ctx.fillText(truncatedArtist, CARD_WIDTH / 2, artistY);
+  }
 
   // Export to PNG and write to cache dir
   const pngBlob = await new Promise<Blob>((resolve, reject) =>
@@ -378,11 +432,12 @@ async function handleNodeDragStart(
 
   const localPath = getProjectNodeLocalPath({ node, project, syncFolder });
   const displayName = node.type === "file" ? node.name.replace(/\.[^/.]+$/, "") : node.name;
+  const artistName = node.type === "file" ? getFileArtist(node) : undefined;
 
   if (!GHOST_CACHE.has(node.id)) {
     GHOST_CACHE.set(
       node.id,
-      generateDragGhostPng(node.id, node.type, displayName).catch((error) => {
+      generateDragGhostPng(node.id, node.type, displayName, artistName).catch((error) => {
         console.warn("Drag ghost generation failed:", error);
         return null;
       }),
