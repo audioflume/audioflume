@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
-import { resolveResource } from "@tauri-apps/api/path";
-import { exists } from "@tauri-apps/plugin-fs";
+import { appCacheDir, join } from "@tauri-apps/api/path";
+import { exists, writeFile } from "@tauri-apps/plugin-fs";
 import { startDrag } from "@crabnebula/tauri-plugin-drag";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Project, ProjectFileNode } from "../../lib/mockFilmwaveApi";
@@ -349,19 +349,95 @@ function getFileArtist(node: ProjectFileNode) {
     : "Filmwave";
 }
 
-// Resolve the bundled folder/file drag preview icons once.
 const dragPreviewIconPromises: Partial<
   Record<"folder" | "file", Promise<string | null>>
 > = {};
 
-async function getDragPreviewIcon(nodeType: ProjectFileNode["type"]) {
+function svgToPngBytes(svgElement: SVGSVGElement, size = 128): Promise<Uint8Array> {
+  return new Promise((resolve, reject) => {
+    const clonedSvg = svgElement.cloneNode(true) as SVGSVGElement;
+    const computedStyle = window.getComputedStyle(svgElement);
+
+    clonedSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clonedSvg.setAttribute("width", String(size));
+    clonedSvg.setAttribute("height", String(size));
+    clonedSvg.style.color = computedStyle.color;
+
+    const svgString = new XMLSerializer().serializeToString(clonedSvg);
+    const svgBlob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+
+    const svgUrl = URL.createObjectURL(svgBlob);
+    const image = new Image();
+
+    image.onload = async () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          throw new Error("Could not create canvas context.");
+        }
+
+        context.clearRect(0, 0, size, size);
+        context.drawImage(image, 0, 0, size, size);
+
+        const pngBlob = await new Promise<Blob>((resolveBlob, rejectBlob) => {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              rejectBlob(new Error("Could not create PNG blob."));
+              return;
+            }
+
+            resolveBlob(blob);
+          }, "image/png");
+        });
+
+        const arrayBuffer = await pngBlob.arrayBuffer();
+        resolve(new Uint8Array(arrayBuffer));
+      } catch (error) {
+        reject(error);
+      } finally {
+        URL.revokeObjectURL(svgUrl);
+      }
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(svgUrl);
+      reject(new Error("Could not load SVG preview image."));
+    };
+
+    image.src = svgUrl;
+  });
+}
+
+async function getDragPreviewIcon(
+  cardElement: HTMLElement,
+  nodeType: ProjectFileNode["type"],
+) {
   const iconType = nodeType === "folder" ? "folder" : "file";
 
   if (!dragPreviewIconPromises[iconType]) {
-    dragPreviewIconPromises[iconType] = resolveResource(
-      iconType === "folder" ? "icons/drag-folder.png" : "icons/drag-file.png",
-    ).catch((error) => {
-      console.warn("Could not resolve drag preview icon.", error);
+    dragPreviewIconPromises[iconType] = (async () => {
+      const svgElement = cardElement.querySelector("svg");
+
+      if (!(svgElement instanceof SVGSVGElement)) {
+        return null;
+      }
+
+      const pngBytes = await svgToPngBytes(svgElement);
+      const cacheDir = await appCacheDir();
+      const iconPath = await join(cacheDir, `filmwave-drag-${iconType}.png`);
+
+      await writeFile(iconPath, pngBytes);
+
+      return iconPath;
+    })().catch((error) => {
+      console.warn("Could not create drag preview icon.", error);
       return null;
     });
   }
@@ -387,7 +463,7 @@ async function handleNodeDragStart(
   }
 
   const localPath = getProjectNodeLocalPath({ node, project, syncFolder });
-  const icon = await getDragPreviewIcon(node.type);
+  const icon = await getDragPreviewIcon(event.currentTarget, node.type);
 
   if (!icon) {
     console.error(
