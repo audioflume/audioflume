@@ -12,45 +12,8 @@ fn watchers() -> &'static Mutex<HashMap<String, RecommendedWatcher>> {
     WATCHERS.get_or_init(|| Mutex::new(HashMap::new()))
 }
 
-static DRAG_SOURCE_CLASS: OnceLock<usize> = OnceLock::new();
-
-#[cfg(target_os = "macos")]
-fn get_drag_source_class() -> *const objc::runtime::Class {
-    use objc::{
-        declare::ClassDecl,
-        runtime::{Class, Object, Sel},
-        sel, sel_impl,
-    };
-    use cocoa::base::id;
-
-    let addr = DRAG_SOURCE_CLASS.get_or_init(|| {
-        let superclass = Class::get("NSObject").expect("NSObject must exist");
-        let mut decl =
-            ClassDecl::new("FWFileDragSource", superclass).expect("class name must be unique");
-
-        // NSDraggingSource required method — return NSDragOperationEvery so
-        // all external drop targets (Finder windows, Desktop) accept the drag.
-        extern "C" fn source_operation_mask(
-            _this: &Object,
-            _sel: Sel,
-            _session: id,
-            _context: u64,
-        ) -> u64 {
-            u64::MAX // NSDragOperationEvery
-        }
-
-        unsafe {
-            decl.add_method(
-                sel!(draggingSession:sourceOperationMaskForDraggingContext:),
-                source_operation_mask as extern "C" fn(&Object, Sel, id, u64) -> u64,
-            );
-        }
-
-        decl.register() as *const _ as usize
-    });
-
-    *addr as *const objc::runtime::Class
-}
+// Tracks whether we have already patched WKWebView's drag source operation mask.
+static DRAG_MASK_PATCHED: OnceLock<()> = OnceLock::new();
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -87,6 +50,80 @@ fn open_path(path: String) -> Result<(), String> {
     }
 }
 
+/// Patch WKWebView's NSDraggingSource operation mask to allow external drops.
+///
+/// WKWebView's content view implements `draggingSession:sourceOperationMaskForDraggingContext:`
+/// and returns `NSDragOperationNone` for `NSDraggingContextOutsideApplication`.
+/// This causes the macOS Desktop (an external/Finder drop target) to show a
+/// "no drop" cursor and reject drops from our app.
+///
+/// We replace that method's implementation on WKWebView's actual runtime class
+/// with one that returns `NSDragOperationEvery`, making all external targets —
+/// including the Desktop — accept drops from our drag sessions.
+///
+/// This is a one-time patch applied to the class (not the instance), so it
+/// affects all future drag sessions from this WKWebView. The patch is done
+/// lazily on the first drag and is idempotent.
+#[cfg(target_os = "macos")]
+unsafe fn patch_wkwebview_drag_mask(content_view: cocoa::base::id) {
+    use cocoa::base::id;
+    use objc::{
+        runtime::{Class, Method, Object, Sel},
+        sel, sel_impl,
+    };
+    use std::ffi::CStr;
+
+    // External C functions from the ObjC runtime not exposed by the objc crate.
+    extern "C" {
+        fn object_getClass(obj: id) -> *const Class;
+        fn class_getInstanceMethod(cls: *const Class, sel: Sel) -> *mut Method;
+        fn method_setImplementation(
+            method: *mut Method,
+            imp: extern "C" fn(*mut Object, Sel, id, u64) -> u64,
+        ) -> extern "C" fn(*mut Object, Sel, id, u64) -> u64;
+        fn class_addMethod(
+            cls: *const Class,
+            name: Sel,
+            imp: extern "C" fn(*mut Object, Sel, id, u64) -> u64,
+            types: *const i8,
+        ) -> bool;
+    }
+
+    // The replacement: return NSDragOperationEvery for every dragging context,
+    // including NSDraggingContextOutsideApplication (Desktop / other apps).
+    extern "C" fn drag_mask_every(
+        _this: *mut Object,
+        _sel: Sel,
+        _session: id,
+        _context: u64,
+    ) -> u64 {
+        u64::MAX // NSDragOperationEvery
+    }
+
+    let cls = object_getClass(content_view);
+    if cls.is_null() {
+        return;
+    }
+
+    let target_sel = sel!(draggingSession:sourceOperationMaskForDraggingContext:);
+
+    // Try replacing an existing implementation first.
+    let method = class_getInstanceMethod(cls, target_sel);
+    if !method.is_null() {
+        method_setImplementation(method, drag_mask_every);
+        eprintln!("[fw-drag] patched existing draggingSession:sourceOperationMaskForDraggingContext: on WKWebView class");
+    } else {
+        // The method doesn't exist — add it.
+        // Type encoding: Q (NSUInteger return) @ (self) : (SEL) @ (session) q (NSInteger context)
+        let types = b"Q@:@q\0";
+        let added = class_addMethod(cls, target_sel, drag_mask_every, types.as_ptr() as *const i8);
+        eprintln!(
+            "[fw-drag] added draggingSession:sourceOperationMaskForDraggingContext: to WKWebView class: {}",
+            added
+        );
+    }
+}
+
 #[tauri::command]
 fn start_native_file_drag(
     window: WebviewWindow,
@@ -98,8 +135,8 @@ fn start_native_file_drag(
     #[cfg(target_os = "macos")]
     {
         use cocoa::appkit::NSWindow;
-        use cocoa::base::{id, nil};
-        use cocoa::foundation::{NSAutoreleasePool, NSArray, NSPoint, NSRect, NSSize, NSString};
+        use cocoa::base::{id, nil, NO};
+        use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
         use objc::{class, msg_send, sel, sel_impl};
         use std::path::Path;
 
@@ -108,14 +145,16 @@ fn start_native_file_drag(
         }
 
         let window_clone = window.clone();
-        // AppKit Y origin is bottom-left; JS Y origin is top-left.
         let appkit_x = x;
         let appkit_y = window_height - y;
 
         let _ = window.run_on_main_thread(move || {
             let ns_window = match window_clone.ns_window() {
                 Ok(w) => w as id,
-                Err(e) => { eprintln!("[fw-drag] ns_window error: {}", e); return; }
+                Err(e) => {
+                    eprintln!("[fw-drag] ns_window error: {}", e);
+                    return;
+                }
             };
 
             unsafe {
@@ -126,16 +165,22 @@ fn start_native_file_drag(
                     return;
                 }
 
-                // Use real system uptime — a synthetic event with timestamp 0.0
-                // may be rejected by AppKit as stale.
+                // Patch WKWebView's drag source operation mask once per session.
+                // This makes external drop targets (Finder, Desktop) accept drops.
+                DRAG_MASK_PATCHED.get_or_init(|| {
+                    patch_wkwebview_drag_mask(content_view);
+                });
+
+                // Synthetic NSLeftMouseDown at the coordinates captured in JS.
+                // Avoids the every-other-drag failure caused by NSApp.currentEvent
+                // being stale (mouseUp) by the time async IPC delivers to Rust.
                 let process_info: id = msg_send![class!(NSProcessInfo), processInfo];
                 let timestamp: f64 = msg_send![process_info, systemUptime];
-
                 let mouse_point = NSPoint::new(appkit_x, appkit_y);
                 let window_number: i64 = msg_send![ns_window, windowNumber];
                 let synthetic_event: id = msg_send![
                     class!(NSEvent),
-                    mouseEventWithType: 1_u64   // NSLeftMouseDown = 1
+                    mouseEventWithType: 1_u64
                     location: mouse_point
                     modifierFlags: 0_u64
                     timestamp: timestamp
@@ -151,59 +196,28 @@ fn start_native_file_drag(
                     return;
                 }
 
-                // NSURL provides public.file-url pasteboard type for Finder/Desktop.
                 let path_ns: id = NSString::alloc(nil).init_str(&path);
-                let file_url: id = msg_send![class!(NSURL), fileURLWithPath: path_ns];
-                if file_url == nil {
-                    eprintln!("[fw-drag] could not create file URL");
-                    return;
-                }
 
-                let dragging_item: id = msg_send![class!(NSDraggingItem), alloc];
-                let dragging_item: id =
-                    msg_send![dragging_item, initWithPasteboardWriter: file_url];
-
-                // File's actual Finder icon as the drag preview.
-                let workspace: id = msg_send![class!(NSWorkspace), sharedWorkspace];
-                let icon: id = msg_send![workspace, iconForFile: path_ns];
-                let icon_size = 64.0_f64;
-
-                // setDraggingFrame is in the coordinate system of the view
-                // calling beginDraggingSessionWithItems (content_view).
-                // Centre the 64x64 icon on the cursor.
-                let drag_frame = NSRect::new(
-                    NSPoint::new(appkit_x - icon_size / 2.0, appkit_y - icon_size / 2.0),
-                    NSSize::new(icon_size, icon_size),
+                // dragFile:fromRect:slideBack:event: is the reliable API for
+                // dragging a local file path. It puts NSFilenamesPboardType on
+                // the pasteboard and drives its own event-tracking loop.
+                // slideBack:NO prevents the fly-back animation on cancel.
+                let drag_rect = NSRect::new(
+                    NSPoint::new(appkit_x - 16.0, appkit_y - 16.0),
+                    NSSize::new(32.0, 32.0),
                 );
-                let _: () = msg_send![dragging_item,
-                    setDraggingFrame: drag_frame
-                    contents: icon
-                ];
 
-                let items: id = NSArray::arrayWithObject(nil, dragging_item);
-
-                // FWFileDragSource returns NSDragOperationEvery — this is what
-                // allows external drop targets (Finder, Desktop) to accept drags.
-                // WKWebView's content view returns NSDragOperationNone for external
-                // contexts, which is why Desktop drops failed before.
-                let drag_source_cls = get_drag_source_class();
-                let drag_source: id = msg_send![drag_source_cls, new];
-
-                // Call on content_view so setDraggingFrame coordinates (which
-                // are in content_view space) are interpreted correctly.
-                // Using the overlay NSView caused the "flies in from side" bug
-                // because the frame coordinates were interpreted in the tiny
-                // overlay's local coordinate system.
-                let session: id = msg_send![content_view,
-                    beginDraggingSessionWithItems: items
+                let started: bool = msg_send![content_view,
+                    dragFile: path_ns
+                    fromRect: drag_rect
+                    slideBack: NO
                     event: synthetic_event
-                    source: drag_source
                 ];
 
-                if session == nil {
-                    eprintln!("[fw-drag] beginDraggingSessionWithItems returned nil");
+                if !started {
+                    eprintln!("[fw-drag] dragFile:fromRect:slideBack:event: returned NO");
                 } else {
-                    eprintln!("[fw-drag] drag session started OK at ({:.1}, {:.1})", appkit_x, appkit_y);
+                    eprintln!("[fw-drag] drag started OK");
                 }
             }
         });
