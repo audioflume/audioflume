@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "generate:drag-icons": "node scripts/generate-drag-icons.mjs",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "desktop": "npm --prefix apps/desktop run tauri -- dev",
+    "web": "npm --prefix apps/web run dev"
   },
   "dependencies": {
     "@crabnebula/tauri-plugin-drag": "^2.1.0",
@@ -28,8 +29,6 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
-    "satori": "^0.18.3",
-    "sharp": "^0.34.5",
     "typescript": "~5.8.3",
     "vite": "^7.0.4"
   }
