@@ -349,52 +349,57 @@ function getFileArtist(node: ProjectFileNode) {
     : "Filmwave";
 }
 
-// ─── Drag ghost generation ────────────────────────────────────────────────────
-//
-// Generates a crisp 2x-DPR PNG per dragged node showing a dark pill with the
-// node's icon and display name — matching the existing in-app ghost overlay
-// style but rendered as a native OS drag image so it appears on every drag.
-//
-// Cached per node.id so each unique file/folder gets its own named ghost.
-// Written to the app cache dir as a temp file, which is the path format
-// tauri-plugin-drag accepts.
+const dragPreviewIconPromises: Partial<
+  Record<"folder" | "file", Promise<string | null>>
+> = {};
 
-const GHOST_CACHE = new Map<string, Promise<string | null>>();
-
-// Inline SVG source strings. These are self-contained and safe to serialize
-// to a Blob URL for canvas drawImage without touching the live DOM.
-
-const FOLDER_SVG_SOURCE = `<svg width="62" height="54" viewBox="0 0 62 54" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="fwft" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#3b3b3b"/>
-      <stop offset="1" stop-color="#252525"/>
-    </linearGradient>
-    <linearGradient id="fwfb" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#3a3a3a"/>
-      <stop offset="0.48" stop-color="#242424"/>
-      <stop offset="1" stop-color="#151515"/>
-    </linearGradient>
-  </defs>
-  <path d="M0 10 a4 4 0 0 1 4 -4 h20 a5 5 0 0 1 5 5 v3 H0 Z" fill="url(#fwft)"/>
-  <path d="M4 6.5 h20" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-linecap="round"/>
-  <rect x="0" y="11" width="62" height="43" rx="5" fill="url(#fwfb)"/>
-  <rect x="1" y="12" width="60" height="1.4" rx="0.7" fill="rgba(255,255,255,0.22)"/>
-  <rect x="1" y="52.4" width="60" height="1" rx="0.5" fill="rgba(0,0,0,0.72)"/>
-</svg>`;
-
-// Note fill is a light grey so it reads against the dark ghost background.
-const MUSIC_SVG_SOURCE = `<svg width="48.83" height="66.94" viewBox="0 0 48.83 66.94" xmlns="http://www.w3.org/2000/svg">
-  <path d="M48.62,15.64c-2-9.61-18.89-7.59-19.97-15.64h-3.76v54.49c-2.33-2.42-6.6-4.04-11.5-4.04-7.39,0-13.38,3.69-13.38,8.25s5.99,8.25,13.38,8.25c.15,0,.3-.01.45-.01.16,0,.32.01.49.01,7.91,0,14.32-3.69,14.32-8.25V11.74c3.46,4,12.53,2.97,14.12,7.65.66,1.93-.05,3.81-2.16,6.31l2.43,1.94c3.44-3.95,6.66-6.82,5.59-12Z" fill="rgba(210,210,210,0.9)"/>
-</svg>`;
-
-function loadSvgAsImage(
-  svgSource: string,
-  nativeWidth: number,
-  nativeHeight: number,
-): Promise<HTMLImageElement> {
+function svgToPngBytes(svgElement: SVGSVGElement): Promise<Uint8Array> {
   return new Promise((resolve, reject) => {
-    const blob = new Blob([svgSource], {
+    const iconWrap =
+      svgElement.closest(".project-file-card-icon-wrap") ||
+      svgElement.closest(".project-folder-card-icon-wrap") ||
+      svgElement.closest(".desktop-project-file-icon-wrap") ||
+      svgElement.closest(".desktop-project-folder-icon-wrap") ||
+      svgElement.parentElement;
+
+    if (!(iconWrap instanceof HTMLElement)) {
+      reject(new Error("Could not find icon wrapper."));
+      return;
+    }
+
+    const wrapRect = iconWrap.getBoundingClientRect();
+    const svgRect = svgElement.getBoundingClientRect();
+
+    const isMusicFileIcon =
+      svgElement.closest(".project-file-card-icon-wrap") ||
+      svgElement.closest(".desktop-project-file-icon-wrap");
+
+    const canvasWidth = isMusicFileIcon ? 44 : Math.ceil(wrapRect.width);
+    const canvasHeight = isMusicFileIcon ? 44 : Math.ceil(wrapRect.height);
+
+    const svgWidth = isMusicFileIcon ? 20 : svgRect.width;
+    const svgHeight = isMusicFileIcon ? 20 : svgRect.height;
+
+    const svgX = isMusicFileIcon
+      ? (canvasWidth - svgWidth) / 2
+      : svgRect.left - wrapRect.left;
+
+    const svgY = isMusicFileIcon
+      ? (canvasHeight - svgHeight) / 2
+      : svgRect.top - wrapRect.top;
+
+    const renderScale = 1;
+
+    const clonedSvg = svgElement.cloneNode(true) as SVGSVGElement;
+    const computedStyle = window.getComputedStyle(svgElement);
+
+    clonedSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clonedSvg.setAttribute("width", String(svgWidth));
+    clonedSvg.setAttribute("height", String(svgHeight));
+    clonedSvg.style.color = computedStyle.color;
+
+    const svgString = new XMLSerializer().serializeToString(clonedSvg);
+    const svgBlob = new Blob([svgString], {
       type: "image/svg+xml;charset=utf-8",
     });
     const url = URL.createObjectURL(blob);
@@ -458,7 +463,12 @@ async function generateDragGhostPng(
   ctx.lineTo(ghostWidth - BORDER_RADIUS, 0);
   ctx.quadraticCurveTo(ghostWidth, 0, ghostWidth, BORDER_RADIUS);
   ctx.lineTo(ghostWidth, ghostHeight - BORDER_RADIUS);
-  ctx.quadraticCurveTo(ghostWidth, ghostHeight, ghostWidth - BORDER_RADIUS, ghostHeight);
+  ctx.quadraticCurveTo(
+    ghostWidth,
+    ghostHeight,
+    ghostWidth - BORDER_RADIUS,
+    ghostHeight,
+  );
   ctx.lineTo(BORDER_RADIUS, ghostHeight);
   ctx.quadraticCurveTo(0, ghostHeight, 0, ghostHeight - BORDER_RADIUS);
   ctx.lineTo(0, BORDER_RADIUS);
@@ -555,7 +565,9 @@ async function handleNodeDragStart(
   const icon = await GHOST_CACHE.get(node.id)!;
 
   if (!icon) {
-    console.error("Native file drag failed: ghost icon could not be generated.");
+    console.error(
+      "Native file drag failed: ghost icon could not be generated.",
+    );
     return;
   }
 
