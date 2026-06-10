@@ -353,7 +353,10 @@ const dragPreviewIconPromises: Partial<
   Record<"folder" | "file", Promise<string | null>>
 > = {};
 
-function svgToPngBytes(svgElement: SVGSVGElement, size = 128): Promise<Uint8Array> {
+function svgToPngBytes(
+  svgElement: SVGSVGElement,
+  size = 128,
+): Promise<Uint8Array> {
   return new Promise((resolve, reject) => {
     const clonedSvg = svgElement.cloneNode(true) as SVGSVGElement;
     const computedStyle = window.getComputedStyle(svgElement);
@@ -384,7 +387,59 @@ function svgToPngBytes(svgElement: SVGSVGElement, size = 128): Promise<Uint8Arra
         }
 
         context.clearRect(0, 0, size, size);
-        context.drawImage(image, 0, 0, size, size);
+
+        const isMusicFileIcon =
+          svgElement.closest(".project-file-card-icon-wrap") ||
+          svgElement.closest(".desktop-project-file-icon-wrap");
+
+        if (isMusicFileIcon) {
+          const tileSize = 78;
+          const tileX = (size - tileSize) / 2;
+          const tileY = (size - tileSize) / 2;
+          const radius = 14;
+
+          context.fillStyle = "#f4f4f1";
+          context.strokeStyle = "rgba(0, 0, 0, 0.08)";
+          context.lineWidth = 1;
+
+          context.beginPath();
+          context.moveTo(tileX + radius, tileY);
+          context.lineTo(tileX + tileSize - radius, tileY);
+          context.quadraticCurveTo(
+            tileX + tileSize,
+            tileY,
+            tileX + tileSize,
+            tileY + radius,
+          );
+          context.lineTo(tileX + tileSize, tileY + tileSize - radius);
+          context.quadraticCurveTo(
+            tileX + tileSize,
+            tileY + tileSize,
+            tileX + tileSize - radius,
+            tileY + tileSize,
+          );
+          context.lineTo(tileX + radius, tileY + tileSize);
+          context.quadraticCurveTo(
+            tileX,
+            tileY + tileSize,
+            tileX,
+            tileY + tileSize - radius,
+          );
+          context.lineTo(tileX, tileY + radius);
+          context.quadraticCurveTo(tileX, tileY, tileX + radius, tileY);
+          context.closePath();
+
+          context.fill();
+          context.stroke();
+
+          const noteSize = 54;
+          const noteX = (size - noteSize) / 2;
+          const noteY = (size - noteSize) / 2;
+
+          context.drawImage(image, noteX, noteY, noteSize, noteSize);
+        } else {
+          context.drawImage(image, 0, 0, size, size);
+        }
 
         const pngBlob = await new Promise<Blob>((resolveBlob, rejectBlob) => {
           canvas.toBlob((blob) => {
