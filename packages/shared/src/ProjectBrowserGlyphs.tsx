@@ -14,7 +14,9 @@ import type { CSSProperties } from "react";
  * the CSS box-shadow stack, but is visually very close at icon sizes.
  *
  * The music note uses the user-provided note artwork and inherits the
- * surrounding text color via `currentColor`.
+ * surrounding text color via `currentColor`. The viewBox is padded by half
+ * the 22px stroke width on every side so the stroke is not clipped at the
+ * top/left edges.
  */
 
 type GlyphProps = {
@@ -22,6 +24,12 @@ type GlyphProps = {
   className?: string;
   style?: CSSProperties;
 };
+
+// Padded viewBox: original art is 0 0 302.66 440.13 with a 22px stroke,
+// so we pad 11px (half stroke) on each side to avoid edge clipping.
+const NOTE_VIEWBOX_WIDTH = 302.66 + 22; // 324.66
+const NOTE_VIEWBOX_HEIGHT = 440.13 + 22; // 462.13
+const NOTE_ASPECT = NOTE_VIEWBOX_WIDTH / NOTE_VIEWBOX_HEIGHT;
 
 export function FolderGlyph({ small = false, className, style }: GlyphProps) {
   // Preserve the original footprints: 62x54 (large), 19x16 (small).
@@ -103,11 +111,11 @@ export function FolderGlyph({ small = false, className, style }: GlyphProps) {
 
 export function MusicGlyph({ small = false, className, style }: GlyphProps) {
   // Preserve the original footprints: 44x44 (large), 22x22 (small) box.
-  // The user note is portrait (302.66 x 440.13); fit it within the box
-  // height while keeping aspect ratio.
+  // The user note is portrait; fit it within the box height while keeping
+  // aspect ratio.
   const box = small ? 22 : 44;
   const noteHeight = small ? 14 : 26;
-  const noteWidth = noteHeight * (302.66 / 440.13);
+  const noteWidth = noteHeight * NOTE_ASPECT;
 
   return (
     <span
@@ -127,7 +135,7 @@ export function MusicGlyph({ small = false, className, style }: GlyphProps) {
       <svg
         width={noteWidth}
         height={noteHeight}
-        viewBox="0 0 302.66 440.13"
+        viewBox="-11 -11 324.66 462.13"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
