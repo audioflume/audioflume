@@ -370,13 +370,25 @@ function svgToPngBytes(svgElement: SVGSVGElement): Promise<Uint8Array> {
     const wrapRect = iconWrap.getBoundingClientRect();
     const svgRect = svgElement.getBoundingClientRect();
 
-    const canvasWidth = Math.ceil(wrapRect.width);
-    const canvasHeight = Math.ceil(wrapRect.height);
+    const isMusicFileIcon =
+      svgElement.closest(".project-file-card-icon-wrap") ||
+      svgElement.closest(".desktop-project-file-icon-wrap");
 
-    const svgX = svgRect.left - wrapRect.left;
-    const svgY = svgRect.top - wrapRect.top;
-    const svgWidth = svgRect.width;
-    const svgHeight = svgRect.height;
+    const canvasWidth = isMusicFileIcon ? 44 : Math.ceil(wrapRect.width);
+    const canvasHeight = isMusicFileIcon ? 44 : Math.ceil(wrapRect.height);
+
+    const svgWidth = isMusicFileIcon ? 20 : svgRect.width;
+    const svgHeight = isMusicFileIcon ? 20 : svgRect.height;
+
+    const svgX = isMusicFileIcon
+      ? (canvasWidth - svgWidth) / 2
+      : svgRect.left - wrapRect.left;
+
+    const svgY = isMusicFileIcon
+      ? (canvasHeight - svgHeight) / 2
+      : svgRect.top - wrapRect.top;
+
+    const renderScale = Math.max(2, Math.ceil(window.devicePixelRatio || 1));
 
     const clonedSvg = svgElement.cloneNode(true) as SVGSVGElement;
     const computedStyle = window.getComputedStyle(svgElement);
@@ -397,8 +409,8 @@ function svgToPngBytes(svgElement: SVGSVGElement): Promise<Uint8Array> {
     image.onload = async () => {
       try {
         const canvas = document.createElement("canvas");
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
+        canvas.width = Math.ceil(canvasWidth * renderScale);
+        canvas.height = Math.ceil(canvasHeight * renderScale);
 
         const context = canvas.getContext("2d");
 
@@ -406,11 +418,8 @@ function svgToPngBytes(svgElement: SVGSVGElement): Promise<Uint8Array> {
           throw new Error("Could not create canvas context.");
         }
 
+        context.scale(renderScale, renderScale);
         context.clearRect(0, 0, canvasWidth, canvasHeight);
-
-        const isMusicFileIcon =
-          svgElement.closest(".project-file-card-icon-wrap") ||
-          svgElement.closest(".desktop-project-file-icon-wrap");
 
         if (isMusicFileIcon) {
           const radius = 8;
