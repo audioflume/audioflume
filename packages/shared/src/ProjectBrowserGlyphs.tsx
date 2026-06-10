@@ -108,10 +108,9 @@ export function FolderGlyph({ small = false, className, style }: GlyphProps) {
 
 export function MusicGlyph({ small = false, className, style }: GlyphProps) {
   // Preserve the original footprints: 44x44 (large), 22x22 (small) box.
-  // Note height roughly matches the original ♪ character size
-  // (font-size 20 large / 12 small) so the swap is visually consistent.
+  // Note sits comfortably smaller than the box, similar to the original ♪.
   const box = small ? 22 : 44;
-  const noteHeight = small ? 11 : 20;
+  const noteHeight = small ? 9 : 16;
   const noteWidth = noteHeight * NOTE_ASPECT;
 
   return (
