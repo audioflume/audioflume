@@ -353,17 +353,37 @@ const dragPreviewIconPromises: Partial<
   Record<"folder" | "file", Promise<string | null>>
 > = {};
 
-function svgToPngBytes(
-  svgElement: SVGSVGElement,
-  size = 128,
-): Promise<Uint8Array> {
+function svgToPngBytes(svgElement: SVGSVGElement): Promise<Uint8Array> {
   return new Promise((resolve, reject) => {
+    const iconWrap =
+      svgElement.closest(".project-file-card-icon-wrap") ||
+      svgElement.closest(".project-folder-card-icon-wrap") ||
+      svgElement.closest(".desktop-project-file-icon-wrap") ||
+      svgElement.closest(".desktop-project-folder-icon-wrap") ||
+      svgElement.parentElement;
+
+    if (!(iconWrap instanceof HTMLElement)) {
+      reject(new Error("Could not find icon wrapper."));
+      return;
+    }
+
+    const wrapRect = iconWrap.getBoundingClientRect();
+    const svgRect = svgElement.getBoundingClientRect();
+
+    const canvasWidth = Math.ceil(wrapRect.width);
+    const canvasHeight = Math.ceil(wrapRect.height);
+
+    const svgX = svgRect.left - wrapRect.left;
+    const svgY = svgRect.top - wrapRect.top;
+    const svgWidth = svgRect.width;
+    const svgHeight = svgRect.height;
+
     const clonedSvg = svgElement.cloneNode(true) as SVGSVGElement;
     const computedStyle = window.getComputedStyle(svgElement);
 
     clonedSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    clonedSvg.setAttribute("width", String(size));
-    clonedSvg.setAttribute("height", String(size));
+    clonedSvg.setAttribute("width", String(svgWidth));
+    clonedSvg.setAttribute("height", String(svgHeight));
     clonedSvg.style.color = computedStyle.color;
 
     const svgString = new XMLSerializer().serializeToString(clonedSvg);
@@ -377,8 +397,8 @@ function svgToPngBytes(
     image.onload = async () => {
       try {
         const canvas = document.createElement("canvas");
-        canvas.width = size;
-        canvas.height = size;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
 
         const context = canvas.getContext("2d");
 
@@ -386,60 +406,41 @@ function svgToPngBytes(
           throw new Error("Could not create canvas context.");
         }
 
-        context.clearRect(0, 0, size, size);
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
 
         const isMusicFileIcon =
           svgElement.closest(".project-file-card-icon-wrap") ||
           svgElement.closest(".desktop-project-file-icon-wrap");
 
         if (isMusicFileIcon) {
-          const tileSize = 78;
-          const tileX = (size - tileSize) / 2;
-          const tileY = (size - tileSize) / 2;
-          const radius = 14;
+          const radius = 8;
 
           context.fillStyle = "#f4f4f1";
           context.strokeStyle = "rgba(0, 0, 0, 0.08)";
           context.lineWidth = 1;
 
           context.beginPath();
-          context.moveTo(tileX + radius, tileY);
-          context.lineTo(tileX + tileSize - radius, tileY);
+          context.moveTo(radius, 0);
+          context.lineTo(canvasWidth - radius, 0);
+          context.quadraticCurveTo(canvasWidth, 0, canvasWidth, radius);
+          context.lineTo(canvasWidth, canvasHeight - radius);
           context.quadraticCurveTo(
-            tileX + tileSize,
-            tileY,
-            tileX + tileSize,
-            tileY + radius,
+            canvasWidth,
+            canvasHeight,
+            canvasWidth - radius,
+            canvasHeight,
           );
-          context.lineTo(tileX + tileSize, tileY + tileSize - radius);
-          context.quadraticCurveTo(
-            tileX + tileSize,
-            tileY + tileSize,
-            tileX + tileSize - radius,
-            tileY + tileSize,
-          );
-          context.lineTo(tileX + radius, tileY + tileSize);
-          context.quadraticCurveTo(
-            tileX,
-            tileY + tileSize,
-            tileX,
-            tileY + tileSize - radius,
-          );
-          context.lineTo(tileX, tileY + radius);
-          context.quadraticCurveTo(tileX, tileY, tileX + radius, tileY);
+          context.lineTo(radius, canvasHeight);
+          context.quadraticCurveTo(0, canvasHeight, 0, canvasHeight - radius);
+          context.lineTo(0, radius);
+          context.quadraticCurveTo(0, 0, radius, 0);
           context.closePath();
 
           context.fill();
           context.stroke();
-
-          const noteSize = 54;
-          const noteX = (size - noteSize) / 2;
-          const noteY = (size - noteSize) / 2;
-
-          context.drawImage(image, noteX, noteY, noteSize, noteSize);
-        } else {
-          context.drawImage(image, 0, 0, size, size);
         }
+
+        context.drawImage(image, svgX, svgY, svgWidth, svgHeight);
 
         const pngBlob = await new Promise<Blob>((resolveBlob, rejectBlob) => {
           canvas.toBlob((blob) => {
