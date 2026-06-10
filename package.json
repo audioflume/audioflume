@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "generate:drag-icons": "node scripts/generate-drag-icons.mjs",
-    "tauri": "npm run generate:drag-icons && tauri"
+    "tauri": "tauri"
   },
   "dependencies": {
     "@crabnebula/tauri-plugin-drag": "^2.1.0",
