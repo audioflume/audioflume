@@ -13,10 +13,8 @@ import type { CSSProperties } from "react";
  * to mimic the inset bevel). It is not a pixel-identical reproduction of
  * the CSS box-shadow stack, but is visually very close at icon sizes.
  *
- * The music note uses the user-provided note artwork and inherits the
- * surrounding text color via `currentColor`. The viewBox is padded by half
- * the 22px stroke width on every side so the stroke is not clipped at the
- * top/left edges.
+ * The music note uses the user-provided note artwork (a filled path) and
+ * inherits the surrounding text color via `currentColor`.
  */
 
 type GlyphProps = {
@@ -25,10 +23,9 @@ type GlyphProps = {
   style?: CSSProperties;
 };
 
-// Padded viewBox: original art is 0 0 302.66 440.13 with a 22px stroke,
-// so we pad 11px (half stroke) on each side to avoid edge clipping.
-const NOTE_VIEWBOX_WIDTH = 302.66 + 22; // 324.66
-const NOTE_VIEWBOX_HEIGHT = 440.13 + 22; // 462.13
+// User-provided eighth-note artwork.
+const NOTE_VIEWBOX_WIDTH = 48.83;
+const NOTE_VIEWBOX_HEIGHT = 66.94;
 const NOTE_ASPECT = NOTE_VIEWBOX_WIDTH / NOTE_VIEWBOX_HEIGHT;
 
 export function FolderGlyph({ small = false, className, style }: GlyphProps) {
@@ -111,7 +108,7 @@ export function FolderGlyph({ small = false, className, style }: GlyphProps) {
 
 export function MusicGlyph({ small = false, className, style }: GlyphProps) {
   // Preserve the original footprints: 44x44 (large), 22x22 (small) box.
-  // The user note is portrait; fit it within the box height while keeping
+  // The note is portrait; fit it within the box height while keeping
   // aspect ratio.
   const box = small ? 22 : 44;
   const noteHeight = small ? 14 : 26;
@@ -135,28 +132,13 @@ export function MusicGlyph({ small = false, className, style }: GlyphProps) {
       <svg
         width={noteWidth}
         height={noteHeight}
-        viewBox="-11 -11 324.66 462.13"
-        fill="none"
+        viewBox="0 0 48.83 66.94"
+        fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
         focusable="false"
       >
-        <line
-          x1="11"
-          y1="440.13"
-          x2="11"
-          y2="13.68"
-          stroke="currentColor"
-          strokeWidth="22"
-          strokeMiterlimit="10"
-        />
-        <polygon
-          points="11 235.89 291.66 174.16 291.66 75.41 11 13.68 11 235.89"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="22"
-          strokeMiterlimit="10"
-        />
+        <path d="M48.62,15.64c-2-9.61-18.89-7.59-19.97-15.64h-3.76v54.49c-2.33-2.42-6.6-4.04-11.5-4.04-7.39,0-13.38,3.69-13.38,8.25s5.99,8.25,13.38,8.25c.15,0,.3-.01.45-.01.16,0,.32.01.49.01,7.91,0,14.32-3.69,14.32-8.25V11.74c3.46,4,12.53,2.97,14.12,7.65.66,1.93-.05,3.81-2.16,6.31l2.43,1.94c3.44-3.95,6.66-6.82,5.59-12Z" />
       </svg>
     </span>
   );
