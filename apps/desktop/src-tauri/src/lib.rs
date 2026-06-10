@@ -12,8 +12,6 @@ fn watchers() -> &'static Mutex<HashMap<String, RecommendedWatcher>> {
     WATCHERS.get_or_init(|| Mutex::new(HashMap::new()))
 }
 
-/// Class pointer stored as usize so it is Send + Sync.
-/// The class is registered once and lives for the process lifetime.
 static DRAG_SOURCE_CLASS: OnceLock<usize> = OnceLock::new();
 
 #[cfg(target_os = "macos")]
@@ -21,7 +19,7 @@ fn get_drag_source_class() -> *const objc::runtime::Class {
     use objc::{
         declare::ClassDecl,
         runtime::{Class, Object, Sel},
-        sel, sel_impl, // sel_impl must be in scope for the sel! macro to expand
+        sel, sel_impl,
     };
     use cocoa::base::id;
 
@@ -30,12 +28,6 @@ fn get_drag_source_class() -> *const objc::runtime::Class {
         let mut decl =
             ClassDecl::new("FWFileDragSource", superclass).expect("class name must be unique");
 
-        // NSDraggingSource required method:
-        // - (NSDragOperation)draggingSession:(NSDraggingSession *)session
-        //        sourceOperationMaskForDraggingContext:(NSDraggingContext)context
-        //
-        // Return NSDragOperationEvery (u64::MAX) so all drop targets including
-        // Finder's Desktop accept the drag.
         extern "C" fn source_operation_mask(
             _this: &Object,
             _sel: Sel,
@@ -93,20 +85,6 @@ fn open_path(path: String) -> Result<(), String> {
     }
 }
 
-/// Start a native macOS file drag-out.
-///
-/// `x` / `y` are `clientX` / `clientY` from the JS drag event (logical px).
-/// `window_height` is `window.innerHeight`.
-///
-/// Two key fixes vs previous attempts:
-///
-/// 1. Synthetic NSLeftMouseDown — avoids the every-other-drag failure caused
-///    by NSApp.currentEvent being stale (mouseUp) by the time async IPC delivers.
-///
-/// 2. FWFileDragSource as NSDraggingSource — WKWebView's content view returns
-///    NSDragOperationNone for external contexts, which is why Finder/Desktop
-///    never accepted the drop. Our NSObject subclass returns NSDragOperationEvery.
-///    NSURL-backed NSDraggingItem provides public.file-url for Finder.
 #[tauri::command]
 fn start_native_file_drag(
     window: WebviewWindow,
@@ -129,13 +107,13 @@ fn start_native_file_drag(
 
         let window_clone = window.clone();
         let appkit_x = x;
-        let appkit_y = window_height - y; // flip Y: JS top-left → AppKit bottom-left
+        let appkit_y = window_height - y;
 
         let _ = window.run_on_main_thread(move || {
             let ns_window = match window_clone.ns_window() {
                 Ok(w) => w as id,
                 Err(e) => {
-                    eprintln!("start_native_file_drag: ns_window error: {}", e);
+                    eprintln!("[fw-drag] ns_window error: {}", e);
                     return;
                 }
             };
@@ -144,11 +122,15 @@ fn start_native_file_drag(
                 let _pool = NSAutoreleasePool::new(nil);
                 let content_view: id = ns_window.contentView();
                 if content_view == nil {
-                    eprintln!("start_native_file_drag: no content view");
+                    eprintln!("[fw-drag] no content view");
                     return;
                 }
 
-                // ── Synthetic NSLeftMouseDown ──────────────────────────────
+                // Use real system uptime as the event timestamp — a synthetic
+                // event with timestamp 0.0 may be rejected by AppKit as stale.
+                let process_info: id = msg_send![class!(NSProcessInfo), processInfo];
+                let timestamp: f64 = msg_send![process_info, systemUptime];
+
                 let mouse_point = NSPoint::new(appkit_x, appkit_y);
                 let window_number: i64 = msg_send![ns_window, windowNumber];
                 let synthetic_event: id = msg_send![
@@ -156,7 +138,7 @@ fn start_native_file_drag(
                     mouseEventWithType: 1_u64   // NSLeftMouseDown = 1
                     location: mouse_point
                     modifierFlags: 0_u64
-                    timestamp: 0.0_f64
+                    timestamp: timestamp
                     windowNumber: window_number
                     context: nil
                     eventNumber: 0_i64
@@ -165,20 +147,19 @@ fn start_native_file_drag(
                 ];
 
                 if synthetic_event == nil {
-                    eprintln!("start_native_file_drag: could not create synthetic event");
+                    eprintln!("[fw-drag] could not create synthetic event");
                     return;
                 }
+                eprintln!("[fw-drag] synthetic event created at ({:.1}, {:.1}) ts={:.3}", appkit_x, appkit_y, timestamp);
 
-                // ── NSURL file URL ─────────────────────────────────────────
+                // NSURL provides public.file-url pasteboard type for Finder.
                 let path_ns: id = NSString::alloc(nil).init_str(&path);
                 let file_url: id = msg_send![class!(NSURL), fileURLWithPath: path_ns];
-
                 if file_url == nil {
-                    eprintln!("start_native_file_drag: could not create file URL");
+                    eprintln!("[fw-drag] could not create file URL");
                     return;
                 }
 
-                // ── NSDraggingItem ─────────────────────────────────────────
                 let dragging_item: id = msg_send![class!(NSDraggingItem), alloc];
                 let dragging_item: id =
                     msg_send![dragging_item, initWithPasteboardWriter: file_url];
@@ -186,7 +167,6 @@ fn start_native_file_drag(
                 // File's actual Finder icon as drag preview.
                 let workspace: id = msg_send![class!(NSWorkspace), sharedWorkspace];
                 let icon: id = msg_send![workspace, iconForFile: path_ns];
-
                 let icon_size = 64.0_f64;
                 let drag_frame = NSRect::new(
                     NSPoint::new(appkit_x - icon_size / 2.0, appkit_y - icon_size / 2.0),
@@ -199,15 +179,37 @@ fn start_native_file_drag(
 
                 let items: id = NSArray::arrayWithObject(nil, dragging_item);
 
-                // ── FWFileDragSource ───────────────────────────────────────
+                // FWFileDragSource returns NSDragOperationEvery so external
+                // drop targets (Finder, Desktop) accept the drag.
                 let drag_source_cls = get_drag_source_class();
                 let drag_source: id = msg_send![drag_source_cls, new];
 
-                let _session: id = msg_send![content_view,
+                // Try initiating from a plain NSView added to the window.
+                // WKWebView may intercept beginDraggingSessionWithItems when
+                // called on its own content view — a separate plain NSView
+                // bypasses that.
+                let overlay: id = msg_send![class!(NSView), alloc];
+                let overlay_frame = NSRect::new(
+                    NSPoint::new(appkit_x - 1.0, appkit_y - 1.0),
+                    NSSize::new(2.0, 2.0),
+                );
+                let overlay: id = msg_send![overlay, initWithFrame: overlay_frame];
+                let _: () = msg_send![content_view, addSubview: overlay];
+
+                let session: id = msg_send![overlay,
                     beginDraggingSessionWithItems: items
                     event: synthetic_event
                     source: drag_source
                 ];
+
+                if session == nil {
+                    eprintln!("[fw-drag] beginDraggingSessionWithItems returned nil — drag failed to start");
+                } else {
+                    eprintln!("[fw-drag] drag session started OK");
+                }
+
+                // Remove the overlay; the drag session continues independently.
+                let _: () = msg_send![overlay, removeFromSuperview];
             }
         });
 
