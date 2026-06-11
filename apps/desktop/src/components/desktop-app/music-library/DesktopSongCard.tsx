@@ -26,6 +26,24 @@ const SONG_CARD_DROPDOWN_COLLISION_PADDING = {
   left: 16,
 };
 
+function getDesktopSongDisplayMeta(song: DesktopMusicSong) {
+  const title = song.title.trim() || "Untitled Song";
+  const artist = song.artist.trim() || "Unknown Artist";
+
+  if (artist.toLowerCase() !== "filmwave" || !title.includes(" - ")) {
+    return { title, artist };
+  }
+
+  const [songTitle, ...artistParts] = title.split(" - ");
+  const parsedTitle = songTitle.trim();
+  const parsedArtist = artistParts.join(" - ").trim();
+
+  return {
+    title: parsedTitle || title,
+    artist: parsedArtist || artist,
+  };
+}
+
 type SongSyncStatus = "idle" | "syncing" | "synced" | "error";
 
 export default function DesktopSongCard({
@@ -68,6 +86,7 @@ export default function DesktopSongCard({
   const songDragStartRef = useRef<{ x: number; y: number; started: boolean } | null>(null);
   const visibleGenres = [song.genre, song.mood].filter(Boolean).join(", ");
   const isSynced = syncStatus === "synced" && Boolean(syncedPath);
+  const displayMeta = useMemo(() => getDesktopSongDisplayMeta(song), [song]);
   const normalizedSelectedCuePointTypes = useMemo(
     () => selectedCuePointTypes.map(normalizeEditPointType),
     [selectedCuePointTypes],
@@ -148,13 +167,13 @@ export default function DesktopSongCard({
           <img src={song.coverArt} alt="" className="desktop-song-cover-image" draggable={false} />
         ) : (
           <span className="desktop-song-cover-text">
-            {song.title.slice(0, 1).toUpperCase()}
+            {displayMeta.title.slice(0, 1).toUpperCase()}
           </span>
         )
       }
       playOverlay={isPlaying ? <PauseIcon /> : <PlayIcon />}
-      title={song.title}
-      artist={song.artist}
+      title={displayMeta.title}
+      artist={displayMeta.artist}
       stems={
         <SongCardStemsSlot
           stems={song.stems}
@@ -169,7 +188,7 @@ export default function DesktopSongCard({
           progress={visualProgress}
           onSeek={handleWaveformSeek}
           overlay={markerOverlay}
-          ariaLabel={`Seek ${song.title}`}
+          ariaLabel={`Seek ${displayMeta.title}`}
         />
       }
       duration={song.duration}
