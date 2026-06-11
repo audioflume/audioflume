@@ -49,15 +49,6 @@ fn open_path(path: String) -> Result<(), String> {
     }
 }
 
-/// Patch WKWebView's drag source operation masks so external drop targets
-/// (Finder windows, Desktop) accept drags from our app.
-///
-/// dragImage:at:offset:event:pasteboard:source:slideBack: (the method we now use)
-/// calls draggingSourceOperationMaskForLocal: on the `source` object we pass.
-/// We pass `content_view` as the source, so we need the method on its class.
-///
-/// NSView's default implementation returns NSDragOperationNone for isLocal=NO
-/// (external contexts). We patch it to return NSDragOperationEvery.
 #[cfg(target_os = "macos")]
 unsafe fn patch_wkwebview_drag_masks(content_view: cocoa::base::id) {
     use cocoa::base::id;
@@ -81,7 +72,7 @@ unsafe fn patch_wkwebview_drag_masks(content_view: cocoa::base::id) {
         ) -> bool;
     }
 
-    extern "C" fn drag_mask_every(
+    extern "C" fn drag_mask_local(
         _this: *mut Object,
         _sel: Sel,
         _is_local: u8,
@@ -90,17 +81,19 @@ unsafe fn patch_wkwebview_drag_masks(content_view: cocoa::base::id) {
     }
 
     let cls = object_getClass(content_view);
-    if cls.is_null() { return; }
+    if cls.is_null() {
+        eprintln!("[fw-drag] patch: could not get class");
+        return;
+    }
 
-    let sel = sel!(draggingSourceOperationMaskForLocal:);
-    let types = b"Q@:c\0"; // NSUInteger return, self, SEL, BOOL arg
-
-    let method = class_getInstanceMethod(cls, sel);
-    if !method.is_null() {
-        method_setImplementation(method, drag_mask_every);
+    let old_sel = sel!(draggingSourceOperationMaskForLocal:);
+    let old_types = b"Q@:c\0";
+    let old_method = class_getInstanceMethod(cls, old_sel);
+    if !old_method.is_null() {
+        method_setImplementation(old_method, drag_mask_local);
         eprintln!("[fw-drag] replaced draggingSourceOperationMaskForLocal: on WKWebView class");
     } else {
-        let added = class_addMethod(cls, sel, drag_mask_every, types.as_ptr() as *const i8);
+        let added = class_addMethod(cls, old_sel, drag_mask_local, old_types.as_ptr() as *const i8);
         eprintln!("[fw-drag] added draggingSourceOperationMaskForLocal: to WKWebView class: {}", added);
     }
 }
@@ -117,7 +110,7 @@ fn start_native_file_drag(
     {
         use cocoa::appkit::NSWindow;
         use cocoa::base::{id, nil, NO};
-        use cocoa::foundation::{NSAutoreleasePool, NSArray, NSPoint, NSSize, NSString};
+        use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
         use objc::{class, msg_send, sel, sel_impl};
         use std::path::Path;
 
@@ -132,7 +125,10 @@ fn start_native_file_drag(
         let _ = window.run_on_main_thread(move || {
             let ns_window = match window_clone.ns_window() {
                 Ok(w) => w as id,
-                Err(e) => { eprintln!("[fw-drag] ns_window error: {}", e); return; }
+                Err(e) => {
+                    eprintln!("[fw-drag] ns_window error: {}", e);
+                    return;
+                }
             };
 
             unsafe {
@@ -143,12 +139,10 @@ fn start_native_file_drag(
                     return;
                 }
 
-                // Patch once per session: makes external drop targets accept drags.
                 DRAG_MASK_PATCHED.get_or_init(|| {
                     patch_wkwebview_drag_masks(content_view);
                 });
 
-                // Synthetic NSLeftMouseDown at JS-captured cursor position.
                 let process_info: id = msg_send![class!(NSProcessInfo), processInfo];
                 let timestamp: f64 = msg_send![process_info, systemUptime];
                 let mouse_point = NSPoint::new(appkit_x, appkit_y);
@@ -165,6 +159,7 @@ fn start_native_file_drag(
                     clickCount: 1_i64
                     pressure: 1.0_f32
                 ];
+
                 if synthetic_event == nil {
                     eprintln!("[fw-drag] could not create synthetic event");
                     return;
@@ -172,47 +167,23 @@ fn start_native_file_drag(
 
                 let path_ns: id = NSString::alloc(nil).init_str(&path);
 
-                // Build a pasteboard with BOTH the old string type AND the modern
-                // public.file-url type. dragFile: only writes NSFilenamesPboardType
-                // (string paths), which macOS 13+ Desktop may reject. We use
-                // dragImage:at:offset:event:pasteboard:source:slideBack: so we
-                // can supply our own pasteboard with NSURL (public.file-url).
-                let pasteboard: id = msg_send![class!(NSPasteboard), pasteboardWithUniqueName];
-                let _: i64 = msg_send![pasteboard, clearContents];
+                let drag_rect = NSRect::new(
+                    NSPoint::new(appkit_x - 16.0, appkit_y - 16.0),
+                    NSSize::new(32.0, 32.0),
+                );
 
-                // public.file-url via NSURL.writeObjects — Finder's modern type.
-                let file_url: id = msg_send![class!(NSURL), fileURLWithPath: path_ns];
-                let url_array: id = NSArray::arrayWithObject(nil, file_url);
-                let wrote_url: bool = msg_send![pasteboard, writeObjects: url_array];
-                eprintln!("[fw-drag] wrote public.file-url: {}", wrote_url);
-
-                // NSFilenamesPboardType — backwards compat for older drop targets.
-                let old_type: id = NSString::alloc(nil).init_str("NSFilenamesPboardType");
-                let filenames: id = NSArray::arrayWithObject(nil, path_ns);
-                let _: bool = msg_send![pasteboard, setPropertyList: filenames forType: old_type];
-
-                // Use the file's Finder icon as the drag image.
-                let workspace: id = msg_send![class!(NSWorkspace), sharedWorkspace];
-                let icon: id = msg_send![workspace, iconForFile: path_ns];
-
-                // dragImage:at:offset:event:pasteboard:source:slideBack: lets us
-                // provide the custom pasteboard and use content_view (with our
-                // patched draggingSourceOperationMaskForLocal:) as the source.
-                // slideBack:NO prevents the fly-back animation on cancel.
-                let drag_loc = NSPoint::new(appkit_x - 16.0, appkit_y - 16.0);
-                let offset = NSSize::new(0.0, 0.0);
-
-                let _: () = msg_send![content_view,
-                    dragImage: icon
-                    at: drag_loc
-                    offset: offset
-                    event: synthetic_event
-                    pasteboard: pasteboard
-                    source: content_view
+                let started: bool = msg_send![content_view,
+                    dragFile: path_ns
+                    fromRect: drag_rect
                     slideBack: NO
+                    event: synthetic_event
                 ];
 
-                eprintln!("[fw-drag] drag started");
+                if !started {
+                    eprintln!("[fw-drag] dragFile:fromRect:slideBack:event: returned NO");
+                } else {
+                    eprintln!("[fw-drag] drag started OK");
+                }
             }
         });
 
