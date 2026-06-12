@@ -15,6 +15,7 @@
   --bg-control-hover: rgba(255, 255, 255, 0.12);
   --bg-hover: rgba(255, 255, 255, 0.04);
   --bg-hover-strong: rgba(255, 255, 255, 0.08);
+  --filmwave-chrome-surface: var(--bg-tertiary);
   --filmwave-square-icon-hover-bg: var(--bg-hover-strong);
   --icon-button-hover: rgba(255, 255, 255, 0.18);
 
