@@ -85,8 +85,10 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 }
 
 html[data-theme="light"] .fw-toolbar-float,
-html.light .fw-toolbar-float {
-  background: var(--bg-primary) !important;
+html.light .fw-toolbar-float,
+html[data-theme="light"] .desktop-app-sidebar,
+html.light .desktop-app-sidebar {
+  background: var(--bg-tertiary) !important;
 }
 
 .fw-toolbar {
