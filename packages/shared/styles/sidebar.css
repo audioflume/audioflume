@@ -10,11 +10,20 @@
   --filmwave-sidebar-y-padding-bottom: 24px;
   --filmwave-sidebar-row-padding-x: 10px;
   --filmwave-sidebar-icon-size: 16px;
+  --filmwave-sidebar-icon-color: #8f8f8f;
+  --filmwave-sidebar-icon-color-active: #ffffff;
+  --filmwave-sidebar-heading-icon-color: #8f8f8f;
   --filmwave-sidebar-label-gap: 10px;
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
   --filmwave-sidebar-float-inset: 12px;
   --filmwave-sidebar-content-gap: 20px;
+}
+
+:where(html.light, html[data-theme="light"]) {
+  --filmwave-sidebar-icon-color: #969696;
+  --filmwave-sidebar-icon-color-active: #111111;
+  --filmwave-sidebar-heading-icon-color: #969696;
 }
 
 /* Narrower sidebar — overrides the app-level width tokens so the panel
@@ -85,7 +94,7 @@ body.sidebar-collapsed .desktop-app-sidebar {
   justify-content: center;
   border: 0;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--filmwave-sidebar-icon-color);
   opacity: 0;
   padding: 0;
   font-family: inherit;
@@ -100,7 +109,7 @@ body.sidebar-collapsed .desktop-app-sidebar {
 }
 
 .desktop-sidebar-collapse-button:hover {
-  color: var(--text-secondary);
+  color: var(--filmwave-sidebar-icon-color-active);
   opacity: 0.55;
 }
 
@@ -181,7 +190,7 @@ body.sidebar-collapsed .desktop-app-sidebar-inner {
   height: var(--filmwave-sidebar-icon-size);
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--filmwave-sidebar-heading-icon-color);
   opacity: 0;
   transform: translateX(-50%) scale(0.9);
   transition:
@@ -190,7 +199,7 @@ body.sidebar-collapsed .desktop-app-sidebar-inner {
 }
 
 .desktop-sidebar-heading-icon.is-visible {
-  opacity: 0.3;
+  opacity: 1;
   transform: translateX(-50%) scale(1);
 }
 
@@ -248,18 +257,19 @@ body.sidebar-collapsed .desktop-sidebar-link {
   flex: 0 0 var(--filmwave-sidebar-icon-size);
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--filmwave-sidebar-icon-color);
+  opacity: 1;
   transition: color 150ms ease;
 }
 
 .desktop-sidebar-link:hover .desktop-sidebar-link-icon,
 .desktop-sidebar-link.is-active .desktop-sidebar-link-icon {
-  color: var(--text-primary);
+  color: var(--filmwave-sidebar-icon-color-active);
 }
 
-/* Icon crispness pass — force all sidebar SVGs to the exact same pixel box
-   and use non-scaling strokes so custom large-viewBox icons do not collapse
-   into hairlines when rendered at 16px. */
+/* Icon clarity pass — keep icons in a consistent box, but do not thicken strokes.
+   Opacity is forced to 1 so inactive icons render as solid grey rather than soft
+   transparent grey. */
 .desktop-sidebar-link-icon svg,
 .desktop-sidebar-heading-icon svg,
 .desktop-sidebar-add-button svg {
@@ -267,14 +277,17 @@ body.sidebar-collapsed .desktop-sidebar-link {
   width: var(--filmwave-sidebar-icon-size);
   height: var(--filmwave-sidebar-icon-size);
   overflow: visible;
-  shape-rendering: geometricPrecision;
 }
 
+.desktop-sidebar-link-icon svg,
 .desktop-sidebar-link-icon svg *,
+.desktop-sidebar-heading-icon svg,
 .desktop-sidebar-heading-icon svg *,
+.desktop-sidebar-add-button svg,
 .desktop-sidebar-add-button svg * {
-  vector-effect: non-scaling-stroke;
-  stroke-width: 2px !important;
+  opacity: 1 !important;
+  fill-opacity: 1 !important;
+  stroke-opacity: 1 !important;
 }
 
 .filmwave-player-controls svg *,
@@ -341,7 +354,7 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   border: 0;
   border-radius: 6px;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--filmwave-sidebar-icon-color);
   padding: 0;
   font-family: inherit;
   transition:
@@ -351,7 +364,7 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
 
 .desktop-sidebar-add-button:hover {
   background: var(--bg-hover-strong);
-  color: var(--text-primary);
+  color: var(--filmwave-sidebar-icon-color-active);
 }
 
 /* Collapsed overrides: only change layout/visibility, not size */
