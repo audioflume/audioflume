@@ -13,40 +13,54 @@ import {
 import type { FilmwaveBpmFilterValue, FilmwaveKeyFilterValue } from "./music";
 
 /* ------------------------------------------------------------------ */
-/* Icons                                                               */
+/* Icons — solid, filled glyphs                                        */
 /* ------------------------------------------------------------------ */
 
 function DefaultSearchIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" aria-hidden="true">
-      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-      <path d="M20 20L16.2 16.2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M10.5 3a7.5 7.5 0 1 0 4.71 13.33l4.13 4.13a1.4 1.4 0 0 0 1.98-1.98l-4.13-4.13A7.5 7.5 0 0 0 10.5 3ZM5.8 10.5a4.7 4.7 0 1 1 9.4 0 4.7 4.7 0 0 1-9.4 0Z"
+      />
     </svg>
   );
 }
 
-function FunnelIcon() {
+/* Mixer faders — replaces the funnel. */
+function FaderIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" aria-hidden="true">
-      <path
-        d="M4 5H20L14 12.5V19L10 17V12.5L4 5Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+      <g fill="currentColor">
+        <rect x="3" y="5.1" width="18" height="1.8" rx="0.9" />
+        <rect x="3" y="11.1" width="18" height="1.8" rx="0.9" />
+        <rect x="3" y="17.1" width="18" height="1.8" rx="0.9" />
+        <circle cx="9" cy="6" r="2.7" />
+        <circle cx="15.5" cy="12" r="2.7" />
+        <circle cx="7" cy="18" r="2.7" />
+      </g>
     </svg>
   );
 }
 
 function ChevronDownIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
       <path
-        d="M6 9L12 15L18 9"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        fill="currentColor"
+        d="M5.3 8.6a1.3 1.3 0 0 1 1.84-.04L12 13.2l4.86-4.64a1.3 1.3 0 0 1 1.8 1.88l-5.76 5.5a1.3 1.3 0 0 1-1.8 0l-5.76-5.5a1.3 1.3 0 0 1-.04-1.84Z"
+      />
+    </svg>
+  );
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8.6 5.3a1.3 1.3 0 0 1 1.84.04l5.5 5.76a1.3 1.3 0 0 1 0 1.8l-5.5 5.76a1.3 1.3 0 0 1-1.88-1.8L13.2 12 8.56 7.14a1.3 1.3 0 0 1 .04-1.84Z"
       />
     </svg>
   );
@@ -54,8 +68,25 @@ function ChevronDownIcon() {
 
 function ClearSearchIcon() {
   return (
+    <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M6.34 4.93 12 10.59l5.66-5.66a1 1 0 1 1 1.41 1.41L13.41 12l5.66 5.66a1 1 0 0 1-1.41 1.41L12 13.41l-5.66 5.66a1 1 0 0 1-1.41-1.41L10.59 12 4.93 6.34a1 1 0 0 1 1.41-1.41Z"
+      />
+    </svg>
+  );
+}
+
+function OptionCheckIcon() {
+  return (
     <svg viewBox="0 0 24 24" width="11" height="11" fill="none" aria-hidden="true">
-      <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <path
+        d="M5 12.5L9.5 17L19 7"
+        stroke="currentColor"
+        strokeWidth="3.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -141,7 +172,7 @@ export function MusicLibraryToolbar({
             aria-expanded={filtersOpen}
             onClick={onToggleFilters}
           >
-            <FunnelIcon />
+            <FaderIcon />
             <span className="fw-toolbar-filters-label">Filters</span>
             {filterCount > 0 && (
               <span
@@ -200,69 +231,46 @@ function toSliderPercent(value: number, min: number, max: number) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Chip group section — large categories collapse behind "+N more" so  */
-/* every section keeps a comparable footprint in the panel.            */
+/* Option list — list rows with check squares instead of chip tiles    */
 /* ------------------------------------------------------------------ */
 
-const GROUP_VISIBLE_LIMIT = 12;
-
-function MusicFilterGroupSection({ group }: { group: MusicFilterChipGroup }) {
-  const [expanded, setExpanded] = useState(false);
-  const collapsible = group.options.length > GROUP_VISIBLE_LIMIT + 2;
-
-  let visibleOptions = group.options;
-
-  if (collapsible && !expanded) {
-    // Keep every selected chip visible, fill the rest up to the limit,
-    // and preserve the original option order so chips never jump around.
-    const selectedSet = new Set(group.selected);
-    const prioritized = [
-      ...group.options.filter((option) => selectedSet.has(option)),
-      ...group.options.filter((option) => !selectedSet.has(option)),
-    ].slice(0, Math.max(GROUP_VISIBLE_LIMIT, group.selected.length));
-    const visibleSet = new Set(prioritized);
-
-    visibleOptions = group.options.filter((option) => visibleSet.has(option));
-  }
-
-  const hiddenCount = group.options.length - visibleOptions.length;
-
+function MusicFilterOptionRow({
+  selected,
+  onToggle,
+  children,
+}: {
+  selected: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
   return (
-    <section className="fw-filter-group">
-      <h3 className="fw-filter-group-label">
-        {group.label}
-        {group.selected.length > 0 && (
-          <span className="fw-filter-group-count">{group.selected.length}</span>
-        )}
-      </h3>
-      <div className="fw-filter-chip-grid">
-        {visibleOptions.map((option) => {
-          const isSelected = group.selected.includes(option);
+    <button
+      type="button"
+      aria-pressed={selected}
+      className={`fw-filter-option${selected ? " is-selected" : ""}`}
+      onClick={onToggle}
+    >
+      <span className="fw-filter-option-check" aria-hidden="true">
+        {selected && <OptionCheckIcon />}
+      </span>
+      <span className="fw-filter-option-label">{children}</span>
+    </button>
+  );
+}
 
-          return (
-            <button
-              key={option}
-              type="button"
-              aria-pressed={isSelected}
-              className={`fw-filter-chip${isSelected ? " is-selected" : ""}`}
-              onClick={() => group.onToggle(option)}
-            >
-              {option}
-            </button>
-          );
-        })}
-        {collapsible && (
-          <button
-            type="button"
-            className="fw-filter-chip fw-filter-chip-more"
-            aria-expanded={expanded}
-            onClick={() => setExpanded((open) => !open)}
-          >
-            {expanded ? "Show less" : `+${hiddenCount} more`}
-          </button>
-        )}
-      </div>
-    </section>
+function MusicFilterOptionList({ group }: { group: MusicFilterChipGroup }) {
+  return (
+    <div className="fw-filter-option-list">
+      {group.options.map((option) => (
+        <MusicFilterOptionRow
+          key={option}
+          selected={group.selected.includes(option)}
+          onToggle={() => group.onToggle(option)}
+        >
+          {option}
+        </MusicFilterOptionRow>
+      ))}
+    </div>
   );
 }
 
@@ -387,19 +395,13 @@ function MusicBpmSection({
     if (event.key === "Enter") event.currentTarget.blur();
   }
 
-  const hasActive = value !== null;
   const activeStart = mode === "range" ? toSliderPercent(low, BPM_MIN, BPM_MAX) : 0;
   const activeEnd = mode === "range"
     ? toSliderPercent(high, BPM_MIN, BPM_MAX)
     : toSliderPercent(exact, BPM_MIN, BPM_MAX);
 
   return (
-    <section className="fw-filter-group">
-      <h3 className="fw-filter-group-label">
-        BPM
-        {hasActive && <span className="fw-filter-group-count">1</span>}
-      </h3>
-
+    <div className="fw-filter-control-stack">
       <div className="fw-segment">
         {(["range", "exact"] as const).map((segmentMode) => (
           <button
@@ -513,7 +515,7 @@ function MusicBpmSection({
           );
         })}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -638,12 +640,7 @@ function MusicDurationSection({
   const activeEnd = toSliderPercent(high, DURATION_MIN, DURATION_MAX);
 
   return (
-    <section className="fw-filter-group">
-      <h3 className="fw-filter-group-label">
-        Duration
-        {hasActive && <span className="fw-filter-group-count">1</span>}
-      </h3>
-
+    <div className="fw-filter-control-stack">
       <div className="fw-duration-summary">
         <span>{formatDurationTime(low)}</span>
         <span className="fw-duration-summary-mid">Range</span>
@@ -689,7 +686,7 @@ function MusicDurationSection({
           );
         })}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -730,15 +727,9 @@ function MusicKeySection({
   }
 
   const accidentals = accidental === "sharp" ? SHARP_ACCIDENTALS : FLAT_ACCIDENTALS;
-  const hasActive = value !== null;
 
   return (
-    <section className="fw-filter-group">
-      <h3 className="fw-filter-group-label">
-        Key
-        {hasActive && <span className="fw-filter-group-count">1</span>}
-      </h3>
-
+    <div className="fw-filter-control-stack">
       <div className="fw-segment">
         {(["sharp", "flat"] as const).map((mode) => (
           <button
@@ -797,7 +788,7 @@ function MusicKeySection({
           </button>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -818,43 +809,30 @@ function MusicPlaylistSection({
   selectedPlaylistId?: string | null;
   onSelect: (playlist: MusicFilterPanelPlaylist | null) => void;
 }) {
+  if (loading) return <div className="fw-filter-empty">Loading playlists…</div>;
+  if (playlists.length === 0) return <div className="fw-filter-empty">No playlists yet</div>;
+
   return (
-    <section className="fw-filter-group">
-      <h3 className="fw-filter-group-label">
-        Playlist
-        {selectedPlaylistId && <span className="fw-filter-group-count">1</span>}
-      </h3>
+    <div className="fw-filter-option-list">
+      {playlists.map((playlist) => {
+        const isSelected = selectedPlaylistId === playlist.id;
 
-      {loading ? (
-        <div className="fw-filter-empty">Loading playlists…</div>
-      ) : playlists.length === 0 ? (
-        <div className="fw-filter-empty">No playlists yet</div>
-      ) : (
-        <div className="fw-filter-chip-grid">
-          {playlists.map((playlist) => {
-            const isSelected = selectedPlaylistId === playlist.id;
-
-            return (
-              <button
-                key={playlist.id}
-                type="button"
-                aria-pressed={isSelected}
-                className={`fw-filter-chip${isSelected ? " is-selected" : ""}`}
-                onClick={() => onSelect(isSelected ? null : playlist)}
-              >
-                {playlist.name}
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </section>
+        return (
+          <MusicFilterOptionRow
+            key={playlist.id}
+            selected={isSelected}
+            onToggle={() => onSelect(isSelected ? null : playlist)}
+          >
+            {playlist.name}
+          </MusicFilterOptionRow>
+        );
+      })}
+    </div>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* Filter panel — masonry columns; sections flow top-to-bottom and     */
-/* pack tightly regardless of how many chips each category has.        */
+/* Filter panel — category rail on the left, options list on the right */
 /* ------------------------------------------------------------------ */
 
 type MusicFilterPanelProps = {
@@ -898,6 +876,33 @@ export function MusicFilterPanel({
   onClearAll,
   onClose,
 }: MusicFilterPanelProps) {
+  const sections: Array<{ id: string; label: string; count: number }> = [
+    ...groups.map((group) => ({
+      id: group.id,
+      label: group.label,
+      count: group.selected.length,
+    })),
+    ...(onSelectPlaylist
+      ? [{ id: "playlist", label: "Playlist", count: selectedPlaylistId ? 1 : 0 }]
+      : []),
+    ...(onDurationsChange
+      ? [{ id: "duration", label: "Duration", count: selectedDurations.length > 0 ? 1 : 0 }]
+      : []),
+    ...(onBpmChange ? [{ id: "bpm", label: "BPM", count: bpmValue ? 1 : 0 }] : []),
+    ...(onKeyChange ? [{ id: "key", label: "Key", count: keyValue ? 1 : 0 }] : []),
+    ...(onToggleMarkers
+      ? [{ id: "display", label: "Display", count: markersActive ? 1 : 0 }]
+      : []),
+  ];
+
+  const [activeSectionId, setActiveSectionId] = useState<string>(sections[0]?.id ?? "");
+
+  useEffect(() => {
+    if (sections.some((section) => section.id === activeSectionId)) return;
+    setActiveSectionId(sections[0]?.id ?? "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groups.length, activeSectionId]);
+
   useEffect(() => {
     if (!open) return;
 
@@ -909,59 +914,96 @@ export function MusicFilterPanel({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [open, onClose]);
 
+  const activeSection = sections.find((section) => section.id === activeSectionId);
+  const activeGroup = groups.find((group) => group.id === activeSectionId);
+
+  function renderDetail() {
+    if (activeGroup) return <MusicFilterOptionList group={activeGroup} />;
+
+    if (activeSectionId === "playlist" && onSelectPlaylist) {
+      return (
+        <MusicPlaylistSection
+          playlists={playlists ?? []}
+          loading={playlistsLoading}
+          selectedPlaylistId={selectedPlaylistId}
+          onSelect={onSelectPlaylist}
+        />
+      );
+    }
+
+    if (activeSectionId === "duration" && onDurationsChange) {
+      return <MusicDurationSection selected={selectedDurations} onChange={onDurationsChange} />;
+    }
+
+    if (activeSectionId === "bpm" && onBpmChange) {
+      return <MusicBpmSection value={bpmValue} onChange={onBpmChange} />;
+    }
+
+    if (activeSectionId === "key" && onKeyChange) {
+      return <MusicKeySection value={keyValue} onChange={onKeyChange} />;
+    }
+
+    if (activeSectionId === "display" && onToggleMarkers) {
+      return (
+        <div className="fw-filter-option-list">
+          <button
+            type="button"
+            disabled={markersDisabled}
+            aria-pressed={markersActive}
+            className={`fw-filter-option${markersActive ? " is-selected" : ""}`}
+            onClick={onToggleMarkers}
+          >
+            <span className="fw-filter-option-check" aria-hidden="true">
+              {markersActive && <OptionCheckIcon />}
+            </span>
+            <span className="fw-filter-option-label">Show cue markers</span>
+          </button>
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   return (
     <div className={`fw-filter-panel-wrap${open ? " is-open" : ""}`} aria-hidden={!open}>
       <div className="fw-filter-panel-reveal">
         <div className="fw-filter-panel">
-          <div className="fw-filter-panel-scroll">
-            <div className="fw-filter-panel-grid">
-              {groups.map((group) => (
-                <MusicFilterGroupSection key={group.id} group={group} />
-              ))}
+          <div className="fw-filter-panel-body">
+            <nav className="fw-filter-rail" aria-label="Filter categories">
+              {sections.map((section) => {
+                const isActive = section.id === activeSectionId;
 
-              {onDurationsChange && (
-                <MusicDurationSection
-                  selected={selectedDurations}
-                  onChange={onDurationsChange}
-                />
-              )}
+                return (
+                  <button
+                    key={section.id}
+                    type="button"
+                    className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
+                    aria-current={isActive}
+                    onClick={() => setActiveSectionId(section.id)}
+                  >
+                    <span className="fw-filter-rail-label">{section.label}</span>
+                    {section.count > 0 && (
+                      <span className="fw-filter-rail-count">{section.count}</span>
+                    )}
+                    <span className="fw-filter-rail-chevron" aria-hidden="true">
+                      <ChevronRightIcon />
+                    </span>
+                  </button>
+                );
+              })}
+            </nav>
 
-              {onBpmChange && (
-                <MusicBpmSection value={bpmValue} onChange={onBpmChange} />
+            <div className="fw-filter-detail">
+              {activeSection && (
+                <h3 className="fw-filter-group-label">
+                  {activeSection.label}
+                  {activeSection.count > 0 && (
+                    <span className="fw-filter-group-count">{activeSection.count}</span>
+                  )}
+                </h3>
               )}
-
-              {onKeyChange && (
-                <MusicKeySection value={keyValue} onChange={onKeyChange} />
-              )}
-
-              {onSelectPlaylist && (
-                <MusicPlaylistSection
-                  playlists={playlists ?? []}
-                  loading={playlistsLoading}
-                  selectedPlaylistId={selectedPlaylistId}
-                  onSelect={onSelectPlaylist}
-                />
-              )}
-
-              {onToggleMarkers && (
-                <section className="fw-filter-group">
-                  <h3 className="fw-filter-group-label">
-                    Display
-                    {markersActive && <span className="fw-filter-group-count">1</span>}
-                  </h3>
-                  <div className="fw-filter-chip-grid">
-                    <button
-                      type="button"
-                      disabled={markersDisabled}
-                      aria-pressed={markersActive}
-                      className={`fw-filter-chip${markersActive ? " is-selected" : ""}`}
-                      onClick={onToggleMarkers}
-                    >
-                      Cue markers
-                    </button>
-                  </div>
-                </section>
-              )}
+              {renderDetail()}
             </div>
           </div>
 
