@@ -71,6 +71,19 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   box-shadow: none !important;
 }
 
+/* ─── Music library sticky toolbar scroll illusion ───────── */
+
+.fw-toolbar-sticky {
+  padding-bottom: 0 !important;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-primary) 0,
+    var(--bg-primary) 58px,
+    transparent 58px,
+    transparent 100%
+  ) !important;
+}
+
 /* ─── Music library integrated pill filter row ───────────── */
 
 .fw-toolbar-float {
