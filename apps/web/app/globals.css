@@ -199,7 +199,7 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 .fw-quick-chip {
   min-height: 0 !important;
   height: 22px !important;
-  border-radius: 7px !important;
+  border-radius: 999px !important;
   padding: 0 8px !important;
   font-size: 10.5px !important;
   font-weight: 400 !important;
@@ -218,7 +218,7 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 
 .fw-quick-end .filmwave-music-sort-button {
   height: 22px !important;
-  border-radius: 7px !important;
+  border-radius: 999px !important;
   padding: 0 8px !important;
   gap: 3px !important;
   font-size: 10.5px !important;
@@ -234,8 +234,8 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 
 .fw-quick-row {
   padding-top: 8px !important;
-  padding-right: var(--fw-music-content-inset-right) !important;
-  padding-left: var(--fw-music-content-inset-left) !important;
+  padding-right: calc(var(--fw-music-content-inset-right) + 10px) !important;
+  padding-left: calc(var(--fw-music-content-inset-left) + 10px) !important;
 }
 
 .fw-quick-row + div > .min-h-0 > .px-8 {
@@ -319,13 +319,37 @@ body > header,
   font-size: 13px !important;
 }
 
+.fw-toolbar-filters-count,
 .fw-toolbar-filters-count.is-clearable,
 .fw-toolbar-filters-count.is-clearable:hover {
+  box-sizing: border-box !important;
+  width: 18px !important;
+  min-width: 18px !important;
+  max-width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  padding: 0 !important;
   transform: none !important;
 }
 
+.fw-toolbar-filters-count-num,
+.fw-toolbar-filters-count-x {
+  width: 100% !important;
+  height: 100% !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
 .fw-toolbar-filters-count-x svg {
-  width: 11px !important;
-  height: 11px !important;
-  transform: scale(1.12);
+  display: none !important;
+}
+
+.fw-toolbar-filters-count-x::before {
+  content: "×";
+  color: currentColor;
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 0.9;
+  transform: translateY(-0.5px);
 }
