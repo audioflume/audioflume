@@ -22,6 +22,8 @@
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
   --fw-music-content-inset: 20px;
+  --fw-music-content-inset-left: 28px;
+  --fw-music-content-inset-right: 20px;
 }
 
 html,
@@ -75,9 +77,9 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 /* ─── Music library sticky toolbar scroll illusion ───────── */
 
 .fw-toolbar-sticky {
-  padding-right: var(--fw-music-content-inset) !important;
+  padding-right: var(--fw-music-content-inset-right) !important;
   padding-bottom: 0 !important;
-  padding-left: var(--fw-music-content-inset) !important;
+  padding-left: var(--fw-music-content-inset-left) !important;
   background: linear-gradient(
     to bottom,
     var(--bg-primary) 0,
@@ -217,18 +219,24 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 /* ─── Music library alignment rail ────────────────────────── */
 
 .fw-quick-row {
-  padding-right: var(--fw-music-content-inset) !important;
-  padding-left: var(--fw-music-content-inset) !important;
+  padding-right: var(--fw-music-content-inset-right) !important;
+  padding-left: var(--fw-music-content-inset-left) !important;
 }
 
 .fw-quick-row + div > .min-h-0 > .px-8 {
-  padding-right: var(--fw-music-content-inset) !important;
-  padding-left: var(--fw-music-content-inset) !important;
+  padding-right: var(--fw-music-content-inset-right) !important;
+  padding-left: var(--fw-music-content-inset-left) !important;
 }
 
 .fw-song-list {
-  margin-right: var(--fw-music-content-inset) !important;
-  margin-left: var(--fw-music-content-inset) !important;
+  margin-right: var(--fw-music-content-inset-right) !important;
+  margin-left: var(--fw-music-content-inset-left) !important;
+}
+
+.fw-song-list .filmwave-song-card,
+.fw-song-list .desktop-song-card,
+.fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+  --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y) !important;
 }
 
 /* ─── Music hero/list spacing cleanup ─────────────────────── */
@@ -260,5 +268,7 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 @media (max-width: 640px) {
   :root {
     --fw-music-content-inset: 12px;
+    --fw-music-content-inset-left: 12px;
+    --fw-music-content-inset-right: 12px;
   }
 }
