@@ -67,7 +67,12 @@ body:has(.filmwave-search-filter-sticky) body > header {
 }
 
 body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar {
-  border-right: 1px solid var(--border);
+  border-color: var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+}
+
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
+  width: 56px;
 }
 
 body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar-inner {
@@ -124,9 +129,9 @@ main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky::before 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-combined-row {
   height: 54px;
   min-height: 54px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  background: var(--bg-primary);
+  background: var(--bg-panel);
   padding: 8px 10px;
   box-shadow: none;
 }
