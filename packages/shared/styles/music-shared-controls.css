@@ -93,23 +93,32 @@
   width: 8px;
   height: 8px;
   flex: 0 0 8px;
-  opacity: 0.9;
+  opacity: 1;
+}
+
+.filmwave-music-player {
+  --filmwave-player-icon-color-opaque: #8f8f8f;
+  --filmwave-player-icon-color-active-opaque: #ffffff;
+}
+
+html.light .filmwave-music-player,
+html[data-theme="light"] .filmwave-music-player {
+  --filmwave-player-icon-color-opaque: #969696;
+  --filmwave-player-icon-color-active-opaque: #111111;
 }
 
 .filmwave-music-player .filmwave-icon-button,
 .filmwave-music-player .filmwave-player-controls button {
-  opacity: 1;
-}
-
-.filmwave-music-player .filmwave-icon-button {
-  color: var(--filmwave-sidebar-icon-color, var(--icon-color));
+  opacity: 1 !important;
+  color: var(--filmwave-player-icon-color-opaque) !important;
 }
 
 .filmwave-music-player .filmwave-icon-button:hover,
 .filmwave-music-player .filmwave-icon-button.is-open,
 .filmwave-music-player .filmwave-icon-button.is-active,
-.filmwave-music-player .filmwave-icon-button[aria-pressed="true"] {
-  color: var(--text-primary);
+.filmwave-music-player .filmwave-icon-button[aria-pressed="true"],
+.filmwave-music-player .filmwave-player-controls button:hover {
+  color: var(--filmwave-player-icon-color-active-opaque) !important;
 }
 
 .filmwave-music-player .filmwave-player-controls svg,
