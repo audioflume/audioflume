@@ -18,6 +18,8 @@
 @import "../../../packages/shared/styles/dropdown-shell.css";
 @import "../../../packages/shared/styles/user-menu.css";
 @import "../../../packages/shared/styles/settings-side-nav.css";
+@import "../../../packages/shared/styles/collapsible-search-pill.css";
+@import "./player-action-overrides.css";
 
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
@@ -256,7 +258,7 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   margin-left: var(--fw-music-content-inset-left) !important;
 }
 
-.fw-quick-row + .grid[aria-hidden="true"] + .fw-song-list {
+.fw-quick-row + div[aria-hidden="true"] + .fw-song-list {
   margin-top: 14px !important;
 }
 
