@@ -196,31 +196,31 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 
 .fw-quick-chip {
   min-height: 0 !important;
-  height: 24px !important;
-  border-radius: 8px !important;
-  padding: 0 9px !important;
-  font-size: 11px !important;
+  height: 22px !important;
+  border-radius: 7px !important;
+  padding: 0 8px !important;
+  font-size: 10.5px !important;
   line-height: 1 !important;
 }
 
 .fw-quick-end .fw-quick-chip {
-  min-width: 28px !important;
+  min-width: 26px !important;
   justify-content: center !important;
-  padding: 0 7px !important;
+  padding: 0 6px !important;
 }
 
 .fw-quick-end .filmwave-music-sort-button {
-  height: 24px !important;
-  border-radius: 8px !important;
-  padding: 0 9px !important;
-  gap: 4px !important;
-  font-size: 11px !important;
+  height: 22px !important;
+  border-radius: 7px !important;
+  padding: 0 8px !important;
+  gap: 3px !important;
+  font-size: 10.5px !important;
   line-height: 1 !important;
 }
 
 .fw-quick-end .filmwave-music-sort-button svg {
-  width: 11px !important;
-  height: 11px !important;
+  width: 10px !important;
+  height: 10px !important;
 }
 
 /* ─── Music library alignment rail ────────────────────────── */
