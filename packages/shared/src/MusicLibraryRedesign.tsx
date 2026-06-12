@@ -6,7 +6,7 @@ import {
   useState,
   type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
-  type MutableRefObject,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
   type Ref,
 } from "react";
@@ -81,6 +81,7 @@ type MusicLibraryToolbarProps = {
   filterCount: number;
   filtersOpen: boolean;
   onToggleFilters: () => void;
+  onClearFilters?: () => void;
   actions?: ReactNode;
   chips?: ReactNode;
   stickyTop?: CSSProperties["top"];
@@ -97,49 +98,13 @@ export function MusicLibraryToolbar({
   filterCount,
   filtersOpen,
   onToggleFilters,
+  onClearFilters,
   actions,
   chips,
   stickyTop,
   className = "",
   children,
 }: MusicLibraryToolbarProps) {
-  const internalSearchRef = useRef<HTMLInputElement | null>(null);
-
-  function setSearchRefs(node: HTMLInputElement | null) {
-    internalSearchRef.current = node;
-
-    if (typeof searchInputRef === "function") {
-      searchInputRef(node);
-      return;
-    }
-
-    if (searchInputRef && "current" in searchInputRef) {
-      (searchInputRef as MutableRefObject<HTMLInputElement | null>).current = node;
-    }
-  }
-
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
-
-      const target = event.target as HTMLElement | null;
-      if (
-        target &&
-        (target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.isContentEditable)
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-      internalSearchRef.current?.focus();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   return (
     <div
       className={`fw-toolbar-sticky${className ? ` ${className}` : ""}`}
@@ -152,15 +117,12 @@ export function MusicLibraryToolbar({
               {searchIcon ?? <DefaultSearchIcon />}
             </span>
             <input
-              ref={setSearchRefs}
+              ref={searchInputRef}
               type="text"
               value={searchValue}
               placeholder={searchPlaceholder}
               onChange={(event) => onSearchChange(event.target.value)}
             />
-            {searchValue.length === 0 && (
-              <kbd className="fw-toolbar-search-kbd" aria-hidden="true">/</kbd>
-            )}
             {searchValue.length > 0 && (
               <button
                 type="button"
@@ -182,7 +144,24 @@ export function MusicLibraryToolbar({
             <FunnelIcon />
             <span className="fw-toolbar-filters-label">Filters</span>
             {filterCount > 0 && (
-              <span className="fw-toolbar-filters-count">{filterCount}</span>
+              <span
+                className={`fw-toolbar-filters-count${onClearFilters ? " is-clearable" : ""}`}
+                role={onClearFilters ? "button" : undefined}
+                aria-label={onClearFilters ? "Clear all filters" : undefined}
+                title={onClearFilters ? "Clear all filters" : undefined}
+                onClick={(event) => {
+                  if (!onClearFilters) return;
+                  event.stopPropagation();
+                  onClearFilters();
+                }}
+              >
+                <span className="fw-toolbar-filters-count-num">{filterCount}</span>
+                {onClearFilters && (
+                  <span className="fw-toolbar-filters-count-x" aria-hidden="true">
+                    <ClearSearchIcon />
+                  </span>
+                )}
+              </span>
             )}
             <span className={`fw-toolbar-filters-chevron${filtersOpen ? " is-open" : ""}`}>
               <ChevronDownIcon />
@@ -201,12 +180,34 @@ export function MusicLibraryToolbar({
 }
 
 /* ------------------------------------------------------------------ */
-/* Native panel sections (BPM / Key / Duration / Playlist / Markers)   */
+/* Shared slider helpers                                               */
+/* ------------------------------------------------------------------ */
+
+function getSliderValueFromMouse(
+  track: HTMLDivElement | null,
+  clientX: number,
+  min: number,
+  max: number,
+) {
+  if (!track) return min;
+  const rect = track.getBoundingClientRect();
+  const percent = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+  return Math.round(min + (percent / 100) * (max - min));
+}
+
+function toSliderPercent(value: number, min: number, max: number) {
+  return ((value - min) / (max - min)) * 100;
+}
+
+/* ------------------------------------------------------------------ */
+/* BPM section — range/exact segmented control, slider, presets        */
 /* ------------------------------------------------------------------ */
 
 const BPM_MIN = 1;
 const BPM_MAX = 300;
 const BPM_PRESETS = [80, 105, 120, 140];
+
+type BpmMode = "range" | "exact";
 
 function MusicBpmSection({
   value,
@@ -215,39 +216,104 @@ function MusicBpmSection({
   value: FilmwaveBpmFilterValue | null;
   onChange: (value: FilmwaveBpmFilterValue | null) => void;
 }) {
-  const [low, setLow] = useState(value?.mode === "range" ? value.low : BPM_MIN);
-  const [high, setHigh] = useState(value?.mode === "range" ? value.high : BPM_MAX);
+  const [mode, setMode] = useState<BpmMode>(value?.mode || "range");
+  const [low, setLow] = useState(value?.low || BPM_MIN);
+  const [high, setHigh] = useState(value?.high || BPM_MAX);
+  const [exact, setExact] = useState(value?.exact || BPM_MIN);
+  const rangeRef = useRef<HTMLDivElement>(null);
+  const modeRef = useRef<BpmMode>(mode);
+  const lowRef = useRef(low);
+  const highRef = useRef(high);
+  const exactRef = useRef(exact);
+
+  useEffect(() => { modeRef.current = mode; }, [mode]);
+  useEffect(() => { lowRef.current = low; }, [low]);
+  useEffect(() => { highRef.current = high; }, [high]);
+  useEffect(() => { exactRef.current = exact; }, [exact]);
 
   useEffect(() => {
-    if (value?.mode === "range") {
-      setLow(value.low);
-      setHigh(value.high);
+    if (!value) {
+      setMode("range"); setLow(BPM_MIN); setHigh(BPM_MAX); setExact(BPM_MIN);
+      modeRef.current = "range"; lowRef.current = BPM_MIN; highRef.current = BPM_MAX; exactRef.current = BPM_MIN;
       return;
     }
-
-    setLow(BPM_MIN);
-    setHigh(BPM_MAX);
+    setMode(value.mode); setLow(value.low); setHigh(value.high); setExact(value.exact);
+    modeRef.current = value.mode; lowRef.current = value.low; highRef.current = value.high; exactRef.current = value.exact;
   }, [value]);
 
-  function applyRange(nextLow: number, nextHigh: number) {
-    const cleanLow = Math.max(
-      BPM_MIN,
-      Math.min(Number.isFinite(nextLow) ? nextLow : BPM_MIN, BPM_MAX - 1),
-    );
-    const cleanHigh = Math.min(
-      BPM_MAX,
-      Math.max(Number.isFinite(nextHigh) ? nextHigh : BPM_MAX, cleanLow + 1),
-    );
-
-    setLow(cleanLow);
-    setHigh(cleanHigh);
-
-    if (cleanLow === BPM_MIN && cleanHigh === BPM_MAX) {
-      onChange(null);
+  function emitChange(
+    nextMode = modeRef.current,
+    nextLow = lowRef.current,
+    nextHigh = highRef.current,
+    nextExact = exactRef.current,
+  ) {
+    if (nextMode === "range" && (nextLow !== BPM_MIN || nextHigh !== BPM_MAX)) {
+      onChange({ mode: nextMode, low: nextLow, high: nextHigh, exact: nextExact });
       return;
     }
+    if (nextMode === "exact" && nextExact !== BPM_MIN) {
+      onChange({ mode: nextMode, low: nextLow, high: nextHigh, exact: nextExact });
+      return;
+    }
+    onChange(null);
+  }
 
-    onChange({ mode: "range", low: cleanLow, high: cleanHigh, exact: BPM_MIN });
+  function startDrag(handle: "low" | "high" | "exact") {
+    function onMove(event: MouseEvent) {
+      const next = getSliderValueFromMouse(rangeRef.current, event.clientX, BPM_MIN, BPM_MAX);
+      if (handle === "low") {
+        const nextLow = Math.min(next, highRef.current - 1);
+        lowRef.current = nextLow; setLow(nextLow);
+        emitChange(modeRef.current, nextLow, highRef.current, exactRef.current);
+        return;
+      }
+      if (handle === "high") {
+        const nextHigh = Math.max(next, lowRef.current + 1);
+        highRef.current = nextHigh; setHigh(nextHigh);
+        emitChange(modeRef.current, lowRef.current, nextHigh, exactRef.current);
+        return;
+      }
+      exactRef.current = next; setExact(next);
+      emitChange(modeRef.current, lowRef.current, highRef.current, next);
+    }
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      emitChange();
+    }
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }
+
+  function applyRangeLow(nextLow: number) {
+    const cleaned = Math.min(Math.max(Number.isFinite(nextLow) ? nextLow : BPM_MIN, BPM_MIN), highRef.current - 1);
+    setLow(cleaned); lowRef.current = cleaned;
+    emitChange("range", cleaned, highRef.current, exactRef.current);
+  }
+
+  function applyRangeHigh(nextHigh: number) {
+    const cleaned = Math.max(Math.min(Number.isFinite(nextHigh) ? nextHigh : BPM_MAX, BPM_MAX), lowRef.current + 1);
+    setHigh(cleaned); highRef.current = cleaned;
+    emitChange("range", lowRef.current, cleaned, exactRef.current);
+  }
+
+  function applyExact(nextExact: number) {
+    const cleaned = Math.min(Math.max(Number.isFinite(nextExact) ? nextExact : BPM_MIN, BPM_MIN), BPM_MAX);
+    setExact(cleaned); exactRef.current = cleaned;
+    emitChange("exact", lowRef.current, highRef.current, cleaned);
+  }
+
+  function switchMode(nextMode: BpmMode) {
+    setMode(nextMode);
+    modeRef.current = nextMode;
+    emitChange(nextMode, lowRef.current, highRef.current, exactRef.current);
+  }
+
+  function handleTrackClick(event: ReactMouseEvent<HTMLDivElement>) {
+    if (modeRef.current !== "exact") return;
+    const next = getSliderValueFromMouse(rangeRef.current, event.clientX, BPM_MIN, BPM_MAX);
+    setExact(next); exactRef.current = next;
+    emitChange("exact", lowRef.current, highRef.current, next);
   }
 
   function blurOnEnter(event: ReactKeyboardEvent<HTMLInputElement>) {
@@ -255,6 +321,10 @@ function MusicBpmSection({
   }
 
   const hasActive = value !== null;
+  const activeStart = mode === "range" ? toSliderPercent(low, BPM_MIN, BPM_MAX) : 0;
+  const activeEnd = mode === "range"
+    ? toSliderPercent(high, BPM_MIN, BPM_MAX)
+    : toSliderPercent(exact, BPM_MIN, BPM_MAX);
 
   return (
     <section className="fw-filter-group">
@@ -263,7 +333,94 @@ function MusicBpmSection({
         {hasActive && <span className="fw-filter-group-count">1</span>}
       </h3>
 
-      <div className="fw-filter-chip-grid">
+      <div className="fw-segment">
+        {(["range", "exact"] as const).map((segmentMode) => (
+          <button
+            key={segmentMode}
+            type="button"
+            className={mode === segmentMode ? "is-active" : ""}
+            onClick={() => switchMode(segmentMode)}
+          >
+            {segmentMode === "range" ? "Range" : "Exact"}
+          </button>
+        ))}
+      </div>
+
+      <div className="fw-filter-bpm-row">
+        {mode === "range" ? (
+          <>
+            <label className="fw-filter-mini-field">
+              <span>Low</span>
+              <input
+                type="number"
+                min={BPM_MIN}
+                max={BPM_MAX}
+                value={low}
+                onChange={(event) => setLow(Number(event.target.value))}
+                onBlur={() => applyRangeLow(low)}
+                onKeyDown={blurOnEnter}
+                className="fw-filter-input"
+              />
+            </label>
+            <span className="fw-filter-bpm-dash" aria-hidden="true">–</span>
+            <label className="fw-filter-mini-field">
+              <span>High</span>
+              <input
+                type="number"
+                min={BPM_MIN}
+                max={BPM_MAX}
+                value={high}
+                onChange={(event) => setHigh(Number(event.target.value))}
+                onBlur={() => applyRangeHigh(high)}
+                onKeyDown={blurOnEnter}
+                className="fw-filter-input"
+              />
+            </label>
+          </>
+        ) : (
+          <label className="fw-filter-mini-field">
+            <span>Exact BPM</span>
+            <input
+              type="number"
+              min={BPM_MIN}
+              max={BPM_MAX}
+              value={exact}
+              onChange={(event) => setExact(Number(event.target.value))}
+              onBlur={() => applyExact(exact)}
+              onKeyDown={blurOnEnter}
+              className="fw-filter-input"
+            />
+          </label>
+        )}
+      </div>
+
+      <div className="fw-range-area">
+        <div ref={rangeRef} className="fw-range-track" onClick={handleTrackClick}>
+          <div
+            className="fw-range-fill"
+            style={{ left: `${activeStart}%`, width: `${Math.max(0, activeEnd - activeStart)}%` }}
+          />
+          {mode === "range" ? (
+            (["low", "high"] as const).map((handle) => (
+              <div
+                key={handle}
+                className="fw-range-handle"
+                style={{ left: `${toSliderPercent(handle === "low" ? low : high, BPM_MIN, BPM_MAX)}%` }}
+                onMouseDown={(event) => { event.preventDefault(); event.stopPropagation(); startDrag(handle); }}
+              />
+            ))
+          ) : (
+            <div
+              className="fw-range-handle"
+              style={{ left: `${toSliderPercent(exact, BPM_MIN, BPM_MAX)}%` }}
+              onMouseDown={(event) => { event.preventDefault(); event.stopPropagation(); startDrag("exact"); }}
+            />
+          )}
+        </div>
+        <div className="fw-range-labels"><span>{BPM_MIN}</span><span>{BPM_MAX}</span></div>
+      </div>
+
+      <div className="fw-filter-chip-grid fw-filter-subrow">
         {BPM_PRESETS.map((preset) => {
           const isSelected = value?.mode === "exact" && value.exact === preset;
 
@@ -273,124 +430,78 @@ function MusicBpmSection({
               type="button"
               aria-pressed={isSelected}
               className={`fw-filter-chip${isSelected ? " is-selected" : ""}`}
-              onClick={() =>
-                onChange(
-                  isSelected
-                    ? null
-                    : { mode: "exact", low: BPM_MIN, high: BPM_MAX, exact: preset },
-                )
-              }
+              onClick={() => {
+                if (isSelected) {
+                  setExact(BPM_MIN); exactRef.current = BPM_MIN;
+                  onChange(null);
+                  return;
+                }
+                setMode("exact"); modeRef.current = "exact";
+                setExact(preset); exactRef.current = preset;
+                emitChange("exact", lowRef.current, highRef.current, preset);
+              }}
             >
               {preset}
             </button>
           );
         })}
       </div>
-
-      <div className="fw-filter-bpm-row">
-        <label className="fw-filter-mini-field">
-          <span>Low</span>
-          <input
-            type="number"
-            min={BPM_MIN}
-            max={BPM_MAX}
-            value={low}
-            onChange={(event) => setLow(Number(event.target.value))}
-            onBlur={() => applyRange(low, high)}
-            onKeyDown={blurOnEnter}
-            className="fw-filter-input"
-          />
-        </label>
-        <span className="fw-filter-bpm-dash" aria-hidden="true">–</span>
-        <label className="fw-filter-mini-field">
-          <span>High</span>
-          <input
-            type="number"
-            min={BPM_MIN}
-            max={BPM_MAX}
-            value={high}
-            onChange={(event) => setHigh(Number(event.target.value))}
-            onBlur={() => applyRange(low, high)}
-            onKeyDown={blurOnEnter}
-            className="fw-filter-input"
-          />
-        </label>
-      </div>
     </section>
   );
 }
 
-const KEY_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+/* ------------------------------------------------------------------ */
+/* Duration section — slider + intent presets                          */
+/* ------------------------------------------------------------------ */
 
-function MusicKeySection({
-  value,
-  onChange,
-}: {
-  value: FilmwaveKeyFilterValue | null;
-  onChange: (value: FilmwaveKeyFilterValue | null) => void;
-}) {
-  const note = value?.note ?? null;
-  const scale = value?.scale ?? null;
-
-  return (
-    <section className="fw-filter-group">
-      <h3 className="fw-filter-group-label">
-        Key
-        {value && <span className="fw-filter-group-count">1</span>}
-      </h3>
-
-      <div className="fw-filter-chip-grid">
-        {KEY_NOTES.map((keyNote) => {
-          const isSelected = note === keyNote;
-
-          return (
-            <button
-              key={keyNote}
-              type="button"
-              aria-pressed={isSelected}
-              className={`fw-filter-chip fw-filter-chip-compact${isSelected ? " is-selected" : ""}`}
-              onClick={() =>
-                onChange(isSelected ? null : { note: keyNote, scale })
-              }
-            >
-              {keyNote}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="fw-filter-chip-grid fw-filter-subrow">
-        {(["major", "minor"] as const).map((scaleMode) => {
-          const isSelected = Boolean(note) && scale === scaleMode;
-
-          return (
-            <button
-              key={scaleMode}
-              type="button"
-              disabled={!note}
-              aria-pressed={isSelected}
-              className={`fw-filter-chip${isSelected ? " is-selected" : ""}`}
-              onClick={() => {
-                if (!note) return;
-                onChange({ note, scale: scale === scaleMode ? null : scaleMode });
-              }}
-            >
-              {scaleMode === "major" ? "Major" : "Minor"}
-            </button>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
+const DURATION_MIN = 0;
+const DURATION_MAX = 300;
 
 const DURATION_INTENTS = [
-  { title: "Short", detail: "<1:00", label: "0:00 - 1:00" },
-  { title: "Quick", detail: "1–2 min", label: "1:00 - 2:00" },
-  { title: "Standard", detail: "2–3 min", label: "2:00 - 3:00" },
-  { title: "Long", detail: "3–4 min", label: "3:00 - 4:00" },
-  { title: "Extended", detail: "4:00+", label: "4:00+" },
+  { title: "Short", detail: "<1:00", low: 0, high: 60 },
+  { title: "Quick", detail: "1–2 min", low: 60, high: 120 },
+  { title: "Standard", detail: "2–3 min", low: 120, high: 180 },
+  { title: "Long", detail: "3–4 min", low: 180, high: 240 },
+  { title: "Extended", detail: "4:00+", low: 240, high: 300 },
 ];
+
+function formatDurationTime(seconds: number) {
+  const clean = Math.max(DURATION_MIN, Math.min(DURATION_MAX, Math.round(seconds)));
+  const mins = Math.floor(clean / 60);
+  const secs = clean % 60;
+  return `${mins}:${String(secs).padStart(2, "0")}`;
+}
+
+function parseDurationTime(value: string) {
+  const [minutes = "0", seconds = "0"] = value.split(":");
+  return Number(minutes) * 60 + Number(seconds);
+}
+
+function formatDurationLabel(low: number, high: number) {
+  if (low === 0 && high === 60) return "0:00 - 1:00";
+  if (low === 60 && high === 120) return "1:00 - 2:00";
+  if (low === 120 && high === 180) return "2:00 - 3:00";
+  if (low === 180 && high === 240) return "3:00 - 4:00";
+  if (low === 240 && high === 300) return "4:00+";
+  if (high === DURATION_MAX) return `${formatDurationTime(low)}+`;
+  return `${formatDurationTime(low)} - ${formatDurationTime(high)}`;
+}
+
+function parseSelectedDuration(selected: string[]) {
+  const first = selected[0];
+  if (!first) return { low: DURATION_MIN, high: DURATION_MAX };
+  if (first === "0:00 - 1:00") return { low: 0, high: 60 };
+  if (first === "1:00 - 2:00") return { low: 60, high: 120 };
+  if (first === "2:00 - 3:00") return { low: 120, high: 180 };
+  if (first === "3:00 - 4:00") return { low: 180, high: 240 };
+  if (first === "4:00+") return { low: 240, high: 300 };
+  if (first.endsWith("+")) return { low: parseDurationTime(first.replace("+", "")), high: DURATION_MAX };
+  if (first.includes(" - ")) {
+    const [lowValue, highValue] = first.split(" - ");
+    return { low: parseDurationTime(lowValue), high: parseDurationTime(highValue) };
+  }
+  return { low: DURATION_MIN, high: DURATION_MAX };
+}
 
 function MusicDurationSection({
   selected,
@@ -399,26 +510,111 @@ function MusicDurationSection({
   selected: string[];
   onChange: (selected: string[]) => void;
 }) {
+  const initial = parseSelectedDuration(selected);
+  const [low, setLow] = useState(initial.low);
+  const [high, setHigh] = useState(initial.high);
+  const rangeRef = useRef<HTMLDivElement>(null);
+  const lowRef = useRef(low);
+  const highRef = useRef(high);
+
+  useEffect(() => { lowRef.current = low; }, [low]);
+  useEffect(() => { highRef.current = high; }, [high]);
+
+  useEffect(() => {
+    const next = parseSelectedDuration(selected);
+    setLow(next.low); setHigh(next.high);
+    lowRef.current = next.low; highRef.current = next.high;
+  }, [selected]);
+
+  function emitChange(nextLow = lowRef.current, nextHigh = highRef.current) {
+    if (nextLow === DURATION_MIN && nextHigh === DURATION_MAX) {
+      onChange([]);
+      return;
+    }
+    onChange([formatDurationLabel(nextLow, nextHigh)]);
+  }
+
+  function startDrag(handle: "low" | "high") {
+    function onMove(event: MouseEvent) {
+      const next = getSliderValueFromMouse(rangeRef.current, event.clientX, DURATION_MIN, DURATION_MAX);
+      if (handle === "low") {
+        const nextLow = Math.min(next, highRef.current - 5);
+        lowRef.current = nextLow; setLow(nextLow); emitChange(nextLow, highRef.current);
+        return;
+      }
+      const nextHigh = Math.max(next, lowRef.current + 5);
+      highRef.current = nextHigh; setHigh(nextHigh); emitChange(lowRef.current, nextHigh);
+    }
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      emitChange();
+    }
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }
+
+  function clear() {
+    setLow(DURATION_MIN); setHigh(DURATION_MAX);
+    lowRef.current = DURATION_MIN; highRef.current = DURATION_MAX;
+    onChange([]);
+  }
+
+  function applyIntent(nextLow: number, nextHigh: number) {
+    setLow(nextLow); setHigh(nextHigh);
+    lowRef.current = nextLow; highRef.current = nextHigh;
+    emitChange(nextLow, nextHigh);
+  }
+
+  const hasActive = selected.length > 0;
+  const activeStart = toSliderPercent(low, DURATION_MIN, DURATION_MAX);
+  const activeEnd = toSliderPercent(high, DURATION_MIN, DURATION_MAX);
+
   return (
     <section className="fw-filter-group">
       <h3 className="fw-filter-group-label">
         Duration
-        {selected.length > 0 && (
-          <span className="fw-filter-group-count">{selected.length}</span>
-        )}
+        {hasActive && <span className="fw-filter-group-count">1</span>}
       </h3>
 
-      <div className="fw-filter-chip-grid">
+      <div className="fw-duration-summary">
+        <span>{formatDurationTime(low)}</span>
+        <span className="fw-duration-summary-mid">Range</span>
+        <span>{high === DURATION_MAX ? `${formatDurationTime(high)}+` : formatDurationTime(high)}</span>
+      </div>
+
+      <div className="fw-range-area">
+        <div ref={rangeRef} className="fw-range-track">
+          <div
+            className="fw-range-fill"
+            style={{ left: `${activeStart}%`, width: `${Math.max(0, activeEnd - activeStart)}%` }}
+          />
+          {(["low", "high"] as const).map((handle) => (
+            <div
+              key={handle}
+              className="fw-range-handle"
+              style={{ left: `${toSliderPercent(handle === "low" ? low : high, DURATION_MIN, DURATION_MAX)}%` }}
+              onMouseDown={(event) => { event.preventDefault(); event.stopPropagation(); startDrag(handle); }}
+            />
+          ))}
+        </div>
+        <div className="fw-range-labels"><span>0:00</span><span>5:00+</span></div>
+      </div>
+
+      <div className="fw-filter-chip-grid fw-filter-subrow">
         {DURATION_INTENTS.map((intent) => {
-          const isSelected = selected[0] === intent.label;
+          const isSelected = low === intent.low && high === intent.high && hasActive;
 
           return (
             <button
-              key={intent.label}
+              key={intent.title}
               type="button"
               aria-pressed={isSelected}
               className={`fw-filter-chip fw-filter-chip-stacked${isSelected ? " is-selected" : ""}`}
-              onClick={() => onChange(isSelected ? [] : [intent.label])}
+              onClick={() => {
+                if (isSelected) { clear(); return; }
+                applyIntent(intent.low, intent.high);
+              }}
             >
               <span>{intent.title}</span>
               <small>{intent.detail}</small>
@@ -429,6 +625,118 @@ function MusicDurationSection({
     </section>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/* Key section — sharp/flat toggle, piano rows, independent scale      */
+/* ------------------------------------------------------------------ */
+
+const SHARP_ACCIDENTALS = ["C#", "D#", null, "F#", "G#", "A#"];
+const FLAT_ACCIDENTALS = ["Db", "Eb", null, "Gb", "Ab", "Bb"];
+const NATURAL_NOTES = ["C", "D", "E", "F", "G", "A", "B"];
+
+function MusicKeySection({
+  value,
+  onChange,
+}: {
+  value: FilmwaveKeyFilterValue | null;
+  onChange: (value: FilmwaveKeyFilterValue | null) => void;
+}) {
+  const [accidental, setAccidental] = useState<"sharp" | "flat">(
+    value?.note?.includes("b") ? "flat" : "sharp",
+  );
+
+  useEffect(() => {
+    if (value?.note) {
+      setAccidental(value.note.includes("b") ? "flat" : "sharp");
+    }
+  }, [value]);
+
+  const note = value?.note ? value.note : null;
+  const scale = value?.scale ?? null;
+
+  function emit(nextNote: string | null, nextScale: "major" | "minor" | null) {
+    if (!nextNote && !nextScale) {
+      onChange(null);
+      return;
+    }
+    onChange({ note: nextNote ?? "", scale: nextScale });
+  }
+
+  const accidentals = accidental === "sharp" ? SHARP_ACCIDENTALS : FLAT_ACCIDENTALS;
+  const hasActive = value !== null;
+
+  return (
+    <section className="fw-filter-group">
+      <h3 className="fw-filter-group-label">
+        Key
+        {hasActive && <span className="fw-filter-group-count">1</span>}
+      </h3>
+
+      <div className="fw-segment">
+        {(["sharp", "flat"] as const).map((mode) => (
+          <button
+            key={mode}
+            type="button"
+            className={accidental === mode ? "is-active" : ""}
+            onClick={() => setAccidental(mode)}
+          >
+            {mode === "sharp" ? "Sharp" : "Flat"}
+          </button>
+        ))}
+      </div>
+
+      <div className="fw-filter-chip-grid fw-filter-subrow">
+        {accidentals.map((keyNote, index) =>
+          keyNote === null ? (
+            <span key={`spacer-${index}`} className="fw-filter-chip fw-filter-chip-compact fw-key-spacer" />
+          ) : (
+            <button
+              key={keyNote}
+              type="button"
+              aria-pressed={note === keyNote}
+              className={`fw-filter-chip fw-filter-chip-compact${note === keyNote ? " is-selected" : ""}`}
+              onClick={() => emit(note === keyNote ? null : keyNote, scale)}
+            >
+              {keyNote}
+            </button>
+          ),
+        )}
+      </div>
+
+      <div className="fw-filter-chip-grid fw-filter-subrow">
+        {NATURAL_NOTES.map((keyNote) => (
+          <button
+            key={keyNote}
+            type="button"
+            aria-pressed={note === keyNote}
+            className={`fw-filter-chip fw-filter-chip-compact${note === keyNote ? " is-selected" : ""}`}
+            onClick={() => emit(note === keyNote ? null : keyNote, scale)}
+          >
+            {keyNote}
+          </button>
+        ))}
+      </div>
+
+      <div className="fw-filter-chip-grid fw-filter-subrow">
+        {(["major", "minor"] as const).map((scaleMode) => (
+          <button
+            key={scaleMode}
+            type="button"
+            aria-pressed={scale === scaleMode}
+            className={`fw-filter-chip${scale === scaleMode ? " is-selected" : ""}`}
+            onClick={() => emit(note, scale === scaleMode ? null : scaleMode)}
+          >
+            {scaleMode === "major" ? "Major" : "Minor"}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Playlist section                                                    */
+/* ------------------------------------------------------------------ */
 
 export type MusicFilterPanelPlaylist = { id: string; name: string };
 
