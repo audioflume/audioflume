@@ -156,8 +156,7 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   color: var(--text-primary);
 }
 
-.fw-toolbar-filters,
-.fw-quick-end .filmwave-music-sort-button {
+.fw-toolbar-filters {
   border-radius: 999px !important;
 }
 
@@ -197,29 +196,37 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 
 .fw-quick-chip {
   min-height: 0 !important;
-  height: 26px !important;
-  padding: 0 10px !important;
-  font-size: 11.5px !important;
+  height: 24px !important;
+  border-radius: 8px !important;
+  padding: 0 9px !important;
+  font-size: 11px !important;
   line-height: 1 !important;
 }
 
+.fw-quick-end .fw-quick-chip {
+  min-width: 28px !important;
+  justify-content: center !important;
+  padding: 0 7px !important;
+}
+
 .fw-quick-end .filmwave-music-sort-button {
-  height: 26px !important;
-  padding: 0 10px !important;
-  gap: 5px !important;
-  font-size: 11.5px !important;
+  height: 24px !important;
+  border-radius: 8px !important;
+  padding: 0 9px !important;
+  gap: 4px !important;
+  font-size: 11px !important;
   line-height: 1 !important;
 }
 
 .fw-quick-end .filmwave-music-sort-button svg {
-  width: 12px !important;
-  height: 12px !important;
+  width: 11px !important;
+  height: 11px !important;
 }
 
 /* ─── Music library alignment rail ────────────────────────── */
 
 .fw-quick-row {
-  padding-top: 14px !important;
+  padding-top: 8px !important;
   padding-right: var(--fw-music-content-inset-right) !important;
   padding-left: var(--fw-music-content-inset-left) !important;
 }
