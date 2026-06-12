@@ -1,12 +1,13 @@
-/* Music Library redesign v2 — floating toolbar, native filter panel,
-   open borderless song cards. Relies on theme.css variables. */
+/* Music Library redesign v3 — solid floating toolbar, blurred filter panel,
+   native slider filters, open borderless song cards. */
 
-/* Floating sticky toolbar — transparent gutter, content drifts behind. */
+/* Sticky toolbar — solid page background so scrolling content never shows
+   through the gap between the header and the floating bar. */
 .fw-toolbar-sticky {
   position: sticky;
   top: 56px;
   z-index: var(--filmwave-z-search-filter, 60);
-  background: transparent;
+  background: var(--bg-primary);
   padding: 10px 20px 6px;
 }
 
@@ -14,12 +15,11 @@
   top: 0;
 }
 
+/* Floating filter block — solid subtle grey, rounded, no blur. */
 .fw-toolbar-float {
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  background: color-mix(in srgb, var(--bg-tertiary) 86%, transparent);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: var(--bg-tertiary);
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.16);
   padding: 8px;
 }
@@ -31,7 +31,7 @@
   min-width: 0;
 }
 
-/* Search — pill with icon badge, slash-key hint and accent focus glow. */
+/* Search — pill with icon badge; neutral focus state. */
 .fw-toolbar-search {
   display: flex;
   flex: 1 1 240px;
@@ -44,13 +44,12 @@
   background: var(--bg-control);
   padding: 0 10px 0 6px;
   cursor: text;
-  transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+  transition: background 150ms ease, border-color 150ms ease;
 }
 
 .fw-toolbar-search:focus-within {
-  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  border-color: var(--border-strong);
   background: var(--bg-control-hover);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
 .fw-toolbar-search-icon {
@@ -63,12 +62,11 @@
   border-radius: 999px;
   background: var(--bg-hover-strong);
   color: var(--text-secondary);
-  transition: background 150ms ease, color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .fw-toolbar-search:focus-within .fw-toolbar-search-icon {
-  background: var(--accent);
-  color: var(--accent-contrast, #111111);
+  color: var(--text-primary);
 }
 
 .fw-toolbar-search-icon svg {
@@ -91,26 +89,6 @@
 
 .fw-toolbar-search input::placeholder {
   color: var(--text-muted);
-}
-
-.fw-toolbar-search-kbd {
-  display: inline-flex;
-  height: 20px;
-  min-width: 20px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-muted);
-  font-family: inherit;
-  font-size: 10.5px;
-  line-height: 1;
-  transition: opacity 150ms ease;
-}
-
-.fw-toolbar-search:focus-within .fw-toolbar-search-kbd {
-  opacity: 0;
 }
 
 .fw-toolbar-search-clear {
@@ -168,6 +146,7 @@
   background: var(--bg-control-hover);
 }
 
+/* Count badge — number swaps to an X on hover; clicking clears all filters. */
 .fw-toolbar-filters-count {
   display: inline-flex;
   height: 18px;
@@ -181,6 +160,35 @@
   font-size: 10px;
   font-weight: 600;
   line-height: 1;
+}
+
+.fw-toolbar-filters-count.is-clearable {
+  cursor: pointer;
+}
+
+.fw-toolbar-filters-count-num,
+.fw-toolbar-filters-count-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fw-toolbar-filters-count-x {
+  display: none;
+}
+
+.fw-toolbar-filters-count-x svg {
+  display: block;
+  width: 9px;
+  height: 9px;
+}
+
+.fw-toolbar-filters-count.is-clearable:hover .fw-toolbar-filters-count-num {
+  display: none;
+}
+
+.fw-toolbar-filters-count.is-clearable:hover .fw-toolbar-filters-count-x {
+  display: inline-flex;
 }
 
 .fw-toolbar-filters-chevron {
@@ -222,8 +230,7 @@
   padding: 0 7px 0 11px;
 }
 
-/* Filter panel — floating card below the toolbar; everything is native
-   chips/inputs that wrap, so nothing opens off-screen. */
+/* Filter panel — floating translucent blurred card below the toolbar. */
 .fw-filter-panel-wrap {
   display: grid;
   margin-top: 0;
@@ -251,7 +258,9 @@
   flex-direction: column;
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  background: var(--bg-tertiary);
+  background: color-mix(in srgb, var(--bg-tertiary) 86%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   box-shadow: var(--shadow-ui);
 }
 
@@ -363,9 +372,113 @@
   opacity: 0.7;
 }
 
+.fw-key-spacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .fw-filter-empty {
   color: var(--text-muted);
   font-size: 12px;
+}
+
+/* Segmented control (Range/Exact, Sharp/Flat) */
+.fw-segment {
+  display: flex;
+  width: fit-content;
+  gap: 4px;
+  border-radius: 999px;
+  background: var(--bg-control);
+  padding: 3px;
+}
+
+.fw-segment button {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  padding: 4px 12px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.fw-segment button:hover {
+  color: var(--text-primary);
+}
+
+.fw-segment button.is-active {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+/* Range slider */
+.fw-range-area {
+  margin-top: 14px;
+  padding: 0 6px;
+}
+
+.fw-range-track {
+  position: relative;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--bg-control-hover);
+  cursor: pointer;
+}
+
+.fw-range-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: var(--text-primary);
+}
+
+.fw-range-handle {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--bg-tertiary);
+  border-radius: 999px;
+  background: var(--text-primary);
+  cursor: grab;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.fw-range-handle:active {
+  cursor: grabbing;
+}
+
+.fw-range-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+/* Duration summary row */
+.fw-duration-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.fw-duration-summary-mid {
+  color: var(--text-muted);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* BPM inputs */
@@ -451,8 +564,7 @@
   opacity: 0.85;
 }
 
-/* Quick chips row — genre shortcuts left, shuffle + sort right,
-   all in the same chip style. */
+/* Quick chips row — genre shortcuts left, shuffle + sort right. */
 .fw-quick-row {
   display: flex;
   flex-wrap: wrap;
