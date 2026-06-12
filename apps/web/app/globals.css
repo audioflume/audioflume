@@ -86,7 +86,7 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 
 html[data-theme="light"] .fw-toolbar-float,
 html.light .fw-toolbar-float {
-  background: #f2f2f0 !important;
+  background: var(--bg-primary) !important;
 }
 
 .fw-toolbar {
