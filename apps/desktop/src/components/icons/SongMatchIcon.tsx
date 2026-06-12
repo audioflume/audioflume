@@ -2,7 +2,7 @@ type SongMatchIconProps = {
   size?: number;
 };
 
-export default function SongMatchIcon({ size = 15 }: SongMatchIconProps) {
+export default function SongMatchIcon({ size = 16 }: SongMatchIconProps) {
   return (
     <svg
       width={size}
