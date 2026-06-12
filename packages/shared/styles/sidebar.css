@@ -13,25 +13,30 @@
   --filmwave-sidebar-label-gap: 10px;
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
+  --filmwave-sidebar-float-inset: 12px;
 }
 
+/* Floating sidebar — inset rounded panel on a subtle grey surface,
+   detached from the page edges. */
 .desktop-app-sidebar {
   position: fixed;
-  top: var(--filmwave-sidebar-top-offset);
-  bottom: 0;
-  left: 0;
+  top: calc(var(--filmwave-sidebar-top-offset) + var(--filmwave-sidebar-float-inset));
+  bottom: var(--filmwave-sidebar-float-inset);
+  left: var(--filmwave-sidebar-float-inset);
   z-index: 120;
   display: flex;
-  width: var(--filmwave-sidebar-expanded-width);
+  width: calc(var(--filmwave-sidebar-expanded-width) - (var(--filmwave-sidebar-float-inset) * 2));
   flex-direction: column;
   overflow: hidden;
-  border-right: 1px solid var(--border);
-  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-tertiary);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
   transition: width 200ms ease;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
-  width: var(--filmwave-sidebar-collapsed-width);
+  width: calc(var(--filmwave-sidebar-collapsed-width) - 16px);
 }
 
 .desktop-sidebar-collapse-zone {
@@ -99,8 +104,14 @@
     var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom);
 }
 
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar-inner {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Open feel — sections separated by space, not divider lines. */
 .desktop-sidebar-section {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 0;
   padding-bottom: var(--filmwave-sidebar-section-gap);
 }
 
