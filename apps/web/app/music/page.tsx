@@ -279,7 +279,6 @@ export default function MusicPage() {
         const ids = getPlaylistSongIdsFromResponse(data);
 
         if (cancelled) return;
-
         setPlaylistSongIdsByPlaylistId((current) => ({
           ...current,
           [playlistId]: ids,
@@ -578,7 +577,6 @@ export default function MusicPage() {
           <MusicQuickChipsEnd>
             <MusicQuickChip active={shuffleActive} onClick={setRandomSort}>
               <ShuffleIconSmall size={12} />
-              Shuffle
             </MusicQuickChip>
             <MusicLibrarySortControl
               value={sortOrder}
