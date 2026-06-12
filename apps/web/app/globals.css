@@ -59,6 +59,32 @@ body.sidebar-collapsed aside[data-sidebar] {
 
 /* ─── Web music page polish ───────────────────────────────── */
 
+body:has(.filmwave-search-filter-sticky) {
+  --filmwave-music-sidebar-inset: 10px;
+  --filmwave-music-sidebar-gap: 26px;
+  --filmwave-music-sidebar-expanded-width: calc(
+    var(--filmwave-sidebar-expanded-width) -
+      (var(--filmwave-music-sidebar-inset) * 2)
+  );
+  --filmwave-music-sidebar-collapsed-width: 56px;
+  --filmwave-music-sidebar-current-width: var(
+    --filmwave-music-sidebar-expanded-width
+  );
+  --filmwave-music-content-offset: calc(
+    var(--filmwave-music-sidebar-inset) +
+      var(--filmwave-music-sidebar-current-width) +
+      var(--filmwave-music-sidebar-gap)
+  );
+  --filmwave-music-content-gutter: 28px;
+  --filmwave-music-floating-surface: var(--bg-card);
+}
+
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed {
+  --filmwave-music-sidebar-current-width: var(
+    --filmwave-music-sidebar-collapsed-width
+  );
+}
+
 body:has(.filmwave-search-filter-sticky) .filmwave-app-header,
 body:has(.filmwave-search-filter-sticky) .filmwave-header,
 body:has(.filmwave-search-filter-sticky) body > header {
@@ -67,12 +93,16 @@ body:has(.filmwave-search-filter-sticky) body > header {
 }
 
 body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar {
-  border-color: var(--border-subtle);
-  border-right: 1px solid var(--border-subtle);
+  left: var(--filmwave-music-sidebar-inset);
+  width: var(--filmwave-music-sidebar-current-width);
+  border: 1px solid var(--border-subtle);
+  background: var(--filmwave-music-floating-surface);
 }
 
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
-  width: 56px;
+body:has(.filmwave-search-filter-sticky)
+  .desktop-app-shell.is-sidebar-collapsed
+  .desktop-app-sidebar {
+  width: var(--filmwave-music-sidebar-current-width);
 }
 
 body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar-inner {
@@ -88,31 +118,43 @@ body:has(.filmwave-search-filter-sticky) .desktop-sidebar-link.is-active::before
   display: none;
 }
 
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
-  justify-content: flex-start;
-  padding: 0 var(--filmwave-sidebar-row-padding-x);
+body:has(.filmwave-search-filter-sticky)
+  .desktop-app-shell.is-sidebar-collapsed
+  .desktop-sidebar-link {
+  justify-content: center;
+  padding-right: 0;
+  padding-left: 0;
 }
 
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon {
+body:has(.filmwave-search-filter-sticky)
+  .desktop-app-shell.is-sidebar-collapsed
+  .desktop-sidebar-link-icon {
+  position: static;
   margin: 0;
   opacity: 1;
+  transform: none;
 }
 
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
+body:has(.filmwave-search-filter-sticky)
+  .desktop-app-shell.is-sidebar-collapsed
+  .desktop-sidebar-link-label {
   width: var(--filmwave-sidebar-label-width);
   min-width: var(--filmwave-sidebar-label-width);
   margin-left: var(--filmwave-sidebar-label-gap);
   opacity: 0;
 }
 
-main:has(.filmwave-search-filter-sticky) > section {
-  padding-left: 16px;
+body:has(.filmwave-search-filter-sticky)
+  main:has(.filmwave-search-filter-sticky)
+  > section {
+  margin-left: var(--filmwave-music-content-offset) !important;
   padding-right: 16px;
+  padding-left: 0;
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky {
-  background: var(--bg-primary);
-  padding: 10px 28px 0;
+  background: transparent;
+  padding: 10px var(--filmwave-music-content-gutter) 0;
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky::before {
@@ -131,18 +173,27 @@ main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-combined-row {
   min-height: 54px;
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  background: var(--bg-panel);
+  background: var(--filmwave-music-floating-surface);
   padding: 8px 10px;
   box-shadow: none;
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-quick-row {
   background: var(--bg-primary);
-  padding: 10px 28px 0;
+  padding: 10px var(--filmwave-music-content-gutter) 0;
+}
+
+main:has(.filmwave-search-filter-sticky)
+  .filmwave-search-filter-quick-row
+  + .grid
+  > .min-h-0
+  > .px-8 {
+  padding-right: var(--filmwave-music-content-gutter);
+  padding-left: var(--filmwave-music-content-gutter);
 }
 
 main:has(.filmwave-search-filter-sticky) section > div:has(> .filmwave-song-card) {
-  margin: 12px 28px 0;
+  margin: 12px var(--filmwave-music-content-gutter) 0;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -167,59 +218,4 @@ main:has(.filmwave-search-filter-sticky) .filmwave-song-card.is-current {
 
 main:has(.filmwave-search-filter-sticky) .filmwave-song-cover {
   border-radius: 8px;
-}
-
-/* ─── Music page sidebar/filter alignment refinements ─────── */
-
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed .filmwave-music-library-frame,
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .filmwave-music-library-frame {
-  margin-left: 66px;
-}
-
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
-  position: relative;
-  padding-right: 0;
-  padding-left: 0;
-}
-
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-quick-row + .grid > .min-h-0 > .px-8,
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-quick-row + .grid > .min-h-0 > .px-8 {
-  padding-left: 12px;
-}
-
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed main:has(.filmwave-search-filter-sticky) section > div:has(> .filmwave-song-card),
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed main:has(.filmwave-search-filter-sticky) section > div:has(> .filmwave-song-card) {
-  margin-left: 8px;
-}
-
-main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky {
-  background: transparent;
-}
-
-main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky::before {
-  top: -80px;
-  height: 80px;
-}
-
-/* ─── Music page collapsed offset/surface corrections ─────── */
-
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed,
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed {
-  --sidebar-width: 44px;
-}
-
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed .filmwave-music-library-frame,
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .filmwave-music-library-frame {
-  margin-left: 44px;
-}
-
-body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar,
-main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-combined-row {
-  background: var(--bg-elevated);
 }
