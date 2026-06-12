@@ -76,5 +76,15 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 }
 
 .fw-toolbar-float {
+  border-radius: 999px !important;
   box-shadow: 0 18px 30px -24px rgba(0, 0, 0, 0.24) !important;
+}
+
+.fw-toolbar-search,
+.fw-toolbar-search:focus-within {
+  background: transparent !important;
+}
+
+.fw-toolbar-search-icon {
+  background: transparent !important;
 }
