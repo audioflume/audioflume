@@ -247,16 +247,13 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   --filmwave-song-card-hover-bg: var(--filmwave-chrome-surface) !important;
 }
 
-:where(html.light, html[data-theme="light"]) .fw-song-list .filmwave-song-card.is-playing,
-:where(html.light, html[data-theme="light"]) .fw-song-list .filmwave-song-card.is-current,
-:where(html.light, html[data-theme="light"]) .fw-song-list .desktop-song-card.is-playing,
-:where(html.light, html[data-theme="light"]) .fw-song-list .desktop-song-card.is-current,
 :where(html.light, html[data-theme="light"])
   .fw-song-list
-  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center.is-playing,
-:where(html.light, html[data-theme="light"])
-  .fw-song-list
-  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center.is-current {
+  :is(
+    .filmwave-song-card,
+    .desktop-song-card,
+    .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
+  ):is(:hover, .is-playing, .is-current, .is-active, [aria-current="true"], [data-active="true"]) {
   background: var(--filmwave-chrome-surface) !important;
 }
 
