@@ -8,18 +8,31 @@ import {
 
 function formatMarkerTime(secondsValue: number) {
   const seconds = Number(secondsValue);
-
   if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
-
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.floor(seconds % 60);
-
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
 function getPercent(time: number, duration: number) {
   if (!duration) return 0;
   return Math.max(0, Math.min(100, (time / duration) * 100));
+}
+
+/* Solid diamond marker head — replaces the bare CSS line indicator. */
+function CueMarkerHead({ size = 8 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 10 10"
+      fill="currentColor"
+      aria-hidden="true"
+      className="filmwave-song-cue-marker-icon"
+    >
+      <path d="M5 0L10 5L5 10L0 5Z" />
+    </svg>
+  );
 }
 
 export function SongCardCuePointOverlay({
@@ -53,11 +66,10 @@ export function SongCardCuePointOverlay({
         return (
           <div
             key={range.id}
-            className={`filmwave-song-cue-range${compact ? " is-compact" : ""}${isStrong ? " is-strong" : ""}`}
-            style={{
-              left: `${left}%`,
-              width: `${width}%`,
-            }}
+            className={`filmwave-song-cue-range${compact ? " is-compact" : ""}${
+              isStrong ? " is-strong" : ""
+            }`}
+            style={{ left: `${left}%`, width: `${width}%` }}
           />
         );
       })}
@@ -88,6 +100,8 @@ export function SongCardCuePointOverlay({
               onSeek(safeProgress);
             }}
           >
+            <CueMarkerHead size={compact ? 6 : 8} />
+
             <span
               className="filmwave-song-cue-marker-line"
               style={{
