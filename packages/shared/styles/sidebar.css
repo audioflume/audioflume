@@ -267,18 +267,9 @@ body.sidebar-collapsed .desktop-sidebar-link {
   color: var(--filmwave-sidebar-icon-color-active);
 }
 
-/* Icon clarity pass — keep icons in a consistent box, but do not thicken strokes.
+/* Icon clarity pass — preserve each icon's original SVG size/geometry.
    Opacity is forced to 1 so inactive icons render as solid grey rather than soft
    transparent grey. */
-.desktop-sidebar-link-icon svg,
-.desktop-sidebar-heading-icon svg,
-.desktop-sidebar-add-button svg {
-  display: block;
-  width: var(--filmwave-sidebar-icon-size);
-  height: var(--filmwave-sidebar-icon-size);
-  overflow: visible;
-}
-
 .desktop-sidebar-link-icon svg,
 .desktop-sidebar-link-icon svg *,
 .desktop-sidebar-heading-icon svg,
