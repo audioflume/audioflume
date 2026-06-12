@@ -459,8 +459,8 @@ export default function MusicPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
+    <main className="music-page-reimagined min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <section className="music-page-stage min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
         <MusicLibraryToolbar
           stickyTop={56}
           searchValue={search}
@@ -554,161 +554,155 @@ export default function MusicPage() {
           />
         </MusicLibraryToolbar>
 
-        <MusicQuickChips>
-          {QUICK_FILTERS.map((filter) => {
-            const isActive = selectedGenres.includes(filter);
+        <div className="music-page-canvas">
+          <div className="music-command-panel">
+            <div className="music-command-copy">
+              <span className="music-command-eyebrow">Cue Discovery</span>
+              <h1>Build the emotional shape of the cut.</h1>
+              <p>
+                Search, filter, and audition cues from a tighter workspace built
+                around scene feel, edit rhythm, and fast decision-making.
+              </p>
+            </div>
 
-            return (
-              <MusicQuickChip
-                key={filter}
-                active={isActive}
-                onClick={() =>
-                  setSelectedGenres(
-                    isActive
-                      ? selectedGenres.filter((genre) => genre !== filter)
-                      : [...selectedGenres, filter],
-                  )
-                }
-              >
-                {filter}
+            <div className="music-command-stats" aria-label="Library stats">
+              <div>
+                <span>{displayedSongs.length}</span>
+                <small>shown</small>
+              </div>
+              <div>
+                <span>{songs.length}</span>
+                <small>library</small>
+              </div>
+              <div>
+                <span>{activeFilterCount}</span>
+                <small>active</small>
+              </div>
+            </div>
+          </div>
+
+          <MusicQuickChips>
+            {QUICK_FILTERS.map((filter) => {
+              const isActive = selectedGenres.includes(filter);
+
+              return (
+                <MusicQuickChip
+                  key={filter}
+                  active={isActive}
+                  onClick={() =>
+                    setSelectedGenres(
+                      isActive
+                        ? selectedGenres.filter((genre) => genre !== filter)
+                        : [...selectedGenres, filter],
+                    )
+                  }
+                >
+                  {filter}
+                </MusicQuickChip>
+              );
+            })}
+
+            <MusicQuickChipsEnd>
+              <MusicQuickChip active={shuffleActive} onClick={setRandomSort}>
+                <ShuffleIconSmall size={12} />
+                Shuffle
               </MusicQuickChip>
-            );
-          })}
+              <MusicLibrarySortControl
+                value={sortOrder}
+                onChange={handleSortChange}
+              />
+            </MusicQuickChipsEnd>
+          </MusicQuickChips>
 
-          <MusicQuickChipsEnd>
-            <MusicQuickChip active={shuffleActive} onClick={setRandomSort}>
-              <ShuffleIconSmall size={12} />
-              Shuffle
-            </MusicQuickChip>
-            <MusicLibrarySortControl
-              value={sortOrder}
-              onChange={handleSortChange}
-            />
-          </MusicQuickChipsEnd>
-        </MusicQuickChips>
+          <div
+            className="music-hero-reveal grid overflow-hidden"
+            style={{
+              gridTemplateRows: hasActiveFilters ? "0fr" : "1fr",
+              opacity: hasActiveFilters ? 0 : 1,
+              transition:
+                "grid-template-rows 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
+            }}
+            aria-hidden={hasActiveFilters}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <div className="music-hero-board">
+                <div className="music-hero-primary group">
+                  <div
+                    className="music-hero-image"
+                    style={{ backgroundImage: `url("${MUSIC_HERO_IMAGE}")` }}
+                  />
+                  <div className="music-hero-shade" />
 
-        <div
-          className="grid overflow-hidden"
-          style={{
-            gridTemplateRows: hasActiveFilters ? "0fr" : "1fr",
-            opacity: hasActiveFilters ? 0 : 1,
-            transition:
-              "grid-template-rows 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
-          }}
-          aria-hidden={hasActiveFilters}
-        >
-          <div className="min-h-0 overflow-hidden">
-            <div className="px-8 pt-5 pb-8">
-              <div className="overflow-hidden">
-                <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
-                  <div className="group relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
-                      style={{ backgroundImage: `url("${MUSIC_HERO_IMAGE}")` }}
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%)",
-                      }}
-                    />
+                  <div className="music-hero-content">
+                    <div className="music-hero-label">
+                      <MusicIcon size={11} />
+                      <span>Music Library</span>
+                    </div>
 
-                    <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
-                      <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                        <MusicIcon size={11} />
-                        <span className="truncate">Music Library</span>
-                      </div>
-
-                      <div>
-                        <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
-                          Find the cue that fits the cut.
-                        </h1>
-
-                        <div className="mt-5 flex flex-wrap items-end gap-5">
-                          <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
-                            Move through the library like a visual treatment —
-                            documentary warmth, after-dark tension, open travel
-                            cues, and polished brand motion.
-                          </p>
-
-                          <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
-                            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                              {displayedSongs.length} shown
-                            </span>
-                            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                              {songs.length} songs
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+                    <div>
+                      <h2>Find the cue that fits the cut.</h2>
+                      <p>
+                        Move through the library like a visual treatment —
+                        documentary warmth, after-dark tension, open travel cues,
+                        and polished brand motion.
+                      </p>
                     </div>
                   </div>
+                </div>
 
-                  <div className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
-                      style={{
-                        backgroundImage: `url("${DESKTOP_SYNC_IMAGE}")`,
-                      }}
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08))",
-                      }}
-                    />
+                <div className="music-hero-side group">
+                  <div
+                    className="music-hero-image"
+                    style={{ backgroundImage: `url("${DESKTOP_SYNC_IMAGE}")` }}
+                  />
+                  <div className="music-hero-side-shade" />
 
-                    <div className="relative z-10 flex justify-between gap-5">
-                      <div>
-                        <div className="text-[11px] font-medium text-white/64">
-                          Desktop Sync
-                        </div>
-                        <h2 className="mt-2 max-w-[260px] text-[26px] font-medium leading-[0.95] tracking-[-0.055em] text-white">
-                          Drag your library straight into the edit.
-                        </h2>
-                      </div>
-
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                        <ArrowUpRightIcon size={14} />
-                      </div>
+                  <div className="music-hero-side-content">
+                    <div>
+                      <span>Desktop Sync</span>
+                      <h3>Drag your library straight into the edit.</h3>
                     </div>
 
-                    <div className="relative z-10 max-w-[320px] text-[14px] leading-6 text-white/72">
+                    <div className="music-hero-side-arrow">
+                      <ArrowUpRightIcon size={14} />
+                    </div>
+
+                    <p>
                       Keep projects, playlists, and downloaded cues organized
                       across the web app and local folders.
-                    </div>
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {songsError && (
-          <div className="px-5 py-4 text-sm text-[var(--danger)]">
-            Failed to load songs. Showing cached results where available.
-          </div>
-        )}
-
-        <MusicListShell
-          title={selectedPlaylist ? selectedPlaylist.name : "All tracks"}
-          meta={`${displayedSongs.length} of ${songs.length} tracks`}
-        >
-          {showSongSkeleton ? (
-            <SkeletonSongList />
-          ) : (
-            displayedSongs.map((song, index) => (
-              <SongCard
-                key={getMusicSongStableId(song, index)}
-                song={song}
-                highlightedEditPointTypes={highlightedEditPointTypes}
-                showEditPointMarkers={effectiveShowEditPointMarkers}
-              />
-            ))
+          {songsError && (
+            <div className="music-library-error text-sm text-[var(--danger)]">
+              Failed to load songs. Showing cached results where available.
+            </div>
           )}
-        </MusicListShell>
+
+          <div className="music-results-panel">
+            <MusicListShell
+              title={selectedPlaylist ? selectedPlaylist.name : "All tracks"}
+              meta={`${displayedSongs.length} of ${songs.length} tracks`}
+            >
+              {showSongSkeleton ? (
+                <SkeletonSongList />
+              ) : (
+                displayedSongs.map((song, index) => (
+                  <SongCard
+                    key={getMusicSongStableId(song, index)}
+                    song={song}
+                    highlightedEditPointTypes={highlightedEditPointTypes}
+                    showEditPointMarkers={effectiveShowEditPointMarkers}
+                  />
+                ))
+              )}
+            </MusicListShell>
+          </div>
+        </div>
 
         <Footer playerPadding={playerVisible} />
       </section>
