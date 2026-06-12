@@ -79,16 +79,9 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 
 .fw-toolbar-float {
   border-radius: 999px !important;
-  background: var(--bg-tertiary) !important;
+  background: var(--filmwave-chrome-surface) !important;
   padding: 6px 8px !important;
   box-shadow: 0 18px 30px -24px rgba(0, 0, 0, 0.24) !important;
-}
-
-html[data-theme="light"] .fw-toolbar-float,
-html.light .fw-toolbar-float,
-html[data-theme="light"] .desktop-app-sidebar,
-html.light .desktop-app-sidebar {
-  background: var(--bg-tertiary) !important;
 }
 
 .fw-toolbar {
@@ -195,21 +188,4 @@ html.light .desktop-app-sidebar {
 .fw-filter-panel {
   overflow: hidden;
   border-radius: 18px !important;
-}
-
-/* ─── Music chrome surface sync ───────────────────────────── */
-
-:where(html.light, html[data-theme="light"]) {
-  --fw-music-chrome-surface: #f2f2f0;
-}
-
-:where(html:not(.light):not([data-theme="light"])) {
-  --fw-music-chrome-surface: var(--bg-tertiary);
-}
-
-.fw-toolbar-float,
-.fw-toolbar-search,
-.fw-toolbar-search:focus-within,
-.desktop-app-sidebar {
-  background: var(--fw-music-chrome-surface) !important;
 }
