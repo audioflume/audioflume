@@ -211,6 +211,16 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   height: 12px !important;
 }
 
+/* ─── Music hero/list spacing cleanup ─────────────────────── */
+
+.fw-song-list-head {
+  display: none !important;
+}
+
+.fw-song-list {
+  margin-top: -12px !important;
+}
+
 /* ─── Filter dropdown shadow/corner fix ───────────────────── */
 
 .fw-filter-panel-wrap.is-open,
