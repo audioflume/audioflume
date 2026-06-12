@@ -470,6 +470,7 @@ export default function MusicPage() {
           filterCount={activeFilterCount}
           filtersOpen={filtersOpen}
           onToggleFilters={() => setFiltersOpen((open) => !open)}
+          onClearFilters={clearAllFilters}
           chips={
             hasActiveFilters ? (
               <FilterTags
@@ -596,7 +597,7 @@ export default function MusicPage() {
           aria-hidden={hasActiveFilters}
         >
           <div className="min-h-0 overflow-hidden">
-            <div className="px-8 pt-5 pb-8">
+            <div className="px-5 pt-4 pb-7">
               <div className="overflow-hidden">
                 <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
                   <div className="group relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white">
