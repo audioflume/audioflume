@@ -129,3 +129,99 @@ html[data-theme="light"] .desktop-music-page .desktop-song-play-overlay {
   background: var(--media-overlay-strong);
   color: #111111 !important;
 }
+
+.desktop-app-shell:has(.desktop-persistent-music-view.is-active .desktop-music-page) .desktop-header {
+  border-bottom: 0;
+}
+
+.desktop-app-shell:has(.desktop-persistent-music-view.is-active .desktop-music-page) .desktop-sidebar-link.is-active::before {
+  display: none;
+}
+
+.desktop-app-shell.is-sidebar-collapsed:has(.desktop-persistent-music-view.is-active .desktop-music-page) .desktop-sidebar-link {
+  justify-content: center;
+}
+
+.desktop-app-shell.is-sidebar-collapsed:has(.desktop-persistent-music-view.is-active .desktop-music-page) .desktop-sidebar-link-icon {
+  margin: 0;
+}
+
+.desktop-app-shell:has(.desktop-persistent-music-view.is-active .desktop-music-page) .desktop-app-main {
+  padding-left: calc(var(--sidebar-width-expanded, 280px) + 16px);
+}
+
+.desktop-app-shell.is-sidebar-collapsed:has(.desktop-persistent-music-view.is-active .desktop-music-page) .desktop-app-main {
+  padding-left: calc(var(--sidebar-width-collapsed, 76px) + 16px);
+}
+
+.desktop-music-page .filmwave-search-filter-sticky {
+  background: transparent;
+  padding: 16px 28px 10px;
+}
+
+.desktop-music-page .filmwave-search-filter-combined-row {
+  height: 56px;
+  min-height: 56px;
+  gap: 4px;
+  overflow-y: visible;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-panel);
+  padding: 0 10px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.04);
+}
+
+.desktop-music-page .filmwave-search-filter-pill-slot {
+  padding-right: 10px;
+}
+
+.desktop-music-page .filmwave-search-filter-quick-row {
+  background: transparent;
+  padding: 14px 28px 14px;
+}
+
+.desktop-music-page .desktop-music-list {
+  width: auto;
+  margin: 8px 28px 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  background: var(--bg-panel);
+  padding: 8px;
+}
+
+.desktop-music-page.has-player .desktop-music-list {
+  padding-bottom: 100px;
+}
+
+.desktop-music-page .desktop-song-card {
+  --filmwave-song-card-padding-left: 14px;
+  --filmwave-song-card-padding-right: 14px;
+  --filmwave-song-card-hover-bg: var(--bg-row-hover);
+  border-radius: 14px;
+}
+
+.desktop-music-page .desktop-song-card:hover,
+.desktop-music-page .desktop-song-card.is-current,
+.desktop-music-page .desktop-song-card.is-playing {
+  background: var(--filmwave-song-card-hover-bg);
+}
+
+.desktop-music-page .desktop-filter-count {
+  background: var(--bg-control-hover);
+}
+
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-sticky,
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-quick-row {
+  background: transparent;
+}
+
+html[data-theme="light"] .desktop-music-page .filmwave-search-filter-combined-row,
+html[data-theme="light"] .desktop-music-page .desktop-music-list {
+  background: #f2f2f0;
+}
+
+html[data-theme="light"] .desktop-music-page .desktop-song-card:hover,
+html[data-theme="light"] .desktop-music-page .desktop-song-card.is-current,
+html[data-theme="light"] .desktop-music-page .desktop-song-card.is-playing {
+  background: rgba(17, 17, 17, 0.055);
+}
