@@ -69,8 +69,12 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
   background: linear-gradient(
     to bottom,
     var(--bg-primary) 0,
-    var(--bg-primary) 52%,
-    transparent 52%,
+    var(--bg-primary) 58px,
+    transparent 58px,
     transparent 100%
   ) !important;
+}
+
+.fw-toolbar-float {
+  box-shadow: 0 18px 30px -24px rgba(0, 0, 0, 0.24) !important;
 }
