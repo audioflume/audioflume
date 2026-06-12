@@ -53,6 +53,7 @@
   width: 20px;
   min-width: 20px;
   padding: 2px 3px;
+  color: var(--filmwave-sidebar-icon-color, var(--text-muted));
 }
 
 .filmwave-music-sort-button {
@@ -61,7 +62,11 @@
 
 .filmwave-music-shuffle-button:hover,
 .filmwave-music-shuffle-button.is-active,
-.filmwave-music-shuffle-button[aria-pressed="true"],
+.filmwave-music-shuffle-button[aria-pressed="true"] {
+  background: var(--bg-elevated);
+  color: var(--filmwave-sidebar-icon-color, var(--text-muted));
+}
+
 .filmwave-music-sort-button:hover,
 .filmwave-music-sort-button.is-open {
   background: var(--bg-elevated);
@@ -69,8 +74,8 @@
 }
 
 .filmwave-music-shuffle-button svg {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
 }
 
 .filmwave-music-sort-button svg {
@@ -86,5 +91,5 @@
 
 html[data-theme="light"] .filmwave-music-shuffle-button.is-active,
 html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
-  color: #000000;
+  color: var(--filmwave-sidebar-icon-color, #969696);
 }
