@@ -83,8 +83,8 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   background: linear-gradient(
     to bottom,
     var(--bg-primary) 0,
-    var(--bg-primary) 35px,
-    transparent 35px,
+    var(--bg-primary) 32px,
+    transparent 32px,
     transparent 100%
   ) !important;
 }
