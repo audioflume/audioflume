@@ -63,6 +63,7 @@ body:has(.filmwave-search-filter-sticky) .filmwave-app-header,
 body:has(.filmwave-search-filter-sticky) .filmwave-header,
 body:has(.filmwave-search-filter-sticky) body > header {
   border-bottom: 0;
+  box-shadow: none;
 }
 
 body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar {
@@ -77,22 +78,21 @@ body:has(.filmwave-search-filter-sticky) .desktop-sidebar-link.is-active::before
   display: none;
 }
 
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed .desktop-sidebar-link {
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
   justify-content: center;
   padding: 0;
 }
 
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed .desktop-sidebar-link > a {
-  flex: 0 0 100%;
-  justify-content: center;
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon {
+  margin: 0;
+  opacity: 1;
 }
 
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed .desktop-sidebar-link-icon {
-  margin: 0 auto;
-}
-
-body:has(.filmwave-search-filter-sticky).sidebar-collapsed .desktop-sidebar-link-label {
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
+  width: 0;
+  min-width: 0;
   margin-left: 0;
+  opacity: 0;
 }
 
 main:has(.filmwave-search-filter-sticky) > section {
@@ -101,8 +101,19 @@ main:has(.filmwave-search-filter-sticky) > section {
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky {
-  background: transparent;
-  padding: 16px 28px 8px;
+  background: var(--bg-primary);
+  padding: 16px 28px 0;
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -80px;
+  height: 80px;
+  background: var(--bg-primary);
+  pointer-events: none;
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-combined-row {
@@ -112,20 +123,20 @@ main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-combined-row {
   border-radius: 18px;
   background: var(--bg-panel);
   padding: 8px 10px;
-  box-shadow: var(--shadow-ui);
+  box-shadow: none;
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-quick-row {
-  background: transparent;
+  background: var(--bg-primary);
   padding: 10px 28px 0;
 }
 
 main:has(.filmwave-search-filter-sticky) section > div:has(> .filmwave-song-card) {
   margin: 12px 28px 0;
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  background: var(--bg-panel);
-  padding: 6px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-song-card {
