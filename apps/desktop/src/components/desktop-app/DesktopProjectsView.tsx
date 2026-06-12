@@ -216,6 +216,23 @@ function getFileArtist(node: ProjectFileNode) {
   return node.path.includes("/") ? getNodeParentPath(node).split("/").pop() : "Filmwave";
 }
 
+function getFileDisplayMetadata(node: ProjectFileNode) {
+  const title = node.name.replace(/\.[^/.]+$/, "");
+  const titleArtistMatch = title.match(/^(.+?)\s+-\s+(.+)$/);
+
+  if (titleArtistMatch?.[1] && titleArtistMatch[2]) {
+    return {
+      title: titleArtistMatch[1].trim(),
+      artist: titleArtistMatch[2].trim(),
+    };
+  }
+
+  return {
+    title,
+    artist: getFileArtist(node),
+  };
+}
+
 // ─── Drag handler ─────────────────────────────────────────────────────────────
 //
 // Uses the native macOS dragFile:fromRect:slideBack:event: API via a Rust
@@ -430,6 +447,9 @@ function ProjectGridItem({
       </div>
     );
   }
+
+  const fileDisplay = getFileDisplayMetadata(node);
+
   return (
     <div
       draggable
@@ -438,8 +458,8 @@ function ProjectGridItem({
       onDragStart={(event) => handleNodeDragStart(event, node, project, syncFolder)}
     >
       <div className="project-file-card-icon-wrap"><DesktopMusicGlyph /></div>
-      <div className="project-file-card-title">{node.name.replace(/\.[^/.]+$/, "")}</div>
-      <div className="project-file-card-meta">{getFileArtist(node)}</div>
+      <div className="project-file-card-title">{fileDisplay.title}</div>
+      <div className="project-file-card-meta">{fileDisplay.artist}</div>
     </div>
   );
 }
@@ -478,6 +498,9 @@ function ProjectListItem({
       </div>
     );
   }
+
+  const fileDisplay = getFileDisplayMetadata(node);
+
   return (
     <div
       draggable
@@ -487,9 +510,9 @@ function ProjectListItem({
     >
       <span className="project-browser-row-name">
         <span className="project-file-list-icon-wrap"><DesktopMusicGlyph small /></span>
-        <span className="project-browser-row-title">{node.name.replace(/\.[^/.]+$/, "")}</span>
+        <span className="project-browser-row-title">{fileDisplay.title}</span>
       </span>
-      <span className="project-browser-row-muted">{getFileArtist(node)}</span>
+      <span className="project-browser-row-muted">{fileDisplay.artist}</span>
       <span className="project-browser-row-muted">Music</span>
       <span />
     </div>
