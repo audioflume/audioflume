@@ -666,15 +666,11 @@ export default function MusicPage() {
         )}
 
         {showSongSkeleton ? (
-          <div
-            className={`${hasActiveFilters ? "mt-3" : ""} border-t border-[var(--border-subtle)]`}
-          >
+          <div className={hasActiveFilters ? "mt-3" : ""}>
             <SkeletonSongList />
           </div>
         ) : (
-          <div
-            className={`${hasActiveFilters ? "mt-3" : ""} border-t border-[var(--border-subtle)] pb-6`}
-          >
+          <div className={`${hasActiveFilters ? "mt-3" : ""} pb-6`}>
             {displayedSongs.map((song, index) => (
               <SongCard
                 key={getMusicSongStableId(song, index)}
