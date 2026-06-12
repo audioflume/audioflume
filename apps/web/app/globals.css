@@ -8,6 +8,7 @@
 @import "../../../packages/shared/styles/search-filter-chrome.css";
 @import "../../../packages/shared/styles/collapsible-search-pill.css";
 @import "../../../packages/shared/styles/combined-row-fix.css";
+@import "../../../packages/shared/styles/collapsible-search-pill.css";
 @import "../../../packages/shared/styles/music-filter-popovers.css";
 @import "../../../packages/shared/styles/music-library-states.css";
 @import "../../../packages/shared/styles/music-shared-controls.css";
@@ -349,7 +350,7 @@ body > header,
   content: "×";
   color: currentColor;
   font-size: 14px;
-  font-weight: 850;
+  font-weight: 600;
   line-height: 0.9;
   transform: translateY(-0.5px);
 }
