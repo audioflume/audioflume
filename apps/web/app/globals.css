@@ -56,3 +56,94 @@ body.sidebar-collapsed {
 body.sidebar-collapsed aside[data-sidebar] {
   width: var(--sidebar-width-collapsed);
 }
+
+/* ─── Web music page polish ───────────────────────────────── */
+
+body:has(.filmwave-search-filter-sticky) .filmwave-app-header,
+body:has(.filmwave-search-filter-sticky) .filmwave-header,
+body:has(.filmwave-search-filter-sticky) body > header {
+  border-bottom: 0;
+}
+
+body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar {
+  border-right: 0;
+}
+
+body:has(.filmwave-search-filter-sticky) .desktop-sidebar-link {
+  border-radius: 10px;
+}
+
+body:has(.filmwave-search-filter-sticky) .desktop-sidebar-link.is-active::before {
+  display: none;
+}
+
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed .desktop-sidebar-link {
+  justify-content: center;
+  padding: 0;
+}
+
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed .desktop-sidebar-link > a {
+  flex: 0 0 100%;
+  justify-content: center;
+}
+
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed .desktop-sidebar-link-icon {
+  margin: 0 auto;
+}
+
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed .desktop-sidebar-link-label {
+  margin-left: 0;
+}
+
+main:has(.filmwave-search-filter-sticky) > section {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky {
+  background: transparent;
+  padding: 16px 28px 8px;
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-combined-row {
+  height: 54px;
+  min-height: 54px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-panel);
+  padding: 8px 10px;
+  box-shadow: var(--shadow-ui);
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-quick-row {
+  background: transparent;
+  padding: 10px 28px 0;
+}
+
+main:has(.filmwave-search-filter-sticky) section > div:has(> .filmwave-song-card) {
+  margin: 12px 28px 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-panel);
+  padding: 6px;
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-song-card {
+  --filmwave-song-card-padding-left: 16px;
+  --filmwave-song-card-hover-bg: var(--bg-row);
+  border-bottom: 0;
+  border-radius: 12px;
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-song-card:hover {
+  background: var(--filmwave-song-card-hover-bg);
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-song-card.is-playing,
+main:has(.filmwave-search-filter-sticky) .filmwave-song-card.is-current {
+  background: var(--bg-row-hover);
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-song-cover {
+  border-radius: 8px;
+}
