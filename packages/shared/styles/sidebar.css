@@ -14,10 +14,13 @@
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
   --filmwave-sidebar-float-inset: 12px;
+  --filmwave-sidebar-content-gap: 20px;
 }
 
 /* Floating sidebar — inset rounded panel on a subtle grey surface,
-   detached from the page edges. */
+   detached from the page edges. The content offset stays at the full
+   sidebar width variable, so the panel width = expanded - inset - gap
+   gives an identical gap on the website and the desktop app. */
 .desktop-app-sidebar {
   position: fixed;
   top: calc(var(--filmwave-sidebar-top-offset) + var(--filmwave-sidebar-float-inset));
@@ -25,7 +28,10 @@
   left: var(--filmwave-sidebar-float-inset);
   z-index: 120;
   display: flex;
-  width: calc(var(--filmwave-sidebar-expanded-width) - (var(--filmwave-sidebar-float-inset) * 2));
+  width: calc(
+    var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-float-inset) -
+      var(--filmwave-sidebar-content-gap)
+  );
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--border-subtle);
@@ -35,8 +41,9 @@
   transition: width 200ms ease;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
-  width: calc(var(--filmwave-sidebar-collapsed-width) - 16px);
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar,
+body.sidebar-collapsed .desktop-app-sidebar {
+  width: 56px;
 }
 
 .desktop-sidebar-collapse-zone {
@@ -104,9 +111,10 @@
     var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom);
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar-inner {
-  padding-left: 12px;
-  padding-right: 12px;
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar-inner,
+body.sidebar-collapsed .desktop-app-sidebar-inner {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 /* Open feel — sections separated by space, not divider lines. */
@@ -176,7 +184,8 @@
   transform: translateX(-50%) scale(1);
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading-label {
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading-label,
+body.sidebar-collapsed .desktop-sidebar-heading-label {
   pointer-events: none;
   opacity: 0;
 }
@@ -209,6 +218,13 @@
     color 150ms ease;
 }
 
+/* Collapsed: icons perfectly centered, labels collapse to zero width. */
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
+body.sidebar-collapsed .desktop-sidebar-link {
+  justify-content: center;
+  padding: 0;
+}
+
 .desktop-sidebar-link:hover,
 .desktop-sidebar-link.is-active {
   background: var(--bg-hover-strong);
@@ -239,13 +255,15 @@
   opacity: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: opacity 150ms ease;
+  transition: opacity 150ms ease, width 200ms ease, min-width 200ms ease,
+    margin-left 200ms ease;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label {
-  width: var(--filmwave-sidebar-label-width);
-  min-width: var(--filmwave-sidebar-label-width);
-  margin-left: var(--filmwave-sidebar-label-gap);
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label,
+body.sidebar-collapsed .desktop-sidebar-link-label {
+  width: 0;
+  min-width: 0;
+  margin-left: 0;
   opacity: 0;
 }
 
@@ -300,16 +318,19 @@
 }
 
 /* Collapsed overrides: only change layout/visibility, not size */
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head {
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head,
+body.sidebar-collapsed .desktop-sidebar-projects-head {
   justify-content: center;
   padding: 0;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label {
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
+body.sidebar-collapsed .desktop-sidebar-projects-label {
   display: none;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions {
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions,
+body.sidebar-collapsed .desktop-sidebar-project-actions {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -318,11 +339,15 @@
 
 .desktop-app-shell.is-sidebar-collapsed
   .desktop-sidebar-project-actions
+  > :not(.desktop-sidebar-add-button),
+body.sidebar-collapsed
+  .desktop-sidebar-project-actions
   > :not(.desktop-sidebar-add-button) {
   display: none;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button,
+body.sidebar-collapsed .desktop-sidebar-add-button {
   width: 36px;
   height: var(--filmwave-sidebar-row-height);
   border-radius: var(--filmwave-sidebar-row-radius);
@@ -334,7 +359,8 @@
   font-size: 12px;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects {
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects,
+body.sidebar-collapsed .desktop-sidebar-empty-projects {
   display: none;
 }
 

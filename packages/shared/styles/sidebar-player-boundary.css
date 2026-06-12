@@ -3,10 +3,20 @@
   --filmwave-sidebar-bottom-offset: 0px;
 }
 
-:where(body:has(.filmwave-music-player), .desktop-app-shell:has(.filmwave-music-player)) {
+:where(
+  body:has(.filmwave-music-player),
+  .desktop-app-shell:has(.filmwave-music-player),
+  body:has(.desktop-music-player),
+  .desktop-app-shell:has(.desktop-music-player)
+) {
   --filmwave-sidebar-bottom-offset: var(--filmwave-player-height);
 }
 
+/* Keep a breathing gap below the floating sidebar — above the viewport
+   bottom normally, and above the music player when one is docked. */
 .desktop-app-sidebar {
-  bottom: var(--filmwave-sidebar-bottom-offset) !important;
+  bottom: calc(
+    var(--filmwave-sidebar-bottom-offset) +
+      var(--filmwave-sidebar-float-inset, 12px)
+  ) !important;
 }

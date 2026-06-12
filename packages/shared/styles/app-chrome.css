@@ -25,12 +25,13 @@
   --filmwave-search-font-size: 15px;
 }
 
+/* Open feel — header sits on the same surface with no divider line. */
 .filmwave-app-header,
 .desktop-header,
 body > header {
   z-index: var(--filmwave-z-header) !important;
   height: var(--filmwave-header-height);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 0;
   background: var(--bg-primary);
   color: var(--text-primary);
   box-shadow: none;
@@ -51,7 +52,7 @@ body > header > div {
   left: 0;
   z-index: var(--filmwave-z-header);
   height: var(--filmwave-header-height);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 0;
   background: var(--bg-primary);
   color: var(--text-primary);
   user-select: none;
