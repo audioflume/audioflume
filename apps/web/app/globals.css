@@ -21,6 +21,7 @@
 
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
+  --fw-music-content-inset: 20px;
 }
 
 html,
@@ -74,7 +75,9 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 /* ─── Music library sticky toolbar scroll illusion ───────── */
 
 .fw-toolbar-sticky {
+  padding-right: var(--fw-music-content-inset) !important;
   padding-bottom: 0 !important;
+  padding-left: var(--fw-music-content-inset) !important;
   background: linear-gradient(
     to bottom,
     var(--bg-primary) 0,
@@ -211,6 +214,23 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   height: 12px !important;
 }
 
+/* ─── Music library alignment rail ────────────────────────── */
+
+.fw-quick-row {
+  padding-right: var(--fw-music-content-inset) !important;
+  padding-left: var(--fw-music-content-inset) !important;
+}
+
+.fw-quick-row + div > .min-h-0 > .px-8 {
+  padding-right: var(--fw-music-content-inset) !important;
+  padding-left: var(--fw-music-content-inset) !important;
+}
+
+.fw-song-list {
+  margin-right: var(--fw-music-content-inset) !important;
+  margin-left: var(--fw-music-content-inset) !important;
+}
+
 /* ─── Music hero/list spacing cleanup ─────────────────────── */
 
 .fw-song-list-head {
@@ -235,4 +255,10 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 .fw-filter-panel {
   overflow: hidden;
   border-radius: 18px !important;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --fw-music-content-inset: 12px;
+  }
 }
