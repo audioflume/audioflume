@@ -223,6 +223,10 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   padding-left: var(--fw-music-content-inset-left) !important;
 }
 
+.fw-quick-row:has(+ .grid[aria-hidden="true"]) {
+  padding-top: 14px !important;
+}
+
 .fw-quick-row + div > .min-h-0 > .px-8 {
   padding-right: var(--fw-music-content-inset-right) !important;
   padding-bottom: 12px !important;
