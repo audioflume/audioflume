@@ -304,14 +304,16 @@ export function matchesBpmFilter(
 }
 
 function normalizeKeyText(value: string) {
-  return value.trim().replaceAll("♯", "#").replaceAll("♭", "b").toLowerCase();
+  return value.trim().replaceAll("\u266f", "#").replaceAll("\u266d", "b").toLowerCase();
 }
 
 export function matchesKeyFilter(
   songKeyValue: unknown,
   keyValue: FilmwaveKeyFilterValue | null,
 ) {
-  if (!keyValue?.note) return true;
+  // A key filter can specify a note, a scale, or both. An empty note with a
+  // scale (e.g. "any Major") filters by scale alone.
+  if (!keyValue || (!keyValue.note && !keyValue.scale)) return true;
 
   const songKey =
     typeof songKeyValue === "string"
@@ -322,11 +324,13 @@ export function matchesKeyFilter(
         ? (songKeyValue as { key: string }).key
         : "";
   const normalizedSongKey = normalizeKeyText(songKey);
-  const normalizedNote = normalizeKeyText(keyValue.note);
 
-  const songNote = normalizedSongKey.match(/^([a-g](?:#|b)?)/)?.[1];
+  if (keyValue.note) {
+    const normalizedNote = normalizeKeyText(keyValue.note);
+    const songNote = normalizedSongKey.match(/^([a-g](?:#|b)?)/)?.[1];
 
-  if (songNote !== normalizedNote) return false;
+    if (songNote !== normalizedNote) return false;
+  }
 
   if (!keyValue.scale) return true;
 
