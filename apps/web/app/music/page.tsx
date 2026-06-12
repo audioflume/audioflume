@@ -208,7 +208,6 @@ export default function MusicPage() {
     keyValue !== null ||
     selectedPlaylist !== null;
 
-  // Clear all: only dropdown filters, not search/shuffle/markers
   const hasActiveClearableFilters =
     selectedMoods.length > 0 ||
     selectedGenres.length > 0 ||
@@ -586,98 +585,95 @@ export default function MusicPage() {
           </MusicQuickChipsEnd>
         </MusicQuickChips>
 
+        {/* Hero — same horizontal margin as .fw-song-list so left edges align. */}
         <div
-          className="grid overflow-hidden"
+          className="overflow-hidden"
           style={{
             gridTemplateRows: hasActiveFilters ? "0fr" : "1fr",
             opacity: hasActiveFilters ? 0 : 1,
+            display: "grid",
             transition:
               "grid-template-rows 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
           }}
           aria-hidden={hasActiveFilters}
         >
           <div className="min-h-0 overflow-hidden">
-            <div className="px-5 pt-4 pb-7">
-              <div className="overflow-hidden">
-                <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
-                  <div className="group relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
-                      style={{ backgroundImage: `url("${MUSIC_HERO_IMAGE}")` }}
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%)",
-                      }}
-                    />
+            {/* fw-hero-section uses the same 20px horizontal margin as fw-song-list */}
+            <div className="fw-hero-section">
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
+                <div className="group relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
+                    style={{ backgroundImage: `url("${MUSIC_HERO_IMAGE}")` }}
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%)",
+                    }}
+                  />
 
-                    <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
-                      <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                        <MusicIcon size={11} />
-                        <span className="truncate">Music Library</span>
-                      </div>
+                  <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
+                    <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                      <MusicIcon size={11} />
+                      <span className="truncate">Music Library</span>
+                    </div>
 
-                      <div>
-                        <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
-                          Find the cue that fits the cut.
-                        </h1>
+                    <div>
+                      <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
+                        Find the cue that fits the cut.
+                      </h1>
 
-                        <div className="mt-5 flex flex-wrap items-end gap-5">
-                          <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
-                            Move through the library like a visual treatment —
-                            documentary warmth, after-dark tension, open travel
-                            cues, and polished brand motion.
-                          </p>
+                      <div className="mt-5 flex flex-wrap items-end gap-5">
+                        <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
+                          Move through the library like a visual treatment —
+                          documentary warmth, after-dark tension, open travel
+                          cues, and polished brand motion.
+                        </p>
 
-                          <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
-                            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                              {displayedSongs.length} shown
-                            </span>
-                            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                              {songs.length} songs
-                            </span>
-                          </div>
+                        <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
+                          <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                            {displayedSongs.length} shown
+                          </span>
+                          <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                            {songs.length} songs
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
-                      style={{
-                        backgroundImage: `url("${DESKTOP_SYNC_IMAGE}")`,
-                      }}
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08))",
-                      }}
-                    />
+                <div className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
+                    style={{ backgroundImage: `url("${DESKTOP_SYNC_IMAGE}")` }}
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08))",
+                    }}
+                  />
 
-                    <div className="relative z-10 flex justify-between gap-5">
-                      <div>
-                        <div className="text-[11px] font-medium text-white/64">
-                          Desktop Sync
-                        </div>
-                        <h2 className="mt-2 max-w-[260px] text-[26px] font-medium leading-[0.95] tracking-[-0.055em] text-white">
-                          Drag your library straight into the edit.
-                        </h2>
-                      </div>
-
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                        <ArrowUpRightIcon size={14} />
-                      </div>
+                  <div className="relative z-10 flex justify-between gap-5">
+                    <div>
+                      <div className="text-[11px] font-medium text-white/64">Desktop Sync</div>
+                      <h2 className="mt-2 max-w-[260px] text-[26px] font-medium leading-[0.95] tracking-[-0.055em] text-white">
+                        Drag your library straight into the edit.
+                      </h2>
                     </div>
 
-                    <div className="relative z-10 max-w-[320px] text-[14px] leading-6 text-white/72">
-                      Keep projects, playlists, and downloaded cues organized
-                      across the web app and local folders.
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                      <ArrowUpRightIcon size={14} />
                     </div>
+                  </div>
+
+                  <div className="relative z-10 max-w-[320px] text-[14px] leading-6 text-white/72">
+                    Keep projects, playlists, and downloaded cues organized
+                    across the web app and local folders.
                   </div>
                 </div>
               </div>
