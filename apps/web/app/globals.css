@@ -246,6 +246,8 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   margin-right: var(--fw-music-content-inset-right) !important;
   margin-bottom: 12px !important;
   margin-left: var(--fw-music-content-inset-left) !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
 }
 
 .fw-song-list {
