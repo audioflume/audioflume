@@ -197,6 +197,7 @@
 
 .desktop-music-list {
   width: 100%;
+  border-top: 1px solid var(--border-subtle);
   transition: margin-top 300ms ease-out;
 }
 
