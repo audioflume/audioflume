@@ -80,6 +80,7 @@
   --bg-control-hover: rgba(17, 17, 17, 0.12);
   --bg-hover: rgba(17, 17, 17, 0.045);
   --bg-hover-strong: rgba(17, 17, 17, 0.075);
+  --filmwave-chrome-surface: var(--bg-panel-2);
   --icon-button-hover: rgba(17, 17, 17, 0.12);
 
   --divider: rgba(17, 17, 17, 0.075);
