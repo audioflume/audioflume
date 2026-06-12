@@ -61,3 +61,10 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
   flex: 0 0 auto;
   justify-content: center;
 }
+
+/* ─── Music library sticky toolbar scroll illusion ───────── */
+
+.fw-toolbar-sticky {
+  padding-bottom: 0 !important;
+  background: transparent !important;
+}
