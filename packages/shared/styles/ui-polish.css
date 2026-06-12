@@ -1,8 +1,7 @@
 /*
-  ui-polish.css — layered-surface pass for the music library.
+  ui-polish.css — layered-surface pass for the music library + app chrome.
   Loaded LAST in both apps so it overrides earlier shared styles.
-  Revert: git revert the commit that added this file (removes file,
-  the two @import lines, and the page.tsx border-t removal together).
+  Revert: git revert the commits that touched this file.
 */
 
 /* ── Toolbar: contained rounded surface instead of full-bleed hairline row ── */
@@ -208,4 +207,138 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
 .desktop-filter-menu {
   border-color: var(--border-subtle);
   background: var(--bg-tertiary);
+}
+
+/* ──────────────────────────────────────────────────
+   App chrome pass: sidebar, header, user menu
+   ────────────────────────────────────────────────── */
+
+/* ── Sidebar: distinct panel surface, no section hairlines ── */
+
+.desktop-app-sidebar {
+  border-right: 1px solid var(--border-subtle);
+  background: var(--bg-panel);
+}
+
+.desktop-sidebar-section {
+  border-bottom: 0;
+}
+
+.desktop-sidebar-link {
+  height: 36px;
+  border-radius: 8px;
+}
+
+.desktop-sidebar-link:hover {
+  background: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.desktop-sidebar-link.is-active {
+  background: var(--bg-control-hover);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.desktop-sidebar-add-button {
+  border-radius: 8px;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button {
+  border-radius: 8px;
+}
+
+.desktop-sidebar-tooltip-inner {
+  border-color: var(--border-subtle);
+  background: var(--bg-tertiary);
+}
+
+/* Collapsed nav buttons keep the new height */
+:root {
+  --filmwave-sidebar-row-height: 36px;
+  --filmwave-sidebar-row-radius: 8px;
+}
+
+/* ── Header: softer divider, pill hovers on nav + account ── */
+
+.filmwave-app-header,
+.desktop-header,
+body > header,
+.filmwave-header {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.filmwave-header-nav-link {
+  border-radius: 999px;
+  padding: 0 12px;
+  font-weight: 500;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-header-nav-link:hover,
+.filmwave-header-nav-link.is-active {
+  background: var(--bg-control);
+  color: var(--text-primary);
+}
+
+.filmwave-header-account-label {
+  border-radius: 999px;
+  padding: 0 12px;
+  font-weight: 500;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.filmwave-header-account-trigger:hover .filmwave-header-account-label,
+.filmwave-header-account-trigger.is-open .filmwave-header-account-label {
+  background: var(--bg-control);
+  color: var(--text-primary);
+}
+
+.filmwave-header-avatar {
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+/* ── User menu: rounded card, inset items, segmented theme control ── */
+
+.filmwave-user-menu {
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+}
+
+.filmwave-user-menu-head {
+  padding: 14px 16px 12px;
+}
+
+.filmwave-user-menu-actions {
+  padding: 6px;
+}
+
+.filmwave-user-menu-action,
+.filmwave-user-menu-exit {
+  border-radius: 8px;
+}
+
+.filmwave-user-menu-exit {
+  margin: 0 6px;
+  width: calc(100% - 12px);
+}
+
+.filmwave-user-menu-theme-wrap {
+  padding: 8px;
+}
+
+.filmwave-user-menu-theme {
+  gap: 3px;
+  border-radius: 999px;
+  background: var(--filmwave-menu-theme-bg);
+  padding: 3px;
+}
+
+.filmwave-user-menu-theme-option {
+  height: 28px;
+  border-radius: 999px;
 }

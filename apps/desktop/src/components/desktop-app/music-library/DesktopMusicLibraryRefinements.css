@@ -3,10 +3,8 @@
    combined-row-fix.css handle all the search/filter row layout.
    This file only adds desktop-specific adjustments. */
 
-/* Filter triggers match the 48px row height */
-.desktop-music-page .filmwave-filter-trigger {
-  height: 48px;
-}
+/* (Removed: 48px trigger-height override — trigger sizing now comes from
+   ui-polish.css so the desktop hover pill matches the website.) */
 
 .desktop-music-page .desktop-music-list {
   overflow: visible;
