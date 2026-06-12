@@ -12,6 +12,7 @@ import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
 import IconButtonTitleSync from "@/components/IconButtonTitleSync";
+import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
 import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
 import "./admin-polish.css";
@@ -61,7 +62,7 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <head>
-          {/*
+          {/**
            * Preconnect to the R2 CDN so the TCP + TLS handshake is already
            * complete by the time the user clicks any song. Without this, every
            * new song play pays a 100–300 ms connection setup cost before the
@@ -90,6 +91,7 @@ export default async function RootLayout({
                       {children}
                       <PlayerRenderer />
                       <IconButtonTitleSync />
+                      <MusicFilterToolbarBehavior />
                       <AdminPageHeaderMount />
                     </ProjectsProvider>
                   </PlaylistsProvider>
