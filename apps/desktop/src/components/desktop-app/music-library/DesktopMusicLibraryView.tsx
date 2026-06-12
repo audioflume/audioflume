@@ -615,6 +615,7 @@ export default function DesktopMusicLibraryView({
         filterCount={activeFilterCount}
         filtersOpen={filtersOpen}
         onToggleFilters={() => setFiltersOpen((open) => !open)}
+        onClearFilters={clearAllFilters}
         chips={
           hasActiveFilters ? (
             <DesktopFilterTags
