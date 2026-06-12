@@ -17,6 +17,15 @@
   --filmwave-sidebar-content-gap: 20px;
 }
 
+/* Narrower sidebar — overrides the app-level width tokens so the panel
+   AND the content offset both shrink together. If the page content does
+   not shift, the app defines --sidebar-width somewhere with a hardcoded
+   value instead of deriving it from these tokens. */
+:root {
+  --sidebar-width-expanded: 248px;
+  --sidebar-width-collapsed: 68px;
+}
+
 /* Floating sidebar — inset rounded panel on a subtle grey surface,
    detached from the page edges. The content offset stays at the full
    sidebar width variable, so the panel width = expanded - inset - gap
@@ -44,7 +53,7 @@
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar,
 body.sidebar-collapsed .desktop-app-sidebar {
-  width: 56px;
+  width: 48px;
 }
 
 .desktop-sidebar-collapse-zone {
@@ -114,8 +123,8 @@ body.sidebar-collapsed .desktop-app-sidebar {
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar-inner,
 body.sidebar-collapsed .desktop-app-sidebar-inner {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 /* Open feel — sections separated by space, not divider lines. */
@@ -248,6 +257,20 @@ body.sidebar-collapsed .desktop-sidebar-link {
   color: var(--text-primary);
 }
 
+/* Icon weight pass — the app's line icons read thin and cheap at 16px.
+   CSS stroke-width beats SVG presentation attributes, so this thickens
+   every stroked icon in the chrome without touching the icon components.
+   Fill-based icons are unaffected. */
+.desktop-sidebar-link-icon svg *,
+.desktop-sidebar-heading-icon svg *,
+.desktop-sidebar-add-button svg *,
+.filmwave-player-controls svg *,
+.filmwave-icon-button svg *,
+.filmwave-song-action-button svg *,
+.desktop-song-action-button svg * {
+  stroke-width: 2.4;
+}
+
 .desktop-sidebar-link-label {
   width: var(--filmwave-sidebar-label-width);
   min-width: var(--filmwave-sidebar-label-width);
@@ -349,7 +372,7 @@ body.sidebar-collapsed
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button,
 body.sidebar-collapsed .desktop-sidebar-add-button {
-  width: 36px;
+  width: 32px;
   height: var(--filmwave-sidebar-row-height);
   border-radius: var(--filmwave-sidebar-row-radius);
 }
