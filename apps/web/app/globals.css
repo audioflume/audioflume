@@ -200,7 +200,12 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   border-radius: 7px !important;
   padding: 0 8px !important;
   font-size: 10.5px !important;
+  font-weight: 400 !important;
   line-height: 1 !important;
+}
+
+.fw-quick-chip:is(:hover, .is-active, [aria-pressed="true"], [data-active="true"]) {
+  font-weight: 400 !important;
 }
 
 .fw-quick-end .fw-quick-chip {
