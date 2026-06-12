@@ -66,5 +66,11 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 
 .fw-toolbar-sticky {
   padding-bottom: 0 !important;
-  background: transparent !important;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-primary) 0,
+    var(--bg-primary) 52%,
+    transparent 52%,
+    transparent 100%
+  ) !important;
 }
