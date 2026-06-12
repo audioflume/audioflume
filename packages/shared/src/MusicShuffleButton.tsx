@@ -19,7 +19,7 @@ export function MusicShuffleButton({
       aria-label="Shuffle songs"
       aria-pressed={active}
     >
-      <ShuffleIconSmall size={14} />
+      <ShuffleIconSmall size={13} />
     </button>
   );
 }
