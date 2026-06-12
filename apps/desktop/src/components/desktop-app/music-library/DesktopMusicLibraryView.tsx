@@ -1,11 +1,17 @@
 import {
-  FilterTrigger,
+  MusicFilterPanel,
+  type MusicFilterChipGroup,
   MusicLibraryEmptyState,
   MusicLibraryLoadNotice,
   MusicLibrarySkeletonList,
   MusicLibrarySortControl,
   type MusicLibrarySortValue,
-  MusicShuffleButton,
+  MusicLibraryToolbar,
+  MusicListShell,
+  MusicQuickChip,
+  MusicQuickChips,
+  MusicQuickChipsEnd,
+  ShuffleIconSmall,
   clampPlaybackProgress,
   getAdjacentTrackIndex,
   getMusicLibrarySearchPlaceholder,
@@ -13,16 +19,6 @@ import {
   getProgressFromTime,
   getSeekTimeFromProgress,
   isCoreEditPointType,
-  MusicBpmFilter,
-  MusicDurationFilter,
-  MusicFilterPanel,
-  type MusicFilterChipGroup,
-  MusicKeyFilter,
-  MusicLibraryToolbar,
-  MusicListShell,
-  MusicPlaylistFilter,
-  MusicQuickChip,
-  MusicQuickChips,
   normalizeEditPointType,
   shouldClearPendingSeekProgress,
   shouldIgnorePlaybackShortcutTarget,
@@ -30,9 +26,6 @@ import {
 import { exists } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import CheckIcon from "../../icons/CheckIcon";
-import PlaylistIcon from "../../icons/PlaylistIcon";
-import PlusIcon from "../../icons/PlusIcon";
 import SearchIconSmall from "../../icons/SearchIconSmall";
 import {
   desktopSongs,
@@ -222,6 +215,15 @@ export default function DesktopMusicLibraryView({
   const filteredSongs = useMemo(
     () => filterDesktopMusicSongs(songs, filters),
     [songs, filters],
+  );
+
+  const playlistChipOptions = useMemo(
+    () =>
+      playlistOptions.map((option) => ({
+        id: String(option.id),
+        name: option.name,
+      })),
+    [playlistOptions],
   );
 
   function setRandomSort() {
@@ -613,12 +615,6 @@ export default function DesktopMusicLibraryView({
         filterCount={activeFilterCount}
         filtersOpen={filtersOpen}
         onToggleFilters={() => setFiltersOpen((open) => !open)}
-        actions={
-          <>
-            <MusicShuffleButton active={filters.shuffle} onClick={setRandomSort} />
-            <MusicLibrarySortControl value={sortOrder} onChange={handleSortChange} />
-          </>
-        }
         chips={
           hasActiveFilters ? (
             <DesktopFilterTags
@@ -644,52 +640,36 @@ export default function DesktopMusicLibraryView({
         <MusicFilterPanel
           open={filtersOpen}
           groups={filterChipGroups}
-          advanced={
-            <>
-              <MusicPlaylistFilter
-                selected={filters.selectedPlaylist}
-                playlists={playlistOptions}
-                loading={songsLoading}
-                loaded={!songsLoading}
-                playlistIcon={<PlaylistIcon size={13} />}
-                checkIcon={<CheckIcon size={11} />}
-                plusIcon={<PlusIcon size={11} />}
-                onChange={(selectedPlaylist) =>
-                  setFilters((current) => ({ ...current, selectedPlaylist }))
-                }
-              />
-
-              <MusicBpmFilter
-                value={filters.bpmValue}
-                onChange={(bpmValue) =>
-                  setFilters((current) => ({ ...current, bpmValue }))
-                }
-              />
-
-              <MusicKeyFilter
-                value={filters.keyValue}
-                onChange={(keyValue) =>
-                  setFilters((current) => ({ ...current, keyValue }))
-                }
-              />
-
-              <MusicDurationFilter
-                selected={filters.selectedDurations}
-                onChange={(selectedDurations) =>
-                  setFilters((current) => ({ ...current, selectedDurations }))
-                }
-              />
-
-              <FilterTrigger
-                label="Markers"
-                active={filters.markers}
-                showActiveDot
-                hideChevron
-                onClick={() =>
-                  setFilters((current) => ({ ...current, markers: !current.markers }))
-                }
-              />
-            </>
+          playlists={playlistChipOptions}
+          playlistsLoading={songsLoading}
+          selectedPlaylistId={
+            filters.selectedPlaylist ? String(filters.selectedPlaylist.id) : null
+          }
+          onSelectPlaylist={(playlist) =>
+            setFilters((current) => ({
+              ...current,
+              selectedPlaylist: playlist
+                ? playlistOptions.find(
+                    (option) => String(option.id) === playlist.id,
+                  ) ?? null
+                : null,
+            }))
+          }
+          bpmValue={filters.bpmValue}
+          onBpmChange={(bpmValue) =>
+            setFilters((current) => ({ ...current, bpmValue }))
+          }
+          keyValue={filters.keyValue}
+          onKeyChange={(keyValue) =>
+            setFilters((current) => ({ ...current, keyValue }))
+          }
+          selectedDurations={filters.selectedDurations}
+          onDurationsChange={(selectedDurations) =>
+            setFilters((current) => ({ ...current, selectedDurations }))
+          }
+          markersActive={filters.markers}
+          onToggleMarkers={() =>
+            setFilters((current) => ({ ...current, markers: !current.markers }))
           }
           hasActive={hasActiveClearableFilters}
           onClearAll={clearAllFilters}
@@ -711,6 +691,14 @@ export default function DesktopMusicLibraryView({
             </MusicQuickChip>
           );
         })}
+
+        <MusicQuickChipsEnd>
+          <MusicQuickChip active={filters.shuffle} onClick={setRandomSort}>
+            <ShuffleIconSmall size={12} />
+            Shuffle
+          </MusicQuickChip>
+          <MusicLibrarySortControl value={sortOrder} onChange={handleSortChange} />
+        </MusicQuickChipsEnd>
       </MusicQuickChips>
 
       {songsError && (
