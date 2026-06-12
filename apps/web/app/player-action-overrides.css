@@ -1,6 +1,17 @@
 /* Scope SongActionButton player usage to the same compact button styling as the desktop player. */
 
-.filmwave-player-actions .filmwave-song-action-button {
+:where(:root) {
+  --filmwave-player-action-icon-color: var(--filmwave-sidebar-icon-color, #8f8f8f);
+  --filmwave-player-action-icon-color-active: var(--filmwave-sidebar-icon-color-active, #ffffff);
+}
+
+:where(html.light, html[data-theme="light"]) {
+  --filmwave-player-action-icon-color: var(--filmwave-sidebar-icon-color, #969696);
+  --filmwave-player-action-icon-color-active: var(--filmwave-sidebar-icon-color-active, #111111);
+}
+
+.filmwave-player-actions .filmwave-song-action-button,
+.filmwave-player-actions .filmwave-icon-button {
   display: inline-flex !important;
   width: 28px !important;
   min-width: 28px !important;
@@ -12,7 +23,8 @@
   border-radius: 9px !important;
   background: transparent !important;
   padding: 0 !important;
-  color: var(--icon-color) !important;
+  color: var(--filmwave-player-action-icon-color) !important;
+  opacity: 1 !important;
   transition:
     background 0.15s ease,
     color 0.15s ease !important;
@@ -21,23 +33,39 @@
 .filmwave-player-actions .filmwave-song-action-button:hover,
 .filmwave-player-actions .filmwave-song-action-button.is-open,
 .filmwave-player-actions .filmwave-song-action-button.is-active,
-.filmwave-player-actions .filmwave-song-action-button[aria-pressed="true"] {
+.filmwave-player-actions .filmwave-song-action-button[aria-pressed="true"],
+.filmwave-player-actions .filmwave-icon-button:hover,
+.filmwave-player-actions .filmwave-icon-button.is-open,
+.filmwave-player-actions .filmwave-icon-button.is-active,
+.filmwave-player-actions .filmwave-icon-button[aria-pressed="true"] {
   border-color: transparent !important;
   background: var(--filmwave-square-icon-hover-bg) !important;
-  color: var(--text-primary) !important;
+  color: var(--filmwave-player-action-icon-color-active) !important;
+  opacity: 1 !important;
 }
 
 .filmwave-player-actions .filmwave-song-action-button[aria-label="Remove song from favorites"],
 .filmwave-player-actions .filmwave-song-action-button[aria-label="Remove song from favorites"] svg,
-.filmwave-player-actions .filmwave-song-action-button[aria-pressed="true"] svg {
-  color: var(--text-primary) !important;
+.filmwave-player-actions .filmwave-song-action-button[aria-pressed="true"] svg,
+.filmwave-player-actions .filmwave-icon-button[aria-pressed="true"] svg {
+  color: var(--filmwave-player-action-icon-color-active) !important;
   fill: currentColor !important;
   stroke: currentColor !important;
+  opacity: 1 !important;
 }
 
-.filmwave-player-actions .filmwave-song-action-button svg {
+.filmwave-player-actions .filmwave-song-action-button svg,
+.filmwave-player-actions .filmwave-icon-button svg {
   width: 14px !important;
   height: 14px !important;
+  opacity: 1 !important;
+}
+
+.filmwave-player-actions .filmwave-song-action-button svg *,
+.filmwave-player-actions .filmwave-icon-button svg * {
+  opacity: 1 !important;
+  fill-opacity: 1 !important;
+  stroke-opacity: 1 !important;
 }
 
 .filmwave-player-actions .filmwave-song-action-button.is-plain-active-icon {
