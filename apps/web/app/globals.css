@@ -83,8 +83,8 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   background: linear-gradient(
     to bottom,
     var(--bg-primary) 0,
-    var(--bg-primary) 58px,
-    transparent 58px,
+    var(--bg-primary) 35px,
+    transparent 35px,
     transparent 100%
   ) !important;
 }
@@ -258,35 +258,3 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 }
 
 /* ─── Music hero/list spacing cleanup ─────────────────────── */
-
-.fw-song-list-head {
-  display: none !important;
-}
-
-.fw-song-list {
-  margin-top: -12px !important;
-}
-
-/* ─── Filter dropdown shadow/corner fix ───────────────────── */
-
-.fw-filter-panel-wrap.is-open,
-.fw-filter-panel-wrap.is-open .fw-filter-panel-reveal {
-  overflow: visible !important;
-}
-
-.fw-filter-panel-wrap.is-open {
-  padding-bottom: 14px;
-}
-
-.fw-filter-panel {
-  overflow: hidden;
-  border-radius: 18px !important;
-}
-
-@media (max-width: 640px) {
-  :root {
-    --fw-music-content-inset: 12px;
-    --fw-music-content-inset-left: 12px;
-    --fw-music-content-inset-right: 12px;
-  }
-}
