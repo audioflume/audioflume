@@ -257,13 +257,26 @@ body.sidebar-collapsed .desktop-sidebar-link {
   color: var(--text-primary);
 }
 
-/* Icon weight pass — the app's line icons read thin and cheap at 16px.
-   CSS stroke-width beats SVG presentation attributes, so this thickens
-   every stroked icon in the chrome without touching the icon components.
-   Fill-based icons are unaffected. */
+/* Icon crispness pass — force all sidebar SVGs to the exact same pixel box
+   and use non-scaling strokes so custom large-viewBox icons do not collapse
+   into hairlines when rendered at 16px. */
+.desktop-sidebar-link-icon svg,
+.desktop-sidebar-heading-icon svg,
+.desktop-sidebar-add-button svg {
+  display: block;
+  width: var(--filmwave-sidebar-icon-size);
+  height: var(--filmwave-sidebar-icon-size);
+  overflow: visible;
+  shape-rendering: geometricPrecision;
+}
+
 .desktop-sidebar-link-icon svg *,
 .desktop-sidebar-heading-icon svg *,
-.desktop-sidebar-add-button svg *,
+.desktop-sidebar-add-button svg * {
+  vector-effect: non-scaling-stroke;
+  stroke-width: 2px !important;
+}
+
 .filmwave-player-controls svg *,
 .filmwave-icon-button svg *,
 .filmwave-song-action-button svg *,
