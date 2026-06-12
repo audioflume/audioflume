@@ -1,3 +1,7 @@
+:where(html.light, html[data-theme="light"]) {
+  --filmwave-sidebar-heading-icon-color: #d7d7d7;
+}
+
 .filmwave-song-card.is-current .filmwave-song-play-overlay,
 .desktop-song-card.is-current .desktop-song-play-overlay,
 .desktop-song-card.is-current .filmwave-song-play-overlay {
@@ -74,8 +78,15 @@
 }
 
 .filmwave-music-shuffle-button svg {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
+  opacity: 1;
+}
+
+.filmwave-music-shuffle-button svg * {
+  opacity: 1 !important;
+  fill-opacity: 1 !important;
+  stroke-opacity: 1 !important;
 }
 
 .filmwave-music-sort-button svg {
@@ -83,6 +94,31 @@
   height: 8px;
   flex: 0 0 8px;
   opacity: 0.9;
+}
+
+.filmwave-music-player .filmwave-icon-button,
+.filmwave-music-player .filmwave-player-controls button {
+  opacity: 1;
+}
+
+.filmwave-music-player .filmwave-icon-button {
+  color: var(--filmwave-sidebar-icon-color, var(--icon-color));
+}
+
+.filmwave-music-player .filmwave-icon-button:hover,
+.filmwave-music-player .filmwave-icon-button.is-open,
+.filmwave-music-player .filmwave-icon-button.is-active,
+.filmwave-music-player .filmwave-icon-button[aria-pressed="true"] {
+  color: var(--text-primary);
+}
+
+.filmwave-music-player .filmwave-player-controls svg,
+.filmwave-music-player .filmwave-player-controls svg *,
+.filmwave-music-player .filmwave-icon-button svg,
+.filmwave-music-player .filmwave-icon-button svg * {
+  opacity: 1 !important;
+  fill-opacity: 1 !important;
+  stroke-opacity: 1 !important;
 }
 
 .filmwave-music-sort-dropdown {
