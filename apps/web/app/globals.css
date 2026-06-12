@@ -78,3 +78,19 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 .fw-toolbar-float {
   box-shadow: 0 18px 30px -24px rgba(0, 0, 0, 0.24) !important;
 }
+
+/* ─── Music library search field restore ─────────────────── */
+
+.fw-toolbar-search {
+  border-color: transparent !important;
+  background: var(--bg-control) !important;
+}
+
+.fw-toolbar-search:focus-within {
+  border-color: var(--border-strong) !important;
+  background: var(--bg-control-hover) !important;
+}
+
+.fw-toolbar-search-icon {
+  background: var(--bg-hover-strong) !important;
+}
