@@ -18,6 +18,7 @@
 @import "../../../packages/shared/styles/dropdown-shell.css";
 @import "../../../packages/shared/styles/user-menu.css";
 @import "../../../packages/shared/styles/settings-side-nav.css";
+@import "../../../packages/shared/styles/ui-polish.css";
 
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
