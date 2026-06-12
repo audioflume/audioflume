@@ -168,3 +168,31 @@ main:has(.filmwave-search-filter-sticky) .filmwave-song-card.is-current {
 main:has(.filmwave-search-filter-sticky) .filmwave-song-cover {
   border-radius: 8px;
 }
+
+/* ─── Music page sidebar/filter alignment refinements ─────── */
+
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed .filmwave-music-library-frame,
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .filmwave-music-library-frame {
+  margin-left: 66px;
+}
+
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link {
+  position: relative;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky {
+  background: transparent;
+}
+
+main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky::before {
+  top: -80px;
+  height: 90px;
+}
