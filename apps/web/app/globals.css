@@ -84,6 +84,11 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
   box-shadow: 0 18px 30px -24px rgba(0, 0, 0, 0.24) !important;
 }
 
+html[data-theme="light"] .fw-toolbar-float,
+html.light .fw-toolbar-float {
+  background: #f2f2f0 !important;
+}
+
 .fw-toolbar {
   gap: 4px !important;
 }
@@ -101,6 +106,8 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 }
 
 .fw-toolbar-search-icon {
+  width: 26px !important;
+  height: 26px !important;
   background: var(--bg-hover-strong) !important;
 }
 
@@ -170,4 +177,20 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 /* Filter actions now live in the toolbar. */
 .fw-filter-panel-footer {
   display: none !important;
+}
+
+/* ─── Filter dropdown shadow/corner fix ───────────────────── */
+
+.fw-filter-panel-wrap.is-open,
+.fw-filter-panel-wrap.is-open .fw-filter-panel-reveal {
+  overflow: visible !important;
+}
+
+.fw-filter-panel-wrap.is-open {
+  padding-bottom: 14px;
+}
+
+.fw-filter-panel {
+  overflow: hidden;
+  border-radius: 18px !important;
 }
