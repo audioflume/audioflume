@@ -239,6 +239,14 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y) !important;
 }
 
+:where(html.light, html[data-theme="light"]) .fw-song-list .filmwave-song-card,
+:where(html.light, html[data-theme="light"]) .fw-song-list .desktop-song-card,
+:where(html.light, html[data-theme="light"])
+  .fw-song-list
+  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+  --filmwave-song-card-hover-bg: var(--filmwave-chrome-surface) !important;
+}
+
 /* ─── Music hero/list spacing cleanup ─────────────────────── */
 
 .fw-song-list-head {
