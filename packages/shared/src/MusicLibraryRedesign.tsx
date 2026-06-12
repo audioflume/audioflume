@@ -200,6 +200,73 @@ function toSliderPercent(value: number, min: number, max: number) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Chip group section — large categories collapse behind "+N more" so  */
+/* every section keeps a comparable footprint in the panel.            */
+/* ------------------------------------------------------------------ */
+
+const GROUP_VISIBLE_LIMIT = 12;
+
+function MusicFilterGroupSection({ group }: { group: MusicFilterChipGroup }) {
+  const [expanded, setExpanded] = useState(false);
+  const collapsible = group.options.length > GROUP_VISIBLE_LIMIT + 2;
+
+  let visibleOptions = group.options;
+
+  if (collapsible && !expanded) {
+    // Keep every selected chip visible, fill the rest up to the limit,
+    // and preserve the original option order so chips never jump around.
+    const selectedSet = new Set(group.selected);
+    const prioritized = [
+      ...group.options.filter((option) => selectedSet.has(option)),
+      ...group.options.filter((option) => !selectedSet.has(option)),
+    ].slice(0, Math.max(GROUP_VISIBLE_LIMIT, group.selected.length));
+    const visibleSet = new Set(prioritized);
+
+    visibleOptions = group.options.filter((option) => visibleSet.has(option));
+  }
+
+  const hiddenCount = group.options.length - visibleOptions.length;
+
+  return (
+    <section className="fw-filter-group">
+      <h3 className="fw-filter-group-label">
+        {group.label}
+        {group.selected.length > 0 && (
+          <span className="fw-filter-group-count">{group.selected.length}</span>
+        )}
+      </h3>
+      <div className="fw-filter-chip-grid">
+        {visibleOptions.map((option) => {
+          const isSelected = group.selected.includes(option);
+
+          return (
+            <button
+              key={option}
+              type="button"
+              aria-pressed={isSelected}
+              className={`fw-filter-chip${isSelected ? " is-selected" : ""}`}
+              onClick={() => group.onToggle(option)}
+            >
+              {option}
+            </button>
+          );
+        })}
+        {collapsible && (
+          <button
+            type="button"
+            className="fw-filter-chip fw-filter-chip-more"
+            aria-expanded={expanded}
+            onClick={() => setExpanded((open) => !open)}
+          >
+            {expanded ? "Show less" : `+${hiddenCount} more`}
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* BPM section — range/exact segmented control, slider, presets        */
 /* ------------------------------------------------------------------ */
 
@@ -786,7 +853,8 @@ function MusicPlaylistSection({
 }
 
 /* ------------------------------------------------------------------ */
-/* Filter panel                                                        */
+/* Filter panel — masonry columns; sections flow top-to-bottom and     */
+/* pack tightly regardless of how many chips each category has.        */
 /* ------------------------------------------------------------------ */
 
 type MusicFilterPanelProps = {
@@ -848,41 +916,8 @@ export function MusicFilterPanel({
           <div className="fw-filter-panel-scroll">
             <div className="fw-filter-panel-grid">
               {groups.map((group) => (
-                <section key={group.id} className="fw-filter-group">
-                  <h3 className="fw-filter-group-label">
-                    {group.label}
-                    {group.selected.length > 0 && (
-                      <span className="fw-filter-group-count">{group.selected.length}</span>
-                    )}
-                  </h3>
-                  <div className="fw-filter-chip-grid">
-                    {group.options.map((option) => {
-                      const isSelected = group.selected.includes(option);
-
-                      return (
-                        <button
-                          key={option}
-                          type="button"
-                          aria-pressed={isSelected}
-                          className={`fw-filter-chip${isSelected ? " is-selected" : ""}`}
-                          onClick={() => group.onToggle(option)}
-                        >
-                          {option}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </section>
+                <MusicFilterGroupSection key={group.id} group={group} />
               ))}
-
-              {onSelectPlaylist && (
-                <MusicPlaylistSection
-                  playlists={playlists ?? []}
-                  loading={playlistsLoading}
-                  selectedPlaylistId={selectedPlaylistId}
-                  onSelect={onSelectPlaylist}
-                />
-              )}
 
               {onDurationsChange && (
                 <MusicDurationSection
@@ -897,6 +932,15 @@ export function MusicFilterPanel({
 
               {onKeyChange && (
                 <MusicKeySection value={keyValue} onChange={onKeyChange} />
+              )}
+
+              {onSelectPlaylist && (
+                <MusicPlaylistSection
+                  playlists={playlists ?? []}
+                  loading={playlistsLoading}
+                  selectedPlaylistId={selectedPlaylistId}
+                  onSelect={onSelectPlaylist}
+                />
               )}
 
               {onToggleMarkers && (
