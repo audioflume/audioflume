@@ -3,7 +3,6 @@
 import {
   BUILD_OPTIONS,
   EDIT_POINT_FILTER_OPTIONS,
-  FilterTrigger,
   filterMusicLibrarySongs,
   GENRE_OPTIONS,
   getMusicLibrarySearchPlaceholder,
@@ -14,33 +13,31 @@ import {
   isCoreEditPointType,
   MOOD_OPTIONS,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
-  MusicBpmFilter,
-  MusicDurationFilter,
   MusicFilterPanel,
-  MusicKeyFilter,
   MusicLibrarySortControl,
   type MusicLibrarySortValue,
   MusicLibraryToolbar,
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
-  MusicShuffleButton,
+  MusicQuickChipsEnd,
   QUICK_FILTERS,
+  ShuffleIconSmall,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
-import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
+import type { BpmFilterValue, KeyFilterValue } from "@/lib/types";
 
 import { useFilterPersistence } from "@/hooks/useFilterPersistence";
+import { usePlaylists } from "@/hooks/usePlaylists";
 import { useSongs } from "@/hooks/useSongs";
 
 import { usePlayer } from "@/context/PlayerContext";
 
 import FilterTags from "@/components/FilterTags";
 import Footer from "@/components/Footer";
-import PlaylistFilter from "@/components/PlaylistFilter";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -102,6 +99,7 @@ export default function MusicPage() {
   } = useFilterPersistence(musicFilterStorageKey);
 
   const { songs, loading: songsLoading, error: songsError } = useSongs();
+  const { playlists } = usePlaylists();
 
   const { currentSong, setQueue } = usePlayer();
   const playerVisible = Boolean(currentSong);
@@ -156,8 +154,6 @@ export default function MusicPage() {
     setFilters((current) => ({ ...current, bpmValue: value }));
   const setKeyValue = (value: KeyFilterValue | null) =>
     setFilters((current) => ({ ...current, keyValue: value }));
-  const setSelectedPlaylist = (value: PlaylistRef | null) =>
-    setFilters((current) => ({ ...current, selectedPlaylist: value }));
   const setShowEditPointMarkers = (value: boolean) =>
     setFilters((current) => ({ ...current, showEditPointMarkers: value }));
 
@@ -185,6 +181,15 @@ export default function MusicPage() {
           : [...values, option],
       );
   }
+
+  const playlistChipOptions = useMemo(
+    () =>
+      playlists.map((playlist) => ({
+        id: String(playlist.id),
+        name: playlist.name,
+      })),
+    [playlists],
+  );
 
   const hasActiveFilters =
     search.trim().length > 0 ||
@@ -463,18 +468,6 @@ export default function MusicPage() {
           filterCount={activeFilterCount}
           filtersOpen={filtersOpen}
           onToggleFilters={() => setFiltersOpen((open) => !open)}
-          actions={
-            <>
-              <MusicShuffleButton
-                active={shuffleActive}
-                onClick={setRandomSort}
-              />
-              <MusicLibrarySortControl
-                value={sortOrder}
-                onChange={handleSortChange}
-              />
-            </>
-          }
           chips={
             hasActiveFilters ? (
               <FilterTags
@@ -520,7 +513,9 @@ export default function MusicPage() {
                 onRemoveInstrumental={() => setInstrumental(false)}
                 onRemoveBpm={() => setBpmValue(null)}
                 onRemoveKey={() => setKeyValue(null)}
-                onRemovePlaylist={() => setSelectedPlaylist(null)}
+                onRemovePlaylist={() =>
+                  setFilters((current) => ({ ...current, selectedPlaylist: null }))
+                }
                 onRemoveShuffle={() => handleSortChange("recent")}
               />
             ) : undefined
@@ -529,29 +524,26 @@ export default function MusicPage() {
           <MusicFilterPanel
             open={filtersOpen}
             groups={filterChipGroups}
-            advanced={
-              <>
-                <PlaylistFilter
-                  selected={selectedPlaylist}
-                  onChange={setSelectedPlaylist}
-                />
-                <MusicBpmFilter value={bpmValue} onChange={setBpmValue} />
-                <MusicKeyFilter value={keyValue} onChange={setKeyValue} />
-                <MusicDurationFilter
-                  selected={selectedDurations}
-                  onChange={setSelectedDurations}
-                />
-                <FilterTrigger
-                  label="Markers"
-                  active={effectiveShowEditPointMarkers}
-                  showActiveDot
-                  hideChevron
-                  disabled={!filtersHydrated}
-                  onClick={() =>
-                    setShowEditPointMarkers(!effectiveShowEditPointMarkers)
-                  }
-                />
-              </>
+            playlists={playlistChipOptions}
+            selectedPlaylistId={selectedPlaylistId ? String(selectedPlaylistId) : null}
+            onSelectPlaylist={(playlist) =>
+              setFilters((current) => ({
+                ...current,
+                selectedPlaylist: playlist
+                  ? { id: playlist.id, name: playlist.name }
+                  : null,
+              }))
+            }
+            bpmValue={bpmValue}
+            onBpmChange={setBpmValue}
+            keyValue={keyValue}
+            onKeyChange={setKeyValue}
+            selectedDurations={selectedDurations}
+            onDurationsChange={setSelectedDurations}
+            markersActive={effectiveShowEditPointMarkers}
+            markersDisabled={!filtersHydrated}
+            onToggleMarkers={() =>
+              setShowEditPointMarkers(!effectiveShowEditPointMarkers)
             }
             hasActive={hasActiveClearableFilters}
             onClearAll={clearAllFilters}
@@ -579,6 +571,17 @@ export default function MusicPage() {
               </MusicQuickChip>
             );
           })}
+
+          <MusicQuickChipsEnd>
+            <MusicQuickChip active={shuffleActive} onClick={setRandomSort}>
+              <ShuffleIconSmall size={12} />
+              Shuffle
+            </MusicQuickChip>
+            <MusicLibrarySortControl
+              value={sortOrder}
+              onChange={handleSortChange}
+            />
+          </MusicQuickChipsEnd>
         </MusicQuickChips>
 
         <div
@@ -592,7 +595,7 @@ export default function MusicPage() {
           aria-hidden={hasActiveFilters}
         >
           <div className="min-h-0 overflow-hidden">
-            <div className="px-7 pt-4">
+            <div className="px-5 pt-4">
               <div className="group relative flex min-h-[240px] overflow-hidden rounded-[20px] bg-[var(--bg-secondary)] p-7 text-white">
                 <div
                   className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
@@ -649,7 +652,7 @@ export default function MusicPage() {
         </div>
 
         {songsError && (
-          <div className="px-7 py-4 text-sm text-[var(--danger)]">
+          <div className="px-5 py-4 text-sm text-[var(--danger)]">
             Failed to load songs. Showing cached results where available.
           </div>
         )}
