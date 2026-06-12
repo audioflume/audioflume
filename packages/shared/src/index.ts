@@ -36,3 +36,4 @@ export * from "./UserMenuShell";
 export * from "./SettingsSideNav";
 export * from "./CollapsibleSearchPill";
 export * from "./ProjectBrowserGlyphs";
+export * from "./MusicLibraryRedesign";

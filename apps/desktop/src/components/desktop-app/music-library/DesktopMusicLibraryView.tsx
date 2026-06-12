@@ -1,6 +1,4 @@
 import {
-  CollapsibleSearchPill,
-  EDIT_POINT_FILTER_OPTIONS,
   FilterTrigger,
   MusicLibraryEmptyState,
   MusicLibraryLoadNotice,
@@ -17,17 +15,21 @@ import {
   isCoreEditPointType,
   MusicBpmFilter,
   MusicDurationFilter,
+  MusicFilterPanel,
+  type MusicFilterChipGroup,
   MusicKeyFilter,
+  MusicLibraryToolbar,
+  MusicListShell,
   MusicPlaylistFilter,
+  MusicQuickChip,
+  MusicQuickChips,
   normalizeEditPointType,
-  SearchFilterChrome,
-  SearchFilterQuickButton,
   shouldClearPendingSeekProgress,
   shouldIgnorePlaybackShortcutTarget,
 } from "@filmwave/shared";
 import { exists } from "@tauri-apps/plugin-fs";
 import { load } from "@tauri-apps/plugin-store";
-import { useCallback, useEffect, useMemo, useRef, useState, type WheelEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CheckIcon from "../../icons/CheckIcon";
 import PlaylistIcon from "../../icons/PlaylistIcon";
 import PlusIcon from "../../icons/PlusIcon";
@@ -41,7 +43,6 @@ import {
   getMusicLibrarySyncedSongPath,
   syncSongToMusicLibraryFolder,
 } from "../../../lib/musicLibrarySync";
-import DesktopFilterDropdown from "./DesktopFilterDropdown";
 import DesktopFilterTags from "./DesktopFilterTags";
 import DesktopMusicPlayer, { type DesktopMusicPlayerSeekRequest } from "./DesktopMusicPlayer";
 import DesktopSongCard from "./DesktopSongCard";
@@ -59,6 +60,7 @@ import "./DesktopMusicLibraryView.css";
 import "./DesktopMusicLibraryRefinements.css";
 import "./DesktopMusicLibrarySpacing.css";
 import "./DesktopCollapsibleSearchPill.css";
+import "./MusicLibraryRedesign.css";
 
 const SETTINGS_STORE = "filmwave-settings.json";
 const TRACK_SCROLL_EDGE_PADDING = 12;
@@ -100,7 +102,7 @@ export default function DesktopMusicLibraryView({
   const [songsLoading, setSongsLoading] = useState(true);
   const [songsError, setSongsError] = useState<string | null>(null);
   const [filters, setFilters] = useState<DesktopMusicFilterState>(EMPTY_FILTERS);
-  const [openDropdown, setOpenDropdown] = useState<DesktopMusicFilterKey | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
   const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
@@ -292,6 +294,21 @@ export default function DesktopMusicLibraryView({
     filters.keyValue !== null ||
     filters.selectedPlaylist !== null;
 
+  const hasActiveFilters =
+    hasActiveClearableFilters || filters.search.trim().length > 0 || filters.shuffle;
+
+  const activeFilterCount =
+    filters.mood.length +
+    filters.genre.length +
+    filters.instrument.length +
+    filters.vocal.length +
+    filters.build.length +
+    filters.cuePoint.length +
+    filters.selectedDurations.length +
+    (filters.bpmValue !== null ? 1 : 0) +
+    (filters.keyValue !== null ? 1 : 0) +
+    (filters.selectedPlaylist !== null ? 1 : 0);
+
   function clearAllFilters() {
     setFilters((current) => ({
       ...current,
@@ -334,7 +351,7 @@ export default function DesktopMusicLibraryView({
       const scrollContainer = getScrollContainer(card);
       const rect = card.getBoundingClientRect();
       const containerRect = scrollContainer?.getBoundingClientRect();
-      const searchFilter = document.querySelector<HTMLElement>(".filmwave-search-filter-sticky");
+      const searchFilter = document.querySelector<HTMLElement>(".fw-toolbar-sticky");
       const player = document.querySelector<HTMLElement>(".desktop-music-player");
       const searchFilterRect = searchFilter?.getBoundingClientRect();
       const playerRect = player?.getBoundingClientRect();
@@ -566,160 +583,135 @@ export default function DesktopMusicLibraryView({
     return getProgressFromTime(playbackProgress.currentTime, playbackProgress.duration);
   }
 
-  function handleMusicPageWheelCapture(event: WheelEvent<HTMLElement>) {
-    const target = event.target instanceof Element ? event.target : null;
-    const filterRow = target?.closest<HTMLElement>(".filmwave-search-filter-row");
-
-    if (!filterRow) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    filterRow.scrollLeft += event.deltaX + (event.shiftKey ? event.deltaY : 0);
-  }
+  const filterChipGroups: MusicFilterChipGroup[] = [
+    ...filterKeys.map((filterKey) => ({
+      id: filterKey,
+      label: FILTER_TITLES[filterKey],
+      options: filterOptions[filterKey],
+      selected: filters[filterKey],
+      onToggle: (value: string) => setFilterValue(filterKey, value),
+    })),
+    {
+      id: "cuePoint",
+      label: FILTER_TITLES.cuePoint,
+      options: filterOptions.cuePoint,
+      selected: filters.cuePoint,
+      onToggle: (value: string) => setFilterValue("cuePoint", value),
+    },
+  ];
 
   return (
-    <section
-      className={`desktop-music-page${activeSong ? " has-player" : ""}`}
-      onWheelCapture={handleMusicPageWheelCapture}
-    >
-      <SearchFilterChrome
-        onSearchRowClick={() => searchInputRef.current?.focus()}
-        search={
-          <CollapsibleSearchPill
-            searchIcon={<SearchIconSmall />}
-            inputRef={searchInputRef}
-            value={filters.search}
-            placeholder={searchPlaceholder}
-            onChange={(value) =>
-              setFilters((current) => ({ ...current, search: value }))
-            }
-          />
+    <section className={`desktop-music-page${activeSong ? " has-player" : ""}`}>
+      <MusicLibraryToolbar
+        searchValue={filters.search}
+        searchPlaceholder={searchPlaceholder}
+        onSearchChange={(value) =>
+          setFilters((current) => ({ ...current, search: value }))
         }
-        tags={
-          <DesktopFilterTags
-            filters={filters}
-            onRemoveFilter={removeFilterValue}
-            onRemovePlaylist={() =>
-              setFilters((current) => ({ ...current, selectedPlaylist: null }))
-            }
-            onRemoveBpm={() =>
-              setFilters((current) => ({ ...current, bpmValue: null }))
-            }
-            onRemoveKey={() =>
-              setFilters((current) => ({ ...current, keyValue: null }))
-            }
-            onRemoveDuration={() =>
-              setFilters((current) => ({ ...current, selectedDurations: [] }))
-            }
-            onRemoveShuffle={removeShuffle}
-          />
-        }
-        filters={
-          <>
-            <MusicPlaylistFilter
-              selected={filters.selectedPlaylist}
-              playlists={playlistOptions}
-              loading={songsLoading}
-              loaded={!songsLoading}
-              playlistIcon={<PlaylistIcon size={13} />}
-              checkIcon={<CheckIcon size={11} />}
-              plusIcon={<PlusIcon size={11} />}
-              onChange={(selectedPlaylist) =>
-                setFilters((current) => ({ ...current, selectedPlaylist }))
-              }
-            />
-
-            {filterKeys.map((filterKey) => (
-              <DesktopFilterDropdown
-                key={filterKey}
-                filterKey={filterKey}
-                label={FILTER_TITLES[filterKey]}
-                options={filterOptions[filterKey]}
-                selected={filters[filterKey]}
-                open={openDropdown === filterKey}
-                onOpenChange={(open) => setOpenDropdown(open ? filterKey : null)}
-                onToggleOption={(value) => setFilterValue(filterKey, value)}
-              />
-            ))}
-
-            <MusicBpmFilter
-              value={filters.bpmValue}
-              onChange={(bpmValue) =>
-                setFilters((current) => ({ ...current, bpmValue }))
-              }
-            />
-
-            <MusicKeyFilter
-              value={filters.keyValue}
-              onChange={(keyValue) =>
-                setFilters((current) => ({ ...current, keyValue }))
-              }
-            />
-
-            <MusicDurationFilter
-              selected={filters.selectedDurations}
-              onChange={(selectedDurations) =>
-                setFilters((current) => ({ ...current, selectedDurations }))
-              }
-            />
-
-            <DesktopFilterDropdown
-              filterKey="cuePoint"
-              label={FILTER_TITLES.cuePoint}
-              options={filterOptions.cuePoint}
-              selected={filters.cuePoint}
-              open={openDropdown === "cuePoint"}
-              onOpenChange={(open) => setOpenDropdown(open ? "cuePoint" : null)}
-              onToggleOption={(value) => setFilterValue("cuePoint", value)}
-            />
-
-            <FilterTrigger
-              label="Markers"
-              active={filters.markers}
-              showActiveDot
-              hideChevron
-              onClick={() =>
-                setFilters((current) => ({ ...current, markers: !current.markers }))
-              }
-            />
-          </>
-        }
-        clearAll={
-          hasActiveClearableFilters ? (
-            <button
-              type="button"
-              className="filmwave-filter-clear-all"
-              onClick={clearAllFilters}
-            >
-              Clear all
-            </button>
-          ) : undefined
-        }
-        quickFilters={
-          <>
-            {QUICK_GENRES.map((genre) => {
-              const active = filters.genre.includes(genre);
-
-              return (
-                <SearchFilterQuickButton
-                  key={genre}
-                  active={active}
-                  onClick={() => setFilterValue("genre", genre)}
-                >
-                  {genre}
-                </SearchFilterQuickButton>
-              );
-            })}
-          </>
-        }
-        quickActions={
+        searchInputRef={searchInputRef}
+        searchIcon={<SearchIconSmall />}
+        filterCount={activeFilterCount}
+        filtersOpen={filtersOpen}
+        onToggleFilters={() => setFiltersOpen((open) => !open)}
+        actions={
           <>
             <MusicShuffleButton active={filters.shuffle} onClick={setRandomSort} />
             <MusicLibrarySortControl value={sortOrder} onChange={handleSortChange} />
           </>
         }
-      />
+        chips={
+          hasActiveFilters ? (
+            <DesktopFilterTags
+              filters={filters}
+              onRemoveFilter={removeFilterValue}
+              onRemovePlaylist={() =>
+                setFilters((current) => ({ ...current, selectedPlaylist: null }))
+              }
+              onRemoveBpm={() =>
+                setFilters((current) => ({ ...current, bpmValue: null }))
+              }
+              onRemoveKey={() =>
+                setFilters((current) => ({ ...current, keyValue: null }))
+              }
+              onRemoveDuration={() =>
+                setFilters((current) => ({ ...current, selectedDurations: [] }))
+              }
+              onRemoveShuffle={removeShuffle}
+            />
+          ) : undefined
+        }
+      >
+        <MusicFilterPanel
+          open={filtersOpen}
+          groups={filterChipGroups}
+          advanced={
+            <>
+              <MusicPlaylistFilter
+                selected={filters.selectedPlaylist}
+                playlists={playlistOptions}
+                loading={songsLoading}
+                loaded={!songsLoading}
+                playlistIcon={<PlaylistIcon size={13} />}
+                checkIcon={<CheckIcon size={11} />}
+                plusIcon={<PlusIcon size={11} />}
+                onChange={(selectedPlaylist) =>
+                  setFilters((current) => ({ ...current, selectedPlaylist }))
+                }
+              />
+
+              <MusicBpmFilter
+                value={filters.bpmValue}
+                onChange={(bpmValue) =>
+                  setFilters((current) => ({ ...current, bpmValue }))
+                }
+              />
+
+              <MusicKeyFilter
+                value={filters.keyValue}
+                onChange={(keyValue) =>
+                  setFilters((current) => ({ ...current, keyValue }))
+                }
+              />
+
+              <MusicDurationFilter
+                selected={filters.selectedDurations}
+                onChange={(selectedDurations) =>
+                  setFilters((current) => ({ ...current, selectedDurations }))
+                }
+              />
+
+              <FilterTrigger
+                label="Markers"
+                active={filters.markers}
+                showActiveDot
+                hideChevron
+                onClick={() =>
+                  setFilters((current) => ({ ...current, markers: !current.markers }))
+                }
+              />
+            </>
+          }
+          hasActive={hasActiveClearableFilters}
+          onClearAll={clearAllFilters}
+          onClose={() => setFiltersOpen(false)}
+        />
+      </MusicLibraryToolbar>
+
+      <MusicQuickChips>
+        {QUICK_GENRES.map((genre) => {
+          const active = filters.genre.includes(genre);
+
+          return (
+            <MusicQuickChip
+              key={genre}
+              active={active}
+              onClick={() => setFilterValue("genre", genre)}
+            >
+              {genre}
+            </MusicQuickChip>
+          );
+        })}
+      </MusicQuickChips>
 
       {songsError && (
         <MusicLibraryLoadNotice>
@@ -727,36 +719,41 @@ export default function DesktopMusicLibraryView({
         </MusicLibraryLoadNotice>
       )}
 
-      <div className="desktop-music-list">
-        {songsLoading && <MusicLibrarySkeletonList />}
+      <MusicListShell
+        title={filters.selectedPlaylist ? filters.selectedPlaylist.name : "All tracks"}
+        meta={`${displayedSongs.length} of ${songs.length} tracks`}
+      >
+        <div className="desktop-music-list">
+          {songsLoading && <MusicLibrarySkeletonList />}
 
-        {!songsLoading &&
-          displayedSongs.map((song) => (
-            <DesktopSongCard
-              key={song.id}
-              song={song}
-              favorite={favoriteIds.has(song.id)}
-              markersVisible={filters.markers}
-              selectedCuePointTypes={selectedCoreCuePointTypes}
-              isSelected={activeSongId === song.id}
-              isPlaying={activeSongId === song.id && playerPlaying}
-              playbackProgress={getSongPlaybackProgress(song.id)}
-              pendingSeekProgress={pendingSeekProgressBySongId[song.id] ?? null}
-              syncStatus={getSongSyncStatus(song.id)}
-              syncedPath={syncedSongPaths[song.id] ?? null}
-              cardRef={(node) => {
-                if (node) songCardRefs.current.set(song.id, node);
-                else songCardRefs.current.delete(song.id);
-              }}
-              onFavoriteToggle={() => toggleFavorite(song.id)}
-              onPlay={() => playSong(song)}
-              onSeek={(progress) => seekSong(song, progress)}
-              onSync={() => syncSong(song)}
-            />
-          ))}
+          {!songsLoading &&
+            displayedSongs.map((song) => (
+              <DesktopSongCard
+                key={song.id}
+                song={song}
+                favorite={favoriteIds.has(song.id)}
+                markersVisible={filters.markers}
+                selectedCuePointTypes={selectedCoreCuePointTypes}
+                isSelected={activeSongId === song.id}
+                isPlaying={activeSongId === song.id && playerPlaying}
+                playbackProgress={getSongPlaybackProgress(song.id)}
+                pendingSeekProgress={pendingSeekProgressBySongId[song.id] ?? null}
+                syncStatus={getSongSyncStatus(song.id)}
+                syncedPath={syncedSongPaths[song.id] ?? null}
+                cardRef={(node) => {
+                  if (node) songCardRefs.current.set(song.id, node);
+                  else songCardRefs.current.delete(song.id);
+                }}
+                onFavoriteToggle={() => toggleFavorite(song.id)}
+                onPlay={() => playSong(song)}
+                onSeek={(progress) => seekSong(song, progress)}
+                onSync={() => syncSong(song)}
+              />
+            ))}
 
-        {!songsLoading && displayedSongs.length === 0 && <MusicLibraryEmptyState />}
-      </div>
+          {!songsLoading && displayedSongs.length === 0 && <MusicLibraryEmptyState />}
+        </div>
+      </MusicListShell>
 
       {activeSong && (
         <DesktopMusicPlayer
