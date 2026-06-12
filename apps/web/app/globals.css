@@ -21,7 +21,6 @@
 
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
-  --filmwave-chrome-surface: var(--bg-tertiary);
 }
 
 html,
@@ -65,26 +64,10 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 
 /* ─── Shared sidebar/search chrome surface ───────────────── */
 
-.desktop-app-shell::before {
-  content: "";
-  position: fixed;
-  top: var(--filmwave-header-height, 56px);
-  bottom: 0;
-  left: 0;
-  width: var(--filmwave-sidebar-expanded-width);
-  background: var(--filmwave-chrome-surface);
-  pointer-events: none;
-  z-index: 1;
-  transition: width 200ms ease;
-}
-
-body.sidebar-collapsed .desktop-app-shell::before,
-.desktop-app-shell.is-sidebar-collapsed::before {
-  width: var(--filmwave-sidebar-collapsed-width);
-}
-
-.desktop-app-sidebar {
+aside.desktop-app-sidebar[data-sidebar],
+aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   background: var(--filmwave-chrome-surface) !important;
+  background-image: none !important;
 }
 
 /* ─── Music library sticky toolbar scroll illusion ───────── */
