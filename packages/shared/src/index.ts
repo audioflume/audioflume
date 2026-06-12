@@ -37,7 +37,3 @@ export * from "./SettingsSideNav";
 export * from "./CollapsibleSearchPill";
 export * from "./ProjectBrowserGlyphs";
 export * from "./MusicLibraryRedesign";
-export {
-  MusicFilterPanel,
-  MusicLibraryToolbar,
-} from "./MusicLibraryFilterDropdownTags";
