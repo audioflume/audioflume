@@ -206,3 +206,20 @@ main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky::before 
   top: -80px;
   height: 80px;
 }
+
+/* ─── Music page collapsed offset/surface corrections ─────── */
+
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed,
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed {
+  --sidebar-width: 44px;
+}
+
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed .filmwave-music-library-frame,
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed .filmwave-music-library-frame {
+  margin-left: 44px;
+}
+
+body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar,
+main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-combined-row {
+  background: var(--bg-elevated);
+}
