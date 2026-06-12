@@ -219,12 +219,9 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 /* ─── Music library alignment rail ────────────────────────── */
 
 .fw-quick-row {
+  padding-top: 14px !important;
   padding-right: var(--fw-music-content-inset-right) !important;
   padding-left: var(--fw-music-content-inset-left) !important;
-}
-
-.fw-quick-row:has(+ .grid[aria-hidden="true"]) {
-  padding-top: 14px !important;
 }
 
 .fw-quick-row + div > .min-h-0 > .px-8 {
