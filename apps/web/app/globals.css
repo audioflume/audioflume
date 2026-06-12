@@ -68,19 +68,15 @@ aside.desktop-app-sidebar[data-sidebar],
 aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   background: var(--filmwave-chrome-surface) !important;
   background-image: none !important;
+  box-shadow: none !important;
 }
 
-/* ─── Music library sticky toolbar scroll illusion ───────── */
+/* ─── Music library sticky toolbar scroll area ────────────── */
 
 .fw-toolbar-sticky {
   padding-bottom: 0 !important;
-  background: linear-gradient(
-    to bottom,
-    var(--bg-primary) 0,
-    var(--bg-primary) 58px,
-    transparent 58px,
-    transparent 100%
-  ) !important;
+  background: var(--bg-primary) !important;
+  background-image: none !important;
 }
 
 /* ─── Music library integrated pill filter row ───────────── */
@@ -88,8 +84,9 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 .fw-toolbar-float {
   border-radius: 999px !important;
   background: var(--filmwave-chrome-surface) !important;
+  background-image: none !important;
   padding: 6px 8px !important;
-  box-shadow: 0 18px 30px -24px rgba(0, 0, 0, 0.24) !important;
+  box-shadow: none !important;
 }
 
 .fw-toolbar {
@@ -99,13 +96,17 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 .fw-toolbar-search {
   border-color: transparent !important;
   background: transparent !important;
+  background-image: none !important;
   border-radius: 999px !important;
   padding-left: 6px !important;
+  box-shadow: none !important;
 }
 
 .fw-toolbar-search:focus-within {
   border-color: transparent !important;
   background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
 }
 
 .fw-toolbar-search-icon {
