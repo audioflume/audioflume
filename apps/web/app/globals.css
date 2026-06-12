@@ -101,7 +101,7 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 }
 
 .fw-toolbar-search-icon {
-  background: transparent !important;
+  background: var(--bg-hover-strong) !important;
 }
 
 .fw-toolbar-filters,
@@ -116,4 +116,51 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 .fw-toolbar-filters:hover,
 .fw-toolbar-filters.is-open {
   background: var(--bg-control-hover) !important;
+}
+
+/* ─── Active filter tags inside dropdown ─────────────────── */
+
+.fw-filter-panel-composite {
+  display: grid;
+}
+
+.fw-filter-panel-active-chips {
+  display: grid;
+  gap: 9px;
+  margin-top: 8px;
+  border: 1px solid var(--border-subtle);
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  background: color-mix(in srgb, var(--bg-tertiary) 88%, transparent);
+  padding: 13px 16px 11px;
+  box-shadow: var(--shadow-ui);
+}
+
+.fw-filter-panel-active-chips-label {
+  color: var(--text-muted);
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.fw-filter-panel-active-chips-list .filmwave-search-filter-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.fw-filter-panel-active-chips-list .filmwave-search-filter-tag {
+  height: 24px;
+}
+
+.fw-filter-panel-active-chips + .fw-filter-panel-wrap.is-open {
+  margin-top: 0;
+}
+
+.fw-filter-panel-active-chips + .fw-filter-panel-wrap .fw-filter-panel {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
