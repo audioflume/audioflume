@@ -55,6 +55,9 @@ const VOCAL_FILTER_OPTIONS = [
 const MUSIC_HERO_IMAGE =
   "https://images.unsplash.com/photo-1556139930-c23fa4a4f934?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
+const DESKTOP_SYNC_IMAGE =
+  "https://images.unsplash.com/photo-1686519093104-3140c6dcf284?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
 function shuffleSongList<T>(songs: T[]) {
   if (songs.length < 2) return [...songs];
 
@@ -595,54 +598,86 @@ export default function MusicPage() {
           aria-hidden={hasActiveFilters}
         >
           <div className="min-h-0 overflow-hidden">
-            <div className="px-5 pt-4">
-              <div className="group relative flex min-h-[240px] overflow-hidden rounded-[20px] bg-[var(--bg-secondary)] p-7 text-white">
-                <div
-                  className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
-                  style={{ backgroundImage: `url("${MUSIC_HERO_IMAGE}")` }}
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 100%)",
-                  }}
-                />
+            <div className="px-8 pt-5 pb-8">
+              <div className="overflow-hidden">
+                <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)]">
+                  <div className="group relative flex min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
+                      style={{ backgroundImage: `url("${MUSIC_HERO_IMAGE}")` }}
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 52%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%)",
+                      }}
+                    />
 
-                <div className="relative z-10 flex min-h-full w-full flex-col justify-between gap-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
-                      <MusicIcon size={11} />
-                      <span className="truncate">Music Library</span>
-                    </div>
+                    <div className="relative z-10 flex min-h-full w-full flex-col justify-between">
+                      <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/80 backdrop-blur">
+                        <MusicIcon size={11} />
+                        <span className="truncate">Music Library</span>
+                      </div>
 
-                    <div className="hidden shrink-0 items-center gap-2 text-[11px] text-white/72 sm:flex">
-                      <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                        {displayedSongs.length} shown
-                      </span>
-                      <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
-                        {songs.length} songs
-                      </span>
+                      <div>
+                        <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
+                          Find the cue that fits the cut.
+                        </h1>
+
+                        <div className="mt-5 flex flex-wrap items-end gap-5">
+                          <p className="max-w-[560px] text-[14px] leading-6 text-white/76">
+                            Move through the library like a visual treatment —
+                            documentary warmth, after-dark tension, open travel
+                            cues, and polished brand motion.
+                          </p>
+
+                          <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/72">
+                            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                              {displayedSongs.length} shown
+                            </span>
+                            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+                              {songs.length} songs
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-end justify-between gap-5">
-                    <div className="min-w-0">
-                      <h1 className="max-w-[680px] font-[family-name:var(--font-instrument-sans)] text-[clamp(28px,4vw,48px)] font-medium leading-[0.92] tracking-[-0.06em] text-white">
-                        Find the cue that fits the cut.
-                      </h1>
-                      <p className="mt-4 max-w-[520px] text-[13.5px] leading-6 text-white/76">
-                        Search, filter, and audition the full Filmwave library
-                        — documentary warmth, after-dark tension, open travel
-                        cues, and polished brand motion.
-                      </p>
+                  <div className="group relative hidden min-h-[320px] overflow-hidden rounded-[18px] bg-[var(--bg-secondary)] p-7 text-white xl:flex xl:flex-col xl:justify-between">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out group-hover:scale-[1.02]"
+                      style={{
+                        backgroundImage: `url("${DESKTOP_SYNC_IMAGE}")`,
+                      }}
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.78) 100%), linear-gradient(90deg, rgba(0,0,0,0.26), rgba(0,0,0,0.08))",
+                      }}
+                    />
+
+                    <div className="relative z-10 flex justify-between gap-5">
+                      <div>
+                        <div className="text-[11px] font-medium text-white/64">
+                          Desktop Sync
+                        </div>
+                        <h2 className="mt-2 max-w-[260px] text-[26px] font-medium leading-[0.95] tracking-[-0.055em] text-white">
+                          Drag your library straight into the edit.
+                        </h2>
+                      </div>
+
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                        <ArrowUpRightIcon size={14} />
+                      </div>
                     </div>
 
-                    <div className="inline-flex shrink-0 items-center gap-2.5 rounded-full border border-white/15 bg-white/10 py-1.5 pl-4 pr-1.5 text-[12px] text-white/85 backdrop-blur">
-                      Desktop Sync
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                        <ArrowUpRightIcon size={12} />
-                      </span>
+                    <div className="relative z-10 max-w-[320px] text-[14px] leading-6 text-white/72">
+                      Keep projects, playlists, and downloaded cues organized
+                      across the web app and local folders.
                     </div>
                   </div>
                 </div>
