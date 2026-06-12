@@ -245,7 +245,7 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 .fw-hero-section {
   margin-right: var(--fw-music-content-inset-right) !important;
   margin-bottom: 12px !important;
-  margin-left: calc(var(--fw-music-content-inset-left) + 12px) !important;
+  margin-left: var(--fw-music-content-inset-left) !important;
 }
 
 .fw-song-list {
