@@ -188,11 +188,21 @@ body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed
   transform: translateX(-50%);
 }
 
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-quick-row + .grid > .min-h-0 > .px-8,
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-quick-row + .grid > .min-h-0 > .px-8 {
+  padding-left: 12px;
+}
+
+body:has(.filmwave-search-filter-sticky).sidebar-collapsed main:has(.filmwave-search-filter-sticky) section > div:has(> .filmwave-song-card),
+body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed main:has(.filmwave-search-filter-sticky) section > div:has(> .filmwave-song-card) {
+  margin-left: 8px;
+}
+
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky {
   background: transparent;
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky::before {
   top: -80px;
-  height: 90px;
+  height: 80px;
 }
