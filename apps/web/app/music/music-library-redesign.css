@@ -31,7 +31,7 @@
   min-width: 0;
 }
 
-/* Search — pill with icon badge; neutral focus state. */
+/* Search pill */
 .fw-toolbar-search {
   display: flex;
   flex: 1 1 240px;
@@ -146,7 +146,7 @@
   background: var(--bg-control-hover);
 }
 
-/* Count badge — number swaps to an X on hover; clicking clears all filters. */
+/* Count badge — swaps num → × on hover when onClearFilters is wired. */
 .fw-toolbar-filters-count {
   display: inline-flex;
   height: 18px;
@@ -164,6 +164,11 @@
 
 .fw-toolbar-filters-count.is-clearable {
   cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.fw-toolbar-filters-count.is-clearable:hover {
+  transform: scale(1.12);
 }
 
 .fw-toolbar-filters-count-num,
@@ -179,8 +184,6 @@
 
 .fw-toolbar-filters-count-x svg {
   display: block;
-  width: 9px;
-  height: 9px;
 }
 
 .fw-toolbar-filters-count.is-clearable:hover .fw-toolbar-filters-count-num {
@@ -208,7 +211,7 @@
   gap: 6px;
 }
 
-/* Active filter chips — inside the floating bar, wrap, never scroll. */
+/* Active filter chips row */
 .fw-active-chips {
   display: flex;
   flex-wrap: wrap;
@@ -230,7 +233,7 @@
   padding: 0 7px 0 11px;
 }
 
-/* Filter panel — floating translucent blurred card below the toolbar. */
+/* Filter panel — animated grid-row reveal */
 .fw-filter-panel-wrap {
   display: grid;
   margin-top: 0;
@@ -264,8 +267,7 @@
   box-shadow: var(--shadow-ui);
 }
 
-/* Rail + detail layout — categories listed on the left, the active
-   category's options on the right. */
+/* Rail + detail */
 .fw-filter-panel-body {
   display: flex;
   min-height: 0;
@@ -386,7 +388,7 @@
   letter-spacing: 0;
 }
 
-/* Option list — checkable rows, flowing into columns when wide. */
+/* Checkable option rows */
 .fw-filter-option-list {
   column-width: 180px;
   column-gap: 18px;
@@ -453,7 +455,7 @@
   white-space: nowrap;
 }
 
-/* Control sections (BPM / Duration / Key) inside the detail pane. */
+/* Control stack (BPM / Duration / Key) */
 .fw-filter-control-stack {
   display: flex;
   max-width: 430px;
@@ -509,11 +511,6 @@
   opacity: 0.4;
 }
 
-.fw-filter-chip:disabled:hover {
-  background: var(--bg-control);
-  color: var(--text-secondary);
-}
-
 .fw-filter-chip-compact {
   min-width: 34px;
   justify-content: center;
@@ -542,7 +539,7 @@
   font-size: 12px;
 }
 
-/* Segmented control (Range/Exact, Sharp/Flat) */
+/* Segmented control */
 .fw-segment {
   display: flex;
   width: fit-content;
@@ -629,7 +626,7 @@
   font-size: 10px;
 }
 
-/* Duration summary row */
+/* Duration summary */
 .fw-duration-summary {
   display: flex;
   align-items: center;
@@ -732,7 +729,7 @@
   opacity: 0.85;
 }
 
-/* Quick chips row — genre shortcuts left, shuffle + sort right. */
+/* Quick chips row */
 .fw-quick-row {
   display: flex;
   flex-wrap: wrap;
@@ -774,8 +771,13 @@
   color: var(--text-primary);
 }
 
-/* Song list — open layout: no container, no dividers, each card its own
-   rounded row. */
+/* Hero section — matches .fw-song-list horizontal margin exactly.
+   Both hero and song list sit at the same 20px inset from the section edge. */
+.fw-hero-section {
+  padding: 16px 20px 28px;
+}
+
+/* Song list */
 .fw-song-list {
   display: flex;
   flex-direction: column;
@@ -819,8 +821,7 @@
   border-radius: 16px;
 }
 
-/* Narrow widths — rail becomes a horizontal scroller above the options;
-   everything else wraps, nothing scrolls sideways. */
+/* Narrow widths */
 @media (max-width: 640px) {
   .fw-toolbar-sticky {
     padding-left: 12px;
@@ -832,9 +833,12 @@
     padding-right: 20px;
   }
 
+  .fw-hero-section,
   .fw-song-list {
     margin-left: 12px;
     margin-right: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .fw-toolbar-filters-label {
