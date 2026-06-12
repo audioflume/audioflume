@@ -70,6 +70,11 @@ body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar {
   border-right: 1px solid var(--border);
 }
 
+body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar-inner {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 body:has(.filmwave-search-filter-sticky) .desktop-sidebar-link {
   border-radius: 10px;
 }
