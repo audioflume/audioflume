@@ -1,10 +1,10 @@
 /* ── User menu ── */
 
 .filmwave-user-menu {
-  width: 250px;
+  width: 260px;
   overflow: hidden;
-  border: 0;
-  border-radius: 4px;
+  border: 1px solid var(--filmwave-menu-border);
+  border-radius: 14px;
   background: var(--filmwave-menu-bg);
   box-shadow: var(--filmwave-menu-shadow);
 }
@@ -12,6 +12,7 @@
 /* Shared menu tokens */
 :root {
   --filmwave-menu-bg: #1f1f1f;
+  --filmwave-menu-border: rgba(255, 255, 255, 0.08);
   --filmwave-menu-hover: rgba(255, 255, 255, 0.1);
   --filmwave-menu-text: #ffffff;
   --filmwave-menu-text-muted: #b3b3b3;
@@ -21,14 +22,15 @@
   --filmwave-menu-theme-active-text: #111111;
   --filmwave-menu-theme-hover: rgba(255, 255, 255, 0.12);
   --filmwave-menu-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.28),
+    0 12px 32px rgba(0, 0, 0, 0.3),
     0 2px 8px rgba(0, 0, 0, 0.18);
-  --filmwave-menu-item-radius: 0;
+  --filmwave-menu-item-radius: 8px;
   --filmwave-menu-item-mx: 0;
 }
 
 html[data-theme="light"] {
   --filmwave-menu-bg: #ffffff;
+  --filmwave-menu-border: rgba(0, 0, 0, 0.08);
   --filmwave-menu-hover: rgba(0, 0, 0, 0.06);
   --filmwave-menu-text: #111111;
   --filmwave-menu-text-muted: #6a6a6a;
@@ -38,19 +40,19 @@ html[data-theme="light"] {
   --filmwave-menu-theme-active-text: #ffffff;
   --filmwave-menu-theme-hover: rgba(0, 0, 0, 0.08);
   --filmwave-menu-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 12px 32px rgba(0, 0, 0, 0.12),
     0 2px 8px rgba(0, 0, 0, 0.07);
 }
 
 .filmwave-user-menu-head {
   border-bottom: 1px solid var(--filmwave-menu-separator);
-  padding: 14px 16px 12px;
+  padding: 13px 15px 11px;
 }
 
 .filmwave-user-menu-title {
   overflow: hidden;
   color: var(--filmwave-menu-text);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
   line-height: 1.15;
   text-overflow: ellipsis;
@@ -67,10 +69,10 @@ html[data-theme="light"] {
   white-space: nowrap;
 }
 
-/* Container has 4px padding on all sides so items don't reach the edges */
+/* Container padding keeps rounded item hovers off the menu edges */
 .filmwave-user-menu-actions {
   display: grid;
-  padding: 4px;
+  padding: 5px;
 }
 
 .filmwave-user-menu-action {
@@ -81,10 +83,10 @@ html[data-theme="light"] {
   justify-content: space-between;
   gap: 12px;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--filmwave-menu-item-radius);
   background: transparent;
   color: var(--filmwave-menu-text);
-  padding: 0 12px;
+  padding: 0 11px;
   font-family: inherit;
   text-align: left;
   text-decoration: none;
@@ -124,19 +126,20 @@ html[data-theme="light"] {
   color: var(--filmwave-menu-text-muted);
 }
 
-/* Exit action also needs side padding to stay inside the 4px container */
+/* Exit action mirrors the rounded item treatment */
 .filmwave-user-menu-exit {
   display: flex;
-  width: 100%;
+  width: calc(100% - 10px);
   height: 34px;
   cursor: pointer;
   align-items: center;
   justify-content: space-between;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--filmwave-menu-item-radius);
   background: transparent;
   color: var(--filmwave-menu-text);
-  padding: 0 12px;
+  margin: 0 5px 5px;
+  padding: 0 11px;
   font-family: inherit;
   font-size: 12px;
   font-weight: 350;
@@ -154,27 +157,29 @@ html[data-theme="light"] {
 }
 
 .filmwave-user-menu-theme-wrap {
-  padding: 8px;
+  padding: 4px 8px 8px;
 }
 
 .filmwave-user-menu-theme {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  border-radius: 0;
+  gap: 3px;
+  border-radius: 10px;
+  background: var(--filmwave-menu-theme-bg);
+  padding: 3px;
 }
 
 .filmwave-user-menu-theme-option {
   box-sizing: border-box;
   display: inline-flex;
   width: 100%;
-  height: 30px;
+  height: 28px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
   gap: 7px;
   border: 0;
-  border-radius: 0;
+  border-radius: 8px;
   background: transparent;
   color: var(--filmwave-menu-text-muted);
   font-family: inherit;

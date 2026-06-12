@@ -2,7 +2,7 @@
   --filmwave-header-height: 56px;
   --filmwave-header-padding-x: 24px;
   --filmwave-header-nav-height: 32px;
-  --filmwave-header-nav-radius: 6px;
+  --filmwave-header-nav-radius: 999px;
 
   --filmwave-sidebar-width-expanded: var(--sidebar-width-expanded, 280px);
   --filmwave-sidebar-width-collapsed: var(--sidebar-width-collapsed, 76px);
@@ -107,6 +107,8 @@ body > header > div {
   gap: 4px;
 }
 
+/* Nav links — quiet by default, soft pill on hover/active to match the
+   chip language used across the page. */
 .filmwave-header-nav-link {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
@@ -117,18 +119,18 @@ body > header > div {
   border-radius: var(--filmwave-header-nav-radius);
   background: transparent;
   color: var(--text-secondary);
-  padding: 0 10px;
+  padding: 0 12px;
   font-family: inherit;
   font-size: 12px;
   font-weight: 400;
   line-height: 1;
   text-decoration: none;
-  transition: color 150ms ease;
+  transition: background 150ms ease, color 150ms ease;
 }
 
 .filmwave-header-nav-link:hover,
 .filmwave-header-nav-link.is-active {
-  background: transparent;
+  background: var(--bg-hover-strong);
   color: var(--text-primary);
 }
 
@@ -166,14 +168,14 @@ body > header > div {
   height: var(--filmwave-header-nav-height);
   align-items: center;
   gap: 6px;
-  padding: 0 10px;
+  padding: 0 12px;
   border-radius: var(--filmwave-header-nav-radius);
-  transition: color 150ms ease;
+  transition: background 150ms ease, color 150ms ease;
 }
 
 .filmwave-header-account-trigger:hover .filmwave-header-account-label,
 .filmwave-header-account-trigger.is-open .filmwave-header-account-label {
-  background: transparent;
+  background: var(--bg-hover-strong);
   color: var(--text-primary);
 }
 
