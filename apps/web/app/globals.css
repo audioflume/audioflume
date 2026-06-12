@@ -61,12 +61,9 @@ body.sidebar-collapsed aside[data-sidebar] {
 
 body:has(.filmwave-search-filter-sticky) {
   --filmwave-music-sidebar-inset: 10px;
-  --filmwave-music-sidebar-gap: 26px;
-  --filmwave-music-sidebar-expanded-width: calc(
-    var(--filmwave-sidebar-expanded-width) -
-      (var(--filmwave-music-sidebar-inset) * 2)
-  );
-  --filmwave-music-sidebar-collapsed-width: 56px;
+  --filmwave-music-sidebar-gap: 4px;
+  --filmwave-music-sidebar-expanded-width: var(--sidebar-width-expanded, 280px);
+  --filmwave-music-sidebar-collapsed-width: var(--sidebar-width-collapsed, 76px);
   --filmwave-music-sidebar-current-width: var(
     --filmwave-music-sidebar-expanded-width
   );
@@ -76,10 +73,10 @@ body:has(.filmwave-search-filter-sticky) {
       var(--filmwave-music-sidebar-gap)
   );
   --filmwave-music-content-gutter: 28px;
-  --filmwave-music-floating-surface: var(--bg-card);
+  --filmwave-music-floating-surface: var(--bg-elevated);
 }
 
-body:has(.filmwave-search-filter-sticky) .desktop-app-shell.is-sidebar-collapsed {
+body.sidebar-collapsed:has(.filmwave-search-filter-sticky) {
   --filmwave-music-sidebar-current-width: var(
     --filmwave-music-sidebar-collapsed-width
   );
@@ -95,19 +92,12 @@ body:has(.filmwave-search-filter-sticky) body > header {
 body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar {
   left: var(--filmwave-music-sidebar-inset);
   width: var(--filmwave-music-sidebar-current-width);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border);
   background: var(--filmwave-music-floating-surface);
 }
 
-body:has(.filmwave-search-filter-sticky)
-  .desktop-app-shell.is-sidebar-collapsed
-  .desktop-app-sidebar {
-  width: var(--filmwave-music-sidebar-current-width);
-}
-
-body:has(.filmwave-search-filter-sticky) .desktop-app-sidebar-inner {
-  padding-left: 10px;
-  padding-right: 10px;
+body.sidebar-collapsed:has(.filmwave-search-filter-sticky) .desktop-app-sidebar {
+  width: var(--filmwave-music-sidebar-collapsed-width);
 }
 
 body:has(.filmwave-search-filter-sticky) .desktop-sidebar-link {
@@ -119,32 +109,6 @@ body:has(.filmwave-search-filter-sticky) .desktop-sidebar-link.is-active::before
 }
 
 body:has(.filmwave-search-filter-sticky)
-  .desktop-app-shell.is-sidebar-collapsed
-  .desktop-sidebar-link {
-  justify-content: center;
-  padding-right: 0;
-  padding-left: 0;
-}
-
-body:has(.filmwave-search-filter-sticky)
-  .desktop-app-shell.is-sidebar-collapsed
-  .desktop-sidebar-link-icon {
-  position: static;
-  margin: 0;
-  opacity: 1;
-  transform: none;
-}
-
-body:has(.filmwave-search-filter-sticky)
-  .desktop-app-shell.is-sidebar-collapsed
-  .desktop-sidebar-link-label {
-  width: var(--filmwave-sidebar-label-width);
-  min-width: var(--filmwave-sidebar-label-width);
-  margin-left: var(--filmwave-sidebar-label-gap);
-  opacity: 0;
-}
-
-body:has(.filmwave-search-filter-sticky)
   main:has(.filmwave-search-filter-sticky)
   > section {
   margin-left: var(--filmwave-music-content-offset) !important;
@@ -153,7 +117,7 @@ body:has(.filmwave-search-filter-sticky)
 }
 
 main:has(.filmwave-search-filter-sticky) .filmwave-search-filter-sticky {
-  background: transparent;
+  background: var(--bg-primary);
   padding: 10px var(--filmwave-music-content-gutter) 0;
 }
 
