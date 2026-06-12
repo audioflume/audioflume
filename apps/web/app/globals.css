@@ -20,6 +20,10 @@
 @import "../../../packages/shared/styles/settings-side-nav.css";
 @import "../../../packages/shared/styles/collapsible-search-pill.css";
 @import "./player-action-overrides.css";
+@import "./admin-polish.css";
+@import "./icon-button-overrides.css";
+@import "./player-action-overrides.css";
+@import "./playlist-grid-overrides.css";
 
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
@@ -295,4 +299,37 @@ body > header,
 .fw-song-list .desktop-song-card,
 .fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
   --filmwave-song-card-action-radius: 9px !important;
+}
+
+/* ─── Open filter trigger behavior ────────────────────────── */
+
+.fw-toolbar-filters.is-open {
+  min-width: 74px !important;
+  justify-content: center !important;
+}
+
+.fw-toolbar-filters.is-open > svg,
+.fw-toolbar-filters.is-open .fw-toolbar-filters-count,
+.fw-toolbar-filters.is-open .fw-toolbar-filters-chevron {
+  display: none !important;
+}
+
+.fw-toolbar-filters.is-open .fw-toolbar-filters-label {
+  font-size: 0 !important;
+}
+
+.fw-toolbar-filters.is-open .fw-toolbar-filters-label::after {
+  content: "Done";
+  font-size: 13px !important;
+}
+
+.fw-toolbar-filters-count.is-clearable,
+.fw-toolbar-filters-count.is-clearable:hover {
+  transform: none !important;
+}
+
+.fw-toolbar-filters-count-x svg {
+  width: 11px !important;
+  height: 11px !important;
+  transform: scale(1.12);
 }
