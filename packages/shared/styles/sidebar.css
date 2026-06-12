@@ -12,7 +12,7 @@
   --filmwave-sidebar-icon-size: 16px;
   --filmwave-sidebar-icon-color: #8f8f8f;
   --filmwave-sidebar-icon-color-active: #ffffff;
-  --filmwave-sidebar-heading-icon-color: #8f8f8f;
+  --filmwave-sidebar-heading-icon-color: #a8a8a8;
   --filmwave-sidebar-label-gap: 10px;
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
@@ -23,7 +23,7 @@
 :where(html.light, html[data-theme="light"]) {
   --filmwave-sidebar-icon-color: #969696;
   --filmwave-sidebar-icon-color-active: #111111;
-  --filmwave-sidebar-heading-icon-color: #969696;
+  --filmwave-sidebar-heading-icon-color: #b8b8b8;
 }
 
 /* Narrower sidebar — overrides the app-level width tokens so the panel
@@ -286,6 +286,13 @@ body.sidebar-collapsed .desktop-sidebar-link {
 .filmwave-song-action-button svg *,
 .desktop-song-action-button svg * {
   stroke-width: 2.4;
+}
+
+.filmwave-more-icon *,
+.filmwave-icon-button .filmwave-more-icon *,
+.filmwave-song-action-button .filmwave-more-icon *,
+.desktop-song-action-button .filmwave-more-icon * {
+  stroke-width: 3.7 !important;
 }
 
 .desktop-sidebar-link-label {
