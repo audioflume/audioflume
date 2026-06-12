@@ -56,8 +56,6 @@
 
 .filmwave-player-actions .filmwave-song-action-button svg,
 .filmwave-player-actions .filmwave-icon-button svg {
-  width: 14px !important;
-  height: 14px !important;
   opacity: 1 !important;
 }
 
@@ -66,6 +64,21 @@
   opacity: 1 !important;
   fill-opacity: 1 !important;
   stroke-opacity: 1 !important;
+}
+
+.filmwave-player-actions .filmwave-song-action-button[aria-label="Favorite song"] svg path,
+.filmwave-player-actions .filmwave-song-action-button[aria-label="Remove song from favorites"] svg path,
+.filmwave-player-actions .filmwave-song-action-button[aria-label="Show cue markers"] svg path,
+.filmwave-player-actions .filmwave-song-action-button[aria-label="Hide cue markers"] svg path {
+  stroke-width: 1.9 !important;
+}
+
+.filmwave-player-actions .filmwave-icon-button[aria-label="Download song"] svg path {
+  stroke-width: 2.2 !important;
+}
+
+.filmwave-player-actions .filmwave-icon-button[aria-label="Song options"] .filmwave-more-icon path {
+  stroke-width: 3.7 !important;
 }
 
 .filmwave-player-actions .filmwave-song-action-button.is-plain-active-icon {
