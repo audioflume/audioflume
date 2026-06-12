@@ -11,6 +11,7 @@ type SidebarShellProps = {
   collapsed: boolean;
   children: ReactNode;
   header?: ReactNode;
+  footer?: ReactNode;
   tooltip?: SidebarTooltipState;
   main?: ReactNode;
   className?: string;
@@ -23,6 +24,7 @@ export function SidebarShell({
   collapsed,
   children,
   header,
+  footer,
   tooltip,
   main,
   className = "desktop-app-shell",
@@ -35,6 +37,7 @@ export function SidebarShell({
       {header}
       <aside className={sidebarClassName} style={sidebarStyle} data-sidebar data-tauri-drag-region>
         {children}
+        {footer && <div className="desktop-sidebar-footer">{footer}</div>}
       </aside>
       {tooltip && <SidebarTooltip label={tooltip.label} top={tooltip.top} />}
       {main !== undefined && <main className={mainClassName}>{main}</main>}

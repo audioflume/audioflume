@@ -4,7 +4,7 @@
   Revert: git revert the commits that touched this file.
 */
 
-/* ── Toolbar: contained rounded surface instead of full-bleed hairline row ── */
+/* ── Toolbar: sits directly on the page background ── */
 
 .filmwave-search-filter-sticky {
   padding-top: 10px;
@@ -15,11 +15,10 @@
   height: 52px;
   min-height: 52px;
   margin: 0;
-  padding: 0 10px;
+  padding: 0;
   gap: 2px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  background: var(--bg-panel);
+  border-bottom: none;
+  background: transparent;
 }
 
 /* ── Search pill: filled surface instead of outline ── */
@@ -101,7 +100,7 @@
 /* ── Quick filter chips: rounded, bordered, inverted when active ── */
 
 .filmwave-search-filter-quick-row {
-  padding: 14px 32px 0;
+  padding: 14px 28px 0;
 }
 
 .filmwave-search-filter-quick-list {
@@ -177,15 +176,23 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   color: var(--bg-primary);
 }
 
-/* ── Song rows: hairlines → rounded hover surfaces ── */
+/* ── Song list: contained panel surface, rows as rounded hover cards ── */
+
+.filmwave-song-list-panel {
+  margin: 0 28px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-panel);
+  padding: 6px;
+}
 
 .filmwave-song-card,
 .desktop-song-card {
   --filmwave-song-card-padding-left: 16px;
   --filmwave-song-card-hover-bg: var(--bg-row);
-  margin: 0 16px;
+  margin: 0;
   border-bottom: none;
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
 .filmwave-song-card.is-playing,
@@ -210,21 +217,47 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
 }
 
 /* ──────────────────────────────────────────────────
-   App chrome pass: sidebar, header, user menu
+   Sidebar: floating inset rail
    ────────────────────────────────────────────────── */
 
-/* ── Sidebar: distinct panel surface, no section hairlines ── */
-
 .desktop-app-sidebar {
-  border-right: 1px solid var(--border-subtle);
+  top: calc(var(--filmwave-sidebar-top-offset, 56px) + 10px);
+  left: 10px;
+  width: calc(var(--filmwave-sidebar-expanded-width) - 20px);
+  margin-bottom: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
   background: var(--bg-panel);
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar {
+  width: calc(var(--filmwave-sidebar-collapsed-width) - 20px);
+}
+
+/* Collapsed inner padding shrinks so 36px rows still fit the 56px rail */
+.desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar-inner {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .desktop-sidebar-section {
   border-bottom: 0;
 }
 
+.desktop-sidebar-heading-label,
+.desktop-sidebar-projects-label {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:root {
+  --filmwave-sidebar-row-height: 36px;
+  --filmwave-sidebar-row-radius: 8px;
+}
+
 .desktop-sidebar-link {
+  position: relative;
   height: 36px;
   border-radius: 8px;
 }
@@ -240,6 +273,19 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   font-weight: 500;
 }
 
+/* Accent bar on the active row */
+.desktop-sidebar-link.is-active::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3px;
+  height: 16px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: var(--accent);
+}
+
 .desktop-sidebar-add-button {
   border-radius: 8px;
 }
@@ -253,10 +299,92 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   background: var(--bg-tertiary);
 }
 
-/* Collapsed nav buttons keep the new height */
-:root {
-  --filmwave-sidebar-row-height: 36px;
-  --filmwave-sidebar-row-radius: 8px;
+/* Pinned footer (user card) */
+.desktop-sidebar-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  border-top: 1px solid var(--border-subtle);
+  padding: 8px;
+}
+
+.desktop-sidebar-user-card {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  padding: 7px 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 150ms ease;
+}
+
+.desktop-sidebar-user-card:hover {
+  background: var(--bg-hover-strong);
+}
+
+.desktop-sidebar-user-avatar {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--bg-control);
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.desktop-sidebar-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.desktop-sidebar-user-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  transition: opacity 150ms ease;
+}
+
+.desktop-sidebar-user-name {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-sidebar-user-sub {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-user-copy {
+  width: 0;
+  opacity: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-user-card {
+  justify-content: center;
+  padding: 7px 0;
 }
 
 /* ── Header: softer divider, pill hovers on nav + account ── */
@@ -302,9 +430,10 @@ body > header,
   box-shadow: 0 0 0 1px var(--border);
 }
 
-/* ── User menu: rounded card, inset items, segmented theme control ── */
+/* ── User menu: profile head, grouped items with icons, segmented theme ── */
 
 .filmwave-user-menu {
+  width: 280px;
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
 }
@@ -313,18 +442,90 @@ body > header,
   padding: 14px 16px 12px;
 }
 
+.filmwave-user-menu-profile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px solid var(--filmwave-menu-separator);
+  padding: 13px 14px;
+}
+
+.filmwave-user-menu-profile-avatar {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--filmwave-menu-hover);
+  color: var(--filmwave-menu-text);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.filmwave-user-menu-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.filmwave-user-menu-profile-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .filmwave-user-menu-actions {
   padding: 6px;
 }
 
+.filmwave-user-menu-group + .filmwave-user-menu-group {
+  margin-top: 5px;
+  border-top: 1px solid var(--filmwave-menu-separator);
+  padding-top: 5px;
+}
+
 .filmwave-user-menu-action,
 .filmwave-user-menu-exit {
+  height: 36px;
   border-radius: 8px;
 }
 
-.filmwave-user-menu-exit {
-  margin: 0 6px;
-  width: calc(100% - 12px);
+.filmwave-user-menu-action-main {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.filmwave-user-menu-action-icon {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--filmwave-menu-theme-bg);
+  color: var(--filmwave-menu-text-muted);
+  transition: color 150ms ease;
+}
+
+.filmwave-user-menu-action:hover .filmwave-user-menu-action-icon {
+  color: var(--filmwave-menu-text);
+}
+
+.filmwave-user-menu-action-icon svg {
+  width: 13px;
+  height: 13px;
+}
+
+.filmwave-user-menu-action-title {
+  font-size: 12.5px;
 }
 
 .filmwave-user-menu-theme-wrap {

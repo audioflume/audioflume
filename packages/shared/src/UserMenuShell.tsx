@@ -51,8 +51,32 @@ export function UserMenuHeader({
   );
 }
 
+export function UserMenuProfile({
+  avatar,
+  title,
+  detail,
+}: {
+  avatar: ReactNode;
+  title: ReactNode;
+  detail: ReactNode;
+}) {
+  return (
+    <div className="filmwave-user-menu-profile">
+      <span className="filmwave-user-menu-profile-avatar">{avatar}</span>
+      <span className="filmwave-user-menu-profile-copy">
+        <span className="filmwave-user-menu-title">{title}</span>
+        <span className="filmwave-user-menu-detail">{detail}</span>
+      </span>
+    </div>
+  );
+}
+
 export function UserMenuActions({ children }: { children: ReactNode }) {
   return <div className="filmwave-user-menu-actions">{children}</div>;
+}
+
+export function UserMenuGroup({ children }: { children: ReactNode }) {
+  return <div className="filmwave-user-menu-group">{children}</div>;
 }
 
 export function UserMenuAction({
@@ -60,12 +84,14 @@ export function UserMenuAction({
   href,
   label,
   helper,
+  icon,
   onClick,
 }: {
   as?: ElementType;
   href?: string;
   label: ReactNode;
   helper: ReactNode;
+  icon?: ReactNode;
   onClick?: MouseEventHandler<HTMLElement>;
 }) {
   const Component = as ?? (href ? "a" : "button");
@@ -78,9 +104,16 @@ export function UserMenuAction({
 
   return (
     <Component {...props}>
-      <div className="filmwave-user-menu-action-copy">
-        <div className="filmwave-user-menu-action-title">{label}</div>
-        <div className="filmwave-user-menu-action-helper">{helper}</div>
+      <div className="filmwave-user-menu-action-main">
+        {icon && (
+          <span className="filmwave-user-menu-action-icon" aria-hidden="true">
+            {icon}
+          </span>
+        )}
+        <div className="filmwave-user-menu-action-copy">
+          <div className="filmwave-user-menu-action-title">{label}</div>
+          <div className="filmwave-user-menu-action-helper">{helper}</div>
+        </div>
       </div>
 
       <div className="filmwave-user-menu-action-arrow">
