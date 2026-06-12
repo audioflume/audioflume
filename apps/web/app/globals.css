@@ -248,18 +248,10 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 .fw-song-list .desktop-song-card,
 .fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
   --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y) !important;
-}
-
-:where(html.light, html[data-theme="light"]) .fw-song-list .filmwave-song-card,
-:where(html.light, html[data-theme="light"]) .fw-song-list .desktop-song-card,
-:where(html.light, html[data-theme="light"])
-  .fw-song-list
-  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
   --filmwave-song-card-hover-bg: var(--filmwave-chrome-surface) !important;
 }
 
-:where(html.light, html[data-theme="light"])
-  .fw-song-list
+.fw-song-list
   :is(
     .filmwave-song-card,
     .desktop-song-card,
