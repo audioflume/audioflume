@@ -1,0 +1,4 @@
+/* Shared hero wrapper — matches .fw-song-list horizontal margin exactly */
+.fw-hero-section {
+  padding: 16px 20px 28px;
+}
