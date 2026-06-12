@@ -7,25 +7,20 @@ export default function EditPointsIcon({ size = 14 }: EditPointsIconProps) {
     <svg
       width={size}
       height={size}
-      viewBox="-20 -30 342.66 500.13"
+      viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
     >
-      <line
-        x1="11"
-        y1="440.13"
-        x2="11"
-        y2="13.68"
+      <path
+        d="M7 20V4"
         stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="28"
-        strokeMiterlimit="10"
+        strokeWidth="1.9"
         strokeLinecap="round"
       />
-      <polygon
-        points="11 235.89 291.66 174.16 291.66 75.41 11 13.68 11 235.89"
+      <path
+        d="M7 5.25L17 8L7 10.75V5.25Z"
         stroke="var(--edit-points-icon-color, currentColor)"
-        strokeWidth="28"
-        strokeMiterlimit="10"
+        strokeWidth="1.9"
         strokeLinejoin="round"
       />
     </svg>
