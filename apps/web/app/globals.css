@@ -199,17 +199,19 @@ html.light .desktop-app-sidebar {
 
 /* ─── Music chrome surface sync ───────────────────────────── */
 
-:where(html.light, html[data-theme="light"]) {
+:root {
   --fw-music-chrome-surface: #f2f2f0;
 }
 
-:where(html:not(.light):not([data-theme="light"])) {
+:where(html.dark, html[data-theme="dark"]) {
   --fw-music-chrome-surface: var(--bg-tertiary);
 }
 
 .fw-toolbar-float,
 .fw-toolbar-search,
 .fw-toolbar-search:focus-within,
-.desktop-app-sidebar {
+body aside[data-sidebar].desktop-app-sidebar,
+body aside[data-sidebar].desktop-app-sidebar .desktop-app-sidebar-inner {
   background: var(--fw-music-chrome-surface) !important;
+  background-image: none !important;
 }
