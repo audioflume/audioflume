@@ -74,9 +74,13 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 /* ─── Music library sticky toolbar scroll area ────────────── */
 
 .fw-toolbar-sticky {
-  padding-bottom: 0 !important;
+  padding-bottom: 16px !important;
+  margin-bottom: -16px !important;
+  border-bottom-left-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
   background: var(--bg-primary) !important;
   background-image: none !important;
+  overflow: visible !important;
 }
 
 /* ─── Music library integrated pill filter row ───────────── */
