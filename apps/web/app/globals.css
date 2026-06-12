@@ -55,3 +55,9 @@ body.sidebar-collapsed {
 body.sidebar-collapsed aside[data-sidebar] {
   width: var(--sidebar-width-collapsed);
 }
+
+body.sidebar-collapsed .desktop-sidebar-link > a {
+  width: 100%;
+  flex: 0 0 auto;
+  justify-content: center;
+}
