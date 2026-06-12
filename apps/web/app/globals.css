@@ -281,3 +281,16 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 }
 
 /* ─── Music hero/list spacing cleanup ─────────────────────── */
+
+.filmwave-app-header,
+.desktop-header,
+body > header,
+.filmwave-header {
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.fw-song-list .filmwave-song-card,
+.fw-song-list .desktop-song-card,
+.fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+  --filmwave-song-card-action-radius: 9px !important;
+}
