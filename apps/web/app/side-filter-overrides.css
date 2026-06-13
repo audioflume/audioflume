@@ -6,7 +6,7 @@
   --filmwave-side-filter-detail-width: 184px;
   --filmwave-side-filter-sidebar-gap: var(--filmwave-sidebar-float-inset, 12px);
   --filmwave-side-filter-content-gap: 14px;
-  --filmwave-side-filter-divider-color: var(--filmwave-header-border-color, rgba(255, 255, 255, 0.16));
+  --filmwave-side-filter-divider-color: var(--border-subtle);
 }
 
 main > section:has(.fw-filter-panel-wrap) {
