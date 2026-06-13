@@ -17,6 +17,7 @@ const SECTION_ID_BY_LABEL: Record<string, string> = {
 };
 
 const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
+const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 
 function getRailItemKey(railItem: Element, panel: Element) {
   const railItems = Array.from(panel.querySelectorAll(".fw-filter-rail-item"));
@@ -50,6 +51,14 @@ function syncFilterColumnFadeState(column: HTMLElement) {
 
 function syncFilterPanelColumnFadeStates(root: ParentNode = document) {
   root.querySelectorAll<HTMLElement>(FILTER_COLUMN_SELECTOR).forEach(syncFilterColumnFadeState);
+}
+
+function dispatchSideFilterSectionClear(sectionId: string) {
+  window.dispatchEvent(
+    new CustomEvent(SIDE_FILTER_SECTION_CLEAR_EVENT, {
+      detail: { sectionId },
+    }),
+  );
 }
 
 function setNativeInputValue(input: HTMLInputElement, value: string) {
@@ -167,6 +176,11 @@ function clickNextSelectedDetailControl(panel: HTMLElement, attempts = 0) {
 }
 
 function clearOpenRailSection(panel: HTMLElement, sectionId: string) {
+  if (sectionId === "duration") {
+    dispatchSideFilterSectionClear(sectionId);
+    return;
+  }
+
   if (sectionId === "bpm") {
     resetBpmInputs(panel);
   }
