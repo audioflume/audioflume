@@ -31,6 +31,46 @@ body:has(.desktop-app-sidebar)
   display: none !important;
 }
 
+/* If the initial body class is stale, let the live shell state control expansion. */
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-app-sidebar {
+  width: calc(
+    var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-float-inset) -
+      var(--filmwave-sidebar-content-gap)
+  ) !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-app-sidebar-inner {
+  padding: var(--filmwave-sidebar-y-padding-top)
+    var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom) !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-link {
+  justify-content: flex-start !important;
+  padding: 0 var(--filmwave-sidebar-row-padding-x) !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-link-label {
+  width: var(--filmwave-sidebar-label-width) !important;
+  min-width: var(--filmwave-sidebar-label-width) !important;
+  margin-left: var(--filmwave-sidebar-label-gap) !important;
+  opacity: 1 !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-projects-head {
+  justify-content: space-between !important;
+  padding: 0 var(--filmwave-sidebar-row-padding-x) !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-projects-label {
+  display: inline !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-add-button {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 6px !important;
+}
+
 /* Anchor the toolbar by its own top edge so the filter panel reveals downward below it. */
 .fw-toolbar-sticky {
   top: calc((var(--filmwave-header-height) - 40px) / 2) !important;
@@ -98,16 +138,26 @@ body:has(.desktop-app-sidebar)
   flex-basis: 12px !important;
 }
 
-html:not(.light):not([data-theme="light"]) .fw-toolbar-search,
-html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell {
+html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-float {
   background: rgba(0, 0, 0, 0.24) !important;
   background-color: rgba(0, 0, 0, 0.24) !important;
 }
 
-html:not(.light):not([data-theme="light"]) .fw-toolbar-search:focus-within,
-html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell:focus-within {
+html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-float:focus-within {
   background: rgba(0, 0, 0, 0.28) !important;
   background-color: rgba(0, 0, 0, 0.28) !important;
+}
+
+html:not(.light):not([data-theme="light"]) .fw-toolbar-search,
+html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell,
+html:not(.light):not([data-theme="light"]) .fw-toolbar-search:focus-within,
+html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell:focus-within {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.filmwave-search-filter-quick-row {
+  margin-top: var(--filmwave-sidebar-float-inset) !important;
 }
 
 /* Keep only the expanding border around the profile image, without the glow. */
