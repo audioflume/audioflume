@@ -154,7 +154,7 @@ export function useFilterPersistence(
 
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
-  const [filters, setFilters] = useState<MusicFilterState>(baseDefaultState);
+  const [filters, setFilters] = useState<MusicFilterState>(() => getDefaultState());
 
   useEffect(() => {
     const handleEditPointMarkerVisibility = (event: Event) => {
