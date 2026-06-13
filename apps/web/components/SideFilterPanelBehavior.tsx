@@ -33,17 +33,19 @@ function getRailItemSectionId(railItem: Element) {
   return SECTION_ID_BY_LABEL[label] ?? null;
 }
 
-function clickSelectedDetailControls(panel: HTMLElement, sectionId: string) {
-  const selectedOptions = Array.from(
-    panel.querySelectorAll<HTMLButtonElement>(
-      ".fw-filter-detail .fw-filter-option.is-selected, .fw-filter-detail .fw-filter-chip.is-selected",
-    ),
+function setNativeInputValue(input: HTMLInputElement, value: string) {
+  const descriptor = Object.getOwnPropertyDescriptor(
+    window.HTMLInputElement.prototype,
+    "value",
   );
 
-  selectedOptions.forEach((option) => option.click());
+  descriptor?.set?.call(input, value);
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+  input.blur();
+}
 
-  if (sectionId !== "bpm") return;
-
+function resetBpmInputs(panel: HTMLElement) {
   const inputs = Array.from(
     panel.querySelectorAll<HTMLInputElement>(".fw-filter-detail .fw-filter-mini-field input"),
   );
@@ -52,11 +54,32 @@ function clickSelectedDetailControls(panel: HTMLElement, sectionId: string) {
     const label = input.closest(".fw-filter-mini-field")?.textContent ?? "";
     const nextValue = label.includes("High") ? "300" : "1";
 
-    input.value = nextValue;
-    input.dispatchEvent(new Event("input", { bubbles: true }));
-    input.dispatchEvent(new Event("change", { bubbles: true }));
-    input.blur();
+    setNativeInputValue(input, nextValue);
   });
+}
+
+function clickNextSelectedDetailControl(panel: HTMLElement, attempts = 0) {
+  if (attempts > 20) return;
+
+  const selectedOption = panel.querySelector<HTMLButtonElement>(
+    ".fw-filter-detail .fw-filter-option.is-selected, .fw-filter-detail .fw-filter-chip.is-selected",
+  );
+
+  if (!selectedOption) return;
+
+  selectedOption.click();
+
+  window.requestAnimationFrame(() => {
+    clickNextSelectedDetailControl(panel, attempts + 1);
+  });
+}
+
+function clearOpenRailSection(panel: HTMLElement, sectionId: string) {
+  if (sectionId === "bpm") {
+    resetBpmInputs(panel);
+  }
+
+  clickNextSelectedDetailControl(panel);
 }
 
 function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: string) {
@@ -66,7 +89,7 @@ function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: stri
     panel.dataset.sideFilterActiveKey === railItemKey;
 
   if (isCurrentOpenSection) {
-    clickSelectedDetailControls(panel, sectionId);
+    clearOpenRailSection(panel, sectionId);
     return;
   }
 
@@ -74,7 +97,7 @@ function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: stri
 
   window.requestAnimationFrame(() => {
     window.requestAnimationFrame(() => {
-      clickSelectedDetailControls(panel, sectionId);
+      clearOpenRailSection(panel, sectionId);
     });
   });
 }
