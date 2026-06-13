@@ -18,6 +18,7 @@ import "./globals.css";
 import "./admin-polish.css";
 import "./icon-button-overrides.css";
 import "./player-action-overrides.css";
+import "./search-filter-backdrop-overrides.css";
 import "./playlist-grid-overrides.css";
 
 const geistSans = Geist({
