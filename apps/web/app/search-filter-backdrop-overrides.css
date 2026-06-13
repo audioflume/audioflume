@@ -1,50 +1,6 @@
-/* Remove the sticky search/filter backdrop so song cards remain visible while scrolling behind it. */
-.filmwave-music-library-frame .filmwave-search-filter-sticky,
-.filmwave-music-library-frame .filmwave-search-filter-combined-row,
-.filmwave-music-library-frame .filmwave-search-filter-search-row,
-.filmwave-music-library-frame .filmwave-search-filter-row,
-.filmwave-music-library-frame .filmwave-search-filter-quick-row,
-.filmwave-music-library-frame .fw-toolbar,
-.filmwave-music-library-frame .fw-toolbar-float,
-.filmwave-music-library-frame .fw-toolbar-shell,
-.filmwave-music-library-frame .fw-toolbar-sticky,
-.filmwave-music-library-frame .fw-toolbar-wrap,
-.filmwave-music-library-frame .fw-quick-row,
-.filmwave-music-library-frame .fw-search-filter-row {
+/* Remove the opaque sticky backdrop behind the search/filter row. */
+.filmwave-search-filter-sticky,
+.filmwave-search-filter-quick-row {
   background: transparent !important;
   background-color: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.filmwave-music-library-frame .filmwave-search-filter-sticky::before,
-.filmwave-music-library-frame .filmwave-search-filter-sticky::after,
-.filmwave-music-library-frame .fw-toolbar::before,
-.filmwave-music-library-frame .fw-toolbar::after,
-.filmwave-music-library-frame .fw-toolbar-float::before,
-.filmwave-music-library-frame .fw-toolbar-float::after,
-.filmwave-music-library-frame .fw-toolbar-shell::before,
-.filmwave-music-library-frame .fw-toolbar-shell::after,
-.filmwave-music-library-frame .fw-toolbar-sticky::before,
-.filmwave-music-library-frame .fw-toolbar-sticky::after,
-.filmwave-music-library-frame .fw-toolbar-wrap::before,
-.filmwave-music-library-frame .fw-toolbar-wrap::after {
-  content: none !important;
-  display: none !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.filmwave-music-library-frame .filmwave-search-filter-sticky > div[aria-hidden="true"],
-.filmwave-music-library-frame .fw-toolbar > div[aria-hidden="true"],
-.filmwave-music-library-frame .fw-toolbar-float > div[aria-hidden="true"] {
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
