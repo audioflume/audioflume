@@ -3,18 +3,16 @@
   --filmwave-sidebar-bottom-offset: 0px;
 }
 
-/* When a player is docked, the sidebar stops above it: player inset (12px)
-   + player height, and the boundary rule below adds the sidebar's own 12px
-   gap on top — so there is always clear space between the two cards. */
+/* When a player is docked, the sidebar stops above it: player height plus
+   the sidebar's own floating inset, keeping a consistent gap above the docked
+   player without double-counting the player's bottom inset. */
 :where(
   body:has(.filmwave-music-player),
   .desktop-app-shell:has(.filmwave-music-player),
   body:has(.desktop-music-player),
   .desktop-app-shell:has(.desktop-music-player)
 ) {
-  --filmwave-sidebar-bottom-offset: calc(
-    var(--filmwave-player-height) + var(--filmwave-player-inset, 12px)
-  );
+  --filmwave-sidebar-bottom-offset: var(--filmwave-player-height);
 }
 
 /* Keep a breathing gap below the floating sidebar — above the viewport
