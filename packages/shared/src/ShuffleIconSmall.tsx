@@ -14,30 +14,37 @@ export function ShuffleIconSmall({ size = 14, className }: ShuffleIconSmallProps
       className={className}
     >
       <path
-        d="M4 7H7.25C8.85 7 9.95 7.75 10.9 9.05L13.1 12.05C14.05 13.35 15.15 14.1 16.75 14.1H19.5"
+        d="M16 3H21V8"
         stroke="currentColor"
-        strokeWidth="1.9"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M4 17H7.25C8.85 17 9.95 16.25 10.9 14.95L13.1 11.95C14.05 10.65 15.15 9.9 16.75 9.9H19.5"
+        d="M4 20L21 3"
         stroke="currentColor"
-        strokeWidth="1.9"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M17.25 7.65L19.5 9.9L17.25 12.15"
+        d="M21 16V21H16"
         stroke="currentColor"
-        strokeWidth="1.9"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M17.25 11.85L19.5 14.1L17.25 16.35"
+        d="M15 15L21 21"
         stroke="currentColor"
-        strokeWidth="1.9"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4 4L9 9"
+        stroke="currentColor"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
