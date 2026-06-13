@@ -156,3 +156,12 @@
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
+
+/* Let song cards pass visibly behind the sticky search/filter row. */
+.filmwave-search-filter-sticky,
+.filmwave-search-filter-combined-row,
+.filmwave-search-filter-search-row,
+.filmwave-search-filter-row,
+.filmwave-search-filter-quick-row {
+  background: transparent !important;
+}
