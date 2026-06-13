@@ -40,15 +40,50 @@ function setNativeInputValue(input: HTMLInputElement, value: string) {
   );
 
   descriptor?.set?.call(input, value);
-  input.dispatchEvent(new Event("input", { bubbles: true }));
+
+  if (typeof InputEvent === "function") {
+    input.dispatchEvent(
+      new InputEvent("input", {
+        bubbles: true,
+        data: value,
+        inputType: "insertReplacementText",
+      }),
+    );
+  } else {
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
   input.dispatchEvent(new Event("change", { bubbles: true }));
-  input.blur();
 }
 
-function resetBpmInputs(panel: HTMLElement) {
-  const inputs = Array.from(
+function getBpmInputs(panel: HTMLElement) {
+  return Array.from(
     panel.querySelectorAll<HTMLInputElement>(".fw-filter-detail .fw-filter-mini-field input"),
   );
+}
+
+function syncBpmSliderVisuals(panel: HTMLElement) {
+  const fill = panel.querySelector<HTMLElement>(".fw-filter-detail .fw-range-fill");
+  const handles = Array.from(
+    panel.querySelectorAll<HTMLElement>(".fw-filter-detail .fw-range-handle"),
+  );
+
+  if (fill) {
+    fill.style.left = "0%";
+    fill.style.width = handles.length > 1 ? "100%" : "0%";
+  }
+
+  if (handles.length > 1) {
+    handles[0].style.left = "0%";
+    handles[1].style.left = "100%";
+    return;
+  }
+
+  if (handles[0]) handles[0].style.left = "0%";
+}
+
+function applyBpmReset(panel: HTMLElement) {
+  const inputs = getBpmInputs(panel);
 
   inputs.forEach((input) => {
     const label = input.closest(".fw-filter-mini-field")?.textContent ?? "";
@@ -56,6 +91,44 @@ function resetBpmInputs(panel: HTMLElement) {
 
     setNativeInputValue(input, nextValue);
   });
+
+  window.requestAnimationFrame(() => {
+    const nextInputs = getBpmInputs(panel);
+    const lastInput = nextInputs[nextInputs.length - 1];
+
+    if (lastInput) {
+      lastInput.focus();
+      lastInput.blur();
+      lastInput.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
+    }
+
+    syncBpmSliderVisuals(panel);
+
+    window.requestAnimationFrame(() => {
+      syncBpmSliderVisuals(panel);
+    });
+  });
+}
+
+function resetBpmInputs(panel: HTMLElement) {
+  const segmentButtons = Array.from(
+    panel.querySelectorAll<HTMLButtonElement>(".fw-filter-detail .fw-segment button"),
+  );
+  const rangeButton = segmentButtons.find(
+    (button) => button.textContent?.trim().toLowerCase() === "range",
+  );
+
+  if (rangeButton && !rangeButton.classList.contains("is-active")) {
+    rangeButton.click();
+
+    window.requestAnimationFrame(() => {
+      applyBpmReset(panel);
+    });
+
+    return;
+  }
+
+  applyBpmReset(panel);
 }
 
 function clickNextSelectedDetailControl(panel: HTMLElement, attempts = 0) {
