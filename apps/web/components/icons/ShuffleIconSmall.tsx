@@ -12,35 +12,35 @@ export default function ShuffleIconSmall({ size = 14 }: ShuffleIconSmallProps) {
       aria-hidden="true"
     >
       <path
-        d="M16 3H21V8"
+        d="M3 7H5.25C8 7 9.35 9.15 10.75 12C12.15 14.85 13.5 17 16.25 17H21"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M4 20L21 3"
+        d="M18 14L21 17L18 20"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M21 16V21H16"
+        d="M3 17H5.25C7.25 17 8.55 15.95 9.65 14.25"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M15 15L21 21"
+        d="M14.35 9.75C15.3 8.15 16.35 7 18.25 7H21"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M4 4L9 9"
+        d="M18 4L21 7L18 10"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
