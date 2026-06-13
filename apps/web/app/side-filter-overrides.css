@@ -1,36 +1,23 @@
 /* Structural music side-filter layout.
-   The filter panel participates in the music page grid so its width narrows
-   the song/content column instead of floating over the library. */
+   The existing filter panel becomes a real left column in the music page grid,
+   so its width narrows the song/content column instead of floating over it. */
 :root {
   --filmwave-side-filter-rail-width: 168px;
-  --filmwave-side-filter-detail-width: 188px;
-  --filmwave-side-filter-gap: var(--filmwave-sidebar-content-gap, 20px);
+  --filmwave-side-filter-detail-width: 180px;
+  --filmwave-side-filter-gap: 12px;
+  --filmwave-side-filter-content-gap: 14px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
   display: grid !important;
   grid-template-columns: auto minmax(0, 1fr) !important;
-  column-gap: var(--filmwave-side-filter-gap) !important;
+  column-gap: var(--filmwave-side-filter-content-gap) !important;
   align-items: start !important;
 }
 
+/* Keep the toolbar node as the real first grid column.
+   This is what makes the filters participate in layout instead of overlaying content. */
 main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
-  display: contents !important;
-}
-
-/* Keep the search bar in the header while letting the filter panel become a grid item. */
-main > section:has(.fw-filter-panel-wrap) .fw-toolbar-float {
-  position: fixed !important;
-  top: calc((var(--filmwave-header-height, 56px) - 40px) / 2) !important;
-  left: 50% !important;
-  z-index: var(--filmwave-z-search-filter, 60) !important;
-  width: clamp(260px, calc(100vw - 420px), 920px) !important;
-  max-width: calc(100vw - 300px) !important;
-  transform: translateX(-50%) !important;
-}
-
-/* The side filter is now the first grid column, directly beside the app sidebar. */
-main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap {
   grid-column: 1 !important;
   grid-row: 1 / span 999 !important;
   position: sticky !important;
@@ -48,8 +35,41 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap {
       (var(--filmwave-sidebar-float-inset, 12px) * 2)
   ) !important;
   margin: 0 !important;
+  padding: 0 !important;
   transform: none !important;
+  background: transparent !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky:has(.fw-filter-panel-wrap.has-selected-filter-section) {
+  width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
+      var(--filmwave-side-filter-detail-width)
+  ) !important;
+  max-width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
+      var(--filmwave-side-filter-detail-width)
+  ) !important;
+}
+
+/* Keep the search bar in the header. Only the filter panel participates in the page grid. */
+main > section:has(.fw-filter-panel-wrap) .fw-toolbar-float {
+  position: fixed !important;
+  top: calc((var(--filmwave-header-height, 56px) - 40px) / 2) !important;
+  left: 50% !important;
+  z-index: var(--filmwave-z-search-filter, 60) !important;
+  width: clamp(260px, calc(100vw - 420px), 920px) !important;
+  max-width: calc(100vw - 300px) !important;
+  transform: translateX(-50%) !important;
+}
+
+/* The side filter panel is always visible as the left rail. */
+main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap {
+  display: grid !important;
   grid-template-rows: 1fr !important;
+  width: var(--filmwave-side-filter-rail-width) !important;
+  max-width: var(--filmwave-side-filter-rail-width) !important;
+  height: 100% !important;
+  margin: 0 !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
@@ -166,6 +186,13 @@ main > section:has(.fw-filter-panel-wrap) > footer {
 @media (max-width: 900px) {
   main > section:has(.fw-filter-panel-wrap) {
     display: block !important;
+  }
+
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
+    position: sticky !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
   }
 
   main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap {
