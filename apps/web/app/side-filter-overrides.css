@@ -1,12 +1,12 @@
 /* Structural music side-filter layout.
-   The toolbar remains a header searchbar. Only the filter panel becomes a real
-   left column in the music page grid, so its width narrows the song/content
-   column instead of floating over it. */
+   The toolbar remains a header searchbar. Only the filter panel participates in
+   the music page grid, so its width narrows the song/content column instead of
+   floating over it. */
 :root {
   --filmwave-side-filter-rail-width: 168px;
-  --filmwave-side-filter-detail-width: 180px;
-  --filmwave-side-filter-gap: 8px;
-  --filmwave-side-filter-content-gap: 0px;
+  --filmwave-side-filter-detail-width: 184px;
+  --filmwave-side-filter-sidebar-gap: var(--filmwave-sidebar-float-inset, 12px);
+  --filmwave-side-filter-content-gap: 12px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -14,6 +14,21 @@ main > section:has(.fw-filter-panel-wrap) {
   grid-template-columns: auto minmax(0, 1fr) !important;
   column-gap: var(--filmwave-side-filter-content-gap) !important;
   align-items: start !important;
+}
+
+body:not(.sidebar-collapsed) main > section:has(.fw-filter-panel-wrap) {
+  margin-left: calc(
+    var(--filmwave-sidebar-expanded-width, var(--sidebar-width-expanded, 248px)) -
+      var(--filmwave-sidebar-content-gap, 20px) +
+      var(--filmwave-side-filter-sidebar-gap)
+  ) !important;
+}
+
+body.sidebar-collapsed main > section:has(.fw-filter-panel-wrap) {
+  margin-left: calc(
+    var(--filmwave-sidebar-float-inset, 12px) + 48px +
+      var(--filmwave-side-filter-sidebar-gap)
+  ) !important;
 }
 
 /* The toolbar wrapper should not become the side column. It only owns two
@@ -83,12 +98,10 @@ main > section:has(.fw-filter-panel-wrap)
   > .fw-toolbar-sticky
   > .fw-filter-panel-wrap.has-selected-filter-section {
   width: calc(
-    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
-      var(--filmwave-side-filter-detail-width)
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
   ) !important;
   max-width: calc(
-    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
-      var(--filmwave-side-filter-detail-width)
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
   ) !important;
 }
 
@@ -114,11 +127,18 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel {
   backdrop-filter: none !important;
 }
 
+/* Rail and detail are one shared block, not two separate cards. */
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body {
   display: grid !important;
   grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
-  gap: var(--filmwave-side-filter-gap) !important;
-  overflow: visible !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 18px !important;
+  background: color-mix(in srgb, var(--bg-tertiary) 86%, transparent) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px) !important;
+  box-shadow: var(--shadow-ui) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
@@ -132,12 +152,12 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   height: 100% !important;
   min-height: 0 !important;
   overflow-y: auto !important;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: 18px !important;
-  background: color-mix(in srgb, var(--bg-tertiary) 86%, transparent) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  backdrop-filter: blur(16px) !important;
-  box-shadow: var(--shadow-ui) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail {
@@ -148,6 +168,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   display: none !important;
   min-width: 0 !important;
   padding: 12px !important;
+  border-left: 1px solid var(--border-subtle) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
