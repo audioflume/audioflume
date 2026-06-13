@@ -30,6 +30,24 @@
   margin-left: auto;
 }
 
+.fw-quick-end .fw-quick-chip:first-child {
+  gap: 5px !important;
+  min-width: auto !important;
+  padding: 0 9px 0 7px !important;
+}
+
+.fw-quick-end .fw-quick-chip:first-child svg {
+  width: 12px !important;
+  height: 12px !important;
+  flex: 0 0 12px !important;
+}
+
+.fw-quick-shuffle-label {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
 .filmwave-music-shuffle-button,
 .filmwave-music-sort-button {
   box-sizing: border-box;
