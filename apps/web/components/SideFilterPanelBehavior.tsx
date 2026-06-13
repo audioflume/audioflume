@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 
-const SIDE_FILTER_CLEAR_SECTION_EVENT = "filmwave-clear-filter-section";
-
 const SECTION_ID_BY_LABEL: Record<string, string> = {
   Mood: "mood",
   Genre: "genre",
@@ -35,6 +33,52 @@ function getRailItemSectionId(railItem: Element) {
   return SECTION_ID_BY_LABEL[label] ?? null;
 }
 
+function clickSelectedDetailControls(panel: HTMLElement, sectionId: string) {
+  const selectedOptions = Array.from(
+    panel.querySelectorAll<HTMLButtonElement>(
+      ".fw-filter-detail .fw-filter-option.is-selected, .fw-filter-detail .fw-filter-chip.is-selected",
+    ),
+  );
+
+  selectedOptions.forEach((option) => option.click());
+
+  if (sectionId !== "bpm") return;
+
+  const inputs = Array.from(
+    panel.querySelectorAll<HTMLInputElement>(".fw-filter-detail .fw-filter-mini-field input"),
+  );
+
+  inputs.forEach((input) => {
+    const label = input.closest(".fw-filter-mini-field")?.textContent ?? "";
+    const nextValue = label.includes("High") ? "300" : "1";
+
+    input.value = nextValue;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    input.blur();
+  });
+}
+
+function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: string) {
+  const railItemKey = getRailItemKey(railItem, panel);
+  const isCurrentOpenSection =
+    panel.classList.contains("has-selected-filter-section") &&
+    panel.dataset.sideFilterActiveKey === railItemKey;
+
+  if (isCurrentOpenSection) {
+    clickSelectedDetailControls(panel, sectionId);
+    return;
+  }
+
+  (railItem as HTMLElement).click();
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      clickSelectedDetailControls(panel, sectionId);
+    });
+  });
+}
+
 export default function SideFilterPanelBehavior() {
   useEffect(() => {
     function handleFilterRailClick(event: MouseEvent) {
@@ -55,11 +99,7 @@ export default function SideFilterPanelBehavior() {
         event.preventDefault();
         event.stopPropagation();
 
-        window.dispatchEvent(
-          new CustomEvent(SIDE_FILTER_CLEAR_SECTION_EVENT, {
-            detail: { sectionId },
-          }),
-        );
+        clearRailSection(panel, railItem, sectionId);
 
         return;
       }
