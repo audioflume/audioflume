@@ -1,4 +1,4 @@
-/* Remove the opaque sticky backdrop behind the search/filter row. */
+/* Remove the opaque sticky backdrop behind the music page search/filter row. */
 .fw-toolbar-sticky,
 .filmwave-search-filter-sticky,
 .filmwave-search-filter-quick-row {
@@ -6,8 +6,17 @@
   background-color: transparent !important;
 }
 
+/* This is the actual visible opaque block around the search/filter controls. */
+.fw-toolbar-float {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
 .fw-toolbar-sticky::before,
 .fw-toolbar-sticky::after,
+.fw-toolbar-float::before,
+.fw-toolbar-float::after,
 .filmwave-search-filter-sticky::before,
 .filmwave-search-filter-sticky::after {
   content: none !important;
