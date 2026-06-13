@@ -1,12 +1,12 @@
 /* Structural music side-filter layout.
-   The toolbar remains a header searchbar. Only the filter panel participates in
-   the music page grid, so its width narrows the song/content column instead of
-   floating over it. */
+   The page section already starts after the sidebar via --sidebar-width.
+   This file only turns the filter panel into the first music-page grid column;
+   it must not recalculate or override the sidebar margin itself. */
 :root {
   --filmwave-side-filter-rail-width: 168px;
   --filmwave-side-filter-detail-width: 184px;
   --filmwave-side-filter-sidebar-gap: var(--filmwave-sidebar-float-inset, 12px);
-  --filmwave-side-filter-content-gap: 12px;
+  --filmwave-side-filter-content-gap: 18px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -14,21 +14,8 @@ main > section:has(.fw-filter-panel-wrap) {
   grid-template-columns: auto minmax(0, 1fr) !important;
   column-gap: var(--filmwave-side-filter-content-gap) !important;
   align-items: start !important;
-}
-
-body:not(.sidebar-collapsed) main > section:has(.fw-filter-panel-wrap) {
-  margin-left: calc(
-    var(--filmwave-sidebar-expanded-width, var(--sidebar-width-expanded, 248px)) -
-      var(--filmwave-sidebar-content-gap, 20px) +
-      var(--filmwave-side-filter-sidebar-gap)
-  ) !important;
-}
-
-body.sidebar-collapsed main > section:has(.fw-filter-panel-wrap) {
-  margin-left: calc(
-    var(--filmwave-sidebar-float-inset, 12px) + 48px +
-      var(--filmwave-side-filter-sidebar-gap)
-  ) !important;
+  box-sizing: border-box !important;
+  padding-left: var(--filmwave-side-filter-sidebar-gap) !important;
 }
 
 /* The toolbar wrapper should not become the side column. It only owns two
@@ -240,6 +227,7 @@ main > section:has(.fw-filter-panel-wrap) > .px-5 {
 @media (max-width: 900px) {
   main > section:has(.fw-filter-panel-wrap) {
     display: block !important;
+    padding-left: 0 !important;
   }
 
   main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
