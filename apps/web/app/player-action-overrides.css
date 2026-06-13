@@ -117,11 +117,11 @@
 .fw-toolbar-search-clear {
   position: relative !important;
   order: 1 !important;
-  width: 16px !important;
-  min-width: 16px !important;
+  width: 18px !important;
+  min-width: 18px !important;
   height: 24px !important;
-  margin-left: -3px !important;
-  margin-right: 8px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
 }
@@ -137,14 +137,14 @@
   right: -8px;
   width: 1px;
   height: 16px;
-  background: var(--border-subtle);
+  background: var(--border);
   transform: translateY(-50%);
   pointer-events: none;
 }
 
 .fw-toolbar-search-clear svg {
-  width: 10px !important;
-  height: 10px !important;
+  width: 12px !important;
+  height: 12px !important;
 }
 
 .fw-toolbar-search input {
