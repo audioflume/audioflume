@@ -6,27 +6,27 @@
   background-color: transparent !important;
 }
 
-/* This wrapper should not mask song cards while they scroll behind the toolbar. */
+/* The floating toolbar itself gets the visible surface, not the full-width sticky wrapper. */
 .fw-toolbar-float {
-  border-color: transparent !important;
-  background: transparent !important;
-  background-color: transparent !important;
+  border-color: var(--border) !important;
+  background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
+  background-color: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
   box-shadow: none !important;
 }
 
-/* Keep the actual controls readable without restoring the full-width opaque mask. */
+/* Let the controls sit on the toolbar surface instead of creating separate opaque blocks. */
 .fw-toolbar-search,
 .fw-toolbar-filters,
 .filmwave-search-filter-search-shell {
-  background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
-  background-color: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .fw-toolbar-search:focus-within,
 .fw-toolbar-filters:hover,
 .fw-toolbar-filters.is-open {
-  background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
-  background-color: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .fw-toolbar-sticky::before,
