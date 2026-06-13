@@ -23,7 +23,15 @@ main > section:has(.fw-filter-panel-wrap) {
   padding-left: 0 !important;
 }
 
-.desktop-app-shell:not(.is-sidebar-collapsed) > main > section:has(.fw-filter-panel-wrap) {
+.desktop-app-shell.is-sidebar-collapsed ~ main > section:has(.fw-filter-panel-wrap) {
+  --filmwave-side-filter-sidebar-offset: calc(
+    var(--filmwave-sidebar-float-inset, 12px) +
+      var(--sidebar-width-collapsed, 68px) +
+      var(--filmwave-side-filter-sidebar-gap)
+  );
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) ~ main > section:has(.fw-filter-panel-wrap) {
   --filmwave-side-filter-sidebar-offset: calc(
     var(--filmwave-sidebar-expanded-width, var(--sidebar-width-expanded, 248px)) -
       var(--filmwave-sidebar-content-gap, 20px) +
