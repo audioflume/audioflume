@@ -27,7 +27,7 @@
   gap: 6px !important;
   background: transparent !important;
   background-color: transparent !important;
-  padding: 0 10px 0 4px !important;
+  padding: 0 10px 0 2px !important;
 }
 
 .fw-toolbar-search:focus-within {
@@ -81,7 +81,7 @@
 }
 
 /* Closed filter button keeps its own pill background. */
-.fw-toolbar-filters:not(.is-done):not([aria-expanded="true"]) {
+.fw-toolbar-filters:not([aria-expanded="true"]) {
   display: inline-flex !important;
   height: 32px !important;
   min-height: 32px !important;
@@ -97,8 +97,7 @@
   line-height: 1 !important;
 }
 
-.fw-toolbar-filters:not(.is-done):not([aria-expanded="true"]):hover,
-.fw-toolbar-filters:not(.is-done):not([aria-expanded="true"]).is-open {
+.fw-toolbar-filters:not([aria-expanded="true"]):hover {
   background: var(--bg-control-hover) !important;
   background-color: var(--bg-control-hover) !important;
 }
@@ -116,11 +115,9 @@
   flex-shrink: 0 !important;
 }
 
-/* Open-state action buttons: same box, vertically corrected text. */
-.fw-toolbar-clear-all,
-.fw-toolbar-filters.is-done,
-.fw-toolbar-filters.is-open,
-.fw-toolbar-filters[aria-expanded="true"],
+/* Filter panel footer action buttons. */
+.fw-filter-panel-footer > .fw-filter-clear-all,
+.fw-filter-panel-footer > .fw-filter-done,
 .fw-filter-clear-all,
 .fw-filter-done {
   display: inline-flex !important;
@@ -140,7 +137,7 @@
   vertical-align: middle !important;
 }
 
-.fw-toolbar-clear-all,
+.fw-filter-panel-footer > .fw-filter-clear-all,
 .fw-filter-clear-all {
   border: 1px solid transparent !important;
   background: transparent !important;
@@ -148,74 +145,28 @@
   color: var(--text-primary) !important;
 }
 
-.fw-toolbar-clear-all:hover,
+.fw-filter-panel-footer > .fw-filter-clear-all:hover,
 .fw-filter-clear-all:hover {
   background: var(--bg-control-hover) !important;
   background-color: var(--bg-control-hover) !important;
 }
 
-.fw-toolbar-filters.is-done,
-.fw-toolbar-filters.is-open,
-.fw-toolbar-filters[aria-expanded="true"],
+.fw-filter-panel-footer > .fw-filter-done,
 .fw-filter-done {
-  gap: 0 !important;
   border: 1px solid #ffffff !important;
   background: #ffffff !important;
   background-color: #ffffff !important;
   color: #111111 !important;
 }
 
-html.light .fw-toolbar-filters.is-done,
-html.light .fw-toolbar-filters.is-open,
-html.light .fw-toolbar-filters[aria-expanded="true"],
+html.light .fw-filter-panel-footer > .fw-filter-done,
 html.light .fw-filter-done,
-html[data-theme="light"] .fw-toolbar-filters.is-done,
-html[data-theme="light"] .fw-toolbar-filters.is-open,
-html[data-theme="light"] .fw-toolbar-filters[aria-expanded="true"],
+html[data-theme="light"] .fw-filter-panel-footer > .fw-filter-done,
 html[data-theme="light"] .fw-filter-done {
   border-color: #111111 !important;
   background: #111111 !important;
   background-color: #111111 !important;
   color: #ffffff !important;
-}
-
-.fw-toolbar-filters.is-done > svg,
-.fw-toolbar-filters.is-done .fw-toolbar-filters-count,
-.fw-toolbar-filters.is-done .fw-toolbar-filters-chevron,
-.fw-toolbar-filters.is-open > svg,
-.fw-toolbar-filters.is-open .fw-toolbar-filters-count,
-.fw-toolbar-filters.is-open .fw-toolbar-filters-chevron,
-.fw-toolbar-filters[aria-expanded="true"] > svg,
-.fw-toolbar-filters[aria-expanded="true"] .fw-toolbar-filters-count,
-.fw-toolbar-filters[aria-expanded="true"] .fw-toolbar-filters-chevron,
-.fw-filter-done > svg {
-  content: none !important;
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  flex-basis: 0 !important;
-}
-
-.fw-toolbar-filters.is-done::before,
-.fw-toolbar-filters.is-open::before,
-.fw-toolbar-filters[aria-expanded="true"]::before {
-  content: none !important;
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  flex-basis: 0 !important;
-}
-
-.fw-toolbar-filters.is-done .fw-toolbar-filters-label,
-.fw-toolbar-filters.is-open .fw-toolbar-filters-label,
-.fw-toolbar-filters[aria-expanded="true"] .fw-toolbar-filters-label,
-.fw-filter-done {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: auto !important;
-  line-height: 1 !important;
-  transform: translateY(-1px) !important;
 }
 
 .fw-toolbar-sticky::before,
