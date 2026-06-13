@@ -3,7 +3,7 @@
   --filmwave-header-padding-x: 24px;
   --filmwave-header-nav-height: 32px;
   --filmwave-header-nav-radius: 999px;
-  --filmwave-header-border-color: rgba(255, 255, 255, 0.1);
+  --filmwave-header-border-color: rgba(255, 255, 255, 0.16);
 
   --filmwave-sidebar-width-expanded: var(--sidebar-width-expanded, 280px);
   --filmwave-sidebar-width-collapsed: var(--sidebar-width-collapsed, 76px);
@@ -27,10 +27,10 @@
 }
 
 :where(html.light, html[data-theme="light"]) {
-  --filmwave-header-border-color: #e5e5e5;
+  --filmwave-header-border-color: #d9d9d9;
 }
 
-/* Header divider uses the same visible line color as the search/filter chrome. */
+/* Header divider is intentionally hard-lined to match the visible search/card borders. */
 .filmwave-app-header,
 .desktop-header,
 body > header {
@@ -39,7 +39,7 @@ body > header {
   border-bottom: 1px solid var(--filmwave-header-border-color) !important;
   background: var(--bg-primary);
   color: var(--text-primary);
-  box-shadow: none;
+  box-shadow: 0 1px 0 var(--filmwave-header-border-color) !important;
 }
 
 .filmwave-app-header-inner,
@@ -61,6 +61,7 @@ body > header > div {
   background: var(--bg-primary);
   color: var(--text-primary);
   user-select: none;
+  box-shadow: 0 1px 0 var(--filmwave-header-border-color) !important;
 }
 
 .filmwave-header::after {
@@ -69,7 +70,7 @@ body > header > div {
   bottom: 0;
   left: 0;
   height: 1px;
-  background: var(--filmwave-header-border-color);
+  background: var(--filmwave-header-border-color) !important;
   content: "";
   pointer-events: none;
 }
