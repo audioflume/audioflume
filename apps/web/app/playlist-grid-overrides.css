@@ -39,6 +39,12 @@ body:has(.desktop-app-sidebar)
   ) !important;
 }
 
+.desktop-app-shell:not(.is-sidebar-collapsed) .filmwave-music-library-frame {
+  margin-left: calc(
+    var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-content-gap)
+  ) !important;
+}
+
 .desktop-app-shell:not(.is-sidebar-collapsed) .desktop-app-sidebar-inner {
   padding: var(--filmwave-sidebar-y-padding-top)
     var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom) !important;
