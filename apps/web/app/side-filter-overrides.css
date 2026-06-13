@@ -1,0 +1,121 @@
+/* Side filter layout: keep categories beside the sidebar and expand options only after a category is selected. */
+:root {
+  --filmwave-side-filter-rail-width: 168px;
+  --filmwave-side-filter-detail-width: 178px;
+  --filmwave-side-filter-gap: var(--filmwave-sidebar-content-gap, 20px);
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap {
+  position: fixed !important;
+  top: calc(
+    var(--filmwave-sidebar-top-offset, 56px) +
+      var(--filmwave-sidebar-float-inset, 12px)
+  ) !important;
+  bottom: calc(
+    var(--filmwave-sidebar-bottom-offset, 0px) +
+      var(--filmwave-sidebar-float-inset, 12px)
+  ) !important;
+  left: calc(
+    var(--filmwave-sidebar-float-inset, 12px) + 48px +
+      var(--filmwave-side-filter-gap)
+  ) !important;
+  z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
+  display: block !important;
+  width: var(--filmwave-side-filter-rail-width) !important;
+  max-width: var(--filmwave-side-filter-rail-width) !important;
+  height: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+  grid-template-rows: 1fr !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .fw-toolbar-sticky > .fw-filter-panel-wrap {
+  left: calc(
+    var(--filmwave-sidebar-expanded-width) -
+      var(--filmwave-sidebar-content-gap) + var(--filmwave-side-filter-gap)
+  ) !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section {
+  width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
+      var(--filmwave-side-filter-detail-width)
+  ) !important;
+  max-width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
+      var(--filmwave-side-filter-detail-width)
+  ) !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-reveal,
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel,
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-body {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-body {
+  display: grid !important;
+  grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
+  gap: var(--filmwave-side-filter-gap) !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body {
+  grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail,
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 18px !important;
+  background: color-mix(in srgb, var(--bg-tertiary) 86%, transparent) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px) !important;
+  box-shadow: var(--shadow-ui) !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail {
+  padding: 10px 8px !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail {
+  display: none !important;
+  min-width: 0 !important;
+  padding: 12px !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-detail {
+  display: block !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap:not(.has-selected-filter-section) .fw-filter-rail-item.is-active {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap:not(.has-selected-filter-section) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
+  opacity: 0.4 !important;
+}
+
+.filmwave-music-library-frame {
+  margin-left: calc(
+    var(--filmwave-sidebar-float-inset, 12px) + 48px +
+      var(--filmwave-side-filter-gap) + var(--filmwave-side-filter-rail-width) +
+      var(--filmwave-side-filter-gap)
+  ) !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .filmwave-music-library-frame {
+  margin-left: calc(
+    var(--filmwave-sidebar-expanded-width) -
+      var(--filmwave-sidebar-content-gap) + var(--filmwave-side-filter-gap) +
+      var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap)
+  ) !important;
+}
