@@ -5,7 +5,7 @@
   --filmwave-side-filter-gap: var(--filmwave-sidebar-content-gap, 20px);
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap {
   position: fixed !important;
   top: calc(
     var(--filmwave-sidebar-top-offset, 56px) +
@@ -24,6 +24,7 @@
   width: var(--filmwave-side-filter-rail-width) !important;
   max-width: var(--filmwave-side-filter-rail-width) !important;
   height: auto !important;
+  max-height: none !important;
   margin: 0 !important;
   transform: none !important;
   grid-template-rows: 1fr !important;
@@ -31,14 +32,14 @@
   pointer-events: auto !important;
 }
 
-.desktop-app-shell:not(.is-sidebar-collapsed) .fw-toolbar-sticky > .fw-filter-panel-wrap {
+body:has(.fw-toolbar-sticky) .desktop-app-shell:not(.is-sidebar-collapsed) .fw-filter-panel-wrap {
   left: calc(
     var(--filmwave-sidebar-expanded-width) -
       var(--filmwave-sidebar-content-gap) + var(--filmwave-side-filter-gap)
   ) !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap.has-selected-filter-section {
   width: calc(
     var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
       var(--filmwave-side-filter-detail-width)
@@ -49,27 +50,41 @@
   ) !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-reveal,
-.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel,
-.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-body {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-panel-reveal,
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-panel,
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-panel-body {
   height: 100% !important;
   min-height: 0 !important;
+  max-height: none !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-body {
-  display: grid !important;
-  grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
-  gap: var(--filmwave-side-filter-gap) !important;
-  max-height: none !important;
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-panel-reveal {
+  display: block !important;
   overflow: visible !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-panel {
+  overflow: visible !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-panel-body {
+  display: grid !important;
+  grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
+  gap: var(--filmwave-side-filter-gap) !important;
+  overflow: visible !important;
+}
+
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body {
   grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail,
-.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-rail,
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-detail {
   height: 100% !important;
   min-height: 0 !important;
   overflow-y: auto !important;
@@ -81,26 +96,50 @@
   box-shadow: var(--shadow-ui) !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-rail {
   padding: 10px 8px !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-detail {
   display: none !important;
   min-width: 0 !important;
   padding: 12px !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-detail {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-detail {
   display: block !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap:not(.has-selected-filter-section) .fw-filter-rail-item.is-active {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-panel-footer {
+  display: none !important;
+}
+
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-option-list {
+  column-width: auto !important;
+  column-count: 1 !important;
+  column-gap: 0 !important;
+}
+
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-option {
+  break-inside: auto !important;
+  -webkit-column-break-inside: auto !important;
+}
+
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-group-label {
+  margin-bottom: 10px !important;
+}
+
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap .fw-filter-rail-item {
+  height: 38px !important;
+  border-radius: 11px !important;
+}
+
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap:not(.has-selected-filter-section) .fw-filter-rail-item.is-active {
   background: transparent !important;
   color: var(--text-secondary) !important;
 }
 
-.fw-toolbar-sticky > .fw-filter-panel-wrap:not(.has-selected-filter-section) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
+body:has(.fw-toolbar-sticky) .fw-filter-panel-wrap:not(.has-selected-filter-section) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
   opacity: 0.4 !important;
 }
 
