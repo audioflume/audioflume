@@ -6,11 +6,17 @@
   background-color: transparent !important;
 }
 
-/* This is the actual visible opaque block around the search/filter controls. */
+/* This wrapper should not mask song cards while they scroll behind the toolbar. */
 .fw-toolbar-float {
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
+}
+
+/* Keep the actual search control readable without restoring the full-width opaque mask. */
+.filmwave-search-filter-search-shell {
+  background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
+  background-color: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
 }
 
 .fw-toolbar-sticky::before,
