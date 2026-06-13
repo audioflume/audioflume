@@ -14,19 +14,37 @@
   box-shadow: none !important;
 }
 
-/* Let the controls sit on the toolbar surface instead of creating separate opaque blocks. */
-.fw-toolbar-search,
-.fw-toolbar-filters,
-.filmwave-search-filter-search-shell {
+.fw-toolbar {
   background: transparent !important;
   background-color: transparent !important;
 }
 
-.fw-toolbar-search:focus-within,
-.fw-toolbar-filters:hover,
-.fw-toolbar-filters.is-open {
+/* Search sits on the toolbar surface, with even spacing around the icon circle. */
+.fw-toolbar-search,
+.filmwave-search-filter-search-shell {
+  gap: 6px !important;
   background: transparent !important;
   background-color: transparent !important;
+  padding: 0 10px 0 6px !important;
+}
+
+.fw-toolbar-search:focus-within {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* The filter button keeps its own pill background like the original design. */
+.fw-toolbar-filters {
+  gap: 8px !important;
+  background: var(--bg-control) !important;
+  background-color: var(--bg-control) !important;
+  padding: 0 12px !important;
+}
+
+.fw-toolbar-filters:hover,
+.fw-toolbar-filters.is-open {
+  background: var(--bg-control-hover) !important;
+  background-color: var(--bg-control-hover) !important;
 }
 
 .fw-toolbar-sticky::before,
