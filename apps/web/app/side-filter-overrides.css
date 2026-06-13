@@ -1,6 +1,6 @@
 /* Structural music side-filter layout.
-   The music page offset must use the same live --sidebar-width token as the
-   actual sidebar, then add the floating sidebar inset and the desired gap. */
+   The music page offset must use the same live sidebar panel geometry as the
+   actual sidebar, then add the desired sidebar-to-filter gap. */
 :root {
   --filmwave-side-filter-rail-width: 168px;
   --filmwave-side-filter-detail-width: 184px;
@@ -9,16 +9,26 @@
 }
 
 main > section:has(.fw-filter-panel-wrap) {
+  --filmwave-side-filter-sidebar-offset: calc(
+    var(--filmwave-sidebar-float-inset, 12px) +
+      var(--sidebar-width-collapsed, 68px) +
+      var(--filmwave-side-filter-sidebar-gap)
+  );
   display: grid !important;
   grid-template-columns: auto minmax(0, 1fr) !important;
   column-gap: var(--filmwave-side-filter-content-gap) !important;
   align-items: start !important;
   box-sizing: border-box !important;
-  margin-left: calc(
-    var(--filmwave-sidebar-float-inset, 12px) + var(--sidebar-width) +
-      var(--filmwave-side-filter-sidebar-gap)
-  ) !important;
+  margin-left: var(--filmwave-side-filter-sidebar-offset) !important;
   padding-left: 0 !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) > main > section:has(.fw-filter-panel-wrap) {
+  --filmwave-side-filter-sidebar-offset: calc(
+    var(--filmwave-sidebar-expanded-width, var(--sidebar-width-expanded, 248px)) -
+      var(--filmwave-sidebar-content-gap, 20px) +
+      var(--filmwave-side-filter-sidebar-gap)
+  );
 }
 
 /* The toolbar wrapper should not become the side column. It only owns two
