@@ -1,6 +1,17 @@
 /* Remove the opaque sticky backdrop behind the search/filter row. */
+.fw-toolbar-sticky,
 .filmwave-search-filter-sticky,
 .filmwave-search-filter-quick-row {
   background: transparent !important;
   background-color: transparent !important;
+}
+
+.fw-toolbar-sticky::before,
+.fw-toolbar-sticky::after,
+.filmwave-search-filter-sticky::before,
+.filmwave-search-filter-sticky::after {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
