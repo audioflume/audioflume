@@ -44,6 +44,8 @@ type UseFilterPersistenceProps = {
   authLoaded: boolean;
 };
 
+const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
+
 const baseDefaultState: MusicFilterState = {
   search: "",
   selectedMoods: [],
@@ -140,6 +142,11 @@ function getEditPointMarkerVisibilityFromEvent(event: Event) {
   return getStoredEditPointMarkerVisibility();
 }
 
+function getSideFilterClearSectionFromEvent(event: Event) {
+  const customEvent = event as CustomEvent<{ sectionId?: string }>;
+  return customEvent.detail?.sectionId ?? null;
+}
+
 export function useFilterPersistence(
   propsOrStorageKey: UseFilterPersistenceProps | string | null,
 ) {
@@ -181,6 +188,32 @@ export function useFilterPersistence(
         handleEditPointMarkerVisibility,
       );
       window.removeEventListener("storage", handleEditPointMarkerVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleSideFilterSectionClear = (event: Event) => {
+      const sectionId = getSideFilterClearSectionFromEvent(event);
+
+      if (sectionId !== "duration") return;
+
+      setFilters((current) =>
+        current.selectedDurations.length === 0
+          ? current
+          : { ...current, selectedDurations: [] },
+      );
+    };
+
+    window.addEventListener(
+      SIDE_FILTER_SECTION_CLEAR_EVENT,
+      handleSideFilterSectionClear,
+    );
+
+    return () => {
+      window.removeEventListener(
+        SIDE_FILTER_SECTION_CLEAR_EVENT,
+        handleSideFilterSectionClear,
+      );
     };
   }, []);
 
