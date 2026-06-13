@@ -142,7 +142,9 @@ body > header > div {
   font-weight: 400;
   line-height: 1;
   text-decoration: none;
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .filmwave-header-nav-link:hover,
@@ -187,7 +189,9 @@ body > header > div {
   gap: 6px;
   padding: 0 12px;
   border-radius: var(--filmwave-header-nav-radius);
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .filmwave-header-account-trigger:hover .filmwave-header-account-label,
