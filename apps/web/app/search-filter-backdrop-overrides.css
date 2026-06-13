@@ -107,6 +107,32 @@
   background-color: var(--bg-control-hover) !important;
 }
 
+.fw-toolbar-filters.is-open {
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #111111 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html.light .fw-toolbar-filters.is-open,
+html[data-theme="light"] .fw-toolbar-filters.is-open {
+  border-color: #111111 !important;
+  background: #111111 !important;
+  background-color: #111111 !important;
+  color: #ffffff !important;
+}
+
+.fw-toolbar-filters.is-open .fw-toolbar-filters-label,
+.fw-toolbar-filters.is-open .fw-toolbar-filters-label::after {
+  display: inline-flex !important;
+  height: 100% !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
 .fw-toolbar-filter-actions {
   display: inline-flex !important;
   align-items: center !important;
