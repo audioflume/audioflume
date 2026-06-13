@@ -11,7 +11,6 @@ export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
 }> = [
   { value: "recent", label: "Most Recent" },
   { value: "downloaded", label: "Most Popular" },
-  { value: "random", label: "Shuffle" },
 ];
 
 function SortChevron() {
