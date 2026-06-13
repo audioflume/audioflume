@@ -371,3 +371,47 @@ body.sidebar-collapsed:has(.desktop-app-sidebar)
     width: min(720px, calc(100vw - 360px)) !important;
   }
 }
+
+/* Header account: keep the profile thumbnail as the only visible trigger. */
+.filmwave-header-account-label {
+  display: none !important;
+}
+
+.filmwave-header-account-trigger {
+  gap: 0 !important;
+  padding-right: 0 !important;
+  border-radius: 999px !important;
+}
+
+.filmwave-header-avatar {
+  position: relative !important;
+  overflow: visible !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) !important;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease !important;
+}
+
+.filmwave-header-avatar img {
+  border-radius: inherit !important;
+}
+
+.filmwave-header-account-trigger:hover .filmwave-header-avatar,
+.filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.18),
+    0 0 0 4px rgba(255, 255, 255, 0.08),
+    0 0 18px rgba(255, 255, 255, 0.18) !important;
+  transform: scale(1.05) !important;
+}
+
+html.light .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+html.light .filmwave-header-account-trigger.is-open .filmwave-header-avatar,
+html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 0 0 4px rgba(0, 0, 0, 0.08),
+    0 0 18px rgba(0, 0, 0, 0.16) !important;
+}
