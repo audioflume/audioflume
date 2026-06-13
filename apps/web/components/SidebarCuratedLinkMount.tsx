@@ -5,7 +5,6 @@ import { createPortal } from "react-dom";
 import { usePathname, useRouter } from "next/navigation";
 import {
   SidebarLinkRow,
-  SidebarNav,
   SidebarTooltip,
   type SidebarTooltipState,
 } from "@filmwave/shared";
@@ -20,13 +19,19 @@ function CuratedIcon() {
       aria-hidden="true"
     >
       <path
-        d="M3 4.25H8.7M3 7H10.1M3 9.75H7.4"
+        d="M4.15 3.1H9.2C9.9 3.1 10.45 3.65 10.45 4.35V9.4C10.45 10.1 9.9 10.65 9.2 10.65H4.15C3.45 10.65 2.9 10.1 2.9 9.4V4.35C2.9 3.65 3.45 3.1 4.15 3.1Z"
         stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
+        strokeWidth="1.45"
       />
       <path
-        d="M10.45 2.4L10.8 3.2C10.9 3.43 11.08 3.61 11.31 3.71L12.1 4.05L11.31 4.39C11.08 4.49 10.9 4.67 10.8 4.9L10.45 5.7L10.1 4.9C10 4.67 9.82 4.49 9.59 4.39L8.8 4.05L9.59 3.71C9.82 3.61 10 3.43 10.1 3.2L10.45 2.4Z"
+        d="M4.35 1.75H9.85C11.15 1.75 12.25 2.85 12.25 4.15V8.95"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+      <path
+        d="M6.65 5.05L7.05 5.9C7.14 6.1 7.3 6.26 7.5 6.35L8.35 6.75L7.5 7.15C7.3 7.24 7.14 7.4 7.05 7.6L6.65 8.45L6.25 7.6C6.16 7.4 6 7.24 5.8 7.15L4.95 6.75L5.8 6.35C6 6.26 6.16 6.1 6.25 5.9L6.65 5.05Z"
         fill="currentColor"
       />
     </svg>
@@ -41,25 +46,22 @@ export default function SidebarCuratedLinkMount() {
   const [tooltip, setTooltip] = useState<SidebarTooltipState>(null);
 
   useEffect(() => {
-    const sidebarInner = document.querySelector<HTMLElement>(
-      ".desktop-app-sidebar-inner",
-    );
-    const projectsSection = document.querySelector<HTMLElement>(
-      ".desktop-sidebar-section.is-projects-section",
+    const libraryNav = document.querySelector<HTMLElement>(
+      ".desktop-app-sidebar-inner > .desktop-sidebar-section:first-child .desktop-sidebar-nav",
     );
 
-    if (!sidebarInner || !projectsSection) return;
+    if (!libraryNav) return;
 
-    let curatedMount = sidebarInner.querySelector<HTMLElement>(
+    let curatedMount = libraryNav.querySelector<HTMLElement>(
       ".desktop-sidebar-curated-mount",
     );
 
     if (!curatedMount) {
       curatedMount = document.createElement("div");
       curatedMount.className = "desktop-sidebar-curated-mount";
-      sidebarInner.insertBefore(curatedMount, projectsSection);
     }
 
+    libraryNav.appendChild(curatedMount);
     setMount(curatedMount);
 
     const shell = document.querySelector<HTMLElement>(".desktop-app-shell");
@@ -87,16 +89,14 @@ export default function SidebarCuratedLinkMount() {
   return (
     <>
       {createPortal(
-        <SidebarNav label="Curated playlists navigation">
-          <SidebarLinkRow
-            label="Curated Playlists"
-            icon={<CuratedIcon />}
-            collapsed={collapsed}
-            active={active}
-            onTooltipChange={setTooltip}
-            onClick={() => router.push("/curated-playlists")}
-          />
-        </SidebarNav>,
+        <SidebarLinkRow
+          label="Curated Playlists"
+          icon={<CuratedIcon />}
+          collapsed={collapsed}
+          active={active}
+          onTooltipChange={setTooltip}
+          onClick={() => router.push("/curated-playlists")}
+        />,
         mount,
       )}
       {tooltip && <SidebarTooltip label={tooltip.label} top={tooltip.top} />}
