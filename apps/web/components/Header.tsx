@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-import DashboardIcon from "@/components/icons/DashboardIcon";
 import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import UserMenu from "@/components/UserMenu";
@@ -129,7 +128,6 @@ export default function Header() {
         const hero = document.querySelector<HTMLElement>(".project-detail-hero");
 
         if (!actions || !tabsRow || !hero) return;
-
         const shouldMoveToHero = tabsRow.getBoundingClientRect().width <= 560;
 
         if (shouldMoveToHero) {
@@ -193,11 +191,6 @@ export default function Header() {
       }
       actions={
         <div className="filmwave-header-actions" ref={menuRef}>
-          <Link href="/discover" className="filmwave-header-nav-link">
-            <DashboardIcon />
-            Discover
-          </Link>
-
           <Link href="/curated-playlists" className="filmwave-header-nav-link">
             <PlaylistIcon size={13} />
             Playlists
