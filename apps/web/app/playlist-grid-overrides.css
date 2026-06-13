@@ -138,14 +138,10 @@ body:has(.desktop-app-sidebar)
   flex-basis: 12px !important;
 }
 
-html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-float {
+html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-float,
+html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-float:focus-within {
   background: rgba(0, 0, 0, 0.24) !important;
   background-color: rgba(0, 0, 0, 0.24) !important;
-}
-
-html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-float:focus-within {
-  background: rgba(0, 0, 0, 0.28) !important;
-  background-color: rgba(0, 0, 0, 0.28) !important;
 }
 
 html:not(.light):not([data-theme="light"]) .fw-toolbar-search,
@@ -157,7 +153,8 @@ html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell:
 }
 
 .filmwave-search-filter-quick-row {
-  margin-top: var(--filmwave-sidebar-float-inset) !important;
+  margin-top: 0 !important;
+  padding-top: var(--filmwave-sidebar-float-inset) !important;
 }
 
 /* Keep only the expanding border around the profile image, without the glow. */
