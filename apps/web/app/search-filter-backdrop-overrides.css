@@ -24,7 +24,7 @@
   gap: 6px !important;
   background: transparent !important;
   background-color: transparent !important;
-  padding: 0 10px 0 6px !important;
+  padding: 0 10px 0 3px !important;
 }
 
 .fw-toolbar-search:focus-within {
@@ -139,9 +139,15 @@
 .fw-toolbar-clear-all,
 .fw-filter-clear-all {
   border: 1px solid transparent !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.fw-toolbar-clear-all:hover,
+.fw-filter-clear-all:hover {
   background: var(--bg-control-hover) !important;
   background-color: var(--bg-control-hover) !important;
-  color: var(--text-primary) !important;
 }
 
 .fw-toolbar-filters.is-done,
