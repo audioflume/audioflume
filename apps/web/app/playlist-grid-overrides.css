@@ -209,3 +209,102 @@ html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-head
 .fw-toolbar-sticky .fw-toolbar-filters {
   display: none !important;
 }
+
+/* Keep the existing filter UI visible beside the sidebar instead of hiding it behind the header button. */
+:root {
+  --filmwave-side-filter-width: 360px;
+  --filmwave-side-filter-gap: 14px;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap {
+  position: fixed !important;
+  top: calc(var(--filmwave-header-height) + var(--filmwave-sidebar-float-inset)) !important;
+  left: calc(var(--sidebar-width) + var(--filmwave-side-filter-gap)) !important;
+  z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
+  display: block !important;
+  width: var(--filmwave-side-filter-width) !important;
+  max-width: var(--filmwave-side-filter-width) !important;
+  margin: 0 !important;
+  transform: none !important;
+  grid-template-rows: 1fr !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-reveal {
+  min-height: auto !important;
+  overflow: visible !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel {
+  overflow: visible !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-body {
+  display: grid !important;
+  grid-template-columns: 168px 178px !important;
+  gap: 10px !important;
+  max-height: calc(100vh - var(--filmwave-header-height) - (var(--filmwave-sidebar-float-inset) * 2)) !important;
+  overflow: visible !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail,
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail {
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 18px !important;
+  background: color-mix(in srgb, var(--bg-tertiary) 86%, transparent) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px) !important;
+  box-shadow: var(--shadow-ui) !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail {
+  flex: none !important;
+  border-right: 1px solid var(--border-subtle) !important;
+  padding: 10px 8px !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail {
+  min-width: 0 !important;
+  padding: 12px !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-panel-footer {
+  display: none !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-option-list {
+  column-width: auto !important;
+  column-count: 1 !important;
+  column-gap: 0 !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-option {
+  break-inside: auto !important;
+  -webkit-column-break-inside: auto !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-group-label {
+  margin-bottom: 10px !important;
+}
+
+.fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail-item {
+  height: 38px !important;
+  border-radius: 11px !important;
+}
+
+.filmwave-music-library-frame {
+  margin-left: calc(var(--sidebar-width) + var(--filmwave-side-filter-width) + var(--filmwave-side-filter-gap)) !important;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .filmwave-music-library-frame {
+  margin-left: calc(
+    var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-content-gap) +
+      var(--filmwave-side-filter-width) + var(--filmwave-side-filter-gap)
+  ) !important;
+}
