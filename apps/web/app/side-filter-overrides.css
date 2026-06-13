@@ -6,6 +6,7 @@
   --filmwave-side-filter-detail-width: 184px;
   --filmwave-side-filter-sidebar-gap: var(--filmwave-sidebar-float-inset, 12px);
   --filmwave-side-filter-content-gap: 14px;
+  --filmwave-side-filter-divider-color: var(--filmwave-header-border-color, rgba(255, 255, 255, 0.16));
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -142,6 +143,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body {
   gap: 0 !important;
   overflow: hidden !important;
   border: 0 !important;
+  border-right: 1px solid var(--filmwave-side-filter-divider-color) !important;
   border-radius: 0 !important;
   background: transparent !important;
   -webkit-backdrop-filter: none !important;
@@ -176,7 +178,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   display: none !important;
   min-width: 0 !important;
   padding: 12px !important;
-  border-left: 1px solid var(--border-subtle) !important;
+  border-left: 1px solid var(--filmwave-side-filter-divider-color) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
