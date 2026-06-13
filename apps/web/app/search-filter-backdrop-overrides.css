@@ -167,6 +167,7 @@ html[data-theme="light"] .fw-toolbar-filters.is-open {
   background: transparent !important;
   background-color: transparent !important;
   color: var(--text-primary) !important;
+  padding: 2px 0 0 !important;
 }
 
 .fw-toolbar-clear-all:hover,
