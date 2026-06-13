@@ -154,7 +154,11 @@ html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell:
 
 .filmwave-search-filter-quick-row {
   margin-top: 0 !important;
-  padding-top: calc(var(--filmwave-sidebar-float-inset) + 6px) !important;
+  padding-top: var(--filmwave-sidebar-float-inset) !important;
+}
+
+.fw-quick-row {
+  padding-top: var(--filmwave-sidebar-float-inset) !important;
 }
 
 /* Keep only the expanding border around the profile image, without the glow. */
