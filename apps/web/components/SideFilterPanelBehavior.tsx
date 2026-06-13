@@ -16,6 +16,8 @@ const SECTION_ID_BY_LABEL: Record<string, string> = {
   Display: "display",
 };
 
+const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
+
 function getRailItemKey(railItem: Element, panel: Element) {
   const railItems = Array.from(panel.querySelectorAll(".fw-filter-rail-item"));
   const index = railItems.indexOf(railItem);
@@ -31,6 +33,14 @@ function getRailItemSectionId(railItem: Element) {
   if (!label) return null;
 
   return SECTION_ID_BY_LABEL[label] ?? null;
+}
+
+function syncFilterColumnFadeState(column: HTMLElement) {
+  column.classList.toggle("has-scroll-top", column.scrollTop > 1);
+}
+
+function syncFilterPanelColumnFadeStates(root: ParentNode = document) {
+  root.querySelectorAll<HTMLElement>(FILTER_COLUMN_SELECTOR).forEach(syncFilterColumnFadeState);
 }
 
 function setNativeInputValue(input: HTMLInputElement, value: string) {
@@ -196,6 +206,7 @@ export default function SideFilterPanelBehavior() {
         event.stopPropagation();
 
         clearRailSection(panel, railItem, sectionId);
+        window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
 
         return;
       }
@@ -208,17 +219,32 @@ export default function SideFilterPanelBehavior() {
       if (isSameOpenSection) {
         panel.classList.remove("has-selected-filter-section");
         delete panel.dataset.sideFilterActiveKey;
+        window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
         return;
       }
 
       panel.dataset.sideFilterActiveKey = railItemKey;
       panel.classList.add("has-selected-filter-section");
+      window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
     }
 
+    function handleFilterColumnScroll(event: Event) {
+      const target = event.target;
+
+      if (!(target instanceof HTMLElement)) return;
+      if (!target.matches(FILTER_COLUMN_SELECTOR)) return;
+
+      syncFilterColumnFadeState(target);
+    }
+
+    window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates());
+
     document.addEventListener("click", handleFilterRailClick, true);
+    document.addEventListener("scroll", handleFilterColumnScroll, true);
 
     return () => {
       document.removeEventListener("click", handleFilterRailClick, true);
+      document.removeEventListener("scroll", handleFilterColumnScroll, true);
     };
   }, []);
 
