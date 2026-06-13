@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
+import SidebarBodyClassSync from "@/components/SidebarBodyClassSync";
 import SidebarCuratedLinkMount from "@/components/SidebarCuratedLinkMount";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
@@ -18,6 +19,7 @@ export default function SidebarRenderer({
   return (
     <>
       <Sidebar initialCollapsed={initialCollapsed} />
+      <SidebarBodyClassSync />
       <SidebarCuratedLinkMount />
     </>
   );
