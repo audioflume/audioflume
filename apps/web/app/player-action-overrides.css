@@ -89,3 +89,27 @@
 .filmwave-player-actions .filmwave-song-action-button.is-plain-active-icon:hover {
   background: var(--filmwave-square-icon-hover-bg) !important;
 }
+
+/* Compact the music search/filter row without changing the page spacing. */
+.fw-toolbar-float {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.fw-toolbar-search,
+.fw-toolbar-filters,
+.fw-toolbar-clear-all {
+  height: 34px !important;
+  min-height: 34px !important;
+}
+
+.fw-toolbar-search-icon {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.fw-toolbar-filters,
+.fw-toolbar-clear-all {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
