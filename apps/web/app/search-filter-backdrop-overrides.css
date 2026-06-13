@@ -8,7 +8,7 @@
 
 /* The floating toolbar itself gets the visible surface, not the full-width sticky wrapper. */
 .fw-toolbar-float {
-  border-color: var(--border) !important;
+  border-color: var(--filmwave-header-border-color) !important;
   background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
   background-color: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
   box-shadow: none !important;
