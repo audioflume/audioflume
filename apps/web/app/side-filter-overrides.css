@@ -1,12 +1,13 @@
 /* Structural music side-filter layout.
-   The page section already starts after the sidebar via --sidebar-width.
-   This file only turns the filter panel into the first music-page grid column;
-   it must not recalculate or override the sidebar margin itself. */
+   The music page offset must be based on the visible floating sidebar panel,
+   not only on --sidebar-width, because collapsed and expanded sidebar panel
+   widths are calculated differently. */
 :root {
   --filmwave-side-filter-rail-width: 168px;
   --filmwave-side-filter-detail-width: 184px;
   --filmwave-side-filter-sidebar-gap: var(--filmwave-sidebar-float-inset, 12px);
-  --filmwave-side-filter-content-gap: 18px;
+  --filmwave-side-filter-content-gap: 14px;
+  --filmwave-side-filter-collapsed-sidebar-panel-width: 48px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -15,7 +16,20 @@ main > section:has(.fw-filter-panel-wrap) {
   column-gap: var(--filmwave-side-filter-content-gap) !important;
   align-items: start !important;
   box-sizing: border-box !important;
-  padding-left: var(--filmwave-side-filter-sidebar-gap) !important;
+  margin-left: calc(
+    var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-content-gap, 20px) +
+      var(--filmwave-side-filter-sidebar-gap)
+  ) !important;
+  padding-left: 0 !important;
+}
+
+body.sidebar-collapsed main > section:has(.fw-filter-panel-wrap),
+.desktop-app-shell.is-sidebar-collapsed main > section:has(.fw-filter-panel-wrap) {
+  margin-left: calc(
+    var(--filmwave-sidebar-float-inset, 12px) +
+      var(--filmwave-side-filter-collapsed-sidebar-panel-width) +
+      var(--filmwave-side-filter-sidebar-gap)
+  ) !important;
 }
 
 /* The toolbar wrapper should not become the side column. It only owns two
