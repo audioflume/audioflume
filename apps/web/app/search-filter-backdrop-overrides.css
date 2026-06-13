@@ -1,4 +1,6 @@
-/* Remove the full-width sticky backdrop behind the music page search/filter row. */
+/* Music page toolbar overrides loaded after the redesign stylesheet. */
+
+/* Remove the full-width opaque strip so song cards can scroll behind the toolbar. */
 .fw-toolbar-sticky,
 .filmwave-search-filter-sticky,
 .filmwave-search-filter-quick-row {
@@ -6,7 +8,7 @@
   background-color: transparent !important;
 }
 
-/* The floating toolbar itself gets the visible surface, not the full-width sticky wrapper. */
+/* The floating toolbar is the only visible surface. */
 .fw-toolbar-float {
   border-color: var(--border) !important;
   background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
@@ -19,12 +21,13 @@
   background-color: transparent !important;
 }
 
+/* Search field: keep the icon circle inset equal to the top/bottom spacing. */
 .fw-toolbar-search,
 .filmwave-search-filter-search-shell {
   gap: 6px !important;
   background: transparent !important;
   background-color: transparent !important;
-  padding: 0 10px 0 1px !important;
+  padding: 0 10px 0 6px !important;
 }
 
 .fw-toolbar-search:focus-within {
@@ -36,7 +39,7 @@
   order: 0 !important;
   width: 26px !important;
   height: 26px !important;
-  margin-left: -2px !important;
+  margin-left: 0 !important;
 }
 
 .fw-toolbar-search-clear {
@@ -77,34 +80,33 @@
   border-left: 0 !important;
 }
 
-.fw-toolbar-filters {
+/* Closed filter button keeps its own pill background. */
+.fw-toolbar-filters:not(.is-done) {
   display: inline-flex !important;
   height: 32px !important;
   min-height: 32px !important;
   max-height: 32px !important;
-  gap: 7px !important;
   align-items: center !important;
-  align-self: center !important;
   justify-content: center !important;
+  gap: 7px !important;
   box-sizing: border-box !important;
   border-radius: 999px !important;
   background: var(--bg-control) !important;
   background-color: var(--bg-control) !important;
-  padding: 0 14px !important;
-  font-size: 13px !important;
+  padding: 0 14px 1px !important;
   line-height: 1 !important;
+}
+
+.fw-toolbar-filters:not(.is-done):hover,
+.fw-toolbar-filters:not(.is-done).is-open {
+  background: var(--bg-control-hover) !important;
+  background-color: var(--bg-control-hover) !important;
 }
 
 .fw-toolbar-filters::before {
   width: 13px !important;
   height: 13px !important;
   flex-basis: 13px !important;
-}
-
-.fw-toolbar-filters:hover,
-.fw-toolbar-filters.is-open {
-  background: var(--bg-control-hover) !important;
-  background-color: var(--bg-control-hover) !important;
 }
 
 .fw-toolbar-filter-actions {
@@ -114,6 +116,7 @@
   flex-shrink: 0 !important;
 }
 
+/* Open-state action buttons: same box, vertically corrected text. */
 .fw-toolbar-clear-all,
 .fw-toolbar-filters.is-done,
 .fw-filter-clear-all,
@@ -130,7 +133,7 @@
   justify-content: center !important;
   box-sizing: border-box !important;
   border-radius: 999px !important;
-  padding: 0 0 2px !important;
+  padding: 0 18px 2px !important;
   line-height: 1 !important;
   vertical-align: middle !important;
 }
@@ -152,7 +155,7 @@
 .fw-toolbar-filters.is-done,
 .fw-filter-done {
   gap: 0 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid #ffffff !important;
   background: #ffffff !important;
   background-color: #ffffff !important;
   color: #111111 !important;
