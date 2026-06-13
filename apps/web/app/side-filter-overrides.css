@@ -187,6 +187,10 @@ main > section:has(.fw-filter-panel-wrap)
   display: block !important;
 }
 
+main > section:has(.fw-filter-panel-wrap) .fw-filter-group-count {
+  display: none !important;
+}
+
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-footer {
   display: none !important;
 }
