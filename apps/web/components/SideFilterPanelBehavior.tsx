@@ -36,7 +36,16 @@ function getRailItemSectionId(railItem: Element) {
 }
 
 function syncFilterColumnFadeState(column: HTMLElement) {
-  column.classList.toggle("has-scroll-top", column.scrollTop > 1);
+  const hasScrollTop = column.scrollTop > 1;
+  const hasScrollBottom = column.scrollHeight - column.clientHeight - column.scrollTop > 1;
+  const rect = column.getBoundingClientRect();
+
+  column.classList.toggle("has-scroll-top", hasScrollTop);
+  column.classList.toggle("has-scroll-bottom", hasScrollBottom);
+  column.style.setProperty("--fw-filter-fade-left", `${rect.left}px`);
+  column.style.setProperty("--fw-filter-fade-top", `${rect.top}px`);
+  column.style.setProperty("--fw-filter-fade-width", `${column.clientWidth}px`);
+  column.style.setProperty("--fw-filter-fade-height", `${rect.height}px`);
 }
 
 function syncFilterPanelColumnFadeStates(root: ParentNode = document) {
@@ -231,20 +240,30 @@ export default function SideFilterPanelBehavior() {
     function handleFilterColumnScroll(event: Event) {
       const target = event.target;
 
-      if (!(target instanceof HTMLElement)) return;
-      if (!target.matches(FILTER_COLUMN_SELECTOR)) return;
+      if (target instanceof HTMLElement && target.matches(FILTER_COLUMN_SELECTOR)) {
+        syncFilterColumnFadeState(target);
+        return;
+      }
 
-      syncFilterColumnFadeState(target);
+      syncFilterPanelColumnFadeStates();
+    }
+
+    function handleViewportChange() {
+      syncFilterPanelColumnFadeStates();
     }
 
     window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates());
 
     document.addEventListener("click", handleFilterRailClick, true);
     document.addEventListener("scroll", handleFilterColumnScroll, true);
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, { passive: true });
 
     return () => {
       document.removeEventListener("click", handleFilterRailClick, true);
       document.removeEventListener("scroll", handleFilterColumnScroll, true);
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange);
     };
   }, []);
 
