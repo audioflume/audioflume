@@ -212,6 +212,10 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item {
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
   cursor: pointer !important;
   transition: background-color 160ms ease, color 160ms ease !important;
 }
@@ -222,7 +226,13 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover {
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after {
   content: "×";
-  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
   line-height: 1 !important;
 }
 
