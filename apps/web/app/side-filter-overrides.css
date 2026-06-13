@@ -139,6 +139,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel {
 
 /* Rail and detail are one shared block, not two separate cards. */
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body {
+  position: relative !important;
   display: grid !important;
   grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
   gap: 0 !important;
@@ -156,6 +157,25 @@ main > section:has(.fw-filter-panel-wrap)
   .fw-filter-panel-wrap.has-selected-filter-section
   .fw-filter-panel-body {
   grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--filmwave-side-filter-rail-width);
+  width: 1px;
+  z-index: calc(var(--filmwave-z-search-filter, 60) + 2);
+  background: var(--filmwave-side-filter-divider-color);
+  pointer-events: none;
+  opacity: 0;
+}
+
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap.has-selected-filter-section
+  .fw-filter-panel-body::before {
+  opacity: 1;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail,
@@ -216,7 +236,6 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   display: none !important;
   min-width: 0 !important;
   padding: 12px !important;
-  border-left: 1px solid var(--filmwave-side-filter-divider-color) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
