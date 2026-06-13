@@ -53,7 +53,7 @@ const baseDefaultState: MusicFilterState = {
   selectedVocals: [],
   selectedDurations: [],
   selectedEditPoints: [],
-  showEditPointMarkers: true,
+  showEditPointMarkers: false,
   instrumental: false,
   bpmValue: null,
   keyValue: null,
@@ -154,7 +154,9 @@ export function useFilterPersistence(
 
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
-  const [filters, setFilters] = useState<MusicFilterState>(() => getDefaultState());
+  const [filters, setFilters] = useState<MusicFilterState>(() => ({
+    ...baseDefaultState,
+  }));
 
   useEffect(() => {
     const handleEditPointMarkerVisibility = (event: Event) => {
