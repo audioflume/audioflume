@@ -35,11 +35,11 @@ import EditProjectModal from "@/components/EditProjectModal";
 import Toast from "@/components/Toast";
 import AiIcon from "@/components/icons/AiIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
+import DashboardIcon from "@/components/icons/DashboardIcon";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import EditPointsIcon from "@/components/icons/EditPointsIcon";
 import FolderIcon from "@/components/icons/FolderIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
-import LibraryIcon from "@/components/icons/LibraryIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
@@ -52,6 +52,7 @@ import { useUserPreferences } from "@/context/UserPreferencesContext";
 import type { Project } from "@/lib/types";
 
 const mainLinks = [
+  { label: "Discover", href: "/discover", icon: "discover" },
   { label: "Music Library", href: "/music", icon: "music" },
   { label: "My Playlists", href: "/playlists", icon: "playlist" },
   { label: "Favorites", href: "/favorites", icon: "heart" },
@@ -106,6 +107,7 @@ function HorizontalMoreIcon() {
 }
 
 function MainIcon({ icon }: { icon: string }) {
+  if (icon === "discover") return <DashboardIcon size={12} />;
   if (icon === "music") return <MusicIcon />;
   if (icon === "playlist") return <PlaylistIcon size={14} />;
   if (icon === "heart") return <HeartIcon />;
@@ -401,7 +403,6 @@ export default function Sidebar({
   }, []);
 
   useEffect(() => {
-    document.body.classList.toggle("sidebar-collapsed", sidebarCollapsed);
     localStorage.setItem("filmwave-sidebar-collapsed", String(collapsed));
     document.cookie = `filmwave-sidebar-collapsed=${collapsed};path=/;max-age=31536000`;
   }, [collapsed, sidebarCollapsed]);
@@ -603,11 +604,6 @@ export default function Sidebar({
 
         <SidebarInner>
           <SidebarSection>
-            <SidebarSectionHeading
-              label="Library"
-              collapsed={sidebarCollapsed}
-              icon={<LibraryIcon />}
-            />
             <SidebarNav label="Library navigation">
               {mainLinks.map((link) => (
                 <SidebarLinkRow
