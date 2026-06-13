@@ -33,12 +33,35 @@
   background-color: transparent !important;
 }
 
-/* The filter button keeps its own pill background like the original design. */
+.fw-toolbar-search-icon {
+  order: 0 !important;
+  width: 26px !important;
+  height: 26px !important;
+}
+
+.fw-toolbar-search-clear {
+  order: 1 !important;
+  width: auto !important;
+  min-width: 22px !important;
+  height: 26px !important;
+  margin: 0 !important;
+  padding: 0 6px 0 0 !important;
+  border-right: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+}
+
+.fw-toolbar-search input {
+  order: 2 !important;
+  padding-left: 6px !important;
+}
+
+/* The filter button keeps its own pill background like the original design, but sits smaller inside the container. */
 .fw-toolbar-filters {
-  gap: 8px !important;
+  height: 30px !important;
+  gap: 6px !important;
   background: var(--bg-control) !important;
   background-color: var(--bg-control) !important;
-  padding: 0 12px !important;
+  padding: 0 10px !important;
 }
 
 .fw-toolbar-filters:hover,
