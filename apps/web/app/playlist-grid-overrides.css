@@ -122,6 +122,12 @@ body:has(.desktop-app-sidebar)
   white-space: nowrap !important;
 }
 
+.fw-toolbar-sticky .fw-toolbar-filters:not(.is-open):not(.is-done),
+.fw-toolbar-sticky .fw-toolbar-filters:not(.is-open):not(.is-done):hover {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 .fw-toolbar-sticky .fw-toolbar-filters-label {
   display: inline-block !important;
   max-width: clamp(0px, calc(100vw - 760px), 64px) !important;
