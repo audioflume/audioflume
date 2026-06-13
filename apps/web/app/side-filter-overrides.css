@@ -232,8 +232,9 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after {
   width: 100% !important;
   height: 100% !important;
   font-size: 12px !important;
-  font-weight: 400 !important;
+  font-weight: 450 !important;
   line-height: 1 !important;
+  transform: translateY(-1px) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active {
