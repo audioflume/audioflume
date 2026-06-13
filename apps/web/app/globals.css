@@ -289,7 +289,12 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 .desktop-header,
 body > header,
 .filmwave-header {
-  border-bottom: 1px solid var(--border-subtle) !important;
+  border-bottom: 1px solid var(--border) !important;
+  box-shadow: none !important;
+}
+
+.filmwave-header::after {
+  content: none !important;
 }
 
 .fw-song-list .filmwave-song-card,
