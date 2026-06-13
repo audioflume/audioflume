@@ -169,40 +169,43 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   box-shadow: none !important;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0,
-    #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
-    transparent 100%
-  ) !important;
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0,
-    #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
-    transparent 100%
-  ) !important;
-  -webkit-mask-size: 100% 100% !important;
-  mask-size: 100% 100% !important;
-  -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail.has-scroll-top,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-detail.has-scroll-top {
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    #000 var(--filmwave-side-filter-edge-fade),
-    #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
-    transparent 100%
-  ) !important;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    #000 var(--filmwave-side-filter-edge-fade),
-    #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
-    transparent 100%
-  ) !important;
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail::before,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-detail::before,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail::after,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-detail::after {
+  content: "";
+  position: fixed;
+  left: var(--fw-filter-fade-left, -9999px);
+  width: var(--fw-filter-fade-width, 0px);
+  height: var(--filmwave-side-filter-edge-fade);
+  z-index: calc(var(--filmwave-z-search-filter, 60) + 1);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail::before,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-detail::before {
+  top: var(--fw-filter-fade-top, 0px);
+  background: linear-gradient(to bottom, var(--bg-primary, #0b0b0b), transparent);
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail::after,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-detail::after {
+  top: calc(
+    var(--fw-filter-fade-top, 0px) + var(--fw-filter-fade-height, 0px) -
+      var(--filmwave-side-filter-edge-fade)
+  );
+  background: linear-gradient(to top, var(--bg-primary, #0b0b0b), transparent);
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail.has-scroll-top::before,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-detail.has-scroll-top::before,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail.has-scroll-bottom::after,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-detail.has-scroll-bottom::after {
+  opacity: 1;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail {
