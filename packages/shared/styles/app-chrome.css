@@ -3,6 +3,7 @@
   --filmwave-header-padding-x: 24px;
   --filmwave-header-nav-height: 32px;
   --filmwave-header-nav-radius: 999px;
+  --filmwave-header-border-color: rgba(255, 255, 255, 0.1);
 
   --filmwave-sidebar-width-expanded: var(--sidebar-width-expanded, 280px);
   --filmwave-sidebar-width-collapsed: var(--sidebar-width-collapsed, 76px);
@@ -25,13 +26,17 @@
   --filmwave-search-font-size: 15px;
 }
 
-/* Header divider uses the stronger site border so it visually matches the search/card chrome. */
+:where(html.light, html[data-theme="light"]) {
+  --filmwave-header-border-color: #e5e5e5;
+}
+
+/* Header divider uses the same visible line color as the search/filter chrome. */
 .filmwave-app-header,
 .desktop-header,
 body > header {
   z-index: var(--filmwave-z-header) !important;
   height: var(--filmwave-header-height);
-  border-bottom: 1px solid var(--border-strong) !important;
+  border-bottom: 1px solid var(--filmwave-header-border-color) !important;
   background: var(--bg-primary);
   color: var(--text-primary);
   box-shadow: none;
@@ -52,10 +57,21 @@ body > header > div {
   left: 0;
   z-index: var(--filmwave-z-header);
   height: var(--filmwave-header-height);
-  border-bottom: 1px solid var(--border-strong) !important;
+  border-bottom: 1px solid var(--filmwave-header-border-color) !important;
   background: var(--bg-primary);
   color: var(--text-primary);
   user-select: none;
+}
+
+.filmwave-header::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--filmwave-header-border-color);
+  content: "";
+  pointer-events: none;
 }
 
 .filmwave-header-inner {
