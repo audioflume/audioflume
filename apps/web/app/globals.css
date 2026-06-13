@@ -362,3 +362,33 @@ body > header,
   line-height: 0.9;
   transform: translateY(-0.5px);
 }
+
+/* ─── Music hero/list container alignment ─────────────────── */
+
+main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section {
+  container-type: inline-size;
+  margin-left: 0 !important;
+  width: auto !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > .grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100% !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > .grid > :nth-child(2) {
+  display: none !important;
+}
+
+@container (min-width: 960px) {
+  main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > .grid {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 420px) !important;
+  }
+
+  main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > .grid > :nth-child(2) {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+}
