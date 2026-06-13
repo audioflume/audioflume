@@ -24,7 +24,7 @@
   gap: 6px !important;
   background: transparent !important;
   background-color: transparent !important;
-  padding: 0 10px 0 8px !important;
+  padding: 0 10px 0 6px !important;
 }
 
 .fw-toolbar-search:focus-within {
@@ -107,6 +107,15 @@
   background-color: var(--bg-control-hover) !important;
 }
 
+.fw-toolbar-filter-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+.fw-toolbar-clear-all,
+.fw-toolbar-filters.is-done,
 .fw-filter-clear-all,
 .fw-filter-done {
   display: inline-flex !important;
@@ -121,19 +130,34 @@
   box-sizing: border-box !important;
   border-radius: 999px !important;
   padding: 0 !important;
-  font-size: 12px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
   line-height: 1 !important;
   vertical-align: middle !important;
 }
 
+.fw-toolbar-clear-all,
 .fw-filter-clear-all {
-  background: var(--bg-control) !important;
+  border: 1px solid transparent !important;
+  background: var(--bg-control-hover) !important;
+  background-color: var(--bg-control-hover) !important;
   color: var(--text-primary) !important;
 }
 
+.fw-toolbar-filters.is-done,
 .fw-filter-done {
-  background: var(--text-primary) !important;
-  color: var(--bg-primary) !important;
+  gap: 0 !important;
+  border: 1px solid var(--border-strong) !important;
+  background: var(--bg-control-hover) !important;
+  background-color: var(--bg-control-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.fw-toolbar-filters.is-done .fw-toolbar-filters-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
 }
 
 .fw-toolbar-sticky::before,
