@@ -171,6 +171,26 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   box-shadow: none !important;
   -webkit-mask-image: linear-gradient(
     to bottom,
+    #000 0,
+    #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
+    transparent 100%
+  ) !important;
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
+    transparent 100%
+  ) !important;
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail.has-scroll-top,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-detail.has-scroll-top {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
     transparent 0,
     #000 var(--filmwave-side-filter-edge-fade),
     #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
@@ -183,10 +203,6 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
     #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
     transparent 100%
   ) !important;
-  -webkit-mask-size: 100% 100% !important;
-  mask-size: 100% 100% !important;
-  -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail {
