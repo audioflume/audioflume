@@ -45,17 +45,76 @@ export default function MusicFilterToolbarBehavior() {
       clearAllButton?.remove();
     }
 
-    syncFilterToolbar();
+    function syncShuffleButtonLabel() {
+      const shuffleButton = document.querySelector<HTMLButtonElement>(
+        ".fw-quick-end .fw-quick-chip:first-child",
+      );
 
-    const observer = new MutationObserver(syncFilterToolbar);
+      if (!shuffleButton) return;
+      if (shuffleButton.textContent?.trim()) return;
+      if (shuffleButton.querySelector(".fw-quick-shuffle-label")) return;
+
+      const label = document.createElement("span");
+      label.className = "fw-quick-shuffle-label";
+      label.textContent = "Shuffle";
+      shuffleButton.appendChild(label);
+    }
+
+    function resetActiveShuffle() {
+      const sortButton = document.querySelector<HTMLButtonElement>(
+        ".fw-quick-end .filmwave-music-sort-button",
+      );
+
+      if (!sortButton) return;
+      sortButton.click();
+
+      window.requestAnimationFrame(() => {
+        const mostRecentButton = document.querySelector<HTMLButtonElement>(
+          '.filmwave-music-sort-dropdown button[role="menuitem"], .filmwave-music-sort-dropdown button',
+        );
+
+        mostRecentButton?.click();
+      });
+    }
+
+    function handleShuffleClick(event: MouseEvent) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const shuffleButton = target.closest<HTMLButtonElement>(
+        ".fw-quick-end .fw-quick-chip:first-child",
+      );
+
+      if (!shuffleButton) return;
+      if (shuffleButton.getAttribute("aria-pressed") !== "true") return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      resetActiveShuffle();
+    }
+
+    function syncAll() {
+      syncFilterToolbar();
+      syncShuffleButtonLabel();
+    }
+
+    syncAll();
+
+    document.addEventListener("click", handleShuffleClick, true);
+
+    const observer = new MutationObserver(syncAll);
     observer.observe(document.body, {
       attributes: true,
-      attributeFilter: ["class"],
+      attributeFilter: ["class", "aria-pressed"],
       childList: true,
       subtree: true,
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("click", handleShuffleClick, true);
+    };
   }, []);
 
   return null;
