@@ -119,10 +119,10 @@ export default function SideFilterPanelBehavior() {
       panel.classList.add("has-selected-filter-section");
     }
 
-    document.addEventListener("click", handleFilterRailClick);
+    document.addEventListener("click", handleFilterRailClick, true);
 
     return () => {
-      document.removeEventListener("click", handleFilterRailClick);
+      document.removeEventListener("click", handleFilterRailClick, true);
     };
   }, []);
 
