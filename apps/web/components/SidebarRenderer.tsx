@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
+import SidebarCuratedLinkMount from "@/components/SidebarCuratedLinkMount";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
 export default function SidebarRenderer({
@@ -12,9 +13,12 @@ export default function SidebarRenderer({
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
 
-  return isAdminPage ? (
-    <AdminSidebar />
-  ) : (
-    <Sidebar initialCollapsed={initialCollapsed} />
+  if (isAdminPage) return <AdminSidebar />;
+
+  return (
+    <>
+      <Sidebar initialCollapsed={initialCollapsed} />
+      <SidebarCuratedLinkMount />
+    </>
   );
 }
