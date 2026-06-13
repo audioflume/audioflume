@@ -5,8 +5,8 @@
 :root {
   --filmwave-side-filter-rail-width: 168px;
   --filmwave-side-filter-detail-width: 180px;
-  --filmwave-side-filter-gap: 12px;
-  --filmwave-side-filter-content-gap: 12px;
+  --filmwave-side-filter-gap: 8px;
+  --filmwave-side-filter-content-gap: 0px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -192,6 +192,22 @@ main > section:has(.fw-filter-panel-wrap) > .fw-song-list,
 main > section:has(.fw-filter-panel-wrap) > footer {
   grid-column: 2 !important;
   min-width: 0 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) > .fw-quick-row {
+  padding-left: 0 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) > .fw-song-list {
+  margin-left: 0 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section {
+  padding-left: 0 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) > .px-5 {
+  padding-left: 0 !important;
 }
 
 @media (max-width: 1180px) {
