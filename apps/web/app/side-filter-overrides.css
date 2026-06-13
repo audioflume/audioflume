@@ -211,6 +211,21 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item {
   border-radius: 11px !important;
 }
 
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
+  cursor: pointer !important;
+  transition: background-color 160ms ease, color 160ms ease !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover {
+  font-size: 0 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after {
+  content: "×";
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
 main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active {
   background: transparent !important;
   color: var(--text-secondary) !important;
