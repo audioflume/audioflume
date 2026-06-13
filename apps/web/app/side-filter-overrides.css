@@ -1,11 +1,12 @@
 /* Structural music side-filter layout.
-   The existing filter panel becomes a real left column in the music page grid,
-   so its width narrows the song/content column instead of floating over it. */
+   The toolbar remains a header searchbar. Only the filter panel becomes a real
+   left column in the music page grid, so its width narrows the song/content
+   column instead of floating over it. */
 :root {
   --filmwave-side-filter-rail-width: 168px;
   --filmwave-side-filter-detail-width: 180px;
   --filmwave-side-filter-gap: 12px;
-  --filmwave-side-filter-content-gap: 14px;
+  --filmwave-side-filter-content-gap: 12px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -15,9 +16,47 @@ main > section:has(.fw-filter-panel-wrap) {
   align-items: start !important;
 }
 
-/* Keep the toolbar node as the real first grid column.
-   This is what makes the filters participate in layout instead of overlaying content. */
+/* The toolbar wrapper should not become the side column. It only owns two
+   children: the fixed header searchbar and the structural side filter panel. */
 main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
+  display: contents !important;
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  width: auto !important;
+  max-width: none !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  background: transparent !important;
+}
+
+/* Keep the searchbar in the header. */
+main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
+  position: fixed !important;
+  top: calc(var(--filmwave-header-height, 56px) / 2) !important;
+  left: 50% !important;
+  z-index: 141 !important;
+  width: min(920px, calc(100vw - 520px)) !important;
+  max-width: calc(100vw - 300px) !important;
+  min-height: 40px !important;
+  height: 40px !important;
+  box-sizing: border-box !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: auto !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar,
+main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
+  min-height: 30px !important;
+  height: 30px !important;
+}
+
+/* The side filter panel is the real first grid column. */
+main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
   grid-column: 1 !important;
   grid-row: 1 / span 999 !important;
   position: sticky !important;
@@ -26,7 +65,8 @@ main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
       var(--filmwave-sidebar-float-inset, 12px)
   ) !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
-  display: block !important;
+  display: grid !important;
+  grid-template-rows: 1fr !important;
   width: var(--filmwave-side-filter-rail-width) !important;
   max-width: var(--filmwave-side-filter-rail-width) !important;
   height: calc(
@@ -35,46 +75,13 @@ main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
       (var(--filmwave-sidebar-float-inset, 12px) * 2)
   ) !important;
   margin: 0 !important;
-  padding: 0 !important;
-  transform: none !important;
-  background: transparent !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky:has(.fw-filter-panel-wrap.has-selected-filter-section) {
-  width: calc(
-    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
-      var(--filmwave-side-filter-detail-width)
-  ) !important;
-  max-width: calc(
-    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
-      var(--filmwave-side-filter-detail-width)
-  ) !important;
-}
-
-/* Keep the search bar in the header. Only the filter panel participates in the page grid. */
-main > section:has(.fw-filter-panel-wrap) .fw-toolbar-float {
-  position: fixed !important;
-  top: calc((var(--filmwave-header-height, 56px) - 40px) / 2) !important;
-  left: 50% !important;
-  z-index: var(--filmwave-z-search-filter, 60) !important;
-  width: clamp(260px, calc(100vw - 420px), 920px) !important;
-  max-width: calc(100vw - 300px) !important;
-  transform: translateX(-50%) !important;
-}
-
-/* The side filter panel is always visible as the left rail. */
-main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap {
-  display: grid !important;
-  grid-template-rows: 1fr !important;
-  width: var(--filmwave-side-filter-rail-width) !important;
-  max-width: var(--filmwave-side-filter-rail-width) !important;
-  height: 100% !important;
-  margin: 0 !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section {
+main > section:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap.has-selected-filter-section {
   width: calc(
     var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-gap) +
       var(--filmwave-side-filter-detail-width)
@@ -114,7 +121,9 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body {
   overflow: visible !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body {
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap.has-selected-filter-section
+  .fw-filter-panel-body {
   grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
 }
 
@@ -141,7 +150,9 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   padding: 12px !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-detail {
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap.has-selected-filter-section
+  .fw-filter-detail {
   display: block !important;
 }
 
@@ -183,19 +194,22 @@ main > section:has(.fw-filter-panel-wrap) > footer {
   min-width: 0 !important;
 }
 
+@media (max-width: 1180px) {
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
+    width: min(720px, calc(100vw - 360px)) !important;
+  }
+}
+
 @media (max-width: 900px) {
   main > section:has(.fw-filter-panel-wrap) {
     display: block !important;
   }
 
   main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
-    position: sticky !important;
-    width: auto !important;
-    max-width: none !important;
-    height: auto !important;
+    display: block !important;
   }
 
-  main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap {
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
     display: none !important;
   }
 }
