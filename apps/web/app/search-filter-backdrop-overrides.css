@@ -25,7 +25,7 @@
   gap: 6px !important;
   background: transparent !important;
   background-color: transparent !important;
-  padding: 0 10px 0 6px !important;
+  padding: 0 12px 0 6px !important;
 }
 
 .fw-toolbar-search:focus-within {
@@ -40,28 +40,50 @@
 }
 
 .fw-toolbar-search-clear {
+  position: relative !important;
   order: 1 !important;
-  width: auto !important;
+  width: 22px !important;
   min-width: 22px !important;
   height: 26px !important;
   margin: 0 !important;
-  padding: 0 6px 0 0 !important;
-  border-right: 1px solid var(--border) !important;
+  padding: 0 8px 0 0 !important;
+  border: 0 !important;
+  border-right: 0 !important;
   border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.fw-toolbar-search-clear::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  right: 0 !important;
+  display: block !important;
+  width: 1px !important;
+  height: 16px !important;
+  transform: translateY(-50%) !important;
+  background: var(--border) !important;
 }
 
 .fw-toolbar-search input {
   order: 2 !important;
-  padding-left: 6px !important;
+  padding-left: 12px !important;
 }
 
 /* The filter button keeps its own pill background like the original design, but sits smaller inside the container. */
 .fw-toolbar-filters {
-  height: 30px !important;
-  gap: 6px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  gap: 5px !important;
   background: var(--bg-control) !important;
   background-color: var(--bg-control) !important;
-  padding: 0 10px !important;
+  padding: 0 9px !important;
+}
+
+.fw-toolbar-filters::before {
+  width: 13px !important;
+  height: 13px !important;
+  flex-basis: 13px !important;
 }
 
 .fw-toolbar-filters:hover,
