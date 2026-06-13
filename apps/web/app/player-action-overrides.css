@@ -103,9 +103,52 @@
   min-height: 34px !important;
 }
 
+.fw-toolbar-search {
+  gap: 8px !important;
+  padding-left: 5px !important;
+}
+
 .fw-toolbar-search-icon {
+  order: 0 !important;
   width: 24px !important;
   height: 24px !important;
+}
+
+.fw-toolbar-search-clear {
+  position: relative !important;
+  order: 1 !important;
+  width: 16px !important;
+  min-width: 16px !important;
+  height: 24px !important;
+  margin-left: -3px !important;
+  margin-right: 8px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.fw-toolbar-search-clear:hover {
+  background: transparent !important;
+}
+
+.fw-toolbar-search-clear::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  width: 1px;
+  height: 16px;
+  background: var(--border-subtle);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.fw-toolbar-search-clear svg {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.fw-toolbar-search input {
+  order: 2 !important;
 }
 
 .fw-toolbar-filters,
