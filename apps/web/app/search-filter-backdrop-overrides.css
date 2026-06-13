@@ -1,4 +1,4 @@
-/* Remove the opaque sticky backdrop behind the music page search/filter row. */
+/* Remove the full-width sticky backdrop behind the music page search/filter row. */
 .fw-toolbar-sticky,
 .filmwave-search-filter-sticky,
 .filmwave-search-filter-quick-row {
@@ -8,13 +8,23 @@
 
 /* This wrapper should not mask song cards while they scroll behind the toolbar. */
 .fw-toolbar-float {
+  border-color: transparent !important;
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
 }
 
-/* Keep the actual search control readable without restoring the full-width opaque mask. */
+/* Keep the actual controls readable without restoring the full-width opaque mask. */
+.fw-toolbar-search,
+.fw-toolbar-filters,
 .filmwave-search-filter-search-shell {
+  background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
+  background-color: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
+}
+
+.fw-toolbar-search:focus-within,
+.fw-toolbar-filters:hover,
+.fw-toolbar-filters.is-open {
   background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
   background-color: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
 }
