@@ -179,19 +179,16 @@ html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-head
     0 0 0 4px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Hide the old AI Tools block while Curated Playlists is mounted before Projects. */
+/* Hide the old AI Tools block while Curated Playlists lives in the Library nav. */
 .desktop-app-sidebar-inner > .desktop-sidebar-section:nth-of-type(2):not(.is-projects-section) {
   display: none !important;
 }
 
 .desktop-sidebar-curated-mount {
-  margin-bottom: var(--filmwave-sidebar-section-gap);
-  padding-bottom: var(--filmwave-sidebar-section-gap);
-  border-bottom: 1px solid var(--border-subtle);
+  display: contents !important;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-curated-mount,
-body.sidebar-collapsed .desktop-sidebar-curated-mount {
-  margin-bottom: var(--filmwave-sidebar-section-gap);
-  padding-bottom: var(--filmwave-sidebar-section-gap);
+.desktop-app-sidebar-inner > .desktop-sidebar-section:first-child {
+  padding-bottom: var(--filmwave-sidebar-section-gap) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
 }
