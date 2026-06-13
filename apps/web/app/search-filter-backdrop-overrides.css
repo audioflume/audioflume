@@ -235,3 +235,31 @@ html[data-theme="light"] .fw-filter-done {
   background: transparent !important;
   box-shadow: none !important;
 }
+
+/* Trial: visually dock the music search/filter toolbar inside the header gap. */
+.fw-toolbar-sticky {
+  position: fixed !important;
+  top: 0 !important;
+  right: 380px !important;
+  left: 174px !important;
+  z-index: calc(var(--filmwave-z-header) + 1) !important;
+  padding: 3px 0 0 !important;
+  pointer-events: none !important;
+}
+
+.fw-toolbar-sticky > .fw-toolbar-float,
+.fw-toolbar-sticky > .fw-filter-panel-wrap {
+  pointer-events: auto !important;
+}
+
+.fw-toolbar-sticky > .fw-toolbar-float {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 1180px) {
+  .fw-toolbar-sticky {
+    right: 300px !important;
+    left: 150px !important;
+  }
+}
