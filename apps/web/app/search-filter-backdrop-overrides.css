@@ -25,7 +25,7 @@
   gap: 6px !important;
   background: transparent !important;
   background-color: transparent !important;
-  padding: 0 10px 0 4px !important;
+  padding: 0 10px 0 0 !important;
 }
 
 .fw-toolbar-search:focus-within {
@@ -37,21 +37,27 @@
   order: 0 !important;
   width: 26px !important;
   height: 26px !important;
-  margin-left: 0 !important;
+  margin-left: -2px !important;
 }
 
 .fw-toolbar-search-clear {
   position: relative !important;
   order: 1 !important;
-  width: 22px !important;
-  min-width: 22px !important;
+  width: 20px !important;
+  min-width: 20px !important;
   height: 26px !important;
   margin: 0 !important;
-  padding: 0 8px 0 0 !important;
+  padding: 0 6px 0 0 !important;
   border: 0 !important;
+  border-left: 0 !important;
   border-right: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
+}
+
+.fw-toolbar-search-clear::before {
+  content: none !important;
+  display: none !important;
 }
 
 .fw-toolbar-search-clear::after {
@@ -68,7 +74,7 @@
 
 .fw-toolbar-search input {
   order: 2 !important;
-  padding-left: 8px !important;
+  padding-left: 6px !important;
   border-left: 0 !important;
 }
 
