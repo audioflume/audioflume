@@ -156,3 +156,18 @@
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
+
+/* Dock the music player flush to the viewport sides and bottom. */
+:where(:root) {
+  --filmwave-player-inset: 0px;
+}
+
+.filmwave-music-player {
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+  border-radius: 16px 16px 0 0 !important;
+}
