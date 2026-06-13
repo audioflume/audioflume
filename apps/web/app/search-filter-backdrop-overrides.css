@@ -19,7 +19,6 @@
   background-color: transparent !important;
 }
 
-/* Search sits on the toolbar surface. */
 .fw-toolbar-search,
 .filmwave-search-filter-search-shell {
   gap: 6px !important;
@@ -37,7 +36,7 @@
   order: 0 !important;
   width: 26px !important;
   height: 26px !important;
-  margin-left: -2px !important;
+  margin-left: -6px !important;
 }
 
 .fw-toolbar-search-clear {
@@ -78,31 +77,56 @@
   border-left: 0 !important;
 }
 
-/* The filter button keeps its own pill background like the original design, but sits smaller inside the container. */
 .fw-toolbar-filters {
-  height: 26px !important;
-  min-height: 26px !important;
-  max-height: 26px !important;
-  gap: 4px !important;
+  display: inline-flex !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  gap: 6px !important;
+  align-items: center !important;
   align-self: center !important;
+  justify-content: center !important;
   border-radius: 999px !important;
   background: var(--bg-control) !important;
   background-color: var(--bg-control) !important;
-  padding: 0 8px !important;
+  padding: 0 12px !important;
   font-size: 13px !important;
-  line-height: 26px !important;
+  line-height: 1 !important;
 }
 
 .fw-toolbar-filters::before {
-  width: 12px !important;
-  height: 12px !important;
-  flex-basis: 12px !important;
+  width: 13px !important;
+  height: 13px !important;
+  flex-basis: 13px !important;
 }
 
 .fw-toolbar-filters:hover,
 .fw-toolbar-filters.is-open {
   background: var(--bg-control-hover) !important;
   background-color: var(--bg-control-hover) !important;
+}
+
+.fw-filter-clear-all,
+.fw-filter-done {
+  display: inline-flex !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.fw-filter-clear-all {
+  background: var(--bg-control) !important;
+  color: var(--text-primary) !important;
+}
+
+.fw-filter-done {
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
 }
 
 .fw-toolbar-sticky::before,
