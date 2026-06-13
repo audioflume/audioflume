@@ -204,3 +204,8 @@ html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-head
   padding-bottom: var(--filmwave-sidebar-section-gap) !important;
   border-bottom: 1px solid var(--border-subtle) !important;
 }
+
+/* Remove the filter trigger from the header searchbar while filters move into the side layout. */
+.fw-toolbar-sticky .fw-toolbar-filters {
+  display: none !important;
+}
