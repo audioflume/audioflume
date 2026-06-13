@@ -13,6 +13,7 @@ import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
 import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
+import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
 import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
 import "./admin-polish.css";
@@ -20,6 +21,7 @@ import "./icon-button-overrides.css";
 import "./player-action-overrides.css";
 import "./search-filter-backdrop-overrides.css";
 import "./playlist-grid-overrides.css";
+import "./side-filter-overrides.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -93,6 +95,7 @@ export default async function RootLayout({
                       <PlayerRenderer />
                       <IconButtonTitleSync />
                       <MusicFilterToolbarBehavior />
+                      <SideFilterPanelBehavior />
                       <AdminPageHeaderMount />
                     </ProjectsProvider>
                   </PlaylistsProvider>
