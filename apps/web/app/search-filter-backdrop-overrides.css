@@ -239,11 +239,13 @@ html[data-theme="light"] .fw-filter-done {
 /* Trial: visually dock the music search/filter toolbar inside the header gap. */
 .fw-toolbar-sticky {
   position: fixed !important;
-  top: 7px !important;
-  right: 380px !important;
-  left: 190px !important;
-  z-index: calc(var(--filmwave-z-header) + 1) !important;
+  top: calc(var(--filmwave-header-height) / 2) !important;
+  right: auto !important;
+  left: 50% !important;
+  z-index: 141 !important;
+  width: min(920px, calc(100vw - 520px)) !important;
   padding: 0 !important;
+  transform: translate(-50%, -50%) !important;
   pointer-events: none !important;
 }
 
@@ -293,6 +295,10 @@ html[data-theme="light"] .fw-filter-done {
   display: none !important;
 }
 
+body:has(.desktop-app-sidebar) .filmwave-header {
+  z-index: 130 !important;
+}
+
 body:has(.desktop-app-sidebar) .filmwave-header-nav-link[href="/discover"] {
   position: fixed !important;
   top: calc(
@@ -300,7 +306,7 @@ body:has(.desktop-app-sidebar) .filmwave-header-nav-link[href="/discover"] {
       var(--filmwave-sidebar-y-padding-top)
   ) !important;
   left: calc(var(--filmwave-sidebar-float-inset) + var(--filmwave-sidebar-x-padding)) !important;
-  z-index: 125 !important;
+  z-index: 135 !important;
   display: flex !important;
   width: calc(
     var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-float-inset) -
@@ -362,7 +368,6 @@ body.sidebar-collapsed:has(.desktop-app-sidebar)
 
 @media (max-width: 1180px) {
   .fw-toolbar-sticky {
-    right: 300px !important;
-    left: 150px !important;
+    width: min(720px, calc(100vw - 360px)) !important;
   }
 }
