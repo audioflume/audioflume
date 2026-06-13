@@ -7,6 +7,7 @@
   --filmwave-side-filter-sidebar-gap: var(--filmwave-sidebar-float-inset, 12px);
   --filmwave-side-filter-content-gap: 14px;
   --filmwave-side-filter-divider-color: var(--border-subtle);
+  --filmwave-side-filter-edge-fade: 28px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -168,6 +169,24 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   box-shadow: none !important;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--filmwave-side-filter-edge-fade),
+    #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
+    transparent 100%
+  ) !important;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--filmwave-side-filter-edge-fade),
+    #000 calc(100% - var(--filmwave-side-filter-edge-fade)),
+    transparent 100%
+  ) !important;
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail {
