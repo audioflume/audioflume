@@ -12,6 +12,9 @@ export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
   { value: "downloaded", label: "Most Popular" },
 ];
 
+let lastRealMusicLibrarySortValue: MusicLibrarySortValue = "recent";
+let musicLibraryShuffleWasActive = false;
+
 function SortChevron() {
   return (
     <svg
@@ -42,38 +45,36 @@ export function MusicLibrarySortControl({
 }) {
   const [open, setOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement>(null);
-  const lastSortValueRef = useRef<MusicLibrarySortValue>(
-    value === "random" ? "recent" : value,
-  );
-  const previousValueRef = useRef<MusicLibrarySortValue>(value);
   const suppressNextRecentRestoreRef = useRef(false);
 
-  const shouldRestorePreviousSort =
-    previousValueRef.current === "random" &&
-    value === "recent" &&
-    !suppressNextRecentRestoreRef.current &&
-    lastSortValueRef.current !== "recent";
-
-  if (value !== "random" && !shouldRestorePreviousSort) {
-    lastSortValueRef.current = value;
-  }
-
   const displayedValue =
-    value === "random" || shouldRestorePreviousSort
-      ? lastSortValueRef.current
-      : value;
+    value === "random" ? lastRealMusicLibrarySortValue : value;
   const selectedOption =
     MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === displayedValue) ??
     MUSIC_LIBRARY_SORT_OPTIONS[0];
 
   useEffect(() => {
-    if (shouldRestorePreviousSort) {
-      onChange(lastSortValueRef.current);
+    if (value === "random") {
+      musicLibraryShuffleWasActive = true;
+      return;
     }
 
+    const shouldRestorePreviousSort =
+      musicLibraryShuffleWasActive &&
+      value === "recent" &&
+      !suppressNextRecentRestoreRef.current &&
+      lastRealMusicLibrarySortValue !== "recent";
+
+    if (shouldRestorePreviousSort) {
+      musicLibraryShuffleWasActive = false;
+      onChange(lastRealMusicLibrarySortValue);
+      return;
+    }
+
+    musicLibraryShuffleWasActive = false;
     suppressNextRecentRestoreRef.current = false;
-    previousValueRef.current = value;
-  }, [onChange, shouldRestorePreviousSort, value]);
+    lastRealMusicLibrarySortValue = value;
+  }, [onChange, value]);
 
   useEffect(() => {
     if (!open) return;
