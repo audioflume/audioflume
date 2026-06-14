@@ -35,7 +35,7 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
 
         .filmwave-header-actions > form:first-child {
           position: fixed !important;
-          top: 10px !important;
+          top: 10.5px !important;
           left: 50% !important;
           z-index: 40 !important;
           width: clamp(320px, 42vw, 640px) !important;
