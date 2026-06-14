@@ -235,7 +235,7 @@ export default function Header() {
               <CollapsibleSearchPill
                 searchIcon={<SearchIcon />}
                 value={headerSearch}
-                placeholder="Search music"
+                placeholder="Search music library"
                 onChange={setHeaderSearch}
               />
             </form>
