@@ -88,6 +88,14 @@ function isBoolean(value: unknown): value is boolean {
   return typeof value === "boolean";
 }
 
+function syncEditPointMarkerVisibilityDocumentState(visible: boolean) {
+  if (typeof document === "undefined") return;
+
+  document.documentElement.dataset.editPointMarkers = visible
+    ? "visible"
+    : "hidden";
+}
+
 export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const [playlistViewMode, setPlaylistViewModeState] =
     useState<PlaylistViewMode>("grid");
@@ -98,13 +106,20 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const [projectAssetAddTarget, setProjectAssetAddTargetState] =
     useState<ProjectAssetAddTarget>("media_folder");
   const [themeMode, setThemeModeState] = useState<ThemeMode>("dark");
-  const [showEditPointMarkers, setShowEditPointMarkersState] =
-    useState(true);
+  const [showEditPointMarkers, setShowEditPointMarkersState] = useState(() =>
+    getStoredEditPointMarkerVisibility(),
+  );
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
   useEffect(() => {
-    setShowEditPointMarkersState(getStoredEditPointMarkerVisibility());
+    const storedVisibility = getStoredEditPointMarkerVisibility();
+    syncEditPointMarkerVisibilityDocumentState(storedVisibility);
+    setShowEditPointMarkersState(storedVisibility);
   }, []);
+
+  useEffect(() => {
+    syncEditPointMarkerVisibilityDocumentState(showEditPointMarkers);
+  }, [showEditPointMarkers]);
 
   useEffect(() => {
     const syncMarkerVisibility = (event?: Event) => {
@@ -114,6 +129,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
           ? customEvent.detail.visible
           : getStoredEditPointMarkerVisibility();
 
+      syncEditPointMarkerVisibilityDocumentState(visible);
       setShowEditPointMarkersState(visible);
     };
 
@@ -180,6 +196,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
         }
 
         if (!cancelled) {
+          syncEditPointMarkerVisibilityDocumentState(localShowEditPointMarkers);
           setShowEditPointMarkersState(localShowEditPointMarkers);
           setPreferencesLoaded(true);
         }
@@ -231,6 +248,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
         }
 
         if (isBoolean(data.show_edit_point_markers)) {
+          syncEditPointMarkerVisibilityDocumentState(data.show_edit_point_markers);
           setShowEditPointMarkersState(data.show_edit_point_markers);
           setStoredEditPointMarkerVisibility(data.show_edit_point_markers);
         }
@@ -301,6 +319,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   };
 
   const setShowEditPointMarkers = (value: boolean) => {
+    syncEditPointMarkerVisibilityDocumentState(value);
     setShowEditPointMarkersState(value);
     setStoredEditPointMarkerVisibility(value);
     patchPreferences({ show_edit_point_markers: value });
