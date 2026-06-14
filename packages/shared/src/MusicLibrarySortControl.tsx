@@ -2,11 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export type MusicLibrarySortValue = "recent" | "downloaded" | "random";
-type RealMusicLibrarySortValue = Exclude<MusicLibrarySortValue, "random">;
+export type MusicLibrarySortValue = "recent" | "downloaded";
 
 export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
-  value: RealMusicLibrarySortValue;
+  value: MusicLibrarySortValue;
   label: string;
 }> = [
   { value: "recent", label: "Most Recent" },
@@ -39,7 +38,7 @@ export function MusicLibrarySortControl({
   onChange,
 }: {
   value: MusicLibrarySortValue;
-  onChange: (value: RealMusicLibrarySortValue) => void;
+  onChange: (value: MusicLibrarySortValue) => void;
 }) {
   const [open, setOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement>(null);
