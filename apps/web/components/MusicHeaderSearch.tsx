@@ -56,15 +56,13 @@ export default function MusicHeaderSearch() {
   }
 
   return (
-    <div className="filmwave-music-header-search-slot">
-      <form onSubmit={handleSubmit}>
-        <CollapsibleSearchPill
-          searchIcon={<SearchIcon />}
-          value={search}
-          placeholder={placeholder}
-          onChange={handleSearchChange}
-        />
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <CollapsibleSearchPill
+        searchIcon={<SearchIcon />}
+        value={search}
+        placeholder={placeholder}
+        onChange={handleSearchChange}
+      />
+    </form>
   );
 }
