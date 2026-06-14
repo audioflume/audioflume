@@ -28,6 +28,10 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
           margin: 0 !important;
           padding: 0 !important;
         }
+
+        main .fw-song-list {
+          margin-top: 16px !important;
+        }
       `}</style>
     </>
   );
