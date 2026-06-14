@@ -306,6 +306,23 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
   transition: background-color 160ms ease, color 160ms ease !important;
 }
 
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
+  content: "✓";
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  transform: translateY(-0.5px) !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::before {
+  display: none !important;
+}
+
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover {
   font-size: 0 !important;
 }
