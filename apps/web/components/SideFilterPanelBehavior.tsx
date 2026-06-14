@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import CheckIcon from "./icons/CheckIcon";
 
 const SECTION_ID_BY_LABEL: Record<string, string> = {
   Mood: "mood",
@@ -22,6 +24,66 @@ const DOT_ONLY_COUNT_SECTION_IDS = new Set(["playlist", "duration", "bpm", "key"
 
 const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
+const DOT_ONLY_CHECK_STYLE_ID = "filmwave-dot-only-check-icon-styles";
+
+const dotOnlyCheckRoots = new WeakMap<Element, Root>();
+
+function ensureDotOnlyCheckStyle() {
+  const existing = document.getElementById(DOT_ONLY_CHECK_STYLE_ID);
+  if (existing) return null;
+
+  const style = document.createElement("style");
+  style.id = DOT_ONLY_CHECK_STYLE_ID;
+  style.textContent = `
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
+      content: none !important;
+      display: none !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check {
+      display: none !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+      transform: translateY(-0.5px) !important;
+      pointer-events: none !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check svg {
+      display: block !important;
+      width: 10px !important;
+      height: 10px !important;
+    }
+  `;
+  document.head.appendChild(style);
+  return style;
+}
+
+function renderDotOnlyCheckIcon(count: HTMLElement) {
+  let iconHost = count.querySelector<HTMLElement>(".fw-filter-rail-count-check");
+
+  if (!iconHost) {
+    count.replaceChildren();
+    iconHost = document.createElement("span");
+    iconHost.className = "fw-filter-rail-count-check";
+    iconHost.setAttribute("aria-hidden", "true");
+    count.appendChild(iconHost);
+  }
+
+  let root = dotOnlyCheckRoots.get(iconHost);
+
+  if (!root) {
+    root = createRoot(iconHost);
+    dotOnlyCheckRoots.set(iconHost, root);
+  }
+
+  root.render(<CheckIcon size={10} strokeWidth={3} />);
+}
 
 function getRailItemKey(railItem: Element, panel: Element) {
   const railItems = Array.from(panel.querySelectorAll(".fw-filter-rail-item"));
@@ -60,8 +122,7 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
       return;
     }
 
-    count.textContent = "";
-    count.style.setProperty("font-size", "0", "important");
+    renderDotOnlyCheckIcon(count);
     count.style.setProperty("width", "16px", "important");
     count.style.setProperty("min-width", "16px", "important");
     count.style.setProperty("height", "16px", "important");
@@ -244,6 +305,7 @@ function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: stri
 export default function SideFilterPanelBehavior() {
   useEffect(() => {
     let dotOnlySyncFrame = 0;
+    const dotOnlyCheckStyle = ensureDotOnlyCheckStyle();
 
     function scheduleDotOnlyRailCountSync() {
       if (dotOnlySyncFrame) return;
@@ -330,6 +392,7 @@ export default function SideFilterPanelBehavior() {
 
     return () => {
       if (dotOnlySyncFrame) window.cancelAnimationFrame(dotOnlySyncFrame);
+      dotOnlyCheckStyle?.remove();
       observer.disconnect();
       document.removeEventListener("click", handleFilterRailClick, true);
       document.removeEventListener("scroll", handleFilterColumnScroll, true);
