@@ -1,19 +1,27 @@
 "use client";
 
-import { HeaderChevron, HeaderShell } from "@filmwave/shared";
+import {
+  CollapsibleSearchPill,
+  HeaderChevron,
+  HeaderShell,
+  MUSIC_FILTER_STORAGE_KEY_PREFIX,
+} from "@filmwave/shared";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { useUser } from "@clerk/nextjs";
 import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import SearchIcon from "@/components/icons/SearchIcon";
 import UserMenu from "@/components/UserMenu";
 
 export default function Header() {
   const { user } = useUser();
   const pathname = usePathname();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [headerSearch, setHeaderSearch] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -178,9 +186,40 @@ export default function Header() {
     };
   }, [pathname]);
 
+  function handleHeaderSearchSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const nextSearch = headerSearch.trim();
+    const storageKey = user?.id
+      ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${user.id}`
+      : null;
+
+    if (storageKey) {
+      try {
+        const stored = sessionStorage.getItem(storageKey);
+        const parsed = stored ? JSON.parse(stored) : {};
+        const current =
+          typeof parsed === "object" && parsed !== null ? parsed : {};
+
+        sessionStorage.setItem(
+          storageKey,
+          JSON.stringify({
+            ...current,
+            search: nextSearch,
+          }),
+        );
+      } catch {
+        sessionStorage.setItem(storageKey, JSON.stringify({ search: nextSearch }));
+      }
+    }
+
+    router.push(nextSearch ? `/music?search=${encodeURIComponent(nextSearch)}` : "/music");
+  }
+
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
     : "";
+  const showHeaderSearch = pathname !== "/music";
 
   return (
     <HeaderShell
@@ -191,6 +230,17 @@ export default function Header() {
       }
       actions={
         <div className="filmwave-header-actions" ref={menuRef}>
+          {showHeaderSearch && (
+            <form onSubmit={handleHeaderSearchSubmit}>
+              <CollapsibleSearchPill
+                searchIcon={<SearchIcon />}
+                value={headerSearch}
+                placeholder="Search music"
+                onChange={setHeaderSearch}
+              />
+            </form>
+          )}
+
           <Link href="/curated-playlists" className="filmwave-header-nav-link">
             <PlaylistIcon size={13} />
             Playlists
