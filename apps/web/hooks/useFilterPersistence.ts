@@ -46,6 +46,7 @@ type UseFilterPersistenceProps = {
   authLoaded: boolean;
 };
 
+const MUSIC_HEADER_SEARCH_CHANNEL = "filmwave-music-header-search";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 
 const baseDefaultState: MusicFilterState = {
@@ -153,6 +154,13 @@ function getSideFilterClearSectionFromEvent(event: Event) {
   return customEvent.detail?.sectionId ?? null;
 }
 
+function getHeaderSearchFromChannelMessage(value: unknown) {
+  if (typeof value !== "object" || value === null) return null;
+
+  const search = (value as { search?: unknown }).search;
+  return typeof search === "string" ? search : "";
+}
+
 export function useFilterPersistence(
   propsOrStorageKey: UseFilterPersistenceProps | string | null,
 ) {
@@ -230,6 +238,21 @@ export function useFilterPersistence(
         handleSideFilterSectionClear,
       );
     };
+  }, []);
+
+  useEffect(() => {
+    const channel = new BroadcastChannel(MUSIC_HEADER_SEARCH_CHANNEL);
+
+    channel.onmessage = (event) => {
+      const nextSearch = getHeaderSearchFromChannelMessage(event.data);
+      if (nextSearch === null) return;
+
+      setFilters((current) =>
+        current.search === nextSearch ? current : { ...current, search: nextSearch },
+      );
+    };
+
+    return () => channel.close();
   }, []);
 
   useEffect(() => {
