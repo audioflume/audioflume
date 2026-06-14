@@ -11,6 +11,11 @@
   --filmwave-sidebar-row-padding-x: 8px;
   --filmwave-sidebar-icon-size: 16px;
   --filmwave-sidebar-icon-column-width: 32px;
+  --filmwave-sidebar-collapsed-panel-width: 48px;
+  --filmwave-sidebar-icon-slot-width: calc(
+    var(--filmwave-sidebar-collapsed-panel-width) -
+      (var(--filmwave-sidebar-x-padding) * 2)
+  );
   --filmwave-sidebar-icon-color: #8f8f8f;
   --filmwave-sidebar-icon-color-active: #ffffff;
   --filmwave-sidebar-heading-icon-color: #a8a8a8;
@@ -63,7 +68,7 @@
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar,
 body.sidebar-collapsed .desktop-app-sidebar {
-  width: 48px;
+  width: var(--filmwave-sidebar-collapsed-panel-width);
 }
 
 .desktop-sidebar-collapse-zone {
@@ -220,7 +225,7 @@ body.sidebar-collapsed .desktop-sidebar-heading-label {
   width: 100%;
   height: var(--filmwave-sidebar-row-height);
   cursor: pointer;
-  grid-template-columns: var(--filmwave-sidebar-icon-column-width) minmax(0, 1fr) auto;
+  grid-template-columns: var(--filmwave-sidebar-icon-slot-width) minmax(0, 1fr) auto;
   align-items: center;
   overflow: hidden;
   border: 0;
@@ -240,16 +245,19 @@ body.sidebar-collapsed .desktop-sidebar-heading-label {
 
 .desktop-sidebar-link > a {
   display: grid !important;
+  width: 100%;
   height: 100%;
   min-width: 0;
   grid-column: 1 / 3;
-  grid-template-columns: var(--filmwave-sidebar-icon-column-width) minmax(0, 1fr);
+  grid-template-columns: var(--filmwave-sidebar-icon-slot-width) minmax(0, 1fr);
   align-items: center;
+  padding: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
 body.sidebar-collapsed .desktop-sidebar-link {
-  grid-template-columns: var(--filmwave-sidebar-icon-column-width) minmax(0, 0) auto;
+  grid-template-columns: var(--filmwave-sidebar-icon-slot-width) minmax(0, 1fr) auto;
+  padding: 0;
 }
 
 .desktop-sidebar-link:hover,
@@ -260,9 +268,9 @@ body.sidebar-collapsed .desktop-sidebar-link {
 
 .desktop-sidebar-link-icon {
   display: flex;
-  width: var(--filmwave-sidebar-icon-column-width);
+  width: var(--filmwave-sidebar-icon-slot-width);
   height: var(--filmwave-sidebar-row-height);
-  flex: 0 0 var(--filmwave-sidebar-icon-column-width);
+  flex: 0 0 var(--filmwave-sidebar-icon-slot-width);
   align-items: center;
   justify-content: center;
   color: var(--filmwave-sidebar-icon-color);
@@ -308,6 +316,7 @@ body.sidebar-collapsed .desktop-sidebar-link {
   min-width: 0;
   overflow: hidden;
   margin-left: 0;
+  padding-left: var(--filmwave-sidebar-label-gap);
   opacity: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -374,8 +383,9 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head,
 body.sidebar-collapsed .desktop-sidebar-projects-head {
-  grid-template-columns: var(--filmwave-sidebar-icon-column-width);
+  grid-template-columns: var(--filmwave-sidebar-icon-slot-width);
   gap: 0;
+  padding: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
@@ -386,7 +396,7 @@ body.sidebar-collapsed .desktop-sidebar-projects-label {
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions,
 body.sidebar-collapsed .desktop-sidebar-project-actions {
-  width: var(--filmwave-sidebar-icon-column-width);
+  width: var(--filmwave-sidebar-icon-slot-width);
   justify-content: center;
   margin-left: 0;
 }
@@ -402,7 +412,7 @@ body.sidebar-collapsed
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button,
 body.sidebar-collapsed .desktop-sidebar-add-button {
-  width: var(--filmwave-sidebar-icon-column-width);
+  width: var(--filmwave-sidebar-icon-slot-width);
   height: var(--filmwave-sidebar-row-height);
   border-radius: var(--filmwave-sidebar-row-radius);
 }
