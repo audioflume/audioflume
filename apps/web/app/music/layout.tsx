@@ -32,6 +32,36 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
         main .fw-song-list {
           margin-top: 16px !important;
         }
+
+        .filmwave-header-actions > form:first-child {
+          position: fixed !important;
+          top: 14px !important;
+          left: 50% !important;
+          z-index: 40 !important;
+          width: clamp(320px, 42vw, 640px) !important;
+          max-width: calc(100vw - 420px) !important;
+          margin-right: 0 !important;
+          transform: translateX(-50%) !important;
+        }
+
+        .filmwave-header-actions > form:first-child .filmwave-search-pill,
+        .filmwave-header-actions > form:first-child .filmwave-search-pill-expanded,
+        .filmwave-header-actions > form:first-child .filmwave-search-pill-collapsed {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+
+        .filmwave-header-actions > form:first-child .filmwave-search-pill-input {
+          width: 100% !important;
+        }
+
+        @media (max-width: 900px) {
+          .filmwave-header-actions > form:first-child {
+            left: calc(50% + 32px) !important;
+            width: min(420px, calc(100vw - 300px)) !important;
+            max-width: calc(100vw - 300px) !important;
+          }
+        }
       `}</style>
     </>
   );
