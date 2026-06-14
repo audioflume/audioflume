@@ -27,9 +27,12 @@
   --fw-music-content-inset: 20px;
   --fw-music-content-inset-left: 28px;
   --fw-music-content-inset-right: 20px;
-  --sidebar-content-offset-expanded: calc(var(--sidebar-width-expanded) - 24px);
-  --sidebar-content-offset-collapsed: calc(var(--sidebar-width-collapsed) + 24px);
-  --sidebar-width: var(--sidebar-content-offset-expanded);
+  --filmwave-sidebar-page-gap: 12px;
+  --filmwave-sidebar-current-panel-width: var(--filmwave-sidebar-panel-expanded-width);
+  --sidebar-width: calc(
+    var(--filmwave-sidebar-float-inset, 12px) +
+      var(--filmwave-sidebar-current-panel-width) + var(--filmwave-sidebar-page-gap)
+  );
 }
 
 html,
@@ -48,21 +51,21 @@ button:focus-visible {
 }
 
 body.sidebar-collapsed {
-  --sidebar-width: var(--sidebar-content-offset-collapsed);
+  --filmwave-sidebar-current-panel-width: var(--filmwave-sidebar-collapsed-panel-width);
 }
 
 :root aside[data-sidebar] {
-  width: var(--sidebar-width-expanded);
+  width: var(--filmwave-sidebar-current-panel-width);
 }
 
 :root body.sidebar-collapsed aside[data-sidebar] {
-  width: var(--sidebar-width-collapsed);
+  width: var(--filmwave-sidebar-current-panel-width);
 }
 
 /* ─── Sidebar collapse ───────────────────────────────────── */
 
 body.sidebar-collapsed aside[data-sidebar] {
-  width: var(--sidebar-width-collapsed);
+  width: var(--filmwave-sidebar-current-panel-width);
 }
 
 body.sidebar-collapsed .desktop-sidebar-link > a {
