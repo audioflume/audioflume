@@ -1,4 +1,4 @@
-import type { KeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
+import type { KeyboardEvent, MouseEvent, PointerEvent, ReactNode, Ref } from "react";
 
 export type FilterTriggerProps = {
   label: ReactNode;
@@ -55,6 +55,12 @@ export function FilterTrigger({
 }: FilterTriggerProps) {
   const activeLabelIsClearable = active && activeLabel != null && !!onClear;
 
+  function handleClearPointerDown(event: PointerEvent<HTMLSpanElement>) {
+    if (!onClear) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   function handleCountClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
     event.preventDefault();
@@ -101,6 +107,7 @@ export function FilterTrigger({
           role={activeLabelIsClearable ? "button" : undefined}
           tabIndex={activeLabelIsClearable ? 0 : undefined}
           aria-label={activeLabelIsClearable ? `Clear ${typeof label === "string" ? label : "filter"}` : undefined}
+          onPointerDown={activeLabelIsClearable ? handleClearPointerDown : undefined}
           onClick={activeLabelIsClearable ? handleActiveLabelClear : undefined}
           onKeyDown={activeLabelIsClearable ? handleActiveLabelKeyDown : undefined}
         >
@@ -118,6 +125,7 @@ export function FilterTrigger({
           role={onClear ? "button" : undefined}
           tabIndex={onClear ? 0 : undefined}
           aria-label={onClear ? `Clear ${typeof label === "string" ? label : "filter"}` : undefined}
+          onPointerDown={onClear ? handleClearPointerDown : undefined}
           onClick={handleCountClear}
           onKeyDown={handleCountKeyDown}
         >
