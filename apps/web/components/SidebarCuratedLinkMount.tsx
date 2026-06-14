@@ -12,9 +12,9 @@ import {
 function CuratedIcon() {
   return (
     <svg
-      width="16"
-      height="16"
-      viewBox="0 0 14 14"
+      width="18"
+      height="18"
+      viewBox="0.65 0.65 12.7 12.7"
       fill="none"
       aria-hidden="true"
     >
