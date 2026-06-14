@@ -55,6 +55,17 @@ export function FilterTrigger({
 }: FilterTriggerProps) {
   const activeLabelIsClearable = active && activeLabel != null && !!onClear;
   const ignoreNextTriggerClickRef = useRef(false);
+  const clearHandledOnPointerDownRef = useRef(false);
+
+  function stopClearInteraction(
+    event:
+      | PointerEvent<HTMLSpanElement>
+      | MouseEvent<HTMLSpanElement>
+      | KeyboardEvent<HTMLSpanElement>,
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 
   function markClearInteraction(
     event:
@@ -64,8 +75,7 @@ export function FilterTrigger({
   ) {
     if (!onClear) return;
     ignoreNextTriggerClickRef.current = true;
-    event.preventDefault();
-    event.stopPropagation();
+    stopClearInteraction(event);
   }
 
   function handleTriggerClick(event: MouseEvent<HTMLButtonElement>) {
@@ -86,7 +96,10 @@ export function FilterTrigger({
   }
 
   function handleClearPointerDown(event: PointerEvent<HTMLSpanElement>) {
+    if (!onClear) return;
     markClearInteraction(event);
+    clearHandledOnPointerDownRef.current = true;
+    onClear();
   }
 
   function handleClearMouseDown(event: MouseEvent<HTMLSpanElement>) {
@@ -96,6 +109,12 @@ export function FilterTrigger({
   function handleCountClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
     markClearInteraction(event);
+
+    if (clearHandledOnPointerDownRef.current) {
+      clearHandledOnPointerDownRef.current = false;
+      return;
+    }
+
     onClear();
   }
 
@@ -108,6 +127,12 @@ export function FilterTrigger({
   function handleActiveLabelClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
     markClearInteraction(event);
+
+    if (clearHandledOnPointerDownRef.current) {
+      clearHandledOnPointerDownRef.current = false;
+      return;
+    }
+
     onClear();
   }
 
