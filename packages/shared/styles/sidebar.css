@@ -20,15 +20,12 @@
     var(--filmwave-sidebar-panel-expanded-width) -
       (var(--filmwave-sidebar-x-padding) * 2)
   );
-  --filmwave-sidebar-icon-slot-left: 4px;
+  --filmwave-sidebar-icon-slot-left: 6px;
   --filmwave-sidebar-icon-slot-width: calc(
     var(--filmwave-sidebar-collapsed-panel-width) -
       (var(--filmwave-sidebar-x-padding) * 2)
   );
-  --filmwave-sidebar-collapsed-row-width: calc(
-    var(--filmwave-sidebar-icon-slot-width) +
-      (var(--filmwave-sidebar-icon-slot-left) * 2)
-  );
+  --filmwave-sidebar-collapsed-row-width: var(--filmwave-sidebar-icon-slot-width);
   --filmwave-sidebar-icon-color: #8f8f8f;
   --filmwave-sidebar-icon-color-active: #ffffff;
   --filmwave-sidebar-heading-icon-color: #a8a8a8;
