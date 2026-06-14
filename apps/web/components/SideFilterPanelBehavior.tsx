@@ -14,6 +14,7 @@ const SECTION_ID_BY_LABEL: Record<string, string> = {
   Build: "build",
   "Cue Points": "cuePoints",
   Playlist: "playlist",
+  Playlists: "playlist",
   Duration: "duration",
   BPM: "bpm",
   Key: "key",
@@ -25,6 +26,7 @@ const DOT_ONLY_COUNT_SECTION_IDS = new Set(["playlist", "duration", "bpm", "key"
 const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 const DOT_ONLY_CHECK_STYLE_ID = "filmwave-dot-only-check-icon-styles";
+const RAIL_CLEAR_ALL_CLASS = "fw-filter-rail-clear-all";
 
 const dotOnlyCheckRoots = new WeakMap<Element, Root>();
 
@@ -58,6 +60,31 @@ function ensureDotOnlyCheckStyle() {
       display: block !important;
       width: 10px !important;
       height: 10px !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .${RAIL_CLEAR_ALL_CLASS} {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      width: 100% !important;
+      height: 34px !important;
+      margin: 8px 0 0 !important;
+      padding: 0 12px !important;
+      border: 0 !important;
+      border-radius: 10px !important;
+      background: transparent !important;
+      color: var(--text-secondary) !important;
+      font: inherit !important;
+      font-size: 12px !important;
+      font-weight: 400 !important;
+      line-height: 1 !important;
+      cursor: pointer !important;
+      transition: background-color 160ms ease, color 160ms ease !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .${RAIL_CLEAR_ALL_CLASS}:hover {
+      background: var(--bg-hover) !important;
+      color: var(--text-primary) !important;
     }
   `;
   document.head.appendChild(style);
@@ -100,6 +127,74 @@ function getRailItemSectionId(railItem: Element) {
   if (!label) return null;
 
   return SECTION_ID_BY_LABEL[label] ?? null;
+}
+
+function syncPlaylistRailItem(root: ParentNode = document) {
+  root.querySelectorAll<HTMLElement>(".fw-filter-panel-wrap").forEach((panel) => {
+    const rail = panel.querySelector<HTMLElement>(".fw-filter-rail");
+    if (!rail) return;
+
+    const playlistItem = Array.from(rail.querySelectorAll<HTMLElement>(".fw-filter-rail-item")).find(
+      (railItem) => getRailItemSectionId(railItem) === "playlist",
+    );
+
+    if (!playlistItem) return;
+
+    const label = playlistItem.querySelector<HTMLElement>(".fw-filter-rail-label");
+    if (label && label.textContent?.trim() !== "Playlists") label.textContent = "Playlists";
+
+    const clearAllButton = rail.querySelector<HTMLElement>(`.${RAIL_CLEAR_ALL_CLASS}`);
+    if (clearAllButton) {
+      rail.insertBefore(playlistItem, clearAllButton);
+      return;
+    }
+
+    rail.appendChild(playlistItem);
+  });
+}
+
+function syncRailClearAllButtons(root: ParentNode = document) {
+  root.querySelectorAll<HTMLElement>(".fw-filter-panel-wrap").forEach((panel) => {
+    const rail = panel.querySelector<HTMLElement>(".fw-filter-rail");
+    if (!rail) return;
+
+    const footerClearAll = panel.querySelector<HTMLButtonElement>(".fw-filter-panel-footer .fw-filter-clear-all");
+    let railClearAll = rail.querySelector<HTMLButtonElement>(`.${RAIL_CLEAR_ALL_CLASS}`);
+
+    if (!footerClearAll) {
+      railClearAll?.remove();
+      return;
+    }
+
+    if (!railClearAll) {
+      railClearAll = document.createElement("button");
+      railClearAll.type = "button";
+      railClearAll.className = RAIL_CLEAR_ALL_CLASS;
+      railClearAll.textContent = "Clear all";
+      railClearAll.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const currentFooterClearAll = panel.querySelector<HTMLButtonElement>(
+          ".fw-filter-panel-footer .fw-filter-clear-all",
+        );
+        currentFooterClearAll?.click();
+      });
+      rail.appendChild(railClearAll);
+    }
+
+    const playlistItem = Array.from(rail.querySelectorAll<HTMLElement>(".fw-filter-rail-item")).find(
+      (railItem) => getRailItemSectionId(railItem) === "playlist",
+    );
+
+    if (playlistItem) {
+      rail.insertBefore(playlistItem, railClearAll);
+    }
+  });
+}
+
+function syncSideFilterRailPresentation(root: ParentNode = document) {
+  syncPlaylistRailItem(root);
+  syncRailClearAllButtons(root);
 }
 
 function syncDotOnlyRailCounts(root: ParentNode = document) {
@@ -312,6 +407,7 @@ export default function SideFilterPanelBehavior() {
 
       dotOnlySyncFrame = window.requestAnimationFrame(() => {
         dotOnlySyncFrame = 0;
+        syncSideFilterRailPresentation();
         syncDotOnlyRailCounts();
       });
     }
@@ -380,6 +476,7 @@ export default function SideFilterPanelBehavior() {
 
     window.requestAnimationFrame(() => {
       syncFilterPanelColumnFadeStates();
+      syncSideFilterRailPresentation();
       syncDotOnlyRailCounts();
     });
 
