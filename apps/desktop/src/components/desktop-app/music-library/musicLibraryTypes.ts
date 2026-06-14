@@ -8,6 +8,7 @@ import type { DesktopSong } from "../../../lib/desktopSongs";
 export type DesktopMusicFilterKey =
   | "mood"
   | "genre"
+  | "region"
   | "instrument"
   | "vocal"
   | "build"
