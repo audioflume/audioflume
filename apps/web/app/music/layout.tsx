@@ -15,7 +15,16 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
           fill: var(--text-primary) !important;
         }
 
+        main .fw-toolbar-float {
+          border: 0 !important;
+          border-radius: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
+
         main .fw-toolbar-search {
+          box-sizing: border-box !important;
           flex: 0 0 auto !important;
           width: 356px !important;
           min-width: 356px !important;
