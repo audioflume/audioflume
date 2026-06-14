@@ -22,6 +22,7 @@ import {
   MusicQuickChips,
   MusicQuickChipsEnd,
   QUICK_FILTERS,
+  REGION_OPTIONS,
   ShuffleIconSmall,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
@@ -120,6 +121,7 @@ export default function MusicPage() {
   const search = filters.search;
   const selectedMoods = filters.selectedMoods;
   const selectedGenres = filters.selectedGenres;
+  const selectedRegions = filters.selectedRegions;
   const selectedInstruments = filters.selectedInstruments;
   const selectedBuilds = filters.selectedBuilds;
   const selectedVocals = filters.selectedVocals;
@@ -141,6 +143,8 @@ export default function MusicPage() {
     setFilters((current) => ({ ...current, selectedMoods: values }));
   const setSelectedGenres = (values: string[]) =>
     setFilters((current) => ({ ...current, selectedGenres: values }));
+  const setSelectedRegions = (values: string[]) =>
+    setFilters((current) => ({ ...current, selectedRegions: values }));
   const setSelectedInstruments = (values: string[]) =>
     setFilters((current) => ({ ...current, selectedInstruments: values }));
   const setSelectedBuilds = (values: string[]) =>
@@ -198,6 +202,7 @@ export default function MusicPage() {
     search.trim().length > 0 ||
     selectedMoods.length > 0 ||
     selectedGenres.length > 0 ||
+    selectedRegions.length > 0 ||
     selectedInstruments.length > 0 ||
     selectedBuilds.length > 0 ||
     selectedVocals.length > 0 ||
@@ -211,6 +216,7 @@ export default function MusicPage() {
   const hasActiveClearableFilters =
     selectedMoods.length > 0 ||
     selectedGenres.length > 0 ||
+    selectedRegions.length > 0 ||
     selectedInstruments.length > 0 ||
     selectedBuilds.length > 0 ||
     selectedVocals.length > 0 ||
@@ -224,6 +230,7 @@ export default function MusicPage() {
   const activeFilterCount =
     selectedMoods.length +
     selectedGenres.length +
+    selectedRegions.length +
     selectedInstruments.length +
     selectedVocalFilters.length +
     selectedBuilds.length +
@@ -238,6 +245,7 @@ export default function MusicPage() {
       ...current,
       selectedMoods: [],
       selectedGenres: [],
+      selectedRegions: [],
       selectedInstruments: [],
       selectedBuilds: [],
       selectedVocals: [],
@@ -315,6 +323,7 @@ export default function MusicPage() {
       search,
       selectedMoods,
       selectedGenres,
+      selectedRegions,
       selectedInstruments,
       selectedBuilds,
       selectedVocals,
@@ -338,6 +347,7 @@ export default function MusicPage() {
     selectedMoods,
     selectedPlaylistId,
     selectedPlaylistSongIds,
+    selectedRegions,
     selectedVocals,
     songs,
   ]);
@@ -401,7 +411,7 @@ export default function MusicPage() {
   const filterChipGroups = [
     {
       id: "mood",
-      label: "Mood",
+      label: "Scene",
       options: [...MOOD_OPTIONS],
       selected: selectedMoods,
       onToggle: toggleIn(selectedMoods, setSelectedMoods),
@@ -412,6 +422,13 @@ export default function MusicPage() {
       options: [...GENRE_OPTIONS],
       selected: selectedGenres,
       onToggle: toggleIn(selectedGenres, setSelectedGenres),
+    },
+    {
+      id: "region",
+      label: "Region",
+      options: [...REGION_OPTIONS],
+      selected: selectedRegions,
+      onToggle: toggleIn(selectedRegions, setSelectedRegions),
     },
     {
       id: "instruments",
@@ -475,6 +492,7 @@ export default function MusicPage() {
               <FilterTags
                 selectedMoods={selectedMoods}
                 selectedGenres={selectedGenres}
+                selectedRegions={selectedRegions}
                 selectedInstruments={selectedInstruments}
                 selectedBuilds={selectedBuilds}
                 selectedVocals={selectedVocals}
@@ -490,6 +508,9 @@ export default function MusicPage() {
                 }
                 onRemoveGenre={(v) =>
                   setSelectedGenres(selectedGenres.filter((item) => item !== v))
+                }
+                onRemoveRegion={(v) =>
+                  setSelectedRegions(selectedRegions.filter((item) => item !== v))
                 }
                 onRemoveInstrument={(v) =>
                   setSelectedInstruments(
