@@ -19,7 +19,7 @@
   --filmwave-sidebar-icon-color: #8f8f8f;
   --filmwave-sidebar-icon-color-active: #ffffff;
   --filmwave-sidebar-heading-icon-color: #a8a8a8;
-  --filmwave-sidebar-label-gap: 12px;
+  --filmwave-sidebar-label-gap: 8px;
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
   --filmwave-sidebar-float-inset: 12px;
@@ -468,8 +468,8 @@ body.sidebar-collapsed .desktop-sidebar-empty-projects {
   box-shadow: var(--shadow-ui);
 }
 
-/* Lock sidebar row geometry: the collapsed icon slot is the source of truth.
-   Expanded labels sit after that slot, but row padding and icon slots never move. */
+/* Lock sidebar row geometry: the expanded row geometry is the source of truth.
+   Collapse only hides labels; row padding, icon slot, and label gap remain unchanged. */
 .desktop-sidebar-link,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
 body.sidebar-collapsed .desktop-sidebar-link {
@@ -504,17 +504,12 @@ body.sidebar-collapsed .desktop-sidebar-link-icon {
   padding-left: 0;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
-body.sidebar-collapsed .desktop-sidebar-link,
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link > a,
-body.sidebar-collapsed .desktop-sidebar-link > a {
-  grid-template-columns: var(--filmwave-sidebar-icon-slot-width);
-  column-gap: 0;
-}
-
-.desktop-sidebar-projects-head {
+.desktop-sidebar-projects-head,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head,
+body.sidebar-collapsed .desktop-sidebar-projects-head {
   grid-template-columns: minmax(0, 1fr) var(--filmwave-sidebar-icon-slot-width);
   column-gap: var(--filmwave-sidebar-label-gap);
+  padding: 0 !important;
 }
 
 .desktop-sidebar-project-actions,
