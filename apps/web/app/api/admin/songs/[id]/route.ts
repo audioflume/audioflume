@@ -21,6 +21,7 @@ type SaveSongPayload = {
   waveformPeaks: string;
   genres: string[];
   moods: string[];
+  regions: string[];
   instruments: string[];
   builds: string[];
   vocals: string[];
@@ -260,6 +261,7 @@ export async function GET(_req: Request, context: RouteContext) {
       waveformPeaks: data.waveform_peaks || "[]",
       genres: data.genres || [],
       moods: data.moods || [],
+      regions: data.regions || [],
       instruments: data.instruments || [],
       builds: data.builds || [],
       vocals: data.vocals || [],
@@ -342,6 +344,7 @@ export async function PATCH(req: Request, context: RouteContext) {
         key: payload.key || null,
         genres: cleanStringArray(payload.genres),
         moods: cleanStringArray(payload.moods),
+        regions: cleanStringArray(payload.regions),
         instruments: cleanStringArray(payload.instruments),
         builds: cleanStringArray(payload.builds),
         vocals: cleanStringArray(payload.vocals),
