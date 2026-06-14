@@ -50,7 +50,7 @@ function ensureDotOnlyCheckStyle() {
       justify-content: center !important;
       width: 100% !important;
       height: 100% !important;
-      transform: translateY(-0.5px) !important;
+      transform: translateY(0.5px) !important;
       pointer-events: none !important;
     }
 
