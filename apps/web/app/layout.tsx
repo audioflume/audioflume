@@ -57,6 +57,9 @@ export default async function RootLayout({
   const themeMode = cookieStore.get("filmwave-theme-mode")?.value;
   const normalizedThemeMode = themeMode === "light" ? "light" : "dark";
   const htmlClassName = normalizedThemeMode === "light" ? "light" : undefined;
+  const bodyClassName = [htmlClassName, sidebarCollapsed ? "sidebar-collapsed" : null]
+    .filter(Boolean)
+    .join(" ") || undefined;
 
   return (
     <ClerkProvider>
@@ -84,7 +87,7 @@ export default async function RootLayout({
               __html: `
 html[data-edit-point-markers="hidden"] .filmwave-song-cue-marker,
 html[data-edit-point-markers="hidden"] .filmwave-song-cue-range,
-html[data-edit-point-markers="hidden"] .group\\/player-cue-point {
+html[data-edit-point-markers="hidden"] .group\/player-cue-point {
   display: none !important;
 }
               `.trim(),
@@ -102,7 +105,7 @@ html[data-edit-point-markers="hidden"] .group\\/player-cue-point {
           <link rel="preconnect" href={R2_CDN_ORIGIN} crossOrigin="anonymous" />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
-        <body className={htmlClassName}>
+        <body className={bodyClassName}>
           <UserPreferencesProvider>
             <ThemeProvider>
               <PlayerProvider>
