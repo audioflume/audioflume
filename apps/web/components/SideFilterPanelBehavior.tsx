@@ -27,6 +27,7 @@ const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 const DOT_ONLY_CHECK_STYLE_ID = "filmwave-dot-only-check-icon-styles";
 const RAIL_CLEAR_ALL_CLASS = "fw-filter-rail-clear-all";
+const RAIL_PLAYLISTS_CLASS = "fw-filter-rail-item-playlists";
 
 const dotOnlyCheckRoots = new WeakMap<Element, Root>();
 
@@ -37,6 +38,15 @@ function ensureDotOnlyCheckStyle() {
   const style = document.createElement("style");
   style.id = DOT_ONLY_CHECK_STYLE_ID;
   style.textContent = `
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .${RAIL_PLAYLISTS_CLASS} {
+      order: 900 !important;
+    }
+
     main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
       content: none !important;
       display: none !important;
@@ -63,28 +73,35 @@ function ensureDotOnlyCheckStyle() {
     }
 
     main > section:has(.fw-filter-panel-wrap) .${RAIL_CLEAR_ALL_CLASS} {
-      display: flex !important;
+      order: 1000 !important;
+      display: inline-flex !important;
       align-items: center !important;
       justify-content: flex-start !important;
-      width: 100% !important;
-      height: 34px !important;
-      margin: 8px 0 0 !important;
-      padding: 0 12px !important;
+      align-self: flex-start !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 12px 8px 0 !important;
+      padding: 4px 2px !important;
       border: 0 !important;
-      border-radius: 10px !important;
+      border-radius: 0 !important;
       background: transparent !important;
-      color: var(--text-secondary) !important;
+      color: var(--text-tertiary, var(--text-secondary)) !important;
       font: inherit !important;
-      font-size: 12px !important;
-      font-weight: 400 !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
       line-height: 1 !important;
+      letter-spacing: 0.02em !important;
       cursor: pointer !important;
-      transition: background-color 160ms ease, color 160ms ease !important;
+      opacity: 0.82 !important;
+      transition: color 160ms ease, opacity 160ms ease !important;
     }
 
     main > section:has(.fw-filter-panel-wrap) .${RAIL_CLEAR_ALL_CLASS}:hover {
-      background: var(--bg-hover) !important;
+      background: transparent !important;
       color: var(--text-primary) !important;
+      opacity: 1 !important;
+      text-decoration: underline !important;
+      text-underline-offset: 3px !important;
     }
   `;
   document.head.appendChild(style);
@@ -140,16 +157,10 @@ function syncPlaylistRailItem(root: ParentNode = document) {
 
     if (!playlistItem) return;
 
+    playlistItem.classList.add(RAIL_PLAYLISTS_CLASS);
+
     const label = playlistItem.querySelector<HTMLElement>(".fw-filter-rail-label");
     if (label && label.textContent?.trim() !== "Playlists") label.textContent = "Playlists";
-
-    const clearAllButton = rail.querySelector<HTMLElement>(`.${RAIL_CLEAR_ALL_CLASS}`);
-    if (clearAllButton) {
-      rail.insertBefore(playlistItem, clearAllButton);
-      return;
-    }
-
-    rail.appendChild(playlistItem);
   });
 }
 
@@ -180,14 +191,6 @@ function syncRailClearAllButtons(root: ParentNode = document) {
         currentFooterClearAll?.click();
       });
       rail.appendChild(railClearAll);
-    }
-
-    const playlistItem = Array.from(rail.querySelectorAll<HTMLElement>(".fw-filter-rail-item")).find(
-      (railItem) => getRailItemSectionId(railItem) === "playlist",
-    );
-
-    if (playlistItem) {
-      rail.insertBefore(playlistItem, railClearAll);
     }
   });
 }
