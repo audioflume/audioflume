@@ -216,6 +216,13 @@ export default function DesktopMusicLibraryView({
     () => filterDesktopMusicSongs(songs, filters),
     [songs, filters],
   );
+  const sortedSongs = useMemo(() => {
+    if (sortOrder === "downloaded") {
+      return [...filteredSongs].sort((a, b) => b.downloadCount - a.downloadCount);
+    }
+
+    return filteredSongs;
+  }, [filteredSongs, sortOrder]);
 
   const playlistChipOptions = useMemo(
     () =>
@@ -226,34 +233,33 @@ export default function DesktopMusicLibraryView({
     [playlistOptions],
   );
 
-  function setRandomSort() {
-    const nextOrder = shuffleDesktopMusicSongs(filteredSongs).map((song) => song.id);
+  function enableShuffle() {
+    const nextOrder = shuffleDesktopMusicSongs(sortedSongs).map((song) => song.id);
     setShuffleOrderIds(nextOrder);
-    setSortOrder("random");
     setFilters((current) => ({ ...current, shuffle: true }));
   }
 
-  function handleSortChange(value: MusicLibrarySortValue) {
-    if (value === "random") {
-      setRandomSort();
+  function toggleShuffle() {
+    if (filters.shuffle) {
+      removeShuffle();
       return;
     }
 
+    enableShuffle();
+  }
+
+  function handleSortChange(value: MusicLibrarySortValue) {
     setSortOrder(value);
     setShuffleOrderIds(null);
     setFilters((current) => ({ ...current, shuffle: false }));
   }
 
   const displayedSongs = useMemo(() => {
-    if (sortOrder === "downloaded") {
-      return [...filteredSongs].sort((a, b) => b.downloadCount - a.downloadCount);
-    }
-
-    if (sortOrder !== "random" || !shuffleOrderIds) return filteredSongs;
+    if (!filters.shuffle || !shuffleOrderIds) return sortedSongs;
 
     const orderMap = new Map(shuffleOrderIds.map((songId, index) => [songId, index]));
 
-    return [...filteredSongs].sort((a, b) => {
+    return [...sortedSongs].sort((a, b) => {
       const aOrder = orderMap.get(a.id);
       const bOrder = orderMap.get(b.id);
 
@@ -263,7 +269,7 @@ export default function DesktopMusicLibraryView({
 
       return aOrder - bOrder;
     });
-  }, [filteredSongs, shuffleOrderIds, sortOrder]);
+  }, [filters.shuffle, shuffleOrderIds, sortedSongs]);
 
   const activeSong = useMemo(
     () => songs.find((song) => song.id === activeSongId) ?? null,
@@ -398,7 +404,8 @@ export default function DesktopMusicLibraryView({
   }
 
   function removeShuffle() {
-    handleSortChange("recent");
+    setShuffleOrderIds(null);
+    setFilters((current) => ({ ...current, shuffle: false }));
   }
 
   function toggleFavorite(songId: string) {
@@ -694,7 +701,7 @@ export default function DesktopMusicLibraryView({
         })}
 
         <MusicQuickChipsEnd>
-          <MusicQuickChip active={filters.shuffle} onClick={setRandomSort}>
+          <MusicQuickChip active={filters.shuffle} onClick={toggleShuffle}>
             <ShuffleIconSmall size={12} />
             Shuffle
           </MusicQuickChip>
