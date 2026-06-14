@@ -20,14 +20,19 @@
     var(--filmwave-sidebar-panel-expanded-width) -
       (var(--filmwave-sidebar-x-padding) * 2)
   );
+  --filmwave-sidebar-icon-slot-left: 4px;
   --filmwave-sidebar-icon-slot-width: calc(
     var(--filmwave-sidebar-collapsed-panel-width) -
       (var(--filmwave-sidebar-x-padding) * 2)
   );
+  --filmwave-sidebar-collapsed-row-width: calc(
+    var(--filmwave-sidebar-icon-slot-width) +
+      (var(--filmwave-sidebar-icon-slot-left) * 2)
+  );
   --filmwave-sidebar-icon-color: #8f8f8f;
   --filmwave-sidebar-icon-color-active: #ffffff;
   --filmwave-sidebar-heading-icon-color: #a8a8a8;
-  --filmwave-sidebar-label-gap: 4px;
+  --filmwave-sidebar-label-gap: 2px;
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
   --filmwave-sidebar-float-inset: 12px;
@@ -227,13 +232,10 @@ body.sidebar-collapsed .desktop-sidebar-heading-label {
 }
 
 /* Source-of-truth geometry:
-   - row width follows the current sidebar panel, so the active background
-     remains visible in collapsed mode.
-   - icon slot is always the collapsed content width and never changes.
-   - collapse only fades labels; it does not change row padding/icon position. */
-.desktop-sidebar-link,
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
-body.sidebar-collapsed .desktop-sidebar-link {
+   - expanded rows fill the expanded sidebar.
+   - collapsed rows shrink only to the fixed icon/background capsule.
+   - the icon slot/padding never changes between states. */
+.desktop-sidebar-link {
   position: relative;
   display: block;
   width: 100%;
@@ -257,6 +259,12 @@ body.sidebar-collapsed .desktop-sidebar-link {
     color 150ms ease;
 }
 
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
+body.sidebar-collapsed .desktop-sidebar-link {
+  width: var(--filmwave-sidebar-collapsed-row-width);
+  max-width: var(--filmwave-sidebar-collapsed-row-width);
+}
+
 .desktop-sidebar-link > a,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link > a,
 body.sidebar-collapsed .desktop-sidebar-link > a {
@@ -271,8 +279,15 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 
 .desktop-sidebar-link:hover,
 .desktop-sidebar-link.is-active {
-  background: var(--bg-hover-strong);
+  background-color: var(--bg-hover-strong);
   color: var(--text-primary);
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link:hover,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link.is-active,
+body.sidebar-collapsed .desktop-sidebar-link:hover,
+body.sidebar-collapsed .desktop-sidebar-link.is-active {
+  background-color: var(--bg-hover-strong) !important;
 }
 
 .desktop-sidebar-link-icon,
@@ -280,7 +295,7 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 body.sidebar-collapsed .desktop-sidebar-link-icon {
   position: absolute;
   top: 0;
-  left: 0;
+  left: var(--filmwave-sidebar-icon-slot-left);
   display: flex;
   width: var(--filmwave-sidebar-icon-slot-width);
   min-width: var(--filmwave-sidebar-icon-slot-width);
@@ -332,7 +347,8 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   position: absolute;
   top: 50%;
   left: calc(
-    var(--filmwave-sidebar-icon-slot-width) + var(--filmwave-sidebar-label-gap)
+    var(--filmwave-sidebar-icon-slot-left) + var(--filmwave-sidebar-icon-slot-width) +
+      var(--filmwave-sidebar-label-gap)
   );
   right: 8px;
   display: block;
@@ -440,8 +456,15 @@ body.sidebar-collapsed .desktop-sidebar-projects-label {
 body.sidebar-collapsed .desktop-sidebar-project-actions {
   right: auto;
   left: 0;
+  width: var(--filmwave-sidebar-collapsed-row-width);
+  min-width: var(--filmwave-sidebar-collapsed-row-width);
   justify-content: center;
   margin-left: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button,
+body.sidebar-collapsed .desktop-sidebar-add-button {
+  width: var(--filmwave-sidebar-collapsed-row-width);
 }
 
 .desktop-app-shell.is-sidebar-collapsed
