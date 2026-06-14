@@ -29,7 +29,7 @@ export function getMusicLibrarySearchPlaceholder(playlistName?: string | null) {
 
   return formattedPlaylistName
     ? `Search "${formattedPlaylistName}"`
-    : "Search Music Library";
+    : "Search music library";
 }
 
 export function MusicLibraryFrame({
