@@ -99,6 +99,7 @@ export function normalizeSongRow(row: any): Song {
     bpm: Number(row.bpm || 0),
     genres: Array.isArray(row.genres) ? row.genres : [],
     moods: Array.isArray(row.moods) ? row.moods : [],
+    regions: Array.isArray(row.regions) ? row.regions : [],
     instruments: Array.isArray(row.instruments) ? row.instruments : [],
     builds: Array.isArray(row.builds) ? row.builds : [],
     vocals: Array.isArray(row.vocals) ? row.vocals : [],
