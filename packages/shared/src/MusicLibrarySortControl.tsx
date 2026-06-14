@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 export type MusicLibrarySortValue = "recent" | "downloaded" | "random";
 
 export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
-  value: MusicLibrarySortValue;
+  value: Exclude<MusicLibrarySortValue, "random">;
   label: string;
 }> = [
   { value: "recent", label: "Most Recent" },
@@ -43,9 +43,8 @@ export function MusicLibrarySortControl({
   const [open, setOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement>(null);
 
-  const displayedValue = value === "random" ? "recent" : value;
   const selectedOption =
-    MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === displayedValue) ??
+    MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === value) ??
     MUSIC_LIBRARY_SORT_OPTIONS[0];
 
   useEffect(() => {
