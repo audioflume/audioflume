@@ -8,6 +8,20 @@ main > section:has(.fw-filter-panel-wrap)
 main > section:has(.fw-filter-panel-wrap)
   .fw-filter-panel-wrap
   .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(1) {
+  order: 1 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(2) {
+  order: 2 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
   .fw-filter-rail-item:nth-of-type(3) {
   order: 4 !important;
 }
@@ -17,6 +31,13 @@ main > section:has(.fw-filter-panel-wrap)
   .fw-filter-rail
   .fw-filter-rail-item:nth-of-type(4) {
   order: 3 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(n + 5) {
+  order: 5 !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
