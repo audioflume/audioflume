@@ -82,6 +82,17 @@ function shuffleSongList<T>(songs: T[]) {
   return bestShuffle;
 }
 
+function sortMusicLibrarySongList<T extends { downloadCount: number }>(
+  songs: T[],
+  sortOrder: MusicLibrarySortValue,
+) {
+  if (sortOrder === "downloaded") {
+    return [...songs].sort((a, b) => b.downloadCount - a.downloadCount);
+  }
+
+  return songs;
+}
+
 export default function MusicPage() {
   const { userId } = useAuth();
   const musicFilterStorageKey = userId
@@ -125,7 +136,7 @@ export default function MusicPage() {
   const selectedPlaylist = filters.selectedPlaylist;
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
 
-  const shuffleActive = sortOrder === "random";
+  const shuffleActive = shuffleOrderIds !== null;
   const highlightedEditPointTypes =
     selectedEditPoints.filter(isCoreEditPointType);
 
@@ -344,12 +355,25 @@ export default function MusicPage() {
     songs,
   ]);
 
-  function setRandomSort() {
-    const shuffledSongs = shuffleSongList(filteredSongs);
-    setShuffleOrderIds(
-      shuffledSongs.map((song, index) => getMusicSongStableId(song, index)),
+  const sortedSongs = useMemo(
+    () => sortMusicLibrarySongList(filteredSongs, sortOrder),
+    [filteredSongs, sortOrder],
+  );
+
+  function createShuffleOrder(sourceSongs: typeof filteredSongs) {
+    const shuffledSongs = shuffleSongList(sourceSongs);
+    return shuffledSongs.map((song, index) =>
+      getMusicSongStableId(song, index),
     );
-    setSortOrder("random");
+  }
+
+  function setRandomSort() {
+    if (shuffleActive) {
+      setShuffleOrderIds(null);
+      return;
+    }
+
+    setShuffleOrderIds(createShuffleOrder(sortedSongs));
   }
 
   function handleSortChange(value: MusicLibrarySortValue) {
@@ -359,23 +383,21 @@ export default function MusicPage() {
     }
 
     setSortOrder(value);
-    setShuffleOrderIds(null);
+
+    if (shuffleActive) {
+      const nextSortedSongs = sortMusicLibrarySongList(filteredSongs, value);
+      setShuffleOrderIds(createShuffleOrder(nextSortedSongs));
+    }
   }
 
   const displayedSongs = useMemo(() => {
-    if (sortOrder === "downloaded") {
-      return [...filteredSongs].sort(
-        (a, b) => b.downloadCount - a.downloadCount,
-      );
-    }
-
-    if (sortOrder !== "random" || !shuffleOrderIds) return filteredSongs;
+    if (!shuffleOrderIds) return sortedSongs;
 
     const orderMap = new Map(
       shuffleOrderIds.map((songId, index) => [songId, index]),
     );
 
-    return [...filteredSongs].sort((a, b) => {
+    return [...sortedSongs].sort((a, b) => {
       const aId = getMusicSongStableId(a);
       const bId = getMusicSongStableId(b);
       const aOrder = orderMap.get(aId);
@@ -387,7 +409,7 @@ export default function MusicPage() {
 
       return aOrder - bOrder;
     });
-  }, [filteredSongs, shuffleOrderIds, sortOrder]);
+  }, [shuffleOrderIds, sortedSongs]);
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -531,7 +553,7 @@ export default function MusicPage() {
                 onRemovePlaylist={() =>
                   setFilters((current) => ({ ...current, selectedPlaylist: null }))
                 }
-                onRemoveShuffle={() => handleSortChange("recent")}
+                onRemoveShuffle={() => setShuffleOrderIds(null)}
               />
             ) : undefined
           }
