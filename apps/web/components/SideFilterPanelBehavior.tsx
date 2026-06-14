@@ -18,6 +18,8 @@ const SECTION_ID_BY_LABEL: Record<string, string> = {
   Display: "display",
 };
 
+const DOT_ONLY_COUNT_SECTION_IDS = new Set(["playlist", "duration", "bpm", "key", "display"]);
+
 const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 
@@ -36,6 +38,35 @@ function getRailItemSectionId(railItem: Element) {
   if (!label) return null;
 
   return SECTION_ID_BY_LABEL[label] ?? null;
+}
+
+function syncDotOnlyRailCounts(root: ParentNode = document) {
+  root.querySelectorAll<HTMLElement>(".fw-filter-rail-item").forEach((railItem) => {
+    const sectionId = getRailItemSectionId(railItem);
+    const count = railItem.querySelector<HTMLElement>(".fw-filter-rail-count");
+
+    if (!count) return;
+
+    const isDotOnly = sectionId ? DOT_ONLY_COUNT_SECTION_IDS.has(sectionId) : false;
+
+    count.classList.toggle("is-dot-only", isDotOnly);
+
+    if (!isDotOnly) {
+      count.style.removeProperty("font-size");
+      count.style.removeProperty("width");
+      count.style.removeProperty("min-width");
+      count.style.removeProperty("height");
+      count.style.removeProperty("padding");
+      return;
+    }
+
+    count.textContent = "";
+    count.style.setProperty("font-size", "0", "important");
+    count.style.setProperty("width", "16px", "important");
+    count.style.setProperty("min-width", "16px", "important");
+    count.style.setProperty("height", "16px", "important");
+    count.style.setProperty("padding", "0", "important");
+  });
 }
 
 function syncFilterColumnFadeState(column: HTMLElement) {
@@ -212,6 +243,17 @@ function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: stri
 
 export default function SideFilterPanelBehavior() {
   useEffect(() => {
+    let dotOnlySyncFrame = 0;
+
+    function scheduleDotOnlyRailCountSync() {
+      if (dotOnlySyncFrame) return;
+
+      dotOnlySyncFrame = window.requestAnimationFrame(() => {
+        dotOnlySyncFrame = 0;
+        syncDotOnlyRailCounts();
+      });
+    }
+
     function handleFilterRailClick(event: MouseEvent) {
       const target = event.target;
       if (!(target instanceof Element)) return;
@@ -232,6 +274,7 @@ export default function SideFilterPanelBehavior() {
 
         clearRailSection(panel, railItem, sectionId);
         window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
+        scheduleDotOnlyRailCountSync();
 
         return;
       }
@@ -245,12 +288,14 @@ export default function SideFilterPanelBehavior() {
         panel.classList.remove("has-selected-filter-section");
         delete panel.dataset.sideFilterActiveKey;
         window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
+        scheduleDotOnlyRailCountSync();
         return;
       }
 
       panel.dataset.sideFilterActiveKey = railItemKey;
       panel.classList.add("has-selected-filter-section");
       window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
+      scheduleDotOnlyRailCountSync();
     }
 
     function handleFilterColumnScroll(event: Event) {
@@ -266,9 +311,17 @@ export default function SideFilterPanelBehavior() {
 
     function handleViewportChange() {
       syncFilterPanelColumnFadeStates();
+      scheduleDotOnlyRailCountSync();
     }
 
-    window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates());
+    const observer = new MutationObserver(scheduleDotOnlyRailCountSync);
+
+    window.requestAnimationFrame(() => {
+      syncFilterPanelColumnFadeStates();
+      syncDotOnlyRailCounts();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
 
     document.addEventListener("click", handleFilterRailClick, true);
     document.addEventListener("scroll", handleFilterColumnScroll, true);
@@ -276,6 +329,8 @@ export default function SideFilterPanelBehavior() {
     window.addEventListener("scroll", handleViewportChange, { passive: true });
 
     return () => {
+      if (dotOnlySyncFrame) window.cancelAnimationFrame(dotOnlySyncFrame);
+      observer.disconnect();
       document.removeEventListener("click", handleFilterRailClick, true);
       document.removeEventListener("scroll", handleFilterColumnScroll, true);
       window.removeEventListener("resize", handleViewportChange);
