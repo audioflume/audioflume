@@ -434,10 +434,16 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   color: var(--filmwave-sidebar-icon-color-active);
 }
 
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading-label,
+body.sidebar-collapsed .desktop-sidebar-heading-label,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label,
+body.sidebar-collapsed .desktop-sidebar-link-label,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
 body.sidebar-collapsed .desktop-sidebar-projects-label {
+  visibility: hidden;
   pointer-events: none;
   opacity: 0;
+  transition: none;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions,
