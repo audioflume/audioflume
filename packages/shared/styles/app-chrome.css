@@ -134,6 +134,45 @@ body > header > div {
   transform: translateY(-1px);
 }
 
+.fw-toolbar-sticky .fw-toolbar-search {
+  flex-basis: 356px;
+  min-width: 240px;
+  height: 34px;
+  gap: 7px;
+  border-color: var(--border);
+  background: transparent;
+  padding: 0 10px 0 4px;
+  transition: border-color 150ms ease;
+}
+
+.fw-toolbar-sticky .fw-toolbar-search:focus-within {
+  border-color: var(--border-strong);
+  background: transparent;
+}
+
+.fw-toolbar-sticky .fw-toolbar-search-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+}
+
+.fw-toolbar-sticky .fw-toolbar-search-icon svg {
+  width: 11px;
+  height: 11px;
+}
+
+.fw-toolbar-sticky .fw-toolbar-search input {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.fw-toolbar-sticky .fw-toolbar-search input::placeholder {
+  color: var(--text-muted);
+}
+
 /* Nav links — quiet by default, soft pill on hover/active to match the
    chip language used across the page. */
 .filmwave-header-nav-link {
