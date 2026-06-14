@@ -136,7 +136,7 @@ export function MusicLibraryToolbar({
       className={`fw-toolbar-sticky${className ? ` ${className}` : ""}`}
       style={stickyTop !== undefined ? { top: stickyTop } : undefined}
     >
-      <div className="fw-toolbar-float">
+      <div className="fw-toolbar-float" style={{ display: "none" }}>
         <div className="fw-toolbar">
           <label className="fw-toolbar-search">
             <span className="fw-toolbar-search-icon" aria-hidden="true">
