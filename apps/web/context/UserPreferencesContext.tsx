@@ -106,9 +106,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const [projectAssetAddTarget, setProjectAssetAddTargetState] =
     useState<ProjectAssetAddTarget>("media_folder");
   const [themeMode, setThemeModeState] = useState<ThemeMode>("dark");
-  const [showEditPointMarkers, setShowEditPointMarkersState] = useState(() =>
-    getStoredEditPointMarkerVisibility(),
-  );
+  const [showEditPointMarkers, setShowEditPointMarkersState] = useState(false);
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
   useEffect(() => {
