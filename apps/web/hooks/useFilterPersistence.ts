@@ -104,10 +104,7 @@ function normalizeFilterState(value: unknown): MusicFilterState {
     selectedEditPoints: stringArray(parsed.selectedEditPoints).length
       ? stringArray(parsed.selectedEditPoints)
       : stringArray(parsed.editPoints),
-    showEditPointMarkers:
-      typeof parsed.showEditPointMarkers === "boolean"
-        ? parsed.showEditPointMarkers
-        : getStoredEditPointMarkerVisibility(),
+    showEditPointMarkers: getStoredEditPointMarkerVisibility(),
     instrumental:
       typeof parsed.instrumental === "boolean" ? parsed.instrumental : false,
     bpmValue:
