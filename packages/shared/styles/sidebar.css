@@ -11,7 +11,7 @@
   --filmwave-sidebar-row-padding-x: 8px;
   --filmwave-sidebar-icon-size: 16px;
   --filmwave-sidebar-icon-column-width: 32px;
-  --filmwave-sidebar-collapsed-panel-width: 68px;
+  --filmwave-sidebar-collapsed-panel-width: 72px;
   --filmwave-sidebar-panel-expanded-width: calc(
     var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-float-inset) -
       var(--filmwave-sidebar-content-gap)
@@ -20,7 +20,7 @@
     var(--filmwave-sidebar-panel-expanded-width) -
       (var(--filmwave-sidebar-x-padding) * 2)
   );
-  --filmwave-sidebar-icon-slot-left: 10px;
+  --filmwave-sidebar-icon-slot-left: 12px;
   --filmwave-sidebar-icon-slot-width: 32px;
   --filmwave-sidebar-collapsed-row-width: calc(
     (var(--filmwave-sidebar-icon-slot-left) * 2) +
@@ -48,7 +48,7 @@
    value instead of deriving it from these tokens. */
 :root {
   --sidebar-width-expanded: 248px;
-  --sidebar-width-collapsed: 88px;
+  --sidebar-width-collapsed: 72px;
 }
 
 /* Floating sidebar — inset rounded panel on a subtle grey surface,
