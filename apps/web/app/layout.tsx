@@ -87,7 +87,7 @@ export default async function RootLayout({
                   <ProjectsProvider>
                     <FavoritesProvider>
                       <Header />
-                      <SidebarRenderer initiallyCollapsed={sidebarCollapsed} />
+                      <SidebarRenderer initialCollapsed={sidebarCollapsed} />
                       <PlayerRenderer />
                       <MusicFilterToolbarBehavior />
                       <SideFilterPanelBehavior />
