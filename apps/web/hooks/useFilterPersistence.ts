@@ -14,6 +14,7 @@ export type MusicFilterState = {
   search: string;
   selectedMoods: string[];
   selectedGenres: string[];
+  selectedRegions: string[];
   selectedInstruments: string[];
   selectedBuilds: string[];
   selectedVocals: string[];
@@ -29,6 +30,7 @@ export type MusicFilterState = {
 type LegacyMusicFilterState = Partial<MusicFilterState> & {
   moods?: unknown;
   genres?: unknown;
+  regions?: unknown;
   instruments?: unknown;
   builds?: unknown;
   vocals?: unknown;
@@ -50,6 +52,7 @@ const baseDefaultState: MusicFilterState = {
   search: "",
   selectedMoods: [],
   selectedGenres: [],
+  selectedRegions: [],
   selectedInstruments: [],
   selectedBuilds: [],
   selectedVocals: [],
@@ -82,6 +85,9 @@ function normalizeFilterState(value: unknown): MusicFilterState {
     selectedGenres: stringArray(parsed.selectedGenres).length
       ? stringArray(parsed.selectedGenres)
       : stringArray(parsed.genres),
+    selectedRegions: stringArray(parsed.selectedRegions).length
+      ? stringArray(parsed.selectedRegions)
+      : stringArray(parsed.regions),
     selectedInstruments: stringArray(parsed.selectedInstruments).length
       ? stringArray(parsed.selectedInstruments)
       : stringArray(parsed.instruments),
@@ -195,13 +201,22 @@ export function useFilterPersistence(
     const handleSideFilterSectionClear = (event: Event) => {
       const sectionId = getSideFilterClearSectionFromEvent(event);
 
-      if (sectionId !== "duration") return;
+      if (sectionId === "duration") {
+        setFilters((current) =>
+          current.selectedDurations.length === 0
+            ? current
+            : { ...current, selectedDurations: [] },
+        );
+        return;
+      }
 
-      setFilters((current) =>
-        current.selectedDurations.length === 0
-          ? current
-          : { ...current, selectedDurations: [] },
-      );
+      if (sectionId === "region") {
+        setFilters((current) =>
+          current.selectedRegions.length === 0
+            ? current
+            : { ...current, selectedRegions: [] },
+        );
+      }
     };
 
     window.addEventListener(
