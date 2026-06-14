@@ -13,36 +13,6 @@ export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
   { value: "downloaded", label: "Most Popular" },
 ];
 
-const MUSIC_LIBRARY_SORT_STORAGE_KEY = "filmwave-music-library-sort-order";
-
-function getStoredSortValue(): RealMusicLibrarySortValue | null {
-  if (typeof window === "undefined") return null;
-
-  try {
-    const storedValue = window.localStorage.getItem(
-      MUSIC_LIBRARY_SORT_STORAGE_KEY,
-    );
-
-    if (storedValue === "recent" || storedValue === "downloaded") {
-      return storedValue;
-    }
-  } catch {
-    // Ignore storage failures.
-  }
-
-  return null;
-}
-
-function setStoredSortValue(value: RealMusicLibrarySortValue) {
-  if (typeof window === "undefined") return;
-
-  try {
-    window.localStorage.setItem(MUSIC_LIBRARY_SORT_STORAGE_KEY, value);
-  } catch {
-    // Ignore storage failures.
-  }
-}
-
 function SortChevron() {
   return (
     <svg
@@ -69,35 +39,14 @@ export function MusicLibrarySortControl({
   onChange,
 }: {
   value: MusicLibrarySortValue;
-  onChange: (value: MusicLibrarySortValue) => void;
+  onChange: (value: RealMusicLibrarySortValue) => void;
 }) {
   const [open, setOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement>(null);
-  const skipNextRestoreRef = useRef(false);
 
   const selectedOption =
     MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === value) ??
     MUSIC_LIBRARY_SORT_OPTIONS[0];
-
-  useEffect(() => {
-    if (value !== "recent" && value !== "downloaded") return;
-
-    const storedValue = getStoredSortValue();
-
-    if (!storedValue) {
-      setStoredSortValue(value);
-      return;
-    }
-
-    if (skipNextRestoreRef.current) {
-      skipNextRestoreRef.current = false;
-      return;
-    }
-
-    if (storedValue !== value) {
-      onChange(storedValue);
-    }
-  }, [onChange, value]);
 
   useEffect(() => {
     if (!open) return;
@@ -167,8 +116,6 @@ export function MusicLibrarySortControl({
               type="button"
               role="menuitem"
               onClick={() => {
-                skipNextRestoreRef.current = true;
-                setStoredSortValue(option.value);
                 onChange(option.value);
                 setOpen(false);
               }}
