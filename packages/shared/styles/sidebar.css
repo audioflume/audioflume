@@ -20,12 +20,9 @@
     var(--filmwave-sidebar-panel-expanded-width) -
       (var(--filmwave-sidebar-x-padding) * 2)
   );
-  --filmwave-sidebar-icon-slot-left: 10px;
+  --filmwave-sidebar-icon-slot-left: 13px;
   --filmwave-sidebar-icon-slot-width: 32px;
-  --filmwave-sidebar-collapsed-row-width: calc(
-    (var(--filmwave-sidebar-icon-slot-left) * 2) +
-      var(--filmwave-sidebar-icon-slot-width)
-  );
+  --filmwave-sidebar-collapsed-row-width: 100%;
   --filmwave-sidebar-icon-color: #8f8f8f;
   --filmwave-sidebar-icon-color-active: #ffffff;
   --filmwave-sidebar-heading-icon-color: #a8a8a8;
@@ -229,9 +226,9 @@ body.sidebar-collapsed .desktop-sidebar-heading-label {
 }
 
 /* Source-of-truth geometry:
-   - expanded rows fill the expanded sidebar.
-   - collapsed rows shrink only to the fixed icon/background capsule.
-   - the icon slot/padding never changes between states. */
+   - rows fill the padded sidebar in both expanded and collapsed states.
+   - the active background spans the full row width.
+   - collapse hides labels only; it does not resize or re-pad rows. */
 .desktop-sidebar-link {
   position: relative;
   display: block;
@@ -254,12 +251,6 @@ body.sidebar-collapsed .desktop-sidebar-heading-label {
   transition:
     background 150ms ease,
     color 150ms ease;
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
-body.sidebar-collapsed .desktop-sidebar-link {
-  width: var(--filmwave-sidebar-collapsed-row-width);
-  max-width: var(--filmwave-sidebar-collapsed-row-width);
 }
 
 .desktop-sidebar-link > a,
@@ -453,15 +444,15 @@ body.sidebar-collapsed .desktop-sidebar-projects-label {
 body.sidebar-collapsed .desktop-sidebar-project-actions {
   right: auto;
   left: 0;
-  width: var(--filmwave-sidebar-collapsed-row-width);
-  min-width: var(--filmwave-sidebar-collapsed-row-width);
+  width: 100%;
+  min-width: 0;
   justify-content: center;
   margin-left: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button,
 body.sidebar-collapsed .desktop-sidebar-add-button {
-  width: var(--filmwave-sidebar-collapsed-row-width);
+  width: 100%;
 }
 
 .desktop-app-shell.is-sidebar-collapsed
