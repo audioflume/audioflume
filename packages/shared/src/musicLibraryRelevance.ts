@@ -30,6 +30,7 @@ function getSongSearchText(song: MusicLibraryFilterSong) {
     String(song.bpm ?? ""),
     ...toStringArray(song.genres ?? song.genre),
     ...toStringArray(song.moods ?? song.mood),
+    ...toStringArray(song.regions ?? song.region),
     ...toStringArray(song.instruments),
     ...toStringArray(song.builds ?? song.build),
     ...toStringArray(song.vocals),
@@ -114,6 +115,7 @@ export function scoreMusicLibrarySongRelevance(
 
     score += scoreSelectedValues(song.moods ?? song.mood, [query], 34);
     score += scoreSelectedValues(song.genres ?? song.genre, [query], 34);
+    score += scoreSelectedValues(song.regions ?? song.region, [query], 32);
     score += scoreSelectedValues(song.instruments, [query], 30);
     score += scoreSelectedValues(song.vocals, [query], 24);
     score += scoreSelectedValues(song.builds ?? song.build, [query], 22);
@@ -123,6 +125,7 @@ export function scoreMusicLibrarySongRelevance(
 
   score += scoreSelectedValues(song.moods ?? song.mood, filters.selectedMoods ?? [], 34);
   score += scoreSelectedValues(song.genres ?? song.genre, filters.selectedGenres ?? [], 34);
+  score += scoreSelectedValues(song.regions ?? song.region, filters.selectedRegions ?? [], 32);
   score += scoreSelectedValues(song.instruments, filters.selectedInstruments ?? [], 30);
   score += scoreSelectedValues(song.vocals, filters.selectedVocals ?? [], 24);
   score += scoreSelectedValues(song.builds ?? song.build, filters.selectedBuilds ?? [], 22);
