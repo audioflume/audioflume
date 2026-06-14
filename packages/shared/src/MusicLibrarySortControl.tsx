@@ -42,8 +42,17 @@ export function MusicLibrarySortControl({
 }) {
   const [open, setOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement>(null);
+  const lastSortValueRef = useRef<MusicLibrarySortValue>(
+    value === "random" ? "recent" : value,
+  );
+
+  if (value !== "random") {
+    lastSortValueRef.current = value;
+  }
+
+  const displayedValue = value === "random" ? lastSortValueRef.current : value;
   const selectedOption =
-    MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === value) ??
+    MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === displayedValue) ??
     MUSIC_LIBRARY_SORT_OPTIONS[0];
 
   useEffect(() => {
