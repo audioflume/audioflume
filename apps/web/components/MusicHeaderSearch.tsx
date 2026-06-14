@@ -4,10 +4,21 @@ import {
   CollapsibleSearchPill,
   getMusicLibrarySearchPlaceholder,
 } from "@filmwave/shared";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type CSSProperties, type FormEvent } from "react";
 import SearchIcon from "@/components/icons/SearchIcon";
 
 const MUSIC_HEADER_SEARCH_CHANNEL = "filmwave-music-header-search";
+
+const musicHeaderSearchStyle: CSSProperties = {
+  position: "fixed",
+  top: "10px",
+  left: "50%",
+  zIndex: 40,
+  width: "clamp(320px, 42vw, 640px)",
+  maxWidth: "calc(100vw - 420px)",
+  marginRight: 0,
+  transform: "translateX(-50%)",
+};
 
 function getMusicToolbarSearchInput() {
   return document.querySelector<HTMLInputElement>("main .fw-toolbar-search input");
@@ -56,13 +67,38 @@ export default function MusicHeaderSearch() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      className="filmwave-music-header-search-form"
+      style={musicHeaderSearchStyle}
+      onSubmit={handleSubmit}
+    >
       <CollapsibleSearchPill
         searchIcon={<SearchIcon />}
         value={search}
         placeholder={placeholder}
         onChange={handleSearchChange}
       />
+
+      <style jsx global>{`
+        .filmwave-music-header-search-form .filmwave-search-pill,
+        .filmwave-music-header-search-form .filmwave-search-pill-expanded,
+        .filmwave-music-header-search-form .filmwave-search-pill-collapsed {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+
+        .filmwave-music-header-search-form .filmwave-search-pill-input {
+          width: 100% !important;
+        }
+
+        @media (max-width: 900px) {
+          .filmwave-music-header-search-form {
+            left: calc(50% + 32px) !important;
+            width: min(420px, calc(100vw - 300px)) !important;
+            max-width: calc(100vw - 300px) !important;
+          }
+        }
+      `}</style>
     </form>
   );
 }
