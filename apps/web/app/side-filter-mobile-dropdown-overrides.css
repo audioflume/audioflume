@@ -1,10 +1,24 @@
 @media (max-width: 900px) {
+  main > section:has(.fw-filter-panel-wrap) {
+    display: block !important;
+    grid-template-columns: none !important;
+    column-gap: 0 !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
+    display: block !important;
+    position: relative !important;
+  }
+
   main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
     width: min(720px, calc(100vw - 32px)) !important;
     max-width: calc(100vw - 32px) !important;
   }
 
-  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap,
+  main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap {
     position: fixed !important;
     top: calc(var(--filmwave-header-height, 56px) + 10px) !important;
     left: 50% !important;
@@ -16,16 +30,25 @@
     height: auto !important;
     max-height: calc(100dvh - var(--filmwave-header-height, 56px) - 24px) !important;
     margin: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
     transform: translateX(-50%) !important;
   }
 
-  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap.is-open {
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap.is-open,
+  main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.is-open {
     display: grid !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
   }
 
   main > section:has(.fw-filter-panel-wrap)
     > .fw-toolbar-sticky
-    > .fw-filter-panel-wrap.has-selected-filter-section {
+    > .fw-filter-panel-wrap.has-selected-filter-section,
+  main > section:has(.fw-filter-panel-wrap)
+    .fw-filter-panel-wrap.has-selected-filter-section {
     width: min(720px, calc(100vw - 32px)) !important;
     max-width: calc(100vw - 32px) !important;
   }
