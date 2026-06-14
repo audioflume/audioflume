@@ -9,7 +9,7 @@ import PlaylistIcon from "@/components/icons/PlaylistIcon";
 type FilterTagsProps = {
   selectedMoods: string[];
   selectedGenres: string[];
-  selectedRegions: string[];
+  selectedRegions?: string[];
   selectedInstruments: string[];
   selectedBuilds: string[];
   selectedVocals: string[];
@@ -22,7 +22,7 @@ type FilterTagsProps = {
   shuffleActive: boolean;
   onRemoveMood: (value: string) => void;
   onRemoveGenre: (value: string) => void;
-  onRemoveRegion: (value: string) => void;
+  onRemoveRegion?: (value: string) => void;
   onRemoveInstrument: (value: string) => void;
   onRemoveBuild: (value: string) => void;
   onRemoveVocal: (value: string) => void;
@@ -38,7 +38,7 @@ type FilterTagsProps = {
 export default function FilterTags({
   selectedMoods,
   selectedGenres,
-  selectedRegions,
+  selectedRegions = [],
   selectedInstruments,
   selectedBuilds,
   selectedVocals,
@@ -51,7 +51,7 @@ export default function FilterTags({
   shuffleActive,
   onRemoveMood,
   onRemoveGenre,
-  onRemoveRegion,
+  onRemoveRegion = () => {},
   onRemoveInstrument,
   onRemoveBuild,
   onRemoveVocal,
