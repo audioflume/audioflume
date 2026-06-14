@@ -246,7 +246,7 @@ export default function Header() {
           )}
 
           <Link href="/curated-playlists" className="filmwave-header-nav-link">
-            <PlaylistIcon size={15} />
+            <PlaylistIcon size={16} />
             Playlists
           </Link>
 
