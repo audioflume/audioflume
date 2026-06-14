@@ -28,7 +28,7 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
         .filmwave-music-header-search-slot {
           position: fixed;
           top: 0;
-          right: 68px;
+          right: 49px;
           z-index: 130;
           display: flex;
           height: 56px;
@@ -38,6 +38,11 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
 
         .filmwave-music-header-search-slot > form {
           pointer-events: auto;
+        }
+
+        .filmwave-music-header-search-slot .filmwave-search-pill-input {
+          line-height: 1;
+          transform: translateY(-1px);
         }
       `}</style>
     </>
