@@ -29,6 +29,12 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
           padding: 0 !important;
         }
 
+        main > section > .overflow-hidden[aria-hidden] {
+          display: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
         main .fw-song-list {
           margin-top: 16px !important;
         }
