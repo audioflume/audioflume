@@ -4,7 +4,9 @@ import { useEffect } from "react";
 
 const SECTION_ID_BY_LABEL: Record<string, string> = {
   Mood: "mood",
+  Scene: "mood",
   Genre: "genre",
+  Region: "region",
   Instruments: "instruments",
   Vocals: "vocals",
   Build: "build",
@@ -176,7 +178,7 @@ function clickNextSelectedDetailControl(panel: HTMLElement, attempts = 0) {
 }
 
 function clearOpenRailSection(panel: HTMLElement, sectionId: string) {
-  if (sectionId === "duration") {
+  if (sectionId === "duration" || sectionId === "region") {
     dispatchSideFilterSectionClear(sectionId);
     return;
   }
