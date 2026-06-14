@@ -274,6 +274,13 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item.is-active {
   font-weight: 400 !important;
 }
 
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap.has-selected-filter-section
+  .fw-filter-rail-item.is-active {
+  background: var(--bg-hover-strong) !important;
+  color: var(--text-primary) !important;
+}
+
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
   opacity: 0.4 !important;
   transition: opacity 160ms ease, color 160ms ease !important;
@@ -281,7 +288,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item:hover,
 main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active:hover {
-  background: var(--bg-hover-strong) !important;
+  background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
 }
 
