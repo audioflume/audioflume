@@ -3,18 +3,53 @@
     display: block !important;
     grid-template-columns: none !important;
     column-gap: 0 !important;
-    margin-left: 0 !important;
     padding-left: 0 !important;
+  }
+
+  .desktop-app-shell.is-sidebar-collapsed ~ main > section:has(.fw-filter-panel-wrap) {
+    margin-left: calc(
+      var(--filmwave-sidebar-float-inset, 12px) +
+        var(--sidebar-width-collapsed, 68px) +
+        var(--filmwave-side-filter-sidebar-gap, 12px)
+    ) !important;
+  }
+
+  .desktop-app-shell:not(.is-sidebar-collapsed) ~ main > section:has(.fw-filter-panel-wrap) {
+    margin-left: calc(
+      var(--filmwave-sidebar-expanded-width, var(--sidebar-width-expanded, 248px)) -
+        var(--filmwave-sidebar-content-gap, 20px) +
+        var(--filmwave-side-filter-sidebar-gap, 12px)
+    ) !important;
   }
 
   main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
     display: block !important;
-    position: relative !important;
+    position: static !important;
   }
 
   main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
-    width: min(720px, calc(100vw - 32px)) !important;
-    max-width: calc(100vw - 32px) !important;
+    width: min(720px, calc(100vw - 360px)) !important;
+    max-width: calc(100vw - 300px) !important;
+  }
+
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar {
+    display: flex !important;
+    min-width: 0 !important;
+    align-items: center !important;
+  }
+
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-filters {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap,
@@ -25,8 +60,8 @@
     z-index: 140 !important;
     display: none !important;
     grid-template-rows: auto !important;
-    width: min(720px, calc(100vw - 32px)) !important;
-    max-width: calc(100vw - 32px) !important;
+    width: min(720px, calc(100vw - 360px)) !important;
+    max-width: calc(100vw - 300px) !important;
     height: auto !important;
     max-height: calc(100dvh - var(--filmwave-header-height, 56px) - 24px) !important;
     margin: 0 !important;
@@ -49,8 +84,8 @@
     > .fw-filter-panel-wrap.has-selected-filter-section,
   main > section:has(.fw-filter-panel-wrap)
     .fw-filter-panel-wrap.has-selected-filter-section {
-    width: min(720px, calc(100vw - 32px)) !important;
-    max-width: calc(100vw - 32px) !important;
+    width: min(720px, calc(100vw - 360px)) !important;
+    max-width: calc(100vw - 300px) !important;
   }
 
   main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-reveal,
@@ -96,6 +131,18 @@
 }
 
 @media (max-width: 560px) {
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float,
+  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap,
+  main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap,
+  main > section:has(.fw-filter-panel-wrap)
+    > .fw-toolbar-sticky
+    > .fw-filter-panel-wrap.has-selected-filter-section,
+  main > section:has(.fw-filter-panel-wrap)
+    .fw-filter-panel-wrap.has-selected-filter-section {
+    width: min(520px, calc(100vw - 128px)) !important;
+    max-width: calc(100vw - 128px) !important;
+  }
+
   main > section:has(.fw-filter-panel-wrap)
     .fw-filter-panel-wrap.has-selected-filter-section
     .fw-filter-panel-body {
