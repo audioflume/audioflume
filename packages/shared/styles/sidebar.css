@@ -467,3 +467,68 @@ body.sidebar-collapsed .desktop-sidebar-empty-projects {
   white-space: nowrap;
   box-shadow: var(--shadow-ui);
 }
+
+/* Lock sidebar row geometry: the collapsed icon slot is the source of truth.
+   Expanded labels sit after that slot, but row padding and icon slots never move. */
+.desktop-sidebar-link,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
+body.sidebar-collapsed .desktop-sidebar-link {
+  grid-template-columns: var(--filmwave-sidebar-icon-slot-width) minmax(0, 1fr) auto;
+  column-gap: var(--filmwave-sidebar-label-gap);
+  padding: 0 !important;
+}
+
+.desktop-sidebar-link > a,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link > a,
+body.sidebar-collapsed .desktop-sidebar-link > a {
+  display: grid !important;
+  grid-column: 1 / 3;
+  grid-template-columns: var(--filmwave-sidebar-icon-slot-width) minmax(0, 1fr);
+  column-gap: var(--filmwave-sidebar-label-gap);
+  align-items: center;
+  padding: 0 !important;
+}
+
+.desktop-sidebar-link-icon,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon,
+body.sidebar-collapsed .desktop-sidebar-link-icon {
+  position: static;
+  grid-column: 1;
+  width: var(--filmwave-sidebar-icon-slot-width);
+  min-width: var(--filmwave-sidebar-icon-slot-width);
+  height: var(--filmwave-sidebar-row-height);
+}
+
+.desktop-sidebar-link-label {
+  grid-column: 2;
+  padding-left: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
+body.sidebar-collapsed .desktop-sidebar-link,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link > a,
+body.sidebar-collapsed .desktop-sidebar-link > a {
+  grid-template-columns: var(--filmwave-sidebar-icon-slot-width);
+  column-gap: 0;
+}
+
+.desktop-sidebar-projects-head {
+  grid-template-columns: minmax(0, 1fr) var(--filmwave-sidebar-icon-slot-width);
+  column-gap: var(--filmwave-sidebar-label-gap);
+}
+
+.desktop-sidebar-project-actions,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions,
+body.sidebar-collapsed .desktop-sidebar-project-actions {
+  width: var(--filmwave-sidebar-icon-slot-width);
+  min-width: var(--filmwave-sidebar-icon-slot-width);
+  justify-content: center;
+}
+
+.desktop-sidebar-add-button,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button,
+body.sidebar-collapsed .desktop-sidebar-add-button {
+  width: var(--filmwave-sidebar-icon-slot-width);
+  height: var(--filmwave-sidebar-row-height);
+  border-radius: var(--filmwave-sidebar-row-radius);
+}
