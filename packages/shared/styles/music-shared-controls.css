@@ -193,3 +193,19 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   background: var(--filmwave-filter-active-marker) !important;
   color: var(--filmwave-filter-active-marker-contrast) !important;
 }
+
+.fw-quick-chip.is-selected,
+.fw-quick-chip[aria-pressed="true"] {
+  border-color: var(--text-primary) !important;
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+.fw-quick-chip.is-selected svg,
+.fw-quick-chip[aria-pressed="true"] svg,
+.fw-quick-chip.is-selected svg *,
+.fw-quick-chip[aria-pressed="true"] svg * {
+  color: var(--bg-primary) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
