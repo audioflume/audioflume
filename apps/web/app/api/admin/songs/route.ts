@@ -18,6 +18,7 @@ type SaveSongPayload = {
   waveformPeaks: string;
   genres: string[];
   moods: string[];
+  regions: string[];
   instruments: string[];
   builds: string[];
   vocals: string[];
@@ -110,6 +111,7 @@ function buildSupabaseSongRow(body: SaveSongPayload) {
     waveform_peaks: body.waveformPeaks || "[]",
     genres: cleanStringArray(body.genres),
     moods: cleanStringArray(body.moods),
+    regions: cleanStringArray(body.regions),
     instruments: cleanStringArray(body.instruments),
     builds: cleanStringArray(body.builds),
     vocals: cleanStringArray(body.vocals),
