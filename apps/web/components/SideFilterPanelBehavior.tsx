@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import CheckIcon from "./icons/CheckIcon";
 
@@ -76,32 +76,33 @@ function ensureDotOnlyCheckStyle() {
       order: 1000 !important;
       display: inline-flex !important;
       align-items: center !important;
-      justify-content: flex-start !important;
+      justify-content: center !important;
       align-self: flex-start !important;
       width: auto !important;
-      height: auto !important;
+      height: 26px !important;
       margin: 12px 8px 0 !important;
-      padding: 4px 2px !important;
-      border: 0 !important;
-      border-radius: 0 !important;
+      padding: 0 11px !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 999px !important;
       background: transparent !important;
       color: var(--text-tertiary, var(--text-secondary)) !important;
       font: inherit !important;
       font-size: 11px !important;
       font-weight: 500 !important;
       line-height: 1 !important;
-      letter-spacing: 0.02em !important;
+      letter-spacing: 0.01em !important;
       cursor: pointer !important;
-      opacity: 0.82 !important;
-      transition: color 160ms ease, opacity 160ms ease !important;
+      opacity: 0.86 !important;
+      text-decoration: none !important;
+      transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, opacity 160ms ease !important;
     }
 
     main > section:has(.fw-filter-panel-wrap) .${RAIL_CLEAR_ALL_CLASS}:hover {
-      background: transparent !important;
+      background: var(--bg-hover) !important;
+      border-color: var(--border-strong, var(--border-subtle)) !important;
       color: var(--text-primary) !important;
       opacity: 1 !important;
-      text-decoration: underline !important;
-      text-underline-offset: 3px !important;
+      text-decoration: none !important;
     }
   `;
   document.head.appendChild(style);
@@ -401,7 +402,7 @@ function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: stri
 }
 
 export default function SideFilterPanelBehavior() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     let dotOnlySyncFrame = 0;
     const dotOnlyCheckStyle = ensureDotOnlyCheckStyle();
 
@@ -476,6 +477,10 @@ export default function SideFilterPanelBehavior() {
     }
 
     const observer = new MutationObserver(scheduleDotOnlyRailCountSync);
+
+    syncFilterPanelColumnFadeStates();
+    syncSideFilterRailPresentation();
+    syncDotOnlyRailCounts();
 
     window.requestAnimationFrame(() => {
       syncFilterPanelColumnFadeStates();
