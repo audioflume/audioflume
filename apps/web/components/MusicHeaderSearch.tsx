@@ -11,13 +11,18 @@ const MUSIC_HEADER_SEARCH_CHANNEL = "filmwave-music-header-search";
 
 const musicHeaderSearchStyle: CSSProperties = {
   position: "fixed",
-  top: "10px",
+  top: "10.5px",
   left: "50%",
   zIndex: 40,
   width: "clamp(320px, 42vw, 640px)",
   maxWidth: "calc(100vw - 420px)",
   marginRight: 0,
   transform: "translateX(-50%)",
+};
+
+const musicHeaderSearchPillStyle: CSSProperties = {
+  width: "100%",
+  maxWidth: "100%",
 };
 
 function getMusicToolbarSearchInput() {
@@ -76,6 +81,7 @@ export default function MusicHeaderSearch() {
         searchIcon={<SearchIcon />}
         value={search}
         placeholder={placeholder}
+        style={musicHeaderSearchPillStyle}
         onChange={handleSearchChange}
       />
 
