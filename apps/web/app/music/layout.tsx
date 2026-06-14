@@ -22,6 +22,12 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
         main .fw-toolbar-search {
           display: none !important;
         }
+
+        main .fw-hero-section {
+          display: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
       `}</style>
     </>
   );
