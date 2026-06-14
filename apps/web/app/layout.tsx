@@ -67,6 +67,29 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+(function () {
+  try {
+    var hidden = window.localStorage.getItem("filmwave-show-edit-point-markers") === "false";
+    document.documentElement.dataset.editPointMarkers = hidden ? "hidden" : "visible";
+  } catch (error) {}
+})();
+              `.trim(),
+            }}
+          />
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+html[data-edit-point-markers="hidden"] .filmwave-song-cue-marker,
+html[data-edit-point-markers="hidden"] .filmwave-song-cue-range,
+html[data-edit-point-markers="hidden"] .group\\/player-cue-point {
+  display: none !important;
+}
+              `.trim(),
+            }}
+          />
           {/**
            * Preconnect to the R2 CDN so the TCP + TLS handshake is already
            * complete by the time the user clicks any song. Without this, every
