@@ -5,9 +5,9 @@ main > section:has(.fw-filter-panel-wrap)
   > div:first-child
   > div:last-child
   > div:first-child {
-  padding: 0.5rem 1.15rem !important;
-  gap: 0.625rem !important;
-  font-size: 13px !important;
+  padding: 0.45rem 1.05rem !important;
+  gap: 0.55rem !important;
+  font-size: 12.5px !important;
   line-height: 1 !important;
 }
 
@@ -18,8 +18,8 @@ main > section:has(.fw-filter-panel-wrap)
   > div:last-child
   > div:first-child
   svg {
-  width: 14px !important;
-  height: 14px !important;
+  width: 13px !important;
+  height: 13px !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
