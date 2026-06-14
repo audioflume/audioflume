@@ -23,6 +23,7 @@ import "./search-filter-backdrop-overrides.css";
 import "./playlist-grid-overrides.css";
 import "./side-filter-overrides.css";
 import "./side-filter-clear-all-overrides.css";
+import "./music-hero-overrides.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
