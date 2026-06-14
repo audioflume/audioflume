@@ -27,6 +27,9 @@
   --fw-music-content-inset: 20px;
   --fw-music-content-inset-left: 28px;
   --fw-music-content-inset-right: 20px;
+  --sidebar-content-offset-expanded: calc(var(--sidebar-width-expanded) - 24px);
+  --sidebar-content-offset-collapsed: calc(var(--sidebar-width-collapsed) + 24px);
+  --sidebar-width: var(--sidebar-content-offset-expanded);
 }
 
 html,
@@ -45,7 +48,7 @@ button:focus-visible {
 }
 
 body.sidebar-collapsed {
-  --sidebar-width: var(--sidebar-width-collapsed);
+  --sidebar-width: var(--sidebar-content-offset-collapsed);
 }
 
 :root aside[data-sidebar] {
