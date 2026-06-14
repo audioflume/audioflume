@@ -81,8 +81,8 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
         <body className={htmlClassName}>
-          <ThemeProvider>
-            <UserPreferencesProvider>
+          <UserPreferencesProvider>
+            <ThemeProvider>
               <PlayerProvider>
                 <PlaylistsProvider>
                   <ProjectsProvider>
@@ -99,8 +99,8 @@ export default async function RootLayout({
                   </ProjectsProvider>
                 </PlaylistsProvider>
               </PlayerProvider>
-            </UserPreferencesProvider>
-          </ThemeProvider>
+            </ThemeProvider>
+          </UserPreferencesProvider>
         </body>
       </html>
     </ClerkProvider>
