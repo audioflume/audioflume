@@ -129,6 +129,11 @@ body > header > div {
   margin-right: 6px;
 }
 
+.filmwave-header-actions .filmwave-search-pill-input {
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
 /* Nav links — quiet by default, soft pill on hover/active to match the
    chip language used across the page. */
 .filmwave-header-nav-link {
