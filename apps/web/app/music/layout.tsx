@@ -28,7 +28,7 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
         .filmwave-music-header-search-slot {
           position: fixed;
           top: 0;
-          right: 76px;
+          right: 68px;
           z-index: 130;
           display: flex;
           height: 56px;
