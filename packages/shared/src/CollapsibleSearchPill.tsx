@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 type CollapsibleSearchPillProps = {
   searchIcon: ReactNode;
@@ -8,6 +14,8 @@ type CollapsibleSearchPillProps = {
   value: string;
   placeholder?: string;
   inputRef?: React.Ref<HTMLInputElement>;
+  className?: string;
+  style?: CSSProperties;
   onChange: (value: string) => void;
 };
 
@@ -17,6 +25,8 @@ export function CollapsibleSearchPill({
   value,
   placeholder = "Search",
   inputRef,
+  className,
+  style,
   onChange,
 }: CollapsibleSearchPillProps) {
   const [collapsed, setCollapsed] = useState(false);
@@ -54,7 +64,10 @@ export function CollapsibleSearchPill({
 
   return (
     <div
-      className={`filmwave-search-pill${collapsed ? " is-collapsed" : ""}`}
+      className={`filmwave-search-pill${collapsed ? " is-collapsed" : ""}${
+        className ? ` ${className}` : ""
+      }`}
+      style={style}
       onClick={() => !collapsed && resolvedRef.current?.focus()}
     >
       <button
