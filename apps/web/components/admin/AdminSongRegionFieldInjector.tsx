@@ -92,6 +92,15 @@ function isAdminSongSaveRequest(input: RequestInfo | URL, init?: RequestInit) {
   return /\/api\/admin\/songs(?:\/[^/]+)?$/.test(url);
 }
 
+function renameMoodWarningText() {
+  document.querySelectorAll<HTMLElement>("div, span").forEach((element) => {
+    if (element.childElementCount > 0) return;
+    if (element.textContent?.trim() === "Mood tags empty") {
+      element.textContent = "Scene tags empty";
+    }
+  });
+}
+
 export default function AdminSongRegionFieldInjector({
   songId,
 }: AdminSongRegionFieldInjectorProps) {
@@ -189,6 +198,7 @@ export default function AdminSongRegionFieldInjector({
       if (!mounted) return false;
 
       const tagsSection = findTagsSection();
+      renameMoodWarningText();
       if (!tagsSection) return false;
 
       renameMoodLabel(tagsSection);
