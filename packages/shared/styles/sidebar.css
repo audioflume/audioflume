@@ -20,7 +20,7 @@
     var(--filmwave-sidebar-panel-expanded-width) -
       (var(--filmwave-sidebar-x-padding) * 2)
   );
-  --filmwave-sidebar-icon-slot-left: 10px;
+  --filmwave-sidebar-icon-slot-left: 9px;
   --filmwave-sidebar-icon-slot-width: 32px;
   --filmwave-sidebar-collapsed-row-width: 100%;
   --filmwave-sidebar-icon-color: #8f8f8f;
