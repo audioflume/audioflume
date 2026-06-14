@@ -90,7 +90,7 @@ function sortMusicLibrarySongList<T extends { downloadCount: number }>(
     return [...songs].sort((a, b) => b.downloadCount - a.downloadCount);
   }
 
-  return songs;
+  return [...songs];
 }
 
 export default function MusicPage() {
@@ -214,7 +214,8 @@ export default function MusicPage() {
     instrumental ||
     bpmValue !== null ||
     keyValue !== null ||
-    selectedPlaylist !== null;
+    selectedPlaylist !== null ||
+    shuffleActive;
 
   const hasActiveClearableFilters =
     selectedMoods.length > 0 ||
@@ -360,28 +361,26 @@ export default function MusicPage() {
     [filteredSongs, sortOrder],
   );
 
-  function createShuffleOrder(sourceSongs: typeof filteredSongs) {
-    const shuffledSongs = shuffleSongList(sourceSongs);
-    return shuffledSongs.map((song, index) =>
-      getMusicSongStableId(song, index),
+  function createShuffleOrder(sourceSongs: typeof sortedSongs) {
+    const indexedSongs = sourceSongs.map((song, index) => ({
+      id: getMusicSongStableId(song, index),
+      song,
+    }));
+
+    return shuffleSongList(indexedSongs).map((item) => item.id);
+  }
+
+  function toggleShuffle() {
+    setShuffleOrderIds((current) =>
+      current === null ? createShuffleOrder(sortedSongs) : null,
     );
   }
 
-  function setRandomSort() {
-    if (shuffleActive) {
-      setShuffleOrderIds(null);
-      return;
-    }
-
-    setShuffleOrderIds(createShuffleOrder(sortedSongs));
+  function removeShuffle() {
+    setShuffleOrderIds(null);
   }
 
   function handleSortChange(value: MusicLibrarySortValue) {
-    if (value === "random") {
-      setRandomSort();
-      return;
-    }
-
     setSortOrder(value);
 
     if (shuffleActive) {
@@ -397,18 +396,23 @@ export default function MusicPage() {
       shuffleOrderIds.map((songId, index) => [songId, index]),
     );
 
-    return [...sortedSongs].sort((a, b) => {
-      const aId = getMusicSongStableId(a);
-      const bId = getMusicSongStableId(b);
-      const aOrder = orderMap.get(aId);
-      const bOrder = orderMap.get(bId);
+    return sortedSongs
+      .map((song, index) => ({
+        song,
+        order: orderMap.get(getMusicSongStableId(song, index)),
+        index,
+      }))
+      .sort((a, b) => {
+        if (a.order === undefined && b.order === undefined) {
+          return a.index - b.index;
+        }
 
-      if (aOrder === undefined && bOrder === undefined) return 0;
-      if (aOrder === undefined) return 1;
-      if (bOrder === undefined) return -1;
+        if (a.order === undefined) return 1;
+        if (b.order === undefined) return -1;
 
-      return aOrder - bOrder;
-    });
+        return a.order - b.order;
+      })
+      .map((item) => item.song);
   }, [shuffleOrderIds, sortedSongs]);
 
   useEffect(() => {
@@ -553,7 +557,7 @@ export default function MusicPage() {
                 onRemovePlaylist={() =>
                   setFilters((current) => ({ ...current, selectedPlaylist: null }))
                 }
-                onRemoveShuffle={() => setShuffleOrderIds(null)}
+                onRemoveShuffle={removeShuffle}
               />
             ) : undefined
           }
@@ -610,7 +614,7 @@ export default function MusicPage() {
           })}
 
           <MusicQuickChipsEnd>
-            <MusicQuickChip active={shuffleActive} onClick={setRandomSort}>
+            <MusicQuickChip active={shuffleActive} onClick={toggleShuffle}>
               <ShuffleIconSmall size={12} />
             </MusicQuickChip>
             <MusicLibrarySortControl
