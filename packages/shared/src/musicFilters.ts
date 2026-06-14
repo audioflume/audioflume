@@ -76,6 +76,22 @@ export const GENRE_OPTIONS = [
   "YouTube",
 ] as const;
 
+export const REGION_OPTIONS = [
+  "African",
+  "Americana",
+  "Asian",
+  "Celtic",
+  "Desert",
+  "Eastern",
+  "Latin",
+  "Mediterranean",
+  "Middle Eastern",
+  "Nordic",
+  "Ritual",
+  "Tropical",
+  "Western",
+] as const;
+
 export const INSTRUMENT_OPTIONS = [
   "Acoustic Guitar",
   "Banjo",
