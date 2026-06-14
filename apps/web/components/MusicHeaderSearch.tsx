@@ -7,20 +7,16 @@ import {
 import { useEffect, useState, type FormEvent } from "react";
 import SearchIcon from "@/components/icons/SearchIcon";
 
-const MUSIC_HEADER_SEARCH_MESSAGE = "filmwave:music-header-search";
+const MUSIC_HEADER_SEARCH_CHANNEL = "filmwave-music-header-search";
 
 function getMusicToolbarSearchInput() {
   return document.querySelector<HTMLInputElement>("main .fw-toolbar-search input");
 }
 
 function sendMusicSearch(nextSearch: string) {
-  window.postMessage(
-    {
-      type: MUSIC_HEADER_SEARCH_MESSAGE,
-      search: nextSearch,
-    },
-    window.location.origin,
-  );
+  const channel = new BroadcastChannel(MUSIC_HEADER_SEARCH_CHANNEL);
+  channel.postMessage({ search: nextSearch });
+  channel.close();
 }
 
 export default function MusicHeaderSearch() {
