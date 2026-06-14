@@ -29,7 +29,7 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
           padding: 0 !important;
         }
 
-        main > section > .overflow-hidden[aria-hidden] {
+        main > section > .overflow-hidden {
           display: none !important;
           margin: 0 !important;
           padding: 0 !important;
