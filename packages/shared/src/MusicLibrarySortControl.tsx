@@ -45,15 +45,35 @@ export function MusicLibrarySortControl({
   const lastSortValueRef = useRef<MusicLibrarySortValue>(
     value === "random" ? "recent" : value,
   );
+  const previousValueRef = useRef<MusicLibrarySortValue>(value);
+  const suppressNextRecentRestoreRef = useRef(false);
 
-  if (value !== "random") {
+  const shouldRestorePreviousSort =
+    previousValueRef.current === "random" &&
+    value === "recent" &&
+    !suppressNextRecentRestoreRef.current &&
+    lastSortValueRef.current !== "recent";
+
+  if (value !== "random" && !shouldRestorePreviousSort) {
     lastSortValueRef.current = value;
   }
 
-  const displayedValue = value === "random" ? lastSortValueRef.current : value;
+  const displayedValue =
+    value === "random" || shouldRestorePreviousSort
+      ? lastSortValueRef.current
+      : value;
   const selectedOption =
     MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === displayedValue) ??
     MUSIC_LIBRARY_SORT_OPTIONS[0];
+
+  useEffect(() => {
+    if (shouldRestorePreviousSort) {
+      onChange(lastSortValueRef.current);
+    }
+
+    suppressNextRecentRestoreRef.current = false;
+    previousValueRef.current = value;
+  }, [onChange, shouldRestorePreviousSort, value]);
 
   useEffect(() => {
     if (!open) return;
@@ -123,6 +143,10 @@ export function MusicLibrarySortControl({
               type="button"
               role="menuitem"
               onClick={() => {
+                if (option.value === "recent") {
+                  suppressNextRecentRestoreRef.current = true;
+                }
+
                 onChange(option.value);
                 setOpen(false);
               }}
