@@ -5,15 +5,15 @@
   --filmwave-sidebar-row-height: 32px;
   --filmwave-sidebar-row-radius: 6px;
   --filmwave-sidebar-section-gap: 20px;
-  --filmwave-sidebar-x-padding: 20px;
+  --filmwave-sidebar-x-padding: 8px;
   --filmwave-sidebar-y-padding-top: 24px;
   --filmwave-sidebar-y-padding-bottom: 24px;
-  --filmwave-sidebar-row-padding-x: 10px;
+  --filmwave-sidebar-row-padding-x: 8px;
   --filmwave-sidebar-icon-size: 16px;
   --filmwave-sidebar-icon-color: #8f8f8f;
   --filmwave-sidebar-icon-color-active: #ffffff;
   --filmwave-sidebar-heading-icon-color: #a8a8a8;
-  --filmwave-sidebar-label-gap: 10px;
+  --filmwave-sidebar-label-gap: 12px;
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
   --filmwave-sidebar-float-inset: 12px;
@@ -132,8 +132,8 @@ body.sidebar-collapsed .desktop-app-sidebar {
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-app-sidebar-inner,
 body.sidebar-collapsed .desktop-app-sidebar-inner {
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: var(--filmwave-sidebar-x-padding);
+  padding-right: var(--filmwave-sidebar-x-padding);
 }
 
 /* Open feel — sections separated by space, not divider lines. */
@@ -184,7 +184,7 @@ body.sidebar-collapsed .desktop-app-sidebar-inner {
 
 .desktop-sidebar-heading-icon {
   position: absolute;
-  left: 50%;
+  left: calc(var(--filmwave-sidebar-row-padding-x) + (var(--filmwave-sidebar-icon-size) / 2));
   display: flex;
   width: var(--filmwave-sidebar-icon-size);
   height: var(--filmwave-sidebar-icon-size);
@@ -237,11 +237,11 @@ body.sidebar-collapsed .desktop-sidebar-heading-label {
     color 150ms ease;
 }
 
-/* Collapsed: icons perfectly centered, labels collapse to zero width. */
+/* Collapsed: keep the same left anchor as expanded so icons do not shift. */
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link,
 body.sidebar-collapsed .desktop-sidebar-link {
-  justify-content: center;
-  padding: 0;
+  justify-content: flex-start;
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
 }
 
 .desktop-sidebar-link:hover,
@@ -303,15 +303,12 @@ body.sidebar-collapsed .desktop-sidebar-link {
   opacity: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: opacity 150ms ease, width 200ms ease, min-width 200ms ease,
-    margin-left 200ms ease;
+  transition: opacity 150ms ease;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label,
 body.sidebar-collapsed .desktop-sidebar-link-label {
-  width: 0;
-  min-width: 0;
-  margin-left: 0;
+  pointer-events: none;
   opacity: 0;
 }
 
@@ -368,21 +365,22 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
 /* Collapsed overrides: only change layout/visibility, not size */
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-head,
 body.sidebar-collapsed .desktop-sidebar-projects-head {
-  justify-content: center;
-  padding: 0;
+  justify-content: flex-start;
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
 body.sidebar-collapsed .desktop-sidebar-projects-label {
-  display: none;
+  pointer-events: none;
+  opacity: 0;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions,
 body.sidebar-collapsed .desktop-sidebar-project-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
-  /* No width/height override — inherits from parent */
+  justify-content: flex-start;
+  margin-left: calc(-1 * var(--filmwave-sidebar-label-width));
 }
 
 .desktop-app-shell.is-sidebar-collapsed
@@ -396,7 +394,7 @@ body.sidebar-collapsed
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button,
 body.sidebar-collapsed .desktop-sidebar-add-button {
-  width: 32px;
+  width: var(--filmwave-sidebar-icon-size);
   height: var(--filmwave-sidebar-row-height);
   border-radius: var(--filmwave-sidebar-row-radius);
 }
