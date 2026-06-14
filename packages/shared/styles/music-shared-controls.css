@@ -175,3 +175,21 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
 .fw-toolbar-filters.is-open::before {
   display: none !important;
 }
+
+.fw-filter-panel {
+  --filmwave-filter-active-marker: var(--text-primary);
+  --filmwave-filter-active-marker-contrast: var(--bg-primary);
+}
+
+.fw-filter-panel .fw-filter-rail-count,
+.fw-filter-panel .fw-filter-group-count {
+  background: var(--filmwave-filter-active-marker) !important;
+  color: var(--filmwave-filter-active-marker-contrast) !important;
+}
+
+.fw-filter-panel .fw-filter-option.is-selected .fw-filter-option-check,
+.fw-filter-panel .fw-filter-chip.is-selected {
+  border-color: var(--filmwave-filter-active-marker) !important;
+  background: var(--filmwave-filter-active-marker) !important;
+  color: var(--filmwave-filter-active-marker-contrast) !important;
+}
