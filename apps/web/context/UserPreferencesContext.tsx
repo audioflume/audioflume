@@ -10,6 +10,7 @@ import {
 } from "react";
 import {
   EDIT_POINT_MARKER_VISIBILITY_EVENT,
+  EDIT_POINT_MARKER_VISIBILITY_STORAGE_KEY,
   getStoredEditPointMarkerVisibility,
   setStoredEditPointMarkerVisibility,
 } from "@/lib/editPointMarkerVisibility";
@@ -94,6 +95,14 @@ function syncEditPointMarkerVisibilityDocumentState(visible: boolean) {
   document.documentElement.dataset.editPointMarkers = visible
     ? "visible"
     : "hidden";
+}
+
+function hasLocalEditPointMarkerVisibilityPreference() {
+  if (typeof window === "undefined") return false;
+
+  return (
+    window.localStorage.getItem(EDIT_POINT_MARKER_VISIBILITY_STORAGE_KEY) !== null
+  );
 }
 
 export function UserPreferencesProvider({ children }: { children: ReactNode }) {
@@ -245,7 +254,10 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
           window.localStorage.setItem(LOCAL_THEME_MODE_KEY, data.theme_mode);
         }
 
-        if (isBoolean(data.show_edit_point_markers)) {
+        if (
+          isBoolean(data.show_edit_point_markers) &&
+          !hasLocalEditPointMarkerVisibilityPreference()
+        ) {
           syncEditPointMarkerVisibilityDocumentState(data.show_edit_point_markers);
           setShowEditPointMarkersState(data.show_edit_point_markers);
           setStoredEditPointMarkerVisibility(data.show_edit_point_markers);
