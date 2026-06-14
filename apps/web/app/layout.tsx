@@ -23,6 +23,7 @@ import "./search-filter-backdrop-overrides.css";
 import "./playlist-grid-overrides.css";
 import "./side-filter-overrides.css";
 import "./side-filter-clear-all-overrides.css";
+import "./side-filter-mobile-dropdown-overrides.css";
 import "./music-hero-overrides.css";
 
 const geistSans = Geist({
@@ -79,32 +80,27 @@ export default async function RootLayout({
           <link rel="preconnect" href={R2_CDN_ORIGIN} crossOrigin="anonymous" />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased${
-            sidebarCollapsed ? " sidebar-collapsed" : ""
-          }`}
-          suppressHydrationWarning
-        >
-          <UserPreferencesProvider>
-            <ThemeProvider>
+        <body className={htmlClassName}>
+          <ThemeProvider>
+            <UserPreferencesProvider>
               <PlayerProvider>
-                <FavoritesProvider>
-                  <PlaylistsProvider>
-                    <ProjectsProvider>
+                <PlaylistsProvider>
+                  <ProjectsProvider>
+                    <FavoritesProvider>
                       <Header />
-                      <SidebarRenderer initialCollapsed={sidebarCollapsed} />
-                      {children}
+                      <SidebarRenderer initiallyCollapsed={sidebarCollapsed} />
                       <PlayerRenderer />
-                      <IconButtonTitleSync />
                       <MusicFilterToolbarBehavior />
                       <SideFilterPanelBehavior />
+                      <IconButtonTitleSync />
                       <AdminPageHeaderMount />
-                    </ProjectsProvider>
-                  </PlaylistsProvider>
-                </FavoritesProvider>
+                      {children}
+                    </FavoritesProvider>
+                  </ProjectsProvider>
+                </PlaylistsProvider>
               </PlayerProvider>
-            </ThemeProvider>
-          </UserPreferencesProvider>
+            </UserPreferencesProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
