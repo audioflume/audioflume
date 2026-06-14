@@ -1,4 +1,4 @@
-import type { KeyboardEvent, MouseEvent, PointerEvent, ReactNode, Ref } from "react";
+import { useRef, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode, type Ref } from "react";
 
 export type FilterTriggerProps = {
   label: ReactNode;
@@ -54,38 +54,66 @@ export function FilterTrigger({
   onClear,
 }: FilterTriggerProps) {
   const activeLabelIsClearable = active && activeLabel != null && !!onClear;
+  const ignoreNextTriggerClickRef = useRef(false);
 
-  function handleClearPointerDown(event: PointerEvent<HTMLSpanElement>) {
+  function markClearInteraction(
+    event:
+      | PointerEvent<HTMLSpanElement>
+      | MouseEvent<HTMLSpanElement>
+      | KeyboardEvent<HTMLSpanElement>,
+  ) {
     if (!onClear) return;
+    ignoreNextTriggerClickRef.current = true;
     event.preventDefault();
     event.stopPropagation();
   }
 
+  function handleTriggerClick(event: MouseEvent<HTMLButtonElement>) {
+    if (ignoreNextTriggerClickRef.current) {
+      ignoreNextTriggerClickRef.current = false;
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    if ((event.target as HTMLElement).closest("[data-filmwave-filter-clear]")) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    onClick();
+  }
+
+  function handleClearPointerDown(event: PointerEvent<HTMLSpanElement>) {
+    markClearInteraction(event);
+  }
+
+  function handleClearMouseDown(event: MouseEvent<HTMLSpanElement>) {
+    markClearInteraction(event);
+  }
+
   function handleCountClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
-    event.preventDefault();
-    event.stopPropagation();
+    markClearInteraction(event);
     onClear();
   }
 
   function handleCountKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
     if (!onClear || (event.key !== "Enter" && event.key !== " ")) return;
-    event.preventDefault();
-    event.stopPropagation();
+    markClearInteraction(event);
     onClear();
   }
 
   function handleActiveLabelClear(event: MouseEvent<HTMLSpanElement>) {
     if (!onClear) return;
-    event.preventDefault();
-    event.stopPropagation();
+    markClearInteraction(event);
     onClear();
   }
 
   function handleActiveLabelKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
     if (!onClear || (event.key !== "Enter" && event.key !== " ")) return;
-    event.preventDefault();
-    event.stopPropagation();
+    markClearInteraction(event);
     onClear();
   }
 
@@ -93,7 +121,7 @@ export function FilterTrigger({
     <button
       ref={buttonRef}
       type="button"
-      onClick={onClick}
+      onClick={handleTriggerClick}
       disabled={disabled}
       className={`filmwave-filter-trigger${active ? " is-active" : ""}${open ? " is-open" : ""}${hideChevron ? " no-chevron" : ""}${className ? ` ${className}` : ""}`}
       aria-expanded={hideChevron ? undefined : open}
@@ -107,7 +135,9 @@ export function FilterTrigger({
           role={activeLabelIsClearable ? "button" : undefined}
           tabIndex={activeLabelIsClearable ? 0 : undefined}
           aria-label={activeLabelIsClearable ? `Clear ${typeof label === "string" ? label : "filter"}` : undefined}
+          data-filmwave-filter-clear={activeLabelIsClearable ? "true" : undefined}
           onPointerDown={activeLabelIsClearable ? handleClearPointerDown : undefined}
+          onMouseDown={activeLabelIsClearable ? handleClearMouseDown : undefined}
           onClick={activeLabelIsClearable ? handleActiveLabelClear : undefined}
           onKeyDown={activeLabelIsClearable ? handleActiveLabelKeyDown : undefined}
         >
@@ -125,7 +155,9 @@ export function FilterTrigger({
           role={onClear ? "button" : undefined}
           tabIndex={onClear ? 0 : undefined}
           aria-label={onClear ? `Clear ${typeof label === "string" ? label : "filter"}` : undefined}
+          data-filmwave-filter-clear={onClear ? "true" : undefined}
           onPointerDown={onClear ? handleClearPointerDown : undefined}
+          onMouseDown={onClear ? handleClearMouseDown : undefined}
           onClick={handleCountClear}
           onKeyDown={handleCountKeyDown}
         >
