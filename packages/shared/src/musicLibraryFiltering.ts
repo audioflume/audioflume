@@ -67,6 +67,8 @@ export type MusicLibraryFilterSong = {
   genre?: string | null;
   moods?: string[] | null;
   mood?: string | null;
+  regions?: string[] | null;
+  region?: string | null;
   instruments?: string[] | null;
   builds?: string[] | null;
   build?: string | null;
@@ -80,6 +82,7 @@ export type MusicLibraryFilterValues = {
   search?: string;
   selectedMoods?: string[];
   selectedGenres?: string[];
+  selectedRegions?: string[];
   selectedInstruments?: string[];
   selectedBuilds?: string[];
   selectedVocals?: string[];
@@ -94,6 +97,7 @@ export type DesktopMusicLibraryFilterValues = {
   search?: string;
   mood?: string[];
   genre?: string[];
+  region?: string[];
   instrument?: string[];
   vocal?: string[];
   build?: string[];
@@ -118,6 +122,7 @@ export function normalizeDesktopMusicLibraryFilters(
     search: filters.search ?? "",
     selectedMoods: filters.mood ?? [],
     selectedGenres: filters.genre ?? [],
+    selectedRegions: filters.region ?? [],
     selectedInstruments: filters.instrument ?? [],
     selectedBuilds: filters.build ?? [],
     selectedVocals: vocals.filter(
@@ -136,6 +141,7 @@ export function hasActiveMusicLibraryFilters(filters: MusicLibraryFilterValues) 
     filters.search?.trim() ||
       filters.selectedMoods?.length ||
       filters.selectedGenres?.length ||
+      filters.selectedRegions?.length ||
       filters.selectedInstruments?.length ||
       filters.selectedBuilds?.length ||
       filters.selectedVocals?.length ||
@@ -399,6 +405,7 @@ export function getSongSearchText(song: MusicLibraryFilterSong) {
     String(song.bpm ?? ""),
     ...toStringArray(song.genres ?? song.genre),
     ...toStringArray(song.moods ?? song.mood),
+    ...toStringArray(song.regions ?? song.region),
     ...toStringArray(song.instruments),
     ...toStringArray(song.builds ?? song.build),
     ...toStringArray(song.vocals),
@@ -415,6 +422,7 @@ export function filterMusicLibrarySongs<T extends MusicLibraryFilterSong>(
   const searchQuery = filters.search?.toLowerCase().trim() ?? "";
   const selectedMoods = filters.selectedMoods ?? [];
   const selectedGenres = filters.selectedGenres ?? [];
+  const selectedRegions = filters.selectedRegions ?? [];
   const selectedInstruments = filters.selectedInstruments ?? [];
   const selectedBuilds = filters.selectedBuilds ?? [];
   const selectedVocals = filters.selectedVocals ?? [];
@@ -431,6 +439,7 @@ export function filterMusicLibrarySongs<T extends MusicLibraryFilterSong>(
 
     if (!selectedValuesMatch(toStringArray(song.moods ?? song.mood), selectedMoods)) return false;
     if (!selectedValuesMatch(toStringArray(song.genres ?? song.genre), selectedGenres)) return false;
+    if (!selectedValuesMatch(toStringArray(song.regions ?? song.region), selectedRegions)) return false;
     if (!selectedValuesMatch(toStringArray(song.instruments), selectedInstruments)) return false;
     if (!selectedValuesMatch(toStringArray(song.builds ?? song.build), selectedBuilds)) return false;
     if (!selectedValuesMatch(toStringArray(song.vocals), selectedVocals)) return false;
