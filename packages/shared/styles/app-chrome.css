@@ -124,6 +124,11 @@ body > header > div {
   gap: 4px;
 }
 
+.filmwave-header-actions > form {
+  display: inline-flex;
+  margin-right: 6px;
+}
+
 /* Nav links — quiet by default, soft pill on hover/active to match the
    chip language used across the page. */
 .filmwave-header-nav-link {
