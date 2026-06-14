@@ -3,104 +3,60 @@
 import {
   CollapsibleSearchPill,
   getMusicLibrarySearchPlaceholder,
-  MUSIC_FILTER_STORAGE_KEY_PREFIX,
 } from "@filmwave/shared";
-import { useUser } from "@clerk/nextjs";
 import { useEffect, useState, type FormEvent } from "react";
 import SearchIcon from "@/components/icons/SearchIcon";
-import {
-  MUSIC_FILTER_STATE_CHANGE_EVENT,
-  MUSIC_HEADER_SEARCH_EVENT,
-} from "@/hooks/useFilterPersistence";
 
-type MusicFilterSnapshot = {
-  search?: unknown;
-  selectedPlaylist?: {
-    name?: unknown;
-  } | null;
-};
+const MUSIC_HEADER_SEARCH_MESSAGE = "filmwave:music-header-search";
 
-function getPlaylistName(filters: MusicFilterSnapshot) {
-  const selectedPlaylist = filters.selectedPlaylist;
+function getMusicToolbarSearchInput() {
+  return document.querySelector<HTMLInputElement>("main .fw-toolbar-search input");
+}
 
-  if (
-    selectedPlaylist &&
-    typeof selectedPlaylist === "object" &&
-    typeof selectedPlaylist.name === "string"
-  ) {
-    return selectedPlaylist.name;
-  }
-
-  return null;
+function sendMusicSearch(nextSearch: string) {
+  window.postMessage(
+    {
+      type: MUSIC_HEADER_SEARCH_MESSAGE,
+      search: nextSearch,
+    },
+    window.location.origin,
+  );
 }
 
 export default function MusicHeaderSearch() {
-  const { user } = useUser();
   const [search, setSearch] = useState("");
   const [placeholder, setPlaceholder] = useState(
     getMusicLibrarySearchPlaceholder(),
   );
 
   useEffect(() => {
-    function syncFromFilters(filters: unknown) {
-      const filterSnapshot =
-        typeof filters === "object" && filters !== null
-          ? (filters as MusicFilterSnapshot)
-          : {};
+    function syncFromToolbarSearch() {
+      const input = getMusicToolbarSearchInput();
+      if (!input) return;
 
-      setSearch(typeof filterSnapshot.search === "string" ? filterSnapshot.search : "");
-      setPlaceholder(
-        getMusicLibrarySearchPlaceholder(getPlaylistName(filterSnapshot)),
+      setSearch((current) => (current === input.value ? current : input.value));
+      setPlaceholder((current) =>
+        current === input.placeholder ? current : input.placeholder,
       );
     }
 
-    const storageKey = user?.id
-      ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${user.id}`
-      : null;
+    syncFromToolbarSearch();
+    const interval = window.setInterval(syncFromToolbarSearch, 120);
 
-    if (storageKey) {
-      try {
-        const stored = sessionStorage.getItem(storageKey);
-        if (stored) syncFromFilters(JSON.parse(stored));
-      } catch {
-        syncFromFilters(null);
-      }
-    }
-
-    function handleMusicFilterStateChange(event: Event) {
-      const customEvent = event as CustomEvent<{ filters?: unknown }>;
-      syncFromFilters(customEvent.detail?.filters);
-    }
-
-    window.addEventListener(
-      MUSIC_FILTER_STATE_CHANGE_EVENT,
-      handleMusicFilterStateChange,
-    );
-
-    return () => {
-      window.removeEventListener(
-        MUSIC_FILTER_STATE_CHANGE_EVENT,
-        handleMusicFilterStateChange,
-      );
-    };
-  }, [user?.id]);
-
-  function dispatchSearch(nextSearch: string) {
-    window.dispatchEvent(
-      new CustomEvent(MUSIC_HEADER_SEARCH_EVENT, {
-        detail: { search: nextSearch },
-      }),
-    );
-  }
+    return () => window.clearInterval(interval);
+  }, []);
 
   function handleSearchChange(nextSearch: string) {
     setSearch(nextSearch);
-    dispatchSearch(nextSearch);
+    sendMusicSearch(nextSearch);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    dispatchSearch(search.trim());
+
+    const trimmedSearch = search.trim();
+    setSearch(trimmedSearch);
+    sendMusicSearch(trimmedSearch);
   }
 
   return (
