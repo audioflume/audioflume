@@ -39,6 +39,7 @@ export type FilmwaveSong = {
   bpm: number;
   genres: string[];
   moods: string[];
+  regions: string[];
   instruments: string[];
   builds: string[];
   vocals: string[];
@@ -65,6 +66,7 @@ export type FilmwaveSongApiItem = {
   bpm?: number | string | null;
   genres?: string[] | null;
   moods?: string[] | null;
+  regions?: string[] | null;
   instruments?: string[] | null;
   builds?: string[] | null;
   vocals?: string[] | null;
@@ -81,6 +83,8 @@ export type FilmwaveDesktopSong = {
   genres: string[];
   mood: string;
   moods: string[];
+  region: string;
+  regions: string[];
   bpm: number;
   key: string;
   duration: string;
