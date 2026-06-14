@@ -8,6 +8,7 @@ import {
   MOOD_OPTIONS,
   normalizeDesktopMusicLibraryFilters,
   QUICK_FILTERS,
+  REGION_OPTIONS,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import type {
@@ -19,8 +20,9 @@ import type {
 export const QUICK_GENRES = [...QUICK_FILTERS];
 
 export const FILTER_TITLES = {
-  mood: "Mood",
+  mood: "Scene",
   genre: "Genre",
+  region: "Region",
   instrument: "Instruments",
   vocal: "Vocals",
   build: "Build",
@@ -32,6 +34,7 @@ export const EMPTY_FILTERS: DesktopMusicFilterState = {
   selectedPlaylist: null,
   mood: [],
   genre: [],
+  region: [],
   instrument: [],
   vocal: [],
   build: [],
@@ -53,6 +56,7 @@ export function getDesktopMusicFilterOptions(): DesktopMusicFilterOptions {
   return {
     mood: [...MOOD_OPTIONS],
     genre: [...GENRE_OPTIONS],
+    region: [...REGION_OPTIONS],
     instrument: [...INSTRUMENT_OPTIONS],
     vocal: [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...VOCALS_OPTIONS],
     build: [...BUILD_OPTIONS],
@@ -104,6 +108,7 @@ export function hasActiveDesktopMusicFilters(filters: DesktopMusicFilterState) {
       filters.selectedPlaylist ||
       filters.mood.length ||
       filters.genre.length ||
+      filters.region.length ||
       filters.instrument.length ||
       filters.vocal.length ||
       filters.build.length ||
