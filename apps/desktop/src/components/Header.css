@@ -18,11 +18,18 @@ body {
   left: 0;
   right: 0;
   z-index: 110;
-  height: 56px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-primary);
+  height: var(--filmwave-header-height, 56px);
+  border-bottom: 1px solid var(--filmwave-header-border-color) !important;
+  background: color-mix(in srgb, var(--bg-primary) 76%, transparent) !important;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: none !important;
   color: var(--text-primary);
   user-select: none;
+}
+
+.desktop-header::after {
+  display: none !important;
 }
 
 .desktop-header-inner {
@@ -30,7 +37,40 @@ body {
   height: 100%;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 var(--filmwave-header-padding-x, 24px);
+}
+
+.desktop-header .filmwave-header-actions {
+  gap: 0;
+}
+
+.desktop-header .desktop-user-menu-wrap {
+  height: auto;
+}
+
+.desktop-header-avatar-trigger {
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  border-radius: 999px;
+}
+
+.desktop-header-avatar-trigger .filmwave-header-avatar {
+  width: 32px;
+  height: 32px;
+  flex-basis: 32px;
+  transition:
+    background 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.desktop-header-avatar-trigger:hover .filmwave-header-avatar,
+.desktop-header-avatar-trigger.is-open .filmwave-header-avatar {
+  background: var(--bg-hover-strong);
+  box-shadow: 0 0 0 4px var(--bg-hover);
 }
 
 @media (max-width: 550px) {
