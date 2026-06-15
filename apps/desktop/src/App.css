@@ -48,3 +48,8 @@ select {
 button {
   color: inherit;
 }
+
+.desktop-app-main .filmwave-player-actions .filmwave-song-action-button,
+.desktop-app-main .filmwave-player-actions .filmwave-icon-button {
+  border-radius: 999px !important;
+}
