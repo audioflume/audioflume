@@ -47,6 +47,22 @@ const VOCAL_FILTER_OPTIONS = [
   ...VOCALS_OPTIONS,
 ];
 
+type MusicSortMode = "recent" | "popular";
+
+function shuffleIds(ids: string[]) {
+  const nextIds = [...ids];
+
+  for (let index = nextIds.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [nextIds[index], nextIds[randomIndex]] = [
+      nextIds[randomIndex],
+      nextIds[index],
+    ];
+  }
+
+  return nextIds;
+}
+
 export default function MusicPage() {
   const { userId } = useAuth();
   const musicFilterStorageKey = userId
@@ -70,6 +86,8 @@ export default function MusicPage() {
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sortMode, setSortMode] = useState<MusicSortMode>("recent");
+  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -87,6 +105,7 @@ export default function MusicPage() {
   const keyValue = filters.keyValue;
   const selectedPlaylist = filters.selectedPlaylist;
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
+  const shuffleActive = shuffleOrderIds !== null;
 
   const highlightedEditPointTypes =
     selectedEditPoints.filter(isCoreEditPointType);
@@ -166,6 +185,8 @@ export default function MusicPage() {
     bpmValue !== null ||
     keyValue !== null ||
     selectedPlaylist !== null;
+
+  const hasActiveTags = hasActiveFilters || shuffleActive;
 
   const hasActiveClearableFilters =
     selectedMoods.length > 0 ||
@@ -262,7 +283,7 @@ export default function MusicPage() {
     if (!selectedPlaylistId) setSelectedPlaylistSongIds(null);
   }, [selectedPlaylistId]);
 
-  const displayedSongs = useMemo(() => {
+  const filteredSongs = useMemo(() => {
     if (!filtersHydrated) return [];
 
     const playlistSongs = selectedPlaylistId
@@ -305,6 +326,67 @@ export default function MusicPage() {
     selectedVocals,
     songs,
   ]);
+
+  const sortedSongs = useMemo(() => {
+    if (sortMode === "popular") {
+      return [...filteredSongs].sort(
+        (a, b) => (b.downloadCount ?? 0) - (a.downloadCount ?? 0),
+      );
+    }
+
+    return filteredSongs;
+  }, [filteredSongs, sortMode]);
+
+  function getSongOrderId(song: (typeof sortedSongs)[number], index: number) {
+    return getMusicSongIdentityValues(song)[0] ?? getMusicSongStableId(song, index);
+  }
+
+  function createShuffleOrder(sourceSongs: typeof sortedSongs) {
+    return shuffleIds(sourceSongs.map((song, index) => getSongOrderId(song, index)));
+  }
+
+  function disableShuffle() {
+    setShuffleOrderIds(null);
+  }
+
+  function toggleShuffle() {
+    setShuffleOrderIds((current) =>
+      current === null ? createShuffleOrder(sortedSongs) : null,
+    );
+  }
+
+  function selectSortMode(nextSortMode: MusicSortMode) {
+    setSortMode(nextSortMode);
+    setShuffleOrderIds(null);
+  }
+
+  const displayedSongs = useMemo(() => {
+    if (!shuffleActive || !shuffleOrderIds) return sortedSongs;
+
+    const orderMap = new Map(
+      shuffleOrderIds.map((songId, index) => [songId, index]),
+    );
+    const entries = sortedSongs.map((song, index) => ({
+      song,
+      orderId: getSongOrderId(song, index),
+      fallbackIndex: index,
+    }));
+
+    return [...entries]
+      .sort((a, b) => {
+        const aOrder = orderMap.get(a.orderId);
+        const bOrder = orderMap.get(b.orderId);
+
+        if (aOrder === undefined && bOrder === undefined) {
+          return a.fallbackIndex - b.fallbackIndex;
+        }
+        if (aOrder === undefined) return 1;
+        if (bOrder === undefined) return -1;
+
+        return aOrder - bOrder;
+      })
+      .map((entry) => entry.song);
+  }, [shuffleActive, shuffleOrderIds, sortedSongs]);
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -397,7 +479,7 @@ export default function MusicPage() {
           onToggleFilters={() => setFiltersOpen((open) => !open)}
           onClearFilters={clearAllFilters}
           chips={
-            hasActiveFilters ? (
+            hasActiveTags ? (
               <FilterTags
                 selectedMoods={selectedMoods}
                 selectedGenres={selectedGenres}
@@ -411,7 +493,7 @@ export default function MusicPage() {
                 bpmValue={bpmValue}
                 keyValue={keyValue}
                 selectedPlaylist={selectedPlaylist}
-                shuffleActive={false}
+                shuffleActive={shuffleActive}
                 onRemoveMood={(v) =>
                   setSelectedMoods(selectedMoods.filter((item) => item !== v))
                 }
@@ -448,7 +530,7 @@ export default function MusicPage() {
                 onRemovePlaylist={() =>
                   setFilters((current) => ({ ...current, selectedPlaylist: null }))
                 }
-                onRemoveShuffle={() => {}}
+                onRemoveShuffle={disableShuffle}
               />
             ) : undefined
           }
@@ -484,6 +566,22 @@ export default function MusicPage() {
         </MusicLibraryToolbar>
 
         <MusicQuickChips>
+          <MusicQuickChip active={shuffleActive} onClick={toggleShuffle}>
+            Shuffle
+          </MusicQuickChip>
+          <MusicQuickChip
+            active={sortMode === "recent"}
+            onClick={() => selectSortMode("recent")}
+          >
+            Most Recent
+          </MusicQuickChip>
+          <MusicQuickChip
+            active={sortMode === "popular"}
+            onClick={() => selectSortMode("popular")}
+          >
+            Most Popular
+          </MusicQuickChip>
+
           {QUICK_FILTERS.map((filter) => {
             const isActive = selectedGenres.includes(filter);
 
