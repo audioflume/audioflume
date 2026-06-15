@@ -18,8 +18,10 @@ import {
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
+  MusicQuickChipsEnd,
   QUICK_FILTERS,
   REGION_OPTIONS,
+  ShuffleIconSmall,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -566,22 +568,6 @@ export default function MusicPage() {
         </MusicLibraryToolbar>
 
         <MusicQuickChips>
-          <MusicQuickChip active={shuffleActive} onClick={toggleShuffle}>
-            Shuffle
-          </MusicQuickChip>
-          <MusicQuickChip
-            active={sortMode === "recent"}
-            onClick={() => selectSortMode("recent")}
-          >
-            Most Recent
-          </MusicQuickChip>
-          <MusicQuickChip
-            active={sortMode === "popular"}
-            onClick={() => selectSortMode("popular")}
-          >
-            Most Popular
-          </MusicQuickChip>
-
           {QUICK_FILTERS.map((filter) => {
             const isActive = selectedGenres.includes(filter);
 
@@ -601,6 +587,25 @@ export default function MusicPage() {
               </MusicQuickChip>
             );
           })}
+
+          <MusicQuickChipsEnd>
+            <MusicQuickChip active={shuffleActive} onClick={toggleShuffle}>
+              <ShuffleIconSmall size={13} />
+              <span>Shuffle</span>
+            </MusicQuickChip>
+            <MusicQuickChip
+              active={sortMode === "recent"}
+              onClick={() => selectSortMode("recent")}
+            >
+              Most Recent
+            </MusicQuickChip>
+            <MusicQuickChip
+              active={sortMode === "popular"}
+              onClick={() => selectSortMode("popular")}
+            >
+              Most Popular
+            </MusicQuickChip>
+          </MusicQuickChipsEnd>
         </MusicQuickChips>
 
         {songsError && (
