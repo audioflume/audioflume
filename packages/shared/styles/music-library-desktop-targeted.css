@@ -247,12 +247,10 @@
   text-decoration: none !important;
 }
 
-@media (max-width: 1180px) {
-  .desktop-app-main
-    .desktop-music-page:has(.fw-filter-panel-wrap)
-    > .fw-toolbar-sticky
-    > .fw-toolbar-float {
-    width: min(420px, calc(100vw - 300px)) !important;
-    max-width: calc(100vw - 300px) !important;
-  }
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float {
+  width: min(clamp(420px, 42vw, 640px), calc(100vw - 300px)) !important;
+  max-width: calc(100vw - 300px) !important;
 }
