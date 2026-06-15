@@ -75,7 +75,8 @@
   max-width: var(--filmwave-desktop-music-filter-rail-width);
   height: calc(
     100dvh - var(--filmwave-header-height, 56px) -
-      var(--filmwave-sidebar-float-inset, 12px) * 2
+      var(--filmwave-sidebar-float-inset, 12px) -
+      var(--filmwave-sidebar-float-inset, 12px)
   );
   margin: 0;
   opacity: 1;
