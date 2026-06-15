@@ -30,6 +30,28 @@
   margin-left: auto;
 }
 
+/* Shared website quick-chip sizing for music quick filters, shuffle, and sort. */
+.fw-quick-chip {
+  box-sizing: border-box !important;
+  min-height: 0 !important;
+  height: 22px !important;
+  border-radius: 999px !important;
+  padding: 0 8px !important;
+  font-size: 10.5px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+}
+
+.fw-quick-chip:is(:hover, .is-active, .is-selected, [aria-pressed="true"], [data-active="true"]) {
+  font-weight: 400 !important;
+}
+
+.fw-quick-end .fw-quick-chip {
+  min-width: 26px !important;
+  justify-content: center !important;
+  padding: 0 6px !important;
+}
+
 .fw-quick-end .fw-quick-chip:first-child {
   gap: 5px !important;
   min-width: auto !important;
