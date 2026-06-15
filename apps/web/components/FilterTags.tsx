@@ -152,5 +152,9 @@ export default function FilterTags({
       : []),
   ];
 
+  if (tags.length === 0) {
+    return <style>{`.fw-active-chips { display: none; padding: 0; }`}</style>;
+  }
+
   return <MusicFilterTags tags={tags} />;
 }
