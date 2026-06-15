@@ -12,6 +12,7 @@ import {
 } from "@filmwave/shared";
 import { useEffect, useState, type ReactNode } from "react";
 import type { Project } from "../../lib/mockFilmwaveApi";
+import DashboardIcon from "../icons/DashboardIcon";
 import FolderIcon from "../icons/FolderIcon";
 import HeartIcon from "../icons/HeartIcon";
 import LibraryIcon from "../icons/LibraryIcon";
@@ -105,7 +106,9 @@ export default function DesktopAppShell({
   }, []);
 
   const libraryLinks: SidebarNavItem[] = [
+    { view: "discover", label: "Discover", icon: <DashboardIcon size={12} /> },
     { view: "music", label: "Music Library", icon: <MusicIcon /> },
+    { view: "curated", label: "Curated Playlists", icon: <PlaylistIcon size={14} /> },
     { view: "playlists", label: "My Playlists", icon: <PlaylistIcon size={14} /> },
     {
       view: "projects",
