@@ -2,8 +2,6 @@ import { HeaderShell, SideFilterPanelBehavior } from "@filmwave/shared";
 import { useEffect, useState, type PointerEvent } from "react";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import FilmwaveLogoIcon from "./icons/FilmwaveLogoIcon";
-import DashboardIcon from "./icons/DashboardIcon";
-import PlaylistIcon from "./icons/PlaylistIcon";
 import UserMenu from "./UserMenu";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
 import type { DesktopAppView } from "./desktop-app/DesktopAppShell";
@@ -58,7 +56,6 @@ function handleHeaderSurfacePointerDown(event: PointerEvent<HTMLElement>) {
 export default function Header({
   account,
   accountLoading,
-  activeView,
   isSignedIn,
   onActiveViewChange,
   onOpenSignIn,
@@ -98,7 +95,7 @@ export default function Header({
             type="button"
             className="filmwave-header-logo-action"
             aria-label="Filmwave Desktop home"
-            onClick={() => onActiveViewChange("projects")}
+            onClick={() => onActiveViewChange("music")}
           >
             <FilmwaveLogoIcon
               className="filmwave-header-logo-mark"
@@ -108,36 +105,16 @@ export default function Header({
           </button>
         }
         actions={
-          <>
-            <button
-              type="button"
-              className={`filmwave-header-nav-link${activeView === "discover" ? " is-active" : ""}`}
-              onClick={() => onActiveViewChange("discover")}
-            >
-              <DashboardIcon />
-              Discover
-            </button>
-
-            <button
-              type="button"
-              className={`filmwave-header-nav-link${activeView === "playlists" ? " is-active" : ""}`}
-              onClick={() => onActiveViewChange("playlists")}
-            >
-              <PlaylistIcon size={13} />
-              Playlists
-            </button>
-
-            <UserMenu
-              account={account}
-              accountLoading={accountLoading}
-              isSignedIn={isSignedIn}
-              onOpenSignIn={onOpenSignIn}
-              onOpenSyncSettings={openSyncSettings}
-              onSignOut={onSignOut}
-              theme={theme}
-              onThemeChange={setTheme}
-            />
-          </>
+          <UserMenu
+            account={account}
+            accountLoading={accountLoading}
+            isSignedIn={isSignedIn}
+            onOpenSignIn={onOpenSignIn}
+            onOpenSyncSettings={openSyncSettings}
+            onSignOut={onSignOut}
+            theme={theme}
+            onThemeChange={setTheme}
+          />
         }
       />
     </>
