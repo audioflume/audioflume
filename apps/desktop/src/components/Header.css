@@ -12,27 +12,32 @@ body {
     color 0.18s ease;
 }
 
-.desktop-header {
+.filmwave-header.desktop-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 110;
+  z-index: var(--filmwave-z-header, 110);
   height: var(--filmwave-header-height, 56px);
-  border-bottom: 1px solid var(--filmwave-header-border-color) !important;
-  background: color-mix(in srgb, var(--bg-primary) 76%, transparent) !important;
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(17, 17, 17, 0.52) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.2) !important;
+  backdrop-filter: blur(18px) saturate(1.2) !important;
   box-shadow: none !important;
   color: var(--text-primary);
   user-select: none;
 }
 
-.desktop-header::after {
+html[data-theme="light"] .filmwave-header.desktop-header {
+  border-bottom-color: rgba(0, 0, 0, 0.12) !important;
+  background: rgba(255, 255, 255, 0.66) !important;
+}
+
+.filmwave-header.desktop-header::after {
   display: none !important;
 }
 
-.desktop-header-inner {
+.filmwave-header.desktop-header .desktop-header-inner {
   display: flex;
   height: 100%;
   align-items: center;
@@ -40,11 +45,11 @@ body {
   padding: 0 var(--filmwave-header-padding-x, 24px);
 }
 
-.desktop-header .filmwave-header-actions {
+.filmwave-header.desktop-header .filmwave-header-actions {
   gap: 0;
 }
 
-.desktop-header .desktop-user-menu-wrap {
+.filmwave-header.desktop-header .desktop-user-menu-wrap {
   height: auto;
 }
 
