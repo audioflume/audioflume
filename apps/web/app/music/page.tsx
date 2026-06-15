@@ -341,64 +341,22 @@ export default function MusicPage() {
     return getMusicSongIdentityValues(song)[0] ?? getMusicSongStableId(song, index);
   }
 
-  function getDebugOrderIds(sourceSongs: typeof sortedSongs) {
-    return sourceSongs
-      .slice(0, 12)
-      .map((song, index) => getSongOrderId(song, index));
-  }
-
   function createShuffleOrder(sourceSongs: typeof sortedSongs) {
     return shuffleIds(sourceSongs.map((song, index) => getSongOrderId(song, index)));
   }
 
   function toggleShuffle() {
-    setShuffleActive((currentActive) => {
-      if (currentActive) {
-        console.log("[Filmwave music debug] shuffle click", {
-          action: "disable",
-          sortMode,
-          currentActive,
-          songsCount: songs.length,
-          filteredCount: filteredSongs.length,
-          sortedCount: sortedSongs.length,
-          displayedCount: displayedSongs.length,
-          sortedIds: getDebugOrderIds(sortedSongs),
-          displayedIds: getDebugOrderIds(displayedSongs),
-        });
-        setShuffleOrderIds([]);
-        return false;
-      }
+    if (shuffleActive) {
+      setShuffleOrderIds([]);
+      setShuffleActive(false);
+      return;
+    }
 
-      const nextShuffleOrderIds = createShuffleOrder(sortedSongs);
-      console.log("[Filmwave music debug] shuffle click", {
-        action: "enable",
-        sortMode,
-        currentActive,
-        songsCount: songs.length,
-        filteredCount: filteredSongs.length,
-        sortedCount: sortedSongs.length,
-        displayedCount: displayedSongs.length,
-        sortedIds: getDebugOrderIds(sortedSongs),
-        displayedIds: getDebugOrderIds(displayedSongs),
-        nextShuffleOrderIds: nextShuffleOrderIds.slice(0, 12),
-      });
-      setShuffleOrderIds(nextShuffleOrderIds);
-      return true;
-    });
+    setShuffleOrderIds(createShuffleOrder(sortedSongs));
+    setShuffleActive(true);
   }
 
   function selectSortMode(nextSortMode: MusicSortMode) {
-    console.log("[Filmwave music debug] sort click", {
-      currentSortMode: sortMode,
-      nextSortMode,
-      shuffleActive,
-      songsCount: songs.length,
-      filteredCount: filteredSongs.length,
-      sortedCount: sortedSongs.length,
-      displayedCount: displayedSongs.length,
-      sortedIds: getDebugOrderIds(sortedSongs),
-      displayedIds: getDebugOrderIds(displayedSongs),
-    });
     setSortMode(nextSortMode);
     setShuffleActive(false);
     setShuffleOrderIds([]);
@@ -433,28 +391,8 @@ export default function MusicPage() {
   }, [shuffleActive, shuffleOrderIds, sortedSongs]);
 
   useEffect(() => {
-    console.log("[Filmwave music debug] order updated", {
-      sortMode,
-      shuffleActive,
-      songsCount: songs.length,
-      filteredCount: filteredSongs.length,
-      sortedCount: sortedSongs.length,
-      displayedCount: displayedSongs.length,
-      shuffleOrderIds: shuffleOrderIds.slice(0, 12),
-      sortedIds: getDebugOrderIds(sortedSongs),
-      displayedIds: getDebugOrderIds(displayedSongs),
-    });
     setQueue(displayedSongs);
-  }, [
-    displayedSongs,
-    filteredSongs.length,
-    setQueue,
-    shuffleActive,
-    shuffleOrderIds,
-    songs.length,
-    sortMode,
-    sortedSongs,
-  ]);
+  }, [displayedSongs, setQueue]);
 
   const loadingPlaylistSongs =
     !!selectedPlaylistId && selectedPlaylistSongIds === null;
