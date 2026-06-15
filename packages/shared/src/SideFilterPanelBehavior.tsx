@@ -177,7 +177,26 @@ function clickNextSelectedDetailControl(panel: HTMLElement, attempts = 0) {
   });
 }
 
+function getActiveTagRemoveButton(sectionId: string | null) {
+  if (!sectionId) return null;
+
+  const selector =
+    sectionId === "playlist"
+      ? '.filmwave-search-filter-tag[data-fw-filter-tag-id^="playlist-"] .filmwave-search-filter-tag-remove'
+      : `.filmwave-search-filter-tag[data-fw-filter-tag-id="${sectionId}"] .filmwave-search-filter-tag-remove`;
+
+  return document.querySelector<HTMLButtonElement>(selector);
+}
+
 function clearRailSection(panel: HTMLElement, railItem: Element) {
+  const sectionId = getRailItemSectionId(railItem);
+  const activeTagRemoveButton = getActiveTagRemoveButton(sectionId);
+
+  if (activeTagRemoveButton) {
+    activeTagRemoveButton.click();
+    return;
+  }
+
   const railItemKey = getRailItemKey(railItem, panel);
   const isCurrentOpenSection =
     panel.classList.contains("has-selected-filter-section") &&
