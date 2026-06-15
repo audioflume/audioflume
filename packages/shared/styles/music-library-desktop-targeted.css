@@ -121,14 +121,27 @@
   order: 900 !important;
 }
 
-/* Match the website component check icon host for dot-only filter markers. */
+/* Unify numbered and dot-only filter markers so both states share the same circle geometry. */
 .desktop-app-main
   .desktop-music-page:has(.fw-filter-panel-wrap)
-  .fw-filter-rail-count.is-dot-only {
+  .fw-filter-rail-count {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 16px !important;
   min-width: 16px !important;
   width: 16px !important;
   height: 16px !important;
   padding: 0 !important;
+  overflow: hidden !important;
+  line-height: 16px !important;
+  text-align: center !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count.is-dot-only {
   font-size: 0 !important;
 }
 
@@ -136,12 +149,6 @@
   .desktop-music-page:has(.fw-filter-panel-wrap)
   .fw-filter-rail-count.is-dot-only::before {
   content: none !important;
-  display: none !important;
-}
-
-.desktop-app-main
-  .desktop-music-page:has(.fw-filter-panel-wrap)
-  .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check {
   display: none !important;
 }
 
@@ -167,17 +174,34 @@
 
 .desktop-app-main
   .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count:hover {
+  font-size: 0 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count.is-dot-only:hover
+  .fw-filter-rail-count-check {
+  opacity: 0 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count:hover::after,
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
   .fw-filter-rail-count.is-dot-only:hover::after {
-  content: "×" !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  font-size: 12px !important;
-  font-weight: 450 !important;
-  line-height: 1 !important;
-  transform: translateY(2.5px) !important;
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  display: block !important;
+  width: 7.5px !important;
+  height: 7.5px !important;
+  background: var(--bg-primary, #111) !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 3L9 9M9 3L3 9' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat !important;
+  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 3L9 9M9 3L3 9' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat !important;
+  transform: translate(-50%, -50%) !important;
 }
 
 /* Keep Clear all after the rail items, matching the website visual order. */
