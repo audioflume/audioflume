@@ -55,14 +55,26 @@ function isPressed(button: LegacyButtonElement) {
 }
 
 function cloneShuffleButton(button: LegacyButtonElement, selected: boolean) {
+  function triggerShuffle(event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+    button.props.onClick?.(event as MouseEvent<HTMLButtonElement>);
+  }
+
   return cloneElement(button, {
     className: `fw-filter-chip fw-quick-chip${selected ? " is-selected" : ""}`,
     "aria-pressed": selected,
     "data-filmwave-quick-role": "shuffle",
+    onMouseDown: (event: MouseEvent<HTMLButtonElement>) => {
+      triggerShuffle(event);
+    },
     onClick: (event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      button.props.onClick?.(event);
+    },
+    onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      triggerShuffle(event);
     },
   });
 }
