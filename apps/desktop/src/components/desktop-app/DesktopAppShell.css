@@ -18,16 +18,32 @@
    internal layout handles its own horizontal spacing */
 .desktop-app-main:has(.desktop-projects-page.is-detail),
 .desktop-app-main:has(.desktop-music-page) {
-  padding-left: var(--sidebar-width-expanded, 280px);
   padding-right: 0;
   padding-bottom: 0;
 }
 
+.desktop-app-main:has(.desktop-projects-page.is-detail) {
+  padding-left: var(--sidebar-width-expanded, 280px);
+}
+
+.desktop-app-main:has(.desktop-music-page) {
+  padding-left: calc(
+    var(--filmwave-sidebar-float-inset, 12px) +
+      var(--filmwave-sidebar-panel-expanded-width) + 12px
+  );
+}
+
 .desktop-app-shell.is-sidebar-collapsed
-  .desktop-app-main:has(.desktop-projects-page.is-detail),
+  .desktop-app-main:has(.desktop-projects-page.is-detail) {
+  padding-left: var(--sidebar-width-collapsed, 76px);
+}
+
 .desktop-app-shell.is-sidebar-collapsed
   .desktop-app-main:has(.desktop-music-page) {
-  padding-left: var(--sidebar-width-collapsed, 76px);
+  padding-left: calc(
+    var(--filmwave-sidebar-float-inset, 12px) +
+      var(--filmwave-sidebar-collapsed-panel-width, 68px) + 12px
+  );
 }
 
 .desktop-app-main:has(.desktop-projects-page.is-detail) {
