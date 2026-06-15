@@ -46,6 +46,7 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import "./music-library-redesign.css";
 
 const INSTRUMENTAL_VOCAL_FILTER_OPTION = "Instrumental";
+const MUSIC_LIBRARY_DEBUG_PREFIX = "[music-debug]";
 const VOCAL_FILTER_OPTIONS = [
   INSTRUMENTAL_VOCAL_FILTER_OPTION,
   ...VOCALS_OPTIONS,
@@ -121,6 +122,8 @@ export default function MusicPage() {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const debugRenderCountRef = useRef(0);
+  const debugMountedAtRef = useRef(Date.now());
 
   const search = filters.search;
   const selectedMoods = filters.selectedMoods;
@@ -269,6 +272,20 @@ export default function MusicPage() {
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
   useEffect(() => {
+    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "mount", {
+      mountedAt: debugMountedAtRef.current,
+      pathname: window.location.pathname,
+    });
+
+    return () => {
+      console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "unmount", {
+        mountedAt: debugMountedAtRef.current,
+        pathname: window.location.pathname,
+      });
+    };
+  }, []);
+
+  useEffect(() => {
     if (!userId || !selectedPlaylistId) return;
 
     const playlistId = selectedPlaylistId;
@@ -371,16 +388,39 @@ export default function MusicPage() {
   }
 
   function enableShuffle() {
-    setShuffleOrderIds(createShuffleOrder(sortedSongs));
+    const nextShuffleOrderIds = createShuffleOrder(sortedSongs);
+
+    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "enableShuffle", {
+      sortOrder,
+      sourceSongCount: sortedSongs.length,
+      nextShuffleOrderCount: nextShuffleOrderIds.length,
+      previousShuffleActive: shuffleActive,
+      previousShuffleOrderCount: shuffleOrderIds.length,
+    });
+
+    setShuffleOrderIds(nextShuffleOrderIds);
     setShuffleActive(true);
   }
 
   function disableShuffle() {
+    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "disableShuffle", {
+      sortOrder,
+      previousShuffleActive: shuffleActive,
+      previousShuffleOrderCount: shuffleOrderIds.length,
+    });
+
     setShuffleOrderIds([]);
     setShuffleActive(false);
   }
 
   function toggleShuffle() {
+    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "toggleShuffle click", {
+      sortOrder,
+      shuffleActive,
+      shuffleOrderCount: shuffleOrderIds.length,
+      sortedSongCount: sortedSongs.length,
+    });
+
     if (shuffleActive) {
       disableShuffle();
       return;
@@ -390,15 +430,37 @@ export default function MusicPage() {
   }
 
   function removeShuffle() {
+    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "removeShuffle tag", {
+      sortOrder,
+      shuffleActive,
+      shuffleOrderCount: shuffleOrderIds.length,
+    });
+
     disableShuffle();
   }
 
   function handleSortChange(value: MusicLibrarySortValue) {
+    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "handleSortChange", {
+      previousSortOrder: sortOrder,
+      nextSortOrder: value,
+      shuffleActive,
+      shuffleOrderCount: shuffleOrderIds.length,
+      filteredSongCount: filteredSongs.length,
+    });
+
     setSortOrder(value);
 
     if (shuffleActive) {
       const nextSortedSongs = sortMusicLibrarySongList(filteredSongs, value);
-      setShuffleOrderIds(createShuffleOrder(nextSortedSongs));
+      const nextShuffleOrderIds = createShuffleOrder(nextSortedSongs);
+
+      console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "handleSortChange reshuffle", {
+        nextSortOrder: value,
+        nextSortedSongCount: nextSortedSongs.length,
+        nextShuffleOrderCount: nextShuffleOrderIds.length,
+      });
+
+      setShuffleOrderIds(nextShuffleOrderIds);
     }
   }
 
@@ -429,8 +491,37 @@ export default function MusicPage() {
   }, [shuffleActive, shuffleOrderIds, sortedSongs]);
 
   useEffect(() => {
+    debugRenderCountRef.current += 1;
+
+    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "render", {
+      renderCount: debugRenderCountRef.current,
+      mountedAt: debugMountedAtRef.current,
+      pathname: window.location.pathname,
+      sortOrder,
+      shuffleActive,
+      shuffleOrderCount: shuffleOrderIds.length,
+      filteredSongCount: filteredSongs.length,
+      sortedSongCount: sortedSongs.length,
+      displayedSongCount: displayedSongs.length,
+      filtersHydrated,
+      songsLoading,
+      songsError: Boolean(songsError),
+      selectedPlaylistId,
+    });
+  });
+
+  useEffect(() => {
+    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "setQueue", {
+      sortOrder,
+      shuffleActive,
+      displayedSongCount: displayedSongs.length,
+      firstSongId: displayedSongs[0]
+        ? getMusicSongStableId(displayedSongs[0], 0)
+        : null,
+    });
+
     setQueue(displayedSongs);
-  }, [displayedSongs, setQueue]);
+  }, [displayedSongs, setQueue, shuffleActive, sortOrder]);
 
   const loadingPlaylistSongs =
     !!selectedPlaylistId && selectedPlaylistSongIds === null;
