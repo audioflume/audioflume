@@ -92,7 +92,7 @@ function getProjectNames(projects: Project[]) {
 }
 
 function App() {
-  const [activeView, setActiveView] = useState<DesktopAppView>("projects");
+  const [activeView, setActiveView] = useState<DesktopAppView>("music");
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
