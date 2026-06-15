@@ -14,16 +14,12 @@ import {
   MOOD_OPTIONS,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
   MusicFilterPanel,
-  MusicLibrarySortControl,
-  type MusicLibrarySortValue,
   MusicLibraryToolbar,
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
-  MusicQuickChipsEnd,
   QUICK_FILTERS,
   REGION_OPTIONS,
-  ShuffleIconSmall,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -46,53 +42,10 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import "./music-library-redesign.css";
 
 const INSTRUMENTAL_VOCAL_FILTER_OPTION = "Instrumental";
-const MUSIC_LIBRARY_DEBUG_PREFIX = "[music-debug]";
 const VOCAL_FILTER_OPTIONS = [
   INSTRUMENTAL_VOCAL_FILTER_OPTION,
   ...VOCALS_OPTIONS,
 ];
-
-function shuffleSongList<T>(songs: T[]) {
-  if (songs.length < 2) return [...songs];
-
-  let bestShuffle = [...songs];
-  let bestMovedCount = -1;
-
-  for (let attempt = 0; attempt < 12; attempt += 1) {
-    const shuffled = [...songs];
-
-    for (let i = shuffled.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = shuffled[i];
-      shuffled[i] = shuffled[j];
-      shuffled[j] = temp;
-    }
-
-    const movedCount = shuffled.filter(
-      (song, index) => song !== songs[index],
-    ).length;
-
-    if (movedCount > bestMovedCount) {
-      bestShuffle = shuffled;
-      bestMovedCount = movedCount;
-    }
-
-    if (movedCount >= Math.floor(songs.length * 0.85)) break;
-  }
-
-  return bestShuffle;
-}
-
-function sortMusicLibrarySongList<T extends { downloadCount: number }>(
-  songs: T[],
-  sortOrder: MusicLibrarySortValue,
-) {
-  if (sortOrder === "downloaded") {
-    return [...songs].sort((a, b) => b.downloadCount - a.downloadCount);
-  }
-
-  return [...songs];
-}
 
 export default function MusicPage() {
   const { userId } = useAuth();
@@ -116,14 +69,9 @@ export default function MusicPage() {
     useState<Record<string, Set<string>>>({});
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
-  const [shuffleActive, setShuffleActive] = useState(false);
-  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[]>([]);
-  const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const debugRenderCountRef = useRef(0);
-  const debugMountedAtRef = useRef(Date.now());
 
   const search = filters.search;
   const selectedMoods = filters.selectedMoods;
@@ -217,8 +165,7 @@ export default function MusicPage() {
     instrumental ||
     bpmValue !== null ||
     keyValue !== null ||
-    selectedPlaylist !== null ||
-    shuffleActive;
+    selectedPlaylist !== null;
 
   const hasActiveClearableFilters =
     selectedMoods.length > 0 ||
@@ -272,20 +219,6 @@ export default function MusicPage() {
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
   useEffect(() => {
-    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "mount", {
-      mountedAt: debugMountedAtRef.current,
-      pathname: window.location.pathname,
-    });
-
-    return () => {
-      console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "unmount", {
-        mountedAt: debugMountedAtRef.current,
-        pathname: window.location.pathname,
-      });
-    };
-  }, []);
-
-  useEffect(() => {
     if (!userId || !selectedPlaylistId) return;
 
     const playlistId = selectedPlaylistId;
@@ -329,7 +262,7 @@ export default function MusicPage() {
     if (!selectedPlaylistId) setSelectedPlaylistSongIds(null);
   }, [selectedPlaylistId]);
 
-  const filteredSongs = useMemo(() => {
+  const displayedSongs = useMemo(() => {
     if (!filtersHydrated) return [];
 
     const playlistSongs = selectedPlaylistId
@@ -373,155 +306,9 @@ export default function MusicPage() {
     songs,
   ]);
 
-  const sortedSongs = useMemo(
-    () => sortMusicLibrarySongList(filteredSongs, sortOrder),
-    [filteredSongs, sortOrder],
-  );
-
-  function createShuffleOrder(sourceSongs: typeof sortedSongs) {
-    const indexedSongs = sourceSongs.map((song, index) => ({
-      id: getMusicSongStableId(song, index),
-      song,
-    }));
-
-    return shuffleSongList(indexedSongs).map((item) => item.id);
-  }
-
-  function enableShuffle() {
-    const nextShuffleOrderIds = createShuffleOrder(sortedSongs);
-
-    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "enableShuffle", {
-      sortOrder,
-      sourceSongCount: sortedSongs.length,
-      nextShuffleOrderCount: nextShuffleOrderIds.length,
-      previousShuffleActive: shuffleActive,
-      previousShuffleOrderCount: shuffleOrderIds.length,
-    });
-
-    setShuffleOrderIds(nextShuffleOrderIds);
-    setShuffleActive(true);
-  }
-
-  function disableShuffle() {
-    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "disableShuffle", {
-      sortOrder,
-      previousShuffleActive: shuffleActive,
-      previousShuffleOrderCount: shuffleOrderIds.length,
-    });
-
-    setShuffleOrderIds([]);
-    setShuffleActive(false);
-  }
-
-  function toggleShuffle() {
-    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "toggleShuffle click", {
-      sortOrder,
-      shuffleActive,
-      shuffleOrderCount: shuffleOrderIds.length,
-      sortedSongCount: sortedSongs.length,
-    });
-
-    if (shuffleActive) {
-      disableShuffle();
-      return;
-    }
-
-    enableShuffle();
-  }
-
-  function removeShuffle() {
-    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "removeShuffle tag", {
-      sortOrder,
-      shuffleActive,
-      shuffleOrderCount: shuffleOrderIds.length,
-    });
-
-    disableShuffle();
-  }
-
-  function handleSortChange(value: MusicLibrarySortValue) {
-    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "handleSortChange", {
-      previousSortOrder: sortOrder,
-      nextSortOrder: value,
-      shuffleActive,
-      shuffleOrderCount: shuffleOrderIds.length,
-      filteredSongCount: filteredSongs.length,
-    });
-
-    setSortOrder(value);
-
-    if (shuffleActive) {
-      const nextSortedSongs = sortMusicLibrarySongList(filteredSongs, value);
-      const nextShuffleOrderIds = createShuffleOrder(nextSortedSongs);
-
-      console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "handleSortChange reshuffle", {
-        nextSortOrder: value,
-        nextSortedSongCount: nextSortedSongs.length,
-        nextShuffleOrderCount: nextShuffleOrderIds.length,
-      });
-
-      setShuffleOrderIds(nextShuffleOrderIds);
-    }
-  }
-
-  const displayedSongs = useMemo(() => {
-    if (!shuffleActive || shuffleOrderIds.length === 0) return sortedSongs;
-
-    const orderMap = new Map(
-      shuffleOrderIds.map((songId, index) => [songId, index]),
-    );
-
-    return sortedSongs
-      .map((song, index) => ({
-        song,
-        order: orderMap.get(getMusicSongStableId(song, index)),
-        index,
-      }))
-      .sort((a, b) => {
-        if (a.order === undefined && b.order === undefined) {
-          return a.index - b.index;
-        }
-
-        if (a.order === undefined) return 1;
-        if (b.order === undefined) return -1;
-
-        return a.order - b.order;
-      })
-      .map((item) => item.song);
-  }, [shuffleActive, shuffleOrderIds, sortedSongs]);
-
   useEffect(() => {
-    debugRenderCountRef.current += 1;
-
-    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "render", {
-      renderCount: debugRenderCountRef.current,
-      mountedAt: debugMountedAtRef.current,
-      pathname: window.location.pathname,
-      sortOrder,
-      shuffleActive,
-      shuffleOrderCount: shuffleOrderIds.length,
-      filteredSongCount: filteredSongs.length,
-      sortedSongCount: sortedSongs.length,
-      displayedSongCount: displayedSongs.length,
-      filtersHydrated,
-      songsLoading,
-      songsError: Boolean(songsError),
-      selectedPlaylistId,
-    });
-  });
-
-  useEffect(() => {
-    console.log(MUSIC_LIBRARY_DEBUG_PREFIX, "setQueue", {
-      sortOrder,
-      shuffleActive,
-      displayedSongCount: displayedSongs.length,
-      firstSongId: displayedSongs[0]
-        ? getMusicSongStableId(displayedSongs[0], 0)
-        : null,
-    });
-
     setQueue(displayedSongs);
-  }, [displayedSongs, setQueue, shuffleActive, sortOrder]);
+  }, [displayedSongs, setQueue]);
 
   const loadingPlaylistSongs =
     !!selectedPlaylistId && selectedPlaylistSongIds === null;
@@ -624,7 +411,7 @@ export default function MusicPage() {
                 bpmValue={bpmValue}
                 keyValue={keyValue}
                 selectedPlaylist={selectedPlaylist}
-                shuffleActive={shuffleActive}
+                shuffleActive={false}
                 onRemoveMood={(v) =>
                   setSelectedMoods(selectedMoods.filter((item) => item !== v))
                 }
@@ -661,7 +448,7 @@ export default function MusicPage() {
                 onRemovePlaylist={() =>
                   setFilters((current) => ({ ...current, selectedPlaylist: null }))
                 }
-                onRemoveShuffle={removeShuffle}
+                onRemoveShuffle={() => {}}
               />
             ) : undefined
           }
@@ -716,16 +503,6 @@ export default function MusicPage() {
               </MusicQuickChip>
             );
           })}
-
-          <MusicQuickChipsEnd>
-            <MusicQuickChip active={shuffleActive} onClick={toggleShuffle}>
-              <ShuffleIconSmall size={12} />
-            </MusicQuickChip>
-            <MusicLibrarySortControl
-              value={sortOrder}
-              onChange={handleSortChange}
-            />
-          </MusicQuickChipsEnd>
         </MusicQuickChips>
 
         {songsError && (
