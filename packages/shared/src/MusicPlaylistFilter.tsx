@@ -5,7 +5,7 @@ import { FilterPopover } from "./FilterPopover";
 import { FilterTrigger } from "./FilterTrigger";
 
 export type MusicPlaylistFilterRef = {
-  id: number;
+  id: string;
   name: string;
 };
 
