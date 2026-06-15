@@ -32,7 +32,7 @@ export type KeyFilterValue = FilmwaveKeyFilterValue;
 export type SharedFilmwaveSong = FilmwaveSong;
 
 export type PlaylistRef = {
-  id: number;
+  id: string;
   name: string;
 };
 
