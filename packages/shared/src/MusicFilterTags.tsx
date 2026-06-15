@@ -16,7 +16,12 @@ export function MusicFilterTags({ tags }: { tags: MusicFilterTagItem[] }) {
   return (
     <SearchFilterTagList>
       {tags.map((tag) => (
-        <SearchFilterTag key={tag.id} icon={tag.icon} onRemove={tag.onRemove}>
+        <SearchFilterTag
+          key={tag.id}
+          tagId={tag.id}
+          icon={tag.icon}
+          onRemove={tag.onRemove}
+        >
           {tag.label}
         </SearchFilterTag>
       ))}
