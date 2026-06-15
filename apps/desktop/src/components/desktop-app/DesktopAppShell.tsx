@@ -134,9 +134,15 @@ export default function DesktopAppShell({
   const effectivelyCollapsed = collapsed || autoCollapsed;
 
   useEffect(() => {
-    const savedView = window.localStorage.getItem(LAST_DESKTOP_VIEW_KEY);
-    if (isDesktopAppView(savedView) && savedView !== activeView) {
-      onActiveViewChange(savedView);
+    const savedView = window.sessionStorage.getItem(LAST_DESKTOP_VIEW_KEY);
+    if (isDesktopAppView(savedView)) {
+      if (savedView !== activeView) onActiveViewChange(savedView);
+      return;
+    }
+
+    if (activeView !== "music") {
+      window.sessionStorage.setItem(LAST_DESKTOP_VIEW_KEY, "music");
+      onActiveViewChange("music");
     }
   }, []);
 
@@ -155,7 +161,7 @@ export default function DesktopAppShell({
   }, []);
 
   function selectView(view: DesktopAppView) {
-    window.localStorage.setItem(LAST_DESKTOP_VIEW_KEY, view);
+    window.sessionStorage.setItem(LAST_DESKTOP_VIEW_KEY, view);
     onActiveViewChange(view);
   }
 
