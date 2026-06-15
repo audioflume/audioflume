@@ -45,6 +45,8 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
 
         @media (max-width: 640px) {
           main .fw-song-list {
+            margin-left: 20px !important;
+            margin-right: 20px !important;
             padding-left: 0 !important;
             padding-right: 0 !important;
           }
