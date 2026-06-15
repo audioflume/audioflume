@@ -1,6 +1,8 @@
 "use client";
 
 import { useLayoutEffect } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import { MusicCheckIcon } from "./MusicIcons";
 
 const SECTION_ID_BY_LABEL: Record<string, string> = {
   Mood: "mood",
@@ -30,6 +32,28 @@ const DOT_ONLY_COUNT_SECTION_IDS = new Set([
 const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const RAIL_CLEAR_ALL_CLASS = "fw-filter-rail-clear-all";
 const RAIL_PLAYLISTS_CLASS = "fw-filter-rail-item-playlists";
+const dotOnlyCheckRoots = new WeakMap<Element, Root>();
+
+function renderDotOnlyCheckIcon(count: HTMLElement) {
+  let iconHost = count.querySelector<HTMLElement>(".fw-filter-rail-count-check");
+
+  if (!iconHost) {
+    count.replaceChildren();
+    iconHost = document.createElement("span");
+    iconHost.className = "fw-filter-rail-count-check";
+    iconHost.setAttribute("aria-hidden", "true");
+    count.appendChild(iconHost);
+  }
+
+  let root = dotOnlyCheckRoots.get(iconHost);
+
+  if (!root) {
+    root = createRoot(iconHost);
+    dotOnlyCheckRoots.set(iconHost, root);
+  }
+
+  root.render(<MusicCheckIcon size={10} strokeWidth={3} />);
+}
 
 function getRailItemKey(railItem: Element, panel: Element) {
   const railItems = Array.from(panel.querySelectorAll(".fw-filter-rail-item"));
@@ -74,7 +98,7 @@ function syncRailClearAllButtons(root: ParentNode = document) {
     const footerClearAll = panel.querySelector<HTMLButtonElement>(
       ".fw-filter-panel-footer .fw-filter-clear-all",
     );
-    let railClearAll = rail.querySelector<HTMLButtonElement>(`.${RAIL_CLEAR_ALL_CLASS}`);
+    let railClearAll = rail.querySelector<HTMLButtonElement>("." + RAIL_CLEAR_ALL_CLASS);
 
     if (!footerClearAll) {
       railClearAll?.remove();
@@ -115,7 +139,8 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
 
     if (!isDotOnly) return;
 
-    count.setAttribute("aria-label", `Clear ${sectionId} filter`);
+    count.setAttribute("aria-label", "Clear " + sectionId + " filter");
+    renderDotOnlyCheckIcon(count);
   });
 }
 
@@ -126,10 +151,10 @@ function syncFilterColumnFadeState(column: HTMLElement) {
 
   column.classList.toggle("has-scroll-top", hasScrollTop);
   column.classList.toggle("has-scroll-bottom", hasScrollBottom);
-  column.style.setProperty("--fw-filter-fade-left", `${rect.left}px`);
-  column.style.setProperty("--fw-filter-fade-top", `${rect.top}px`);
-  column.style.setProperty("--fw-filter-fade-width", `${column.clientWidth}px`);
-  column.style.setProperty("--fw-filter-fade-height", `${rect.height}px`);
+  column.style.setProperty("--fw-filter-fade-left", rect.left + "px");
+  column.style.setProperty("--fw-filter-fade-top", rect.top + "px");
+  column.style.setProperty("--fw-filter-fade-width", column.clientWidth + "px");
+  column.style.setProperty("--fw-filter-fade-height", rect.height + "px");
 }
 
 function syncFilterPanelColumnFadeStates(root: ParentNode = document) {
