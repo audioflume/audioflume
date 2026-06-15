@@ -42,21 +42,37 @@ function getElementSummary(target: EventTarget | null) {
     tagName: target.tagName,
     text: target.textContent?.trim() ?? "",
     className: target.className,
+    dataRole: target.getAttribute("data-filmwave-quick-role"),
     ariaExpanded: target.getAttribute("aria-expanded"),
     ariaPressed: target.getAttribute("aria-pressed"),
     role: target.getAttribute("role"),
   };
 }
 
-function getEventPathSummary(event: MouseEvent<HTMLElement>) {
-  return event.nativeEvent
+function getRectSummary(element: Element | null) {
+  if (!(element instanceof HTMLElement)) return null;
+  const rect = element.getBoundingClientRect();
+
+  return {
+    top: Math.round(rect.top),
+    right: Math.round(rect.right),
+    bottom: Math.round(rect.bottom),
+    left: Math.round(rect.left),
+    width: Math.round(rect.width),
+    height: Math.round(rect.height),
+  };
+}
+
+function getPathSummary(event: Event) {
+  return event
     .composedPath()
     .filter((target): target is HTMLElement => target instanceof HTMLElement)
-    .slice(0, 8)
+    .slice(0, 10)
     .map((element) => ({
       tagName: element.tagName,
       text: element.textContent?.trim() ?? "",
       className: element.className,
+      dataRole: element.getAttribute("data-filmwave-quick-role"),
       ariaExpanded: element.getAttribute("aria-expanded"),
       ariaPressed: element.getAttribute("aria-pressed"),
       role: element.getAttribute("role"),
@@ -90,13 +106,14 @@ function cloneShuffleButton(button: LegacyButtonElement, selected: boolean) {
   return cloneElement(button, {
     className: `fw-filter-chip fw-quick-chip${selected ? " is-selected" : ""}`,
     "aria-pressed": selected,
+    "data-filmwave-quick-role": "shuffle",
     onClick: (event: MouseEvent<HTMLButtonElement>) => {
-      debugQuickActions("shuffle click", {
+      debugQuickActions("shuffle React onClick", {
         detail: event.detail,
         selectedBefore: selected,
         target: getElementSummary(event.target),
         currentTarget: getElementSummary(event.currentTarget),
-        path: getEventPathSummary(event),
+        path: getPathSummary(event.nativeEvent),
       });
       event.preventDefault();
       event.stopPropagation();
@@ -135,15 +152,82 @@ function LegacyQuickActionsAdapter({
   const activeSortLabel = getTextContent(activeSortButton.props.children);
   const inactiveSortLabel = getTextContent(inactiveSortButton.props.children);
 
-  useEffect(() => {
-    debugQuickActions("state", {
+  function getDiagnosticSnapshot(event?: Event) {
+    const wrapper = wrapperRef.current;
+    const shuffle = wrapper?.querySelector('[data-filmwave-quick-role="shuffle"]') ?? null;
+    const sortButton = wrapper?.querySelector('[data-filmwave-quick-role="sort-button"]') ?? null;
+    const dropdown = wrapper?.querySelector('[data-filmwave-quick-role="sort-dropdown"]') ?? null;
+    const activeOption = wrapper?.querySelector('[data-filmwave-quick-role="active-option"]') ?? null;
+    const inactiveOption = wrapper?.querySelector('[data-filmwave-quick-role="inactive-option"]') ?? null;
+    const pointerEvent = event instanceof PointerEvent || event instanceof MouseEvent ? event : null;
+    const elementFromPoint = pointerEvent
+      ? document.elementFromPoint(pointerEvent.clientX, pointerEvent.clientY)
+      : null;
+
+    return {
       isOpen,
       shuffleActive,
       recentPressed,
       popularPressed,
       activeSortLabel,
       inactiveSortLabel,
-    });
+      activeElement: getElementSummary(document.activeElement),
+      elementFromPoint: getElementSummary(elementFromPoint),
+      pointer: pointerEvent
+        ? {
+            clientX: Math.round(pointerEvent.clientX),
+            clientY: Math.round(pointerEvent.clientY),
+            detail: pointerEvent.detail,
+            button: pointerEvent.button,
+            buttons: pointerEvent.buttons,
+          }
+        : null,
+      rects: {
+        wrapper: getRectSummary(wrapper),
+        shuffle: getRectSummary(shuffle),
+        sortButton: getRectSummary(sortButton),
+        dropdown: getRectSummary(dropdown),
+        activeOption: getRectSummary(activeOption),
+        inactiveOption: getRectSummary(inactiveOption),
+      },
+      target: event ? getElementSummary(event.target) : null,
+      path: event ? getPathSummary(event) : null,
+    };
+  }
+
+  useEffect(() => {
+    debugQuickActions("state", getDiagnosticSnapshot());
+  }, [activeSortLabel, inactiveSortLabel, isOpen, popularPressed, recentPressed, shuffleActive]);
+
+  useEffect(() => {
+    const events = ["pointerdown", "mousedown", "mouseup", "click"] as const;
+
+    function handleDocumentEvent(event: Event) {
+      const wrapper = wrapperRef.current;
+      if (!wrapper) return;
+      const pointerEvent = event instanceof PointerEvent || event instanceof MouseEvent ? event : null;
+      const elementFromPoint = pointerEvent
+        ? document.elementFromPoint(pointerEvent.clientX, pointerEvent.clientY)
+        : null;
+      const eventPath = event.composedPath();
+      const relatedToQuickActions =
+        eventPath.includes(wrapper) ||
+        (elementFromPoint instanceof Node && wrapper.contains(elementFromPoint));
+
+      if (!relatedToQuickActions) return;
+
+      debugQuickActions(`document ${event.type} capture`, getDiagnosticSnapshot(event));
+    }
+
+    for (const eventName of events) {
+      document.addEventListener(eventName, handleDocumentEvent, true);
+    }
+
+    return () => {
+      for (const eventName of events) {
+        document.removeEventListener(eventName, handleDocumentEvent, true);
+      }
+    };
   }, [activeSortLabel, inactiveSortLabel, isOpen, popularPressed, recentPressed, shuffleActive]);
 
   useEffect(() => {
@@ -152,9 +236,7 @@ function LegacyQuickActionsAdapter({
     function handlePointerDown(event: PointerEvent) {
       if (!wrapperRef.current) return;
       if (wrapperRef.current.contains(event.target as Node)) return;
-      debugQuickActions("outside pointerdown closes dropdown", {
-        target: getElementSummary(event.target),
-      });
+      debugQuickActions("outside pointerdown closes dropdown", getDiagnosticSnapshot(event));
       setIsOpen(false);
     }
 
@@ -169,15 +251,12 @@ function LegacyQuickActionsAdapter({
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
+  }, [activeSortLabel, inactiveSortLabel, isOpen, popularPressed, recentPressed, shuffleActive]);
 
   function chooseSort(button: LegacyButtonElement) {
     debugQuickActions("choose sort", {
-      label: getTextContent(button.props.children),
-      isOpen,
-      shuffleActive,
-      recentPressed,
-      popularPressed,
+      chosenLabel: getTextContent(button.props.children),
+      snapshot: getDiagnosticSnapshot(),
     });
     button.props.onClick?.({
       preventDefault() {},
@@ -196,37 +275,23 @@ function LegacyQuickActionsAdapter({
   return (
     <span
       className="fw-quick-end filmwave-music-quick-actions-inline"
+      data-filmwave-quick-role="wrapper"
       ref={wrapperRef}
       onClickCapture={(event) => {
-        debugQuickActions("wrapper click capture", {
-          detail: event.detail,
-          isOpen,
-          shuffleActive,
-          activeSortLabel,
-          target: getElementSummary(event.target),
-          currentTarget: getElementSummary(event.currentTarget),
-          path: getEventPathSummary(event),
-        });
+        debugQuickActions("wrapper React onClickCapture", getDiagnosticSnapshot(event.nativeEvent));
       }}
     >
       {cloneShuffleButton(shuffleButton, shuffleActive)}
-      <span className="filmwave-music-sort-control">
+      <span className="filmwave-music-sort-control" data-filmwave-quick-role="sort-control">
         <button
           type="button"
           className={`fw-filter-chip fw-quick-chip filmwave-music-sort-button${
             isOpen ? " is-open" : ""
           }`}
+          data-filmwave-quick-role="sort-button"
           aria-expanded={isOpen}
           onClick={(event) => {
-            debugQuickActions("sort button click", {
-              detail: event.detail,
-              isOpen,
-              shuffleActive,
-              activeSortLabel,
-              target: getElementSummary(event.target),
-              currentTarget: getElementSummary(event.currentTarget),
-              path: getEventPathSummary(event),
-            });
+            debugQuickActions("sort button React onClick", getDiagnosticSnapshot(event.nativeEvent));
             event.preventDefault();
             event.stopPropagation();
             setIsOpen((open) => !open);
@@ -236,21 +301,19 @@ function LegacyQuickActionsAdapter({
           <ChevronDownIcon />
         </button>
         {isOpen && (
-          <div className="filmwave-music-sort-dropdown" role="menu">
+          <div
+            className="filmwave-music-sort-dropdown"
+            data-filmwave-quick-role="sort-dropdown"
+            role="menu"
+          >
             <button
               type="button"
               role="menuitemradio"
               aria-checked={true}
               className="filmwave-music-sort-option is-selected"
+              data-filmwave-quick-role="active-option"
               onMouseDown={(event) => {
-                debugQuickActions("active option mousedown", {
-                  detail: event.detail,
-                  activeSortLabel,
-                  shuffleActive,
-                  target: getElementSummary(event.target),
-                  currentTarget: getElementSummary(event.currentTarget),
-                  path: getEventPathSummary(event),
-                });
+                debugQuickActions("active option React onMouseDown", getDiagnosticSnapshot(event.nativeEvent));
                 event.preventDefault();
                 event.stopPropagation();
                 chooseSort(activeSortButton);
@@ -264,15 +327,9 @@ function LegacyQuickActionsAdapter({
               role="menuitemradio"
               aria-checked={false}
               className="filmwave-music-sort-option"
+              data-filmwave-quick-role="inactive-option"
               onMouseDown={(event) => {
-                debugQuickActions("inactive option mousedown", {
-                  detail: event.detail,
-                  inactiveSortLabel,
-                  shuffleActive,
-                  target: getElementSummary(event.target),
-                  currentTarget: getElementSummary(event.currentTarget),
-                  path: getEventPathSummary(event),
-                });
+                debugQuickActions("inactive option React onMouseDown", getDiagnosticSnapshot(event.nativeEvent));
                 event.preventDefault();
                 event.stopPropagation();
                 chooseSort(inactiveSortButton);
