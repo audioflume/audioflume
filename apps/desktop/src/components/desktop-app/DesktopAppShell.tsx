@@ -30,6 +30,19 @@ export type DesktopAppView =
   | "curated"
   | "settings";
 
+const LAST_DESKTOP_VIEW_KEY = "filmwave.desktop.activeView";
+
+function isDesktopAppView(value: string | null): value is DesktopAppView {
+  return (
+    value === "projects" ||
+    value === "music" ||
+    value === "playlists" ||
+    value === "discover" ||
+    value === "curated" ||
+    value === "settings"
+  );
+}
+
 type DesktopAppShellProps = {
   activeProjectId: string | null;
   activeView: DesktopAppView;
@@ -121,6 +134,13 @@ export default function DesktopAppShell({
   const effectivelyCollapsed = collapsed || autoCollapsed;
 
   useEffect(() => {
+    const savedView = window.localStorage.getItem(LAST_DESKTOP_VIEW_KEY);
+    if (isDesktopAppView(savedView) && savedView !== activeView) {
+      onActiveViewChange(savedView);
+    }
+  }, []);
+
+  useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 900px)");
 
     function syncAutoCollapsed() {
@@ -134,6 +154,11 @@ export default function DesktopAppShell({
     return () => mediaQuery.removeEventListener("change", syncAutoCollapsed);
   }, []);
 
+  function selectView(view: DesktopAppView) {
+    window.localStorage.setItem(LAST_DESKTOP_VIEW_KEY, view);
+    onActiveViewChange(view);
+  }
+
   const libraryLinks: SidebarNavItem[] = [
     { view: "discover", label: "Discover", icon: <DashboardIcon size={12} /> },
     { view: "music", label: "Music Library", icon: <MusicIcon /> },
@@ -145,7 +170,7 @@ export default function DesktopAppShell({
       active: activeView === "projects" && !activeProjectId,
       onClick: () => {
         onActiveProjectIdChange(null);
-        onActiveViewChange("projects");
+        selectView("projects");
       },
     },
     { label: "Favorites", icon: <HeartIcon /> },
@@ -159,7 +184,7 @@ export default function DesktopAppShell({
     active: activeView === "projects" && activeProjectId === project.id,
     onClick: () => {
       onActiveProjectIdChange(project.id);
-      onActiveViewChange("projects");
+      selectView("projects");
     },
   }));
 
@@ -207,7 +232,7 @@ export default function DesktopAppShell({
                     item.onClick();
                     return;
                   }
-                  if (item.view) onActiveViewChange(item.view);
+                  if (item.view) selectView(item.view);
                 }}
               />
             ))}
