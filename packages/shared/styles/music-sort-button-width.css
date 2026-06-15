@@ -4,6 +4,9 @@
   width: 102px !important;
   min-width: 102px !important;
   max-width: 102px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: space-between !important;
 }
 
 .filmwave-music-sort-button > span {
@@ -11,4 +14,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: left;
+}
+
+.filmwave-music-sort-button > svg {
+  flex: 0 0 auto;
+  margin-left: auto;
 }
