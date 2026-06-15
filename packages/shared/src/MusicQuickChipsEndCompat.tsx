@@ -105,9 +105,9 @@ function LegacyQuickActionsAdapter({
   const recentPressed = isPressed(recentButton);
   const popularPressed = isPressed(popularButton);
   const activeSortButton = popularPressed ? popularButton : recentButton;
-  const inactiveSortButton = popularPressed ? recentButton : popularButton;
   const activeSortLabel = getTextContent(activeSortButton.props.children);
-  const inactiveSortLabel = getTextContent(inactiveSortButton.props.children);
+  const recentSortLabel = getTextContent(recentButton.props.children);
+  const popularSortLabel = getTextContent(popularButton.props.children);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -194,32 +194,32 @@ function LegacyQuickActionsAdapter({
             <button
               type="button"
               role="menuitemradio"
-              aria-checked={true}
-              className="filmwave-music-sort-option is-selected"
-              data-filmwave-quick-role="active-option"
+              aria-checked={recentPressed}
+              className={`filmwave-music-sort-option${recentPressed ? " is-selected" : ""}`}
+              data-filmwave-quick-role="recent-option"
               onMouseDown={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                chooseSort(activeSortButton);
+                chooseSort(recentButton);
               }}
-              onKeyDown={(event) => handleOptionKeyDown(event, activeSortButton)}
+              onKeyDown={(event) => handleOptionKeyDown(event, recentButton)}
             >
-              {activeSortLabel}
+              {recentSortLabel}
             </button>
             <button
               type="button"
               role="menuitemradio"
-              aria-checked={false}
-              className="filmwave-music-sort-option"
-              data-filmwave-quick-role="inactive-option"
+              aria-checked={popularPressed}
+              className={`filmwave-music-sort-option${popularPressed ? " is-selected" : ""}`}
+              data-filmwave-quick-role="popular-option"
               onMouseDown={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                chooseSort(inactiveSortButton);
+                chooseSort(popularButton);
               }}
-              onKeyDown={(event) => handleOptionKeyDown(event, inactiveSortButton)}
+              onKeyDown={(event) => handleOptionKeyDown(event, popularButton)}
             >
-              {inactiveSortLabel}
+              {popularSortLabel}
             </button>
           </div>
         )}
