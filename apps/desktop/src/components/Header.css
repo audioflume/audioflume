@@ -53,6 +53,13 @@ html[data-theme="light"] .filmwave-header.desktop-header {
   height: auto;
 }
 
+.desktop-user-menu-portal {
+  position: fixed !important;
+  z-index: 1000 !important;
+  width: min(280px, calc(100vw - 24px));
+  pointer-events: auto;
+}
+
 .desktop-header-avatar-trigger {
   width: 36px;
   height: 36px;
@@ -79,7 +86,8 @@ html[data-theme="light"] .filmwave-header.desktop-header {
 }
 
 @media (max-width: 550px) {
-  .desktop-user-menu-wrap .filmwave-user-menu {
+  .desktop-user-menu-wrap .filmwave-user-menu,
+  .desktop-user-menu-portal .filmwave-user-menu {
     width: min(300px, calc(100vw - 24px));
   }
 }
