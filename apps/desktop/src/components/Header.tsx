@@ -1,4 +1,4 @@
-import { HeaderShell } from "@filmwave/shared";
+import { HeaderShell, SideFilterPanelBehavior } from "@filmwave/shared";
 import { useEffect, useState, type PointerEvent } from "react";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import FilmwaveLogoIcon from "./icons/FilmwaveLogoIcon";
@@ -86,57 +86,60 @@ export default function Header({
   }, [theme]);
 
   return (
-    <HeaderShell
-      className="desktop-header"
-      innerClassName="desktop-header-inner"
-      onPointerDownCapture={handleHeaderSurfacePointerDown}
-      dragSurfaceProps={{ "data-tauri-drag-region": true }}
-      logo={
-        <button
-          type="button"
-          className="filmwave-header-logo-action"
-          aria-label="Filmwave Desktop home"
-          onClick={() => onActiveViewChange("projects")}
-        >
-          <FilmwaveLogoIcon
-            className="filmwave-header-logo-mark"
-            width={115}
-            height={22}
-          />
-        </button>
-      }
-      actions={
-        <>
+    <>
+      <SideFilterPanelBehavior />
+      <HeaderShell
+        className="desktop-header"
+        innerClassName="desktop-header-inner"
+        onPointerDownCapture={handleHeaderSurfacePointerDown}
+        dragSurfaceProps={{ "data-tauri-drag-region": true }}
+        logo={
           <button
             type="button"
-            className={`filmwave-header-nav-link${activeView === "discover" ? " is-active" : ""}`}
-            onClick={() => onActiveViewChange("discover")}
+            className="filmwave-header-logo-action"
+            aria-label="Filmwave Desktop home"
+            onClick={() => onActiveViewChange("projects")}
           >
-            <DashboardIcon />
-            Discover
+            <FilmwaveLogoIcon
+              className="filmwave-header-logo-mark"
+              width={115}
+              height={22}
+            />
           </button>
+        }
+        actions={
+          <>
+            <button
+              type="button"
+              className={`filmwave-header-nav-link${activeView === "discover" ? " is-active" : ""}`}
+              onClick={() => onActiveViewChange("discover")}
+            >
+              <DashboardIcon />
+              Discover
+            </button>
 
-          <button
-            type="button"
-            className={`filmwave-header-nav-link${activeView === "playlists" ? " is-active" : ""}`}
-            onClick={() => onActiveViewChange("playlists")}
-          >
-            <PlaylistIcon size={13} />
-            Playlists
-          </button>
+            <button
+              type="button"
+              className={`filmwave-header-nav-link${activeView === "playlists" ? " is-active" : ""}`}
+              onClick={() => onActiveViewChange("playlists")}
+            >
+              <PlaylistIcon size={13} />
+              Playlists
+            </button>
 
-          <UserMenu
-            account={account}
-            accountLoading={accountLoading}
-            isSignedIn={isSignedIn}
-            onOpenSignIn={onOpenSignIn}
-            onOpenSyncSettings={openSyncSettings}
-            onSignOut={onSignOut}
-            theme={theme}
-            onThemeChange={setTheme}
-          />
-        </>
-      }
-    />
+            <UserMenu
+              account={account}
+              accountLoading={accountLoading}
+              isSignedIn={isSignedIn}
+              onOpenSignIn={onOpenSignIn}
+              onOpenSyncSettings={openSyncSettings}
+              onSignOut={onSignOut}
+              theme={theme}
+              onThemeChange={setTheme}
+            />
+          </>
+        }
+      />
+    </>
   );
 }
