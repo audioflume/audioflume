@@ -46,12 +46,6 @@ type UseFilterPersistenceProps = {
   authLoaded: boolean;
 };
 
-type InitialFilterPersistenceState = {
-  filters: MusicFilterState;
-  hydrated: boolean;
-  hydratedKey: string | null;
-};
-
 const MUSIC_HEADER_SEARCH_CHANNEL = "filmwave-music-header-search";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 
@@ -142,55 +136,6 @@ function getDefaultState(): MusicFilterState {
   };
 }
 
-function getInitialFilterPersistenceState(
-  storageKey: string | null,
-  authLoaded: boolean,
-): InitialFilterPersistenceState {
-  if (typeof window === "undefined" || !authLoaded) {
-    return {
-      filters: { ...baseDefaultState },
-      hydrated: false,
-      hydratedKey: null,
-    };
-  }
-
-  sessionStorage.removeItem("filmwave-music-filters");
-
-  if (!storageKey) {
-    return {
-      filters: getDefaultState(),
-      hydrated: true,
-      hydratedKey: null,
-    };
-  }
-
-  const saved = sessionStorage.getItem(storageKey);
-
-  if (!saved) {
-    return {
-      filters: getDefaultState(),
-      hydrated: true,
-      hydratedKey: storageKey,
-    };
-  }
-
-  try {
-    return {
-      filters: normalizeFilterState(JSON.parse(saved)),
-      hydrated: true,
-      hydratedKey: storageKey,
-    };
-  } catch {
-    sessionStorage.removeItem(storageKey);
-
-    return {
-      filters: getDefaultState(),
-      hydrated: true,
-      hydratedKey: storageKey,
-    };
-  }
-}
-
 function getEditPointMarkerVisibilityFromEvent(event: Event) {
   const customEvent = event as CustomEvent<{ visible?: boolean }>;
 
@@ -225,23 +170,11 @@ export function useFilterPersistence(
       ? propsOrStorageKey.authLoaded
       : true;
 
-  const [initialState] = useState(() =>
-    getInitialFilterPersistenceState(storageKey, authLoaded),
-  );
-  const [hydrated, setHydrated] = useState(initialState.hydrated);
-  const [hydratedKey, setHydratedKey] = useState<string | null>(
-    initialState.hydratedKey,
-  );
-  const [filters, setFilters] = useState<MusicFilterState>(
-    initialState.filters,
-  );
-
-  useEffect(() => {
-    if (initialState.hydrated) {
-      notifyCuePointFilterSelection(initialState.filters.selectedEditPoints);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [hydrated, setHydrated] = useState(false);
+  const [hydratedKey, setHydratedKey] = useState<string | null>(null);
+  const [filters, setFilters] = useState<MusicFilterState>(() => ({
+    ...baseDefaultState,
+  }));
 
   useEffect(() => {
     const handleEditPointMarkerVisibility = (event: Event) => {
