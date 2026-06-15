@@ -61,15 +61,14 @@
 
 .desktop-sidebar-nav-divider {
   flex: 0 0 auto;
-  width: calc(100% - (var(--filmwave-sidebar-x-padding, 8px) * 2));
+  width: 100%;
   height: 1px;
-  margin: 0 var(--filmwave-sidebar-x-padding, 8px)
-    var(--filmwave-sidebar-section-gap, 20px);
+  margin: 0 0 var(--filmwave-sidebar-section-gap, 20px);
   background: var(--border-subtle);
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-nav-divider {
-  width: calc(100% - (var(--filmwave-sidebar-x-padding, 8px) * 2));
+  width: 100%;
 }
 
 .desktop-view {
