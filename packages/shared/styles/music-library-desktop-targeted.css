@@ -1,68 +1,31 @@
-/* Desktop-only music library corrections that intentionally match the website
-   music page while the desktop app keeps its own Tauri/sync behavior. */
+.desktop-app-main .desktop-music-page {
+  padding-right: 0 !important;
+}
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-song-list-head {
+.desktop-app-main .desktop-music-page .fw-song-list-head {
   display: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
-  box-sizing: border-box !important;
-  top: calc(var(--filmwave-header-height, 56px) + var(--filmwave-sidebar-float-inset, 12px)) !important;
-  height: calc(
-    100dvh - var(--filmwave-header-height, 56px) -
-      (var(--filmwave-sidebar-float-inset, 12px) * 2)
-  ) !important;
-  padding-top: var(--filmwave-sidebar-float-inset, 12px) !important;
-  padding-bottom: var(--filmwave-sidebar-float-inset, 12px) !important;
+.desktop-app-main .desktop-music-page.has-player {
+  --filmwave-sidebar-bottom-offset: var(--filmwave-player-height, 72px);
 }
 
-.desktop-app-main .desktop-music-page.has-player:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
-  height: calc(
-    100dvh - var(--filmwave-header-height, 56px) - var(--filmwave-player-height, 72px) -
-      (var(--filmwave-sidebar-float-inset, 12px) * 3)
-  ) !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list {
-  margin: 10px 20px 28px !important;
-}
-
-.desktop-app-main .desktop-music-page.has-player:has(.fw-filter-panel-wrap) > .fw-song-list {
+.desktop-app-main .desktop-music-page.has-player > .fw-song-list {
   margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px) !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list .desktop-music-list {
+.desktop-app-main
+  .desktop-music-page
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.desktop-app-main .desktop-music-page > .fw-quick-row {
+  padding: 8px 28px 0 0 !important;
+}
+
+.desktop-app-main .desktop-music-page > .fw-song-list .desktop-music-list {
   border-top: 0 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row {
-  min-height: 0 !important;
-  align-items: center !important;
-  padding: 8px 28px 0 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row .fw-filter-chip {
-  height: auto !important;
-  min-height: 0 !important;
-  align-items: center !important;
-  padding: 4px 11px !important;
-  font-size: 11.5px !important;
-  line-height: 1.4 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row .fw-quick-end .fw-filter-chip {
-  height: auto !important;
-  min-height: 0 !important;
-  padding: 4px 11px !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row .fw-quick-end .fw-quick-chip svg {
-  width: 12px !important;
-  height: 12px !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list .desktop-song-card {
-  --filmwave-song-card-padding-y: 12px;
-  --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y);
-  --filmwave-song-card-padding-right: 18px;
 }
