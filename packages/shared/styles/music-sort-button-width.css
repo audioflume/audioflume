@@ -1,8 +1,8 @@
 /* Shared fixed width for the music sort trigger on web and desktop. */
 .filmwave-music-sort-button {
-  width: 92px !important;
-  min-width: 92px !important;
-  max-width: 92px !important;
+  width: 128px !important;
+  min-width: 128px !important;
+  max-width: 128px !important;
 }
 
 .filmwave-music-sort-button > span {
