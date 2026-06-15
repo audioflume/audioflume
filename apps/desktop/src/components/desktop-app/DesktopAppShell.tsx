@@ -214,6 +214,8 @@ export default function DesktopAppShell({
           </SidebarNav>
         </SidebarSection>
 
+        <div className="desktop-sidebar-nav-divider" aria-hidden="true" />
+
         <SidebarSection projects>
           <SidebarProjectsHeader
             label="Projects"
