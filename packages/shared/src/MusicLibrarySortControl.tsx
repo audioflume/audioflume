@@ -73,6 +73,14 @@ export function MusicLibrarySortControl({
     };
   }, [open]);
 
+  function selectOption(nextValue: MusicLibrarySortValue) {
+    setOpen(false);
+
+    if (nextValue === value) return;
+
+    onChange(nextValue);
+  }
+
   return (
     <div
       ref={controlRef}
@@ -114,10 +122,7 @@ export function MusicLibrarySortControl({
               key={option.value}
               type="button"
               role="menuitem"
-              onClick={() => {
-                onChange(option.value);
-                setOpen(false);
-              }}
+              onClick={() => selectOption(option.value)}
             >
               {option.label}
             </button>
