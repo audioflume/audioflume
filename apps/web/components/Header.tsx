@@ -13,7 +13,6 @@ import { useUser } from "@clerk/nextjs";
 import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
-import MusicHeaderSearch from "@/components/MusicHeaderSearch";
 import UserMenu from "@/components/UserMenu";
 
 export default function Header() {
@@ -220,8 +219,7 @@ export default function Header() {
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
     : "";
-  const isMusicPage = pathname === "/music";
-  const showHeaderSearch = !isMusicPage;
+  const showHeaderSearch = pathname !== "/music";
 
   return (
     <HeaderShell
@@ -232,8 +230,6 @@ export default function Header() {
       }
       actions={
         <div className="filmwave-header-actions" ref={menuRef}>
-          {isMusicPage && <MusicHeaderSearch />}
-
           {showHeaderSearch && (
             <form onSubmit={handleHeaderSearchSubmit}>
               <CollapsibleSearchPill
