@@ -115,7 +115,8 @@ export default function MusicPage() {
     useState<Record<string, Set<string>>>({});
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
-  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
+  const [shuffleActive, setShuffleActive] = useState(false);
+  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[]>([]);
   const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -136,7 +137,6 @@ export default function MusicPage() {
   const selectedPlaylist = filters.selectedPlaylist;
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
 
-  const shuffleActive = shuffleOrderIds !== null;
   const highlightedEditPointTypes =
     selectedEditPoints.filter(isCoreEditPointType);
 
@@ -370,14 +370,27 @@ export default function MusicPage() {
     return shuffleSongList(indexedSongs).map((item) => item.id);
   }
 
+  function enableShuffle() {
+    setShuffleOrderIds(createShuffleOrder(sortedSongs));
+    setShuffleActive(true);
+  }
+
+  function disableShuffle() {
+    setShuffleOrderIds([]);
+    setShuffleActive(false);
+  }
+
   function toggleShuffle() {
-    setShuffleOrderIds((current) =>
-      current === null ? createShuffleOrder(sortedSongs) : null,
-    );
+    if (shuffleActive) {
+      disableShuffle();
+      return;
+    }
+
+    enableShuffle();
   }
 
   function removeShuffle() {
-    setShuffleOrderIds(null);
+    disableShuffle();
   }
 
   function handleSortChange(value: MusicLibrarySortValue) {
@@ -390,7 +403,7 @@ export default function MusicPage() {
   }
 
   const displayedSongs = useMemo(() => {
-    if (!shuffleOrderIds) return sortedSongs;
+    if (!shuffleActive || shuffleOrderIds.length === 0) return sortedSongs;
 
     const orderMap = new Map(
       shuffleOrderIds.map((songId, index) => [songId, index]),
@@ -413,7 +426,7 @@ export default function MusicPage() {
         return a.order - b.order;
       })
       .map((item) => item.song);
-  }, [shuffleOrderIds, sortedSongs]);
+  }, [shuffleActive, shuffleOrderIds, sortedSongs]);
 
   useEffect(() => {
     setQueue(displayedSongs);
