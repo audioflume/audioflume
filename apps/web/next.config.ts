@@ -4,6 +4,9 @@ const R2_CDN_ORIGIN = "https://pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@filmwave/shared"],
+  outputFileTracingIncludes: {
+    "/api/admin/upload": ["./node_modules/ffmpeg-static/ffmpeg"],
+  },
   images: {
     remotePatterns: [
       {
