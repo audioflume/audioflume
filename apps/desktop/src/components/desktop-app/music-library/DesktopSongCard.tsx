@@ -100,11 +100,16 @@ export default function DesktopSongCard({
     waveformRef.current?.seekTo(nextProgress);
   }, [pendingSeekProgress, playbackProgress, song.id]);
 
-  async function startSyncedSongDrag() {
+  async function startSyncedSongDrag(x: number, y: number) {
     if (!isSynced || !syncedPath) return;
 
     try {
-      await invoke(NATIVE_FILE_DRAG_COMMAND, { path: syncedPath });
+      await invoke(NATIVE_FILE_DRAG_COMMAND, {
+        path: syncedPath,
+        x,
+        y,
+        windowHeight: window.innerHeight,
+      });
     } catch (error) {
       console.warn("Could not start native song drag", error);
     }
@@ -129,7 +134,7 @@ export default function DesktopSongCard({
     if (distance < SONG_DRAG_START_DISTANCE) return;
 
     dragStart.started = true;
-    void startSyncedSongDrag();
+    void startSyncedSongDrag(event.clientX, event.clientY);
   }
 
   function handleSyncedSongPointerEnd() {
