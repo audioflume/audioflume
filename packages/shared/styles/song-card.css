@@ -504,13 +504,6 @@ html[data-theme="light"]
   }
 }
 
-@container (max-width: 760px) {
-  .filmwave-song-stems-slot,
-  .desktop-song-stems-slot {
-    display: none;
-  }
-}
-
 @container (max-width: 620px) {
   .filmwave-song-duration,
   .desktop-song-duration {
