@@ -1,12 +1,15 @@
 import ffmpegPath from "ffmpeg-static";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { access, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { uploadFileToR2 } from "@/lib/r2";
 
 const execFileAsync = promisify(execFile);
+const FFMPEG_EXECUTABLE_NAME = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg";
+
+let resolvedFfmpegPath: string | null = null;
 
 type ProcessAudioForStreamingArgs = {
   file: File;
@@ -27,12 +30,41 @@ export type ProcessedAudioAssets = {
   hlsAssets: HlsAsset[];
 };
 
-function assertFfmpegPath() {
-  if (!ffmpegPath) {
-    throw new Error("ffmpeg-static did not resolve a binary path.");
+async function fileExists(filePath: string) {
+  try {
+    await access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function resolveFfmpegPath() {
+  if (resolvedFfmpegPath) return resolvedFfmpegPath;
+
+  const candidates = [
+    process.env.FFMPEG_PATH,
+    ffmpegPath || undefined,
+    path.join(process.cwd(), "node_modules", "ffmpeg-static", FFMPEG_EXECUTABLE_NAME),
+    path.join(
+      process.cwd(),
+      "..",
+      "..",
+      "node_modules",
+      "ffmpeg-static",
+      FFMPEG_EXECUTABLE_NAME,
+    ),
+  ].filter((candidate): candidate is string => Boolean(candidate));
+
+  for (const candidate of [...new Set(candidates)]) {
+    if (await fileExists(candidate)) {
+      resolvedFfmpegPath = candidate;
+      return resolvedFfmpegPath;
+    }
   }
 
-  return ffmpegPath;
+  resolvedFfmpegPath = "ffmpeg";
+  return resolvedFfmpegPath;
 }
 
 function getFileExtension(fileName: string) {
@@ -51,9 +83,21 @@ function getHlsContentType(fileName: string) {
 }
 
 async function runFfmpeg(args: string[]) {
-  await execFileAsync(assertFfmpegPath(), args, {
-    maxBuffer: 1024 * 1024 * 20,
-  });
+  const ffmpegCommand = await resolveFfmpegPath();
+
+  try {
+    await execFileAsync(ffmpegCommand, args, {
+      maxBuffer: 1024 * 1024 * 20,
+    });
+  } catch (error) {
+    if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
+      throw new Error(
+        `FFmpeg binary was not found. Tried ${ffmpegCommand}. Reinstall dependencies or set FFMPEG_PATH to a valid ffmpeg binary.`,
+      );
+    }
+
+    throw error;
+  }
 }
 
 export async function processAudioForStreaming({
