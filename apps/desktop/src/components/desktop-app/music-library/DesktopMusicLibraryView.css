@@ -1,6 +1,5 @@
 .desktop-app-main:has(.desktop-persistent-music-view.is-active .desktop-music-page) {
   height: calc(100vh - var(--filmwave-header-height, 56px));
-  margin-top: var(--filmwave-header-height, 56px);
 }
 
 .desktop-app-main:has(.desktop-persistent-music-view.is-active .desktop-music-page.has-player) {
@@ -9,12 +8,20 @@
   );
 }
 
-.desktop-persistent-music-view.is-background .desktop-music-page > :not(.desktop-music-player) {
-  display: none;
+.desktop-app-main .desktop-persistent-music-view.is-background {
+  min-height: 0 !important;
+  height: auto !important;
+  pointer-events: none;
 }
 
-.desktop-persistent-music-view.is-background .desktop-music-page {
-  min-height: 0;
+.desktop-app-main .desktop-persistent-music-view.is-background .desktop-music-page {
+  display: block !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.desktop-app-main .desktop-persistent-music-view.is-background .desktop-music-page > :not(.desktop-music-player) {
+  display: none !important;
 }
 
 .desktop-app-main:has(.desktop-persistent-music-view.is-background .desktop-music-player) > .desktop-view,
