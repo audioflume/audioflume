@@ -56,6 +56,15 @@ function isPressed(button: LegacyButtonElement) {
   return button.props["aria-pressed"] === true;
 }
 
+function logMusicSortAdapterDebug(
+  label: string,
+  payload: Record<string, unknown>,
+) {
+  if (typeof window === "undefined") return;
+
+  console.log(`[Filmwave sort adapter debug] ${label}`, payload);
+}
+
 function LegacyQuickActionsAdapter({
   shuffleButton,
   recentButton,
@@ -68,12 +77,25 @@ function LegacyQuickActionsAdapter({
   const [isOpen, setIsOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement | null>(null);
   const shuffleActive = isPressed(shuffleButton);
-  const value: MusicLibrarySortValue = isPressed(popularButton)
+  const recentPressed = isPressed(recentButton);
+  const popularPressed = isPressed(popularButton);
+  const value: MusicLibrarySortValue = popularPressed
     ? "downloaded"
     : "recent";
   const activeOption =
     MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === value) ??
     MUSIC_LIBRARY_SORT_OPTIONS[0];
+
+  useEffect(() => {
+    logMusicSortAdapterDebug("state", {
+      activeLabel: activeOption.label,
+      isOpen,
+      popularPressed,
+      recentPressed,
+      shuffleActive,
+      value,
+    });
+  }, [activeOption.label, isOpen, popularPressed, recentPressed, shuffleActive, value]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -106,6 +128,17 @@ function LegacyQuickActionsAdapter({
       {cloneElement(shuffleButton, {
         className: `fw-filter-chip fw-quick-chip${shuffleActive ? " is-selected" : ""}`,
         "aria-pressed": shuffleActive,
+        onClick: (event) => {
+          logMusicSortAdapterDebug("shuffle click", {
+            activeLabel: activeOption.label,
+            detail: event.detail,
+            popularPressed,
+            recentPressed,
+            shuffleActive,
+            value,
+          });
+          shuffleButton.props.onClick?.(event);
+        },
       })}
 
       <div className="filmwave-music-sort-control" ref={controlRef}>
@@ -164,6 +197,17 @@ function LegacyQuickActionsAdapter({
                   onClick={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
+                    logMusicSortAdapterDebug("sort option click", {
+                      activeLabel: activeOption.label,
+                      detail: event.detail,
+                      nextLabel: option.label,
+                      nextValue: option.value,
+                      popularPressed,
+                      recentPressed,
+                      selected,
+                      shuffleActive,
+                      value,
+                    });
                     legacyButton.props.onClick?.(event);
                     setIsOpen(false);
                   }}
