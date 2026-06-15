@@ -164,11 +164,7 @@ function LegacyQuickActionsAdapter({
                   onClick={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
-
-                    if (!selected) {
-                      legacyButton.props.onClick?.(event);
-                    }
-
+                    legacyButton.props.onClick?.(event);
                     setIsOpen(false);
                   }}
                 >
