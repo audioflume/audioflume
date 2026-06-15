@@ -13,9 +13,10 @@
     "windows": [
       {
         "title": "Filmwave",
-        "width": 800,
-        "height": 600,
-        "minWidth": 600,
+        "width": 1080,
+        "height": 670,
+        "minWidth": 1080,
+        "minHeight": 670,
         "titleBarStyle": "Transparent",
         "hiddenTitle": true,
         "backgroundColor": "#111111"
