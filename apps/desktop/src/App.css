@@ -54,3 +54,30 @@ button {
 .desktop-app-main .filmwave-player-actions .filmwave-icon-button {
   border-radius: 999px !important;
 }
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float {
+  width: min(clamp(420px, 42vw, 640px), calc(100vw - 300px)) !important;
+  max-width: calc(100vw - 300px) !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float
+  .fw-toolbar {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float
+  .fw-toolbar-search {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
