@@ -290,14 +290,17 @@ export function SearchFilterTag({
   children,
   icon,
   onRemove,
+  tagId,
 }: {
   children: ReactNode;
   icon?: ReactNode;
   onRemove: () => void;
+  tagId?: string;
 }) {
   return (
     <span
       className="filmwave-search-filter-tag"
+      data-fw-filter-tag-id={tagId}
       onClick={(event) => event.stopPropagation()}
     >
       {icon && <span className="filmwave-search-filter-tag-icon">{icon}</span>}
