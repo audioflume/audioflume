@@ -7,12 +7,13 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import { MusicQuickChip } from "./MusicLibraryRedesign";
 import {
   MusicLibrarySortControl,
   type MusicLibrarySortValue,
 } from "./MusicLibrarySortControl";
 
-type LegacySortButtonElement = ReactElement<
+type LegacyButtonElement = ReactElement<
   ButtonHTMLAttributes<HTMLButtonElement>
 >;
 
@@ -33,10 +34,10 @@ function getTextContent(children: ReactNode): string {
     .trim();
 }
 
-function isLegacySortButton(
+function isLegacyButton(
   child: ReactNode,
-  expectedLabel: string,
-): child is LegacySortButtonElement {
+  expectedLabel?: string,
+): child is LegacyButtonElement {
   if (!isValidElement<ButtonHTMLAttributes<HTMLButtonElement>>(child)) {
     return false;
   }
@@ -45,43 +46,49 @@ function isLegacySortButton(
     return false;
   }
 
-  return getTextContent(child.props.children) === expectedLabel;
+  return expectedLabel === undefined || getTextContent(child.props.children) === expectedLabel;
 }
 
-function isPressed(button: LegacySortButtonElement) {
+function isPressed(button: LegacyButtonElement) {
   return button.props["aria-pressed"] === true;
 }
 
-function createLegacyClickEvent(): React.MouseEvent<HTMLButtonElement> {
-  return {
+function callLegacyClick(button: LegacyButtonElement) {
+  button.props.onClick?.({
     preventDefault() {},
     stopPropagation() {},
-  } as React.MouseEvent<HTMLButtonElement>;
+  } as React.MouseEvent<HTMLButtonElement>);
 }
 
-function LegacySortAdapter({
-  shuffleControl,
+function LegacyQuickActionsAdapter({
+  shuffleButton,
   recentButton,
   popularButton,
 }: {
-  shuffleControl: ReactNode;
-  recentButton: LegacySortButtonElement;
-  popularButton: LegacySortButtonElement;
+  shuffleButton: LegacyButtonElement;
+  recentButton: LegacyButtonElement;
+  popularButton: LegacyButtonElement;
 }) {
+  const shuffleActive = isPressed(shuffleButton);
   const value: MusicLibrarySortValue = isPressed(popularButton)
     ? "downloaded"
     : "recent";
 
+  function handleShuffleClick() {
+    callLegacyClick(shuffleButton);
+  }
+
   function handleSortChange(nextValue: MusicLibrarySortValue) {
     if (nextValue === value) return;
 
-    const sourceButton = nextValue === "downloaded" ? popularButton : recentButton;
-    sourceButton.props.onClick?.(createLegacyClickEvent());
+    callLegacyClick(nextValue === "downloaded" ? popularButton : recentButton);
   }
 
   return (
     <span className="fw-quick-end">
-      {shuffleControl}
+      <MusicQuickChip active={shuffleActive} onClick={handleShuffleClick}>
+        {shuffleButton.props.children}
+      </MusicQuickChip>
       <MusicLibrarySortControl value={value} onChange={handleSortChange} />
     </span>
   );
@@ -89,16 +96,17 @@ function LegacySortAdapter({
 
 export function MusicQuickChipsEnd({ children }: { children: ReactNode }) {
   const childArray = Children.toArray(children);
-  const [shuffleControl, recentButton, popularButton] = childArray;
+  const [shuffleButton, recentButton, popularButton] = childArray;
 
   if (
     childArray.length === 3 &&
-    isLegacySortButton(recentButton, "Most Recent") &&
-    isLegacySortButton(popularButton, "Most Popular")
+    isLegacyButton(shuffleButton) &&
+    isLegacyButton(recentButton, "Most Recent") &&
+    isLegacyButton(popularButton, "Most Popular")
   ) {
     return (
-      <LegacySortAdapter
-        shuffleControl={shuffleControl}
+      <LegacyQuickActionsAdapter
+        shuffleButton={shuffleButton}
         recentButton={recentButton}
         popularButton={popularButton}
       />
