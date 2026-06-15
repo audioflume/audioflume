@@ -1,17 +1,12 @@
 .desktop-app-main:has(.desktop-persistent-music-view.is-active .desktop-music-page) {
   height: calc(100vh - var(--filmwave-header-height, 56px));
   margin-top: var(--filmwave-header-height, 56px);
-  padding: 0 0 0 var(--sidebar-width-expanded, 280px);
 }
 
 .desktop-app-main:has(.desktop-persistent-music-view.is-active .desktop-music-page.has-player) {
   height: calc(
     100vh - var(--filmwave-header-height, 56px) - var(--filmwave-player-height, 72px)
   );
-}
-
-.desktop-app-shell.is-sidebar-collapsed .desktop-app-main:has(.desktop-persistent-music-view.is-active .desktop-music-page) {
-  padding-left: var(--sidebar-width-collapsed, 76px);
 }
 
 .desktop-persistent-music-view.is-background .desktop-music-page > :not(.desktop-music-player) {
