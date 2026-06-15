@@ -59,6 +59,19 @@
   padding-top: 56px;
 }
 
+.desktop-sidebar-nav-divider {
+  flex: 0 0 auto;
+  width: calc(100% - (var(--filmwave-sidebar-x-padding, 8px) * 2));
+  height: 1px;
+  margin: 0 var(--filmwave-sidebar-x-padding, 8px)
+    var(--filmwave-sidebar-section-gap, 20px);
+  background: var(--border-subtle);
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-nav-divider {
+  width: calc(100% - (var(--filmwave-sidebar-x-padding, 8px) * 2));
+}
+
 .desktop-view {
   width: 100%;
   margin: 0 auto;
