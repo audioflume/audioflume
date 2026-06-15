@@ -14,8 +14,8 @@ const musicHeaderSearchStyle: CSSProperties = {
   top: "10.5px",
   left: "50%",
   zIndex: 40,
-  width: "clamp(320px, 42vw, 640px)",
-  maxWidth: "calc(100vw - 420px)",
+  width: "min(clamp(420px, 42vw, 640px), calc(100vw - 300px))",
+  maxWidth: "calc(100vw - 300px)",
   marginRight: 0,
   transform: "translateX(-50%)",
 };
@@ -95,14 +95,6 @@ export default function MusicHeaderSearch() {
 
         .filmwave-music-header-search-form .filmwave-search-pill-input {
           width: 100% !important;
-        }
-
-        @media (max-width: 900px) {
-          .filmwave-music-header-search-form {
-            left: calc(50% + 32px) !important;
-            width: min(420px, calc(100vw - 300px)) !important;
-            max-width: calc(100vw - 300px) !important;
-          }
         }
       `}</style>
     </form>
