@@ -1,31 +1,115 @@
-.desktop-app-main .desktop-music-page {
+/* Final desktop music-page corrections.
+   Keep these scoped to the desktop app while matching the website music page
+   layout contract as closely as possible. */
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) {
   padding-right: 0 !important;
+}
+
+/* The website music header/search geometry. */
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float {
+  top: calc(var(--filmwave-header-height, 56px) / 2) !important;
+  width: min(920px, calc(100vw - 520px)) !important;
+  max-width: calc(100vw - 300px) !important;
+  min-height: 40px !important;
+  height: 40px !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float
+  .fw-toolbar,
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float
+  .fw-toolbar-search {
+  min-height: 30px !important;
+  height: 30px !important;
+}
+
+/* The website side-filter top/bottom spacing, including the player offset. */
+.desktop-app-main .desktop-music-page.has-player {
+  --filmwave-sidebar-bottom-offset: var(--filmwave-player-height, 72px);
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  top: calc(
+    var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
+      var(--filmwave-sidebar-float-inset, 12px)
+  ) !important;
+  height: calc(
+    100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
+      var(--filmwave-sidebar-bottom-offset, 0px) -
+      (var(--filmwave-sidebar-float-inset, 12px) * 2)
+  ) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Website side-filter content column placement. */
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row,
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .desktop-music-load-notice,
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list,
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > footer {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row {
+  padding: 8px 28px 0 0 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list {
+  margin: 10px 20px 28px 0 !important;
+}
+
+.desktop-app-main .desktop-music-page.has-player:has(.fw-filter-panel-wrap) > .fw-song-list {
+  margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px) !important;
 }
 
 .desktop-app-main .desktop-music-page .fw-song-list-head {
   display: none !important;
 }
 
-.desktop-app-main .desktop-music-page.has-player {
-  --filmwave-sidebar-bottom-offset: var(--filmwave-player-height, 72px);
-}
-
-.desktop-app-main .desktop-music-page.has-player > .fw-song-list {
-  margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px) !important;
-}
-
-.desktop-app-main
-  .desktop-music-page
-  > .fw-toolbar-sticky
-  > .fw-filter-panel-wrap {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-.desktop-app-main .desktop-music-page > .fw-quick-row {
-  padding: 8px 28px 0 0 !important;
-}
-
-.desktop-app-main .desktop-music-page > .fw-song-list .desktop-music-list {
+/* Make the remaining desktop list wrapper layout-neutral until the JSX wrapper is removed. */
+.desktop-app-main .desktop-music-page > .fw-song-list > .desktop-music-list {
+  display: contents !important;
   border-top: 0 !important;
+}
+
+/* Match the website quick chips; the shared CSS owns size/typography. */
+.desktop-app-main .desktop-music-page .fw-quick-row .fw-filter-chip {
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 4px 11px !important;
+  font-size: 11.5px !important;
+  line-height: 1.4 !important;
+}
+
+.desktop-app-main .desktop-music-page .fw-quick-row .fw-quick-chip svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+/* Desktop card padding should visually match the website card inset. */
+.desktop-app-main .desktop-music-page .desktop-song-card {
+  --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y);
+}
+
+@media (max-width: 1180px) {
+  .desktop-app-main
+    .desktop-music-page:has(.fw-filter-panel-wrap)
+    > .fw-toolbar-sticky
+    > .fw-toolbar-float {
+    width: min(720px, calc(100vw - 360px)) !important;
+  }
 }
