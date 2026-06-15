@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import FooterBottom from "@/components/FooterBottom";
 import Logo from "@/components/Logo";
 import { usePlayer } from "@/context/PlayerContext";
@@ -24,6 +25,7 @@ export default function Footer({
   playerPadding = true,
 }: FooterProps) {
   const { currentSong } = usePlayer();
+  const pathname = usePathname();
   const footerRef = useRef<HTMLElement | null>(null);
   const playerVisible = Boolean(currentSong);
 
@@ -37,6 +39,8 @@ export default function Footer({
       parent.style.paddingBottom = "0px";
     }
   }, [playerVisible]);
+
+  if (pathname === "/music") return null;
 
   return (
     <footer
