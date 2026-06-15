@@ -1,77 +1,8 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 export default function MusicLayout({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    function getSongCardOrder() {
-      return Array.from(document.querySelectorAll<HTMLElement>("[data-song-card-id]"))
-        .map((card) => card.dataset.songCardId)
-        .filter(Boolean)
-        .slice(0, 20);
-    }
-
-    function getQuickButtonState(label: string) {
-      const button = Array.from(document.querySelectorAll<HTMLButtonElement>("button")).find(
-        (element) => element.textContent?.trim() === label,
-      );
-
-      return {
-        exists: Boolean(button),
-        pressed: button?.getAttribute("aria-pressed") ?? null,
-        className: button?.className ?? null,
-      };
-    }
-
-    function logDomState(source: string) {
-      console.log("[Filmwave music DOM debug]", source, {
-        shuffle: getQuickButtonState("Shuffle"),
-        recent: getQuickButtonState("Most Recent"),
-        popular: getQuickButtonState("Most Popular"),
-        domSongCardCount: document.querySelectorAll("[data-song-card-id]").length,
-        domSongCardIds: getSongCardOrder(),
-      });
-    }
-
-    function handleClick(event: MouseEvent) {
-      const button = (event.target as Element | null)?.closest("button");
-      const label = button?.textContent?.trim();
-
-      if (label !== "Shuffle" && label !== "Most Recent" && label !== "Most Popular") return;
-
-      console.log("[Filmwave music DOM debug] click captured", {
-        label,
-        detail: event.detail,
-        eventPhase: event.eventPhase,
-        targetTag: (event.target as Element | null)?.tagName ?? null,
-        buttonPressedBefore: button?.getAttribute("aria-pressed") ?? null,
-      });
-
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => logDomState(`after ${label} click`));
-      });
-    }
-
-    const observer = new MutationObserver(() => {
-      window.requestAnimationFrame(() => logDomState("mutation"));
-    });
-
-    document.addEventListener("click", handleClick, true);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["data-song-card-id", "aria-pressed", "class"],
-    });
-
-    logDomState("mounted");
-
-    return () => {
-      document.removeEventListener("click", handleClick, true);
-      observer.disconnect();
-    };
-  }, []);
-
   return (
     <>
       {children}
