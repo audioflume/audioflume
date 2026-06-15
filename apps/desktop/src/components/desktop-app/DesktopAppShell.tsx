@@ -75,7 +75,7 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
   );
 }
 
-function CuratedIcon({ size = 14 }: { size?: number }) {
+function CuratedIcon({ size = 13 }: { size?: number }) {
   return (
     <svg
       width={size}
