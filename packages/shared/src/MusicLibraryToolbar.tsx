@@ -67,6 +67,7 @@ export type MusicLibraryToolbarProps = {
   actions?: ReactNode;
   chips?: ReactNode;
   stickyTop?: CSSProperties["top"];
+  renderToolbarChrome?: boolean;
   className?: string;
   children?: ReactNode;
 };
@@ -84,6 +85,7 @@ export function MusicLibraryToolbar({
   actions,
   chips,
   stickyTop,
+  renderToolbarChrome = stickyTop === undefined,
   className = "",
   children,
 }: MusicLibraryToolbarProps) {
@@ -136,74 +138,76 @@ export function MusicLibraryToolbar({
       className={`fw-toolbar-sticky${className ? ` ${className}` : ""}`}
       style={stickyTop !== undefined ? { top: stickyTop } : undefined}
     >
-      <div className="fw-toolbar-float">
-        <div className="fw-toolbar">
-          <label className="fw-toolbar-search">
-            <span className="fw-toolbar-search-icon" aria-hidden="true">
-              {searchIcon ?? <DefaultSearchIcon />}
-            </span>
-            <input
-              ref={searchInputRef}
-              type="text"
-              value={searchValue}
-              placeholder={searchPlaceholder}
-              onChange={(event) => onSearchChange(event.target.value)}
-            />
-            {searchValue.length > 0 && (
-              <button
-                type="button"
-                className="fw-toolbar-search-clear"
-                aria-label="Clear search"
-                onClick={() => onSearchChange("")}
-              >
-                <ClearXIcon />
-              </button>
-            )}
-          </label>
-
-          <button
-            type="button"
-            className={`fw-toolbar-filters${filtersOpen ? " is-open" : ""}${
-              filterCount > 0 ? " is-active" : ""
-            }`}
-            aria-expanded={filtersOpen}
-            onClick={handleFilterToggleClick}
-          >
-            <FilterBarsIcon />
-            <span className="fw-toolbar-filters-label">Filters</span>
-
-            {filterCount > 0 && (
-              <span
-                className={`fw-toolbar-filters-count${onClearFilters ? " is-clearable" : ""}`}
-                role={onClearFilters ? "button" : undefined}
-                tabIndex={onClearFilters ? 0 : undefined}
-                aria-label={onClearFilters ? "Clear all filters" : undefined}
-                title={onClearFilters ? "Clear all filters" : undefined}
-                onPointerDown={onClearFilters ? handleFilterCountPointerDown : undefined}
-                onClick={onClearFilters ? handleFilterCountClick : undefined}
-                onKeyDown={onClearFilters ? handleFilterCountKeyDown : undefined}
-              >
-                <span className="fw-toolbar-filters-count-num">{filterCount}</span>
-                {onClearFilters && (
-                  <span className="fw-toolbar-filters-count-x" aria-hidden="true">
-                    <ClearXIcon />
-                  </span>
-                )}
+      {renderToolbarChrome && (
+        <div className="fw-toolbar-float">
+          <div className="fw-toolbar">
+            <label className="fw-toolbar-search">
+              <span className="fw-toolbar-search-icon" aria-hidden="true">
+                {searchIcon ?? <DefaultSearchIcon />}
               </span>
-            )}
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchValue}
+                placeholder={searchPlaceholder}
+                onChange={(event) => onSearchChange(event.target.value)}
+              />
+              {searchValue.length > 0 && (
+                <button
+                  type="button"
+                  className="fw-toolbar-search-clear"
+                  aria-label="Clear search"
+                  onClick={() => onSearchChange("")}
+                >
+                  <ClearXIcon />
+                </button>
+              )}
+            </label>
 
-            <span
-              className={`fw-toolbar-filters-chevron${filtersOpen ? " is-open" : ""}`}
+            <button
+              type="button"
+              className={`fw-toolbar-filters${filtersOpen ? " is-open" : ""}${
+                filterCount > 0 ? " is-active" : ""
+              }`}
+              aria-expanded={filtersOpen}
+              onClick={handleFilterToggleClick}
             >
-              <ChevronDownIcon />
-            </span>
-          </button>
+              <FilterBarsIcon />
+              <span className="fw-toolbar-filters-label">Filters</span>
 
-          {actions && <div className="fw-toolbar-actions">{actions}</div>}
+              {filterCount > 0 && (
+                <span
+                  className={`fw-toolbar-filters-count${onClearFilters ? " is-clearable" : ""}`}
+                  role={onClearFilters ? "button" : undefined}
+                  tabIndex={onClearFilters ? 0 : undefined}
+                  aria-label={onClearFilters ? "Clear all filters" : undefined}
+                  title={onClearFilters ? "Clear all filters" : undefined}
+                  onPointerDown={onClearFilters ? handleFilterCountPointerDown : undefined}
+                  onClick={onClearFilters ? handleFilterCountClick : undefined}
+                  onKeyDown={onClearFilters ? handleFilterCountKeyDown : undefined}
+                >
+                  <span className="fw-toolbar-filters-count-num">{filterCount}</span>
+                  {onClearFilters && (
+                    <span className="fw-toolbar-filters-count-x" aria-hidden="true">
+                      <ClearXIcon />
+                    </span>
+                  )}
+                </span>
+              )}
+
+              <span
+                className={`fw-toolbar-filters-chevron${filtersOpen ? " is-open" : ""}`}
+              >
+                <ChevronDownIcon />
+              </span>
+            </button>
+
+            {actions && <div className="fw-toolbar-actions">{actions}</div>}
+          </div>
+
+          {chips && <div className="fw-active-chips">{chips}</div>}
         </div>
-
-        {chips && <div className="fw-active-chips">{chips}</div>}
-      </div>
+      )}
 
       {children}
     </div>
