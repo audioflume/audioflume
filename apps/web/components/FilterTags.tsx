@@ -19,7 +19,7 @@ type FilterTagsProps = {
   bpmValue: BpmFilterValue | null;
   keyValue: KeyFilterValue | null;
   selectedPlaylist: PlaylistRef | null;
-  shuffleActive: boolean;
+  shuffleActive?: boolean;
   onRemoveMood: (value: string) => void;
   onRemoveGenre: (value: string) => void;
   onRemoveRegion?: (value: string) => void;
@@ -32,7 +32,7 @@ type FilterTagsProps = {
   onRemoveBpm: () => void;
   onRemoveKey: () => void;
   onRemovePlaylist: () => void;
-  onRemoveShuffle: () => void;
+  onRemoveShuffle?: () => void;
 };
 
 export default function FilterTags({
@@ -48,7 +48,6 @@ export default function FilterTags({
   bpmValue,
   keyValue,
   selectedPlaylist,
-  shuffleActive,
   onRemoveMood,
   onRemoveGenre,
   onRemoveRegion = () => {},
@@ -61,7 +60,6 @@ export default function FilterTags({
   onRemoveBpm,
   onRemoveKey,
   onRemovePlaylist,
-  onRemoveShuffle,
 }: FilterTagsProps) {
   const tags: MusicFilterTagItem[] = [
     ...selectedMoods.map((value) => ({
@@ -151,9 +149,6 @@ export default function FilterTags({
             onRemove: onRemovePlaylist,
           },
         ]
-      : []),
-    ...(shuffleActive
-      ? [{ id: "shuffle", label: "Shuffle", onRemove: onRemoveShuffle }]
       : []),
   ];
 
