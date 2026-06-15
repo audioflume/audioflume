@@ -86,20 +86,6 @@
   border-top: 0 !important;
 }
 
-/* Match the website quick chips; the shared CSS owns size/typography. */
-.desktop-app-main .desktop-music-page .fw-quick-row .fw-filter-chip {
-  min-height: 0 !important;
-  height: auto !important;
-  padding: 4px 11px !important;
-  font-size: 11.5px !important;
-  line-height: 1.4 !important;
-}
-
-.desktop-app-main .desktop-music-page .fw-quick-row .fw-quick-chip svg {
-  width: 13px !important;
-  height: 13px !important;
-}
-
 /* Desktop card padding should visually match the website card inset. */
 .desktop-app-main .desktop-music-page .desktop-song-card {
   --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y);
