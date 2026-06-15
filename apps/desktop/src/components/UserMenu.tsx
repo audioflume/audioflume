@@ -1,4 +1,3 @@
-import { HeaderChevron } from "@filmwave/shared";
 import { useEffect, useRef, useState } from "react";
 import DarkMode from "./icons/DarkMode";
 import LightMode from "./icons/LightMode";
@@ -42,8 +41,9 @@ export default function UserMenu({
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const accountName =
-    account?.name ?? (accountLoading ? "Loading account..." : "Filmwave user");
+  const accountLabel = isSignedIn
+    ? account?.name ?? (accountLoading ? "Loading account" : "Filmwave account")
+    : "Account";
 
   useEffect(() => {
     function handlePointerDown(event: PointerEvent) {
@@ -57,21 +57,14 @@ export default function UserMenu({
   }, [open]);
 
   return (
-    <div ref={menuRef} className="filmwave-header-actions">
+    <div ref={menuRef} className="filmwave-header-actions desktop-user-menu-wrap">
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className={`filmwave-header-account-trigger${open ? " is-open" : ""}`}
-        aria-label="Open user menu"
+        className={`filmwave-header-account-trigger desktop-header-avatar-trigger${open ? " is-open" : ""}`}
+        aria-label={`Open user menu for ${accountLabel}`}
         aria-expanded={open}
       >
-        <span className="filmwave-header-account-label">
-          <span className="filmwave-header-account-name">
-            {isSignedIn ? accountName : "Account"}
-          </span>
-          <HeaderChevron open={open} />
-        </span>
-
         <span className="filmwave-header-avatar">
           {account?.imageUrl ? (
             <img src={account.imageUrl} alt="" />
