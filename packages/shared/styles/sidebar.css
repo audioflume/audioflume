@@ -490,14 +490,14 @@ body.sidebar-collapsed .desktop-sidebar-empty-projects {
 }
 
 .desktop-sidebar-tooltip-border {
-  border-radius: 8px;
+  border-radius: 999px;
   background: transparent;
   padding: 0;
 }
 
 .desktop-sidebar-tooltip-inner {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 999px;
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-size: 11px;
