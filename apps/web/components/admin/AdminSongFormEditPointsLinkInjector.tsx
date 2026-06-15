@@ -34,6 +34,7 @@ function setNativeTextareaValue(textarea: HTMLTextAreaElement, value: string) {
   }
 
   textarea.dispatchEvent(new Event("input", { bubbles: true }));
+  textarea.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
 function stopAudioInside(target: HTMLElement) {
@@ -88,6 +89,7 @@ export default function AdminSongFormEditPointsLinkInjector({
   useEffect(() => {
     const ownerId = `edit-points-${songId || "new"}`;
     let mounted = true;
+    const originalFetch = window.fetch.bind(window);
 
     const findEditPointsSection = () => {
       const headers = Array.from(
@@ -105,10 +107,44 @@ export default function AdminSongFormEditPointsLinkInjector({
       const editPointsSection = findEditPointsSection();
       const textarea = editPointsSection?.querySelector<HTMLTextAreaElement>("textarea");
 
-      if (!textarea) return;
-
-      setNativeTextareaValue(textarea, value);
+      if (textarea) setNativeTextareaValue(textarea, value);
     };
+
+    const patchedFetch: typeof window.fetch = async (input, init) => {
+      const requestUrl =
+        typeof input === "string"
+          ? input
+          : input instanceof URL
+            ? input.toString()
+            : input.url;
+      const requestMethod = (
+        init?.method || (input instanceof Request ? input.method : "GET")
+      ).toUpperCase();
+      const isSongUpdateRequest =
+        Boolean(songId) &&
+        requestMethod === "PATCH" &&
+        requestUrl.includes(`/api/admin/songs/${songId}`) &&
+        !requestUrl.includes("/edit-points");
+
+      if (isSongUpdateRequest && typeof init?.body === "string") {
+        try {
+          const body = JSON.parse(init.body) as Record<string, unknown>;
+          return originalFetch(input, {
+            ...init,
+            body: JSON.stringify({
+              ...body,
+              editPoints: editPointsJsonRef.current,
+            }),
+          });
+        } catch {
+          return originalFetch(input, init);
+        }
+      }
+
+      return originalFetch(input, init);
+    };
+
+    window.fetch = patchedFetch;
 
     const setOriginalBodyContentVisibility = (body: HTMLElement, visible: boolean) => {
       Array.from(body.children).forEach((child) => {
@@ -204,6 +240,7 @@ export default function AdminSongFormEditPointsLinkInjector({
       mounted = false;
       observer.disconnect();
       document.removeEventListener("submit", submitListener, true);
+      if (window.fetch === patchedFetch) window.fetch = originalFetch;
       cleanupExistingEmbeddedEditPointRoot(ownerId);
     };
   }, [songId]);
