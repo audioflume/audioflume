@@ -218,7 +218,115 @@ html[data-theme="light"] .filmwave-music-player {
   color: var(--text-primary);
 }
 
+/* Website compatibility: collapse the legacy hardcoded sort buttons into one dropdown. */
+.fw-quick-end:has(> button.fw-quick-chip:nth-of-type(2):last-child) {
+  position: relative;
+  z-index: 50;
+}
+
+.fw-quick-end > button.fw-quick-chip:nth-of-type(2):not(:last-child),
+.fw-quick-end > button.fw-quick-chip:nth-of-type(3) {
+  padding-right: 18px !important;
+}
+
+.fw-quick-end > button.fw-quick-chip:nth-of-type(2):not(:last-child)::after,
+.fw-quick-end > button.fw-quick-chip:nth-of-type(3)::after {
+  content: "";
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-right: 1.4px solid currentColor;
+  border-bottom: 1.4px solid currentColor;
+  transform: translateY(-65%) rotate(45deg);
+  opacity: 0.8;
+}
+
+.fw-quick-end > button.fw-quick-chip:nth-of-type(2):not(.is-selected):not(:last-child),
+.fw-quick-end > button.fw-quick-chip:nth-of-type(3):not(.is-selected) {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 9999;
+  min-width: 132px !important;
+  justify-content: flex-start !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 10px !important;
+  background: var(--bg-tertiary) !important;
+  padding: 8px 24px 8px 10px !important;
+  box-shadow: var(--shadow-ui);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-2px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.fw-quick-end > button.fw-quick-chip:nth-of-type(2).is-selected:not(:last-child):is(:hover, :focus-visible)
+  ~ button.fw-quick-chip:nth-of-type(3):not(.is-selected),
+.fw-quick-end > button.fw-quick-chip:nth-of-type(3):not(.is-selected):is(:hover, :focus-visible),
+.fw-quick-end:has(> button.fw-quick-chip:nth-of-type(3).is-selected:is(:hover, :focus-visible))
+  > button.fw-quick-chip:nth-of-type(2):not(.is-selected):not(:last-child),
+.fw-quick-end > button.fw-quick-chip:nth-of-type(2):not(.is-selected):not(:last-child):is(:hover, :focus-visible) {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 html[data-theme="light"] .filmwave-music-shuffle-button.is-active,
 html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   color: var(--filmwave-sidebar-icon-color, #969696);
+}
+
+.fw-toolbar-filters > svg {
+  display: none !important;
+}
+
+.fw-toolbar-filters::before {
+  content: "";
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.1%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%207h16%27%2F%3E%3Cpath%20d%3D%27M13%205.25v3.5%27%2F%3E%3Cpath%20d%3D%27M4%2012h16%27%2F%3E%3Cpath%20d%3D%27M8.5%2010.25v3.5%27%2F%3E%3Cpath%20d%3D%27M4%2017h16%27%2F%3E%3Cpath%20d%3D%27M15.5%2015.25v3.5%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.1%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%207h16%27%2F%3E%3Cpath%20d%3D%27M13%205.25v3.5%27%2F%3E%3Cpath%20d%3D%27M4%2012h16%27%2F%3E%3Cpath%20d%3D%27M8.5%2010.25v3.5%27%2F%3E%3Cpath%20d%3D%27M4%2017h16%27%2F%3E%3Cpath%20d%3D%27M15.5%2015.25v3.5%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+
+.fw-toolbar-filters.is-open::before {
+  display: none !important;
+}
+
+.fw-filter-panel {
+  --filmwave-filter-active-marker: var(--text-primary);
+  --filmwave-filter-active-marker-contrast: var(--bg-primary);
+}
+
+.fw-filter-panel .fw-filter-rail-count,
+.fw-filter-panel .fw-filter-group-count {
+  background: var(--filmwave-filter-active-marker) !important;
+  color: var(--filmwave-filter-active-marker-contrast) !important;
+}
+
+.fw-filter-panel .fw-filter-option.is-selected .fw-filter-option-check,
+.fw-filter-panel .fw-filter-chip.is-selected {
+  border-color: var(--filmwave-filter-active-marker) !important;
+  background: var(--filmwave-filter-active-marker) !important;
+  color: var(--filmwave-filter-active-marker-contrast) !important;
+}
+
+.fw-quick-chip.is-selected,
+.fw-quick-chip[aria-pressed="true"] {
+  border-color: var(--text-primary) !important;
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+.fw-quick-chip.is-selected svg,
+.fw-quick-chip[aria-pressed="true"] svg,
+.fw-quick-chip.is-selected svg *,
+.fw-quick-chip[aria-pressed="true"] svg * {
+  color: var(--bg-primary) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
 }
