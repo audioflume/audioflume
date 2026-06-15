@@ -1,1 +1,31 @@
 @import "../../../../packages/shared/styles/music-library-redesign.css";
+
+/* Website-only compatibility for the legacy hardcoded sort buttons.
+   Desktop uses the real shared dropdown component, so keep this scoped to the web page import. */
+.fw-quick-end:has(> button.fw-quick-chip:nth-of-type(3)) {
+  position: relative;
+  z-index: 50;
+}
+
+.fw-quick-end:has(> button.fw-quick-chip:nth-of-type(3))
+  > button.fw-quick-chip:first-child {
+  position: relative;
+  z-index: 2;
+}
+
+.fw-quick-end:has(> button.fw-quick-chip:nth-of-type(3))
+  > button.fw-quick-chip:nth-of-type(2).is-selected,
+.fw-quick-end:has(> button.fw-quick-chip:nth-of-type(3))
+  > button.fw-quick-chip:nth-of-type(3).is-selected {
+  position: relative;
+  z-index: 3;
+}
+
+.fw-quick-end:has(> button.fw-quick-chip:nth-of-type(3)):is(:hover, :focus-within)
+  > button.fw-quick-chip:nth-of-type(2):not(.is-selected):not(:last-child),
+.fw-quick-end:has(> button.fw-quick-chip:nth-of-type(3)):is(:hover, :focus-within)
+  > button.fw-quick-chip:nth-of-type(3):not(.is-selected) {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
