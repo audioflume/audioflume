@@ -1,0 +1,38 @@
+/* Desktop-only music library corrections that intentionally match the website
+   music page while the desktop app keeps its own Tauri/sync behavior. */
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-song-list-head {
+  display: none !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list {
+  margin-top: 18px !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list .desktop-music-list {
+  border-top: 0 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row {
+  min-height: 34px !important;
+  align-items: center !important;
+  padding-top: 8px !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row .fw-filter-chip {
+  height: 28px !important;
+  align-items: center !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row .fw-quick-end .fw-filter-chip {
+  height: 28px !important;
+  padding: 0 14px !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row .fw-quick-end .fw-quick-chip svg {
+  width: 12px !important;
+  height: 12px !important;
+}
