@@ -39,6 +39,10 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
           margin-top: 16px !important;
         }
 
+        body:has(.filmwave-music-player) main .fw-song-list {
+          margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px) !important;
+        }
+
         .filmwave-header-actions > form:first-child {
           position: fixed !important;
           top: 10.5px !important;
