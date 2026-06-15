@@ -42,68 +42,77 @@
 /* Keep the searchbar in the header, matching the website music page. */
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
   position: fixed !important;
-  top: calc(var(--filmwave-header-height, 56px) / 2) !important;
+  top: 10.5px !important;
   left: 50% !important;
   z-index: 141 !important;
-  width: min(920px, calc(100vw - 520px)) !important;
-  max-width: calc(100vw - 300px) !important;
-  min-height: 40px !important;
-  height: 40px !important;
+  width: clamp(320px, 42vw, 640px) !important;
+  max-width: calc(100vw - 420px) !important;
+  min-height: 34px !important;
+  height: 34px !important;
   box-sizing: border-box !important;
-  transform: translate(-50%, -50%) !important;
+  transform: translateX(-50%) !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  padding: 4px 0 !important;
+  padding: 0 !important;
   pointer-events: auto !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar,
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
-  min-height: 30px !important;
-  height: 30px !important;
+  min-height: 34px !important;
+  height: 34px !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
   gap: 8px !important;
-  border-color: var(--border-subtle) !important;
-  background: var(--bg-control) !important;
-  padding-left: 5px !important;
+  border-color: var(--border) !important;
+  background: transparent !important;
+  padding: 0 10px 0 4px !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search:focus-within {
   border-color: var(--border-strong) !important;
-  background: var(--bg-control-hover) !important;
+  background: transparent !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-icon {
   order: 0 !important;
   width: 24px !important;
   height: 24px !important;
+  background: var(--bg-elevated) !important;
+  color: var(--text-muted) !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-icon svg {
+  width: 11px !important;
+  height: 11px !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear {
   position: relative !important;
   order: 1 !important;
-  width: 18px !important;
-  min-width: 18px !important;
-  height: 24px !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  border-radius: 0 !important;
+  width: 20px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  margin-left: 4px !important;
+  margin-right: 4px !important;
+  border-radius: 999px !important;
   background: transparent !important;
+  color: var(--text-muted) !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear:hover {
   background: transparent !important;
+  color: var(--text-primary) !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear::after {
   content: "";
   position: absolute;
   top: 50%;
-  right: -8px;
+  right: -4px;
   width: 1px;
   height: 16px;
   background: var(--border);
@@ -118,6 +127,9 @@
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search input {
   order: 2 !important;
+  padding: 0 4px 0 7px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-filters,
@@ -457,7 +469,8 @@
 
 @media (max-width: 1180px) {
   .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
-    width: min(720px, calc(100vw - 360px)) !important;
+    width: min(420px, calc(100vw - 300px)) !important;
+    max-width: calc(100vw - 300px) !important;
   }
 }
 
