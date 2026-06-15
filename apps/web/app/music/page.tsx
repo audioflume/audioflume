@@ -89,7 +89,8 @@ export default function MusicPage() {
     useState<Set<string> | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortMode, setSortMode] = useState<MusicSortMode>("recent");
-  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
+  const [shuffleActive, setShuffleActive] = useState(false);
+  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[]>([]);
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -107,7 +108,6 @@ export default function MusicPage() {
   const keyValue = filters.keyValue;
   const selectedPlaylist = filters.selectedPlaylist;
   const selectedPlaylistId = selectedPlaylist?.id ?? null;
-  const shuffleActive = shuffleOrderIds !== null;
 
   const highlightedEditPointTypes =
     selectedEditPoints.filter(isCoreEditPointType);
@@ -187,8 +187,6 @@ export default function MusicPage() {
     bpmValue !== null ||
     keyValue !== null ||
     selectedPlaylist !== null;
-
-  const hasActiveTags = hasActiveFilters || shuffleActive;
 
   const hasActiveClearableFilters =
     selectedMoods.length > 0 ||
@@ -347,23 +345,26 @@ export default function MusicPage() {
     return shuffleIds(sourceSongs.map((song, index) => getSongOrderId(song, index)));
   }
 
-  function disableShuffle() {
-    setShuffleOrderIds(null);
-  }
-
   function toggleShuffle() {
-    setShuffleOrderIds((current) =>
-      current === null ? createShuffleOrder(sortedSongs) : null,
-    );
+    setShuffleActive((currentActive) => {
+      if (currentActive) {
+        setShuffleOrderIds([]);
+        return false;
+      }
+
+      setShuffleOrderIds(createShuffleOrder(sortedSongs));
+      return true;
+    });
   }
 
   function selectSortMode(nextSortMode: MusicSortMode) {
     setSortMode(nextSortMode);
-    setShuffleOrderIds(null);
+    setShuffleActive(false);
+    setShuffleOrderIds([]);
   }
 
   const displayedSongs = useMemo(() => {
-    if (!shuffleActive || !shuffleOrderIds) return sortedSongs;
+    if (!shuffleActive) return sortedSongs;
 
     const orderMap = new Map(
       shuffleOrderIds.map((songId, index) => [songId, index]),
@@ -481,7 +482,7 @@ export default function MusicPage() {
           onToggleFilters={() => setFiltersOpen((open) => !open)}
           onClearFilters={clearAllFilters}
           chips={
-            hasActiveTags ? (
+            hasActiveFilters ? (
               <FilterTags
                 selectedMoods={selectedMoods}
                 selectedGenres={selectedGenres}
@@ -495,7 +496,6 @@ export default function MusicPage() {
                 bpmValue={bpmValue}
                 keyValue={keyValue}
                 selectedPlaylist={selectedPlaylist}
-                shuffleActive={shuffleActive}
                 onRemoveMood={(v) =>
                   setSelectedMoods(selectedMoods.filter((item) => item !== v))
                 }
@@ -532,7 +532,6 @@ export default function MusicPage() {
                 onRemovePlaylist={() =>
                   setFilters((current) => ({ ...current, selectedPlaylist: null }))
                 }
-                onRemoveShuffle={disableShuffle}
               />
             ) : undefined
           }
@@ -589,22 +588,43 @@ export default function MusicPage() {
           })}
 
           <MusicQuickChipsEnd>
-            <MusicQuickChip active={shuffleActive} onClick={toggleShuffle}>
+            <button
+              type="button"
+              aria-pressed={shuffleActive}
+              className={`fw-filter-chip fw-quick-chip${shuffleActive ? " is-selected" : ""}`}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                toggleShuffle();
+              }}
+            >
               <ShuffleIconSmall size={13} />
               <span>Shuffle</span>
-            </MusicQuickChip>
-            <MusicQuickChip
-              active={sortMode === "recent"}
-              onClick={() => selectSortMode("recent")}
+            </button>
+            <button
+              type="button"
+              aria-pressed={sortMode === "recent"}
+              className={`fw-filter-chip fw-quick-chip${sortMode === "recent" ? " is-selected" : ""}`}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                selectSortMode("recent");
+              }}
             >
               Most Recent
-            </MusicQuickChip>
-            <MusicQuickChip
-              active={sortMode === "popular"}
-              onClick={() => selectSortMode("popular")}
+            </button>
+            <button
+              type="button"
+              aria-pressed={sortMode === "popular"}
+              className={`fw-filter-chip fw-quick-chip${sortMode === "popular" ? " is-selected" : ""}`}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                selectSortMode("popular");
+              }}
             >
               Most Popular
-            </MusicQuickChip>
+            </button>
           </MusicQuickChipsEnd>
         </MusicQuickChips>
 
