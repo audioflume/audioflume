@@ -1,3 +1,5 @@
+@import "../../../packages/shared/styles/music-sort-button-width.css";
+
 /* Website music action buttons should use the same circular shape as the desktop song cards. */
 
 .fw-song-list .filmwave-song-card,
