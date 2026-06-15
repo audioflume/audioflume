@@ -75,11 +75,11 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
   );
 }
 
-function CuratedIcon() {
+function CuratedIcon({ size = 14 }: { size?: number }) {
   return (
     <svg
-      width="20"
-      height="20"
+      width={size}
+      height={size}
       viewBox="0 0 14 14"
       fill="none"
       aria-hidden="true"
@@ -139,7 +139,6 @@ export default function DesktopAppShell({
   const libraryLinks: SidebarNavItem[] = [
     { view: "discover", label: "Discover", icon: <DashboardIcon size={12} /> },
     { view: "music", label: "Music Library", icon: <MusicIcon /> },
-    { view: "curated", label: "Curated Playlists", icon: <CuratedIcon /> },
     { view: "playlists", label: "My Playlists", icon: <PlaylistIcon size={14} /> },
     {
       view: "projects",
@@ -153,6 +152,7 @@ export default function DesktopAppShell({
     },
     { label: "Favorites", icon: <HeartIcon /> },
     { label: "Sound FX", icon: <WaveformIcon /> },
+    { view: "curated", label: "Curated Playlists", icon: <CuratedIcon /> },
   ];
 
   const projectLinks: SidebarNavItem[] = projects.map((project) => ({
