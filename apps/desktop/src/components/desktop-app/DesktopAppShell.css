@@ -2,6 +2,12 @@
   min-height: 100vh;
   background: var(--bg-primary);
   color: var(--text-primary);
+  --filmwave-desktop-sidebar-active-panel-width: var(--filmwave-sidebar-panel-expanded-width);
+  --filmwave-desktop-sidebar-content-gap: 12px;
+}
+
+.desktop-app-shell.is-sidebar-collapsed {
+  --filmwave-desktop-sidebar-active-panel-width: var(--filmwave-sidebar-collapsed-panel-width);
 }
 
 .desktop-app-main {
@@ -29,7 +35,8 @@
 .desktop-app-main:has(.desktop-music-page) {
   padding-left: calc(
     var(--filmwave-sidebar-float-inset, 12px) +
-      var(--filmwave-sidebar-panel-expanded-width) + 12px
+      var(--filmwave-desktop-sidebar-active-panel-width) +
+      var(--filmwave-desktop-sidebar-content-gap)
   );
 }
 
@@ -42,7 +49,8 @@
   .desktop-app-main:has(.desktop-music-page) {
   padding-left: calc(
     var(--filmwave-sidebar-float-inset, 12px) +
-      var(--filmwave-sidebar-collapsed-panel-width, 68px) + 12px
+      var(--filmwave-desktop-sidebar-active-panel-width) +
+      var(--filmwave-desktop-sidebar-content-gap)
   );
 }
 
