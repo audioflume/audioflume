@@ -8,6 +8,8 @@ import {
   useRef,
   useState,
   type ButtonHTMLAttributes,
+  type KeyboardEvent,
+  type MouseEvent,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -56,15 +58,6 @@ function isPressed(button: LegacyButtonElement) {
   return button.props["aria-pressed"] === true;
 }
 
-function logMusicSortAdapterDebug(
-  label: string,
-  payload: Record<string, unknown>,
-) {
-  if (typeof window === "undefined") return;
-
-  console.log(`[Filmwave sort adapter debug] ${label}`, payload);
-}
-
 function LegacyQuickActionsAdapter({
   shuffleButton,
   recentButton,
@@ -85,17 +78,6 @@ function LegacyQuickActionsAdapter({
   const activeOption =
     MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === value) ??
     MUSIC_LIBRARY_SORT_OPTIONS[0];
-
-  useEffect(() => {
-    logMusicSortAdapterDebug("state", {
-      activeLabel: activeOption.label,
-      isOpen,
-      popularPressed,
-      recentPressed,
-      shuffleActive,
-      value,
-    });
-  }, [activeOption.label, isOpen, popularPressed, recentPressed, shuffleActive, value]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -123,20 +105,24 @@ function LegacyQuickActionsAdapter({
     return nextValue === "downloaded" ? popularButton : recentButton;
   }
 
+  function selectSortOption(
+    event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>,
+    nextValue: MusicLibrarySortValue,
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const legacyButton = getSortButtonForValue(nextValue);
+    legacyButton.props.onClick?.(event as MouseEvent<HTMLButtonElement>);
+    setIsOpen(false);
+  }
+
   return (
     <span className="fw-quick-end">
       {cloneElement(shuffleButton, {
         className: `fw-filter-chip fw-quick-chip${shuffleActive ? " is-selected" : ""}`,
         "aria-pressed": shuffleActive,
         onClick: (event) => {
-          logMusicSortAdapterDebug("shuffle click", {
-            activeLabel: activeOption.label,
-            detail: event.detail,
-            popularPressed,
-            recentPressed,
-            shuffleActive,
-            value,
-          });
           shuffleButton.props.onClick?.(event);
         },
       })}
@@ -183,7 +169,6 @@ function LegacyQuickActionsAdapter({
           <div className="filmwave-music-sort-dropdown" role="menu">
             {MUSIC_LIBRARY_SORT_OPTIONS.map((option) => {
               const selected = value === option.value;
-              const legacyButton = getSortButtonForValue(option.value);
 
               return (
                 <button
@@ -195,21 +180,18 @@ function LegacyQuickActionsAdapter({
                     selected ? " is-selected" : ""
                   }`}
                   onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    logMusicSortAdapterDebug("sort option click", {
-                      activeLabel: activeOption.label,
-                      detail: event.detail,
-                      nextLabel: option.label,
-                      nextValue: option.value,
-                      popularPressed,
-                      recentPressed,
-                      selected,
-                      shuffleActive,
-                      value,
-                    });
-                    legacyButton.props.onClick?.(event);
-                    setIsOpen(false);
+                    if (event.detail === 0) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      return;
+                    }
+
+                    selectSortOption(event, option.value);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      selectSortOption(event, option.value);
+                    }
                   }}
                 >
                   {option.label}
