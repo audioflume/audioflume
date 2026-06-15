@@ -6,7 +6,6 @@ import {
   SidebarNav,
   SidebarProjectsHeader,
   SidebarSection,
-  SidebarSectionHeading,
   SidebarShell,
   type SidebarTooltipState,
 } from "@filmwave/shared";
@@ -15,7 +14,6 @@ import type { Project } from "../../lib/mockFilmwaveApi";
 import DashboardIcon from "../icons/DashboardIcon";
 import FolderIcon from "../icons/FolderIcon";
 import HeartIcon from "../icons/HeartIcon";
-import LibraryIcon from "../icons/LibraryIcon";
 import MusicIcon from "../icons/MusicIcon";
 import PlaylistIcon from "../icons/PlaylistIcon";
 import WaveformIcon from "../icons/WaveformIcon";
@@ -195,11 +193,6 @@ export default function DesktopAppShell({
 
       <SidebarInner>
         <SidebarSection>
-          <SidebarSectionHeading
-            label="Library"
-            collapsed={effectivelyCollapsed}
-            icon={<LibraryIcon size={16} />}
-          />
           <SidebarNav label="Library navigation">
             {libraryLinks.map((item) => (
               <SidebarLinkRow
