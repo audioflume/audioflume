@@ -1,6 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -71,7 +72,9 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <head>
-          <script
+          <Script
+            id="filmwave-edit-point-marker-visibility"
+            strategy="beforeInteractive"
             dangerouslySetInnerHTML={{
               __html: `
 (function () {
