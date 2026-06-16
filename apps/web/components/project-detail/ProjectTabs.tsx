@@ -1,4 +1,7 @@
-import type { ProjectTab, TABS } from "@/lib/project-detail/projectDetailUtils";
+import {
+  TABS,
+  type ProjectTab,
+} from "@/lib/project-detail/projectDetailUtils";
 
 type ProjectTabItem = (typeof TABS)[number];
 
@@ -19,10 +22,10 @@ function ProjectTabChevronIcon() {
   );
 }
 
-export default function ProjectTabs({ activeTab, tabs, onTabChange }: Props) {
+export default function ProjectTabs({ activeTab, onTabChange }: Props) {
   return (
     <nav className="project-tabs-row fw-filter-rail" aria-label="Project sections">
-      {tabs.map((tab) => {
+      {TABS.map((tab) => {
         const isActive = activeTab === tab.value;
 
         return (
