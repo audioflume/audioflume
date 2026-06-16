@@ -55,6 +55,7 @@ const mainLinks = [
   { label: "Discover", href: "/discover", icon: "discover" },
   { label: "Music Library", href: "/music", icon: "music" },
   { label: "My Playlists", href: "/playlists", icon: "playlist" },
+  { label: "Curated Playlists", href: "/curated-playlists", icon: "curated" },
   { label: "Favorites", href: "/favorites", icon: "heart" },
   { label: "Sound FX", href: "/sound-fx", icon: "waveform" },
 ];
@@ -106,10 +107,42 @@ function HorizontalMoreIcon() {
   );
 }
 
+function CuratedIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden="true"
+    >
+      <g transform="translate(7 7) scale(1.16) translate(-7 -7)">
+        <path
+          d="M4.15 3.1H9.2C9.9 3.1 10.45 3.65 10.45 4.35V9.4C10.45 10.1 9.9 10.65 9.2 10.65H4.15C3.45 10.65 2.9 10.1 2.9 9.4V4.35C2.9 3.65 3.45 3.1 4.15 3.1Z"
+          stroke="currentColor"
+          strokeWidth="1.45"
+        />
+        <path
+          d="M4.35 1.75H9.85C11.15 1.75 12.25 2.85 12.25 4.15V8.95"
+          stroke="currentColor"
+          strokeWidth="1.35"
+          strokeLinecap="round"
+          opacity="0.55"
+        />
+        <path
+          d="M6.65 5.05L7.05 5.9C7.14 6.1 7.3 6.26 7.5 6.35L8.35 6.75L7.5 7.15C7.3 7.24 7.14 7.4 7.05 7.6L6.65 8.45L6.25 7.6C6.16 7.4 6 7.24 5.8 7.15L4.95 6.75L5.8 6.35C6 6.26 6.16 6.1 6.25 5.9L6.65 5.05Z"
+          fill="currentColor"
+        />
+      </g>
+    </svg>
+  );
+}
+
 function MainIcon({ icon }: { icon: string }) {
   if (icon === "discover") return <DashboardIcon size={12} />;
   if (icon === "music") return <MusicIcon />;
   if (icon === "playlist") return <PlaylistIcon size={14} />;
+  if (icon === "curated") return <CuratedIcon />;
   if (icon === "heart") return <HeartIcon />;
   if (icon === "song-match") return <SongMatchIcon />;
   if (icon === "marker") return <EditPointsIcon />;
