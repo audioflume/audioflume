@@ -1,8 +1,6 @@
 "use client";
 
 import { useLayoutEffect } from "react";
-import { createRoot, type Root } from "react-dom/client";
-import CheckIcon from "./icons/CheckIcon";
 
 const SECTION_ID_BY_LABEL: Record<string, string> = {
   Mood: "mood",
@@ -25,110 +23,8 @@ const DOT_ONLY_COUNT_SECTION_IDS = new Set(["playlist", "duration", "bpm", "key"
 
 const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
-const DOT_ONLY_CHECK_STYLE_ID = "filmwave-dot-only-check-icon-styles";
 const RAIL_CLEAR_ALL_CLASS = "fw-filter-rail-clear-all";
 const RAIL_PLAYLISTS_CLASS = "fw-filter-rail-item-playlists";
-
-const dotOnlyCheckRoots = new WeakMap<Element, Root>();
-
-function ensureDotOnlyCheckStyle() {
-  const existing = document.getElementById(DOT_ONLY_CHECK_STYLE_ID);
-  if (existing) return null;
-
-  const style = document.createElement("style");
-  style.id = DOT_ONLY_CHECK_STYLE_ID;
-  style.textContent = `
-    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail {
-      display: flex !important;
-      flex-direction: column !important;
-    }
-
-    main > section:has(.fw-filter-panel-wrap) .${RAIL_PLAYLISTS_CLASS} {
-      order: 900 !important;
-    }
-
-    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
-      content: none !important;
-      display: none !important;
-    }
-
-    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check {
-      display: none !important;
-    }
-
-    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check {
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 100% !important;
-      height: 100% !important;
-      transform: translateY(0px) !important;
-      pointer-events: none !important;
-    }
-
-    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check svg {
-      display: block !important;
-      width: 10px !important;
-      height: 10px !important;
-    }
-
-    main > section:has(.fw-filter-panel-wrap) .${RAIL_CLEAR_ALL_CLASS} {
-      order: 1000 !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      align-self: flex-start !important;
-      width: auto !important;
-      height: 26px !important;
-      margin: 12px 8px 0 !important;
-      padding: 0 11px !important;
-      border: 1px solid var(--border-subtle) !important;
-      border-radius: 999px !important;
-      background: transparent !important;
-      color: var(--text-tertiary, var(--text-secondary)) !important;
-      font: inherit !important;
-      font-size: 11px !important;
-      font-weight: 500 !important;
-      line-height: 1 !important;
-      letter-spacing: 0.01em !important;
-      cursor: pointer !important;
-      opacity: 0.86 !important;
-      text-decoration: none !important;
-      transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, opacity 160ms ease !important;
-    }
-
-    main > section:has(.fw-filter-panel-wrap) .${RAIL_CLEAR_ALL_CLASS}:hover {
-      background: var(--bg-hover) !important;
-      border-color: var(--border-strong, var(--border-subtle)) !important;
-      color: var(--text-primary) !important;
-      opacity: 1 !important;
-      text-decoration: none !important;
-    }
-  `;
-  document.head.appendChild(style);
-  return style;
-}
-
-function renderDotOnlyCheckIcon(count: HTMLElement) {
-  let iconHost = count.querySelector<HTMLElement>(".fw-filter-rail-count-check");
-
-  if (!iconHost) {
-    count.replaceChildren();
-    iconHost = document.createElement("span");
-    iconHost.className = "fw-filter-rail-count-check";
-    iconHost.setAttribute("aria-hidden", "true");
-    count.appendChild(iconHost);
-  }
-
-  let root = dotOnlyCheckRoots.get(iconHost);
-
-  if (!root) {
-    root = createRoot(iconHost);
-    dotOnlyCheckRoots.set(iconHost, root);
-  }
-
-  root.render(<CheckIcon size={10} strokeWidth={3} />);
-}
 
 function getRailItemKey(railItem: Element, panel: Element) {
   const railItems = Array.from(panel.querySelectorAll(".fw-filter-rail-item"));
@@ -140,6 +36,9 @@ function getRailItemKey(railItem: Element, panel: Element) {
 }
 
 function getRailItemSectionId(railItem: Element) {
+  const explicitSectionId = (railItem as HTMLElement).dataset.filterSectionId;
+  if (explicitSectionId) return explicitSectionId;
+
   const label = railItem.querySelector(".fw-filter-rail-label")?.textContent?.trim();
 
   if (!label) return null;
@@ -159,6 +58,7 @@ function syncPlaylistRailItem(root: ParentNode = document) {
     if (!playlistItem) return;
 
     playlistItem.classList.add(RAIL_PLAYLISTS_CLASS);
+    playlistItem.dataset.filterSectionId = "playlist";
 
     const label = playlistItem.querySelector<HTMLElement>(".fw-filter-rail-label");
     if (label && label.textContent?.trim() !== "Playlists") label.textContent = "Playlists";
@@ -208,24 +108,21 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
 
     if (!count) return;
 
+    const originalCount = count.dataset.countValue ?? count.textContent?.trim() ?? "";
+    if (originalCount && !count.dataset.countValue) count.dataset.countValue = originalCount;
+
     const isDotOnly = sectionId ? DOT_ONLY_COUNT_SECTION_IDS.has(sectionId) : false;
 
     count.classList.toggle("is-dot-only", isDotOnly);
 
-    if (!isDotOnly) {
-      count.style.removeProperty("font-size");
-      count.style.removeProperty("width");
-      count.style.removeProperty("min-width");
-      count.style.removeProperty("height");
-      count.style.removeProperty("padding");
+    if (isDotOnly) {
+      count.textContent = "";
+      count.setAttribute("aria-label", `${sectionId} filter active`);
       return;
     }
 
-    renderDotOnlyCheckIcon(count);
-    count.style.setProperty("width", "16px", "important");
-    count.style.setProperty("min-width", "16px", "important");
-    count.style.setProperty("height", "16px", "important");
-    count.style.setProperty("padding", "0", "important");
+    count.textContent = count.dataset.countValue ?? originalCount;
+    count.removeAttribute("aria-label");
   });
 }
 
@@ -403,14 +300,13 @@ function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: stri
 
 export default function SideFilterPanelBehavior() {
   useLayoutEffect(() => {
-    let dotOnlySyncFrame = 0;
-    const dotOnlyCheckStyle = ensureDotOnlyCheckStyle();
+    let railSyncFrame = 0;
 
-    function scheduleDotOnlyRailCountSync() {
-      if (dotOnlySyncFrame) return;
+    function scheduleRailSync() {
+      if (railSyncFrame) return;
 
-      dotOnlySyncFrame = window.requestAnimationFrame(() => {
-        dotOnlySyncFrame = 0;
+      railSyncFrame = window.requestAnimationFrame(() => {
+        railSyncFrame = 0;
         syncSideFilterRailPresentation();
         syncDotOnlyRailCounts();
       });
@@ -436,7 +332,7 @@ export default function SideFilterPanelBehavior() {
 
         clearRailSection(panel, railItem, sectionId);
         window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
-        scheduleDotOnlyRailCountSync();
+        scheduleRailSync();
 
         return;
       }
@@ -450,14 +346,14 @@ export default function SideFilterPanelBehavior() {
         panel.classList.remove("has-selected-filter-section");
         delete panel.dataset.sideFilterActiveKey;
         window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
-        scheduleDotOnlyRailCountSync();
+        scheduleRailSync();
         return;
       }
 
       panel.dataset.sideFilterActiveKey = railItemKey;
       panel.classList.add("has-selected-filter-section");
       window.requestAnimationFrame(() => syncFilterPanelColumnFadeStates(panel));
-      scheduleDotOnlyRailCountSync();
+      scheduleRailSync();
     }
 
     function handleFilterColumnScroll(event: Event) {
@@ -473,10 +369,10 @@ export default function SideFilterPanelBehavior() {
 
     function handleViewportChange() {
       syncFilterPanelColumnFadeStates();
-      scheduleDotOnlyRailCountSync();
+      scheduleRailSync();
     }
 
-    const observer = new MutationObserver(scheduleDotOnlyRailCountSync);
+    const observer = new MutationObserver(scheduleRailSync);
 
     syncFilterPanelColumnFadeStates();
     syncSideFilterRailPresentation();
@@ -496,8 +392,7 @@ export default function SideFilterPanelBehavior() {
     window.addEventListener("scroll", handleViewportChange, { passive: true });
 
     return () => {
-      if (dotOnlySyncFrame) window.cancelAnimationFrame(dotOnlySyncFrame);
-      dotOnlyCheckStyle?.remove();
+      if (railSyncFrame) window.cancelAnimationFrame(railSyncFrame);
       observer.disconnect();
       document.removeEventListener("click", handleFilterRailClick, true);
       document.removeEventListener("scroll", handleFilterColumnScroll, true);
