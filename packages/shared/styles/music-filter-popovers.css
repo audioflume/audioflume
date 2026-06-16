@@ -132,53 +132,32 @@
   outline: none;
 }
 
-.filmwave-filter-input::-webkit-outer-spin-button,
-.filmwave-filter-input::-webkit-inner-spin-button {
-  width: 26px;
+.filmwave-filter-input[type="number"] {
+  padding-right: 22px;
+  color-scheme: dark;
+  appearance: auto;
+  -webkit-appearance: auto;
+}
+
+.filmwave-filter-input[type="number"]::-webkit-outer-spin-button,
+.filmwave-filter-input[type="number"]::-webkit-inner-spin-button {
+  width: 20px;
   height: 32px;
   margin: 0;
   cursor: pointer;
-  opacity: 0;
+  opacity: 0.72;
+  -webkit-appearance: inner-spin-button;
+}
+
+.filmwave-filter-input[type="number"]:hover::-webkit-outer-spin-button,
+.filmwave-filter-input[type="number"]:hover::-webkit-inner-spin-button,
+.filmwave-filter-input[type="number"]:focus::-webkit-outer-spin-button,
+.filmwave-filter-input[type="number"]:focus::-webkit-inner-spin-button {
+  opacity: 1;
 }
 
 .filmwave-filter-input:focus {
   border-color: var(--text-secondary);
-}
-
-.filmwave-filter-field-grid label:has(.filmwave-filter-input[type="number"]) {
-  position: relative;
-}
-
-.filmwave-filter-field-grid label:has(.filmwave-filter-input[type="number"]) .filmwave-filter-input {
-  padding-right: 34px;
-  appearance: auto;
-}
-
-.filmwave-filter-field-grid label:has(.filmwave-filter-input[type="number"])::before,
-.filmwave-filter-field-grid label:has(.filmwave-filter-input[type="number"])::after {
-  content: "";
-  position: absolute;
-  right: 9px;
-  width: 14px;
-  height: 14px;
-  background: var(--text-secondary);
-  pointer-events: none;
-  transition: background 0.15s ease;
-}
-
-.filmwave-filter-field-grid label:has(.filmwave-filter-input[type="number"])::before {
-  bottom: 14px;
-  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 15L12 9L18 15' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-}
-
-.filmwave-filter-field-grid label:has(.filmwave-filter-input[type="number"])::after {
-  bottom: 4px;
-  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-}
-
-.filmwave-filter-field-grid label:has(.filmwave-filter-input[type="number"]):focus-within::before,
-.filmwave-filter-field-grid label:has(.filmwave-filter-input[type="number"]):focus-within::after {
-  background: var(--text-primary);
 }
 
 .filmwave-filter-range-area {
@@ -236,65 +215,4 @@
 
 .filmwave-filter-preset-grid.is-four {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.filmwave-key-grid-wrap {
-  margin-top: 12px;
-}
-
-.filmwave-key-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.filmwave-key-grid.is-accidental {
-  margin-top: 0;
-  transform: translateX(18px);
-}
-
-.filmwave-key-spacer {
-  height: 32px;
-}
-
-.filmwave-key-button {
-  display: flex;
-  height: 32px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 400;
-  transition:
-    background 150ms ease,
-    border-color 150ms ease,
-    color 150ms ease;
-}
-
-.filmwave-key-button:hover {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
-}
-
-.filmwave-key-button.is-active {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
-}
-
-.filmwave-key-scale-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 14px;
-}
-
-.filmwave-key-scale-button {
-  height: 32px;
 }
