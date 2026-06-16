@@ -1,9 +1,9 @@
 /* Desktop music library shell bridge.
-   This file only maps the desktop persistent wrapper to the same shared
-   music/filter geometry used by the website. Values mirror the shared
-   music-side-filter and header-search-toolbar source styles. */
+   This file maps the desktop persistent wrapper to the same shared
+   music/filter geometry used by the website without replacing the shared
+   component styling. */
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) {
+.desktop-app-main .desktop-music-page {
   display: grid !important;
   grid-template-columns: auto minmax(0, 1fr) !important;
   column-gap: var(--filmwave-side-filter-content-gap) !important;
@@ -17,7 +17,7 @@
   --filmwave-sidebar-bottom-offset: var(--filmwave-player-height, 72px);
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky {
   display: contents !important;
   position: static !important;
   top: auto !important;
@@ -33,13 +33,12 @@
   background: transparent !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float {
   position: fixed !important;
   top: calc(var(--filmwave-header-height, 56px) / 2) !important;
   left: 50% !important;
   z-index: 141 !important;
   width: min(920px, calc(100vw - 520px)) !important;
-  max-width: calc(100vw - 300px) !important;
   min-height: 40px !important;
   height: 40px !important;
   box-sizing: border-box !important;
@@ -50,30 +49,33 @@
   box-shadow: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar,
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
   min-height: 30px !important;
   height: 30px !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search,
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search:focus-within {
   gap: 6px !important;
+  border-color: transparent !important;
   background: transparent !important;
+  background-color: transparent !important;
   padding: 0 10px 0 1px !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-icon {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-icon {
   width: 24px !important;
   height: 24px !important;
   margin-left: -1px !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-icon svg {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-icon svg {
   width: 11px !important;
   height: 11px !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear {
   order: 1 !important;
   width: 20px !important;
   min-width: 20px !important;
@@ -84,20 +86,20 @@
   background: transparent !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search input {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search input {
   order: 2 !important;
   padding-left: 6px !important;
   font-size: 13px !important;
   font-weight: 400 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-filters,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-actions,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-active-chips {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-filters,
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-actions,
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-active-chips {
   display: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-filter-panel-wrap {
   grid-column: 1 !important;
   grid-row: 1 / span 999 !important;
   position: sticky !important;
@@ -120,25 +122,25 @@
   pointer-events: auto !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) {
   width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
   max-width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-reveal,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-body {
+.desktop-app-main .desktop-music-page .fw-filter-panel-reveal,
+.desktop-app-main .desktop-music-page .fw-filter-panel,
+.desktop-app-main .desktop-music-page .fw-filter-panel-body {
   height: 100% !important;
   min-height: 0 !important;
   max-height: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-reveal {
+.desktop-app-main .desktop-music-page .fw-filter-panel-reveal {
   display: block !important;
   overflow: visible !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel {
+.desktop-app-main .desktop-music-page .fw-filter-panel {
   overflow: visible !important;
   border: 0 !important;
   background: transparent !important;
@@ -147,7 +149,7 @@
   backdrop-filter: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-body {
+.desktop-app-main .desktop-music-page .fw-filter-panel-body {
   position: relative !important;
   display: grid !important;
   grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
@@ -162,11 +164,11 @@
   box-shadow: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) .fw-filter-panel-body {
   grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-body::before {
+.desktop-app-main .desktop-music-page .fw-filter-panel-body::before {
   content: "";
   position: absolute;
   top: 0;
@@ -179,12 +181,12 @@
   opacity: 0;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body::before {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) .fw-filter-panel-body::before {
   opacity: 1;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-detail {
+.desktop-app-main .desktop-music-page .fw-filter-rail,
+.desktop-app-main .desktop-music-page .fw-filter-detail {
   height: 100% !important;
   min-height: 0 !important;
   overflow-y: auto !important;
@@ -196,28 +198,28 @@
   box-shadow: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail {
+.desktop-app-main .desktop-music-page .fw-filter-rail {
   display: flex !important;
   flex-direction: column !important;
   padding: 10px 8px !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-detail {
+.desktop-app-main .desktop-music-page .fw-filter-detail {
   display: none !important;
   min-width: 0 !important;
   padding: 12px !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-detail {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) .fw-filter-detail {
   display: block !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-group-count,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-footer {
+.desktop-app-main .desktop-music-page .fw-filter-group-count,
+.desktop-app-main .desktop-music-page .fw-filter-panel-footer {
   display: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-option-list {
+.desktop-app-main .desktop-music-page .fw-filter-option-list {
   column-width: auto !important;
   column-count: 1 !important;
   column-gap: 0 !important;
@@ -225,39 +227,39 @@
   -webkit-column-break-inside: auto !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item {
   height: 38px !important;
   border-radius: 11px !important;
   font-weight: 400 !important;
   transition: background-color 160ms ease, color 160ms ease !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item.is-active {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item.is-active {
   font-weight: 400 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-rail-item.is-active {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) .fw-filter-rail-item.is-active {
   background: var(--bg-hover-strong) !important;
   color: var(--text-primary) !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
+.desktop-app-main .desktop-music-page .fw-filter-rail-chevron {
   opacity: 0.4 !important;
   transition: opacity 160ms ease, color 160ms ease !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:hover,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active:hover {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:hover,
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:not(:is(.has-selected-filter-section, :focus-within)) .fw-filter-rail-item.is-active:hover {
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:hover .fw-filter-rail-chevron,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active:hover .fw-filter-rail-chevron {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:hover .fw-filter-rail-chevron,
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:not(:is(.has-selected-filter-section, :focus-within)) .fw-filter-rail-item.is-active:hover .fw-filter-rail-chevron {
   opacity: 0.65 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
+.desktop-app-main .desktop-music-page .fw-filter-rail-count {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -266,7 +268,7 @@
   transition: background-color 160ms ease, color 160ms ease !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
+.desktop-app-main .desktop-music-page .fw-filter-rail-count.is-dot-only::before {
   content: "✓";
   display: inline-flex !important;
   align-items: center !important;
@@ -279,15 +281,15 @@
   transform: translateY(-0.5px) !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::before {
+.desktop-app-main .desktop-music-page .fw-filter-rail-count.is-dot-only:hover::before {
   display: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover {
+.desktop-app-main .desktop-music-page .fw-filter-rail-count:hover {
   font-size: 0 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after {
+.desktop-app-main .desktop-music-page .fw-filter-rail-count:hover::after {
   content: "×";
   display: inline-flex !important;
   align-items: center !important;
@@ -300,40 +302,40 @@
   transform: translateY(-1px) !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:not(:is(.has-selected-filter-section, :focus-within)) .fw-filter-rail-item.is-active {
   background: transparent !important;
   color: var(--text-secondary) !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:not(:is(.has-selected-filter-section, :focus-within)) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
   opacity: 0.4 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(1) {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:nth-of-type(1) {
   order: 1 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(2) {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:nth-of-type(2) {
   order: 2 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(3) {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:nth-of-type(3) {
   order: 4 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(4) {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:nth-of-type(4) {
   order: 3 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(n + 5) {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:nth-of-type(n + 5) {
   order: 5 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item-playlists {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item-playlists {
   order: 900 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all {
+.desktop-app-main .desktop-music-page button.fw-filter-rail-clear-all {
   order: 1000 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -359,7 +361,7 @@
   transition: background 150ms ease, color 150ms ease !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all:hover {
+.desktop-app-main .desktop-music-page button.fw-filter-rail-clear-all:hover {
   background: var(--bg-control-hover) !important;
   border-color: transparent !important;
   color: var(--text-primary) !important;
@@ -367,23 +369,23 @@
   text-decoration: none !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .desktop-music-load-notice,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > footer {
+.desktop-app-main .desktop-music-page > .fw-quick-row,
+.desktop-app-main .desktop-music-page > .desktop-music-load-notice,
+.desktop-app-main .desktop-music-page > .fw-song-list,
+.desktop-app-main .desktop-music-page > footer {
   grid-column: 2 !important;
   min-width: 0 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row {
+.desktop-app-main .desktop-music-page > .fw-quick-row {
   padding: 8px 28px 0 0 !important;
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list {
+.desktop-app-main .desktop-music-page > .fw-song-list {
   margin: 10px 20px 28px 0 !important;
 }
 
-.desktop-app-main .desktop-music-page.has-player:has(.fw-filter-panel-wrap) > .fw-song-list {
+.desktop-app-main .desktop-music-page.has-player > .fw-song-list {
   margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px) !important;
 }
 
@@ -401,22 +403,22 @@
 }
 
 @media (max-width: 1180px) {
-  .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
+  .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float {
     width: min(720px, calc(100vw - 360px)) !important;
   }
 }
 
 @media (max-width: 900px) {
-  .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) {
+  .desktop-app-main .desktop-music-page {
     display: block !important;
     padding-left: 0 !important;
   }
 
-  .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
+  .desktop-app-main .desktop-music-page > .fw-toolbar-sticky {
     display: block !important;
   }
 
-  .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
+  .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-filter-panel-wrap {
     display: none !important;
   }
 }
