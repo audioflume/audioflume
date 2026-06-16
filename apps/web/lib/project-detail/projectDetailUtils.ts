@@ -72,30 +72,14 @@ export function getTimestamp(value: string | null | undefined) {
   return Number.isFinite(time) ? time : null;
 }
 
-export function getVisibleProjectTabs({
-  projectAssets,
-  projectSongsLength,
-}: {
+export function getVisibleProjectTabs(_args: {
   projectAssets: ProjectAsset[];
   projectSongsLength: number;
 }) {
-  const values = new Set<ProjectTab>(["overview", "licenses"]);
-
-  projectAssets.forEach((asset) => {
-    const mediaTab =
-      MEDIA_TAB_BY_ASSET_TYPE[
-        asset.asset_type as keyof typeof MEDIA_TAB_BY_ASSET_TYPE
-      ];
-
-    if (mediaTab) values.add(mediaTab);
-  });
-
-  if (projectSongsLength > 0) {
-    values.add("music");
-  }
+  const values = new Set<ProjectTab>(TABS.map((tab) => tab.value));
 
   return {
     availableTabValues: values,
-    visibleTabs: TABS.filter((tab) => values.has(tab.value)),
+    visibleTabs: TABS,
   };
 }
