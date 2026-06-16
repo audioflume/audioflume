@@ -3,10 +3,6 @@
   display: contents;
 }
 
-.admin-original-page-header-hidden {
-  display: none !important;
-}
-
 /* Admin dashboard */
 main[class*="md:ml-[var(--admin-sidebar-width)]"] {
   padding-top: 0 !important;
