@@ -19,8 +19,9 @@ import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
 import "./admin-polish.css";
 import "../../../packages/shared/styles/music-sort-button-width.css";
+import "../../../packages/shared/styles/playlist-library.css";
+import "../../../packages/shared/styles/shell-chrome.css";
 import "./search-filter-backdrop-overrides.css";
-import "./playlist-grid-overrides.css";
 import "./side-filter-overrides.css";
 import "./side-filter-clear-all-overrides.css";
 
