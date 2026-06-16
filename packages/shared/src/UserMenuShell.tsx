@@ -103,18 +103,16 @@ export function UserMenuExitAction({
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }) {
   return (
-    <div className="filmwave-user-menu-exit-section">
-      <button
-        type="button"
-        onClick={onClick}
-        className="filmwave-dropdown-item filmwave-user-menu-exit"
-      >
-        <span>{label}</span>
-        {trailing && (
-          <span className="filmwave-user-menu-exit-hint">{trailing}</span>
-        )}
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className="filmwave-dropdown-item filmwave-user-menu-exit"
+    >
+      <span>{label}</span>
+      {trailing && (
+        <span className="filmwave-user-menu-exit-hint">{trailing}</span>
+      )}
+    </button>
   );
 }
 
