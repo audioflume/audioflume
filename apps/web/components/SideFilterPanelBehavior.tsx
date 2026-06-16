@@ -23,20 +23,20 @@ function ensureWebsiteFilterCountIconParity() {
 
     body main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after,
     body main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::after {
-      content: "×" !important;
-      position: absolute !important;
-      top: 50% !important;
-      left: 50% !important;
-      display: flex !important;
+      content: "\\00d7" !important;
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       width: 100% !important;
       height: 100% !important;
       font-family: inherit !important;
       font-size: 12px !important;
-      font-weight: 400 !important;
+      font-weight: 450 !important;
       line-height: 1 !important;
-      transform: translate(-50%, -50%) !important;
+      transform: translateY(-1px) !important;
     }
   `;
 
