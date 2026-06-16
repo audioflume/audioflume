@@ -7,7 +7,6 @@
   display: grid;
   width: 200px;
   overflow: hidden;
-  gap: 2px;
   border: 0;
   border-radius: 4px;
   background: var(--filmwave-menu-bg);
@@ -21,7 +20,7 @@
   display: grid;
   width: 150px;
   overflow: hidden;
-  gap: 2px;
+  gap: 0;
   border: 0;
   border-radius: 4px;
   background: var(--filmwave-menu-bg);
@@ -41,7 +40,6 @@
   display: grid;
   width: 200px;
   overflow: hidden;
-  gap: 2px;
   border: 0;
   border-radius: 4px;
   background: var(--filmwave-menu-bg);
