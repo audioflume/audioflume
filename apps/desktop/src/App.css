@@ -81,3 +81,35 @@ button {
   width: 100% !important;
   max-width: 100% !important;
 }
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count.fw-filter-rail-count::before,
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count.fw-filter-rail-count::after {
+  content: none !important;
+  display: none !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count-clear {
+  position: absolute !important;
+  inset: auto !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 11px !important;
+  height: 11px !important;
+  transform: translate(-50%, -50%) !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count-clear svg {
+  display: block !important;
+  width: 11px !important;
+  height: 11px !important;
+}
