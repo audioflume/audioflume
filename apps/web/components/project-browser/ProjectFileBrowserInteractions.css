@@ -1,15 +1,5 @@
 /* Project file browser interactions, drag previews, and context menus */
 
-.project-tabs-row button:not(.filmwave-active-line-trigger)::after,
-.project-download-trigger::after {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  content: none !important;
-}
-
 .project-drag-preview.is-grid-preview {
   width: 132px !important;
   min-width: 132px !important;
