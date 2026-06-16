@@ -1,7 +1,8 @@
 /* Desktop music library shell bridge.
-   This file maps the desktop persistent wrapper to the same shared
-   music/filter geometry used by the website without replacing the shared
-   component styling. */
+   This file only maps the desktop persistent wrapper onto the same shared
+   website music/filter geometry. It is imported after the shared redesign CSS
+   from MusicLibraryRedesign.css so these platform-structure rules win without
+   restoring the deleted parity/targeted override files. */
 
 .desktop-app-main .desktop-music-page {
   display: grid !important;
@@ -17,10 +18,13 @@
   --filmwave-sidebar-bottom-offset: var(--filmwave-player-height, 72px);
 }
 
+/* Match the website header searchbar: the sticky wrapper becomes structural,
+   while the visible pill is fixed in the header center. */
 .desktop-app-main .desktop-music-page > .fw-toolbar-sticky {
   display: contents !important;
   position: static !important;
   top: auto !important;
+  right: auto !important;
   left: auto !important;
   width: auto !important;
   max-width: none !important;
@@ -39,6 +43,7 @@
   left: 50% !important;
   z-index: 141 !important;
   width: min(920px, calc(100vw - 520px)) !important;
+  max-width: calc(100vw - 300px) !important;
   min-height: 40px !important;
   height: 40px !important;
   box-sizing: border-box !important;
@@ -46,6 +51,7 @@
   pointer-events: auto !important;
   border-color: var(--border) !important;
   background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
+  background-color: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
   box-shadow: none !important;
 }
 
@@ -56,11 +62,13 @@
 }
 
 .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search,
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search:hover,
 .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search:focus-within {
   gap: 6px !important;
   border-color: transparent !important;
   background: transparent !important;
   background-color: transparent !important;
+  box-shadow: none !important;
   padding: 0 10px 0 1px !important;
 }
 
@@ -82,6 +90,7 @@
   height: 24px !important;
   margin: 0 !important;
   padding: 0 6px 0 0 !important;
+  border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
 }
@@ -89,16 +98,22 @@
 .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search input {
   order: 2 !important;
   padding-left: 6px !important;
+  border-left: 0 !important;
   font-size: 13px !important;
   font-weight: 400 !important;
 }
 
+/* Desktop uses the side rail as the filter UI, so the header filter/chip controls
+   stay hidden while the panel itself remains mounted structurally. */
 .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-filters,
 .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-actions,
 .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-toolbar-float .fw-active-chips {
   display: none !important;
 }
 
+/* The side filter panel is the first grid column. Unlike the header dropdown,
+   desktop keeps the rail/detail structure open so category clicks use the shared
+   React active-section behavior directly. */
 .desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-filter-panel-wrap {
   grid-column: 1 !important;
   grid-row: 1 / span 999 !important;
@@ -110,8 +125,8 @@
   z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
   display: grid !important;
   grid-template-rows: 1fr !important;
-  width: var(--filmwave-side-filter-rail-width) !important;
-  max-width: var(--filmwave-side-filter-rail-width) !important;
+  width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
+  max-width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
   height: calc(
     100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
       var(--filmwave-sidebar-bottom-offset, 0px) -
@@ -120,11 +135,6 @@
   margin: 0 !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-}
-
-.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) {
-  width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
-  max-width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
 }
 
 .desktop-app-main .desktop-music-page .fw-filter-panel-reveal,
@@ -152,7 +162,7 @@
 .desktop-app-main .desktop-music-page .fw-filter-panel-body {
   position: relative !important;
   display: grid !important;
-  grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
+  grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
   gap: 0 !important;
   overflow: hidden !important;
   border: 0 !important;
@@ -162,10 +172,6 @@
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   box-shadow: none !important;
-}
-
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) .fw-filter-panel-body {
-  grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
 }
 
 .desktop-app-main .desktop-music-page .fw-filter-panel-body::before {
@@ -178,10 +184,6 @@
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2);
   background: var(--filmwave-side-filter-divider-color);
   pointer-events: none;
-  opacity: 0;
-}
-
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) .fw-filter-panel-body::before {
   opacity: 1;
 }
 
@@ -205,13 +207,9 @@
 }
 
 .desktop-app-main .desktop-music-page .fw-filter-detail {
-  display: none !important;
+  display: block !important;
   min-width: 0 !important;
   padding: 12px !important;
-}
-
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) .fw-filter-detail {
-  display: block !important;
 }
 
 .desktop-app-main .desktop-music-page .fw-filter-group-count,
@@ -235,12 +233,9 @@
 }
 
 .desktop-app-main .desktop-music-page .fw-filter-rail-item.is-active {
-  font-weight: 400 !important;
-}
-
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:is(.has-selected-filter-section, :focus-within) .fw-filter-rail-item.is-active {
   background: var(--bg-hover-strong) !important;
   color: var(--text-primary) !important;
+  font-weight: 400 !important;
 }
 
 .desktop-app-main .desktop-music-page .fw-filter-rail-chevron {
@@ -248,14 +243,12 @@
   transition: opacity 160ms ease, color 160ms ease !important;
 }
 
-.desktop-app-main .desktop-music-page .fw-filter-rail-item:hover,
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:not(:is(.has-selected-filter-section, :focus-within)) .fw-filter-rail-item.is-active:hover {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:hover {
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
 }
 
-.desktop-app-main .desktop-music-page .fw-filter-rail-item:hover .fw-filter-rail-chevron,
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:not(:is(.has-selected-filter-section, :focus-within)) .fw-filter-rail-item.is-active:hover .fw-filter-rail-chevron {
+.desktop-app-main .desktop-music-page .fw-filter-rail-item:hover .fw-filter-rail-chevron {
   opacity: 0.65 !important;
 }
 
@@ -300,15 +293,6 @@
   font-weight: 450 !important;
   line-height: 1 !important;
   transform: translateY(-1px) !important;
-}
-
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:not(:is(.has-selected-filter-section, :focus-within)) .fw-filter-rail-item.is-active {
-  background: transparent !important;
-  color: var(--text-secondary) !important;
-}
-
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:not(:is(.has-selected-filter-section, :focus-within)) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
-  opacity: 0.4 !important;
 }
 
 .desktop-app-main .desktop-music-page .fw-filter-rail-item:nth-of-type(1) {
