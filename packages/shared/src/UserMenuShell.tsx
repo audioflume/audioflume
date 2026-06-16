@@ -19,8 +19,6 @@ export function UserMenuArrowIcon() {
 }
 
 // ── Panel ─────────────────────────────────────────────────────────────
-// Clean card: no workspace section, no brand footer, just identity +
-// actions + theme toggle. Width 260px, soft shadow, 14px radius.
 export function UserMenuPanel({
   children,
   className,
@@ -29,7 +27,7 @@ export function UserMenuPanel({
   className?: string;
 }) {
   return (
-    <div className={cx("filmwave-user-menu", className)}>
+    <div className={cx("filmwave-dropdown-shell filmwave-user-menu", className)}>
       {children}
     </div>
   );
@@ -81,7 +79,7 @@ export function UserMenuAction({
 }) {
   const Component = as ?? (href ? "a" : "button");
   const props = {
-    className: "filmwave-user-menu-action",
+    className: "filmwave-dropdown-item filmwave-user-menu-action",
     onClick,
     ...(href ? { href } : {}),
     ...(Component === "button" ? { type: "button" as const } : {}),
@@ -109,7 +107,7 @@ export function UserMenuExitAction({
       <button
         type="button"
         onClick={onClick}
-        className="filmwave-user-menu-exit"
+        className="filmwave-dropdown-item filmwave-user-menu-exit"
       >
         <span>{label}</span>
         {trailing && (
