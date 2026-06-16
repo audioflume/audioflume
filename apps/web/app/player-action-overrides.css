@@ -1,5 +1,3 @@
-/* Scope SongActionButton player usage to the same compact button styling as the desktop player. */
-
 :where(:root) {
   --filmwave-player-action-icon-color: var(--filmwave-sidebar-icon-color, #8f8f8f);
   --filmwave-player-action-icon-color-active: var(--filmwave-sidebar-icon-color-active, #ffffff);
@@ -12,22 +10,22 @@
 
 .filmwave-player-actions .filmwave-song-action-button,
 .filmwave-player-actions .filmwave-icon-button {
-  display: inline-flex !important;
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  cursor: pointer !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: 1px solid transparent !important;
-  border-radius: 9px !important;
-  background: transparent !important;
-  padding: 0 !important;
-  color: var(--filmwave-player-action-icon-color) !important;
-  opacity: 1 !important;
+  display: inline-flex;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  padding: 0;
+  color: var(--filmwave-player-action-icon-color);
+  opacity: 1;
   transition:
     background 0.15s ease,
-    color 0.15s ease !important;
+    color 0.15s ease;
 }
 
 .filmwave-player-actions .filmwave-song-action-button:hover,
@@ -38,96 +36,95 @@
 .filmwave-player-actions .filmwave-icon-button.is-open,
 .filmwave-player-actions .filmwave-icon-button.is-active,
 .filmwave-player-actions .filmwave-icon-button[aria-pressed="true"] {
-  border-color: transparent !important;
-  background: var(--filmwave-square-icon-hover-bg) !important;
-  color: var(--filmwave-player-action-icon-color-active) !important;
-  opacity: 1 !important;
+  border-color: transparent;
+  background: var(--filmwave-square-icon-hover-bg);
+  color: var(--filmwave-player-action-icon-color-active);
+  opacity: 1;
 }
 
 .filmwave-player-actions .filmwave-song-action-button[aria-label="Remove song from favorites"],
 .filmwave-player-actions .filmwave-song-action-button[aria-label="Remove song from favorites"] svg,
 .filmwave-player-actions .filmwave-song-action-button[aria-pressed="true"] svg,
 .filmwave-player-actions .filmwave-icon-button[aria-pressed="true"] svg {
-  color: var(--filmwave-player-action-icon-color-active) !important;
-  fill: currentColor !important;
-  stroke: currentColor !important;
-  opacity: 1 !important;
+  color: var(--filmwave-player-action-icon-color-active);
+  fill: currentColor;
+  stroke: currentColor;
+  opacity: 1;
 }
 
 .filmwave-player-actions .filmwave-song-action-button svg,
 .filmwave-player-actions .filmwave-icon-button svg {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 .filmwave-player-actions .filmwave-song-action-button svg *,
 .filmwave-player-actions .filmwave-icon-button svg * {
-  opacity: 1 !important;
-  fill-opacity: 1 !important;
-  stroke-opacity: 1 !important;
+  opacity: 1;
+  fill-opacity: 1;
+  stroke-opacity: 1;
 }
 
 .filmwave-player-actions .filmwave-song-action-button[aria-label="Favorite song"] svg path,
 .filmwave-player-actions .filmwave-song-action-button[aria-label="Remove song from favorites"] svg path,
 .filmwave-player-actions .filmwave-song-action-button[aria-label="Show cue markers"] svg path,
 .filmwave-player-actions .filmwave-song-action-button[aria-label="Hide cue markers"] svg path {
-  stroke-width: 1.9 !important;
+  stroke-width: 1.9;
 }
 
 .filmwave-player-actions .filmwave-icon-button[aria-label="Download song"] svg path {
-  stroke-width: 2.2 !important;
+  stroke-width: 2.2;
 }
 
 .filmwave-player-actions .filmwave-icon-button[aria-label="Song options"] .filmwave-more-icon path {
-  stroke-width: 3.7 !important;
+  stroke-width: 3.7;
 }
 
 .filmwave-player-actions .filmwave-song-action-button.is-plain-active-icon {
-  border-color: transparent !important;
-  background: transparent !important;
+  border-color: transparent;
+  background: transparent;
 }
 
 .filmwave-player-actions .filmwave-song-action-button.is-plain-active-icon:hover {
-  background: var(--filmwave-square-icon-hover-bg) !important;
+  background: var(--filmwave-square-icon-hover-bg);
 }
 
-/* Compact the music search/filter row without changing the page spacing. */
 .fw-toolbar-float {
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 .fw-toolbar-search,
 .fw-toolbar-filters,
 .fw-toolbar-clear-all {
-  height: 34px !important;
-  min-height: 34px !important;
+  height: 34px;
+  min-height: 34px;
 }
 
 .fw-toolbar-search {
-  gap: 8px !important;
-  padding-left: 5px !important;
+  gap: 8px;
+  padding-left: 5px;
 }
 
 .fw-toolbar-search-icon {
-  order: 0 !important;
-  width: 24px !important;
-  height: 24px !important;
+  order: 0;
+  width: 24px;
+  height: 24px;
 }
 
 .fw-toolbar-search-clear {
-  position: relative !important;
-  order: 1 !important;
-  width: 18px !important;
-  min-width: 18px !important;
-  height: 24px !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
+  position: relative;
+  order: 1;
+  width: 18px;
+  min-width: 18px;
+  height: 24px;
+  margin-left: 0;
+  margin-right: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .fw-toolbar-search-clear:hover {
-  background: transparent !important;
+  background: transparent;
 }
 
 .fw-toolbar-search-clear::after {
@@ -143,43 +140,41 @@
 }
 
 .fw-toolbar-search-clear svg {
-  width: 12px !important;
-  height: 12px !important;
+  width: 12px;
+  height: 12px;
 }
 
 .fw-toolbar-search input {
-  order: 2 !important;
+  order: 2;
 }
 
 .fw-toolbar-filters,
 .fw-toolbar-clear-all {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-/* Let song cards pass visibly behind the sticky search/filter row. */
 .filmwave-search-filter-sticky,
 .filmwave-search-filter-combined-row,
 .filmwave-search-filter-search-row,
 .filmwave-search-filter-row,
 .filmwave-search-filter-quick-row {
-  background: transparent !important;
+  background: transparent;
 }
 
-/* Anchor the music player flush to the viewport edges. */
 .filmwave-music-player {
-  right: 0 !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  border-right: 0 !important;
-  border-bottom: 0 !important;
-  border-left: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .filmwave-music-player[data-platform="desktop"],
 .filmwave-music-player[data-platform="web"] {
-  width: 100vw !important;
-  max-width: 100vw !important;
+  width: 100vw;
+  max-width: 100vw;
 }
