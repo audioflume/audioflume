@@ -70,7 +70,7 @@ export default function MusicFilterToolbarBehavior() {
 
       window.requestAnimationFrame(() => {
         const mostRecentButton = document.querySelector<HTMLButtonElement>(
-          '.filmwave-music-sort-dropdown button[role="menuitem"], .filmwave-music-sort-dropdown button',
+          '.filmwave-music-sort-menu button[role="menuitemradio"], .filmwave-music-sort-menu button, .filmwave-music-sort-dropdown button[role="menuitem"], .filmwave-music-sort-dropdown button',
         );
 
         mostRecentButton?.click();
@@ -90,7 +90,6 @@ export default function MusicFilterToolbarBehavior() {
 
       event.preventDefault();
       event.stopPropagation();
-      event.stopImmediatePropagation();
       resetActiveShuffle();
     }
 
