@@ -104,12 +104,101 @@
 
 .project-detail-page {
   min-height: calc(100vh - 56px);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: var(--filmwave-side-filter-rail-width, 168px) minmax(0, 1fr);
+  column-gap: var(--filmwave-side-filter-content-gap, 14px);
+  align-items: start;
   background: var(--bg-primary);
 }
 
-/* .project-tabs-row is defined in DesktopProjectsViewOverrides.css */
+.project-tabs-row {
+  grid-column: 1;
+  grid-row: 1 / span 999;
+  position: sticky;
+  top: var(--filmwave-sidebar-float-inset, 12px);
+  z-index: 40;
+  width: var(--filmwave-side-filter-rail-width, 168px);
+  max-width: var(--filmwave-side-filter-rail-width, 168px);
+  height: calc(
+    100dvh - var(--filmwave-header-height, 56px) -
+      (var(--filmwave-sidebar-float-inset, 12px) * 2)
+  );
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-right: 1px solid var(--filmwave-side-filter-divider-color, var(--divider));
+  background: transparent;
+  padding: 10px 8px;
+  scrollbar-width: none;
+}
+
+.project-tabs-row::-webkit-scrollbar {
+  display: none;
+}
+
+.project-tabs-row .fw-filter-rail-item {
+  width: 100%;
+  height: 38px;
+  min-height: 38px;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0 8px 0 12px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 400;
+  text-align: left;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.project-tabs-row .fw-filter-rail-item:hover {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+}
+
+.project-tabs-row .fw-filter-rail-item.is-active {
+  background: var(--bg-row-hover);
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.project-tabs-row .fw-filter-rail-label {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-tabs-row .fw-filter-rail-chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  opacity: 0.4;
+  transition: opacity 160ms ease, color 160ms ease;
+}
+
+.project-tabs-row .fw-filter-rail-item:hover .fw-filter-rail-chevron {
+  opacity: 0.65;
+}
+
+.project-tabs-row .fw-filter-rail-chevron svg {
+  width: 11px;
+  height: 11px;
+  display: block;
+}
 
 .project-toolbar-button,
 .project-toolbar-icon-button {
@@ -146,10 +235,15 @@
 }
 
 .project-detail-hero {
+  grid-column: 2;
   position: relative;
+  width: 100%;
+  max-width: 1180px;
+  box-sizing: border-box;
+  margin: 0 auto;
   min-height: 176px;
   border-bottom: 1px solid var(--divider);
-  padding: 38px 32px 28px;
+  padding: 88px 40px 28px;
 }
 
 .project-detail-kicker {
@@ -182,10 +276,63 @@
   line-height: 1;
 }
 
+.project-sync-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.project-sync-status.is-syncing > span:first-child {
+  font-size: 0;
+}
+
+.project-sync-status.is-syncing > span:first-child::before {
+  content: "Syncing";
+  font-size: 11px;
+}
+
+.project-sync-status-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--success);
+}
+
+.project-sync-status.is-syncing .project-sync-status-dot {
+  width: 9px;
+  height: 9px;
+  flex-basis: 9px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  background: transparent;
+  animation: project-sync-spin 0.75s linear infinite;
+}
+
+.project-sync-status.is-error .project-sync-status-dot {
+  background: var(--danger);
+}
+
+.project-sync-status.is-success .project-sync-status-dot {
+  background: var(--success);
+}
+
+@keyframes project-sync-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .project-file-browser {
+  grid-column: 2;
   position: relative;
-  flex: 1;
-  padding: 0 32px 32px;
+  width: 100%;
+  max-width: 1180px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  flex: initial;
+  padding: 0 40px 32px;
 }
 
 .project-file-browser-top {
@@ -194,10 +341,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-left: -32px;
-  margin-right: -32px;
+  margin-left: 0;
+  margin-right: 0;
   background: var(--bg-primary);
-  padding: 0 32px;
+  padding: 0;
 }
 
 .project-breadcrumbs.project-path {
@@ -272,6 +419,15 @@
 
 .project-more-menu-button:hover {
   background: var(--bg-row-hover);
+}
+
+.project-more-menu-button.is-danger {
+  color: #dc584f;
+}
+
+.project-more-menu-button.is-danger:hover {
+  background: rgba(220, 88, 79, 0.12);
+  color: #dc584f;
 }
 
 .project-file-browser-section {
