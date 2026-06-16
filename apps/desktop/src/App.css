@@ -81,3 +81,7 @@ button {
   width: 100% !important;
   max-width: 100% !important;
 }
+
+.desktop-app-main .fw-filter-rail-count-clear svg {
+  transform: translate(0px, 0.15px) !important;
+}
