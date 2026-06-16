@@ -133,27 +133,17 @@
 }
 
 .filmwave-filter-input[type="number"] {
-  padding-right: 22px;
-  color-scheme: dark;
-  appearance: auto;
-  -webkit-appearance: auto;
+  padding-right: 10px;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
 }
 
 .filmwave-filter-input[type="number"]::-webkit-outer-spin-button,
 .filmwave-filter-input[type="number"]::-webkit-inner-spin-button {
-  width: 20px;
-  height: 32px;
+  display: none;
   margin: 0;
-  cursor: pointer;
-  opacity: 0.72;
-  -webkit-appearance: inner-spin-button;
-}
-
-.filmwave-filter-input[type="number"]:hover::-webkit-outer-spin-button,
-.filmwave-filter-input[type="number"]:hover::-webkit-inner-spin-button,
-.filmwave-filter-input[type="number"]:focus::-webkit-outer-spin-button,
-.filmwave-filter-input[type="number"]:focus::-webkit-inner-spin-button {
-  opacity: 1;
+  -webkit-appearance: none;
 }
 
 .filmwave-filter-input:focus {
