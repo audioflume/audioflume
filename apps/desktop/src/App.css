@@ -9,17 +9,14 @@
 @import "../../../packages/shared/styles/sidebar.css";
 @import "../../../packages/shared/styles/sidebar-player-boundary.css";
 @import "../../../packages/shared/styles/search-filter-chrome.css";
-@import "../../../packages/shared/styles/header-search-toolbar.css";
-@import "../../../packages/shared/styles/music-side-filter.css";
 @import "../../../packages/shared/styles/collapsible-search-pill.css";
 @import "../../../packages/shared/styles/combined-row-fix.css";
 @import "../../../packages/shared/styles/music-filter-popovers.css";
 @import "../../../packages/shared/styles/music-library-states.css";
 @import "../../../packages/shared/styles/music-shared-controls.css";
 @import "../../../packages/shared/styles/music-sort-button-width.css";
-@import "../../../packages/shared/styles/playlist-library.css";
-@import "../../../packages/shared/styles/shell-chrome.css";
-@import "./components/desktop-app/music-library/DesktopMusicLibrarySharedLayout.css";
+@import "../../../packages/shared/styles/music-library-desktop-parity.css";
+@import "../../../packages/shared/styles/music-library-desktop-targeted.css";
 @import "../../../packages/shared/styles/project-toolbar.css";
 @import "../../../packages/shared/styles/project-browser-icons.css";
 
@@ -51,4 +48,36 @@ select {
 
 button {
   color: inherit;
+}
+
+.desktop-app-main .filmwave-player-actions .filmwave-song-action-button,
+.desktop-app-main .filmwave-player-actions .filmwave-icon-button {
+  border-radius: 999px !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float {
+  width: min(clamp(420px, 42vw, 640px), calc(100vw - 300px)) !important;
+  max-width: calc(100vw - 300px) !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float
+  .fw-toolbar {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float
+  .fw-toolbar-search {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
