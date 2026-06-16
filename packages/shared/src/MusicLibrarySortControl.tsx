@@ -120,7 +120,7 @@ export function MusicLibrarySortControl({
               type="button"
               role="menuitemradio"
               aria-checked={value === option.value}
-              className={`filmwave-dropdown-item filmwave-music-sort-option${
+              className={`filmwave-dropdown-item${
                 value === option.value ? " is-selected" : ""
               }`}
               onClick={(event) => selectOption(event, option.value)}
