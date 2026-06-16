@@ -69,7 +69,8 @@
   pointer-events: auto !important;
 }
 
-.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section {
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-filter-panel-wrap.has-selected-filter-section,
+.desktop-app-main .desktop-music-page > .fw-toolbar-sticky > .fw-filter-panel-wrap:focus-within {
   width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
   max-width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
 }
@@ -78,7 +79,8 @@
   grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
 }
 
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body,
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:focus-within .fw-filter-panel-body {
   grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
 }
 
@@ -86,7 +88,8 @@
   opacity: 0 !important;
 }
 
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body::before {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body::before,
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:focus-within .fw-filter-panel-body::before {
   opacity: 1 !important;
 }
 
@@ -94,7 +97,8 @@
   display: none !important;
 }
 
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-detail {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-detail,
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:focus-within .fw-filter-detail {
   display: block !important;
 }
 
@@ -104,7 +108,8 @@
   font-weight: 400 !important;
 }
 
-.desktop-app-main .desktop-music-page .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-rail-item.is-active {
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-rail-item.is-active,
+.desktop-app-main .desktop-music-page .fw-filter-panel-wrap:focus-within .fw-filter-rail-item.is-active {
   background: var(--bg-hover-strong) !important;
   color: var(--text-primary) !important;
 }
