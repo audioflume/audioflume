@@ -43,6 +43,13 @@ main > section:has(.fw-filter-panel-wrap)
 main > section:has(.fw-filter-panel-wrap)
   .fw-filter-panel-wrap
   .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(8) {
+  order: 900 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
   .fw-filter-rail-item.fw-filter-rail-item-playlists {
   order: 900 !important;
 }
