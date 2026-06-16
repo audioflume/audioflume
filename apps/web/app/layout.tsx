@@ -22,7 +22,7 @@ import "../../../packages/shared/styles/music-sort-button-width.css";
 import "../../../packages/shared/styles/playlist-library.css";
 import "../../../packages/shared/styles/shell-chrome.css";
 import "../../../packages/shared/styles/music-side-filter.css";
-import "./search-filter-backdrop-overrides.css";
+import "../../../packages/shared/styles/header-search-toolbar.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,84 +49,41 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-
-  const sidebarCollapsed =
-    cookieStore.get("filmwave-sidebar-collapsed")?.value === "true";
-
-  const themeMode = cookieStore.get("filmwave-theme-mode")?.value;
-  const normalizedThemeMode = themeMode === "light" ? "light" : "dark";
-  const htmlClassName = normalizedThemeMode === "light" ? "light" : undefined;
-  const bodyClassName = [htmlClassName, sidebarCollapsed ? "sidebar-collapsed" : null]
-    .filter(Boolean)
-    .join(" ") || undefined;
+  const themeCookie = cookieStore.get("filmwave-theme")?.value;
+  const initialTheme = themeCookie === "light" ? "light" : "dark";
+  const htmlClassName = `${geistSans.variable} ${geistMono.variable}`;
 
   return (
     <ClerkProvider>
-      <html
-        lang="en"
-        className={htmlClassName}
-        data-theme={normalizedThemeMode}
-        suppressHydrationWarning
-      >
+      <html lang="en" className={htmlClassName} data-theme={initialTheme}>
         <head>
-          <Script
-            id="filmwave-edit-point-marker-visibility"
-            strategy="beforeInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-(function () {
-  try {
-    var hidden = window.localStorage.getItem("filmwave-show-edit-point-markers") === "false";
-    document.documentElement.dataset.editPointMarkers = hidden ? "hidden" : "visible";
-  } catch (error) {}
-})();
-              `.trim(),
-            }}
-          />
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-html[data-edit-point-markers="hidden"] .filmwave-song-cue-marker,
-html[data-edit-point-markers="hidden"] .filmwave-song-cue-range,
-html[data-edit-point-markers="hidden"] .group\/player-cue-point {
-  display: none !important;
-}
-              `.trim(),
-            }}
-          />
-          {/**
-           * Preconnect to the R2 CDN so the TCP + TLS handshake is already
-           * complete by the time the user clicks any song. Without this, every
-           * new song play pays a 100–300 ms connection setup cost before the
-           * first byte of audio arrives.
-           *
-           * preconnect   → full connection (DNS + TCP + TLS), kept warm
-           * dns-prefetch → DNS-only fallback for browsers that drop preconnect
-           */}
-          <link rel="preconnect" href={R2_CDN_ORIGIN} crossOrigin="anonymous" />
+          <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
+          <Script id="filmwave-theme-init" strategy="beforeInteractive">
+            {`(function(){try{var t=localStorage.getItem('filmwave-theme')||'${initialTheme}';document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.dataset.theme='${initialTheme}';document.documentElement.style.colorScheme='${initialTheme}';}})();`}
+          </Script>
         </head>
-        <body className={bodyClassName}>
-          <UserPreferencesProvider>
-            <ThemeProvider>
-              <PlayerProvider>
-                <PlaylistsProvider>
-                  <ProjectsProvider>
-                    <FavoritesProvider>
+        <body>
+          <ThemeProvider initialTheme={initialTheme}>
+            <UserPreferencesProvider>
+              <PlaylistsProvider>
+                <ProjectsProvider>
+                  <FavoritesProvider>
+                    <PlayerProvider>
                       <Header />
-                      <SidebarRenderer initialCollapsed={sidebarCollapsed} />
+                      <SidebarRenderer />
+                      {children}
                       <PlayerRenderer />
+                      <IconButtonTitleSync />
                       <MusicFilterToolbarBehavior />
                       <SideFilterPanelBehavior />
-                      <IconButtonTitleSync />
                       <AdminPageHeaderMount />
-                      {children}
-                    </FavoritesProvider>
-                  </ProjectsProvider>
-                </PlaylistsProvider>
-              </PlayerProvider>
-            </ThemeProvider>
-          </UserPreferencesProvider>
+                    </PlayerProvider>
+                  </FavoritesProvider>
+                </ProjectsProvider>
+              </PlaylistsProvider>
+            </UserPreferencesProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
