@@ -1,0 +1,119 @@
+/* Column-native layouts for Duration, BPM, and Key filters. */
+
+.fw-filter-detail .fw-filter-control-stack {
+  width: 100%;
+  max-width: none;
+  gap: 16px;
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-segment {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-segment button {
+  height: 28px;
+  padding: 0 10px;
+  text-align: center;
+}
+
+.fw-filter-detail .fw-filter-bpm-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-items: end;
+  margin-top: 0;
+}
+
+.fw-filter-detail .fw-filter-bpm-dash {
+  display: none;
+}
+
+.fw-filter-detail .fw-filter-mini-field {
+  min-width: 0;
+}
+
+.fw-filter-detail .fw-filter-bpm-row > .fw-filter-mini-field:only-child {
+  grid-column: 1 / -1;
+}
+
+.fw-filter-detail .fw-filter-input {
+  width: 100%;
+  height: 34px;
+  border-radius: 11px;
+}
+
+.fw-filter-detail .fw-duration-summary {
+  height: 36px;
+  border-radius: 12px;
+  background: var(--bg-control);
+  padding: 0 12px;
+}
+
+.fw-filter-detail .fw-duration-summary-mid {
+  letter-spacing: 0.1em;
+}
+
+.fw-filter-detail .fw-range-area {
+  margin-top: 0;
+  padding: 0 8px;
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 0;
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow:has(.fw-filter-chip-compact) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow:has(.fw-filter-chip-stacked) {
+  grid-template-columns: 1fr;
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow .fw-filter-chip {
+  width: 100%;
+  min-height: 34px;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 7px 10px;
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow .fw-filter-chip-compact {
+  min-width: 0;
+  height: 34px;
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow .fw-filter-chip-stacked {
+  height: 44px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 12px;
+  text-align: left;
+}
+
+.fw-filter-detail .fw-filter-chip-stacked span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fw-filter-detail .fw-filter-chip-stacked small {
+  flex-shrink: 0;
+  font-size: 11px;
+  opacity: 0.72;
+}
+
+.fw-filter-detail .fw-key-spacer {
+  display: none;
+}
