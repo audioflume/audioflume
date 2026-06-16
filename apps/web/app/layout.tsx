@@ -51,7 +51,11 @@ export default async function RootLayout({
 }) {
   const cookieStore = await cookies();
   const themeCookie = cookieStore.get("filmwave-theme")?.value;
+  const sidebarCollapsedCookie = cookieStore.get(
+    "filmwave-sidebar-collapsed",
+  )?.value;
   const initialTheme = themeCookie === "light" ? "light" : "dark";
+  const initialSidebarCollapsed = sidebarCollapsedCookie === "true";
   const htmlClassName = `${geistSans.variable} ${geistMono.variable}`;
 
   return (
@@ -69,7 +73,7 @@ export default async function RootLayout({
                   <PlayerProvider>
                     <FavoritesProvider>
                       <Header />
-                      <SidebarRenderer />
+                      <SidebarRenderer initialCollapsed={initialSidebarCollapsed} />
                       {children}
                       <PlayerRenderer />
                       <IconButtonTitleSync />
