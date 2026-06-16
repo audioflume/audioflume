@@ -1,7 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -61,15 +60,12 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
         <body>
-          <Script id="filmwave-theme-init" strategy="beforeInteractive">
-            {`(function(){try{var t=localStorage.getItem('filmwave-theme')||'${initialTheme}';document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.dataset.theme='${initialTheme}';document.documentElement.style.colorScheme='${initialTheme}';}})();`}
-          </Script>
           <UserPreferencesProvider>
             <ThemeProvider>
               <PlaylistsProvider>
                 <ProjectsProvider>
-                  <FavoritesProvider>
-                    <PlayerProvider>
+                  <PlayerProvider>
+                    <FavoritesProvider>
                       <Header />
                       <SidebarRenderer />
                       {children}
@@ -78,8 +74,8 @@ export default async function RootLayout({
                       <MusicFilterToolbarBehavior />
                       <SideFilterPanelBehavior />
                       <AdminPageHeaderMount />
-                    </PlayerProvider>
-                  </FavoritesProvider>
+                    </FavoritesProvider>
+                  </PlayerProvider>
                 </ProjectsProvider>
               </PlaylistsProvider>
             </ThemeProvider>
