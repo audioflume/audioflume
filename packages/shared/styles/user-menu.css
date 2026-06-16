@@ -1,7 +1,9 @@
 /* ── User menu ── shared dropdown shell + identity/theme sections ── */
 
-.filmwave-user-menu {
+.filmwave-dropdown-shell.filmwave-user-menu {
   width: 260px;
+  border-radius: 14px;
+  --filmwave-menu-item-radius: 8px;
 }
 
 /* tokens */
