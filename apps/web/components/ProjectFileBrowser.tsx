@@ -1,6 +1,12 @@
 "use client";
 
-import { useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import {
   DndContext,
   DragOverlay,
@@ -21,7 +27,7 @@ import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
 import ProjectFolderCard from "./project-browser/ProjectFolderCard";
 import ProjectSongFileCard from "./project-browser/ProjectSongFileCard";
 import "./project-browser/ProjectFileBrowser.module.css";
-import "./project-browser/ProjectFileBrowserOverrides.css";
+import "./project-browser/ProjectFileBrowserStyles.css";
 
 type ProjectFileView = "grid" | "list";
 
@@ -78,7 +84,9 @@ function getFolderDropId(folderId: number) {
 }
 
 function getBreadcrumbDropId(folderId: number | null) {
-  return folderId == null ? BREADCRUMB_ROOT_DROP_ID : `drop-breadcrumb:${folderId}`;
+  return folderId == null
+    ? BREADCRUMB_ROOT_DROP_ID
+    : `drop-breadcrumb:${folderId}`;
 }
 
 function parseDropFolderId(value: UniqueIdentifier | null | undefined) {
@@ -87,19 +95,28 @@ function parseDropFolderId(value: UniqueIdentifier | null | undefined) {
   const id = String(value);
 
   if (id === BREADCRUMB_ROOT_DROP_ID) return null;
-  if (id.startsWith("drop-folder:")) return Number(id.replace("drop-folder:", ""));
-  if (id.startsWith("drop-breadcrumb:")) return Number(id.replace("drop-breadcrumb:", ""));
+  if (id.startsWith("drop-folder:"))
+    return Number(id.replace("drop-folder:", ""));
+  if (id.startsWith("drop-breadcrumb:"))
+    return Number(id.replace("drop-breadcrumb:", ""));
 
   return undefined;
 }
 
 function getActivatorPoint(event: unknown) {
-  const maybeEvent = event as MouseEvent | TouchEvent | PointerEvent | undefined;
+  const maybeEvent = event as
+    | MouseEvent
+    | TouchEvent
+    | PointerEvent
+    | undefined;
 
   if (!maybeEvent) return null;
 
   if ("touches" in maybeEvent && maybeEvent.touches?.[0]) {
-    return { x: maybeEvent.touches[0].clientX, y: maybeEvent.touches[0].clientY };
+    return {
+      x: maybeEvent.touches[0].clientX,
+      y: maybeEvent.touches[0].clientY,
+    };
   }
 
   if ("changedTouches" in maybeEvent && maybeEvent.changedTouches?.[0]) {
@@ -163,7 +180,10 @@ function DraggableFolderItem({
   folder: ProjectFolder;
   viewMode: ProjectFileView;
   onOpen: (folderId: number) => void;
-  onContextMenu: (event: MouseEvent<HTMLElement>, folder: ProjectFolder) => void;
+  onContextMenu: (
+    event: MouseEvent<HTMLElement>,
+    folder: ProjectFolder,
+  ) => void;
 }) {
   const draggable = useDraggable({
     id: getFolderDragId(folder.id),
@@ -312,13 +332,15 @@ export default function ProjectFileBrowser({
   const [folderParentOverrides, setFolderParentOverrides] = useState<
     Map<number, number | null>
   >(() => new Map());
-  const [folderNameOverrides, setFolderNameOverrides] = useState<Map<number, string>>(
-    () => new Map(),
-  );
+  const [folderNameOverrides, setFolderNameOverrides] = useState<
+    Map<number, string>
+  >(() => new Map());
   const [deletedFolderIds, setDeletedFolderIds] = useState<Set<number>>(
     () => new Set(),
   );
-  const [deletedAssetIds, setDeletedAssetIds] = useState<Set<number>>(() => new Set());
+  const [deletedAssetIds, setDeletedAssetIds] = useState<Set<number>>(
+    () => new Set(),
+  );
   const [songFolderOverrides, setSongFolderOverrides] = useState<
     Map<number, number | null>
   >(() => new Map());
@@ -348,7 +370,7 @@ export default function ProjectFileBrowser({
           ...folder,
           name: folderNameOverrides.get(folder.id) ?? folder.name,
           parent_folder_id: folderParentOverrides.has(folder.id)
-            ? folderParentOverrides.get(folder.id) ?? null
+            ? (folderParentOverrides.get(folder.id) ?? null)
             : folder.parent_folder_id,
         })),
     [folders, folderNameOverrides, folderParentOverrides, deletedFolderIds],
@@ -365,7 +387,10 @@ export default function ProjectFileBrowser({
           const assetId = Number(song.project_asset_id);
 
           return Number.isFinite(assetId) && songFolderOverrides.has(assetId)
-            ? { ...song, project_folder_id: songFolderOverrides.get(assetId) ?? null }
+            ? {
+                ...song,
+                project_folder_id: songFolderOverrides.get(assetId) ?? null,
+              }
             : song;
         }),
     [songs, songFolderOverrides, deletedAssetIds],
@@ -389,7 +414,7 @@ export default function ProjectFileBrowser({
       current =
         current.parent_folder_id == null
           ? null
-          : foldersById.get(current.parent_folder_id) ?? null;
+          : (foldersById.get(current.parent_folder_id) ?? null);
     }
     return chain;
   }, [activeFolderId, foldersById]);
@@ -406,21 +431,27 @@ export default function ProjectFileBrowser({
     [effectiveFolders, visibleFolderId],
   );
   const visibleSongs = useMemo(
-    () => effectiveSongs.filter((song) => (song.project_folder_id ?? null) === visibleFolderId),
+    () =>
+      effectiveSongs.filter(
+        (song) => (song.project_folder_id ?? null) === visibleFolderId,
+      ),
     [effectiveSongs, visibleFolderId],
   );
   const itemCount = visibleFolders.length + visibleSongs.length;
   const draggedFolder =
     activeDragData?.kind === "folder"
-      ? effectiveFolders.find((folder) => folder.id === activeDragData.folderId) ?? null
+      ? (effectiveFolders.find(
+          (folder) => folder.id === activeDragData.folderId,
+        ) ?? null)
       : null;
   const draggedSong =
     activeDragData?.kind === "song"
-      ? effectiveSongs.find(
+      ? (effectiveSongs.find(
           (song) => Number(song.project_asset_id) === activeDragData.assetId,
-        ) ?? null
+        ) ?? null)
       : null;
-  const overlayModifiers = activeDragViewMode === "list" ? [snapListOverlayToCursor] : undefined;
+  const overlayModifiers =
+    activeDragViewMode === "list" ? [snapListOverlayToCursor] : undefined;
 
   function folderIsDescendant(targetFolderId: number, draggedFolderId: number) {
     let current = foldersById.get(targetFolderId) ?? null;
@@ -432,7 +463,7 @@ export default function ProjectFileBrowser({
       current =
         current.parent_folder_id == null
           ? null
-          : foldersById.get(current.parent_folder_id) ?? null;
+          : (foldersById.get(current.parent_folder_id) ?? null);
     }
 
     return false;
@@ -442,7 +473,9 @@ export default function ProjectFileBrowser({
     if (!movingFolder) return effectiveFolders;
 
     return effectiveFolders.filter(
-      (folder) => folder.id !== movingFolder.id && !folderIsDescendant(folder.id, movingFolder.id),
+      (folder) =>
+        folder.id !== movingFolder.id &&
+        !folderIsDescendant(folder.id, movingFolder.id),
     );
   }, [effectiveFolders, foldersById, movingFolder]);
 
@@ -484,7 +517,10 @@ export default function ProjectFileBrowser({
 
     if (dragData?.kind === "folder") {
       if (targetFolderId === dragData.folderId) return undefined;
-      if (targetFolderId !== null && folderIsDescendant(targetFolderId, dragData.folderId)) {
+      if (
+        targetFolderId !== null &&
+        folderIsDescendant(targetFolderId, dragData.folderId)
+      ) {
         return undefined;
       }
     }
@@ -492,7 +528,10 @@ export default function ProjectFileBrowser({
     return targetFolderId;
   }
 
-  function previewDragMove(dragData: DragData | undefined, folderId: number | null) {
+  function previewDragMove(
+    dragData: DragData | undefined,
+    folderId: number | null,
+  ) {
     if (!dragData) return;
 
     if (dragData.kind === "song") {
@@ -516,7 +555,8 @@ export default function ProjectFileBrowser({
 
     if (!Number.isFinite(assetId)) return;
 
-    const previousFolderId = originalSongTargetRef.current ?? song.project_folder_id ?? null;
+    const previousFolderId =
+      originalSongTargetRef.current ?? song.project_folder_id ?? null;
 
     setSongFolderOverrides((current) => {
       const next = new Map(current);
@@ -525,11 +565,14 @@ export default function ProjectFileBrowser({
     });
 
     try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(String(song.project_id))}/assets`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ asset_id: assetId, folder_id: folderId }),
-      });
+      const res = await fetch(
+        `/api/projects/${encodeURIComponent(String(song.project_id))}/assets`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ asset_id: assetId, folder_id: folderId }),
+        },
+      );
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
 
@@ -544,8 +587,12 @@ export default function ProjectFileBrowser({
     }
   }
 
-  async function moveFolderToFolder(folder: ProjectFolder, parentFolderId: number | null) {
-    const previousParentFolderId = originalFolderTargetRef.current ?? folder.parent_folder_id ?? null;
+  async function moveFolderToFolder(
+    folder: ProjectFolder,
+    parentFolderId: number | null,
+  ) {
+    const previousParentFolderId =
+      originalFolderTargetRef.current ?? folder.parent_folder_id ?? null;
 
     setFolderParentOverrides((current) => {
       const next = new Map(current);
@@ -554,11 +601,17 @@ export default function ProjectFileBrowser({
     });
 
     try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(String(folder.project_id))}/folders`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ folder_id: folder.id, parent_folder_id: parentFolderId }),
-      });
+      const res = await fetch(
+        `/api/projects/${encodeURIComponent(String(folder.project_id))}/folders`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            folder_id: folder.id,
+            parent_folder_id: parentFolderId,
+          }),
+        },
+      );
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
 
@@ -588,11 +641,14 @@ export default function ProjectFileBrowser({
     });
 
     try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(String(folder.project_id))}/folders`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ folder_id: folder.id, name: nextName }),
-      });
+      const res = await fetch(
+        `/api/projects/${encodeURIComponent(String(folder.project_id))}/folders`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ folder_id: folder.id, name: nextName }),
+        },
+      );
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
 
@@ -615,17 +671,21 @@ export default function ProjectFileBrowser({
     setDeletedFolderIds((current) => new Set([...current, ...folderIds]));
 
     try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(String(folder.project_id))}/folders`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ folder_id: folder.id }),
-      });
+      const res = await fetch(
+        `/api/projects/${encodeURIComponent(String(folder.project_id))}/folders`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ folder_id: folder.id }),
+        },
+      );
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
 
       if (!res.ok) throw new Error(data?.error || "Failed to delete folder");
 
-      if (folderIds.has(activeFolderId ?? -1)) onOpenFolder(folder.parent_folder_id ?? null);
+      if (folderIds.has(activeFolderId ?? -1))
+        onOpenFolder(folder.parent_folder_id ?? null);
     } catch (err) {
       setDeletedFolderIds((current) => {
         const next = new Set(current);
@@ -645,15 +705,19 @@ export default function ProjectFileBrowser({
     setDeletedAssetIds((current) => new Set([...current, assetId]));
 
     try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(String(song.project_id))}/assets`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ asset_id: assetId }),
-      });
+      const res = await fetch(
+        `/api/projects/${encodeURIComponent(String(song.project_id))}/assets`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ asset_id: assetId }),
+        },
+      );
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
 
-      if (!res.ok) throw new Error(data?.error || "Failed to remove file from project");
+      if (!res.ok)
+        throw new Error(data?.error || "Failed to remove file from project");
     } catch (err) {
       setDeletedAssetIds((current) => {
         const next = new Set(current);
@@ -672,23 +736,42 @@ export default function ProjectFileBrowser({
 
   function downloadFolder(folder: ProjectFolder) {
     setContextMenu(null);
-    const songsToDownload = getSongsInFolderTree(folder.id).filter((song) => song.audioUrl);
+    const songsToDownload = getSongsInFolderTree(folder.id).filter(
+      (song) => song.audioUrl,
+    );
 
     songsToDownload.forEach((song, index) => {
-      window.setTimeout(() => downloadUrl(song.audioUrl, song.title || "filmwave-song"), index * 150);
+      window.setTimeout(
+        () => downloadUrl(song.audioUrl, song.title || "filmwave-song"),
+        index * 150,
+      );
     });
   }
 
-  function openFolderContextMenu(event: MouseEvent<HTMLElement>, folder: ProjectFolder) {
+  function openFolderContextMenu(
+    event: MouseEvent<HTMLElement>,
+    folder: ProjectFolder,
+  ) {
     event.preventDefault();
     event.stopPropagation();
-    setContextMenu({ type: "folder", folder, point: { x: event.clientX, y: event.clientY } });
+    setContextMenu({
+      type: "folder",
+      folder,
+      point: { x: event.clientX, y: event.clientY },
+    });
   }
 
-  function openSongContextMenu(event: MouseEvent<HTMLElement>, song: ProjectSong) {
+  function openSongContextMenu(
+    event: MouseEvent<HTMLElement>,
+    song: ProjectSong,
+  ) {
     event.preventDefault();
     event.stopPropagation();
-    setContextMenu({ type: "song", song, point: { x: event.clientX, y: event.clientY } });
+    setContextMenu({
+      type: "song",
+      song,
+      point: { x: event.clientX, y: event.clientY },
+    });
   }
 
   function handleDragStart(event: DragStartEvent) {
@@ -700,14 +783,18 @@ export default function ProjectFileBrowser({
     setActiveDragViewMode(viewMode);
 
     if (dragData?.kind === "song") {
-      const song = effectiveSongs.find((item) => Number(item.project_asset_id) === dragData.assetId);
+      const song = effectiveSongs.find(
+        (item) => Number(item.project_asset_id) === dragData.assetId,
+      );
       originalSongTargetRef.current = song?.project_folder_id ?? null;
       originalFolderTargetRef.current = undefined;
       return;
     }
 
     if (dragData?.kind === "folder") {
-      const folder = effectiveFolders.find((item) => item.id === dragData.folderId);
+      const folder = effectiveFolders.find(
+        (item) => item.id === dragData.folderId,
+      );
       originalFolderTargetRef.current = folder?.parent_folder_id ?? null;
       originalSongTargetRef.current = undefined;
     }
@@ -737,7 +824,8 @@ export default function ProjectFileBrowser({
   }
 
   function handleDragEnd(event: DragEndEvent) {
-    const targetFolderId = getValidDropFolderId(event) ?? lastBreadcrumbTargetRef.current;
+    const targetFolderId =
+      getValidDropFolderId(event) ?? lastBreadcrumbTargetRef.current;
     const dragData = event.active.data.current as DragData | undefined;
 
     if (targetFolderId === undefined || !dragData) {
@@ -746,25 +834,35 @@ export default function ProjectFileBrowser({
     }
 
     if (dragData.kind === "song") {
-      const song = effectiveSongs.find((item) => Number(item.project_asset_id) === dragData.assetId);
+      const song = effectiveSongs.find(
+        (item) => Number(item.project_asset_id) === dragData.assetId,
+      );
       if (song) moveSongToFolder(song, targetFolderId);
       onOpenFolder(targetFolderId);
       cleanupDragState();
       return;
     }
 
-    const folder = effectiveFolders.find((item) => item.id === dragData.folderId);
+    const folder = effectiveFolders.find(
+      (item) => item.id === dragData.folderId,
+    );
     if (folder) moveFolderToFolder(folder, targetFolderId);
     onOpenFolder(targetFolderId);
     cleanupDragState();
   }
 
   function handleDragCancel() {
-    if (activeDragData?.kind === "song" && originalSongTargetRef.current !== undefined) {
+    if (
+      activeDragData?.kind === "song" &&
+      originalSongTargetRef.current !== undefined
+    ) {
       previewDragMove(activeDragData, originalSongTargetRef.current);
     }
 
-    if (activeDragData?.kind === "folder" && originalFolderTargetRef.current !== undefined) {
+    if (
+      activeDragData?.kind === "folder" &&
+      originalFolderTargetRef.current !== undefined
+    ) {
       previewDragMove(activeDragData, originalFolderTargetRef.current);
     }
 
@@ -809,7 +907,10 @@ export default function ProjectFileBrowser({
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
-        <div className="project-file-browser" onContextMenu={() => setContextMenu(null)}>
+        <div
+          className="project-file-browser"
+          onContextMenu={() => setContextMenu(null)}
+        >
           <div className="project-file-browser-top">
             <div className="project-file-browser-title-wrap">
               <div className="project-breadcrumbs project-path">
@@ -838,7 +939,9 @@ export default function ProjectFileBrowser({
                 })}
               </div>
             </div>
-            {downloadSlot && <div className="project-file-browser-actions">{downloadSlot}</div>}
+            {downloadSlot && (
+              <div className="project-file-browser-actions">{downloadSlot}</div>
+            )}
           </div>
           <div className="project-file-browser-section">
             {itemCount > 0 ? (
@@ -892,7 +995,9 @@ export default function ProjectFileBrowser({
                 </div>
               )
             ) : (
-              <div className="project-file-empty-inline">No files in this folder yet.</div>
+              <div className="project-file-empty-inline">
+                No files in this folder yet.
+              </div>
             )}
           </div>
         </div>
@@ -916,11 +1021,16 @@ export default function ProjectFileBrowser({
         anchorPoint={contextMenu?.point ?? null}
         collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
         offsetAmount={4}
-        trigger={() => <span className="project-context-menu-anchor" aria-hidden="true" />}
+        trigger={() => (
+          <span className="project-context-menu-anchor" aria-hidden="true" />
+        )}
       >
         {contextMenu?.type === "folder" ? (
           <>
-            <button type="button" onClick={() => renameFolder(contextMenu.folder)}>
+            <button
+              type="button"
+              onClick={() => renameFolder(contextMenu.folder)}
+            >
               Rename
             </button>
             <button
@@ -932,7 +1042,10 @@ export default function ProjectFileBrowser({
             >
               Move
             </button>
-            <button type="button" onClick={() => downloadFolder(contextMenu.folder)}>
+            <button
+              type="button"
+              onClick={() => downloadFolder(contextMenu.folder)}
+            >
               Download
             </button>
             <button
@@ -954,7 +1067,10 @@ export default function ProjectFileBrowser({
             >
               Move
             </button>
-            <button type="button" onClick={() => downloadSong(contextMenu.song)}>
+            <button
+              type="button"
+              onClick={() => downloadSong(contextMenu.song)}
+            >
               Download
             </button>
             <button
