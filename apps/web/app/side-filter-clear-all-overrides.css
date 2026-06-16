@@ -57,6 +57,23 @@ main > section:has(.fw-filter-panel-wrap)
 main > section:has(.fw-filter-panel-wrap)
   .fw-filter-panel-wrap
   .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(8)
+  .fw-filter-rail-label {
+  font-size: 0 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(8)
+  .fw-filter-rail-label::before {
+  content: "Playlists";
+  font-size: 12.5px !important;
+}
+
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
   button.fw-filter-rail-clear-all {
   height: 22px !important;
   min-height: 0 !important;
