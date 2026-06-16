@@ -113,14 +113,14 @@ export function MusicLibrarySortControl({
       </button>
 
       {isOpen ? (
-        <div className="filmwave-music-sort-dropdown" role="menu">
+        <div className="filmwave-dropdown-shell filmwave-music-sort-dropdown" role="menu">
           {MUSIC_LIBRARY_SORT_OPTIONS.map((option) => (
             <button
               key={option.value}
               type="button"
               role="menuitemradio"
               aria-checked={value === option.value}
-              className={`filmwave-music-sort-option${
+              className={`filmwave-dropdown-item filmwave-music-sort-option${
                 value === option.value ? " is-selected" : ""
               }`}
               onClick={(event) => selectOption(event, option.value)}
