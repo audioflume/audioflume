@@ -146,7 +146,3 @@
 .project-browser-row .project-folder-action-wrap .project-file-action {
   opacity: 1 !important;
 }
-
-.project-browser-row:hover .project-folder-action-wrap .project-file-action {
-  opacity: 1 !important;
-}
