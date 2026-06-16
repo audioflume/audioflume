@@ -22,7 +22,7 @@
   grid-template-columns: var(--filmwave-side-filter-rail-width, 168px) minmax(0, 1fr) !important;
   column-gap: var(--filmwave-side-filter-content-gap, 14px) !important;
   align-items: start !important;
-  padding: 0 0 0 var(--filmwave-side-filter-sidebar-gap, 12px) !important;
+  padding: 0 !important;
 }
 
 .project-tabs-row {
@@ -33,7 +33,7 @@
   top: calc(var(--filmwave-header-height, 56px) + var(--filmwave-sidebar-float-inset, 12px)) !important;
   left: auto !important;
   right: auto !important;
-  z-index: 60 !important;
+  z-index: 90 !important;
   display: flex !important;
   box-sizing: border-box !important;
   width: var(--filmwave-side-filter-rail-width, 168px) !important;
@@ -275,6 +275,10 @@
 
 .project-detail-page .project-file-browser {
   padding: 32px 0 !important;
+}
+
+.project-detail-page .project-breadcrumbs.project-path:not(:has(.project-path-separator)) {
+  display: none !important;
 }
 
 .project-detail-page .project-footer-wrap {
