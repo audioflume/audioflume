@@ -448,6 +448,7 @@ export default function SideFilterPanelBehavior() {
         railSyncFrame = 0;
         syncSideFilterRailPresentation();
         syncDotOnlyRailCounts();
+        syncFilterPanelColumnFadeStates();
       });
     }
 
