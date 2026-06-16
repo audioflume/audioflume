@@ -59,6 +59,16 @@
   color: var(--text-primary) !important;
 }
 
+.project-tabs-row button:not(.filmwave-active-line-trigger)::after,
+.project-download-trigger::after {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  content: none !important;
+}
+
 .project-tabs-row > button[class*="border-[var(--text-primary)]"]::after {
   background: var(--filmwave-active-line-color) !important;
 }
