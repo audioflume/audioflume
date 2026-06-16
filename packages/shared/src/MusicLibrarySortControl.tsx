@@ -113,7 +113,7 @@ export function MusicLibrarySortControl({
       </button>
 
       {isOpen ? (
-        <div className="filmwave-dropdown-shell filmwave-music-sort-dropdown" role="menu">
+        <div className="filmwave-dropdown-shell filmwave-music-sort-menu" role="menu">
           {MUSIC_LIBRARY_SORT_OPTIONS.map((option) => (
             <button
               key={option.value}
