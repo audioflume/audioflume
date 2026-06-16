@@ -22,10 +22,10 @@ function ProjectTabChevronIcon() {
   );
 }
 
-export default function ProjectTabs({ activeTab, onTabChange }: Props) {
+export default function ProjectTabs({ activeTab, tabs, onTabChange }: Props) {
   return (
     <nav className="project-tabs-row fw-filter-rail" aria-label="Project sections">
-      {TABS.map((tab) => {
+      {tabs.map((tab) => {
         const isActive = activeTab === tab.value;
 
         return (
