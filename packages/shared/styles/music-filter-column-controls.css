@@ -82,7 +82,7 @@
 
 .fw-filter-detail .fw-filter-control-stack > .fw-segment + .fw-filter-subrow,
 .fw-filter-detail .fw-filter-control-stack > .fw-segment + .fw-filter-subrow + .fw-filter-subrow {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
