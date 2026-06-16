@@ -26,6 +26,8 @@ const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 const RAIL_CLEAR_ALL_CLASS = "fw-filter-rail-clear-all";
 const RAIL_PLAYLISTS_CLASS = "fw-filter-rail-item-playlists";
 const RAIL_COUNT_ICON_STYLE_ID = "filmwave-side-filter-count-icon-styles";
+const RAIL_COUNT_CHECK_CLASS = "fw-filter-rail-count-check";
+const RAIL_COUNT_CLEAR_CLASS = "fw-filter-rail-count-clear";
 
 function ensureRailCountIconStyles() {
   if (typeof document === "undefined") return;
@@ -56,7 +58,11 @@ function ensureRailCountIconStyles() {
     }
 
     main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before,
-    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after,
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::after,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::after {
       content: none !important;
       display: none !important;
     }
@@ -79,6 +85,26 @@ function ensureRailCountIconStyles() {
       height: 10px !important;
     }
 
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-clear,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count-clear {
+      position: absolute !important;
+      inset: 0 !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+      color: inherit !important;
+      pointer-events: none !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-clear svg,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count-clear svg {
+      display: block !important;
+      width: 11px !important;
+      height: 11px !important;
+    }
+
     main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check,
     .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check {
       opacity: 0 !important;
@@ -89,23 +115,11 @@ function ensureRailCountIconStyles() {
       font-size: 0 !important;
     }
 
-    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after,
-    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::after,
-    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after,
-    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::after {
-      content: "×" !important;
-      position: absolute !important;
-      top: 50% !important;
-      left: 50% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 100% !important;
-      height: 100% !important;
-      font-size: 12px !important;
-      font-weight: 450 !important;
-      line-height: 1 !important;
-      transform: translate(-50%, -50%) !important;
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover .fw-filter-rail-count-clear,
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-clear,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover .fw-filter-rail-count-clear,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-clear {
+      display: inline-flex !important;
     }
   `;
 
@@ -114,7 +128,7 @@ function ensureRailCountIconStyles() {
 
 function createRailCountCheckIcon() {
   const check = document.createElement("span");
-  check.className = "fw-filter-rail-count-check";
+  check.className = RAIL_COUNT_CHECK_CLASS;
   check.setAttribute("aria-hidden", "true");
   check.innerHTML = `
     <svg viewBox="0 0 24 24" width="10" height="10" fill="none" aria-hidden="true">
@@ -128,6 +142,23 @@ function createRailCountCheckIcon() {
     </svg>
   `;
   return check;
+}
+
+function createRailCountClearIcon() {
+  const clear = document.createElement("span");
+  clear.className = RAIL_COUNT_CLEAR_CLASS;
+  clear.setAttribute("aria-hidden", "true");
+  clear.innerHTML = `
+    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" aria-hidden="true">
+      <path
+        d="M7 7L17 17M17 7L7 17"
+        stroke="currentColor"
+        stroke-width="2.6"
+        stroke-linecap="round"
+      />
+    </svg>
+  `;
+  return clear;
 }
 
 function getRailItemKey(railItem: Element, panel: Element) {
@@ -222,12 +253,14 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
     if (isDotOnly) {
       count.textContent = "";
       count.appendChild(createRailCountCheckIcon());
+      count.appendChild(createRailCountClearIcon());
       count.setAttribute("aria-label", `${sectionId} filter active`);
       return;
     }
 
-    count.querySelector(".fw-filter-rail-count-check")?.remove();
+    count.querySelector(`.${RAIL_COUNT_CHECK_CLASS}`)?.remove();
     count.textContent = count.dataset.countValue ?? originalCount;
+    count.appendChild(createRailCountClearIcon());
     count.removeAttribute("aria-label");
   });
 }
