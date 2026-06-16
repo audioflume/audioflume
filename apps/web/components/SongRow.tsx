@@ -2,7 +2,7 @@
 
 import type { Song } from "@/lib/types";
 import { useState } from "react";
-import { SongActionButton } from "@filmwave/shared";
+import { SongActionButton, SongActionLink } from "@filmwave/shared";
 import DropdownShell from "@/components/DropdownShell";
 import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import AddToProjectModal from "@/components/AddToProjectModal";
@@ -370,25 +370,24 @@ export default function SongRow({
           </DropdownShell>
 
           {safeSong.audioUrl ? (
-            <a
+            <SongActionLink
               href={safeSong.audioUrl}
               download
               target="_blank"
               rel="noreferrer"
-              className="filmwave-song-action-button flex-shrink-0"
-              aria-label="Download song"
+              className="flex-shrink-0"
+              label="Download song"
             >
               <DownloadIcon />
-            </a>
+            </SongActionLink>
           ) : (
-            <button
-              type="button"
-              className="filmwave-song-action-button flex-shrink-0"
-              aria-label="Download unavailable"
+            <SongActionButton
+              label="Download unavailable"
+              className="flex-shrink-0"
               disabled
             >
               <DownloadIcon />
-            </button>
+            </SongActionButton>
           )}
         </div>
       </div>
