@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import SidebarBodyClassSync from "@/components/SidebarBodyClassSync";
-import SidebarCuratedLinkMount from "@/components/SidebarCuratedLinkMount";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
 function getInitialSidebarCollapsed(fallback: boolean) {
@@ -38,7 +37,6 @@ export default function SidebarRenderer({
     <>
       <Sidebar initialCollapsed={resolvedInitialCollapsed} />
       <SidebarBodyClassSync />
-      <SidebarCuratedLinkMount />
     </>
   );
 }
