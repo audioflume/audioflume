@@ -59,13 +59,13 @@ export default async function RootLayout({
         <head>
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
+        </head>
+        <body>
           <Script id="filmwave-theme-init" strategy="beforeInteractive">
             {`(function(){try{var t=localStorage.getItem('filmwave-theme')||'${initialTheme}';document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.dataset.theme='${initialTheme}';document.documentElement.style.colorScheme='${initialTheme}';}})();`}
           </Script>
-        </head>
-        <body>
-          <ThemeProvider initialTheme={initialTheme}>
-            <UserPreferencesProvider>
+          <UserPreferencesProvider>
+            <ThemeProvider>
               <PlaylistsProvider>
                 <ProjectsProvider>
                   <FavoritesProvider>
@@ -82,8 +82,8 @@ export default async function RootLayout({
                   </FavoritesProvider>
                 </ProjectsProvider>
               </PlaylistsProvider>
-            </UserPreferencesProvider>
-          </ThemeProvider>
+            </ThemeProvider>
+          </UserPreferencesProvider>
         </body>
       </html>
     </ClerkProvider>
