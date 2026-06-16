@@ -45,20 +45,16 @@ export default function DesktopSideFilterBehavior() {
         panel.classList.contains("has-selected-filter-section") &&
         panel.dataset.sideFilterActiveKey === railItemKey;
 
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          if (wasSameOpenSection) {
-            panel.classList.remove("has-selected-filter-section");
-            delete panel.dataset.sideFilterActiveKey;
-            syncPanelFadeStates(panel);
-            return;
-          }
+      if (wasSameOpenSection) {
+        panel.classList.remove("has-selected-filter-section");
+        delete panel.dataset.sideFilterActiveKey;
+        syncPanelFadeStates(panel);
+        return;
+      }
 
-          panel.dataset.sideFilterActiveKey = railItemKey;
-          panel.classList.add("has-selected-filter-section");
-          syncPanelFadeStates(panel);
-        });
-      });
+      panel.dataset.sideFilterActiveKey = railItemKey;
+      panel.classList.add("has-selected-filter-section");
+      syncPanelFadeStates(panel);
     }
 
     document.addEventListener("click", handleRailClick);
