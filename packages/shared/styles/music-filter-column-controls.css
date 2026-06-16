@@ -11,12 +11,14 @@
   width: 100%;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px;
-  border-radius: 12px;
+  overflow: hidden;
+  border-radius: 999px;
   padding: 4px;
 }
 
 .fw-filter-detail .fw-filter-control-stack > .fw-segment button {
-  height: 28px;
+  height: 32px;
+  border-radius: 999px;
   padding: 0 10px;
   text-align: center;
 }
@@ -49,7 +51,7 @@
 
 .fw-filter-detail .fw-duration-summary {
   height: 36px;
-  border-radius: 12px;
+  border-radius: 999px;
   background: var(--bg-control);
   padding: 0 12px;
 }
@@ -70,12 +72,18 @@
   margin-top: 0;
 }
 
-.fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow:has(.fw-filter-chip-compact) {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+.fw-filter-detail .fw-duration-summary + .fw-range-area + .fw-filter-subrow {
+  grid-template-columns: 1fr;
 }
 
-.fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow:has(.fw-filter-chip-stacked) {
-  grid-template-columns: 1fr;
+.fw-filter-detail .fw-filter-bpm-row + .fw-range-area + .fw-filter-subrow {
+  display: none;
+}
+
+.fw-filter-detail .fw-filter-control-stack > .fw-segment + .fw-filter-subrow,
+.fw-filter-detail .fw-filter-control-stack > .fw-segment + .fw-filter-subrow + .fw-filter-subrow {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow .fw-filter-chip {
@@ -88,7 +96,8 @@
 
 .fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow .fw-filter-chip-compact {
   min-width: 0;
-  height: 34px;
+  height: 32px;
+  padding: 0 6px;
 }
 
 .fw-filter-detail .fw-filter-control-stack > .fw-filter-subrow .fw-filter-chip-stacked {
