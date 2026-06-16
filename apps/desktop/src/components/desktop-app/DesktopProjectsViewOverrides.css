@@ -1,0 +1,83 @@
+.project-tabs-row {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: visible;
+  border-bottom: 1px solid var(--divider);
+  background: var(--bg-primary);
+  padding: 0 32px;
+  scrollbar-width: none;
+}
+
+.project-tabs-row::-webkit-scrollbar {
+  display: none;
+}
+
+
+.project-file-list-icon-wrap {
+  width: 19px;
+  height: 19px;
+}
+
+.project-sync-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.project-sync-status.is-syncing > span:first-child {
+  font-size: 0;
+}
+
+.project-sync-status.is-syncing > span:first-child::before {
+  content: "Syncing";
+  font-size: 11px;
+}
+
+.project-sync-status-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--success);
+}
+
+.project-sync-status.is-syncing .project-sync-status-dot {
+  width: 9px;
+  height: 9px;
+  flex-basis: 9px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  background: transparent;
+  animation: project-sync-spin 0.75s linear infinite;
+}
+
+.project-sync-status.is-error .project-sync-status-dot {
+  background: var(--danger);
+}
+
+.project-sync-status.is-success .project-sync-status-dot {
+  background: var(--success);
+}
+
+@keyframes project-sync-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.project-more-menu-button.is-danger {
+  color: #dc584f;
+}
+
+.project-more-menu-button.is-danger:hover {
+  background: rgba(220, 88, 79, 0.12);
+  color: #dc584f;
+}
