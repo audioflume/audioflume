@@ -20,10 +20,6 @@
   padding: 0 32px !important;
 }
 
-.project-detail-page .project-file-browser-top::after {
-  display: none !important;
-}
-
 .project-detail-page .project-file-browser-title-wrap {
   min-width: 0 !important;
 }
