@@ -20,7 +20,7 @@
   height: 48px !important;
   min-height: 48px !important;
   flex-wrap: nowrap !important;
-  gap: 22px !important;
+  gap: 2px !important;
   row-gap: 0 !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
@@ -42,14 +42,14 @@
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  padding: 0 !important;
+  padding: 0 10px !important;
   color: var(--text-subtle) !important;
   font-size: 13px !important;
   white-space: nowrap !important;
 }
 
 .project-tabs-row > button:first-child {
-  margin-left: 0 !important;
+  margin-left: -10px !important;
 }
 
 .project-tabs-row > button.is-active,
