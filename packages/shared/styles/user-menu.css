@@ -107,12 +107,12 @@ html[data-theme="light"] {
   border-top: 1px solid var(--filmwave-menu-sep);
 }
 
-.filmwave-user-menu-exit {
+.filmwave-user-menu .filmwave-user-menu-exit {
   justify-content: space-between;
   color: var(--filmwave-menu-muted);
 }
 
-.filmwave-user-menu-exit:hover {
+.filmwave-user-menu .filmwave-user-menu-exit:hover {
   color: var(--filmwave-menu-text);
 }
 
