@@ -109,24 +109,6 @@ body > header > div {
   color: var(--text-primary);
 }
 
-.filmwave-header-logo-slot:has(.filmwave-header-left-search) {
-  display: contents;
-}
-
-.filmwave-header-logo-slot:has(.filmwave-header-left-search) + .filmwave-header-drag-surface {
-  order: 1;
-}
-
-.filmwave-header-left-search {
-  display: inline-flex;
-  order: 2;
-  margin-right: 6px;
-}
-
-.filmwave-header-logo-slot:has(.filmwave-header-left-search) ~ .filmwave-header-actions {
-  order: 3;
-}
-
 .filmwave-header-drag-surface {
   height: 100%;
   min-width: 24px;
