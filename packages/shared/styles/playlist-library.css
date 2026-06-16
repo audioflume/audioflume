@@ -1,0 +1,6 @@
+/* User playlist page gallery grid density. Does not target curated playlist pages. */
+
+.playlists-page .playlist-library .playlist-gallery,
+.playlists-page .playlist-skeleton-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
