@@ -14,7 +14,6 @@ type MusicBpmFilterProps = {
 
 const MIN = 1;
 const MAX = 300;
-const PRESETS = [80, 105, 120, 140];
 
 function formatBpmLabel(value: FilmwaveBpmFilterValue): string {
   if (value.mode === "exact") return `${value.exact}`;
@@ -179,12 +178,6 @@ export function MusicBpmFilter({ value, onChange }: MusicBpmFilterProps) {
               )}
             </div>
             <div className="filmwave-filter-range-labels"><span>{MIN}</span><span>{MAX}</span></div>
-          </div>
-          <div className="filmwave-filter-preset-grid is-four">
-            {PRESETS.map((preset) => {
-              const isSelected = value?.mode === "exact" && value.exact === preset;
-              return <button key={preset} type="button" onClick={() => { if (isSelected) { setExact(MIN); exactRef.current = MIN; onChange(null); return; } setMode("exact"); modeRef.current = "exact"; setExact(preset); exactRef.current = preset; emitChange("exact", lowRef.current, highRef.current, preset); }} className={`filmwave-filter-segment-button${isSelected ? " is-active" : ""}`}>{preset}</button>;
-            })}
           </div>
         </div>
       </FilterPopover>
