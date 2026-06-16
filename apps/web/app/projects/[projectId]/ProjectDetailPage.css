@@ -78,7 +78,7 @@
 .project-folder-card-icon-wrap, .project-file-card-icon-wrap { height: 50px !important; padding-top: 0 !important; }
 .project-file-browser .project-file-card-title, .project-folder-card-name { font-size: 10.5px !important; line-height: 1.5 !important; }
 .project-folder-card-meta, .project-file-browser .project-file-card-meta { margin-top: -5px !important; }
-@media (max-width: 760px) {
+@media (max-width: 520px) {
   .project-detail-shell { display: block; padding: 0 18px; }
   .project-tabs-row { position: sticky; top: 56px; z-index: 109; flex-direction: row; width: auto; height: 48px; min-height: 48px; align-items: center; gap: 8px; margin-left: -18px; margin-right: -18px; border-right: 0; border-bottom: 1px solid var(--border); background: var(--bg-primary); padding: 8px 18px; overflow-x: auto; overflow-y: visible; }
   .project-tabs-row .fw-filter-rail-item { width: auto; height: 32px; flex: 0 0 auto; border-radius: 999px; padding: 0 12px; }
@@ -90,4 +90,11 @@
   .project-file-browser-actions { align-items: center; }
   .project-file-row { grid-template-columns: 38px minmax(0, 1fr) 76px; }
   .project-file-list-meta { display: none; }
+}
+
+@media (min-width: 521px) {
+  .project-detail-shell { display: grid !important; grid-template-columns: var(--filmwave-side-filter-rail-width, 168px) minmax(0, 1fr) !important; column-gap: var(--filmwave-side-filter-content-gap, 14px) !important; padding: 0 !important; }
+  .project-tabs-row { grid-column: 1 !important; grid-row: 1 / span 999 !important; position: sticky !important; top: calc(var(--filmwave-header-height, 56px) + var(--filmwave-sidebar-float-inset, 12px)) !important; z-index: 90 !important; display: flex !important; flex-direction: column !important; width: var(--filmwave-side-filter-rail-width, 168px) !important; max-width: var(--filmwave-side-filter-rail-width, 168px) !important; height: calc(100dvh - var(--filmwave-header-height, 56px) - (var(--filmwave-sidebar-float-inset, 12px) * 2)) !important; min-height: 0 !important; align-items: stretch !important; gap: 0 !important; margin: 0 !important; border-right: 1px solid var(--filmwave-side-filter-divider-color, var(--border-subtle)) !important; border-bottom: 0 !important; background: transparent !important; padding: 10px 8px !important; overflow-x: hidden !important; overflow-y: auto !important; }
+  .project-tabs-row .fw-filter-rail-item { width: 100% !important; height: 38px !important; min-height: 38px !important; flex: 0 0 auto !important; border-radius: 11px !important; padding: 0 8px 0 12px !important; }
+  .project-tabs-row .fw-filter-rail-chevron { display: inline-flex !important; }
 }
