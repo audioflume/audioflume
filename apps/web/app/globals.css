@@ -20,7 +20,6 @@
 @import "../../../packages/shared/styles/user-menu.css";
 @import "../../../packages/shared/styles/settings-side-nav.css";
 @import "../../../packages/shared/styles/collapsible-search-pill.css";
-@import "./player-action-overrides.css";
 
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
