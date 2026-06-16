@@ -19,6 +19,7 @@ import MusicIcon from "../icons/MusicIcon";
 import PlaylistIcon from "../icons/PlaylistIcon";
 import WaveformIcon from "../icons/WaveformIcon";
 import DesktopMusicLibraryView from "./music-library/DesktopMusicLibraryView";
+import DesktopSideFilterBehavior from "./music-library/DesktopSideFilterBehavior";
 import "./DesktopAppShell.css";
 import "./DesktopScrollLock.css";
 import "../../../../../packages/shared/styles/sidebar.css";
@@ -202,6 +203,7 @@ export default function DesktopAppShell({
   const main = (
     <>
       <SideFilterPanelBehavior />
+      <DesktopSideFilterBehavior />
       {activeView !== "music" && children}
       <div
         className={`desktop-persistent-music-view${
