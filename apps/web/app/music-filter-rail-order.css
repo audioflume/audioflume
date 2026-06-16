@@ -32,6 +32,24 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:n
   order: 12;
 }
 
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label {
+  font-size: 0;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label::after {
+  content: "Playlists";
+  font-size: 14px;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label {
+  font-size: 0;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label::before {
+  content: "Playlists";
+  font-size: 11px;
+}
+
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(9) {
   order: 8;
 }
