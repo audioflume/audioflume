@@ -40,8 +40,14 @@ function ensureRailCountIconStyles() {
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
+      flex: 0 0 16px !important;
+      min-width: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      padding: 0 !important;
       overflow: hidden !important;
-      line-height: 1 !important;
+      line-height: 16px !important;
+      text-align: center !important;
     }
 
     main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only,
@@ -57,23 +63,20 @@ function ensureRailCountIconStyles() {
 
     main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check,
     .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check {
-      position: absolute !important;
-      top: 50% !important;
-      left: 50% !important;
-      display: flex !important;
+      display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       width: 100% !important;
       height: 100% !important;
-      transform: translate(-50%, -50%) !important;
+      transform: translateY(0px) !important;
       pointer-events: none !important;
     }
 
     main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check svg,
     .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check svg {
       display: block !important;
-      width: 13px !important;
-      height: 13px !important;
+      width: 10px !important;
+      height: 10px !important;
     }
 
     main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check,
@@ -114,7 +117,7 @@ function createRailCountCheckIcon() {
   check.className = "fw-filter-rail-count-check";
   check.setAttribute("aria-hidden", "true");
   check.innerHTML = `
-    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="10" height="10" fill="none" aria-hidden="true">
       <path
         d="M5 12.5L9.5 17L19 7"
         stroke="currentColor"
