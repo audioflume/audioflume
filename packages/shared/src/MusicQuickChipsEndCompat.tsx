@@ -187,7 +187,7 @@ function LegacyQuickActionsAdapter({
         </button>
         {isOpen && (
           <div
-            className="filmwave-music-sort-dropdown"
+            className="filmwave-dropdown-shell filmwave-music-sort-menu"
             data-filmwave-quick-role="sort-dropdown"
             role="menu"
           >
@@ -195,7 +195,7 @@ function LegacyQuickActionsAdapter({
               type="button"
               role="menuitemradio"
               aria-checked={recentPressed}
-              className={`filmwave-music-sort-option${recentPressed ? " is-selected" : ""}`}
+              className={`filmwave-dropdown-item filmwave-music-sort-option${recentPressed ? " is-selected" : ""}`}
               data-filmwave-quick-role="recent-option"
               onMouseDown={(event) => {
                 event.preventDefault();
@@ -210,7 +210,7 @@ function LegacyQuickActionsAdapter({
               type="button"
               role="menuitemradio"
               aria-checked={popularPressed}
-              className={`filmwave-music-sort-option${popularPressed ? " is-selected" : ""}`}
+              className={`filmwave-dropdown-item filmwave-music-sort-option${popularPressed ? " is-selected" : ""}`}
               data-filmwave-quick-role="popular-option"
               onMouseDown={(event) => {
                 event.preventDefault();
