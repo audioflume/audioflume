@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -47,7 +47,7 @@ export default function SidebarCuratedLinkMount() {
   const [collapsed, setCollapsed] = useState(false);
   const [tooltip, setTooltip] = useState<SidebarTooltipState>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const libraryNav = document.querySelector<HTMLElement>(
       ".desktop-app-sidebar-inner > .desktop-sidebar-section:first-child .desktop-sidebar-nav",
     );
