@@ -34,38 +34,62 @@ function ensureRailCountIconStyles() {
   const style = document.createElement("style");
   style.id = RAIL_COUNT_ICON_STYLE_ID;
   style.textContent = `
-    .fw-filter-rail-count.is-dot-only::before {
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
+      position: relative !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      overflow: hidden !important;
+      line-height: 1 !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only {
+      font-size: 0 !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
       content: none !important;
       display: none !important;
     }
 
-    .fw-filter-rail-count.is-dot-only {
-      position: relative !important;
-      font-size: 0 !important;
-    }
-
-    .fw-filter-rail-count.is-dot-only .fw-filter-rail-count-check {
-      display: inline-flex !important;
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       width: 100% !important;
       height: 100% !important;
-      transform: translateY(0px) !important;
+      transform: translate(-50%, -50%) !important;
       pointer-events: none !important;
     }
 
-    .fw-filter-rail-count.is-dot-only .fw-filter-rail-count-check svg {
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check svg,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check svg {
       display: block !important;
-      width: 10px !important;
-      height: 10px !important;
+      width: 13px !important;
+      height: 13px !important;
     }
 
-    .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check {
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check {
       opacity: 0 !important;
     }
 
-    .fw-filter-rail-count:hover::after,
-    .fw-filter-rail-count.is-dot-only:hover::after {
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover {
+      font-size: 0 !important;
+    }
+
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after,
+    main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::after,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after,
+    .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::after {
       content: "×" !important;
       position: absolute !important;
       top: 50% !important;
@@ -90,11 +114,11 @@ function createRailCountCheckIcon() {
   check.className = "fw-filter-rail-count-check";
   check.setAttribute("aria-hidden", "true");
   check.innerHTML = `
-    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" aria-hidden="true">
       <path
         d="M5 12.5L9.5 17L19 7"
         stroke="currentColor"
-        stroke-width="3.4"
+        stroke-width="2.6"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
