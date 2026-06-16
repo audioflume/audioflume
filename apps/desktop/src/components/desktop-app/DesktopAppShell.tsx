@@ -7,6 +7,7 @@ import {
   SidebarProjectsHeader,
   SidebarSection,
   SidebarShell,
+  SideFilterPanelBehavior,
   type SidebarTooltipState,
 } from "@filmwave/shared";
 import { useEffect, useState, type ReactNode } from "react";
@@ -200,6 +201,7 @@ export default function DesktopAppShell({
 
   const main = (
     <>
+      <SideFilterPanelBehavior />
       {activeView !== "music" && children}
       <div
         className={`desktop-persistent-music-view${
