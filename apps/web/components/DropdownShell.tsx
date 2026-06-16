@@ -1,3 +1,3 @@
 "use client";
 
-export { default } from "@filmwave/shared";
+export { DropdownShell as default } from "@filmwave/shared";
