@@ -14,9 +14,9 @@ const MAX = 300;
 
 const INTENTS = [
   { title: "Short", detail: "< 1:00", low: 0, high: 60 },
-  { title: "Quick", detail: "1–2min", low: 60, high: 120 },
-  { title: "Standard", detail: "2–3min", low: 120, high: 180 },
-  { title: "Long", detail: "3–4min", low: 180, high: 240 },
+  { title: "Quick", detail: "1–2 min", low: 60, high: 120 },
+  { title: "Standard", detail: "2–3 min", low: 120, high: 180 },
+  { title: "Long", detail: "3–4 min", low: 180, high: 240 },
   { title: "Extended", detail: "4:00+", low: 240, high: 300 },
 ];
 
