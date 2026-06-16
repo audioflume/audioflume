@@ -49,6 +49,50 @@
   border-radius: 11px;
 }
 
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"]) {
+  position: relative;
+}
+
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"]) .fw-filter-input {
+  padding-right: 34px;
+  appearance: textfield;
+}
+
+.fw-filter-detail .fw-filter-input[type="number"]::-webkit-outer-spin-button,
+.fw-filter-detail .fw-filter-input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"])::before,
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"])::after {
+  content: "";
+  position: absolute;
+  right: 9px;
+  width: 14px;
+  height: 14px;
+  background: var(--text-secondary);
+  pointer-events: none;
+  transition: background 0.15s ease;
+}
+
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"])::before {
+  bottom: 16px;
+  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 15L12 9L18 15' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"])::after {
+  bottom: 5px;
+  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"]):hover::before,
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"]):hover::after,
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"]):focus-within::before,
+.fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"]):focus-within::after {
+  background: var(--text-primary);
+}
+
 .fw-filter-detail .fw-duration-summary {
   height: 36px;
   border-radius: 999px;
