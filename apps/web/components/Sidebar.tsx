@@ -55,9 +55,9 @@ const mainLinks = [
   { label: "Discover", href: "/discover", icon: "discover" },
   { label: "Music Library", href: "/music", icon: "music" },
   { label: "My Playlists", href: "/playlists", icon: "playlist" },
-  { label: "Curated Playlists", href: "/curated-playlists", icon: "curated" },
   { label: "Favorites", href: "/favorites", icon: "heart" },
   { label: "Sound FX", href: "/sound-fx", icon: "waveform" },
+  { label: "Curated Playlists", href: "/curated-playlists", icon: "curated" },
 ];
 
 const aiLinks = [
@@ -107,11 +107,11 @@ function HorizontalMoreIcon() {
   );
 }
 
-function CuratedIcon() {
+function CuratedIcon({ size = 13 }: { size?: number }) {
   return (
     <svg
-      width="20"
-      height="20"
+      width={size}
+      height={size}
       viewBox="0 0 14 14"
       fill="none"
       aria-hidden="true"
