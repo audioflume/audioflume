@@ -2,6 +2,7 @@
 
 import type { Song } from "@/lib/types";
 import { useState } from "react";
+import { SongActionButton } from "@filmwave/shared";
 import DropdownShell from "@/components/DropdownShell";
 import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import AddToProjectModal from "@/components/AddToProjectModal";
@@ -10,10 +11,6 @@ import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import Waveform from "@/components/Waveform";
-import {
-  iconButtonActiveClass,
-  smallIconButtonClass,
-} from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
@@ -270,20 +267,18 @@ export default function SongRow({
         </div>
 
         <div
-          className="flex items-center justify-end gap-1"
+          className="filmwave-song-actions"
           onClick={(event) => event.stopPropagation()}
         >
-          <button
-            type="button"
+          <SongActionButton
+            label={favorited ? "Remove song from favorites" : "Favorite song"}
+            active={favorited}
+            activeMode="plain-icon"
+            className="flex-shrink-0"
             onClick={() => toggleFavorite(safeSong)}
-            className={`${smallIconButtonClass} h-7 w-7 flex-shrink-0`}
-            aria-label={
-              favorited ? "Remove song from favorites" : "Favorite song"
-            }
-            aria-pressed={favorited}
           >
             <HeartIcon filled={favorited} />
-          </button>
+          </SongActionButton>
 
           <DropdownShell
             open={moreOpen}
@@ -299,16 +294,14 @@ export default function SongRow({
               left: 16,
             }}
             trigger={({ open }) => (
-              <button
-                type="button"
-                className={`${smallIconButtonClass} h-7 w-7 flex-shrink-0 ${
-                  open ? iconButtonActiveClass : ""
-                }`}
-                aria-label="Song options"
+              <SongActionButton
+                label="Song options"
+                active={open}
+                className="flex-shrink-0"
                 aria-expanded={open}
               >
                 <MoreIcon />
-              </button>
+              </SongActionButton>
             )}
           >
             <button
@@ -382,7 +375,7 @@ export default function SongRow({
               download
               target="_blank"
               rel="noreferrer"
-              className={`${smallIconButtonClass} h-7 w-7 flex-shrink-0`}
+              className="filmwave-song-action-button flex-shrink-0"
               aria-label="Download song"
             >
               <DownloadIcon />
@@ -390,7 +383,7 @@ export default function SongRow({
           ) : (
             <button
               type="button"
-              className={`${smallIconButtonClass} h-7 w-7 flex-shrink-0`}
+              className="filmwave-song-action-button flex-shrink-0"
               aria-label="Download unavailable"
               disabled
             >
