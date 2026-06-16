@@ -236,6 +236,17 @@ function syncSideFilterRailPresentation(root: ParentNode = document) {
   syncRailClearAllButtons(root);
 }
 
+function getLiveRailCountValue(count: HTMLElement) {
+  const textNodeValue = Array.from(count.childNodes)
+    .filter((node) => node.nodeType === window.Node.TEXT_NODE)
+    .map((node) => node.textContent?.trim() ?? "")
+    .join("")
+    .trim();
+  const currentText = textNodeValue || count.textContent?.trim() || "";
+
+  return /^\d+$/.test(currentText) ? currentText : count.dataset.countValue ?? "";
+}
+
 function syncDotOnlyRailCounts(root: ParentNode = document) {
   root.querySelectorAll<HTMLElement>(".fw-filter-rail-item").forEach((railItem) => {
     const sectionId = getRailItemSectionId(railItem);
@@ -243,9 +254,10 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
 
     if (!count) return;
 
-    const originalCount = count.dataset.countValue ?? count.textContent?.trim() ?? "";
-    if (originalCount && !count.dataset.countValue) count.dataset.countValue = originalCount;
+    const liveCount = getLiveRailCountValue(count);
+    if (liveCount) count.dataset.countValue = liveCount;
 
+    const displayCount = count.dataset.countValue ?? liveCount;
     const isDotOnly = sectionId ? DOT_ONLY_COUNT_SECTION_IDS.has(sectionId) : false;
 
     count.classList.toggle("is-dot-only", isDotOnly);
@@ -259,7 +271,7 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
     }
 
     count.querySelector(`.${RAIL_COUNT_CHECK_CLASS}`)?.remove();
-    count.textContent = count.dataset.countValue ?? originalCount;
+    count.textContent = displayCount;
     count.appendChild(createRailCountClearIcon());
     count.removeAttribute("aria-label");
   });
