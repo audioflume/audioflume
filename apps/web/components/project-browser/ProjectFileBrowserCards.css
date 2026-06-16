@@ -1,0 +1,152 @@
+.project-browser-grid {
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)) !important;
+  column-gap: 12px !important;
+  row-gap: 12px !important;
+  justify-content: stretch !important;
+  padding-top: 0 !important;
+}
+
+.project-browser-grid > div,
+.project-file-browser .project-folder-card,
+.project-file-browser .project-file-card {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.project-file-browser .project-folder-card,
+.project-file-browser .project-file-card {
+  position: relative !important;
+  min-height: 112px !important;
+  padding: 6px 8px !important;
+  gap: 10px !important;
+}
+
+.project-folder-card-icon-wrap,
+.project-file-card-icon-wrap {
+  display: flex !important;
+  height: 54px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.project-folder-card-name,
+.project-file-browser .project-file-card-title,
+.project-file-browser .project-file-card-meta,
+.project-file-browser .project-folder-card-meta {
+  max-width: 100% !important;
+}
+
+.project-file-browser .project-folder-card-meta {
+  display: block !important;
+  margin-top: -6px !important;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.project-file-browser .project-folder-card .project-file-action,
+.project-file-browser .project-file-card .project-file-action {
+  position: absolute !important;
+  right: 7px !important;
+  top: 0 !important;
+  z-index: 2;
+  border: 0 !important;
+  background: transparent !important;
+  opacity: 0;
+  font-size: 14px !important;
+  color: var(--text-primary) !important;
+}
+
+.project-file-browser .project-folder-card:hover .project-file-action,
+.project-file-browser .project-file-card:hover .project-file-action {
+  opacity: 1;
+}
+
+.project-file-list-icon-wrap {
+  position: relative !important;
+  display: flex !important;
+  flex-shrink: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.project-preview-button-list {
+  --project-preview-track: rgba(255, 255, 255, 0.18);
+  position: absolute !important;
+  inset: auto !important;
+  margin: 0 !important;
+  display: flex !important;
+  height: 18px !important;
+  width: 18px !important;
+  cursor: pointer !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  color: var(--text-primary) !important;
+  opacity: 0 !important;
+  transform: scale(0.9) !important;
+  transition: opacity 0.15s ease, transform 0.15s ease !important;
+}
+
+.light .project-preview-button-list {
+  --project-preview-track: rgba(0, 0, 0, 0.18);
+}
+
+.project-preview-button-list::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background: var(--bg-primary);
+}
+
+.project-preview-button-list svg {
+  position: relative;
+  z-index: 1;
+  width: 7px !important;
+  height: 7px !important;
+}
+
+.project-browser-row:hover .project-preview-button-list,
+.project-preview-button-list.is-playing,
+.project-preview-button-list.is-active {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+.project-browser-list {
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding-top: 0 !important;
+}
+
+.project-browser-list-head {
+  display: none !important;
+}
+
+.project-browser-list .project-browser-row {
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 14px !important;
+}
+
+.project-browser-list .project-browser-row:hover {
+  border-radius: 8px !important;
+}
+
+.project-folder-action-wrap {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+}
+
+.project-browser-row .project-folder-action-wrap .project-file-action {
+  opacity: 1 !important;
+}
+
+.project-browser-row:hover .project-folder-action-wrap .project-file-action {
+  opacity: 1 !important;
+}
