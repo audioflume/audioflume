@@ -51,27 +51,17 @@
 }
 
 .fw-filter-detail .fw-filter-mini-field:has(.fw-filter-input[type="number"]) .fw-filter-input {
-  padding-right: 22px;
-  color-scheme: dark;
-  appearance: auto;
-  -webkit-appearance: auto;
+  padding-right: 12px;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
 }
 
 .fw-filter-detail .fw-filter-input[type="number"]::-webkit-outer-spin-button,
 .fw-filter-detail .fw-filter-input[type="number"]::-webkit-inner-spin-button {
-  width: 20px;
-  height: 34px;
+  display: none;
   margin: 0;
-  cursor: pointer;
-  opacity: 0.72;
-  -webkit-appearance: inner-spin-button;
-}
-
-.fw-filter-detail .fw-filter-input[type="number"]:hover::-webkit-outer-spin-button,
-.fw-filter-detail .fw-filter-input[type="number"]:hover::-webkit-inner-spin-button,
-.fw-filter-detail .fw-filter-input[type="number"]:focus::-webkit-outer-spin-button,
-.fw-filter-detail .fw-filter-input[type="number"]:focus::-webkit-inner-spin-button {
-  opacity: 1;
+  -webkit-appearance: none;
 }
 
 .fw-filter-detail .fw-duration-summary {
