@@ -25,6 +25,83 @@ const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 const RAIL_CLEAR_ALL_CLASS = "fw-filter-rail-clear-all";
 const RAIL_PLAYLISTS_CLASS = "fw-filter-rail-item-playlists";
+const RAIL_COUNT_ICON_STYLE_ID = "filmwave-side-filter-count-icon-styles";
+
+function ensureRailCountIconStyles() {
+  if (typeof document === "undefined") return;
+  if (document.getElementById(RAIL_COUNT_ICON_STYLE_ID)) return;
+
+  const style = document.createElement("style");
+  style.id = RAIL_COUNT_ICON_STYLE_ID;
+  style.textContent = `
+    .fw-filter-rail-count.is-dot-only::before {
+      content: none !important;
+      display: none !important;
+    }
+
+    .fw-filter-rail-count.is-dot-only {
+      position: relative !important;
+      font-size: 0 !important;
+    }
+
+    .fw-filter-rail-count.is-dot-only .fw-filter-rail-count-check {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+      transform: translateY(0px) !important;
+      pointer-events: none !important;
+    }
+
+    .fw-filter-rail-count.is-dot-only .fw-filter-rail-count-check svg {
+      display: block !important;
+      width: 10px !important;
+      height: 10px !important;
+    }
+
+    .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check {
+      opacity: 0 !important;
+    }
+
+    .fw-filter-rail-count:hover::after,
+    .fw-filter-rail-count.is-dot-only:hover::after {
+      content: "×" !important;
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+      font-size: 12px !important;
+      font-weight: 450 !important;
+      line-height: 1 !important;
+      transform: translate(-50%, -50%) !important;
+    }
+  `;
+
+  document.head.appendChild(style);
+}
+
+function createRailCountCheckIcon() {
+  const check = document.createElement("span");
+  check.className = "fw-filter-rail-count-check";
+  check.setAttribute("aria-hidden", "true");
+  check.innerHTML = `
+    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" aria-hidden="true">
+      <path
+        d="M5 12.5L9.5 17L19 7"
+        stroke="currentColor"
+        stroke-width="3.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  `;
+  return check;
+}
 
 function getRailItemKey(railItem: Element, panel: Element) {
   const railItems = Array.from(panel.querySelectorAll(".fw-filter-rail-item"));
@@ -117,10 +194,12 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
 
     if (isDotOnly) {
       count.textContent = "";
+      count.appendChild(createRailCountCheckIcon());
       count.setAttribute("aria-label", `${sectionId} filter active`);
       return;
     }
 
+    count.querySelector(".fw-filter-rail-count-check")?.remove();
     count.textContent = count.dataset.countValue ?? originalCount;
     count.removeAttribute("aria-label");
   });
@@ -374,6 +453,7 @@ export default function SideFilterPanelBehavior() {
 
     const observer = new MutationObserver(scheduleRailSync);
 
+    ensureRailCountIconStyles();
     syncFilterPanelColumnFadeStates();
     syncSideFilterRailPresentation();
     syncDotOnlyRailCounts();
