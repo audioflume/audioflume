@@ -28,7 +28,7 @@ function getSongActionButtonStyle({
           "--edit-points-icon-color": "var(--text-primary)",
           "--favorite-icon-color": "var(--text-primary)",
         }
-      : null),
+      : {}),
     ...style,
   } as CSSProperties;
 }
