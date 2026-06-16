@@ -54,7 +54,7 @@ export default function SongMoreDropdown({
         trigger={({ open }) => (
           <button
             type="button"
-            className={`${iconButtonClass} ${open ? iconButtonActiveClass : ""}`}
+            className={`filmwave-song-action-button ${iconButtonClass} ${open ? iconButtonActiveClass : ""}`}
             aria-label="Song options"
             aria-expanded={open}
           >
