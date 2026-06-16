@@ -21,9 +21,8 @@ import "./admin-polish.css";
 import "../../../packages/shared/styles/music-sort-button-width.css";
 import "../../../packages/shared/styles/playlist-library.css";
 import "../../../packages/shared/styles/shell-chrome.css";
+import "../../../packages/shared/styles/music-side-filter.css";
 import "./search-filter-backdrop-overrides.css";
-import "./side-filter-overrides.css";
-import "./side-filter-clear-all-overrides.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
