@@ -11,7 +11,6 @@ import {
   DesktopMusicGlyph,
 } from "./DesktopProjectBrowserGlyphs";
 import "./DesktopProjectsView.css";
-import "./DesktopProjectsViewOverrides.css";
 import "./DesktopProjectGridTight.css";
 
 type ProjectTab =
@@ -105,6 +104,17 @@ function MoreIcon() {
   );
 }
 
+function ProjectTabChevronIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8.6 5.3a1.3 1.3 0 0 1 1.84.04l5.5 5.76a1.3 1.3 0 0 1 0 1.8l-5.5 5.76a1.3 1.3 0 0 1-1.88-1.8L13.2 12 8.56 7.14a1.3 1.3 0 0 1 .04-1.84Z"
+      />
+    </svg>
+  );
+}
+
 function formatFileCount(count: number) {
   return `${count} ${count === 1 ? "file" : "files"}`;
 }
@@ -161,12 +171,8 @@ function projectHasMediaForFolder(project: Project, rootFolderName: string) {
   );
 }
 
-function getVisibleProjectTabs(project: Project): ProjectTabDefinition[] {
-  return [
-    ALL_FILES_TAB,
-    ...MEDIA_TABS.filter((tab) => projectHasMediaForFolder(project, tab.rootFolderName)),
-    LICENSES_TAB,
-  ];
+function getVisibleProjectTabs(_project: Project): ProjectTabDefinition[] {
+  return [ALL_FILES_TAB, ...MEDIA_TABS, LICENSES_TAB];
 }
 
 function isEmptyReservedMediaFolder(project: Project, node: ProjectFileNode) {
@@ -523,12 +529,10 @@ function ProjectDetailView({
   project,
   syncFolder,
   syncStatus,
-  onBack,
 }: {
   project: Project;
   syncFolder: string | null;
   syncStatus: string;
-  onBack: () => void;
 }) {
   const visibleTabs = useMemo(() => getVisibleProjectTabs(project), [project]);
   const [activeTab, setActiveTab] = useState<ProjectTab>("overview");
@@ -560,19 +564,26 @@ function ProjectDetailView({
 
   return (
     <section className="desktop-projects-page is-detail project-detail-page">
-      <div className="project-tabs-row">
-        <button type="button" className="filmwave-filter-trigger" onClick={onBack} aria-label="Back to projects">Projects</button>
-        {visibleTabs.map((tab) => (
-          <button
-            key={tab.value}
-            type="button"
-            className={`filmwave-filter-trigger${activeTab === tab.value ? " is-active" : ""}`}
-            onClick={() => changeTab(tab.value)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      <nav className="project-tabs-row fw-filter-rail" aria-label="Project sections">
+        {visibleTabs.map((tab) => {
+          const isActive = activeTab === tab.value;
+
+          return (
+            <button
+              key={tab.value}
+              type="button"
+              className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
+              aria-current={isActive}
+              onClick={() => changeTab(tab.value)}
+            >
+              <span className="fw-filter-rail-label">{tab.label}</span>
+              <span className="fw-filter-rail-chevron" aria-hidden="true">
+                <ProjectTabChevronIcon />
+              </span>
+            </button>
+          );
+        })}
+      </nav>
       <section className="project-detail-hero">
         <span className="project-detail-kicker">Project</span>
         <h1 className="project-detail-title">{project.name}</h1>
@@ -639,7 +650,6 @@ export default function DesktopProjectsView({
         project={activeProject}
         syncFolder={syncFolder}
         syncStatus={syncStatus}
-        onBack={() => onActiveProjectIdChange(null)}
       />
     );
   }
