@@ -1,12 +1,7 @@
-/* ── User menu v3 ── clean identity card + plain text rows ── */
+/* ── User menu ── shared dropdown shell + identity/theme sections ── */
 
 .filmwave-user-menu {
   width: 260px;
-  overflow: hidden;
-  border: 1px solid var(--filmwave-menu-border);
-  border-radius: 14px;
-  background: var(--filmwave-menu-bg);
-  box-shadow: var(--filmwave-menu-shadow);
 }
 
 /* tokens */
@@ -16,11 +11,12 @@
   --filmwave-menu-hover: rgba(255, 255, 255, 0.07);
   --filmwave-menu-sep: rgba(255, 255, 255, 0.07);
   --filmwave-menu-text: #f0f0f0;
+  --filmwave-menu-text-muted: #8a8a8a;
   --filmwave-menu-muted: #8a8a8a;
   --filmwave-menu-shadow:
     0 8px 28px rgba(0, 0, 0, 0.32),
     0 2px 6px rgba(0, 0, 0, 0.18);
-  --filmwave-menu-item-radius: 8px;
+  --filmwave-menu-item-radius: 0;
   /* shared by player more-menu */
   --filmwave-menu-item-mx: 0;
 }
@@ -31,6 +27,7 @@ html[data-theme="light"] {
   --filmwave-menu-hover: rgba(0, 0, 0, 0.05);
   --filmwave-menu-sep: rgba(0, 0, 0, 0.07);
   --filmwave-menu-text: #111111;
+  --filmwave-menu-text-muted: #7a7a7a;
   --filmwave-menu-muted: #7a7a7a;
   --filmwave-menu-shadow:
     0 8px 28px rgba(0, 0, 0, 0.12),
@@ -96,29 +93,6 @@ html[data-theme="light"] {
   padding: 5px;
 }
 
-.filmwave-user-menu-action {
-  display: flex;
-  height: 34px;
-  cursor: pointer;
-  align-items: center;
-  border: 0;
-  border-radius: var(--filmwave-menu-item-radius);
-  background: transparent;
-  color: var(--filmwave-menu-text);
-  padding: 0 10px;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 400;
-  line-height: 1;
-  text-align: left;
-  text-decoration: none;
-  transition: background 100ms ease;
-}
-
-.filmwave-user-menu-action:hover {
-  background: var(--filmwave-menu-hover);
-}
-
 .filmwave-user-menu-action-label {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -129,32 +103,16 @@ html[data-theme="light"] {
 
 .filmwave-user-menu-exit-section {
   padding: 5px;
-  padding-top: 0;
-  border-top: 1px solid var(--filmwave-menu-sep);
   padding-top: 5px;
+  border-top: 1px solid var(--filmwave-menu-sep);
 }
 
 .filmwave-user-menu-exit {
-  display: flex;
-  width: 100%;
-  height: 34px;
-  cursor: pointer;
-  align-items: center;
   justify-content: space-between;
-  border: 0;
-  border-radius: var(--filmwave-menu-item-radius);
-  background: transparent;
   color: var(--filmwave-menu-muted);
-  padding: 0 10px;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 400;
-  text-align: left;
-  transition: background 100ms ease, color 100ms ease;
 }
 
 .filmwave-user-menu-exit:hover {
-  background: var(--filmwave-menu-hover);
   color: var(--filmwave-menu-text);
 }
 
@@ -188,8 +146,9 @@ html[data-theme="light"] {
   padding: 3px;
 }
 
-.filmwave-user-menu-theme-option {
+.filmwave-user-menu .filmwave-user-menu-theme .filmwave-user-menu-theme-option {
   display: inline-flex;
+  width: auto;
   height: 26px;
   cursor: pointer;
   align-items: center;
@@ -206,11 +165,11 @@ html[data-theme="light"] {
   transition: background 100ms ease, color 100ms ease;
 }
 
-.filmwave-user-menu-theme-option:hover {
+.filmwave-user-menu .filmwave-user-menu-theme .filmwave-user-menu-theme-option:hover {
   color: var(--filmwave-menu-text);
 }
 
-.filmwave-user-menu-theme-option.is-active {
+.filmwave-user-menu .filmwave-user-menu-theme .filmwave-user-menu-theme-option.is-active {
   background: var(--filmwave-menu-text);
   color: var(--filmwave-menu-bg);
 }
