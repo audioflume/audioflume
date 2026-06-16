@@ -226,13 +226,16 @@ export default function Header() {
   return (
     <HeaderShell
       logo={
-        <>
-          <Link href="/music" className="filmwave-header-logo-action" aria-label="Filmwave Home">
-            <FilmwaveLogoIcon className="filmwave-header-logo-mark" />
-          </Link>
+        <Link href="/music" className="filmwave-header-logo-action" aria-label="Filmwave Home">
+          <FilmwaveLogoIcon className="filmwave-header-logo-mark" />
+        </Link>
+      }
+      actions={
+        <div className="filmwave-header-actions" ref={menuRef}>
+          {isMusicPage && <MusicHeaderSearch />}
 
           {showHeaderSearch && (
-            <form className="filmwave-header-left-search" onSubmit={handleHeaderSearchSubmit}>
+            <form onSubmit={handleHeaderSearchSubmit}>
               <CollapsibleSearchPill
                 searchIcon={<SearchIcon />}
                 value={headerSearch}
@@ -241,11 +244,6 @@ export default function Header() {
               />
             </form>
           )}
-        </>
-      }
-      actions={
-        <div className="filmwave-header-actions" ref={menuRef}>
-          {isMusicPage && <MusicHeaderSearch />}
 
           <Link href="/curated-playlists" className="filmwave-header-nav-link">
             <PlaylistIcon size={16} />
