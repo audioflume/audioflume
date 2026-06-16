@@ -1,0 +1,197 @@
+/* Shared shell chrome source styles moved out of the old playlist-grid override layer. */
+
+/* Keep the structural sidebar Discover row in normal sidebar flow. */
+body:has(.desktop-app-sidebar)
+  .desktop-app-sidebar-inner
+  > .desktop-sidebar-section:first-child
+  > .desktop-sidebar-nav {
+  padding-top: 0;
+}
+
+body:has(.desktop-app-sidebar)
+  .desktop-app-sidebar-inner
+  > .desktop-sidebar-section:first-child
+  > .desktop-sidebar-nav
+  .desktop-sidebar-link:first-child
+  .desktop-sidebar-link-icon
+  svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Keep header Playlists hidden while Discover lives in the sidebar. */
+.filmwave-header-nav-link[href="/curated-playlists"] {
+  display: none;
+}
+
+/* If the initial body class is stale, let the live shell state control expansion. */
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-app-sidebar {
+  width: calc(
+    var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-float-inset) -
+      var(--filmwave-sidebar-content-gap)
+  );
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .filmwave-music-library-frame {
+  margin-left: calc(
+    var(--filmwave-sidebar-expanded-width) - var(--filmwave-sidebar-content-gap)
+  );
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-app-sidebar-inner {
+  padding: var(--filmwave-sidebar-y-padding-top)
+    var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom);
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-link {
+  justify-content: flex-start;
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-link-label {
+  width: var(--filmwave-sidebar-label-width);
+  min-width: var(--filmwave-sidebar-label-width);
+  margin-left: var(--filmwave-sidebar-label-gap);
+  opacity: 1;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-projects-head {
+  justify-content: space-between;
+  padding: 0 var(--filmwave-sidebar-row-padding-x);
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-projects-label {
+  display: inline;
+}
+
+.desktop-app-shell:not(.is-sidebar-collapsed) .desktop-sidebar-add-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}
+
+/* Anchor the toolbar by its own top edge so the search bar stays centered in the header. */
+.fw-toolbar-sticky {
+  top: calc((var(--filmwave-header-height) - 40px) / 2);
+  width: clamp(260px, calc(100vw - 420px), 920px);
+  max-width: calc(100vw - 300px);
+  transform: translateX(-50%);
+}
+
+.fw-toolbar-sticky .fw-toolbar {
+  width: 100%;
+  min-width: 0;
+  gap: 6px;
+}
+
+.fw-toolbar-sticky .fw-toolbar-search,
+.fw-toolbar-sticky .filmwave-search-filter-search-shell {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 30px;
+  height: 30px;
+}
+
+.fw-toolbar-sticky .fw-toolbar-search input {
+  min-width: 0;
+}
+
+.fw-toolbar-sticky .fw-toolbar-filters {
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 44px;
+  min-height: 30px;
+  max-height: 30px;
+  height: 30px;
+  gap: 6px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.fw-toolbar-sticky .fw-toolbar-filters:not(.is-open):not(.is-done),
+.fw-toolbar-sticky .fw-toolbar-filters:not(.is-open):not(.is-done):hover {
+  background: transparent;
+  background-color: transparent;
+}
+
+.fw-toolbar-sticky .fw-toolbar-filters-label {
+  display: inline-block;
+  max-width: clamp(0px, calc(100vw - 760px), 64px);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.fw-toolbar-sticky .fw-toolbar-search-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.fw-toolbar-sticky .fw-toolbar-search-clear {
+  height: 24px;
+}
+
+.fw-toolbar-sticky .fw-toolbar-filters::before {
+  width: 12px;
+  height: 12px;
+  flex-basis: 12px;
+}
+
+html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-float,
+html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-float:focus-within {
+  background: rgba(0, 0, 0, 0.24);
+  background-color: rgba(0, 0, 0, 0.24);
+}
+
+html:not(.light):not([data-theme="light"]) .fw-toolbar-search,
+html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell,
+html:not(.light):not([data-theme="light"]) .fw-toolbar-search:focus-within,
+html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell:focus-within {
+  background: transparent;
+  background-color: transparent;
+}
+
+.filmwave-search-filter-quick-row {
+  margin-top: 0;
+  padding-top: var(--filmwave-sidebar-float-inset);
+}
+
+.fw-quick-row {
+  padding-top: var(--filmwave-sidebar-float-inset);
+}
+
+/* Keep only the expanding border around the profile image, without the glow. */
+.filmwave-header-account-trigger:hover .filmwave-header-avatar,
+.filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.18),
+    0 0 0 4px rgba(255, 255, 255, 0.08);
+  transform: scale(1.05);
+}
+
+html.light .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+html.light .filmwave-header-account-trigger.is-open .filmwave-header-avatar,
+html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 0 0 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Hide the old AI Tools block while Curated Playlists lives in the Library nav. */
+.desktop-app-sidebar-inner > .desktop-sidebar-section:nth-of-type(2):not(.is-projects-section) {
+  display: none;
+}
+
+.desktop-sidebar-curated-mount {
+  display: contents;
+}
+
+.desktop-app-sidebar-inner > .desktop-sidebar-section:first-child {
+  padding-bottom: var(--filmwave-sidebar-section-gap);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Remove the filter trigger from the header searchbar while filters live in the side layout. */
+.fw-toolbar-sticky .fw-toolbar-filters {
+  display: none;
+}
