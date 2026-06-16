@@ -16,7 +16,8 @@ import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior"
 import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
 import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
-import "./admin-polish.css";
+import "../components/admin/AdminPageLayout.css";
+import "../components/admin/AdminSongFormPolish.css";
 import "../../../packages/shared/styles/music-sort-button-width.css";
 import "../../../packages/shared/styles/playlist-library.css";
 import "../../../packages/shared/styles/shell-chrome.css";
