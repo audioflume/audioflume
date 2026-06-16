@@ -1,14 +1,7 @@
-/* Desktop music library source layout.
-   These rules keep the desktop app aligned with the shared music-library structure
-   without relying on the old desktop parity override files. */
-
-:root {
-  --filmwave-side-filter-rail-width: 168px;
-  --filmwave-side-filter-detail-width: 184px;
-  --filmwave-side-filter-content-gap: 14px;
-  --filmwave-side-filter-divider-color: var(--border-subtle);
-  --filmwave-side-filter-edge-fade: 28px;
-}
+/* Desktop music library shell bridge.
+   This file only maps the desktop persistent wrapper to the same shared
+   music/filter geometry used by the website. Values mirror the shared
+   music-side-filter and header-search-toolbar source styles. */
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) {
   display: grid !important;
@@ -42,48 +35,37 @@
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
   position: fixed !important;
-  top: 10.5px !important;
+  top: calc(var(--filmwave-header-height, 56px) / 2) !important;
   left: 50% !important;
   z-index: 141 !important;
   width: min(920px, calc(100vw - 520px)) !important;
   max-width: calc(100vw - 300px) !important;
-  min-height: 34px !important;
-  height: 34px !important;
+  min-height: 40px !important;
+  height: 40px !important;
   box-sizing: border-box !important;
-  transform: translateX(-50%) !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
+  transform: translate(-50%, -50%) !important;
   pointer-events: auto !important;
+  border-color: var(--border) !important;
+  background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
+  box-shadow: none !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar,
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
-  min-height: 34px !important;
-  height: 34px !important;
+  min-height: 30px !important;
+  height: 30px !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search {
-  gap: 8px !important;
-  border-color: var(--border) !important;
+  gap: 6px !important;
   background: transparent !important;
-  padding: 0 10px 0 4px !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search:focus-within {
-  border-color: var(--border-strong) !important;
-  background: transparent !important;
+  padding: 0 10px 0 1px !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-icon {
-  order: 0 !important;
   width: 24px !important;
   height: 24px !important;
-  margin-left: 0 !important;
-  background: var(--bg-elevated) !important;
-  color: var(--text-muted) !important;
+  margin-left: -1px !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-icon svg {
@@ -92,44 +74,19 @@
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear {
-  position: relative !important;
   order: 1 !important;
   width: 20px !important;
   min-width: 20px !important;
-  height: 20px !important;
-  margin-left: 4px !important;
-  margin-right: 4px !important;
-  padding: 0 !important;
-  border-radius: 999px !important;
+  height: 24px !important;
+  margin: 0 !important;
+  padding: 0 6px 0 0 !important;
+  border-radius: 0 !important;
   background: transparent !important;
-  color: var(--text-muted) !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear:hover {
-  background: transparent !important;
-  color: var(--text-primary) !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear::after {
-  content: "" !important;
-  position: absolute !important;
-  top: 50% !important;
-  right: -4px !important;
-  width: 1px !important;
-  height: 16px !important;
-  background: var(--border) !important;
-  transform: translateY(-50%) !important;
-  pointer-events: none !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search-clear svg {
-  width: 12px !important;
-  height: 12px !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-search input {
   order: 2 !important;
-  padding: 0 4px 0 7px !important;
+  padding-left: 6px !important;
   font-size: 13px !important;
   font-weight: 400 !important;
 }
@@ -209,6 +166,23 @@
   grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
 }
 
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--filmwave-side-filter-rail-width);
+  width: 1px;
+  z-index: calc(var(--filmwave-z-search-filter, 60) + 2);
+  background: var(--filmwave-side-filter-divider-color);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-panel-body::before {
+  opacity: 1;
+}
+
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail,
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-detail {
   height: 100% !important;
@@ -247,11 +221,150 @@
   column-width: auto !important;
   column-count: 1 !important;
   column-gap: 0 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-option {
   break-inside: auto !important;
   -webkit-column-break-inside: auto !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item {
+  height: 38px !important;
+  border-radius: 11px !important;
+  font-weight: 400 !important;
+  transition: background-color 160ms ease, color 160ms ease !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item.is-active {
+  font-weight: 400 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-panel-wrap.has-selected-filter-section .fw-filter-rail-item.is-active {
+  background: var(--bg-hover-strong) !important;
+  color: var(--text-primary) !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
+  opacity: 0.4 !important;
+  transition: opacity 160ms ease, color 160ms ease !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:hover,
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:hover .fw-filter-rail-chevron,
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active:hover .fw-filter-rail-chevron {
+  opacity: 0.65 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: background-color 160ms ease, color 160ms ease !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
+  content: "✓";
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  transform: translateY(-0.5px) !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::before {
+  display: none !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover {
+  font-size: 0 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after {
+  content: "×";
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 12px !important;
+  font-weight: 450 !important;
+  line-height: 1 !important;
+  transform: translateY(-1px) !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
+  opacity: 0.4 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(1) {
+  order: 1 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(2) {
+  order: 2 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(3) {
+  order: 4 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(4) {
+  order: 3 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item:nth-of-type(n + 5) {
+  order: 5 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-item-playlists {
+  order: 900 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all {
+  order: 1000 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: flex-start !important;
+  width: auto !important;
+  height: 22px !important;
+  min-height: 0 !important;
+  margin: 12px 8px 0 !important;
+  padding: 0 8px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--bg-control) !important;
+  color: var(--text-secondary) !important;
+  font-family: inherit !important;
+  font-size: 10.5px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
+  transition: background 150ms ease, color 150ms ease !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all:hover {
+  background: var(--bg-control-hover) !important;
+  border-color: transparent !important;
+  color: var(--text-primary) !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row,
@@ -287,131 +400,9 @@
   --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y);
 }
 
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-of-type(1) {
-  order: 1 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-of-type(2) {
-  order: 2 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-of-type(3) {
-  order: 4 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-of-type(4) {
-  order: 3 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-of-type(n + 5) {
-  order: 5 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.fw-filter-rail-item-playlists {
-  order: 900 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
-  position: relative !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex: 0 0 16px !important;
-  min-width: 16px !important;
-  width: 16px !important;
-  height: 16px !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  line-height: 16px !important;
-  text-align: center !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only {
-  font-size: 0 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
-  content: none !important;
-  display: none !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  transform: translateY(0px) !important;
-  pointer-events: none !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check svg {
-  display: block !important;
-  width: 10px !important;
-  height: 10px !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover {
-  font-size: 0 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover .fw-filter-rail-count-check {
-  opacity: 0 !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after,
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::after {
-  content: "" !important;
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  display: block !important;
-  width: 9px !important;
-  height: 9px !important;
-  background: var(--bg-primary, #111) !important;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 3L9 9M9 3L3 9' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat !important;
-  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 3L9 9M9 3L3 9' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail button.fw-filter-rail-clear-all {
-  order: 901 !important;
-  align-self: flex-start !important;
-  flex: 0 0 22px !important;
-  width: auto !important;
-  height: 22px !important;
-  min-height: 22px !important;
-  max-height: 22px !important;
-  margin: 12px 8px 0 !important;
-  padding: 0 8px !important;
-  border: 0 !important;
-  border-radius: 999px !important;
-  background: var(--bg-control) !important;
-  color: var(--text-secondary) !important;
-  font-family: inherit !important;
-  font-size: 10.5px !important;
-  font-weight: 400 !important;
-  line-height: 22px !important;
-  letter-spacing: 0 !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-  opacity: 1 !important;
-  text-decoration: none !important;
-  transition: background 150ms ease, color 150ms ease !important;
-}
-
-.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) .fw-filter-rail button.fw-filter-rail-clear-all:hover {
-  background: var(--bg-control-hover) !important;
-  border-color: transparent !important;
-  color: var(--text-primary) !important;
-  opacity: 1 !important;
-  text-decoration: none !important;
-}
-
 @media (max-width: 1180px) {
   .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
     width: min(720px, calc(100vw - 360px)) !important;
-    max-width: calc(100vw - 300px) !important;
   }
 }
 
