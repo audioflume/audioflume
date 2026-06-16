@@ -15,8 +15,16 @@
 }
 
 .filmwave-dropdown-shell.filmwave-music-sort-dropdown {
+  box-sizing: border-box;
+  display: grid;
   width: 150px;
+  overflow: hidden;
   gap: 0;
+  border: 0;
+  border-radius: 4px;
+  background: var(--filmwave-menu-bg);
+  padding: 4px;
+  box-shadow: var(--filmwave-menu-shadow);
 }
 
 .project-more-dropdown.project-more-dropdown {
