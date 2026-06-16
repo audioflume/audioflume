@@ -133,7 +133,7 @@ html[data-theme="light"] {
 
 .filmwave-user-menu-theme {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   border-radius: 0;
   background: transparent;
   padding: 0;
