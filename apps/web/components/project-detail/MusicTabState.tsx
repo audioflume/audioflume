@@ -1,6 +1,7 @@
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import type { ProjectSong } from "@/lib/project-detail/projectDetailTypes";
+import { MusicListShell } from "@filmwave/shared";
 
 type MusicTabStateProps = {
   projectId: string;
@@ -41,7 +42,10 @@ export default function MusicTabState({
   }
 
   return (
-    <div>
+    <MusicListShell
+      title="Music"
+      meta={`${songs.length} ${songs.length === 1 ? "track" : "tracks"}`}
+    >
       {songs.map((song, index) => (
         <SongCard
           key={song.id}
@@ -52,6 +56,6 @@ export default function MusicTabState({
           onRemoveFromProject={onRemoveFromProject}
         />
       ))}
-    </div>
+    </MusicListShell>
   );
 }
