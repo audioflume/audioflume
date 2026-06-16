@@ -19,6 +19,7 @@
 @import "../../../packages/shared/styles/music-sort-button-width.css";
 @import "../../../packages/shared/styles/playlist-library.css";
 @import "../../../packages/shared/styles/shell-chrome.css";
+@import "./components/desktop-app/music-library/DesktopMusicLibrarySharedLayout.css";
 @import "../../../packages/shared/styles/project-toolbar.css";
 @import "../../../packages/shared/styles/project-browser-icons.css";
 
