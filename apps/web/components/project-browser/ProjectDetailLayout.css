@@ -1,5 +1,19 @@
 .project-detail-page {
+  --project-detail-content-pad: 20px;
+  --project-detail-content-max-width: 1180px;
   display: block !important;
+}
+
+@media (min-width: 768px) {
+  .project-detail-page {
+    --project-detail-content-pad: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .project-detail-page {
+    --project-detail-content-pad: 40px;
+  }
 }
 
 .project-detail-page > .project-detail-shell {
@@ -8,6 +22,7 @@
   grid-template-columns: var(--filmwave-side-filter-rail-width, 168px) minmax(0, 1fr) !important;
   column-gap: var(--filmwave-side-filter-content-gap, 14px) !important;
   align-items: start !important;
+  padding: 0 0 0 var(--filmwave-side-filter-sidebar-gap, 12px) !important;
 }
 
 .project-tabs-row {
@@ -20,6 +35,7 @@
   right: auto !important;
   z-index: 60 !important;
   display: flex !important;
+  box-sizing: border-box !important;
   width: var(--filmwave-side-filter-rail-width, 168px) !important;
   max-width: var(--filmwave-side-filter-rail-width, 168px) !important;
   height: calc(100dvh - var(--filmwave-header-height, 56px) - (var(--filmwave-sidebar-float-inset, 12px) * 2)) !important;
@@ -183,16 +199,28 @@
   stroke-width: 1.65 !important;
 }
 
+.project-detail-page .project-detail-hero,
+.project-sort-row,
+.project-detail-page .project-tab-panel,
+.project-detail-page .project-footer-wrap {
+  grid-column: 2 !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  width: min(100%, calc(var(--project-detail-content-max-width) + (var(--project-detail-content-pad) * 2))) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--project-detail-content-pad) !important;
+  padding-right: var(--project-detail-content-pad) !important;
+}
+
 .project-detail-page .project-detail-hero {
   order: initial !important;
-  grid-column: 2 !important;
   position: relative !important;
   display: block !important;
-  min-width: 0 !important;
   min-height: 176px !important;
-  margin: 0 !important;
   border-bottom: 1px solid var(--border) !important;
-  padding: 38px 0 28px 0 !important;
+  padding-top: 38px !important;
+  padding-bottom: 28px !important;
 }
 
 .project-detail-page .project-detail-kicker {
@@ -227,7 +255,6 @@
 
 .project-sort-row {
   order: initial !important;
-  grid-column: 2 !important;
   min-width: 0 !important;
 }
 
@@ -243,16 +270,15 @@
 
 .project-detail-page .project-tab-panel {
   order: initial !important;
-  grid-column: 2 !important;
-  min-width: 0 !important;
   flex: initial !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+}
+
+.project-detail-page .project-file-browser {
+  padding: 32px 0 !important;
 }
 
 .project-detail-page .project-footer-wrap {
   order: initial !important;
-  grid-column: 2 !important;
   margin-top: auto !important;
 }
 
@@ -305,5 +331,8 @@
   .project-detail-page .project-tab-panel,
   .project-detail-page .project-footer-wrap {
     grid-column: auto !important;
+    width: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
