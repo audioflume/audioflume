@@ -23,6 +23,8 @@ const RESERVED_PROJECT_FOLDER_NAMES = new Set([
   "colour grading",
 ]);
 
+const LICENSE_ASSET_TYPES = new Set(["license", "licenses"]);
+
 export const SORT_OPTIONS = [
   { label: "Newest", value: "newest" },
   { label: "Oldest", value: "oldest" },
@@ -72,14 +74,35 @@ export function getTimestamp(value: string | null | undefined) {
   return Number.isFinite(time) ? time : null;
 }
 
-export function getVisibleProjectTabs(_args: {
+function hasProjectAssetType(projectAssets: ProjectAsset[], assetType: string) {
+  return projectAssets.some((asset) => asset.asset_type === assetType);
+}
+
+export function getVisibleProjectTabs({
+  projectAssets,
+  projectSongsLength,
+}: {
   projectAssets: ProjectAsset[];
   projectSongsLength: number;
 }) {
-  const values = new Set<ProjectTab>(TABS.map((tab) => tab.value));
+  const hasMusic =
+    projectSongsLength > 0 || hasProjectAssetType(projectAssets, "song");
+  const hasLicenses = projectAssets.some((asset) =>
+    LICENSE_ASSET_TYPES.has(String(asset.asset_type)),
+  );
+
+  const visibleTabs = TABS.filter((tab) => {
+    if (tab.value === "overview") return true;
+    if (tab.value === "music") return hasMusic;
+    if (tab.value === "licenses") return hasLicenses;
+
+    return hasProjectAssetType(projectAssets, tab.value);
+  });
+
+  const values = new Set<ProjectTab>(visibleTabs.map((tab) => tab.value));
 
   return {
     availableTabValues: values,
-    visibleTabs: TABS,
+    visibleTabs,
   };
 }
