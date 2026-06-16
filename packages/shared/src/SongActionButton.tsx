@@ -8,6 +8,10 @@ export const songActionButtonStyleDefaults = {
   "--filmwave-song-card-action-hover-bg": "var(--bg-hover-strong)",
   "--filmwave-song-card-action-color": "var(--icon-color)",
   "--filmwave-song-card-action-active-color": "var(--text-primary)",
+  width: "var(--filmwave-song-card-action-size)",
+  minWidth: "var(--filmwave-song-card-action-size)",
+  height: "var(--filmwave-song-card-action-size)",
+  borderRadius: "var(--filmwave-song-card-action-radius)",
 } as CSSProperties;
 
 function getSongActionButtonStyle({
