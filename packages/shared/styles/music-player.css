@@ -1,30 +1,32 @@
 :where(.filmwave-music-player) {
   --filmwave-player-height: 72px;
-  --filmwave-player-inset: 12px;
   --filmwave-player-padding-x: 16px;
   --filmwave-player-main-gap: 18px;
   --filmwave-player-cover-size: 40px;
   --filmwave-player-control-gap: clamp(12px, 2vw, 24px);
   --filmwave-player-meta-gap: 18px;
   --filmwave-player-action-gap: 2px;
-  --filmwave-player-shadow: 0 16px 48px rgba(0, 0, 0, 0.26);
   --filmwave-square-icon-hover-bg: var(--bg-hover-strong);
 }
 
-/* Floating player — inset rounded card matching the sidebar and toolbar,
-   detached from the page edges. */
+/* Shared flush music player — full-width, edge-aligned, and consistent across web and desktop. */
 .filmwave-music-player {
   position: fixed;
-  right: var(--filmwave-player-inset);
-  bottom: var(--filmwave-player-inset);
-  left: var(--filmwave-player-inset);
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: calc(var(--filmwave-z-header, 120) + 1);
+  width: 100vw;
+  max-width: 100vw;
   min-height: var(--filmwave-player-height);
   overflow: visible;
   border: 1px solid var(--border-subtle);
-  border-radius: 16px;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
   background: var(--bg-tertiary);
-  box-shadow: var(--filmwave-player-shadow);
+  box-shadow: none;
 }
 
 .filmwave-music-player[data-platform="desktop"],
@@ -508,9 +510,4 @@
     padding-right: var(--filmwave-player-padding-x);
     padding-left: var(--filmwave-player-padding-x);
   }
-}
-
-html[data-theme="light"] .filmwave-music-player,
-.light .filmwave-music-player {
-  --filmwave-player-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
 }
