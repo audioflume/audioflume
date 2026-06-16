@@ -306,12 +306,6 @@ body > header,
   content: none !important;
 }
 
-.fw-song-list .filmwave-song-card,
-.fw-song-list .desktop-song-card,
-.fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
-  --filmwave-song-card-action-radius: 9px !important;
-}
-
 /* ─── Open filter trigger behavior ────────────────────────── */
 
 .fw-toolbar-filters.is-open {
