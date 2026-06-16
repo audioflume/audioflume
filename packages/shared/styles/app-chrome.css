@@ -109,11 +109,6 @@ body > header > div {
   color: var(--text-primary);
 }
 
-.filmwave-header-left-search {
-  display: inline-flex;
-  margin-left: 18px;
-}
-
 .filmwave-header-drag-surface {
   height: 100%;
   min-width: 24px;
