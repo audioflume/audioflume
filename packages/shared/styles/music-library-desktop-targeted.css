@@ -1,0 +1,257 @@
+/* Final desktop music-page corrections.
+   Keep these scoped to the desktop app while matching the website music page
+   layout contract as closely as possible. */
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) {
+  padding-right: 0 !important;
+}
+
+/* The website side-filter top/bottom spacing, including the player offset. */
+.desktop-app-main .desktop-music-page.has-player {
+  --filmwave-sidebar-bottom-offset: var(--filmwave-player-height, 72px);
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  top: calc(
+    var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
+      var(--filmwave-sidebar-float-inset, 12px)
+  ) !important;
+  height: calc(
+    100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
+      var(--filmwave-sidebar-bottom-offset, 0px) -
+      (var(--filmwave-sidebar-float-inset, 12px) * 2)
+  ) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Website side-filter content column placement. */
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row,
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .desktop-music-load-notice,
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list,
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > footer {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-quick-row {
+  padding: 8px 28px 0 0 !important;
+}
+
+.desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-song-list {
+  margin: 10px 20px 28px 0 !important;
+}
+
+.desktop-app-main .desktop-music-page.has-player:has(.fw-filter-panel-wrap) > .fw-song-list {
+  margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px) !important;
+}
+
+.desktop-app-main .desktop-music-page .fw-song-list-head {
+  display: none !important;
+}
+
+/* Make the remaining desktop list wrapper layout-neutral until the JSX wrapper is removed. */
+.desktop-app-main .desktop-music-page > .fw-song-list > .desktop-music-list {
+  display: contents !important;
+  border-top: 0 !important;
+}
+
+/* Desktop card padding should visually match the website card inset. */
+.desktop-app-main .desktop-music-page .desktop-song-card {
+  --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y);
+}
+
+/* Match the website side-filter rail order while keeping Clear all at the bottom. */
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(1) {
+  order: 1 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(2) {
+  order: 2 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(3) {
+  order: 4 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(4) {
+  order: 3 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item:nth-of-type(n + 5) {
+  order: 5 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  .fw-filter-rail-item.fw-filter-rail-item-playlists {
+  order: 900 !important;
+}
+
+/* Unify numbered and dot-only filter markers so both states share the same circle geometry. */
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 16px !important;
+  min-width: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  line-height: 16px !important;
+  text-align: center !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count.is-dot-only {
+  font-size: 0 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count.is-dot-only::before {
+  content: none !important;
+  display: none !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count-check {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: translateY(0px) !important;
+  pointer-events: none !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count-check svg {
+  display: block !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count:hover {
+  font-size: 0 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count.is-dot-only:hover
+  .fw-filter-rail-count-check {
+  opacity: 0 !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count:hover::after,
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-rail-count.is-dot-only:hover::after {
+  content: "×" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Keep Clear all after the rail items, matching the website visual order. */
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  button.fw-filter-rail-clear-all {
+  order: 901 !important;
+  align-self: flex-start !important;
+  flex: 0 0 22px !important;
+  width: auto !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  max-height: 22px !important;
+  margin: 12px 8px 0 !important;
+  padding: 0 8px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--bg-control) !important;
+  color: var(--text-secondary) !important;
+  font-family: inherit !important;
+  font-size: 10.5px !important;
+  font-weight: 400 !important;
+  line-height: 22px !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
+  transition: background 150ms ease, color 150ms ease !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap
+  .fw-filter-rail
+  button.fw-filter-rail-clear-all:hover {
+  background: var(--bg-control-hover) !important;
+  border-color: transparent !important;
+  color: var(--text-primary) !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
+}
+
+.desktop-app-main
+  .desktop-music-page:has(.fw-filter-panel-wrap)
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float {
+  width: min(clamp(420px, 42vw, 640px), calc(100vw - 300px)) !important;
+  max-width: calc(100vw - 300px) !important;
+}
