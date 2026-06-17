@@ -83,6 +83,7 @@ function editPointRowsToJson(rows: SongEditPointRow[] = []) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeSongRow(row: any): Song {
   const audioUrl = String(row.audio_url || "");
+  const sizeBytes = Number(row.size_bytes || 0) || undefined;
 
   return {
     id: String(row.id),
@@ -106,6 +107,7 @@ export function normalizeSongRow(row: any): Song {
     instrumental: Boolean(row.instrumental),
     editPoints: String(row.edit_points || emptyEditPoints()),
     downloadCount: Number(row.download_count || 0),
+    sizeBytes,
   };
 }
 
