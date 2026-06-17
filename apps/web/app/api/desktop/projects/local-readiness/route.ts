@@ -40,6 +40,11 @@ type SongSizeRow = Record<string, unknown> & {
   size_bytes?: number | string | null;
 };
 
+type SongLookup = {
+  sizeByIdentifier: Map<string, number>;
+  validIdentifiers: Set<string>;
+};
+
 function getNumericId(value: unknown) {
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue : null;
@@ -90,9 +95,28 @@ function getPositiveSizeBytes(value: unknown) {
 }
 
 function isUuid(value: string) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{12}$/i.test(
     value,
   );
+}
+
+function getNormalizedAssetType(asset: ProjectAssetRow) {
+  return String(asset.asset_type || "").trim().toLowerCase();
+}
+
+function isFolderAsset(asset: ProjectAssetRow) {
+  const assetType = getNormalizedAssetType(asset);
+  return assetType === "folder" || assetType === "project_folder";
+}
+
+function isSyncableReadinessAsset(asset: ProjectAssetRow, songLookup: SongLookup) {
+  if (isFolderAsset(asset)) return false;
+
+  if (asset.asset_type === "song") {
+    return songLookup.validIdentifiers.has(String(asset.asset_id || ""));
+  }
+
+  return true;
 }
 
 function getSongIdentifierValues(song: SongSizeRow) {
@@ -130,7 +154,7 @@ async function getOwnedProjectIds(userId: string, requestedProjectId?: number | 
   return (data ?? []).map((project) => Number(project.id)).filter(Number.isFinite);
 }
 
-async function getSongSizeMap(assets: ProjectAssetRow[]) {
+async function getSongLookup(assets: ProjectAssetRow[]): Promise<SongLookup> {
   const songIds = [
     ...new Set(
       assets
@@ -140,7 +164,9 @@ async function getSongSizeMap(assets: ProjectAssetRow[]) {
     ),
   ];
 
-  if (songIds.length === 0) return new Map<string, number>();
+  if (songIds.length === 0) {
+    return { sizeByIdentifier: new Map(), validIdentifiers: new Set() };
+  }
 
   const uuidSongIds = songIds.filter(isUuid);
   const needsExternalSongLookup = uuidSongIds.length !== songIds.length;
@@ -166,23 +192,25 @@ async function getSongSizeMap(assets: ProjectAssetRow[]) {
     console.warn("Desktop local readiness fallback song lookup failed", allSongsError);
   }
 
-  const songSizeByIdentifier = new Map<string, number>();
+  const sizeByIdentifier = new Map<string, number>();
+  const validIdentifiers = new Set<string>();
 
   for (const song of [
     ...((directSongsError ? [] : directSongRows ?? []) as SongSizeRow[]),
     ...((allSongsError ? [] : allSongRows ?? []) as SongSizeRow[]),
   ]) {
     const sizeBytes = getPositiveSizeBytes(song.size_bytes);
-    if (!sizeBytes) continue;
 
     for (const identifier of getSongIdentifierValues(song)) {
-      if (!songSizeByIdentifier.has(identifier)) {
-        songSizeByIdentifier.set(identifier, sizeBytes);
+      validIdentifiers.add(identifier);
+
+      if (sizeBytes && !sizeByIdentifier.has(identifier)) {
+        sizeByIdentifier.set(identifier, sizeBytes);
       }
     }
   }
 
-  return songSizeByIdentifier;
+  return { sizeByIdentifier, validIdentifiers };
 }
 
 export async function GET(req: Request) {
@@ -209,7 +237,7 @@ export async function GET(req: Request) {
     if (error) throw error;
 
     const assetRows = (assets ?? []) as ProjectAssetRow[];
-    const songSizeById = await getSongSizeMap(assetRows);
+    const songLookup = await getSongLookup(assetRows);
 
     const summaries = new Map<
       number,
@@ -236,12 +264,13 @@ export async function GET(req: Request) {
       const projectId = Number(asset.project_id);
       const summary = summaries.get(projectId);
       if (!summary) return;
+      if (!isSyncableReadinessAsset(asset, songLookup)) return;
 
       const metadata = normalizeMetadata(asset.metadata);
       const updatedAt = getUpdatedAt(metadata);
       const songSizeBytes =
         asset.asset_type === "song"
-          ? songSizeById.get(String(asset.asset_id || "")) ?? 0
+          ? songLookup.sizeByIdentifier.get(String(asset.asset_id || "")) ?? 0
           : 0;
 
       summary.totalFiles += 1;
