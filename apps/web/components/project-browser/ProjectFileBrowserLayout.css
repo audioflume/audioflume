@@ -1,6 +1,6 @@
 .project-detail-page .project-file-browser {
   position: relative !important;
-  padding: 10px 0 24px !important;
+  padding: 8px 0 24px !important;
 }
 
 .project-detail-page .project-file-browser-top {
@@ -8,7 +8,7 @@
   top: auto !important;
   z-index: 3 !important;
   display: flex !important;
-  min-height: 30px !important;
+  min-height: 40px !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
@@ -17,7 +17,7 @@
   margin-right: 0 !important;
   border-bottom: 1px solid var(--border-subtle) !important;
   background: var(--bg-primary) !important;
-  padding: 0 0 8px !important;
+  padding: 0 0 10px !important;
 }
 
 .project-detail-page .project-file-browser-title-wrap {
@@ -26,15 +26,36 @@
 
 .project-detail-page .project-breadcrumbs.project-path {
   margin-top: 0 !important;
+  display: inline-flex !important;
+  min-height: 28px !important;
   flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 8px !important;
   overflow: visible !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
+}
+
+.project-breadcrumbs.project-path::before {
+  content: "⌂";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1;
 }
 
 .project-breadcrumbs.project-path button,
 .project-breadcrumbs.project-path span,
 .project-path-separator {
-  color: var(--text-subtle) !important;
+  color: var(--text-secondary) !important;
+}
+
+.project-breadcrumbs.project-path button {
+  font-size: 12px !important;
+  font-weight: 500 !important;
 }
 
 .project-breadcrumbs.project-path button.is-current,
