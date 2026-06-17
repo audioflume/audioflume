@@ -58,7 +58,7 @@
   justify-content: stretch !important;
   column-gap: 12px !important;
   row-gap: 2px !important;
-  border: 1px solid var(--border) !important;
+  border: 1px solid var(--border-subtle) !important;
   border-radius: 8px !important;
   background: var(--bg-secondary) !important;
   padding: 9px 14px !important;
@@ -192,43 +192,25 @@
 }
 
 .project-browser-list {
-  overflow: hidden !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 8px !important;
-  background: var(--bg-secondary) !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
   padding-top: 0 !important;
 }
 
 .project-browser-list-head {
-  display: grid !important;
-  min-height: 34px !important;
-  align-items: center !important;
-  gap: 14px !important;
-  border-bottom: 1px solid var(--border) !important;
-  padding: 0 14px !important;
-  color: var(--text-muted) !important;
-  font-size: 10px !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.1em !important;
-  text-transform: uppercase !important;
+  display: none !important;
 }
 
 .project-browser-list .project-browser-row {
   border: 0 !important;
-  border-bottom: 1px solid var(--border) !important;
   border-radius: 0 !important;
-  background: transparent !important;
   padding: 0 14px !important;
-  transition: background 0.15s ease !important;
-}
-
-.project-browser-list .project-browser-row:last-child {
-  border-bottom: 0 !important;
 }
 
 .project-browser-list .project-browser-row:hover {
-  border-radius: 0 !important;
-  background: var(--bg-hover) !important;
+  border-radius: 8px !important;
 }
 
 .project-folder-action-wrap {
@@ -267,7 +249,7 @@
   justify-content: stretch !important;
   column-gap: 12px !important;
   row-gap: 2px !important;
-  border: 1px solid var(--border) !important;
+  border: 1px solid var(--border-subtle) !important;
   border-radius: 8px !important;
   background: var(--bg-secondary) !important;
   padding: 9px 14px !important;
@@ -317,4 +299,11 @@
   height: 54px !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+.light .project-file-browser .project-folder-card,
+.light .project-file-browser .project-file-card,
+.light .project-file-browser.project-file-browser .project-folder-card,
+.light .project-file-browser.project-file-browser .project-file-card {
+  border-color: var(--border) !important;
 }
