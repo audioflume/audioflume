@@ -63,13 +63,9 @@
 }
 
 .project-detail-page .project-detail-hero {
-  border-bottom: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
 }
 
 .project-detail-page .project-detail-hero::after {
-  content: "";
-  display: block;
-  height: 1px;
-  margin-top: 6px;
-  background: var(--border);
+  content: none !important;
 }
