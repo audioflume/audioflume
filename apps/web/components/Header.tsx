@@ -134,11 +134,15 @@ export default function Header() {
             {isMusicPage && <MusicHeaderSearch />}
 
             {showHeaderSearch && (
-              <form onSubmit={handleHeaderSearchSubmit}>
+              <form
+                className="filmwave-music-header-search-form filmwave-header-search-form"
+                onSubmit={handleHeaderSearchSubmit}
+              >
                 <CollapsibleSearchPill
                   searchIcon={<SearchIcon />}
                   value={headerSearch}
                   placeholder="Search music library"
+                  style={{ width: "100%", maxWidth: "100%" }}
                   onChange={setHeaderSearch}
                 />
               </form>
