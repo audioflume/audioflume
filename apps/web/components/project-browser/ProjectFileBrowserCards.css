@@ -63,12 +63,6 @@
 
 .project-file-list-icon-wrap {
   position: relative !important;
-  display: flex !important;
-  flex-shrink: 0 !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 22px !important;
-  height: 22px !important;
 }
 
 .project-preview-button-list {
@@ -77,15 +71,15 @@
   inset: auto !important;
   margin: 0 !important;
   display: flex !important;
-  height: 18px !important;
-  width: 18px !important;
+  height: 22px !important;
+  width: 22px !important;
   cursor: pointer !important;
   align-items: center !important;
   justify-content: center !important;
   border-radius: 999px !important;
   color: var(--text-primary) !important;
   opacity: 0 !important;
-  transform: scale(0.9) !important;
+  transform: scale(0.92) !important;
   transition: opacity 0.15s ease, transform 0.15s ease !important;
 }
 
@@ -104,8 +98,8 @@
 .project-preview-button-list svg {
   position: relative;
   z-index: 1;
-  width: 7px !important;
-  height: 7px !important;
+  width: 8px !important;
+  height: 8px !important;
 }
 
 .project-browser-row:hover .project-preview-button-list,
@@ -116,25 +110,132 @@
 }
 
 .project-browser-list {
-  overflow: visible !important;
-  border: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid var(--border-subtle) !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding-top: 0 !important;
 }
 
 .project-browser-list-head {
+  display: grid !important;
+  grid-template-columns: minmax(280px, 1fr) minmax(96px, 0.22fr) minmax(142px, 0.34fr) !important;
+  min-height: 44px !important;
+  align-items: center !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+  padding: 0 24px !important;
+}
+
+.project-browser-list-head span {
+  font-size: 0 !important;
+}
+
+.project-browser-list-head span::after {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  color: var(--text-secondary) !important;
+}
+
+.project-browser-list-head span:nth-child(1)::after {
+  content: "Name ↑";
+}
+
+.project-browser-list-head span:nth-child(2)::after {
+  content: "Size";
+}
+
+.project-browser-list-head span:nth-child(3)::after {
+  content: "Last modified";
+}
+
+.project-browser-list-head span:nth-child(4) {
   display: none !important;
 }
 
 .project-browser-list .project-browser-row {
+  display: grid !important;
+  grid-template-columns: minmax(280px, 1fr) minmax(96px, 0.22fr) minmax(142px, 0.34fr) !important;
+  min-height: 68px !important;
+  align-items: center !important;
+  gap: 0 !important;
   border: 0 !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
   border-radius: 0 !important;
-  padding: 0 14px !important;
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  padding: 0 24px !important;
+  transition: background-color 130ms ease, color 130ms ease !important;
+}
+
+.project-browser-list .project-browser-row:last-child {
+  border-bottom: 0 !important;
 }
 
 .project-browser-list .project-browser-row:hover {
-  border-radius: 8px !important;
+  border-radius: 0 !important;
+  background: var(--bg-hover) !important;
+}
+
+.project-browser-row-name {
+  display: inline-flex !important;
+  min-width: 0 !important;
+  align-items: center !important;
+  gap: 18px !important;
+}
+
+.project-browser-row-icon {
+  display: inline-flex !important;
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 34px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--text-muted) !important;
+}
+
+.project-browser-row-icon svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.project-browser-row-title-wrap {
+  display: flex !important;
+  min-width: 0 !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.project-browser-row-title {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: var(--text-primary) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.1 !important;
+}
+
+.project-browser-row-subtitle {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: var(--text-muted) !important;
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+}
+
+.project-browser-row-size,
+.project-browser-row-date,
+.project-browser-row-muted {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: var(--text-secondary) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
 }
 
 .project-folder-action-wrap {
