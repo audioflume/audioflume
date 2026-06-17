@@ -159,7 +159,7 @@ async function getLocalReadinessFile({
   syncFolder: string;
 }) {
   try {
-    const localPath = getProjectNodeLocalPath({ file, node: file, project, syncFolder });
+    const localPath = getProjectNodeLocalPath({ node: file, project, syncFolder });
     const existsLocally = await exists(localPath);
 
     if (!existsLocally) {
