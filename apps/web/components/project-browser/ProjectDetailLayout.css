@@ -211,11 +211,6 @@
   margin-right: 0 !important;
 }
 
-.project-detail-page .project-sort-row:has(+ .project-tab-panel > .fw-song-list),
-.project-detail-page .project-tab-panel:has(> .fw-song-list) {
-  margin-left: 12px !important;
-}
-
 .project-detail-page .project-tab-panel:has(> .project-file-empty-inline) {
   padding-top: 14px !important;
 }
