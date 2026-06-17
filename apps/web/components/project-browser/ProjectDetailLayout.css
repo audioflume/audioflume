@@ -41,6 +41,49 @@
 
 .project-detail-page .project-tabs-row::-webkit-scrollbar { display: none !important; }
 
+.project-detail-page .project-tab-utility {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  margin-top: auto !important;
+  padding: 14px 8px 8px 4px !important;
+  border-top: 1px solid var(--border-subtle) !important;
+  color: var(--text-muted) !important;
+}
+
+.project-detail-page .project-tab-utility-meter {
+  position: relative !important;
+  height: 3px !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  border-radius: 999px !important;
+  background: var(--bg-tertiary) !important;
+  margin-bottom: 11px !important;
+}
+
+.project-detail-page .project-tab-utility-meter-bar {
+  display: block !important;
+  height: 100% !important;
+  width: 68% !important;
+  border-radius: inherit !important;
+  background: var(--text-secondary) !important;
+  opacity: 0.75 !important;
+}
+
+.project-detail-page .project-tab-utility-line {
+  display: block !important;
+  font-size: 10.5px !important;
+  font-weight: 400 !important;
+  line-height: 1.45 !important;
+  color: var(--text-muted) !important;
+  white-space: nowrap !important;
+}
+
+.project-detail-page .project-tab-utility-version {
+  margin-top: 8px !important;
+  color: color-mix(in srgb, var(--text-muted) 74%, transparent) !important;
+}
+
 .project-detail-page .project-tabs-row .fw-filter-rail-item {
   display: flex !important;
   width: 100% !important;
@@ -161,4 +204,10 @@
 .project-detail-page .project-tab-panel > .fw-song-list {
   margin-left: 0 !important;
   margin-right: 0 !important;
+}
+
+@media (max-width: 520px) {
+  .project-detail-page .project-tab-utility {
+    display: none !important;
+  }
 }
