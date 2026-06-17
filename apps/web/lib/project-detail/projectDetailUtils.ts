@@ -23,8 +23,6 @@ const RESERVED_PROJECT_FOLDER_NAMES = new Set([
   "colour grading",
 ]);
 
-const LICENSE_ASSET_TYPES = new Set(["license", "licenses"]);
-
 export const SORT_OPTIONS = [
   { label: "Newest", value: "newest" },
   { label: "Oldest", value: "oldest" },
@@ -70,7 +68,6 @@ export function getTimestamp(value: string | null | undefined) {
   if (!value) return null;
 
   const time = new Date(value).getTime();
-
   return Number.isFinite(time) ? time : null;
 }
 
@@ -87,14 +84,11 @@ export function getVisibleProjectTabs({
 }) {
   const hasMusic =
     projectSongsLength > 0 || hasProjectAssetType(projectAssets, "song");
-  const hasLicenses = projectAssets.some((asset) =>
-    LICENSE_ASSET_TYPES.has(String(asset.asset_type)),
-  );
 
   const visibleTabs = TABS.filter((tab) => {
     if (tab.value === "overview") return true;
     if (tab.value === "music") return hasMusic;
-    if (tab.value === "licenses") return hasLicenses;
+    if (tab.value === "licenses") return true;
 
     return hasProjectAssetType(projectAssets, tab.value);
   });
