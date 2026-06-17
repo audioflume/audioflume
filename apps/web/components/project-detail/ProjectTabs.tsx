@@ -233,7 +233,7 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
 
     if (readiness.loading) {
       return {
-        countLabel: "Checking local files",
+        countLabel: "Checking desktop sync",
         meterProgress: 0,
         sizeLabel: resolvedSizeBytes
           ? formatSyncSize(resolvedSizeBytes)
@@ -245,7 +245,7 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
 
     if (readiness.error || readiness.totalFiles == null || readiness.readyFiles == null) {
       return {
-        countLabel: "Readiness unavailable",
+        countLabel: "Desktop sync unavailable",
         meterProgress: 0,
         sizeLabel: resolvedSizeBytes
           ? formatSyncSize(resolvedSizeBytes)
@@ -261,7 +261,7 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
     const readyFiles = Math.min(Math.max(0, readiness.readyFiles), totalFiles);
 
     return {
-      countLabel: `${readyFiles} / ${totalFiles} files ready`,
+      countLabel: `${readyFiles} / ${totalFiles} files synced`,
       meterProgress: totalFiles > 0 ? Math.round((readyFiles / totalFiles) * 100) : 0,
       sizeLabel: resolvedSizeBytes
         ? formatSyncSize(resolvedSizeBytes)
@@ -274,7 +274,7 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
   return (
     <div
       className="project-tab-utility"
-      aria-label="Project local readiness"
+      aria-label="Project desktop sync"
       style={
         {
           "--project-tab-utility-meter-progress": `${meterProgress}%`,
@@ -285,7 +285,7 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
         <span className="project-tab-utility-meter-bar" />
       </div>
       <span className="project-tab-utility-line project-tab-utility-heading">
-        Local readiness
+        Desktop sync
       </span>
       <span className="project-tab-utility-line">{countLabel}</span>
       <span className="project-tab-utility-line project-tab-utility-version">
