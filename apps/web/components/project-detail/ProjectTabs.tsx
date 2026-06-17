@@ -15,14 +15,17 @@ type Props = {
   onTabChange: (tab: ProjectTab) => void;
 };
 
-type DesktopProjectSummary = {
+type LocalReadinessProjectSummary = {
   id: string | number;
-  fileCount?: number;
+  totalFiles?: number;
+  readyFiles?: number;
   sizeBytes?: number;
+  updatedAt?: string | null;
 };
 
 type LocalReadinessState = {
-  fileCount: number | null;
+  totalFiles: number | null;
+  readyFiles: number | null;
   sizeBytes: number | null;
   loading: boolean;
   error: boolean;
@@ -55,11 +58,15 @@ function formatSyncSize(bytes: number | null) {
   return `${value.toFixed(precision)} ${units[unitIndex]} sync size`;
 }
 
-function getProjectFileCount(project: DesktopProjectSummary | null) {
-  return Number.isFinite(project?.fileCount) ? Number(project?.fileCount) : null;
+function getProjectTotalFiles(project: LocalReadinessProjectSummary | null) {
+  return Number.isFinite(project?.totalFiles) ? Number(project?.totalFiles) : null;
 }
 
-function getProjectSizeBytes(project: DesktopProjectSummary | null) {
+function getProjectReadyFiles(project: LocalReadinessProjectSummary | null) {
+  return Number.isFinite(project?.readyFiles) ? Number(project?.readyFiles) : null;
+}
+
+function getProjectSizeBytes(project: LocalReadinessProjectSummary | null) {
   return Number.isFinite(project?.sizeBytes) ? Number(project?.sizeBytes) : null;
 }
 
@@ -67,7 +74,8 @@ function ProjectTabUtilityStatus() {
   const params = useParams();
   const projectId = String(params.projectId || "");
   const [readiness, setReadiness] = useState<LocalReadinessState>({
-    fileCount: null,
+    totalFiles: null,
+    readyFiles: null,
     sizeBytes: null,
     loading: true,
     error: false,
@@ -76,7 +84,8 @@ function ProjectTabUtilityStatus() {
   useEffect(() => {
     if (!projectId) {
       setReadiness({
-        fileCount: null,
+        totalFiles: null,
+        readyFiles: null,
         sizeBytes: null,
         loading: false,
         error: true,
@@ -90,14 +99,17 @@ function ProjectTabUtilityStatus() {
       setReadiness((current) => ({ ...current, loading: true, error: false }));
 
       try {
-        const response = await fetch("/api/desktop/projects", { cache: "no-store" });
+        const response = await fetch(
+          `/api/desktop/projects/local-readiness?projectId=${encodeURIComponent(projectId)}`,
+          { cache: "no-store" },
+        );
         const text = await response.text();
         const data = text ? JSON.parse(text) : null;
 
-        if (!response.ok) throw new Error(data?.error || "Failed to load project readiness");
+        if (!response.ok) throw new Error(data?.error || "Failed to load local readiness");
 
         const projects = Array.isArray(data?.projects)
-          ? (data.projects as DesktopProjectSummary[])
+          ? (data.projects as LocalReadinessProjectSummary[])
           : [];
         const project =
           projects.find((item) => String(item.id) === projectId) ?? null;
@@ -105,7 +117,8 @@ function ProjectTabUtilityStatus() {
         if (cancelled) return;
 
         setReadiness({
-          fileCount: getProjectFileCount(project),
+          totalFiles: getProjectTotalFiles(project),
+          readyFiles: getProjectReadyFiles(project),
           sizeBytes: getProjectSizeBytes(project),
           loading: false,
           error: !project,
@@ -114,7 +127,8 @@ function ProjectTabUtilityStatus() {
         if (cancelled) return;
 
         setReadiness({
-          fileCount: null,
+          totalFiles: null,
+          readyFiles: null,
           sizeBytes: null,
           loading: false,
           error: true,
@@ -138,17 +152,20 @@ function ProjectTabUtilityStatus() {
       };
     }
 
-    if (readiness.error || readiness.fileCount == null) {
+    if (readiness.error || readiness.totalFiles == null || readiness.readyFiles == null) {
       return {
         countLabel: "Readiness unavailable",
         meterProgress: 0,
-        sizeLabel: "Sync size pending",
+        sizeLabel: "Open desktop app to sync",
       };
     }
 
+    const totalFiles = Math.max(0, readiness.totalFiles);
+    const readyFiles = Math.min(Math.max(0, readiness.readyFiles), totalFiles);
+
     return {
-      countLabel: `${readiness.fileCount} / ${readiness.fileCount} files ready`,
-      meterProgress: readiness.fileCount > 0 ? 100 : 0,
+      countLabel: `${readyFiles} / ${totalFiles} files ready`,
+      meterProgress: totalFiles > 0 ? Math.round((readyFiles / totalFiles) * 100) : 0,
       sizeLabel: formatSyncSize(readiness.sizeBytes),
     };
   }, [readiness]);
