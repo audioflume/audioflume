@@ -10,6 +10,10 @@ type RouteContext = {
   params: Promise<{ songId: string }> | { songId: string };
 };
 
+type SongSizeRow = {
+  size_bytes?: number | string | null;
+};
+
 async function getSongId(context: RouteContext) {
   const params = await context.params;
   return decodeURIComponent(params.songId);
@@ -50,6 +54,19 @@ async function getDefaultSongFolderId(projectId: number, userId: string) {
   if (error || !data) return null;
 
   return Number(data.id);
+}
+
+async function getSongSizeBytes(songId: string) {
+  const { data, error } = await supabaseServer
+    .from("songs")
+    .select("size_bytes")
+    .eq("id", songId)
+    .maybeSingle();
+
+  if (error || !data) return undefined;
+
+  const sizeBytes = Number((data as SongSizeRow).size_bytes || 0);
+  return sizeBytes > 0 ? sizeBytes : undefined;
 }
 
 export async function GET(_req: Request, context: RouteContext) {
@@ -145,6 +162,7 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     if (selected) {
       const folderId = await getDefaultSongFolderId(projectId, userId);
+      const songSizeBytes = await getSongSizeBytes(songId);
       const { data: latestAsset, error: latestAssetError } =
         await supabaseServer
           .from("project_assets")
@@ -168,6 +186,7 @@ export async function PATCH(req: Request, context: RouteContext) {
           asset_id: songId,
           folder_id: folderId,
           position: nextPosition,
+          metadata: songSizeBytes ? { sizeBytes: songSizeBytes } : {},
         },
         {
           onConflict: "project_id,asset_type,asset_id",
