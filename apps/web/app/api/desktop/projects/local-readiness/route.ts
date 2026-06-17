@@ -35,7 +35,7 @@ type ProjectAssetRow = {
   metadata?: unknown;
 };
 
-type SongSizeRow = {
+type SongSizeRow = Record<string, unknown> & {
   id: string | number;
   size_bytes?: number | string | null;
 };
@@ -84,6 +84,31 @@ function getUpdatedAt(metadata: ProjectAssetReadinessMetadata) {
   return typeof value === "string" && value ? value : null;
 }
 
+function getPositiveSizeBytes(value: unknown) {
+  const sizeBytes = Number(value || 0);
+  return Number.isFinite(sizeBytes) && sizeBytes > 0 ? sizeBytes : null;
+}
+
+function isUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value,
+  );
+}
+
+function getSongIdentifierValues(song: SongSizeRow) {
+  const identifiers = new Set<string>();
+
+  for (const value of Object.values(song)) {
+    if (typeof value === "string" && value.trim()) {
+      identifiers.add(value.trim());
+    } else if (typeof value === "number" && Number.isFinite(value)) {
+      identifiers.add(String(value));
+    }
+  }
+
+  return identifiers;
+}
+
 async function getRequestUserId(req: Request) {
   const tokenUserId = getDesktopUserIdFromRequest(req);
   if (tokenUserId) return tokenUserId;
@@ -117,19 +142,47 @@ async function getSongSizeMap(assets: ProjectAssetRow[]) {
 
   if (songIds.length === 0) return new Map<string, number>();
 
-  const { data, error } = await supabaseServer
-    .from("songs")
-    .select("id, size_bytes")
-    .in("id", songIds);
+  const uuidSongIds = songIds.filter(isUuid);
+  const needsExternalSongLookup = uuidSongIds.length !== songIds.length;
 
-  if (error) throw error;
+  const { data: directSongRows, error: directSongsError } = uuidSongIds.length
+    ? await supabaseServer.from("songs").select("*").in("id", uuidSongIds)
+    : { data: [], error: null };
 
-  return new Map(
-    ((data ?? []) as SongSizeRow[]).flatMap((song) => {
-      const sizeBytes = Number(song.size_bytes || 0);
-      return sizeBytes > 0 ? [[String(song.id), sizeBytes] as const] : [];
-    }),
-  );
+  if (directSongsError) {
+    console.warn("Desktop local readiness UUID song lookup failed", directSongsError);
+  }
+
+  const shouldLoadAllSongs =
+    needsExternalSongLookup ||
+    Boolean(directSongsError) ||
+    (directSongRows ?? []).length < uuidSongIds.length;
+
+  const { data: allSongRows, error: allSongsError } = shouldLoadAllSongs
+    ? await supabaseServer.from("songs").select("*")
+    : { data: [], error: null };
+
+  if (allSongsError) {
+    console.warn("Desktop local readiness fallback song lookup failed", allSongsError);
+  }
+
+  const songSizeByIdentifier = new Map<string, number>();
+
+  for (const song of [
+    ...((directSongsError ? [] : directSongRows ?? []) as SongSizeRow[]),
+    ...((allSongsError ? [] : allSongRows ?? []) as SongSizeRow[]),
+  ]) {
+    const sizeBytes = getPositiveSizeBytes(song.size_bytes);
+    if (!sizeBytes) continue;
+
+    for (const identifier of getSongIdentifierValues(song)) {
+      if (!songSizeByIdentifier.has(identifier)) {
+        songSizeByIdentifier.set(identifier, sizeBytes);
+      }
+    }
+  }
+
+  return songSizeByIdentifier;
 }
 
 export async function GET(req: Request) {
