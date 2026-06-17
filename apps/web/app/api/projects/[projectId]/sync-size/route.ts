@@ -16,6 +16,10 @@ type ProjectAssetSizeRow = {
 type SongSizeRow = {
   id: string | number;
   size_bytes?: number | string | null;
+  audio_url?: string | null;
+  playback_url?: string | null;
+  audioUrl?: string | null;
+  playbackUrl?: string | null;
 };
 
 async function getProjectId(context: RouteContext) {
@@ -47,6 +51,100 @@ function getMetadataSizeBytes(metadata: ProjectAssetSizeRow["metadata"]) {
 
 function getSongSizeBytes(song: SongSizeRow | undefined) {
   return getPositiveSizeBytes(song?.size_bytes);
+}
+
+function getSongAudioUrl(song: SongSizeRow | undefined) {
+  const url =
+    song?.audio_url ||
+    song?.playback_url ||
+    song?.audioUrl ||
+    song?.playbackUrl ||
+    "";
+
+  return typeof url === "string" && url.trim() ? url.trim() : null;
+}
+
+function getContentRangeSizeBytes(contentRange: string | null) {
+  if (!contentRange) return null;
+
+  const match = contentRange.match(/\/(\d+)$/);
+  if (!match) return null;
+
+  return getPositiveSizeBytes(match[1]);
+}
+
+async function getRemoteFileSizeBytes(url: string) {
+  try {
+    const headResponse = await fetch(url, {
+      method: "HEAD",
+      cache: "no-store",
+    });
+
+    const headSizeBytes = getPositiveSizeBytes(
+      headResponse.headers.get("content-length"),
+    );
+
+    if (headSizeBytes) return headSizeBytes;
+  } catch {
+    // Fall through to range request below.
+  }
+
+  try {
+    const rangeResponse = await fetch(url, {
+      method: "GET",
+      headers: { Range: "bytes=0-0" },
+      cache: "no-store",
+    });
+
+    const rangeSizeBytes = getContentRangeSizeBytes(
+      rangeResponse.headers.get("content-range"),
+    );
+
+    if (rangeSizeBytes) return rangeSizeBytes;
+
+    return getPositiveSizeBytes(rangeResponse.headers.get("content-length"));
+  } catch {
+    return null;
+  }
+}
+
+async function persistResolvedSizeBytes({
+  asset,
+  song,
+  sizeBytes,
+}: {
+  asset: ProjectAssetSizeRow;
+  song: SongSizeRow | undefined;
+  sizeBytes: number;
+}) {
+  const updates: Promise<unknown>[] = [];
+
+  if (song?.id != null && !getSongSizeBytes(song)) {
+    updates.push(
+      supabaseServer
+        .from("songs")
+        .update({ size_bytes: sizeBytes })
+        .eq("id", song.id),
+    );
+  }
+
+  if (!getMetadataSizeBytes(asset.metadata)) {
+    updates.push(
+      supabaseServer
+        .from("project_assets")
+        .update({
+          metadata: {
+            ...(asset.metadata ?? {}),
+            sizeBytes,
+          },
+        })
+        .eq("id", asset.id),
+    );
+  }
+
+  if (updates.length === 0) return;
+
+  await Promise.allSettled(updates);
 }
 
 export async function GET(_req: Request, context: RouteContext) {
@@ -88,11 +186,11 @@ export async function GET(_req: Request, context: RouteContext) {
       console.warn("Project sync size song-size lookup failed", songsError);
     }
 
-    const songSizeById = new Map(
-      ((songsError ? [] : songRows ?? []) as SongSizeRow[]).flatMap((song) => {
-        const sizeBytes = getSongSizeBytes(song);
-        return sizeBytes ? [[String(song.id), sizeBytes] as const] : [];
-      }),
+    const songById = new Map(
+      ((songsError ? [] : songRows ?? []) as SongSizeRow[]).map((song) => [
+        String(song.id),
+        song,
+      ]),
     );
 
     let sizeBytes = 0;
@@ -107,10 +205,22 @@ export async function GET(_req: Request, context: RouteContext) {
       }
 
       if (asset.asset_type === "song" && asset.asset_id != null) {
-        const songSizeBytes = songSizeById.get(String(asset.asset_id)) ?? null;
+        const song = songById.get(String(asset.asset_id));
+        const songSizeBytes = getSongSizeBytes(song);
 
         if (songSizeBytes) {
           sizeBytes += songSizeBytes;
+          continue;
+        }
+
+        const songUrl = getSongAudioUrl(song);
+        const remoteSizeBytes = songUrl
+          ? await getRemoteFileSizeBytes(songUrl)
+          : null;
+
+        if (remoteSizeBytes) {
+          sizeBytes += remoteSizeBytes;
+          await persistResolvedSizeBytes({ asset, song, sizeBytes: remoteSizeBytes });
           continue;
         }
       }
