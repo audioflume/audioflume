@@ -16,6 +16,55 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import MusicHeaderSearch from "@/components/MusicHeaderSearch";
 import UserMenu from "@/components/UserMenu";
 
+const HEADER_SEARCH_ACCOUNT_STYLE = `
+  .fw-toolbar-sticky,
+  .filmwave-header-actions > form {
+    width: min(920px, calc(100vw - 520px)) !important;
+    max-width: calc(100vw - 300px) !important;
+  }
+
+  @media (max-width: 1180px) {
+    .fw-toolbar-sticky,
+    .filmwave-header-actions > form {
+      width: min(720px, calc(100vw - 340px)) !important;
+      max-width: calc(100vw - 260px) !important;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .fw-toolbar-sticky,
+    .filmwave-header-actions > form {
+      width: clamp(160px, calc(100vw - 300px), 420px) !important;
+      max-width: calc(100vw - 220px) !important;
+    }
+  }
+
+  .filmwave-header-account-trigger:hover,
+  .filmwave-header-account-trigger.is-open,
+  .filmwave-header-account-trigger:hover .filmwave-header-account-label,
+  .filmwave-header-account-trigger.is-open .filmwave-header-account-label {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
+  .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+  .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.18),
+      0 0 0 4px rgba(255, 255, 255, 0.08) !important;
+    transform: scale(1.05) !important;
+  }
+
+  html.light .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+  html.light .filmwave-header-account-trigger.is-open .filmwave-header-avatar,
+  html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+  html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.12),
+      0 0 0 4px rgba(0, 0, 0, 0.08) !important;
+  }
+`;
+
 export default function Header() {
   const { user } = useUser();
   const pathname = usePathname();
@@ -95,63 +144,67 @@ export default function Header() {
   const showHeaderSearch = !isMusicPage;
 
   return (
-    <HeaderShell
-      logo={
-        <Link href="/music" className="filmwave-header-logo-action" aria-label="Filmwave Home">
-          <FilmwaveLogoIcon className="filmwave-header-logo-mark" />
-        </Link>
-      }
-      actions={
-        <div className="filmwave-header-actions" ref={menuRef}>
-          {isMusicPage && <MusicHeaderSearch />}
-
-          {showHeaderSearch && (
-            <form onSubmit={handleHeaderSearchSubmit}>
-              <CollapsibleSearchPill
-                searchIcon={<SearchIcon />}
-                value={headerSearch}
-                placeholder="Search music library"
-                onChange={setHeaderSearch}
-              />
-            </form>
-          )}
-
-          <Link href="/curated-playlists" className="filmwave-header-nav-link">
-            <PlaylistIcon size={16} />
-            Playlists
+    <>
+      <HeaderShell
+        logo={
+          <Link href="/music" className="filmwave-header-logo-action" aria-label="Filmwave Home">
+            <FilmwaveLogoIcon className="filmwave-header-logo-mark" />
           </Link>
+        }
+        actions={
+          <div className="filmwave-header-actions" ref={menuRef}>
+            {isMusicPage && <MusicHeaderSearch />}
 
-          <button
-            type="button"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
-            aria-label="Open user menu"
-            aria-expanded={menuOpen}
-          >
-            <span className="filmwave-header-account-label">
-              <span className="filmwave-header-account-name">
-                {user?.fullName || "Account"}
+            {showHeaderSearch && (
+              <form onSubmit={handleHeaderSearchSubmit}>
+                <CollapsibleSearchPill
+                  searchIcon={<SearchIcon />}
+                  value={headerSearch}
+                  placeholder="Search music library"
+                  onChange={setHeaderSearch}
+                />
+              </form>
+            )}
+
+            <Link href="/curated-playlists" className="filmwave-header-nav-link">
+              <PlaylistIcon size={16} />
+              Playlists
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
+              aria-label="Open user menu"
+              aria-expanded={menuOpen}
+            >
+              <span className="filmwave-header-account-label">
+                <span className="filmwave-header-account-name">
+                  {user?.fullName || "Account"}
+                </span>
+
+                <HeaderChevron open={menuOpen} />
               </span>
 
-              <HeaderChevron open={menuOpen} />
-            </span>
+              <span className="filmwave-header-avatar">
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" />
+                ) : (
+                  initials
+                )}
+              </span>
+            </button>
 
-            <span className="filmwave-header-avatar">
-              {profileImage ? (
-                <img src={profileImage} alt="Profile" />
-              ) : (
-                initials
-              )}
-            </span>
-          </button>
+            {menuOpen && (
+              <div className="filmwave-header-menu-wrap">
+                <UserMenu onClose={() => setMenuOpen(false)} />
+              </div>
+            )}
+          </div>
+        }
+      />
 
-          {menuOpen && (
-            <div className="filmwave-header-menu-wrap">
-              <UserMenu onClose={() => setMenuOpen(false)} />
-            </div>
-          )}
-        </div>
-      }
-    />
+      <style>{HEADER_SEARCH_ACCOUNT_STYLE}</style>
+    </>
   );
 }
