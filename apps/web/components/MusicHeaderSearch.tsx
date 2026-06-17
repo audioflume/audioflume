@@ -14,7 +14,7 @@ const musicHeaderSearchStyle: CSSProperties = {
   top: "10.5px",
   left: "50%",
   zIndex: 40,
-  width: "min(clamp(420px, 42vw, 640px), calc(100vw - 300px))",
+  width: "min(clamp(420px, 45vw, 640px), calc(100vw - 300px))",
   maxWidth: "calc(100vw - 300px)",
   marginRight: 0,
   transform: "translateX(-50%)",
