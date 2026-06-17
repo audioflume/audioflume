@@ -1,18 +1,16 @@
 "use client";
 
 import {
-  CollapsibleSearchPill,
   HeaderChevron,
   HeaderShell,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
 } from "@filmwave/shared";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useRef, useEffect, type FormEvent } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-import SearchIcon from "@/components/icons/SearchIcon";
 import MusicHeaderSearch from "@/components/MusicHeaderSearch";
 import UserMenu from "@/components/UserMenu";
 
@@ -85,10 +83,8 @@ export default function Header() {
     };
   }, []);
 
-  function handleHeaderSearchSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const nextSearch = headerSearch.trim();
+  function handleHeaderSearchSubmit(nextSearchValue: string) {
+    const nextSearch = nextSearchValue.trim();
     const storageKey = user?.id
       ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${user.id}`
       : null;
@@ -119,7 +115,6 @@ export default function Header() {
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
     : "";
   const isMusicPage = pathname === "/music";
-  const showHeaderSearch = !isMusicPage;
 
   return (
     <>
@@ -131,21 +126,16 @@ export default function Header() {
         }
         actions={
           <div className="filmwave-header-actions" ref={menuRef}>
-            {isMusicPage && <MusicHeaderSearch />}
-
-            {showHeaderSearch && (
-              <form
-                className="filmwave-music-header-search-form filmwave-header-search-form"
-                onSubmit={handleHeaderSearchSubmit}
-              >
-                <CollapsibleSearchPill
-                  searchIcon={<SearchIcon />}
-                  value={headerSearch}
-                  placeholder="Search music library"
-                  style={{ width: "100%", maxWidth: "100%" }}
-                  onChange={setHeaderSearch}
-                />
-              </form>
+            {isMusicPage ? (
+              <MusicHeaderSearch />
+            ) : (
+              <MusicHeaderSearch
+                value={headerSearch}
+                placeholder="Search music library"
+                syncWithToolbar={false}
+                onChange={setHeaderSearch}
+                onSubmitSearch={handleHeaderSearchSubmit}
+              />
             )}
 
             <Link href="/curated-playlists" className="filmwave-header-nav-link">
