@@ -11,6 +11,7 @@ import { FavoritesProvider } from "@/context/FavoritesContext";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
+import HeaderSearchResponsiveStyles from "@/components/HeaderSearchResponsiveStyles";
 import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
 import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
@@ -74,6 +75,7 @@ export default async function RootLayout({
                   <PlayerProvider>
                     <FavoritesProvider>
                       <Header />
+                      <HeaderSearchResponsiveStyles />
                       <SidebarRenderer initialCollapsed={initialSidebarCollapsed} />
                       {children}
                       <PlayerRenderer />
