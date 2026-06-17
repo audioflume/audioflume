@@ -1,6 +1,6 @@
 .project-detail-page .project-file-browser {
   position: relative !important;
-  padding: 8px 0 24px !important;
+  padding: 0 0 24px !important;
 }
 
 .project-detail-page .project-file-browser-top {
@@ -8,7 +8,7 @@
   top: auto !important;
   z-index: 3 !important;
   display: flex !important;
-  min-height: 40px !important;
+  min-height: 46px !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
@@ -17,7 +17,7 @@
   margin-right: 0 !important;
   border-bottom: 1px solid var(--border-subtle) !important;
   background: var(--bg-primary) !important;
-  padding: 0 0 10px !important;
+  padding: 0 0 8px !important;
 }
 
 .project-detail-page .project-file-browser-title-wrap {
@@ -27,7 +27,7 @@
 .project-detail-page .project-breadcrumbs.project-path {
   margin-top: 0 !important;
   display: inline-flex !important;
-  min-height: 28px !important;
+  min-height: 32px !important;
   flex-wrap: nowrap !important;
   align-items: center !important;
   gap: 8px !important;
@@ -40,10 +40,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   color: var(--text-secondary);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1;
 }
 
@@ -84,5 +84,20 @@
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
-  padding-top: 14px !important;
+  padding-top: 16px !important;
+}
+
+.project-detail-page .project-file-browser-section::before {
+  content: "Folders";
+  display: block;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.project-detail-page .project-file-browser-section:has(.project-browser-list)::before,
+.project-detail-page .project-file-browser-section:has(.project-file-empty-inline)::before {
+  display: none;
 }
