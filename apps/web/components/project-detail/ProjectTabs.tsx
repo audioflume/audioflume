@@ -22,6 +22,21 @@ function ProjectTabChevronIcon() {
   );
 }
 
+function ProjectTabUtilityStatus() {
+  return (
+    <div className="project-tab-utility" aria-label="Project workspace status">
+      <div className="project-tab-utility-meter" aria-hidden="true">
+        <span className="project-tab-utility-meter-bar" />
+      </div>
+      <span className="project-tab-utility-line">Project storage</span>
+      <span className="project-tab-utility-line">Workspace index active</span>
+      <span className="project-tab-utility-line project-tab-utility-version">
+        Filmwave Project 1.0
+      </span>
+    </div>
+  );
+}
+
 export default function ProjectTabs({ activeTab, tabs, onTabChange }: Props) {
   return (
     <nav className="project-tabs-row fw-filter-rail" aria-label="Project sections">
@@ -43,6 +58,8 @@ export default function ProjectTabs({ activeTab, tabs, onTabChange }: Props) {
           </button>
         );
       })}
+
+      <ProjectTabUtilityStatus />
     </nav>
   );
 }
