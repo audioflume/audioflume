@@ -16,7 +16,7 @@ type ProjectAssetSizeRow = {
   metadata: Record<string, unknown> | null;
 };
 
-type SongSizeRow = {
+type SongSizeRow = Record<string, unknown> & {
   id: string | number;
   size_bytes?: number | string | null;
   audio_url?: string | null;
@@ -84,6 +84,26 @@ function getContentRangeSizeBytes(contentRange: string | null) {
   return getPositiveSizeBytes(match[1]);
 }
 
+function isUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value,
+  );
+}
+
+function getSongIdentifierValues(song: SongSizeRow) {
+  const identifiers = new Set<string>();
+
+  for (const value of Object.values(song)) {
+    if (typeof value === "string" && value.trim()) {
+      identifiers.add(value.trim());
+    } else if (typeof value === "number" && Number.isFinite(value)) {
+      identifiers.add(String(value));
+    }
+  }
+
+  return identifiers;
+}
+
 function getR2Client() {
   if (!r2AccountId || !r2AccessKeyId || !r2SecretAccessKey || !r2BucketName) {
     return null;
@@ -121,7 +141,7 @@ function getR2ObjectKeyFromUrl(url: string) {
       }
     }
 
-    return decodeURIComponent(pathname.replace(/^\/+/, ""));
+    return decodeURIComponent(pathname.replace(/^\/+/g, ""));
   } catch {
     return null;
   }
@@ -259,21 +279,42 @@ export async function GET(_req: Request, context: RouteContext) {
           .map((asset) => String(asset.asset_id)),
       ),
     ];
+    const uuidSongIds = songIds.filter(isUuid);
+    const needsExternalSongLookup = uuidSongIds.length !== songIds.length;
 
-    const { data: songRows, error: songsError } = songIds.length
-      ? await supabaseServer.from("songs").select("*").in("id", songIds)
+    const { data: directSongRows, error: directSongsError } = uuidSongIds.length
+      ? await supabaseServer.from("songs").select("*").in("id", uuidSongIds)
       : { data: [], error: null };
 
-    if (songsError) {
-      console.warn("Project sync size song-size lookup failed", songsError);
+    if (directSongsError) {
+      console.warn("Project sync size UUID song lookup failed", directSongsError);
     }
 
-    const songById = new Map(
-      ((songsError ? [] : songRows ?? []) as SongSizeRow[]).map((song) => [
-        String(song.id),
-        song,
-      ]),
-    );
+    const shouldLoadAllSongs =
+      needsExternalSongLookup ||
+      Boolean(directSongsError) ||
+      (directSongRows ?? []).length < uuidSongIds.length;
+
+    const { data: allSongRows, error: allSongsError } = shouldLoadAllSongs
+      ? await supabaseServer.from("songs").select("*")
+      : { data: [], error: null };
+
+    if (allSongsError) {
+      console.warn("Project sync size fallback song lookup failed", allSongsError);
+    }
+
+    const songByIdentifier = new Map<string, SongSizeRow>();
+
+    for (const song of [
+      ...((directSongsError ? [] : directSongRows ?? []) as SongSizeRow[]),
+      ...((allSongsError ? [] : allSongRows ?? []) as SongSizeRow[]),
+    ]) {
+      for (const identifier of getSongIdentifierValues(song)) {
+        if (!songByIdentifier.has(identifier)) {
+          songByIdentifier.set(identifier, song);
+        }
+      }
+    }
 
     let sizeBytes = 0;
     let missingSizeCount = 0;
@@ -287,7 +328,7 @@ export async function GET(_req: Request, context: RouteContext) {
       }
 
       if (asset.asset_type === "song" && asset.asset_id != null) {
-        const song = songById.get(String(asset.asset_id));
+        const song = songByIdentifier.get(String(asset.asset_id));
         const songSizeBytes = getSongSizeBytes(song);
 
         if (songSizeBytes) {
