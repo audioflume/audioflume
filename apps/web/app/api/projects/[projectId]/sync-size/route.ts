@@ -15,7 +15,7 @@ type ProjectAssetSizeRow = {
 
 type SongSizeRow = {
   id: string | number;
-  size_bytes: number | string | null;
+  size_bytes?: number | string | null;
 };
 
 async function getProjectId(context: RouteContext) {
@@ -45,6 +45,10 @@ function getMetadataSizeBytes(metadata: ProjectAssetSizeRow["metadata"]) {
   return getPositiveSizeBytes(metadata?.sizeBytes);
 }
 
+function getSongSizeBytes(song: SongSizeRow | undefined) {
+  return getPositiveSizeBytes(song?.size_bytes);
+}
+
 export async function GET(_req: Request, context: RouteContext) {
   const { userId } = await auth();
 
@@ -52,14 +56,14 @@ export async function GET(_req: Request, context: RouteContext) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const projectId = await getProjectId(context);
+  const project = await verifyProject(projectId, userId);
+
+  if (!project) {
+    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+  }
+
   try {
-    const projectId = await getProjectId(context);
-    const project = await verifyProject(projectId, userId);
-
-    if (!project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
-    }
-
     const { data: assetRows, error: assetsError } = await supabaseServer
       .from("project_assets")
       .select("id, asset_type, asset_id, metadata")
@@ -77,10 +81,7 @@ export async function GET(_req: Request, context: RouteContext) {
     ];
 
     const { data: songRows, error: songsError } = songIds.length
-      ? await supabaseServer
-          .from("songs")
-          .select("id, size_bytes")
-          .in("id", songIds)
+      ? await supabaseServer.from("songs").select("*").in("id", songIds)
       : { data: [], error: null };
 
     if (songsError) {
@@ -89,7 +90,7 @@ export async function GET(_req: Request, context: RouteContext) {
 
     const songSizeById = new Map(
       ((songsError ? [] : songRows ?? []) as SongSizeRow[]).flatMap((song) => {
-        const sizeBytes = getPositiveSizeBytes(song.size_bytes);
+        const sizeBytes = getSongSizeBytes(song);
         return sizeBytes ? [[String(song.id), sizeBytes] as const] : [];
       }),
     );
@@ -125,12 +126,12 @@ export async function GET(_req: Request, context: RouteContext) {
   } catch (error) {
     console.error("Project sync size fetch error:", error);
 
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Failed to load project sync size",
-      },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      sizeBytes: 0,
+      missingSizeCount: 0,
+      totalAssetCount: 0,
+      warning:
+        error instanceof Error ? error.message : "Failed to calculate project sync size",
+    });
   }
 }
