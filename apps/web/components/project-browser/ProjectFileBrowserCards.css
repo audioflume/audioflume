@@ -1,6 +1,6 @@
 .project-browser-grid {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
   column-gap: 14px !important;
   row-gap: 12px !important;
   align-items: stretch !important;
@@ -221,4 +221,73 @@
 
 .project-browser-row .project-folder-action-wrap .project-file-action {
   opacity: 1 !important;
+}
+
+.project-file-browser.project-file-browser .project-browser-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  column-gap: 14px !important;
+  row-gap: 12px !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+.project-file-browser.project-file-browser .project-browser-grid > div {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.project-file-browser.project-file-browser .project-folder-card,
+.project-file-browser.project-file-browser .project-file-card {
+  position: relative !important;
+  display: grid !important;
+  min-height: 66px !important;
+  height: auto !important;
+  grid-template-columns: 60px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  align-items: center !important;
+  justify-content: stretch !important;
+  column-gap: 12px !important;
+  row-gap: 2px !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 8px !important;
+  background: var(--bg-secondary) !important;
+  padding: 9px 14px !important;
+  text-align: left !important;
+  transform: none !important;
+}
+
+.project-file-browser.project-file-browser .project-folder-card-name,
+.project-file-browser.project-file-browser .project-file-card-title {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  align-self: end !important;
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.project-file-browser.project-file-browser .project-folder-card-meta,
+.project-file-browser.project-file-browser .project-file-card-meta {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  align-self: start !important;
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  margin-top: 0 !important;
+}
+
+.project-file-browser.project-file-browser .project-folder-card-icon-wrap,
+.project-file-browser.project-file-browser .project-file-card-icon-wrap {
+  grid-column: 1 !important;
+  grid-row: 1 / span 2 !important;
+  display: flex !important;
+  height: 54px !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
