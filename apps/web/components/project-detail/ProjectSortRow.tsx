@@ -1,4 +1,7 @@
+"use client";
+
 import { SORT_OPTIONS, type ProjectSort } from "@/lib/project-detail/projectDetailUtils";
+import { useSearchParams } from "next/navigation";
 
 type ProjectSortRowProps = {
   projectSort: ProjectSort;
@@ -9,6 +12,11 @@ export default function ProjectSortRow({
   projectSort,
   onProjectSortChange,
 }: ProjectSortRowProps) {
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get("tab");
+
+  if (activeTab === "licenses") return null;
+
   return (
     <div className="project-sort-row fw-quick-row">
       {SORT_OPTIONS.map((option) => {
