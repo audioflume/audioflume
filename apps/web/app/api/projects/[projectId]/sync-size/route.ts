@@ -90,6 +90,15 @@ function isUuid(value: string) {
   );
 }
 
+function getNormalizedAssetType(asset: ProjectAssetSizeRow) {
+  return String(asset.asset_type || "").trim().toLowerCase();
+}
+
+function isFolderAsset(asset: ProjectAssetSizeRow) {
+  const assetType = getNormalizedAssetType(asset);
+  return assetType === "folder" || assetType === "project_folder";
+}
+
 function getSongIdentifierValues(song: SongSizeRow) {
   const identifiers = new Set<string>();
 
@@ -318,21 +327,28 @@ export async function GET(_req: Request, context: RouteContext) {
 
     let sizeBytes = 0;
     let missingSizeCount = 0;
+    let totalFileCount = 0;
 
     for (const asset of assets) {
+      if (isFolderAsset(asset)) continue;
+
       const metadataSizeBytes = getMetadataSizeBytes(asset.metadata);
 
       if (metadataSizeBytes) {
         sizeBytes += metadataSizeBytes;
+        totalFileCount += 1;
         continue;
       }
 
       if (asset.asset_type === "song" && asset.asset_id != null) {
         const song = songByIdentifier.get(String(asset.asset_id));
+        if (!song) continue;
+
         const songSizeBytes = getSongSizeBytes(song);
 
         if (songSizeBytes) {
           sizeBytes += songSizeBytes;
+          totalFileCount += 1;
           continue;
         }
 
@@ -343,9 +359,12 @@ export async function GET(_req: Request, context: RouteContext) {
 
         if (remoteSizeBytes) {
           sizeBytes += remoteSizeBytes;
+          totalFileCount += 1;
           await persistResolvedSizeBytes({ asset, song, sizeBytes: remoteSizeBytes });
           continue;
         }
+      } else {
+        totalFileCount += 1;
       }
 
       missingSizeCount += 1;
@@ -354,7 +373,7 @@ export async function GET(_req: Request, context: RouteContext) {
     return NextResponse.json({
       sizeBytes,
       missingSizeCount,
-      totalAssetCount: assets.length,
+      totalAssetCount: totalFileCount,
     });
   } catch (error) {
     console.error("Project sync size fetch error:", error);
