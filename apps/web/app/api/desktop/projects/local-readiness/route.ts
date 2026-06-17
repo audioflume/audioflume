@@ -27,6 +27,19 @@ type LocalReadinessProjectPayload = {
   files?: LocalReadinessFilePayload[];
 };
 
+type ProjectAssetRow = {
+  id: number | string;
+  project_id: number | string;
+  asset_type?: string | null;
+  asset_id?: string | number | null;
+  metadata?: unknown;
+};
+
+type SongSizeRow = {
+  id: string | number;
+  size_bytes?: number | string | null;
+};
+
 function getNumericId(value: unknown) {
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue : null;
@@ -48,12 +61,17 @@ function normalizeMetadata(value: unknown): ProjectAssetReadinessMetadata {
   return value && typeof value === "object" ? (value as ProjectAssetReadinessMetadata) : {};
 }
 
-function getMetadataSizeBytes(metadata: ProjectAssetReadinessMetadata) {
+function getMetadataSizeBytes(
+  metadata: ProjectAssetReadinessMetadata,
+  fallbackSizeBytes = 0,
+) {
   const localSizeBytes = Number(metadata.desktopLocalReadiness?.sizeBytes || 0);
   if (localSizeBytes > 0) return localSizeBytes;
 
   const storedSizeBytes = Number(metadata.sizeBytes || 0);
-  return storedSizeBytes > 0 ? storedSizeBytes : 0;
+  if (storedSizeBytes > 0) return storedSizeBytes;
+
+  return fallbackSizeBytes > 0 ? fallbackSizeBytes : 0;
 }
 
 function isReady(metadata: ProjectAssetReadinessMetadata) {
@@ -87,6 +105,33 @@ async function getOwnedProjectIds(userId: string, requestedProjectId?: number | 
   return (data ?? []).map((project) => Number(project.id)).filter(Number.isFinite);
 }
 
+async function getSongSizeMap(assets: ProjectAssetRow[]) {
+  const songIds = [
+    ...new Set(
+      assets
+        .filter((asset) => asset.asset_type === "song")
+        .map((asset) => String(asset.asset_id || ""))
+        .filter(Boolean),
+    ),
+  ];
+
+  if (songIds.length === 0) return new Map<string, number>();
+
+  const { data, error } = await supabaseServer
+    .from("songs")
+    .select("id, size_bytes")
+    .in("id", songIds);
+
+  if (error) throw error;
+
+  return new Map(
+    ((data ?? []) as SongSizeRow[]).flatMap((song) => {
+      const sizeBytes = Number(song.size_bytes || 0);
+      return sizeBytes > 0 ? [[String(song.id), sizeBytes] as const] : [];
+    }),
+  );
+}
+
 export async function GET(req: Request) {
   const userId = await getRequestUserId(req);
 
@@ -105,10 +150,13 @@ export async function GET(req: Request) {
 
     const { data: assets, error } = await supabaseServer
       .from("project_assets")
-      .select("id, project_id, metadata")
+      .select("id, project_id, asset_type, asset_id, metadata")
       .in("project_id", projectIds);
 
     if (error) throw error;
+
+    const assetRows = (assets ?? []) as ProjectAssetRow[];
+    const songSizeById = await getSongSizeMap(assetRows);
 
     const summaries = new Map<
       number,
@@ -131,16 +179,20 @@ export async function GET(req: Request) {
       });
     });
 
-    (assets ?? []).forEach((asset) => {
+    assetRows.forEach((asset) => {
       const projectId = Number(asset.project_id);
       const summary = summaries.get(projectId);
       if (!summary) return;
 
       const metadata = normalizeMetadata(asset.metadata);
       const updatedAt = getUpdatedAt(metadata);
+      const songSizeBytes =
+        asset.asset_type === "song"
+          ? songSizeById.get(String(asset.asset_id || "")) ?? 0
+          : 0;
 
       summary.totalFiles += 1;
-      summary.sizeBytes += getMetadataSizeBytes(metadata);
+      summary.sizeBytes += getMetadataSizeBytes(metadata, songSizeBytes);
 
       if (isReady(metadata)) {
         summary.readyFiles += 1;
