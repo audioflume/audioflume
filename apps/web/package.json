@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "r2:backfill-cache": "node scripts/backfill-r2-cache-headers.mjs",
+    "songs:backfill-sizes": "node scripts/backfill-song-size-bytes.mjs",
     "audio:backfill-streaming": "node scripts/backfill-audio-streaming-assets.mjs"
   },
   "dependencies": {
