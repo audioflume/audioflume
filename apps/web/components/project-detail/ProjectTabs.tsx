@@ -1,5 +1,7 @@
 "use client";
 
+import FolderIcon from "@/components/icons/FolderIcon";
+import MusicIcon from "@/components/icons/MusicIcon";
 import {
   TABS,
   type ProjectTab,
@@ -40,6 +42,11 @@ function ProjectTabChevronIcon() {
       />
     </svg>
   );
+}
+
+function ProjectTabIcon({ tab }: { tab: ProjectTab }) {
+  if (tab === "music") return <MusicIcon size={12} />;
+  return <FolderIcon size={13} />;
 }
 
 function formatSyncSize(bytes: number | null) {
@@ -208,6 +215,9 @@ export default function ProjectTabs({ activeTab, tabs, onTabChange }: Props) {
             className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
             aria-current={isActive}
           >
+            <span className="fw-filter-rail-icon" aria-hidden="true">
+              <ProjectTabIcon tab={tab.value} />
+            </span>
             <span className="fw-filter-rail-label">{tab.label}</span>
             <span className="fw-filter-rail-chevron" aria-hidden="true">
               <ProjectTabChevronIcon />
