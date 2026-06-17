@@ -30,6 +30,7 @@ import {
 import type { Project, ProjectAsset, ProjectFolder } from "@/lib/types";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import "../../music/music-library-redesign.css";
 import "./ProjectDetailPage.css";
 
 export default function ProjectDetailPageClient() {
@@ -370,7 +371,7 @@ export default function ProjectDetailPageClient() {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            asset_id: song.project_asset_id,
+            asset_project_id: song.project_asset_id,
             folder_id: folderId,
           }),
         },
