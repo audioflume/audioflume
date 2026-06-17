@@ -1,6 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
+import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
+
+export const runtime = "nodejs";
 
 type RouteContext = {
   params: Promise<{ projectId: string }> | { projectId: string };
@@ -21,6 +24,14 @@ type SongSizeRow = {
   audioUrl?: string | null;
   playbackUrl?: string | null;
 };
+
+const r2AccountId = process.env.CLOUDFLARE_R2_ACCOUNT_ID;
+const r2AccessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID;
+const r2SecretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
+const r2BucketName = process.env.CLOUDFLARE_R2_BUCKET_NAME;
+const r2PublicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL;
+
+let r2Client: S3Client | null = null;
 
 async function getProjectId(context: RouteContext) {
   const params = await context.params;
@@ -73,6 +84,73 @@ function getContentRangeSizeBytes(contentRange: string | null) {
   return getPositiveSizeBytes(match[1]);
 }
 
+function getR2Client() {
+  if (!r2AccountId || !r2AccessKeyId || !r2SecretAccessKey || !r2BucketName) {
+    return null;
+  }
+
+  if (r2Client) return r2Client;
+
+  r2Client = new S3Client({
+    region: "auto",
+    endpoint: `https://${r2AccountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: r2AccessKeyId,
+      secretAccessKey: r2SecretAccessKey,
+    },
+  });
+
+  return r2Client;
+}
+
+function getR2ObjectKeyFromUrl(url: string) {
+  try {
+    const parsedUrl = new URL(url);
+    let pathname = parsedUrl.pathname;
+
+    if (r2PublicUrl) {
+      const publicUrl = new URL(r2PublicUrl.replace(/\/+$/, ""));
+      const publicBasePath = publicUrl.pathname.replace(/\/+$/, "");
+
+      if (
+        parsedUrl.origin === publicUrl.origin &&
+        publicBasePath &&
+        pathname.startsWith(`${publicBasePath}/`)
+      ) {
+        pathname = pathname.slice(publicBasePath.length);
+      }
+    }
+
+    return decodeURIComponent(pathname.replace(/^\/+/, ""));
+  } catch {
+    return null;
+  }
+}
+
+async function getR2FileSizeBytes(url: string) {
+  const client = getR2Client();
+  const key = getR2ObjectKeyFromUrl(url);
+
+  if (!client || !key || !r2BucketName) return null;
+
+  try {
+    const head = await client.send(
+      new HeadObjectCommand({
+        Bucket: r2BucketName,
+        Key: key,
+      }),
+    );
+
+    return getPositiveSizeBytes(head.ContentLength);
+  } catch (error) {
+    console.warn("Project sync size R2 head failed", {
+      key,
+      error: error instanceof Error ? error.message : error,
+    });
+    return null;
+  }
+}
+
 async function getRemoteFileSizeBytes(url: string) {
   try {
     const headResponse = await fetch(url, {
@@ -106,6 +184,10 @@ async function getRemoteFileSizeBytes(url: string) {
   } catch {
     return null;
   }
+}
+
+async function getResolvedRemoteFileSizeBytes(url: string) {
+  return (await getR2FileSizeBytes(url)) ?? (await getRemoteFileSizeBytes(url));
 }
 
 async function persistResolvedSizeBytes({
@@ -215,7 +297,7 @@ export async function GET(_req: Request, context: RouteContext) {
 
         const songUrl = getSongAudioUrl(song);
         const remoteSizeBytes = songUrl
-          ? await getRemoteFileSizeBytes(songUrl)
+          ? await getResolvedRemoteFileSizeBytes(songUrl)
           : null;
 
         if (remoteSizeBytes) {
