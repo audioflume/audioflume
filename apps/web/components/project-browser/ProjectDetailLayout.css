@@ -68,9 +68,14 @@
 }
 
 .project-detail-page .project-tabs-row .fw-filter-rail-item.is-active {
-  background: var(--bg-hover-strong) !important;
+  background: transparent !important;
   color: var(--text-primary) !important;
   font-weight: 400 !important;
+}
+
+.project-detail-page .project-tabs-row .fw-filter-rail-item.is-active:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
 }
 
 .project-detail-page .project-tabs-row .fw-filter-rail-label {
@@ -119,26 +124,26 @@
   display: block !important;
   min-height: 0 !important;
   border-bottom: 1px solid var(--border) !important;
-  padding-top: 34px !important;
-  padding-bottom: 12px !important;
+  padding-top: 22px !important;
+  padding-bottom: 4px !important;
 }
 
 .project-detail-page .project-detail-header-row {
   display: flex !important;
   flex-wrap: nowrap !important;
-  align-items: baseline !important;
+  align-items: center !important;
   width: 100% !important;
   gap: 16px !important;
 }
 
 .project-detail-page .project-detail-title {
   flex: 0 0 auto !important;
-  line-height: 1 !important;
+  line-height: 1.05 !important;
 }
 
 .project-detail-page .project-detail-meta {
   margin-left: auto !important;
-  align-items: baseline !important;
+  align-items: center !important;
   justify-content: flex-end !important;
   line-height: 1 !important;
 }
