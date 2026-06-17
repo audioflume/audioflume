@@ -1,3 +1,5 @@
+import { exists, stat } from "@tauri-apps/plugin-fs";
+import { load } from "@tauri-apps/plugin-store";
 import type {
   FilmwaveDesktopAccount,
   FilmwaveDesktopLocalChanges,
@@ -44,6 +46,8 @@ type DesktopLocalChangesApiResponse = DesktopLocalChangesResult & {
   error?: string;
 };
 
+const SETTINGS_STORE = "filmwave-settings.json";
+const PROJECTS_SYNC_FOLDER_NAME = "Projects";
 const mockProjects: Project[] = [];
 
 export function normalizeFilmwaveApiBaseUrl(apiBaseUrl?: string | null) {
@@ -68,6 +72,47 @@ function formatSize(bytes: number | undefined) {
   }
 
   return `${value >= 10 ? value.toFixed(0) : value.toFixed(1)} ${units[unitIndex]}`;
+}
+
+function sanitizeFolderName(name: string) {
+  return name
+    .replace(/[<>:"/\\|?*]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function sanitizeProjectRelativePath(path: string) {
+  const cleanedPath = path
+    .split("/")
+    .map((part) => sanitizeFolderName(part))
+    .filter(Boolean)
+    .join("/");
+
+  if (
+    !cleanedPath ||
+    cleanedPath.startsWith("/") ||
+    cleanedPath.includes("..")
+  ) {
+    throw new Error(`Unsafe file path: ${path}`);
+  }
+
+  return cleanedPath;
+}
+
+function getProjectFolderPath(syncFolder: string, project: Project) {
+  return `${syncFolder}/${PROJECTS_SYNC_FOLDER_NAME}/${sanitizeFolderName(project.name)}`;
+}
+
+function getProjectNodeLocalPath({
+  node,
+  project,
+  syncFolder,
+}: {
+  node: ProjectFileNode;
+  project: Project;
+  syncFolder: string;
+}) {
+  return `${getProjectFolderPath(syncFolder, project)}/${sanitizeProjectRelativePath(node.path)}`;
 }
 
 function getAuthHeaders(token?: string | null): HeadersInit {
@@ -95,6 +140,108 @@ function normalizeApiProject(project: FilmwaveDesktopProjectApiItem): Project {
   };
 }
 
+async function getSavedSyncFolder() {
+  try {
+    const store = await load(SETTINGS_STORE);
+    return (await store.get<string>("syncFolder")) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function getLocalReadinessFile({
+  file,
+  project,
+  syncFolder,
+}: {
+  file: ProjectFileNode;
+  project: Project;
+  syncFolder: string;
+}) {
+  try {
+    const localPath = getProjectNodeLocalPath({ file, node: file, project, syncFolder });
+    const existsLocally = await exists(localPath);
+
+    if (!existsLocally) {
+      return {
+        id: file.id,
+        path: file.path,
+        ready: false,
+        status: "missing",
+        sizeBytes: file.sizeBytes,
+      };
+    }
+
+    const fileInfo = await stat(localPath);
+    const localSizeBytes = Number(fileInfo.size || 0);
+    const expectedSizeBytes = Number(file.sizeBytes || 0);
+    const sizeMatches = expectedSizeBytes <= 0 || localSizeBytes === expectedSizeBytes;
+
+    return {
+      id: file.id,
+      path: file.path,
+      ready: sizeMatches,
+      status: sizeMatches ? "ready" : "size-mismatch",
+      sizeBytes: localSizeBytes || file.sizeBytes,
+    };
+  } catch {
+    return {
+      id: file.id,
+      path: file.path,
+      ready: false,
+      status: "error",
+      sizeBytes: file.sizeBytes,
+    };
+  }
+}
+
+async function reportLocalReadinessForProjects({
+  apiBaseUrl,
+  projects,
+  token,
+}: {
+  apiBaseUrl?: string | null;
+  projects: Project[];
+  token?: string | null;
+}) {
+  if (!token || projects.length === 0) return;
+
+  const syncFolder = await getSavedSyncFolder();
+  if (!syncFolder) return;
+
+  try {
+    const payloadProjects = await Promise.all(
+      projects.map(async (project) => {
+        const files = project.files.filter((file) => file.type === "file");
+
+        return {
+          projectId: project.id,
+          files: await Promise.all(
+            files.map((file) =>
+              getLocalReadinessFile({ file, project, syncFolder }),
+            ),
+          ),
+        };
+      }),
+    );
+
+    await fetch(
+      `${normalizeFilmwaveApiBaseUrl(apiBaseUrl)}/api/desktop/projects/local-readiness`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeaders(token),
+        },
+        body: JSON.stringify({ projects: payloadProjects }),
+      },
+    );
+  } catch (error) {
+    console.warn("Could not report Filmwave local readiness.", error);
+  }
+}
+
 export async function getMockProjects() {
   await new Promise((resolve) => window.setTimeout(resolve, 250));
 
@@ -115,7 +262,10 @@ export async function getFilmwaveProjects(token?: string | null, apiBaseUrl?: st
     throw new Error(data.error || "Failed to load Filmwave projects");
   }
 
-  return (data.projects ?? []).map(normalizeApiProject);
+  const projects = (data.projects ?? []).map(normalizeApiProject);
+  void reportLocalReadinessForProjects({ apiBaseUrl, projects, token });
+
+  return projects;
 }
 
 export async function getDesktopAccount(token?: string | null, apiBaseUrl?: string | null) {
