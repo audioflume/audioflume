@@ -17,28 +17,6 @@ import MusicHeaderSearch from "@/components/MusicHeaderSearch";
 import UserMenu from "@/components/UserMenu";
 
 const HEADER_SEARCH_ACCOUNT_STYLE = `
-  .fw-toolbar-sticky,
-  .filmwave-header-actions > form {
-    width: min(920px, calc(100vw - 520px)) !important;
-    max-width: calc(100vw - 300px) !important;
-  }
-
-  @media (max-width: 1180px) {
-    .fw-toolbar-sticky,
-    .filmwave-header-actions > form {
-      width: min(720px, calc(100vw - 340px)) !important;
-      max-width: calc(100vw - 260px) !important;
-    }
-  }
-
-  @media (max-width: 760px) {
-    .fw-toolbar-sticky,
-    .filmwave-header-actions > form {
-      width: clamp(160px, calc(100vw - 300px), 420px) !important;
-      max-width: calc(100vw - 220px) !important;
-    }
-  }
-
   .filmwave-header-account-trigger:hover,
   .filmwave-header-account-trigger.is-open,
   .filmwave-header-account-trigger:hover .filmwave-header-account-label,
