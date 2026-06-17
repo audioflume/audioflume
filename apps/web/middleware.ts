@@ -47,6 +47,10 @@ export default clerkMiddleware(async (auth, request) => {
     return applyDesktopCorsHeaders(NextResponse.next(), request);
   }
 
+  if (request.nextUrl.pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
   if (!isPublicRoute(request)) {
     await auth.protect();
   }
