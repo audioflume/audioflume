@@ -1,6 +1,6 @@
 .project-detail-page .project-file-browser {
   position: relative !important;
-  padding: 20px 0 28px !important;
+  padding: 12px 0 28px !important;
 }
 
 .project-detail-page .project-file-browser-top {
@@ -59,7 +59,7 @@
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
-  padding-top: 24px !important;
+  padding-top: 16px !important;
 }
 
 .project-detail-page .project-detail-hero {
