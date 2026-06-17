@@ -5,16 +5,33 @@ import { FolderGlyph } from "./ProjectBrowserGlyphs";
 type ProjectFileView = "grid" | "list";
 type ProjectFolderWithFileCount = ProjectFolder & { recursive_asset_count?: number };
 
-function getAssetTypeLabel(assetType: string | null | undefined) {
-  if (assetType === "song") return "Music";
-  if (assetType === "sound-fx") return "Sound FX";
-  if (assetType === "visual-fx") return "Visual FX";
-  if (assetType === "colour-grading") return "Colour Grading";
-  return "Folder";
-}
-
 function formatFileCount(count: number) {
   return `${count} ${count === 1 ? "file" : "files"}`;
+}
+
+function formatRelativeDate(value: string | null | undefined) {
+  if (!value) return "—";
+
+  const time = new Date(value).getTime();
+  if (!Number.isFinite(time)) return "—";
+
+  const seconds = Math.max(0, Math.floor((Date.now() - time) / 1000));
+  if (seconds < 60) return "just now";
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} ${days === 1 ? "day" : "days"} ago`;
+
+  return new Date(value).toLocaleDateString([], {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 export default function ProjectFolderCard({
@@ -28,8 +45,8 @@ export default function ProjectFolderCard({
   onOpen: (folderId: number) => void;
   onContextMenu?: (event: MouseEvent<HTMLElement>, folder: ProjectFolderWithFileCount) => void;
 }) {
-  const totalItems = (folder.child_count ?? 0) + (folder.asset_count ?? 0);
   const recursiveFileCount = folder.recursive_asset_count ?? folder.asset_count ?? 0;
+  const lastModified = formatRelativeDate(folder.updated_at ?? folder.created_at);
 
   function handleOpen() {
     onOpen(folder.id);
@@ -56,12 +73,16 @@ export default function ProjectFolderCard({
         onContextMenu={handleContextMenu}
       >
         <span className="project-browser-row-name">
-          <FolderGlyph small />
-          <span className="project-browser-row-title">{folder.name}</span>
+          <span className="project-browser-row-icon project-browser-row-folder-icon">
+            <FolderGlyph small />
+          </span>
+          <span className="project-browser-row-title-wrap">
+            <span className="project-browser-row-title">{folder.name}</span>
+            <span className="project-browser-row-subtitle">{formatFileCount(recursiveFileCount)}</span>
+          </span>
         </span>
-        <span className="project-browser-row-muted">{totalItems || "--"}</span>
-        <span className="project-browser-row-muted">{getAssetTypeLabel(folder.asset_type)}</span>
-        <span className="project-folder-action-wrap" />
+        <span className="project-browser-row-size">—</span>
+        <span className="project-browser-row-date">{lastModified}</span>
       </div>
     );
   }
