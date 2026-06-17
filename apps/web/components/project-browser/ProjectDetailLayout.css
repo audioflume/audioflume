@@ -1,9 +1,8 @@
 .project-detail-page {
   --project-detail-content-pad: 20px;
   --project-detail-content-max-width: 1180px;
-  --filmwave-side-filter-rail-width: 168px !important;
+  --filmwave-side-filter-rail-width: 190px !important;
   --filmwave-side-filter-content-gap: 0px !important;
-  --filmwave-side-filter-divider-color: var(--border-subtle);
   display: block !important;
 }
 
@@ -22,81 +21,47 @@
 .project-detail-page > .project-detail-shell {
   display: grid !important;
   min-height: calc(100vh - 56px) !important;
-  grid-template-columns: var(--filmwave-side-filter-rail-width) minmax(0, 1fr) !important;
+  grid-template-columns: 190px minmax(0, 1fr) !important;
   column-gap: 0 !important;
   align-items: start !important;
   padding: 0 !important;
 }
 
 .project-detail-page .project-tabs-row {
-  order: initial !important;
   grid-column: 1 !important;
   grid-row: 1 / span 999 !important;
   position: sticky !important;
-  top: calc(
-    var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
-      var(--filmwave-sidebar-float-inset, 12px)
-  ) !important;
-  z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
-  display: flex !important;
+  top: calc(var(--filmwave-header-height, 56px) + var(--filmwave-sidebar-float-inset, 12px)) !important;
+  z-index: 59 !important;
   box-sizing: border-box !important;
-  width: var(--filmwave-side-filter-rail-width) !important;
-  max-width: var(--filmwave-side-filter-rail-width) !important;
-  height: calc(
-    100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
-      var(--filmwave-sidebar-bottom-offset, 0px) -
-      (var(--filmwave-sidebar-float-inset, 12px) * 2)
-  ) !important;
+  width: 190px !important;
+  max-width: 190px !important;
+  height: calc(100dvh - var(--filmwave-header-height, 56px) - (var(--filmwave-sidebar-float-inset, 12px) * 2)) !important;
   min-height: 0 !important;
-  flex-direction: column !important;
-  flex-wrap: nowrap !important;
-  gap: 0 !important;
-  align-self: start !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain !important;
   margin: 0 !important;
-  border: 0 !important;
-  border-right: 1px solid var(--filmwave-side-filter-divider-color) !important;
   border-radius: 0 !important;
   background: transparent !important;
-  padding: 10px 8px !important;
   scrollbar-width: none !important;
-}
-
-.project-detail-page .project-tabs-row::-webkit-scrollbar {
-  display: none !important;
 }
 
 .project-detail-page .project-tabs-row > button,
 .project-detail-page .project-tabs-row .fw-filter-rail-item {
   display: flex !important;
-  width: 100% !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  flex: 0 0 auto !important;
+  height: 34px !important;
+  flex-shrink: 0 !important;
   cursor: pointer !important;
   align-items: center !important;
-  justify-content: flex-start !important;
   gap: 8px !important;
   border: 0 !important;
-  border-radius: 11px !important;
+  border-radius: 9px !important;
   background: transparent !important;
-  padding: 0 8px 0 12px !important;
   color: var(--text-secondary) !important;
+  padding: 0 8px 0 12px !important;
   font-family: inherit !important;
   font-size: 12.5px !important;
   font-weight: 400 !important;
   text-align: left !important;
-  white-space: nowrap !important;
-  transition: background-color 160ms ease, color 160ms ease !important;
-}
-
-.project-detail-page .project-tabs-row > button.is-active,
-.project-detail-page .project-tabs-row .fw-filter-rail-item.is-active {
-  background: var(--bg-hover-strong) !important;
-  color: var(--text-primary) !important;
-  font-weight: 400 !important;
+  transition: background 130ms ease, color 130ms ease !important;
 }
 
 .project-detail-page .project-tabs-row > button:hover,
@@ -105,8 +70,14 @@
   color: var(--text-primary) !important;
 }
 
+.project-detail-page .project-tabs-row > button.is-active,
+.project-detail-page .project-tabs-row .fw-filter-rail-item.is-active {
+  background: var(--bg-control-hover) !important;
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+}
+
 .project-detail-page .project-tabs-row .fw-filter-rail-label {
-  min-width: 0 !important;
   flex: 1 1 auto !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -117,28 +88,13 @@
   display: inline-flex !important;
   flex-shrink: 0 !important;
   color: var(--text-muted) !important;
-  opacity: 0.4 !important;
-  transition: opacity 160ms ease, color 160ms ease !important;
+  opacity: 0 !important;
+  transition: opacity 130ms ease !important;
 }
 
-.project-detail-page .project-tabs-row .fw-filter-rail-item:hover .fw-filter-rail-chevron {
-  opacity: 0.65 !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-chevron svg {
-  display: block !important;
-  width: 11px !important;
-  height: 11px !important;
-}
-
-.project-detail-page .project-tabs-row button:not(.filmwave-active-line-trigger)::after,
-.project-detail-page .project-download-trigger::after {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  content: none !important;
+.project-detail-page .project-tabs-row .fw-filter-rail-item.is-active .fw-filter-rail-chevron,
+.project-detail-page .project-tabs-row > button.is-active .fw-filter-rail-chevron {
+  opacity: 1 !important;
 }
 
 .project-detail-page .project-detail-hero,
@@ -157,7 +113,6 @@
 }
 
 .project-detail-page .project-detail-hero {
-  order: initial !important;
   position: relative !important;
   display: block !important;
   min-height: 176px !important;
@@ -166,126 +121,6 @@
   padding-bottom: 28px !important;
 }
 
-.project-detail-page .project-detail-kicker {
-  display: block !important;
-  margin-bottom: 12px !important;
-  font-size: 10px !important;
-  letter-spacing: 0.12em !important;
-  color: var(--text-muted) !important;
-}
-
-.project-detail-page .project-detail-title {
-  margin: 0 !important;
-  max-width: 620px !important;
-  font-size: 58px !important;
-  font-weight: 500 !important;
-  line-height: 0.94 !important;
-  letter-spacing: -0.055em !important;
-}
-
-.project-detail-page .project-detail-meta {
-  display: flex !important;
-  margin-top: 18px !important;
-  align-items: center !important;
-  gap: 8px !important;
-  font-size: 11px !important;
-  color: var(--text-secondary) !important;
-}
-
-.project-detail-page .project-detail-description {
-  display: none !important;
-}
-
-.project-detail-page .project-sort-row {
-  order: initial !important;
-  min-width: 0 !important;
-  justify-content: flex-start !important;
-  padding-top: 16px !important;
-  padding-bottom: 16px !important;
-}
-
-.project-detail-page .project-download-wrap {
-  display: flex !important;
-  align-items: center !important;
-}
-
-.project-detail-page .project-download-trigger {
-  gap: 6px !important;
-  font-size: 12px !important;
-}
-
-.project-detail-page .project-tab-panel {
-  order: initial !important;
-  flex: initial !important;
-}
-
 .project-detail-page .project-file-browser {
   padding: 32px 0 !important;
-}
-
-.project-detail-page .project-breadcrumbs.project-path:not(:has(.project-path-separator)) {
-  display: none !important;
-}
-
-.project-detail-page .project-footer-wrap {
-  order: initial !important;
-  margin-top: auto !important;
-}
-
-@media (max-width: 760px) {
-  .project-detail-page > .project-detail-shell {
-    display: flex !important;
-    flex-direction: column !important;
-    padding: 0 18px !important;
-  }
-
-  .project-detail-page .project-tabs-row {
-    grid-column: auto !important;
-    grid-row: auto !important;
-    position: sticky !important;
-    top: 56px !important;
-    z-index: 109 !important;
-    flex-direction: row !important;
-    width: auto !important;
-    max-width: none !important;
-    height: 48px !important;
-    min-height: 48px !important;
-    align-items: center !important;
-    gap: 8px !important;
-    margin-left: -18px !important;
-    margin-right: -18px !important;
-    border-right: 0 !important;
-    border-bottom: 1px solid var(--border) !important;
-    background: var(--bg-primary) !important;
-    padding: 8px 18px !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-  }
-
-  .project-detail-page .project-tabs-row > button,
-  .project-detail-page .project-tabs-row .fw-filter-rail-item {
-    width: auto !important;
-    height: 32px !important;
-    min-height: 32px !important;
-    flex: 0 0 auto !important;
-    border-radius: 999px !important;
-    padding: 0 12px !important;
-  }
-
-  .project-detail-page .project-tabs-row .fw-filter-rail-chevron {
-    display: none !important;
-  }
-
-  .project-detail-page .project-detail-hero,
-  .project-detail-page .project-sort-row,
-  .project-detail-page .project-tab-panel,
-  .project-detail-page .project-footer-wrap {
-    grid-column: auto !important;
-    width: auto !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
 }
