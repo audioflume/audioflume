@@ -1,6 +1,6 @@
 .project-detail-page .project-file-browser {
   position: relative !important;
-  padding: 0 0 24px !important;
+  padding: 0 0 32px !important;
 }
 
 .project-detail-page .project-file-browser-top {
@@ -8,16 +8,16 @@
   top: auto !important;
   z-index: 3 !important;
   display: flex !important;
-  min-height: 46px !important;
+  min-height: 34px !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
   overflow: visible !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
-  border-bottom: 1px solid var(--border-subtle) !important;
+  border-bottom: 0 !important;
   background: var(--bg-primary) !important;
-  padding: 0 0 8px !important;
+  padding: 0 !important;
 }
 
 .project-detail-page .project-file-browser-title-wrap {
@@ -26,46 +26,21 @@
 
 .project-detail-page .project-breadcrumbs.project-path {
   margin-top: 0 !important;
-  display: inline-flex !important;
-  min-height: 32px !important;
   flex-wrap: nowrap !important;
-  align-items: center !important;
-  gap: 8px !important;
   overflow: visible !important;
   font-size: 12px !important;
-}
-
-.project-breadcrumbs.project-path::before {
-  content: "⌂";
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  color: var(--text-secondary);
-  font-size: 17px;
-  line-height: 1;
 }
 
 .project-breadcrumbs.project-path button,
 .project-breadcrumbs.project-path span,
 .project-path-separator {
-  color: var(--text-secondary) !important;
-}
-
-.project-breadcrumbs.project-path button {
-  font-size: 12px !important;
-  font-weight: 500 !important;
+  color: var(--text-subtle) !important;
 }
 
 .project-breadcrumbs.project-path button.is-current,
 .project-breadcrumbs.project-path button:hover,
 .project-breadcrumbs.project-path button.is-drag-over {
   color: var(--text-primary) !important;
-}
-
-.project-breadcrumbs.project-path button.is-current {
-  font-weight: 600 !important;
 }
 
 .project-breadcrumbs.project-path button.is-drag-over {
@@ -84,20 +59,17 @@
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
-  padding-top: 16px !important;
+  padding-top: 10px !important;
 }
 
-.project-detail-page .project-file-browser-section::before {
-  content: "Folders";
+.project-detail-page .project-detail-hero {
+  border-bottom: 0 !important;
+}
+
+.project-detail-page .project-detail-hero::after {
+  content: "";
   display: block;
-  margin-bottom: 10px;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.project-detail-page .project-file-browser-section:has(.project-browser-list)::before,
-.project-detail-page .project-file-browser-section:has(.project-file-empty-inline)::before {
-  display: none;
+  height: 1px;
+  margin-top: 28px;
+  background: var(--border);
 }
