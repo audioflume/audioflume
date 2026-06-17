@@ -117,13 +117,33 @@
 .project-detail-page .project-detail-hero {
   position: relative !important;
   display: block !important;
-  min-height: 176px !important;
+  min-height: 0 !important;
   border-bottom: 1px solid var(--border) !important;
-  padding-top: 38px !important;
-  padding-bottom: 28px !important;
+  padding-top: 34px !important;
+  padding-bottom: 12px !important;
 }
 
-.project-detail-page .project-file-browser { padding: 32px 0 !important; }
+.project-detail-page .project-detail-header-row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: baseline !important;
+  width: 100% !important;
+  gap: 16px !important;
+}
+
+.project-detail-page .project-detail-title {
+  flex: 0 0 auto !important;
+  line-height: 1 !important;
+}
+
+.project-detail-page .project-detail-meta {
+  margin-left: auto !important;
+  align-items: baseline !important;
+  justify-content: flex-end !important;
+  line-height: 1 !important;
+}
+
+.project-detail-page .project-file-browser { padding: 12px 0 32px !important; }
 
 .project-detail-page .project-tab-panel > .fw-song-list {
   margin-left: 0 !important;
