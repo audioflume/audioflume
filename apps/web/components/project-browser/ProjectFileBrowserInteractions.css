@@ -35,6 +35,25 @@
   outline-offset: 2px !important;
 }
 
+.project-file-browser.project-file-browser .project-drag-over-folder .project-folder-card,
+.project-file-browser.project-file-browser .project-drag-over-folder .project-folder-card:hover {
+  border-color: var(--border-hover, var(--border)) !important;
+  background: var(--bg-hover-strong) !important;
+  box-shadow: none !important;
+  outline: 1px solid var(--border-hover, var(--border)) !important;
+  outline-offset: 2px !important;
+  transform: none !important;
+}
+
+.project-file-browser.project-file-browser .project-browser-list .project-drag-over-folder .project-folder-row,
+.project-file-browser.project-file-browser .project-browser-list .project-drag-over-folder .project-folder-row:hover {
+  border-color: var(--border-hover, var(--border)) !important;
+  background: var(--bg-hover-strong) !important;
+  box-shadow: none !important;
+  outline: 1px solid var(--border-hover, var(--border)) !important;
+  outline-offset: 2px !important;
+}
+
 .project-context-menu:has(> button:nth-child(4)) > button:nth-child(1) {
   order: 2 !important;
 }
