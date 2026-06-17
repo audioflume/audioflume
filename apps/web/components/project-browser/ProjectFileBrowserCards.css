@@ -1,7 +1,8 @@
 .project-browser-grid {
-  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)) !important;
-  column-gap: 12px !important;
-  row-gap: 12px !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+  column-gap: 14px !important;
+  row-gap: 14px !important;
   justify-content: stretch !important;
   padding-top: 0 !important;
 }
@@ -16,38 +17,97 @@
 .project-file-browser .project-folder-card,
 .project-file-browser .project-file-card {
   position: relative !important;
-  min-height: 112px !important;
-  padding: 6px 8px !important;
-  gap: 10px !important;
+  display: grid !important;
+  grid-template-columns: 56px minmax(0, 1fr) !important;
+  min-height: 76px !important;
+  align-items: center !important;
+  gap: 14px !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 5px !important;
+  background: color-mix(in srgb, var(--bg-secondary) 78%, transparent) !important;
+  padding: 12px 16px !important;
+  text-align: left !important;
+  transform: none !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.025), 0 12px 26px rgba(0, 0, 0, 0.12) !important;
+  transition: background-color 130ms ease, border-color 130ms ease, transform 130ms ease !important;
+}
+
+.project-file-browser .project-folder-card:hover,
+.project-file-browser .project-file-card:hover,
+.project-file-browser .project-file-card.is-active {
+  border-color: color-mix(in srgb, var(--border) 74%, var(--text-primary)) !important;
+  background: var(--bg-hover) !important;
+  transform: translateY(-1px) !important;
 }
 
 .project-folder-card-icon-wrap,
 .project-file-card-icon-wrap {
+  position: relative !important;
   display: flex !important;
-  height: 54px !important;
+  width: 56px !important;
+  height: 46px !important;
+  min-width: 56px !important;
   align-items: center !important;
   justify-content: center !important;
+  color: var(--text-muted) !important;
+}
+
+.project-folder-card-icon-wrap svg {
+  width: 48px !important;
+  height: 38px !important;
+}
+
+.project-file-card-icon-wrap svg {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.project-folder-card-copy,
+.project-file-card-copy {
+  display: flex !important;
+  min-width: 0 !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 3px !important;
 }
 
 .project-folder-card-name,
-.project-file-browser .project-file-card-title,
-.project-file-browser .project-file-card-meta,
-.project-file-browser .project-folder-card-meta {
+.project-file-browser .project-file-card-title {
   max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: var(--text-primary) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.1 !important;
 }
 
-.project-file-browser .project-folder-card-meta {
+.project-folder-card-dash,
+.project-file-card-dash {
   display: block !important;
-  margin-top: -6px !important;
-  font-size: 9px;
-  color: var(--text-muted);
+  color: var(--text-muted) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.project-file-browser .project-folder-card-meta,
+.project-file-browser .project-file-card-meta {
+  display: block !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: var(--text-secondary) !important;
+  font-size: 12px !important;
+  line-height: 1.1 !important;
 }
 
 .project-file-browser .project-folder-card .project-file-action,
 .project-file-browser .project-file-card .project-file-action {
   position: absolute !important;
-  right: 7px !important;
-  top: 0 !important;
+  right: 8px !important;
+  top: 8px !important;
   z-index: 2;
   border: 0 !important;
   background: transparent !important;
@@ -61,33 +121,28 @@
   opacity: 1;
 }
 
-.project-file-list-icon-wrap {
-  position: relative !important;
-}
-
-.project-preview-button-list {
+.project-preview-button {
   --project-preview-track: rgba(255, 255, 255, 0.18);
   position: absolute !important;
   inset: auto !important;
-  margin: 0 !important;
   display: flex !important;
-  height: 22px !important;
-  width: 22px !important;
+  height: 28px !important;
+  width: 28px !important;
   cursor: pointer !important;
   align-items: center !important;
   justify-content: center !important;
   border-radius: 999px !important;
   color: var(--text-primary) !important;
   opacity: 0 !important;
-  transform: scale(0.92) !important;
-  transition: opacity 0.15s ease, transform 0.15s ease !important;
+  transform: scale(0.94) !important;
+  transition: opacity 130ms ease, transform 130ms ease !important;
 }
 
-.light .project-preview-button-list {
+.light .project-preview-button {
   --project-preview-track: rgba(0, 0, 0, 0.18);
 }
 
-.project-preview-button-list::before {
+.project-preview-button::before {
   content: "";
   position: absolute;
   inset: 2px;
@@ -95,18 +150,28 @@
   background: var(--bg-primary);
 }
 
-.project-preview-button-list svg {
+.project-preview-button svg {
   position: relative;
   z-index: 1;
-  width: 8px !important;
-  height: 8px !important;
+  width: 10px !important;
+  height: 10px !important;
 }
 
-.project-browser-row:hover .project-preview-button-list,
-.project-preview-button-list.is-playing,
-.project-preview-button-list.is-active {
+.project-file-card:hover .project-preview-button,
+.project-preview-button.is-playing,
+.project-preview-button.is-active,
+.project-browser-row:hover .project-preview-button-list {
   opacity: 1 !important;
   transform: scale(1) !important;
+}
+
+.project-file-list-icon-wrap {
+  position: relative !important;
+}
+
+.project-preview-button-list {
+  height: 22px !important;
+  width: 22px !important;
 }
 
 .project-browser-list {
