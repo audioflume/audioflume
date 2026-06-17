@@ -25,6 +25,14 @@ const musicHeaderSearchPillStyle: CSSProperties = {
   maxWidth: "100%",
 };
 
+type MusicHeaderSearchProps = {
+  value?: string;
+  placeholder?: string;
+  syncWithToolbar?: boolean;
+  onChange?: (nextSearch: string) => void;
+  onSubmitSearch?: (nextSearch: string) => void;
+};
+
 function getMusicToolbarSearchInput() {
   return document.querySelector<HTMLInputElement>("main .fw-toolbar-search input");
 }
@@ -35,18 +43,36 @@ function sendMusicSearch(nextSearch: string) {
   channel.close();
 }
 
-export default function MusicHeaderSearch() {
-  const [search, setSearch] = useState("");
+export default function MusicHeaderSearch({
+  value,
+  placeholder: placeholderOverride,
+  syncWithToolbar = true,
+  onChange,
+  onSubmitSearch,
+}: MusicHeaderSearchProps = {}) {
+  const isControlled = value !== undefined;
+  const [internalSearch, setInternalSearch] = useState(value ?? "");
   const [placeholder, setPlaceholder] = useState(
-    getMusicLibrarySearchPlaceholder(),
+    placeholderOverride ?? getMusicLibrarySearchPlaceholder(),
   );
+  const search = isControlled ? value : internalSearch;
 
   useEffect(() => {
+    if (placeholderOverride !== undefined) {
+      setPlaceholder(placeholderOverride);
+    }
+  }, [placeholderOverride]);
+
+  useEffect(() => {
+    if (!syncWithToolbar) return;
+
     function syncFromToolbarSearch() {
       const input = getMusicToolbarSearchInput();
       if (!input) return;
 
-      setSearch((current) => (current === input.value ? current : input.value));
+      setInternalSearch((current) =>
+        current === input.value ? current : input.value,
+      );
       setPlaceholder((current) =>
         current === input.placeholder ? current : input.placeholder,
       );
@@ -56,19 +82,27 @@ export default function MusicHeaderSearch() {
     const interval = window.setInterval(syncFromToolbarSearch, 120);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [syncWithToolbar]);
+
+  function updateSearch(nextSearch: string) {
+    if (!isControlled) setInternalSearch(nextSearch);
+    onChange?.(nextSearch);
+
+    if (syncWithToolbar) {
+      sendMusicSearch(nextSearch);
+    }
+  }
 
   function handleSearchChange(nextSearch: string) {
-    setSearch(nextSearch);
-    sendMusicSearch(nextSearch);
+    updateSearch(nextSearch);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const trimmedSearch = search.trim();
-    setSearch(trimmedSearch);
-    sendMusicSearch(trimmedSearch);
+    updateSearch(trimmedSearch);
+    onSubmitSearch?.(trimmedSearch);
   }
 
   return (
