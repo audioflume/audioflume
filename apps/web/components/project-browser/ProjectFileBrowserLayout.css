@@ -1,3 +1,7 @@
+.project-detail-page {
+  padding-bottom: calc(var(--filmwave-player-height, 72px) + 32px) !important;
+}
+
 .project-detail-page .project-file-browser {
   position: relative !important;
   padding: 12px 0 28px !important;
