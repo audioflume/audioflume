@@ -121,11 +121,12 @@
 
 .project-detail-page .project-detail-hero {
   position: relative !important;
-  display: block !important;
-  min-height: 0 !important;
+  display: flex !important;
+  min-height: 78px !important;
+  align-items: center !important;
   border-bottom: 1px solid var(--border) !important;
-  padding-top: 22px !important;
-  padding-bottom: 4px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .project-detail-page .project-detail-header-row {
@@ -138,7 +139,7 @@
 
 .project-detail-page .project-detail-title {
   flex: 0 0 auto !important;
-  line-height: 1.05 !important;
+  line-height: 1 !important;
 }
 
 .project-detail-page .project-detail-meta {
