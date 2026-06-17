@@ -1,5 +1,10 @@
 import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { createClient } from "@supabase/supabase-js";
+import { loadEnvConfig } from "@next/env";
+import { fileURLToPath } from "node:url";
+
+const projectDir = fileURLToPath(new URL("..", import.meta.url));
+loadEnvConfig(projectDir);
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
