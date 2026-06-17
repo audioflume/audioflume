@@ -1,6 +1,8 @@
 .project-detail-page {
   --project-detail-content-pad: 20px;
   --project-detail-content-max-width: 1180px;
+  --filmwave-side-filter-rail-width: 190px;
+  --filmwave-side-filter-content-gap: 14px;
   display: block !important;
 }
 
@@ -19,7 +21,7 @@
 .project-detail-page > .project-detail-shell {
   display: grid !important;
   min-height: calc(100vh - 56px) !important;
-  grid-template-columns: var(--filmwave-side-filter-rail-width, 168px) minmax(0, 1fr) !important;
+  grid-template-columns: var(--filmwave-side-filter-rail-width, 190px) minmax(0, 1fr) !important;
   column-gap: var(--filmwave-side-filter-content-gap, 14px) !important;
   align-items: start !important;
   padding: 0 !important;
@@ -31,26 +33,23 @@
   grid-row: 1 / span 999 !important;
   position: sticky !important;
   top: calc(var(--filmwave-header-height, 56px) + var(--filmwave-sidebar-float-inset, 12px)) !important;
-  left: auto !important;
-  right: auto !important;
   z-index: 90 !important;
   display: flex !important;
   box-sizing: border-box !important;
-  width: var(--filmwave-side-filter-rail-width, 168px) !important;
-  max-width: var(--filmwave-side-filter-rail-width, 168px) !important;
+  width: var(--filmwave-side-filter-rail-width, 190px) !important;
+  max-width: var(--filmwave-side-filter-rail-width, 190px) !important;
   height: calc(100dvh - var(--filmwave-header-height, 56px) - (var(--filmwave-sidebar-float-inset, 12px) * 2)) !important;
   min-height: 0 !important;
   flex-direction: column !important;
   flex-wrap: nowrap !important;
-  gap: 0 !important;
-  row-gap: 0 !important;
+  gap: 2px !important;
   align-self: start !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   overscroll-behavior: contain !important;
   margin: 0 !important;
   border: 0 !important;
-  border-right: 1px solid var(--filmwave-side-filter-divider-color, var(--border-subtle)) !important;
+  border-right: 1px solid var(--border-subtle) !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding: 10px 8px !important;
@@ -65,15 +64,15 @@
 .project-tabs-row .fw-filter-rail-item {
   display: flex !important;
   width: 100% !important;
-  height: 38px !important;
-  min-height: 38px !important;
+  height: 34px !important;
+  min-height: 34px !important;
   flex: 0 0 auto !important;
   cursor: pointer !important;
   align-items: center !important;
   justify-content: flex-start !important;
   gap: 8px !important;
   border: 0 !important;
-  border-radius: 11px !important;
+  border-radius: 9px !important;
   background: transparent !important;
   padding: 0 8px 0 12px !important;
   color: var(--text-secondary) !important;
@@ -82,7 +81,7 @@
   font-weight: 400 !important;
   text-align: left !important;
   white-space: nowrap !important;
-  transition: background-color 160ms ease, color 160ms ease !important;
+  transition: background 130ms ease, color 130ms ease !important;
 }
 
 .project-tabs-row > button:first-child {
@@ -90,11 +89,10 @@
 }
 
 .project-tabs-row > button.is-active,
-.project-tabs-row .fw-filter-rail-item.is-active,
-.project-tabs-row > button[class*="border-[var(--text-primary)]"] {
-  background: var(--bg-hover-strong) !important;
+.project-tabs-row .fw-filter-rail-item.is-active {
+  background: var(--bg-control-hover) !important;
   color: var(--text-primary) !important;
-  font-weight: 400 !important;
+  font-weight: 500 !important;
 }
 
 .project-tabs-row > button:hover,
@@ -115,12 +113,12 @@
   display: inline-flex !important;
   flex-shrink: 0 !important;
   color: var(--text-muted) !important;
-  opacity: 0.4 !important;
-  transition: opacity 160ms ease, color 160ms ease !important;
+  opacity: 0 !important;
+  transition: opacity 130ms ease !important;
 }
 
-.project-tabs-row .fw-filter-rail-item:hover .fw-filter-rail-chevron {
-  opacity: 0.65 !important;
+.project-tabs-row .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
+  opacity: 1 !important;
 }
 
 .project-tabs-row .fw-filter-rail-chevron svg {
@@ -137,10 +135,6 @@
   margin: 0 !important;
   border: 0 !important;
   content: none !important;
-}
-
-.project-tabs-row > button[class*="border-[var(--text-primary)]"]::after {
-  background: var(--filmwave-active-line-color) !important;
 }
 
 .project-tabs-row-actions {
@@ -192,13 +186,6 @@
   height: 14px !important;
 }
 
-.project-tabs-row-actions .project-new-folder-button svg path:nth-of-type(3),
-.project-tabs-row-actions .project-view-toggle-button svg path:nth-of-type(3) {
-  transform-box: fill-box;
-  transform-origin: center;
-  stroke-width: 1.65 !important;
-}
-
 .project-detail-page .project-detail-hero,
 .project-sort-row,
 .project-detail-page .project-tab-panel,
@@ -206,11 +193,12 @@
   grid-column: 2 !important;
   box-sizing: border-box !important;
   min-width: 0 !important;
-  width: min(100%, calc(var(--project-detail-content-max-width) + (var(--project-detail-content-pad) * 2))) !important;
-  margin-left: auto !important;
+  width: min(calc(100% - (var(--project-detail-content-pad) * 2)), var(--project-detail-content-max-width)) !important;
+  max-width: var(--project-detail-content-max-width) !important;
+  margin-left: var(--project-detail-content-pad) !important;
   margin-right: auto !important;
-  padding-left: var(--project-detail-content-pad) !important;
-  padding-right: var(--project-detail-content-pad) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .project-detail-page .project-detail-hero {
@@ -256,6 +244,9 @@
 .project-sort-row {
   order: initial !important;
   min-width: 0 !important;
+  justify-content: flex-start !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
 }
 
 .project-download-wrap {
@@ -336,6 +327,9 @@
   .project-detail-page .project-footer-wrap {
     grid-column: auto !important;
     width: auto !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
