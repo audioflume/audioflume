@@ -1,5 +1,5 @@
 .project-detail-page {
-  --project-detail-content-inset-left: 12px;
+  --project-detail-content-inset-left: var(--fw-music-content-inset-left, 28px);
   --project-detail-content-inset-right: var(--fw-music-content-inset-right, 20px);
   --filmwave-side-filter-rail-width: 168px !important;
   --filmwave-side-filter-content-gap: 0px !important;
@@ -209,6 +209,15 @@
 .project-detail-page .project-tab-panel > .fw-song-list {
   margin-left: 0 !important;
   margin-right: 0 !important;
+}
+
+.project-detail-page .project-sort-row:has(+ .project-tab-panel > .fw-song-list),
+.project-detail-page .project-tab-panel:has(> .fw-song-list) {
+  margin-left: 12px !important;
+}
+
+.project-detail-page .project-tab-panel:has(> .project-file-empty-inline) {
+  padding-top: 14px !important;
 }
 
 @media (max-width: 520px) {
