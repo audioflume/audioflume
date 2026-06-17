@@ -16,6 +16,41 @@ type ProjectSong = Song & {
   project_folder_id?: number | null;
 };
 
+function formatDuration(seconds: number | null | undefined) {
+  if (!seconds || !Number.isFinite(seconds)) return "—";
+
+  const rounded = Math.max(0, Math.round(seconds));
+  const minutes = Math.floor(rounded / 60);
+  const remainingSeconds = rounded % 60;
+
+  return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+}
+
+function formatRelativeDate(value: string | null | undefined) {
+  if (!value) return "—";
+
+  const time = new Date(value).getTime();
+  if (!Number.isFinite(time)) return "—";
+
+  const seconds = Math.max(0, Math.floor((Date.now() - time) / 1000));
+  if (seconds < 60) return "just now";
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} ${days === 1 ? "day" : "days"} ago`;
+
+  return new Date(value).toLocaleDateString([], {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 export default function ProjectSongFileCard({
   song,
   viewMode,
@@ -47,7 +82,7 @@ export default function ProjectSongFileCard({
     return (
       <div className="project-browser-row project-file-row" onContextMenu={handleContextMenu}>
         <span className="project-browser-row-name">
-          <span className="project-file-list-icon-wrap">
+          <span className="project-browser-row-icon project-file-list-icon-wrap">
             <MusicGlyph small />
             <button
               type="button"
@@ -59,11 +94,13 @@ export default function ProjectSongFileCard({
               <PlayPauseIcon playing={previewIsPlaying} />
             </button>
           </span>
-          <span className="project-browser-row-title">{song.title}</span>
+          <span className="project-browser-row-title-wrap">
+            <span className="project-browser-row-title">{song.title}</span>
+            <span className="project-browser-row-subtitle">{song.artist || "Unknown Artist"}</span>
+          </span>
         </span>
-        <span className="project-browser-row-muted">{song.artist || "--"}</span>
-        <span className="project-browser-row-muted">Music</span>
-        <span />
+        <span className="project-browser-row-size">{formatDuration(song.duration)}</span>
+        <span className="project-browser-row-date">{formatRelativeDate(song.project_added_at)}</span>
       </div>
     );
   }
