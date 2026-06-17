@@ -25,7 +25,7 @@
   flex-direction: column !important;
   width: 168px !important;
   max-width: 168px !important;
-  height: calc(100dvh - var(--filmwave-header-height, 56px) - (var(--filmwave-sidebar-float-inset, 12px) * 2)) !important;
+  height: calc(100dvh - var(--filmwave-header-height, 56px) - var(--filmwave-sidebar-bottom-offset, var(--filmwave-sidebar-float-inset, 12px)) - var(--filmwave-sidebar-float-inset, 12px)) !important;
   min-height: 0 !important;
   margin: 0 !important;
   gap: 2px !important;
@@ -64,10 +64,11 @@
 .project-detail-page .project-tab-utility-meter-bar {
   display: block !important;
   height: 100% !important;
-  width: 68% !important;
+  width: var(--project-tab-utility-meter-progress, 0%) !important;
   border-radius: inherit !important;
   background: var(--text-secondary) !important;
   opacity: 0.75 !important;
+  transition: width 180ms ease !important;
 }
 
 .project-detail-page .project-tab-utility-line {
@@ -77,6 +78,10 @@
   line-height: 1.45 !important;
   color: var(--text-muted) !important;
   white-space: nowrap !important;
+}
+
+.project-detail-page .project-tab-utility-heading {
+  color: var(--text-secondary) !important;
 }
 
 .project-detail-page .project-tab-utility-version {
