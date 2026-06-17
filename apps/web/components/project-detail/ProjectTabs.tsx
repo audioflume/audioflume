@@ -38,15 +38,7 @@ type ProjectSyncSizeState = {
   error: boolean;
 };
 
-type ProjectSyncAsset = {
-  id?: number | string;
-  asset_type?: string | null;
-  asset_id?: string | number | null;
-  metadata?: Record<string, unknown> | null;
-};
-
-type ProjectSyncSong = {
-  id?: string | number;
+type ProjectSyncSizeResponse = {
   sizeBytes?: number | string | null;
 };
 
@@ -89,38 +81,9 @@ function getProjectSizeBytes(project: LocalReadinessProjectSummary | null) {
   return Number.isFinite(project?.sizeBytes) ? Number(project?.sizeBytes) : null;
 }
 
-function getPositiveSizeBytes(value: number | null | undefined) {
-  return Number.isFinite(value) && Number(value) > 0 ? Number(value) : null;
-}
-
-function getMetadataSizeBytes(metadata: ProjectSyncAsset["metadata"]) {
-  const sizeBytes = Number(metadata?.sizeBytes || 0);
-  return sizeBytes > 0 ? sizeBytes : 0;
-}
-
-function getSongSizeMap(songs: ProjectSyncSong[]) {
-  return new Map(
-    songs.flatMap((song) => {
-      if (song.id == null) return [];
-      const sizeBytes = Number(song.sizeBytes || 0);
-      return sizeBytes > 0 ? [[String(song.id), sizeBytes] as const] : [];
-    }),
-  );
-}
-
-function getProjectSyncSizeBytes(assets: ProjectSyncAsset[], songs: ProjectSyncSong[]) {
-  const songSizeById = getSongSizeMap(songs);
-
-  return assets.reduce((total, asset) => {
-    const metadataSizeBytes = getMetadataSizeBytes(asset.metadata);
-    if (metadataSizeBytes > 0) return total + metadataSizeBytes;
-
-    if (asset.asset_type === "song") {
-      return total + (songSizeById.get(String(asset.asset_id || "")) ?? 0);
-    }
-
-    return total;
-  }, 0);
+function getPositiveSizeBytes(value: number | string | null | undefined) {
+  const sizeBytes = Number(value || 0);
+  return Number.isFinite(sizeBytes) && sizeBytes > 0 ? sizeBytes : null;
 }
 
 function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | null }) {
@@ -219,45 +182,27 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
       setProjectSyncSize((current) => ({ ...current, loading: true, error: false }));
 
       try {
-        const [foldersResponse, songsResponse] = await Promise.all([
-          fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, {
-            cache: "no-store",
-          }),
-          fetch(`/api/projects/${encodeURIComponent(projectId)}/assets?type=song`, {
-            cache: "no-store",
-          }),
-        ]);
+        const response = await fetch(
+          `/api/projects/${encodeURIComponent(projectId)}/sync-size`,
+          { cache: "no-store" },
+        );
+        const text = await response.text();
+        const data = text ? (JSON.parse(text) as ProjectSyncSizeResponse) : null;
 
-        const [foldersText, songsText] = await Promise.all([
-          foldersResponse.text(),
-          songsResponse.text(),
-        ]);
-        const foldersData = foldersText ? JSON.parse(foldersText) : null;
-        const songsData = songsText ? JSON.parse(songsText) : null;
-
-        if (!foldersResponse.ok) {
-          throw new Error(foldersData?.error || "Failed to load project folders");
-        }
-        if (!songsResponse.ok) {
-          throw new Error(songsData?.error || "Failed to load project songs");
+        if (!response.ok) {
+          throw new Error(
+            data && "error" in data && typeof data.error === "string"
+              ? data.error
+              : "Failed to load project sync size",
+          );
         }
 
-        const folderAssets = Array.isArray(foldersData?.assets)
-          ? (foldersData.assets as ProjectSyncAsset[])
-          : [];
-        const songAssets = Array.isArray(songsData?.assets)
-          ? (songsData.assets as ProjectSyncAsset[])
-          : [];
-        const songs = Array.isArray(songsData?.songs)
-          ? (songsData.songs as ProjectSyncSong[])
-          : [];
-        const assets = folderAssets.length > 0 ? folderAssets : songAssets;
-        const sizeBytes = getProjectSyncSizeBytes(assets, songs);
+        const sizeBytes = getPositiveSizeBytes(data?.sizeBytes);
 
         if (cancelled) return;
 
         setProjectSyncSize({
-          sizeBytes: sizeBytes > 0 ? sizeBytes : null,
+          sizeBytes,
           loading: false,
           error: false,
         });
