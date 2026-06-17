@@ -126,28 +126,6 @@
   color: var(--text-primary) !important;
 }
 
-.project-detail-page .project-tabs-row .fw-filter-rail-icon {
-  display: inline-flex !important;
-  width: 14px !important;
-  height: 14px !important;
-  flex: 0 0 14px !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: currentColor !important;
-  opacity: 0.72 !important;
-  transition: opacity 160ms ease !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-item:hover .fw-filter-rail-icon,
-.project-detail-page .project-tabs-row .fw-filter-rail-item.is-active .fw-filter-rail-icon {
-  opacity: 0.92 !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-icon svg {
-  display: block !important;
-  flex: 0 0 auto !important;
-}
-
 .project-detail-page .project-tabs-row .fw-filter-rail-label {
   min-width: 0 !important;
   flex: 1 1 auto !important;
