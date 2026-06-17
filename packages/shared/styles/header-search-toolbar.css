@@ -347,6 +347,16 @@ html[data-theme="light"] .fw-filter-done {
   color: var(--text-primary) !important;
 }
 
+@media (max-width: 1280px) {
+  .filmwave-header-account-label {
+    display: none !important;
+  }
+
+  .filmwave-header-account-trigger {
+    gap: 0 !important;
+  }
+}
+
 .filmwave-header-avatar {
   position: relative !important;
   overflow: visible !important;
