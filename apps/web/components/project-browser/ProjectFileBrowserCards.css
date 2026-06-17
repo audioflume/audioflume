@@ -58,7 +58,7 @@
   justify-content: stretch !important;
   column-gap: 12px !important;
   row-gap: 2px !important;
-  border: 1px solid var(--filmwave-side-filter-divider-color, var(--border-subtle)) !important;
+  border: 1px solid var(--border) !important;
   border-radius: 8px !important;
   background: var(--bg-secondary) !important;
   padding: 9px 14px !important;
@@ -71,7 +71,7 @@
 .project-file-browser .project-file-card:hover,
 .project-file-browser .project-file-card.is-active {
   border-color: var(--border) !important;
-  background: var(--bg-hover-strong) !important;
+  background: var(--bg-hover) !important;
   transform: none !important;
 }
 
@@ -192,25 +192,43 @@
 }
 
 .project-browser-list {
-  overflow: visible !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
+  overflow: hidden !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  background: var(--bg-secondary) !important;
   padding-top: 0 !important;
 }
 
 .project-browser-list-head {
-  display: none !important;
+  display: grid !important;
+  min-height: 34px !important;
+  align-items: center !important;
+  gap: 14px !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 0 14px !important;
+  color: var(--text-muted) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
 }
 
 .project-browser-list .project-browser-row {
   border: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
   border-radius: 0 !important;
+  background: transparent !important;
   padding: 0 14px !important;
+  transition: background 0.15s ease !important;
+}
+
+.project-browser-list .project-browser-row:last-child {
+  border-bottom: 0 !important;
 }
 
 .project-browser-list .project-browser-row:hover {
-  border-radius: 8px !important;
+  border-radius: 0 !important;
+  background: var(--bg-hover) !important;
 }
 
 .project-folder-action-wrap {
@@ -249,11 +267,20 @@
   justify-content: stretch !important;
   column-gap: 12px !important;
   row-gap: 2px !important;
-  border: 1px solid var(--filmwave-side-filter-divider-color, var(--border-subtle)) !important;
+  border: 1px solid var(--border) !important;
   border-radius: 8px !important;
   background: var(--bg-secondary) !important;
   padding: 9px 14px !important;
   text-align: left !important;
+  transform: none !important;
+  transition: background 0.15s ease, border-color 0.15s ease !important;
+}
+
+.project-file-browser.project-file-browser .project-folder-card:hover,
+.project-file-browser.project-file-browser .project-file-card:hover,
+.project-file-browser.project-file-browser .project-file-card.is-active {
+  border-color: var(--border) !important;
+  background: var(--bg-hover) !important;
   transform: none !important;
 }
 
