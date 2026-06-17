@@ -1,17 +1,9 @@
 .project-detail-page {
-  --project-detail-content-pad: 20px;
-  --project-detail-content-max-width: 1180px;
+  --project-detail-content-inset-left: var(--fw-music-content-inset-left, 28px);
+  --project-detail-content-inset-right: var(--fw-music-content-inset-right, 20px);
   --filmwave-side-filter-rail-width: 168px !important;
   --filmwave-side-filter-content-gap: 0px !important;
   display: block !important;
-}
-
-@media (min-width: 768px) {
-  .project-detail-page { --project-detail-content-pad: 32px; }
-}
-
-@media (min-width: 1280px) {
-  .project-detail-page { --project-detail-content-pad: 40px; }
 }
 
 .project-detail-page > .project-detail-shell {
@@ -114,10 +106,10 @@
   grid-column: 2 !important;
   box-sizing: border-box !important;
   min-width: 0 !important;
-  width: min(calc(100% - (var(--project-detail-content-pad) * 2)), var(--project-detail-content-max-width)) !important;
-  max-width: var(--project-detail-content-max-width) !important;
-  margin-left: var(--project-detail-content-pad) !important;
-  margin-right: auto !important;
+  width: auto !important;
+  max-width: none !important;
+  margin-left: var(--project-detail-content-inset-left) !important;
+  margin-right: var(--project-detail-content-inset-right) !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
