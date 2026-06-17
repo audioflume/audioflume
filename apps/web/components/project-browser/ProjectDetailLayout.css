@@ -209,6 +209,8 @@
 .project-detail-page .project-tab-panel > .fw-song-list {
   margin-left: 0 !important;
   margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .project-detail-page .project-tab-panel:has(> .project-file-empty-inline) {
