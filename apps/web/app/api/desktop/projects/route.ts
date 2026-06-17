@@ -26,6 +26,7 @@ type SongRow = Record<string, unknown> & {
   id?: string;
   updated_at?: string;
   created_at?: string;
+  size_bytes?: number | string | null;
 };
 
 const UUID_PATTERN =
@@ -107,6 +108,14 @@ function getFallbackAssetFilename(asset: ProjectAsset) {
   return sanitizeFilenamePart(rawFilename) || `${asset.asset_type}-${asset.id}.txt`;
 }
 
+function getSongSizeBytes(song: Song, songRow: SongRow | undefined) {
+  const normalizedSizeBytes = Number(song.sizeBytes || 0);
+  if (normalizedSizeBytes > 0) return normalizedSizeBytes;
+
+  const rowSizeBytes = Number(songRow?.size_bytes || 0);
+  return rowSizeBytes > 0 ? rowSizeBytes : undefined;
+}
+
 function buildDesktopFileTree({
   assets,
   folders,
@@ -149,6 +158,7 @@ function buildDesktopFileTree({
       if (!song) return;
 
       const filename = getSongFilename(song);
+      const sizeBytes = getSongSizeBytes(song, songRow);
 
       fileTree.push({
         id: `asset:${asset.id}`,
@@ -158,6 +168,7 @@ function buildDesktopFileTree({
         parentId: asset.folder_id == null ? null : `folder:${asset.folder_id}`,
         sortOrder: asset.position ?? 0,
         downloadUrl: song.audioUrl || song.playbackUrl,
+        sizeBytes,
         updatedAt:
           typeof songRow?.updated_at === "string" && songRow.updated_at
             ? songRow.updated_at
