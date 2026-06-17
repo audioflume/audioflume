@@ -1,6 +1,6 @@
 .project-detail-page .project-file-browser {
   position: relative !important;
-  padding: 0 0 32px !important;
+  padding: 10px 0 24px !important;
 }
 
 .project-detail-page .project-file-browser-top {
@@ -8,16 +8,16 @@
   top: auto !important;
   z-index: 3 !important;
   display: flex !important;
-  min-height: 34px !important;
+  min-height: 30px !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
   overflow: visible !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
-  border-bottom: 0 !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
   background: var(--bg-primary) !important;
-  padding: 0 !important;
+  padding: 0 0 8px !important;
 }
 
 .project-detail-page .project-file-browser-title-wrap {
@@ -28,7 +28,7 @@
   margin-top: 0 !important;
   flex-wrap: nowrap !important;
   overflow: visible !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
 }
 
 .project-breadcrumbs.project-path button,
@@ -41,6 +41,10 @@
 .project-breadcrumbs.project-path button:hover,
 .project-breadcrumbs.project-path button.is-drag-over {
   color: var(--text-primary) !important;
+}
+
+.project-breadcrumbs.project-path button.is-current {
+  font-weight: 600 !important;
 }
 
 .project-breadcrumbs.project-path button.is-drag-over {
@@ -59,17 +63,5 @@
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
-  padding-top: 10px !important;
-}
-
-.project-detail-page .project-detail-hero {
-  border-bottom: 0 !important;
-}
-
-.project-detail-page .project-detail-hero::after {
-  content: "";
-  display: block;
-  height: 1px;
-  margin-top: 28px;
-  background: var(--border);
+  padding-top: 14px !important;
 }
