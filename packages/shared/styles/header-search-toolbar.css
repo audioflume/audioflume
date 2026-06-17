@@ -298,15 +298,53 @@ html[data-theme="light"] .fw-filter-done {
   }
 }
 
-/* Header account: keep the profile thumbnail as the only visible trigger. */
+/* Match the non-music header search position/width to the music page header search. */
+.filmwave-header-actions > form {
+  position: fixed !important;
+  top: calc(var(--filmwave-header-height) / 2) !important;
+  right: auto !important;
+  left: 50% !important;
+  z-index: 142 !important;
+  display: inline-flex !important;
+  width: min(920px, calc(100vw - 520px)) !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: auto !important;
+}
+
+.filmwave-header-actions > form .filmwave-search-pill {
+  width: 100% !important;
+}
+
+@media (max-width: 1180px) {
+  .filmwave-header-actions > form {
+    width: min(720px, calc(100vw - 360px)) !important;
+  }
+}
+
+/* Header account: show the user name/chevron with text-only hover feedback. */
 .filmwave-header-account-label {
-  display: none !important;
+  display: inline-flex !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 6px 0 0 !important;
 }
 
 .filmwave-header-account-trigger {
-  gap: 0 !important;
+  gap: 8px !important;
   padding-right: 0 !important;
-  border-radius: 999px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.filmwave-header-account-trigger:hover,
+.filmwave-header-account-trigger.is-open,
+.filmwave-header-account-trigger:hover .filmwave-header-account-label,
+.filmwave-header-account-trigger.is-open .filmwave-header-account-label {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
 }
 
 .filmwave-header-avatar {
@@ -315,8 +353,7 @@ html[data-theme="light"] .fw-filter-done {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) !important;
   transition:
     transform 150ms ease,
-    box-shadow 150ms ease,
-    background-color 150ms ease !important;
+    box-shadow 150ms ease !important;
 }
 
 .filmwave-header-avatar img {
@@ -325,19 +362,13 @@ html[data-theme="light"] .fw-filter-done {
 
 .filmwave-header-account-trigger:hover .filmwave-header-avatar,
 .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.18),
-    0 0 0 4px rgba(255, 255, 255, 0.08),
-    0 0 18px rgba(255, 255, 255, 0.18) !important;
-  transform: scale(1.05) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) !important;
+  transform: none !important;
 }
 
 html.light .filmwave-header-account-trigger:hover .filmwave-header-avatar,
 html.light .filmwave-header-account-trigger.is-open .filmwave-header-avatar,
 html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header-avatar,
 html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.12),
-    0 0 0 4px rgba(0, 0, 0, 0.08),
-    0 0 18px rgba(0, 0, 0, 0.16) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
 }
