@@ -122,7 +122,7 @@
 .project-detail-page .project-detail-hero {
   position: relative !important;
   display: flex !important;
-  min-height: 78px !important;
+  min-height: 56px !important;
   align-items: stretch !important;
   border-bottom: 1px solid var(--border) !important;
   padding-top: 0 !important;
@@ -134,9 +134,9 @@
   flex-wrap: nowrap !important;
   align-items: center !important;
   width: 100% !important;
-  min-height: 78px !important;
+  min-height: 56px !important;
   gap: 16px !important;
-  transform: translateY(-6px) !important;
+  transform: none !important;
 }
 
 .project-detail-page .project-detail-title {
@@ -156,7 +156,7 @@
   line-height: 1.15 !important;
 }
 
-.project-detail-page .project-file-browser { padding: 12px 0 32px !important; }
+.project-detail-page .project-file-browser { padding: 20px 0 32px !important; }
 
 .project-detail-page .project-tab-panel > .fw-song-list {
   margin-left: 0 !important;
