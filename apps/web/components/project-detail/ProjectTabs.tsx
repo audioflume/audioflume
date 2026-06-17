@@ -13,6 +13,7 @@ type Props = {
   activeTab: ProjectTab;
   tabs: readonly ProjectTabItem[];
   onTabChange: (tab: ProjectTab) => void;
+  syncSizeBytes?: number | null;
 };
 
 type LocalReadinessProjectSummary = {
@@ -70,7 +71,11 @@ function getProjectSizeBytes(project: LocalReadinessProjectSummary | null) {
   return Number.isFinite(project?.sizeBytes) ? Number(project?.sizeBytes) : null;
 }
 
-function ProjectTabUtilityStatus() {
+function getPositiveSizeBytes(value: number | null | undefined) {
+  return Number.isFinite(value) && Number(value) > 0 ? Number(value) : null;
+}
+
+function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | null }) {
   const params = useParams();
   const projectId = String(params.projectId || "");
   const [readiness, setReadiness] = useState<LocalReadinessState>({
@@ -144,11 +149,17 @@ function ProjectTabUtilityStatus() {
   }, [projectId]);
 
   const { countLabel, meterProgress, sizeLabel } = useMemo(() => {
+    const fallbackSizeBytes = getPositiveSizeBytes(syncSizeBytes);
+    const readinessSizeBytes = getPositiveSizeBytes(readiness.sizeBytes);
+    const resolvedSizeBytes = readinessSizeBytes ?? fallbackSizeBytes;
+
     if (readiness.loading) {
       return {
         countLabel: "Checking local files",
         meterProgress: 0,
-        sizeLabel: "Calculating sync size",
+        sizeLabel: fallbackSizeBytes
+          ? formatSyncSize(fallbackSizeBytes)
+          : "Calculating sync size",
       };
     }
 
@@ -156,7 +167,9 @@ function ProjectTabUtilityStatus() {
       return {
         countLabel: "Readiness unavailable",
         meterProgress: 0,
-        sizeLabel: "Open desktop app to sync",
+        sizeLabel: resolvedSizeBytes
+          ? formatSyncSize(resolvedSizeBytes)
+          : "Open desktop app to sync",
       };
     }
 
@@ -166,9 +179,9 @@ function ProjectTabUtilityStatus() {
     return {
       countLabel: `${readyFiles} / ${totalFiles} files ready`,
       meterProgress: totalFiles > 0 ? Math.round((readyFiles / totalFiles) * 100) : 0,
-      sizeLabel: formatSyncSize(readiness.sizeBytes),
+      sizeLabel: formatSyncSize(resolvedSizeBytes),
     };
-  }, [readiness]);
+  }, [readiness, syncSizeBytes]);
 
   return (
     <div
@@ -194,7 +207,12 @@ function ProjectTabUtilityStatus() {
   );
 }
 
-export default function ProjectTabs({ activeTab, tabs, onTabChange }: Props) {
+export default function ProjectTabs({
+  activeTab,
+  tabs,
+  onTabChange,
+  syncSizeBytes,
+}: Props) {
   return (
     <nav className="project-tabs-row fw-filter-rail" aria-label="Project sections">
       {tabs.map((tab) => {
@@ -216,7 +234,7 @@ export default function ProjectTabs({ activeTab, tabs, onTabChange }: Props) {
         );
       })}
 
-      <ProjectTabUtilityStatus />
+      <ProjectTabUtilityStatus syncSizeBytes={syncSizeBytes} />
     </nav>
   );
 }
