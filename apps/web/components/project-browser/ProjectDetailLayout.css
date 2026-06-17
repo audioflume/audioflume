@@ -2,7 +2,7 @@
   --project-detail-content-pad: 20px;
   --project-detail-content-max-width: 1180px;
   --filmwave-side-filter-rail-width: 190px;
-  --filmwave-side-filter-content-gap: 14px;
+  --filmwave-side-filter-content-gap: 0px;
   display: block !important;
 }
 
@@ -22,7 +22,7 @@
   display: grid !important;
   min-height: calc(100vh - 56px) !important;
   grid-template-columns: var(--filmwave-side-filter-rail-width, 190px) minmax(0, 1fr) !important;
-  column-gap: var(--filmwave-side-filter-content-gap, 14px) !important;
+  column-gap: var(--filmwave-side-filter-content-gap, 0px) !important;
   align-items: start !important;
   padding: 0 !important;
 }
