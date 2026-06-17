@@ -1,5 +1,5 @@
 .project-detail-page {
-  --project-detail-content-inset-left: var(--fw-music-content-inset-left, 28px);
+  --project-detail-content-inset-left: 12px;
   --project-detail-content-inset-right: var(--fw-music-content-inset-right, 20px);
   --filmwave-side-filter-rail-width: 168px !important;
   --filmwave-side-filter-content-gap: 0px !important;
