@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs/server";
-import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -16,8 +15,6 @@ type ProjectAssetSizeRow = {
 
 type SongSizeRow = {
   id: string | number;
-  audio_url: string | null;
-  playback_url: string | null;
   size_bytes: number | string | null;
 };
 
@@ -39,106 +36,13 @@ async function verifyProject(projectId: string, userId: string) {
   return project;
 }
 
+function getPositiveSizeBytes(value: unknown) {
+  const sizeBytes = Number(value || 0);
+  return Number.isFinite(sizeBytes) && sizeBytes > 0 ? sizeBytes : null;
+}
+
 function getMetadataSizeBytes(metadata: ProjectAssetSizeRow["metadata"]) {
-  const sizeBytes = Number(metadata?.sizeBytes || 0);
-  return Number.isFinite(sizeBytes) && sizeBytes > 0 ? sizeBytes : null;
-}
-
-function getSongSizeBytes(song: SongSizeRow | null | undefined) {
-  const sizeBytes = Number(song?.size_bytes || 0);
-  return Number.isFinite(sizeBytes) && sizeBytes > 0 ? sizeBytes : null;
-}
-
-function getSongUrl(song: SongSizeRow | null | undefined) {
-  const audioUrl = typeof song?.audio_url === "string" ? song.audio_url.trim() : "";
-  const playbackUrl =
-    typeof song?.playback_url === "string" ? song.playback_url.trim() : "";
-  return audioUrl || playbackUrl || null;
-}
-
-function getR2KeyFromUrl(url: string) {
-  try {
-    const pathname = new URL(url).pathname;
-    return decodeURIComponent(pathname.replace(/^\/+/, ""));
-  } catch {
-    return null;
-  }
-}
-
-function createR2Client() {
-  const accountId = process.env.CLOUDFLARE_R2_ACCOUNT_ID;
-  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
-
-  if (!accountId || !accessKeyId || !secretAccessKey) return null;
-
-  return new S3Client({
-    region: "auto",
-    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  });
-}
-
-async function getObjectSizeBytes(song: SongSizeRow) {
-  const bucketName = process.env.CLOUDFLARE_R2_BUCKET_NAME;
-  const r2Client = createR2Client();
-  const url = getSongUrl(song);
-
-  if (!bucketName || !r2Client || !url) return null;
-
-  const key = getR2KeyFromUrl(url);
-  if (!key) return null;
-
-  try {
-    const head = await r2Client.send(
-      new HeadObjectCommand({
-        Bucket: bucketName,
-        Key: key,
-      }),
-    );
-
-    const sizeBytes = Number(head.ContentLength || 0);
-    return Number.isFinite(sizeBytes) && sizeBytes > 0 ? sizeBytes : null;
-  } catch (error) {
-    console.warn("Failed to read R2 object size", { songId: song.id, error });
-    return null;
-  }
-}
-
-async function updateSongSizeBytes(songId: string | number, sizeBytes: number) {
-  const { error } = await supabaseServer
-    .from("songs")
-    .update({ size_bytes: sizeBytes })
-    .eq("id", songId);
-
-  if (error) {
-    console.warn("Failed to update song size_bytes", { songId, error });
-  }
-}
-
-async function updateAssetMetadataSizeBytes(
-  asset: ProjectAssetSizeRow,
-  sizeBytes: number,
-) {
-  const metadata = {
-    ...(asset.metadata ?? {}),
-    sizeBytes,
-  };
-
-  const { error } = await supabaseServer
-    .from("project_assets")
-    .update({ metadata })
-    .eq("id", asset.id);
-
-  if (error) {
-    console.warn("Failed to update project asset sizeBytes", {
-      assetId: asset.id,
-      error,
-    });
-  }
+  return getPositiveSizeBytes(metadata?.sizeBytes);
 }
 
 export async function GET(_req: Request, context: RouteContext) {
@@ -175,16 +79,20 @@ export async function GET(_req: Request, context: RouteContext) {
     const { data: songRows, error: songsError } = songIds.length
       ? await supabaseServer
           .from("songs")
-          .select("id, audio_url, playback_url, size_bytes")
+          .select("id, size_bytes")
           .in("id", songIds)
       : { data: [], error: null };
 
-    if (songsError) throw songsError;
+    if (songsError) {
+      console.warn("Project sync size song-size lookup failed", songsError);
+    }
 
-    const songsById = new Map(
-      ((songRows ?? []) as SongSizeRow[]).map((song) => [String(song.id), song]),
+    const songSizeById = new Map(
+      ((songsError ? [] : songRows ?? []) as SongSizeRow[]).flatMap((song) => {
+        const sizeBytes = getPositiveSizeBytes(song.size_bytes);
+        return sizeBytes ? [[String(song.id), sizeBytes] as const] : [];
+      }),
     );
-    const resolvedSongSizes = new Map<string, number>();
 
     let sizeBytes = 0;
     let missingSizeCount = 0;
@@ -197,38 +105,16 @@ export async function GET(_req: Request, context: RouteContext) {
         continue;
       }
 
-      if (asset.asset_type !== "song" || asset.asset_id == null) {
-        missingSizeCount += 1;
-        continue;
-      }
-
-      const songId = String(asset.asset_id);
-      const cachedSongSizeBytes = resolvedSongSizes.get(songId);
-
-      if (cachedSongSizeBytes) {
-        sizeBytes += cachedSongSizeBytes;
-        void updateAssetMetadataSizeBytes(asset, cachedSongSizeBytes);
-        continue;
-      }
-
-      const song = songsById.get(songId);
-      let songSizeBytes = getSongSizeBytes(song);
-
-      if (!songSizeBytes && song) {
-        songSizeBytes = await getObjectSizeBytes(song);
+      if (asset.asset_type === "song" && asset.asset_id != null) {
+        const songSizeBytes = songSizeById.get(String(asset.asset_id)) ?? null;
 
         if (songSizeBytes) {
-          void updateSongSizeBytes(song.id, songSizeBytes);
+          sizeBytes += songSizeBytes;
+          continue;
         }
       }
 
-      if (songSizeBytes) {
-        resolvedSongSizes.set(songId, songSizeBytes);
-        sizeBytes += songSizeBytes;
-        void updateAssetMetadataSizeBytes(asset, songSizeBytes);
-      } else {
-        missingSizeCount += 1;
-      }
+      missingSizeCount += 1;
     }
 
     return NextResponse.json({
