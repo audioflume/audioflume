@@ -32,6 +32,24 @@ type LocalReadinessState = {
   error: boolean;
 };
 
+type ProjectSyncSizeState = {
+  sizeBytes: number | null;
+  loading: boolean;
+  error: boolean;
+};
+
+type ProjectSyncAsset = {
+  id?: number | string;
+  asset_type?: string | null;
+  asset_id?: string | number | null;
+  metadata?: Record<string, unknown> | null;
+};
+
+type ProjectSyncSong = {
+  id?: string | number;
+  sizeBytes?: number | string | null;
+};
+
 function ProjectTabChevronIcon() {
   return (
     <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
@@ -75,12 +93,47 @@ function getPositiveSizeBytes(value: number | null | undefined) {
   return Number.isFinite(value) && Number(value) > 0 ? Number(value) : null;
 }
 
+function getMetadataSizeBytes(metadata: ProjectSyncAsset["metadata"]) {
+  const sizeBytes = Number(metadata?.sizeBytes || 0);
+  return sizeBytes > 0 ? sizeBytes : 0;
+}
+
+function getSongSizeMap(songs: ProjectSyncSong[]) {
+  return new Map(
+    songs.flatMap((song) => {
+      if (song.id == null) return [];
+      const sizeBytes = Number(song.sizeBytes || 0);
+      return sizeBytes > 0 ? [[String(song.id), sizeBytes] as const] : [];
+    }),
+  );
+}
+
+function getProjectSyncSizeBytes(assets: ProjectSyncAsset[], songs: ProjectSyncSong[]) {
+  const songSizeById = getSongSizeMap(songs);
+
+  return assets.reduce((total, asset) => {
+    const metadataSizeBytes = getMetadataSizeBytes(asset.metadata);
+    if (metadataSizeBytes > 0) return total + metadataSizeBytes;
+
+    if (asset.asset_type === "song") {
+      return total + (songSizeById.get(String(asset.asset_id || "")) ?? 0);
+    }
+
+    return total;
+  }, 0);
+}
+
 function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | null }) {
   const params = useParams();
   const projectId = String(params.projectId || "");
   const [readiness, setReadiness] = useState<LocalReadinessState>({
     totalFiles: null,
     readyFiles: null,
+    sizeBytes: null,
+    loading: true,
+    error: false,
+  });
+  const [projectSyncSize, setProjectSyncSize] = useState<ProjectSyncSizeState>({
     sizeBytes: null,
     loading: true,
     error: false,
@@ -148,8 +201,88 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
     };
   }, [projectId]);
 
+  useEffect(() => {
+    const providedSizeBytes = getPositiveSizeBytes(syncSizeBytes);
+
+    if (providedSizeBytes || !projectId) {
+      setProjectSyncSize({
+        sizeBytes: providedSizeBytes,
+        loading: false,
+        error: false,
+      });
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadProjectSyncSize() {
+      setProjectSyncSize((current) => ({ ...current, loading: true, error: false }));
+
+      try {
+        const [foldersResponse, songsResponse] = await Promise.all([
+          fetch(`/api/projects/${encodeURIComponent(projectId)}/folders`, {
+            cache: "no-store",
+          }),
+          fetch(`/api/projects/${encodeURIComponent(projectId)}/assets?type=song`, {
+            cache: "no-store",
+          }),
+        ]);
+
+        const [foldersText, songsText] = await Promise.all([
+          foldersResponse.text(),
+          songsResponse.text(),
+        ]);
+        const foldersData = foldersText ? JSON.parse(foldersText) : null;
+        const songsData = songsText ? JSON.parse(songsText) : null;
+
+        if (!foldersResponse.ok) {
+          throw new Error(foldersData?.error || "Failed to load project folders");
+        }
+        if (!songsResponse.ok) {
+          throw new Error(songsData?.error || "Failed to load project songs");
+        }
+
+        const folderAssets = Array.isArray(foldersData?.assets)
+          ? (foldersData.assets as ProjectSyncAsset[])
+          : [];
+        const songAssets = Array.isArray(songsData?.assets)
+          ? (songsData.assets as ProjectSyncAsset[])
+          : [];
+        const songs = Array.isArray(songsData?.songs)
+          ? (songsData.songs as ProjectSyncSong[])
+          : [];
+        const assets = folderAssets.length > 0 ? folderAssets : songAssets;
+        const sizeBytes = getProjectSyncSizeBytes(assets, songs);
+
+        if (cancelled) return;
+
+        setProjectSyncSize({
+          sizeBytes: sizeBytes > 0 ? sizeBytes : null,
+          loading: false,
+          error: false,
+        });
+      } catch {
+        if (cancelled) return;
+
+        setProjectSyncSize({
+          sizeBytes: null,
+          loading: false,
+          error: true,
+        });
+      }
+    }
+
+    void loadProjectSyncSize();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId, syncSizeBytes]);
+
   const { countLabel, meterProgress, sizeLabel } = useMemo(() => {
-    const fallbackSizeBytes = getPositiveSizeBytes(syncSizeBytes);
+    const propSizeBytes = getPositiveSizeBytes(syncSizeBytes);
+    const pageSizeBytes = getPositiveSizeBytes(projectSyncSize.sizeBytes);
+    const fallbackSizeBytes = propSizeBytes ?? pageSizeBytes;
     const readinessSizeBytes = getPositiveSizeBytes(readiness.sizeBytes);
     const resolvedSizeBytes = readinessSizeBytes ?? fallbackSizeBytes;
 
@@ -157,9 +290,11 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
       return {
         countLabel: "Checking local files",
         meterProgress: 0,
-        sizeLabel: fallbackSizeBytes
-          ? formatSyncSize(fallbackSizeBytes)
-          : "Calculating sync size",
+        sizeLabel: resolvedSizeBytes
+          ? formatSyncSize(resolvedSizeBytes)
+          : projectSyncSize.loading
+            ? "Calculating sync size"
+            : "Sync size pending",
       };
     }
 
@@ -169,7 +304,11 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
         meterProgress: 0,
         sizeLabel: resolvedSizeBytes
           ? formatSyncSize(resolvedSizeBytes)
-          : "Open desktop app to sync",
+          : projectSyncSize.loading
+            ? "Calculating sync size"
+            : projectSyncSize.error
+              ? "Sync size unavailable"
+              : "Sync size pending",
       };
     }
 
@@ -179,9 +318,13 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
     return {
       countLabel: `${readyFiles} / ${totalFiles} files ready`,
       meterProgress: totalFiles > 0 ? Math.round((readyFiles / totalFiles) * 100) : 0,
-      sizeLabel: formatSyncSize(resolvedSizeBytes),
+      sizeLabel: resolvedSizeBytes
+        ? formatSyncSize(resolvedSizeBytes)
+        : projectSyncSize.loading
+          ? "Calculating sync size"
+          : "Sync size pending",
     };
-  }, [readiness, syncSizeBytes]);
+  }, [projectSyncSize, readiness, syncSizeBytes]);
 
   return (
     <div
