@@ -99,8 +99,11 @@ export default function ProjectFolderCard({
       <span className="project-folder-card-icon-wrap">
         <FolderGlyph />
       </span>
-      <span className="project-folder-card-name">{folder.name}</span>
-      <span className="project-folder-card-meta">{formatFileCount(recursiveFileCount)}</span>
+      <span className="project-folder-card-copy">
+        <span className="project-folder-card-name">{folder.name}</span>
+        <span className="project-folder-card-dash">—</span>
+        <span className="project-folder-card-meta">{lastModified}</span>
+      </span>
     </div>
   );
 }
