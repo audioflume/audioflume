@@ -307,3 +307,9 @@
 .light .project-file-browser.project-file-browser .project-file-card {
   border-color: var(--border) !important;
 }
+
+.project-file-browser .project-folder-card .project-folder-glyph,
+.project-file-browser.project-file-browser .project-folder-card .project-folder-glyph {
+  width: 54px !important;
+  height: 47px !important;
+}
