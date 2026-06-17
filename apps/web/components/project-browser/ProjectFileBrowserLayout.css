@@ -1,6 +1,6 @@
 .project-detail-page .project-file-browser {
   position: relative !important;
-  padding: 0 0 28px !important;
+  padding: 4px 0 28px !important;
 }
 
 .project-detail-page .project-file-browser-top {
@@ -8,7 +8,7 @@
   top: auto !important;
   z-index: 3 !important;
   display: flex !important;
-  min-height: 28px !important;
+  min-height: 22px !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
@@ -59,7 +59,7 @@
 .project-detail-page .project-file-browser-section {
   position: relative !important;
   z-index: 1 !important;
-  padding-top: 4px !important;
+  padding-top: 0 !important;
 }
 
 .project-detail-page .project-detail-hero {
@@ -70,6 +70,6 @@
   content: "";
   display: block;
   height: 1px;
-  margin-top: 12px;
+  margin-top: 6px;
   background: var(--border);
 }
