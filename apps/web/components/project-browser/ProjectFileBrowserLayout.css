@@ -63,11 +63,25 @@
 }
 
 .project-detail-page .project-detail-hero {
-  border-bottom: 1px solid var(--border) !important;
+  position: relative !important;
+  border-bottom: 0 !important;
 }
 
 .project-detail-page .project-detail-hero::after {
-  content: none !important;
+  content: "" !important;
+  position: absolute !important;
+  right: 32px !important;
+  bottom: 0 !important;
+  left: 32px !important;
+  border-bottom: 1px solid var(--border) !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 520px) {
+  .project-detail-page .project-detail-hero::after {
+    right: 18px !important;
+    left: 18px !important;
+  }
 }
 
 @media (min-width: 521px) {
