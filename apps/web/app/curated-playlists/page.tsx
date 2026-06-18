@@ -6,6 +6,8 @@ import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import PlaylistTabsRail from "../playlists/PlaylistTabsRail";
+import "../playlists/playlists-tabs-rail.css";
 
 type GroupMeta = {
   name: string;
@@ -282,6 +284,7 @@ export default function CuratedPlaylistsPage() {
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <PlaylistTabsRail />
       <section className="ml-[var(--sidebar-width)] min-h-screen pt-14 transition-[margin-left] duration-200">
         <div className="px-8 pt-6">
           <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
