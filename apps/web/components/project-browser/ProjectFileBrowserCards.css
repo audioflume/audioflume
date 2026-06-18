@@ -308,6 +308,13 @@
   border-color: var(--border) !important;
 }
 
+html:not(.light):not([data-theme="light"]) .project-file-browser .project-folder-card,
+html:not(.light):not([data-theme="light"]) .project-file-browser .project-file-card,
+html:not(.light):not([data-theme="light"]) .project-file-browser.project-file-browser .project-folder-card,
+html:not(.light):not([data-theme="light"]) .project-file-browser.project-file-browser .project-file-card {
+  border-color: var(--filmwave-header-border-color) !important;
+}
+
 .project-file-browser .project-folder-card .project-folder-glyph,
 .project-file-browser.project-file-browser .project-folder-card .project-folder-glyph {
   width: 54px !important;
