@@ -9,11 +9,11 @@
 }
 
 .project-file-browser {
-  --project-browser-card-border-color: var(--border);
+  --project-browser-card-border-color: #292929;
 }
 
-:where(html.light, html[data-theme="light"]) .project-file-browser {
-  --project-browser-card-border-color: var(--filmwave-header-border-color);
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser {
+  --project-browser-card-border-color: #d9d9d9;
 }
 
 .project-browser-grid:has(> div .project-folder-card)::before,
@@ -264,4 +264,9 @@
   text-align: left !important;
   transform: none !important;
   transition: background 0.15s ease, border-color 0.15s ease !important;
+}
+
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser.project-file-browser .project-browser-grid .project-folder-card,
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser.project-file-browser .project-browser-grid .project-file-card {
+  border: 1px solid #d9d9d9 !important;
 }
