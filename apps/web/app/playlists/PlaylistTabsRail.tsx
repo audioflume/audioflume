@@ -8,7 +8,7 @@ const PLAYLIST_TABS = [
   {
     label: "Curated Collections",
     value: "curated-collections",
-    href: "/playlists?tab=curated-collections",
+    href: "/curated-playlists",
   },
   {
     label: "Community Playlists",
@@ -31,18 +31,19 @@ function PlaylistTabChevronIcon() {
 export default function PlaylistTabsRail() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const activeTab = searchParams.get("tab") || "my-playlists";
+  const activeTab = pathname?.startsWith("/curated-playlists")
+    ? "curated-collections"
+    : searchParams.get("tab") || "my-playlists";
 
   return (
     <nav className="playlists-tabs-row fw-filter-rail" aria-label="Playlist sections">
       {PLAYLIST_TABS.map((tab) => {
         const isActive = activeTab === tab.value;
-        const href = tab.value === "my-playlists" ? pathname || tab.href : tab.href;
 
         return (
           <Link
             key={tab.value}
-            href={href}
+            href={tab.href}
             className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
             aria-current={isActive ? "page" : undefined}
           >
