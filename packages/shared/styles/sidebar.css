@@ -29,7 +29,7 @@
   --filmwave-sidebar-label-gap: 2px;
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
-  --filmwave-sidebar-float-inset: 12px;
+  --filmwave-sidebar-float-inset: 0px;
   --filmwave-sidebar-content-gap: 20px;
 }
 
@@ -62,8 +62,9 @@
   width: var(--filmwave-sidebar-panel-expanded-width);
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
+  border: 0;
+  border-right: 1px solid var(--border-subtle);
+  border-radius: 0;
   background: var(--filmwave-chrome-surface, var(--bg-tertiary));
   background-image: none;
   box-shadow: none;
