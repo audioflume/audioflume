@@ -309,7 +309,7 @@ export default function CuratedPlaylistsPage() {
           inset: -36px 0 0 0;
           background-size: cover;
           background-position: center 38%;
-          opacity: 0.42;
+          opacity: 0.68;
           filter: blur(1px);
           transform: scale(1.04);
           transform-origin: center top;
