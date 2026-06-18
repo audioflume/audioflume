@@ -4,7 +4,7 @@
 
 .playlists-tabs-row {
   position: fixed !important;
-  top: calc(var(--filmwave-header-height, 56px) + var(--filmwave-sidebar-float-inset, 12px)) !important;
+  top: var(--filmwave-header-height, 56px) !important;
   left: calc(var(--sidebar-width) + 32px) !important;
   right: 32px !important;
   z-index: 59 !important;
@@ -14,7 +14,7 @@
   width: auto !important;
   max-width: none !important;
   height: auto !important;
-  min-height: 38px !important;
+  min-height: 34px !important;
   margin: 0 !important;
   gap: 8px !important;
   overflow-x: auto !important;
@@ -22,10 +22,16 @@
   border: 0 !important;
   border-bottom: 1px solid var(--border) !important;
   border-radius: 0 !important;
-  background: var(--bg-primary) !important;
-  padding: 0 0 12px !important;
+  background: rgba(12, 12, 12, 0.74) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(135%) !important;
+  backdrop-filter: blur(18px) saturate(135%) !important;
+  padding: 12px 0 !important;
   scrollbar-width: none !important;
   transition: left 0.2s ease !important;
+}
+
+:where(html.light, html[data-theme="light"]) .playlists-tabs-row {
+  background: rgba(255, 255, 255, 0.74) !important;
 }
 
 .playlists-tabs-row::-webkit-scrollbar {
