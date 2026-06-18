@@ -9,7 +9,7 @@
 .project-detail-page > .project-detail-shell {
   display: grid !important;
   min-height: calc(100vh - 56px) !important;
-  grid-template-columns: 168px minmax(0, 1fr) !important;
+  grid-template-columns: calc(var(--filmwave-side-filter-rail-width) + 1px) minmax(0, 1fr) !important;
   column-gap: 0 !important;
   align-items: start !important;
   padding: 0 !important;
@@ -23,8 +23,8 @@
   z-index: 59 !important;
   display: flex !important;
   flex-direction: column !important;
-  width: 168px !important;
-  max-width: 168px !important;
+  width: calc(var(--filmwave-side-filter-rail-width) + 1px) !important;
+  max-width: calc(var(--filmwave-side-filter-rail-width) + 1px) !important;
   height: calc(100dvh - var(--filmwave-header-height, 56px) - var(--filmwave-sidebar-bottom-offset, var(--filmwave-sidebar-float-inset, 12px)) - var(--filmwave-sidebar-float-inset, 12px)) !important;
   min-height: 0 !important;
   margin: 0 !important;
@@ -98,127 +98,4 @@
   align-items: center !important;
   justify-content: flex-start !important;
   gap: 8px !important;
-  border: 0 !important;
-  border-radius: 11px !important;
-  background: transparent !important;
-  color: var(--text-secondary) !important;
-  padding: 0 8px 0 12px !important;
-  font-family: inherit !important;
-  font-size: 12.5px !important;
-  font-weight: 400 !important;
-  text-align: left !important;
-  transition: background-color 160ms ease, color 160ms ease !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-item:hover {
-  background: var(--bg-hover) !important;
-  color: var(--text-primary) !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-item.is-active {
-  background: transparent !important;
-  color: var(--text-primary) !important;
-  font-weight: 400 !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-item.is-active:hover {
-  background: var(--bg-hover) !important;
-  color: var(--text-primary) !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-label {
-  min-width: 0 !important;
-  flex: 1 1 auto !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-chevron {
-  display: inline-flex !important;
-  flex-shrink: 0 !important;
-  color: var(--text-muted) !important;
-  opacity: 0.4 !important;
-  transition: opacity 160ms ease, color 160ms ease !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-item:hover .fw-filter-rail-chevron {
-  opacity: 0.65 !important;
-}
-
-.project-detail-page .project-tabs-row .fw-filter-rail-chevron svg {
-  display: block !important;
-  width: 11px !important;
-  height: 11px !important;
-}
-
-.project-detail-page .project-detail-hero,
-.project-detail-page .project-sort-row,
-.project-detail-page .project-tab-panel,
-.project-detail-page .project-footer-wrap {
-  grid-column: 2 !important;
-  box-sizing: border-box !important;
-  min-width: 0 !important;
-  width: auto !important;
-  max-width: none !important;
-  margin-left: var(--project-detail-content-inset-left) !important;
-  margin-right: var(--project-detail-content-inset-right) !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-.project-detail-page .project-detail-hero {
-  position: relative !important;
-  display: flex !important;
-  min-height: 56px !important;
-  align-items: stretch !important;
-  border-bottom: 1px solid var(--border) !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-.project-detail-page .project-detail-header-row {
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  width: 100% !important;
-  min-height: 56px !important;
-  gap: 16px !important;
-  transform: none !important;
-}
-
-.project-detail-page .project-detail-title {
-  display: inline-flex !important;
-  flex: 0 0 auto !important;
-  align-items: center !important;
-  min-height: 28px !important;
-  line-height: 1.15 !important;
-}
-
-.project-detail-page .project-detail-meta {
-  display: flex !important;
-  min-height: 18px !important;
-  margin-left: auto !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  line-height: 1.15 !important;
-}
-
-.project-detail-page .project-file-browser { padding: 20px 0 32px !important; }
-
-.project-detail-page .project-tab-panel > .fw-song-list {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-.project-detail-page .project-tab-panel:has(> .project-file-empty-inline) {
-  padding-top: 14px !important;
-}
-
-@media (max-width: 520px) {
-  .project-detail-page .project-tab-utility {
-    display: none !important;
-  }
 }
