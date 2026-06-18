@@ -63,14 +63,11 @@
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  border-right: 1px solid var(--filmwave-header-border-color);
+  border-right: 1px solid var(--border-subtle);
   border-radius: 0;
   background: var(--bg-primary);
-  background: color-mix(in srgb, var(--bg-primary) 84%, transparent);
   background-image: none;
   box-shadow: none;
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
   transition: width 200ms ease;
 }
 
@@ -141,7 +138,6 @@ body.sidebar-collapsed .desktop-app-sidebar {
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
-  background: transparent;
   padding: var(--filmwave-sidebar-y-padding-top)
     var(--filmwave-sidebar-x-padding) var(--filmwave-sidebar-y-padding-bottom);
 }
@@ -263,142 +259,252 @@ body.sidebar-collapsed .desktop-sidebar-heading-label {
 body.sidebar-collapsed .desktop-sidebar-link > a {
   position: absolute;
   inset: 0;
-  display: flex;
+  display: block !important;
   width: 100%;
   height: 100%;
-  align-items: center;
-  color: inherit;
-  padding: 0;
-  text-decoration: none;
+  min-width: 0;
+  padding: 0 !important;
 }
 
-.desktop-sidebar-icon {
+.desktop-sidebar-link:hover,
+.desktop-sidebar-link.is-active {
+  background-color: var(--bg-hover-strong);
+  color: var(--text-primary);
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link:hover,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link.is-active,
+body.sidebar-collapsed .desktop-sidebar-link:hover,
+body.sidebar-collapsed .desktop-sidebar-link.is-active {
+  background-color: var(--bg-hover-strong) !important;
+}
+
+.desktop-sidebar-link-icon,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-icon,
+body.sidebar-collapsed .desktop-sidebar-link-icon {
   position: absolute;
+  top: 0;
   left: var(--filmwave-sidebar-icon-slot-left);
   display: flex;
   width: var(--filmwave-sidebar-icon-slot-width);
-  height: 100%;
+  min-width: var(--filmwave-sidebar-icon-slot-width);
+  height: var(--filmwave-sidebar-row-height);
   align-items: center;
   justify-content: center;
   color: var(--filmwave-sidebar-icon-color);
+  opacity: 1;
+  pointer-events: none;
   transition: color 150ms ease;
 }
 
-.desktop-sidebar-icon svg {
-  display: block;
-  width: var(--filmwave-sidebar-icon-size);
-  height: var(--filmwave-sidebar-icon-size);
-  flex-shrink: 0;
+.desktop-sidebar-link:hover .desktop-sidebar-link-icon,
+.desktop-sidebar-link.is-active .desktop-sidebar-link-icon {
+  color: var(--filmwave-sidebar-icon-color-active);
 }
 
-.desktop-sidebar-label {
+/* Icon clarity pass — preserve each icon's original SVG size/geometry.
+   Opacity is forced to 1 so inactive icons render as solid grey rather than soft
+   transparent grey. */
+.desktop-sidebar-link-icon svg,
+.desktop-sidebar-link-icon svg *,
+.desktop-sidebar-heading-icon svg,
+.desktop-sidebar-heading-icon svg *,
+.desktop-sidebar-add-button svg,
+.desktop-sidebar-add-button svg * {
+  opacity: 1 !important;
+  fill-opacity: 1 !important;
+  stroke-opacity: 1 !important;
+}
+
+.filmwave-player-controls svg *,
+.filmwave-icon-button svg *,
+.filmwave-song-action-button svg *,
+.desktop-song-action-button svg * {
+  stroke-width: 2.4;
+}
+
+.filmwave-more-icon *,
+.filmwave-icon-button .filmwave-more-icon *,
+.filmwave-song-action-button .filmwave-more-icon *,
+.desktop-song-action-button .filmwave-more-icon * {
+  stroke-width: 3.7 !important;
+}
+
+.desktop-sidebar-link-label,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label,
+body.sidebar-collapsed .desktop-sidebar-link-label {
   position: absolute;
+  top: 50%;
   left: calc(
-    var(--filmwave-sidebar-icon-slot-left) +
-      var(--filmwave-sidebar-icon-slot-width) +
+    var(--filmwave-sidebar-icon-slot-left) + var(--filmwave-sidebar-icon-slot-width) +
       var(--filmwave-sidebar-label-gap)
   );
+  right: 8px;
   display: block;
+  width: auto;
+  min-width: 0;
   overflow: hidden;
-  width: var(--filmwave-sidebar-label-width);
-  color: inherit;
+  margin-left: 0;
+  padding-left: 0;
   opacity: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transform: translateY(-50%);
   transition: opacity 150ms ease;
 }
 
-.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-label,
-body.sidebar-collapsed .desktop-sidebar-label {
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label,
+body.sidebar-collapsed .desktop-sidebar-link-label {
   pointer-events: none;
   opacity: 0;
 }
 
-.desktop-sidebar-link:hover,
-.desktop-sidebar-link.is-active,
-.desktop-sidebar-link[data-active="true"] {
-  background: var(--filmwave-square-icon-hover-bg, var(--bg-hover-strong));
-  color: var(--text-primary);
-}
-
-.desktop-sidebar-link:hover .desktop-sidebar-icon,
-.desktop-sidebar-link.is-active .desktop-sidebar-icon,
-.desktop-sidebar-link[data-active="true"] .desktop-sidebar-icon {
-  color: var(--filmwave-sidebar-icon-color-active);
-}
-
-.desktop-sidebar-divider {
-  height: 1px;
-  margin: 8px 0;
-  background: var(--border-subtle);
-}
-
-.desktop-sidebar-footer {
-  margin-top: auto;
-}
-
-.desktop-sidebar-projects {
-  display: grid;
-  gap: 2px;
-}
-
-.desktop-sidebar-placeholder {
-  height: var(--filmwave-sidebar-row-height);
-}
-
-.desktop-sidebar-project-link,
-.desktop-sidebar-project-add-button {
-  width: 100%;
-}
-
-.desktop-sidebar-project-link > a,
-.desktop-sidebar-project-add-button > button {
+.desktop-sidebar-link > button {
+  position: absolute;
+  top: 50%;
+  right: 4px;
   display: flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0 !important;
+  padding: 0 !important;
+  transform: translateY(-50%);
+}
+
+.desktop-sidebar-projects-head {
+  position: relative;
+  display: block;
   width: 100%;
+  max-width: 100%;
   height: var(--filmwave-sidebar-row-height);
+  margin-bottom: var(--filmwave-sidebar-nav-gap);
+  padding: 0 !important;
+}
+
+.desktop-sidebar-projects-label {
+  position: absolute;
+  top: 50%;
+  left: var(--filmwave-sidebar-row-padding-x);
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  transition: opacity 150ms ease;
+}
+
+.desktop-sidebar-project-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  width: var(--filmwave-sidebar-icon-slot-width);
+  min-width: var(--filmwave-sidebar-icon-slot-width);
+  height: var(--filmwave-sidebar-row-height);
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.desktop-sidebar-add-button {
+  display: flex;
+  width: var(--filmwave-sidebar-icon-slot-width);
+  height: var(--filmwave-sidebar-row-height);
+  cursor: pointer;
   align-items: center;
   justify-content: center;
   border: 0;
   border-radius: var(--filmwave-sidebar-row-radius);
   background: transparent;
   color: var(--filmwave-sidebar-icon-color);
-  padding: 0;
+  padding: 0 !important;
+  font-family: inherit;
   transition:
     background 150ms ease,
     color 150ms ease;
 }
 
-.desktop-sidebar-project-link > a:hover,
-.desktop-sidebar-project-add-button > button:hover {
-  background: var(--filmwave-square-icon-hover-bg, var(--bg-hover-strong));
+.desktop-sidebar-add-button:hover {
+  background: var(--bg-hover-strong);
   color: var(--filmwave-sidebar-icon-color-active);
 }
 
-.desktop-sidebar-project-link svg,
-.desktop-sidebar-project-add-button svg {
-  width: var(--filmwave-sidebar-icon-size);
-  height: var(--filmwave-sidebar-icon-size);
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-heading-label,
+body.sidebar-collapsed .desktop-sidebar-heading-label,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label,
+body.sidebar-collapsed .desktop-sidebar-link-label,
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
+body.sidebar-collapsed .desktop-sidebar-projects-label {
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: none;
 }
 
-.desktop-sidebar-new-project-shell {
-  display: flex;
-  justify-content: center;
-}
-
-.desktop-sidebar-user-chip {
-  display: flex;
-  width: 44px;
-  height: 44px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  background: var(--bg-primary);
-}
-
-.desktop-sidebar-user-chip img {
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions,
+body.sidebar-collapsed .desktop-sidebar-project-actions {
+  right: auto;
+  left: 0;
   width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  object-fit: cover;
+  min-width: 0;
+  justify-content: center;
+  margin-left: 0;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-add-button,
+body.sidebar-collapsed .desktop-sidebar-add-button {
+  width: 100%;
+}
+
+.desktop-app-shell.is-sidebar-collapsed
+  .desktop-sidebar-project-actions
+  > :not(.desktop-sidebar-add-button),
+body.sidebar-collapsed
+  .desktop-sidebar-project-actions
+  > :not(.desktop-sidebar-add-button) {
+  display: none;
+}
+
+.desktop-sidebar-empty-projects {
+  color: var(--text-muted);
+  padding: 4px 0 0;
+  font-size: 12px;
+}
+
+.desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-empty-projects,
+body.sidebar-collapsed .desktop-sidebar-empty-projects {
+  display: none;
+}
+
+.desktop-sidebar-tooltip {
+  position: fixed;
+  z-index: 1000;
+  left: calc(var(--filmwave-sidebar-collapsed-width) + 4px);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.desktop-sidebar-tooltip-border {
+  border-radius: 999px;
+  background: transparent;
+  padding: 0;
+}
+
+.desktop-sidebar-tooltip-inner {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 7px 9px;
+  white-space: nowrap;
+  box-shadow: var(--shadow-ui);
 }
