@@ -75,7 +75,7 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 
 aside.desktop-app-sidebar[data-sidebar],
 aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
-  background: var(--filmwave-chrome-surface) !important;
+  background: var(--bg-primary) !important;
   background-image: none !important;
   box-shadow: none !important;
 }
