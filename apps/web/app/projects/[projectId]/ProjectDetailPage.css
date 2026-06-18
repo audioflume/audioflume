@@ -1,6 +1,6 @@
 .project-detail-page { --filmwave-side-filter-rail-width: 190px; --filmwave-side-filter-content-gap: 0px; position: relative; margin-left: var(--sidebar-width); margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: visible; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); transition: margin-left 0.2s ease; }
 .project-detail-shell { position: relative; z-index: 1; display: grid; min-height: calc(100vh - 56px); grid-template-columns: var(--filmwave-side-filter-rail-width, 190px) minmax(0, 1fr); column-gap: 0; align-items: start; padding: 0; }
-.project-detail-hero { grid-column: 2; min-width: 0; display: block; margin: 0; width: 100%; max-width: 1180px; border-bottom: 1px solid var(--border); padding: 44px 40px 18px; }
+.project-detail-hero { grid-column: 2; min-width: 0; display: block; margin: 0 auto; width: 100%; max-width: 1180px; border-bottom: 1px solid var(--border); padding: 44px 40px 18px; }
 .project-detail-header-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .project-detail-kicker, .project-file-browser-kicker, .project-file-section-heading { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
 .project-detail-title { margin: 0; max-width: 640px; font-family: var(--font-instrument-sans); font-size: 24px; font-weight: 500; line-height: 1; letter-spacing: -0.025em; color: var(--text-primary); }
@@ -17,8 +17,8 @@
 .project-tabs-row .fw-filter-rail-item.is-active .fw-filter-rail-chevron { opacity: 1; }
 .project-tabs-row .fw-filter-rail-chevron svg { display: block; width: 11px; height: 11px; }
 .project-tab-skeleton { width: 86px; height: 28px; border-radius: 6px; }
-.project-sort-row { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; width: 100%; max-width: 1180px; background: var(--bg-primary); padding: 16px 40px; }
-.project-tab-panel { grid-column: 2; min-width: 0; width: 100%; max-width: 1180px; margin: 0; padding: 0 40px; }
+.project-sort-row { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 auto; width: 100%; max-width: 1180px; background: var(--bg-primary); padding: 16px 40px; }
+.project-tab-panel { grid-column: 2; min-width: 0; width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 40px; }
 .project-file-browser { padding: 32px 0; }
 .project-file-browser-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
 .project-file-browser-title-wrap { min-width: 0; flex: 1 1 auto; }
