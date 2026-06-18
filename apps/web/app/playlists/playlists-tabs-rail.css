@@ -1,0 +1,106 @@
+.playlists-page .playlists-shell {
+  padding-left: calc(168px + 32px) !important;
+}
+
+.playlists-tabs-row {
+  position: fixed !important;
+  top: calc(var(--filmwave-header-height, 56px) + var(--filmwave-sidebar-float-inset, 12px)) !important;
+  left: var(--sidebar-width) !important;
+  z-index: 59 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 168px !important;
+  max-width: 168px !important;
+  height: calc(100dvh - var(--filmwave-header-height, 56px) - var(--filmwave-sidebar-bottom-offset, var(--filmwave-sidebar-float-inset, 12px)) - var(--filmwave-sidebar-float-inset, 12px)) !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  gap: 2px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border: 0 !important;
+  border-right: 1px solid var(--filmwave-side-filter-divider-color, var(--border-subtle)) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 10px 8px !important;
+  scrollbar-width: none !important;
+  transition: left 0.2s ease !important;
+}
+
+.playlists-tabs-row::-webkit-scrollbar {
+  display: none !important;
+}
+
+.playlists-tabs-row .fw-filter-rail-item {
+  display: flex !important;
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  border: 0 !important;
+  border-radius: 11px !important;
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  padding: 0 8px 0 12px !important;
+  font-family: inherit !important;
+  font-size: 12.5px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  text-align: left !important;
+  text-decoration: none !important;
+  transition: background-color 160ms ease, color 160ms ease !important;
+}
+
+.playlists-tabs-row .fw-filter-rail-item:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.playlists-tabs-row .fw-filter-rail-item.is-active {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  font-weight: 400 !important;
+}
+
+.playlists-tabs-row .fw-filter-rail-item.is-active:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.playlists-tabs-row .fw-filter-rail-label {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.playlists-tabs-row .fw-filter-rail-chevron {
+  display: inline-flex !important;
+  flex-shrink: 0 !important;
+  color: var(--text-muted) !important;
+  opacity: 0.4 !important;
+  transition: opacity 160ms ease, color 160ms ease !important;
+}
+
+.playlists-tabs-row .fw-filter-rail-item:hover .fw-filter-rail-chevron {
+  opacity: 0.65 !important;
+}
+
+.playlists-tabs-row .fw-filter-rail-chevron svg {
+  display: block !important;
+  width: 11px !important;
+  height: 11px !important;
+}
+
+@media (max-width: 720px) {
+  .playlists-tabs-row {
+    display: none !important;
+  }
+
+  .playlists-page .playlists-shell {
+    padding-left: 32px !important;
+  }
+}
