@@ -2,8 +2,16 @@
   display: none !important;
 }
 
+.playlists-page {
+  margin-top: 0 !important;
+}
+
 .playlists-page .playlists-shell {
   padding-left: 32px !important;
+}
+
+.playlists-page .playlists-hero {
+  padding-top: 24px !important;
 }
 
 .playlists-tabs-row {
@@ -91,5 +99,9 @@
 
   .playlists-page .playlists-shell {
     padding-left: 32px !important;
+  }
+
+  .playlists-page .playlists-hero {
+    padding-top: 88px !important;
   }
 }
