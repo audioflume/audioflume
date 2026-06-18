@@ -47,7 +47,7 @@
   flex-direction: column !important;
   margin-top: auto !important;
   padding: 14px 8px 8px 4px !important;
-  border-top: 1px solid var(--border-subtle) !important;
+  border-top: 1px solid var(--border) !important;
   color: var(--text-muted) !important;
 }
 
