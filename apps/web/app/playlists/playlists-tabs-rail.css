@@ -7,11 +7,8 @@
 }
 
 .playlists-tabs-row {
-  position: absolute !important;
-  top: calc(var(--filmwave-header-height, 56px) + 12px) !important;
-  left: calc(var(--sidebar-width) + 32px) !important;
-  right: 32px !important;
-  z-index: 59 !important;
+  position: relative !important;
+  z-index: 1 !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
@@ -19,7 +16,7 @@
   max-width: none !important;
   height: auto !important;
   min-height: 34px !important;
-  margin: 0 !important;
+  margin: calc(var(--filmwave-header-height, 56px) + 12px) 32px 0 calc(var(--sidebar-width) + 32px) !important;
   gap: 8px !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
@@ -30,7 +27,6 @@
   backdrop-filter: none !important;
   padding: 0 !important;
   scrollbar-width: none !important;
-  transition: left 0.2s ease !important;
 }
 
 .playlists-tabs-row::-webkit-scrollbar {
