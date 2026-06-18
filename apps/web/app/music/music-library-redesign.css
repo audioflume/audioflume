@@ -1,3 +1,8 @@
 @import "../../../../packages/shared/styles/music-library-redesign.css";
 @import "../../../../packages/shared/styles/music-filter-column-controls.css";
 @import "./fw-hero.css";
+
+/* Project music tabs share the library song list but need player-safe scroll space. */
+.project-tab-panel .fw-song-list {
+  margin-bottom: 132px;
+}
