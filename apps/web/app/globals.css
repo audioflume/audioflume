@@ -90,3 +90,7 @@ main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child >
 main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-4 {
   margin-top: 0 !important;
 }
+
+main:has(a[href^="/curated-playlists/"]) section.mt-10 article[aria-label^="Play "] > div:first-child {
+  border-radius: 10px;
+}
