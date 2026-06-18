@@ -342,6 +342,10 @@ export default function CuratedPlaylistsPage() {
           );
         }
 
+        :where(html.light, html[data-theme="light"]) .curated-playlists-hero-bg {
+          display: none;
+        }
+
         .curated-playlists-page-layer {
           position: relative;
           z-index: 1;
