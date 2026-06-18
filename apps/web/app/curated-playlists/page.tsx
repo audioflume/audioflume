@@ -252,6 +252,13 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
+  const heroBackgroundImage = useMemo(
+    () =>
+      playlists.find((playlist) => playlist.name === "Easy Picks")
+        ?.cover_image_url ?? "",
+    [playlists],
+  );
+
   const groupedPlaylists = useMemo(() => {
     const playlistMap = new Map<string, CuratedPlaylist[]>();
 
@@ -283,9 +290,75 @@ export default function CuratedPlaylistsPage() {
   }, [playlists, groups]);
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <PlaylistTabsRail />
-      <section className="ml-[var(--sidebar-width)] min-h-screen pt-6 transition-[margin-left] duration-200">
+    <main className="relative min-h-screen overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <style>{`
+        .curated-playlists-hero-bg {
+          pointer-events: none;
+          position: absolute;
+          inset: 0 0 auto 0;
+          z-index: 0;
+          height: min(620px, 70vh);
+          overflow: hidden;
+        }
+
+        .curated-playlists-hero-bg-image {
+          position: absolute;
+          inset: -36px 0 0 0;
+          background-size: cover;
+          background-position: center 38%;
+          opacity: 0.32;
+          filter: blur(1px);
+          transform: scale(1.04);
+          transform-origin: center top;
+        }
+
+        .curated-playlists-hero-bg::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background: linear-gradient(
+            to right,
+            rgba(10, 10, 10, 0.62) 0%,
+            rgba(10, 10, 10, 0.28) 22%,
+            rgba(10, 10, 10, 0.28) 72%,
+            rgba(10, 10, 10, 0.58) 100%
+          );
+        }
+
+        .curated-playlists-hero-bg::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          background: linear-gradient(
+            to bottom,
+            rgba(10, 10, 10, 0.08) 0%,
+            rgba(10, 10, 10, 0.28) 42%,
+            var(--bg-primary) 100%
+          );
+        }
+
+        .curated-playlists-page-layer {
+          position: relative;
+          z-index: 1;
+        }
+      `}</style>
+
+      {heroBackgroundImage && (
+        <div className="curated-playlists-hero-bg" aria-hidden="true">
+          <div
+            className="curated-playlists-hero-bg-image"
+            style={{ backgroundImage: `url(${JSON.stringify(heroBackgroundImage)})` }}
+          />
+        </div>
+      )}
+
+      <div className="curated-playlists-page-layer">
+        <PlaylistTabsRail />
+      </div>
+
+      <section className="curated-playlists-page-layer ml-[var(--sidebar-width)] min-h-screen pt-6 transition-[margin-left] duration-200">
         <div className="px-8">
           <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
             <div>
