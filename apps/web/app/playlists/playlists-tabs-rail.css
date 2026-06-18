@@ -20,20 +20,20 @@
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  width: auto !important;
-  max-width: none !important;
+  width: fit-content !important;
+  max-width: calc(100% - var(--sidebar-width) - 64px) !important;
   height: auto !important;
-  min-height: 34px !important;
+  min-height: 42px !important;
   margin: calc(var(--filmwave-header-height, 56px) + 12px) 32px 0 calc(var(--sidebar-width) + 32px) !important;
   gap: 8px !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  padding: 0 !important;
+  border: 1px solid color-mix(in srgb, var(--border) 65%, transparent) !important;
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--bg-secondary) 72%, transparent) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  padding: 4px !important;
   scrollbar-width: none !important;
 }
 
