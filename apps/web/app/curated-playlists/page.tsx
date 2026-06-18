@@ -285,8 +285,8 @@ export default function CuratedPlaylistsPage() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <PlaylistTabsRail />
-      <section className="ml-[var(--sidebar-width)] min-h-screen pt-14 transition-[margin-left] duration-200">
-        <div className="px-8 pt-6">
+      <section className="ml-[var(--sidebar-width)] min-h-screen pt-6 transition-[margin-left] duration-200">
+        <div className="px-8">
           <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
             <div>
               <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
@@ -338,12 +338,9 @@ export default function CuratedPlaylistsPage() {
                 />
               ),
             )}
-
-          <div className="pt-10 pb-2">
-            <Footer />
-          </div>
         </div>
       </section>
+      <Footer />
     </main>
   );
 }
