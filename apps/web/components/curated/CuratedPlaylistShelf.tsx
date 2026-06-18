@@ -304,6 +304,21 @@ export default function CuratedPlaylistShelf({
   return (
     <>
       <style>{`
+        .curated-playlist-shelf-viewport {
+          margin-left: calc((var(--sidebar-width) + 2rem) * -1);
+          margin-right: -2rem;
+          overflow: hidden;
+        }
+
+        .curated-playlist-shelf-scroller {
+          padding-left: calc(var(--sidebar-width) + 2rem);
+          padding-right: 5rem;
+        }
+
+        .curated-playlist-shelf-prev-floating {
+          left: calc(var(--sidebar-width) + 2rem);
+        }
+
         .curated-playlist-card-shell {
           flex: 0 0 250px;
           min-width: 250px;
@@ -538,12 +553,12 @@ export default function CuratedPlaylistShelf({
           </div>
         </div>
 
-        <div className="group/playlist-shelf relative -mx-8 overflow-hidden">
+        <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
           <button
             type="button"
             onClick={() => scrollPlaylists("prev")}
             disabled={!canScrollPrev}
-            className="absolute left-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+            className="curated-playlist-shelf-prev-floating absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
             aria-label={`Scroll ${title} left`}
           >
             <ChevronLeftIcon size={18} />
@@ -561,7 +576,7 @@ export default function CuratedPlaylistShelf({
 
           <div
             ref={scrollerRef}
-            className="flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain pl-8 pr-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="curated-playlist-shelf-scroller flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {playlists.map((playlist, index) => (
               <CuratedPlaylistCard
