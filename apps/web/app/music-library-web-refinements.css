@@ -156,8 +156,8 @@
 
 .fw-quick-row {
   padding-top: 8px !important;
-  padding-right: calc(var(--fw-music-content-inset-right) + 10px) !important;
-  padding-left: calc(var(--fw-music-content-inset-left) + 10px) !important;
+  padding-right: calc(var(--fw-music-content-inset-right) + 16px) !important;
+  padding-left: calc(var(--fw-music-content-inset-left) + 16px) !important;
 }
 
 .fw-quick-row + div > .min-h-0 > .px-8 {
