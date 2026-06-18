@@ -58,7 +58,7 @@
   justify-content: stretch !important;
   column-gap: 12px !important;
   row-gap: 2px !important;
-  border: 1px solid var(--border-subtle) !important;
+  border: 1px solid var(--filmwave-header-border-color) !important;
   border-radius: 8px !important;
   background: var(--bg-secondary) !important;
   padding: 9px 14px !important;
@@ -70,7 +70,7 @@
 .project-file-browser .project-folder-card:hover,
 .project-file-browser .project-file-card:hover,
 .project-file-browser .project-file-card.is-active {
-  border-color: var(--border) !important;
+  border-color: var(--filmwave-header-border-color) !important;
   background: var(--bg-hover) !important;
   transform: none !important;
 }
@@ -249,74 +249,11 @@
   justify-content: stretch !important;
   column-gap: 12px !important;
   row-gap: 2px !important;
-  border: 1px solid var(--border-subtle) !important;
+  border: 1px solid var(--filmwave-header-border-color) !important;
   border-radius: 8px !important;
   background: var(--bg-secondary) !important;
   padding: 9px 14px !important;
   text-align: left !important;
   transform: none !important;
   transition: background 0.15s ease, border-color 0.15s ease !important;
-}
-
-.project-file-browser.project-file-browser .project-folder-card:hover,
-.project-file-browser.project-file-browser .project-file-card:hover,
-.project-file-browser.project-file-browser .project-file-card.is-active {
-  border-color: var(--border) !important;
-  background: var(--bg-hover) !important;
-  transform: none !important;
-}
-
-.project-file-browser.project-file-browser .project-folder-card-name,
-.project-file-browser.project-file-browser .project-file-card-title {
-  grid-column: 2 !important;
-  grid-row: 1 !important;
-  align-self: end !important;
-  display: block !important;
-  max-width: 100% !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-.project-file-browser.project-file-browser .project-folder-card-meta,
-.project-file-browser.project-file-browser .project-file-card-meta {
-  grid-column: 2 !important;
-  grid-row: 2 !important;
-  align-self: start !important;
-  display: block !important;
-  max-width: 100% !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  margin-top: 0 !important;
-}
-
-.project-file-browser.project-file-browser .project-folder-card-icon-wrap,
-.project-file-browser.project-file-browser .project-file-card-icon-wrap {
-  grid-column: 1 !important;
-  grid-row: 1 / span 2 !important;
-  display: flex !important;
-  height: 54px !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.light .project-file-browser .project-folder-card,
-.light .project-file-browser .project-file-card,
-.light .project-file-browser.project-file-browser .project-folder-card,
-.light .project-file-browser.project-file-browser .project-file-card {
-  border-color: var(--border) !important;
-}
-
-html:not(.light):not([data-theme="light"]) .project-file-browser .project-folder-card,
-html:not(.light):not([data-theme="light"]) .project-file-browser .project-file-card,
-html:not(.light):not([data-theme="light"]) .project-file-browser.project-file-browser .project-folder-card,
-html:not(.light):not([data-theme="light"]) .project-file-browser.project-file-browser .project-file-card {
-  border-color: var(--filmwave-header-border-color) !important;
-}
-
-.project-file-browser .project-folder-card .project-folder-glyph,
-.project-file-browser.project-file-browser .project-folder-card .project-folder-glyph {
-  width: 54px !important;
-  height: 47px !important;
 }
