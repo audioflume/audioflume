@@ -74,7 +74,7 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 /* ─── Shared sidebar/search chrome surface ───────────────── */
 
 aside.desktop-app-sidebar[data-sidebar] {
-  background: transparent !important;
+  background: color-mix(in srgb, var(--bg-primary) 88%, transparent) !important;
   background-image: none !important;
   box-shadow: none !important;
   -webkit-backdrop-filter: blur(18px);
