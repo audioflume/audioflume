@@ -24,7 +24,7 @@
   --fw-music-content-inset: 20px;
   --fw-music-content-inset-left: 28px;
   --fw-music-content-inset-right: 20px;
-  --filmwave-sidebar-page-gap: 12px;
+  --filmwave-sidebar-page-gap: 0px;
   --filmwave-sidebar-current-panel-width: var(--filmwave-sidebar-panel-expanded-width);
   --sidebar-width: calc(
     var(--filmwave-sidebar-float-inset, 12px) +
@@ -86,19 +86,4 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
   background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
-}
-
-/* ─── Discover page visual-first layout ───────────────────── */
-
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mb-6,
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > section.mt-6 {
-  display: none !important;
-}
-
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-4 {
-  margin-top: 0 !important;
-}
-
-main:has(a[href^="/curated-playlists/"]) section.mt-10 article[aria-label^="Play "] > div:first-child {
-  border-radius: 10px;
 }
