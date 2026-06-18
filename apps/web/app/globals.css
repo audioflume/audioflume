@@ -74,11 +74,12 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 /* ─── Shared sidebar/search chrome surface ───────────────── */
 
 aside.desktop-app-sidebar[data-sidebar] {
-  background: color-mix(in srgb, var(--bg-primary) 88%, transparent) !important;
+  background: color-mix(in srgb, var(--bg-primary) 72%, transparent) !important;
   background-image: none !important;
   box-shadow: none !important;
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  border-right: 1px solid var(--border) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
 }
 
 aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
