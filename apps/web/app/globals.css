@@ -73,9 +73,18 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 
 /* ─── Shared sidebar/search chrome surface ───────────────── */
 
-aside.desktop-app-sidebar[data-sidebar],
-aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
+aside.desktop-app-sidebar[data-sidebar] {
+  border-right-color: var(--filmwave-header-border-color) !important;
   background: var(--bg-primary) !important;
+  background: color-mix(in srgb, var(--bg-primary) 84%, transparent) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
+  background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
 }
