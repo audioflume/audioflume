@@ -252,12 +252,15 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
-  const heroBackgroundImage = useMemo(
-    () =>
-      playlists.find((playlist) => playlist.name === "Easy Picks")
-        ?.cover_image_url ?? "",
-    [playlists],
-  );
+  const heroBackgroundImage = useMemo(() => {
+    const playlistImages = playlists
+      .map((playlist) => playlist.cover_image_url)
+      .filter((url): url is string => Boolean(url));
+
+    if (playlistImages.length === 0) return "";
+
+    return playlistImages[Math.floor(Math.random() * playlistImages.length)] ?? "";
+  }, [playlists]);
 
   const groupedPlaylists = useMemo(() => {
     const playlistMap = new Map<string, CuratedPlaylist[]>();
@@ -306,7 +309,7 @@ export default function CuratedPlaylistsPage() {
           inset: -36px 0 0 0;
           background-size: cover;
           background-position: center 38%;
-          opacity: 0.32;
+          opacity: 0.42;
           filter: blur(1px);
           transform: scale(1.04);
           transform-origin: center top;
