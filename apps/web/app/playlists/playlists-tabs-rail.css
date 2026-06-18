@@ -90,13 +90,13 @@
 }
 
 .playlists-tabs-row .fw-filter-rail-item.is-active {
-  background: var(--bg-hover) !important;
+  background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
   color: var(--text-primary) !important;
   font-weight: 400 !important;
 }
 
 .playlists-tabs-row .fw-filter-rail-item.is-active:hover {
-  background: var(--bg-hover) !important;
+  background: var(--filmwave-chrome-surface, var(--bg-tertiary)) !important;
   color: var(--text-primary) !important;
 }
 
