@@ -77,12 +77,16 @@ body::before {
   background: color-mix(in srgb, var(--bg-primary) 72%, transparent);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   backdrop-filter: blur(18px) saturate(140%);
-  -webkit-mask: linear-gradient(#000 0 0) var(--filmwave-sidebar-current-panel-width) 0 /
-    calc(100% - var(--filmwave-sidebar-current-panel-width)) var(--filmwave-header-height, 56px)
-    no-repeat;
-  mask: linear-gradient(#000 0 0) var(--filmwave-sidebar-current-panel-width) 0 /
-    calc(100% - var(--filmwave-sidebar-current-panel-width)) var(--filmwave-header-height, 56px)
-    no-repeat;
+  -webkit-mask:
+    linear-gradient(#000 0 0) 0 0 / 100% var(--filmwave-header-height, 56px)
+      no-repeat,
+    linear-gradient(#000 0 0) 0 0 / var(--filmwave-sidebar-current-panel-width) 100%
+      no-repeat;
+  mask:
+    linear-gradient(#000 0 0) 0 0 / 100% var(--filmwave-header-height, 56px)
+      no-repeat,
+    linear-gradient(#000 0 0) 0 0 / var(--filmwave-sidebar-current-panel-width) 100%
+      no-repeat;
   content: "";
 }
 
@@ -127,12 +131,12 @@ aside.desktop-app-sidebar[data-sidebar] {
   top: 0 !important;
   bottom: 0 !important;
   z-index: var(--filmwave-z-sidebar, 100) !important;
-  background: color-mix(in srgb, var(--bg-primary) 72%, transparent) !important;
+  background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
   border-right: 1px solid var(--border) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
-  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
   transition: none !important;
 }
 
