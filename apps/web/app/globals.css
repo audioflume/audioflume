@@ -94,6 +94,13 @@ body::before {
   content: "";
 }
 
+body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"])::before {
+  -webkit-mask: linear-gradient(#000 0 0) 0 0 / 100%
+    var(--filmwave-header-height, 56px) no-repeat;
+  mask: linear-gradient(#000 0 0) 0 0 / 100%
+    var(--filmwave-header-height, 56px) no-repeat;
+}
+
 button:focus,
 button:focus-visible {
   outline: none;
@@ -129,6 +136,10 @@ body > header,
   background: transparent !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
+}
+
+.filmwave-header-logo-action {
+  width: var(--filmwave-header-logo-width) !important;
 }
 
 aside.desktop-app-sidebar[data-sidebar] {
