@@ -149,8 +149,13 @@ body.sidebar-collapsed .filmwave-header-logo-wordmark {
   transition-duration: 90ms;
 }
 
+body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"]) .filmwave-header-logo-slot,
 body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"]) .filmwave-header-logo-action {
   width: var(--filmwave-header-logo-width) !important;
+}
+
+body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"]) .filmwave-header-logo-slot {
+  overflow: visible;
 }
 
 body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"]) .filmwave-header-logo-wordmark {
