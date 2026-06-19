@@ -28,6 +28,12 @@ export default function Footer({
   const pathname = usePathname();
   const footerRef = useRef<HTMLElement | null>(null);
   const playerVisible = Boolean(currentSong);
+  const isMyPlaylistsPage = pathname === "/playlists";
+  const isCuratedPlaylistsPage = pathname === "/curated-playlists";
+  const horizontalPaddingClass = isMyPlaylistsPage ? "" : "px-8";
+  const routeLayoutClass = isCuratedPlaylistsPage
+    ? "ml-[var(--sidebar-width)]"
+    : "";
 
   useEffect(() => {
     const parent = footerRef.current?.parentElement;
@@ -45,7 +51,7 @@ export default function Footer({
   return (
     <footer
       ref={footerRef}
-      className={`px-8 pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
+      className={`${horizontalPaddingClass} ${routeLayoutClass} pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
       style={{
         paddingBottom: playerPadding
           ? playerVisible
