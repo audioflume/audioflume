@@ -186,10 +186,14 @@ body.sidebar-collapsed .desktop-app-sidebar-inner {
 .desktop-sidebar-heading-label {
   position: absolute;
   left: var(--filmwave-sidebar-row-padding-x);
+  width: var(--filmwave-sidebar-label-width);
+  max-width: var(--filmwave-sidebar-label-width);
+  overflow: hidden;
   color: var(--text-muted);
   font-size: 11px;
   font-weight: 500;
   line-height: 1;
+  text-overflow: ellipsis;
   white-space: nowrap;
   transition: opacity var(--filmwave-sidebar-motion-duration, 180ms) var(--filmwave-sidebar-motion-easing, linear);
 }
@@ -339,10 +343,11 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
     var(--filmwave-sidebar-icon-slot-left) + var(--filmwave-sidebar-icon-slot-width) +
       var(--filmwave-sidebar-label-gap)
   );
-  right: 8px;
+  right: auto;
   display: block;
-  width: auto;
-  min-width: 0;
+  width: var(--filmwave-sidebar-label-width);
+  max-width: var(--filmwave-sidebar-label-width);
+  min-width: var(--filmwave-sidebar-label-width);
   overflow: hidden;
   margin-left: 0;
   padding-left: 0;
@@ -379,6 +384,7 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   width: 100%;
   max-width: 100%;
   height: var(--filmwave-sidebar-row-height);
+  overflow: hidden;
   margin-bottom: var(--filmwave-sidebar-nav-gap);
   padding: 0 !important;
 }
@@ -387,7 +393,9 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   position: absolute;
   top: 50%;
   left: var(--filmwave-sidebar-row-padding-x);
-  min-width: 0;
+  width: var(--filmwave-sidebar-label-width);
+  max-width: var(--filmwave-sidebar-label-width);
+  min-width: var(--filmwave-sidebar-label-width);
   overflow: hidden;
   color: var(--text-muted);
   font-size: 11px;
