@@ -449,8 +449,9 @@ main > section:has(.fw-filter-panel-wrap) > .px-5 {
 }
 
 /* Keep the music page side-filter shell tied to the shared sidebar offset.
-   This makes the music page resize at the same rate as the other pages. */
+   The offset is driven by the animated sidebar variable itself, so this
+   consumer should not add a second margin-left transition. */
 main > section:has(.fw-filter-panel-wrap) {
   margin-left: var(--sidebar-width) !important;
-  transition: margin-left 200ms ease !important;
+  transition: none !important;
 }
