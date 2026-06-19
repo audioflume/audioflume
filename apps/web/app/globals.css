@@ -138,8 +138,23 @@ body > header,
   backdrop-filter: none !important;
 }
 
+.filmwave-header-logo-wordmark {
+  opacity: 1;
+  transition: opacity var(--filmwave-sidebar-motion-duration)
+    var(--filmwave-sidebar-motion-easing);
+}
+
+body.sidebar-collapsed .filmwave-header-logo-wordmark {
+  opacity: 0;
+  transition-duration: 90ms;
+}
+
 body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"]) .filmwave-header-logo-action {
   width: var(--filmwave-header-logo-width) !important;
+}
+
+body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"]) .filmwave-header-logo-wordmark {
+  opacity: 1;
 }
 
 aside.desktop-app-sidebar[data-sidebar] {
