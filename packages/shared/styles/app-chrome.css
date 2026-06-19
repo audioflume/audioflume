@@ -94,7 +94,11 @@ body > header > div {
 }
 
 .filmwave-header-logo-slot {
-  width: var(--filmwave-header-logo-width);
+  width: clamp(
+    var(--filmwave-header-logo-mark-width),
+    calc(var(--filmwave-sidebar-current-panel-width, var(--filmwave-header-logo-width)) - var(--filmwave-header-padding-x)),
+    var(--filmwave-header-logo-width)
+  );
   overflow: hidden;
 }
 
@@ -108,11 +112,6 @@ body > header > div {
   padding: 0;
   color: var(--text-primary);
   text-decoration: none;
-}
-
-.is-sidebar-collapsed .filmwave-header-logo-action,
-body.sidebar-collapsed .filmwave-header-logo-action {
-  width: var(--filmwave-header-logo-mark-width);
 }
 
 .filmwave-header-logo-mark {
