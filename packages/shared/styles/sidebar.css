@@ -28,6 +28,9 @@
   --filmwave-sidebar-heading-icon-color: #a8a8a8;
   --filmwave-sidebar-label-gap: 2px;
   --filmwave-sidebar-label-width: 180px;
+  --filmwave-sidebar-label-fade-in-delay: 45ms;
+  --filmwave-sidebar-label-fade-in-duration: 135ms;
+  --filmwave-sidebar-label-fade-out-duration: 75ms;
   --filmwave-sidebar-nav-gap: 2px;
   --filmwave-sidebar-float-inset: 0px;
   --filmwave-sidebar-content-gap: 20px;
@@ -195,7 +198,10 @@ body.sidebar-collapsed .desktop-app-sidebar-inner {
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: opacity var(--filmwave-sidebar-motion-duration, 180ms) var(--filmwave-sidebar-motion-easing, linear);
+  transition:
+    opacity var(--filmwave-sidebar-label-fade-in-duration)
+      var(--filmwave-sidebar-motion-easing, linear)
+      var(--filmwave-sidebar-label-fade-in-delay);
 }
 
 .desktop-sidebar-heading-icon {
@@ -355,7 +361,10 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   text-overflow: ellipsis;
   white-space: nowrap;
   transform: translateY(-50%);
-  transition: opacity var(--filmwave-sidebar-motion-duration, 180ms) var(--filmwave-sidebar-motion-easing, linear);
+  transition:
+    opacity var(--filmwave-sidebar-label-fade-in-duration)
+      var(--filmwave-sidebar-motion-easing, linear)
+      var(--filmwave-sidebar-label-fade-in-delay);
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label,
@@ -404,7 +413,10 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   text-overflow: ellipsis;
   white-space: nowrap;
   transform: translateY(-50%);
-  transition: opacity var(--filmwave-sidebar-motion-duration, 180ms) var(--filmwave-sidebar-motion-easing, linear);
+  transition:
+    opacity var(--filmwave-sidebar-label-fade-in-duration)
+      var(--filmwave-sidebar-motion-easing, linear)
+      var(--filmwave-sidebar-label-fade-in-delay);
 }
 
 .desktop-sidebar-project-actions {
@@ -451,6 +463,8 @@ body.sidebar-collapsed .desktop-sidebar-link-label,
 body.sidebar-collapsed .desktop-sidebar-projects-label {
   pointer-events: none;
   opacity: 0;
+  transition-duration: var(--filmwave-sidebar-label-fade-out-duration);
+  transition-delay: 0ms;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions,
