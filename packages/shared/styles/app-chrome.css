@@ -4,6 +4,8 @@
   --filmwave-header-nav-height: 32px;
   --filmwave-header-nav-radius: 999px;
   --filmwave-header-border-color: rgba(255, 255, 255, 0.16);
+  --filmwave-header-logo-width: 114px;
+  --filmwave-header-logo-mark-width: 24px;
 
   --filmwave-sidebar-width-expanded: var(--sidebar-width-expanded, 280px);
   --filmwave-sidebar-width-collapsed: var(--sidebar-width-collapsed, 76px);
@@ -92,13 +94,20 @@ body > header > div {
 }
 
 .filmwave-header-logo-action {
+  width: var(--filmwave-header-logo-width);
   height: var(--filmwave-header-nav-height);
   cursor: pointer;
+  overflow: hidden;
   border: 0;
   background: transparent;
   padding: 0;
   color: var(--text-primary);
   text-decoration: none;
+  transition: width 180ms ease;
+}
+
+.is-sidebar-collapsed .filmwave-header-logo-action {
+  width: var(--filmwave-header-logo-mark-width);
 }
 
 .filmwave-header-logo-mark {
