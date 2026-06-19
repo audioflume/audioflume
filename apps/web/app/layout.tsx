@@ -59,6 +59,7 @@ export default async function RootLayout({
   const initialTheme = themeCookie === "light" ? "light" : "dark";
   const initialSidebarCollapsed = sidebarCollapsedCookie === "true";
   const htmlClassName = `${geistSans.variable} ${geistMono.variable}`;
+  const bodyClassName = initialSidebarCollapsed ? "sidebar-collapsed" : undefined;
 
   return (
     <ClerkProvider>
@@ -67,7 +68,7 @@ export default async function RootLayout({
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
-        <body>
+        <body className={bodyClassName}>
           <UserPreferencesProvider>
             <ThemeProvider>
               <PlaylistsProvider>
