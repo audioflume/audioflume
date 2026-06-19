@@ -36,8 +36,7 @@
   --fw-music-content-inset: 20px;
   --fw-music-content-inset-left: 28px;
   --fw-music-content-inset-right: 20px;
-  --filmwave-sidebar-float-inset: 8px;
-  --filmwave-sidebar-page-gap: var(--filmwave-sidebar-content-gap, 20px);
+  --filmwave-sidebar-page-gap: 0px;
   --filmwave-sidebar-motion-duration: 180ms;
   --filmwave-sidebar-motion-easing: linear;
 }
@@ -85,12 +84,12 @@ body::before {
   -webkit-mask:
     linear-gradient(#000 0 0) 0 0 / 100% var(--filmwave-header-height, 56px)
       no-repeat,
-    linear-gradient(#000 0 0) 0 0 / var(--sidebar-width) 100%
+    linear-gradient(#000 0 0) 0 0 / var(--filmwave-sidebar-current-panel-width) 100%
       no-repeat;
   mask:
     linear-gradient(#000 0 0) 0 0 / 100% var(--filmwave-header-height, 56px)
       no-repeat,
-    linear-gradient(#000 0 0) 0 0 / var(--sidebar-width) 100%
+    linear-gradient(#000 0 0) 0 0 / var(--filmwave-sidebar-current-panel-width) 100%
       no-repeat;
   content: "";
 }
@@ -159,26 +158,23 @@ body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"]) .filmwave-header-log
 }
 
 aside.desktop-app-sidebar[data-sidebar] {
-  top: calc(
-    var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
-      var(--filmwave-sidebar-float-inset, 0px)
-  ) !important;
-  bottom: var(--filmwave-sidebar-float-inset, 0px) !important;
-  left: var(--filmwave-sidebar-float-inset, 0px) !important;
+  top: 0 !important;
+  bottom: 0 !important;
   z-index: var(--filmwave-z-sidebar, 100) !important;
-  overflow: hidden !important;
   background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 12px !important;
+  border-right: 1px solid var(--border) !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   transition: none !important;
 }
 
 aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
-  padding-top: var(--filmwave-sidebar-y-padding-top, 24px) !important;
+  padding-top: calc(
+    var(--filmwave-header-height, 56px) +
+      var(--filmwave-sidebar-y-padding-top, 24px)
+  ) !important;
   background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
