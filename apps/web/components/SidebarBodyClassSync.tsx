@@ -2,6 +2,14 @@
 
 import { useEffect } from "react";
 
+const EXPANDED_SIDEBAR_PANEL_WIDTH = "var(--filmwave-sidebar-panel-expanded-width)";
+const COLLAPSED_SIDEBAR_PANEL_WIDTH = "var(--filmwave-sidebar-collapsed-panel-width)";
+
+const EXPANDED_SIDEBAR_WIDTH =
+  "calc(var(--filmwave-sidebar-float-inset, 0px) + var(--filmwave-sidebar-panel-expanded-width) + var(--filmwave-sidebar-page-gap, 0px))";
+const COLLAPSED_SIDEBAR_WIDTH =
+  "calc(var(--filmwave-sidebar-float-inset, 0px) + var(--filmwave-sidebar-collapsed-panel-width) + var(--filmwave-sidebar-page-gap, 0px))";
+
 export default function SidebarBodyClassSync() {
   useEffect(() => {
     let shellObserver: MutationObserver | null = null;
@@ -13,6 +21,14 @@ export default function SidebarBodyClassSync() {
       const collapsed = Boolean(shell?.classList.contains("is-sidebar-collapsed"));
 
       document.body.classList.toggle("sidebar-collapsed", collapsed);
+      document.body.style.setProperty(
+        "--filmwave-sidebar-current-panel-width",
+        collapsed ? COLLAPSED_SIDEBAR_PANEL_WIDTH : EXPANDED_SIDEBAR_PANEL_WIDTH,
+      );
+      document.body.style.setProperty(
+        "--sidebar-width",
+        collapsed ? COLLAPSED_SIDEBAR_WIDTH : EXPANDED_SIDEBAR_WIDTH,
+      );
 
       if (!shell || shellObserver) return;
 
@@ -31,6 +47,8 @@ export default function SidebarBodyClassSync() {
       shellObserver?.disconnect();
       documentObserver?.disconnect();
       document.body.classList.remove("sidebar-collapsed");
+      document.body.style.removeProperty("--filmwave-sidebar-current-panel-width");
+      document.body.style.removeProperty("--sidebar-width");
     };
   }, []);
 
