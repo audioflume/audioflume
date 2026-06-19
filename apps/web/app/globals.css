@@ -38,8 +38,29 @@ body {
 }
 
 body {
+  position: relative;
   overflow-x: clip;
   letter-spacing: -0.005em;
+}
+
+body::before {
+  position: fixed;
+  z-index: calc(var(--filmwave-z-sidebar, 100) - 1);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--bg-primary) 72%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) 0 0 / 100% var(--filmwave-header-height, 56px) no-repeat,
+    linear-gradient(#000 0 0) 0 0 / var(--filmwave-sidebar-current-panel-width) 100% no-repeat;
+  mask:
+    linear-gradient(#000 0 0) 0 0 / 100% var(--filmwave-header-height, 56px) no-repeat,
+    linear-gradient(#000 0 0) 0 0 / var(--filmwave-sidebar-current-panel-width) 100% no-repeat;
+  content: "";
 }
 
 button:focus,
@@ -73,16 +94,25 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 
 /* ─── Shared sidebar/search chrome surface ───────────────── */
 
+.filmwave-app-header,
+.desktop-header,
+body > header,
+.filmwave-header {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
 aside.desktop-app-sidebar[data-sidebar] {
   top: 0 !important;
   bottom: 0 !important;
   z-index: var(--filmwave-z-sidebar, 100) !important;
-  background: color-mix(in srgb, var(--bg-primary) 72%, transparent) !important;
+  background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
   border-right: 1px solid var(--border) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
