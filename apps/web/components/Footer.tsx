@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
 import FooterBottom from "@/components/FooterBottom";
 import Logo from "@/components/Logo";
 import { usePlayer } from "@/context/PlayerContext";
@@ -25,15 +24,8 @@ export default function Footer({
   playerPadding = true,
 }: FooterProps) {
   const { currentSong } = usePlayer();
-  const pathname = usePathname();
   const footerRef = useRef<HTMLElement | null>(null);
   const playerVisible = Boolean(currentSong);
-  const isMyPlaylistsPage = pathname === "/playlists";
-  const isCuratedPlaylistsPage = pathname === "/curated-playlists";
-  const horizontalPaddingClass = isMyPlaylistsPage ? "" : "px-8";
-  const routeLayoutClass = isCuratedPlaylistsPage
-    ? "ml-[var(--sidebar-width)]"
-    : "";
 
   useEffect(() => {
     const parent = footerRef.current?.parentElement;
@@ -46,12 +38,10 @@ export default function Footer({
     }
   }, [playerVisible]);
 
-  if (pathname === "/music") return null;
-
   return (
     <footer
       ref={footerRef}
-      className={`${horizontalPaddingClass} ${routeLayoutClass} pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
+      className={`pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
       style={{
         paddingBottom: playerPadding
           ? playerVisible
