@@ -37,6 +37,8 @@
   --fw-music-content-inset-left: 28px;
   --fw-music-content-inset-right: 20px;
   --filmwave-sidebar-page-gap: 0px;
+  --filmwave-sidebar-motion-duration: 200ms;
+  --filmwave-sidebar-motion-easing: linear;
 }
 
 html,
@@ -54,8 +56,8 @@ body {
   overflow-x: clip;
   letter-spacing: -0.005em;
   transition:
-    --filmwave-sidebar-current-panel-width 200ms linear,
-    --sidebar-width 200ms linear;
+    --filmwave-sidebar-current-panel-width var(--filmwave-sidebar-motion-duration) var(--filmwave-sidebar-motion-easing),
+    --sidebar-width var(--filmwave-sidebar-motion-duration) var(--filmwave-sidebar-motion-easing);
 }
 
 body.sidebar-collapsed {
@@ -98,6 +100,12 @@ body.sidebar-collapsed aside[data-sidebar] {
   width: var(--filmwave-sidebar-current-panel-width) !important;
 }
 
+/* Consumers read the animated sidebar variables directly. Do not add a second
+   margin/width transition on the consuming element or it will lag behind. */
+.ml-\[var\(--sidebar-width\)\] {
+  transition: none !important;
+}
+
 /* ─── Sidebar collapse ───────────────────────────────────── */
 
 body.sidebar-collapsed .desktop-sidebar-link > a {
@@ -127,7 +135,7 @@ aside.desktop-app-sidebar[data-sidebar] {
   border-right: 1px solid var(--border) !important;
   -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
   backdrop-filter: blur(18px) saturate(140%) !important;
-  transition: width 200ms linear !important;
+  transition: none !important;
 }
 
 aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
