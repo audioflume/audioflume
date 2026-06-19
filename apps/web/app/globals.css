@@ -138,7 +138,7 @@ body > header,
   backdrop-filter: none !important;
 }
 
-.filmwave-header-logo-action {
+body:has(main[class*="md:ml-[var(--admin-sidebar-width)]"]) .filmwave-header-logo-action {
   width: var(--filmwave-header-logo-width) !important;
 }
 
