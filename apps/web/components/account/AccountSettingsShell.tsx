@@ -36,7 +36,7 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
   const hasPlayer = Boolean(currentSong);
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-[padding-left] duration-200 ease-out md:pl-[var(--sidebar-width,240px)]">
+    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] md:pl-[var(--sidebar-width,240px)]">
       <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
         <SettingsSideNav
           kicker="Account"
