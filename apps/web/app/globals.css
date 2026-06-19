@@ -54,8 +54,8 @@ body {
   overflow-x: clip;
   letter-spacing: -0.005em;
   transition:
-    --filmwave-sidebar-current-panel-width 200ms ease,
-    --sidebar-width 200ms ease;
+    --filmwave-sidebar-current-panel-width 200ms linear,
+    --sidebar-width 200ms linear;
 }
 
 body.sidebar-collapsed {
@@ -127,6 +127,7 @@ aside.desktop-app-sidebar[data-sidebar] {
   border-right: 1px solid var(--border) !important;
   -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
   backdrop-filter: blur(18px) saturate(140%) !important;
+  transition: width 200ms linear !important;
 }
 
 aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
