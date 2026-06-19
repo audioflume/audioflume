@@ -133,7 +133,6 @@ export function UserMenuThemeToggle({
 
   return (
     <div className="filmwave-user-menu-theme-wrap">
-      <span className="filmwave-user-menu-theme-label">Appearance</span>
       <div className="filmwave-user-menu-theme" aria-label="Theme">
         <button
           type="button"
