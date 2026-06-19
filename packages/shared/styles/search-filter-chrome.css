@@ -4,7 +4,6 @@
   margin-left: var(--sidebar-width, var(--sidebar-width-expanded, 280px));
   background: var(--bg-primary);
   color: var(--text-primary);
-  transition: margin-left 200ms ease;
 }
 
 body.sidebar-collapsed .filmwave-music-library-frame,
