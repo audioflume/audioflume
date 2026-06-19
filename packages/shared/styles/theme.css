@@ -19,11 +19,11 @@
   --filmwave-square-icon-hover-bg: var(--bg-hover-strong);
   --icon-button-hover: rgba(255, 255, 255, 0.18);
 
-  --divider: rgba(255, 255, 255, 0.1);
-  --border: rgba(255, 255, 255, 0.1);
-  --border-subtle: rgba(255, 255, 255, 0.03);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-hover: rgba(255, 255, 255, 0.2);
+  --divider: rgba(255, 255, 255, 0.065);
+  --border: rgba(255, 255, 255, 0.065);
+  --border-subtle: rgba(255, 255, 255, 0.025);
+  --border-strong: rgba(255, 255, 255, 0.11);
+  --border-hover: rgba(255, 255, 255, 0.14);
 
   --text-primary: #ffffff;
   --text-secondary: #808080;
