@@ -37,7 +37,7 @@
   --fw-music-content-inset-left: 28px;
   --fw-music-content-inset-right: 20px;
   --filmwave-sidebar-page-gap: 0px;
-  --filmwave-sidebar-motion-duration: 0ms;
+  --filmwave-sidebar-motion-duration: 180ms;
   --filmwave-sidebar-motion-easing: linear;
 }
 
@@ -55,7 +55,11 @@ body {
   position: relative;
   overflow-x: clip;
   letter-spacing: -0.005em;
-  transition: none;
+  transition:
+    --filmwave-sidebar-current-panel-width var(--filmwave-sidebar-motion-duration)
+      var(--filmwave-sidebar-motion-easing),
+    --sidebar-width var(--filmwave-sidebar-motion-duration)
+      var(--filmwave-sidebar-motion-easing);
 }
 
 body.sidebar-collapsed {
