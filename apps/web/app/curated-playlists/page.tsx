@@ -418,9 +418,10 @@ export default function CuratedPlaylistsPage() {
                 />
               ),
             )}
+
+          <Footer />
         </div>
       </section>
-      <Footer />
     </main>
   );
 }
