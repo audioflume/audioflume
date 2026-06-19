@@ -37,7 +37,7 @@
   --fw-music-content-inset-left: 28px;
   --fw-music-content-inset-right: 20px;
   --filmwave-sidebar-page-gap: 0px;
-  --filmwave-sidebar-motion-duration: 200ms;
+  --filmwave-sidebar-motion-duration: 0ms;
   --filmwave-sidebar-motion-easing: linear;
 }
 
@@ -55,9 +55,7 @@ body {
   position: relative;
   overflow-x: clip;
   letter-spacing: -0.005em;
-  transition:
-    --filmwave-sidebar-current-panel-width var(--filmwave-sidebar-motion-duration) var(--filmwave-sidebar-motion-easing),
-    --sidebar-width var(--filmwave-sidebar-motion-duration) var(--filmwave-sidebar-motion-easing);
+  transition: none;
 }
 
 body.sidebar-collapsed {
@@ -100,8 +98,8 @@ body.sidebar-collapsed aside[data-sidebar] {
   width: var(--filmwave-sidebar-current-panel-width) !important;
 }
 
-/* Consumers read the animated sidebar variables directly. Do not add a second
-   margin/width transition on the consuming element or it will lag behind. */
+/* Consumers read the sidebar variables directly. Do not add a separate
+   margin/width transition on the consuming element or it will move out of sync. */
 .ml-\[var\(--sidebar-width\)\] {
   transition: none !important;
 }
