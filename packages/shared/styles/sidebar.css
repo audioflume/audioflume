@@ -191,7 +191,7 @@ body.sidebar-collapsed .desktop-app-sidebar-inner {
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  transition: opacity 150ms ease;
+  transition: opacity var(--filmwave-sidebar-motion-duration, 180ms) var(--filmwave-sidebar-motion-easing, linear);
 }
 
 .desktop-sidebar-heading-icon {
@@ -350,7 +350,7 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   text-overflow: ellipsis;
   white-space: nowrap;
   transform: translateY(-50%);
-  transition: opacity 150ms ease;
+  transition: opacity var(--filmwave-sidebar-motion-duration, 180ms) var(--filmwave-sidebar-motion-easing, linear);
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-link-label,
@@ -396,7 +396,7 @@ body.sidebar-collapsed .desktop-sidebar-link-label {
   text-overflow: ellipsis;
   white-space: nowrap;
   transform: translateY(-50%);
-  transition: opacity 150ms ease;
+  transition: opacity var(--filmwave-sidebar-motion-duration, 180ms) var(--filmwave-sidebar-motion-easing, linear);
 }
 
 .desktop-sidebar-project-actions {
@@ -441,10 +441,8 @@ body.sidebar-collapsed .desktop-sidebar-heading-label,
 body.sidebar-collapsed .desktop-sidebar-link-label,
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-projects-label,
 body.sidebar-collapsed .desktop-sidebar-projects-label {
-  visibility: hidden;
   pointer-events: none;
   opacity: 0;
-  transition: none;
 }
 
 .desktop-app-shell.is-sidebar-collapsed .desktop-sidebar-project-actions,
