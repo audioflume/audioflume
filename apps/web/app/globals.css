@@ -74,6 +74,8 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
 /* ─── Shared sidebar/search chrome surface ───────────────── */
 
 aside.desktop-app-sidebar[data-sidebar] {
+  top: 0 !important;
+  bottom: 0 !important;
   z-index: var(--filmwave-z-sidebar, 100) !important;
   background: color-mix(in srgb, var(--bg-primary) 72%, transparent) !important;
   background-image: none !important;
@@ -83,21 +85,11 @@ aside.desktop-app-sidebar[data-sidebar] {
   backdrop-filter: blur(18px) saturate(140%);
 }
 
-aside.desktop-app-sidebar[data-sidebar]::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: var(--filmwave-sidebar-current-panel-width);
-  height: var(--filmwave-header-height, 56px);
-  pointer-events: none;
-  background: color-mix(in srgb, var(--bg-primary) 72%, transparent);
-  border-right: 1px solid var(--border);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  backdrop-filter: blur(18px) saturate(140%);
-}
-
 aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
+  padding-top: calc(
+    var(--filmwave-header-height, 56px) +
+      var(--filmwave-sidebar-y-padding-top, 24px)
+  ) !important;
   background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
