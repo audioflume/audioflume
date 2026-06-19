@@ -19,6 +19,18 @@
 @import "../../../packages/shared/styles/user-menu.css";
 @import "../../../packages/shared/styles/settings-side-nav.css";
 
+@property --filmwave-sidebar-current-panel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 228px;
+}
+
+@property --sidebar-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 228px;
+}
+
 :root {
   --modal-backdrop: rgba(0, 0, 0, 0.55);
   --fw-music-content-inset: 20px;
@@ -41,6 +53,9 @@ body {
   position: relative;
   overflow-x: clip;
   letter-spacing: -0.005em;
+  transition:
+    --filmwave-sidebar-current-panel-width 200ms ease,
+    --sidebar-width 200ms ease;
 }
 
 body::before {
