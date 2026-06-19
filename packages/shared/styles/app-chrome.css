@@ -233,6 +233,36 @@ body.sidebar-collapsed .filmwave-header-logo-action {
   transition: color 150ms ease;
 }
 
+.filmwave-header-avatar {
+  display: inline-flex;
+  width: 28px;
+  min-width: 28px;
+  max-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  flex: 0 0 28px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.filmwave-header-avatar img {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
 .filmwave-header-account-trigger:hover,
 .filmwave-header-account-trigger.is-open {
   background: transparent !important;
