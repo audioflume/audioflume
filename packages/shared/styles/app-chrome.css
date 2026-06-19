@@ -143,6 +143,13 @@ body.sidebar-collapsed .filmwave-header-logo-action {
   margin-right: 6px;
 }
 
+.filmwave-header-menu-wrap {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: calc(var(--filmwave-z-header, 200) + 10);
+}
+
 .fw-toolbar-sticky .fw-toolbar-search {
   flex-basis: 356px;
   min-width: 240px;
