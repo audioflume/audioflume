@@ -1,1 +1,96 @@
-test
+@import "tailwindcss";
+@import "../../../packages/shared/styles/fonts.css";
+@import "../../../packages/shared/styles/theme.css";
+@import "../../../packages/shared/styles/layers.css";
+@import "../../../packages/shared/styles/app-chrome.css";
+@import "../../../packages/shared/styles/sidebar.css";
+@import "../../../packages/shared/styles/sidebar-player-boundary.css";
+@import "../../../packages/shared/styles/search-filter-chrome.css";
+@import "../../../packages/shared/styles/collapsible-search-pill.css";
+@import "../../../packages/shared/styles/combined-row-fix.css";
+@import "../../../packages/shared/styles/music-filter-popovers.css";
+@import "../../../packages/shared/styles/music-library-states.css";
+@import "../../../packages/shared/styles/song-card.css";
+@import "../../../packages/shared/styles/music-player.css";
+@import "../../../packages/shared/styles/music-shared-controls.css";
+@import "../../../packages/shared/styles/project-toolbar.css";
+@import "../../../packages/shared/styles/project-browser-icons.css";
+@import "../../../packages/shared/styles/dropdown-shell.css";
+@import "../../../packages/shared/styles/user-menu.css";
+@import "../../../packages/shared/styles/settings-side-nav.css";
+
+:root {
+  --modal-backdrop: rgba(0, 0, 0, 0.55);
+  --fw-music-content-inset: 20px;
+  --fw-music-content-inset-left: 28px;
+  --fw-music-content-inset-right: 20px;
+  --filmwave-sidebar-page-gap: 0px;
+  --filmwave-sidebar-current-panel-width: var(--filmwave-sidebar-panel-expanded-width);
+  --sidebar-width: calc(
+    var(--filmwave-sidebar-float-inset, 12px) +
+      var(--filmwave-sidebar-current-panel-width) + var(--filmwave-sidebar-page-gap)
+  );
+}
+
+html,
+body {
+  overscroll-behavior-x: none;
+}
+
+body {
+  overflow-x: clip;
+  letter-spacing: -0.005em;
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+}
+
+body.sidebar-collapsed {
+  --filmwave-sidebar-current-panel-width: var(--filmwave-sidebar-collapsed-panel-width);
+}
+
+:root aside[data-sidebar] {
+  width: var(--filmwave-sidebar-current-panel-width);
+}
+
+:root body.sidebar-collapsed aside[data-sidebar] {
+  width: var(--filmwave-sidebar-current-panel-width);
+}
+
+/* ─── Sidebar collapse ───────────────────────────────────── */
+
+body.sidebar-collapsed aside[data-sidebar] {
+  width: var(--filmwave-sidebar-current-panel-width);
+}
+
+body.sidebar-collapsed .desktop-sidebar-link > a {
+  width: 100%;
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+/* ─── Shared sidebar/search chrome surface ───────────────── */
+
+aside.desktop-app-sidebar[data-sidebar] {
+  top: 0 !important;
+  bottom: 0 !important;
+  z-index: var(--filmwave-z-sidebar, 100) !important;
+  background: color-mix(in srgb, var(--bg-primary) 72%, transparent) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border-right: 1px solid var(--border) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
+  padding-top: calc(
+    var(--filmwave-header-height, 56px) +
+      var(--filmwave-sidebar-y-padding-top, 24px)
+  ) !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
