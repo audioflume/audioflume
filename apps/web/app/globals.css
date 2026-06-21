@@ -27,6 +27,7 @@
   --filmwave-sidebar-page-gap: 12px;
   --sidebar-width-collapsed: 56px;
   --filmwave-sidebar-collapsed-panel-width: 56px;
+  --filmwave-sidebar-icon-slot-left: 3px;
   --filmwave-sidebar-current-panel-width: var(--filmwave-sidebar-panel-expanded-width);
   --sidebar-width: calc(
     var(--filmwave-sidebar-float-inset, 12px) +
@@ -55,7 +56,7 @@ body.sidebar-collapsed {
 
 body.sidebar-collapsed,
 .desktop-app-shell.is-sidebar-collapsed {
-  --filmwave-sidebar-icon-slot-left: 4px;
+  --filmwave-sidebar-icon-slot-left: 3px;
 }
 
 :root aside[data-sidebar] {
