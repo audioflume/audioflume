@@ -30,7 +30,6 @@
   --filmwave-header-border-color: #d9d9d9;
 }
 
-/* Header divider is intentionally hard-lined to match the visible search/card borders. */
 .filmwave-app-header,
 .desktop-header,
 body > header {
@@ -124,9 +123,24 @@ body > header > div {
   gap: 4px;
 }
 
+.filmwave-header-search-form,
 .filmwave-header-actions > form {
-  display: inline-flex;
-  margin-right: 6px;
+  position: fixed !important;
+  top: calc(var(--filmwave-header-height) / 2) !important;
+  right: auto !important;
+  left: 50% !important;
+  z-index: 142 !important;
+  display: inline-flex !important;
+  width: min(clamp(420px, 45vw, 640px), calc(100vw - 300px)) !important;
+  max-width: calc(100vw - 300px) !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: auto !important;
+}
+
+.filmwave-header-search-form .filmwave-search-pill,
+.filmwave-header-actions > form .filmwave-search-pill {
+  width: 100% !important;
 }
 
 .filmwave-header-actions .filmwave-search-pill-input {
@@ -134,47 +148,14 @@ body > header > div {
   transform: translateY(-1px);
 }
 
-.fw-toolbar-sticky .fw-toolbar-search {
-  flex-basis: 356px;
-  min-width: 240px;
-  height: 34px;
-  gap: 7px;
-  border-color: var(--border);
-  background: transparent;
-  padding: 0 10px 0 4px;
-  transition: border-color 150ms ease;
+@media (max-width: 760px) {
+  .filmwave-header-search-form,
+  .filmwave-header-actions > form {
+    width: min(380px, calc(100vw - 360px)) !important;
+    max-width: calc(100vw - 300px) !important;
+  }
 }
 
-.fw-toolbar-sticky .fw-toolbar-search:focus-within {
-  border-color: var(--border-strong);
-  background: transparent;
-}
-
-.fw-toolbar-sticky .fw-toolbar-search-icon {
-  width: 24px;
-  height: 24px;
-  background: var(--bg-elevated);
-  color: var(--text-muted);
-}
-
-.fw-toolbar-sticky .fw-toolbar-search-icon svg {
-  width: 11px;
-  height: 11px;
-}
-
-.fw-toolbar-sticky .fw-toolbar-search input {
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1;
-  transform: translateY(-1px);
-}
-
-.fw-toolbar-sticky .fw-toolbar-search input::placeholder {
-  color: var(--text-muted);
-}
-
-/* Nav links — quiet by default, soft pill on hover/active to match the
-   chip language used across the page. */
 .filmwave-header-nav-link {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
@@ -202,8 +183,6 @@ body > header > div {
   color: var(--text-primary);
 }
 
-/* Account trigger: button itself never gets background —
-   only the inner label span does, so the avatar stays outside the hover zone */
 .filmwave-header-account-trigger {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
@@ -230,7 +209,6 @@ body > header > div {
   color: var(--text-primary);
 }
 
-/* Label span (name + chevron) is what gets the hover pill */
 .filmwave-header-account-label {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
