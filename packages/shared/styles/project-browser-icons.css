@@ -28,8 +28,8 @@
 .project-file-browser .project-folder-glyph {
   position: relative !important;
   display: block !important;
-  width: 62px !important;
-  height: 54px !important;
+  width: 58px !important;
+  height: 50px !important;
   flex-shrink: 0 !important;
   filter: none !important;
 }
