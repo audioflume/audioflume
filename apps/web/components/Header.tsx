@@ -87,7 +87,7 @@ export default function Header() {
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
     : "";
-  const isMusicPage = pathname === "/music";
+  const syncHeaderSearchWithMusicPage = pathname === "/music";
 
   return (
     <HeaderShell
@@ -98,17 +98,13 @@ export default function Header() {
       }
       actions={
         <div className="filmwave-header-actions" ref={menuRef}>
-          {isMusicPage ? (
-            <MusicHeaderSearch />
-          ) : (
-            <MusicHeaderSearch
-              value={headerSearch}
-              placeholder="Search music library"
-              syncWithToolbar={false}
-              onChange={setHeaderSearch}
-              onSubmitSearch={handleHeaderSearchSubmit}
-            />
-          )}
+          <MusicHeaderSearch
+            value={headerSearch}
+            placeholder="Search music library"
+            syncWithToolbar={syncHeaderSearchWithMusicPage}
+            onChange={setHeaderSearch}
+            onSubmitSearch={handleHeaderSearchSubmit}
+          />
 
           <Link href="/curated-playlists" className="filmwave-header-nav-link">
             <PlaylistIcon size={16} />
