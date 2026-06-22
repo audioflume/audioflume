@@ -52,7 +52,6 @@ button:focus-visible {
 
 body.sidebar-collapsed {
   --filmwave-sidebar-current-panel-width: var(--filmwave-sidebar-collapsed-panel-width);
-  --fw-music-content-inset-left: 16px;
 }
 
 body.sidebar-collapsed,
@@ -90,6 +89,10 @@ aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
 }
 
 /* ─── Discover page visual-first layout ───────────────────── */
+
+body.sidebar-collapsed main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] {
+  padding-left: 20px !important;
+}
 
 main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mb-6,
 main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > section.mt-6 {
