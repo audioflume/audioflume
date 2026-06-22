@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npm run style:guard && tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "desktop": "npm --prefix apps/desktop run tauri -- dev",
-    "web": "npm --prefix apps/web run dev"
+    "style:guard": "node tools/style-guard.mjs",
+    "web": "npm run style:guard && npm --prefix apps/web run dev"
   },
   "dependencies": {
     "@crabnebula/tauri-plugin-drag": "^2.1.0",
