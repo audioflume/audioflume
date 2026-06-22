@@ -52,6 +52,7 @@ button:focus-visible {
 
 body.sidebar-collapsed {
   --filmwave-sidebar-current-panel-width: var(--filmwave-sidebar-collapsed-panel-width);
+  --fw-music-content-inset-left: 16px;
 }
 
 body.sidebar-collapsed,
