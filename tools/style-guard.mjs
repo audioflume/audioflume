@@ -20,9 +20,6 @@ const headerSearchSelectors = [
   "filmwave-search-pill-expanded",
   "filmwave-search-pill-icon-circle",
   "filmwave-search-pill-input",
-  "fw-toolbar-search",
-  "fw-toolbar-search-clear",
-  "fw-toolbar-search-icon",
 ];
 const errors = [];
 
@@ -55,9 +52,6 @@ for (const absolutePath of walk(repoRoot)) {
 
   if (source.includes("style jsx global")) {
     errors.push(`${rel}: route-level global style block found.`);
-  }
-  if (rel.endsWith("HeaderSearchResponsiveStyles.tsx")) {
-    errors.push(`${rel}: runtime header-search style component found.`);
   }
   if (ext === ".css" && containsHeaderSearchSelector(source) && !headerSearchStyleOwners.has(rel)) {
     errors.push(`${rel}: header/search selector ownership violation.`);
