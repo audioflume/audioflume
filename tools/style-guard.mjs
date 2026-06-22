@@ -15,16 +15,19 @@ const ignoredDirectories = new Set([
 ]);
 const checkedExtensions = new Set([".css", ".js", ".jsx", ".mjs", ".ts", ".tsx"]);
 
-const headerSearchStyleOwners = new Set([
+const headerSearchLayoutOwners = new Set([
   "packages/shared/styles/app-chrome.css",
-  "packages/shared/styles/collapsible-search-pill.css",
 ]);
 
-const headerSearchSelectors = [
+const headerSearchLayoutSelectors = [
   "filmwave-header-search-form",
   "filmwave-music-header-search-form",
   "filmwave-header-actions > form",
   "filmwave-header-actions>form",
+];
+
+const headerSearchRuntimeSelectors = [
+  ...headerSearchLayoutSelectors,
   "filmwave-search-pill",
   "filmwave-search-pill-body",
   "filmwave-search-pill-collapsed",
@@ -53,8 +56,8 @@ function walk(directory, files = []) {
   return files;
 }
 
-function containsHeaderSearchSelector(source) {
-  return headerSearchSelectors.some((selector) => source.includes(selector));
+function containsAny(source, patterns) {
+  return patterns.some((pattern) => source.includes(pattern));
 }
 
 for (const absolutePath of walk(repoRoot)) {
@@ -66,11 +69,11 @@ for (const absolutePath of walk(repoRoot)) {
     errors.push(`${rel}: route-level global style block found.`);
   }
 
-  if (ext === ".css" && containsHeaderSearchSelector(source) && !headerSearchStyleOwners.has(rel)) {
-    errors.push(`${rel}: header/search selector ownership violation.`);
+  if (ext === ".css" && containsAny(source, headerSearchLayoutSelectors) && !headerSearchLayoutOwners.has(rel)) {
+    errors.push(`${rel}: header search layout selector ownership violation.`);
   }
 
-  if (ext !== ".css" && source.includes("<style") && containsHeaderSearchSelector(source)) {
+  if (ext !== ".css" && source.includes("<style") && containsAny(source, headerSearchRuntimeSelectors)) {
     errors.push(`${rel}: component-level header/search style injection found.`);
   }
 }
