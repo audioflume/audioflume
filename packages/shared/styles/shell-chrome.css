@@ -70,7 +70,7 @@ body:has(.desktop-app-sidebar)
   border-radius: 6px;
 }
 
-/* Anchor the toolbar by its own top edge so the search bar stays centered in the header. */
+/* Anchor the filter toolbar by its own top edge. */
 .fw-toolbar-sticky {
   top: calc((var(--filmwave-header-height) - 40px) / 2);
   width: clamp(260px, calc(100vw - 420px), 920px);
@@ -82,16 +82,6 @@ body:has(.desktop-app-sidebar)
   width: 100%;
   min-width: 0;
   gap: 6px;
-}
-
-.fw-toolbar-sticky .fw-toolbar-search,
-.fw-toolbar-sticky .filmwave-search-filter-search-shell {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.fw-toolbar-sticky .fw-toolbar-search input {
-  min-width: 0;
 }
 
 .fw-toolbar-sticky .fw-toolbar-filters {
@@ -122,14 +112,6 @@ html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-floa
   background-color: rgba(0, 0, 0, 0.24);
 }
 
-html:not(.light):not([data-theme="light"]) .fw-toolbar-search,
-html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell,
-html:not(.light):not([data-theme="light"]) .fw-toolbar-search:focus-within,
-html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell:focus-within {
-  background: transparent;
-  background-color: transparent;
-}
-
 .filmwave-search-filter-quick-row {
   margin-top: 0;
   padding-top: var(--filmwave-sidebar-float-inset);
@@ -150,7 +132,7 @@ html:not(.light):not([data-theme="light"]) .filmwave-search-filter-search-shell:
 
 html.light .filmwave-header-account-trigger:hover .filmwave-header-avatar,
 html.light .filmwave-header-account-trigger.is-open .filmwave-header-avatar,
-html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-avatar,
+html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header-avatar,
 html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.12),
