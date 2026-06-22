@@ -29,9 +29,9 @@ const NOTE_VIEWBOX_HEIGHT = 66.94;
 const NOTE_ASPECT = NOTE_VIEWBOX_WIDTH / NOTE_VIEWBOX_HEIGHT;
 
 export function FolderGlyph({ small = false, className, style }: GlyphProps) {
-  // Preserve the original footprints: 62x54 (large), 19x16 (small).
-  const width = small ? 19 : 62;
-  const height = small ? 16 : 54;
+  // Keep grid-view folders visually balanced with the music file glyph.
+  const width = small ? 19 : 58;
+  const height = small ? 16 : 50;
 
   return (
     <svg
