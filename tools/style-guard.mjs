@@ -13,6 +13,7 @@ const ignoredDirectories = new Set([
   "out",
   "target",
 ]);
+const ignoredFiles = new Set(["tools/style-guard.mjs"]);
 const checkedExtensions = new Set([".css", ".js", ".jsx", ".mjs", ".ts", ".tsx"]);
 
 const headerSearchLayoutOwners = new Set([
@@ -62,6 +63,8 @@ function containsAny(source, patterns) {
 
 for (const absolutePath of walk(repoRoot)) {
   const rel = relativePath(absolutePath);
+  if (ignoredFiles.has(rel)) continue;
+
   const source = readFileSync(absolutePath, "utf8");
   const ext = path.extname(rel);
 
