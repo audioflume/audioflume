@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node ../../tools/style-guard.mjs",
     "dev": "pkill -f 'next dev' || true && NODE_OPTIONS='--max-old-space-size=8192' next dev",
-    "build": "next build",
-    "vercel-build": "next build",
+    "build": "node ../../tools/style-guard.mjs && next build",
+    "vercel-build": "node ../../tools/style-guard.mjs && next build",
     "start": "next start",
     "lint": "eslint",
     "r2:backfill-cache": "node scripts/backfill-r2-cache-headers.mjs",
