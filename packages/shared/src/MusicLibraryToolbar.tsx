@@ -10,18 +10,6 @@ import {
   type Ref,
 } from "react";
 
-function DefaultSearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
-      <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M10.5 3a7.5 7.5 0 1 0 4.71 13.33l4.13 4.13a1.4 1.4 0 0 0 1.98-1.98l-4.13-4.13A7.5 7.5 0 0 0 10.5 3ZM5.8 10.5a4.7 4.7 0 1 1 9.4 0 4.7 4.7 0 0 1-9.4 0Z"
-      />
-    </svg>
-  );
-}
-
 function FilterBarsIcon() {
   return (
     <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
@@ -73,11 +61,6 @@ export type MusicLibraryToolbarProps = {
 };
 
 export function MusicLibraryToolbar({
-  searchValue,
-  searchPlaceholder,
-  onSearchChange,
-  searchInputRef,
-  searchIcon,
   filterCount,
   filtersOpen,
   onToggleFilters,
@@ -141,29 +124,6 @@ export function MusicLibraryToolbar({
       {renderToolbarChrome && (
         <div className="fw-toolbar-float">
           <div className="fw-toolbar">
-            <label className="fw-toolbar-search">
-              <span className="fw-toolbar-search-icon" aria-hidden="true">
-                {searchIcon ?? <DefaultSearchIcon />}
-              </span>
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchValue}
-                placeholder={searchPlaceholder}
-                onChange={(event) => onSearchChange(event.target.value)}
-              />
-              {searchValue.length > 0 && (
-                <button
-                  type="button"
-                  className="fw-toolbar-search-clear"
-                  aria-label="Clear search"
-                  onClick={() => onSearchChange("")}
-                >
-                  <ClearXIcon />
-                </button>
-              )}
-            </label>
-
             <button
               type="button"
               className={`fw-toolbar-filters${filtersOpen ? " is-open" : ""}${
