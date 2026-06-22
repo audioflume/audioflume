@@ -238,7 +238,7 @@ html[data-theme="light"] .fw-filter-done {
   box-shadow: none !important;
 }
 
-/* Dock the music search/filter toolbar inside the header gap. */
+/* Dock the music filter toolbar inside the header gap. */
 .fw-toolbar-sticky {
   position: fixed !important;
   top: calc(var(--filmwave-header-height) / 2) !important;
@@ -269,8 +269,8 @@ html[data-theme="light"] .fw-filter-done {
   }
 }
 
-/* Match the header search position/width across music and non-music pages. */
-.filmwave-music-header-search-form,
+/* Header search sizing. */
+.filmwave-header-search-form,
 .filmwave-header-actions > form {
   position: fixed !important;
   top: calc(var(--filmwave-header-height) / 2) !important;
@@ -285,13 +285,13 @@ html[data-theme="light"] .fw-filter-done {
   pointer-events: auto !important;
 }
 
-.filmwave-music-header-search-form .filmwave-search-pill,
+.filmwave-header-search-form .filmwave-search-pill,
 .filmwave-header-actions > form .filmwave-search-pill {
   width: 100% !important;
 }
 
 @media (max-width: 760px) {
-  .filmwave-music-header-search-form,
+  .filmwave-header-search-form,
   .filmwave-header-actions > form {
     width: min(380px, calc(100vw - 360px)) !important;
     max-width: calc(100vw - 300px) !important;
