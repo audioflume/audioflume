@@ -96,6 +96,11 @@
   justify-content: center !important;
 }
 
+.project-file-browser .project-folder-card .project-folder-glyph:not(.small) {
+  width: 58px !important;
+  height: 50px !important;
+}
+
 .project-folder-card-name,
 .project-file-browser .project-file-card-title {
   grid-column: 2 !important;
