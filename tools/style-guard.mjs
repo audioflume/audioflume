@@ -3,17 +3,28 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const ignoredDirectories = new Set([".git", ".next", ".turbo", "build", "dist", "node_modules", "out", "target"]);
+const ignoredDirectories = new Set([
+  ".git",
+  ".next",
+  ".turbo",
+  "build",
+  "dist",
+  "node_modules",
+  "out",
+  "target",
+]);
 const checkedExtensions = new Set([".css", ".js", ".jsx", ".mjs", ".ts", ".tsx"]);
+
 const headerSearchStyleOwners = new Set([
   "packages/shared/styles/app-chrome.css",
   "packages/shared/styles/collapsible-search-pill.css",
-  "packages/shared/styles/header-search-toolbar.css",
 ]);
+
 const headerSearchSelectors = [
   "filmwave-header-search-form",
   "filmwave-music-header-search-form",
   "filmwave-header-actions > form",
+  "filmwave-header-actions>form",
   "filmwave-search-pill",
   "filmwave-search-pill-body",
   "filmwave-search-pill-collapsed",
@@ -21,6 +32,7 @@ const headerSearchSelectors = [
   "filmwave-search-pill-icon-circle",
   "filmwave-search-pill-input",
 ];
+
 const errors = [];
 
 function relativePath(absolutePath) {
@@ -53,9 +65,11 @@ for (const absolutePath of walk(repoRoot)) {
   if (source.includes("style jsx global")) {
     errors.push(`${rel}: route-level global style block found.`);
   }
+
   if (ext === ".css" && containsHeaderSearchSelector(source) && !headerSearchStyleOwners.has(rel)) {
     errors.push(`${rel}: header/search selector ownership violation.`);
   }
+
   if (ext !== ".css" && source.includes("<style") && containsHeaderSearchSelector(source)) {
     errors.push(`${rel}: component-level header/search style injection found.`);
   }
