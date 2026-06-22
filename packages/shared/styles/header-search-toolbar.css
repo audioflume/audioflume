@@ -21,64 +21,6 @@
   background-color: transparent !important;
 }
 
-.fw-toolbar-search,
-.filmwave-search-filter-search-shell {
-  gap: 6px !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  padding: 0 10px 0 1px !important;
-}
-
-.fw-toolbar-search:focus-within {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-.fw-toolbar-search-icon {
-  order: 0 !important;
-  width: 26px !important;
-  height: 26px !important;
-  margin-left: -1px !important;
-}
-
-.fw-toolbar-search-clear {
-  position: relative !important;
-  order: 1 !important;
-  width: 20px !important;
-  min-width: 20px !important;
-  height: 26px !important;
-  margin: 0 !important;
-  padding: 0 6px 0 0 !important;
-  border: 0 !important;
-  border-left: 0 !important;
-  border-right: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-}
-
-.fw-toolbar-search-clear::before {
-  content: none !important;
-  display: none !important;
-}
-
-.fw-toolbar-search-clear::after {
-  content: "" !important;
-  position: absolute !important;
-  top: 50% !important;
-  right: 0 !important;
-  display: block !important;
-  width: 1px !important;
-  height: 16px !important;
-  transform: translateY(-50%) !important;
-  background: var(--border) !important;
-}
-
-.fw-toolbar-search input {
-  order: 2 !important;
-  padding-left: 6px !important;
-  border-left: 0 !important;
-}
-
 .fw-toolbar-filters {
   display: inline-flex !important;
   height: 32px !important;
@@ -269,35 +211,6 @@ html[data-theme="light"] .fw-filter-done {
   }
 }
 
-/* Header search sizing. */
-.filmwave-header-search-form,
-.filmwave-header-actions > form {
-  position: fixed !important;
-  top: calc(var(--filmwave-header-height) / 2) !important;
-  right: auto !important;
-  left: 50% !important;
-  z-index: 142 !important;
-  display: inline-flex !important;
-  width: min(clamp(420px, 45vw, 640px), calc(100vw - 300px)) !important;
-  max-width: calc(100vw - 300px) !important;
-  margin: 0 !important;
-  transform: translate(-50%, -50%) !important;
-  pointer-events: auto !important;
-}
-
-.filmwave-header-search-form .filmwave-search-pill,
-.filmwave-header-actions > form .filmwave-search-pill {
-  width: 100% !important;
-}
-
-@media (max-width: 760px) {
-  .filmwave-header-search-form,
-  .filmwave-header-actions > form {
-    width: min(380px, calc(100vw - 360px)) !important;
-    max-width: calc(100vw - 300px) !important;
-  }
-}
-
 /* Header account: show the user name/chevron with text-only hover feedback. */
 .filmwave-header-account-label {
   display: inline-flex !important;
@@ -350,11 +263,4 @@ html[data-theme="light"] .fw-filter-done {
 .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) !important;
   transform: none !important;
-}
-
-html.light .filmwave-header-account-trigger:hover .filmwave-header-avatar,
-html.light .filmwave-header-account-trigger.is-open .filmwave-header-avatar,
-html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header-avatar,
-html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
 }
