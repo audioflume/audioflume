@@ -263,35 +263,6 @@ html[data-theme="light"] .fw-filter-done {
   box-sizing: border-box !important;
 }
 
-.fw-toolbar-sticky .fw-toolbar,
-.fw-toolbar-sticky .fw-toolbar-search,
-.fw-toolbar-sticky .filmwave-search-filter-search-shell {
-  min-height: 30px !important;
-  height: 30px !important;
-}
-
-.fw-toolbar-sticky .fw-toolbar-search-icon {
-  width: 24px !important;
-  height: 24px !important;
-}
-
-.fw-toolbar-sticky .fw-toolbar-search-clear {
-  height: 24px !important;
-}
-
-.fw-toolbar-sticky .fw-toolbar-filters {
-  min-height: 30px !important;
-  max-height: 30px !important;
-  height: 30px !important;
-  padding: 0 12px !important;
-}
-
-.fw-toolbar-sticky .fw-toolbar-filters::before {
-  width: 12px !important;
-  height: 12px !important;
-  flex-basis: 12px !important;
-}
-
 @media (max-width: 1180px) {
   .fw-toolbar-sticky {
     width: min(720px, calc(100vw - 360px)) !important;
