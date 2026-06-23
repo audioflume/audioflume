@@ -9,8 +9,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
+import CuratedPlaylistsIcon from "@/components/icons/CuratedPlaylistsIcon";
 import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
-import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import MusicHeaderSearch from "@/components/MusicHeaderSearch";
 import UserMenu from "@/components/UserMenu";
 
@@ -107,7 +107,7 @@ export default function Header() {
           />
 
           <Link href="/curated-playlists" className="filmwave-header-nav-link">
-            <PlaylistIcon size={16} />
+            <CuratedPlaylistsIcon size={16} />
             Playlists
           </Link>
 
