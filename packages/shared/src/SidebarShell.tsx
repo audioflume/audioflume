@@ -133,30 +133,21 @@ function SidebarCuratedPlaylistsIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path
-        d="M4.6 2.6H10.7C11.5 2.6 12.1 3.2 12.1 4V9.8"
-        stroke="currentColor"
-        strokeWidth="1.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.48"
+        d="M4.7 1.85L5.35 3.5L7 4.15L5.35 4.8L4.7 6.45L4.05 4.8L2.4 4.15L4.05 3.5L4.7 1.85Z"
+        fill="currentColor"
       />
       <path
-        d="M3.3 4.3H9.4C10.2 4.3 10.8 4.9 10.8 5.7V11.4C10.8 12.2 10.2 12.8 9.4 12.8H3.3C2.5 12.8 1.9 12.2 1.9 11.4V5.7C1.9 4.9 2.5 4.3 3.3 4.3Z"
+        d="M8.35 3.35H13.25M7.6 6.35H13.25M3.4 9.35H13.25M3.4 12.35H10.75"
         stroke="currentColor"
         strokeWidth="1.45"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4.35 7H8.35M4.35 8.75H8.85M4.35 10.5H7.1"
-        stroke="currentColor"
-        strokeWidth="1.35"
         strokeLinecap="round"
       />
       <path
-        d="M12.7 5.4V8.35M11.25 6.85H14.15"
+        d="M3.4 6.35H4.95"
         stroke="currentColor"
-        strokeWidth="1.35"
+        strokeWidth="1.45"
         strokeLinecap="round"
+        opacity="0.55"
       />
     </svg>
   );
@@ -258,6 +249,10 @@ export function SidebarProjectsHeader({
       </div>
     </div>
   );
+}
+
+export function SidebarProjectList({ children }: { children: ReactNode }) {
+  return <div className="desktop-sidebar-project-list">{children}</div>;
 }
 
 export function SidebarEmptyState({ children }: { children: ReactNode }) {
