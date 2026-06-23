@@ -71,7 +71,7 @@ html[data-theme="light"]
   justify-content: center;
   overflow: hidden;
   border: 0;
-  border-radius: 10px;
+  border-radius: 0;
   background: var(--bg-hover);
   padding: 0;
   color: var(--text-primary);
