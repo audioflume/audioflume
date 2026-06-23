@@ -7,6 +7,21 @@ const DISCOVER_LAYOUT_STYLE = `
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div:nth-of-type(2) {
     margin-top: 0 !important;
   }
+
+  main > section[class*="ml-[var(--sidebar-width)]"] a[href^="/curated-playlists/"],
+  main > section[class*="ml-[var(--sidebar-width)]"] .playlist-gallery-art-wrap,
+  main > section[class*="ml-[var(--sidebar-width)]"] .discover-skeleton-card,
+  main > section[class*="ml-[var(--sidebar-width)]"] .discover-skeleton-shelf-card {
+    border-width: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  main > section[class*="ml-[var(--sidebar-width)]"] a[href^="/curated-playlists/"]:hover,
+  main > section[class*="ml-[var(--sidebar-width)]"] .playlist-gallery-card:hover .playlist-gallery-art-wrap,
+  main > section[class*="ml-[var(--sidebar-width)]"] .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap {
+    border-width: 0 !important;
+    border-color: transparent !important;
+  }
 `;
 
 export default function DiscoverLayout({
