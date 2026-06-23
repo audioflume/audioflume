@@ -131,39 +131,32 @@ export function SidebarNav({
 
 function SidebarCuratedPlaylistsIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path
-        d="M4.4 3.25H10.2C11.05 3.25 11.7 3.9 11.7 4.75V11.15C11.7 12 11.05 12.65 10.2 12.65H4.4C3.55 12.65 2.9 12 2.9 11.15V4.75C2.9 3.9 3.55 3.25 4.4 3.25Z"
+        d="M4.6 2.6H10.7C11.5 2.6 12.1 3.2 12.1 4V9.8"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.48"
+      />
+      <path
+        d="M3.3 4.3H9.4C10.2 4.3 10.8 4.9 10.8 5.7V11.4C10.8 12.2 10.2 12.8 9.4 12.8H3.3C2.5 12.8 1.9 12.2 1.9 11.4V5.7C1.9 4.9 2.5 4.3 3.3 4.3Z"
         stroke="currentColor"
         strokeWidth="1.45"
         strokeLinejoin="round"
       />
       <path
-        d="M5.1 6.15H9.55M5.1 8.25H8.45M5.1 10.35H7.2"
+        d="M4.35 7H8.35M4.35 8.75H8.85M4.35 10.5H7.1"
         stroke="currentColor"
         strokeWidth="1.35"
         strokeLinecap="round"
       />
       <path
-        d="M10.45 10.15L11.45 11.15L13.6 8.95"
+        d="M12.7 5.4V8.35M11.25 6.85H14.15"
         stroke="currentColor"
-        strokeWidth="1.55"
+        strokeWidth="1.35"
         strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4.65 1.65H10.65C12.55 1.65 14 3.1 14 5V9.25"
-        stroke="currentColor"
-        strokeWidth="1.15"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.48"
       />
     </svg>
   );
