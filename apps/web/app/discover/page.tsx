@@ -524,7 +524,7 @@ function FullWidthSearchBar() {
   }
 
   return (
-    <section className="mt-6">
+    <section className="mt-6 block">
       <form
         onSubmit={handleSubmit}
         onClick={() => searchInputRef.current?.focus()}
@@ -794,9 +794,6 @@ function ProductionStylesSection({ blocks }: { blocks: CuratedPlaylist[] }) {
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
             Browse by production style
           </h2>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Visual entry points for common edits, pacing, and film tone.
-          </p>
         </div>
 
         <Link
@@ -826,7 +823,6 @@ function CuratedPlaylistsSection({
   return (
     <CuratedPlaylistShelf
       title="Curated playlists"
-      description="Built for faster starting points, rough cuts, and client-facing treatments."
       playlists={playlists}
       viewAllHref="/curated-playlists"
     />
@@ -941,10 +937,6 @@ function CompactSongsSection({ songs }: { songs: Song[] }) {
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
             Ready-to-cut tracks
           </h2>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Quick options for pacing out a scene, testing a tone, or finding a
-            first pass.
-          </p>
         </div>
 
         <Link
@@ -974,9 +966,6 @@ function FastScanSection({ songs }: { songs: Song[] }) {
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
             Fast tracks
           </h2>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            A denser list for quick auditioning when you already know the lane.
-          </p>
         </div>
 
         <Link
