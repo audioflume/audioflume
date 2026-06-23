@@ -29,8 +29,8 @@
   --filmwave-sidebar-label-gap: 2px;
   --filmwave-sidebar-label-width: 180px;
   --filmwave-sidebar-nav-gap: 2px;
-  --filmwave-sidebar-float-inset: 12px;
-  --filmwave-sidebar-content-gap: 20px;
+  --filmwave-sidebar-float-inset: 0px;
+  --filmwave-sidebar-content-gap: 0px;
 }
 
 :where(html.light, html[data-theme="light"]) {
@@ -48,10 +48,9 @@
   --sidebar-width-collapsed: 68px;
 }
 
-/* Floating sidebar — inset rounded panel on a subtle grey surface,
-   detached from the page edges. The content offset stays at the full
-   sidebar width variable, so the panel width = expanded - inset - gap
-   gives an identical gap on the website and the desktop app. */
+/* Anchored sidebar — flush to the page edge with only a right-side divider.
+   The content offset stays at the full sidebar width variable so the
+   website and desktop app keep matching expanded/collapsed layout geometry. */
 .desktop-app-sidebar {
   position: fixed;
   top: calc(var(--filmwave-sidebar-top-offset) + var(--filmwave-sidebar-float-inset));
@@ -62,8 +61,9 @@
   width: var(--filmwave-sidebar-panel-expanded-width);
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
+  border: 0;
+  border-right: 1px solid var(--border-subtle);
+  border-radius: 0;
   background: var(--filmwave-chrome-surface, var(--bg-tertiary));
   background-image: none;
   box-shadow: none;
