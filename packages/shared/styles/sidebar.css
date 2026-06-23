@@ -64,7 +64,7 @@
   border: 0;
   border-right: 1px solid var(--border-subtle);
   border-radius: 0;
-  background: var(--filmwave-chrome-surface, var(--bg-tertiary));
+  background: var(--bg-primary);
   background-image: none;
   box-shadow: none;
   transition: width 200ms ease;
