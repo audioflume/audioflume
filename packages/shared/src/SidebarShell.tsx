@@ -129,30 +129,6 @@ export function SidebarNav({
   );
 }
 
-function SidebarCuratedPlaylistsIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path
-        d="M4.7 1.85L5.35 3.5L7 4.15L5.35 4.8L4.7 6.45L4.05 4.8L2.4 4.15L4.05 3.5L4.7 1.85Z"
-        fill="currentColor"
-      />
-      <path
-        d="M8.35 3.35H13.25M7.6 6.35H13.25M3.4 9.35H13.25M3.4 12.35H10.75"
-        stroke="currentColor"
-        strokeWidth="1.45"
-        strokeLinecap="round"
-      />
-      <path
-        d="M3.4 6.35H4.95"
-        stroke="currentColor"
-        strokeWidth="1.45"
-        strokeLinecap="round"
-        opacity="0.55"
-      />
-    </svg>
-  );
-}
-
 type SidebarLinkRowProps = {
   label: string;
   icon: ReactNode;
@@ -170,20 +146,21 @@ export function SidebarLinkRow({
   onClick,
   onTooltipChange,
 }: SidebarLinkRowProps) {
-  const renderedIcon =
-    label === "Curated Playlists" ? <SidebarCuratedPlaylistsIcon /> : icon;
+  if (label === "Curated Playlists") return null;
+
+  const renderedLabel = label === "My Playlists" ? "Playlists" : label;
 
   function showTooltip(element: HTMLElement) {
     if (!collapsed) return;
     const rect = element.getBoundingClientRect();
-    onTooltipChange({ label, top: rect.top + rect.height / 2 });
+    onTooltipChange({ label: renderedLabel, top: rect.top + rect.height / 2 });
   }
 
   return (
     <button
       type="button"
       className={`desktop-sidebar-link${active ? " is-active" : ""}`}
-      aria-label={label}
+      aria-label={renderedLabel}
       onMouseEnter={(event) => showTooltip(event.currentTarget)}
       onMouseLeave={() => onTooltipChange(null)}
       onFocus={(event) => showTooltip(event.currentTarget)}
@@ -194,9 +171,9 @@ export function SidebarLinkRow({
       }}
     >
       <span className="desktop-sidebar-link-icon" aria-hidden="true">
-        {renderedIcon}
+        {icon}
       </span>
-      <span className="desktop-sidebar-link-label">{label}</span>
+      <span className="desktop-sidebar-link-label">{renderedLabel}</span>
     </button>
   );
 }
