@@ -22,6 +22,7 @@ import {
   QUICK_FILTERS,
   REGION_OPTIONS,
   ShuffleIconSmall,
+  songMatchesEditPointFilter,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -63,6 +64,52 @@ function shuffleIds(ids: string[]) {
   }
 
   return nextIds;
+}
+
+function normalizeFilterValue(value: string) {
+  return value.trim().toLowerCase();
+}
+
+function toFilterStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.flatMap(toFilterStringArray);
+  }
+
+  if (typeof value !== "string") return [];
+
+  return value
+    .split(/[;,]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function getSongField(song: unknown, field: string) {
+  if (!song || typeof song !== "object") return undefined;
+  return (song as Record<string, unknown>)[field];
+}
+
+function getSongFilterValues(song: unknown, fields: string[]) {
+  return fields.flatMap((field) => toFilterStringArray(getSongField(song, field)));
+}
+
+function optionIsUsedBySongValues(values: string[], option: string) {
+  const normalizedOption = normalizeFilterValue(option);
+
+  return values.some((value) => normalizeFilterValue(value) === normalizedOption);
+}
+
+function filterOptionsWithSongs<T extends string>(
+  options: readonly T[],
+  songs: readonly unknown[],
+  fields: string[],
+) {
+  return options.filter((option) =>
+    songs.some((song) => optionIsUsedBySongValues(getSongFilterValues(song, fields), option)),
+  );
+}
+
+function songIsInstrumental(song: unknown) {
+  return getSongField(song, "instrumental") === true;
 }
 
 export default function MusicPage() {
@@ -138,6 +185,34 @@ export default function MusicPage() {
     setFilters((current) => ({ ...current, keyValue: value }));
   const setShowEditPointMarkers = (value: boolean) =>
     setFilters((current) => ({ ...current, showEditPointMarkers: value }));
+
+  const availableFilterOptions = useMemo(() => {
+    const moods = filterOptionsWithSongs(MOOD_OPTIONS, songs, ["moods", "mood"]);
+    const genres = filterOptionsWithSongs(GENRE_OPTIONS, songs, ["genres", "genre"]);
+    const regions = filterOptionsWithSongs(REGION_OPTIONS, songs, ["regions", "region"]);
+    const instruments = filterOptionsWithSongs(INSTRUMENT_OPTIONS, songs, ["instruments"]);
+    const builds = filterOptionsWithSongs(BUILD_OPTIONS, songs, ["builds", "build"]);
+    const vocals = filterOptionsWithSongs(VOCALS_OPTIONS, songs, ["vocals"]);
+    const vocalFilters = [
+      ...(songs.some(songIsInstrumental) ? [INSTRUMENTAL_VOCAL_FILTER_OPTION] : []),
+      ...vocals,
+    ];
+    const cuePoints = EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+      songs.some((song) => songMatchesEditPointFilter(song, option.type)),
+    );
+    const quickFilters = QUICK_FILTERS.filter((filter) => genres.includes(filter));
+
+    return {
+      moods,
+      genres,
+      regions,
+      instruments,
+      builds,
+      vocals: vocalFilters,
+      cuePoints,
+      quickFilters,
+    };
+  }, [songs]);
 
   const selectedVocalFilters = instrumental
     ? [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...selectedVocals]
@@ -283,6 +358,61 @@ export default function MusicPage() {
     if (!selectedPlaylistId) setSelectedPlaylistSongIds(null);
   }, [selectedPlaylistId]);
 
+  useEffect(() => {
+    if (!filtersHydrated || songsLoading || songs.length === 0) return;
+
+    setFilters((current) => {
+      const nextSelectedMoods = current.selectedMoods.filter((value) =>
+        availableFilterOptions.moods.includes(value),
+      );
+      const nextSelectedGenres = current.selectedGenres.filter((value) =>
+        availableFilterOptions.genres.includes(value),
+      );
+      const nextSelectedRegions = current.selectedRegions.filter((value) =>
+        availableFilterOptions.regions.includes(value),
+      );
+      const nextSelectedInstruments = current.selectedInstruments.filter((value) =>
+        availableFilterOptions.instruments.includes(value),
+      );
+      const nextSelectedBuilds = current.selectedBuilds.filter((value) =>
+        availableFilterOptions.builds.includes(value),
+      );
+      const nextSelectedVocals = current.selectedVocals.filter((value) =>
+        availableFilterOptions.vocals.includes(value),
+      );
+      const nextSelectedEditPoints = current.selectedEditPoints.filter((type) =>
+        availableFilterOptions.cuePoints.some((option) => option.type === type),
+      );
+      const nextInstrumental =
+        current.instrumental &&
+        availableFilterOptions.vocals.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
+
+      const changed =
+        nextSelectedMoods.length !== current.selectedMoods.length ||
+        nextSelectedGenres.length !== current.selectedGenres.length ||
+        nextSelectedRegions.length !== current.selectedRegions.length ||
+        nextSelectedInstruments.length !== current.selectedInstruments.length ||
+        nextSelectedBuilds.length !== current.selectedBuilds.length ||
+        nextSelectedVocals.length !== current.selectedVocals.length ||
+        nextSelectedEditPoints.length !== current.selectedEditPoints.length ||
+        nextInstrumental !== current.instrumental;
+
+      if (!changed) return current;
+
+      return {
+        ...current,
+        selectedMoods: nextSelectedMoods,
+        selectedGenres: nextSelectedGenres,
+        selectedRegions: nextSelectedRegions,
+        selectedInstruments: nextSelectedInstruments,
+        selectedBuilds: nextSelectedBuilds,
+        selectedVocals: nextSelectedVocals,
+        selectedEditPoints: nextSelectedEditPoints,
+        instrumental: nextInstrumental,
+      };
+    });
+  }, [availableFilterOptions, filtersHydrated, setFilters, songs.length, songsLoading]);
+
   const filteredSongs = useMemo(() => {
     if (!filtersHydrated) return [];
 
@@ -405,54 +535,54 @@ export default function MusicPage() {
     {
       id: "mood",
       label: "Scene",
-      options: [...MOOD_OPTIONS],
+      options: availableFilterOptions.moods,
       selected: selectedMoods,
       onToggle: toggleIn(selectedMoods, setSelectedMoods),
     },
     {
       id: "genre",
       label: "Genre",
-      options: [...GENRE_OPTIONS],
+      options: availableFilterOptions.genres,
       selected: selectedGenres,
       onToggle: toggleIn(selectedGenres, setSelectedGenres),
     },
     {
       id: "region",
       label: "Region",
-      options: [...REGION_OPTIONS],
+      options: availableFilterOptions.regions,
       selected: selectedRegions,
       onToggle: toggleIn(selectedRegions, setSelectedRegions),
     },
     {
       id: "instruments",
       label: "Instruments",
-      options: [...INSTRUMENT_OPTIONS],
+      options: availableFilterOptions.instruments,
       selected: selectedInstruments,
       onToggle: toggleIn(selectedInstruments, setSelectedInstruments),
     },
     {
       id: "vocals",
       label: "Vocals",
-      options: VOCAL_FILTER_OPTIONS,
+      options: availableFilterOptions.vocals,
       selected: selectedVocalFilters,
       onToggle: toggleIn(selectedVocalFilters, setSelectedVocalFilters),
     },
     {
       id: "build",
       label: "Build",
-      options: [...BUILD_OPTIONS],
+      options: availableFilterOptions.builds,
       selected: selectedBuilds,
       onToggle: toggleIn(selectedBuilds, setSelectedBuilds),
     },
     {
       id: "cuePoints",
       label: "Cue Points",
-      options: EDIT_POINT_FILTER_OPTIONS.map((option) => option.label),
-      selected: EDIT_POINT_FILTER_OPTIONS.filter((option) =>
+      options: availableFilterOptions.cuePoints.map((option) => option.label),
+      selected: availableFilterOptions.cuePoints.filter((option) =>
         selectedEditPoints.includes(option.type),
       ).map((option) => option.label),
       onToggle: (label: string) => {
-        const option = EDIT_POINT_FILTER_OPTIONS.find(
+        const option = availableFilterOptions.cuePoints.find(
           (item) => item.label === label,
         );
         if (!option) return;
@@ -566,7 +696,7 @@ export default function MusicPage() {
         </MusicLibraryToolbar>
 
         <MusicQuickChips>
-          {QUICK_FILTERS.map((filter) => {
+          {availableFilterOptions.quickFilters.map((filter) => {
             const isActive = selectedGenres.includes(filter);
 
             return (
