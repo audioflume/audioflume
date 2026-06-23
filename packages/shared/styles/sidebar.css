@@ -62,7 +62,7 @@
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  border-right: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--filmwave-header-border-color);
   border-radius: 0;
   background: var(--bg-primary);
   background-image: none;
