@@ -12,6 +12,7 @@ import {
 } from "@filmwave/shared";
 import { useEffect, useState, type ReactNode } from "react";
 import type { Project } from "../../lib/mockFilmwaveApi";
+import CuratedPlaylistsIcon from "../icons/CuratedPlaylistsIcon";
 import DashboardIcon from "../icons/DashboardIcon";
 import FolderIcon from "../icons/FolderIcon";
 import HeartIcon from "../icons/HeartIcon";
@@ -88,41 +89,6 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
   );
 }
 
-function CuratedIcon({ size = 14 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 7H13.25"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H15"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 17H11.5"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M17.4 4.9L18.18 6.74C18.32 7.07 18.58 7.33 18.91 7.47L20.75 8.25L18.91 9.03C18.58 9.17 18.32 9.43 18.18 9.76L17.4 11.6L16.62 9.76C16.48 9.43 16.22 9.17 15.89 9.03L14.05 8.25L15.89 7.47C16.22 7.33 16.48 7.07 16.62 6.74L17.4 4.9Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
 export default function DesktopAppShell({
   activeProjectId,
   activeView,
@@ -187,7 +153,7 @@ export default function DesktopAppShell({
     },
     { label: "Favorites", icon: <HeartIcon /> },
     { label: "Sound FX", icon: <WaveformIcon /> },
-    { view: "curated", label: "Curated Playlists", icon: <CuratedIcon /> },
+    { view: "curated", label: "Curated Playlists", icon: <CuratedPlaylistsIcon size={14} /> },
   ];
 
   const projectLinks: SidebarNavItem[] = projects.map((project) => ({
