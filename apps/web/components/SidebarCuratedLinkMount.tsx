@@ -8,41 +8,7 @@ import {
   SidebarTooltip,
   type SidebarTooltipState,
 } from "@filmwave/shared";
-
-function CuratedIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 7H13.25"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12H15"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 17H11.5"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M17.4 4.9L18.18 6.74C18.32 7.07 18.58 7.33 18.91 7.47L20.75 8.25L18.91 9.03C18.58 9.17 18.32 9.43 18.18 9.76L17.4 11.6L16.62 9.76C16.48 9.43 16.22 9.17 15.89 9.03L14.05 8.25L15.89 7.47C16.22 7.33 16.48 7.07 16.62 6.74L17.4 4.9Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
+import CuratedPlaylistsIcon from "@/components/icons/CuratedPlaylistsIcon";
 
 export default function SidebarCuratedLinkMount() {
   const pathname = usePathname();
@@ -97,7 +63,7 @@ export default function SidebarCuratedLinkMount() {
       {createPortal(
         <SidebarLinkRow
           label="Curated Playlists"
-          icon={<CuratedIcon />}
+          icon={<CuratedPlaylistsIcon size={20} />}
           collapsed={collapsed}
           active={active}
           onTooltipChange={setTooltip}
