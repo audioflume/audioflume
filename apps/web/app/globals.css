@@ -79,15 +79,6 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
   justify-content: center;
 }
 
-/* ─── Shared sidebar/search chrome surface ───────────────── */
-
-aside.desktop-app-sidebar[data-sidebar],
-aside.desktop-app-sidebar[data-sidebar] .desktop-app-sidebar-inner {
-  background: var(--filmwave-chrome-surface) !important;
-  background-image: none !important;
-  box-shadow: none !important;
-}
-
 /* ─── Discover page visual-first layout ───────────────────── */
 
 body.sidebar-collapsed main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] {
