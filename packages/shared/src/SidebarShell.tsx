@@ -129,6 +129,46 @@ export function SidebarNav({
   );
 }
 
+function SidebarCuratedPlaylistsIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4.4 3.25H10.2C11.05 3.25 11.7 3.9 11.7 4.75V11.15C11.7 12 11.05 12.65 10.2 12.65H4.4C3.55 12.65 2.9 12 2.9 11.15V4.75C2.9 3.9 3.55 3.25 4.4 3.25Z"
+        stroke="currentColor"
+        strokeWidth="1.45"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.1 6.15H9.55M5.1 8.25H8.45M5.1 10.35H7.2"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10.45 10.15L11.45 11.15L13.6 8.95"
+        stroke="currentColor"
+        strokeWidth="1.55"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4.65 1.65H10.65C12.55 1.65 14 3.1 14 5V9.25"
+        stroke="currentColor"
+        strokeWidth="1.15"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.48"
+      />
+    </svg>
+  );
+}
+
 type SidebarLinkRowProps = {
   label: string;
   icon: ReactNode;
@@ -146,6 +186,9 @@ export function SidebarLinkRow({
   onClick,
   onTooltipChange,
 }: SidebarLinkRowProps) {
+  const renderedIcon =
+    label === "Curated Playlists" ? <SidebarCuratedPlaylistsIcon /> : icon;
+
   function showTooltip(element: HTMLElement) {
     if (!collapsed) return;
     const rect = element.getBoundingClientRect();
@@ -167,7 +210,7 @@ export function SidebarLinkRow({
       }}
     >
       <span className="desktop-sidebar-link-icon" aria-hidden="true">
-        {icon}
+        {renderedIcon}
       </span>
       <span className="desktop-sidebar-link-label">{label}</span>
     </button>
