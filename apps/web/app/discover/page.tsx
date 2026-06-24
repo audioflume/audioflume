@@ -769,8 +769,8 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
         </div>
       </div>
 
-      <div className="mt-5">
-        <h3 className="font-[family-name:var(--font-instrument-sans)] text-[28px] font-medium leading-[1.05] tracking-[-0.055em] text-[var(--text-primary)]">
+      <div className="mt-5 border-b border-[var(--border)] pb-5">
+        <h3 className="font-[family-name:var(--font-instrument-sans)] text-[22px] font-medium leading-[1.05] tracking-[-0.055em] text-[var(--text-primary)]">
           {playlist.name}
         </h3>
 
