@@ -722,7 +722,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
 
       <FullWidthSearchBar />
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
+      <div className="mt-2 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
         {hero && <DiscoveryHeroCard playlist={hero} />}
 
         <div className="grid gap-4">
@@ -777,6 +777,11 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
             {playlist.description}
           </p>
         )}
+
+        <div className="mt-4 inline-flex h-8 w-fit items-center gap-1.5 bg-[var(--text-primary)] px-3 text-[11px] font-medium text-[var(--bg-primary)] transition group-hover:opacity-85">
+          Explore
+          <ArrowUpRightIcon />
+        </div>
       </div>
     </Link>
   );
