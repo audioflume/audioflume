@@ -98,26 +98,22 @@ main:has(a[href^="/curated-playlists/"]) section.mt-10 article[aria-label^="Play
   border-radius: 10px;
 }
 
-main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] {
+main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="min-h-[245px]"] {
   min-height: 365px;
-  overflow: hidden;
+  overflow: visible;
   border-color: transparent;
   border-radius: 0;
   background: transparent;
 }
 
-main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > img,
-main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > div[class*="absolute"][class*="inset-0"] {
-  bottom: auto !important;
-  height: 245px !important;
+main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="min-h-[245px]"] > img,
+main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="min-h-[245px]"] > div[class*="absolute"][class*="inset-0"] {
   border-radius: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 245px, 0 245px);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 245px, 0 245px);
 }
 
-main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > img {
-  transform: none !important;
-}
-
-main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child {
+main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="min-h-[245px]"] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child {
   position: absolute;
   top: calc(100% + 18px);
   left: 0;
@@ -126,10 +122,10 @@ main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[
   background: transparent;
 }
 
-main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child h3 {
+main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="min-h-[245px]"] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child h3 {
   color: var(--text-primary);
 }
 
-main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child p {
+main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="min-h-[245px]"] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child p {
   color: var(--text-secondary);
 }
