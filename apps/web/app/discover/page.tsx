@@ -745,40 +745,40 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <Link
       href={`/curated-playlists/${playlist.id}`}
-      className="group relative min-h-[245px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] transition hover:border-[var(--text-muted)]"
+      className="group block bg-transparent transition"
     >
-      {playlist.cover_image_url && (
-        <Image
-          src={playlist.cover_image_url}
-          alt={playlist.name}
-          fill
-          sizes="(min-width: 1280px) 25vw, 100vw"
-          className="object-cover transition duration-700 group-hover:scale-[1.04]"
-        />
-      )}
+      <div className="relative h-[245px] overflow-hidden bg-[var(--bg-secondary)]">
+        {playlist.cover_image_url && (
+          <Image
+            src={playlist.cover_image_url}
+            alt={playlist.name}
+            fill
+            sizes="(min-width: 1280px) 25vw, 100vw"
+            className="object-cover transition duration-700 group-hover:scale-[1.04]"
+          />
+        )}
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/36 to-black/8" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/36 to-black/8" />
 
-      <div className="relative z-10 flex min-h-[245px] flex-col justify-between p-4">
-        <div className="flex items-start justify-between gap-3">
+        <div className="absolute left-4 right-4 top-4 z-10 flex items-start justify-between gap-3">
           <KickerPill>{playlist.kicker}</KickerPill>
 
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black">
             <ArrowUpRightIcon />
           </div>
         </div>
+      </div>
 
-        <div>
-          <h3 className="font-[family-name:var(--font-instrument-sans)] text-[28px] font-medium leading-[1.05] tracking-[-0.055em] text-white">
-            {playlist.name}
-          </h3>
+      <div className="mt-5">
+        <h3 className="font-[family-name:var(--font-instrument-sans)] text-[28px] font-medium leading-[1.05] tracking-[-0.055em] text-[var(--text-primary)]">
+          {playlist.name}
+        </h3>
 
-          {playlist.description && (
-            <p className="mt-3 max-w-[320px] text-xs leading-5 text-white/68">
-              {playlist.description}
-            </p>
-          )}
-        </div>
+        {playlist.description && (
+          <p className="mt-3 max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
+            {playlist.description}
+          </p>
+        )}
       </div>
     </Link>
   );
