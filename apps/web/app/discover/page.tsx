@@ -603,9 +603,7 @@ function DiscoveryHeroCard({ playlist }: { playlist: CuratedPlaylist }) {
 
       <div className="absolute inset-0 bg-black/35" />
 
-      <div className="relative z-10 flex min-h-[420px] flex-col justify-between p-6 md:p-8">
-        <KickerPill>{playlist.kicker}</KickerPill>
-
+      <div className="relative z-10 flex min-h-[420px] flex-col justify-end p-6 md:p-8">
         <div className="max-w-[520px]">
           <h1 className="font-[family-name:var(--font-instrument-sans)] text-[clamp(32px,4.8vw,58px)] font-medium leading-[0.9] tracking-[-0.065em] text-white">
             {playlist.name}
@@ -647,9 +645,7 @@ function DiscoverySideCard({ playlist }: { playlist: CuratedPlaylist }) {
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/46 to-black/10" />
 
-      <div className="relative z-10 flex min-h-[204px] flex-col justify-between p-5">
-        <KickerPill>{playlist.kicker}</KickerPill>
-
+      <div className="relative z-10 flex min-h-[204px] flex-col justify-end p-5">
         <div>
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-[30px] font-medium leading-[1.05] tracking-[-0.055em] text-white">
             {playlist.name}
@@ -660,6 +656,11 @@ function DiscoverySideCard({ playlist }: { playlist: CuratedPlaylist }) {
               {playlist.description}
             </p>
           )}
+
+          <div className="mt-4 inline-flex h-8 w-fit items-center gap-1.5 bg-white px-3 text-[11px] font-medium text-black transition group-hover:scale-[1.02]">
+            Explore this mood
+            <ArrowUpRightIcon />
+          </div>
         </div>
       </div>
     </Link>
@@ -684,12 +685,15 @@ function DiscoveryMiniCard({ playlist }: { playlist: CuratedPlaylist }) {
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/22 to-black/8" />
 
-      <div className="relative z-10 flex min-h-[188px] flex-col justify-end gap-2 p-4">
-        <KickerPill>{playlist.kicker}</KickerPill>
-
+      <div className="relative z-10 flex min-h-[188px] flex-col justify-end p-4">
         <h3 className="font-[family-name:var(--font-instrument-sans)] text-[24px] font-medium leading-[1.05] tracking-[-0.05em] text-white">
           {playlist.name}
         </h3>
+
+        <div className="mt-4 inline-flex h-8 w-fit items-center gap-1.5 bg-white px-3 text-[11px] font-medium text-black transition group-hover:scale-[1.02]">
+          Explore this mood
+          <ArrowUpRightIcon />
+        </div>
       </div>
     </Link>
   );
@@ -722,14 +726,14 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
 
       <FullWidthSearchBar />
 
-      <div className="mt-2 grid gap-2 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
+      <div className="mt-2 grid gap-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
         {hero && <DiscoveryHeroCard playlist={hero} />}
 
-        <div className="grid gap-2">
+        <div className="grid gap-1">
           {side && <DiscoverySideCard playlist={side} />}
 
           {minis.length > 0 && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-1">
               {minis.slice(0, 2).map((playlist) => (
                 <DiscoveryMiniCard key={playlist.id} playlist={playlist} />
               ))}
