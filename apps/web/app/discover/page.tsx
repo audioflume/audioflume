@@ -103,7 +103,7 @@ function stopPlaybackMouseEvent(event: MouseEvent<HTMLElement>) {
 
 function KickerPill({ children }: { children: ReactNode }) {
   return (
-    <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/76 backdrop-blur">
+    <div className="inline-flex w-fit max-w-full items-center text-[11px] font-medium leading-none text-white/76">
       <span className="truncate">{children}</span>
     </div>
   );
@@ -722,14 +722,14 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
 
       <FullWidthSearchBar />
 
-      <div className="mt-2 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
+      <div className="mt-2 grid gap-2 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
         {hero && <DiscoveryHeroCard playlist={hero} />}
 
-        <div className="grid gap-4">
+        <div className="grid gap-2">
           {side && <DiscoverySideCard playlist={side} />}
 
           {minis.length > 0 && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-2">
               {minis.slice(0, 2).map((playlist) => (
                 <DiscoveryMiniCard key={playlist.id} playlist={playlist} />
               ))}
