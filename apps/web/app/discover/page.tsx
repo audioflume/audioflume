@@ -745,7 +745,7 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
   return (
     <Link
       href={`/curated-playlists/${playlist.id}`}
-      className="group block bg-transparent transition"
+      className="group flex h-full flex-col bg-transparent transition"
     >
       <div className="relative h-[210px] overflow-hidden bg-[var(--bg-secondary)]">
         {playlist.cover_image_url && (
@@ -769,7 +769,7 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
         </div>
       </div>
 
-      <div className="mt-5 border-b border-[var(--border)] pb-5">
+      <div className="mt-5 flex flex-1 flex-col border-b border-[var(--border)] pb-5">
         <h3 className="font-[family-name:var(--font-instrument-sans)] text-[22px] font-medium leading-[1.05] tracking-[-0.055em] text-[var(--text-primary)]">
           {playlist.name}
         </h3>
