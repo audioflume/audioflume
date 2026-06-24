@@ -618,7 +618,7 @@ function DiscoveryHeroCard({ playlist }: { playlist: CuratedPlaylist }) {
           )}
 
           {playlist.discover_button_enabled && (
-            <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
+            <div className="mt-7 inline-flex h-11 items-center gap-2 rounded-none bg-white px-4 text-sm font-medium text-black transition group-hover:scale-[1.02]">
               {playlist.discover_button_text || "Explore this mood"}
               <ArrowUpRightIcon />
             </div>
@@ -722,7 +722,7 @@ function VisualDiscoverySection({ blocks }: { blocks: CuratedPlaylist[] }) {
 
       <FullWidthSearchBar />
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
+      <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
         {hero && <DiscoveryHeroCard playlist={hero} />}
 
         <div className="grid gap-4">
