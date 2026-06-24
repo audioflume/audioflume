@@ -760,9 +760,7 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/36 to-black/8" />
 
-        <div className="absolute left-4 right-4 top-4 z-10 flex items-start justify-between gap-3">
-          <KickerPill>{playlist.kicker}</KickerPill>
-
+        <div className="absolute right-4 top-4 z-10">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black">
             <ArrowUpRightIcon />
           </div>
