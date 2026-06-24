@@ -747,7 +747,7 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
       href={`/curated-playlists/${playlist.id}`}
       className="group block bg-transparent transition"
     >
-      <div className="relative h-[245px] overflow-hidden bg-[var(--bg-secondary)]">
+      <div className="relative h-[210px] overflow-hidden bg-[var(--bg-secondary)]">
         {playlist.cover_image_url && (
           <Image
             src={playlist.cover_image_url}
