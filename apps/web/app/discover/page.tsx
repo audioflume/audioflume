@@ -778,9 +778,11 @@ function ProductionStyleCard({ playlist }: { playlist: CuratedPlaylist }) {
           </p>
         )}
 
-        <div className="mt-4 inline-flex h-8 w-fit items-center gap-1.5 bg-[var(--text-primary)] px-3 text-[11px] font-medium text-[var(--bg-primary)] transition group-hover:opacity-85">
-          Explore
-          <ArrowUpRightIcon />
+        <div className="mt-auto pt-4">
+          <div className="inline-flex h-6 w-fit items-center gap-1 bg-[var(--bg-control)] px-2.5 text-[10px] font-medium text-[var(--text-secondary)] transition group-hover:bg-[var(--bg-control-hover)] group-hover:text-[var(--text-primary)]">
+            Explore this style
+            <ArrowUpRightIcon />
+          </div>
         </div>
       </div>
     </Link>
