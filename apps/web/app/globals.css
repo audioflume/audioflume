@@ -113,6 +113,10 @@ main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[
   border-radius: 0;
 }
 
+main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > img {
+  transform: none !important;
+}
+
 main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child {
   position: absolute;
   top: calc(100% + 18px);
