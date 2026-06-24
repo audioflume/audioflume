@@ -36,7 +36,8 @@ body > header {
   z-index: var(--filmwave-z-header) !important;
   height: var(--filmwave-header-height);
   border-bottom: 1px solid var(--filmwave-header-border-color) !important;
-  background: var(--bg-primary);
+  background: var(--filmwave-chrome-surface, var(--bg-primary)) !important;
+  background-color: var(--filmwave-chrome-surface, var(--bg-primary)) !important;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   color: var(--text-primary);
@@ -59,7 +60,8 @@ body > header > div {
   z-index: var(--filmwave-z-header);
   height: var(--filmwave-header-height);
   border-bottom: 1px solid var(--filmwave-header-border-color) !important;
-  background: var(--bg-primary);
+  background: var(--filmwave-chrome-surface, var(--bg-primary)) !important;
+  background-color: var(--filmwave-chrome-surface, var(--bg-primary)) !important;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   color: var(--text-primary);
