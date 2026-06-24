@@ -3,7 +3,7 @@
   --filmwave-header-padding-x: 24px;
   --filmwave-header-nav-height: 32px;
   --filmwave-header-nav-radius: 999px;
-  --filmwave-header-border-color: rgba(255, 255, 255, 0.16);
+  --filmwave-header-border-color: var(--border);
 
   --filmwave-sidebar-width-expanded: var(--sidebar-width-expanded, 280px);
   --filmwave-sidebar-width-collapsed: var(--sidebar-width-collapsed, 76px);
@@ -27,7 +27,7 @@
 }
 
 :where(html.light, html[data-theme="light"]) {
-  --filmwave-header-border-color: #d9d9d9;
+  --filmwave-header-border-color: var(--border);
 }
 
 .filmwave-app-header,
@@ -37,6 +37,8 @@ body > header {
   height: var(--filmwave-header-height);
   border-bottom: 1px solid var(--filmwave-header-border-color) !important;
   background: var(--bg-primary);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   color: var(--text-primary);
   box-shadow: 0 1px 0 var(--filmwave-header-border-color) !important;
 }
@@ -58,6 +60,8 @@ body > header > div {
   height: var(--filmwave-header-height);
   border-bottom: 1px solid var(--filmwave-header-border-color) !important;
   background: var(--bg-primary);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   color: var(--text-primary);
   user-select: none;
   box-shadow: 0 1px 0 var(--filmwave-header-border-color) !important;
