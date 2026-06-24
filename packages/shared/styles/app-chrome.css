@@ -3,7 +3,7 @@
   --filmwave-header-padding-x: 24px;
   --filmwave-header-nav-height: 32px;
   --filmwave-header-nav-radius: 999px;
-  --filmwave-header-border-color: var(--border);
+  --filmwave-header-border-color: var(--border-strong);
 
   --filmwave-sidebar-width-expanded: var(--sidebar-width-expanded, 280px);
   --filmwave-sidebar-width-collapsed: var(--sidebar-width-collapsed, 76px);
@@ -27,7 +27,7 @@
 }
 
 :where(html.light, html[data-theme="light"]) {
-  --filmwave-header-border-color: var(--border);
+  --filmwave-header-border-color: var(--border-strong);
 }
 
 .filmwave-app-header,
