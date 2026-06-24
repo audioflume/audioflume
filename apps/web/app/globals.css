@@ -113,6 +113,11 @@ main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 245px, 0 245px);
 }
 
+main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="min-h-[245px]"] > img {
+  scale: 1 !important;
+  transform: none !important;
+}
+
 main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"][class*="min-h-[245px]"] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child {
   position: absolute;
   top: calc(100% + 18px);
