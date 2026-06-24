@@ -100,16 +100,17 @@ main:has(a[href^="/curated-playlists/"]) section.mt-10 article[aria-label^="Play
 
 main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] {
   min-height: 365px;
-  overflow: visible;
+  overflow: hidden;
   border-color: transparent;
+  border-radius: 0;
   background: transparent;
 }
 
 main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > img,
 main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > div[class*="absolute"][class*="inset-0"] {
-  bottom: auto;
-  height: 245px;
-  border-radius: 18px;
+  bottom: auto !important;
+  height: 245px !important;
+  border-radius: 0;
 }
 
 main:has(a[href^="/curated-playlists/"]) a[href^="/curated-playlists/"].min-h-\[245px\] > div[class*="z-10"][class*="min-h-[245px]"] > div:last-child {
