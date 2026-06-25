@@ -2,7 +2,8 @@
 @import "../../../../packages/shared/styles/music-filter-column-controls.css";
 @import "./fw-hero.css";
 
-/* Project music tabs share the library song list but need the same player-safe scroll space. */
+/* Main music library and project music tabs need player-safe scroll space. */
+.fw-song-list,
 .project-tab-panel .fw-song-list {
   margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px);
 }
