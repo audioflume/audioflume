@@ -2,9 +2,8 @@
 @import "../../../../packages/shared/styles/music-filter-column-controls.css";
 @import "./fw-hero.css";
 
-/* Main music library and project music tabs need player-safe scroll space. */
-.fw-song-list,
-.project-tab-panel .fw-song-list {
+/* Main music library and project music tabs only need player-safe scroll space when the player is visible. */
+body:has(.filmwave-music-player) .fw-song-list {
   margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px);
 }
 
