@@ -35,7 +35,7 @@
   );
   --filmwave-page-sidebar-offset: calc(
     var(--filmwave-sidebar-expanded-width, var(--sidebar-width-expanded, 248px)) -
-      var(--filmwave-sidebar-content-gap, 0px) + var(--filmwave-sidebar-page-gap)
+      var(--filmwave-sidebar-content-gap, 0px)
   );
 }
 
@@ -62,8 +62,7 @@ body.sidebar-collapsed,
   --sidebar-width: var(--filmwave-header-height);
   --filmwave-page-sidebar-offset: calc(
     var(--filmwave-sidebar-float-inset, 0px) +
-      var(--sidebar-width-collapsed, var(--filmwave-header-height)) +
-      var(--filmwave-sidebar-page-gap)
+      var(--sidebar-width-collapsed, var(--filmwave-header-height))
   );
 }
 
@@ -92,7 +91,7 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
   justify-content: center;
 }
 
-/* Shared website page offset — matches the Music Library side rail spacing. */
+/* Shared website page offset — removes the extra generic sidebar page gap. */
 main > section[class*="ml-[var(--sidebar-width)]"],
 .playlists-page,
 .playlist-detail-page,
