@@ -1,5 +1,20 @@
 /* Shared shell chrome source styles moved out of the old playlist-grid override layer. */
 
+:root {
+  --filmwave-header-avatar-hover-ring-color: rgba(0, 0, 0, 0.16);
+  --filmwave-header-avatar-hover-glow-color: rgba(0, 0, 0, 0.16);
+}
+
+html:not(.light):not([data-theme="light"]) {
+  --filmwave-header-avatar-hover-ring-color: rgba(255, 255, 255, 0.72);
+  --filmwave-header-avatar-hover-glow-color: rgba(255, 255, 255, 0.42);
+}
+
+:where(html.light, html[data-theme="light"]) {
+  --filmwave-header-avatar-hover-ring-color: rgba(0, 0, 0, 0.14);
+  --filmwave-header-avatar-hover-glow-color: rgba(0, 0, 0, 0.16);
+}
+
 /* Keep the structural sidebar Discover row in normal sidebar flow. */
 body:has(.desktop-app-sidebar)
   .desktop-app-sidebar-inner
@@ -124,21 +139,12 @@ html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-floa
 /* Header avatar hover state. */
 .filmwave-header-account-trigger:hover .filmwave-header-avatar,
 .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+  outline: 2px solid var(--filmwave-header-avatar-hover-ring-color) !important;
+  outline-offset: 3px !important;
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.18),
-    0 0 0 4px rgba(255, 255, 255, 0.18),
-    0 0 24px rgba(255, 255, 255, 0.32) !important;
+    0 0 24px var(--filmwave-header-avatar-hover-glow-color) !important;
   transform: scale(1.05) !important;
-}
-
-html.light .filmwave-header-account-trigger:hover .filmwave-header-avatar,
-html.light .filmwave-header-account-trigger.is-open .filmwave-header-avatar,
-html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header-avatar,
-html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.12),
-    0 0 0 4px rgba(0, 0, 0, 0.08),
-    0 0 18px rgba(0, 0, 0, 0.16) !important;
 }
 
 /* Hide the old AI Tools block while Curated Playlists lives in the Library nav. */
