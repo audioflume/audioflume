@@ -43,6 +43,10 @@ const DISCOVER_LAYOUT_STYLE = `
     padding: 0 !important;
   }
 
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
+    grid-auto-flow: row !important;
+  }
+
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] {
     position: relative !important;
     grid-template-columns: 24px minmax(0, 1fr) auto !important;
@@ -66,6 +70,25 @@ const DISCOVER_LAYOUT_STYLE = `
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:hover,
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
     background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
+  }
+
+  @media (min-width: 768px) {
+    main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
+      grid-auto-flow: column !important;
+      grid-template-rows: repeat(12, minmax(0, auto)) !important;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
+      grid-template-rows: repeat(8, minmax(0, auto)) !important;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
+      grid-template-rows: repeat(6, minmax(0, auto)) !important;
+    }
   }
 `;
 
