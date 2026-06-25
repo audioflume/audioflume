@@ -38,14 +38,14 @@ const DISCOVER_LAYOUT_STYLE = `
 
   html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "],
   html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "] {
-    background: color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%) !important;
+    background: var(--bg-hover-strong) !important;
   }
 
   html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:hover,
   html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:focus-visible,
   html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:hover,
   html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
-    background: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
+    background: color-mix(in srgb, var(--bg-hover-strong) 88%, var(--text-primary) 12%) !important;
   }
 
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] {
@@ -75,7 +75,7 @@ const DISCOVER_LAYOUT_STYLE = `
 
   html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "],
   html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] {
-    background: color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%) !important;
+    background: var(--bg-hover-strong) !important;
   }
 
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] > div:nth-of-type(1) > div:first-child > span {
@@ -99,7 +99,7 @@ const DISCOVER_LAYOUT_STYLE = `
   html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:focus-visible,
   html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:hover,
   html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
-    background: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
+    background: color-mix(in srgb, var(--bg-hover-strong) 88%, var(--text-primary) 12%) !important;
   }
 
   @media (min-width: 768px) {
