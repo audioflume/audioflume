@@ -28,12 +28,12 @@ const DISCOVER_LAYOUT_STYLE = `
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "] {
     border-width: 0 !important;
     border-radius: 0 !important;
-    background: color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%) !important;
+    background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
   }
 
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:hover,
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
-    background: color-mix(in srgb, var(--bg-primary) 88%, var(--text-primary) 12%) !important;
+    background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
   }
 `;
 
