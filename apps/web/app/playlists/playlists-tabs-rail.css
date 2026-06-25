@@ -11,7 +11,7 @@
 }
 
 .playlists-page .playlists-hero {
-  padding-top: 24px !important;
+  padding-top: 32px !important;
 }
 
 .playlists-page .playlists-kicker {
@@ -25,6 +25,10 @@
 .playlists-page .playlists-title {
   margin-top: 0 !important;
   font-size: 44px !important;
+}
+
+section.curated-playlists-page-layer > div > div:first-child {
+  margin-top: 8px !important;
 }
 
 section.curated-playlists-page-layer > div > div:first-child > div:first-child > div:first-child {
