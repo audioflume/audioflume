@@ -11,6 +11,10 @@
   border-radius: 0 !important;
 }
 
+.playlists-page .playlist-create-card {
+  border-radius: 0 !important;
+}
+
 .playlist-gallery-card:hover .playlist-gallery-art-wrap,
 .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap {
   border-color: transparent !important;
