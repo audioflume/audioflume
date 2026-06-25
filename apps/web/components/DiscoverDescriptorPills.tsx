@@ -10,6 +10,9 @@ const descriptorPillClassName =
 const cornerArrowClassName =
   "discover-dynamic-corner-arrow pointer-events-none absolute right-4 top-4 z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black";
 
+const miniDescriptionClassName =
+  "discover-dynamic-mini-description mt-2 max-w-[300px] text-xs leading-5 text-white/68";
+
 function getCuratedPlaylistId(href: string | null) {
   if (!href) return null;
 
@@ -58,6 +61,28 @@ function removeExploreMoodButton(link: HTMLAnchorElement) {
       element.remove();
     }
   });
+}
+
+function applyMiniDescription(link: HTMLAnchorElement, description: string) {
+  const heading = link.querySelector("h3");
+  if (!heading) return;
+
+  let descriptionElement = link.querySelector<HTMLParagraphElement>(
+    ".discover-dynamic-mini-description",
+  );
+
+  if (!descriptionElement) {
+    descriptionElement = document.createElement("p");
+    heading.insertAdjacentElement("afterend", descriptionElement);
+  }
+
+  if (descriptionElement.className !== miniDescriptionClassName) {
+    descriptionElement.className = miniDescriptionClassName;
+  }
+
+  if (descriptionElement.textContent !== description) {
+    descriptionElement.textContent = description;
+  }
 }
 
 export default function DiscoverDescriptorPills() {
@@ -143,6 +168,9 @@ export default function DiscoverDescriptorPills() {
           if (cornerArrow.className !== cornerArrowClassName) {
             cornerArrow.className = cornerArrowClassName;
           }
+
+          const description = playlist?.description?.trim();
+          if (description) applyMiniDescription(link, description);
         });
       }
 
@@ -158,7 +186,9 @@ export default function DiscoverDescriptorPills() {
       cancelled = true;
       observer?.disconnect();
       document
-        .querySelectorAll(".discover-dynamic-kicker-pill, .discover-dynamic-corner-arrow")
+        .querySelectorAll(
+          ".discover-dynamic-kicker-pill, .discover-dynamic-corner-arrow, .discover-dynamic-mini-description",
+        )
         .forEach((element) => element.remove());
     };
   }, [pathname]);
