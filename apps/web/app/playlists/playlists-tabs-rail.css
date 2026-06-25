@@ -128,6 +128,7 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
+  transform: translateY(2px) !important;
 }
 
 .playlists-tabs-row .fw-filter-rail-chevron {
