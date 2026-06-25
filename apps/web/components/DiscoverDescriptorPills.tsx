@@ -88,14 +88,17 @@ function applyMiniDescription(link: HTMLAnchorElement, description: string) {
   }
 }
 
-function applyProductionDescriptorPill(link: HTMLAnchorElement, kicker: string) {
-  let pill = link.querySelector<HTMLSpanElement>(
+function applyProductionDescriptorPill(
+  imageBlock: HTMLElement,
+  kicker: string,
+) {
+  let pill = imageBlock.querySelector<HTMLSpanElement>(
     ".discover-dynamic-production-kicker-pill",
   );
 
   if (!pill) {
     pill = document.createElement("span");
-    link.insertAdjacentElement("afterbegin", pill);
+    imageBlock.insertAdjacentElement("afterbegin", pill);
   }
 
   if (pill.className !== productionDescriptorPillClassName) {
@@ -105,6 +108,58 @@ function applyProductionDescriptorPill(link: HTMLAnchorElement, kicker: string) 
   if (pill.textContent !== kicker) {
     pill.textContent = kicker;
   }
+}
+
+function applyProductionCardLayout(link: HTMLAnchorElement, kicker: string) {
+  const imageBlock = link.querySelector<HTMLElement>(":scope > div:first-child");
+  if (!imageBlock) return;
+
+  const contentBlock =
+    link.querySelector<HTMLElement>(".discover-dynamic-production-copy") ||
+    Array.from(link.children).find(
+      (child): child is HTMLElement =>
+        child instanceof HTMLElement && child !== imageBlock && !!child.querySelector("h3"),
+    );
+
+  if (!contentBlock) return;
+
+  link.className = "group block h-full bg-transparent transition";
+  imageBlock.style.height = "245px";
+
+  if (contentBlock.parentElement !== imageBlock) {
+    imageBlock.append(contentBlock);
+  }
+
+  contentBlock.className =
+    "discover-dynamic-production-copy absolute bottom-4 left-4 right-4 z-20 m-0 flex flex-col border-0 p-0";
+
+  const heading = contentBlock.querySelector<HTMLElement>("h3");
+  if (heading) {
+    heading.className =
+      "font-[family-name:var(--font-instrument-sans)] text-[22px] font-medium leading-[1.05] tracking-[-0.055em] text-white";
+  }
+
+  const description = contentBlock.querySelector<HTMLParagraphElement>("p");
+  if (description) {
+    description.className = "mt-3 max-w-[320px] text-xs leading-5 text-white/68";
+  }
+
+  const buttonWrap = Array.from(contentBlock.children).find(
+    (child): child is HTMLElement =>
+      child instanceof HTMLElement && child.textContent?.includes("Explore this style"),
+  );
+
+  if (buttonWrap) {
+    buttonWrap.className = "mt-0 pt-4";
+
+    const button = buttonWrap.querySelector<HTMLElement>("div");
+    if (button) {
+      button.className =
+        "inline-flex h-6 w-fit items-center gap-1 bg-white/12 px-2.5 text-[10px] font-medium text-white/78 backdrop-blur transition group-hover:bg-white group-hover:text-black";
+    }
+  }
+
+  applyProductionDescriptorPill(imageBlock, kicker);
 }
 
 export default function DiscoverDescriptorPills() {
@@ -156,7 +211,7 @@ export default function DiscoverDescriptorPills() {
           if (!playlist || !kicker) return;
 
           if (playlist.discover_section?.startsWith("production_style_")) {
-            applyProductionDescriptorPill(link, kicker);
+            applyProductionCardLayout(link, kicker);
             return;
           }
 
