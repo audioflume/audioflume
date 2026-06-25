@@ -149,15 +149,7 @@ function applyProductionCardLayout(link: HTMLAnchorElement, kicker: string) {
       child instanceof HTMLElement && !!child.textContent?.includes("Explore this style"),
   );
 
-  if (buttonWrap) {
-    buttonWrap.className = "mt-0 pt-4";
-
-    const button = buttonWrap.querySelector<HTMLElement>("div");
-    if (button) {
-      button.className =
-        "inline-flex h-6 w-fit items-center gap-1 bg-white/12 px-2.5 text-[10px] font-medium text-white/78 backdrop-blur transition group-hover:bg-white group-hover:text-black";
-    }
-  }
+  buttonWrap?.remove();
 
   applyProductionDescriptorPill(imageBlock, kicker);
 }
