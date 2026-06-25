@@ -383,7 +383,7 @@ export default function AddToProjectModal({
       >
         <SongPreview song={song} />
 
-        <div className="-mx-5 flex min-h-0 flex-1 flex-col bg-[var(--bg-tertiary)]">
+        <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--filmwave-menu-sep)] bg-[var(--filmwave-menu-bg)]">
           <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-3">
             {newProjectOpen ? (
               <form
