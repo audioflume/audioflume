@@ -18,6 +18,12 @@ const DISCOVER_LAYOUT_STYLE = `
     border-width: 0 !important;
     border-color: transparent !important;
   }
+
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div[class*="mt-2"][class*="grid"],
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div[class*="mt-2"][class*="grid"] > div[class*="grid"],
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div[class*="mt-2"][class*="grid"] > div[class*="grid"] > div[class*="grid-cols-2"] {
+    gap: 8px !important;
+  }
 `;
 
 export default function DiscoverLayout({
