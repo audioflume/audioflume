@@ -260,29 +260,33 @@ body > header > div {
 }
 
 .filmwave-header-avatar {
+  position: relative !important;
   display: flex;
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible !important;
   border-radius: 999px;
   background: var(--bg-control);
   color: var(--text-primary);
   font-size: 10px;
   font-weight: 600;
   line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) !important;
   transition:
+    transform 150ms ease,
     box-shadow 150ms ease,
-    transform 150ms ease;
+    background-color 150ms ease !important;
 }
 
 .filmwave-header-account-trigger:hover .filmwave-header-avatar,
 .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.18),
-    0 0 0 4px rgba(255, 255, 255, 0.08) !important;
+    0 0 0 4px rgba(255, 255, 255, 0.08),
+    0 0 18px rgba(255, 255, 255, 0.18) !important;
   transform: scale(1.05) !important;
 }
 
@@ -292,13 +296,15 @@ html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header
 html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.12),
-    0 0 0 4px rgba(0, 0, 0, 0.08) !important;
+    0 0 0 4px rgba(0, 0, 0, 0.08),
+    0 0 18px rgba(0, 0, 0, 0.16) !important;
 }
 
 .filmwave-header-avatar img {
   display: block;
   width: 100%;
   height: 100%;
+  border-radius: inherit !important;
   object-fit: cover;
 }
 
