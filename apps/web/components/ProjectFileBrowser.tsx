@@ -450,8 +450,7 @@ export default function ProjectFileBrowser({
           (song) => Number(song.project_asset_id) === activeDragData.assetId,
         ) ?? null)
       : null;
-  const overlayModifiers =
-    activeDragViewMode === "list" ? [snapListOverlayToCursor] : undefined;
+  const overlayModifiers = [snapListOverlayToCursor];
 
   function folderIsDescendant(targetFolderId: number, draggedFolderId: number) {
     let current = foldersById.get(targetFolderId) ?? null;
