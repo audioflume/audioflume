@@ -1,21 +1,30 @@
 /* Project file browser interactions, drag previews, and context menus */
 
-.project-drag-preview {
+.project-file-browser.project-drag-preview,
+.project-file-browser.project-drag-preview.is-grid-preview,
+.project-file-browser.project-drag-preview.is-list-preview {
   width: 132px !important;
   min-width: 132px !important;
   max-width: 132px !important;
   background: transparent !important;
 }
 
-.project-drag-preview .project-folder-card,
-.project-drag-preview .project-file-card {
+.project-file-browser.project-drag-preview .project-folder-card,
+.project-file-browser.project-drag-preview .project-file-card,
+.project-file-browser.project-file-browser.project-drag-preview .project-folder-card,
+.project-file-browser.project-file-browser.project-drag-preview .project-file-card {
   display: flex !important;
   width: 100% !important;
   min-width: 0 !important;
   min-height: 132px !important;
+  height: 132px !important;
+  grid-template-columns: none !important;
+  grid-template-rows: none !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
+  column-gap: 0 !important;
+  row-gap: 0 !important;
   gap: 6px !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -25,30 +34,42 @@
   box-shadow: none !important;
 }
 
-.project-drag-preview .project-folder-card:hover,
-.project-drag-preview .project-file-card:hover,
-.project-drag-preview .project-file-card.is-active {
+.project-file-browser.project-drag-preview .project-folder-card:hover,
+.project-file-browser.project-drag-preview .project-file-card:hover,
+.project-file-browser.project-drag-preview .project-file-card.is-active,
+.project-file-browser.project-file-browser.project-drag-preview .project-folder-card:hover,
+.project-file-browser.project-file-browser.project-drag-preview .project-file-card:hover,
+.project-file-browser.project-file-browser.project-drag-preview .project-file-card.is-active {
   background: transparent !important;
 }
 
-.project-drag-preview .project-folder-card-icon-wrap,
-.project-drag-preview .project-file-card-icon-wrap {
+.project-file-browser.project-drag-preview .project-folder-card-icon-wrap,
+.project-file-browser.project-drag-preview .project-file-card-icon-wrap,
+.project-file-browser.project-file-browser.project-drag-preview .project-folder-card-icon-wrap,
+.project-file-browser.project-file-browser.project-drag-preview .project-file-card-icon-wrap {
   display: flex !important;
   width: 42px !important;
   height: 42px !important;
   min-width: 42px !important;
   flex: 0 0 42px !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
   align-items: center !important;
   justify-content: center !important;
   margin: 0 0 4px !important;
 }
 
-.project-drag-preview .project-folder-card-name,
-.project-drag-preview .project-file-card-title {
+.project-file-browser.project-drag-preview .project-folder-card-name,
+.project-file-browser.project-drag-preview .project-file-card-title,
+.project-file-browser.project-file-browser.project-drag-preview .project-folder-card-name,
+.project-file-browser.project-file-browser.project-drag-preview .project-file-card-title {
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
   overflow: hidden !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  align-self: center !important;
   text-align: center !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
@@ -57,12 +78,17 @@
   line-height: 1.2 !important;
 }
 
-.project-drag-preview .project-folder-card-meta,
-.project-drag-preview .project-file-card-meta {
+.project-file-browser.project-drag-preview .project-folder-card-meta,
+.project-file-browser.project-drag-preview .project-file-card-meta,
+.project-file-browser.project-file-browser.project-drag-preview .project-folder-card-meta,
+.project-file-browser.project-file-browser.project-drag-preview .project-file-card-meta {
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
   overflow: hidden !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  align-self: center !important;
   margin: 0 !important;
   text-align: center !important;
   text-overflow: ellipsis !important;
@@ -72,7 +98,8 @@
   color: var(--text-muted) !important;
 }
 
-.project-drag-preview .project-preview-button {
+.project-file-browser.project-drag-preview .project-preview-button,
+.project-file-browser.project-file-browser.project-drag-preview .project-preview-button {
   display: none !important;
 }
 
