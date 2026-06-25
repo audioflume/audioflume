@@ -233,7 +233,8 @@ body > header > div {
 
 .filmwave-header-account-trigger:hover .filmwave-header-account-label,
 .filmwave-header-account-trigger.is-open .filmwave-header-account-label {
-  background: var(--bg-hover-strong);
+  background: transparent !important;
+  background-color: transparent !important;
   color: var(--text-primary);
 }
 
@@ -259,7 +260,6 @@ body > header > div {
 }
 
 .filmwave-header-avatar {
-  box-sizing: border-box;
   display: flex;
   width: 32px;
   height: 32px;
@@ -267,25 +267,32 @@ body > header > div {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid transparent;
   border-radius: 999px;
   background: var(--bg-control);
   color: var(--text-primary);
   font-size: 10px;
   font-weight: 600;
   line-height: 1;
-  box-shadow: 0 0 0 0 transparent;
   transition:
-    border-color 150ms ease,
-    box-shadow 150ms ease;
+    box-shadow 150ms ease,
+    transform 150ms ease;
 }
 
 .filmwave-header-account-trigger:hover .filmwave-header-avatar,
 .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
-  border-color: color-mix(in srgb, var(--filmwave-header-border-color) 80%, transparent);
   box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--text-primary) 8%, transparent),
-    0 0 22px color-mix(in srgb, var(--text-primary) 12%, transparent);
+    0 1px 3px rgba(0, 0, 0, 0.18),
+    0 0 0 4px rgba(255, 255, 255, 0.08) !important;
+  transform: scale(1.05) !important;
+}
+
+html.light .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+html.light .filmwave-header-account-trigger.is-open .filmwave-header-avatar,
+html[data-theme="light"] .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+html[data-theme="light"] .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 0 0 4px rgba(0, 0, 0, 0.08) !important;
 }
 
 .filmwave-header-avatar img {
