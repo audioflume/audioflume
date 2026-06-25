@@ -16,7 +16,7 @@ export type WaveformBarOptions = {
   maxBarHeight?: number;
 };
 
-export const DEFAULT_WAVEFORM_BAR_WIDTH = 2;
+export const DEFAULT_WAVEFORM_BAR_WIDTH = 1;
 export const DEFAULT_WAVEFORM_BAR_GAP = 1;
 
 export function createWaveformCanvasDrawCache(): WaveformCanvasDrawCache {
@@ -195,7 +195,10 @@ export function drawWaveformBarsToCanvas({
   const context = canvas.getContext("2d");
   if (!context) return;
 
-  const barWidth = options.barWidth ?? DEFAULT_WAVEFORM_BAR_WIDTH;
+  const barWidth = Math.min(
+    options.barWidth ?? DEFAULT_WAVEFORM_BAR_WIDTH,
+    DEFAULT_WAVEFORM_BAR_WIDTH,
+  );
   const barGap = options.barGap ?? DEFAULT_WAVEFORM_BAR_GAP;
   const barTotal = barWidth + barGap;
   const safeProgress = Number.isFinite(progress)
