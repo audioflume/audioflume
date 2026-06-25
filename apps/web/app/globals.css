@@ -97,3 +97,17 @@ main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child >
 main:has(a[href^="/curated-playlists/"]) section.mt-10 article[aria-label^="Play "] > div:first-child {
   border-radius: 10px;
 }
+
+body .playlist-gallery-art-wrap {
+  border-radius: 0;
+}
+
+body .playlist-gallery-content .playlist-gallery-kicker {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+body .playlist-gallery-content h3 {
+  margin-top: 0;
+}
