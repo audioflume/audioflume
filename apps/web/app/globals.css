@@ -97,28 +97,3 @@ main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child >
 main:has(a[href^="/curated-playlists/"]) section.mt-10 article[aria-label^="Play "] > div:first-child {
   border-radius: 10px;
 }
-
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-2 > .grid > .grid h2,
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-2 > .grid > .grid h3 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-2 > .grid > .grid h2::after,
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-2 > .grid > .grid h3::after {
-  content: "↗";
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: Arial, sans-serif;
-  font-size: 0.82em;
-  line-height: 1;
-  letter-spacing: 0;
-}
-
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-2 > .grid > .grid h2 + p + div,
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-2 > .grid > .grid h2 + div,
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-2 > .grid > .grid h3 + div {
-  display: none;
-}
