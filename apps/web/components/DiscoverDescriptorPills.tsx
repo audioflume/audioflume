@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 const descriptorPillClassName =
-  "discover-dynamic-kicker-pill mb-3 inline-flex h-[22px] w-fit max-w-full items-center rounded-full border border-white/20 bg-white/10 px-2.5 text-[10px] font-medium leading-none tracking-[0.04em] text-white/80 backdrop-blur";
+  "discover-dynamic-kicker-pill pointer-events-none absolute left-4 top-4 z-20 inline-flex h-[22px] w-fit max-w-[calc(100%-32px)] items-center rounded-full border border-white/20 bg-white/10 px-2.5 text-[10px] font-medium leading-none tracking-[0.04em] text-white/80 backdrop-blur";
 
 function getCuratedPlaylistId(href: string | null) {
   if (!href) return null;
@@ -68,17 +68,17 @@ export default function DiscoverDescriptorPills() {
           const kicker = playlist?.kicker?.trim();
           if (!kicker) return;
 
-          const heading = link.querySelector("h1, h2, h3");
-          if (!heading) return;
-
           let pill = link.querySelector<HTMLSpanElement>(
             ".discover-dynamic-kicker-pill",
           );
 
           if (!pill) {
             pill = document.createElement("span");
+            link.insertAdjacentElement("afterbegin", pill);
+          }
+
+          if (pill.className !== descriptorPillClassName) {
             pill.className = descriptorPillClassName;
-            heading.insertAdjacentElement("beforebegin", pill);
           }
 
           if (pill.textContent !== kicker) {
