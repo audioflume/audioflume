@@ -434,11 +434,11 @@ export default function AddToPlaylistModal({
         maxHeight="420px"
         centerTitle
         bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-        contentClassName="h-[420px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[58px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
+        contentClassName="h-[420px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[58px] [&>div:first-child]:items-end [&>div:first-child]:border-b [&>div:first-child]:border-[var(--filmwave-menu-sep)] [&>div:first-child]:pb-2"
       >
         <SongPreview song={song} />
 
-        <div className="-mx-5 flex min-h-0 flex-1 flex-col bg-[var(--bg-tertiary)]">
+        <div className="-mx-5 flex min-h-0 flex-1 flex-col bg-[var(--filmwave-menu-bg)]">
           <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-3">
             {newPlaylistOpen ? (
               <form
