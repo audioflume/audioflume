@@ -393,16 +393,3 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   fill: currentColor !important;
   stroke: currentColor !important;
 }
-
-.filmwave-song-card,
-.desktop-song-card,
-.scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
-  --filmwave-song-card-action-radius: 0;
-}
-
-.filmwave-music-player .filmwave-icon-button,
-.filmwave-music-player .filmwave-player-cue-button,
-.filmwave-player-actions .filmwave-song-action-button,
-.filmwave-player-actions .filmwave-icon-button {
-  border-radius: 0 !important;
-}
