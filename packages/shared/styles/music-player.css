@@ -20,7 +20,7 @@
   max-width: 100vw;
   min-height: var(--filmwave-player-height);
   overflow: visible;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent);
   border-right: 0;
   border-bottom: 0;
   border-left: 0;
