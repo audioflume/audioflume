@@ -137,7 +137,9 @@ export default function DiscoverDescriptorPills() {
           const kicker = playlist?.kicker?.trim();
           if (!kicker) return;
 
-          removeExploreMoodButton(link);
+          if (playlist.discover_section !== "discover_block_2") {
+            removeExploreMoodButton(link);
+          }
 
           let pill = link.querySelector<HTMLSpanElement>(
             ".discover-dynamic-kicker-pill",
