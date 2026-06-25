@@ -45,7 +45,7 @@
   box-sizing: border-box !important;
   min-height: 0 !important;
   height: 22px !important;
-  border-radius: 999px !important;
+  border-radius: 0 !important;
   padding: 0 8px !important;
   font-size: 10.5px !important;
   font-weight: 400 !important;
