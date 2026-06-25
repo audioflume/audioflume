@@ -6,3 +6,9 @@
 .project-tab-panel .fw-song-list {
   margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px);
 }
+
+.fw-quick-row .fw-quick-chip,
+.fw-quick-row .filmwave-music-shuffle-button,
+.fw-quick-row .filmwave-music-sort-button {
+  border-radius: 0 !important;
+}
