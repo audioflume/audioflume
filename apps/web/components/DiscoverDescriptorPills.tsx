@@ -7,6 +7,9 @@ import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 const descriptorPillClassName =
   "discover-dynamic-kicker-pill pointer-events-none absolute left-4 top-4 z-20 inline-flex h-[22px] w-fit max-w-[calc(100%-32px)] items-center rounded-full border border-white/20 bg-white/10 px-2.5 text-[10px] font-medium leading-none tracking-[0.04em] text-white/80 backdrop-blur";
 
+const productionDescriptorPillClassName =
+  "discover-dynamic-production-kicker-pill pointer-events-none absolute left-4 top-4 z-20 inline-flex h-[22px] w-fit max-w-[calc(100%-72px)] items-center rounded-full border border-white/20 bg-white/10 px-2.5 text-[10px] font-medium leading-none tracking-[0.04em] text-white/80 backdrop-blur";
+
 const cornerArrowClassName =
   "discover-dynamic-corner-arrow pointer-events-none absolute right-4 top-4 z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition group-hover:bg-white group-hover:text-black";
 
@@ -85,6 +88,25 @@ function applyMiniDescription(link: HTMLAnchorElement, description: string) {
   }
 }
 
+function applyProductionDescriptorPill(link: HTMLAnchorElement, kicker: string) {
+  let pill = link.querySelector<HTMLSpanElement>(
+    ".discover-dynamic-production-kicker-pill",
+  );
+
+  if (!pill) {
+    pill = document.createElement("span");
+    link.insertAdjacentElement("afterbegin", pill);
+  }
+
+  if (pill.className !== productionDescriptorPillClassName) {
+    pill.className = productionDescriptorPillClassName;
+  }
+
+  if (pill.textContent !== kicker) {
+    pill.textContent = kicker;
+  }
+}
+
 export default function DiscoverDescriptorPills() {
   const pathname = usePathname();
 
@@ -110,22 +132,18 @@ export default function DiscoverDescriptorPills() {
 
       const discoverBlocksById = new Map(
         playlists
-          .filter((playlist) =>
-            playlist.discover_section?.startsWith("discover_block_"),
+          .filter(
+            (playlist) =>
+              playlist.discover_section?.startsWith("discover_block_") ||
+              playlist.discover_section?.startsWith("production_style_"),
           )
           .map((playlist) => [playlist.id, playlist]),
       );
 
       function applyDescriptorPills() {
-        const visualDiscoverySection = document.querySelector(
-          "main > section > div > section:first-child",
-        );
-
-        if (!visualDiscoverySection) return;
-
         const links = Array.from(
-          visualDiscoverySection.querySelectorAll<HTMLAnchorElement>(
-            'a[href^="/curated-playlists/"]',
+          document.querySelectorAll<HTMLAnchorElement>(
+            'main a[href^="/curated-playlists/"]',
           ),
         );
 
@@ -135,7 +153,14 @@ export default function DiscoverDescriptorPills() {
 
           const playlist = discoverBlocksById.get(playlistId);
           const kicker = playlist?.kicker?.trim();
-          if (!kicker) return;
+          if (!playlist || !kicker) return;
+
+          if (playlist.discover_section?.startsWith("production_style_")) {
+            applyProductionDescriptorPill(link, kicker);
+            return;
+          }
+
+          if (!playlist.discover_section?.startsWith("discover_block_")) return;
 
           if (playlist.discover_section !== "discover_block_1") {
             removeExploreMoodButton(link);
@@ -189,7 +214,7 @@ export default function DiscoverDescriptorPills() {
       observer?.disconnect();
       document
         .querySelectorAll(
-          ".discover-dynamic-kicker-pill, .discover-dynamic-corner-arrow, .discover-dynamic-mini-description",
+          ".discover-dynamic-kicker-pill, .discover-dynamic-production-kicker-pill, .discover-dynamic-corner-arrow, .discover-dynamic-mini-description",
         )
         .forEach((element) => element.remove());
     };
