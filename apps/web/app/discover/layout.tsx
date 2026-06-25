@@ -35,6 +35,22 @@ const DISCOVER_LAYOUT_STYLE = `
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
     background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
   }
+
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] {
+    border-width: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] {
+    border-radius: 0 !important;
+    background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
+  }
+
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:hover,
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
+    background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
+  }
 `;
 
 export default function DiscoverLayout({
