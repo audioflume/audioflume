@@ -9,13 +9,13 @@
 }
 
 .project-file-browser {
-  --project-browser-card-border-color: #292929;
-  --project-browser-card-hover-border-color: var(--border-hover);
+  --project-browser-card-border-color: transparent;
+  --project-browser-card-hover-border-color: transparent;
 }
 
 :where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser {
-  --project-browser-card-border-color: var(--border);
-  --project-browser-card-hover-border-color: var(--border-hover);
+  --project-browser-card-border-color: transparent;
+  --project-browser-card-hover-border-color: transparent;
 }
 
 .project-browser-grid:has(> div .project-folder-card)::before,
@@ -68,21 +68,32 @@
   justify-content: stretch !important;
   column-gap: 12px !important;
   row-gap: 2px !important;
-  border: 1px solid var(--project-browser-card-border-color) !important;
-  border-radius: 8px !important;
-  background: var(--bg-secondary) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
   padding: 9px 14px !important;
   text-align: left !important;
   transform: none !important;
-  transition: background 0.15s ease, border-color 0.15s ease !important;
+  transition: background 0.15s ease !important;
 }
 
 .project-file-browser .project-folder-card:hover,
 .project-file-browser .project-file-card:hover,
 .project-file-browser .project-file-card.is-active {
-  border-color: var(--project-browser-card-hover-border-color) !important;
-  background: var(--bg-hover) !important;
+  border-color: transparent !important;
+  background: color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%) !important;
   transform: none !important;
+}
+
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser .project-folder-card,
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser .project-file-card {
+  background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
+}
+
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser .project-folder-card:hover,
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser .project-file-card:hover,
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser .project-file-card.is-active {
+  background: color-mix(in srgb, var(--bg-primary) 91%, var(--text-primary) 9%) !important;
 }
 
 .project-folder-card-icon-wrap,
@@ -259,23 +270,30 @@
   justify-content: stretch !important;
   column-gap: 12px !important;
   row-gap: 2px !important;
-  border: 1px solid var(--project-browser-card-border-color) !important;
-  border-radius: 8px !important;
-  background: var(--bg-secondary) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
   padding: 9px 14px !important;
   text-align: left !important;
   transform: none !important;
-  transition: background 0.15s ease, border-color 0.15s ease !important;
+  transition: background 0.15s ease !important;
 }
 
 :where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser.project-file-browser .project-browser-grid .project-folder-card,
 :where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser.project-file-browser .project-browser-grid .project-file-card {
-  border: 1px solid var(--border) !important;
+  border: 0 !important;
+  background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
 }
 
 .project-file-browser.project-file-browser .project-browser-grid .project-folder-card:hover,
 .project-file-browser.project-file-browser .project-browser-grid .project-file-card:hover,
 .project-file-browser.project-file-browser .project-browser-grid .project-file-card.is-active {
-  border-color: var(--project-browser-card-hover-border-color) !important;
-  background: var(--bg-hover) !important;
+  border-color: transparent !important;
+  background: color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%) !important;
+}
+
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser.project-file-browser .project-browser-grid .project-folder-card:hover,
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser.project-file-browser .project-browser-grid .project-file-card:hover,
+:where(html.light, html[data-theme="light"], body.light, body[data-theme="light"], .light) .project-file-browser.project-file-browser .project-browser-grid .project-file-card.is-active {
+  background: color-mix(in srgb, var(--bg-primary) 91%, var(--text-primary) 9%) !important;
 }
