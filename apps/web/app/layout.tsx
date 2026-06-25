@@ -12,6 +12,7 @@ import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
 import IconButtonTitleSync from "@/components/IconButtonTitleSync";
+import DiscoverDescriptorPills from "@/components/DiscoverDescriptorPills";
 import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
 import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
 import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
@@ -78,6 +79,7 @@ export default async function RootLayout({
                       {children}
                       <PlayerRenderer />
                       <IconButtonTitleSync />
+                      <DiscoverDescriptorPills />
                       <MusicFilterToolbarBehavior />
                       <SideFilterPanelBehavior />
                       <AdminPageHeaderMount />
