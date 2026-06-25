@@ -1,24 +1,79 @@
 /* Project file browser interactions, drag previews, and context menus */
 
-.project-drag-preview.is-grid-preview {
+.project-drag-preview {
   width: 132px !important;
   min-width: 132px !important;
   max-width: 132px !important;
   background: transparent !important;
 }
 
-.project-drag-preview.is-grid-preview .project-folder-card,
-.project-drag-preview.is-grid-preview .project-file-card {
+.project-drag-preview .project-folder-card,
+.project-drag-preview .project-file-card {
+  display: flex !important;
   width: 100% !important;
   min-width: 0 !important;
+  min-height: 132px !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
   background: transparent !important;
+  padding: 14px 10px !important;
+  text-align: center !important;
   box-shadow: none !important;
 }
 
-.project-drag-preview.is-grid-preview .project-folder-card:hover,
-.project-drag-preview.is-grid-preview .project-file-card:hover,
-.project-drag-preview.is-grid-preview .project-file-card.is-active {
-  background: transparent;
+.project-drag-preview .project-folder-card:hover,
+.project-drag-preview .project-file-card:hover,
+.project-drag-preview .project-file-card.is-active {
+  background: transparent !important;
+}
+
+.project-drag-preview .project-folder-card-icon-wrap,
+.project-drag-preview .project-file-card-icon-wrap {
+  display: flex !important;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  flex: 0 0 42px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 0 4px !important;
+}
+
+.project-drag-preview .project-folder-card-name,
+.project-drag-preview .project-file-card-title {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.project-drag-preview .project-folder-card-meta,
+.project-drag-preview .project-file-card-meta {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  text-align: center !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  color: var(--text-muted) !important;
+}
+
+.project-drag-preview .project-preview-button {
+  display: none !important;
 }
 
 .project-drag-over-folder .project-folder-card {
