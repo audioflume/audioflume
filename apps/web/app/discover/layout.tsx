@@ -44,13 +44,19 @@ const DISCOVER_LAYOUT_STYLE = `
   }
 
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
-    grid-auto-flow: row !important;
+    display: block !important;
+    column-count: 1;
+    column-gap: 8px;
   }
 
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] {
     position: relative !important;
+    display: grid !important;
+    width: 100% !important;
+    break-inside: avoid !important;
     grid-template-columns: 24px minmax(0, 1fr) auto !important;
     align-items: center !important;
+    margin-bottom: 4px !important;
     border-radius: 0 !important;
     background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
   }
@@ -74,20 +80,19 @@ const DISCOVER_LAYOUT_STYLE = `
 
   @media (min-width: 768px) {
     main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
-      grid-auto-flow: column !important;
-      grid-template-rows: repeat(12, minmax(0, auto)) !important;
+      column-count: 2;
     }
   }
 
   @media (min-width: 1280px) {
     main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
-      grid-template-rows: repeat(8, minmax(0, auto)) !important;
+      column-count: 3;
     }
   }
 
   @media (min-width: 1536px) {
     main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
-      grid-template-rows: repeat(6, minmax(0, auto)) !important;
+      column-count: 4;
     }
   }
 `;
