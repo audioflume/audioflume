@@ -102,10 +102,6 @@ main > section[class*="ml-[var(--sidebar-width)]"],
 
 /* ─── Discover page visual-first layout ───────────────────── */
 
-body.sidebar-collapsed main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] {
-  padding-left: 20px !important;
-}
-
 main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mb-6,
 main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > section.mt-6 {
   display: none !important;
