@@ -137,7 +137,7 @@ export default function DiscoverDescriptorPills() {
           const kicker = playlist?.kicker?.trim();
           if (!kicker) return;
 
-          if (playlist.discover_section !== "discover_block_2") {
+          if (playlist.discover_section !== "discover_block_1") {
             removeExploreMoodButton(link);
           }
 
