@@ -40,6 +40,7 @@ const DISCOVER_LAYOUT_STYLE = `
     border-width: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
+    padding: 0 !important;
   }
 
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] {
