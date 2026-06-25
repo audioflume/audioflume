@@ -12,3 +12,9 @@
 .fw-quick-row .filmwave-music-sort-button {
   border-radius: 0 !important;
 }
+
+.fw-song-list .filmwave-song-card,
+.fw-song-list .desktop-song-card,
+.fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+  border-radius: 0 !important;
+}
