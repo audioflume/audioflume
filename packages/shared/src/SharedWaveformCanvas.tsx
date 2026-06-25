@@ -21,7 +21,7 @@ import {
   type WaveformBarOptions,
 } from "./waveform";
 
-const DEFAULT_BAR_WIDTH = 2;
+const DEFAULT_BAR_WIDTH = 1.5;
 const DEFAULT_BAR_GAP = 1;
 
 function getWaveformColors(): WaveformColors {
