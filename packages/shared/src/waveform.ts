@@ -16,7 +16,7 @@ export type WaveformBarOptions = {
   maxBarHeight?: number;
 };
 
-export const DEFAULT_WAVEFORM_BAR_WIDTH = 1;
+export const DEFAULT_WAVEFORM_BAR_WIDTH = 1.5;
 export const DEFAULT_WAVEFORM_BAR_GAP = 1;
 
 export function createWaveformCanvasDrawCache(): WaveformCanvasDrawCache {
