@@ -116,10 +116,10 @@
 
 html.light [class*="bg-[var(--filmwave-menu-bg)]"] button[class*="bg-[var(--bg-primary)]"],
 html[data-theme="light"] [class*="bg-[var(--filmwave-menu-bg)]"] button[class*="bg-[var(--bg-primary)]"] {
-  background: color-mix(in srgb, var(--filmwave-menu-bg) 91%, var(--text-primary) 9%) !important;
+  background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
 }
 
 html.light [class*="bg-[var(--filmwave-menu-bg)]"] button[class*="bg-[var(--bg-primary)]"]:hover,
 html[data-theme="light"] [class*="bg-[var(--filmwave-menu-bg)]"] button[class*="bg-[var(--bg-primary)]"]:hover {
-  background: color-mix(in srgb, var(--filmwave-menu-bg) 88%, var(--text-primary) 12%) !important;
+  background: color-mix(in srgb, var(--bg-primary) 91%, var(--text-primary) 9%) !important;
 }
