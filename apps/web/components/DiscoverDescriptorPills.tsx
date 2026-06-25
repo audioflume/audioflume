@@ -146,7 +146,7 @@ function applyProductionCardLayout(link: HTMLAnchorElement, kicker: string) {
 
   const buttonWrap = Array.from(contentBlock.children).find(
     (child): child is HTMLElement =>
-      child instanceof HTMLElement && child.textContent?.includes("Explore this style"),
+      child instanceof HTMLElement && !!child.textContent?.includes("Explore this style"),
   );
 
   if (buttonWrap) {
