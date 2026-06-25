@@ -65,7 +65,7 @@ export default function ModalShell({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-[4px] border-0 bg-[var(--filmwave-menu-bg)] ${contentClassName}`}
+        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-none border-0 bg-[var(--filmwave-menu-bg)] ${contentClassName}`}
         style={{
           maxHeight: modalMaxHeight,
           boxShadow: "var(--filmwave-menu-shadow)",
