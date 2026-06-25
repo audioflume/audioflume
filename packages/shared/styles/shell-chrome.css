@@ -1,18 +1,42 @@
 /* Shared shell chrome source styles moved out of the old playlist-grid override layer. */
 
 :root {
-  --filmwave-header-avatar-hover-ring-color: rgba(0, 0, 0, 0.16);
-  --filmwave-header-avatar-hover-glow-color: rgba(0, 0, 0, 0.16);
+  --filmwave-header-avatar-hover-ring-color: color-mix(
+    in srgb,
+    var(--text-primary) 24%,
+    transparent
+  );
+  --filmwave-header-avatar-hover-glow-color: color-mix(
+    in srgb,
+    var(--text-primary) 18%,
+    transparent
+  );
 }
 
 html:not(.light):not([data-theme="light"]) {
-  --filmwave-header-avatar-hover-ring-color: rgba(255, 255, 255, 0.72);
-  --filmwave-header-avatar-hover-glow-color: rgba(255, 255, 255, 0.42);
+  --filmwave-header-avatar-hover-ring-color: color-mix(
+    in srgb,
+    var(--text-primary) 52%,
+    transparent
+  );
+  --filmwave-header-avatar-hover-glow-color: color-mix(
+    in srgb,
+    var(--text-primary) 38%,
+    transparent
+  );
 }
 
 :where(html.light, html[data-theme="light"]) {
-  --filmwave-header-avatar-hover-ring-color: rgba(0, 0, 0, 0.14);
-  --filmwave-header-avatar-hover-glow-color: rgba(0, 0, 0, 0.16);
+  --filmwave-header-avatar-hover-ring-color: color-mix(
+    in srgb,
+    var(--text-primary) 18%,
+    transparent
+  );
+  --filmwave-header-avatar-hover-glow-color: color-mix(
+    in srgb,
+    var(--text-primary) 16%,
+    transparent
+  );
 }
 
 /* Keep the structural sidebar Discover row in normal sidebar flow. */
