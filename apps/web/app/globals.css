@@ -33,6 +33,10 @@
     var(--filmwave-sidebar-float-inset, 12px) +
       var(--filmwave-sidebar-current-panel-width) + var(--filmwave-sidebar-page-gap)
   );
+  --filmwave-page-sidebar-offset: calc(
+    var(--filmwave-sidebar-expanded-width, var(--sidebar-width-expanded, 248px)) -
+      var(--filmwave-sidebar-content-gap, 0px) + var(--filmwave-sidebar-page-gap)
+  );
 }
 
 html,
@@ -56,6 +60,11 @@ body.sidebar-collapsed,
   --filmwave-sidebar-collapsed-panel-width: var(--filmwave-header-height);
   --sidebar-width-collapsed: var(--filmwave-header-height);
   --sidebar-width: var(--filmwave-header-height);
+  --filmwave-page-sidebar-offset: calc(
+    var(--filmwave-sidebar-float-inset, 0px) +
+      var(--sidebar-width-collapsed, var(--filmwave-header-height)) +
+      var(--filmwave-sidebar-page-gap)
+  );
 }
 
 body.sidebar-collapsed,
@@ -81,6 +90,15 @@ body.sidebar-collapsed .desktop-sidebar-link > a {
   width: 100%;
   flex: 0 0 auto;
   justify-content: center;
+}
+
+/* Shared website page offset — matches the Music Library side rail spacing. */
+main > section[class*="ml-[var(--sidebar-width)]"],
+.playlists-page,
+.playlist-detail-page,
+.favorites-page,
+.project-detail-page {
+  margin-left: var(--filmwave-page-sidebar-offset) !important;
 }
 
 /* ─── Discover page visual-first layout ───────────────────── */
