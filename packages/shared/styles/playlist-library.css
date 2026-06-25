@@ -4,3 +4,24 @@
 .playlists-page .playlist-skeleton-grid {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
+
+/* Shared playlist gallery card surface. */
+.playlist-gallery-art-wrap {
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.playlist-gallery-card:hover .playlist-gallery-art-wrap,
+.playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap {
+  border-color: transparent !important;
+}
+
+.playlist-gallery-content .playlist-gallery-kicker {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.playlist-gallery-content h3 {
+  margin-top: 0;
+}
