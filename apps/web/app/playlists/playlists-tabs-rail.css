@@ -47,7 +47,7 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
   width: auto !important;
   max-width: calc(100% - var(--filmwave-page-sidebar-offset, var(--sidebar-width)) - 64px) !important;
   height: auto !important;
-  min-height: 42px !important;
+  min-height: 44px !important;
   margin: calc(var(--filmwave-header-height, 56px) + 12px) 32px 0 calc(var(--filmwave-page-sidebar-offset, var(--sidebar-width)) + 32px) !important;
   gap: 38px !important;
   overflow-x: auto !important;
@@ -58,7 +58,7 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
   background: transparent !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
-  padding: 0 !important;
+  padding: 2px 0 0 !important;
   scrollbar-width: none !important;
 }
 
@@ -80,7 +80,7 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
   border-radius: 0 !important;
   background: transparent !important;
   color: var(--text-secondary) !important;
-  padding: 0 2px !important;
+  padding: 2px 2px 0 !important;
   font-family: inherit !important;
   font-size: 13px !important;
   font-weight: 400 !important;
