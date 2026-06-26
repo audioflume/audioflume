@@ -33,16 +33,15 @@
 .filmwave-app-header,
 .desktop-header,
 body > header {
-  --filmwave-chrome-surface: color-mix(in srgb, var(--bg-primary) 74%, transparent);
+  --filmwave-chrome-surface: color-mix(in srgb, var(--bg-primary) 72%, transparent);
   z-index: var(--filmwave-z-header) !important;
   height: var(--filmwave-header-height);
-  border-bottom: 1px solid var(--filmwave-header-border-color) !important;
+  border-bottom: 1px solid var(--border) !important;
   background: var(--filmwave-chrome-surface) !important;
-  background-color: var(--filmwave-chrome-surface) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.08);
-  backdrop-filter: blur(18px) saturate(1.08);
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
   color: var(--text-primary);
-  box-shadow: 0 1px 0 var(--filmwave-header-border-color) !important;
+  box-shadow: none !important;
 }
 
 .filmwave-app-header-inner,
@@ -54,21 +53,20 @@ body > header > div {
 }
 
 .filmwave-header {
-  --filmwave-chrome-surface: color-mix(in srgb, var(--bg-primary) 74%, transparent);
+  --filmwave-chrome-surface: color-mix(in srgb, var(--bg-primary) 72%, transparent);
   position: fixed;
   top: 0;
   right: 0;
   left: 0;
   z-index: var(--filmwave-z-header);
   height: var(--filmwave-header-height);
-  border-bottom: 1px solid var(--filmwave-header-border-color) !important;
+  border-bottom: 1px solid var(--border) !important;
   background: var(--filmwave-chrome-surface) !important;
-  background-color: var(--filmwave-chrome-surface) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.08);
-  backdrop-filter: blur(18px) saturate(1.08);
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
   color: var(--text-primary);
   user-select: none;
-  box-shadow: 0 1px 0 var(--filmwave-header-border-color) !important;
+  box-shadow: none !important;
 }
 
 .filmwave-header::after {
