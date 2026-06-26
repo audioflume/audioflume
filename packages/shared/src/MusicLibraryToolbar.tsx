@@ -74,7 +74,7 @@ export function MusicLibraryToolbar({
   actions,
   chips,
   stickyTop,
-  renderToolbarChrome = stickyTop === undefined,
+  renderToolbarChrome = true,
   className = "",
   children,
 }: MusicLibraryToolbarProps) {
