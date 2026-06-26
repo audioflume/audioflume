@@ -395,24 +395,31 @@ export default function PlaylistTabsRail() {
   }, [pathname, activeTab]);
 
   return (
-    <nav className="playlists-tabs-row fw-filter-rail" aria-label="Playlist sections">
-      {PLAYLIST_TABS.map((tab) => {
-        const isActive = activeTab === tab.value;
+    <>
+      <style>{`
+        body.is-positioning-playlist-menu .filmwave-dropdown-shell {
+          visibility: hidden !important;
+        }
+      `}</style>
+      <nav className="playlists-tabs-row fw-filter-rail" aria-label="Playlist sections">
+        {PLAYLIST_TABS.map((tab) => {
+          const isActive = activeTab === tab.value;
 
-        return (
-          <Link
-            key={tab.value}
-            href={tab.href}
-            className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
-            aria-current={isActive ? "page" : undefined}
-          >
-            <span className="fw-filter-rail-label">{tab.label}</span>
-            <span className="fw-filter-rail-chevron" aria-hidden="true">
-              <PlaylistTabChevronIcon />
-            </span>
-          </Link>
-        );
-      })}
-    </nav>
+          return (
+            <Link
+              key={tab.value}
+              href={tab.href}
+              className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
+              aria-current={isActive ? "page" : undefined}
+            >
+              <span className="fw-filter-rail-label">{tab.label}</span>
+              <span className="fw-filter-rail-chevron" aria-hidden="true">
+                <PlaylistTabChevronIcon />
+              </span>
+            </Link>
+          );
+        })}
+      </nav>
+    </>
   );
 }
