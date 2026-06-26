@@ -114,3 +114,11 @@ main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child >
 main:has(a[href^="/curated-playlists/"]) section.mt-10 article[aria-label^="Play "] > div:first-child {
   border-radius: 10px;
 }
+
+/* Temporary header visibility review. */
+.filmwave-app-header,
+.desktop-header,
+body > header,
+.filmwave-header {
+  display: none !important;
+}
