@@ -166,7 +166,7 @@ main:has(.fw-song-list) > section[class*="ml-[var(--sidebar-width)]"] {
   padding-top: 8px !important;
   padding-right: 0 !important;
   padding-bottom: 16px !important;
-  padding-left: 0 !important;
+  padding-left: 16px !important;
 }
 
 .fw-quick-row + div > .min-h-0 > .px-8 {
@@ -186,7 +186,7 @@ main:has(.fw-song-list) > section[class*="ml-[var(--sidebar-width)]"] {
 .fw-song-list {
   margin-top: 0 !important;
   margin-right: 0 !important;
-  margin-left: 0 !important;
+  margin-left: 16px !important;
 }
 
 .fw-quick-row + div[aria-hidden="true"] + .fw-song-list {
@@ -365,7 +365,7 @@ main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child >
   display: flex !important;
   justify-content: center !important;
   width: 100% !important;
-  padding: 16px 0 10px !important;
+  padding: 16px 0 10px 16px !important;
 }
 
 .fw-toolbar-header-search-form {
