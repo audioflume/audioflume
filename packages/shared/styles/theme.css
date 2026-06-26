@@ -1,23 +1,23 @@
 :where(:root) {
   color-scheme: dark;
 
-  --bg-primary: #111111;
-  --bg-secondary: #111111;
-  --bg-tertiary: #1b1b1b;
-  --bg-tertiary-hover: #242424;
-  --bg-panel: #1b1b1b;
-  --bg-panel-2: #252525;
-  --bg-card: rgba(255, 255, 255, 0.055);
-  --bg-elevated: rgba(255, 255, 255, 0.1);
-  --bg-row: rgba(255, 255, 255, 0.06);
-  --bg-row-hover: rgba(255, 255, 255, 0.095);
-  --bg-control: rgba(255, 255, 255, 0.1);
-  --bg-control-hover: rgba(255, 255, 255, 0.15);
-  --bg-hover: rgba(255, 255, 255, 0.055);
-  --bg-hover-strong: rgba(255, 255, 255, 0.105);
+  --bg-primary: #101112;
+  --bg-secondary: #101112;
+  --bg-tertiary: #1a1b1c;
+  --bg-tertiary-hover: #232426;
+  --bg-panel: #1a1b1c;
+  --bg-panel-2: #242528;
+  --bg-card: rgba(245, 248, 255, 0.055);
+  --bg-elevated: rgba(245, 248, 255, 0.1);
+  --bg-row: rgba(245, 248, 255, 0.06);
+  --bg-row-hover: rgba(245, 248, 255, 0.095);
+  --bg-control: rgba(245, 248, 255, 0.1);
+  --bg-control-hover: rgba(245, 248, 255, 0.15);
+  --bg-hover: rgba(245, 248, 255, 0.055);
+  --bg-hover-strong: rgba(245, 248, 255, 0.105);
   --filmwave-chrome-surface: var(--bg-tertiary);
   --filmwave-square-icon-hover-bg: var(--bg-hover-strong);
-  --icon-button-hover: rgba(255, 255, 255, 0.18);
+  --icon-button-hover: rgba(245, 248, 255, 0.18);
 
   --divider: rgba(255, 255, 255, 0.1);
   --border: rgba(255, 255, 255, 0.1);
