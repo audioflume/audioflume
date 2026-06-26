@@ -235,22 +235,24 @@ body > header,
 
 .fw-toolbar-filters.is-open {
   min-width: 74px !important;
-  justify-content: center !important;
 }
 
-.fw-toolbar-filters.is-open > svg,
+.fw-toolbar-filters.is-open > svg {
+  display: inline-block !important;
+}
+
 .fw-toolbar-filters.is-open .fw-toolbar-filters-count,
 .fw-toolbar-filters.is-open .fw-toolbar-filters-chevron {
   display: none !important;
 }
 
 .fw-toolbar-filters.is-open .fw-toolbar-filters-label {
-  font-size: 0 !important;
+  font-size: inherit !important;
 }
 
 .fw-toolbar-filters.is-open .fw-toolbar-filters-label::after {
-  content: "Done";
-  font-size: 13px !important;
+  content: none !important;
+  display: none !important;
 }
 
 .fw-toolbar-filters-count,
