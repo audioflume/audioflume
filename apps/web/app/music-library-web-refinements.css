@@ -3,7 +3,7 @@
 main > section:has(.fw-filter-panel-wrap) {
   box-sizing: border-box !important;
   padding-right: var(--fw-music-content-inset-right) !important;
-  padding-left: var(--fw-music-content-inset-left) !important;
+  padding-left: 36px !important;
 }
 
 .fw-toolbar-sticky {
