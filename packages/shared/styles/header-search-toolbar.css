@@ -267,13 +267,18 @@ html[data-theme="light"] .fw-filter-done {
 
 /* Music page: content-column search belongs in page flow, not the hidden header slot. */
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
+  --filmwave-side-filter-content-gap: 0px;
   grid-template-columns: var(--filmwave-side-filter-rail-width) minmax(0, 1fr) !important;
+  column-gap: 0 !important;
+  gap: 0 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap.has-selected-filter-section) {
   grid-template-columns: calc(
     var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
   ) minmax(0, 1fr) !important;
+  column-gap: 0 !important;
+  gap: 0 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column {
