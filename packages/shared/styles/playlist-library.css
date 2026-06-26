@@ -83,6 +83,13 @@
   display: block !important;
   overflow: hidden !important;
   background-color: var(--bg-secondary) !important;
+  opacity: 0 !important;
+  transition:
+    opacity 120ms ease,
+    transform 180ms ease !important;
+}
+
+.playlists-page .playlist-gallery-art-layer.is-ready {
   opacity: 1 !important;
 }
 
@@ -180,11 +187,17 @@
   object-fit: cover !important;
   border-radius: 0 !important;
   transform: none !important;
+  transition: transform 180ms ease !important;
 }
 
-.playlists-page .playlist-gallery-card:hover .playlist-gallery-art img,
-.playlists-page .playlist-gallery-card.is-menu-open .playlist-gallery-art img {
-  transform: none !important;
+.playlists-page .playlist-gallery-card:hover .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image),
+.playlists-page .playlist-gallery-card.is-menu-open .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image) {
+  transform: translateY(-4px) !important;
+}
+
+.playlists-page .playlist-gallery-card:hover .playlist-gallery-art-layer-middle,
+.playlists-page .playlist-gallery-card.is-menu-open .playlist-gallery-art-layer-middle {
+  transform: translateY(-2px) !important;
 }
 
 .playlists-page .playlist-gallery-top-row {
