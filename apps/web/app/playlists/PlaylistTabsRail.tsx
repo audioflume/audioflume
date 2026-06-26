@@ -248,6 +248,54 @@ function syncPlaylistCoverLayers() {
   });
 }
 
+function syncPlaylistGalleryMenus() {
+  const cards = document.querySelectorAll<HTMLElement>(
+    ".playlists-page .playlist-gallery-card:not(.is-reordering)",
+  );
+
+  cards.forEach((card) => {
+    const title = card.querySelector<HTMLHeadingElement>(".playlist-gallery-content h3");
+    const menuWrap = card.querySelector<HTMLElement>(":scope > .playlist-card-menu-wrap");
+    const menuButton = menuWrap?.querySelector<HTMLElement>(".playlist-menu-btn-grid");
+
+    if (!title || !menuWrap || !menuButton) return;
+
+    const cardRect = card.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents(title);
+    const textRect = range.getBoundingClientRect();
+    range.detach();
+
+    const top = textRect.top - cardRect.top + (textRect.height - 18) / 2;
+    const left = Math.min(
+      textRect.right - cardRect.left + 5,
+      cardRect.width - 18,
+    );
+
+    menuWrap.style.position = "absolute";
+    menuWrap.style.top = `${Math.max(0, top)}px`;
+    menuWrap.style.left = `${Math.max(0, left)}px`;
+    menuWrap.style.right = "auto";
+    menuWrap.style.bottom = "auto";
+    menuWrap.style.width = "18px";
+    menuWrap.style.height = "18px";
+    menuWrap.style.zIndex = "8";
+
+    menuButton.style.width = "18px";
+    menuButton.style.height = "18px";
+    menuButton.style.minWidth = "18px";
+    menuButton.style.padding = "0";
+    menuButton.style.border = "0";
+    menuButton.style.borderRadius = "0";
+    menuButton.style.background = "transparent";
+    menuButton.style.backgroundColor = "transparent";
+    menuButton.style.backgroundImage = "none";
+    menuButton.style.boxShadow = "none";
+    menuButton.style.backdropFilter = "none";
+    menuButton.style.setProperty("-webkit-backdrop-filter", "none");
+  });
+}
+
 export default function PlaylistTabsRail() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -259,15 +307,25 @@ export default function PlaylistTabsRail() {
     if (!pathname || pathname.startsWith("/curated-playlists")) return;
 
     syncPlaylistCoverLayers();
+    syncPlaylistGalleryMenus();
 
-    const timeout = window.setTimeout(syncPlaylistCoverLayers, 100);
+    const timeout = window.setTimeout(() => {
+      syncPlaylistCoverLayers();
+      syncPlaylistGalleryMenus();
+    }, 100);
+    const resizeHandler = () => syncPlaylistGalleryMenus();
     const target = document.querySelector(".playlists-page") || document.body;
-    const observer = new MutationObserver(syncPlaylistCoverLayers);
+    const observer = new MutationObserver(() => {
+      syncPlaylistCoverLayers();
+      syncPlaylistGalleryMenus();
+    });
 
+    window.addEventListener("resize", resizeHandler);
     observer.observe(target, { childList: true, subtree: true });
 
     return () => {
       window.clearTimeout(timeout);
+      window.removeEventListener("resize", resizeHandler);
       observer.disconnect();
     };
   }, [pathname, activeTab]);
