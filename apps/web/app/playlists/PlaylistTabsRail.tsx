@@ -48,8 +48,6 @@ function syncPlaylistCoverLayers() {
       return;
     }
 
-    artwork.classList.add("has-cover-layers");
-
     (["back", "middle"] as const).forEach((layerName) => {
       let layer = artwork.querySelector<HTMLSpanElement>(
         `:scope > .playlist-gallery-art-layer-${layerName}`,
@@ -72,8 +70,26 @@ function syncPlaylistCoverLayers() {
         layer.append(layerImage);
       }
 
+      if (layer.dataset.coverSrc === coverSrc && layer.classList.contains("is-ready")) {
+        return;
+      }
+
+      layer.classList.remove("is-ready");
+      layer.dataset.coverSrc = coverSrc;
       layer.style.backgroundImage = "none";
-      layerImage.style.backgroundImage = `url(${JSON.stringify(coverSrc)})`;
+      layerImage.style.backgroundImage = "none";
+
+      const preloadImage = new Image();
+      preloadImage.onload = () => {
+        if (layer.dataset.coverSrc !== coverSrc) return;
+        layerImage.style.backgroundImage = `url(${JSON.stringify(coverSrc)})`;
+        layer.classList.add("is-ready");
+        artwork.classList.add("has-cover-layers");
+      };
+      preloadImage.onerror = () => {
+        layer.classList.remove("is-ready");
+      };
+      preloadImage.src = coverSrc;
     });
   });
 }
