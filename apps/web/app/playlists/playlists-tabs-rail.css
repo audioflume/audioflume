@@ -36,15 +36,15 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
 }
 
 .playlists-page .playlist-gallery-art-layer-back {
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.16) !important;
+  box-shadow: none !important;
 }
 
 .playlists-page .playlist-gallery-art-layer-middle {
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22) !important;
+  box-shadow: none !important;
 }
 
 .playlists-page .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image) {
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18) !important;
+  box-shadow: none !important;
 }
 
 .playlists-page .playlist-gallery-card:hover .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image),
