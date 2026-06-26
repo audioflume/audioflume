@@ -39,6 +39,13 @@
   line-height: 1 !important;
 }
 
+.fw-toolbar-filters > svg {
+  display: block !important;
+  width: 14px !important;
+  height: 14px !important;
+  flex: 0 0 14px !important;
+}
+
 .fw-toolbar-filters::before {
   width: 13px !important;
   height: 13px !important;
@@ -385,6 +392,13 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
+  .fw-toolbar-filters > svg {
+  display: block !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
   .fw-toolbar-filters-chevron,
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
@@ -472,6 +486,32 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
     var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
   ) !important;
   max-width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
+  ) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.is-open)
+  ~ .fw-quick-row,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.is-open)
+  ~ .fw-song-list {
+  width: auto !important;
+  margin-left: var(--filmwave-side-filter-rail-width) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.is-open.has-selected-filter-section)
+  ~ .fw-quick-row,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.is-open.has-selected-filter-section)
+  ~ .fw-song-list {
+  width: auto !important;
+  margin-left: calc(
     var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
   ) !important;
 }
