@@ -296,7 +296,7 @@ function syncOpenPlaylistDropdownPlacement() {
     ".playlists-page .playlist-menu-btn-grid.is-open",
   );
 
-  if (!openButton) return;
+  if (!openButton) return false;
 
   const dropdowns = Array.from(
     document.querySelectorAll<HTMLElement>(".filmwave-dropdown-shell"),
@@ -305,10 +305,10 @@ function syncOpenPlaylistDropdownPlacement() {
     .reverse()
     .find((node) => {
       const rect = node.getBoundingClientRect();
-      return rect.width > 0 && rect.height > 0 && getComputedStyle(node).visibility !== "hidden";
+      return rect.width > 0 && rect.height > 0;
     });
 
-  if (!dropdown) return;
+  if (!dropdown) return false;
 
   const buttonRect = openButton.getBoundingClientRect();
   const dropdownRect = dropdown.getBoundingClientRect();
@@ -317,18 +317,29 @@ function syncOpenPlaylistDropdownPlacement() {
 
   dropdown.style.transform = `translate3d(${Math.round(left)}px, ${Math.round(top)}px, 0)`;
   dropdown.style.transformOrigin = "top right";
+  document.body.classList.remove("is-positioning-playlist-menu");
+
+  return true;
 }
 
 function schedulePlaylistDropdownPlacement() {
-  window.requestAnimationFrame(() => {
-    syncOpenPlaylistDropdownPlacement();
+  let attempts = 0;
 
-    window.requestAnimationFrame(() => {
-      syncOpenPlaylistDropdownPlacement();
-      window.setTimeout(syncOpenPlaylistDropdownPlacement, 0);
-      window.setTimeout(syncOpenPlaylistDropdownPlacement, 80);
-    });
-  });
+  const tryPosition = () => {
+    attempts += 1;
+    const didPosition = syncOpenPlaylistDropdownPlacement();
+
+    if (!didPosition && attempts < 6) {
+      window.requestAnimationFrame(tryPosition);
+      return;
+    }
+
+    window.setTimeout(() => {
+      document.body.classList.remove("is-positioning-playlist-menu");
+    }, 120);
+  };
+
+  window.requestAnimationFrame(tryPosition);
 }
 
 export default function PlaylistTabsRail() {
@@ -354,7 +365,13 @@ export default function PlaylistTabsRail() {
       syncPlaylistGalleryMenus();
       schedulePlaylistDropdownPlacement();
     };
-    const clickHandler = () => {
+    const clickHandler = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+
+      if (target?.closest(".playlist-menu-btn-grid")) {
+        document.body.classList.add("is-positioning-playlist-menu");
+      }
+
       schedulePlaylistDropdownPlacement();
     };
     const target = document.querySelector(".playlists-page") || document.body;
@@ -372,6 +389,7 @@ export default function PlaylistTabsRail() {
       window.clearTimeout(timeout);
       window.removeEventListener("resize", resizeHandler);
       document.removeEventListener("click", clickHandler, true);
+      document.body.classList.remove("is-positioning-playlist-menu");
       observer.disconnect();
     };
   }, [pathname, activeTab]);
