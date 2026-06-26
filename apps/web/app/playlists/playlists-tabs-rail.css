@@ -35,6 +35,10 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
   display: none !important;
 }
 
+.playlists-page .playlist-create-card .playlist-create-mark {
+  border-color: var(--bg-secondary) !important;
+}
+
 .playlists-tabs-row {
   position: relative !important;
   z-index: 1 !important;
