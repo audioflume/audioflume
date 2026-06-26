@@ -54,7 +54,8 @@
 }
 
 .playlists-page .playlist-gallery-art::before,
-.playlists-page .playlist-gallery-art::after {
+.playlists-page .playlist-gallery-art::after,
+.playlists-page .playlist-gallery-art-layer {
   content: "" !important;
   position: absolute !important;
   height: 100% !important;
@@ -62,70 +63,100 @@
   pointer-events: none !important;
 }
 
-.playlists-page .playlist-gallery-art::before {
+.playlists-page .playlist-gallery-art::before,
+.playlists-page .playlist-gallery-art-layer-back {
   top: -24px !important;
   right: 8% !important;
   left: 8% !important;
   z-index: 1 !important;
-  background: linear-gradient(135deg, rgba(86, 71, 104, 0.88), rgba(30, 34, 34, 0.88)) !important;
-  opacity: 0.42 !important;
 }
 
-.playlists-page .playlist-gallery-art::after {
+.playlists-page .playlist-gallery-art::after,
+.playlists-page .playlist-gallery-art-layer-middle {
   top: -12px !important;
   right: 4% !important;
   left: 4% !important;
   z-index: 2 !important;
-  background: linear-gradient(135deg, rgba(110, 91, 84, 0.84), rgba(42, 43, 39, 0.84)) !important;
-  opacity: 0.62 !important;
+}
+
+.playlists-page .playlist-gallery-art-layer {
+  display: block !important;
+  overflow: hidden !important;
+  background-color: var(--bg-secondary) !important;
+  background-repeat: no-repeat !important;
+  background-size: 145% 145% !important;
+  opacity: 1 !important;
+}
+
+.playlists-page .playlist-gallery-art-layer-back {
+  background-position: 28% 28% !important;
+  filter: blur(6px) saturate(1.6) brightness(0.7) !important;
+}
+
+.playlists-page .playlist-gallery-art-layer-middle {
+  background-position: 72% 48% !important;
+  filter: blur(4px) saturate(1.35) brightness(0.82) !important;
+}
+
+.playlists-page .playlist-gallery-art.has-cover-layers::before,
+.playlists-page .playlist-gallery-art.has-cover-layers::after {
+  display: none !important;
+}
+
+.playlists-page .playlist-gallery-art::before {
+  background: linear-gradient(135deg, rgba(86, 71, 104, 1), rgba(30, 34, 34, 1)) !important;
+}
+
+.playlists-page .playlist-gallery-art::after {
+  background: linear-gradient(135deg, rgba(110, 91, 84, 1), rgba(42, 43, 39, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 1) .playlist-gallery-art::before {
-  background: radial-gradient(circle at 18% 30%, rgba(68, 46, 84, 0.92), transparent 58%), linear-gradient(135deg, rgba(72, 50, 92, 0.82), rgba(25, 27, 29, 0.88)) !important;
+  background: radial-gradient(circle at 18% 30%, rgba(68, 46, 84, 1), transparent 58%), linear-gradient(135deg, rgba(72, 50, 92, 1), rgba(25, 27, 29, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 1) .playlist-gallery-art::after {
-  background: radial-gradient(circle at 78% 42%, rgba(94, 70, 112, 0.9), transparent 56%), linear-gradient(150deg, rgba(70, 62, 76, 0.82), rgba(20, 22, 23, 0.9)) !important;
+  background: radial-gradient(circle at 78% 42%, rgba(94, 70, 112, 1), transparent 56%), linear-gradient(150deg, rgba(70, 62, 76, 1), rgba(20, 22, 23, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 2) .playlist-gallery-art::before {
-  background: radial-gradient(circle at 68% 26%, rgba(88, 54, 40, 0.92), transparent 58%), linear-gradient(135deg, rgba(87, 59, 48, 0.82), rgba(27, 25, 23, 0.9)) !important;
+  background: radial-gradient(circle at 68% 26%, rgba(88, 54, 40, 1), transparent 58%), linear-gradient(135deg, rgba(87, 59, 48, 1), rgba(27, 25, 23, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 2) .playlist-gallery-art::after {
-  background: radial-gradient(circle at 22% 64%, rgba(95, 72, 61, 0.9), transparent 55%), linear-gradient(145deg, rgba(75, 61, 57, 0.82), rgba(24, 22, 21, 0.9)) !important;
+  background: radial-gradient(circle at 22% 64%, rgba(95, 72, 61, 1), transparent 55%), linear-gradient(145deg, rgba(75, 61, 57, 1), rgba(24, 22, 21, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 3) .playlist-gallery-art::before {
-  background: radial-gradient(circle at 28% 22%, rgba(77, 88, 72, 0.92), transparent 58%), linear-gradient(135deg, rgba(67, 78, 67, 0.82), rgba(25, 27, 25, 0.9)) !important;
+  background: radial-gradient(circle at 28% 22%, rgba(77, 88, 72, 1), transparent 58%), linear-gradient(135deg, rgba(67, 78, 67, 1), rgba(25, 27, 25, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 3) .playlist-gallery-art::after {
-  background: radial-gradient(circle at 80% 68%, rgba(97, 96, 75, 0.88), transparent 55%), linear-gradient(145deg, rgba(70, 76, 68, 0.82), rgba(23, 25, 23, 0.9)) !important;
+  background: radial-gradient(circle at 80% 68%, rgba(97, 96, 75, 1), transparent 55%), linear-gradient(145deg, rgba(70, 76, 68, 1), rgba(23, 25, 23, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 4) .playlist-gallery-art::before {
-  background: radial-gradient(circle at 70% 26%, rgba(58, 80, 91, 0.92), transparent 58%), linear-gradient(135deg, rgba(57, 73, 82, 0.82), rgba(23, 27, 29, 0.9)) !important;
+  background: radial-gradient(circle at 70% 26%, rgba(58, 80, 91, 1), transparent 58%), linear-gradient(135deg, rgba(57, 73, 82, 1), rgba(23, 27, 29, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 4) .playlist-gallery-art::after {
-  background: radial-gradient(circle at 24% 70%, rgba(78, 95, 102, 0.88), transparent 55%), linear-gradient(145deg, rgba(62, 77, 81, 0.82), rgba(22, 25, 26, 0.9)) !important;
+  background: radial-gradient(circle at 24% 70%, rgba(78, 95, 102, 1), transparent 55%), linear-gradient(145deg, rgba(62, 77, 81, 1), rgba(22, 25, 26, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 5) .playlist-gallery-art::before {
-  background: radial-gradient(circle at 24% 32%, rgba(72, 48, 82, 0.92), transparent 58%), linear-gradient(135deg, rgba(78, 47, 74, 0.82), rgba(27, 23, 27, 0.9)) !important;
+  background: radial-gradient(circle at 24% 32%, rgba(72, 48, 82, 1), transparent 58%), linear-gradient(135deg, rgba(78, 47, 74, 1), rgba(27, 23, 27, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 5) .playlist-gallery-art::after {
-  background: radial-gradient(circle at 78% 66%, rgba(100, 58, 92, 0.88), transparent 55%), linear-gradient(145deg, rgba(78, 54, 74, 0.82), rgba(25, 22, 25, 0.9)) !important;
+  background: radial-gradient(circle at 78% 66%, rgba(100, 58, 92, 1), transparent 55%), linear-gradient(145deg, rgba(78, 54, 74, 1), rgba(25, 22, 25, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n) .playlist-gallery-art::before {
-  background: radial-gradient(circle at 74% 28%, rgba(94, 66, 40, 0.92), transparent 58%), linear-gradient(135deg, rgba(88, 64, 44, 0.82), rgba(28, 24, 21, 0.9)) !important;
+  background: radial-gradient(circle at 74% 28%, rgba(94, 66, 40, 1), transparent 58%), linear-gradient(135deg, rgba(88, 64, 44, 1), rgba(28, 24, 21, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n) .playlist-gallery-art::after {
-  background: radial-gradient(circle at 22% 66%, rgba(106, 78, 48, 0.88), transparent 55%), linear-gradient(145deg, rgba(78, 62, 47, 0.82), rgba(25, 22, 20, 0.9)) !important;
+  background: radial-gradient(circle at 22% 66%, rgba(106, 78, 48, 1), transparent 55%), linear-gradient(145deg, rgba(78, 62, 47, 1), rgba(25, 22, 20, 1)) !important;
 }
 
 .playlists-page .playlist-gallery-art img {
