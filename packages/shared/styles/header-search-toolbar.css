@@ -273,27 +273,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
   gap: 0 !important;
 }
 
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap.is-open) {
-  grid-template-columns: var(--filmwave-side-filter-rail-width) minmax(0, 1fr) !important;
-  column-gap: 0 !important;
-  gap: 0 !important;
-}
-
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap.is-open.has-selected-filter-section) {
-  grid-template-columns: calc(
-    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
-  ) minmax(0, 1fr) !important;
-  column-gap: 0 !important;
-  gap: 0 !important;
-}
-
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column {
   grid-column: 1 !important;
   min-width: 0 !important;
-}
-
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap.is-open) > .fw-music-content-column {
-  grid-column: 2 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -379,6 +361,25 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   background: transparent !important;
   background-color: transparent !important;
   color: var(--text-primary) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open
+  .fw-toolbar-filters-label {
+  display: inline !important;
+  height: auto !important;
+  font-size: 14px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open
+  .fw-toolbar-filters-label::after {
+  content: none !important;
+  display: none !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
