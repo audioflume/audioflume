@@ -355,14 +355,16 @@ main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child >
 .fw-toolbar-header-search-row {
   display: flex !important;
   justify-content: center !important;
-  padding: 16px 0 10px !important;
+  padding: 16px 10px 10px 0 !important;
 }
 
 .fw-toolbar-header-search-form {
+  box-sizing: border-box !important;
   width: 100% !important;
   max-width: none !important;
 }
 
 .fw-toolbar-header-search-form .filmwave-search-pill {
+  box-sizing: border-box !important;
   width: 100% !important;
 }
