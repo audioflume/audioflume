@@ -267,10 +267,7 @@ function syncPlaylistGalleryMenus() {
     range.detach();
 
     const top = textRect.top - cardRect.top + (textRect.height - 18) / 2;
-    const left = Math.min(
-      textRect.right - cardRect.left + 5,
-      cardRect.width - 18,
-    );
+    const left = cardRect.width - 18;
 
     menuWrap.style.position = "absolute";
     menuWrap.style.top = `${Math.max(0, top)}px`;
