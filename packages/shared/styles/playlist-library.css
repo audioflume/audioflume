@@ -109,6 +109,24 @@
     linear-gradient(145deg, var(--playlist-layer-middle-a), var(--playlist-layer-middle-b)) !important;
 }
 
+.playlists-page .playlist-gallery-art-layer::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  display: block !important;
+  background: var(--bg-primary) !important;
+  pointer-events: none !important;
+}
+
+.playlists-page .playlist-gallery-art-layer-back::after {
+  opacity: 0.58 !important;
+}
+
+.playlists-page .playlist-gallery-art-layer-middle::after {
+  opacity: 0.34 !important;
+}
+
 .playlists-page .playlist-gallery-art.has-cover-layers::before,
 .playlists-page .playlist-gallery-art.has-cover-layers::after {
   display: none !important;
