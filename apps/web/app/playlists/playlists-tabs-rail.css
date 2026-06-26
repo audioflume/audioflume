@@ -159,6 +159,83 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
   color: var(--text-secondary) !important;
 }
 
+.drag-preview-card {
+  width: clamp(190px, 13vw, 230px) !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.drag-preview-card .playlist-gallery-art-wrap {
+  position: relative !important;
+  display: flex !important;
+  min-height: 0 !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.drag-preview-card .playlist-gallery-art {
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.drag-preview-card .playlist-gallery-art::after {
+  display: none !important;
+}
+
+.drag-preview-card .playlist-gallery-art img {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+  transform: none !important;
+}
+
+.drag-preview-card .playlist-gallery-content {
+  position: static !important;
+  margin-top: 12px !important;
+  padding-right: 0 !important;
+}
+
+.drag-preview-card .playlist-gallery-content .playlist-gallery-kicker {
+  display: none !important;
+}
+
+.drag-preview-card .playlist-gallery-content h3 {
+  margin: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-family: var(--font-instrument-sans) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.045em !important;
+  color: var(--text-primary) !important;
+}
+
+.drag-preview-card .playlist-gallery-content p {
+  margin-top: 3px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  color: var(--text-secondary) !important;
+}
+
 .playlists-tabs-row {
   position: relative !important;
   z-index: 1 !important;
