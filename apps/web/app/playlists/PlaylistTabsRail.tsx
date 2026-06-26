@@ -291,6 +291,42 @@ function syncPlaylistGalleryMenus() {
   });
 }
 
+function syncOpenPlaylistDropdownPlacement() {
+  const openButton = document.querySelector<HTMLElement>(
+    ".playlists-page .playlist-menu-btn-grid.is-open",
+  );
+
+  if (!openButton) return;
+
+  const dropdowns = Array.from(
+    document.querySelectorAll<HTMLElement>(".filmwave-dropdown-shell"),
+  );
+  const dropdown = dropdowns
+    .reverse()
+    .find((node) => {
+      const rect = node.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && getComputedStyle(node).visibility !== "hidden";
+    });
+
+  if (!dropdown) return;
+
+  const buttonRect = openButton.getBoundingClientRect();
+  const dropdownRect = dropdown.getBoundingClientRect();
+  const left = Math.max(16, buttonRect.right - dropdownRect.width);
+  const top = Math.max(68, dropdownRect.top);
+
+  dropdown.style.transform = `translate3d(${Math.round(left)}px, ${Math.round(top)}px, 0)`;
+  dropdown.style.transformOrigin = "top right";
+}
+
+function schedulePlaylistDropdownPlacement() {
+  window.requestAnimationFrame(() => {
+    syncOpenPlaylistDropdownPlacement();
+
+    window.requestAnimationFrame(syncOpenPlaylistDropdownPlacement);
+  });
+}
+
 export default function PlaylistTabsRail() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -303,16 +339,22 @@ export default function PlaylistTabsRail() {
 
     syncPlaylistCoverLayers();
     syncPlaylistGalleryMenus();
+    schedulePlaylistDropdownPlacement();
 
     const timeout = window.setTimeout(() => {
       syncPlaylistCoverLayers();
       syncPlaylistGalleryMenus();
+      schedulePlaylistDropdownPlacement();
     }, 100);
-    const resizeHandler = () => syncPlaylistGalleryMenus();
+    const resizeHandler = () => {
+      syncPlaylistGalleryMenus();
+      schedulePlaylistDropdownPlacement();
+    };
     const target = document.querySelector(".playlists-page") || document.body;
     const observer = new MutationObserver(() => {
       syncPlaylistCoverLayers();
       syncPlaylistGalleryMenus();
+      schedulePlaylistDropdownPlacement();
     });
 
     window.addEventListener("resize", resizeHandler);
