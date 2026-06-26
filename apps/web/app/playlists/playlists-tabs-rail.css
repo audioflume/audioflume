@@ -35,6 +35,13 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
   display: none !important;
 }
 
+.playlists-page .playlist-gallery-art::before,
+.playlists-page .playlist-gallery-art::after,
+.playlists-page .playlist-gallery-art-layer {
+  display: none !important;
+  box-shadow: none !important;
+}
+
 .playlists-page .playlist-gallery-art-layer-back {
   box-shadow: none !important;
 }
