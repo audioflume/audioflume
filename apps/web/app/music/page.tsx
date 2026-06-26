@@ -599,187 +599,189 @@ export default function MusicPage() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
-        <MusicLibraryToolbar
-          stickyTop={56}
-          searchValue={search}
-          searchPlaceholder={searchPlaceholder}
-          onSearchChange={setSearch}
-          searchInputRef={searchInputRef}
-          searchIcon={<SearchIcon />}
-          filterCount={activeFilterCount}
-          filtersOpen={filtersOpen}
-          onToggleFilters={() => setFiltersOpen((open) => !open)}
-          onClearFilters={clearAllFilters}
-          chips={
-            hasActiveFilters ? (
-              <FilterTags
-                selectedMoods={selectedMoods}
-                selectedGenres={selectedGenres}
-                selectedRegions={selectedRegions}
-                selectedInstruments={selectedInstruments}
-                selectedBuilds={selectedBuilds}
-                selectedVocals={selectedVocals}
-                selectedDurations={selectedDurations}
-                selectedEditPoints={selectedEditPoints}
-                instrumental={instrumental}
-                bpmValue={bpmValue}
-                keyValue={keyValue}
-                selectedPlaylist={selectedPlaylist}
-                onRemoveMood={(v) =>
-                  setSelectedMoods(selectedMoods.filter((item) => item !== v))
-                }
-                onRemoveGenre={(v) =>
-                  setSelectedGenres(selectedGenres.filter((item) => item !== v))
-                }
-                onRemoveRegion={(v) =>
-                  setSelectedRegions(selectedRegions.filter((item) => item !== v))
-                }
-                onRemoveInstrument={(v) =>
-                  setSelectedInstruments(
-                    selectedInstruments.filter((item) => item !== v),
-                  )
-                }
-                onRemoveBuild={(v) =>
-                  setSelectedBuilds(selectedBuilds.filter((item) => item !== v))
-                }
-                onRemoveVocal={(v) =>
-                  setSelectedVocals(selectedVocals.filter((item) => item !== v))
-                }
-                onRemoveDuration={(v) =>
-                  setSelectedDurations(
-                    selectedDurations.filter((item) => item !== v),
-                  )
-                }
-                onRemoveEditPoint={(v) =>
-                  setSelectedEditPoints(
-                    selectedEditPoints.filter((item) => item !== v),
-                  )
-                }
-                onRemoveInstrumental={() => setInstrumental(false)}
-                onRemoveBpm={() => setBpmValue(null)}
-                onRemoveKey={() => setKeyValue(null)}
-                onRemovePlaylist={() =>
-                  setFilters((current) => ({ ...current, selectedPlaylist: null }))
-                }
-              />
-            ) : undefined
-          }
-        >
-          <MusicFilterPanel
-            open={filtersOpen}
-            groups={filterChipGroups}
-            playlists={playlistChipOptions}
-            selectedPlaylistId={selectedPlaylistId ? String(selectedPlaylistId) : null}
-            onSelectPlaylist={(playlist) =>
-              setFilters((current) => ({
-                ...current,
-                selectedPlaylist: playlist
-                  ? { id: playlist.id, name: playlist.name }
-                  : null,
-              }))
+        <div className="fw-music-content-column">
+          <MusicLibraryToolbar
+            stickyTop={56}
+            searchValue={search}
+            searchPlaceholder={searchPlaceholder}
+            onSearchChange={setSearch}
+            searchInputRef={searchInputRef}
+            searchIcon={<SearchIcon />}
+            filterCount={activeFilterCount}
+            filtersOpen={filtersOpen}
+            onToggleFilters={() => setFiltersOpen((open) => !open)}
+            onClearFilters={clearAllFilters}
+            chips={
+              hasActiveFilters ? (
+                <FilterTags
+                  selectedMoods={selectedMoods}
+                  selectedGenres={selectedGenres}
+                  selectedRegions={selectedRegions}
+                  selectedInstruments={selectedInstruments}
+                  selectedBuilds={selectedBuilds}
+                  selectedVocals={selectedVocals}
+                  selectedDurations={selectedDurations}
+                  selectedEditPoints={selectedEditPoints}
+                  instrumental={instrumental}
+                  bpmValue={bpmValue}
+                  keyValue={keyValue}
+                  selectedPlaylist={selectedPlaylist}
+                  onRemoveMood={(v) =>
+                    setSelectedMoods(selectedMoods.filter((item) => item !== v))
+                  }
+                  onRemoveGenre={(v) =>
+                    setSelectedGenres(selectedGenres.filter((item) => item !== v))
+                  }
+                  onRemoveRegion={(v) =>
+                    setSelectedRegions(selectedRegions.filter((item) => item !== v))
+                  }
+                  onRemoveInstrument={(v) =>
+                    setSelectedInstruments(
+                      selectedInstruments.filter((item) => item !== v),
+                    )
+                  }
+                  onRemoveBuild={(v) =>
+                    setSelectedBuilds(selectedBuilds.filter((item) => item !== v))
+                  }
+                  onRemoveVocal={(v) =>
+                    setSelectedVocals(selectedVocals.filter((item) => item !== v))
+                  }
+                  onRemoveDuration={(v) =>
+                    setSelectedDurations(
+                      selectedDurations.filter((item) => item !== v),
+                    )
+                  }
+                  onRemoveEditPoint={(v) =>
+                    setSelectedEditPoints(
+                      selectedEditPoints.filter((item) => item !== v),
+                    )
+                  }
+                  onRemoveInstrumental={() => setInstrumental(false)}
+                  onRemoveBpm={() => setBpmValue(null)}
+                  onRemoveKey={() => setKeyValue(null)}
+                  onRemovePlaylist={() =>
+                    setFilters((current) => ({ ...current, selectedPlaylist: null }))
+                  }
+                />
+              ) : undefined
             }
-            bpmValue={bpmValue}
-            onBpmChange={setBpmValue}
-            keyValue={keyValue}
-            onKeyChange={setKeyValue}
-            selectedDurations={selectedDurations}
-            onDurationsChange={setSelectedDurations}
-            markersActive={effectiveShowEditPointMarkers}
-            markersDisabled={!filtersHydrated}
-            onToggleMarkers={() =>
-              setShowEditPointMarkers(!effectiveShowEditPointMarkers)
-            }
-            hasActive={hasActiveClearableFilters}
-            onClearAll={clearAllFilters}
-            onClose={() => setFiltersOpen(false)}
-          />
-        </MusicLibraryToolbar>
+          >
+            <MusicFilterPanel
+              open={filtersOpen}
+              groups={filterChipGroups}
+              playlists={playlistChipOptions}
+              selectedPlaylistId={selectedPlaylistId ? String(selectedPlaylistId) : null}
+              onSelectPlaylist={(playlist) =>
+                setFilters((current) => ({
+                  ...current,
+                  selectedPlaylist: playlist
+                    ? { id: playlist.id, name: playlist.name }
+                    : null,
+                }))
+              }
+              bpmValue={bpmValue}
+              onBpmChange={setBpmValue}
+              keyValue={keyValue}
+              onKeyChange={setKeyValue}
+              selectedDurations={selectedDurations}
+              onDurationsChange={setSelectedDurations}
+              markersActive={effectiveShowEditPointMarkers}
+              markersDisabled={!filtersHydrated}
+              onToggleMarkers={() =>
+                setShowEditPointMarkers(!effectiveShowEditPointMarkers)
+              }
+              hasActive={hasActiveClearableFilters}
+              onClearAll={clearAllFilters}
+              onClose={() => setFiltersOpen(false)}
+            />
+          </MusicLibraryToolbar>
 
-        <MusicQuickChips>
-          {availableFilterOptions.quickFilters.map((filter) => {
-            const isActive = selectedGenres.includes(filter);
+          <MusicQuickChips>
+            {availableFilterOptions.quickFilters.map((filter) => {
+              const isActive = selectedGenres.includes(filter);
 
-            return (
-              <MusicQuickChip
-                key={filter}
-                active={isActive}
-                onClick={() =>
-                  setSelectedGenres(
-                    isActive
-                      ? selectedGenres.filter((genre) => genre !== filter)
-                      : [...selectedGenres, filter],
-                  )
-                }
+              return (
+                <MusicQuickChip
+                  key={filter}
+                  active={isActive}
+                  onClick={() =>
+                    setSelectedGenres(
+                      isActive
+                        ? selectedGenres.filter((genre) => genre !== filter)
+                        : [...selectedGenres, filter],
+                    )
+                  }
+                >
+                  {filter}
+                </MusicQuickChip>
+              );
+            })}
+
+            <MusicQuickChipsEnd>
+              <button
+                type="button"
+                aria-pressed={shuffleActive}
+                className={`fw-filter-chip fw-quick-chip${shuffleActive ? " is-selected" : ""}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  toggleShuffle();
+                }}
               >
-                {filter}
-              </MusicQuickChip>
-            );
-          })}
+                <ShuffleIconSmall size={13} />
+                <span>Shuffle</span>
+              </button>
+              <button
+                type="button"
+                aria-pressed={sortMode === "recent"}
+                className={`fw-filter-chip fw-quick-chip${sortMode === "recent" ? " is-selected" : ""}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  selectSortMode("recent");
+                }}
+              >
+                Most Recent
+              </button>
+              <button
+                type="button"
+                aria-pressed={sortMode === "popular"}
+                className={`fw-filter-chip fw-quick-chip${sortMode === "popular" ? " is-selected" : ""}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  selectSortMode("popular");
+                }}
+              >
+                Most Popular
+              </button>
+            </MusicQuickChipsEnd>
+          </MusicQuickChips>
 
-          <MusicQuickChipsEnd>
-            <button
-              type="button"
-              aria-pressed={shuffleActive}
-              className={`fw-filter-chip fw-quick-chip${shuffleActive ? " is-selected" : ""}`}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                toggleShuffle();
-              }}
-            >
-              <ShuffleIconSmall size={13} />
-              <span>Shuffle</span>
-            </button>
-            <button
-              type="button"
-              aria-pressed={sortMode === "recent"}
-              className={`fw-filter-chip fw-quick-chip${sortMode === "recent" ? " is-selected" : ""}`}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                selectSortMode("recent");
-              }}
-            >
-              Most Recent
-            </button>
-            <button
-              type="button"
-              aria-pressed={sortMode === "popular"}
-              className={`fw-filter-chip fw-quick-chip${sortMode === "popular" ? " is-selected" : ""}`}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                selectSortMode("popular");
-              }}
-            >
-              Most Popular
-            </button>
-          </MusicQuickChipsEnd>
-        </MusicQuickChips>
-
-        {songsError && (
-          <div className="px-5 py-4 text-sm text-[var(--danger)]">
-            Failed to load songs. Showing cached results where available.
-          </div>
-        )}
-
-        <MusicListShell
-          title={selectedPlaylist ? selectedPlaylist.name : "All tracks"}
-          meta={`${displayedSongs.length} of ${songs.length} tracks`}
-        >
-          {showSongSkeleton ? (
-            <SkeletonSongList />
-          ) : (
-            displayedSongs.map((song, index) => (
-              <SongCard
-                key={getMusicSongStableId(song, index)}
-                song={song}
-                highlightedEditPointTypes={highlightedEditPointTypes}
-                showEditPointMarkers={effectiveShowEditPointMarkers}
-              />
-            ))
+          {songsError && (
+            <div className="px-5 py-4 text-sm text-[var(--danger)]">
+              Failed to load songs. Showing cached results where available.
+            </div>
           )}
-        </MusicListShell>
+
+          <MusicListShell
+            title={selectedPlaylist ? selectedPlaylist.name : "All tracks"}
+            meta={`${displayedSongs.length} of ${songs.length} tracks`}
+          >
+            {showSongSkeleton ? (
+              <SkeletonSongList />
+            ) : (
+              displayedSongs.map((song, index) => (
+                <SongCard
+                  key={getMusicSongStableId(song, index)}
+                  song={song}
+                  highlightedEditPointTypes={highlightedEditPointTypes}
+                  showEditPointMarkers={effectiveShowEditPointMarkers}
+                />
+              ))
+            )}
+          </MusicListShell>
+        </div>
 
         <Footer playerPadding={playerVisible} />
       </section>
