@@ -1,26 +1,26 @@
 "use client";
 
-import {
-  HeaderChevron,
-  HeaderShell,
-  MUSIC_FILTER_STORAGE_KEY_PREFIX,
-} from "@filmwave/shared";
+import { HeaderShell } from "@filmwave/shared";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-import CuratedPlaylistsIcon from "@/components/icons/CuratedPlaylistsIcon";
 import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
-import MusicHeaderSearch from "@/components/MusicHeaderSearch";
 import UserMenu from "@/components/UserMenu";
+
+const TOP_NAV_LINKS = [
+  { href: "/discover", label: "Discover" },
+  { href: "/music", label: "Music" },
+  { href: "/playlists", label: "Playlists" },
+  { href: "/projects", label: "Projects" },
+  { href: "/sound-fx", label: "Sound FX" },
+];
 
 export default function Header() {
   const { user } = useUser();
   const pathname = usePathname();
-  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [headerSearch, setHeaderSearch] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,91 +56,61 @@ export default function Header() {
     };
   }, []);
 
-  function handleHeaderSearchSubmit(nextSearchValue: string) {
-    const nextSearch = nextSearchValue.trim();
-    const storageKey = user?.id
-      ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${user.id}`
-      : null;
-
-    if (storageKey) {
-      try {
-        const stored = sessionStorage.getItem(storageKey);
-        const parsed = stored ? JSON.parse(stored) : {};
-        const current =
-          typeof parsed === "object" && parsed !== null ? parsed : {};
-
-        sessionStorage.setItem(
-          storageKey,
-          JSON.stringify({
-            ...current,
-            search: nextSearch,
-          }),
-        );
-      } catch {
-        sessionStorage.setItem(storageKey, JSON.stringify({ search: nextSearch }));
-      }
-    }
-
-    router.push(nextSearch ? `/music?search=${encodeURIComponent(nextSearch)}` : "/music");
-  }
-
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
     : "";
-  const syncHeaderSearchWithMusicPage = pathname === "/music";
 
   return (
     <HeaderShell
       logo={
-        <Link href="/music" className="filmwave-header-logo-action" aria-label="Filmwave Home">
+        <Link href="/discover" className="filmwave-header-logo-action" aria-label="Filmwave Home">
           <FilmwaveLogoIcon className="filmwave-header-logo-mark" />
         </Link>
       }
       actions={
-        <div className="filmwave-header-actions" ref={menuRef}>
-          <MusicHeaderSearch
-            value={headerSearch}
-            placeholder="Search music library"
-            syncWithToolbar={syncHeaderSearchWithMusicPage}
-            onChange={setHeaderSearch}
-            onSubmitSearch={handleHeaderSearchSubmit}
-          />
+        <>
+          <nav className="filmwave-header-nav" aria-label="Primary navigation">
+            {TOP_NAV_LINKS.map((link) => {
+              const isActive =
+                pathname === link.href || pathname?.startsWith(`${link.href}/`);
 
-          <Link href="/curated-playlists" className="filmwave-header-nav-link">
-            <CuratedPlaylistsIcon size={16} />
-            Playlists
-          </Link>
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`filmwave-header-nav-link${isActive ? " is-active" : ""}`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
 
-          <button
-            type="button"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
-            aria-label="Open user menu"
-            aria-expanded={menuOpen}
-          >
-            <span className="filmwave-header-account-label">
-              <span className="filmwave-header-account-name">
-                {user?.fullName || "Account"}
+          <div className="filmwave-header-account-wrap" ref={menuRef}>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
+              aria-label="Open user menu"
+              aria-expanded={menuOpen}
+            >
+              <span className="filmwave-header-avatar">
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" />
+                ) : (
+                  initials
+                )}
               </span>
+            </button>
 
-              <HeaderChevron open={menuOpen} />
-            </span>
-
-            <span className="filmwave-header-avatar">
-              {profileImage ? (
-                <img src={profileImage} alt="Profile" />
-              ) : (
-                initials
-              )}
-            </span>
-          </button>
-
-          {menuOpen && (
-            <div className="filmwave-header-menu-wrap">
-              <UserMenu onClose={() => setMenuOpen(false)} />
-            </div>
-          )}
-        </div>
+            {menuOpen && (
+              <div className="filmwave-header-menu-wrap">
+                <UserMenu onClose={() => setMenuOpen(false)} />
+              </div>
+            )}
+          </div>
+        </>
       }
     />
   );
