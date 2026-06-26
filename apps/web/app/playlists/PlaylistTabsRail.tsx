@@ -255,19 +255,17 @@ function syncPlaylistGalleryMenus() {
 
   cards.forEach((card) => {
     const title = card.querySelector<HTMLHeadingElement>(".playlist-gallery-content h3");
+    const artwork = card.querySelector<HTMLElement>(".playlist-gallery-art");
     const menuWrap = card.querySelector<HTMLElement>(":scope > .playlist-card-menu-wrap");
     const menuButton = menuWrap?.querySelector<HTMLElement>(".playlist-menu-btn-grid");
 
-    if (!title || !menuWrap || !menuButton) return;
+    if (!title || !artwork || !menuWrap || !menuButton) return;
 
     const cardRect = card.getBoundingClientRect();
-    const range = document.createRange();
-    range.selectNodeContents(title);
-    const textRect = range.getBoundingClientRect();
-    range.detach();
-
-    const top = textRect.top - cardRect.top + (textRect.height - 18) / 2;
-    const left = cardRect.width - 18;
+    const titleRect = title.getBoundingClientRect();
+    const artworkRect = artwork.getBoundingClientRect();
+    const top = titleRect.top - cardRect.top + (titleRect.height - 18) / 2 - 1;
+    const left = artworkRect.right - cardRect.left - 18;
 
     menuWrap.style.position = "absolute";
     menuWrap.style.top = `${Math.max(0, top)}px`;
