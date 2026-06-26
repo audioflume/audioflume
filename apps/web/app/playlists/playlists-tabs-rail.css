@@ -27,6 +27,10 @@
   font-size: 44px !important;
 }
 
+.playlists-page .playlists-meta {
+  display: none !important;
+}
+
 section.curated-playlists-page-layer > div > div:first-child {
   margin-top: 8px !important;
 }
