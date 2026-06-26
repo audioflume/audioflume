@@ -166,16 +166,16 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
 }
 
 .playlists-page .playlist-create-card .playlist-create-mark {
-  border-color: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
-  background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
+  border-color: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
+  background: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
   transition:
     border-color 160ms ease,
     background 160ms ease !important;
 }
 
 .playlists-page .playlist-create-card:hover .playlist-create-mark {
-  border-color: color-mix(in srgb, var(--bg-primary) 88%, var(--text-primary) 12%) !important;
-  background: color-mix(in srgb, var(--bg-primary) 88%, var(--text-primary) 12%) !important;
+  border-color: color-mix(in srgb, var(--bg-primary) 78%, var(--text-primary) 22%) !important;
+  background: color-mix(in srgb, var(--bg-primary) 78%, var(--text-primary) 22%) !important;
 }
 
 .playlists-page .playlist-create-card .playlist-create-copy span {
