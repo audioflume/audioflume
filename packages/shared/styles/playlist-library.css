@@ -64,8 +64,8 @@
 
 .playlists-page .playlist-gallery-art::before {
   top: -24px !important;
-  right: -8% !important;
-  left: -8% !important;
+  right: 8% !important;
+  left: 8% !important;
   z-index: 1 !important;
   background: linear-gradient(135deg, rgba(86, 71, 104, 0.88), rgba(30, 34, 34, 0.88)) !important;
   opacity: 0.42 !important;
@@ -73,8 +73,8 @@
 
 .playlists-page .playlist-gallery-art::after {
   top: -12px !important;
-  right: -4% !important;
-  left: -4% !important;
+  right: 4% !important;
+  left: 4% !important;
   z-index: 2 !important;
   background: linear-gradient(135deg, rgba(110, 91, 84, 0.84), rgba(42, 43, 39, 0.84)) !important;
   opacity: 0.62 !important;
