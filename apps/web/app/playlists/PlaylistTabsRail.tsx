@@ -62,7 +62,18 @@ function syncPlaylistCoverLayers() {
         artwork.insertBefore(layer, coverImage);
       }
 
-      layer.style.backgroundImage = `url(${JSON.stringify(coverSrc)})`;
+      let layerImage = layer.querySelector<HTMLSpanElement>(
+        ":scope > .playlist-gallery-art-layer-image",
+      );
+
+      if (!layerImage) {
+        layerImage = document.createElement("span");
+        layerImage.className = "playlist-gallery-art-layer-image";
+        layer.append(layerImage);
+      }
+
+      layer.style.backgroundImage = "none";
+      layerImage.style.backgroundImage = `url(${JSON.stringify(coverSrc)})`;
     });
   });
 }
