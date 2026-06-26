@@ -35,9 +35,21 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
   display: none !important;
 }
 
+.playlists-page .playlist-gallery-content h3 {
+  font-size: 16px !important;
+}
+
 .playlists-page .playlist-create-card .playlist-create-mark {
   border-color: color-mix(in srgb, var(--bg-primary) 88%, var(--text-primary) 12%) !important;
   background: color-mix(in srgb, var(--bg-primary) 88%, var(--text-primary) 12%) !important;
+}
+
+.playlists-page .playlist-create-card .playlist-create-copy span {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--text-secondary) !important;
 }
 
 .playlists-tabs-row {
