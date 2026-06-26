@@ -272,7 +272,9 @@
 .playlists-page .playlist-create-card .playlist-create-mark {
   width: 42px !important;
   height: 42px !important;
-  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  background: var(--bg-secondary) !important;
 }
 
 .playlist-gallery-card:hover .playlist-gallery-art-wrap,
