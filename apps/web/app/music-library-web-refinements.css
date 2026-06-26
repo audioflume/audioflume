@@ -4,7 +4,7 @@
   box-sizing: border-box !important;
   width: 100% !important;
   padding-right: var(--fw-music-content-inset-right) !important;
-  padding-left: var(--fw-music-content-inset-left) !important;
+  padding-left: var(--fw-music-content-inset-right) !important;
 }
 
 .fw-toolbar-sticky {
