@@ -120,11 +120,11 @@
 }
 
 .playlists-page .playlist-gallery-art-layer-back::after {
-  opacity: 0.58 !important;
+  opacity: 0.76 !important;
 }
 
 .playlists-page .playlist-gallery-art-layer-middle::after {
-  opacity: 0.34 !important;
+  opacity: 0.52 !important;
 }
 
 .playlists-page .playlist-gallery-art.has-cover-layers::before,
