@@ -196,7 +196,12 @@ export default function DropdownShell({
       }
 
       const side = frozenSideRef.current;
-      const { align } = getPlacementParts(placement);
+      const resolvedPlacement: Placement =
+        placement === "bottom-start" &&
+        referenceRef.current?.querySelector(".playlist-menu-btn-grid")
+          ? "bottom-end"
+          : placement;
+      const { align } = getPlacementParts(resolvedPlacement);
 
       const topPadding = getPaddingValue(collisionPadding, "top");
       const rightPadding = getPaddingValue(collisionPadding, "right");
