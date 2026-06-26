@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const PLAYLIST_TABS = [
   { label: "My Playlists", value: "my-playlists", href: "/playlists" },
@@ -28,12 +29,67 @@ function PlaylistTabChevronIcon() {
   );
 }
 
+function syncPlaylistCoverLayers() {
+  const artworkNodes = document.querySelectorAll<HTMLElement>(
+    ".playlists-page .playlist-gallery-art",
+  );
+
+  artworkNodes.forEach((artwork) => {
+    const coverImage = artwork.querySelector<HTMLImageElement>(
+      ":scope > img:not(.playlist-gallery-art-layer-image)",
+    );
+    const coverSrc = coverImage?.currentSrc || coverImage?.src || "";
+
+    if (!coverSrc) {
+      artwork.classList.remove("has-cover-layers");
+      artwork
+        .querySelectorAll(".playlist-gallery-art-layer")
+        .forEach((layer) => layer.remove());
+      return;
+    }
+
+    artwork.classList.add("has-cover-layers");
+
+    (["back", "middle"] as const).forEach((layerName) => {
+      let layer = artwork.querySelector<HTMLSpanElement>(
+        `:scope > .playlist-gallery-art-layer-${layerName}`,
+      );
+
+      if (!layer) {
+        layer = document.createElement("span");
+        layer.className = `playlist-gallery-art-layer playlist-gallery-art-layer-${layerName}`;
+        layer.setAttribute("aria-hidden", "true");
+        artwork.insertBefore(layer, coverImage);
+      }
+
+      layer.style.backgroundImage = `url(${JSON.stringify(coverSrc)})`;
+    });
+  });
+}
+
 export default function PlaylistTabsRail() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeTab = pathname?.startsWith("/curated-playlists")
     ? "curated-collections"
     : searchParams.get("tab") || "my-playlists";
+
+  useEffect(() => {
+    if (!pathname || pathname.startsWith("/curated-playlists")) return;
+
+    syncPlaylistCoverLayers();
+
+    const timeout = window.setTimeout(syncPlaylistCoverLayers, 100);
+    const target = document.querySelector(".playlists-page") || document.body;
+    const observer = new MutationObserver(syncPlaylistCoverLayers);
+
+    observer.observe(target, { childList: true, subtree: true });
+
+    return () => {
+      window.clearTimeout(timeout);
+      observer.disconnect();
+    };
+  }, [pathname, activeTab]);
 
   return (
     <nav className="playlists-tabs-row fw-filter-rail" aria-label="Playlist sections">
