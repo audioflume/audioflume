@@ -247,7 +247,7 @@
   min-height: 0 !important;
   align-items: center !important;
   justify-content: center !important;
-  border: 1px solid var(--border) !important;
+  border: 1px dashed var(--border) !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding: 16px !important;
