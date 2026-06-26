@@ -79,6 +79,8 @@ export function MusicLibraryToolbar({
   children,
 }: MusicLibraryToolbarProps) {
   const ignoreNextFilterToggleRef = useRef(false);
+  const isStickyHeaderSearch = stickyTop !== undefined;
+  const showFilterExtras = !isStickyHeaderSearch;
 
   function handleFilterToggleClick(event: ReactMouseEvent<HTMLButtonElement>) {
     if (
@@ -127,7 +129,7 @@ export function MusicLibraryToolbar({
       className={`fw-toolbar-sticky${className ? ` ${className}` : ""}`}
       style={stickyTop !== undefined ? { top: stickyTop } : undefined}
     >
-      {stickyTop !== undefined && (
+      {isStickyHeaderSearch && (
         <div className="fw-toolbar-header-search-row">
           <form
             className="fw-toolbar-header-search-form"
@@ -149,16 +151,16 @@ export function MusicLibraryToolbar({
           <div className="fw-toolbar">
             <button
               type="button"
-              className={`fw-toolbar-filters${filtersOpen ? " is-open" : ""}${
-                filterCount > 0 ? " is-active" : ""
-              }`}
+              className={`fw-toolbar-filters${isStickyHeaderSearch ? " is-header-row" : ""}${
+                filtersOpen ? " is-open" : ""
+              }${showFilterExtras && filterCount > 0 ? " is-active" : ""}`}
               aria-expanded={filtersOpen}
               onClick={handleFilterToggleClick}
             >
               <FilterBarsIcon />
               <span className="fw-toolbar-filters-label">Filters</span>
 
-              {filterCount > 0 && (
+              {showFilterExtras && filterCount > 0 && (
                 <span
                   className={`fw-toolbar-filters-count${onClearFilters ? " is-clearable" : ""}`}
                   role={onClearFilters ? "button" : undefined}
@@ -178,11 +180,13 @@ export function MusicLibraryToolbar({
                 </span>
               )}
 
-              <span
-                className={`fw-toolbar-filters-chevron${filtersOpen ? " is-open" : ""}`}
-              >
-                <ChevronDownIcon />
-              </span>
+              {showFilterExtras && (
+                <span
+                  className={`fw-toolbar-filters-chevron${filtersOpen ? " is-open" : ""}`}
+                >
+                  <ChevronDownIcon />
+                </span>
+              )}
             </button>
 
             {actions && <div className="fw-toolbar-actions">{actions}</div>}
