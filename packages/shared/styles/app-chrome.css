@@ -33,14 +33,14 @@
 .filmwave-app-header,
 .desktop-header,
 body > header {
-  --filmwave-chrome-surface: var(--bg-primary);
+  --filmwave-chrome-surface: color-mix(in srgb, var(--bg-primary) 74%, transparent);
   z-index: var(--filmwave-z-header) !important;
   height: var(--filmwave-header-height);
   border-bottom: 1px solid var(--filmwave-header-border-color) !important;
-  background: var(--filmwave-chrome-surface, var(--bg-primary)) !important;
-  background-color: var(--filmwave-chrome-surface, var(--bg-primary)) !important;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
+  background: var(--filmwave-chrome-surface) !important;
+  background-color: var(--filmwave-chrome-surface) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.08);
+  backdrop-filter: blur(18px) saturate(1.08);
   color: var(--text-primary);
   box-shadow: 0 1px 0 var(--filmwave-header-border-color) !important;
 }
@@ -54,7 +54,7 @@ body > header > div {
 }
 
 .filmwave-header {
-  --filmwave-chrome-surface: var(--bg-primary);
+  --filmwave-chrome-surface: color-mix(in srgb, var(--bg-primary) 74%, transparent);
   position: fixed;
   top: 0;
   right: 0;
@@ -62,10 +62,10 @@ body > header > div {
   z-index: var(--filmwave-z-header);
   height: var(--filmwave-header-height);
   border-bottom: 1px solid var(--filmwave-header-border-color) !important;
-  background: var(--filmwave-chrome-surface, var(--bg-primary)) !important;
-  background-color: var(--filmwave-chrome-surface, var(--bg-primary)) !important;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
+  background: var(--filmwave-chrome-surface) !important;
+  background-color: var(--filmwave-chrome-surface) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.08);
+  backdrop-filter: blur(18px) saturate(1.08);
   color: var(--text-primary);
   user-select: none;
   box-shadow: 0 1px 0 var(--filmwave-header-border-color) !important;
