@@ -353,9 +353,11 @@ main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child >
 /* ─── Music page restored header search ───────────────────── */
 
 .fw-toolbar-header-search-row {
+  box-sizing: border-box !important;
   display: flex !important;
   justify-content: center !important;
-  padding: 16px 10px 10px 0 !important;
+  width: 100% !important;
+  padding: 16px calc(var(--fw-music-content-inset-right) + 10px) 10px calc(var(--fw-music-content-inset-left) + 10px) !important;
 }
 
 .fw-toolbar-header-search-form {
