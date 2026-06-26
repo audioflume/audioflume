@@ -1,5 +1,9 @@
 /* User playlist page gallery grid density. Does not target curated playlist pages. */
 
+.playlists-page .playlist-library {
+  padding-top: 34px !important;
+}
+
 .playlists-page .playlist-library .playlist-gallery,
 .playlists-page .playlist-skeleton-grid {
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -53,25 +57,27 @@
 .playlists-page .playlist-gallery-art::after {
   content: "" !important;
   position: absolute !important;
-  left: 7% !important;
-  right: 7% !important;
   height: 100% !important;
   border-radius: 0 !important;
   pointer-events: none !important;
 }
 
 .playlists-page .playlist-gallery-art::before {
-  top: -20px !important;
+  top: -24px !important;
+  right: -8% !important;
+  left: -8% !important;
   z-index: 1 !important;
   background: linear-gradient(135deg, rgba(86, 71, 104, 0.88), rgba(30, 34, 34, 0.88)) !important;
-  opacity: 0.54 !important;
+  opacity: 0.42 !important;
 }
 
 .playlists-page .playlist-gallery-art::after {
-  top: -10px !important;
+  top: -12px !important;
+  right: -4% !important;
+  left: -4% !important;
   z-index: 2 !important;
   background: linear-gradient(135deg, rgba(110, 91, 84, 0.84), rgba(42, 43, 39, 0.84)) !important;
-  opacity: 0.72 !important;
+  opacity: 0.62 !important;
 }
 
 .playlists-page .playlist-gallery-card:nth-child(6n + 1) .playlist-gallery-art::before {
