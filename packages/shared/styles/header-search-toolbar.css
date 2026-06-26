@@ -264,3 +264,65 @@ html[data-theme="light"] .fw-filter-done {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) !important;
   transform: none !important;
 }
+
+/* Music page: content-column search belongs in page flow, not the hidden header slot. */
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
+  grid-template-columns: var(--filmwave-side-filter-rail-width) minmax(0, 1fr) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky {
+  position: sticky !important;
+  top: 0 !important;
+  right: auto !important;
+  left: auto !important;
+  z-index: var(--filmwave-z-search-filter, 60) !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  position: fixed !important;
+  top: calc(
+    var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
+      var(--filmwave-sidebar-float-inset, 12px)
+  ) !important;
+  left: var(--filmwave-side-filter-sidebar-offset) !important;
+  z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
+  display: grid !important;
+  grid-template-rows: 1fr !important;
+  width: var(--filmwave-side-filter-rail-width) !important;
+  max-width: var(--filmwave-side-filter-rail-width) !important;
+  height: calc(
+    100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
+      var(--filmwave-sidebar-bottom-offset, 0px) -
+      (var(--filmwave-sidebar-float-inset, 12px) * 2)
+  ) !important;
+  margin: 0 !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap.has-selected-filter-section {
+  width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
+  ) !important;
+  max-width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
+  ) !important;
+}
