@@ -83,19 +83,30 @@
   display: block !important;
   overflow: hidden !important;
   background-color: var(--bg-secondary) !important;
-  background-repeat: no-repeat !important;
-  background-size: 145% 145% !important;
   opacity: 1 !important;
 }
 
-.playlists-page .playlist-gallery-art-layer-back {
-  background-position: 28% 28% !important;
-  filter: blur(6px) saturate(1.6) brightness(0.7) !important;
+.playlists-page .playlist-gallery-art-layer-image {
+  position: absolute !important;
+  display: block !important;
+  border-radius: 0 !important;
+  background-repeat: no-repeat !important;
+  background-size: 150% 150% !important;
+  opacity: 1 !important;
+  transform: scale(1.04) !important;
+  transform-origin: center !important;
 }
 
-.playlists-page .playlist-gallery-art-layer-middle {
+.playlists-page .playlist-gallery-art-layer-back .playlist-gallery-art-layer-image {
+  inset: -16px !important;
+  background-position: 28% 28% !important;
+  filter: blur(7px) saturate(1.6) brightness(0.7) !important;
+}
+
+.playlists-page .playlist-gallery-art-layer-middle .playlist-gallery-art-layer-image {
+  inset: -12px !important;
   background-position: 72% 48% !important;
-  filter: blur(4px) saturate(1.35) brightness(0.82) !important;
+  filter: blur(5px) saturate(1.35) brightness(0.82) !important;
 }
 
 .playlists-page .playlist-gallery-art.has-cover-layers::before,
