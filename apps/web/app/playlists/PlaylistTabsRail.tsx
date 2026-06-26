@@ -18,6 +18,44 @@ const PLAYLIST_TABS = [
   },
 ] as const;
 
+type RgbColor = [number, number, number];
+
+type CoverPalette = {
+  backA: string;
+  backB: string;
+  middleA: string;
+  middleB: string;
+};
+
+const paletteCache = new Map<string, Promise<CoverPalette>>();
+
+const FALLBACK_PALETTES: CoverPalette[] = [
+  {
+    backA: "rgb(72, 50, 92)",
+    backB: "rgb(25, 27, 29)",
+    middleA: "rgb(70, 62, 76)",
+    middleB: "rgb(20, 22, 23)",
+  },
+  {
+    backA: "rgb(87, 59, 48)",
+    backB: "rgb(27, 25, 23)",
+    middleA: "rgb(75, 61, 57)",
+    middleB: "rgb(24, 22, 21)",
+  },
+  {
+    backA: "rgb(67, 78, 67)",
+    backB: "rgb(25, 27, 25)",
+    middleA: "rgb(70, 76, 68)",
+    middleB: "rgb(23, 25, 23)",
+  },
+  {
+    backA: "rgb(57, 73, 82)",
+    backB: "rgb(23, 27, 29)",
+    middleA: "rgb(62, 77, 81)",
+    middleB: "rgb(22, 25, 26)",
+  },
+];
+
 function PlaylistTabChevronIcon() {
   return (
     <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
@@ -27,6 +65,136 @@ function PlaylistTabChevronIcon() {
       />
     </svg>
   );
+}
+
+function getFallbackPalette(seed: string) {
+  let hash = 0;
+
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = (hash * 31 + seed.charCodeAt(index)) >>> 0;
+  }
+
+  return FALLBACK_PALETTES[hash % FALLBACK_PALETTES.length];
+}
+
+function colorToCss([red, green, blue]: RgbColor) {
+  return `rgb(${red}, ${green}, ${blue})`;
+}
+
+function mixColor(color: RgbColor, target: RgbColor, amount: number): RgbColor {
+  return [
+    Math.round(color[0] + (target[0] - color[0]) * amount),
+    Math.round(color[1] + (target[1] - color[1]) * amount),
+    Math.round(color[2] + (target[2] - color[2]) * amount),
+  ];
+}
+
+function averageRegion(
+  data: Uint8ClampedArray,
+  width: number,
+  height: number,
+  xStart: number,
+  xEnd: number,
+  yStart: number,
+  yEnd: number,
+): RgbColor {
+  let red = 0;
+  let green = 0;
+  let blue = 0;
+  let weightTotal = 0;
+
+  for (let y = yStart; y < yEnd; y += 1) {
+    for (let x = xStart; x < xEnd; x += 1) {
+      const offset = (y * width + x) * 4;
+      const alpha = data[offset + 3] / 255;
+
+      if (alpha < 0.45) continue;
+
+      const pixelRed = data[offset];
+      const pixelGreen = data[offset + 1];
+      const pixelBlue = data[offset + 2];
+      const maxChannel = Math.max(pixelRed, pixelGreen, pixelBlue);
+      const minChannel = Math.min(pixelRed, pixelGreen, pixelBlue);
+      const saturation = maxChannel === 0 ? 0 : (maxChannel - minChannel) / maxChannel;
+      const luminance = (pixelRed * 0.299 + pixelGreen * 0.587 + pixelBlue * 0.114) / 255;
+      const weight = alpha * (0.55 + saturation * 0.45) * (0.65 + luminance * 0.35);
+
+      red += pixelRed * weight;
+      green += pixelGreen * weight;
+      blue += pixelBlue * weight;
+      weightTotal += weight;
+    }
+  }
+
+  if (weightTotal <= 0) return [42, 42, 42];
+
+  return [
+    Math.round(red / weightTotal),
+    Math.round(green / weightTotal),
+    Math.round(blue / weightTotal),
+  ];
+}
+
+function buildPaletteFromImage(image: HTMLImageElement): CoverPalette {
+  const canvas = document.createElement("canvas");
+  const size = 36;
+  canvas.width = size;
+  canvas.height = size;
+
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  if (!context) throw new Error("Could not read playlist cover colours");
+
+  context.drawImage(image, 0, 0, size, size);
+
+  const imageData = context.getImageData(0, 0, size, size).data;
+  const half = Math.floor(size / 2);
+
+  const topLeft = averageRegion(imageData, size, size, 0, half, 0, half);
+  const topRight = averageRegion(imageData, size, size, half, size, 0, half);
+  const bottomLeft = averageRegion(imageData, size, size, 0, half, half, size);
+  const bottomRight = averageRegion(imageData, size, size, half, size, half, size);
+
+  return {
+    backA: colorToCss(mixColor(topLeft, [12, 12, 12], 0.38)),
+    backB: colorToCss(mixColor(bottomRight, [10, 10, 10], 0.52)),
+    middleA: colorToCss(mixColor(topRight, [16, 16, 16], 0.28)),
+    middleB: colorToCss(mixColor(bottomLeft, [12, 12, 12], 0.44)),
+  };
+}
+
+function sampleCoverPalette(coverSrc: string) {
+  const cachedPalette = paletteCache.get(coverSrc);
+  if (cachedPalette) return cachedPalette;
+
+  const palettePromise = new Promise<CoverPalette>((resolve) => {
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.decoding = "async";
+
+    image.onload = () => {
+      try {
+        resolve(buildPaletteFromImage(image));
+      } catch {
+        resolve(getFallbackPalette(coverSrc));
+      }
+    };
+
+    image.onerror = () => {
+      resolve(getFallbackPalette(coverSrc));
+    };
+
+    image.src = coverSrc;
+  });
+
+  paletteCache.set(coverSrc, palettePromise);
+  return palettePromise;
+}
+
+function applyPalette(artwork: HTMLElement, palette: CoverPalette) {
+  artwork.style.setProperty("--playlist-layer-back-a", palette.backA);
+  artwork.style.setProperty("--playlist-layer-back-b", palette.backB);
+  artwork.style.setProperty("--playlist-layer-middle-a", palette.middleA);
+  artwork.style.setProperty("--playlist-layer-middle-b", palette.middleB);
 }
 
 function syncPlaylistCoverLayers() {
@@ -59,37 +227,23 @@ function syncPlaylistCoverLayers() {
         layer.setAttribute("aria-hidden", "true");
         artwork.insertBefore(layer, coverImage);
       }
+    });
 
-      let layerImage = layer.querySelector<HTMLSpanElement>(
-        ":scope > .playlist-gallery-art-layer-image",
-      );
+    if (artwork.dataset.coverPaletteSrc === coverSrc && artwork.classList.contains("has-cover-layers")) {
+      return;
+    }
 
-      if (!layerImage) {
-        layerImage = document.createElement("span");
-        layerImage.className = "playlist-gallery-art-layer-image";
-        layer.append(layerImage);
-      }
+    artwork.classList.remove("has-cover-layers");
+    artwork.dataset.coverPaletteSrc = coverSrc;
 
-      if (layer.dataset.coverSrc === coverSrc && layer.classList.contains("is-ready")) {
-        return;
-      }
+    sampleCoverPalette(coverSrc).then((palette) => {
+      if (artwork.dataset.coverPaletteSrc !== coverSrc) return;
 
-      layer.classList.remove("is-ready");
-      layer.dataset.coverSrc = coverSrc;
-      layer.style.backgroundImage = "none";
-      layerImage.style.backgroundImage = "none";
-
-      const preloadImage = new Image();
-      preloadImage.onload = () => {
-        if (layer.dataset.coverSrc !== coverSrc) return;
-        layerImage.style.backgroundImage = `url(${JSON.stringify(coverSrc)})`;
-        layer.classList.add("is-ready");
-        artwork.classList.add("has-cover-layers");
-      };
-      preloadImage.onerror = () => {
-        layer.classList.remove("is-ready");
-      };
-      preloadImage.src = coverSrc;
+      applyPalette(artwork, palette);
+      artwork.classList.add("has-cover-layers");
+      artwork
+        .querySelectorAll(".playlist-gallery-art-layer")
+        .forEach((layer) => layer.classList.add("is-ready"));
     });
   });
 }
