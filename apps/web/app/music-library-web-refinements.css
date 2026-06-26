@@ -308,3 +308,38 @@ main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > 
     justify-content: space-between !important;
   }
 }
+
+/* ─── Temporary header-hidden spacing cleanup ─────────────── */
+
+main > section[class*="pt-14"] {
+  padding-top: 0 !important;
+}
+
+.fw-toolbar-sticky,
+.sticky.top-\[56px\],
+.favorites-search-sticky,
+.playlist-detail-search-sticky {
+  top: 0 !important;
+}
+
+.playlists-tabs-row {
+  margin-top: 12px !important;
+}
+
+.favorites-page,
+.playlist-detail-page {
+  margin-top: 0 !important;
+  min-height: 100vh !important;
+}
+
+.project-detail-page > .project-detail-shell {
+  min-height: 100vh !important;
+}
+
+.project-detail-page .project-tabs-row {
+  top: var(--filmwave-sidebar-float-inset, 0px) !important;
+  height: calc(
+    100dvh - var(--filmwave-sidebar-bottom-offset, 0px) -
+      (var(--filmwave-sidebar-float-inset, 0px) * 2)
+  ) !important;
+}
