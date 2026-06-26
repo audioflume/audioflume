@@ -343,3 +343,9 @@ main > section[class*="pt-14"] {
       (var(--filmwave-sidebar-float-inset, 0px) * 2)
   ) !important;
 }
+
+/* ─── Discover hero search restore ────────────────────────── */
+
+main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > section.mt-6 {
+  display: block !important;
+}
