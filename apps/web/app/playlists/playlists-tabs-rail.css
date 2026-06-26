@@ -31,6 +31,14 @@
   display: none !important;
 }
 
+.playlists-page .playlists-control-bar {
+  margin-bottom: 14px !important;
+}
+
+.playlists-page .playlist-library {
+  padding-top: 10px !important;
+}
+
 section.curated-playlists-page-layer > div > div:first-child {
   margin-top: 8px !important;
 }
@@ -147,6 +155,14 @@ section.curated-playlists-page-layer > div > div:first-child > div:first-child >
 .playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid svg {
   width: 15px !important;
   height: 15px !important;
+}
+
+.playlists-page .playlist-create-card {
+  background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
+}
+
+.playlists-page .playlist-create-card:hover {
+  background: color-mix(in srgb, var(--bg-primary) 93%, var(--text-primary) 7%) !important;
 }
 
 .playlists-page .playlist-create-card .playlist-create-mark {
