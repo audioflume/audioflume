@@ -212,7 +212,7 @@
 body > header,
 .filmwave-header {
   border-bottom: 1px solid var(--border) !important;
-  background: color-mix(in srgb, var(--bg-primary) 72%, transparent) !important;
+  background: var(--bg-primary) !important;
   -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
   backdrop-filter: blur(28px) saturate(140%) !important;
   box-shadow: none !important;
