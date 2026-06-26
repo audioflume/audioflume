@@ -127,6 +127,11 @@ html[data-theme="light"] .fw-toolbar-filters.is-open {
   background-color: var(--bg-control-hover) !important;
 }
 
+.fw-filter-panel-footer,
+.fw-filter-clear-all {
+  display: none !important;
+}
+
 .fw-toolbar-filters.is-done,
 .fw-filter-done {
   gap: 0 !important;
@@ -373,13 +378,26 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
+  .fw-toolbar-filters
+  .fw-toolbar-filters-label,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
   .fw-toolbar-filters.is-open
   .fw-toolbar-filters-label {
   display: inline !important;
   height: auto !important;
+  align-items: initial !important;
+  justify-content: initial !important;
   font-size: 14px !important;
+  line-height: 1 !important;
 }
 
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters
+  .fw-toolbar-filters-label::after,
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
@@ -468,6 +486,20 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   margin: 0 !important;
   opacity: 0 !important;
   pointer-events: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap * {
+  transition: none !important;
+  animation: none !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -476,6 +508,8 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-filter-panel-wrap.is-open {
   opacity: 1 !important;
   pointer-events: auto !important;
+  transition: none !important;
+  animation: none !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
