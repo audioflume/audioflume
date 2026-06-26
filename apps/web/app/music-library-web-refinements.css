@@ -359,7 +359,7 @@ main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child >
   display: flex !important;
   justify-content: center !important;
   width: 100% !important;
-  padding: 16px var(--fw-music-content-inset-right) 10px 0 !important;
+  padding: 16px var(--fw-music-content-inset-right) 10px var(--fw-music-content-inset-right) !important;
 }
 
 .fw-toolbar-header-search-form {
