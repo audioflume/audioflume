@@ -373,7 +373,7 @@ export default function CuratedPlaylistsPage() {
                 <PlaylistIcon size={13} />
                 Made for you
               </div>
-              <h1 className="max-w-[720px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,78px)] font-medium leading-[0.9] tracking-[-0.07em]">
+              <h1 className="max-w-[520px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,64px)] font-medium leading-[0.9] tracking-[-0.07em]">
                 Playlists built around the scenes you&rsquo;re cutting.
               </h1>
             </div>
