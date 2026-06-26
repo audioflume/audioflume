@@ -1,6 +1,8 @@
 /* ─── Music library sticky toolbar scroll illusion ───────── */
 
 .fw-toolbar-sticky {
+  box-sizing: border-box !important;
+  width: 100% !important;
   padding-right: var(--fw-music-content-inset-right) !important;
   padding-bottom: 0 !important;
   padding-left: var(--fw-music-content-inset-left) !important;
@@ -156,9 +158,9 @@
 
 .fw-quick-row {
   padding-top: 8px !important;
-  padding-right: calc(var(--fw-music-content-inset-right) + 10px) !important;
+  padding-right: var(--fw-music-content-inset-right) !important;
   padding-bottom: 16px !important;
-  padding-left: calc(var(--fw-music-content-inset-left) + 10px) !important;
+  padding-left: var(--fw-music-content-inset-left) !important;
 }
 
 .fw-quick-row + div > .min-h-0 > .px-8 {
