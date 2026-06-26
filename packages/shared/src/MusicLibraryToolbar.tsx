@@ -9,6 +9,7 @@ import {
   type ReactNode,
   type Ref,
 } from "react";
+import { CollapsibleSearchPill } from "./CollapsibleSearchPill";
 
 function FilterBarsIcon() {
   return (
@@ -61,6 +62,11 @@ export type MusicLibraryToolbarProps = {
 };
 
 export function MusicLibraryToolbar({
+  searchValue,
+  searchPlaceholder,
+  onSearchChange,
+  searchInputRef,
+  searchIcon,
   filterCount,
   filtersOpen,
   onToggleFilters,
@@ -121,6 +127,23 @@ export function MusicLibraryToolbar({
       className={`fw-toolbar-sticky${className ? ` ${className}` : ""}`}
       style={stickyTop !== undefined ? { top: stickyTop } : undefined}
     >
+      {stickyTop !== undefined && (
+        <div className="fw-toolbar-header-search-row">
+          <form
+            className="fw-toolbar-header-search-form"
+            onSubmit={(event) => event.preventDefault()}
+          >
+            <CollapsibleSearchPill
+              searchIcon={searchIcon}
+              value={searchValue}
+              placeholder={searchPlaceholder}
+              inputRef={searchInputRef}
+              onChange={onSearchChange}
+            />
+          </form>
+        </div>
+      )}
+
       {renderToolbarChrome && (
         <div className="fw-toolbar-float">
           <div className="fw-toolbar">
