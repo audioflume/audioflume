@@ -349,3 +349,20 @@ main > section[class*="pt-14"] {
 main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > section.mt-6 {
   display: block !important;
 }
+
+/* ─── Music page restored header search ───────────────────── */
+
+.fw-toolbar-header-search-row {
+  display: flex !important;
+  justify-content: center !important;
+  padding: 16px 0 10px !important;
+}
+
+.fw-toolbar-header-search-form {
+  width: min(clamp(420px, 45vw, 640px), calc(100vw - var(--sidebar-width) - 96px)) !important;
+  max-width: calc(100vw - var(--sidebar-width) - 96px) !important;
+}
+
+.fw-toolbar-header-search-form .filmwave-search-pill {
+  width: 100% !important;
+}
