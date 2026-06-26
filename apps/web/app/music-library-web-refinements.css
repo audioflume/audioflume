@@ -1,9 +1,9 @@
 /* ─── Music library sticky toolbar scroll illusion ───────── */
 
-main > section:has(.fw-filter-panel-wrap) {
+main:has(.fw-song-list) > section[class*="ml-[var(--sidebar-width)]"] {
   box-sizing: border-box !important;
   padding-right: var(--fw-music-content-inset-right) !important;
-  padding-left: 36px !important;
+  padding-left: var(--fw-music-content-inset-right) !important;
 }
 
 .fw-toolbar-sticky {
