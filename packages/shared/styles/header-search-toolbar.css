@@ -270,6 +270,12 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
   grid-template-columns: var(--filmwave-side-filter-rail-width) minmax(0, 1fr) !important;
 }
 
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap.has-selected-filter-section) {
+  grid-template-columns: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
+  ) minmax(0, 1fr) !important;
+}
+
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column {
   grid-column: 2 !important;
   min-width: 0 !important;
