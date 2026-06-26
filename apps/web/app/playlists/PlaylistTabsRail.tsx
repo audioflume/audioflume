@@ -323,7 +323,11 @@ function schedulePlaylistDropdownPlacement() {
   window.requestAnimationFrame(() => {
     syncOpenPlaylistDropdownPlacement();
 
-    window.requestAnimationFrame(syncOpenPlaylistDropdownPlacement);
+    window.requestAnimationFrame(() => {
+      syncOpenPlaylistDropdownPlacement();
+      window.setTimeout(syncOpenPlaylistDropdownPlacement, 0);
+      window.setTimeout(syncOpenPlaylistDropdownPlacement, 80);
+    });
   });
 }
 
@@ -350,6 +354,9 @@ export default function PlaylistTabsRail() {
       syncPlaylistGalleryMenus();
       schedulePlaylistDropdownPlacement();
     };
+    const clickHandler = () => {
+      schedulePlaylistDropdownPlacement();
+    };
     const target = document.querySelector(".playlists-page") || document.body;
     const observer = new MutationObserver(() => {
       syncPlaylistCoverLayers();
@@ -358,11 +365,13 @@ export default function PlaylistTabsRail() {
     });
 
     window.addEventListener("resize", resizeHandler);
+    document.addEventListener("click", clickHandler, true);
     observer.observe(target, { childList: true, subtree: true });
 
     return () => {
       window.clearTimeout(timeout);
       window.removeEventListener("resize", resizeHandler);
+      document.removeEventListener("click", clickHandler, true);
       observer.disconnect();
     };
   }, [pathname, activeTab]);
