@@ -9,11 +9,11 @@
 body .playlists-tabs-row {
   box-sizing: border-box !important;
   display: flex !important;
-  width: calc(100% - var(--sidebar-width, 0px) - 64px) !important;
+  width: calc(100% - 64px) !important;
   margin-top: calc(var(--filmwave-header-height, 56px) + 22px) !important;
   margin-right: 32px !important;
   margin-bottom: 36px !important;
-  margin-left: calc(var(--sidebar-width, 0px) + 32px) !important;
+  margin-left: 32px !important;
   flex-direction: row !important;
   align-items: flex-end !important;
   gap: 44px !important;
