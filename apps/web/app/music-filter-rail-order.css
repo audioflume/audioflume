@@ -18,6 +18,13 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   height: var(--filmwave-header-height, 56px) !important;
   margin-right: 0 !important;
   margin-left: 0 !important;
+  transition: top 180ms ease !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky.is-music-search-row-hidden {
+  top: 0 !important;
 }
 
 /* Refine the music search icon and placeholder without touching layout. */
