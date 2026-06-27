@@ -5,8 +5,9 @@ import { createPortal } from "react-dom";
 import { usePathname, useRouter } from "next/navigation";
 import SearchIcon from "@/components/icons/SearchIcon";
 
-const DISCOVER_SEARCH_PLACEHOLDER =
+const DISCOVER_LEGACY_SEARCH_PLACEHOLDER =
   "Search by scene, mood, artist, genre, instrument, or title...";
+const MUSIC_SEARCH_PLACEHOLDER = "Search music library";
 
 function DiscoverMusicSearchbar() {
   const router = useRouter();
@@ -22,7 +23,7 @@ function DiscoverMusicSearchbar() {
 
   return (
     <form
-      className="flex h-full w-full items-center px-6 pl-5"
+      className="flex h-full w-full items-center px-6 pl-6"
       onSubmit={submitSearch}
     >
       <label
@@ -45,7 +46,7 @@ function DiscoverMusicSearchbar() {
           type="text"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder={DISCOVER_SEARCH_PLACEHOLDER}
+          placeholder={MUSIC_SEARCH_PLACEHOLDER}
           className="h-full min-w-0 flex-1 border-0 bg-transparent text-[15px] font-normal text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
         />
 
@@ -87,7 +88,7 @@ export default function DiscoverMusicToolbarOverlay() {
 
     function syncDiscoverSearchbar() {
       const legacyInput = document.querySelector<HTMLInputElement>(
-        `input[placeholder="${DISCOVER_SEARCH_PLACEHOLDER}"]:not([data-discover-search-input="true"])`,
+        `input[placeholder="${DISCOVER_LEGACY_SEARCH_PLACEHOLDER}"]`,
       );
       const legacySection = legacyInput?.closest<HTMLElement>("section");
 
@@ -105,7 +106,7 @@ export default function DiscoverMusicToolbarOverlay() {
       const mount = document.createElement("section");
       mount.dataset.discoverSearchMount = "true";
       mount.className =
-        "relative z-0 block h-14 -mx-8 mt-6 mb-0 border-b border-[var(--border)] bg-[var(--bg-primary)]";
+        "relative z-0 block h-[var(--filmwave-header-height,56px)] -mx-8 mt-0 mb-3 border-b border-[var(--border)] bg-[var(--bg-primary)]";
       legacySection.insertAdjacentElement("beforebegin", mount);
       setMountNode(mount);
     }
@@ -118,7 +119,7 @@ export default function DiscoverMusicToolbarOverlay() {
     return () => {
       observer?.disconnect();
       document
-        .querySelectorAll<HTMLElement>('section[hidden] input[placeholder="Search by scene, mood, artist, genre, instrument, or title..."]')
+        .querySelectorAll<HTMLElement>(`section[hidden] input[placeholder="${DISCOVER_LEGACY_SEARCH_PLACEHOLDER}"]`)
         .forEach((input) => {
           const legacySection = input.closest<HTMLElement>("section");
           if (legacySection) legacySection.hidden = false;
