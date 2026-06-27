@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  CollapsibleSearchPill,
-  getMusicLibrarySearchPlaceholder,
-} from "@filmwave/shared";
+import { getMusicLibrarySearchPlaceholder } from "@filmwave/shared";
 import { useState, type FormEvent } from "react";
 import SearchIcon from "@/components/icons/SearchIcon";
 
@@ -44,10 +41,6 @@ export default function MusicHeaderSearch({
     }
   }
 
-  function handleSearchChange(nextSearch: string) {
-    updateSearch(nextSearch);
-  }
-
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -57,14 +50,19 @@ export default function MusicHeaderSearch({
   }
 
   return (
-    <form className="filmwave-header-search-form" onSubmit={handleSubmit}>
-      <CollapsibleSearchPill
-        searchIcon={<SearchIcon />}
-        value={search}
-        placeholder={placeholder}
-        collapsible={false}
-        onChange={handleSearchChange}
-      />
+    <form className="filmwave-header-search-form filmwave-music-header-search-form" onSubmit={handleSubmit}>
+      <div className="filmwave-music-header-search">
+        <span className="filmwave-music-header-search-icon" aria-hidden="true">
+          <SearchIcon />
+        </span>
+        <input
+          type="text"
+          value={search}
+          placeholder={placeholder}
+          onChange={(event) => updateSearch(event.target.value)}
+          className="filmwave-music-header-search-input"
+        />
+      </div>
     </form>
   );
 }
