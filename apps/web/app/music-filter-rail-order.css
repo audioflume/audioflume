@@ -42,8 +42,8 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-icon {
-  width: 22px !important;
-  height: 22px !important;
+  width: 20px !important;
+  height: 20px !important;
   color: var(--text-primary) !important;
 }
 
@@ -55,8 +55,8 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-icon svg {
-  width: 17px !important;
-  height: 17px !important;
+  width: 15px !important;
+  height: 15px !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -68,7 +68,7 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-toolbar-sticky
   .fw-toolbar-search input {
   font-size: 15px !important;
-  font-weight: 200 !important;
+  font-weight: 300 !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -79,9 +79,9 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search input::placeholder {
-  color: var(--text-muted) !important;
+  color: color-mix(in srgb, var(--text-muted) 72%, transparent) !important;
   font-size: 15px !important;
-  font-weight: 200 !important;
+  font-weight: 300 !important;
 }
 
 /* Open the filter rail by default and remove the filter button from the search row. */
@@ -211,6 +211,10 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:n
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label::after {
   content: "Playlists";
   font-size: 14px;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
+  display: none !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label {
