@@ -10,9 +10,9 @@
   box-sizing: border-box !important;
   display: flex !important;
   width: calc(100% - var(--sidebar-width, 0px)) !important;
-  margin-top: 0 !important;
+  margin-top: calc(var(--filmwave-header-height, 56px) + 22px) !important;
   margin-right: 0 !important;
-  margin-bottom: 0 !important;
+  margin-bottom: 24px !important;
   margin-left: var(--sidebar-width, 0px) !important;
   flex-direction: row !important;
   align-items: flex-end !important;
@@ -68,6 +68,8 @@ section.curated-playlists-page-layer {
 
 section.curated-playlists-page-layer .playlists-tabs-row {
   width: 100% !important;
+  margin-top: 0 !important;
+  margin-bottom: 24px !important;
   margin-left: 0 !important;
   padding: 0 !important;
 }
@@ -106,7 +108,7 @@ section.curated-playlists-page-layer .playlists-tabs-row {
 }
 
 section.curated-playlists-page-layer > div > .playlists-tabs-row + div {
-  margin-top: 8px !important;
+  margin-top: 0 !important;
 }
 
 section.curated-playlists-page-layer > div > .playlists-tabs-row + div > div:first-child > div:first-child {
@@ -119,6 +121,7 @@ section.curated-playlists-page-layer h1 {
 }
 
 section.curated-playlists-page-layer section.mt-10 h2 {
+  font-size: 20px !important;
   font-weight: 300 !important;
   font-variation-settings: "wght" 300 !important;
 }
