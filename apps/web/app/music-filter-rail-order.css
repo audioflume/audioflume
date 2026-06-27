@@ -27,7 +27,7 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search {
-  gap: 14px !important;
+  gap: 12px !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -68,7 +68,7 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-toolbar-sticky
   .fw-toolbar-search input {
   font-size: 15px !important;
-  font-weight: 300 !important;
+  font-weight: 400 !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -81,7 +81,7 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   .fw-toolbar-search input::placeholder {
   color: color-mix(in srgb, var(--text-muted) 72%, transparent) !important;
   font-size: 15px !important;
-  font-weight: 300 !important;
+  font-weight: 400 !important;
 }
 
 /* Open the filter rail by default and remove the filter button from the search row. */
