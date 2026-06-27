@@ -86,33 +86,6 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   font-weight: 400 !important;
 }
 
-:where(html.dark, html[data-theme="dark"]) body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky {
-  background: transparent !important;
-  -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
-  backdrop-filter: blur(28px) saturate(140%) !important;
-}
-
-:where(html.dark, html[data-theme="dark"]) body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  :is(.filmwave-search-pill, .fw-toolbar-search) {
-  border-color: color-mix(in srgb, var(--border) 58%, transparent) !important;
-  background: color-mix(in srgb, var(--bg-primary) 48%, transparent) !important;
-  background-image: none !important;
-  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
-  backdrop-filter: blur(24px) saturate(140%) !important;
-  box-shadow: 0 16px 42px color-mix(in srgb, #000 22%, transparent) !important;
-}
-
-:where(html.dark, html[data-theme="dark"]) body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  :is(.filmwave-search-pill-icon-circle, .fw-toolbar-search-icon) {
-  background: color-mix(in srgb, var(--bg-primary) 44%, var(--text-primary) 10%) !important;
-}
-
 /* Open the filter rail by default and remove the filter button from the search row. */
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
@@ -316,4 +289,107 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:n
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
   font-weight: 400 !important;
+}
+
+/* ─── Dark music page one-piece glass plane ───────────────── */
+
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap))::before,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap))::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: calc(var(--filmwave-z-search-filter, 60) - 2);
+  width: 100vw;
+  height: 100dvh;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--bg-primary) 58%, transparent);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  backdrop-filter: blur(28px) saturate(140%);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(var(--filmwave-header-height, 56px) + 50px),
+    calc(var(--filmwave-side-filter-rail-width) + 1px) calc(var(--filmwave-header-height, 56px) + 50px),
+    calc(var(--filmwave-side-filter-rail-width) + 1px) 100%,
+    0 100%
+  );
+}
+
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .filmwave-app-header,
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .desktop-header,
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) > header,
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .filmwave-header,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .filmwave-app-header,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .desktop-header,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) > header,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .filmwave-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill, .fw-toolbar-search, .fw-filter-panel-body),
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill, .fw-toolbar-search, .fw-filter-panel-body) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-btn,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-btn {
+  pointer-events: none !important;
+  cursor: default !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-circle,
+html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-btn:hover .filmwave-search-pill-icon-circle,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-circle,
+html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-btn:hover .filmwave-search-pill-icon-circle {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-secondary) !important;
+  transition: none !important;
 }
