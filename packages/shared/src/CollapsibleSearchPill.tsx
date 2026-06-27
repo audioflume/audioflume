@@ -16,6 +16,7 @@ type CollapsibleSearchPillProps = {
   inputRef?: React.Ref<HTMLInputElement>;
   className?: string;
   style?: CSSProperties;
+  collapsible?: boolean;
   onChange: (value: string) => void;
 };
 
@@ -27,6 +28,7 @@ export function CollapsibleSearchPill({
   inputRef,
   className,
   style,
+  collapsible = true,
   onChange,
 }: CollapsibleSearchPillProps) {
   const [collapsed, setCollapsed] = useState(false);
@@ -36,9 +38,12 @@ export function CollapsibleSearchPill({
     (inputRef as React.RefObject<HTMLInputElement> | null) ?? innerRef;
 
   const hasValue = value.length > 0;
+  const isCollapsed = collapsible && collapsed;
 
   function handleIconClick(e: React.MouseEvent) {
     e.stopPropagation();
+    if (!collapsible) return;
+
     if (collapsed) {
       setCollapsed(false);
       setTimeout(() => resolvedRef.current?.focus(), 80);
@@ -54,34 +59,49 @@ export function CollapsibleSearchPill({
   }
 
   useEffect(() => {
+    if (!collapsible) {
+      setBodyVisible(true);
+      return;
+    }
+
     if (collapsed) {
       setBodyVisible(false);
     } else {
       const t = setTimeout(() => setBodyVisible(true), 80);
       return () => clearTimeout(t);
     }
-  }, [collapsed]);
+  }, [collapsed, collapsible]);
+
+  const iconCircle = (
+    <span className="filmwave-search-pill-icon-circle">{searchIcon}</span>
+  );
 
   return (
     <div
-      className={`filmwave-search-pill${collapsed ? " is-collapsed" : ""}${
+      className={`filmwave-search-pill${isCollapsed ? " is-collapsed" : ""}${
         className ? ` ${className}` : ""
       }`}
       style={style}
-      onClick={() => !collapsed && resolvedRef.current?.focus()}
+      onClick={() => !isCollapsed && resolvedRef.current?.focus()}
     >
-      <button
-        type="button"
-        className="filmwave-search-pill-icon-btn"
-        onClick={handleIconClick}
-        aria-label={collapsed ? "Expand search" : "Collapse search"}
-      >
-        <span className="filmwave-search-pill-icon-circle">{searchIcon}</span>
-      </button>
+      {collapsible ? (
+        <button
+          type="button"
+          className="filmwave-search-pill-icon-btn"
+          onClick={handleIconClick}
+          aria-label={collapsed ? "Expand search" : "Collapse search"}
+        >
+          {iconCircle}
+        </button>
+      ) : (
+        <span className="filmwave-search-pill-icon-btn" aria-hidden="true">
+          {iconCircle}
+        </span>
+      )}
 
       <div
         className={`filmwave-search-pill-body${
-          bodyVisible && !collapsed ? " is-visible" : ""
+          bodyVisible && !isCollapsed ? " is-visible" : ""
         }`}
       >
         {hasValue && (
