@@ -473,3 +473,12 @@ main > section:has(.fw-filter-panel-wrap) {
   --filmwave-side-filter-sidebar-offset: 0px !important;
   margin-left: 0 !important;
 }
+
+/* ─── Discover and curated playlist light title weights ───── */
+
+main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] :is(h1, h2, h3),
+main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2,
+main:has(a[href="/music"]) a[href^="/curated-playlists/"] > .mt-5 h3,
+.playlist-gallery-content h3 {
+  font-weight: 100 !important;
+}
