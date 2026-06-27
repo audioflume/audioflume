@@ -52,6 +52,11 @@ export function CollapsibleSearchPill({
     }
   }
 
+  function handleStaticIconPointer(e: React.MouseEvent | React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
   function handleClear(e: React.MouseEvent) {
     e.stopPropagation();
     onChange("");
@@ -94,7 +99,12 @@ export function CollapsibleSearchPill({
           {iconCircle}
         </button>
       ) : (
-        <span className="filmwave-search-pill-icon-btn" aria-hidden="true">
+        <span
+          className="filmwave-search-pill-icon-btn"
+          aria-hidden="true"
+          onMouseDown={handleStaticIconPointer}
+          onClick={handleStaticIconPointer}
+        >
           {iconCircle}
         </span>
       )}
