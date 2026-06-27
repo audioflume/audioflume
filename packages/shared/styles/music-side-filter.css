@@ -105,6 +105,22 @@ main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-pane
   pointer-events: auto !important;
 }
 
+body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  top: calc(
+    var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
+      var(--filmwave-side-filter-search-row-offset, 64px)
+  ) !important;
+  height: calc(
+    100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
+      var(--filmwave-side-filter-search-row-offset, 64px) -
+      var(--filmwave-sidebar-bottom-offset, 0px)
+  ) !important;
+  margin: var(--filmwave-side-filter-search-row-offset, 64px) 0 0 !important;
+}
+
 main > section:has(.fw-filter-panel-wrap)
   > .fw-toolbar-sticky
   > .fw-filter-panel-wrap.has-selected-filter-section {
