@@ -165,7 +165,7 @@ body > header > div {
 .filmwave-header-nav {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 18px;
 }
 
 .filmwave-header-nav-link {
@@ -178,7 +178,7 @@ body > header > div {
   border-radius: var(--filmwave-header-nav-radius);
   background: transparent;
   color: var(--text-secondary);
-  padding: 0 12px;
+  padding: 0 16px;
   font-family: inherit;
   font-size: 12px;
   font-weight: 400;
