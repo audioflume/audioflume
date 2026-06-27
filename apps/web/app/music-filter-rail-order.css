@@ -286,3 +286,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:n
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(12) {
   order: 11;
 }
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
+  font-weight: 400 !important;
+}
