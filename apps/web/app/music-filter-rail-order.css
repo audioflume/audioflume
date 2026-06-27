@@ -27,17 +27,17 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .filmwave-search-pill-icon-circle {
-  width: 18px !important;
-  height: 18px !important;
-  color: var(--text-secondary) !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--text-primary) !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .filmwave-search-pill-icon-circle svg {
-  width: 15px !important;
-  height: 15px !important;
+  width: 13px !important;
+  height: 13px !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
