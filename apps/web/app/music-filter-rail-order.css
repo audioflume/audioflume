@@ -3,17 +3,19 @@
 /* Keep the music search/filter row locked to the viewport during elastic scrolling. */
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column {
-  padding-top: 50px !important;
+  padding-top: var(--filmwave-header-height, 56px) !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky {
+  --fw-music-secondary-row-height: var(--filmwave-header-height, 56px);
   position: fixed !important;
   top: var(--filmwave-header-height) !important;
   right: 0 !important;
   left: 0 !important;
   width: auto !important;
+  height: var(--filmwave-header-height, 56px) !important;
   margin-right: 0 !important;
   margin-left: 0 !important;
 }
@@ -111,8 +113,15 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-filter-panel-wrap {
   display: grid !important;
   grid-template-rows: 1fr !important;
+  top: calc(
+    var(--filmwave-header-height, 56px) + var(--filmwave-header-height, 56px)
+  ) !important;
   width: var(--filmwave-side-filter-rail-width) !important;
   max-width: var(--filmwave-side-filter-rail-width) !important;
+  height: calc(
+    100dvh - var(--filmwave-header-height, 56px) -
+      var(--filmwave-header-height, 56px) - var(--filmwave-sidebar-bottom-offset, 0px)
+  ) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
