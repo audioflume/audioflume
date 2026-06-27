@@ -1,24 +1,31 @@
 @import "./music-library-web-layout.css";
 
-/* Let the music search row sit in page flow so it scrolls behind the fixed header. */
+/* Keep the music search row as an independent fixed layer under the header. */
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column {
-  padding-top: 0 !important;
+  padding-top: var(--filmwave-header-height, 56px) !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky {
   --fw-music-secondary-row-height: var(--filmwave-header-height, 56px);
-  position: relative !important;
-  top: auto !important;
-  right: auto !important;
-  left: auto !important;
+  position: fixed !important;
+  top: var(--filmwave-header-height, 56px) !important;
+  right: 0 !important;
+  left: 0 !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) - 2) !important;
   width: auto !important;
   height: var(--filmwave-header-height, 56px) !important;
-  margin-right: calc(var(--fw-music-content-inset-right) * -1) !important;
-  margin-left: calc(var(--fw-music-content-inset-right) * -1) !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  transition: top 180ms ease !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky.is-music-search-row-hidden {
+  top: 0 !important;
 }
 
 /* Refine the music search icon and placeholder without touching layout. */
@@ -125,6 +132,17 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   ) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky.is-music-search-row-hidden
+  > .fw-filter-panel-wrap {
+  top: var(--filmwave-header-height, 56px) !important;
+  height: calc(
+    100dvh - var(--filmwave-header-height, 56px) -
+      var(--filmwave-sidebar-bottom-offset, 0px)
+  ) !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
