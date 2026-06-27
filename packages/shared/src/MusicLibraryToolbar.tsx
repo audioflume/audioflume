@@ -129,26 +129,86 @@ export function MusicLibraryToolbar({
       style={stickyTop !== undefined ? { top: stickyTop } : undefined}
     >
       {isStickyHeaderSearch && (
-        <div className="fw-toolbar-header-search-row">
-          <form
-            className="fw-toolbar-header-search-form"
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <div className="fw-toolbar-search fw-toolbar-search-static">
-              <span className="fw-toolbar-search-static-icon" aria-hidden="true">
-                {searchIcon}
-              </span>
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchValue}
-                placeholder={searchPlaceholder}
-                onChange={(event) => onSearchChange(event.target.value)}
-                className="fw-toolbar-search-static-input"
-              />
-            </div>
-          </form>
-        </div>
+        <>
+          <style>{`
+            html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap,
+            html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap {
+              top: calc(var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) + var(--filmwave-sidebar-float-inset, 12px)) !important;
+              height: calc(100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) - var(--filmwave-sidebar-bottom-offset, 0px) - (var(--filmwave-sidebar-float-inset, 12px) * 2)) !important;
+            }
+
+            html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail,
+            html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail {
+              padding: 10px 8px !important;
+            }
+
+            html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail,
+            html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail {
+              padding: 12px !important;
+            }
+          `}</style>
+          <div className="fw-toolbar-header-search-row">
+            <form
+              className="fw-toolbar-header-search-form"
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <div
+                className="fw-toolbar-search fw-toolbar-search-static"
+                style={{
+                  boxSizing: "border-box",
+                  display: "flex",
+                  width: "100%",
+                  height: 40,
+                  minHeight: 40,
+                  alignItems: "center",
+                  gap: 9,
+                  border: 0,
+                  background: "transparent",
+                  boxShadow: "none",
+                  padding: "0 0 0 26px",
+                }}
+              >
+                <span
+                  className="fw-toolbar-search-static-icon"
+                  aria-hidden="true"
+                  style={{
+                    display: "inline-flex",
+                    width: 20,
+                    height: 40,
+                    flex: "0 0 20px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--text-primary)",
+                    cursor: "default",
+                    pointerEvents: "none",
+                  }}
+                >
+                  {searchIcon}
+                </span>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchValue}
+                  placeholder={searchPlaceholder}
+                  onChange={(event) => onSearchChange(event.target.value)}
+                  className="fw-toolbar-search-static-input"
+                  style={{
+                    minWidth: 0,
+                    flex: "1 1 auto",
+                    border: 0,
+                    background: "transparent",
+                    color: "var(--text-primary)",
+                    fontFamily: "inherit",
+                    fontSize: 15,
+                    fontWeight: 400,
+                    outline: "none",
+                    padding: 0,
+                  }}
+                />
+              </div>
+            </form>
+          </div>
+        </>
       )}
 
       {renderToolbarChrome && (
