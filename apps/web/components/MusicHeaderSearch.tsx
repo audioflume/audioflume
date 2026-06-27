@@ -62,6 +62,7 @@ export default function MusicHeaderSearch({
         searchIcon={<SearchIcon />}
         value={search}
         placeholder={placeholder}
+        collapsible={false}
         onChange={handleSearchChange}
       />
     </form>
