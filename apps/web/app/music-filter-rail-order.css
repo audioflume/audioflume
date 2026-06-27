@@ -1,23 +1,24 @@
 @import "./music-library-web-layout.css";
 
-/* Keep the music search/filter row locked to the viewport during elastic scrolling. */
+/* Let the music search row sit in page flow so it scrolls behind the fixed header. */
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column {
-  padding-top: var(--filmwave-header-height, 56px) !important;
+  padding-top: 0 !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky {
   --fw-music-secondary-row-height: var(--filmwave-header-height, 56px);
-  position: fixed !important;
-  top: var(--filmwave-header-height) !important;
-  right: 0 !important;
-  left: 0 !important;
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  z-index: calc(var(--filmwave-z-search-filter, 60) - 2) !important;
   width: auto !important;
   height: var(--filmwave-header-height, 56px) !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
+  margin-right: calc(var(--fw-music-content-inset-right) * -1) !important;
+  margin-left: calc(var(--fw-music-content-inset-right) * -1) !important;
 }
 
 /* Refine the music search icon and placeholder without touching layout. */
