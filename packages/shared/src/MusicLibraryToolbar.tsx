@@ -9,7 +9,6 @@ import {
   type ReactNode,
   type Ref,
 } from "react";
-import { CollapsibleSearchPill } from "./CollapsibleSearchPill";
 
 function FilterBarsIcon() {
   return (
@@ -135,13 +134,19 @@ export function MusicLibraryToolbar({
             className="fw-toolbar-header-search-form"
             onSubmit={(event) => event.preventDefault()}
           >
-            <CollapsibleSearchPill
-              searchIcon={searchIcon}
-              value={searchValue}
-              placeholder={searchPlaceholder}
-              inputRef={searchInputRef}
-              onChange={onSearchChange}
-            />
+            <div className="fw-toolbar-search fw-toolbar-search-static">
+              <span className="fw-toolbar-search-static-icon" aria-hidden="true">
+                {searchIcon}
+              </span>
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchValue}
+                placeholder={searchPlaceholder}
+                onChange={(event) => onSearchChange(event.target.value)}
+                className="fw-toolbar-search-static-input"
+              />
+            </div>
           </form>
         </div>
       )}
