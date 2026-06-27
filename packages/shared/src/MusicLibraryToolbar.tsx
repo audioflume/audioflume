@@ -196,6 +196,21 @@ export function MusicLibraryToolbar({
                     className="fw-toolbar-search-static-clear"
                     onClick={handleSearchClear}
                     aria-label="Clear search"
+                    style={{
+                      boxSizing: "border-box",
+                      display: "inline-flex",
+                      width: 20,
+                      height: 40,
+                      flex: "0 0 20px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: 0,
+                      borderRadius: 0,
+                      background: "transparent",
+                      color: "var(--text-muted)",
+                      cursor: "pointer",
+                      padding: 0,
+                    }}
                   >
                     <span
                       aria-hidden="true"
@@ -204,7 +219,18 @@ export function MusicLibraryToolbar({
                       <ClearXIcon />
                     </span>
                   </button>
-                  <span className="fw-toolbar-search-static-divider" aria-hidden="true" />
+                  <span
+                    className="fw-toolbar-search-static-divider"
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-flex",
+                      width: 1,
+                      height: 16,
+                      flex: "0 0 1px",
+                      borderRadius: 1,
+                      background: "var(--border)",
+                    }}
+                  />
                 </>
               )}
               <input
