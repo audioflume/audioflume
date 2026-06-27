@@ -430,13 +430,13 @@ main > section[class*="pt-14"] {
   display: inline-flex !important;
   height: 100% !important;
   align-items: center !important;
-  gap: 2px !important;
+  gap: 18px !important;
 }
 
 .filmwave-header-nav-link {
   border-radius: 0 !important;
   background: transparent !important;
-  padding: 0 6px !important;
+  padding: 0 16px !important;
   color: var(--text-secondary) !important;
   font-size: 12px !important;
 }
