@@ -96,6 +96,8 @@ export default function DiscoverMusicToolbarOverlay() {
       if (legacySection.dataset.discoverSearchMount === "true") return;
 
       legacySection.hidden = true;
+      legacySection.dataset.discoverLegacySearchHidden = "true";
+      legacySection.classList.remove("mt-6");
 
       const previousSibling = legacySection.previousElementSibling;
       if (previousSibling instanceof HTMLElement && previousSibling.dataset.discoverSearchMount === "true") {
@@ -106,7 +108,7 @@ export default function DiscoverMusicToolbarOverlay() {
       const mount = document.createElement("section");
       mount.dataset.discoverSearchMount = "true";
       mount.className =
-        "relative z-0 block h-[var(--filmwave-header-height,56px)] -mx-8 mt-0 mb-3 border-b border-[var(--border)] bg-[var(--bg-primary)]";
+        "relative z-0 block h-14 -mx-8 mt-0 mb-2 border-b border-[var(--border)] bg-[var(--bg-primary)]";
       legacySection.insertAdjacentElement("beforebegin", mount);
       setMountNode(mount);
     }
@@ -119,10 +121,11 @@ export default function DiscoverMusicToolbarOverlay() {
     return () => {
       observer?.disconnect();
       document
-        .querySelectorAll<HTMLElement>(`section[hidden] input[placeholder="${DISCOVER_LEGACY_SEARCH_PLACEHOLDER}"]`)
-        .forEach((input) => {
-          const legacySection = input.closest<HTMLElement>("section");
-          if (legacySection) legacySection.hidden = false;
+        .querySelectorAll<HTMLElement>('[data-discover-legacy-search-hidden="true"]')
+        .forEach((legacySection) => {
+          legacySection.hidden = false;
+          legacySection.classList.add("mt-6");
+          delete legacySection.dataset.discoverLegacySearchHidden;
         });
       document
         .querySelectorAll('[data-discover-search-mount="true"]')
