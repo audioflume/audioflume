@@ -23,7 +23,8 @@
   background: transparent;
 }
 
-.filmwave-search-pill-icon-btn {
+.filmwave-search-pill-icon-btn,
+.filmwave-search-pill-icon-static {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -31,8 +32,15 @@
   border: 0;
   background: transparent;
   padding: 0;
-  cursor: pointer;
   margin-left: 4px;
+}
+
+.filmwave-search-pill-icon-btn {
+  cursor: pointer;
+}
+
+.filmwave-search-pill-icon-static {
+  cursor: default;
 }
 
 .filmwave-search-pill-icon-circle {
@@ -49,6 +57,12 @@
     color 150ms ease;
 }
 
+.filmwave-search-pill-icon-static .filmwave-search-pill-icon-circle {
+  background: transparent;
+  color: var(--text-muted);
+  transition: none;
+}
+
 .filmwave-search-pill-icon-circle svg {
   width: 11px;
   height: 11px;
@@ -57,6 +71,11 @@
 .filmwave-search-pill-icon-btn:hover .filmwave-search-pill-icon-circle {
   background: var(--bg-hover-strong);
   color: var(--text-primary);
+}
+
+.filmwave-search-pill-icon-static:hover .filmwave-search-pill-icon-circle {
+  background: transparent;
+  color: var(--text-muted);
 }
 
 .filmwave-search-pill-body {
