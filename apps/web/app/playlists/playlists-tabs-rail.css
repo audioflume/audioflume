@@ -80,7 +80,7 @@ body section.curated-playlists-page-layer .playlists-tabs-row {
 }
 
 .playlists-page .playlists-hero {
-  padding-top: 32px !important;
+  display: none !important;
 }
 
 .playlists-page .playlists-kicker {
@@ -92,8 +92,7 @@ body section.curated-playlists-page-layer .playlists-tabs-row {
 }
 
 .playlists-page .playlists-title {
-  margin-top: 0 !important;
-  font-size: 44px !important;
+  display: none !important;
 }
 
 .playlists-page .playlists-meta {
