@@ -222,8 +222,8 @@ body > header,
 .filmwave-header {
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
-  backdrop-filter: blur(28px) saturate(140%) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
   box-shadow: none !important;
 }
 
@@ -231,10 +231,10 @@ body > header,
 :where(html.dark, html[data-theme="dark"]) .desktop-header,
 :where(html.dark, html[data-theme="dark"]) body > header,
 :where(html.dark, html[data-theme="dark"]) .filmwave-header {
-  border-bottom-color: color-mix(in srgb, var(--border) 64%, transparent) !important;
-  background: color-mix(in srgb, var(--bg-primary) 58%, transparent) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
-  backdrop-filter: blur(28px) saturate(140%) !important;
+  border-bottom-color: var(--border) !important;
+  background: var(--bg-primary) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 .filmwave-header::after {
@@ -340,7 +340,6 @@ main > section[class*="pt-14"] {
   padding-top: 0 !important;
 }
 
-.fw-toolbar-sticky,
 .sticky.top-\[56px\],
 .favorites-search-sticky,
 .playlist-detail-search-sticky {
@@ -416,103 +415,4 @@ body {
 body > header,
 .filmwave-header {
   display: block !important;
-}
-
-.desktop-app-sidebar {
-  display: none !important;
-}
-
-main > section[class*="ml-[var(--sidebar-width)]"],
-.playlists-page,
-.playlist-detail-page,
-.favorites-page,
-.project-detail-page {
-  margin-left: 0 !important;
-}
-
-main > section[class*="pt-14"] {
-  padding-top: var(--filmwave-header-height) !important;
-}
-
-.playlist-detail-page,
-.favorites-page,
-.project-detail-page {
-  margin-top: var(--filmwave-header-height) !important;
-  min-height: calc(100vh - var(--filmwave-header-height)) !important;
-}
-
-.playlists-page {
-  margin-top: 0 !important;
-}
-
-.filmwave-header-actions {
-  gap: 18px !important;
-}
-
-.filmwave-header-nav {
-  display: inline-flex !important;
-  height: 100% !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
-
-.filmwave-header-nav-link {
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 0 8px !important;
-  color: var(--text-secondary) !important;
-  font-size: 12px !important;
-}
-
-.filmwave-header-nav-link:hover,
-.filmwave-header-nav-link.is-active {
-  background: transparent !important;
-  color: var(--text-primary) !important;
-}
-
-.filmwave-header-account-wrap {
-  position: relative !important;
-  display: inline-flex !important;
-  height: 100% !important;
-  align-items: center !important;
-}
-
-.filmwave-header-account-trigger {
-  width: 32px !important;
-  height: 32px !important;
-  justify-content: center !important;
-  padding: 0 !important;
-}
-
-.filmwave-header-account-label {
-  display: none !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) {
-  --filmwave-side-filter-sidebar-offset: 0px !important;
-  margin-left: 0 !important;
-}
-
-/* ─── Discover and curated playlist light title weights ───── */
-
-main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] :is(h1, h2, h3) {
-  font-weight: 200 !important;
-  font-variation-settings: "wght" 200 !important;
-}
-
-main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2 {
-  font-weight: 300 !important;
-}
-
-main:has(a[href="/music"]) a[href^="/curated-playlists/"] > .mt-5 h3 {
-  font-weight: 100 !important;
-}
-
-.playlist-gallery-content h3 {
-  font-weight: 500 !important;
-  font-variation-settings: normal !important;
-}
-
-main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] .group-hover\:scale-\[1\.02\] {
-  transform: none !important;
 }
