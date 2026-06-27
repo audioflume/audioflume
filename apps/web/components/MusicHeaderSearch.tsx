@@ -50,9 +50,40 @@ export default function MusicHeaderSearch({
   }
 
   return (
-    <form className="filmwave-header-search-form filmwave-music-header-search-form" onSubmit={handleSubmit}>
-      <div className="filmwave-music-header-search">
-        <span className="filmwave-music-header-search-icon" aria-hidden="true">
+    <form
+      className="filmwave-header-search-form filmwave-music-header-search-form"
+      onSubmit={handleSubmit}
+      style={{ width: "100%" }}
+    >
+      <div
+        className="filmwave-music-header-search"
+        style={{
+          boxSizing: "border-box",
+          display: "flex",
+          width: "100%",
+          minHeight: 40,
+          alignItems: "center",
+          gap: 14,
+          border: 0,
+          background: "transparent",
+          boxShadow: "none",
+        }}
+      >
+        <span
+          className="filmwave-music-header-search-icon"
+          aria-hidden="true"
+          style={{
+            display: "inline-flex",
+            width: 16,
+            height: 40,
+            flex: "0 0 16px",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "var(--text-primary)",
+            cursor: "default",
+            pointerEvents: "none",
+          }}
+        >
           <SearchIcon />
         </span>
         <input
@@ -61,6 +92,18 @@ export default function MusicHeaderSearch({
           placeholder={placeholder}
           onChange={(event) => updateSearch(event.target.value)}
           className="filmwave-music-header-search-input"
+          style={{
+            minWidth: 0,
+            flex: "1 1 auto",
+            border: 0,
+            background: "transparent",
+            color: "var(--text-primary)",
+            fontFamily: "inherit",
+            fontSize: 15,
+            fontWeight: 400,
+            outline: "none",
+            padding: 0,
+          }}
         />
       </div>
     </form>
