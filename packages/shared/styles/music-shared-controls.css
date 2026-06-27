@@ -344,16 +344,55 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   justify-content: center !important;
   color: var(--text-primary) !important;
   cursor: default !important;
+  line-height: 1 !important;
   pointer-events: none !important;
 }
 
 .fw-toolbar-search-static-icon svg {
+  display: block !important;
   width: 15px !important;
   height: 15px !important;
 }
 
+.fw-toolbar-search-static-clear {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  width: 20px !important;
+  height: 40px !important;
+  flex: 0 0 20px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+}
+
+.fw-toolbar-search-static-clear:hover {
+  color: var(--text-primary) !important;
+}
+
+.fw-toolbar-search-static-clear svg {
+  display: block !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.fw-toolbar-search-static-divider {
+  display: inline-flex !important;
+  width: 1px !important;
+  height: 16px !important;
+  flex: 0 0 1px !important;
+  border-radius: 1px !important;
+  background: var(--border) !important;
+}
+
 .fw-toolbar-search-static-input {
+  display: block !important;
   min-width: 0 !important;
+  height: 40px !important;
   flex: 1 1 auto !important;
   border: 0 !important;
   background: transparent !important;
@@ -361,6 +400,7 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   font-family: inherit !important;
   font-size: 15px !important;
   font-weight: 400 !important;
+  line-height: 40px !important;
   outline: none !important;
   padding: 0 !important;
 }
