@@ -200,6 +200,8 @@ export function MusicLibraryToolbar({
                     color: "var(--text-primary)",
                     cursor: "default",
                     lineHeight: 1,
+                    marginLeft: 4,
+                    marginRight: 4,
                     pointerEvents: "none",
                   }}
                 >
