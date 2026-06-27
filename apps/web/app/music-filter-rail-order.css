@@ -223,6 +223,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:n
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active {
+  border-radius: 0 !important;
   background: transparent !important;
   background-color: transparent !important;
 }
@@ -241,10 +242,24 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.i
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
   display: none !important;
+  opacity: 0 !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
+main > section:has(.fw-filter-panel-wrap)
+  .fw-filter-panel-wrap.has-selected-filter-section
+  .fw-filter-rail-item.is-active
+  .fw-filter-rail-chevron {
   display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-option {
+  border-radius: 0 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-option:hover,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-option.is-selected {
+  border-radius: 0 !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label {
