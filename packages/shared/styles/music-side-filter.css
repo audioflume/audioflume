@@ -8,6 +8,7 @@
   --filmwave-side-filter-content-gap: 14px;
   --filmwave-side-filter-divider-color: var(--border-subtle);
   --filmwave-side-filter-edge-fade: 28px;
+  --filmwave-side-filter-search-row-offset: 64px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -87,7 +88,7 @@ main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-pane
   position: sticky !important;
   top: calc(
     var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
-      var(--filmwave-sidebar-float-inset, 12px)
+      var(--filmwave-side-filter-search-row-offset, 64px)
   ) !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
   display: grid !important;
@@ -96,10 +97,10 @@ main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-pane
   max-width: var(--filmwave-side-filter-rail-width) !important;
   height: calc(
     100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
-      var(--filmwave-sidebar-bottom-offset, 0px) -
-      (var(--filmwave-sidebar-float-inset, 12px) * 2)
+      var(--filmwave-side-filter-search-row-offset, 64px) -
+      var(--filmwave-sidebar-bottom-offset, 0px)
   ) !important;
-  margin: 0 !important;
+  margin: var(--filmwave-side-filter-search-row-offset, 64px) 0 0 !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
