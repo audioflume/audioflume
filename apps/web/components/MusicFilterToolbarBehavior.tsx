@@ -2,51 +2,8 @@
 
 import { useEffect } from "react";
 
-const MUSIC_SEARCH_ROW_HIDDEN_CLASS = "is-music-search-row-hidden";
-const MUSIC_SEARCH_ROW_SCROLL_THRESHOLD = 8;
-
 export default function MusicFilterToolbarBehavior() {
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let scrollTicking = false;
-
-    function syncMusicSearchRowVisibility() {
-      const searchRow = document.querySelector<HTMLElement>(
-        "main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-music-content-column > .fw-toolbar-sticky",
-      );
-
-      if (!searchRow) return;
-
-      const currentScrollY = Math.max(window.scrollY, 0);
-      const scrollDelta = currentScrollY - lastScrollY;
-
-      if (currentScrollY <= MUSIC_SEARCH_ROW_SCROLL_THRESHOLD) {
-        searchRow.classList.remove(MUSIC_SEARCH_ROW_HIDDEN_CLASS);
-        lastScrollY = currentScrollY;
-        return;
-      }
-
-      if (Math.abs(scrollDelta) < MUSIC_SEARCH_ROW_SCROLL_THRESHOLD) return;
-
-      if (scrollDelta > 0) {
-        searchRow.classList.add(MUSIC_SEARCH_ROW_HIDDEN_CLASS);
-      } else {
-        searchRow.classList.remove(MUSIC_SEARCH_ROW_HIDDEN_CLASS);
-      }
-
-      lastScrollY = currentScrollY;
-    }
-
-    function handleMusicSearchRowScroll() {
-      if (scrollTicking) return;
-      scrollTicking = true;
-
-      window.requestAnimationFrame(() => {
-        syncMusicSearchRowVisibility();
-        scrollTicking = false;
-      });
-    }
-
     function syncFilterToolbar() {
       const filterButton = document.querySelector<HTMLButtonElement>(".fw-toolbar-filters");
       if (!filterButton) return;
@@ -142,9 +99,7 @@ export default function MusicFilterToolbarBehavior() {
     }
 
     syncAll();
-    syncMusicSearchRowVisibility();
 
-    window.addEventListener("scroll", handleMusicSearchRowScroll, { passive: true });
     document.addEventListener("click", handleShuffleClick, true);
 
     const observer = new MutationObserver(syncAll);
@@ -157,7 +112,6 @@ export default function MusicFilterToolbarBehavior() {
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", handleMusicSearchRowScroll);
       document.removeEventListener("click", handleShuffleClick, true);
     };
   }, []);
