@@ -318,78 +318,77 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   pointer-events: none;
 }
 
-.fw-toolbar-search-clear svg {
-  width: 12px;
-  height: 12px;
+/* Actual music toolbar header search. */
+.fw-toolbar-search-static {
+  box-sizing: border-box !important;
+  display: flex !important;
+  width: 100% !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  align-items: center !important;
+  gap: 9px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  padding: 0 0 0 28px !important;
 }
 
-.fw-toolbar-search input {
-  order: 2;
+.fw-toolbar-search-static-icon {
+  display: inline-flex !important;
+  width: 15px !important;
+  height: 40px !important;
+  flex: 0 0 15px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--text-primary) !important;
+  cursor: default !important;
+  pointer-events: none !important;
 }
 
-.fw-toolbar-filters,
-.fw-toolbar-clear-all {
-  padding-top: 0;
-  padding-bottom: 0;
+.fw-toolbar-search-static-icon svg {
+  width: 15px !important;
+  height: 15px !important;
 }
 
-.filmwave-search-filter-sticky,
-.filmwave-search-filter-combined-row,
-.filmwave-search-filter-search-row,
-.filmwave-search-filter-row,
-.filmwave-search-filter-quick-row {
-  background: transparent;
+.fw-toolbar-search-static-input {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  outline: none !important;
+  padding: 0 !important;
 }
 
-.fw-toolbar-filters > svg {
-  display: none !important;
+.fw-toolbar-search-static-input::placeholder {
+  color: color-mix(in srgb, var(--text-muted) 72%, transparent) !important;
 }
 
-.fw-toolbar-filters::before {
-  content: "";
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  flex: 0 0 15px;
-  background: currentColor;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.1%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%207h16%27%2F%3E%3Cpath%20d%3D%27M13%205.25v3.5%27%2F%3E%3Cpath%20d%3D%27M4%2012h16%27%2F%3E%3Cpath%20d%3D%27M8.5%2010.25v3.5%27%2F%3E%3Cpath%20d%3D%27M4%2017h16%27%2F%3E%3Cpath%20d%3D%27M15.5%2015.25v3.5%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.1%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%207h16%27%2F%3E%3Cpath%20d%3D%27M13%205.25v3.5%27%2F%3E%3Cpath%20d%3D%27M4%2012h16%27%2F%3E%3Cpath%20d%3D%27M8.5%2010.25v3.5%27%2F%3E%3Cpath%20d%3D%27M4%2017h16%27%2F%3E%3Cpath%20d%3D%27M15.5%2015.25v3.5%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / contain no-repeat;
+/* Dark mode must not change filter rail structure. */
+html.dark body:has(.fw-filter-panel-wrap) .fw-toolbar-sticky > .fw-filter-panel-wrap,
+html[data-theme="dark"] body:has(.fw-filter-panel-wrap) .fw-toolbar-sticky > .fw-filter-panel-wrap {
+  top: calc(
+    var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
+      var(--filmwave-sidebar-float-inset, 12px)
+  ) !important;
+  height: calc(
+    100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
+      var(--filmwave-sidebar-bottom-offset, 0px) -
+      (var(--filmwave-sidebar-float-inset, 12px) * 2)
+  ) !important;
 }
 
-.fw-toolbar-filters.is-open::before {
-  display: none !important;
+html.dark body:has(.fw-filter-panel-wrap) .fw-filter-rail,
+html[data-theme="dark"] body:has(.fw-filter-panel-wrap) .fw-filter-rail {
+  padding: 10px 8px !important;
 }
 
-.fw-filter-panel {
-  --filmwave-filter-active-marker: var(--text-primary);
-  --filmwave-filter-active-marker-contrast: var(--bg-primary);
-}
-
-.fw-filter-panel .fw-filter-rail-count,
-.fw-filter-panel .fw-filter-group-count {
-  background: var(--filmwave-filter-active-marker) !important;
-  color: var(--filmwave-filter-active-marker-contrast) !important;
-}
-
-.fw-filter-panel .fw-filter-option.is-selected .fw-filter-option-check,
-.fw-filter-panel .fw-filter-chip.is-selected {
-  border-color: var(--filmwave-filter-active-marker) !important;
-  background: var(--filmwave-filter-active-marker) !important;
-  color: var(--filmwave-filter-active-marker-contrast) !important;
-}
-
-.fw-quick-chip.is-selected,
-.fw-quick-chip[aria-pressed="true"] {
-  border-color: var(--text-primary) !important;
-  background: var(--text-primary) !important;
-  color: var(--bg-primary) !important;
-}
-
-.fw-quick-chip.is-selected svg,
-.fw-quick-chip[aria-pressed="true"] svg,
-.fw-quick-chip.is-selected svg *,
-.fw-quick-chip[aria-pressed="true"] svg * {
-  color: var(--bg-primary) !important;
-  fill: currentColor !important;
-  stroke: currentColor !important;
+html.dark body:has(.fw-filter-panel-wrap) .fw-filter-detail,
+html[data-theme="dark"] body:has(.fw-filter-panel-wrap) .fw-filter-detail {
+  padding: 12px !important;
 }
