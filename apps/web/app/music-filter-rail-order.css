@@ -27,7 +27,7 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search {
-  gap: 12px !important;
+  gap: 9px !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
