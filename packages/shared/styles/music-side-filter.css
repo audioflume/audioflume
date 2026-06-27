@@ -300,9 +300,23 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
   line-height: 1 !important;
   cursor: pointer !important;
   transition: background-color 160ms ease, color 160ms ease !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-toolbar-filters-count {
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-option.is-selected .fw-filter-option-check,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-chip.is-selected {
+  border-color: var(--text-primary) !important;
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
