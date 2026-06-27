@@ -1,7 +1,7 @@
 "use client";
 
-import { CollapsibleSearchPill } from "@filmwave/shared";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { MusicLibraryToolbar } from "@filmwave/shared";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname, useRouter } from "next/navigation";
 import SearchIcon from "@/components/icons/SearchIcon";
@@ -15,25 +15,35 @@ function DiscoverMusicSearchbar() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
 
-  function submitSearch(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
 
-    const cleanSearch = search.trim();
-    router.push(cleanSearch ? `/music?search=${encodeURIComponent(cleanSearch)}` : "/music");
-  }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+
+      const cleanSearch = search.trim();
+      router.push(cleanSearch ? `/music?search=${encodeURIComponent(cleanSearch)}` : "/music");
+    }
+
+    input.addEventListener("keydown", handleKeyDown);
+    return () => input.removeEventListener("keydown", handleKeyDown);
+  }, [router, search]);
 
   return (
-    <div className="fw-toolbar-header-search-row">
-      <form className="fw-toolbar-header-search-form" onSubmit={submitSearch}>
-        <CollapsibleSearchPill
-          searchIcon={<SearchIcon />}
-          value={search}
-          placeholder={MUSIC_SEARCH_PLACEHOLDER}
-          inputRef={inputRef}
-          onChange={setSearch}
-        />
-      </form>
-    </div>
+    <MusicLibraryToolbar
+      stickyTop={56}
+      searchValue={search}
+      searchPlaceholder={MUSIC_SEARCH_PLACEHOLDER}
+      onSearchChange={setSearch}
+      searchInputRef={inputRef}
+      searchIcon={<SearchIcon />}
+      filterCount={0}
+      filtersOpen={false}
+      onToggleFilters={() => {}}
+      renderToolbarChrome={false}
+    />
   );
 }
 
