@@ -222,8 +222,29 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:n
   font-size: 14px;
 }
 
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:hover {
+  border-radius: 0 !important;
+  background: var(--bg-hover) !important;
+  background-color: var(--bg-hover) !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active:hover {
+  border-radius: 0 !important;
+  background: var(--bg-hover) !important;
+  background-color: var(--bg-hover) !important;
+}
+
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
   display: none !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
+  display: inline-flex !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label {
