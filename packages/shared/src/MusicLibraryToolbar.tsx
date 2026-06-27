@@ -215,7 +215,12 @@ export function MusicLibraryToolbar({
                       onClick={handleSearchClear}
                       aria-label="Clear search"
                     >
-                      <ClearXIcon />
+                      <span
+                        aria-hidden="true"
+                        style={{ display: "inline-flex", transform: "scale(1.25)" }}
+                      >
+                        <ClearXIcon />
+                      </span>
                     </button>
                     <span className="fw-toolbar-search-static-divider" aria-hidden="true" />
                   </>
