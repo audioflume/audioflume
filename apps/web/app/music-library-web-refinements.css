@@ -482,7 +482,7 @@ main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curat
 }
 
 main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2 {
-  font-weight: 200 !important;
+  font-weight: 300 !important;
 }
 
 main:has(a[href="/music"]) a[href^="/curated-playlists/"] > .mt-5 h3 {
