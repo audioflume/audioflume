@@ -1,187 +1,6 @@
-@import "./music-library-web-layout.css";
-
-/* Keep the music search/filter row locked to the viewport during elastic scrolling. */
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column {
-  padding-top: var(--filmwave-header-height, 56px) !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky {
-  --fw-music-secondary-row-height: var(--filmwave-header-height, 56px);
-  position: fixed !important;
-  top: var(--filmwave-header-height) !important;
-  right: 0 !important;
-  left: 0 !important;
-  width: auto !important;
-  height: var(--filmwave-header-height, 56px) !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-}
-
-/* Refine the music search icon and placeholder without touching layout. */
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .fw-toolbar-search {
-  gap: 9px !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-btn,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-static,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-circle,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .fw-toolbar-search-icon {
-  width: 20px !important;
-  height: 20px !important;
-  color: var(--text-primary) !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-circle svg,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .fw-toolbar-search-icon svg {
-  width: 15px !important;
-  height: 15px !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-input,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .fw-toolbar-search input {
-  font-size: 15px !important;
-  font-weight: 400 !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-input::placeholder,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .fw-toolbar-search input::placeholder {
-  color: color-mix(in srgb, var(--text-muted) 72%, transparent) !important;
-  font-size: 15px !important;
-  font-weight: 400 !important;
-}
-
-/* Open the filter rail by default and remove the filter button from the search row. */
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky {
-  grid-template-columns: minmax(0, 1fr) !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-toolbar-float {
-  display: none !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-toolbar-header-search-row {
-  grid-column: 1 !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-filter-panel-wrap {
-  display: grid !important;
-  grid-template-rows: 1fr !important;
-  top: calc(
-    var(--filmwave-header-height, 56px) + var(--filmwave-header-height, 56px)
-  ) !important;
-  width: var(--filmwave-side-filter-rail-width) !important;
-  max-width: var(--filmwave-side-filter-rail-width) !important;
-  height: calc(
-    100dvh - var(--filmwave-header-height, 56px) -
-      var(--filmwave-header-height, 56px) - var(--filmwave-sidebar-bottom-offset, 0px)
-  ) !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-filter-panel-wrap
-  .fw-filter-panel-body {
-  grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-filter-panel-wrap.has-selected-filter-section {
-  width: calc(
-    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
-  ) !important;
-  max-width: calc(
-    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
-  ) !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-filter-panel-wrap.has-selected-filter-section
-  .fw-filter-panel-body {
-  grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap)
-  ~ .fw-quick-row,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap)
-  ~ .fw-song-list {
-  width: auto !important;
-  margin-left: var(--filmwave-side-filter-rail-width) !important;
-}
-
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.has-selected-filter-section)
-  ~ .fw-quick-row,
-html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.has-selected-filter-section)
-  ~ .fw-song-list {
-  margin-left: calc(
-    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
-  ) !important;
-}
+/* Web music filter rail order/count presentation only.
+   Layout lives in music-library-web-layout.css and shared side-filter styling
+   lives in packages/shared/styles/music-side-filter.css. */
 
 /* Keep the web music filter rail in its final order before client-side behavior runs.
    This prevents the category buttons from briefly painting in React's default group order on refresh. */
@@ -224,6 +43,22 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:n
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label::after {
   content: "Playlists";
   font-size: 14px;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(9) {
+  order: 8;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(10) {
+  order: 9;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(11) {
+  order: 10;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(12) {
+  order: 11;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active {
@@ -275,129 +110,6 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-r
   font-size: 11px;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(9) {
-  order: 8;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(10) {
-  order: 9;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(11) {
-  order: 10;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(12) {
-  order: 11;
-}
-
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
   font-weight: 400 !important;
-}
-
-/* ─── Dark music page one-piece glass plane ───────────────── */
-
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap))::before,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap))::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: calc(var(--filmwave-z-search-filter, 60) - 2);
-  width: 100vw;
-  height: 100dvh;
-  pointer-events: none;
-  background: color-mix(in srgb, var(--bg-primary) 58%, transparent);
-  -webkit-backdrop-filter: blur(28px) saturate(140%);
-  backdrop-filter: blur(28px) saturate(140%);
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(var(--filmwave-header-height, 56px) + 50px),
-    calc(var(--filmwave-side-filter-rail-width) + 1px) calc(var(--filmwave-header-height, 56px) + 50px),
-    calc(var(--filmwave-side-filter-rail-width) + 1px) 100%,
-    0 100%
-  );
-}
-
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .filmwave-app-header,
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .desktop-header,
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) > header,
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .filmwave-header,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .filmwave-app-header,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .desktop-header,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) > header,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) .filmwave-header {
-  border-bottom-color: transparent !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
-
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky {
-  border-bottom-color: transparent !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
-
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  :is(.filmwave-search-pill, .fw-toolbar-search, .fw-filter-panel-body),
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  :is(.filmwave-search-pill, .fw-toolbar-search, .fw-filter-panel-body) {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-}
-
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-static,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-static {
-  pointer-events: auto !important;
-  cursor: default !important;
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-static .filmwave-search-pill-icon-circle,
-html[data-theme="dark"] body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-static:hover .filmwave-search-pill-icon-circle,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-static .filmwave-search-pill-icon-circle,
-html.dark body:has(main > section:has(.fw-music-content-column .fw-filter-panel-wrap)) main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-static:hover .filmwave-search-pill-icon-circle {
-  background: transparent !important;
-  background-color: transparent !important;
-  color: var(--text-secondary) !important;
-  transition: none !important;
 }
