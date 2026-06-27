@@ -41,11 +41,12 @@ function DiscoverMusicSearchbar() {
 
         <input
           ref={inputRef}
+          data-discover-search-input="true"
           type="text"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder={DISCOVER_SEARCH_PLACEHOLDER}
-          className="h-full min-w-0 flex-1 border-0 bg-transparent text-[15px] font-normal text-[var(--text-primary)] outline-none placeholder:text-[color-mix(in_srgb,var(--text-muted)_72%,transparent)]"
+          className="h-full min-w-0 flex-1 border-0 bg-transparent text-[15px] font-normal text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
         />
 
         {search.length > 0 && (
@@ -86,11 +87,12 @@ export default function DiscoverMusicToolbarOverlay() {
 
     function syncDiscoverSearchbar() {
       const legacyInput = document.querySelector<HTMLInputElement>(
-        `input[placeholder="${DISCOVER_SEARCH_PLACEHOLDER}"]`,
+        `input[placeholder="${DISCOVER_SEARCH_PLACEHOLDER}"]:not([data-discover-search-input="true"])`,
       );
       const legacySection = legacyInput?.closest<HTMLElement>("section");
 
       if (!legacySection) return;
+      if (legacySection.dataset.discoverSearchMount === "true") return;
 
       legacySection.hidden = true;
 
