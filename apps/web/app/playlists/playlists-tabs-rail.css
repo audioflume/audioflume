@@ -119,6 +119,7 @@ section.curated-playlists-page-layer > div > .playlists-tabs-row + div > div:fir
 section.curated-playlists-page-layer h1 {
   font-weight: 100 !important;
   font-variation-settings: "wght" 100 !important;
+  letter-spacing: -0.035em !important;
 }
 
 section.curated-playlists-page-layer section.mt-10 h2 {
