@@ -23,9 +23,8 @@ import "../../../packages/shared/styles/music-sort-button-width.css";
 import "../../../packages/shared/styles/playlist-library.css";
 import "../../../packages/shared/styles/shell-chrome.css";
 import "../../../packages/shared/styles/header-search-toolbar.css";
-import "../../../packages/shared/styles/music-side-filter.css";
-import "./music-library-web-layout.css";
 import "./music-filter-rail-order.css";
+import "../../../packages/shared/styles/music-side-filter.css";
 import "../../../packages/shared/styles/music-shared-controls.css";
 
 const TYPEKIT_STYLESHEET = "https://use.typekit.net/tjk0kys.css";
