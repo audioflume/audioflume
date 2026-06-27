@@ -477,8 +477,8 @@ main > section:has(.fw-filter-panel-wrap) {
 /* ─── Discover and curated playlist light title weights ───── */
 
 main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] :is(h1, h2, h3) {
-  font-weight: 50 !important;
-  font-variation-settings: "wght" 50 !important;
+  font-weight: 200 !important;
+  font-variation-settings: "wght" 200 !important;
 }
 
 main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2 {
