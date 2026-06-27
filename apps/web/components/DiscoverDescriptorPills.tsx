@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import DiscoverMusicToolbarOverlay from "@/components/DiscoverMusicToolbarOverlay";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 const descriptorPillClassName =
@@ -267,5 +268,5 @@ export default function DiscoverDescriptorPills() {
     };
   }, [pathname]);
 
-  return null;
+  return <DiscoverMusicToolbarOverlay />;
 }
