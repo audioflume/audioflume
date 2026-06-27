@@ -328,7 +328,7 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   align-items: center !important;
   gap: 9px !important;
   border: 0 !important;
-  background: transparent !important;
+  background: var(--bg-primary) !important;
   box-shadow: none !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
@@ -407,6 +407,79 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
 
 .fw-toolbar-search-static-input::placeholder {
   color: color-mix(in srgb, var(--text-muted) 72%, transparent) !important;
+}
+
+/* Music header/search: solid, no blur or transparency. */
+.filmwave-app-header,
+.desktop-header,
+body > header,
+.filmwave-header {
+  border-bottom: 1px solid var(--border) !important;
+  background: var(--bg-primary) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+:where(html.dark, html[data-theme="dark"]) .filmwave-app-header,
+:where(html.dark, html[data-theme="dark"]) .desktop-header,
+:where(html.dark, html[data-theme="dark"]) body > header,
+:where(html.dark, html[data-theme="dark"]) .filmwave-header {
+  border-bottom-color: var(--border) !important;
+  background: var(--bg-primary) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky,
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky,
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky {
+  --fw-music-glass-bg: var(--bg-primary) !important;
+  --fw-music-glass-border: var(--border) !important;
+  background: var(--bg-primary) !important;
+  border-bottom: 1px solid var(--border) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill, .fw-toolbar-search, .fw-toolbar-search-static),
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill, .fw-toolbar-search, .fw-toolbar-search-static),
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill, .fw-toolbar-search, .fw-toolbar-search-static) {
+  background: var(--bg-primary) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-panel-body,
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-panel-body {
+  background: var(--bg-primary) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 /* Dark mode must not change filter rail structure. */
