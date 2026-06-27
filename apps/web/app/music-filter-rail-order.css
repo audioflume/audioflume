@@ -247,7 +247,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
 
 main > section:has(.fw-filter-panel-wrap)
   .fw-filter-panel-wrap.has-selected-filter-section
-  .fw-filter-rail-item.is-active
+  .fw-filter-rail-item.is-active:not(:has(.fw-filter-rail-count))
   .fw-filter-rail-chevron {
   display: inline-flex !important;
   opacity: 1 !important;
