@@ -91,25 +91,30 @@ export default function DiscoverMusicToolbarOverlay() {
         `input[placeholder="${DISCOVER_LEGACY_SEARCH_PLACEHOLDER}"]`,
       );
       const legacySection = legacyInput?.closest<HTMLElement>("section");
+      const pageSection = legacySection?.closest("main")?.firstElementChild;
 
       if (!legacySection) return;
+      if (!(pageSection instanceof HTMLElement)) return;
       if (legacySection.dataset.discoverSearchMount === "true") return;
 
       legacySection.hidden = true;
       legacySection.dataset.discoverLegacySearchHidden = "true";
       legacySection.classList.remove("mt-6");
 
-      const previousSibling = legacySection.previousElementSibling;
-      if (previousSibling instanceof HTMLElement && previousSibling.dataset.discoverSearchMount === "true") {
-        setMountNode(previousSibling);
+      const existingMount = pageSection.querySelector<HTMLElement>(
+        ':scope > [data-discover-search-mount="true"]',
+      );
+
+      if (existingMount) {
+        setMountNode(existingMount);
         return;
       }
 
       const mount = document.createElement("section");
       mount.dataset.discoverSearchMount = "true";
       mount.className =
-        "relative z-0 block h-14 -mx-8 mt-0 mb-2 border-b border-[var(--border)] bg-[var(--bg-primary)]";
-      legacySection.insertAdjacentElement("beforebegin", mount);
+        "relative z-0 block h-[var(--filmwave-header-height)] w-full border-b border-[var(--border)] bg-[var(--bg-primary)]";
+      pageSection.insertBefore(mount, pageSection.firstElementChild);
       setMountNode(mount);
     }
 
