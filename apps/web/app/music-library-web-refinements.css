@@ -227,6 +227,16 @@ body > header,
   box-shadow: none !important;
 }
 
+:where(html.dark, html[data-theme="dark"]) .filmwave-app-header,
+:where(html.dark, html[data-theme="dark"]) .desktop-header,
+:where(html.dark, html[data-theme="dark"]) body > header,
+:where(html.dark, html[data-theme="dark"]) .filmwave-header {
+  border-bottom-color: color-mix(in srgb, var(--border) 64%, transparent) !important;
+  background: color-mix(in srgb, var(--bg-primary) 58%, transparent) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
+  backdrop-filter: blur(28px) saturate(140%) !important;
+}
+
 .filmwave-header::after {
   content: none !important;
 }
