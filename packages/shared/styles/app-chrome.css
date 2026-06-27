@@ -162,6 +162,12 @@ body > header > div {
   }
 }
 
+.filmwave-header-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .filmwave-header-nav-link {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
