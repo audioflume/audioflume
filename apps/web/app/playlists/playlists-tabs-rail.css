@@ -62,6 +62,16 @@
   display: none !important;
 }
 
+section.curated-playlists-page-layer {
+  padding-top: calc(var(--filmwave-header-height, 56px) + 22px) !important;
+}
+
+section.curated-playlists-page-layer .playlists-tabs-row {
+  width: 100% !important;
+  margin-left: 0 !important;
+  padding: 0 !important;
+}
+
 .playlists-page .playlists-shell {
   padding-left: 32px !important;
 }
@@ -95,11 +105,11 @@
   padding-top: 12px !important;
 }
 
-section.curated-playlists-page-layer > div > div:first-child {
+section.curated-playlists-page-layer > div > .playlists-tabs-row + div {
   margin-top: 8px !important;
 }
 
-section.curated-playlists-page-layer > div > div:first-child > div:first-child > div:first-child {
+section.curated-playlists-page-layer > div > .playlists-tabs-row + div > div:first-child > div:first-child {
   display: none !important;
 }
 
