@@ -18,95 +18,132 @@ export default function DiscoverMusicToolbarOverlay() {
   return (
     <>
       <style>{`
-        .discover-searchbar-visual-shell {
+        .discover-music-mock-toolbar {
           position: fixed;
           top: var(--filmwave-header-height, 56px);
           right: 0;
           left: 0;
           z-index: var(--filmwave-z-search-filter, 60);
+          display: grid;
+          grid-template-columns: calc(var(--filmwave-side-filter-rail-width, 168px) + 1px) minmax(0, 1fr);
+          align-items: stretch;
           box-sizing: border-box;
+          width: auto;
           height: 50px;
           border-bottom: 1px solid var(--border);
           background: var(--bg-primary);
-          padding: 0 24px;
+          padding: 0;
         }
 
-        .discover-searchbar-visual-form {
+        .discover-music-mock-toolbar > .fw-toolbar-float {
+          grid-column: 1;
+          grid-row: 1;
           display: flex;
+          width: 100%;
+          min-width: 0;
           height: 100%;
-          align-items: center;
-          gap: 8px;
+          min-height: 0;
+          border: 0;
+          border-right: 1px solid var(--border);
+          border-radius: 0;
+          background: transparent;
+          padding: 0;
+          box-shadow: none;
         }
 
-        .discover-filter-visual-pill {
-          display: inline-flex;
-          height: 32px;
-          flex-shrink: 0;
+        .discover-music-mock-toolbar .fw-toolbar {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          min-height: 0;
           align-items: center;
-          gap: 8px;
+        }
+
+        .discover-music-mock-toolbar .fw-toolbar-filters {
+          display: inline-flex;
+          width: 100%;
+          height: 100%;
+          min-height: 0;
+          max-height: none;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 12px;
           border: 0;
-          border-radius: 999px;
-          background: var(--bg-control);
-          padding: 0 14px;
+          border-radius: 0;
+          background: transparent;
+          padding: 0 30px;
           color: var(--text-primary);
           font-family: inherit;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 400;
           line-height: 1;
+          pointer-events: none;
           white-space: nowrap;
         }
 
-        .discover-filter-visual-icon,
-        .discover-filter-visual-chevron {
+        .discover-music-mock-filter-icon {
           display: inline-flex;
-          flex-shrink: 0;
+          width: 14px;
+          height: 14px;
+          flex: 0 0 14px;
+          align-items: center;
+          justify-content: center;
           color: currentColor;
           font-size: 13px;
           line-height: 1;
         }
 
-        .discover-searchbar-visual-pill {
+        .discover-music-mock-search-row {
+          grid-column: 2;
+          grid-row: 1;
           display: flex;
           width: 100%;
-          height: 32px;
+          height: 100%;
           align-items: center;
-          gap: 9px;
-          border: 0;
-          border-radius: 999px;
+          border-left: 0;
+          padding: 0 24px 0 20px;
+        }
+
+        .discover-music-mock-search-label {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          align-items: center;
+          gap: 6px;
           background: transparent;
           color: var(--text-primary);
           cursor: text;
         }
 
-        .discover-searchbar-visual-icon {
+        .discover-music-mock-search-icon {
           display: inline-flex;
           width: 16px;
-          height: 16px;
+          height: 100%;
           flex-shrink: 0;
           align-items: center;
           justify-content: center;
           color: var(--text-primary);
         }
 
-        .discover-searchbar-visual-icon svg {
+        .discover-music-mock-search-icon svg {
           display: block;
           width: 13px;
           height: 13px;
         }
 
-        .discover-searchbar-visual-input {
+        .discover-music-mock-search-input {
           width: 100%;
           min-width: 0;
           border: 0;
           background: transparent;
           color: var(--text-primary);
           font-family: inherit;
-          font-size: 13.5px;
+          font-size: 14px;
           font-weight: 300;
           outline: none;
         }
 
-        .discover-searchbar-visual-input::placeholder {
+        .discover-music-mock-search-input::placeholder {
           color: var(--text-muted);
         }
 
@@ -119,19 +156,22 @@ export default function DiscoverMusicToolbarOverlay() {
         }
       `}</style>
 
-      <div className="discover-searchbar-visual-shell">
-        <form className="discover-searchbar-visual-form" onSubmit={handleSubmit}>
-          <div className="discover-filter-visual-pill" aria-hidden="true">
-            <span className="discover-filter-visual-icon">≡</span>
-            <span>Filters</span>
-            <span className="discover-filter-visual-chevron">⌄</span>
+      <form className="discover-music-mock-toolbar" onSubmit={handleSubmit}>
+        <div className="fw-toolbar-float">
+          <div className="fw-toolbar">
+            <div className="fw-toolbar-filters" aria-hidden="true">
+              <span className="discover-music-mock-filter-icon">≡</span>
+              <span className="fw-toolbar-filters-label">Filters</span>
+            </div>
           </div>
+        </div>
 
+        <div className="discover-music-mock-search-row">
           <label
-            className="discover-searchbar-visual-pill"
+            className="discover-music-mock-search-label"
             onClick={() => searchInputRef.current?.focus()}
           >
-            <span className="discover-searchbar-visual-icon" aria-hidden="true">
+            <span className="discover-music-mock-search-icon" aria-hidden="true">
               <SearchIcon />
             </span>
             <input
@@ -140,11 +180,11 @@ export default function DiscoverMusicToolbarOverlay() {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search by scene, mood, artist, genre, instrument, or title..."
-              className="discover-searchbar-visual-input"
+              className="discover-music-mock-search-input"
             />
           </label>
-        </form>
-      </div>
+        </div>
+      </form>
     </>
   );
 }
