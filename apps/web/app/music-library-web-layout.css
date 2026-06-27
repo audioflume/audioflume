@@ -1,0 +1,464 @@
+/* Web-only music page layout rules. */
+
+/* Music page: content-column search belongs in page flow, not the hidden header slot. */
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
+  --filmwave-side-filter-content-gap: 0px;
+  grid-template-columns: minmax(0, 1fr) !important;
+  column-gap: 0 !important;
+  gap: 0 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column {
+  grid-column: 1 !important;
+  min-width: 0 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky {
+  --fw-music-secondary-row-height: 58px;
+  position: sticky !important;
+  top: var(--filmwave-header-height) !important;
+  right: auto !important;
+  left: auto !important;
+  z-index: var(--filmwave-z-search-filter, 60) !important;
+  display: grid !important;
+  grid-template-columns: var(--filmwave-side-filter-rail-width) minmax(0, 1fr) !important;
+  align-items: stretch !important;
+  width: auto !important;
+  max-width: none !important;
+  height: var(--fw-music-secondary-row-height) !important;
+  margin-right: calc(var(--fw-music-content-inset-right) * -1) !important;
+  margin-left: calc(var(--fw-music-content-inset-right) * -1) !important;
+  border-bottom: 1px solid var(--border) !important;
+  background: var(--bg-primary) !important;
+  padding: 0 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  border-right: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float
+  > .fw-toolbar {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 30px !important;
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters:hover,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  padding: 0 30px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters::before,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters::after,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active::before,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active::after,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open::before,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open::after {
+  content: none !important;
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  height: 0 !important;
+  flex: 0 0 0 !important;
+  flex-basis: 0 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters
+  .fw-toolbar-filters-label,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active
+  .fw-toolbar-filters-label,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open
+  .fw-toolbar-filters-label {
+  display: inline !important;
+  height: auto !important;
+  align-items: initial !important;
+  justify-content: initial !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters
+  .fw-toolbar-filters-label::after,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active
+  .fw-toolbar-filters-label::after,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open
+  .fw-toolbar-filters-label::after {
+  content: none !important;
+  display: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters > svg,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active > svg,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open > svg {
+  display: block !important;
+  width: 14px !important;
+  height: 14px !important;
+  flex: 0 0 14px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters-chevron,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters-count,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active
+  .fw-toolbar-filters-chevron,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-active
+  .fw-toolbar-filters-count,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open
+  .fw-toolbar-filters-chevron,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-filters.is-open
+  .fw-toolbar-filters-count {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  height: 0 !important;
+  flex: 0 0 0 !important;
+  flex-basis: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-header-search-row {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-left: 0 !important;
+  padding: 0 28px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-header-search-row
+  > .fw-toolbar-header-search-form {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill {
+  height: 100% !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-input {
+  font-size: 14px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  position: fixed !important;
+  top: calc(var(--filmwave-header-height, 56px) + 58px) !important;
+  left: 0 !important;
+  z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
+  display: grid !important;
+  grid-template-rows: 1fr !important;
+  width: var(--filmwave-side-filter-rail-width) !important;
+  max-width: var(--filmwave-side-filter-rail-width) !important;
+  height: calc(
+    100dvh - var(--filmwave-header-height, 56px) - 58px -
+      var(--filmwave-sidebar-bottom-offset, 0px)
+  ) !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap * {
+  transition: none !important;
+  animation: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap.is-open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap.has-selected-filter-section {
+  width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
+  ) !important;
+  max-width: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
+  ) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.is-open)
+  ~ .fw-quick-row,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.is-open)
+  ~ .fw-song-list {
+  width: auto !important;
+  margin-left: var(--filmwave-side-filter-rail-width) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.is-open.has-selected-filter-section)
+  ~ .fw-quick-row,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.is-open.has-selected-filter-section)
+  ~ .fw-song-list {
+  width: auto !important;
+  margin-left: calc(
+    var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)
+  ) !important;
+}
+
+/* ─── Music second-row final refinements ──────────────────── */
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky {
+  --fw-music-secondary-row-height: 50px !important;
+  grid-template-columns: calc(var(--filmwave-side-filter-rail-width) + 1px) minmax(0, 1fr) !important;
+  height: 50px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float {
+  box-sizing: border-box !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-header-search-row {
+  padding: 0 24px 0 20px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-btn {
+  width: 14px !important;
+  height: 100% !important;
+  margin-left: 0 !important;
+  color: #111111 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-circle,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-btn:hover
+  .filmwave-search-pill-icon-circle {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #111111 !important;
+  transition: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-icon-circle svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-input {
+  padding-left: 6px !important;
+  color: #111111 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-input::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  top: calc(var(--filmwave-header-height, 56px) + 50px) !important;
+  height: calc(
+    100dvh - var(--filmwave-header-height, 56px) - 50px -
+      var(--filmwave-sidebar-bottom-offset, 0px)
+  ) !important;
+}
