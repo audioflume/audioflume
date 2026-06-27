@@ -491,7 +491,7 @@ main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curat
 }
 
 main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2 {
-  font-size: 13px !important;
+  font-size: 25px !important;
   font-weight: 300 !important;
 }
 
