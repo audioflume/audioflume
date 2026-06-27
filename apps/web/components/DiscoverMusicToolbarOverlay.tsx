@@ -1,5 +1,6 @@
 "use client";
 
+import { CollapsibleSearchPill } from "@filmwave/shared";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname, useRouter } from "next/navigation";
@@ -22,55 +23,17 @@ function DiscoverMusicSearchbar() {
   }
 
   return (
-    <form
-      className="flex h-full w-full items-center px-6 pl-6"
-      onSubmit={submitSearch}
-    >
-      <label
-        className="flex h-full w-full min-w-0 cursor-text items-center gap-[9px] border-0 bg-transparent shadow-none"
-        onClick={() => inputRef.current?.focus()}
-      >
-        <button
-          type="submit"
-          className="inline-flex h-5 w-5 flex-[0_0_20px] items-center justify-center border-0 bg-transparent p-0 text-[var(--text-primary)]"
-          aria-label="Search music"
-        >
-          <span className="inline-flex h-5 w-5 items-center justify-center text-[var(--text-primary)]" aria-hidden="true">
-            <SearchIcon size={15} />
-          </span>
-        </button>
-
-        <input
-          ref={inputRef}
-          data-discover-search-input="true"
-          type="text"
+    <div className="fw-toolbar-header-search-row">
+      <form className="fw-toolbar-header-search-form" onSubmit={submitSearch}>
+        <CollapsibleSearchPill
+          searchIcon={<SearchIcon />}
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
           placeholder={MUSIC_SEARCH_PLACEHOLDER}
-          className="h-full min-w-0 flex-1 border-0 bg-transparent text-[15px] font-normal text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+          inputRef={inputRef}
+          onChange={setSearch}
         />
-
-        {search.length > 0 && (
-          <button
-            type="button"
-            className="inline-flex h-[22px] w-[22px] flex-[0_0_22px] items-center justify-center rounded-full border-0 bg-transparent text-[var(--text-muted)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-            aria-label="Clear search"
-            onClick={(event) => {
-              event.preventDefault();
-              setSearch("");
-              inputRef.current?.focus();
-            }}
-          >
-            <svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M6.34 4.93 12 10.59l5.66-5.66a1 1 0 1 1 1.41 1.41L13.41 12l5.66 5.66a1 1 0 0 1-1.41 1.41L12 13.41l-5.66 5.66a1 1 0 0 1-1.41-1.41L10.59 12 4.93 6.34a1 1 0 0 1 1.41-1.41Z"
-              />
-            </svg>
-          </button>
-        )}
-      </label>
-    </form>
+      </form>
+    </div>
   );
 }
 
@@ -112,8 +75,7 @@ export default function DiscoverMusicToolbarOverlay() {
 
       const mount = document.createElement("section");
       mount.dataset.discoverSearchMount = "true";
-      mount.className =
-        "relative z-0 block h-[var(--filmwave-header-height)] w-full border-b border-[var(--border)] bg-[var(--bg-primary)]";
+      mount.className = "relative z-0 block w-full border-b border-[var(--border)] bg-[var(--bg-primary)]";
       pageSection.insertBefore(mount, pageSection.firstElementChild);
       setMountNode(mount);
     }
