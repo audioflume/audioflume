@@ -80,6 +80,24 @@ export function MusicLibraryToolbar({
   const ignoreNextFilterToggleRef = useRef(false);
   const isStickyHeaderSearch = stickyTop !== undefined;
   const showFilterExtras = !isStickyHeaderSearch;
+  const hasSearchValue = searchValue.length > 0;
+
+  function focusSearchInput() {
+    if (
+      searchInputRef &&
+      typeof searchInputRef !== "function" &&
+      "current" in searchInputRef
+    ) {
+      searchInputRef.current?.focus();
+    }
+  }
+
+  function handleSearchClear(event: ReactMouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    onSearchChange("");
+    window.requestAnimationFrame(focusSearchInput);
+  }
 
   function handleFilterToggleClick(event: ReactMouseEvent<HTMLButtonElement>) {
     if (
@@ -173,18 +191,32 @@ export function MusicLibraryToolbar({
                   aria-hidden="true"
                   style={{
                     display: "inline-flex",
-                    width: 20,
+                    width: 15,
                     height: 40,
-                    flex: "0 0 20px",
+                    flex: "0 0 15px",
                     alignItems: "center",
                     justifyContent: "center",
                     color: "var(--text-primary)",
                     cursor: "default",
+                    lineHeight: 1,
                     pointerEvents: "none",
                   }}
                 >
                   {searchIcon}
                 </span>
+                {hasSearchValue && (
+                  <>
+                    <button
+                      type="button"
+                      className="fw-toolbar-search-static-clear"
+                      onClick={handleSearchClear}
+                      aria-label="Clear search"
+                    >
+                      <ClearXIcon />
+                    </button>
+                    <span className="fw-toolbar-search-static-divider" aria-hidden="true" />
+                  </>
+                )}
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -194,6 +226,7 @@ export function MusicLibraryToolbar({
                   className="fw-toolbar-search-static-input"
                   style={{
                     minWidth: 0,
+                    height: 40,
                     flex: "1 1 auto",
                     border: 0,
                     background: "transparent",
@@ -201,6 +234,7 @@ export function MusicLibraryToolbar({
                     fontFamily: "inherit",
                     fontSize: 15,
                     fontWeight: 400,
+                    lineHeight: "40px",
                     outline: "none",
                     padding: 0,
                   }}
