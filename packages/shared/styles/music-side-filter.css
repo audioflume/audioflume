@@ -419,31 +419,88 @@ main > section:has(.fw-filter-panel-wrap) > .fw-song-list {
   margin-left: 0 !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section {
-  padding-left: 0 !important;
+/* Dark web search and side filter share one glass source. */
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky,
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky {
+  --fw-music-glass-bg: color-mix(in srgb, var(--bg-primary) 58%, transparent);
+  --fw-music-glass-border: color-mix(in srgb, var(--border) 58%, transparent);
+  background: var(--fw-music-glass-bg) !important;
+  border-bottom: 1px solid var(--fw-music-glass-border) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
+  backdrop-filter: blur(28px) saturate(140%) !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) > .px-5 {
-  padding-left: 0 !important;
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill, .fw-toolbar-search),
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill, .fw-toolbar-search) {
+  border-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
 }
 
-@media (max-width: 1180px) {
-  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
-    width: min(720px, calc(100vw - 360px)) !important;
-  }
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap,
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  top: var(--filmwave-header-height, 56px) !important;
+  height: calc(
+    100dvh - var(--filmwave-header-height, 56px) - var(--filmwave-sidebar-bottom-offset, 0px)
+  ) !important;
 }
 
-@media (max-width: 900px) {
-  main > section:has(.fw-filter-panel-wrap) {
-    display: block !important;
-    padding-left: 0 !important;
-  }
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-panel-body,
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-panel-body {
+  background: var(--fw-music-glass-bg) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
+  backdrop-filter: blur(28px) saturate(140%) !important;
+}
 
-  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
-    display: block !important;
-  }
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-rail,
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-rail {
+  padding-top: calc(var(--filmwave-header-height, 56px) + 10px) !important;
+}
 
-  main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
-    display: none !important;
-  }
+html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-detail,
+html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-detail {
+  padding-top: calc(var(--filmwave-header-height, 56px) + 12px) !important;
 }
