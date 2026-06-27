@@ -277,6 +277,10 @@ body > header,
   line-height: 1 !important;
 }
 
+.fw-toolbar-filters-count-num {
+  font-weight: 400 !important;
+}
+
 .fw-toolbar-filters-count-x svg {
   display: none !important;
 }
