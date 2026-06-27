@@ -150,12 +150,28 @@
   opacity: 0.92;
 }
 
-/* Discover uses the same second-row search geometry as the music page. */
+/* Discover renders the same MusicLibraryToolbar search row in page flow. */
 [data-discover-search-mount="true"] {
-  height: 50px !important;
+  height: var(--filmwave-header-height, 56px) !important;
 }
 
-[data-discover-search-mount="true"] > .fw-toolbar-header-search-row {
+[data-discover-search-mount="true"] > .fw-toolbar-sticky {
+  position: relative !important;
+  inset: auto !important;
+  z-index: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+[data-discover-search-mount="true"] .fw-toolbar-header-search-row {
   box-sizing: border-box !important;
   display: flex !important;
   align-items: center !important;
@@ -165,7 +181,7 @@
   padding: 0 24px 0 20px !important;
 }
 
-[data-discover-search-mount="true"] > .fw-toolbar-header-search-row > .fw-toolbar-header-search-form {
+[data-discover-search-mount="true"] .fw-toolbar-header-search-form {
   width: 100% !important;
   height: 100% !important;
 }
@@ -182,34 +198,37 @@
 }
 
 [data-discover-search-mount="true"] .filmwave-search-pill-icon-btn {
-  width: 14px !important;
+  width: 20px !important;
   height: 100% !important;
   margin-left: 0 !important;
-  color: #111111 !important;
+  color: var(--text-primary) !important;
 }
 
 [data-discover-search-mount="true"] .filmwave-search-pill-icon-circle,
 [data-discover-search-mount="true"] .filmwave-search-pill-icon-btn:hover .filmwave-search-pill-icon-circle {
-  width: 14px !important;
-  height: 14px !important;
+  width: 20px !important;
+  height: 20px !important;
   border-radius: 0 !important;
   background: transparent !important;
   background-color: transparent !important;
-  color: #111111 !important;
+  color: var(--text-primary) !important;
   transition: none !important;
 }
 
 [data-discover-search-mount="true"] .filmwave-search-pill-icon-circle svg {
-  width: 12px !important;
-  height: 12px !important;
+  width: 15px !important;
+  height: 15px !important;
 }
 
 [data-discover-search-mount="true"] .filmwave-search-pill-input {
   padding-left: 6px !important;
-  color: #111111 !important;
-  font-size: 14px !important;
+  color: var(--text-primary) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
 }
 
 [data-discover-search-mount="true"] .filmwave-search-pill-input::placeholder {
-  color: var(--text-secondary) !important;
+  color: color-mix(in srgb, var(--text-muted) 72%, transparent) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
 }
