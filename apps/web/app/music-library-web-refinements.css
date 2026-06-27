@@ -338,7 +338,13 @@ main > section[class*="pt-14"] {
 }
 
 .playlists-tabs-row {
-  margin-top: 12px !important;
+  margin-top: calc(var(--filmwave-header-height, 56px) + 22px) !important;
+  margin-bottom: 24px !important;
+}
+
+section.curated-playlists-page-layer .playlists-tabs-row {
+  margin-top: 0 !important;
+  margin-bottom: 24px !important;
 }
 
 .favorites-page,
@@ -418,12 +424,15 @@ main > section[class*="pt-14"] {
   padding-top: var(--filmwave-header-height) !important;
 }
 
-.playlists-page,
 .playlist-detail-page,
 .favorites-page,
 .project-detail-page {
   margin-top: var(--filmwave-header-height) !important;
   min-height: calc(100vh - var(--filmwave-header-height)) !important;
+}
+
+.playlists-page {
+  margin-top: 0 !important;
 }
 
 .filmwave-header-actions {
@@ -482,6 +491,7 @@ main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curat
 }
 
 main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2 {
+  font-size: 20px !important;
   font-weight: 300 !important;
 }
 
