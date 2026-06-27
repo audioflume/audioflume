@@ -47,6 +47,59 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   color: var(--text-muted) !important;
 }
 
+/* Open the filter rail by default and remove the filter button from the search row. */
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-float {
+  display: none !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-header-search-row {
+  grid-column: 1 !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  display: grid !important;
+  grid-template-rows: 1fr !important;
+  width: var(--filmwave-side-filter-rail-width) !important;
+  max-width: var(--filmwave-side-filter-rail-width) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-panel-body {
+  grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap)
+  ~ .fw-quick-row,
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:has(> .fw-filter-panel-wrap)
+  ~ .fw-song-list {
+  width: auto !important;
+  margin-left: var(--filmwave-side-filter-rail-width) !important;
+}
+
 /* Keep the web music filter rail in its final order before client-side behavior runs.
    This prevents the category buttons from briefly painting in React's default group order on refresh. */
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(1) {
