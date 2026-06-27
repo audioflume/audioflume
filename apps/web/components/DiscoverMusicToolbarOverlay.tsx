@@ -35,6 +35,34 @@ export default function DiscoverMusicToolbarOverlay() {
           display: flex;
           height: 100%;
           align-items: center;
+          gap: 8px;
+        }
+
+        .discover-filter-visual-pill {
+          display: inline-flex;
+          height: 32px;
+          flex-shrink: 0;
+          align-items: center;
+          gap: 8px;
+          border: 0;
+          border-radius: 999px;
+          background: var(--bg-control);
+          padding: 0 14px;
+          color: var(--text-primary);
+          font-family: inherit;
+          font-size: 13px;
+          font-weight: 400;
+          line-height: 1;
+          white-space: nowrap;
+        }
+
+        .discover-filter-visual-icon,
+        .discover-filter-visual-chevron {
+          display: inline-flex;
+          flex-shrink: 0;
+          color: currentColor;
+          font-size: 13px;
+          line-height: 1;
         }
 
         .discover-searchbar-visual-pill {
@@ -93,6 +121,12 @@ export default function DiscoverMusicToolbarOverlay() {
 
       <div className="discover-searchbar-visual-shell">
         <form className="discover-searchbar-visual-form" onSubmit={handleSubmit}>
+          <div className="discover-filter-visual-pill" aria-hidden="true">
+            <span className="discover-filter-visual-icon">≡</span>
+            <span>Filters</span>
+            <span className="discover-filter-visual-chevron">⌄</span>
+          </div>
+
           <label
             className="discover-searchbar-visual-pill"
             onClick={() => searchInputRef.current?.focus()}
