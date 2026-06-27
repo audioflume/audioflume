@@ -200,7 +200,7 @@ export default function MusicPage() {
     const cuePoints = EDIT_POINT_FILTER_OPTIONS.filter((option) =>
       songs.some((song) => songMatchesEditPointFilter(song, option.type)),
     );
-    const quickFilters = QUICK_FILTERS.filter((filter) => genres.includes(filter));
+    const quickFilters = [...QUICK_FILTERS];
 
     return {
       moods,
