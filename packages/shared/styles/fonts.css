@@ -1,12 +1,5 @@
 :where(:root) {
-  --font-satoshi: var(
-    --font-geist-sans,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif
-  );
-  --font-instrument-sans: "Instrument Sans", var(--font-satoshi);
+  --font-satoshi: "aktiv-grotesk", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-instrument-sans: var(--font-satoshi);
 }
