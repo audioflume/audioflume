@@ -1,6 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -27,18 +26,7 @@ import "../../../packages/shared/styles/shell-chrome.css";
 import "../../../packages/shared/styles/music-side-filter.css";
 import "../../../packages/shared/styles/header-search-toolbar.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// R2 public CDN hostname — used for preconnect and dns-prefetch hints.
-// Keeps a single source of truth if the bucket URL ever changes.
+const TYPEKIT_STYLESHEET = "https://use.typekit.net/tjk0kys.css";
 const R2_CDN_ORIGIN = "https://pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev";
 
 export const metadata: Metadata = {
@@ -58,12 +46,12 @@ export default async function RootLayout({
   )?.value;
   const initialTheme = themeCookie === "light" ? "light" : "dark";
   const initialSidebarCollapsed = sidebarCollapsedCookie === "true";
-  const htmlClassName = `${geistSans.variable} ${geistMono.variable}`;
 
   return (
     <ClerkProvider>
-      <html lang="en" className={htmlClassName} data-theme={initialTheme}>
+      <html lang="en" data-theme={initialTheme}>
         <head>
+          <link rel="stylesheet" href={TYPEKIT_STYLESHEET} />
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
