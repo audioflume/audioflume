@@ -22,29 +22,66 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
+  .filmwave-search-pill,
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search {
+  gap: 14px !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
   .filmwave-search-pill-icon-btn,
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-circle {
-  width: 16px !important;
-  height: 16px !important;
+  .filmwave-search-pill-icon-circle,
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-icon {
+  width: 22px !important;
+  height: 22px !important;
   color: var(--text-primary) !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
-  .filmwave-search-pill-icon-circle svg {
-  width: 13px !important;
-  height: 13px !important;
+  .filmwave-search-pill-icon-circle svg,
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-icon svg {
+  width: 17px !important;
+  height: 17px !important;
 }
 
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
-  .filmwave-search-pill-input::placeholder {
+  .filmwave-search-pill-input,
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search input {
+  font-size: 15px !important;
+  font-weight: 200 !important;
+}
+
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .filmwave-search-pill-input::placeholder,
+html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search input::placeholder {
   color: var(--text-muted) !important;
+  font-size: 15px !important;
+  font-weight: 200 !important;
 }
 
 /* Open the filter rail by default and remove the filter button from the search row. */
