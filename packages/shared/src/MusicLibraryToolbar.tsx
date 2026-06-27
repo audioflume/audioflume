@@ -147,117 +147,110 @@ export function MusicLibraryToolbar({
       style={stickyTop !== undefined ? { top: stickyTop } : undefined}
     >
       {isStickyHeaderSearch && (
-        <div className="fw-toolbar-header-search-row">
-          <form
-            className="fw-toolbar-header-search-form"
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <div
-              className="fw-toolbar-search fw-toolbar-search-static"
-              style={{
-                boxSizing: "border-box",
-                display: "flex",
-                width: "100%",
-                height: 40,
-                minHeight: 40,
-                alignItems: "center",
-                gap: 9,
-                border: 0,
-                background: "transparent",
-                boxShadow: "none",
-                padding: 0,
-                transform: "translateY(6px)",
-              }}
+        <>
+          <style>{`
+            html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap,
+            html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap {
+              top: calc(var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) + var(--filmwave-sidebar-float-inset, 12px)) !important;
+              height: calc(100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) - var(--filmwave-sidebar-bottom-offset, 0px) - (var(--filmwave-sidebar-float-inset, 12px) * 2)) !important;
+            }
+
+            html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail,
+            html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-rail {
+              padding: 10px 8px !important;
+            }
+
+            html.dark body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail,
+            html[data-theme="dark"] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column > .fw-toolbar-sticky > .fw-filter-panel-wrap .fw-filter-detail {
+              padding: 12px !important;
+            }
+          `}</style>
+          <div className="fw-toolbar-header-search-row">
+            <form
+              className="fw-toolbar-header-search-form"
+              onSubmit={(event) => event.preventDefault()}
             >
-              <span
-                className="fw-toolbar-search-static-icon"
-                aria-hidden="true"
+              <div
+                className="fw-toolbar-search fw-toolbar-search-static"
                 style={{
-                  display: "inline-flex",
-                  width: 15,
+                  boxSizing: "border-box",
+                  display: "flex",
+                  width: "100%",
                   height: 40,
-                  flex: "0 0 15px",
+                  minHeight: 40,
                   alignItems: "center",
-                  justifyContent: "center",
-                  color: "var(--text-primary)",
-                  cursor: "default",
-                  lineHeight: 1,
-                  marginLeft: 4,
-                  marginRight: 4,
-                  pointerEvents: "none",
-                }}
-              >
-                {searchIcon}
-              </span>
-              {hasSearchValue && (
-                <>
-                  <button
-                    type="button"
-                    className="fw-toolbar-search-static-clear"
-                    onClick={handleSearchClear}
-                    aria-label="Clear search"
-                    style={{
-                      boxSizing: "border-box",
-                      display: "inline-flex",
-                      width: 20,
-                      height: 40,
-                      flex: "0 0 20px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: 0,
-                      borderRadius: 0,
-                      background: "transparent",
-                      color: "var(--text-muted)",
-                      cursor: "pointer",
-                      padding: 0,
-                    }}
-                  >
-                    <span
-                      aria-hidden="true"
-                      style={{ display: "inline-flex", transform: "scale(1.25)" }}
-                    >
-                      <ClearXIcon />
-                    </span>
-                  </button>
-                  <span
-                    className="fw-toolbar-search-static-divider"
-                    aria-hidden="true"
-                    style={{
-                      display: "inline-flex",
-                      width: 1,
-                      height: 16,
-                      flex: "0 0 1px",
-                      borderRadius: 1,
-                      background: "var(--border)",
-                    }}
-                  />
-                </>
-              )}
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchValue}
-                placeholder={searchPlaceholder}
-                onChange={(event) => onSearchChange(event.target.value)}
-                className="fw-toolbar-search-static-input"
-                style={{
-                  minWidth: 0,
-                  height: 40,
-                  flex: "1 1 auto",
+                  gap: 9,
                   border: 0,
                   background: "transparent",
-                  color: "var(--text-primary)",
-                  fontFamily: "inherit",
-                  fontSize: 15,
-                  fontWeight: 400,
-                  lineHeight: "40px",
-                  outline: "none",
+                  boxShadow: "none",
                   padding: 0,
+                  transform: "translateY(6px)",
                 }}
-              />
-            </div>
-          </form>
-        </div>
+              >
+                <span
+                  className="fw-toolbar-search-static-icon"
+                  aria-hidden="true"
+                  style={{
+                    display: "inline-flex",
+                    width: 15,
+                    height: 40,
+                    flex: "0 0 15px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--text-primary)",
+                    cursor: "default",
+                    lineHeight: 1,
+                    marginLeft: 4,
+                    marginRight: 4,
+                    pointerEvents: "none",
+                  }}
+                >
+                  {searchIcon}
+                </span>
+                {hasSearchValue && (
+                  <>
+                    <button
+                      type="button"
+                      className="fw-toolbar-search-static-clear"
+                      onClick={handleSearchClear}
+                      aria-label="Clear search"
+                    >
+                      <span
+                        aria-hidden="true"
+                        style={{ display: "inline-flex", transform: "scale(1.25)" }}
+                      >
+                        <ClearXIcon />
+                      </span>
+                    </button>
+                    <span className="fw-toolbar-search-static-divider" aria-hidden="true" />
+                  </>
+                )}
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchValue}
+                  placeholder={searchPlaceholder}
+                  onChange={(event) => onSearchChange(event.target.value)}
+                  className="fw-toolbar-search-static-input"
+                  style={{
+                    minWidth: 0,
+                    height: 40,
+                    flex: "1 1 auto",
+                    border: 0,
+                    background: "transparent",
+                    color: "var(--text-primary)",
+                    fontFamily: "inherit",
+                    fontSize: 15,
+                    fontWeight: 400,
+                    lineHeight: "40px",
+                    outline: "none",
+                    padding: 0,
+                  }}
+                />
+              </div>
+            </form>
+          </div>
+        </>
       )}
 
       {renderToolbarChrome && (
