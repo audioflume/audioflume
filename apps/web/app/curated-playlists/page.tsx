@@ -361,12 +361,10 @@ export default function CuratedPlaylistsPage() {
         </div>
       )}
 
-      <div className="curated-playlists-page-layer">
-        <PlaylistTabsRail />
-      </div>
-
       <section className="curated-playlists-page-layer ml-[var(--sidebar-width)] min-h-screen pt-6 transition-[margin-left] duration-200">
         <div className="px-8">
+          <PlaylistTabsRail />
+
           <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
             <div>
               <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
