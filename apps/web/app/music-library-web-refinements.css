@@ -490,3 +490,7 @@ main:has(a[href="/music"]) a[href^="/curated-playlists/"] > .mt-5 h3 {
   font-weight: 500 !important;
   font-variation-settings: normal !important;
 }
+
+main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] .group-hover\:scale-\[1\.02\] {
+  transform: none !important;
+}
