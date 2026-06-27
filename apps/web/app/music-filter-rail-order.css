@@ -86,6 +86,33 @@ html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-pan
   font-weight: 400 !important;
 }
 
+:where(html.dark, html[data-theme="dark"]) body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky {
+  background: transparent !important;
+  -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
+  backdrop-filter: blur(28px) saturate(140%) !important;
+}
+
+:where(html.dark, html[data-theme="dark"]) body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill, .fw-toolbar-search) {
+  border-color: color-mix(in srgb, var(--border) 58%, transparent) !important;
+  background: color-mix(in srgb, var(--bg-primary) 48%, transparent) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+  box-shadow: 0 16px 42px color-mix(in srgb, #000 22%, transparent) !important;
+}
+
+:where(html.dark, html[data-theme="dark"]) body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.filmwave-search-pill-icon-circle, .fw-toolbar-search-icon) {
+  background: color-mix(in srgb, var(--bg-primary) 44%, var(--text-primary) 10%) !important;
+}
+
 /* Open the filter rail by default and remove the filter button from the search row. */
 html[data-theme] body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
