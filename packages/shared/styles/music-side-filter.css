@@ -1,6 +1,6 @@
 /* Shared music side-filter layout.
-   The music page offset must use the same live sidebar panel geometry as the
-   actual sidebar, then add the desired sidebar-to-filter gap. */
+   Shared filter structure lives here. Web-only fixed positioning lives in
+   apps/web/app/music-library-web-layout.css. */
 :root {
   --filmwave-side-filter-rail-width: 168px;
   --filmwave-side-filter-detail-width: 184px;
@@ -8,7 +8,6 @@
   --filmwave-side-filter-content-gap: 14px;
   --filmwave-side-filter-divider-color: var(--border-subtle);
   --filmwave-side-filter-edge-fade: 28px;
-  --filmwave-side-filter-search-row-offset: 64px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -42,8 +41,6 @@ main > section:has(.fw-filter-panel-wrap) {
   );
 }
 
-/* The toolbar wrapper should not become the side column. It only owns two
-   children: the fixed header searchbar and the structural side filter panel. */
 main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
   display: contents !important;
   position: static !important;
@@ -60,7 +57,6 @@ main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky {
   background: transparent !important;
 }
 
-/* Keep the searchbar in the header. */
 main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float {
   position: fixed !important;
   top: calc(var(--filmwave-header-height, 56px) / 2) !important;
@@ -81,14 +77,13 @@ main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-flo
   height: 30px !important;
 }
 
-/* The side filter panel is the real first grid column. */
 main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-panel-wrap {
   grid-column: 1 !important;
   grid-row: 1 / span 999 !important;
   position: sticky !important;
   top: calc(
     var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
-      var(--filmwave-side-filter-search-row-offset, 64px)
+      var(--filmwave-sidebar-float-inset, 12px)
   ) !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
   display: grid !important;
@@ -97,28 +92,12 @@ main > section:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-filter-pane
   max-width: var(--filmwave-side-filter-rail-width) !important;
   height: calc(
     100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
-      var(--filmwave-side-filter-search-row-offset, 64px) -
-      var(--filmwave-sidebar-bottom-offset, 0px)
+      var(--filmwave-sidebar-bottom-offset, 0px) -
+      (var(--filmwave-sidebar-float-inset, 12px) * 2)
   ) !important;
-  margin: var(--filmwave-side-filter-search-row-offset, 64px) 0 0 !important;
+  margin: 0 !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-}
-
-body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-filter-panel-wrap {
-  top: calc(
-    var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) +
-      var(--filmwave-side-filter-search-row-offset, 64px)
-  ) !important;
-  height: calc(
-    100dvh - var(--filmwave-sidebar-top-offset, var(--filmwave-header-height, 56px)) -
-      var(--filmwave-side-filter-search-row-offset, 64px) -
-      var(--filmwave-sidebar-bottom-offset, 0px)
-  ) !important;
-  margin: var(--filmwave-side-filter-search-row-offset, 64px) 0 0 !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
@@ -154,7 +133,6 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel {
   backdrop-filter: none !important;
 }
 
-/* Rail and detail are one shared block, not two separate cards. */
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body {
   position: relative !important;
   display: grid !important;
