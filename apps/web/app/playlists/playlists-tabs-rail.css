@@ -66,6 +66,13 @@ section.curated-playlists-page-layer {
   padding-top: calc(var(--filmwave-header-height, 56px) + 22px) !important;
 }
 
+body:has(section.curated-playlists-page-layer) :is(.filmwave-app-header, .desktop-header, body > header, .filmwave-header) {
+  background: color-mix(in srgb, var(--bg-primary) 58%, transparent) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
+  backdrop-filter: blur(28px) saturate(140%) !important;
+  box-shadow: none !important;
+}
+
 body section.curated-playlists-page-layer .playlists-tabs-row {
   width: 100% !important;
   margin-top: 0 !important;
