@@ -166,6 +166,7 @@ export function MusicLibraryToolbar({
                 background: "transparent",
                 boxShadow: "none",
                 padding: 0,
+                transform: "translateY(3px)",
               }}
             >
               <span
