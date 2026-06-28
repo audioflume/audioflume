@@ -492,11 +492,11 @@ main > section:has(.fw-filter-panel-wrap) {
   margin-left: 0 !important;
 }
 
-/* ─── Discover and curated playlist light title weights ───── */
+/* ─── Discover and curated playlist medium title weights ───── */
 
 main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] :is(h1, h2, h3) {
-  font-weight: 200 !important;
-  font-variation-settings: "wght" 200 !important;
+  font-weight: 500 !important;
+  font-variation-settings: "wght" 500 !important;
 }
 
 main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2 {
@@ -504,7 +504,8 @@ main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:fir
 }
 
 main:has(a[href="/music"]) a[href^="/curated-playlists/"] > .mt-5 h3 {
-  font-weight: 100 !important;
+  font-weight: 500 !important;
+  font-variation-settings: "wght" 500 !important;
 }
 
 .playlist-gallery-content h3 {
