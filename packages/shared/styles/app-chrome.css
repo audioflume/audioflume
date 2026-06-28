@@ -70,14 +70,8 @@ body > header > div {
 }
 
 .filmwave-header::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background: var(--filmwave-header-border-color) !important;
-  content: "";
-  pointer-events: none;
+  content: none;
+  display: none;
 }
 
 .filmwave-header-inner {
