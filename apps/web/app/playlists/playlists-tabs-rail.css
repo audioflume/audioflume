@@ -103,13 +103,23 @@ body section.curated-playlists-page-layer .playlists-tabs-row {
 }
 
 .playlists-page .playlists-title {
+  position: relative !important;
   display: block !important;
   margin: 0 !important;
   max-width: 640px !important;
-  font-size: 1.4em !important;
-  font-weight: 300 !important;
+  font-size: 1.6em !important;
+  font-weight: 500 !important;
   line-height: 1 !important;
   letter-spacing: -0.035em !important;
+  color: transparent !important;
+}
+
+.playlists-page .playlists-title::before {
+  content: "My Playlists";
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--text-primary);
 }
 
 .playlists-page .playlists-meta {
