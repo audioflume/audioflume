@@ -67,7 +67,7 @@ section.curated-playlists-page-layer {
 }
 
 :where(html.dark, html[data-theme="dark"])
-  body:has(:is(section.curated-playlists-page-layer, .playlists-page))
+  body:has(section.curated-playlists-page-layer)
   :is(.filmwave-app-header, .desktop-header, body > header, .filmwave-header) {
   background: color-mix(in srgb, var(--bg-primary) 58%, transparent) !important;
   -webkit-backdrop-filter: blur(28px) saturate(140%) !important;
