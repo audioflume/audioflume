@@ -497,20 +497,25 @@ main > section:has(.fw-filter-panel-wrap) {
 main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] :is(h1, h2, h3) {
   font-weight: 500 !important;
   font-variation-settings: "wght" 500 !important;
+  letter-spacing: -0.035em !important;
 }
 
 main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2 {
+  font-size: 1.4em !important;
   font-weight: 300 !important;
+  letter-spacing: -0.035em !important;
 }
 
 main:has(a[href="/music"]) a[href^="/curated-playlists/"] > .mt-5 h3 {
   font-weight: 500 !important;
   font-variation-settings: "wght" 500 !important;
+  letter-spacing: -0.035em !important;
 }
 
 .playlist-gallery-content h3 {
   font-weight: 500 !important;
   font-variation-settings: normal !important;
+  letter-spacing: -0.035em !important;
 }
 
 main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] .group-hover\:scale-\[1\.02\] {
