@@ -65,6 +65,8 @@ html[data-theme="light"]
 .filmwave-song-card.has-expanded-content {
   flex-wrap: wrap;
   row-gap: 0;
+  border: 1px solid var(--border-subtle);
+  padding-bottom: 0;
 }
 
 .filmwave-song-cover,
@@ -370,6 +372,7 @@ html[data-theme="light"]
 
 .filmwave-song-stem-card:last-child {
   border-bottom: 0;
+  padding-bottom: 4px;
 }
 
 .filmwave-song-stem-card:hover,
