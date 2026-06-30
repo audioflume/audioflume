@@ -7,12 +7,14 @@ import type { FilmwaveStem } from "./music";
 type SongCardStemsSlotProps = {
   stems: FilmwaveStem[];
   open: boolean;
+  inline?: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
 export function SongCardStemsSlot({
   stems,
   open,
+  inline = false,
   onOpenChange,
 }: SongCardStemsSlotProps) {
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -20,7 +22,7 @@ export function SongCardStemsSlot({
   const hasStems = stems.length > 0;
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || inline) return;
 
     function handlePointerDown(event: MouseEvent) {
       const target = event.target as Node;
@@ -39,7 +41,7 @@ export function SongCardStemsSlot({
       document.removeEventListener("mousedown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open, onOpenChange]);
+  }, [inline, open, onOpenChange]);
 
   if (!hasStems) {
     return <div className="filmwave-song-stems-placeholder" />;
@@ -51,7 +53,7 @@ export function SongCardStemsSlot({
         ref={triggerRef}
         type="button"
         className="filmwave-song-stems-trigger"
-        aria-label="Show stems"
+        aria-label={open ? "Hide stems" : "Show stems"}
         aria-expanded={open}
         onClick={(event) => {
           event.stopPropagation();
@@ -61,28 +63,30 @@ export function SongCardStemsSlot({
         +{stems.length}
       </button>
 
-      <FilterPopover
-        open={open}
-        triggerRef={triggerRef}
-        width={168}
-        className="filmwave-song-stems-popover"
-      >
-        <div className="filmwave-song-stems-menu">
-          {stems.map((stem) => (
-            <a
-              key={`${stem.name}-${stem.url}`}
-              href={stem.url}
-              download
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => onOpenChange(false)}
-              className="filmwave-song-stems-link"
-            >
-              {stem.name}
-            </a>
-          ))}
-        </div>
-      </FilterPopover>
+      {!inline && (
+        <FilterPopover
+          open={open}
+          triggerRef={triggerRef}
+          width={168}
+          className="filmwave-song-stems-popover"
+        >
+          <div className="filmwave-song-stems-menu">
+            {stems.map((stem) => (
+              <a
+                key={`${stem.name}-${stem.url}`}
+                href={stem.url}
+                download
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => onOpenChange(false)}
+                className="filmwave-song-stems-link"
+              >
+                {stem.name}
+              </a>
+            ))}
+          </div>
+        </FilterPopover>
+      )}
     </div>
   );
 }
