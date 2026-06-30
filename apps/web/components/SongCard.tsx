@@ -295,7 +295,7 @@ export default function SongCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: newPlaylistName,
-          cover_image_url: newCoverPreview,
+          cover_image_url: newPlaylistCoverPreview,
           position: playlists.length,
         }),
       });
