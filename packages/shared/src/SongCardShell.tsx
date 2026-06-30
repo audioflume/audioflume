@@ -18,6 +18,7 @@ type SongCardShellProps = {
   keyMeta?: ReactNode;
   bpmMeta?: ReactNode;
   actions: ReactNode;
+  expandedContent?: ReactNode;
   onCoverClick?: () => void;
   onInfoClick?: () => void;
 };
@@ -38,10 +39,11 @@ export function SongCardShell({
   keyMeta,
   bpmMeta,
   actions,
+  expandedContent,
   onCoverClick,
   onInfoClick,
 }: SongCardShellProps) {
-  const rootClassName = `filmwave-song-card${className ? ` ${className}` : ""}`;
+  const rootClassName = `filmwave-song-card${expandedContent ? " has-expanded-content" : ""}${className ? ` ${className}` : ""}`;
 
   return (
     <article
@@ -101,6 +103,10 @@ export function SongCardShell({
         )}
         <div className="filmwave-song-actions">{actions}</div>
       </div>
+
+      {expandedContent && (
+        <div className="filmwave-song-expanded-content">{expandedContent}</div>
+      )}
     </article>
   );
 }
