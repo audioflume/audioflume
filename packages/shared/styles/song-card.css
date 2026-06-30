@@ -12,6 +12,10 @@
   --filmwave-song-card-padding-y: 12px;
   --filmwave-song-card-gap: 16px;
   --filmwave-song-card-min-height: 64px;
+  --filmwave-song-card-actions-width: calc(
+    var(--filmwave-song-card-action-size) + var(--filmwave-song-card-action-size) +
+      var(--filmwave-song-card-action-size) + 8px
+  );
   --filmwave-song-card-hover-bg: color-mix(
     in srgb,
     var(--bg-hover) 55%,
@@ -385,9 +389,18 @@ html[data-theme="light"]
   flex: 999 1 clamp(120px, 36cqw, 360px);
 }
 
+.filmwave-song-stem-spacer {
+  flex: 0 0 40px;
+}
+
 .filmwave-song-stem-wave {
   min-width: 0;
   flex: 1 1 auto;
+}
+
+.filmwave-song-stem-actions {
+  width: var(--filmwave-song-card-actions-width);
+  flex: 0 0 var(--filmwave-song-card-actions-width);
 }
 
 .filmwave-song-wave,
