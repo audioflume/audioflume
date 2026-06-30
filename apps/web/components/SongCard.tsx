@@ -143,6 +143,96 @@ function getSongStems(song: Song) {
   );
 }
 
+function StemSongRow({
+  parentSong,
+  stem,
+  index,
+  coverArtUrl,
+}: {
+  parentSong: Song;
+  stem: StemItem;
+  index: number;
+  coverArtUrl: string | null;
+}) {
+  const { togglePlayPause } = usePlayer();
+  const stemSong: Song = {
+    ...parentSong,
+    id: `${parentSong.id}:stem:${index}`,
+    title: stem.name,
+    artist: parentSong.artist,
+    audioUrl: stem.url,
+    playbackUrl: stem.url,
+    hlsUrl: "",
+    stems: [],
+    genres: [],
+    moods: [],
+    regions: [],
+    instruments: [],
+    builds: [],
+    vocals: [],
+    editPoints: "",
+  };
+  const stemPlaying = useIsCurrentSongPlaying(stemSong.id);
+  const displayIcon = stemPlaying ? (
+    <PauseIcon size={15} />
+  ) : (
+    <PlayIconSmall size={15} />
+  );
+
+  return (
+    <div className={`filmwave-song-stem-card${stemPlaying ? " is-playing" : ""}`}>
+      <button
+        type="button"
+        className="filmwave-song-cover filmwave-song-stem-cover"
+        aria-label={stemPlaying ? `Pause ${stem.name}` : `Play ${stem.name}`}
+        onClick={() => togglePlayPause(stemSong)}
+      >
+        {coverArtUrl ? (
+          <Image
+            src={coverArtUrl}
+            alt={stem.name}
+            fill
+            sizes="40px"
+            className="object-cover"
+          />
+        ) : (
+          <div className="h-10 w-10 bg-[var(--bg-hover)]" />
+        )}
+        <span className="filmwave-song-play-overlay" aria-hidden="true">
+          <span className="filmwave-song-play-button">{displayIcon}</span>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        className="filmwave-song-info filmwave-song-stem-info"
+        onClick={() => togglePlayPause(stemSong)}
+      >
+        <span className="filmwave-song-title">{stem.name}</span>
+        <span className="filmwave-song-artist">{parentSong.artist}</span>
+      </button>
+
+      <div className="filmwave-song-wave-wrap filmwave-song-stem-wave-wrap">
+        <div className="filmwave-song-wave filmwave-song-stem-wave">
+          <Waveform song={stemSong} showEditPointMarkers={false} />
+        </div>
+        <span className="filmwave-song-duration">{formatDuration(parentSong.duration)}</span>
+      </div>
+
+      <div className="filmwave-song-genre-slot filmwave-song-stem-genre-slot">
+        <span className="filmwave-song-genre">-</span>
+      </div>
+
+      <div className="filmwave-song-key-bpm filmwave-song-meta">
+        <span className="filmwave-song-key">{parentSong.key || "—"}</span>
+        <span className="filmwave-song-bpm">
+          {parentSong.bpm ? `${parentSong.bpm} BPM` : "—"}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function SongCard({
   song,
   playlistId,
@@ -205,7 +295,7 @@ export default function SongCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: newPlaylistName,
-          cover_image_url: newPlaylistCoverPreview,
+          cover_image_url: newCoverPreview,
           position: playlists.length,
         }),
       });
@@ -309,6 +399,7 @@ export default function SongCard({
           <SongCardStemsSlot
             stems={stems}
             open={stemsOpen}
+            inline
             onOpenChange={setStemsOpen}
           />
         }
@@ -353,6 +444,21 @@ export default function SongCard({
               <DownloadIcon />
             </IconButton>
           </>
+        }
+        expandedContent={
+          stemsOpen && stems.length > 0 ? (
+            <div className="filmwave-song-stem-list">
+              {stems.map((stem, index) => (
+                <StemSongRow
+                  key={`${stem.name}-${stem.url}`}
+                  parentSong={song}
+                  stem={stem}
+                  index={index}
+                  coverArtUrl={coverArtUrl}
+                />
+              ))}
+            </div>
+          ) : null
         }
       />
 
