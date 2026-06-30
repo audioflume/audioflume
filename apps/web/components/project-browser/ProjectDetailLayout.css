@@ -116,13 +116,13 @@
 }
 
 .project-detail-page .project-tabs-row .fw-filter-rail-item.is-active {
-  background: transparent !important;
+  background: var(--bg-hover-strong) !important;
   color: var(--text-primary) !important;
   font-weight: 400 !important;
 }
 
 .project-detail-page .project-tabs-row .fw-filter-rail-item.is-active:hover {
-  background: var(--bg-hover) !important;
+  background: var(--bg-hover-strong) !important;
   color: var(--text-primary) !important;
 }
 
