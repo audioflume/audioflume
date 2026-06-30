@@ -53,6 +53,7 @@ function getStemNameFromUrl(url: string, index: number) {
     return filename
       .replaceAll("-", " ")
       .replaceAll("_", " ")
+      .replace(/^\d{8,}\s*/, "")
       .replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
@@ -112,7 +113,7 @@ function normalizeStems(value: unknown): StemItem[] {
 
       const name =
         typeof record.name === "string" && record.name.trim()
-          ? record.name.trim()
+          ? record.name.trim().replace(/^\d{8,}\s*/, "")
           : getStemNameFromUrl(url, index);
 
       return { name, url };
@@ -179,6 +180,10 @@ function StemSongRow({
     <PlayIconSmall size={15} />
   );
 
+  function handleDownloadStem() {
+    window.open(stem.url, "_blank", "noopener,noreferrer");
+  }
+
   return (
     <div className={`filmwave-song-stem-card${stemPlaying ? " is-playing" : ""}`}>
       <button
@@ -213,6 +218,9 @@ function StemSongRow({
       </button>
 
       <div className="filmwave-song-wave-wrap filmwave-song-stem-wave-wrap">
+        <div className="filmwave-song-stems-slot filmwave-song-stem-spacer" aria-hidden="true">
+          <div className="filmwave-song-stems-placeholder" />
+        </div>
         <div className="filmwave-song-wave filmwave-song-stem-wave">
           <Waveform song={stemSong} showEditPointMarkers={false} />
         </div>
@@ -228,6 +236,12 @@ function StemSongRow({
         <span className="filmwave-song-bpm">
           {parentSong.bpm ? `${parentSong.bpm} BPM` : "—"}
         </span>
+      </div>
+
+      <div className="filmwave-song-actions filmwave-song-stem-actions">
+        <IconButton label={`Download ${stem.name}`} onClick={handleDownloadStem}>
+          <DownloadIcon />
+        </IconButton>
       </div>
     </div>
   );
