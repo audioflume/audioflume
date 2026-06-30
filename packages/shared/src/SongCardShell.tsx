@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode, Ref } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 
 type SongCardShellProps = {
   cardRef?: Ref<HTMLElement>;
@@ -44,12 +44,22 @@ export function SongCardShell({
   onInfoClick,
 }: SongCardShellProps) {
   const rootClassName = `filmwave-song-card${expandedContent ? " has-expanded-content" : ""}${className ? ` ${className}` : ""}`;
+  const expandedStyle: CSSProperties | undefined = expandedContent
+    ? {
+        borderTop: 0,
+        borderRight: 0,
+        borderLeft: 0,
+        borderBottom: "1px solid var(--border-subtle)",
+        paddingBottom: "calc(var(--filmwave-song-card-padding-y) - 4px)",
+      }
+    : undefined;
 
   return (
     <article
       ref={cardRef}
       data-song-card-id={dataSongCardId}
       className={rootClassName}
+      style={expandedStyle}
     >
       <button
         type="button"
