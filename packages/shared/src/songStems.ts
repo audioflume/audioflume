@@ -6,18 +6,22 @@ function getRecord(value: unknown) {
     : {};
 }
 
+function cleanStemName(name: string) {
+  return name
+    .replace(/\.[^.]+$/, "")
+    .replaceAll("-", " ")
+    .replaceAll("_", " ")
+    .replace(/^\d{8,}\s*/, "")
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 function getStemNameFromUrl(url: string, index: number) {
   const decodedUrl = decodeURIComponent(url);
-  const filename = decodedUrl.split("/").pop()?.replace(/\.[^.]+$/, "") || "";
+  const filename = decodedUrl.split("/").pop() || "";
+  const cleanedName = filename ? cleanStemName(filename) : "";
 
-  if (filename) {
-    return filename
-      .replaceAll("-", " ")
-      .replaceAll("_", " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase());
-  }
-
-  return `Stem ${index + 1}`;
+  return cleanedName || `Stem ${index + 1}`;
 }
 
 export function normalizeSongStems(value: unknown): FilmwaveStem[] {
@@ -73,7 +77,7 @@ export function normalizeSongStems(value: unknown): FilmwaveStem[] {
 
       const name =
         typeof record.name === "string" && record.name.trim()
-          ? record.name.trim()
+          ? cleanStemName(record.name.trim()) || getStemNameFromUrl(url, index)
           : getStemNameFromUrl(url, index);
 
       return { name, url };
