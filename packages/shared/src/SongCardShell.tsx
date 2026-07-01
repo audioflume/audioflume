@@ -45,8 +45,8 @@ export function SongCardShell({
 }: SongCardShellProps) {
   const rootClassName = `filmwave-song-card${expandedContent ? " has-expanded-content" : ""}${className ? ` ${className}` : ""}`;
   const baseStyle = {
-    "--filmwave-song-card-cover-size": "56px",
-    "--filmwave-song-card-min-height": "80px",
+    "--filmwave-song-card-cover-size": "70px",
+    "--filmwave-song-card-min-height": "94px",
   } as CSSProperties;
   const expandedStyle: CSSProperties | undefined = expandedContent
     ? {
