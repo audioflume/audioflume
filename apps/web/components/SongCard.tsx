@@ -24,6 +24,7 @@ import AddToProjectModal from "@/components/AddToProjectModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
+import NoVocalsIcon from "@/components/icons/NoVocalsIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import IconButton from "@/components/IconButton";
@@ -39,6 +40,20 @@ function formatDuration(seconds: number) {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+function isInstrumentalSong(song: Song) {
+  if (song.instrumental) return true;
+
+  return song.vocals.some((tag) => {
+    const normalized = tag.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    return (
+      normalized === "instrumental" ||
+      normalized === "no vocals" ||
+      normalized === "no vocal" ||
+      normalized === "no voice"
+    );
+  });
 }
 
 function getStemNameFromUrl(url: string, index: number) {
@@ -299,6 +314,7 @@ export default function SongCard({
   const stems = getSongStemsFromRecord(song);
   const favorited = isFavorite(song.id);
   const durationLabel = formatDuration(song.duration);
+  const showNoVocalsIcon = isInstrumentalSong(song);
 
   async function handleCreatePlaylist() {
     if (!newPlaylistName.trim() || isCreatingPlaylist) return;
@@ -401,12 +417,17 @@ export default function SongCard({
         onCoverClick={() => togglePlayPause(song)}
         cover={
           coverArtUrl ? (
-            <Image src={coverArtUrl} alt={song.title} fill sizes="40px" className="object-cover" />
+            <Image src={coverArtUrl} alt={song.title} fill sizes="70px" className="object-cover" />
           ) : (
-            <div className="h-10 w-10 bg-[var(--bg-hover)]" />
+            <div className="h-[70px] w-[70px] bg-[var(--bg-hover)]" />
           )
         }
         playOverlay={displayIcon}
+        vocalIndicator={
+          showNoVocalsIcon ? (
+            <NoVocalsIcon className="filmwave-song-no-vocals-icon" />
+          ) : null
+        }
         title={song.title}
         artist={song.artist}
         stems={
