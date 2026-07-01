@@ -25,7 +25,7 @@ function PlanDetail({ label, value }: { label: string; value: string }) {
 
 function ActivePill() {
   return (
-    <div className="inline-flex items-center border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
+    <div className="inline-flex items-center rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
       Active
     </div>
   );
@@ -33,7 +33,7 @@ function ActivePill() {
 
 function CurrentPlanButton() {
   return (
-    <div className="inline-flex h-8 min-w-[122px] items-center justify-center border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-3.5 text-xs font-medium text-[#48b571]">
+    <div className="inline-flex h-8 min-w-[122px] items-center justify-center rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-3.5 text-xs font-medium text-[#48b571]">
       Current plan
     </div>
   );
@@ -68,7 +68,7 @@ export default function MembershipSection() {
               <div className="mt-1 text-xl font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                 {currentPlanLabel}
               </div>
-              <div className="mt-3 inline-flex border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
+              <div className="mt-3 inline-flex rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
                 {display?.status_label || "Active"}
               </div>
             </div>
