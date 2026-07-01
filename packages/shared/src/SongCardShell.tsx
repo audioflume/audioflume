@@ -9,6 +9,7 @@ type SongCardShellProps = {
   cover: ReactNode;
   coverLabel: string;
   playOverlay: ReactNode;
+  vocalIndicator?: ReactNode;
   title: ReactNode;
   artist: ReactNode;
   stems?: ReactNode;
@@ -30,6 +31,7 @@ export function SongCardShell({
   cover,
   coverLabel,
   playOverlay,
+  vocalIndicator,
   title,
   artist,
   stems,
@@ -59,6 +61,14 @@ export function SongCardShell({
         paddingBottom: "calc(var(--filmwave-song-card-padding-y) - 4px)",
       }
     : baseStyle;
+  const vocalIndicatorSlotStyle = {
+    display: "flex",
+    width: 18,
+    flex: "0 0 18px",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "var(--text-muted)",
+  } as CSSProperties;
 
   return (
     <article
@@ -88,6 +98,10 @@ export function SongCardShell({
           <span className="filmwave-song-play-button">{playOverlay}</span>
         </span>
       </button>
+
+      <span className="filmwave-song-vocal-indicator-slot" style={vocalIndicatorSlotStyle}>
+        {vocalIndicator}
+      </span>
 
       <button
         type="button"
