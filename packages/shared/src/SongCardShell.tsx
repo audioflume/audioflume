@@ -54,7 +54,7 @@ export function SongCardShell({
         borderTop: 0,
         borderRight: 0,
         borderBottom: 0,
-        borderLeft: 0,
+        borderLeft: "3px solid var(--border)",
         paddingBottom: "calc(var(--filmwave-song-card-padding-y) - 4px)",
       }
     : baseStyle;
