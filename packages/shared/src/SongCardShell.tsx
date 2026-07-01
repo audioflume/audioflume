@@ -44,15 +44,20 @@ export function SongCardShell({
   onInfoClick,
 }: SongCardShellProps) {
   const rootClassName = `filmwave-song-card${expandedContent ? " has-expanded-content" : ""}${className ? ` ${className}` : ""}`;
+  const baseStyle = {
+    "--filmwave-song-card-cover-size": "48px",
+    "--filmwave-song-card-min-height": "72px",
+  } as CSSProperties;
   const expandedStyle: CSSProperties | undefined = expandedContent
     ? {
+        ...baseStyle,
         borderTop: 0,
         borderRight: 0,
         borderBottom: 0,
         borderLeft: 0,
         paddingBottom: "calc(var(--filmwave-song-card-padding-y) - 4px)",
       }
-    : undefined;
+    : baseStyle;
 
   return (
     <article
