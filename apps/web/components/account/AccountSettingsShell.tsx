@@ -60,7 +60,7 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
               </div>
               <Link
                 href="/music"
-                className="inline-flex h-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                className="inline-flex h-8 items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
               >
                 Back to music
               </Link>
