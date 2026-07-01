@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   usePlayer,
   useIsCurrentSong,
@@ -35,6 +35,18 @@ type StemItem = {
   url: string;
 };
 
+const stemVocalIndicatorSlotStyle = {
+  display: "flex",
+  width: 20,
+  flex: "0 0 20px",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#9a9a9a",
+  lineHeight: 0,
+  marginLeft: -6,
+  marginRight: -8,
+} as CSSProperties;
+
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
   const m = Math.floor(seconds / 60);
@@ -42,18 +54,25 @@ function formatDuration(seconds: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+function isNoVocalsLabel(value: string) {
+  const normalized = value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+  return (
+    normalized.includes("instrumental") ||
+    normalized.includes("no vocals") ||
+    normalized.includes("no vocal") ||
+    normalized.includes("no voice")
+  );
+}
+
 function isInstrumentalSong(song: Song) {
   if (song.instrumental) return true;
 
-  return song.vocals.some((tag) => {
-    const normalized = tag.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-    return (
-      normalized === "instrumental" ||
-      normalized === "no vocals" ||
-      normalized === "no vocal" ||
-      normalized === "no voice"
-    );
-  });
+  return song.vocals.some(isNoVocalsLabel);
+}
+
+function isNoVocalsStem(stem: StemItem) {
+  return isNoVocalsLabel(stem.name);
 }
 
 function getStemNameFromUrl(url: string, index: number) {
@@ -194,6 +213,7 @@ function StemSongRow({
   ) : (
     <PlayIconSmall size={15} />
   );
+  const showNoVocalsIcon = isNoVocalsStem(stem);
 
   function handleDownloadStem() {
     window.open(stem.url, "_blank", "noopener,noreferrer");
@@ -212,16 +232,25 @@ function StemSongRow({
             src={coverArtUrl}
             alt={stem.name}
             fill
-            sizes="40px"
+            sizes="70px"
             className="object-cover"
           />
         ) : (
-          <div className="h-10 w-10 bg-[var(--bg-hover)]" />
+          <div className="h-[70px] w-[70px] bg-[var(--bg-hover)]" />
         )}
         <span className="filmwave-song-play-overlay" aria-hidden="true">
           <span className="filmwave-song-play-button">{displayIcon}</span>
         </span>
       </button>
+
+      <span
+        className="filmwave-song-vocal-indicator-slot filmwave-song-stem-vocal-indicator-slot"
+        style={stemVocalIndicatorSlotStyle}
+      >
+        {showNoVocalsIcon ? (
+          <NoVocalsIcon className="filmwave-song-no-vocals-icon" />
+        ) : null}
+      </span>
 
       <button
         type="button"
