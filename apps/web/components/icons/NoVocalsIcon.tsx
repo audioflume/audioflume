@@ -5,7 +5,7 @@ type NoVocalsIconProps = {
 
 export default function NoVocalsIcon({
   className,
-  size = 16,
+  size = 18,
 }: NoVocalsIconProps) {
   return (
     <svg
