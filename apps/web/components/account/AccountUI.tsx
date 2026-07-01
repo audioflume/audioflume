@@ -183,7 +183,7 @@ export function Row({ title, description, icon, children }: { title: string; des
   return (
     <div className="grid gap-4 border-b border-[var(--border)] px-4 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
       <div className="flex gap-3">
-        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">{icon}</div> : null}
+        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">{icon}</div> : null}
         <div>
           <div className="text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">{title}</div>
           <p className="mt-1 max-w-xl text-xs leading-5 text-[var(--text-muted)]">{description}</p>
@@ -258,10 +258,10 @@ export function ProfileImageUploader({ initials, value, onChange }: { initials: 
 
   return (
     <div className="flex flex-col items-start gap-2">
-      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
-        <span className="absolute inset-0 overflow-hidden">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
+      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
+        <span className="absolute inset-0 overflow-hidden rounded-full">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
         {!value ? <span>{initials || "FW"}</span> : null}
-        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
+        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
         <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
       </label>
       {value ? <button type="button" onClick={removeImage} className="text-[11px] font-medium text-[var(--text-muted)] transition hover:text-[var(--text-primary)]">Remove photo</button> : null}
