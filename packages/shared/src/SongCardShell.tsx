@@ -69,7 +69,7 @@ export function SongCardShell({
     >
       {expandedContent && (
         <style>
-          {`.filmwave-song-card.has-expanded-content::before { content: ""; position: absolute; left: 0; top: var(--filmwave-song-card-padding-y); width: 3px; height: var(--filmwave-song-card-cover-size); background: var(--border); pointer-events: none; } .filmwave-song-card.has-expanded-content .filmwave-song-stem-card { position: relative; } .filmwave-song-card.has-expanded-content .filmwave-song-stem-card::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: var(--border-subtle); pointer-events: none; }`}
+          {`.filmwave-song-card.has-expanded-content::before { content: ""; position: absolute; left: 0; top: var(--filmwave-song-card-padding-y); width: 3px; height: var(--filmwave-song-card-cover-size); background: var(--border); pointer-events: none; } .filmwave-song-card.has-expanded-content .filmwave-song-stem-card::before { content: ""; position: absolute; left: 0; width: 1px; height: var(--filmwave-song-card-cover-size); transform: translateY(calc((var(--filmwave-song-card-cover-size) - 100%) / -2)); background: var(--border); pointer-events: none; }`}
         </style>
       )}
 
