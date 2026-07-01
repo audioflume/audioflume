@@ -69,6 +69,8 @@ export function SongCardShell({
     justifyContent: "center",
     color: "#9a9a9a",
     lineHeight: 0,
+    marginLeft: -6,
+    marginRight: -8,
   } as CSSProperties;
 
   return (
