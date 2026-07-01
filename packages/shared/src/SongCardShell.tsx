@@ -67,7 +67,7 @@ export function SongCardShell({
     flex: "0 0 20px",
     alignItems: "center",
     justifyContent: "center",
-    color: "#7a7a7a",
+    color: "#9a9a9a",
     lineHeight: 0,
   } as CSSProperties;
 
