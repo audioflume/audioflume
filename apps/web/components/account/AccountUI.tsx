@@ -112,7 +112,7 @@ export function SidebarSortIcon() {
 }
 
 export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] ${className}`}>{children}</div>;
+  return <div className={`overflow-hidden border border-[var(--border)] bg-[var(--bg-secondary)] ${className}`}>{children}</div>;
 }
 
 export function CardTitle({ title, description }: { title: string; description?: string }) {
@@ -134,7 +134,7 @@ export function Input({ label, value, placeholder, onChange, readOnly = false, t
         placeholder={placeholder}
         readOnly={readOnly}
         onChange={(event) => onChange?.(event.target.value)}
-        className="h-10 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] read-only:cursor-default"
+        className="h-10 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] read-only:cursor-default"
       />
     </label>
   );
@@ -142,7 +142,7 @@ export function Input({ label, value, placeholder, onChange, readOnly = false, t
 
 export function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3">
+    <div className="border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3">
       <div className="text-xs font-medium text-[var(--text-muted)]">{label}</div>
       <div className="mt-1 truncate text-sm font-medium text-[var(--text-primary)]">{value}</div>
     </div>
@@ -155,7 +155,7 @@ export function Button({ children, subtle = false, dark = false, disabled = fals
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 rounded-full border px-3.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${dark ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80" : subtle ? "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]" : "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"}`}
+      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 border px-3.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${dark ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80" : subtle ? "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]" : "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"}`}
     >
       {children}
     </button>
@@ -164,7 +164,7 @@ export function Button({ children, subtle = false, dark = false, disabled = fals
 
 export function DangerButton({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="inline-flex h-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-transparent px-3.5 text-xs font-medium text-[var(--danger)] transition hover:border-transparent hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]">
+    <button type="button" onClick={onClick} className="inline-flex h-8 cursor-pointer items-center justify-center border border-[var(--border)] bg-transparent px-3.5 text-xs font-medium text-[var(--danger)] transition hover:border-transparent hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]">
       {children}
     </button>
   );
@@ -172,7 +172,7 @@ export function DangerButton({ children, onClick }: { children: React.ReactNode;
 
 export function Option<T extends string>({ label, value, active, onClick }: { label: string; value: T; active: boolean; onClick: (value: T) => void }) {
   return (
-    <button type="button" onClick={() => onClick(value)} className={`flex h-8 cursor-pointer items-center justify-center gap-2 rounded-full border border-[var(--border)] px-3 text-xs font-medium transition ${active ? "bg-[var(--text-primary)] text-[var(--bg-primary)]" : "bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"}`}>
+    <button type="button" onClick={() => onClick(value)} className={`flex h-8 cursor-pointer items-center justify-center gap-2 border border-[var(--border)] px-3 text-xs font-medium transition ${active ? "bg-[var(--text-primary)] text-[var(--bg-primary)]" : "bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"}`}>
       {active ? <CheckIcon /> : null}
       {label}
     </button>
@@ -183,7 +183,7 @@ export function Row({ title, description, icon, children }: { title: string; des
   return (
     <div className="grid gap-4 border-b border-[var(--border)] px-4 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
       <div className="flex gap-3">
-        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">{icon}</div> : null}
+        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">{icon}</div> : null}
         <div>
           <div className="text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">{title}</div>
           <p className="mt-1 max-w-xl text-xs leading-5 text-[var(--text-muted)]">{description}</p>
@@ -196,7 +196,7 @@ export function Row({ title, description, icon, children }: { title: string; des
 
 export function Feedback({ message, tone }: { message: string; tone: "success" | "error" }) {
   return (
-    <div className={`rounded-xl border px-3 py-2 text-xs ${tone === "success" ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]" : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"}`}>
+    <div className={`border px-3 py-2 text-xs ${tone === "success" ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]" : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"}`}>
       {message}
     </div>
   );
@@ -212,7 +212,7 @@ export function AccountHero({ config }: { config: HeroConfig }) {
         </div>
         <p className="max-w-[520px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">{config.description}</p>
       </div>
-      <div className="group relative min-h-[255px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+      <div className="group relative min-h-[255px] overflow-hidden border border-[var(--border)] bg-[var(--bg-secondary)]">
         <img src={config.image} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
         <div className="relative z-10 flex min-h-[255px] flex-col justify-between p-5 md:p-6">
@@ -258,10 +258,10 @@ export function ProfileImageUploader({ initials, value, onChange }: { initials: 
 
   return (
     <div className="flex flex-col items-start gap-2">
-      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
-        <span className="absolute inset-0 overflow-hidden rounded-xl">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
+      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
+        <span className="absolute inset-0 overflow-hidden">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
         {!value ? <span>{initials || "FW"}</span> : null}
-        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
+        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
         <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
       </label>
       {value ? <button type="button" onClick={removeImage} className="text-[11px] font-medium text-[var(--text-muted)] transition hover:text-[var(--text-primary)]">Remove photo</button> : null}
