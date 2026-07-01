@@ -58,6 +58,16 @@ export function SongCardShell({
         paddingBottom: "calc(var(--filmwave-song-card-padding-y) - 4px)",
       }
     : baseStyle;
+  const expandedContentStyle: CSSProperties | undefined = expandedContent
+    ? {
+        minWidth: 0,
+        flex: "0 0 100%",
+        marginTop: 12,
+        border: "1px solid var(--border-subtle)",
+        background: "color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%)",
+        padding: "4px 12px 0",
+      }
+    : undefined;
 
   return (
     <article
@@ -120,7 +130,9 @@ export function SongCardShell({
       </div>
 
       {expandedContent && (
-        <div className="filmwave-song-expanded-content">{expandedContent}</div>
+        <div className="filmwave-song-expanded-content" style={expandedContentStyle}>
+          {expandedContent}
+        </div>
       )}
     </article>
   );
