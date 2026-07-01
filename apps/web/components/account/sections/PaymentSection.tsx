@@ -24,7 +24,7 @@ export default function PaymentSection() {
         <Card>
           <CardTitle title="Payment method" description="Card data should be handled through Stripe, not stored in Supabase." />
           <div className="p-4">
-            <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3.5">
+            <div className="border border-[var(--border)] bg-[var(--bg-primary)] p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-sm font-medium text-[var(--text-primary)]">Stripe customer portal not connected yet</div>
@@ -32,7 +32,7 @@ export default function PaymentSection() {
                     Customer ID: {billingProfile?.stripe_customer_id || "Not created"}
                   </div>
                 </div>
-                <div className="rounded-full border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]">
+                <div className="border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]">
                   Stripe-ready
                 </div>
               </div>
