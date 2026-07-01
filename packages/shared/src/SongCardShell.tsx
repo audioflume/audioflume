@@ -67,9 +67,13 @@ export function SongCardShell({
       className={rootClassName}
       style={expandedStyle}
     >
+      <style>
+        {`.filmwave-song-card .filmwave-song-stems-trigger:hover, .filmwave-song-card .filmwave-song-stems-trigger[aria-expanded="true"] { background: var(--text-primary) !important; color: var(--bg-primary) !important; }`}
+      </style>
+
       {expandedContent && (
         <style>
-          {`.filmwave-song-card.has-expanded-content .filmwave-song-stem-card { background: var(--filmwave-song-card-hover-bg); } .filmwave-song-card.has-expanded-content .filmwave-song-stems-trigger:hover, .filmwave-song-card.has-expanded-content .filmwave-song-stems-trigger[aria-expanded="true"] { background: var(--text-primary); color: var(--bg-primary); }`}
+          {`.filmwave-song-card.has-expanded-content .filmwave-song-stem-card { background: var(--filmwave-song-card-hover-bg); }`}
         </style>
       )}
 
