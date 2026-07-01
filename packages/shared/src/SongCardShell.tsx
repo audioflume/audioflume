@@ -63,11 +63,12 @@ export function SongCardShell({
     : baseStyle;
   const vocalIndicatorSlotStyle = {
     display: "flex",
-    width: 18,
-    flex: "0 0 18px",
+    width: 12,
+    flex: "0 0 12px",
     alignItems: "center",
     justifyContent: "center",
-    color: "var(--text-muted)",
+    color: "var(--text-primary)",
+    lineHeight: 0,
   } as CSSProperties;
 
   return (
