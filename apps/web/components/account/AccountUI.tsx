@@ -183,7 +183,7 @@ export function Row({ title, description, icon, children }: { title: string; des
   return (
     <div className="grid gap-4 border-b border-[var(--border)] px-4 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
       <div className="flex gap-3">
-        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">{icon}</div> : null}
+        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">{icon}</div> : null}
         <div>
           <div className="text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">{title}</div>
           <p className="mt-1 max-w-xl text-xs leading-5 text-[var(--text-muted)]">{description}</p>
