@@ -51,10 +51,11 @@ export function SongCardShell({
   const expandedStyle: CSSProperties | undefined = expandedContent
     ? {
         ...baseStyle,
+        position: "relative",
         borderTop: 0,
         borderRight: 0,
         borderBottom: 0,
-        borderLeft: "3px solid var(--border)",
+        borderLeft: 0,
         paddingBottom: "calc(var(--filmwave-song-card-padding-y) - 4px)",
       }
     : baseStyle;
@@ -68,7 +69,7 @@ export function SongCardShell({
     >
       {expandedContent && (
         <style>
-          {`.filmwave-song-card.has-expanded-content .filmwave-song-stem-card { border-left: 1px solid var(--border-subtle); padding-left: 12px; }`}
+          {`.filmwave-song-card.has-expanded-content::before { content: ""; position: absolute; left: 0; top: var(--filmwave-song-card-padding-y); width: 3px; height: var(--filmwave-song-card-cover-size); background: var(--border); pointer-events: none; } .filmwave-song-card.has-expanded-content .filmwave-song-stem-card { position: relative; } .filmwave-song-card.has-expanded-content .filmwave-song-stem-card::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: var(--border-subtle); pointer-events: none; }`}
         </style>
       )}
 
