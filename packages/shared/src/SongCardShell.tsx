@@ -66,6 +66,12 @@ export function SongCardShell({
       className={rootClassName}
       style={expandedStyle}
     >
+      {expandedContent && (
+        <style>
+          {`.filmwave-song-card.has-expanded-content .filmwave-song-stem-card { border-left: 1px solid var(--border-subtle); padding-left: 12px; }`}
+        </style>
+      )}
+
       <button
         type="button"
         className="filmwave-song-cover"
