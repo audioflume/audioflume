@@ -20,7 +20,7 @@ body .playlists-tabs-row {
   overflow-x: auto !important;
   overflow-y: hidden !important;
   border-right: 0 !important;
-  border-bottom: 1px solid var(--border-subtle) !important;
+  border-bottom: 1px solid var(--border) !important;
   padding: 0 !important;
 }
 
