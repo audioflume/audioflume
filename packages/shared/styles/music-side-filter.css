@@ -7,7 +7,6 @@
   --filmwave-side-filter-sidebar-gap: var(--filmwave-sidebar-float-inset, 12px);
   --filmwave-side-filter-content-gap: 14px;
   --filmwave-side-filter-divider-color: var(--border-subtle);
-  --filmwave-side-filter-edge-fade: 28px;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -184,43 +183,6 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-detail {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   box-shadow: none !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail::before,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-detail::before,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail::after,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-detail::after {
-  content: "";
-  position: fixed;
-  left: var(--fw-filter-fade-left, -9999px);
-  width: var(--fw-filter-fade-width, 0px);
-  height: var(--filmwave-side-filter-edge-fade);
-  z-index: calc(var(--filmwave-z-search-filter, 60) + 1);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 160ms ease;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail::before,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-detail::before {
-  top: var(--fw-filter-fade-top, 0px);
-  background: linear-gradient(to bottom, var(--bg-primary, #0b0b0b), transparent);
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail::after,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-detail::after {
-  top: calc(
-    var(--fw-filter-fade-top, 0px) + var(--fw-filter-fade-height, 0px) -
-      var(--filmwave-side-filter-edge-fade)
-  );
-  background: linear-gradient(to top, var(--bg-primary, #0b0b0b), transparent);
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail.has-scroll-top::before,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-detail.has-scroll-top::before,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail.has-scroll-bottom::after,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-detail.has-scroll-bottom::after {
-  opacity: 1;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail {
