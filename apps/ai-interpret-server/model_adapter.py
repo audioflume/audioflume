@@ -5,6 +5,7 @@ import shutil
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 
 class ModelNotConfiguredError(RuntimeError):
@@ -16,9 +17,9 @@ class InterpretationRequest:
     source_path: Path
     target_seconds: int
     prompt: str
-    metadata: str | None = None
-    title: str | None = None
-    artist: str | None = None
+    metadata: Optional[str] = None
+    title: Optional[str] = None
+    artist: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -41,9 +42,10 @@ def generate_interpretation(request: InterpretationRequest) -> InterpretationRes
     if not Path(uv_path).exists() and shutil.which("uv") is None:
         raise ModelNotConfiguredError("uv is not installed or is not available on PATH.")
 
+    smart_reference_path = create_smart_reference(request=request, repo_root=repo_root)
     output_path = request.source_path.parent / f"ai-interpretation-{request.target_seconds}s.wav"
     prompt = build_stable_audio_prompt(request)
-    init_noise_level = os.environ.get("FILMWAVE_STABLE_AUDIO_INIT_NOISE_LEVEL", "0.25")
+    init_noise_level = os.environ.get("FILMWAVE_STABLE_AUDIO_INIT_NOISE_LEVEL", "0.18")
     env = os.environ.copy()
     env["HF_HUB_DISABLE_XET"] = "1"
 
@@ -58,7 +60,7 @@ def generate_interpretation(request: InterpretationRequest) -> InterpretationRes
         "--duration",
         str(request.target_seconds),
         "--init-audio",
-        str(request.source_path),
+        str(smart_reference_path),
         "--init-noise-level",
         init_noise_level,
         "-o",
@@ -84,17 +86,61 @@ def generate_interpretation(request: InterpretationRequest) -> InterpretationRes
     return InterpretationResult(output_path=output_path)
 
 
+def create_smart_reference(*, request: InterpretationRequest, repo_root: Path) -> Path:
+    node_path = shutil.which("node")
+
+    if node_path is None:
+        raise ModelNotConfiguredError("node is not installed or is not available on PATH.")
+
+    script_path = repo_root / "apps" / "web" / "scripts" / "shorten-repair-candidate-local.mjs"
+    web_dir = repo_root / "apps" / "web"
+
+    if not script_path.exists():
+        raise ModelNotConfiguredError(f"Smart edit script not found: {script_path}")
+
+    output_dir = request.source_path.parent
+    smart_reference_path = output_dir / f"smart-edit-{request.target_seconds}s.wav"
+
+    command = [
+        node_path,
+        str(script_path),
+        "--source",
+        str(request.source_path),
+        "--length",
+        str(request.target_seconds),
+        "--output",
+        str(output_dir),
+    ]
+
+    completed = subprocess.run(
+        command,
+        cwd=web_dir,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+    )
+
+    if completed.returncode != 0:
+        raise RuntimeError(completed.stdout or "Smart edit reference generation failed.")
+
+    if not smart_reference_path.exists():
+        raise RuntimeError("Smart edit reference finished, but no output file was created.")
+
+    return smart_reference_path
+
+
 def build_stable_audio_prompt(request: InterpretationRequest) -> str:
     identity = " ".join(part for part in [request.title, request.artist] if part)
-    reference_note = f"Use the source audio as the primary reference for {identity}." if identity else "Use the source audio as the primary reference."
+    reference_note = f"Use the smart edit reference as the primary structure for {identity}." if identity else "Use the smart edit reference as the primary structure."
 
     return " ".join(
         [
             reference_note,
-            "Preserve the broad tempo feel, groove, instrumentation, texture, arrangement language, and emotional character of the source cue.",
-            "Create a shorter version that feels related to the same song rather than a new unrelated composition.",
+            "Preserve the smart edit structure, timing, tempo feel, groove, instrumentation, texture, and emotional character.",
+            "Make it feel like a smoother short version of the same cue rather than a new composition.",
             "Keep changes conservative, musical, and coherent.",
-            "Avoid vocals unless they are clearly present in the source.",
+            "Do not replace the melody, chords, or core identity unless absolutely necessary.",
             request.prompt,
         ]
     )
