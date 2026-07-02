@@ -53,9 +53,30 @@
 }
 
 .fw-toolbar-search-icon {
-  width: 26px !important;
-  height: 26px !important;
-  background: var(--bg-hover-strong) !important;
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 16px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--text-muted) !important;
+}
+
+.fw-toolbar-search:focus-within .fw-toolbar-search-icon {
+  color: var(--text-muted) !important;
+}
+
+.fw-toolbar-search-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.fw-toolbar-search input {
+  font-size: 15px !important;
+  font-weight: 300 !important;
+}
+
+.fw-toolbar-search input::placeholder {
+  color: var(--text-muted) !important;
 }
 
 .fw-toolbar-filter-actions {
@@ -218,306 +239,32 @@
 
 .filmwave-app-header,
 .desktop-header,
-body > header,
-.filmwave-header {
-  border-bottom: 1px solid var(--border) !important;
-  background: var(--bg-primary) !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
+.desktop-app-header {
+  border-bottom-color: var(--filmwave-header-border-color, var(--border)) !important;
 }
 
-:where(html.dark, html[data-theme="dark"]) .filmwave-app-header,
-:where(html.dark, html[data-theme="dark"]) .desktop-header,
-:where(html.dark, html[data-theme="dark"]) body > header,
-:where(html.dark, html[data-theme="dark"]) .filmwave-header {
-  border-bottom-color: var(--border) !important;
-  background: var(--bg-primary) !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
-
-.filmwave-header::after {
-  content: none !important;
-}
-
-/* ─── Open filter trigger behavior ────────────────────────── */
-
-.fw-toolbar-filters.is-open {
-  min-width: 74px !important;
-}
-
-.fw-toolbar-filters.is-open > svg {
-  display: inline-block !important;
-}
-
-.fw-toolbar-filters.is-open .fw-toolbar-filters-count,
-.fw-toolbar-filters.is-open .fw-toolbar-filters-chevron {
-  display: none !important;
-}
-
-.fw-toolbar-filters.is-open .fw-toolbar-filters-label {
-  font-size: inherit !important;
-}
-
-.fw-toolbar-filters.is-open .fw-toolbar-filters-label::after {
-  content: none !important;
-  display: none !important;
-}
-
-.fw-toolbar-filters-count,
-.fw-toolbar-filters-count.is-clearable,
-.fw-toolbar-filters-count.is-clearable:hover {
-  box-sizing: border-box !important;
-  width: 18px !important;
-  min-width: 18px !important;
-  max-width: 18px !important;
-  height: 18px !important;
-  flex: 0 0 18px !important;
-  padding: 0 !important;
-  transform: none !important;
-}
-
-.fw-toolbar-filters-count-num,
-.fw-toolbar-filters-count-x {
-  width: 100% !important;
-  height: 100% !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-}
-
-.fw-toolbar-filters-count-num {
-  font-weight: 400 !important;
-}
-
-.fw-toolbar-filters-count-x svg {
-  display: none !important;
-}
-
-.fw-toolbar-filters-count-x::before {
-  content: "×";
-  color: currentColor;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 0.9;
-  transform: translateY(-0.5px);
-}
-
-/* ─── Music hero/list container alignment ─────────────────── */
-
-main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section {
-  container-type: inline-size;
-  margin-left: 0 !important;
-  width: auto !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > .grid {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) !important;
-  width: 100% !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > .grid > :nth-child(2) {
-  display: none !important;
-}
-
-@container (min-width: 960px) {
-  main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > .grid {
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 420px) !important;
-  }
-
-  main > section:has(.fw-filter-panel-wrap) > .overflow-hidden .fw-hero-section > .grid > :nth-child(2) {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-  }
-}
-
-/* ─── Temporary header-hidden spacing cleanup ─────────────── */
-
-main > section[class*="pt-14"] {
-  padding-top: 0 !important;
-}
-
-.sticky.top-\[56px\],
-.favorites-search-sticky,
-.playlist-detail-search-sticky {
-  top: 0 !important;
-}
-
-.playlists-tabs-row {
-  margin-top: calc(var(--filmwave-header-height, 56px) + 22px) !important;
-  margin-bottom: 36px !important;
-}
-
-section.curated-playlists-page-layer .playlists-tabs-row {
-  margin-top: 0 !important;
-  margin-bottom: 36px !important;
-}
-
-.favorites-page,
-.playlist-detail-page {
-  margin-top: 0 !important;
-  min-height: 100vh !important;
-}
-
-.project-detail-page > .project-detail-shell {
-  min-height: 100vh !important;
-}
-
-.project-detail-page .project-tabs-row {
-  top: var(--filmwave-sidebar-float-inset, 0px) !important;
-  height: calc(
-    100dvh - var(--filmwave-sidebar-bottom-offset, 0px) -
-      (var(--filmwave-sidebar-float-inset, 0px) * 2)
-  ) !important;
-}
-
-/* ─── Discover hero search restore ────────────────────────── */
-
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > section.mt-6 {
-  display: block !important;
-}
-
-/* ─── Music page restored header search ───────────────────── */
-
-.fw-toolbar-header-search-row {
-  box-sizing: border-box !important;
-  display: flex !important;
-  justify-content: center !important;
-  width: 100% !important;
-  padding: 16px 0 10px !important;
-}
-
-.fw-toolbar-header-search-form {
-  box-sizing: border-box !important;
-  width: 100% !important;
+.fw-music-page-shell,
+.fw-music-content-column,
+.fw-quick-row,
+.fw-song-list {
   max-width: none !important;
 }
 
-.fw-toolbar-header-search-form .filmwave-search-pill {
-  box-sizing: border-box !important;
-  width: 100% !important;
+.fw-music-page-shell {
+  --fw-music-content-inset-right: 28px;
+  padding-top: 0 !important;
+  padding-right: 28px !important;
+  padding-left: 28px !important;
 }
 
-/* ─── Top navigation experiment ───────────────────────────── */
-
-body {
-  --sidebar-width: 0px;
-  --filmwave-page-sidebar-offset: 0px;
-  --filmwave-sidebar-current-panel-width: 0px;
-  --filmwave-sidebar-top-offset: var(--filmwave-header-height);
+.fw-music-content-column {
+  padding-top: 16px !important;
 }
 
-.filmwave-app-header,
-.desktop-header,
-body > header,
-.filmwave-header {
-  display: block !important;
-}
-
-.desktop-app-sidebar {
-  display: none !important;
-}
-
-main > section[class*="ml-[var(--sidebar-width)]"],
-.playlists-page,
-.playlist-detail-page,
-.favorites-page,
-.project-detail-page {
-  margin-left: 0 !important;
-}
-
-main > section[class*="pt-14"] {
-  padding-top: var(--filmwave-header-height) !important;
-}
-
-.playlist-detail-page,
-.favorites-page,
-.project-detail-page {
-  margin-top: var(--filmwave-header-height) !important;
-  min-height: calc(100vh - var(--filmwave-header-height)) !important;
-}
-
-.playlists-page {
-  margin-top: 0 !important;
-}
-
-.filmwave-header-actions {
-  gap: 18px !important;
-}
-
-.filmwave-header-nav {
-  display: inline-flex !important;
-  height: 100% !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
-
-.filmwave-header-nav-link {
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 0 8px !important;
-  color: var(--text-secondary) !important;
-  font-size: 12px !important;
-}
-
-.filmwave-header-nav-link:hover,
-.filmwave-header-nav-link.is-active {
-  background: transparent !important;
-  color: var(--text-primary) !important;
-}
-
-.filmwave-header-account-wrap {
-  position: relative !important;
-  display: inline-flex !important;
-  height: 100% !important;
-  align-items: center !important;
-}
-
-.filmwave-header-account-trigger {
-  width: 32px !important;
-  height: 32px !important;
-  justify-content: center !important;
-  padding: 0 !important;
-}
-
-.filmwave-header-account-label {
-  display: none !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) {
-  --filmwave-side-filter-sidebar-offset: 0px !important;
-  margin-left: 0 !important;
-}
-
-/* ─── Discover and curated playlist medium title weights ───── */
-
-main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] :is(h1, h2, h3) {
-  font-weight: 500 !important;
-  font-variation-settings: "wght" 500 !important;
-  letter-spacing: -0.035em !important;
-}
-
-main:has(a[href="/music"]) > section > div > section:not(:first-child) > div:first-child h2 {
-  font-size: 1.4em !important;
-  font-weight: 300 !important;
-  letter-spacing: -0.035em !important;
-}
-
-main:has(a[href="/music"]) a[href^="/curated-playlists/"] > .mt-5 h3 {
-  font-weight: 500 !important;
-  font-variation-settings: "wght" 500 !important;
-  letter-spacing: -0.035em !important;
-}
-
-.playlist-gallery-content h3 {
-  font-weight: 500 !important;
-  font-variation-settings: normal !important;
-  letter-spacing: -0.035em !important;
-}
-
-main:has(a[href="/music"]) > section > div > section:first-child a[href^="/curated-playlists/"] .group-hover\:scale-\[1\.02\] {
-  transform: none !important;
+@media (max-width: 760px) {
+  .fw-music-page-shell {
+    --fw-music-content-inset-right: 18px;
+    padding-right: 18px !important;
+    padding-left: 18px !important;
+  }
 }
