@@ -262,9 +262,30 @@ export default function ProjectDetailPageClient() {
     let refreshTimer: number | null = null;
     let eventSource: EventSource | null = null;
     let retryTimer: number | null = null;
+    let cancelled = false;
+
+    function clearRefreshTimer() {
+      if (!refreshTimer) return;
+      window.clearTimeout(refreshTimer);
+      refreshTimer = null;
+    }
+
+    function clearRetryTimer() {
+      if (!retryTimer) return;
+      window.clearTimeout(retryTimer);
+      retryTimer = null;
+    }
+
+    function closeEventSource() {
+      if (!eventSource) return;
+      eventSource.close();
+      eventSource = null;
+    }
 
     function scheduleRefresh() {
-      if (refreshTimer) window.clearTimeout(refreshTimer);
+      clearRefreshTimer();
+      if (cancelled || document.hidden) return;
+
       refreshTimer = window.setTimeout(() => {
         void Promise.all([
           loadProjectSongs({ silent: true }),
@@ -274,10 +295,10 @@ export default function ProjectDetailPageClient() {
     }
 
     function connect() {
-      if (eventSource) {
-        eventSource.close();
-        eventSource = null;
-      }
+      if (cancelled || document.hidden) return;
+
+      closeEventSource();
+      clearRetryTimer();
 
       const source = new EventSource(
         `/api/projects/${encodeURIComponent(projectId)}/events`,
@@ -288,21 +309,39 @@ export default function ProjectDetailPageClient() {
       source.onerror = () => {
         source.close();
         eventSource = null;
-        retryTimer = window.setTimeout(connect, 5000);
+
+        if (!cancelled && !document.hidden) {
+          retryTimer = window.setTimeout(connect, 5000);
+        }
       };
 
       eventSource = source;
     }
 
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        clearRefreshTimer();
+        clearRetryTimer();
+        closeEventSource();
+        return;
+      }
+
+      void Promise.all([
+        loadProjectSongs({ silent: true }),
+        loadProjectFolders({ silent: true }),
+      ]);
+      connect();
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     connect();
 
     return () => {
-      if (refreshTimer) window.clearTimeout(refreshTimer);
-      if (retryTimer) window.clearTimeout(retryTimer);
-      if (eventSource) {
-        eventSource.close();
-        eventSource = null;
-      }
+      cancelled = true;
+      clearRefreshTimer();
+      clearRetryTimer();
+      closeEventSource();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [loadProjectFolders, loadProjectSongs, projectId]);
 
