@@ -269,6 +269,10 @@ main > section:has(.fw-filter-panel-wrap) .fw-toolbar-filters-count {
   color: var(--bg-primary) !important;
 }
 
+main > section:has(.fw-filter-panel-wrap) .fw-filter-option-check {
+  border-radius: 0 !important;
+}
+
 main > section:has(.fw-filter-panel-wrap) .fw-filter-option.is-selected .fw-filter-option-check,
 main > section:has(.fw-filter-panel-wrap) .fw-filter-chip.is-selected {
   border-color: var(--text-primary) !important;
