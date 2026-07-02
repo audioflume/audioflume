@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
-import { mkdir, stat } from "node:fs/promises";
+import { access, mkdir, stat } from "node:fs/promises";
 import path from "node:path";
+import ffmpegPath from "ffmpeg-static";
 
 const args = parseArgs(process.argv.slice(2));
 const source = args.source || args.input;
@@ -100,9 +101,34 @@ function fail(message) {
   process.exit(1);
 }
 
-function runFfmpeg(args) {
+async function resolveFfmpegPath() {
+  const candidates = [
+    process.env.FFMPEG_PATH,
+    ffmpegPath || undefined,
+    path.join(process.cwd(), "node_modules", "ffmpeg-static", process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg"),
+    path.join(process.cwd(), "..", "..", "node_modules", "ffmpeg-static", process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg"),
+    "ffmpeg",
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    if (candidate === "ffmpeg") return candidate;
+
+    try {
+      await access(candidate);
+      return candidate;
+    } catch {
+      // Try the next candidate.
+    }
+  }
+
+  return "ffmpeg";
+}
+
+async function runFfmpeg(args) {
+  const ffmpeg = await resolveFfmpegPath();
+
   return new Promise((resolve, reject) => {
-    const child = spawn(process.env.FFMPEG_PATH || "ffmpeg", args, { stdio: ["ignore", "ignore", "pipe"] });
+    const child = spawn(ffmpeg, args, { stdio: ["ignore", "ignore", "pipe"] });
     let stderr = "";
 
     child.stderr.on("data", (chunk) => {
@@ -117,36 +143,31 @@ function runFfmpeg(args) {
   });
 }
 
-function getDurationSeconds(sourcePath) {
-  return new Promise((resolve, reject) => {
-    const child = spawn(process.env.FFPROBE_PATH || "ffprobe", [
-      "-v",
-      "error",
-      "-show_entries",
-      "format=duration",
-      "-of",
-      "default=noprint_wrappers=1:nokey=1",
-      sourcePath,
-    ]);
-    let stdout = "";
-    let stderr = "";
+async function getDurationSeconds(sourcePath) {
+  const ffmpeg = await resolveFfmpegPath();
 
-    child.stdout.on("data", (chunk) => {
-      stdout += chunk.toString();
-    });
+  return new Promise((resolve, reject) => {
+    const child = spawn(ffmpeg, ["-hide_banner", "-i", sourcePath], { stdio: ["ignore", "ignore", "pipe"] });
+    let stderr = "";
 
     child.stderr.on("data", (chunk) => {
       stderr += chunk.toString();
     });
 
     child.on("error", reject);
-    child.on("close", (code) => {
-      if (code !== 0) {
-        reject(new Error(stderr || `ffprobe exited with code ${code}`));
+    child.on("close", () => {
+      const match = stderr.match(/Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)/);
+
+      if (!match) {
+        reject(new Error("Could not read source duration from ffmpeg."));
         return;
       }
 
-      const duration = Number(stdout.trim());
+      const hours = Number(match[1]);
+      const minutes = Number(match[2]);
+      const seconds = Number(match[3]);
+      const duration = hours * 3600 + minutes * 60 + seconds;
+
       if (!Number.isFinite(duration) || duration <= 0) reject(new Error("Could not read source duration."));
       else resolve(duration);
     });
