@@ -222,12 +222,12 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-option-list {
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item {
   height: 38px !important;
   border-radius: 11px !important;
-  font-weight: 400 !important;
+  font-weight: 500 !important;
   transition: background-color 160ms ease, color 160ms ease !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item.is-active {
-  font-weight: 400 !important;
+  font-weight: 500 !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
