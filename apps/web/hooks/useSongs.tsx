@@ -11,18 +11,11 @@ export function useSongs() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchSongs = useCallback(async () => {
-    if (cachedSongs) {
-      setSongs(cachedSongs);
-      setLoading(false);
-      setError(null);
-      return;
-    }
-
-    setLoading(true);
+    setLoading(!cachedSongs);
     setError(null);
 
     try {
-      const res = await fetch("/api/songs");
+      const res = await fetch("/api/songs", { cache: "no-store" });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
 
@@ -43,7 +36,9 @@ export function useSongs() {
       cachedSongs = songsData;
       setSongs(songsData);
     } catch (err) {
-      setSongs([]);
+      if (!cachedSongs) {
+        setSongs([]);
+      }
       setError(err instanceof Error ? err.message : "Failed to load songs");
     } finally {
       setLoading(false);
