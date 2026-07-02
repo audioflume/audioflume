@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   usePlayer,
   useIsCurrentSong,
@@ -28,24 +28,6 @@ import NoVocalsIcon from "@/components/icons/NoVocalsIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import IconButton from "@/components/IconButton";
-import { getRecord } from "@/lib/utils";
-
-type StemItem = {
-  name: string;
-  url: string;
-};
-
-const stemVocalIndicatorSlotStyle = {
-  display: "flex",
-  width: 20,
-  flex: "0 0 20px",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "#9a9a9a",
-  lineHeight: 0,
-  marginLeft: -6,
-  marginRight: -8,
-} as CSSProperties;
 
 function AiGeneratedIcon() {
   return (
@@ -78,231 +60,6 @@ function isInstrumentalSong(song: Song) {
   if (song.instrumental) return true;
 
   return song.vocals.some(isNoVocalsLabel);
-}
-
-function isNoVocalsStem(stem: StemItem) {
-  return isNoVocalsLabel(stem.name);
-}
-
-function getStemNameFromUrl(url: string, index: number) {
-  const decodedUrl = decodeURIComponent(url);
-  const filename =
-    decodedUrl
-      .split("/")
-      .pop()
-      ?.replace(/\.[^/.]+$/, "") || "";
-
-  if (filename) {
-    return filename
-      .replaceAll("-", " ")
-      .replaceAll("_", " ")
-      .replace(/^\d{8,}\s*/, "")
-      .replace(/\b\w/g, (char) => char.toUpperCase());
-  }
-
-  return `Stem ${index + 1}`;
-}
-
-function normalizeStems(value: unknown): StemItem[] {
-  if (!value) return [];
-
-  if (typeof value === "string") {
-    try {
-      return normalizeStems(JSON.parse(value));
-    } catch {
-      return value
-        .split(/\n/)
-        .map((url, index) => {
-          const cleanUrl = url.trim();
-          if (!cleanUrl || !cleanUrl.startsWith("http")) return null;
-          return { name: getStemNameFromUrl(cleanUrl, index), url: cleanUrl };
-        })
-        .filter((item): item is StemItem => Boolean(item));
-    }
-  }
-
-  if (!Array.isArray(value)) return [];
-
-  if (value.every((item) => typeof item === "string")) {
-    const joined = value.join("\n").trim();
-    if (joined.startsWith("[") || joined.startsWith("{")) {
-      try {
-        return normalizeStems(JSON.parse(joined));
-      } catch {
-        /* fall through */
-      }
-    }
-  }
-
-  return value
-    .map((item, index) => {
-      if (typeof item === "string") {
-        const url = item.trim();
-        if (!url || !url.startsWith("http")) return null;
-        return { name: getStemNameFromUrl(url, index), url };
-      }
-
-      if (!item || typeof item !== "object") return null;
-
-      const record = getRecord(item);
-      const url =
-        typeof record.url === "string" && record.url.trim()
-          ? record.url.trim()
-          : typeof record.href === "string" && record.href.trim()
-            ? record.href.trim()
-            : "";
-
-      if (!url) return null;
-
-      const name =
-        typeof record.name === "string" && record.name.trim()
-          ? record.name.trim().replace(/^\d{8,}\s*/, "")
-          : getStemNameFromUrl(url, index);
-
-      return { name, url };
-    })
-    .filter((item): item is StemItem => Boolean(item));
-}
-
-function getSongStems(song: Song) {
-  const record = getRecord(song);
-  const fields =
-    typeof record.fields === "object" && record.fields !== null
-      ? getRecord(record.fields)
-      : null;
-
-  return (
-    [
-      normalizeStems(record.stems),
-      normalizeStems(record.Stems),
-      normalizeStems(record["Stem Files"]),
-      normalizeStems(record.stemUrls),
-      normalizeStems(record.stem_urls),
-      fields ? normalizeStems(fields.stems) : [],
-      fields ? normalizeStems(fields.Stems) : [],
-      fields ? normalizeStems(fields["Stem Files"]) : [],
-      fields ? normalizeStems(fields.stemUrls) : [],
-      fields ? normalizeStems(fields.stem_urls) : [],
-    ].find((items) => items.length > 0) ?? []
-  );
-}
-
-function StemSongRow({
-  parentSong,
-  stem,
-  index,
-  coverArtUrl,
-}: {
-  parentSong: Song;
-  stem: StemItem;
-  index: number;
-  coverArtUrl: string | null;
-}) {
-  const { togglePlayPause } = usePlayer();
-  const stemSong: Song = {
-    ...parentSong,
-    id: `${parentSong.id}:stem:${index}`,
-    title: stem.name,
-    artist: parentSong.artist,
-    audioUrl: stem.url,
-    playbackUrl: stem.url,
-    hlsUrl: "",
-    stems: [],
-    genres: [],
-    moods: [],
-    regions: [],
-    instruments: [],
-    builds: [],
-    vocals: [],
-    editPoints: "",
-  };
-  const stemPlaying = useIsCurrentSongPlaying(stemSong.id);
-  const displayIcon = stemPlaying ? (
-    <PauseIcon size={15} />
-  ) : (
-    <PlayIconSmall size={15} />
-  );
-  const showNoVocalsIcon = isNoVocalsStem(stem);
-
-  function handleDownloadStem() {
-    window.open(stem.url, "_blank", "noopener,noreferrer");
-  }
-
-  return (
-    <div className={`filmwave-song-stem-card${stemPlaying ? " is-playing" : ""}`}>
-      <button
-        type="button"
-        className="filmwave-song-cover filmwave-song-stem-cover"
-        aria-label={stemPlaying ? `Pause ${stem.name}` : `Play ${stem.name}`}
-        onClick={() => togglePlayPause(stemSong)}
-      >
-        {coverArtUrl ? (
-          <Image
-            src={coverArtUrl}
-            alt={stem.name}
-            fill
-            sizes="62px"
-            className="object-cover"
-          />
-        ) : (
-          <div className="h-[62px] w-[62px] bg-[var(--bg-hover)]" />
-        )}
-        {parentSong.aiGenerated ? (
-          <span className="filmwave-song-ai-badge" aria-label="Made with AI">
-            <AiGeneratedIcon />
-          </span>
-        ) : null}
-        <span className="filmwave-song-play-overlay" aria-hidden="true">
-          <span className="filmwave-song-play-button">{displayIcon}</span>
-        </span>
-      </button>
-
-      <span
-        className="filmwave-song-vocal-indicator-slot filmwave-song-stem-vocal-indicator-slot"
-        style={stemVocalIndicatorSlotStyle}
-      >
-        {showNoVocalsIcon ? (
-          <NoVocalsIcon className="filmwave-song-no-vocals-icon" />
-        ) : null}
-      </span>
-
-      <button
-        type="button"
-        className="filmwave-song-info filmwave-song-stem-info"
-        onClick={() => togglePlayPause(stemSong)}
-      >
-        <span className="filmwave-song-title">{stem.name}</span>
-        <span className="filmwave-song-artist">{parentSong.artist}</span>
-      </button>
-
-      <div className="filmwave-song-wave-wrap filmwave-song-stem-wave-wrap">
-        <div className="filmwave-song-stems-slot filmwave-song-stem-spacer" aria-hidden="true">
-          <div className="filmwave-song-stems-placeholder" />
-        </div>
-        <div className="filmwave-song-wave filmwave-song-stem-wave">
-          <Waveform song={stemSong} showEditPointMarkers={false} />
-        </div>
-        <span className="filmwave-song-duration">{formatDuration(parentSong.duration)}</span>
-      </div>
-
-      <div className="filmwave-song-genre-slot filmwave-song-stem-genre-slot">
-        <span className="filmwave-song-genre">-</span>
-      </div>
-
-      <div className="filmwave-song-key-bpm filmwave-song-meta">
-        <span className="filmwave-song-key">{parentSong.key || "—"}</span>
-        <span className="filmwave-song-bpm">
-          {parentSong.bpm ? `${parentSong.bpm} BPM` : "—"}
-        </span>
-      </div>
-
-      <div className="filmwave-song-actions filmwave-song-stem-actions">
-        <IconButton label={`Download ${stem.name}`} onClick={handleDownloadStem}>
-          <DownloadIcon />
-        </IconButton>
-      </div>
-    </div>
-  );
 }
 
 export default function SongCard({
@@ -484,7 +241,6 @@ export default function SongCard({
           <SongCardStemsSlot
             stems={stems}
             open={stemsOpen}
-            inline
             onOpenChange={setStemsOpen}
           />
         }
@@ -529,21 +285,6 @@ export default function SongCard({
               <DownloadIcon />
             </IconButton>
           </>
-        }
-        expandedContent={
-          stemsOpen && stems.length > 0 ? (
-            <div className="filmwave-song-stem-list">
-              {stems.map((stem, index) => (
-                <StemSongRow
-                  key={`${stem.name}-${stem.url}`}
-                  parentSong={song}
-                  stem={stem}
-                  index={index}
-                  coverArtUrl={coverArtUrl}
-                />
-              ))}
-            </div>
-          ) : null
         }
       />
 
