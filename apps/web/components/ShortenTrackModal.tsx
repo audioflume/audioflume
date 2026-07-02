@@ -104,12 +104,6 @@ function applyEdgeFades(buffer: AudioBuffer) {
 }
 
 async function createShortenedTrack(song: Song, targetSeconds: number) {
-  const sourceUrl = song.audioUrl || song.playbackUrl;
-
-  if (!sourceUrl) {
-    throw new Error("This track does not have an audio file available to shorten.");
-  }
-
   const AudioContextConstructor =
     window.AudioContext || (window as BrowserAudioWindow).webkitAudioContext;
 
@@ -117,10 +111,21 @@ async function createShortenedTrack(song: Song, targetSeconds: number) {
     throw new Error("Your browser does not support in-browser audio processing.");
   }
 
-  const response = await fetch(sourceUrl);
+  const response = await fetch(
+    `/api/songs/${encodeURIComponent(song.id)}/shorten-source`,
+  );
 
   if (!response.ok) {
-    throw new Error("Could not load the track audio.");
+    let message = "Could not load the track audio.";
+
+    try {
+      const data = await response.json();
+      if (typeof data?.error === "string") message = data.error;
+    } catch {
+      // Use the fallback message when the server returns audio or an empty body.
+    }
+
+    throw new Error(message);
   }
 
   const encodedAudio = await response.arrayBuffer();
