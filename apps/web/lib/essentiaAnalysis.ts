@@ -28,6 +28,15 @@ type EssentiaInstance = {
   }
 }
 
+type BeatAnalyzerResponse = {
+  enabled?: boolean
+  bpm?: number | null
+  confidence?: number | null
+  beats?: number[]
+  downbeats?: number[]
+  source?: string
+}
+
 type EssentiaConstructor = new (wasmModule: unknown) => EssentiaInstance
 
 type EssentiaWasmLoader = unknown | (() => Promise<unknown>)
@@ -94,6 +103,79 @@ async function getEssentia() {
   return essentiaPromise
 }
 
+function writeAscii(view: DataView, offset: number, text: string) {
+  for (let i = 0; i < text.length; i++) {
+    view.setUint8(offset + i, text.charCodeAt(i))
+  }
+}
+
+function audioBufferToWavFile(audioBuffer: AudioBuffer) {
+  const channelCount = audioBuffer.numberOfChannels
+  const sampleRate = audioBuffer.sampleRate
+  const sampleCount = audioBuffer.length
+  const bytesPerSample = 2
+  const blockAlign = channelCount * bytesPerSample
+  const dataByteLength = sampleCount * blockAlign
+  const buffer = new ArrayBuffer(44 + dataByteLength)
+  const view = new DataView(buffer)
+
+  writeAscii(view, 0, 'RIFF')
+  view.setUint32(4, 36 + dataByteLength, true)
+  writeAscii(view, 8, 'WAVE')
+  writeAscii(view, 12, 'fmt ')
+  view.setUint32(16, 16, true)
+  view.setUint16(20, 1, true)
+  view.setUint16(22, channelCount, true)
+  view.setUint32(24, sampleRate, true)
+  view.setUint32(28, sampleRate * blockAlign, true)
+  view.setUint16(32, blockAlign, true)
+  view.setUint16(34, bytesPerSample * 8, true)
+  writeAscii(view, 36, 'data')
+  view.setUint32(40, dataByteLength, true)
+
+  let offset = 44
+
+  for (let sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++) {
+    for (let channelIndex = 0; channelIndex < channelCount; channelIndex++) {
+      const channelData = audioBuffer.getChannelData(channelIndex)
+      const sample = Math.max(-1, Math.min(1, channelData[sampleIndex] || 0))
+      const pcmSample = sample < 0 ? sample * 0x8000 : sample * 0x7fff
+
+      view.setInt16(offset, pcmSample, true)
+      offset += bytesPerSample
+    }
+  }
+
+  return new File([buffer], 'beat-this-analysis.wav', {
+    type: 'audio/wav',
+  })
+}
+
+async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer) {
+  try {
+    const formData = new FormData()
+    formData.append('file', audioBufferToWavFile(audioBuffer))
+
+    const response = await fetch('/api/admin/analyze-beats', {
+      method: 'POST',
+      body: formData,
+    })
+
+    if (!response.ok) return null
+
+    const data = (await response.json()) as BeatAnalyzerResponse
+    const bpm = Number(data.bpm)
+
+    if (!data.enabled || !Number.isFinite(bpm) || bpm <= 0) {
+      return null
+    }
+
+    return Math.round(bpm)
+  } catch {
+    return null
+  }
+}
+
 function formatEssentiaKey(key: string, scale: string) {
   const normalizedKey = key.trim()
   const normalizedScale = scale.trim().toLowerCase()
@@ -112,6 +194,12 @@ function formatEssentiaKey(key: string, scale: string) {
 }
 
 export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer) {
+  const beatAnalyzerBpm = await estimateBpmWithBeatAnalyzer(audioBuffer)
+
+  if (beatAnalyzerBpm) {
+    return beatAnalyzerBpm
+  }
+
   const essentia = await getEssentia()
   const channelData = audioBuffer.getChannelData(0)
   const audioVector = essentia.arrayToVector(channelData)
