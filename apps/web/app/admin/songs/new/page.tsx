@@ -25,6 +25,12 @@ export default function NewSongPage() {
         .admin-song-upload-page .admin-song-form-icon-btn {
           border-radius: 0 !important;
         }
+
+        .admin-song-upload-page [style*="--status-success"],
+        .admin-song-upload-page [style*="--status-error"],
+        .admin-song-upload-page [class*="animate-spin"][class*="rounded-full"] {
+          border-radius: 999px !important;
+        }
       `}</style>
 
       <AdminSongForm mode="create" />
