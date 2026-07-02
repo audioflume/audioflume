@@ -26,6 +26,7 @@ type SaveSongPayload = {
   builds: string[];
   vocals: string[];
   instrumental: boolean;
+  aiGenerated?: boolean;
   editPoints: string;
 };
 
@@ -266,6 +267,7 @@ export async function GET(_req: Request, context: RouteContext) {
       builds: data.builds || [],
       vocals: data.vocals || [],
       instrumental: Boolean(data.instrumental),
+      aiGenerated: Boolean(data.ai_generated),
       editPoints:
         generatedEditPointsJson || data.edit_points || emptyEditPointsJson(),
       generatedEditPointCount: generatedEditPoints?.length ?? 0,
@@ -349,6 +351,7 @@ export async function PATCH(req: Request, context: RouteContext) {
         builds: cleanStringArray(payload.builds),
         vocals: cleanStringArray(payload.vocals),
         instrumental: Boolean(payload.instrumental),
+        ai_generated: Boolean(payload.aiGenerated),
         edit_points: nextEditPointsJson,
       })
       .eq("id", id)
