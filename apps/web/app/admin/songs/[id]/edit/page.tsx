@@ -31,6 +31,14 @@ export default async function EditSongPage({
         .admin-song-edit-page .admin-song-form-icon-btn {
           border-radius: 0 !important;
         }
+
+        .admin-song-edit-page .edit-point-play-button,
+        .admin-song-edit-page button[aria-label="Toggle spacebar start from selected marker"],
+        .admin-song-edit-page .cue-point-row-grid button[aria-label^="Play from"],
+        .admin-song-edit-page .cue-point-marker-dot,
+        .admin-song-edit-page .edit-point-selected-dot {
+          border-radius: 999px !important;
+        }
       `}</style>
 
       <AdminSongForm mode="edit" songId={id} />
