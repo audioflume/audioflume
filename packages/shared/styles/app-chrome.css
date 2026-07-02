@@ -162,7 +162,8 @@ body > header > div {
   gap: 18px;
 }
 
-.filmwave-header-nav-link {
+.filmwave-header-nav-link,
+.filmwave-header .filmwave-header-nav-link {
   display: inline-flex;
   height: var(--filmwave-header-nav-height);
   cursor: pointer;
@@ -174,9 +175,9 @@ body > header > div {
   color: var(--text-secondary);
   padding: 0 16px;
   font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 500;
-  letter-spacing: normal;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
   line-height: 1;
   text-decoration: none;
   transition:
