@@ -522,12 +522,17 @@ function PreviewButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full p-[2px] text-[var(--text-primary)] transition hover:scale-[1.04] ${playing ? "scale-100" : "scale-[0.96]"}`}
-      style={{
-        background: `conic-gradient(var(--text-primary) ${progressDegrees}, var(--project-preview-track, color-mix(in srgb, var(--text-primary) 18%, transparent)) 0deg)`,
-      }}
+      className="relative flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#111] transition hover:scale-[1.04]"
     >
-      <span className="flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-primary)]">
+      <span
+        className="absolute inset-0 rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.18)]"
+        style={{
+          background: `conic-gradient(#111 ${progressDegrees}, rgba(255,255,255,0.5) 0deg)`,
+        }}
+        aria-hidden="true"
+      />
+      <span className="absolute inset-[3px] rounded-full bg-white/95 shadow-[0_1px_5px_rgba(0,0,0,0.22)]" aria-hidden="true" />
+      <span className="relative z-10 flex items-center justify-center">
         <PlayPauseIcon playing={playing} />
       </span>
     </button>
