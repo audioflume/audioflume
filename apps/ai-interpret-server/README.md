@@ -17,7 +17,17 @@ The server accepts multipart form data:
 - `title`
 - `artist`
 
-Current status: the server scaffold is in place, but the model adapter is intentionally not connected yet. The endpoint will return `501` until a local music model is plugged into `model_adapter.py`.
+The server now calls the local Stable Audio 3 CLI through `apps/ai-interpret-server/model_adapter.py` and returns generated WAV audio as `audioBase64` JSON.
+
+## Requirements
+
+Stable Audio 3 must exist at:
+
+```txt
+apps/stable-audio-3
+```
+
+The model files must already be downloaded/authenticated. For local runs, keep `HF_HUB_DISABLE_XET=1` to avoid slow Xet downloads.
 
 ## Run locally
 
@@ -38,14 +48,8 @@ cd ~/filmwave-monorepo/apps/web
 npm run shorten:interpret-local -- --source "$HOME/Desktop/Rain Dance - Amber Caravan.wav" --length 30
 ```
 
-Expected current result: the Filmwave request reaches the server, and the server returns a clear `Model adapter is not connected yet` message.
+Expected result: the Filmwave request reaches the server, Stable Audio generates a WAV, and the web script writes `ai-interpretation-30s.wav`.
 
-## Next step
+## Current limitation
 
-Connect a real local music model inside:
-
-```txt
-apps/ai-interpret-server/model_adapter.py
-```
-
-The adapter should return a generated WAV file path for the new short interpretation.
+This first wiring uses Stable Audio 3 text generation through the local CLI. The source audio is accepted by the endpoint, but Stable Audio is not yet using the source file as true audio conditioning in this adapter. This is still useful for validating the full Filmwave-to-local-model pipeline before deeper audio-conditioned interpretation work.
