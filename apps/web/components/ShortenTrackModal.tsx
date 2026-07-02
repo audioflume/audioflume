@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { Song } from "@/lib/types";
 import ModalShell from "@/components/ModalShell";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-import { usePlayer } from "@/context/PlayerContext";
+import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 
 const LENGTH_OPTIONS = [
   { label: "15 seconds", shortLabel: "15s", seconds: 15 },
@@ -204,6 +204,51 @@ function LoadingSpinner() {
   );
 }
 
+function PlayPauseIcon({ playing }: { playing: boolean }) {
+  return playing ? (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M7 5h3v14H7zM14 5h3v14h-3z" />
+    </svg>
+  ) : (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  );
+}
+
+function PreviewButton({
+  playing,
+  progress,
+  label,
+  onClick,
+}: {
+  playing: boolean;
+  progress: number;
+  label: string;
+  onClick: () => void;
+}) {
+  const safeProgress = Number.isFinite(progress)
+    ? Math.max(0, Math.min(1, progress))
+    : 0;
+  const progressDegrees = `${safeProgress * 360}deg`;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={`flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full p-[2px] text-[var(--text-primary)] transition hover:scale-[1.04] ${playing ? "scale-100" : "scale-[0.96]"}`}
+      style={{
+        background: `conic-gradient(var(--text-primary) ${progressDegrees}, var(--project-preview-track, color-mix(in srgb, var(--text-primary) 18%, transparent)) 0deg)`,
+      }}
+    >
+      <span className="flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-primary)]">
+        <PlayPauseIcon playing={playing} />
+      </span>
+    </button>
+  );
+}
+
 function SongPreview({ song }: { song: Song }) {
   const cover = typeof song.coverArt === "string" && song.coverArt.trim() ? song.coverArt : null;
 
@@ -234,6 +279,7 @@ export default function ShortenTrackModal({
   onClose,
 }: ShortenTrackModalProps) {
   const { currentSong, isPlaying, togglePlayPause } = usePlayer();
+  const { currentTime, duration } = usePlayerProgress();
   const [generatedTracks, setGeneratedTracks] = useState<ShortenedTrack[]>([]);
   const [generatingSeconds, setGeneratingSeconds] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -385,7 +431,12 @@ export default function ShortenTrackModal({
             ) : (
               <div className="space-y-1">
                 {generatedTracks.map((track) => {
-                  const isPreviewing = currentSong?.id === track.id && isPlaying;
+                  const isActive = currentSong?.id === track.id;
+                  const isPreviewing = isActive && isPlaying;
+                  const previewProgress =
+                    isActive && duration > 0 && Number.isFinite(duration)
+                      ? currentTime / duration
+                      : 0;
 
                   return (
                     <div
@@ -406,13 +457,12 @@ export default function ShortenTrackModal({
                         </span>
                       </span>
 
-                      <button
-                        type="button"
+                      <PreviewButton
+                        playing={isPreviewing}
+                        progress={previewProgress}
+                        label={isPreviewing ? `Pause ${track.label} version` : `Preview ${track.label} version`}
                         onClick={() => handlePreview(track)}
-                        className="h-8 rounded-none border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]"
-                      >
-                        {isPreviewing ? "Pause" : "Preview"}
-                      </button>
+                      />
                     </div>
                   );
                 })}
