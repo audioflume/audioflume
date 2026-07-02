@@ -1,8 +1,7 @@
-from __future__ import annotations
-
 from base64 import b64encode
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
@@ -22,9 +21,9 @@ async def interpret(
     audio: UploadFile = File(...),
     targetSeconds: int = Form(...),
     prompt: str = Form(...),
-    metadata: str | None = Form(default=None),
-    title: str | None = Form(default=None),
-    artist: str | None = Form(default=None),
+    metadata: Optional[str] = Form(default=None),
+    title: Optional[str] = Form(default=None),
+    artist: Optional[str] = Form(default=None),
 ):
     if targetSeconds not in {15, 30, 60}:
         raise HTTPException(status_code=400, detail="targetSeconds must be 15, 30, or 60")
