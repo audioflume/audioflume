@@ -26,7 +26,26 @@ export default function AdminContentPage({
   contentStyle,
 }: AdminContentPageProps) {
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+    <main className="filmwave-admin-root min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+      <style>{`
+        .filmwave-admin-root :where(
+          [class~="rounded"],
+          [class~="rounded-sm"],
+          [class~="rounded-md"],
+          [class~="rounded-lg"],
+          [class~="rounded-xl"],
+          [class~="rounded-2xl"],
+          [class~="rounded-[4px]"],
+          [class~="rounded-[8px]"],
+          [class~="rounded-[9px]"],
+          [class~="rounded-[14px]"],
+          [class~="rounded-[18px]"]
+        ),
+        .filmwave-admin-root .admin-song-select-box {
+          border-radius: 0 !important;
+        }
+      `}</style>
+
       <AdminSidebar />
 
       <section className="min-h-screen px-5 pt-[88px] pb-20 md:px-8 xl:px-10">
