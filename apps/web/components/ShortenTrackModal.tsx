@@ -36,36 +36,19 @@ type BrowserAudioWindow = Window &
     webkitAudioContext?: typeof AudioContext;
   };
 
-type NaturalSegment = {
-  start: number;
-  length: number;
-};
-
-type NaturalBlendPlan = {
-  segments: NaturalSegment[];
-  crossfadeSeconds: number;
-  mode: "continuous" | "matched_blend";
-  beatAware: boolean;
-};
-
 type EnergyFrame = {
   time: number;
   rms: number;
-  peak: number;
-  zcr: number;
 };
 
 type BeatGrid = {
   beats: number[];
   downbeats: number[];
-  beatInterval: number | null;
-  source: string;
 };
 
 type EditPointsWithBeatGrid = {
   beats?: unknown;
   downbeats?: unknown;
-  beatSource?: unknown;
 };
 
 function formatDuration(seconds: number) {
@@ -108,12 +91,7 @@ function createBpmBeatGrid(bpm: number, duration: number): BeatGrid | null {
     }
   }
 
-  return {
-    beats,
-    downbeats,
-    beatInterval,
-    source: "bpm_grid",
-  };
+  return { beats, downbeats };
 }
 
 function getBeatGridFromSong(song: Song, duration: number): BeatGrid | null {
@@ -124,19 +102,10 @@ function getBeatGridFromSong(song: Song, duration: number): BeatGrid | null {
 
     if (beats.length >= 4 || downbeats.length >= 2) {
       const usableBeats = beats.length >= 4 ? beats : downbeats;
-      const intervals = usableBeats
-        .slice(1)
-        .map((time, index) => time - usableBeats[index])
-        .filter((interval) => interval > 0.2 && interval < 2);
-      const beatInterval = intervals.length
-        ? intervals.sort((a, b) => a - b)[Math.floor(intervals.length / 2)]
-        : null;
 
       return {
-        beats,
+        beats: usableBeats,
         downbeats: downbeats.length >= 2 ? downbeats : usableBeats.filter((_, index) => index % BAR_BEATS === 0),
-        beatInterval,
-        source: typeof parsed.beatSource === "string" ? parsed.beatSource : "stored_grid",
       };
     }
   } catch {
@@ -146,41 +115,16 @@ function getBeatGridFromSong(song: Song, duration: number): BeatGrid | null {
   return createBpmBeatGrid(song.bpm, duration);
 }
 
-function getCutGrid(beatGrid: BeatGrid | null, duration: number) {
+function getCutGrid(beatGrid: BeatGrid | null) {
   if (!beatGrid) return [];
-
-  const preferred = beatGrid.downbeats.length >= 2 ? beatGrid.downbeats : beatGrid.beats;
-
-  return preferred.filter((time) => time >= 0 && time <= duration);
-}
-
-function snapToNearestGridTime(time: number, grid: number[], min: number, max: number, maxDistance = 2.5) {
-  if (!grid.length) return clamp(time, min, max);
-
-  let bestTime = clamp(time, min, max);
-  let bestDistance = Infinity;
-
-  for (const gridTime of grid) {
-    if (gridTime < min || gridTime > max) continue;
-
-    const distance = Math.abs(gridTime - time);
-
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      bestTime = gridTime;
-    }
-  }
-
-  return bestDistance <= maxDistance ? bestTime : clamp(time, min, max);
+  return beatGrid.downbeats.length >= 2 ? beatGrid.downbeats : beatGrid.beats;
 }
 
 function getCandidateStarts(minStart: number, maxStart: number, grid: number[], step: number) {
-  if (grid.length) {
-    const candidates = grid.filter((time) => time >= minStart && time <= maxStart);
+  const gridCandidates = grid.filter((time) => time >= minStart && time <= maxStart);
 
-    if (candidates.length > 0) {
-      return candidates;
-    }
+  if (gridCandidates.length > 0) {
+    return gridCandidates;
   }
 
   const candidates: number[] = [];
@@ -190,6 +134,168 @@ function getCandidateStarts(minStart: number, maxStart: number, grid: number[], 
   }
 
   return candidates;
+}
+
+function getMonoSample(channels: Float32Array[], frame: number) {
+  let value = 0;
+
+  for (let channel = 0; channel < channels.length; channel += 1) {
+    value += channels[channel][frame] || 0;
+  }
+
+  return value / Math.max(1, channels.length);
+}
+
+function getEnergyFrames(buffer: AudioBuffer) {
+  const windowFrames = Math.max(1, Math.floor(buffer.sampleRate * 0.25));
+  const channels = Array.from({ length: buffer.numberOfChannels }, (_, channel) =>
+    buffer.getChannelData(channel),
+  );
+  const frames: EnergyFrame[] = [];
+
+  for (let startFrame = 0; startFrame < buffer.length; startFrame += windowFrames) {
+    const endFrame = Math.min(buffer.length, startFrame + windowFrames);
+    let sum = 0;
+    let count = 0;
+
+    for (let frame = startFrame; frame < endFrame; frame += 1) {
+      const value = getMonoSample(channels, frame);
+      sum += value * value;
+      count += 1;
+    }
+
+    frames.push({
+      time: startFrame / buffer.sampleRate,
+      rms: count > 0 ? Math.sqrt(sum / count) : 0,
+    });
+  }
+
+  return frames;
+}
+
+function averageEnergy(frames: EnergyFrame[], start: number, end: number) {
+  const scoped = frames.filter((frame) => frame.time >= start && frame.time < end);
+  if (!scoped.length) return 0;
+  return scoped.reduce((sum, frame) => sum + frame.rms, 0) / scoped.length;
+}
+
+function edgeEnergy(frames: EnergyFrame[], start: number, end: number) {
+  const edgeSeconds = Math.min(1.5, Math.max(0.5, (end - start) * 0.12));
+  const startEnergy = averageEnergy(frames, start, start + edgeSeconds);
+  const endEnergy = averageEnergy(frames, end - edgeSeconds, end);
+
+  return { startEnergy, endEnergy };
+}
+
+function findBestContinuousStart({
+  buffer,
+  frames,
+  length,
+  beatGrid,
+}: {
+  buffer: AudioBuffer;
+  frames: EnergyFrame[];
+  length: number;
+  beatGrid: BeatGrid | null;
+}) {
+  const duration = buffer.duration;
+  const maxStart = Math.max(0, duration - length);
+  const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.12) : 0;
+  const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.08) : maxStart;
+  const grid = getCutGrid(beatGrid);
+  const candidates = getCandidateStarts(searchMin, searchMax, grid, 0.5);
+  let bestStart = 0;
+  let bestScore = -Infinity;
+
+  for (const start of candidates) {
+    const safeStart = clamp(start, searchMin, searchMax);
+    const end = safeStart + length;
+    const middleEnergy = averageEnergy(frames, safeStart, end);
+    const { startEnergy, endEnergy } = edgeEnergy(frames, safeStart, end);
+    const timelinePosition = maxStart > 0 ? safeStart / maxStart : 0;
+    const centerBias = 1 - Math.abs(timelinePosition - 0.48);
+    const beatBonus = beatGrid ? middleEnergy * 0.12 : 0;
+    const edgePenalty = Math.abs(startEnergy - middleEnergy) * 0.25 + Math.abs(endEnergy - middleEnergy) * 0.45;
+    const score = middleEnergy + centerBias * middleEnergy * 0.16 + beatBonus - edgePenalty;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestStart = safeStart;
+    }
+  }
+
+  return clamp(bestStart, 0, maxStart);
+}
+
+function copyContinuousExcerpt({
+  source,
+  output,
+  startSeconds,
+}: {
+  source: AudioBuffer;
+  output: AudioBuffer;
+  startSeconds: number;
+}) {
+  const sampleRate = source.sampleRate;
+  const sourceStartFrame = Math.max(0, Math.floor(startSeconds * sampleRate));
+
+  for (let channel = 0; channel < source.numberOfChannels; channel += 1) {
+    const sourceData = source.getChannelData(channel);
+    const outputData = output.getChannelData(channel);
+
+    for (let frame = 0; frame < output.length; frame += 1) {
+      const sourceFrame = sourceStartFrame + frame;
+      outputData[frame] = sourceFrame < source.length ? sourceData[sourceFrame] || 0 : 0;
+    }
+  }
+}
+
+function applyEdgeFades(buffer: AudioBuffer) {
+  const fadeInFrames = Math.min(Math.floor(buffer.sampleRate * 0.06), Math.floor(buffer.length / 4));
+  const fadeOutSeconds = clamp(buffer.duration * 0.06, 1, 2);
+  const fadeOutFrames = Math.min(Math.floor(buffer.sampleRate * fadeOutSeconds), Math.floor(buffer.length / 3));
+
+  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const data = buffer.getChannelData(channel);
+
+    for (let index = 0; index < fadeInFrames; index += 1) {
+      data[index] *= Math.sin((index / Math.max(1, fadeInFrames)) * Math.PI * 0.5);
+    }
+
+    for (let index = 0; index < fadeOutFrames; index += 1) {
+      const frame = data.length - 1 - index;
+      data[frame] *= Math.sin((index / Math.max(1, fadeOutFrames)) * Math.PI * 0.5);
+    }
+  }
+}
+
+function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, targetSeconds: number, song: Song) {
+  const actualDurationSeconds = Math.min(targetSeconds, buffer.duration);
+  const output = audioContext.createBuffer(
+    buffer.numberOfChannels,
+    Math.max(1, Math.floor(actualDurationSeconds * buffer.sampleRate)),
+    buffer.sampleRate,
+  );
+  const frames = getEnergyFrames(buffer);
+  const beatGrid = getBeatGridFromSong(song, buffer.duration);
+  const start = findBestContinuousStart({
+    buffer,
+    frames,
+    length: actualDurationSeconds,
+    beatGrid,
+  });
+
+  console.info("[Filmwave Shorten] Continuous excerpt plan", {
+    mode: "continuous_excerpt",
+    beatAware: Boolean(beatGrid),
+    start,
+    length: actualDurationSeconds,
+  });
+
+  copyContinuousExcerpt({ source: buffer, output, startSeconds: start });
+  applyEdgeFades(output);
+
+  return output;
 }
 
 function writeString(view: DataView, offset: number, value: string) {
@@ -235,7 +341,7 @@ function audioBufferToWavBlob(buffer: AudioBuffer) {
     }
   }
 
-  return new Blob([view], { type: "audio/wav" });
+  return new Blob([wavBuffer], { type: "audio/wav" });
 }
 
 function createWaveformPeaks(buffer: AudioBuffer) {
@@ -265,432 +371,6 @@ function createWaveformPeaks(buffer: AudioBuffer) {
 
   if (maxPeak <= 0) return peaks.map(() => 0);
   return peaks.map((peak) => Number((peak / maxPeak).toFixed(4)));
-}
-
-function getMonoSample(channels: Float32Array[], frame: number) {
-  let value = 0;
-
-  for (let channel = 0; channel < channels.length; channel += 1) {
-    value += channels[channel][frame] || 0;
-  }
-
-  return value / Math.max(1, channels.length);
-}
-
-function getEnergyFrames(buffer: AudioBuffer) {
-  const windowFrames = Math.max(1, Math.floor(buffer.sampleRate * 0.25));
-  const channels = Array.from({ length: buffer.numberOfChannels }, (_, channel) =>
-    buffer.getChannelData(channel),
-  );
-  const frames: EnergyFrame[] = [];
-
-  for (let startFrame = 0; startFrame < buffer.length; startFrame += windowFrames) {
-    const endFrame = Math.min(buffer.length, startFrame + windowFrames);
-    let sum = 0;
-    let peak = 0;
-    let crossings = 0;
-    let previous = getMonoSample(channels, startFrame);
-    let count = 0;
-
-    for (let frame = startFrame; frame < endFrame; frame += 1) {
-      const value = getMonoSample(channels, frame);
-      sum += value * value;
-      peak = Math.max(peak, Math.abs(value));
-
-      if ((previous < 0 && value >= 0) || (previous >= 0 && value < 0)) {
-        crossings += 1;
-      }
-
-      previous = value;
-      count += 1;
-    }
-
-    frames.push({
-      time: startFrame / buffer.sampleRate,
-      rms: count > 0 ? Math.sqrt(sum / count) : 0,
-      peak,
-      zcr: count > 0 ? crossings / count : 0,
-    });
-  }
-
-  return frames;
-}
-
-function averageEnergy(frames: EnergyFrame[], start: number, end: number) {
-  const scoped = frames.filter((frame) => frame.time >= start && frame.time < end);
-  if (!scoped.length) return 0;
-  return scoped.reduce((sum, frame) => sum + frame.rms, 0) / scoped.length;
-}
-
-function edgeEnergy(frames: EnergyFrame[], start: number, end: number) {
-  const edgeSeconds = Math.min(1.5, Math.max(0.5, (end - start) * 0.12));
-  const startEnergy = averageEnergy(frames, start, start + edgeSeconds);
-  const endEnergy = averageEnergy(frames, end - edgeSeconds, end);
-
-  return { startEnergy, endEnergy };
-}
-
-function findBestContinuousStart({
-  buffer,
-  frames,
-  length,
-  beatGrid,
-}: {
-  buffer: AudioBuffer;
-  frames: EnergyFrame[];
-  length: number;
-  beatGrid: BeatGrid | null;
-}) {
-  const duration = buffer.duration;
-  const maxStart = Math.max(0, duration - length);
-  const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.08) : 0;
-  const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.08) : maxStart;
-  const grid = getCutGrid(beatGrid, duration);
-  const candidates = getCandidateStarts(searchMin, searchMax, grid, 0.5);
-  let bestStart = 0;
-  let bestScore = -Infinity;
-
-  for (const rawStart of candidates) {
-    const start = snapToNearestGridTime(rawStart, grid, searchMin, searchMax);
-    const end = start + length;
-    const middleEnergy = averageEnergy(frames, start, end);
-    const { startEnergy, endEnergy } = edgeEnergy(frames, start, end);
-    const timelinePosition = maxStart > 0 ? start / maxStart : 0;
-    const avoidExtremeEnds = 1 - Math.abs(timelinePosition - 0.48);
-    const beatBonus = beatGrid ? middleEnergy * 0.16 : 0;
-    const edgePenalty = Math.abs(startEnergy - middleEnergy) * 0.35 + Math.abs(endEnergy - middleEnergy) * 0.55;
-    const score = middleEnergy + avoidExtremeEnds * middleEnergy * 0.18 + beatBonus - edgePenalty;
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestStart = start;
-    }
-  }
-
-  return clamp(bestStart, 0, maxStart);
-}
-
-function getTopSegmentStarts({
-  buffer,
-  frames,
-  length,
-  minStart,
-  maxStart,
-  count,
-  beatGrid,
-  preferLater = false,
-}: {
-  buffer: AudioBuffer;
-  frames: EnergyFrame[];
-  length: number;
-  minStart: number;
-  maxStart: number;
-  count: number;
-  beatGrid: BeatGrid | null;
-  preferLater?: boolean;
-}) {
-  const duration = buffer.duration;
-  const safeMin = clamp(minStart, 0, Math.max(0, duration - length));
-  const safeMax = clamp(maxStart, safeMin, Math.max(safeMin, duration - length));
-  const grid = getCutGrid(beatGrid, duration);
-  const starts = getCandidateStarts(safeMin, safeMax, grid, 0.75);
-  const candidates: Array<{ start: number; score: number }> = [];
-
-  for (const rawStart of starts) {
-    const start = snapToNearestGridTime(rawStart, grid, safeMin, safeMax);
-    const end = start + length;
-    const energy = averageEnergy(frames, start, end);
-    const { startEnergy, endEnergy } = edgeEnergy(frames, start, end);
-    const position = safeMax > safeMin ? (start - safeMin) / (safeMax - safeMin) : 0;
-    const endSmoothness = Math.max(0, 1 - Math.abs(endEnergy - energy) / Math.max(0.001, energy));
-    const timelineBias = preferLater ? position * energy * 0.22 : (1 - Math.abs(position - 0.42)) * energy * 0.12;
-    const beatBonus = beatGrid ? energy * 0.18 : 0;
-    const score = energy + endSmoothness * energy * 0.15 + timelineBias + beatBonus - Math.abs(startEnergy - energy) * 0.24;
-
-    candidates.push({ start, score });
-  }
-
-  return candidates
-    .sort((a, b) => b.score - a.score)
-    .filter((candidate, index, all) =>
-      all.findIndex((item) => Math.abs(item.start - candidate.start) < 4) === index,
-    )
-    .slice(0, count)
-    .map((candidate) => candidate.start);
-}
-
-function getTextureVector(buffer: AudioBuffer, time: number, length: number, before: boolean) {
-  const sampleRate = buffer.sampleRate;
-  const channels = Array.from({ length: buffer.numberOfChannels }, (_, channel) =>
-    buffer.getChannelData(channel),
-  );
-  const vectorSize = 24;
-  const startTime = before ? time - length : time;
-  const startFrame = clamp(Math.floor(startTime * sampleRate), 0, Math.max(0, buffer.length - 1));
-  const endFrame = clamp(Math.floor((startTime + length) * sampleRate), startFrame + 1, buffer.length);
-  const windowFrames = Math.max(1, Math.floor((endFrame - startFrame) / vectorSize));
-  const vector: number[] = [];
-  let totalRms = 0;
-  let totalZcr = 0;
-
-  for (let vectorIndex = 0; vectorIndex < vectorSize; vectorIndex += 1) {
-    const frameStart = startFrame + vectorIndex * windowFrames;
-    const frameEnd = Math.min(endFrame, frameStart + windowFrames);
-    let sum = 0;
-    let crossings = 0;
-    let previous = getMonoSample(channels, frameStart);
-    let count = 0;
-
-    for (let frame = frameStart; frame < frameEnd; frame += 1) {
-      const value = getMonoSample(channels, frame);
-      sum += value * value;
-
-      if ((previous < 0 && value >= 0) || (previous >= 0 && value < 0)) {
-        crossings += 1;
-      }
-
-      previous = value;
-      count += 1;
-    }
-
-    const rms = count > 0 ? Math.sqrt(sum / count) : 0;
-    const zcr = count > 0 ? crossings / count : 0;
-    totalRms += rms;
-    totalZcr += zcr;
-    vector.push(rms, zcr);
-  }
-
-  return {
-    vector,
-    averageRms: totalRms / vectorSize,
-    averageZcr: totalZcr / vectorSize,
-  };
-}
-
-function getJoinDistance(buffer: AudioBuffer, firstEnd: number, secondStart: number, crossfadeSeconds: number) {
-  const outgoing = getTextureVector(buffer, firstEnd, crossfadeSeconds, true);
-  const incoming = getTextureVector(buffer, secondStart, crossfadeSeconds, false);
-  const outgoingScale = Math.max(0.0001, outgoing.averageRms);
-  const incomingScale = Math.max(0.0001, incoming.averageRms);
-  const scale = Math.max(outgoingScale, incomingScale);
-  let vectorDistance = 0;
-
-  for (let index = 0; index < outgoing.vector.length; index += 1) {
-    const isRms = index % 2 === 0;
-    const normalizer = isRms ? scale : Math.max(0.0001, outgoing.averageZcr + incoming.averageZcr);
-    const difference = (outgoing.vector[index] - incoming.vector[index]) / normalizer;
-    vectorDistance += difference * difference;
-  }
-
-  vectorDistance = Math.sqrt(vectorDistance / outgoing.vector.length);
-
-  const loudnessRatio = Math.abs(Math.log(outgoingScale / incomingScale));
-  const zcrDifference = Math.abs(outgoing.averageZcr - incoming.averageZcr) / Math.max(0.0001, outgoing.averageZcr + incoming.averageZcr);
-
-  return vectorDistance * 0.72 + loudnessRatio * 0.2 + zcrDifference * 0.08;
-}
-
-function findMatchedBlendPlan(buffer: AudioBuffer, frames: EnergyFrame[], targetSeconds: number, beatGrid: BeatGrid | null) {
-  const duration = buffer.duration;
-  const beatInterval = beatGrid?.beatInterval || null;
-  const crossfadeSeconds = beatInterval ? clamp(beatInterval * 2, 0.6, 2.4) : clamp(targetSeconds * 0.07, 0.8, 2.4);
-  const endingLength = clamp(targetSeconds * 0.28, targetSeconds <= 20 ? 4 : 7, targetSeconds <= 20 ? 5.5 : 15);
-  const firstLength = targetSeconds + crossfadeSeconds - endingLength;
-  const minimumGap = Math.max(5, crossfadeSeconds * 3);
-
-  if (duration < targetSeconds + minimumGap + 8 || firstLength <= 3 || endingLength <= 3) {
-    return null;
-  }
-
-  const firstStarts = getTopSegmentStarts({
-    buffer,
-    frames,
-    length: firstLength,
-    minStart: duration * 0.05,
-    maxStart: duration - firstLength - endingLength - minimumGap,
-    count: 8,
-    beatGrid,
-  });
-  const secondStarts = getTopSegmentStarts({
-    buffer,
-    frames,
-    length: endingLength,
-    minStart: Math.max(duration * 0.45, targetSeconds),
-    maxStart: duration - endingLength,
-    count: 12,
-    preferLater: true,
-    beatGrid,
-  });
-  const grid = getCutGrid(beatGrid, duration);
-  let bestPlan: NaturalBlendPlan | null = null;
-  let bestScore = Infinity;
-
-  for (const firstStart of firstStarts) {
-    const rawFirstEnd = firstStart + firstLength;
-    const firstEnd = snapToNearestGridTime(rawFirstEnd, grid, firstStart + 3, duration - endingLength - minimumGap);
-    const safeFirstLength = Math.max(3, firstEnd - firstStart);
-
-    for (const secondStart of secondStarts) {
-      if (secondStart <= firstEnd + minimumGap) continue;
-
-      const safeEndingLength = Math.max(3, targetSeconds + crossfadeSeconds - safeFirstLength);
-      if (secondStart + safeEndingLength > duration) continue;
-
-      const distance = getJoinDistance(buffer, firstEnd, secondStart, crossfadeSeconds);
-      const secondEnergy = averageEnergy(frames, secondStart, secondStart + safeEndingLength);
-      const firstEnergy = averageEnergy(frames, firstStart, firstEnd);
-      const energyBalance = Math.abs(Math.log(Math.max(0.0001, firstEnergy) / Math.max(0.0001, secondEnergy)));
-      const beatBonus = beatGrid ? -0.08 : 0;
-      const score = distance + energyBalance * 0.12 + beatBonus;
-
-      if (score < bestScore) {
-        bestScore = score;
-        bestPlan = {
-          mode: "matched_blend",
-          beatAware: Boolean(beatGrid),
-          crossfadeSeconds,
-          segments: [
-            { start: firstStart, length: safeFirstLength },
-            { start: secondStart, length: safeEndingLength },
-          ],
-        };
-      }
-    }
-  }
-
-  if (!bestPlan) return null;
-  return bestScore <= (beatGrid ? 0.72 : 0.58) ? bestPlan : null;
-}
-
-function copySegment({
-  source,
-  output,
-  segment,
-  outputStartSeconds,
-  fadeInSeconds,
-  fadeOutSeconds,
-}: {
-  source: AudioBuffer;
-  output: AudioBuffer;
-  segment: NaturalSegment;
-  outputStartSeconds: number;
-  fadeInSeconds: number;
-  fadeOutSeconds: number;
-}) {
-  const sampleRate = source.sampleRate;
-  const sourceStartFrame = Math.max(0, Math.floor(segment.start * sampleRate));
-  const segmentFrames = Math.min(
-    Math.floor(segment.length * sampleRate),
-    source.length - sourceStartFrame,
-  );
-  const outputStartFrame = Math.floor(outputStartSeconds * sampleRate);
-  const fadeInFrames = Math.min(Math.floor(fadeInSeconds * sampleRate), segmentFrames);
-  const fadeOutFrames = Math.min(Math.floor(fadeOutSeconds * sampleRate), segmentFrames);
-
-  for (let channel = 0; channel < source.numberOfChannels; channel += 1) {
-    const sourceData = source.getChannelData(channel);
-    const outputData = output.getChannelData(channel);
-
-    for (let frame = 0; frame < segmentFrames; frame += 1) {
-      const destinationFrame = outputStartFrame + frame;
-      if (destinationFrame < 0 || destinationFrame >= output.length) continue;
-
-      let gain = 1;
-
-      if (fadeInFrames > 0 && frame < fadeInFrames) {
-        gain *= Math.sin((frame / Math.max(1, fadeInFrames)) * Math.PI * 0.5);
-      }
-
-      if (fadeOutFrames > 0 && frame > segmentFrames - fadeOutFrames) {
-        gain *= Math.sin(((segmentFrames - frame) / Math.max(1, fadeOutFrames)) * Math.PI * 0.5);
-      }
-
-      outputData[destinationFrame] += sourceData[sourceStartFrame + frame] * gain;
-    }
-  }
-}
-
-function applyEdgeFades(buffer: AudioBuffer) {
-  const fadeInFrames = Math.min(Math.floor(buffer.sampleRate * 0.04), Math.floor(buffer.length / 4));
-  const fadeOutFrames = Math.min(Math.floor(buffer.sampleRate * 1.45), Math.floor(buffer.length / 3));
-
-  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
-    const data = buffer.getChannelData(channel);
-
-    for (let index = 0; index < fadeInFrames; index += 1) {
-      data[index] *= index / Math.max(1, fadeInFrames);
-    }
-
-    for (let index = 0; index < fadeOutFrames; index += 1) {
-      const frame = data.length - 1 - index;
-      data[frame] *= index / Math.max(1, fadeOutFrames);
-    }
-  }
-}
-
-function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, targetSeconds: number, song: Song) {
-  const actualDurationSeconds = Math.min(targetSeconds, buffer.duration);
-  const output = audioContext.createBuffer(
-    buffer.numberOfChannels,
-    Math.max(1, Math.floor(actualDurationSeconds * buffer.sampleRate)),
-    buffer.sampleRate,
-  );
-  const frames = getEnergyFrames(buffer);
-  const beatGrid = getBeatGridFromSong(song, buffer.duration);
-  const matchedPlan = findMatchedBlendPlan(buffer, frames, actualDurationSeconds, beatGrid);
-  const plan: NaturalBlendPlan = matchedPlan ?? {
-    mode: "continuous",
-    beatAware: Boolean(beatGrid),
-    crossfadeSeconds: 0,
-    segments: [
-      {
-        start: findBestContinuousStart({
-          buffer,
-          frames,
-          length: actualDurationSeconds,
-          beatGrid,
-        }),
-        length: actualDurationSeconds,
-      },
-    ],
-  };
-
-  console.info(
-    `[Filmwave Shorten] ${plan.beatAware ? "Beat-aware" : "Natural"} ${plan.mode} plan`,
-    plan,
-  );
-
-  if (plan.mode === "continuous") {
-    copySegment({
-      source: buffer,
-      output,
-      segment: plan.segments[0],
-      outputStartSeconds: 0,
-      fadeInSeconds: 0,
-      fadeOutSeconds: 0,
-    });
-  } else {
-    copySegment({
-      source: buffer,
-      output,
-      segment: plan.segments[0],
-      outputStartSeconds: 0,
-      fadeInSeconds: 0,
-      fadeOutSeconds: plan.crossfadeSeconds,
-    });
-    copySegment({
-      source: buffer,
-      output,
-      segment: plan.segments[1],
-      outputStartSeconds: plan.segments[0].length - plan.crossfadeSeconds,
-      fadeInSeconds: plan.crossfadeSeconds,
-      fadeOutSeconds: 0,
-    });
-  }
-
-  applyEdgeFades(output);
-
-  return output;
 }
 
 async function createShortenedTrack(song: Song, targetSeconds: number) {
@@ -924,7 +604,7 @@ export default function ShortenTrackModal({
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
             <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
-              Generate a shorter version using similarity matching snapped to beat/downbeat-safe cut points.
+              Generate a shorter version by isolating one usable continuous section and fading it in/out.
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -1003,7 +683,7 @@ export default function ShortenTrackModal({
                           {track.label} Version
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                          {formatDuration(track.actualDurationSeconds)} beat-aware blend · waveform ready
+                          {formatDuration(track.actualDurationSeconds)} continuous excerpt · waveform ready
                         </span>
                       </span>
 
