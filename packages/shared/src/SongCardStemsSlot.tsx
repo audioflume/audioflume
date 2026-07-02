@@ -30,7 +30,8 @@ export function SongCardStemsSlot({
         className="filmwave-song-stems-popover"
         offsetAmount={6}
         flippedOffsetAmount={6}
-        collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
+        collisionPadding={{ top: 163, right: 16, bottom: 85, left: 16 }}
+        elevateTrigger={false}
         trigger={({ open }) => (
           <button
             type="button"
