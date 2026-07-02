@@ -43,6 +43,7 @@ def generate_interpretation(request: InterpretationRequest) -> InterpretationRes
 
     output_path = request.source_path.parent / f"ai-interpretation-{request.target_seconds}s.wav"
     prompt = build_stable_audio_prompt(request)
+    init_noise_level = os.environ.get("FILMWAVE_STABLE_AUDIO_INIT_NOISE_LEVEL", "0.25")
     env = os.environ.copy()
     env["HF_HUB_DISABLE_XET"] = "1"
 
@@ -56,6 +57,10 @@ def generate_interpretation(request: InterpretationRequest) -> InterpretationRes
         prompt,
         "--duration",
         str(request.target_seconds),
+        "--init-audio",
+        str(request.source_path),
+        "--init-noise-level",
+        init_noise_level,
         "-o",
         str(output_path),
     ]
@@ -81,14 +86,15 @@ def generate_interpretation(request: InterpretationRequest) -> InterpretationRes
 
 def build_stable_audio_prompt(request: InterpretationRequest) -> str:
     identity = " ".join(part for part in [request.title, request.artist] if part)
-    reference_note = f"Inspired by the reference cue {identity}." if identity else "Inspired by the provided reference cue."
+    reference_note = f"Use the source audio as the primary reference for {identity}." if identity else "Use the source audio as the primary reference."
 
     return " ".join(
         [
             reference_note,
-            "Create an intentional short music cue with the same broad mood, tempo feel, instrumentation, groove, production style, and emotional character.",
-            "It should have a clear beginning, natural development, and resolved ending.",
-            "Do not make it feel like a loop, hard edit, crossfade, remix, or generic stock track.",
+            "Preserve the broad tempo feel, groove, instrumentation, texture, arrangement language, and emotional character of the source cue.",
+            "Create a shorter version that feels related to the same song rather than a new unrelated composition.",
+            "Keep changes conservative, musical, and coherent.",
+            "Avoid vocals unless they are clearly present in the source.",
             request.prompt,
         ]
     )
