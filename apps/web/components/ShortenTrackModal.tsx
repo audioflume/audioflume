@@ -14,6 +14,7 @@ const LENGTH_OPTIONS = [
 
 const WAVEFORM_PEAK_COUNT = 512;
 const PLAYER_PREVIEW_Z_INDEX = "220";
+const BAR_BEATS = 4;
 
 type ShortenedTrack = {
   id: string;
@@ -44,6 +45,7 @@ type NaturalBlendPlan = {
   segments: NaturalSegment[];
   crossfadeSeconds: number;
   mode: "continuous" | "matched_blend";
+  beatAware: boolean;
 };
 
 type EnergyFrame = {
@@ -51,6 +53,19 @@ type EnergyFrame = {
   rms: number;
   peak: number;
   zcr: number;
+};
+
+type BeatGrid = {
+  beats: number[];
+  downbeats: number[];
+  beatInterval: number | null;
+  source: string;
+};
+
+type EditPointsWithBeatGrid = {
+  beats?: unknown;
+  downbeats?: unknown;
+  beatSource?: unknown;
 };
 
 function formatDuration(seconds: number) {
@@ -64,6 +79,117 @@ function formatDuration(seconds: number) {
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
+}
+
+function cleanNumberArray(value: unknown, duration: number) {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((item) => Number(item))
+    .filter((item) => Number.isFinite(item) && item >= 0 && item <= duration)
+    .sort((a, b) => a - b);
+}
+
+function createBpmBeatGrid(bpm: number, duration: number): BeatGrid | null {
+  if (!Number.isFinite(bpm) || bpm <= 0 || !Number.isFinite(duration) || duration <= 0) {
+    return null;
+  }
+
+  const beatInterval = 60 / bpm;
+  const beats: number[] = [];
+  const downbeats: number[] = [];
+
+  for (let index = 0; index * beatInterval <= duration; index += 1) {
+    const time = Number((index * beatInterval).toFixed(4));
+    beats.push(time);
+
+    if (index % BAR_BEATS === 0) {
+      downbeats.push(time);
+    }
+  }
+
+  return {
+    beats,
+    downbeats,
+    beatInterval,
+    source: "bpm_grid",
+  };
+}
+
+function getBeatGridFromSong(song: Song, duration: number): BeatGrid | null {
+  try {
+    const parsed = JSON.parse(song.editPoints || "{}") as EditPointsWithBeatGrid;
+    const beats = cleanNumberArray(parsed.beats, duration);
+    const downbeats = cleanNumberArray(parsed.downbeats, duration);
+
+    if (beats.length >= 4 || downbeats.length >= 2) {
+      const usableBeats = beats.length >= 4 ? beats : downbeats;
+      const intervals = usableBeats
+        .slice(1)
+        .map((time, index) => time - usableBeats[index])
+        .filter((interval) => interval > 0.2 && interval < 2);
+      const beatInterval = intervals.length
+        ? intervals.sort((a, b) => a - b)[Math.floor(intervals.length / 2)]
+        : null;
+
+      return {
+        beats,
+        downbeats: downbeats.length >= 2 ? downbeats : usableBeats.filter((_, index) => index % BAR_BEATS === 0),
+        beatInterval,
+        source: typeof parsed.beatSource === "string" ? parsed.beatSource : "stored_grid",
+      };
+    }
+  } catch {
+    // Fall back to BPM-derived grid.
+  }
+
+  return createBpmBeatGrid(song.bpm, duration);
+}
+
+function getCutGrid(beatGrid: BeatGrid | null, duration: number) {
+  if (!beatGrid) return [];
+
+  const preferred = beatGrid.downbeats.length >= 2 ? beatGrid.downbeats : beatGrid.beats;
+
+  return preferred.filter((time) => time >= 0 && time <= duration);
+}
+
+function snapToNearestGridTime(time: number, grid: number[], min: number, max: number, maxDistance = 2.5) {
+  if (!grid.length) return clamp(time, min, max);
+
+  let bestTime = clamp(time, min, max);
+  let bestDistance = Infinity;
+
+  for (const gridTime of grid) {
+    if (gridTime < min || gridTime > max) continue;
+
+    const distance = Math.abs(gridTime - time);
+
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestTime = gridTime;
+    }
+  }
+
+  return bestDistance <= maxDistance ? bestTime : clamp(time, min, max);
+}
+
+function getCandidateStarts(minStart: number, maxStart: number, grid: number[], step: number) {
+  if (grid.length) {
+    const candidates = grid.filter((time) => time >= minStart && time <= maxStart);
+
+    if (candidates.length > 0) {
+      return candidates;
+    }
+  }
+
+  const candidates: number[] = [];
+
+  for (let start = minStart; start <= maxStart; start += step) {
+    candidates.push(start);
+  }
+
+  return candidates;
 }
 
 function writeString(view: DataView, offset: number, value: string) {
@@ -138,7 +264,6 @@ function createWaveformPeaks(buffer: AudioBuffer) {
   }
 
   if (maxPeak <= 0) return peaks.map(() => 0);
-
   return peaks.map((peak) => Number((peak / maxPeak).toFixed(4)));
 }
 
@@ -194,7 +319,6 @@ function getEnergyFrames(buffer: AudioBuffer) {
 function averageEnergy(frames: EnergyFrame[], start: number, end: number) {
   const scoped = frames.filter((frame) => frame.time >= start && frame.time < end);
   if (!scoped.length) return 0;
-
   return scoped.reduce((sum, frame) => sum + frame.rms, 0) / scoped.length;
 }
 
@@ -206,22 +330,36 @@ function edgeEnergy(frames: EnergyFrame[], start: number, end: number) {
   return { startEnergy, endEnergy };
 }
 
-function findBestContinuousStart(buffer: AudioBuffer, frames: EnergyFrame[], length: number) {
+function findBestContinuousStart({
+  buffer,
+  frames,
+  length,
+  beatGrid,
+}: {
+  buffer: AudioBuffer;
+  frames: EnergyFrame[];
+  length: number;
+  beatGrid: BeatGrid | null;
+}) {
   const duration = buffer.duration;
   const maxStart = Math.max(0, duration - length);
   const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.08) : 0;
   const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.08) : maxStart;
+  const grid = getCutGrid(beatGrid, duration);
+  const candidates = getCandidateStarts(searchMin, searchMax, grid, 0.5);
   let bestStart = 0;
   let bestScore = -Infinity;
 
-  for (let start = searchMin; start <= searchMax; start += 0.5) {
+  for (const rawStart of candidates) {
+    const start = snapToNearestGridTime(rawStart, grid, searchMin, searchMax);
     const end = start + length;
     const middleEnergy = averageEnergy(frames, start, end);
     const { startEnergy, endEnergy } = edgeEnergy(frames, start, end);
     const timelinePosition = maxStart > 0 ? start / maxStart : 0;
     const avoidExtremeEnds = 1 - Math.abs(timelinePosition - 0.48);
+    const beatBonus = beatGrid ? middleEnergy * 0.16 : 0;
     const edgePenalty = Math.abs(startEnergy - middleEnergy) * 0.35 + Math.abs(endEnergy - middleEnergy) * 0.55;
-    const score = middleEnergy + avoidExtremeEnds * middleEnergy * 0.18 - edgePenalty;
+    const score = middleEnergy + avoidExtremeEnds * middleEnergy * 0.18 + beatBonus - edgePenalty;
 
     if (score > bestScore) {
       bestScore = score;
@@ -239,6 +377,7 @@ function getTopSegmentStarts({
   minStart,
   maxStart,
   count,
+  beatGrid,
   preferLater = false,
 }: {
   buffer: AudioBuffer;
@@ -247,21 +386,26 @@ function getTopSegmentStarts({
   minStart: number;
   maxStart: number;
   count: number;
+  beatGrid: BeatGrid | null;
   preferLater?: boolean;
 }) {
   const duration = buffer.duration;
   const safeMin = clamp(minStart, 0, Math.max(0, duration - length));
   const safeMax = clamp(maxStart, safeMin, Math.max(safeMin, duration - length));
+  const grid = getCutGrid(beatGrid, duration);
+  const starts = getCandidateStarts(safeMin, safeMax, grid, 0.75);
   const candidates: Array<{ start: number; score: number }> = [];
 
-  for (let start = safeMin; start <= safeMax; start += 0.75) {
+  for (const rawStart of starts) {
+    const start = snapToNearestGridTime(rawStart, grid, safeMin, safeMax);
     const end = start + length;
     const energy = averageEnergy(frames, start, end);
     const { startEnergy, endEnergy } = edgeEnergy(frames, start, end);
     const position = safeMax > safeMin ? (start - safeMin) / (safeMax - safeMin) : 0;
     const endSmoothness = Math.max(0, 1 - Math.abs(endEnergy - energy) / Math.max(0.001, energy));
     const timelineBias = preferLater ? position * energy * 0.22 : (1 - Math.abs(position - 0.42)) * energy * 0.12;
-    const score = energy + endSmoothness * energy * 0.15 + timelineBias - Math.abs(startEnergy - energy) * 0.24;
+    const beatBonus = beatGrid ? energy * 0.18 : 0;
+    const score = energy + endSmoothness * energy * 0.15 + timelineBias + beatBonus - Math.abs(startEnergy - energy) * 0.24;
 
     candidates.push({ start, score });
   }
@@ -316,13 +460,10 @@ function getTextureVector(buffer: AudioBuffer, time: number, length: number, bef
     vector.push(rms, zcr);
   }
 
-  const averageRms = totalRms / vectorSize;
-  const averageZcr = totalZcr / vectorSize;
-
   return {
     vector,
-    averageRms,
-    averageZcr,
+    averageRms: totalRms / vectorSize,
+    averageZcr: totalZcr / vectorSize,
   };
 }
 
@@ -349,9 +490,10 @@ function getJoinDistance(buffer: AudioBuffer, firstEnd: number, secondStart: num
   return vectorDistance * 0.72 + loudnessRatio * 0.2 + zcrDifference * 0.08;
 }
 
-function findMatchedBlendPlan(buffer: AudioBuffer, frames: EnergyFrame[], targetSeconds: number) {
+function findMatchedBlendPlan(buffer: AudioBuffer, frames: EnergyFrame[], targetSeconds: number, beatGrid: BeatGrid | null) {
   const duration = buffer.duration;
-  const crossfadeSeconds = clamp(targetSeconds * 0.07, 0.8, 2.4);
+  const beatInterval = beatGrid?.beatInterval || null;
+  const crossfadeSeconds = beatInterval ? clamp(beatInterval * 2, 0.6, 2.4) : clamp(targetSeconds * 0.07, 0.8, 2.4);
   const endingLength = clamp(targetSeconds * 0.28, targetSeconds <= 20 ? 4 : 7, targetSeconds <= 20 ? 5.5 : 15);
   const firstLength = targetSeconds + crossfadeSeconds - endingLength;
   const minimumGap = Math.max(5, crossfadeSeconds * 3);
@@ -367,6 +509,7 @@ function findMatchedBlendPlan(buffer: AudioBuffer, frames: EnergyFrame[], target
     minStart: duration * 0.05,
     maxStart: duration - firstLength - endingLength - minimumGap,
     count: 8,
+    beatGrid,
   });
   const secondStarts = getTopSegmentStarts({
     buffer,
@@ -376,30 +519,39 @@ function findMatchedBlendPlan(buffer: AudioBuffer, frames: EnergyFrame[], target
     maxStart: duration - endingLength,
     count: 12,
     preferLater: true,
+    beatGrid,
   });
+  const grid = getCutGrid(beatGrid, duration);
   let bestPlan: NaturalBlendPlan | null = null;
   let bestScore = Infinity;
 
   for (const firstStart of firstStarts) {
-    const firstEnd = firstStart + firstLength;
+    const rawFirstEnd = firstStart + firstLength;
+    const firstEnd = snapToNearestGridTime(rawFirstEnd, grid, firstStart + 3, duration - endingLength - minimumGap);
+    const safeFirstLength = Math.max(3, firstEnd - firstStart);
 
     for (const secondStart of secondStarts) {
       if (secondStart <= firstEnd + minimumGap) continue;
 
+      const safeEndingLength = Math.max(3, targetSeconds + crossfadeSeconds - safeFirstLength);
+      if (secondStart + safeEndingLength > duration) continue;
+
       const distance = getJoinDistance(buffer, firstEnd, secondStart, crossfadeSeconds);
-      const secondEnergy = averageEnergy(frames, secondStart, secondStart + endingLength);
+      const secondEnergy = averageEnergy(frames, secondStart, secondStart + safeEndingLength);
       const firstEnergy = averageEnergy(frames, firstStart, firstEnd);
       const energyBalance = Math.abs(Math.log(Math.max(0.0001, firstEnergy) / Math.max(0.0001, secondEnergy)));
-      const score = distance + energyBalance * 0.12;
+      const beatBonus = beatGrid ? -0.08 : 0;
+      const score = distance + energyBalance * 0.12 + beatBonus;
 
       if (score < bestScore) {
         bestScore = score;
         bestPlan = {
           mode: "matched_blend",
+          beatAware: Boolean(beatGrid),
           crossfadeSeconds,
           segments: [
-            { start: firstStart, length: firstLength },
-            { start: secondStart, length: endingLength },
+            { start: firstStart, length: safeFirstLength },
+            { start: secondStart, length: safeEndingLength },
           ],
         };
       }
@@ -407,8 +559,7 @@ function findMatchedBlendPlan(buffer: AudioBuffer, frames: EnergyFrame[], target
   }
 
   if (!bestPlan) return null;
-
-  return bestScore <= 0.58 ? bestPlan : null;
+  return bestScore <= (beatGrid ? 0.72 : 0.58) ? bestPlan : null;
 }
 
 function copySegment({
@@ -477,7 +628,7 @@ function applyEdgeFades(buffer: AudioBuffer) {
   }
 }
 
-function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, targetSeconds: number) {
+function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, targetSeconds: number, song: Song) {
   const actualDurationSeconds = Math.min(targetSeconds, buffer.duration);
   const output = audioContext.createBuffer(
     buffer.numberOfChannels,
@@ -485,17 +636,29 @@ function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, tar
     buffer.sampleRate,
   );
   const frames = getEnergyFrames(buffer);
-  const matchedPlan = findMatchedBlendPlan(buffer, frames, actualDurationSeconds);
+  const beatGrid = getBeatGridFromSong(song, buffer.duration);
+  const matchedPlan = findMatchedBlendPlan(buffer, frames, actualDurationSeconds, beatGrid);
   const plan: NaturalBlendPlan = matchedPlan ?? {
     mode: "continuous",
+    beatAware: Boolean(beatGrid),
     crossfadeSeconds: 0,
     segments: [
       {
-        start: findBestContinuousStart(buffer, frames, actualDurationSeconds),
+        start: findBestContinuousStart({
+          buffer,
+          frames,
+          length: actualDurationSeconds,
+          beatGrid,
+        }),
         length: actualDurationSeconds,
       },
     ],
   };
+
+  console.info(
+    `[Filmwave Shorten] ${plan.beatAware ? "Beat-aware" : "Natural"} ${plan.mode} plan`,
+    plan,
+  );
 
   if (plan.mode === "continuous") {
     copySegment({
@@ -566,7 +729,7 @@ async function createShortenedTrack(song: Song, targetSeconds: number) {
 
   try {
     const decodedAudio = await audioContext.decodeAudioData(encodedAudio.slice(0));
-    const shortenedBuffer = renderNaturalShort(decodedAudio, audioContext, targetSeconds);
+    const shortenedBuffer = renderNaturalShort(decodedAudio, audioContext, targetSeconds, song);
     const blob = audioBufferToWavBlob(shortenedBuffer);
 
     return {
@@ -761,7 +924,7 @@ export default function ShortenTrackModal({
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
             <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
-              Choose a shorter version to generate. Filmwave now prefers natural continuous sections or one similarity-matched blend instead of cue-point cuts.
+              Generate a shorter version using similarity matching snapped to beat/downbeat-safe cut points.
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -840,7 +1003,7 @@ export default function ShortenTrackModal({
                           {track.label} Version
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                          {formatDuration(track.actualDurationSeconds)} natural blend · waveform ready
+                          {formatDuration(track.actualDurationSeconds)} beat-aware blend · waveform ready
                         </span>
                       </span>
 
