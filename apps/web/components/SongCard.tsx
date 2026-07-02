@@ -241,11 +241,11 @@ function StemSongRow({
             src={coverArtUrl}
             alt={stem.name}
             fill
-            sizes="70px"
+            sizes="62px"
             className="object-cover"
           />
         ) : (
-          <div className="h-[70px] w-[70px] bg-[var(--bg-hover)]" />
+          <div className="h-[62px] w-[62px] bg-[var(--bg-hover)]" />
         )}
         {parentSong.aiGenerated ? (
           <span className="filmwave-song-ai-badge" aria-label="Made with AI">
@@ -460,9 +460,9 @@ export default function SongCard({
         onCoverClick={() => togglePlayPause(song)}
         cover={
           coverArtUrl ? (
-            <Image src={coverArtUrl} alt={song.title} fill sizes="70px" className="object-cover" />
+            <Image src={coverArtUrl} alt={song.title} fill sizes="62px" className="object-cover" />
           ) : (
-            <div className="h-[70px] w-[70px] bg-[var(--bg-hover)]" />
+            <div className="h-[62px] w-[62px] bg-[var(--bg-hover)]" />
           )
         }
         coverBadge={
