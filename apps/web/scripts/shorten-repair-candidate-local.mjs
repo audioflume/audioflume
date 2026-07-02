@@ -47,7 +47,7 @@ async function main() {
 
   await unlink(oldRepairCandidatePath).catch(() => undefined);
 
-  console.log("Creating two-section smart edit...");
+  console.log("Creating single-section smart edit...");
   await renderSmartEdit({ sourcePath, outputPath: smartEditPath, plan });
 
   await writeFile(
@@ -60,7 +60,7 @@ async function main() {
         plan,
         outputPath: smartEditPath,
         createdAt: new Date().toISOString(),
-        note: "This is a deterministic two-section smart edit. It does not apply EQ, normalization, limiting, or AI repair.",
+        note: "This is a deterministic single-section smart edit. It has no internal splice or crossfade and does not apply EQ, normalization, limiting, or AI repair.",
       },
       null,
       2,
@@ -70,7 +70,7 @@ async function main() {
   console.log("Done.");
   console.log(`Smart edit: ${smartEditPath}`);
   console.log(`Plan:       ${planPath}`);
-  console.log("Note: this is the smarter edit baseline. True AI repair comes after this sounds musically close enough.");
+  console.log("Note: this is the single-section baseline. AI polish comes after this sounds musically close enough.");
 }
 
 function parseArgs(rawArgs) {
@@ -99,53 +99,25 @@ function clamp(value, min, max) {
 
 function buildSmartEditPlan({ duration, targetSeconds }) {
   const safeTarget = Math.min(targetSeconds, duration);
-  const useTwoSections = duration > safeTarget + 18 && safeTarget >= 15;
-
-  if (!useTwoSections) {
-    return {
-      mode: "continuous",
-      targetSeconds: safeTarget,
-      crossfadeSeconds: 0,
-      segments: [
-        {
-          role: "main",
-          start: clamp(duration * 0.18, 0, Math.max(0, duration - safeTarget)),
-          length: safeTarget,
-        },
-      ],
-    };
-  }
-
-  const crossfadeSeconds = clamp(safeTarget * 0.075, 0.9, 2.2);
-  const endingLength = clamp(safeTarget * 0.28, safeTarget <= 20 ? 4 : 7, safeTarget <= 20 ? 5.5 : 15);
-  const firstLength = safeTarget + crossfadeSeconds - endingLength;
-  const minimumGap = Math.max(5, crossfadeSeconds * 3);
-  const latestFirstStart = Math.max(0, duration - firstLength - endingLength - minimumGap);
-  const firstStart = clamp(duration * 0.12, 0, latestFirstStart);
-  const endingSearchStart = Math.max(duration * 0.52, firstStart + firstLength + minimumGap);
-  const endingStart = clamp(duration - endingLength - duration * 0.06, endingSearchStart, Math.max(endingSearchStart, duration - endingLength));
+  const latestStart = Math.max(0, duration - safeTarget);
+  const preferredStart = duration <= safeTarget + 8 ? 0 : duration * 0.38;
 
   return {
-    mode: "two_section_ending_blend",
+    mode: "single_section_best_excerpt",
     targetSeconds: safeTarget,
-    crossfadeSeconds,
+    crossfadeSeconds: 0,
     segments: [
       {
-        role: "main_body",
-        start: firstStart,
-        length: firstLength,
-      },
-      {
-        role: "natural_ending",
-        start: endingStart,
-        length: endingLength,
+        role: "best_continuous_excerpt",
+        start: clamp(preferredStart, 0, latestStart),
+        length: safeTarget,
       },
     ],
   };
 }
 
 async function renderSmartEdit({ sourcePath, outputPath, plan }) {
-  if (plan.mode === "continuous") {
+  if (plan.segments.length === 1) {
     const segment = plan.segments[0];
 
     await runFfmpeg([
