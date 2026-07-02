@@ -121,19 +121,29 @@ function getCutGrid(beatGrid: BeatGrid | null) {
 }
 
 function getCandidateStarts(minStart: number, maxStart: number, grid: number[], step: number) {
-  const gridCandidates = grid.filter((time) => time >= minStart && time <= maxStart);
-
-  if (gridCandidates.length > 0) {
-    return gridCandidates;
-  }
-
   const candidates: number[] = [];
+
+  for (const time of grid) {
+    if (time >= minStart && time <= maxStart) candidates.push(time);
+  }
 
   for (let start = minStart; start <= maxStart; start += step) {
     candidates.push(start);
   }
 
-  return candidates;
+  return Array.from(new Set(candidates.map((candidate) => Number(candidate.toFixed(3))))).sort((a, b) => a - b);
+}
+
+function getNearestGridDistance(time: number, grid: number[]) {
+  if (!grid.length) return Infinity;
+
+  let distance = Infinity;
+
+  for (const gridTime of grid) {
+    distance = Math.min(distance, Math.abs(gridTime - time));
+  }
+
+  return distance;
 }
 
 function getMonoSample(channels: Float32Array[], frame: number) {
@@ -200,10 +210,24 @@ function findBestContinuousStart({
 }) {
   const duration = buffer.duration;
   const maxStart = Math.max(0, duration - length);
-  const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.12) : 0;
-  const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.08) : maxStart;
+  const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.08) : 0;
+  const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.04) : maxStart;
   const grid = getCutGrid(beatGrid);
-  const candidates = getCandidateStarts(searchMin, searchMax, grid, 0.5);
+  const baseCandidates = getCandidateStarts(searchMin, searchMax, grid, 0.5);
+  const phraseEndCandidates = grid
+    .map((time) => time - length)
+    .filter((start) => start >= searchMin && start <= searchMax);
+  const anchorCandidates = [
+    0,
+    maxStart,
+    duration * 0.18,
+    duration * 0.32,
+    duration * 0.48,
+    duration * 0.64,
+  ].map((start) => clamp(start, searchMin, searchMax));
+  const candidates = Array.from(
+    new Set([...baseCandidates, ...phraseEndCandidates, ...anchorCandidates].map((candidate) => Number(candidate.toFixed(3)))),
+  ).sort((a, b) => a - b);
   let bestStart = 0;
   let bestScore = -Infinity;
 
@@ -211,12 +235,35 @@ function findBestContinuousStart({
     const safeStart = clamp(start, searchMin, searchMax);
     const end = safeStart + length;
     const middleEnergy = averageEnergy(frames, safeStart, end);
+    const energyBase = Math.max(0.0001, middleEnergy);
     const { startEnergy, endEnergy } = edgeEnergy(frames, safeStart, end);
+    const beforeStartEnergy = averageEnergy(frames, Math.max(0, safeStart - 2), safeStart) || startEnergy;
+    const afterEndEnergy = averageEnergy(frames, end, Math.min(duration, end + 2.25)) || endEnergy;
     const timelinePosition = maxStart > 0 ? safeStart / maxStart : 0;
-    const centerBias = 1 - Math.abs(timelinePosition - 0.48);
-    const beatBonus = beatGrid ? middleEnergy * 0.12 : 0;
-    const edgePenalty = Math.abs(startEnergy - middleEnergy) * 0.25 + Math.abs(endEnergy - middleEnergy) * 0.45;
-    const score = middleEnergy + centerBias * middleEnergy * 0.16 + beatBonus - edgePenalty;
+    const timelineBias = (1 - Math.abs(timelinePosition - 0.58)) * middleEnergy * 0.08;
+    const startGridDistance = getNearestGridDistance(safeStart, grid);
+    const endGridDistance = getNearestGridDistance(end, grid);
+    const startBoundaryBonus = Number.isFinite(startGridDistance)
+      ? Math.max(0, 1 - startGridDistance / 1.5) * middleEnergy * 0.2
+      : 0;
+    const endBoundaryBonus = Number.isFinite(endGridDistance)
+      ? Math.max(0, 1 - endGridDistance / 1.5) * middleEnergy * 0.32
+      : 0;
+    const startIntent = clamp((middleEnergy - Math.max(startEnergy, beforeStartEnergy * 0.75)) / energyBase, -1, 1);
+    const endResolution = clamp((middleEnergy - Math.max(endEnergy, afterEndEnergy * 0.85)) / energyBase, -1, 1);
+    const realSongEndBonus = Math.abs(end - duration) < 0.75 ? middleEnergy * 0.4 : 0;
+    const abruptStartPenalty = Math.max(0, startEnergy - middleEnergy * 1.15) * 0.35;
+    const abruptEndPenalty = Math.max(0, Math.max(endEnergy, afterEndEnergy) - middleEnergy * 1.05) * 0.7;
+    const score =
+      middleEnergy +
+      startIntent * middleEnergy * 0.28 +
+      endResolution * middleEnergy * 0.58 +
+      startBoundaryBonus +
+      endBoundaryBonus +
+      realSongEndBonus +
+      timelineBias -
+      abruptStartPenalty -
+      abruptEndPenalty;
 
     if (score > bestScore) {
       bestScore = score;
@@ -286,9 +333,10 @@ function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, tar
   });
 
   console.info("[Filmwave Shorten] Continuous excerpt plan", {
-    mode: "continuous_excerpt",
+    mode: "continuous_excerpt_deliberate_end",
     beatAware: Boolean(beatGrid),
     start,
+    end: start + actualDurationSeconds,
     length: actualDurationSeconds,
   });
 
@@ -604,7 +652,7 @@ export default function ShortenTrackModal({
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
             <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
-              Generate a shorter version by isolating one usable continuous section and fading it in/out.
+              Generate a shorter version by isolating one usable continuous section with a more deliberate start or ending.
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -683,7 +731,7 @@ export default function ShortenTrackModal({
                           {track.label} Version
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                          {formatDuration(track.actualDurationSeconds)} continuous excerpt · waveform ready
+                          {formatDuration(track.actualDurationSeconds)} deliberate excerpt · waveform ready
                         </span>
                       </span>
 
