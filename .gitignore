@@ -1,0 +1,5 @@
+
+# Python sidecar virtual environments
+.venv/
+__pycache__/
+*.pyc
