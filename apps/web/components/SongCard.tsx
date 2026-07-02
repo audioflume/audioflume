@@ -22,6 +22,7 @@ import SongMoreDropdown from "@/components/SongMoreDropdown";
 import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import AddToProjectModal from "@/components/AddToProjectModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
+import ShortenTrackModal from "@/components/ShortenTrackModal";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import NoVocalsIcon from "@/components/icons/NoVocalsIcon";
@@ -96,6 +97,7 @@ export default function SongCard({
   const [stemsOpen, setStemsOpen] = useState(false);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
   const [projectModalOpen, setProjectModalOpen] = useState(false);
+  const [shortenTrackOpen, setShortenTrackOpen] = useState(false);
   const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<string | null>(null);
@@ -270,6 +272,7 @@ export default function SongCard({
               onOpenChange={setMoreOpen}
               onAddToPlaylist={() => setPlaylistModalOpen(true)}
               onAddToProject={() => setProjectModalOpen(true)}
+              onShortenTrack={() => setShortenTrackOpen(true)}
               onCreatePlaylist={() => setCreatePlaylistOpen(true)}
               onRemoveFromPlaylist={playlistId ? handleRemoveFromPlaylist : undefined}
               onRemoveFromProject={projectId ? handleRemoveFromProject : undefined}
@@ -301,6 +304,14 @@ export default function SongCard({
           isOpen={projectModalOpen}
           song={song}
           onClose={() => setProjectModalOpen(false)}
+        />
+      )}
+
+      {shortenTrackOpen && (
+        <ShortenTrackModal
+          isOpen={shortenTrackOpen}
+          song={song}
+          onClose={() => setShortenTrackOpen(false)}
         />
       )}
 
