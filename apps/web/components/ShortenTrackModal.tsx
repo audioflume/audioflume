@@ -5,7 +5,6 @@ import type { Song } from "@/lib/types";
 import ModalShell from "@/components/ModalShell";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
-import { getMarkerType, parseEditPoints } from "@filmwave/shared";
 
 const LENGTH_OPTIONS = [
   { label: "15 seconds", shortLabel: "15s", seconds: 15 },
@@ -36,26 +35,6 @@ type BrowserAudioWindow = Window &
     webkitAudioContext?: typeof AudioContext;
   };
 
-type CutSegment = {
-  start: number;
-  end: number;
-};
-
-type EnergyWindow = {
-  time: number;
-  rms: number;
-  flux: number;
-};
-
-type StructureAnchors = {
-  firstHit: number | null;
-  drop: number | null;
-  breakPoint: number | null;
-  buttonEnding: number | null;
-  hook: number | null;
-  gridAnchor: number;
-};
-
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
 
@@ -63,74 +42,6 @@ function formatDuration(seconds: number) {
   const remainingSeconds = Math.floor(seconds % 60);
 
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function writeString(view: DataView, offset: number, value: string) {
-  for (let index = 0; index < value.length; index += 1) {
-    view.setUint8(offset + index, value.charCodeAt(index));
-  }
-}
-
-function audioBufferToWavBlob(buffer: AudioBuffer) {
-  const numberOfChannels = buffer.numberOfChannels;
-  const sampleRate = buffer.sampleRate;
-  const bytesPerSample = 2;
-  const blockAlign = numberOfChannels * bytesPerSample;
-  const byteRate = sampleRate * blockAlign;
-  const dataSize = buffer.length * blockAlign;
-  const wavBuffer = new ArrayBuffer(44 + dataSize);
-  const view = new DataView(wavBuffer);
-  const channelData = Array.from({ length: numberOfChannels }, (_, channel) =>
-    buffer.getChannelData(channel),
-  );
-
-  writeString(view, 0, "RIFF");
-  view.setUint32(4, 36 + dataSize, true);
-  writeString(view, 8, "WAVE");
-  writeString(view, 12, "fmt ");
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, numberOfChannels, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, byteRate, true);
-  view.setUint16(32, blockAlign, true);
-  view.setUint16(34, bytesPerSample * 8, true);
-  writeString(view, 36, "data");
-  view.setUint32(40, dataSize, true);
-
-  let offset = 44;
-
-  for (let frame = 0; frame < buffer.length; frame += 1) {
-    for (let channel = 0; channel < numberOfChannels; channel += 1) {
-      const sample = Math.max(-1, Math.min(1, channelData[channel][frame] || 0));
-      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
-      offset += bytesPerSample;
-    }
-  }
-
-  return new Blob([view], { type: "audio/wav" });
-}
-
-function applyEdgeFades(buffer: AudioBuffer) {
-  const fadeInFrames = Math.min(Math.floor(buffer.sampleRate * 0.03), Math.floor(buffer.length / 4));
-  const fadeOutFrames = Math.min(Math.floor(buffer.sampleRate * 1.75), Math.floor(buffer.length / 3));
-
-  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
-    const data = buffer.getChannelData(channel);
-
-    for (let index = 0; index < fadeInFrames; index += 1) {
-      data[index] *= index / Math.max(1, fadeInFrames);
-    }
-
-    for (let index = 0; index < fadeOutFrames; index += 1) {
-      const frame = data.length - 1 - index;
-      data[frame] *= index / Math.max(1, fadeOutFrames);
-    }
-  }
 }
 
 function createWaveformPeaks(buffer: AudioBuffer) {
@@ -163,397 +74,22 @@ function createWaveformPeaks(buffer: AudioBuffer) {
   return peaks.map((peak) => Number((peak / maxPeak).toFixed(4)));
 }
 
-function getMarkerTime(song: Song, type: string) {
-  const markers = parseEditPoints(song.editPoints).markers || [];
-  const marker = markers.find((item) => getMarkerType(item) === type);
-  const time = Number(marker?.time);
+async function getErrorMessage(response: Response) {
+  const fallback = "Could not create the shortened track.";
 
-  return Number.isFinite(time) ? time : null;
-}
-
-function getEnergyWindows(source: AudioBuffer): EnergyWindow[] {
-  const windowSeconds = 0.5;
-  const windowFrames = Math.max(1, Math.floor(windowSeconds * source.sampleRate));
-  const channels = Array.from({ length: source.numberOfChannels }, (_, channel) =>
-    source.getChannelData(channel),
-  );
-  const windows: EnergyWindow[] = [];
-  let previousRms = 0;
-
-  for (let startFrame = 0; startFrame < source.length; startFrame += windowFrames) {
-    const endFrame = Math.min(source.length, startFrame + windowFrames);
-    let sum = 0;
-    let count = 0;
-
-    for (let frame = startFrame; frame < endFrame; frame += 1) {
-      for (let channel = 0; channel < channels.length; channel += 1) {
-        const value = channels[channel][frame] || 0;
-        sum += value * value;
-        count += 1;
-      }
-    }
-
-    const rms = count > 0 ? Math.sqrt(sum / count) : 0;
-    windows.push({
-      time: startFrame / source.sampleRate,
-      rms,
-      flux: Math.max(0, rms - previousRms),
-    });
-    previousRms = rms;
-  }
-
-  return windows;
-}
-
-function findBestSustainedEnergyStart({
-  windows,
-  minStart,
-  maxStart,
-  length,
-  preferLater = false,
-}: {
-  windows: EnergyWindow[];
-  minStart: number;
-  maxStart: number;
-  length: number;
-  preferLater?: boolean;
-}) {
-  if (maxStart <= minStart) return null;
-
-  let bestStart = minStart;
-  let bestScore = -Infinity;
-  const step = 0.5;
-
-  for (let start = minStart; start <= maxStart; start += step) {
-    const end = start + length;
-    const scoped = windows.filter((window) => window.time >= start && window.time < end);
-    if (!scoped.length) continue;
-
-    const averageEnergy = scoped.reduce((sum, window) => sum + window.rms, 0) / scoped.length;
-    const averageFlux = scoped.reduce((sum, window) => sum + window.flux, 0) / scoped.length;
-    const timelineBias = preferLater ? (start - minStart) / Math.max(1, maxStart - minStart) : 0;
-    const score = averageEnergy * 0.88 + averageFlux * 0.12 + timelineBias * averageEnergy * 0.08;
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestStart = start;
+  try {
+    const data = await response.json();
+    if (typeof data?.error === "string") return data.error;
+  } catch {
+    try {
+      const text = await response.text();
+      if (text) return text;
+    } catch {
+      return fallback;
     }
   }
 
-  return Number.isFinite(bestScore) ? bestStart : null;
-}
-
-function getBarSeconds(song: Song) {
-  const bpm = Number(song.bpm);
-
-  if (!Number.isFinite(bpm) || bpm < 45 || bpm > 220) return 2;
-
-  return (60 / bpm) * 4;
-}
-
-function getPhraseSeconds(song: Song) {
-  return clamp(getBarSeconds(song) * 4, 5.5, 12);
-}
-
-function snapToBarGrid({
-  song,
-  time,
-  duration,
-  gridAnchor,
-}: {
-  song: Song;
-  time: number;
-  duration: number;
-  gridAnchor: number;
-}) {
-  const bar = getBarSeconds(song);
-  const snapped = gridAnchor + Math.round((time - gridAnchor) / bar) * bar;
-  const snapLimit = Math.min(1.4, bar * 0.45);
-
-  if (Math.abs(snapped - time) > snapLimit) {
-    return clamp(time, 0, duration);
-  }
-
-  return clamp(snapped, 0, duration);
-}
-
-function getStructureAnchors(song: Song, source: AudioBuffer, windows: EnergyWindow[]): StructureAnchors {
-  const firstHit = getMarkerTime(song, "first_hit");
-  const drop = getMarkerTime(song, "drop");
-  const breakPoint = getMarkerTime(song, "break");
-  const buttonEnding = getMarkerTime(song, "button_ending");
-  const fallbackHookStart = findBestSustainedEnergyStart({
-    windows,
-    minStart: clamp(source.duration * 0.16, 4, Math.max(4, source.duration - 8)),
-    maxStart: clamp(source.duration * 0.72, 4, Math.max(4, source.duration - 8)),
-    length: Math.min(12, Math.max(6, source.duration * 0.12)),
-    preferLater: false,
-  });
-  const hook = drop ?? firstHit ?? breakPoint ?? fallbackHookStart;
-  const gridAnchor = firstHit ?? drop ?? 0;
-
-  return {
-    firstHit,
-    drop,
-    breakPoint,
-    buttonEnding,
-    hook,
-    gridAnchor,
-  };
-}
-
-function makeFixedSegment(start: number, length: number, duration: number): CutSegment {
-  const safeLength = Math.min(length, duration);
-  const safeStart = clamp(start, 0, Math.max(0, duration - safeLength));
-
-  return {
-    start: safeStart,
-    end: safeStart + safeLength,
-  };
-}
-
-function getCutdownShape(targetSeconds: number, crossfadeSeconds: number) {
-  const openingLength = targetSeconds <= 20 ? 2.25 : targetSeconds <= 35 ? 4 : 7.5;
-  const hookLength = targetSeconds <= 20 ? 8.75 : targetSeconds <= 35 ? 18 : 38;
-  const endingLength = Math.max(
-    targetSeconds <= 20 ? 4 : targetSeconds <= 35 ? 8 : 13,
-    targetSeconds + crossfadeSeconds * 2 - openingLength - hookLength,
-  );
-
-  return {
-    openingLength,
-    hookLength,
-    endingLength,
-  };
-}
-
-function getOpeningSegment({
-  song,
-  source,
-  anchors,
-  length,
-}: {
-  song: Song;
-  source: AudioBuffer;
-  anchors: StructureAnchors;
-  length: number;
-}) {
-  const phrase = getPhraseSeconds(song);
-  const shouldSkipLongIntro = anchors.firstHit !== null && anchors.firstHit > phrase;
-  const rawStart = shouldSkipLongIntro ? anchors.firstHit - Math.min(1.25, length * 0.45) : 0;
-  const start = shouldSkipLongIntro
-    ? snapToBarGrid({ song, time: rawStart, duration: source.duration, gridAnchor: anchors.gridAnchor })
-    : 0;
-
-  return makeFixedSegment(start, length, source.duration);
-}
-
-function getHookSegment({
-  song,
-  source,
-  anchors,
-  windows,
-  length,
-  minStart,
-  maxEnd,
-}: {
-  song: Song;
-  source: AudioBuffer;
-  anchors: StructureAnchors;
-  windows: EnergyWindow[];
-  length: number;
-  minStart: number;
-  maxEnd: number;
-}) {
-  const phrase = getPhraseSeconds(song);
-  const leadIn = Math.min(phrase * 0.45, length * 0.26, 4.5);
-  const maxStart = Math.max(minStart, maxEnd - length);
-  const markerStart = anchors.hook !== null
-    ? anchors.hook - leadIn
-    : null;
-  const fallbackStart = findBestSustainedEnergyStart({
-    windows,
-    minStart,
-    maxStart,
-    length,
-    preferLater: false,
-  });
-  const rawStart = markerStart ?? fallbackStart ?? minStart;
-  const snappedStart = snapToBarGrid({
-    song,
-    time: rawStart,
-    duration: source.duration,
-    gridAnchor: anchors.gridAnchor,
-  });
-  const start = clamp(snappedStart, minStart, maxStart);
-
-  return makeFixedSegment(start, length, source.duration);
-}
-
-function getEndingSegment({
-  song,
-  source,
-  anchors,
-  windows,
-  length,
-  minStart,
-}: {
-  song: Song;
-  source: AudioBuffer;
-  anchors: StructureAnchors;
-  windows: EnergyWindow[];
-  length: number;
-  minStart: number;
-}) {
-  const duration = source.duration;
-  const maxStart = Math.max(minStart, duration - length);
-  const tailHitLead = Math.min(2.25, length * 0.25);
-  const markerStart = anchors.buttonEnding !== null
-    ? anchors.buttonEnding - (length - tailHitLead)
-    : null;
-  const fallbackStart = findBestSustainedEnergyStart({
-    windows,
-    minStart: clamp(Math.max(minStart, duration - 45), 0, maxStart),
-    maxStart,
-    length,
-    preferLater: true,
-  });
-  const rawStart = markerStart ?? fallbackStart ?? duration - length;
-  const snappedStart = snapToBarGrid({
-    song,
-    time: rawStart,
-    duration,
-    gridAnchor: anchors.gridAnchor,
-  });
-  const start = clamp(snappedStart, minStart, maxStart);
-
-  return makeFixedSegment(start, length, duration);
-}
-
-function buildCutdownSegments(song: Song, source: AudioBuffer, targetSeconds: number, crossfadeSeconds: number) {
-  const duration = source.duration;
-  const safeTarget = Math.min(targetSeconds, duration);
-  const windows = getEnergyWindows(source);
-
-  if (duration <= safeTarget + 1) {
-    return [{ start: 0, end: safeTarget }];
-  }
-
-  const anchors = getStructureAnchors(song, source, windows);
-  const { openingLength, hookLength, endingLength } = getCutdownShape(safeTarget, crossfadeSeconds);
-  const outputTotalSourceSeconds = safeTarget + crossfadeSeconds * 2;
-  const adjustedEndingLength = Math.max(3.5, endingLength);
-  const adjustedHookLength = Math.max(
-    4,
-    outputTotalSourceSeconds - openingLength - adjustedEndingLength,
-  );
-  const openingSegment = getOpeningSegment({
-    song,
-    source,
-    anchors,
-    length: openingLength,
-  });
-  const endingSegment = getEndingSegment({
-    song,
-    source,
-    anchors,
-    windows,
-    length: adjustedEndingLength,
-    minStart: openingSegment.end + Math.max(2, getBarSeconds(song)),
-  });
-  const hookSegment = getHookSegment({
-    song,
-    source,
-    anchors,
-    windows,
-    length: Math.min(hookLength, adjustedHookLength),
-    minStart: openingSegment.end + Math.max(1, getBarSeconds(song) * 0.5),
-    maxEnd: endingSegment.start - Math.max(1, getBarSeconds(song) * 0.5),
-  });
-
-  if (hookSegment.end > openingSegment.end + 0.5 && endingSegment.start > hookSegment.end + 0.5) {
-    return [openingSegment, hookSegment, endingSegment];
-  }
-
-  const twoPartHookLength = Math.max(4, safeTarget + crossfadeSeconds - adjustedEndingLength);
-  const twoPartHook = getHookSegment({
-    song,
-    source,
-    anchors,
-    windows,
-    length: twoPartHookLength,
-    minStart: 0,
-    maxEnd: endingSegment.start - Math.max(1, getBarSeconds(song) * 0.5),
-  });
-
-  if (endingSegment.start > twoPartHook.end + 0.5) {
-    return [twoPartHook, endingSegment];
-  }
-
-  return [makeFixedSegment(Math.max(0, (anchors.hook ?? 0) - 1), safeTarget, duration)];
-}
-
-function renderCutdownBuffer({
-  audioContext,
-  source,
-  segments,
-  targetSeconds,
-  crossfadeSeconds,
-}: {
-  audioContext: AudioContext;
-  source: AudioBuffer;
-  segments: CutSegment[];
-  targetSeconds: number;
-  crossfadeSeconds: number;
-}) {
-  const sampleRate = source.sampleRate;
-  const targetFrames = Math.max(1, Math.floor(targetSeconds * sampleRate));
-  const output = audioContext.createBuffer(source.numberOfChannels, targetFrames, sampleRate);
-  const crossfadeFrames = segments.length > 1
-    ? Math.min(Math.floor(crossfadeSeconds * sampleRate), Math.floor(targetFrames / 5))
-    : 0;
-  let outputOffset = 0;
-
-  for (let segmentIndex = 0; segmentIndex < segments.length; segmentIndex += 1) {
-    const segment = segments[segmentIndex];
-    const sourceStartFrame = Math.max(0, Math.floor(segment.start * sampleRate));
-    const sourceEndFrame = Math.min(source.length, Math.floor(segment.end * sampleRate));
-    const segmentFrames = Math.max(0, sourceEndFrame - sourceStartFrame);
-
-    if (segmentFrames <= 0) continue;
-    if (segmentIndex > 0) outputOffset -= crossfadeFrames;
-
-    const fadeInFrames = segmentIndex > 0 ? Math.min(crossfadeFrames, segmentFrames) : 0;
-    const fadeOutFrames = segmentIndex < segments.length - 1 ? Math.min(crossfadeFrames, segmentFrames) : 0;
-
-    for (let channel = 0; channel < source.numberOfChannels; channel += 1) {
-      const inputData = source.getChannelData(channel);
-      const outputData = output.getChannelData(channel);
-
-      for (let frame = 0; frame < segmentFrames; frame += 1) {
-        const destinationFrame = outputOffset + frame;
-        if (destinationFrame < 0 || destinationFrame >= output.length) continue;
-
-        let gain = 1;
-        if (fadeInFrames > 0 && frame < fadeInFrames) {
-          const progress = frame / Math.max(1, fadeInFrames);
-          gain *= Math.sin((progress * Math.PI) / 2);
-        }
-        if (fadeOutFrames > 0 && frame > segmentFrames - fadeOutFrames) {
-          const progress = (segmentFrames - frame) / Math.max(1, fadeOutFrames);
-          gain *= Math.sin((progress * Math.PI) / 2);
-        }
-
-        outputData[destinationFrame] += inputData[sourceStartFrame + frame] * gain;
-      }
-    }
-
-    outputOffset += segmentFrames;
-  }
-
-  applyEdgeFades(output);
-
-  return output;
+  return fallback;
 }
 
 async function createShortenedTrack(song: Song, targetSeconds: number) {
@@ -561,46 +97,36 @@ async function createShortenedTrack(song: Song, targetSeconds: number) {
     window.AudioContext || (window as BrowserAudioWindow).webkitAudioContext;
 
   if (!AudioContextConstructor) {
-    throw new Error("Your browser does not support in-browser audio processing.");
+    throw new Error("Your browser does not support audio preview decoding.");
   }
 
-  const response = await fetch(
-    `/api/songs/${encodeURIComponent(song.id)}/shorten-source`,
-  );
+  let response: Response;
+
+  try {
+    response = await fetch(`/api/songs/${encodeURIComponent(song.id)}/shorten`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ targetSeconds }),
+    });
+  } catch {
+    throw new Error("Could not reach the shorten service. Make sure the dev server is running.");
+  }
 
   if (!response.ok) {
-    let message = "Could not load the track audio.";
-
-    try {
-      const data = await response.json();
-      if (typeof data?.error === "string") message = data.error;
-    } catch {
-      // Use the fallback message when the server returns audio or an empty body.
-    }
-
-    throw new Error(message);
+    throw new Error(await getErrorMessage(response));
   }
 
-  const encodedAudio = await response.arrayBuffer();
+  const blob = await response.blob();
+  const encodedAudio = await blob.arrayBuffer();
   const audioContext = new AudioContextConstructor();
 
   try {
     const decodedAudio = await audioContext.decodeAudioData(encodedAudio.slice(0));
-    const actualDurationSeconds = Math.min(targetSeconds, decodedAudio.duration);
-    const crossfadeSeconds = clamp(actualDurationSeconds * 0.045, 0.55, 1.4);
-    const segments = buildCutdownSegments(song, decodedAudio, actualDurationSeconds, crossfadeSeconds);
-    const shortenedBuffer = renderCutdownBuffer({
-      audioContext,
-      source: decodedAudio,
-      segments,
-      targetSeconds: actualDurationSeconds,
-      crossfadeSeconds,
-    });
 
     return {
-      blob: audioBufferToWavBlob(shortenedBuffer),
-      actualDurationSeconds,
-      waveformPeaks: createWaveformPeaks(shortenedBuffer),
+      blob,
+      actualDurationSeconds: decodedAudio.duration,
+      waveformPeaks: createWaveformPeaks(decodedAudio),
     };
   } finally {
     void audioContext.close();
@@ -712,7 +238,7 @@ export default function ShortenTrackModal({
     return () => {
       player.style.zIndex = previousZIndex;
     };
-  }, [isShortenedPreviewActive]);
+  }, [isShortenedPreviewActive, generatedTracks, currentSong?.id, isPlaying, isOpen]);
 
   async function handleGenerate(targetSeconds: number) {
     if (!song || generatingSeconds !== null) return;
@@ -751,7 +277,10 @@ export default function ShortenTrackModal({
       };
 
       setGeneratedTracks((current) => {
+        const replaced = current.filter((existing) => existing.durationSeconds === targetSeconds);
         const remaining = current.filter((existing) => existing.durationSeconds !== targetSeconds);
+
+        replaced.forEach((existing) => URL.revokeObjectURL(existing.url));
 
         return [track, ...remaining].sort((a, b) => a.durationSeconds - b.durationSeconds);
       });
@@ -786,7 +315,7 @@ export default function ShortenTrackModal({
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
             <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
-              Choose a shorter version to generate. Filmwave builds a structure-aware cut from setup, hook, and ending moments.
+              Choose a shorter version to generate. Filmwave now creates the cutdown server-side, with support for an external AI arranger service.
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -865,7 +394,7 @@ export default function ShortenTrackModal({
                           {track.label} Version
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                          {formatDuration(track.actualDurationSeconds)} cutdown · waveform ready
+                          {formatDuration(track.actualDurationSeconds)} server cutdown · waveform ready
                         </span>
                       </span>
 
