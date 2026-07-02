@@ -63,7 +63,7 @@ function AiGeneratedField({
         AI
       </label>
       <label
-        className={`group flex h-9 cursor-pointer items-center gap-2.5 self-end rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition hover:text-[var(--text-primary)] ${
+        className={`group flex h-9 cursor-pointer items-center gap-2.5 self-end border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition hover:text-[var(--text-primary)] ${
           checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"
         }`}
       >
@@ -74,7 +74,7 @@ function AiGeneratedField({
           className="peer sr-only"
         />
 
-        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-[4px] border border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
+        <span className="flex h-3.5 w-3.5 items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="opacity-0 text-[var(--bg-primary)] transition">
             <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
