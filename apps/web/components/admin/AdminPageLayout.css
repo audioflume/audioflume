@@ -12,13 +12,44 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   padding-top: 88px !important;
 }
 
-/* Admin song upload / edit source styling */
+/* Source-owned admin page corner system */
+.filmwave-admin-content-page :is(
+  [class~="rounded"],
+  [class~="rounded-sm"],
+  [class~="rounded-md"],
+  [class~="rounded-lg"],
+  [class~="rounded-xl"],
+  [class~="rounded-2xl"],
+  [class~="rounded-[4px]"],
+  [class~="rounded-[8px]"],
+  [class~="rounded-[9px]"],
+  [class~="rounded-[14px]"],
+  [class~="rounded-[18px]"]
+),
+.filmwave-admin-content-page .admin-song-select-box,
 main:has(.admin-song-form-card) .admin-song-form-card,
 main:has(.admin-song-form-card) .admin-song-form-icon-btn,
-main:has(.admin-song-form-card) form [class*="rounded-"] {
+main:has(.admin-song-form-card) form :is(
+  [class~="rounded"],
+  [class~="rounded-sm"],
+  [class~="rounded-md"],
+  [class~="rounded-lg"],
+  [class~="rounded-xl"],
+  [class~="rounded-2xl"],
+  [class~="rounded-[4px]"],
+  [class~="rounded-[8px]"],
+  [class~="rounded-[9px"],
+  [class~="rounded-[14px]"],
+  [class~="rounded-[18px]"]
+) {
   border-radius: 0;
 }
 
+.filmwave-admin-content-page :is(
+  [class~="rounded-full"],
+  [class~="admin-main-image-pill"],
+  [class~="admin-round-icon-button"]
+),
 main:has(.admin-song-form-card) .edit-point-play-button,
 main:has(.admin-song-form-card) button[aria-label="Toggle spacebar start from selected marker"],
 main:has(.admin-song-form-card) .cue-point-row-grid button[aria-label^="Play from"],
