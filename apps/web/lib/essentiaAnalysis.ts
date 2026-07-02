@@ -35,6 +35,7 @@ type BeatAnalyzerResponse = {
   beats?: number[]
   downbeats?: number[]
   source?: string
+  error?: string
 }
 
 type EssentiaConstructor = new (wasmModule: unknown) => EssentiaInstance
@@ -45,10 +46,33 @@ declare global {
   interface Window {
     Essentia?: EssentiaConstructor
     EssentiaWASM?: EssentiaWasmLoader
+    __FILMWAVE_LAST_BPM_ANALYSIS__?: {
+      source: 'beat_this' | 'essentia' | 'fallback'
+      bpm: number | null
+      message: string
+    }
   }
 }
 
 let essentiaPromise: Promise<EssentiaInstance> | null = null
+
+function setLastBpmAnalysis(
+  source: 'beat_this' | 'essentia' | 'fallback',
+  bpm: number | null,
+  message: string
+) {
+  window.__FILMWAVE_LAST_BPM_ANALYSIS__ = {
+    source,
+    bpm,
+    message,
+  }
+
+  if (source === 'beat_this') {
+    console.info(`[Filmwave BPM] Beat-This returned ${bpm} BPM.`)
+  } else {
+    console.info(`[Filmwave BPM] ${message}`)
+  }
+}
 
 function loadScript(src: string) {
   return new Promise<void>((resolve, reject) => {
@@ -153,25 +177,61 @@ function audioBufferToWavFile(audioBuffer: AudioBuffer) {
 
 async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer) {
   try {
+    console.info('[Filmwave BPM] Calling Beat-This analyzer...')
+
     const formData = new FormData()
     formData.append('file', audioBufferToWavFile(audioBuffer))
 
     const response = await fetch('/api/admin/analyze-beats', {
       method: 'POST',
       body: formData,
+      credentials: 'include',
     })
 
-    if (!response.ok) return null
+    let data: BeatAnalyzerResponse | null = null
 
-    const data = (await response.json()) as BeatAnalyzerResponse
-    const bpm = Number(data.bpm)
+    try {
+      data = (await response.json()) as BeatAnalyzerResponse
+    } catch {
+      data = null
+    }
 
-    if (!data.enabled || !Number.isFinite(bpm) || bpm <= 0) {
+    if (!response.ok) {
+      console.warn('[Filmwave BPM] Beat-This route failed.', {
+        status: response.status,
+        data,
+      })
+      setLastBpmAnalysis(
+        'fallback',
+        null,
+        `Beat-This route failed with status ${response.status}; falling back to Essentia.`
+      )
       return null
     }
 
-    return Math.round(bpm)
-  } catch {
+    const bpm = Number(data?.bpm)
+
+    if (!data?.enabled || !Number.isFinite(bpm) || bpm <= 0) {
+      console.warn('[Filmwave BPM] Beat-This returned no usable BPM.', data)
+      setLastBpmAnalysis(
+        'fallback',
+        null,
+        'Beat-This returned no usable BPM; falling back to Essentia.'
+      )
+      return null
+    }
+
+    const roundedBpm = Math.round(bpm)
+    setLastBpmAnalysis('beat_this', roundedBpm, `Beat-This returned ${roundedBpm} BPM.`)
+
+    return roundedBpm
+  } catch (error) {
+    console.warn('[Filmwave BPM] Beat-This request failed.', error)
+    setLastBpmAnalysis(
+      'fallback',
+      null,
+      'Beat-This request failed; falling back to Essentia.'
+    )
     return null
   }
 }
@@ -207,10 +267,14 @@ export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer) {
   const result = essentia.RhythmExtractor2013(audioVector)
 
   if (!result?.bpm || !Number.isFinite(result.bpm)) {
+    setLastBpmAnalysis('essentia', null, 'Essentia returned no usable BPM.')
     return null
   }
 
-  return Math.round(result.bpm)
+  const roundedBpm = Math.round(result.bpm)
+  setLastBpmAnalysis('essentia', roundedBpm, `Essentia returned ${roundedBpm} BPM.`)
+
+  return roundedBpm
 }
 
 export async function estimateKeyWithEssentia(audioBuffer: AudioBuffer) {
