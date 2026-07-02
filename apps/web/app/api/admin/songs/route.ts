@@ -23,6 +23,7 @@ type SaveSongPayload = {
   builds: string[];
   vocals: string[];
   instrumental: boolean;
+  aiGenerated?: boolean;
   editPoints: string;
 };
 
@@ -116,6 +117,7 @@ function buildSupabaseSongRow(body: SaveSongPayload) {
     builds: cleanStringArray(body.builds),
     vocals: cleanStringArray(body.vocals),
     instrumental: Boolean(body.instrumental),
+    ai_generated: Boolean(body.aiGenerated),
     edit_points: body.editPoints || '{"markers":[],"ranges":[]}',
     status: "published",
   };
