@@ -41,6 +41,12 @@ type CutSegment = {
   end: number;
 };
 
+type EnergyWindow = {
+  time: number;
+  rms: number;
+  flux: number;
+};
+
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
 
@@ -160,30 +166,233 @@ function getSegmentEnd(start: number, length: number, duration: number) {
   return clamp(start + length, start, duration);
 }
 
-function getEndingSegment(song: Song, source: AudioBuffer, endingLength: number): CutSegment {
-  const duration = source.duration;
-  const buttonEnding = getMarkerTime(song, "button_ending");
-  const desiredStart =
-    buttonEnding !== null && buttonEnding < duration - 1
-      ? clamp(buttonEnding - 0.35, 0, duration - endingLength)
-      : duration - endingLength;
-  const start = clamp(desiredStart, 0, Math.max(0, duration - endingLength));
+function getEnergyWindows(source: AudioBuffer): EnergyWindow[] {
+  const windowSeconds = 0.5;
+  const windowFrames = Math.max(1, Math.floor(windowSeconds * source.sampleRate));
+  const channels = Array.from({ length: source.numberOfChannels }, (_, channel) =>
+    source.getChannelData(channel),
+  );
+  const windows: EnergyWindow[] = [];
+  let previousRms = 0;
+
+  for (let startFrame = 0; startFrame < source.length; startFrame += windowFrames) {
+    const endFrame = Math.min(source.length, startFrame + windowFrames);
+    let sum = 0;
+    let count = 0;
+
+    for (let frame = startFrame; frame < endFrame; frame += 1) {
+      for (let channel = 0; channel < channels.length; channel += 1) {
+        const value = channels[channel][frame] || 0;
+        sum += value * value;
+        count += 1;
+      }
+    }
+
+    const rms = count > 0 ? Math.sqrt(sum / count) : 0;
+    windows.push({
+      time: startFrame / source.sampleRate,
+      rms,
+      flux: Math.max(0, rms - previousRms),
+    });
+    previousRms = rms;
+  }
+
+  return windows;
+}
+
+function getAverageEnergy(windows: EnergyWindow[], start: number, end: number) {
+  const scoped = windows.filter((window) => window.time >= start && window.time < end);
+  if (!scoped.length) return 0;
+
+  return scoped.reduce((sum, window) => sum + window.rms, 0) / scoped.length;
+}
+
+function findBestEnergySegment({
+  windows,
+  minStart,
+  maxStart,
+  length,
+  preferLater = false,
+}: {
+  windows: EnergyWindow[];
+  minStart: number;
+  maxStart: number;
+  length: number;
+  preferLater?: boolean;
+}) {
+  if (maxStart <= minStart) return null;
+
+  let bestStart = minStart;
+  let bestScore = -Infinity;
+  const step = 0.5;
+
+  for (let start = minStart; start <= maxStart; start += step) {
+    const end = start + length;
+    const scoped = windows.filter((window) => window.time >= start && window.time < end);
+    if (!scoped.length) continue;
+
+    const averageEnergy = scoped.reduce((sum, window) => sum + window.rms, 0) / scoped.length;
+    const averageFlux = scoped.reduce((sum, window) => sum + window.flux, 0) / scoped.length;
+    const timelineBias = preferLater ? (start - minStart) / Math.max(1, maxStart - minStart) : 0;
+    const score = averageEnergy * 0.82 + averageFlux * 0.18 + timelineBias * averageEnergy * 0.16;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestStart = start;
+    }
+  }
+
+  return Number.isFinite(bestScore) ? bestStart : null;
+}
+
+function snapToLowEnergyBoundary({
+  windows,
+  time,
+  searchRadius,
+  minTime,
+  maxTime,
+}: {
+  windows: EnergyWindow[];
+  time: number;
+  searchRadius: number;
+  minTime: number;
+  maxTime: number;
+}) {
+  const searchStart = clamp(time - searchRadius, minTime, maxTime);
+  const searchEnd = clamp(time + searchRadius, minTime, maxTime);
+  const candidates = windows.filter(
+    (window) => window.time >= searchStart && window.time <= searchEnd,
+  );
+
+  if (!candidates.length) return clamp(time, minTime, maxTime);
+
+  return candidates.reduce((best, candidate) =>
+    candidate.rms < best.rms ? candidate : best,
+  ).time;
+}
+
+function createSegment({
+  windows,
+  start,
+  length,
+  duration,
+  snapStart = true,
+  snapEnd = true,
+}: {
+  windows: EnergyWindow[];
+  start: number;
+  length: number;
+  duration: number;
+  snapStart?: boolean;
+  snapEnd?: boolean;
+}): CutSegment {
+  const safeStart = clamp(start, 0, Math.max(0, duration - length));
+  const rawEnd = getSegmentEnd(safeStart, length, duration);
+  const snappedStart = snapStart
+    ? snapToLowEnergyBoundary({
+        windows,
+        time: safeStart,
+        searchRadius: 0.75,
+        minTime: 0,
+        maxTime: Math.max(0, rawEnd - 1),
+      })
+    : safeStart;
+  const snappedEnd = snapEnd
+    ? snapToLowEnergyBoundary({
+        windows,
+        time: rawEnd,
+        searchRadius: 0.75,
+        minTime: snappedStart + 1,
+        maxTime: duration,
+      })
+    : rawEnd;
+
+  if (snappedEnd - snappedStart < length * 0.65) {
+    return { start: safeStart, end: rawEnd };
+  }
 
   return {
-    start,
-    end: getSegmentEnd(start, endingLength, duration),
+    start: snappedStart,
+    end: snappedEnd,
   };
+}
+
+function getOpeningSegment({
+  song,
+  source,
+  windows,
+  length,
+}: {
+  song: Song;
+  source: AudioBuffer;
+  windows: EnergyWindow[];
+  length: number;
+}) {
+  const firstHit = getMarkerTime(song, "first_hit");
+  const delayedFirstHit = firstHit !== null && firstHit > length + 2;
+  const openingStart = delayedFirstHit
+    ? clamp(firstHit - 1.25, 0, Math.max(0, source.duration - length))
+    : 0;
+
+  return createSegment({
+    windows,
+    start: openingStart,
+    length,
+    duration: source.duration,
+    snapStart: delayedFirstHit,
+    snapEnd: true,
+  });
+}
+
+function getEndingSegment({
+  song,
+  source,
+  windows,
+  length,
+  minStart,
+}: {
+  song: Song;
+  source: AudioBuffer;
+  windows: EnergyWindow[];
+  length: number;
+  minStart: number;
+}): CutSegment {
+  const duration = source.duration;
+  const buttonEnding = getMarkerTime(song, "button_ending");
+  const lastUsefulStart = findBestEnergySegment({
+    windows,
+    minStart: clamp(Math.max(minStart, duration - 45), 0, Math.max(0, duration - length)),
+    maxStart: Math.max(0, duration - length),
+    length,
+    preferLater: true,
+  });
+  const desiredStart =
+    buttonEnding !== null && buttonEnding < duration - 0.5
+      ? buttonEnding - length * 0.68
+      : lastUsefulStart ?? duration - length;
+  const start = clamp(desiredStart, minStart, Math.max(minStart, duration - length));
+
+  return createSegment({
+    windows,
+    start,
+    length,
+    duration,
+    snapStart: true,
+    snapEnd: buttonEnding === null,
+  });
 }
 
 function getMiddleSegment({
   song,
   source,
+  windows,
   openingEnd,
   endingStart,
   middleLength,
 }: {
   song: Song;
   source: AudioBuffer;
+  windows: EnergyWindow[];
   openingEnd: number;
   endingStart: number;
   middleLength: number;
@@ -191,64 +400,127 @@ function getMiddleSegment({
   const drop = getMarkerTime(song, "drop");
   const firstHit = getMarkerTime(song, "first_hit");
   const breakPoint = getMarkerTime(song, "break");
-  const anchor = drop ?? firstHit ?? breakPoint;
-  const minStart = Math.min(source.duration, openingEnd + 2);
-  const maxStart = Math.max(minStart, endingStart - middleLength - 2);
+  const minStart = clamp(openingEnd + 1.25, 0, Math.max(0, source.duration - middleLength));
+  const maxStart = clamp(
+    endingStart - middleLength - 1.25,
+    minStart,
+    Math.max(minStart, source.duration - middleLength),
+  );
 
-  if (maxStart <= minStart || maxStart + middleLength > source.duration) return null;
+  if (maxStart <= minStart) return null;
 
-  const desiredStart = anchor !== null
-    ? clamp(anchor - 2, minStart, maxStart)
-    : clamp(openingEnd + (endingStart - openingEnd - middleLength) / 2, minStart, maxStart);
-  const start = clamp(desiredStart, minStart, maxStart);
+  const markerAnchors = [drop, firstHit, breakPoint].filter(
+    (value): value is number => Number.isFinite(value) && value > minStart && value < endingStart,
+  );
+  const markerStart = markerAnchors.length
+    ? clamp(markerAnchors[0] - Math.min(4, middleLength * 0.2), minStart, maxStart)
+    : null;
+  const energyStart = findBestEnergySegment({
+    windows,
+    minStart,
+    maxStart,
+    length: middleLength,
+    preferLater: true,
+  });
+  const start = markerStart ?? energyStart;
+
+  if (start === null) return null;
+
+  return createSegment({
+    windows,
+    start,
+    length: middleLength,
+    duration: source.duration,
+    snapStart: true,
+    snapEnd: true,
+  });
+}
+
+function getCutdownShape(targetSeconds: number, crossfadeSeconds: number) {
+  const openingLength = targetSeconds <= 20 ? 3.25 : targetSeconds <= 35 ? 4.75 : 7;
+  const endingLength = targetSeconds <= 20 ? 4.75 : targetSeconds <= 35 ? 8.25 : 14;
+  const middleLength = Math.max(
+    targetSeconds <= 20 ? 6 : targetSeconds <= 35 ? 14 : 24,
+    targetSeconds + crossfadeSeconds * 2 - openingLength - endingLength,
+  );
 
   return {
-    start,
-    end: getSegmentEnd(start, middleLength, source.duration),
+    openingLength,
+    middleLength,
+    endingLength,
   };
 }
 
 function buildCutdownSegments(song: Song, source: AudioBuffer, targetSeconds: number, crossfadeSeconds: number) {
   const duration = source.duration;
   const safeTarget = Math.min(targetSeconds, duration);
+  const windows = getEnergyWindows(source);
 
   if (duration <= safeTarget + 1) {
     return [{ start: 0, end: safeTarget }];
   }
 
-  if (safeTarget >= 50 && duration > safeTarget + 20) {
-    const endingLength = clamp(safeTarget * 0.22, 12, 16);
-    const middleLength = clamp(safeTarget * 0.42, 22, 30);
-    const openingLength = Math.max(
-      8,
-      safeTarget + crossfadeSeconds * 2 - endingLength - middleLength,
-    );
-    const endingSegment = getEndingSegment(song, source, endingLength);
-    const middleSegment = getMiddleSegment({
-      song,
-      source,
-      openingEnd: openingLength,
-      endingStart: endingSegment.start,
+  const { openingLength, middleLength, endingLength } = getCutdownShape(safeTarget, crossfadeSeconds);
+  const openingSegment = getOpeningSegment({
+    song,
+    source,
+    windows,
+    length: Math.min(openingLength, safeTarget * 0.35),
+  });
+  const endingSegment = getEndingSegment({
+    song,
+    source,
+    windows,
+    length: Math.min(endingLength, safeTarget * 0.42),
+    minStart: openingSegment.end + 2,
+  });
+  const middleSegment = getMiddleSegment({
+    song,
+    source,
+    windows,
+    openingEnd: openingSegment.end,
+    endingStart: endingSegment.start,
+    middleLength: Math.min(
       middleLength,
-    });
+      Math.max(2, endingSegment.start - openingSegment.end - 2.5),
+    ),
+  });
 
-    if (middleSegment) {
-      return [
-        { start: 0, end: openingLength },
-        middleSegment,
-        endingSegment,
-      ];
+  if (middleSegment) {
+    const middleEnergy = getAverageEnergy(windows, middleSegment.start, middleSegment.end);
+    const openingEnergy = getAverageEnergy(windows, openingSegment.start, openingSegment.end);
+    const middleFeelsUseful = middleEnergy >= openingEnergy * 0.65 || safeTarget <= 20;
+
+    if (middleFeelsUseful) {
+      return [openingSegment, middleSegment, endingSegment];
     }
   }
 
-  const endingLength = clamp(safeTarget * 0.3, safeTarget <= 20 ? 4 : 7, safeTarget <= 20 ? 6 : 11);
-  const openingLength = Math.max(4, safeTarget + crossfadeSeconds - endingLength);
-  const endingSegment = getEndingSegment(song, source, endingLength);
+  const fallbackMiddleLength = Math.max(4, safeTarget + crossfadeSeconds * 2 - openingLength - endingLength);
+  const fallbackMiddleStart = findBestEnergySegment({
+    windows,
+    minStart: clamp(openingSegment.end + 1, 0, Math.max(0, endingSegment.start - fallbackMiddleLength - 1)),
+    maxStart: Math.max(openingSegment.end + 1, endingSegment.start - fallbackMiddleLength - 1),
+    length: fallbackMiddleLength,
+    preferLater: true,
+  });
 
-  return [
-    { start: 0, end: openingLength },
-    endingSegment,
-  ];
+  if (fallbackMiddleStart !== null) {
+    return [
+      openingSegment,
+      createSegment({
+        windows,
+        start: fallbackMiddleStart,
+        length: fallbackMiddleLength,
+        duration,
+        snapStart: true,
+        snapEnd: true,
+      }),
+      endingSegment,
+    ];
+  }
+
+  return [openingSegment, endingSegment];
 }
 
 function renderCutdownBuffer({
@@ -295,10 +567,12 @@ function renderCutdownBuffer({
 
         let gain = 1;
         if (fadeInFrames > 0 && frame < fadeInFrames) {
-          gain *= frame / Math.max(1, fadeInFrames);
+          const progress = frame / Math.max(1, fadeInFrames);
+          gain *= Math.sin((progress * Math.PI) / 2);
         }
         if (fadeOutFrames > 0 && frame > segmentFrames - fadeOutFrames) {
-          gain *= (segmentFrames - frame) / Math.max(1, fadeOutFrames);
+          const progress = (segmentFrames - frame) / Math.max(1, fadeOutFrames);
+          gain *= Math.sin((progress * Math.PI) / 2);
         }
 
         outputData[destinationFrame] += inputData[sourceStartFrame + frame] * gain;
@@ -344,7 +618,7 @@ async function createShortenedTrack(song: Song, targetSeconds: number) {
   try {
     const decodedAudio = await audioContext.decodeAudioData(encodedAudio.slice(0));
     const actualDurationSeconds = Math.min(targetSeconds, decodedAudio.duration);
-    const crossfadeSeconds = clamp(actualDurationSeconds * 0.06, 0.75, 2.25);
+    const crossfadeSeconds = clamp(actualDurationSeconds * 0.055, 0.65, 1.85);
     const segments = buildCutdownSegments(song, decodedAudio, actualDurationSeconds, crossfadeSeconds);
     const shortenedBuffer = renderCutdownBuffer({
       audioContext,
@@ -543,7 +817,7 @@ export default function ShortenTrackModal({
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
             <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
-              Choose a shorter version to generate. Filmwave builds an editor-style cutdown from the opening, musical sections, and ending.
+              Choose a shorter version to generate. Filmwave builds a cutdown from a clean start, a main musical moment, and an ending.
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
