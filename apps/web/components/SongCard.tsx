@@ -47,6 +47,15 @@ const stemVocalIndicatorSlotStyle = {
   marginRight: -8,
 } as CSSProperties;
 
+function AiGeneratedIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M8.4 3.8L9.7 7.1L13 8.4L9.7 9.7L8.4 13L7.1 9.7L3.8 8.4L7.1 7.1L8.4 3.8Z" fill="currentColor" />
+      <path d="M15.6 10.8L16.7 13.3L19.2 14.4L16.7 15.5L15.6 18L14.5 15.5L12 14.4L14.5 13.3L15.6 10.8Z" fill="currentColor" />
+    </svg>
+  );
+}
+
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
   const m = Math.floor(seconds / 60);
@@ -238,6 +247,11 @@ function StemSongRow({
         ) : (
           <div className="h-[70px] w-[70px] bg-[var(--bg-hover)]" />
         )}
+        {parentSong.aiGenerated ? (
+          <span className="filmwave-song-ai-badge" aria-label="Made with AI">
+            <AiGeneratedIcon />
+          </span>
+        ) : null}
         <span className="filmwave-song-play-overlay" aria-hidden="true">
           <span className="filmwave-song-play-button">{displayIcon}</span>
         </span>
@@ -450,6 +464,13 @@ export default function SongCard({
           ) : (
             <div className="h-[70px] w-[70px] bg-[var(--bg-hover)]" />
           )
+        }
+        coverBadge={
+          song.aiGenerated ? (
+            <span className="filmwave-song-ai-badge" aria-label="Made with AI">
+              <AiGeneratedIcon />
+            </span>
+          ) : null
         }
         playOverlay={displayIcon}
         vocalIndicator={
