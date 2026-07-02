@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Song } from "@/lib/types";
 import ModalShell from "@/components/ModalShell";
+import DownloadIcon from "@/components/icons/DownloadIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 
@@ -58,6 +59,15 @@ function formatDuration(seconds: number) {
   const remainingSeconds = Math.floor(seconds % 60);
 
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
+function sanitizeFileName(value: string) {
+  return value
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || "filmwave-short-track";
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -558,6 +568,8 @@ export default function ShortenTrackModal({
   const [generatedTracks, setGeneratedTracks] = useState<ShortenedTrack[]>([]);
   const [generatingSeconds, setGeneratingSeconds] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [activePreviewTrackId, setActivePreviewTrackId] = useState<string | null>(null);
+  const [completedPreviewTrackIds, setCompletedPreviewTrackIds] = useState<Set<string>>(() => new Set());
   const isShortenedPreviewActive =
     isOpen &&
     isPlaying &&
@@ -576,6 +588,20 @@ export default function ShortenTrackModal({
       player.style.zIndex = previousZIndex;
     };
   }, [isShortenedPreviewActive, generatedTracks, currentSong?.id, isPlaying, isOpen]);
+
+  useEffect(() => {
+    if (!activePreviewTrackId) return;
+    if (currentSong?.id !== activePreviewTrackId) return;
+    if (!Number.isFinite(duration) || duration <= 0) return;
+    if (currentTime < duration - 0.12) return;
+
+    setCompletedPreviewTrackIds((current) => {
+      const next = new Set(current);
+      next.add(activePreviewTrackId);
+      return next;
+    });
+    setActivePreviewTrackId(null);
+  }, [activePreviewTrackId, currentSong?.id, currentTime, duration]);
 
   async function handleGenerate(targetSeconds: number) {
     if (!song || generatingSeconds !== null) return;
@@ -629,6 +655,12 @@ export default function ShortenTrackModal({
   }
 
   function handlePreview(track: ShortenedTrack) {
+    setActivePreviewTrackId(track.id);
+    setCompletedPreviewTrackIds((current) => {
+      const next = new Set(current);
+      next.delete(track.id);
+      return next;
+    });
     togglePlayPause(track.song);
   }
 
@@ -711,19 +743,43 @@ export default function ShortenTrackModal({
                 {generatedTracks.map((track) => {
                   const isActive = currentSong?.id === track.id;
                   const isPreviewing = isActive && isPlaying;
+                  const isCompleted = completedPreviewTrackIds.has(track.id);
+                  const shouldPersistPreview = activePreviewTrackId === track.id && isActive && !isCompleted;
                   const previewProgress =
                     isActive && duration > 0 && Number.isFinite(duration)
                       ? currentTime / duration
                       : 0;
+                  const cover = typeof track.song.coverArt === "string" && track.song.coverArt.trim()
+                    ? track.song.coverArt
+                    : null;
+                  const shortLabel = LENGTH_OPTIONS.find((option) => option.seconds === track.durationSeconds)?.shortLabel ||
+                    formatDuration(track.durationSeconds);
+                  const downloadName = `${sanitizeFileName(song.title)}-${shortLabel}-short.wav`;
 
                   return (
                     <div
                       key={track.id}
-                      className="flex min-h-[52px] items-center gap-3 bg-[var(--bg-primary)] p-2"
+                      className="group flex min-h-[52px] items-center gap-3 bg-[var(--bg-primary)] p-2"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-xs font-semibold text-[var(--text-primary)]">
-                        {LENGTH_OPTIONS.find((option) => option.seconds === track.durationSeconds)?.shortLabel ||
-                          formatDuration(track.durationSeconds)}
+                      <span className="relative flex h-12 w-12 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)]">
+                        {cover ? (
+                          <img src={cover} alt="" className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
+                            <PlaylistIcon size={16} />
+                          </span>
+                        )}
+
+                        <span
+                          className={`absolute inset-0 flex items-center justify-center bg-black/35 transition-opacity ${shouldPersistPreview ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+                        >
+                          <PreviewButton
+                            playing={isPreviewing}
+                            progress={previewProgress}
+                            label={isPreviewing ? `Pause ${track.label} version` : `Preview ${track.label} version`}
+                            onClick={() => handlePreview(track)}
+                          />
+                        </span>
                       </span>
 
                       <span className="min-w-0 flex-1">
@@ -735,12 +791,15 @@ export default function ShortenTrackModal({
                         </span>
                       </span>
 
-                      <PreviewButton
-                        playing={isPreviewing}
-                        progress={previewProgress}
-                        label={isPreviewing ? `Pause ${track.label} version` : `Preview ${track.label} version`}
-                        onClick={() => handlePreview(track)}
-                      />
+                      <a
+                        href={track.url}
+                        download={downloadName}
+                        aria-label={`Download ${track.label} version`}
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <DownloadIcon size={17} />
+                      </a>
                     </div>
                   );
                 })}
