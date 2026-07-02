@@ -52,6 +52,11 @@ type EditPointsWithBeatGrid = {
   downbeats?: unknown;
 };
 
+type ContinuousExcerptPlan = {
+  start: number;
+  length: number;
+};
+
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
 
@@ -144,6 +149,25 @@ function getCandidateStarts(minStart: number, maxStart: number, grid: number[], 
   return Array.from(new Set(candidates.map((candidate) => Number(candidate.toFixed(3))))).sort((a, b) => a - b);
 }
 
+function getFlexibleDurationMargin(targetSeconds: number) {
+  if (targetSeconds <= 15) return 2;
+  if (targetSeconds <= 30) return 3;
+  return 5;
+}
+
+function getCandidateLengths(targetSeconds: number, duration: number) {
+  const margin = getFlexibleDurationMargin(targetSeconds);
+  const minLength = Math.max(4, Math.min(duration, targetSeconds - margin));
+  const maxLength = Math.min(duration, targetSeconds + margin);
+  const lengths: number[] = [Math.min(targetSeconds, duration)];
+
+  for (let length = minLength; length <= maxLength; length += 0.5) {
+    lengths.push(length);
+  }
+
+  return Array.from(new Set(lengths.map((length) => Number(length.toFixed(3))))).sort((a, b) => a - b);
+}
+
 function getNearestGridDistance(time: number, grid: number[]) {
   if (!grid.length) return Infinity;
 
@@ -207,81 +231,99 @@ function edgeEnergy(frames: EnergyFrame[], start: number, end: number) {
   return { startEnergy, endEnergy };
 }
 
-function findBestContinuousStart({
+function findBestContinuousExcerpt({
   buffer,
   frames,
-  length,
+  targetSeconds,
   beatGrid,
 }: {
   buffer: AudioBuffer;
   frames: EnergyFrame[];
-  length: number;
+  targetSeconds: number;
   beatGrid: BeatGrid | null;
-}) {
+}): ContinuousExcerptPlan {
   const duration = buffer.duration;
-  const maxStart = Math.max(0, duration - length);
-  const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.08) : 0;
-  const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.04) : maxStart;
   const grid = getCutGrid(beatGrid);
-  const baseCandidates = getCandidateStarts(searchMin, searchMax, grid, 0.5);
-  const phraseEndCandidates = grid
-    .map((time) => time - length)
-    .filter((start) => start >= searchMin && start <= searchMax);
-  const anchorCandidates = [
-    0,
-    maxStart,
-    duration * 0.18,
-    duration * 0.32,
-    duration * 0.48,
-    duration * 0.64,
-  ].map((start) => clamp(start, searchMin, searchMax));
-  const candidates = Array.from(
-    new Set([...baseCandidates, ...phraseEndCandidates, ...anchorCandidates].map((candidate) => Number(candidate.toFixed(3)))),
-  ).sort((a, b) => a - b);
-  let bestStart = 0;
+  const lengthCandidates = getCandidateLengths(targetSeconds, duration);
+  const durationMargin = getFlexibleDurationMargin(targetSeconds);
+  let bestPlan: ContinuousExcerptPlan = {
+    start: 0,
+    length: Math.min(targetSeconds, duration),
+  };
   let bestScore = -Infinity;
 
-  for (const start of candidates) {
-    const safeStart = clamp(start, searchMin, searchMax);
-    const end = safeStart + length;
-    const middleEnergy = averageEnergy(frames, safeStart, end);
-    const energyBase = Math.max(0.0001, middleEnergy);
-    const { startEnergy, endEnergy } = edgeEnergy(frames, safeStart, end);
-    const beforeStartEnergy = averageEnergy(frames, Math.max(0, safeStart - 2), safeStart) || startEnergy;
-    const afterEndEnergy = averageEnergy(frames, end, Math.min(duration, end + 2.25)) || endEnergy;
-    const timelinePosition = maxStart > 0 ? safeStart / maxStart : 0;
-    const timelineBias = (1 - Math.abs(timelinePosition - 0.58)) * middleEnergy * 0.08;
-    const startGridDistance = getNearestGridDistance(safeStart, grid);
-    const endGridDistance = getNearestGridDistance(end, grid);
-    const startBoundaryBonus = Number.isFinite(startGridDistance)
-      ? Math.max(0, 1 - startGridDistance / 1.5) * middleEnergy * 0.2
-      : 0;
-    const endBoundaryBonus = Number.isFinite(endGridDistance)
-      ? Math.max(0, 1 - endGridDistance / 1.5) * middleEnergy * 0.32
-      : 0;
-    const startIntent = clamp((middleEnergy - Math.max(startEnergy, beforeStartEnergy * 0.75)) / energyBase, -1, 1);
-    const endResolution = clamp((middleEnergy - Math.max(endEnergy, afterEndEnergy * 0.85)) / energyBase, -1, 1);
-    const realSongEndBonus = Math.abs(end - duration) < 0.75 ? middleEnergy * 0.4 : 0;
-    const abruptStartPenalty = Math.max(0, startEnergy - middleEnergy * 1.15) * 0.35;
-    const abruptEndPenalty = Math.max(0, Math.max(endEnergy, afterEndEnergy) - middleEnergy * 1.05) * 0.7;
-    const score =
-      middleEnergy +
-      startIntent * middleEnergy * 0.28 +
-      endResolution * middleEnergy * 0.58 +
-      startBoundaryBonus +
-      endBoundaryBonus +
-      realSongEndBonus +
-      timelineBias -
-      abruptStartPenalty -
-      abruptEndPenalty;
+  for (const length of lengthCandidates) {
+    const maxStart = Math.max(0, duration - length);
+    const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.08) : 0;
+    const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.04) : maxStart;
+    const baseCandidates = getCandidateStarts(searchMin, searchMax, grid, 0.5);
+    const phraseEndCandidates = grid
+      .map((time) => time - length)
+      .filter((start) => start >= searchMin && start <= searchMax);
+    const anchorCandidates = [
+      0,
+      maxStart,
+      duration * 0.18,
+      duration * 0.32,
+      duration * 0.48,
+      duration * 0.64,
+    ].map((start) => clamp(start, searchMin, searchMax));
+    const candidates = Array.from(
+      new Set([...baseCandidates, ...phraseEndCandidates, ...anchorCandidates].map((candidate) => Number(candidate.toFixed(3)))),
+    ).sort((a, b) => a - b);
 
-    if (score > bestScore) {
-      bestScore = score;
-      bestStart = safeStart;
+    for (const start of candidates) {
+      const safeStart = clamp(start, searchMin, searchMax);
+      const end = safeStart + length;
+      const middleEnergy = averageEnergy(frames, safeStart, end);
+      const energyBase = Math.max(0.0001, middleEnergy);
+      const { startEnergy, endEnergy } = edgeEnergy(frames, safeStart, end);
+      const beforeStartEnergy = averageEnergy(frames, Math.max(0, safeStart - 2), safeStart) || startEnergy;
+      const afterEndEnergy = averageEnergy(frames, end, Math.min(duration, end + 2.25)) || endEnergy;
+      const maxStartForLength = Math.max(0, duration - length);
+      const timelinePosition = maxStartForLength > 0 ? safeStart / maxStartForLength : 0;
+      const timelineBias = (1 - Math.abs(timelinePosition - 0.58)) * middleEnergy * 0.08;
+      const startGridDistance = getNearestGridDistance(safeStart, grid);
+      const endGridDistance = getNearestGridDistance(end, grid);
+      const startBoundaryBonus = Number.isFinite(startGridDistance)
+        ? Math.max(0, 1 - startGridDistance / 1.5) * middleEnergy * 0.2
+        : 0;
+      const endBoundaryBonus = Number.isFinite(endGridDistance)
+        ? Math.max(0, 1 - endGridDistance / 1.5) * middleEnergy * 0.42
+        : 0;
+      const startIntent = clamp((middleEnergy - Math.max(startEnergy, beforeStartEnergy * 0.75)) / energyBase, -1, 1);
+      const endResolution = clamp((middleEnergy - Math.max(endEnergy, afterEndEnergy * 0.85)) / energyBase, -1, 1);
+      const realSongEndBonus = Math.abs(end - duration) < 0.75 ? middleEnergy * 0.42 : 0;
+      const lengthDeviation = Math.abs(length - targetSeconds);
+      const lengthPenalty = (lengthDeviation / Math.max(1, durationMargin)) * middleEnergy * 0.2;
+      const abruptStartPenalty = Math.max(0, startEnergy - middleEnergy * 1.15) * 0.35;
+      const abruptEndPenalty = Math.max(0, Math.max(endEnergy, afterEndEnergy) - middleEnergy * 1.05) * 0.7;
+      const score =
+        middleEnergy +
+        startIntent * middleEnergy * 0.28 +
+        endResolution * middleEnergy * 0.62 +
+        startBoundaryBonus +
+        endBoundaryBonus +
+        realSongEndBonus +
+        timelineBias -
+        lengthPenalty -
+        abruptStartPenalty -
+        abruptEndPenalty;
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestPlan = {
+          start: safeStart,
+          length,
+        };
+      }
     }
   }
 
-  return clamp(bestStart, 0, maxStart);
+  return {
+    start: clamp(bestPlan.start, 0, Math.max(0, duration - bestPlan.length)),
+    length: Math.min(bestPlan.length, duration),
+  };
 }
 
 function copyContinuousExcerpt({
@@ -327,30 +369,30 @@ function applyEdgeFades(buffer: AudioBuffer) {
 }
 
 function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, targetSeconds: number, song: Song) {
-  const actualDurationSeconds = Math.min(targetSeconds, buffer.duration);
-  const output = audioContext.createBuffer(
-    buffer.numberOfChannels,
-    Math.max(1, Math.floor(actualDurationSeconds * buffer.sampleRate)),
-    buffer.sampleRate,
-  );
   const frames = getEnergyFrames(buffer);
   const beatGrid = getBeatGridFromSong(song, buffer.duration);
-  const start = findBestContinuousStart({
+  const plan = findBestContinuousExcerpt({
     buffer,
     frames,
-    length: actualDurationSeconds,
+    targetSeconds,
     beatGrid,
   });
+  const output = audioContext.createBuffer(
+    buffer.numberOfChannels,
+    Math.max(1, Math.floor(plan.length * buffer.sampleRate)),
+    buffer.sampleRate,
+  );
 
-  console.info("[Filmwave Shorten] Continuous excerpt plan", {
-    mode: "continuous_excerpt_deliberate_end",
+  console.info("[Filmwave Shorten] Flexible continuous excerpt plan", {
+    mode: "flexible_continuous_excerpt_deliberate_end",
     beatAware: Boolean(beatGrid),
-    start,
-    end: start + actualDurationSeconds,
-    length: actualDurationSeconds,
+    targetSeconds,
+    start: plan.start,
+    end: plan.start + plan.length,
+    length: plan.length,
   });
 
-  copyContinuousExcerpt({ source: buffer, output, startSeconds: start });
+  copyContinuousExcerpt({ source: buffer, output, startSeconds: plan.start });
   applyEdgeFades(output);
 
   return output;
