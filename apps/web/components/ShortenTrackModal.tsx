@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Song } from "@/lib/types";
 import ModalShell from "@/components/ModalShell";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
@@ -13,6 +13,7 @@ const LENGTH_OPTIONS = [
 ];
 
 const WAVEFORM_PEAK_COUNT = 512;
+const PLAYER_PREVIEW_Z_INDEX = "220";
 
 type ShortenedTrack = {
   id: string;
@@ -236,6 +237,24 @@ export default function ShortenTrackModal({
   const [generatedTracks, setGeneratedTracks] = useState<ShortenedTrack[]>([]);
   const [generatingSeconds, setGeneratingSeconds] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const isShortenedPreviewActive =
+    isOpen &&
+    isPlaying &&
+    generatedTracks.some((track) => track.id === currentSong?.id);
+
+  useEffect(() => {
+    if (!isShortenedPreviewActive) return;
+
+    const player = document.querySelector<HTMLElement>(".filmwave-music-player");
+    if (!player) return;
+
+    const previousZIndex = player.style.zIndex;
+    player.style.zIndex = PLAYER_PREVIEW_Z_INDEX;
+
+    return () => {
+      player.style.zIndex = previousZIndex;
+    };
+  }, [isShortenedPreviewActive]);
 
   async function handleGenerate(targetSeconds: number) {
     if (!song || generatingSeconds !== null) return;
