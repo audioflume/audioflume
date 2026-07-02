@@ -35,6 +35,24 @@ type BrowserAudioWindow = Window &
     webkitAudioContext?: typeof AudioContext;
   };
 
+type NaturalSegment = {
+  start: number;
+  length: number;
+};
+
+type NaturalBlendPlan = {
+  segments: NaturalSegment[];
+  crossfadeSeconds: number;
+  mode: "continuous" | "matched_blend";
+};
+
+type EnergyFrame = {
+  time: number;
+  rms: number;
+  peak: number;
+  zcr: number;
+};
+
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
 
@@ -42,6 +60,56 @@ function formatDuration(seconds: number) {
   const remainingSeconds = Math.floor(seconds % 60);
 
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function writeString(view: DataView, offset: number, value: string) {
+  for (let index = 0; index < value.length; index += 1) {
+    view.setUint8(offset + index, value.charCodeAt(index));
+  }
+}
+
+function audioBufferToWavBlob(buffer: AudioBuffer) {
+  const numberOfChannels = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const bytesPerSample = 2;
+  const blockAlign = numberOfChannels * bytesPerSample;
+  const byteRate = sampleRate * blockAlign;
+  const dataSize = buffer.length * blockAlign;
+  const wavBuffer = new ArrayBuffer(44 + dataSize);
+  const view = new DataView(wavBuffer);
+  const channelData = Array.from({ length: numberOfChannels }, (_, channel) =>
+    buffer.getChannelData(channel),
+  );
+
+  writeString(view, 0, "RIFF");
+  view.setUint32(4, 36 + dataSize, true);
+  writeString(view, 8, "WAVE");
+  writeString(view, 12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, numberOfChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bytesPerSample * 8, true);
+  writeString(view, 36, "data");
+  view.setUint32(40, dataSize, true);
+
+  let offset = 44;
+
+  for (let frame = 0; frame < buffer.length; frame += 1) {
+    for (let channel = 0; channel < numberOfChannels; channel += 1) {
+      const sample = Math.max(-1, Math.min(1, channelData[channel][frame] || 0));
+      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
+      offset += bytesPerSample;
+    }
+  }
+
+  return new Blob([view], { type: "audio/wav" });
 }
 
 function createWaveformPeaks(buffer: AudioBuffer) {
@@ -74,22 +142,392 @@ function createWaveformPeaks(buffer: AudioBuffer) {
   return peaks.map((peak) => Number((peak / maxPeak).toFixed(4)));
 }
 
-async function getErrorMessage(response: Response) {
-  const fallback = "Could not create the shortened track.";
+function getMonoSample(channels: Float32Array[], frame: number) {
+  let value = 0;
 
-  try {
-    const data = await response.json();
-    if (typeof data?.error === "string") return data.error;
-  } catch {
-    try {
-      const text = await response.text();
-      if (text) return text;
-    } catch {
-      return fallback;
+  for (let channel = 0; channel < channels.length; channel += 1) {
+    value += channels[channel][frame] || 0;
+  }
+
+  return value / Math.max(1, channels.length);
+}
+
+function getEnergyFrames(buffer: AudioBuffer) {
+  const windowFrames = Math.max(1, Math.floor(buffer.sampleRate * 0.25));
+  const channels = Array.from({ length: buffer.numberOfChannels }, (_, channel) =>
+    buffer.getChannelData(channel),
+  );
+  const frames: EnergyFrame[] = [];
+
+  for (let startFrame = 0; startFrame < buffer.length; startFrame += windowFrames) {
+    const endFrame = Math.min(buffer.length, startFrame + windowFrames);
+    let sum = 0;
+    let peak = 0;
+    let crossings = 0;
+    let previous = getMonoSample(channels, startFrame);
+    let count = 0;
+
+    for (let frame = startFrame; frame < endFrame; frame += 1) {
+      const value = getMonoSample(channels, frame);
+      sum += value * value;
+      peak = Math.max(peak, Math.abs(value));
+
+      if ((previous < 0 && value >= 0) || (previous >= 0 && value < 0)) {
+        crossings += 1;
+      }
+
+      previous = value;
+      count += 1;
+    }
+
+    frames.push({
+      time: startFrame / buffer.sampleRate,
+      rms: count > 0 ? Math.sqrt(sum / count) : 0,
+      peak,
+      zcr: count > 0 ? crossings / count : 0,
+    });
+  }
+
+  return frames;
+}
+
+function averageEnergy(frames: EnergyFrame[], start: number, end: number) {
+  const scoped = frames.filter((frame) => frame.time >= start && frame.time < end);
+  if (!scoped.length) return 0;
+
+  return scoped.reduce((sum, frame) => sum + frame.rms, 0) / scoped.length;
+}
+
+function edgeEnergy(frames: EnergyFrame[], start: number, end: number) {
+  const edgeSeconds = Math.min(1.5, Math.max(0.5, (end - start) * 0.12));
+  const startEnergy = averageEnergy(frames, start, start + edgeSeconds);
+  const endEnergy = averageEnergy(frames, end - edgeSeconds, end);
+
+  return { startEnergy, endEnergy };
+}
+
+function findBestContinuousStart(buffer: AudioBuffer, frames: EnergyFrame[], length: number) {
+  const duration = buffer.duration;
+  const maxStart = Math.max(0, duration - length);
+  const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.08) : 0;
+  const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.08) : maxStart;
+  let bestStart = 0;
+  let bestScore = -Infinity;
+
+  for (let start = searchMin; start <= searchMax; start += 0.5) {
+    const end = start + length;
+    const middleEnergy = averageEnergy(frames, start, end);
+    const { startEnergy, endEnergy } = edgeEnergy(frames, start, end);
+    const timelinePosition = maxStart > 0 ? start / maxStart : 0;
+    const avoidExtremeEnds = 1 - Math.abs(timelinePosition - 0.48);
+    const edgePenalty = Math.abs(startEnergy - middleEnergy) * 0.35 + Math.abs(endEnergy - middleEnergy) * 0.55;
+    const score = middleEnergy + avoidExtremeEnds * middleEnergy * 0.18 - edgePenalty;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestStart = start;
     }
   }
 
-  return fallback;
+  return clamp(bestStart, 0, maxStart);
+}
+
+function getTopSegmentStarts({
+  buffer,
+  frames,
+  length,
+  minStart,
+  maxStart,
+  count,
+  preferLater = false,
+}: {
+  buffer: AudioBuffer;
+  frames: EnergyFrame[];
+  length: number;
+  minStart: number;
+  maxStart: number;
+  count: number;
+  preferLater?: boolean;
+}) {
+  const duration = buffer.duration;
+  const safeMin = clamp(minStart, 0, Math.max(0, duration - length));
+  const safeMax = clamp(maxStart, safeMin, Math.max(safeMin, duration - length));
+  const candidates: Array<{ start: number; score: number }> = [];
+
+  for (let start = safeMin; start <= safeMax; start += 0.75) {
+    const end = start + length;
+    const energy = averageEnergy(frames, start, end);
+    const { startEnergy, endEnergy } = edgeEnergy(frames, start, end);
+    const position = safeMax > safeMin ? (start - safeMin) / (safeMax - safeMin) : 0;
+    const endSmoothness = Math.max(0, 1 - Math.abs(endEnergy - energy) / Math.max(0.001, energy));
+    const timelineBias = preferLater ? position * energy * 0.22 : (1 - Math.abs(position - 0.42)) * energy * 0.12;
+    const score = energy + endSmoothness * energy * 0.15 + timelineBias - Math.abs(startEnergy - energy) * 0.24;
+
+    candidates.push({ start, score });
+  }
+
+  return candidates
+    .sort((a, b) => b.score - a.score)
+    .filter((candidate, index, all) =>
+      all.findIndex((item) => Math.abs(item.start - candidate.start) < 4) === index,
+    )
+    .slice(0, count)
+    .map((candidate) => candidate.start);
+}
+
+function getTextureVector(buffer: AudioBuffer, time: number, length: number, before: boolean) {
+  const sampleRate = buffer.sampleRate;
+  const channels = Array.from({ length: buffer.numberOfChannels }, (_, channel) =>
+    buffer.getChannelData(channel),
+  );
+  const vectorSize = 24;
+  const startTime = before ? time - length : time;
+  const startFrame = clamp(Math.floor(startTime * sampleRate), 0, Math.max(0, buffer.length - 1));
+  const endFrame = clamp(Math.floor((startTime + length) * sampleRate), startFrame + 1, buffer.length);
+  const windowFrames = Math.max(1, Math.floor((endFrame - startFrame) / vectorSize));
+  const vector: number[] = [];
+  let totalRms = 0;
+  let totalZcr = 0;
+
+  for (let vectorIndex = 0; vectorIndex < vectorSize; vectorIndex += 1) {
+    const frameStart = startFrame + vectorIndex * windowFrames;
+    const frameEnd = Math.min(endFrame, frameStart + windowFrames);
+    let sum = 0;
+    let crossings = 0;
+    let previous = getMonoSample(channels, frameStart);
+    let count = 0;
+
+    for (let frame = frameStart; frame < frameEnd; frame += 1) {
+      const value = getMonoSample(channels, frame);
+      sum += value * value;
+
+      if ((previous < 0 && value >= 0) || (previous >= 0 && value < 0)) {
+        crossings += 1;
+      }
+
+      previous = value;
+      count += 1;
+    }
+
+    const rms = count > 0 ? Math.sqrt(sum / count) : 0;
+    const zcr = count > 0 ? crossings / count : 0;
+    totalRms += rms;
+    totalZcr += zcr;
+    vector.push(rms, zcr);
+  }
+
+  const averageRms = totalRms / vectorSize;
+  const averageZcr = totalZcr / vectorSize;
+
+  return {
+    vector,
+    averageRms,
+    averageZcr,
+  };
+}
+
+function getJoinDistance(buffer: AudioBuffer, firstEnd: number, secondStart: number, crossfadeSeconds: number) {
+  const outgoing = getTextureVector(buffer, firstEnd, crossfadeSeconds, true);
+  const incoming = getTextureVector(buffer, secondStart, crossfadeSeconds, false);
+  const outgoingScale = Math.max(0.0001, outgoing.averageRms);
+  const incomingScale = Math.max(0.0001, incoming.averageRms);
+  const scale = Math.max(outgoingScale, incomingScale);
+  let vectorDistance = 0;
+
+  for (let index = 0; index < outgoing.vector.length; index += 1) {
+    const isRms = index % 2 === 0;
+    const normalizer = isRms ? scale : Math.max(0.0001, outgoing.averageZcr + incoming.averageZcr);
+    const difference = (outgoing.vector[index] - incoming.vector[index]) / normalizer;
+    vectorDistance += difference * difference;
+  }
+
+  vectorDistance = Math.sqrt(vectorDistance / outgoing.vector.length);
+
+  const loudnessRatio = Math.abs(Math.log(outgoingScale / incomingScale));
+  const zcrDifference = Math.abs(outgoing.averageZcr - incoming.averageZcr) / Math.max(0.0001, outgoing.averageZcr + incoming.averageZcr);
+
+  return vectorDistance * 0.72 + loudnessRatio * 0.2 + zcrDifference * 0.08;
+}
+
+function findMatchedBlendPlan(buffer: AudioBuffer, frames: EnergyFrame[], targetSeconds: number) {
+  const duration = buffer.duration;
+  const crossfadeSeconds = clamp(targetSeconds * 0.07, 0.8, 2.4);
+  const endingLength = clamp(targetSeconds * 0.28, targetSeconds <= 20 ? 4 : 7, targetSeconds <= 20 ? 5.5 : 15);
+  const firstLength = targetSeconds + crossfadeSeconds - endingLength;
+  const minimumGap = Math.max(5, crossfadeSeconds * 3);
+
+  if (duration < targetSeconds + minimumGap + 8 || firstLength <= 3 || endingLength <= 3) {
+    return null;
+  }
+
+  const firstStarts = getTopSegmentStarts({
+    buffer,
+    frames,
+    length: firstLength,
+    minStart: duration * 0.05,
+    maxStart: duration - firstLength - endingLength - minimumGap,
+    count: 8,
+  });
+  const secondStarts = getTopSegmentStarts({
+    buffer,
+    frames,
+    length: endingLength,
+    minStart: Math.max(duration * 0.45, targetSeconds),
+    maxStart: duration - endingLength,
+    count: 12,
+    preferLater: true,
+  });
+  let bestPlan: NaturalBlendPlan | null = null;
+  let bestScore = Infinity;
+
+  for (const firstStart of firstStarts) {
+    const firstEnd = firstStart + firstLength;
+
+    for (const secondStart of secondStarts) {
+      if (secondStart <= firstEnd + minimumGap) continue;
+
+      const distance = getJoinDistance(buffer, firstEnd, secondStart, crossfadeSeconds);
+      const secondEnergy = averageEnergy(frames, secondStart, secondStart + endingLength);
+      const firstEnergy = averageEnergy(frames, firstStart, firstEnd);
+      const energyBalance = Math.abs(Math.log(Math.max(0.0001, firstEnergy) / Math.max(0.0001, secondEnergy)));
+      const score = distance + energyBalance * 0.12;
+
+      if (score < bestScore) {
+        bestScore = score;
+        bestPlan = {
+          mode: "matched_blend",
+          crossfadeSeconds,
+          segments: [
+            { start: firstStart, length: firstLength },
+            { start: secondStart, length: endingLength },
+          ],
+        };
+      }
+    }
+  }
+
+  if (!bestPlan) return null;
+
+  return bestScore <= 0.58 ? bestPlan : null;
+}
+
+function copySegment({
+  source,
+  output,
+  segment,
+  outputStartSeconds,
+  fadeInSeconds,
+  fadeOutSeconds,
+}: {
+  source: AudioBuffer;
+  output: AudioBuffer;
+  segment: NaturalSegment;
+  outputStartSeconds: number;
+  fadeInSeconds: number;
+  fadeOutSeconds: number;
+}) {
+  const sampleRate = source.sampleRate;
+  const sourceStartFrame = Math.max(0, Math.floor(segment.start * sampleRate));
+  const segmentFrames = Math.min(
+    Math.floor(segment.length * sampleRate),
+    source.length - sourceStartFrame,
+  );
+  const outputStartFrame = Math.floor(outputStartSeconds * sampleRate);
+  const fadeInFrames = Math.min(Math.floor(fadeInSeconds * sampleRate), segmentFrames);
+  const fadeOutFrames = Math.min(Math.floor(fadeOutSeconds * sampleRate), segmentFrames);
+
+  for (let channel = 0; channel < source.numberOfChannels; channel += 1) {
+    const sourceData = source.getChannelData(channel);
+    const outputData = output.getChannelData(channel);
+
+    for (let frame = 0; frame < segmentFrames; frame += 1) {
+      const destinationFrame = outputStartFrame + frame;
+      if (destinationFrame < 0 || destinationFrame >= output.length) continue;
+
+      let gain = 1;
+
+      if (fadeInFrames > 0 && frame < fadeInFrames) {
+        gain *= Math.sin((frame / Math.max(1, fadeInFrames)) * Math.PI * 0.5);
+      }
+
+      if (fadeOutFrames > 0 && frame > segmentFrames - fadeOutFrames) {
+        gain *= Math.sin(((segmentFrames - frame) / Math.max(1, fadeOutFrames)) * Math.PI * 0.5);
+      }
+
+      outputData[destinationFrame] += sourceData[sourceStartFrame + frame] * gain;
+    }
+  }
+}
+
+function applyEdgeFades(buffer: AudioBuffer) {
+  const fadeInFrames = Math.min(Math.floor(buffer.sampleRate * 0.04), Math.floor(buffer.length / 4));
+  const fadeOutFrames = Math.min(Math.floor(buffer.sampleRate * 1.45), Math.floor(buffer.length / 3));
+
+  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const data = buffer.getChannelData(channel);
+
+    for (let index = 0; index < fadeInFrames; index += 1) {
+      data[index] *= index / Math.max(1, fadeInFrames);
+    }
+
+    for (let index = 0; index < fadeOutFrames; index += 1) {
+      const frame = data.length - 1 - index;
+      data[frame] *= index / Math.max(1, fadeOutFrames);
+    }
+  }
+}
+
+function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, targetSeconds: number) {
+  const actualDurationSeconds = Math.min(targetSeconds, buffer.duration);
+  const output = audioContext.createBuffer(
+    buffer.numberOfChannels,
+    Math.max(1, Math.floor(actualDurationSeconds * buffer.sampleRate)),
+    buffer.sampleRate,
+  );
+  const frames = getEnergyFrames(buffer);
+  const matchedPlan = findMatchedBlendPlan(buffer, frames, actualDurationSeconds);
+  const plan: NaturalBlendPlan = matchedPlan ?? {
+    mode: "continuous",
+    crossfadeSeconds: 0,
+    segments: [
+      {
+        start: findBestContinuousStart(buffer, frames, actualDurationSeconds),
+        length: actualDurationSeconds,
+      },
+    ],
+  };
+
+  if (plan.mode === "continuous") {
+    copySegment({
+      source: buffer,
+      output,
+      segment: plan.segments[0],
+      outputStartSeconds: 0,
+      fadeInSeconds: 0,
+      fadeOutSeconds: 0,
+    });
+  } else {
+    copySegment({
+      source: buffer,
+      output,
+      segment: plan.segments[0],
+      outputStartSeconds: 0,
+      fadeInSeconds: 0,
+      fadeOutSeconds: plan.crossfadeSeconds,
+    });
+    copySegment({
+      source: buffer,
+      output,
+      segment: plan.segments[1],
+      outputStartSeconds: plan.segments[0].length - plan.crossfadeSeconds,
+      fadeInSeconds: plan.crossfadeSeconds,
+      fadeOutSeconds: 0,
+    });
+  }
+
+  applyEdgeFades(output);
+
+  return output;
 }
 
 async function createShortenedTrack(song: Song, targetSeconds: number) {
@@ -97,36 +535,44 @@ async function createShortenedTrack(song: Song, targetSeconds: number) {
     window.AudioContext || (window as BrowserAudioWindow).webkitAudioContext;
 
   if (!AudioContextConstructor) {
-    throw new Error("Your browser does not support audio preview decoding.");
+    throw new Error("Your browser does not support in-browser audio processing.");
   }
 
   let response: Response;
 
   try {
-    response = await fetch(`/api/songs/${encodeURIComponent(song.id)}/shorten`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ targetSeconds }),
-    });
+    response = await fetch(
+      `/api/songs/${encodeURIComponent(song.id)}/shorten-source`,
+    );
   } catch {
-    throw new Error("Could not reach the shorten service. Make sure the dev server is running.");
+    throw new Error("Could not load the track audio.");
   }
 
   if (!response.ok) {
-    throw new Error(await getErrorMessage(response));
+    let message = "Could not load the track audio.";
+
+    try {
+      const data = await response.json();
+      if (typeof data?.error === "string") message = data.error;
+    } catch {
+      // Keep the fallback message.
+    }
+
+    throw new Error(message);
   }
 
-  const blob = await response.blob();
-  const encodedAudio = await blob.arrayBuffer();
+  const encodedAudio = await response.arrayBuffer();
   const audioContext = new AudioContextConstructor();
 
   try {
     const decodedAudio = await audioContext.decodeAudioData(encodedAudio.slice(0));
+    const shortenedBuffer = renderNaturalShort(decodedAudio, audioContext, targetSeconds);
+    const blob = audioBufferToWavBlob(shortenedBuffer);
 
     return {
       blob,
-      actualDurationSeconds: decodedAudio.duration,
-      waveformPeaks: createWaveformPeaks(decodedAudio),
+      actualDurationSeconds: shortenedBuffer.duration,
+      waveformPeaks: createWaveformPeaks(shortenedBuffer),
     };
   } finally {
     void audioContext.close();
@@ -315,7 +761,7 @@ export default function ShortenTrackModal({
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
             <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
-              Choose a shorter version to generate. Filmwave now creates the cutdown server-side, with support for an external AI arranger service.
+              Choose a shorter version to generate. Filmwave now prefers natural continuous sections or one similarity-matched blend instead of cue-point cuts.
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -394,7 +840,7 @@ export default function ShortenTrackModal({
                           {track.label} Version
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                          {formatDuration(track.actualDurationSeconds)} server cutdown · waveform ready
+                          {formatDuration(track.actualDurationSeconds)} natural blend · waveform ready
                         </span>
                       </span>
 
