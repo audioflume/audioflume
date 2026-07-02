@@ -7,6 +7,7 @@ type SongCardShellProps = {
   className?: string;
   dataSongCardId?: string;
   cover: ReactNode;
+  coverBadge?: ReactNode;
   coverLabel: string;
   playOverlay: ReactNode;
   vocalIndicator?: ReactNode;
@@ -29,6 +30,7 @@ export function SongCardShell({
   className = "",
   dataSongCardId,
   cover,
+  coverBadge,
   coverLabel,
   playOverlay,
   vocalIndicator,
@@ -97,6 +99,7 @@ export function SongCardShell({
         onClick={onCoverClick}
       >
         {cover}
+        {coverBadge}
         <span className="filmwave-song-play-overlay" aria-hidden="true">
           <span className="filmwave-song-play-button">{playOverlay}</span>
         </span>
