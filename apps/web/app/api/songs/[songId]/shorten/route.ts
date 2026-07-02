@@ -6,7 +6,6 @@ import path from "node:path";
 import { promisify } from "node:util";
 import ffmpegPath from "ffmpeg-static";
 import { NextResponse } from "next/server";
-import { getMarkerType, parseEditPoints } from "@filmwave/shared";
 import { getSongById } from "@/lib/songs";
 import type { Song } from "@/lib/types";
 
@@ -38,6 +37,12 @@ type ExternalArrangerResponse = {
   crossfadeSeconds?: number;
 };
 
+type LocalEditPointMarker = {
+  label?: string;
+  time?: number | string;
+  type?: string;
+};
+
 const execFileAsync = promisify(execFile);
 const SUPPORTED_TARGETS = new Set([15, 30, 60]);
 
@@ -45,9 +50,48 @@ function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
 
+function toEditPointKey(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replaceAll("/", " ")
+    .replaceAll("-", " ")
+    .replaceAll(".", "")
+    .replace(/[^a-z0-9\s_]/g, "")
+    .replace(/\s+/g, "_");
+}
+
+function normalizeEditPointType(value: string) {
+  const key = toEditPointKey(value);
+
+  if (key === "first_hit" || key === "firsthit" || key.includes("first_hit")) return "first_hit";
+  if ((key.includes("first") && key.includes("hit")) || key.includes("intro_hit")) return "first_hit";
+  if (key === "main_drop" || key === "drop" || key.includes("main_drop")) return "drop";
+  if (key.includes("drop") || key.includes("impact") || key.includes("peak")) return "drop";
+  if (key.includes("break") || key.includes("breakdown") || key.includes("bridge")) return "break";
+  if (key.includes("button") || key.includes("ending") || key.includes("outro") || key === "end") return "button_ending";
+
+  return key;
+}
+
+function parseEditPointMarkers(value: Song["editPoints"]) {
+  if (!value) return [] as LocalEditPointMarker[];
+
+  try {
+    const parsed = typeof value === "string" ? JSON.parse(value) : value;
+    return Array.isArray(parsed?.markers) ? parsed.markers as LocalEditPointMarker[] : [];
+  } catch {
+    return [] as LocalEditPointMarker[];
+  }
+}
+
+function getMarkerType(marker: LocalEditPointMarker) {
+  return normalizeEditPointType(String(marker.type || marker.label || ""));
+}
+
 function getMarkerTime(song: Song, type: string) {
-  const markers = parseEditPoints(song.editPoints).markers || [];
-  const marker = markers.find((item) => getMarkerType(item) === type);
+  const normalizedType = normalizeEditPointType(type);
+  const marker = parseEditPointMarkers(song.editPoints).find((item) => getMarkerType(item) === normalizedType);
   const time = Number(marker?.time);
 
   return Number.isFinite(time) ? time : null;
@@ -138,10 +182,9 @@ function createLocalArrangementPlan(song: Song, targetSeconds: number): Arrangem
   }
 
   const crossfadeSeconds = clamp(targetSeconds * 0.035, 0.45, 1.1);
-  const bar = getBarSeconds(song);
   const gridAnchor = firstHit ?? drop ?? hook;
   const endingLength = targetSeconds <= 15 ? 4.75 : targetSeconds <= 30 ? 8 : 13;
-  const hookLeadIn = Math.min(bar, targetSeconds <= 15 ? 1.5 : 3.5);
+  const hookLeadIn = Math.min(getBarSeconds(song), targetSeconds <= 15 ? 1.5 : 3.5);
   const endingTailLead = Math.min(2.5, endingLength * 0.25);
   const endingStart = buttonEnding !== null
     ? snapToBar(song, buttonEnding - (endingLength - endingTailLead), gridAnchor)
