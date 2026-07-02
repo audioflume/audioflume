@@ -108,7 +108,7 @@ function AdminNavLink({ label, href, status }: AdminNavItem) {
   return (
     <Link
       href={href}
-      className={`group flex h-7 items-center justify-between gap-3 rounded-md px-2.5 text-[13px] font-medium transition ${
+      className={`group flex h-7 items-center justify-between gap-3 px-2.5 text-[13px] font-medium transition ${
         active
           ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
           : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
@@ -116,7 +116,7 @@ function AdminNavLink({ label, href, status }: AdminNavItem) {
     >
       <span className="truncate">{label}</span>
       {status && (
-        <span className="ml-auto rounded-full bg-[var(--bg-tertiary)] px-1.5 py-[1px] text-[8px] font-semibold uppercase tracking-[0.04em] text-[var(--text-muted)]">
+        <span className="ml-auto bg-[var(--bg-tertiary)] px-1.5 py-[1px] text-[8px] font-semibold uppercase tracking-[0.04em] text-[var(--text-muted)]">
           Soon
         </span>
       )}
@@ -131,7 +131,7 @@ function PrimaryNavLink({ label, href, icon }: PrimaryNavItem) {
   return (
     <Link
       href={href}
-      className={`group flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] font-medium transition ${
+      className={`group flex h-8 items-center gap-2.5 px-2.5 text-[13px] font-medium transition ${
         active
           ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
           : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
@@ -170,7 +170,7 @@ function SystemStatusConsole({
   lastChecked: string;
 }) {
   return (
-    <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5">
+    <div className="border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5">
       <div className="mb-1.5 flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.08em] text-[var(--text-muted)]">
         <span>Console</span>
         <span>{loading ? "Check" : "Live"}</span>
