@@ -7,6 +7,8 @@
   --filmwave-player-meta-gap: 18px;
   --filmwave-player-action-gap: 2px;
   --filmwave-square-icon-hover-bg: var(--bg-hover-strong);
+  --filmwave-player-transport-bg: var(--text-primary);
+  --filmwave-player-transport-color: var(--bg-primary);
 }
 
 /* Shared flush music player — full-width, edge-aligned, and consistent across web and desktop. */
@@ -118,20 +120,26 @@
 
 .filmwave-player-controls button {
   display: inline-flex;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
   cursor: pointer;
   align-items: center;
   justify-content: center;
   border: 0;
-  background: transparent;
+  border-radius: 999px;
+  background: var(--filmwave-player-transport-bg);
   padding: 0;
-  color: var(--text-primary);
+  color: var(--filmwave-player-transport-color);
   font-family: inherit;
-  transition: color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    opacity 0.15s ease;
 }
 
 .filmwave-player-controls button:hover {
-  color: var(--text-secondary);
+  color: var(--filmwave-player-transport-color);
+  opacity: 0.82;
 }
 
 .filmwave-player-progress-wrap {
