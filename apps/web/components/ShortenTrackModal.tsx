@@ -5,6 +5,7 @@ import type { Song } from "@/lib/types";
 import ModalShell from "@/components/ModalShell";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
+import { getMarkerType, parseEditPoints } from "@filmwave/shared";
 
 const LENGTH_OPTIONS = [
   { label: "15 seconds", shortLabel: "15s", seconds: 15 },
@@ -35,6 +36,11 @@ type BrowserAudioWindow = Window &
     webkitAudioContext?: typeof AudioContext;
   };
 
+type CutSegment = {
+  start: number;
+  end: number;
+};
+
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
 
@@ -42,6 +48,10 @@ function formatDuration(seconds: number) {
   const remainingSeconds = Math.floor(seconds % 60);
 
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
 }
 
 function writeString(view: DataView, offset: number, value: string) {
@@ -98,12 +108,12 @@ function applyEdgeFades(buffer: AudioBuffer) {
     const data = buffer.getChannelData(channel);
 
     for (let index = 0; index < fadeInFrames; index += 1) {
-      data[index] *= index / fadeInFrames;
+      data[index] *= index / Math.max(1, fadeInFrames);
     }
 
     for (let index = 0; index < fadeOutFrames; index += 1) {
       const frame = data.length - 1 - index;
-      data[frame] *= index / fadeOutFrames;
+      data[frame] *= index / Math.max(1, fadeOutFrames);
     }
   }
 }
@@ -138,6 +148,171 @@ function createWaveformPeaks(buffer: AudioBuffer) {
   return peaks.map((peak) => Number((peak / maxPeak).toFixed(4)));
 }
 
+function getMarkerTime(song: Song, type: string) {
+  const markers = parseEditPoints(song.editPoints).markers || [];
+  const marker = markers.find((item) => getMarkerType(item) === type);
+  const time = Number(marker?.time);
+
+  return Number.isFinite(time) ? time : null;
+}
+
+function getSegmentEnd(start: number, length: number, duration: number) {
+  return clamp(start + length, start, duration);
+}
+
+function getEndingSegment(song: Song, source: AudioBuffer, endingLength: number): CutSegment {
+  const duration = source.duration;
+  const buttonEnding = getMarkerTime(song, "button_ending");
+  const desiredStart =
+    buttonEnding !== null && buttonEnding < duration - 1
+      ? clamp(buttonEnding - 0.35, 0, duration - endingLength)
+      : duration - endingLength;
+  const start = clamp(desiredStart, 0, Math.max(0, duration - endingLength));
+
+  return {
+    start,
+    end: getSegmentEnd(start, endingLength, duration),
+  };
+}
+
+function getMiddleSegment({
+  song,
+  source,
+  openingEnd,
+  endingStart,
+  middleLength,
+}: {
+  song: Song;
+  source: AudioBuffer;
+  openingEnd: number;
+  endingStart: number;
+  middleLength: number;
+}) {
+  const drop = getMarkerTime(song, "drop");
+  const firstHit = getMarkerTime(song, "first_hit");
+  const breakPoint = getMarkerTime(song, "break");
+  const anchor = drop ?? firstHit ?? breakPoint;
+  const minStart = Math.min(source.duration, openingEnd + 2);
+  const maxStart = Math.max(minStart, endingStart - middleLength - 2);
+
+  if (maxStart <= minStart || maxStart + middleLength > source.duration) return null;
+
+  const desiredStart = anchor !== null
+    ? clamp(anchor - 2, minStart, maxStart)
+    : clamp(openingEnd + (endingStart - openingEnd - middleLength) / 2, minStart, maxStart);
+  const start = clamp(desiredStart, minStart, maxStart);
+
+  return {
+    start,
+    end: getSegmentEnd(start, middleLength, source.duration),
+  };
+}
+
+function buildCutdownSegments(song: Song, source: AudioBuffer, targetSeconds: number, crossfadeSeconds: number) {
+  const duration = source.duration;
+  const safeTarget = Math.min(targetSeconds, duration);
+
+  if (duration <= safeTarget + 1) {
+    return [{ start: 0, end: safeTarget }];
+  }
+
+  if (safeTarget >= 50 && duration > safeTarget + 20) {
+    const endingLength = clamp(safeTarget * 0.22, 12, 16);
+    const middleLength = clamp(safeTarget * 0.42, 22, 30);
+    const openingLength = Math.max(
+      8,
+      safeTarget + crossfadeSeconds * 2 - endingLength - middleLength,
+    );
+    const endingSegment = getEndingSegment(song, source, endingLength);
+    const middleSegment = getMiddleSegment({
+      song,
+      source,
+      openingEnd: openingLength,
+      endingStart: endingSegment.start,
+      middleLength,
+    });
+
+    if (middleSegment) {
+      return [
+        { start: 0, end: openingLength },
+        middleSegment,
+        endingSegment,
+      ];
+    }
+  }
+
+  const endingLength = clamp(safeTarget * 0.3, safeTarget <= 20 ? 4 : 7, safeTarget <= 20 ? 6 : 11);
+  const openingLength = Math.max(4, safeTarget + crossfadeSeconds - endingLength);
+  const endingSegment = getEndingSegment(song, source, endingLength);
+
+  return [
+    { start: 0, end: openingLength },
+    endingSegment,
+  ];
+}
+
+function renderCutdownBuffer({
+  audioContext,
+  source,
+  segments,
+  targetSeconds,
+  crossfadeSeconds,
+}: {
+  audioContext: AudioContext;
+  source: AudioBuffer;
+  segments: CutSegment[];
+  targetSeconds: number;
+  crossfadeSeconds: number;
+}) {
+  const sampleRate = source.sampleRate;
+  const targetFrames = Math.max(1, Math.floor(targetSeconds * sampleRate));
+  const output = audioContext.createBuffer(source.numberOfChannels, targetFrames, sampleRate);
+  const crossfadeFrames = Math.min(
+    Math.floor(crossfadeSeconds * sampleRate),
+    Math.floor(targetFrames / 4),
+  );
+  let outputOffset = 0;
+
+  for (let segmentIndex = 0; segmentIndex < segments.length; segmentIndex += 1) {
+    const segment = segments[segmentIndex];
+    const sourceStartFrame = Math.max(0, Math.floor(segment.start * sampleRate));
+    const sourceEndFrame = Math.min(source.length, Math.floor(segment.end * sampleRate));
+    const segmentFrames = Math.max(0, sourceEndFrame - sourceStartFrame);
+
+    if (segmentFrames <= 0) continue;
+    if (segmentIndex > 0) outputOffset -= crossfadeFrames;
+
+    const fadeInFrames = segmentIndex > 0 ? Math.min(crossfadeFrames, segmentFrames) : 0;
+    const fadeOutFrames = segmentIndex < segments.length - 1 ? Math.min(crossfadeFrames, segmentFrames) : 0;
+
+    for (let channel = 0; channel < source.numberOfChannels; channel += 1) {
+      const inputData = source.getChannelData(channel);
+      const outputData = output.getChannelData(channel);
+
+      for (let frame = 0; frame < segmentFrames; frame += 1) {
+        const destinationFrame = outputOffset + frame;
+        if (destinationFrame < 0 || destinationFrame >= output.length) continue;
+
+        let gain = 1;
+        if (fadeInFrames > 0 && frame < fadeInFrames) {
+          gain *= frame / Math.max(1, fadeInFrames);
+        }
+        if (fadeOutFrames > 0 && frame > segmentFrames - fadeOutFrames) {
+          gain *= (segmentFrames - frame) / Math.max(1, fadeOutFrames);
+        }
+
+        outputData[destinationFrame] += inputData[sourceStartFrame + frame] * gain;
+      }
+    }
+
+    outputOffset += segmentFrames;
+  }
+
+  applyEdgeFades(output);
+
+  return output;
+}
+
 async function createShortenedTrack(song: Song, targetSeconds: number) {
   const AudioContextConstructor =
     window.AudioContext || (window as BrowserAudioWindow).webkitAudioContext;
@@ -169,21 +344,15 @@ async function createShortenedTrack(song: Song, targetSeconds: number) {
   try {
     const decodedAudio = await audioContext.decodeAudioData(encodedAudio.slice(0));
     const actualDurationSeconds = Math.min(targetSeconds, decodedAudio.duration);
-    const frameCount = Math.max(1, Math.floor(actualDurationSeconds * decodedAudio.sampleRate));
-    const shortenedBuffer = audioContext.createBuffer(
-      decodedAudio.numberOfChannels,
-      frameCount,
-      decodedAudio.sampleRate,
-    );
-
-    for (let channel = 0; channel < decodedAudio.numberOfChannels; channel += 1) {
-      const sourceData = decodedAudio.getChannelData(channel);
-      const outputData = shortenedBuffer.getChannelData(channel);
-
-      outputData.set(sourceData.subarray(0, frameCount));
-    }
-
-    applyEdgeFades(shortenedBuffer);
+    const crossfadeSeconds = clamp(actualDurationSeconds * 0.06, 0.75, 2.25);
+    const segments = buildCutdownSegments(song, decodedAudio, actualDurationSeconds, crossfadeSeconds);
+    const shortenedBuffer = renderCutdownBuffer({
+      audioContext,
+      source: decodedAudio,
+      segments,
+      targetSeconds: actualDurationSeconds,
+      crossfadeSeconds,
+    });
 
     return {
       blob: audioBufferToWavBlob(shortenedBuffer),
@@ -374,7 +543,7 @@ export default function ShortenTrackModal({
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
             <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
-              Choose a shorter version to generate. The track is processed in your browser and appears below when it is ready.
+              Choose a shorter version to generate. Filmwave builds an editor-style cutdown from the opening, musical sections, and ending.
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -453,7 +622,7 @@ export default function ShortenTrackModal({
                           {track.label} Version
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                          {formatDuration(track.actualDurationSeconds)} preview · waveform ready
+                          {formatDuration(track.actualDurationSeconds)} cutdown · waveform ready
                         </span>
                       </span>
 
