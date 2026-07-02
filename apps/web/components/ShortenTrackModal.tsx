@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import type { Song } from "@/lib/types";
 import ModalShell from "@/components/ModalShell";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import { usePlayer } from "@/context/PlayerContext";
 
 const LENGTH_OPTIONS = [
   { label: "15 seconds", shortLabel: "15s", seconds: 15 },
@@ -11,12 +12,15 @@ const LENGTH_OPTIONS = [
   { label: "1 minute", shortLabel: "1m", seconds: 60 },
 ];
 
+const WAVEFORM_PEAK_COUNT = 512;
+
 type ShortenedTrack = {
   id: string;
   label: string;
   durationSeconds: number;
   actualDurationSeconds: number;
   url: string;
+  song: Song;
 };
 
 type ShortenTrackModalProps = {
@@ -103,6 +107,36 @@ function applyEdgeFades(buffer: AudioBuffer) {
   }
 }
 
+function createWaveformPeaks(buffer: AudioBuffer) {
+  const peakCount = Math.min(WAVEFORM_PEAK_COUNT, Math.max(1, buffer.length));
+  const samplesPerPeak = Math.max(1, Math.floor(buffer.length / peakCount));
+  const channels = Array.from({ length: buffer.numberOfChannels }, (_, channel) =>
+    buffer.getChannelData(channel),
+  );
+  const peaks: number[] = [];
+  let maxPeak = 0;
+
+  for (let peakIndex = 0; peakIndex < peakCount; peakIndex += 1) {
+    const start = peakIndex * samplesPerPeak;
+    const end = Math.min(buffer.length, start + samplesPerPeak);
+    let peak = 0;
+
+    for (let frame = start; frame < end; frame += 1) {
+      for (let channel = 0; channel < channels.length; channel += 1) {
+        const value = Math.abs(channels[channel][frame] || 0);
+        if (value > peak) peak = value;
+      }
+    }
+
+    if (peak > maxPeak) maxPeak = peak;
+    peaks.push(peak);
+  }
+
+  if (maxPeak <= 0) return peaks.map(() => 0);
+
+  return peaks.map((peak) => Number((peak / maxPeak).toFixed(4)));
+}
+
 async function createShortenedTrack(song: Song, targetSeconds: number) {
   const AudioContextConstructor =
     window.AudioContext || (window as BrowserAudioWindow).webkitAudioContext;
@@ -153,10 +187,20 @@ async function createShortenedTrack(song: Song, targetSeconds: number) {
     return {
       blob: audioBufferToWavBlob(shortenedBuffer),
       actualDurationSeconds,
+      waveformPeaks: createWaveformPeaks(shortenedBuffer),
     };
   } finally {
     void audioContext.close();
   }
+}
+
+function LoadingSpinner() {
+  return (
+    <span
+      className="h-3 w-3 animate-spin rounded-full border border-[var(--text-primary)] border-t-transparent"
+      aria-hidden="true"
+    />
+  );
 }
 
 function SongPreview({ song }: { song: Song }) {
@@ -188,29 +232,10 @@ export default function ShortenTrackModal({
   song,
   onClose,
 }: ShortenTrackModalProps) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const generatedTracksRef = useRef<ShortenedTrack[]>([]);
+  const { currentSong, isPlaying, togglePlayPause } = usePlayer();
   const [generatedTracks, setGeneratedTracks] = useState<ShortenedTrack[]>([]);
   const [generatingSeconds, setGeneratingSeconds] = useState<number | null>(null);
-  const [previewingId, setPreviewingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    generatedTracksRef.current = generatedTracks;
-  }, [generatedTracks]);
-
-  useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-      generatedTracksRef.current.forEach((track) => URL.revokeObjectURL(track.url));
-    };
-  }, []);
-
-  function handleClose() {
-    audioRef.current?.pause();
-    setPreviewingId(null);
-    onClose();
-  }
 
   async function handleGenerate(targetSeconds: number) {
     if (!song || generatingSeconds !== null) return;
@@ -219,23 +244,37 @@ export default function ShortenTrackModal({
     setError(null);
 
     try {
-      const { blob, actualDurationSeconds } = await createShortenedTrack(song, targetSeconds);
+      const { blob, actualDurationSeconds, waveformPeaks } = await createShortenedTrack(song, targetSeconds);
       const url = URL.createObjectURL(blob);
-      const label = LENGTH_OPTIONS.find((option) => option.seconds === targetSeconds)?.label ||
-        formatDuration(targetSeconds);
+      const lengthOption = LENGTH_OPTIONS.find((option) => option.seconds === targetSeconds);
+      const label = lengthOption?.label || formatDuration(targetSeconds);
+      const shortLabel = lengthOption?.shortLabel || formatDuration(targetSeconds);
+      const generatedId = `${song.id}-short-${targetSeconds}-${Date.now()}`;
+      const shortenedSong: Song = {
+        ...song,
+        id: generatedId,
+        title: `${song.title} (${shortLabel} Short)`,
+        audioUrl: url,
+        playbackUrl: url,
+        hlsUrl: "",
+        stems: [],
+        waveformPeaks: JSON.stringify(waveformPeaks),
+        duration: actualDurationSeconds,
+        editPoints: "",
+        downloadCount: 0,
+        sizeBytes: blob.size,
+      };
       const track: ShortenedTrack = {
-        id: `${song.id}-${targetSeconds}`,
+        id: generatedId,
         label,
         durationSeconds: targetSeconds,
         actualDurationSeconds,
         url,
+        song: shortenedSong,
       };
 
       setGeneratedTracks((current) => {
-        const replaced = current.filter((existing) => existing.durationSeconds === targetSeconds);
         const remaining = current.filter((existing) => existing.durationSeconds !== targetSeconds);
-
-        replaced.forEach((existing) => URL.revokeObjectURL(existing.url));
 
         return [track, ...remaining].sort((a, b) => a.durationSeconds - b.durationSeconds);
       });
@@ -246,27 +285,8 @@ export default function ShortenTrackModal({
     }
   }
 
-  async function handlePreview(track: ShortenedTrack) {
-    const audio = audioRef.current;
-
-    if (!audio) return;
-
-    if (previewingId === track.id && !audio.paused) {
-      audio.pause();
-      setPreviewingId(null);
-      return;
-    }
-
-    try {
-      audio.pause();
-      audio.src = track.url;
-      audio.currentTime = 0;
-      await audio.play();
-      setPreviewingId(track.id);
-    } catch (err) {
-      setPreviewingId(null);
-      setError(err instanceof Error ? err.message : "Could not preview shortened track.");
-    }
+  function handlePreview(track: ShortenedTrack) {
+    togglePlayPause(track.song);
   }
 
   if (!song) return null;
@@ -275,7 +295,7 @@ export default function ShortenTrackModal({
     <ModalShell
       isOpen={isOpen}
       title="Shorten Track"
-      onClose={handleClose}
+      onClose={onClose}
       closeLabel="Close shorten track modal"
       maxWidth="max-w-[430px]"
       maxHeight="520px"
@@ -307,7 +327,14 @@ export default function ShortenTrackModal({
                     onClick={() => handleGenerate(option.seconds)}
                     className="flex h-12 items-center justify-center rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-semibold text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40"
                   >
-                    {isGenerating ? "Creating..." : option.shortLabel}
+                    {isGenerating ? (
+                      <span className="flex items-center gap-2">
+                        <LoadingSpinner />
+                        <span>Creating...</span>
+                      </span>
+                    ) : (
+                      option.shortLabel
+                    )}
                   </button>
                 );
               })}
@@ -339,7 +366,7 @@ export default function ShortenTrackModal({
             ) : (
               <div className="space-y-1">
                 {generatedTracks.map((track) => {
-                  const isPreviewing = previewingId === track.id;
+                  const isPreviewing = currentSong?.id === track.id && isPlaying;
 
                   return (
                     <div
@@ -356,7 +383,7 @@ export default function ShortenTrackModal({
                           {track.label} Version
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                          {formatDuration(track.actualDurationSeconds)} preview
+                          {formatDuration(track.actualDurationSeconds)} preview · waveform ready
                         </span>
                       </span>
 
@@ -375,15 +402,6 @@ export default function ShortenTrackModal({
           </div>
         </div>
       </div>
-
-      <audio
-        ref={audioRef}
-        className="hidden"
-        onEnded={() => setPreviewingId(null)}
-        onPause={() => {
-          if (audioRef.current?.ended) setPreviewingId(null);
-        }}
-      />
     </ModalShell>
   );
 }
