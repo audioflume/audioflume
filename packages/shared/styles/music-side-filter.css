@@ -238,7 +238,7 @@ main > section:has(.fw-filter-panel-wrap)
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
-  opacity: 0.4 !important;
+  opacity: 0 !important;
   transition: opacity 160ms ease, color 160ms ease !important;
 }
 
@@ -251,6 +251,10 @@ main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-sel
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item:hover .fw-filter-rail-chevron,
 main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active:hover .fw-filter-rail-chevron {
   opacity: 0.65 !important;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item:has(.fw-filter-rail-count):hover .fw-filter-rail-chevron {
+  opacity: 0 !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
@@ -336,7 +340,7 @@ main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-sel
 }
 
 main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
-  opacity: 0.4 !important;
+  opacity: 0 !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item-playlists {
