@@ -11,3 +11,21 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] {
 main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] {
   padding-top: 88px !important;
 }
+
+/* Admin song upload / edit source styling */
+main:has(.admin-song-form-card) .admin-song-form-card,
+main:has(.admin-song-form-card) .admin-song-form-icon-btn,
+main:has(.admin-song-form-card) form [class*="rounded-"] {
+  border-radius: 0;
+}
+
+main:has(.admin-song-form-card) .edit-point-play-button,
+main:has(.admin-song-form-card) button[aria-label="Toggle spacebar start from selected marker"],
+main:has(.admin-song-form-card) .cue-point-row-grid button[aria-label^="Play from"],
+main:has(.admin-song-form-card) .cue-point-marker-dot,
+main:has(.admin-song-form-card) .edit-point-selected-dot,
+main:has(.admin-song-form-card) form [style*="--status-success"],
+main:has(.admin-song-form-card) form [style*="--status-error"],
+main:has(.admin-song-form-card) form [class*="animate-spin"][class*="rounded-full"] {
+  border-radius: 999px;
+}
