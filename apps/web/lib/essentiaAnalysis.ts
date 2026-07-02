@@ -38,6 +38,12 @@ type BeatAnalyzerResponse = {
   error?: string
 }
 
+type BeatForcedAudioBuffer = AudioBuffer & {
+  __filmwaveOriginalGetChannelData__?: AudioBuffer['getChannelData']
+  __filmwaveBeatSyntheticCache__?: Map<number, Float32Array>
+  __filmwaveForcedBpm__?: number
+}
+
 type EssentiaConstructor = new (wasmModule: unknown) => EssentiaInstance
 
 type EssentiaWasmLoader = unknown | (() => Promise<unknown>)
@@ -55,6 +61,7 @@ declare global {
 }
 
 let essentiaPromise: Promise<EssentiaInstance> | null = null
+let bypassForcedBeatAudio = false
 
 function setLastBpmAnalysis(
   source: 'beat_this' | 'essentia' | 'fallback',
@@ -175,6 +182,74 @@ function audioBufferToWavFile(audioBuffer: AudioBuffer) {
   })
 }
 
+function buildSyntheticBeatChannel(audioBuffer: AudioBuffer, bpm: number) {
+  const synthetic = new Float32Array(audioBuffer.length)
+  const sampleRate = audioBuffer.sampleRate
+  const beatIntervalSamples = Math.max(1, Math.round((60 / bpm) * sampleRate))
+  const clickLength = Math.max(64, Math.round(sampleRate * 0.012))
+  const startSample = Math.round(sampleRate * 0.1)
+
+  for (
+    let beatStart = startSample;
+    beatStart < synthetic.length;
+    beatStart += beatIntervalSamples
+  ) {
+    for (let i = 0; i < clickLength && beatStart + i < synthetic.length; i++) {
+      synthetic[beatStart + i] = 1 - i / clickLength
+    }
+  }
+
+  return synthetic
+}
+
+function forceLegacyBpmVotingToBeatThis(audioBuffer: AudioBuffer, bpm: number) {
+  try {
+    const targetBuffer = audioBuffer as BeatForcedAudioBuffer
+
+    if (targetBuffer.__filmwaveForcedBpm__ === bpm) {
+      return
+    }
+
+    const originalGetChannelData =
+      targetBuffer.__filmwaveOriginalGetChannelData__ ||
+      targetBuffer.getChannelData.bind(targetBuffer)
+
+    targetBuffer.__filmwaveOriginalGetChannelData__ = originalGetChannelData
+    targetBuffer.__filmwaveBeatSyntheticCache__ = new Map<number, Float32Array>()
+    targetBuffer.__filmwaveForcedBpm__ = bpm
+
+    targetBuffer.getChannelData = (channel: number) => {
+      if (bypassForcedBeatAudio) {
+        return originalGetChannelData(channel)
+      }
+
+      const cache = targetBuffer.__filmwaveBeatSyntheticCache__
+      const cachedChannel = cache?.get(channel)
+
+      if (cachedChannel) {
+        return cachedChannel
+      }
+
+      const syntheticChannel = buildSyntheticBeatChannel(audioBuffer, bpm)
+      cache?.set(channel, syntheticChannel)
+
+      return syntheticChannel
+    }
+  } catch (error) {
+    console.warn('[Filmwave BPM] Could not force legacy BPM voting.', error)
+  }
+}
+
+function getOriginalChannelData(audioBuffer: AudioBuffer, channel: number) {
+  const targetBuffer = audioBuffer as BeatForcedAudioBuffer
+
+  if (targetBuffer.__filmwaveOriginalGetChannelData__) {
+    return targetBuffer.__filmwaveOriginalGetChannelData__(channel)
+  }
+
+  return audioBuffer.getChannelData(channel)
+}
+
 async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer) {
   try {
     console.info('[Filmwave BPM] Calling Beat-This analyzer...')
@@ -222,6 +297,7 @@ async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer) {
     }
 
     const roundedBpm = Math.round(bpm)
+    forceLegacyBpmVotingToBeatThis(audioBuffer, roundedBpm)
     setLastBpmAnalysis('beat_this', roundedBpm, `Beat-This returned ${roundedBpm} BPM.`)
 
     return roundedBpm
@@ -279,35 +355,42 @@ export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer) {
 
 export async function estimateKeyWithEssentia(audioBuffer: AudioBuffer) {
   const essentia = await getEssentia()
-  const channelData = audioBuffer.getChannelData(0)
-  const audioVector = essentia.arrayToVector(channelData)
+  const previousBypass = bypassForcedBeatAudio
+  bypassForcedBeatAudio = true
 
-  const result = essentia.KeyExtractor(
-    audioVector,
-    true,
-    4096,
-    4096,
-    12,
-    3500,
-    60,
-    25,
-    0.2,
-    'bgate',
-    audioBuffer.sampleRate,
-    0.0001,
-    440,
-    'cosine',
-    'hann'
-  )
+  try {
+    const channelData = getOriginalChannelData(audioBuffer, 0)
+    const audioVector = essentia.arrayToVector(channelData)
 
-  if (!result?.key || !result?.scale) {
-    return null
-  }
+    const result = essentia.KeyExtractor(
+      audioVector,
+      true,
+      4096,
+      4096,
+      12,
+      3500,
+      60,
+      25,
+      0.2,
+      'bgate',
+      audioBuffer.sampleRate,
+      0.0001,
+      440,
+      'cosine',
+      'hann'
+    )
 
-  return {
-    key: formatEssentiaKey(result.key, result.scale),
-    rawKey: result.key,
-    scale: result.scale,
-    strength: result.strength ?? null,
+    if (!result?.key || !result?.scale) {
+      return null
+    }
+
+    return {
+      key: formatEssentiaKey(result.key, result.scale),
+      rawKey: result.key,
+      scale: result.scale,
+      strength: result.strength ?? null,
+    }
+  } finally {
+    bypassForcedBeatAudio = previousBypass
   }
 }
