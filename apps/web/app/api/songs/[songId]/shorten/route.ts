@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { execFile } from "node:child_process";
-import { promises as fs } from "node:fs";
+import { constants, promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -45,6 +45,42 @@ type LocalEditPointMarker = {
 
 const execFileAsync = promisify(execFile);
 const SUPPORTED_TARGETS = new Set([15, 30, 60]);
+const FFMPEG_BINARY_NAME = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg";
+
+async function canExecute(filePath: string | null | undefined) {
+  if (!filePath) return false;
+
+  try {
+    await fs.access(filePath, constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function resolveFfmpegPath() {
+  const appRoot = process.cwd();
+  const workspaceRoot = path.resolve(appRoot, "../..");
+  const candidatePaths = [
+    process.env.FFMPEG_PATH,
+    ffmpegPath || undefined,
+    path.join(appRoot, "node_modules", "ffmpeg-static", FFMPEG_BINARY_NAME),
+    path.join(workspaceRoot, "node_modules", "ffmpeg-static", FFMPEG_BINARY_NAME),
+  ];
+
+  for (const candidatePath of candidatePaths) {
+    if (await canExecute(candidatePath)) return candidatePath;
+  }
+
+  try {
+    await execFileAsync("ffmpeg", ["-version"], { maxBuffer: 1024 * 1024 });
+    return "ffmpeg";
+  } catch {
+    throw new Error(
+      "FFmpeg binary was not found. Run npm install from the repo root or set FFMPEG_PATH to a valid ffmpeg binary.",
+    );
+  }
+}
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
@@ -340,10 +376,7 @@ async function renderArrangement({
   sourceAudio: Buffer;
   plan: ArrangementPlan;
 }) {
-  if (!ffmpegPath) {
-    throw new Error("FFmpeg is not available in this environment.");
-  }
-
+  const executableFfmpegPath = await resolveFfmpegPath();
   const id = randomUUID();
   const inputPath = path.join(os.tmpdir(), `${id}-source.audio`);
   const outputPath = path.join(os.tmpdir(), `${id}-short.wav`);
@@ -351,7 +384,7 @@ async function renderArrangement({
   try {
     await fs.writeFile(inputPath, sourceAudio);
 
-    await execFileAsync(ffmpegPath, [
+    await execFileAsync(executableFfmpegPath, [
       "-y",
       "-i",
       inputPath,
