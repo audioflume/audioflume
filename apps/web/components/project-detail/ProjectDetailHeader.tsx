@@ -16,7 +16,8 @@ type ProjectSyncOperationsResponse = {
   operations?: Array<{ id: string }>;
 };
 
-const SYNC_OPERATIONS_POLL_MS = 900;
+const SYNC_OPERATIONS_IDLE_POLL_MS = 15000;
+const SYNC_OPERATIONS_ACTIVE_POLL_MS = 3000;
 
 function formatCompactSyncLabel(label: string) {
   if (label === "Syncing" || label === "Sync error") return label;
@@ -34,30 +35,75 @@ export default function ProjectDetailHeader({
 
   useEffect(() => {
     let cancelled = false;
-    let intervalId: number | null = null;
+    let timeoutId: number | null = null;
+    let abortController: AbortController | null = null;
+
+    function clearPollTimer() {
+      if (!timeoutId) return;
+      window.clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+
+    function scheduleNextPoll(delay: number) {
+      clearPollTimer();
+
+      if (cancelled || document.hidden) return;
+
+      timeoutId = window.setTimeout(() => {
+        void loadSyncOperations();
+      }, delay);
+    }
 
     async function loadSyncOperations() {
+      if (cancelled || document.hidden) return;
+
+      abortController?.abort();
+      abortController = new AbortController();
+
       try {
         const res = await fetch(
           `/api/projects/${encodeURIComponent(String(project.id))}/sync-operations`,
-          { cache: "no-store" },
+          { cache: "no-store", signal: abortController.signal },
         );
         const data = (await res.json()) as ProjectSyncOperationsResponse;
+        const hasActiveOperations = Boolean(data.operations?.length);
 
         if (!cancelled) {
-          setHasActiveSyncOperations(Boolean(data.operations?.length));
+          setHasActiveSyncOperations(hasActiveOperations);
+          scheduleNextPoll(
+            hasActiveOperations
+              ? SYNC_OPERATIONS_ACTIVE_POLL_MS
+              : SYNC_OPERATIONS_IDLE_POLL_MS,
+          );
         }
-      } catch {
-        if (!cancelled) setHasActiveSyncOperations(false);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+
+        if (!cancelled) {
+          setHasActiveSyncOperations(false);
+          scheduleNextPoll(SYNC_OPERATIONS_IDLE_POLL_MS);
+        }
       }
     }
 
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        clearPollTimer();
+        abortController?.abort();
+        return;
+      }
+
+      void loadSyncOperations();
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     void loadSyncOperations();
-    intervalId = window.setInterval(loadSyncOperations, SYNC_OPERATIONS_POLL_MS);
 
     return () => {
       cancelled = true;
-      if (intervalId) window.clearInterval(intervalId);
+      clearPollTimer();
+      abortController?.abort();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [project.id]);
 
