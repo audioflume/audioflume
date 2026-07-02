@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Song } from "@/lib/types";
 import ModalShell from "@/components/ModalShell";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
@@ -184,10 +184,22 @@ export default function ShortenTrackModal({
   onClose,
 }: ShortenTrackModalProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const generatedTracksRef = useRef<ShortenedTrack[]>([]);
   const [generatedTracks, setGeneratedTracks] = useState<ShortenedTrack[]>([]);
   const [generatingSeconds, setGeneratingSeconds] = useState<number | null>(null);
   const [previewingId, setPreviewingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    generatedTracksRef.current = generatedTracks;
+  }, [generatedTracks]);
+
+  useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      generatedTracksRef.current.forEach((track) => URL.revokeObjectURL(track.url));
+    };
+  }, []);
 
   function handleClose() {
     audioRef.current?.pause();
@@ -278,7 +290,9 @@ export default function ShortenTrackModal({
             <div className="mt-4 grid grid-cols-3 gap-2">
               {LENGTH_OPTIONS.map((option) => {
                 const isGenerating = generatingSeconds === option.seconds;
-                const disabled = generatingSeconds !== null || song.duration <= option.seconds;
+                const disabled =
+                  generatingSeconds !== null ||
+                  (Number.isFinite(song.duration) && song.duration > 0 && song.duration <= option.seconds);
 
                 return (
                   <button
