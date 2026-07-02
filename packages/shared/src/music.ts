@@ -44,6 +44,7 @@ export type FilmwaveSong = {
   builds: string[];
   vocals: string[];
   instrumental: boolean;
+  aiGenerated?: boolean;
   editPoints: string;
   downloadCount: number;
   sizeBytes?: number;
@@ -72,6 +73,7 @@ export type FilmwaveSongApiItem = {
   builds?: string[] | null;
   vocals?: string[] | null;
   instrumental?: boolean | null;
+  aiGenerated?: boolean | null;
   editPoints?: string | null;
   downloadCount?: number | string | null;
   sizeBytes?: number | string | null;
@@ -109,6 +111,7 @@ export type FilmwaveDesktopSong = {
   editPoints: string;
   downloadCount: number;
   sizeBytes?: number;
+  aiGenerated?: boolean;
   isFavorite?: boolean;
 };
 
