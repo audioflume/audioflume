@@ -26,7 +26,7 @@ export default function AdminContentPage({
   contentStyle,
 }: AdminContentPageProps) {
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+    <main className="filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AdminSidebar />
 
       <section className="min-h-screen px-5 pt-[88px] pb-20 md:px-8 xl:px-10">
