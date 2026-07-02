@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
-import { access, mkdir, stat } from "node:fs/promises";
+import { access, mkdir, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import ffmpegPath from "ffmpeg-static";
 
@@ -38,47 +38,39 @@ async function main() {
     ].join("\n"));
   }
 
-  const smartTrimPath = path.join(outputDir, `smart-trim-${Math.round(targetSeconds)}s.wav`);
-  const repairCandidatePath = path.join(outputDir, `repair-candidate-${Math.round(targetSeconds)}s.wav`);
+  const roundedTarget = Math.round(targetSeconds);
+  const smartEditPath = path.join(outputDir, `smart-edit-${roundedTarget}s.wav`);
+  const planPath = path.join(outputDir, `shorten-plan-${roundedTarget}s.json`);
+  const oldRepairCandidatePath = path.join(outputDir, `repair-candidate-${roundedTarget}s.wav`);
   const duration = await getDurationSeconds(sourcePath);
-  const start = Math.max(0, Math.min(duration - targetSeconds, duration * 0.18));
+  const plan = buildSmartEditPlan({ duration, targetSeconds: roundedTarget });
 
-  console.log("Creating smart-trim file...");
-  await runFfmpeg([
-    "-y",
-    "-ss",
-    String(start),
-    "-t",
-    String(targetSeconds),
-    "-i",
-    sourcePath,
-    "-af",
-    `afade=t=in:st=0:d=0.04,afade=t=out:st=${Math.max(0, targetSeconds - 1.45)}:d=1.45`,
-    "-ar",
-    "44100",
-    "-acodec",
-    "pcm_s16le",
-    smartTrimPath,
-  ]);
+  await unlink(oldRepairCandidatePath).catch(() => undefined);
 
-  console.log("Creating local repair candidate file...");
-  await runFfmpeg([
-    "-y",
-    "-i",
-    smartTrimPath,
-    "-af",
-    "highpass=f=24,lowpass=f=19000,dynaudnorm=f=250:g=5:p=0.86:m=8,alimiter=limit=0.97",
-    "-ar",
-    "44100",
-    "-acodec",
-    "pcm_s16le",
-    repairCandidatePath,
-  ]);
+  console.log("Creating two-section smart edit...");
+  await renderSmartEdit({ sourcePath, outputPath: smartEditPath, plan });
+
+  await writeFile(
+    planPath,
+    JSON.stringify(
+      {
+        source: sourcePath,
+        duration,
+        targetSeconds: roundedTarget,
+        plan,
+        outputPath: smartEditPath,
+        createdAt: new Date().toISOString(),
+        note: "This is a deterministic two-section smart edit. It does not apply EQ, normalization, limiting, or AI repair.",
+      },
+      null,
+      2,
+    ),
+  );
 
   console.log("Done.");
-  console.log(`Smart trim: ${smartTrimPath}`);
-  console.log(`Repair candidate: ${repairCandidatePath}`);
-  console.log("Note: repair-candidate is local DSP cleanup, not true AI. True AI needs a local model endpoint.");
+  console.log(`Smart edit: ${smartEditPath}`);
+  console.log(`Plan:       ${planPath}`);
+  console.log("Note: this is the smarter edit baseline. True AI repair comes after this sounds musically close enough.");
 }
 
 function parseArgs(rawArgs) {
@@ -99,6 +91,118 @@ function parseArgs(rawArgs) {
 function fail(message) {
   console.error(message);
   process.exit(1);
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function buildSmartEditPlan({ duration, targetSeconds }) {
+  const safeTarget = Math.min(targetSeconds, duration);
+  const useTwoSections = duration > safeTarget + 18 && safeTarget >= 15;
+
+  if (!useTwoSections) {
+    return {
+      mode: "continuous",
+      targetSeconds: safeTarget,
+      crossfadeSeconds: 0,
+      segments: [
+        {
+          role: "main",
+          start: clamp(duration * 0.18, 0, Math.max(0, duration - safeTarget)),
+          length: safeTarget,
+        },
+      ],
+    };
+  }
+
+  const crossfadeSeconds = clamp(safeTarget * 0.075, 0.9, 2.2);
+  const endingLength = clamp(safeTarget * 0.28, safeTarget <= 20 ? 4 : 7, safeTarget <= 20 ? 5.5 : 15);
+  const firstLength = safeTarget + crossfadeSeconds - endingLength;
+  const minimumGap = Math.max(5, crossfadeSeconds * 3);
+  const latestFirstStart = Math.max(0, duration - firstLength - endingLength - minimumGap);
+  const firstStart = clamp(duration * 0.12, 0, latestFirstStart);
+  const endingSearchStart = Math.max(duration * 0.52, firstStart + firstLength + minimumGap);
+  const endingStart = clamp(duration - endingLength - duration * 0.06, endingSearchStart, Math.max(endingSearchStart, duration - endingLength));
+
+  return {
+    mode: "two_section_ending_blend",
+    targetSeconds: safeTarget,
+    crossfadeSeconds,
+    segments: [
+      {
+        role: "main_body",
+        start: firstStart,
+        length: firstLength,
+      },
+      {
+        role: "natural_ending",
+        start: endingStart,
+        length: endingLength,
+      },
+    ],
+  };
+}
+
+async function renderSmartEdit({ sourcePath, outputPath, plan }) {
+  if (plan.mode === "continuous") {
+    const segment = plan.segments[0];
+
+    await runFfmpeg([
+      "-y",
+      "-ss",
+      String(segment.start),
+      "-t",
+      String(segment.length),
+      "-i",
+      sourcePath,
+      "-af",
+      `afade=t=in:st=0:d=0.04,afade=t=out:st=${Math.max(0, segment.length - 1.45)}:d=1.45`,
+      "-ar",
+      "44100",
+      "-acodec",
+      "pcm_s16le",
+      outputPath,
+    ]);
+    return;
+  }
+
+  const [first, second] = plan.segments;
+  const crossfade = plan.crossfadeSeconds;
+  const firstEndFadeStart = Math.max(0, first.length - crossfade);
+  const secondEndFadeStart = Math.max(0, second.length - 1.45);
+  const outputDuration = first.length + second.length - crossfade;
+
+  await runFfmpeg([
+    "-y",
+    "-ss",
+    String(first.start),
+    "-t",
+    String(first.length),
+    "-i",
+    sourcePath,
+    "-ss",
+    String(second.start),
+    "-t",
+    String(second.length),
+    "-i",
+    sourcePath,
+    "-filter_complex",
+    [
+      `[0:a]afade=t=in:st=0:d=0.04,afade=t=out:st=${firstEndFadeStart}:d=${crossfade}[main]`,
+      `[1:a]afade=t=in:st=0:d=${crossfade},afade=t=out:st=${secondEndFadeStart}:d=1.45[ending]`,
+      `[main][ending]acrossfade=d=${crossfade}:c1=tri:c2=tri[out]`,
+    ].join(";"),
+    "-map",
+    "[out]",
+    "-t",
+    String(outputDuration),
+    "-ar",
+    "44100",
+    "-acodec",
+    "pcm_s16le",
+    outputPath,
+  ]);
 }
 
 async function resolveFfmpegPath() {
