@@ -38,7 +38,7 @@ main:has(.admin-song-form-card) form :is(
   [class~="rounded-2xl"],
   [class~="rounded-[4px]"],
   [class~="rounded-[8px]"],
-  [class~="rounded-[9px"],
+  [class~="rounded-[9px]"],
   [class~="rounded-[14px]"],
   [class~="rounded-[18px]"]
 ) {
