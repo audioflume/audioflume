@@ -16,7 +16,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-c
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky {
-  --fw-music-secondary-row-height: var(--filmwave-header-height, 56px);
+  --fw-music-secondary-row-height: var(--fw-header-search-shell-height, 50px);
   position: fixed !important;
   top: var(--filmwave-header-height, 56px) !important;
   right: 0 !important;
@@ -32,7 +32,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   margin-left: 0 !important;
   border-bottom: 1px solid var(--border) !important;
   background: var(--bg-primary) !important;
-  padding: 0 !important;
+  padding: 0 var(--fw-header-search-shell-padding-right, 24px) 0 var(--fw-header-search-shell-padding-left, 32px) !important;
   transform: none !important;
   pointer-events: auto !important;
 }
@@ -55,7 +55,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   width: 100% !important;
   height: 100% !important;
   border-left: 0 !important;
-  padding: 0 28px !important;
+  padding: 0 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
