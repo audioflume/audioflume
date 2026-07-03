@@ -126,7 +126,7 @@ export function MusicLibraryToolbar({
 
   return (
     <div
-      className={`fw-toolbar-sticky${className ? ` ${className}` : ""}`}
+      className={`fw-toolbar-sticky${isStickyHeaderSearch ? " fw-header-search-shell" : ""}${className ? ` ${className}` : ""}`}
       style={stickyTop !== undefined ? { top: stickyTop } : undefined}
     >
       {isStickyHeaderSearch && (
