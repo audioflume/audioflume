@@ -6,7 +6,7 @@ const DISCOVER_LAYOUT_STYLE = `
     left: 0 !important;
     z-index: var(--filmwave-z-search-filter, 60) !important;
     display: flex !important;
-    height: 56px !important;
+    height: var(--filmwave-header-height, 56px) !important;
     align-items: center !important;
     border-bottom: 1px solid var(--border) !important;
     background: var(--bg-primary) !important;
@@ -14,8 +14,10 @@ const DISCOVER_LAYOUT_STYLE = `
   }
 
   .discover-header-search-form {
+    display: flex !important;
     width: 100% !important;
     height: 100% !important;
+    align-items: center !important;
   }
 
   .discover-header-search {
