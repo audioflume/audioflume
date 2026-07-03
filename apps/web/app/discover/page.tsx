@@ -501,6 +501,64 @@ function usePlayableCard(song: Song) {
   };
 }
 
+function SearchClearIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M3 3L9 9M9 3L3 9" stroke="currentColor" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function DiscoverHeaderSearchBar() {
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState("");
+
+  return (
+    <div className="discover-header-search-row">
+      <form
+        className="discover-header-search-form"
+        onSubmit={(event) => event.preventDefault()}
+      >
+        <div
+          className={`discover-header-search${search ? " has-value" : ""}`}
+          onClick={() => searchInputRef.current?.focus()}
+        >
+          <span className="discover-header-search-icon" aria-hidden="true">
+            <SearchIcon size={16} />
+          </span>
+
+          {search && (
+            <>
+              <button
+                type="button"
+                className="discover-header-search-clear"
+                aria-label="Clear search"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setSearch("");
+                  searchInputRef.current?.focus();
+                }}
+              >
+                <SearchClearIcon />
+              </button>
+              <span className="discover-header-search-divider" aria-hidden="true" />
+            </>
+          )}
+
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search music library"
+            className="discover-header-search-input"
+          />
+        </div>
+      </form>
+    </div>
+  );
+}
+
 function FullWidthSearchBar() {
   const router = useRouter();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -1072,7 +1130,12 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <section className="ml-[var(--sidebar-width)] min-h-screen pt-14 transition-[margin-left] duration-200">
+      <section
+        className="ml-[var(--sidebar-width)] min-h-screen transition-[margin-left] duration-200"
+        style={{ paddingTop: "calc(var(--filmwave-header-height, 56px) + 56px)" }}
+      >
+        <DiscoverHeaderSearchBar />
+
         <div className="px-8 pt-6">
           {pageLoading ? (
             <DiscoverPageSkeleton />
