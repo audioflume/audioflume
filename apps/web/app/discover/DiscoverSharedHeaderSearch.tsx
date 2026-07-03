@@ -19,7 +19,7 @@ export default function DiscoverSharedHeaderSearch() {
           box-sizing: border-box !important;
           display: block !important;
           width: auto !important;
-          margin-left: var(--sidebar-width, 0px) !important;
+          margin-left: 0 !important;
           margin-bottom: 14px !important;
           padding: calc(var(--filmwave-header-height, 56px) + 20px) 32px 0 32px !important;
           transition: margin-left 200ms ease !important;
@@ -38,8 +38,10 @@ export default function DiscoverSharedHeaderSearch() {
         }
 
         .discover-shared-header-search .fw-toolbar-header-search-form {
+          display: flex !important;
           width: 100% !important;
           height: 100% !important;
+          align-items: center !important;
         }
 
         .discover-shared-header-search .fw-toolbar-search,
@@ -68,24 +70,30 @@ export default function DiscoverSharedHeaderSearch() {
         }
 
         .discover-shared-header-search .fw-toolbar-search-static-icon {
+          display: inline-flex !important;
           width: 16px !important;
           height: 40px !important;
           flex: 0 0 16px !important;
+          align-items: center !important;
+          justify-content: center !important;
           color: var(--text-muted) !important;
           margin-left: 0 !important;
           margin-right: 0 !important;
         }
 
         .discover-shared-header-search .fw-toolbar-search-static-icon svg {
+          display: block !important;
           width: 16px !important;
           height: 16px !important;
         }
 
         .discover-shared-header-search .fw-toolbar-search-static-input {
+          display: block !important;
           height: 40px !important;
           font-size: 15px !important;
           font-weight: 300 !important;
           line-height: 40px !important;
+          padding: 0 !important;
         }
 
         .discover-shared-header-search .fw-toolbar-search-static-input::placeholder {
