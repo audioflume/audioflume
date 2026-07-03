@@ -177,6 +177,58 @@ const DISCOVER_LAYOUT_STYLE = `
     display: none !important;
   }
 
+  form[class*="min-h-[58px]"][class*="cursor-text"] {
+    box-sizing: border-box !important;
+    height: 50px !important;
+    min-height: 50px !important;
+    align-items: center !important;
+    gap: 8px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: var(--filmwave-chrome-surface) !important;
+    background-color: var(--filmwave-chrome-surface) !important;
+    padding: 0 24px !important;
+  }
+
+  form[class*="min-h-[58px]"][class*="cursor-text"]:hover,
+  form[class*="min-h-[58px]"][class*="cursor-text"]:focus-within {
+    background: var(--filmwave-chrome-surface) !important;
+    background-color: var(--filmwave-chrome-surface) !important;
+  }
+
+  form[class*="min-h-[58px]"][class*="cursor-text"] > div:first-child {
+    width: 16px !important;
+    height: 40px !important;
+    flex: 0 0 16px !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: var(--text-muted) !important;
+  }
+
+  form[class*="min-h-[58px]"][class*="cursor-text"] > div:first-child svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  form[class*="min-h-[58px]"][class*="cursor-text"] > input {
+    height: 40px !important;
+    font-size: 15px !important;
+    font-weight: 300 !important;
+    line-height: 40px !important;
+  }
+
+  form[class*="min-h-[58px]"][class*="cursor-text"] > input::placeholder {
+    color: var(--text-muted) !important;
+    font-size: 15px !important;
+    font-weight: 300 !important;
+  }
+
+  form[class*="min-h-[58px]"][class*="cursor-text"] > div[class*="lg:flex"],
+  form[class*="min-h-[58px]"][class*="cursor-text"] > button[type="submit"],
+  form[class*="min-h-[58px]"][class*="cursor-text"] + div {
+    display: none !important;
+  }
+
   main > section[class*="ml-[var(--sidebar-width)]"] a[href^="/curated-playlists/"],
   main > section[class*="ml-[var(--sidebar-width)]"] .discover-skeleton-card,
   main > section[class*="ml-[var(--sidebar-width)]"] .discover-skeleton-shelf-card {
