@@ -30,6 +30,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   z-index: var(--filmwave-z-search-filter, 60) !important;
   width: auto !important;
   height: var(--fw-music-secondary-row-height, 50px) !important;
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.18) !important;
   animation: fw-music-search-slide-in 160ms ease-out;
 }
 
