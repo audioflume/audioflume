@@ -25,8 +25,8 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   content: "";
   position: fixed !important;
   top: var(--filmwave-header-height, 56px) !important;
-  right: var(--fw-music-content-inset-right, 20px) !important;
-  left: calc(var(--fw-music-content-inset-right, 20px) + var(--filmwave-side-filter-rail-width)) !important;
+  right: 0 !important;
+  left: 0 !important;
   z-index: 59 !important;
   height: calc(20px + var(--fw-music-secondary-row-height, 50px)) !important;
   background: var(--bg-primary) !important;
@@ -48,9 +48,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   animation: fw-music-search-slide-in 160ms ease-out;
 }
 
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky.is-scroll-revealed:has(> .fw-filter-panel-wrap.has-selected-filter-section)::before,
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky.is-scroll-revealed:has(> .fw-filter-panel-wrap.has-selected-filter-section)
