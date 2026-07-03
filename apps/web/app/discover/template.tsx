@@ -4,7 +4,7 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
       <style>{`
         .discover-header-search-row {
           height: 50px !important;
-          padding-left: 31px !important;
+          padding-left: 32px !important;
           padding-right: 24px !important;
         }
 
@@ -17,7 +17,12 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
         .discover-header-search-row .discover-header-search {
           height: 40px !important;
           min-height: 40px !important;
+          gap: 9px !important;
           transform: translateY(4px) !important;
+        }
+
+        .discover-header-search-row .discover-header-search.has-value {
+          gap: 5px !important;
         }
 
         .discover-header-search-row .discover-header-search-clear {
