@@ -37,6 +37,7 @@ export * from "./SettingsSideNav";
 export * from "./CollapsibleSearchPill";
 export * from "./ProjectBrowserGlyphs";
 export * from "./MusicLibraryRedesign";
+export * from "./HeaderSearchBar";
 export { MusicQuickChipsEnd } from "./MusicQuickChipsEndCompat";
 export { default as SideFilterPanelBehavior } from "./SideFilterPanelBehavior";
 export { MusicLibraryToolbar } from "./MusicLibraryToolbar";
