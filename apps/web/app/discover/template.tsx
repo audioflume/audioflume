@@ -1,3 +1,3 @@
-export default function DiscoverTemplate(props: { children: JSX.Element }) {
+export default function DiscoverTemplate(props: { children: any }) {
   return props.children;
 }
