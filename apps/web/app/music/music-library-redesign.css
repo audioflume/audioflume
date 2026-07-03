@@ -26,7 +26,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   position: fixed !important;
   top: calc(var(--filmwave-header-height, 56px) + 20px) !important;
   right: var(--fw-music-content-inset-right, 20px) !important;
-  left: calc(var(--sidebar-width, 0px) + var(--fw-music-content-inset-right, 20px) + var(--filmwave-side-filter-rail-width)) !important;
+  left: calc(var(--fw-music-content-inset-right, 20px) + var(--filmwave-side-filter-rail-width)) !important;
   z-index: var(--filmwave-z-search-filter, 60) !important;
   width: auto !important;
   height: var(--fw-music-secondary-row-height, 50px) !important;
@@ -37,7 +37,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky.is-scroll-revealed:has(> .fw-filter-panel-wrap.has-selected-filter-section)
   > .fw-toolbar-header-search-row {
-  left: calc(var(--sidebar-width, 0px) + var(--fw-music-content-inset-right, 20px) + var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
+  left: calc(var(--fw-music-content-inset-right, 20px) + var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
 }
 
 @keyframes fw-music-search-slide-in {
