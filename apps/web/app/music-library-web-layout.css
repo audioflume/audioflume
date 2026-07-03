@@ -92,6 +92,13 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
+  .fw-toolbar-search-static:has(.fw-toolbar-search-static-clear) {
+  gap: 5px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
   :is(
     .filmwave-search-pill-icon-btn,
     .filmwave-search-pill-icon-static,
@@ -152,9 +159,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-toolbar-search-static-clear {
   box-sizing: border-box !important;
   display: inline-flex !important;
-  width: 20px !important;
+  width: 14px !important;
   height: 40px !important;
-  flex: 0 0 20px !important;
+  flex: 0 0 14px !important;
   align-items: center !important;
   justify-content: center !important;
   border: 0 !important;
@@ -178,8 +185,10 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-toolbar-search-static-clear
   svg {
   display: block !important;
-  width: 10px !important;
-  height: 10px !important;
+  width: 12px !important;
+  height: 12px !important;
+  stroke: currentColor !important;
+  stroke-width: 1.3px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
