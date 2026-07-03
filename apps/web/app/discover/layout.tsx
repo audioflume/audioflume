@@ -1,3 +1,5 @@
+import DiscoverSharedHeaderSearch from "./DiscoverSharedHeaderSearch";
+
 const DISCOVER_LAYOUT_STYLE = `
   .discover-header-search-row {
     position: fixed !important;
@@ -250,6 +252,7 @@ export default function DiscoverLayout({
   return (
     <>
       <style>{DISCOVER_LAYOUT_STYLE}</style>
+      <DiscoverSharedHeaderSearch />
       {children}
     </>
   );
