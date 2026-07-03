@@ -169,6 +169,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   background: transparent !important;
   color: var(--text-muted) !important;
   cursor: pointer !important;
+  margin-right: 2px !important;
   padding: 0 !important;
 }
 
@@ -187,8 +188,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   display: block !important;
   width: 12px !important;
   height: 12px !important;
-  stroke: currentColor !important;
-  stroke-width: 1.3px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
