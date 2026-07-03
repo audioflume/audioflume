@@ -34,7 +34,7 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
         .discover-header-search-row .discover-header-search-clear svg {
           width: 12px !important;
           height: 12px !important;
-          transform: scale(1.25) !important;
+          transform: scale(1.25) translateX(1px) !important;
         }
 
         .discover-header-search-row .discover-header-search-divider {
