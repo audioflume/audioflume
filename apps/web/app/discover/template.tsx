@@ -52,6 +52,7 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
           height: 16px !important;
           flex-basis: 1px !important;
           margin-right: 4px !important;
+          transform: translateX(1px) !important;
         }
 
         main > section {
