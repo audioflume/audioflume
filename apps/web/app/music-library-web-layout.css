@@ -200,6 +200,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   flex: 0 0 1px !important;
   border-radius: 1px !important;
   background: var(--border) !important;
+  margin-right: 4px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
