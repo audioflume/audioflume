@@ -1,4 +1,123 @@
 const DISCOVER_LAYOUT_STYLE = `
+  .discover-header-search-row {
+    position: fixed !important;
+    top: var(--filmwave-header-height, 56px) !important;
+    right: 0 !important;
+    left: 0 !important;
+    z-index: var(--filmwave-z-search-filter, 60) !important;
+    display: flex !important;
+    height: 56px !important;
+    align-items: center !important;
+    border-bottom: 1px solid var(--border) !important;
+    background: var(--bg-primary) !important;
+    padding: 0 28px !important;
+  }
+
+  .discover-header-search-form {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .discover-header-search {
+    box-sizing: border-box !important;
+    display: flex !important;
+    width: 100% !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    align-items: center !important;
+    gap: 8px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    cursor: text !important;
+  }
+
+  .discover-header-search.has-value {
+    gap: 5px !important;
+  }
+
+  .discover-header-search-icon {
+    display: inline-flex !important;
+    width: 16px !important;
+    height: 40px !important;
+    flex: 0 0 16px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--text-muted) !important;
+    pointer-events: none !important;
+  }
+
+  .discover-header-search-icon svg {
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .discover-header-search-clear {
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    width: 14px !important;
+    height: 40px !important;
+    flex: 0 0 14px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: var(--text-muted) !important;
+    cursor: pointer !important;
+    margin-right: 2px !important;
+    padding: 0 !important;
+  }
+
+  .discover-header-search-clear:hover {
+    color: var(--text-primary) !important;
+  }
+
+  .discover-header-search-clear svg {
+    display: block !important;
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .discover-header-search-divider {
+    display: inline-flex !important;
+    width: 1px !important;
+    height: 16px !important;
+    flex: 0 0 1px !important;
+    border-radius: 1px !important;
+    background: var(--border) !important;
+    margin-right: 4px !important;
+  }
+
+  .discover-header-search-input {
+    display: block !important;
+    min-width: 0 !important;
+    height: 40px !important;
+    flex: 1 1 auto !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    font-family: inherit !important;
+    font-size: 15px !important;
+    font-weight: 300 !important;
+    line-height: 40px !important;
+    outline: none !important;
+    padding: 0 !important;
+  }
+
+  .discover-header-search-input::placeholder {
+    color: var(--text-muted) !important;
+    font-size: 15px !important;
+    font-weight: 300 !important;
+  }
+
   main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div:first-child {
     display: none !important;
   }
