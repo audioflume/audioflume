@@ -28,6 +28,7 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
         .discover-header-search-row .discover-header-search-clear {
           width: 14px !important;
           flex-basis: 14px !important;
+          margin-left: 3px !important;
           margin-right: 2px !important;
         }
 
