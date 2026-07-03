@@ -25,6 +25,7 @@ import "../../../packages/shared/styles/header-search-bar.css";
 import "../../../packages/shared/styles/header-search-toolbar.css";
 import "../../../packages/shared/styles/music-side-filter.css";
 import "./music-library-web-layout.css";
+import "../../../packages/shared/styles/header-search-shell.css";
 import "./music-filter-rail-order.css";
 import "../../../packages/shared/styles/music-shared-controls.css";
 
