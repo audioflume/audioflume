@@ -20,6 +20,25 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
           transform: translateY(4px) !important;
         }
 
+        .discover-header-search-row .discover-header-search-clear {
+          width: 14px !important;
+          flex-basis: 14px !important;
+          margin-right: 2px !important;
+        }
+
+        .discover-header-search-row .discover-header-search-clear svg {
+          width: 12px !important;
+          height: 12px !important;
+          transform: scale(1.25) !important;
+        }
+
+        .discover-header-search-row .discover-header-search-divider {
+          width: 1px !important;
+          height: 16px !important;
+          flex-basis: 1px !important;
+          margin-right: 4px !important;
+        }
+
         main > section {
           padding-top: calc(var(--filmwave-header-height, 56px) + 50px) !important;
         }
