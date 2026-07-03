@@ -18,7 +18,3 @@ body:has(.filmwave-music-player) .fw-song-list {
 .fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
   border-radius: 0 !important;
 }
-
-.fw-music-content-column > .fw-toolbar-sticky > .fw-toolbar-header-search-row {
-  display: none !important;
-}
