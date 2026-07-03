@@ -1,0 +1,119 @@
+/* Shared header search bar internals used by Music and Discover. */
+
+.fw-toolbar-header-search-row {
+  display: flex !important;
+  width: 100% !important;
+  height: 50px !important;
+  align-items: center !important;
+  padding: 0 !important;
+}
+
+.fw-toolbar-header-search-form {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.fw-toolbar-search-static {
+  box-sizing: border-box !important;
+  display: flex !important;
+  width: 100% !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  transform: translateY(4px) !important;
+  cursor: text !important;
+}
+
+.fw-toolbar-search-static.has-value,
+.fw-toolbar-search-static:has(.fw-toolbar-search-static-clear) {
+  gap: 5px !important;
+}
+
+.fw-toolbar-search-static-icon {
+  display: inline-flex !important;
+  width: 16px !important;
+  height: 40px !important;
+  flex: 0 0 16px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--text-muted) !important;
+  margin-left: 4px !important;
+  margin-right: 4px !important;
+  pointer-events: none !important;
+}
+
+.fw-toolbar-search-static-icon svg {
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.fw-toolbar-search-static-clear {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  width: 14px !important;
+  height: 40px !important;
+  flex: 0 0 14px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  cursor: pointer !important;
+  margin: 0 2px 0 0 !important;
+  padding: 0 !important;
+}
+
+.fw-toolbar-search-static-clear:hover {
+  color: var(--text-primary) !important;
+}
+
+.fw-toolbar-search-static-clear svg {
+  display: block !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.fw-toolbar-search-static-divider {
+  display: inline-flex !important;
+  width: 1px !important;
+  height: 16px !important;
+  flex: 0 0 1px !important;
+  border-radius: 1px !important;
+  background: var(--border) !important;
+  margin-right: 4px !important;
+}
+
+.fw-toolbar-search-static-input {
+  display: block !important;
+  min-width: 0 !important;
+  height: 40px !important;
+  flex: 1 1 auto !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 300 !important;
+  line-height: 40px !important;
+  outline: none !important;
+  padding: 0 !important;
+}
+
+.fw-toolbar-search-static-input::placeholder {
+  color: var(--text-muted) !important;
+  font-size: 15px !important;
+  font-weight: 300 !important;
+}
