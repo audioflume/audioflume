@@ -51,7 +51,7 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
           width: 1px !important;
           height: 16px !important;
           flex-basis: 1px !important;
-          margin-right: 4px !important;
+          margin-right: 5px !important;
           transform: translateX(1px) !important;
         }
 
