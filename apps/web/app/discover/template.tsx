@@ -17,7 +17,7 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
         .discover-header-search-row .discover-header-search {
           height: 40px !important;
           min-height: 40px !important;
-          gap: 11px !important;
+          gap: 12px !important;
           transform: translateY(4px) !important;
         }
 
