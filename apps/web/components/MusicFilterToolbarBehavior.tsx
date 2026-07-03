@@ -4,6 +4,81 @@ import { useEffect } from "react";
 
 export default function MusicFilterToolbarBehavior() {
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let searchRevealThreshold = 0;
+    let searchRevealFrame = 0;
+    let searchToolbar: HTMLElement | null = null;
+
+    function getMusicSearchToolbar() {
+      if (searchToolbar?.isConnected) return searchToolbar;
+
+      searchToolbar = document.querySelector<HTMLElement>(
+        ".fw-music-content-column > .fw-toolbar-sticky",
+      );
+
+      return searchToolbar;
+    }
+
+    function measureSearchRevealThreshold() {
+      const toolbar = getMusicSearchToolbar();
+
+      if (!toolbar) {
+        searchRevealThreshold = 0;
+        return;
+      }
+
+      const wasRevealed = toolbar.classList.contains("is-scroll-revealed");
+      if (wasRevealed) toolbar.classList.remove("is-scroll-revealed");
+
+      const rect = toolbar.getBoundingClientRect();
+      searchRevealThreshold = window.scrollY + rect.top + rect.height;
+
+      if (wasRevealed) toolbar.classList.add("is-scroll-revealed");
+    }
+
+    function syncSearchReveal() {
+      searchRevealFrame = 0;
+
+      const toolbar = getMusicSearchToolbar();
+      const nextScrollY = window.scrollY;
+
+      if (!toolbar) {
+        lastScrollY = nextScrollY;
+        return;
+      }
+
+      if (searchRevealThreshold <= 0) measureSearchRevealThreshold();
+
+      const scrollDelta = nextScrollY - lastScrollY;
+      const isPastSearchRow = nextScrollY > searchRevealThreshold + 12;
+
+      if (!isPastSearchRow) {
+        toolbar.classList.remove("is-scroll-revealed");
+      } else if (scrollDelta < -8) {
+        toolbar.classList.add("is-scroll-revealed");
+      } else if (scrollDelta > 8) {
+        toolbar.classList.remove("is-scroll-revealed");
+      }
+
+      lastScrollY = nextScrollY;
+    }
+
+    function scheduleSearchRevealSync() {
+      if (searchRevealFrame) return;
+      searchRevealFrame = window.requestAnimationFrame(syncSearchReveal);
+    }
+
+    function resetSearchRevealMeasurement() {
+      getMusicSearchToolbar()?.classList.remove("is-scroll-revealed");
+      searchRevealThreshold = 0;
+      searchRevealFrame = 0;
+      lastScrollY = window.scrollY;
+      window.requestAnimationFrame(() => {
+        measureSearchRevealThreshold();
+        syncSearchReveal();
+      });
+    }
+
     function syncFilterToolbar() {
       const filterButton = document.querySelector<HTMLButtonElement>(".fw-toolbar-filters");
       if (!filterButton) return;
@@ -99,8 +174,11 @@ export default function MusicFilterToolbarBehavior() {
     }
 
     syncAll();
+    window.requestAnimationFrame(measureSearchRevealThreshold);
 
     document.addEventListener("click", handleShuffleClick, true);
+    window.addEventListener("scroll", scheduleSearchRevealSync, { passive: true });
+    window.addEventListener("resize", resetSearchRevealMeasurement);
 
     const observer = new MutationObserver(syncAll);
     observer.observe(document.body, {
@@ -113,6 +191,9 @@ export default function MusicFilterToolbarBehavior() {
     return () => {
       observer.disconnect();
       document.removeEventListener("click", handleShuffleClick, true);
+      window.removeEventListener("scroll", scheduleSearchRevealSync);
+      window.removeEventListener("resize", resetSearchRevealMeasurement);
+      if (searchRevealFrame) window.cancelAnimationFrame(searchRevealFrame);
     };
   }, []);
 
