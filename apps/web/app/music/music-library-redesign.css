@@ -30,10 +30,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   z-index: var(--filmwave-z-search-filter, 60) !important;
   width: auto !important;
   height: var(--fw-music-secondary-row-height, 50px) !important;
-  background: rgba(26, 27, 28, 0.78) !important;
-  background: color-mix(in srgb, var(--filmwave-chrome-surface) 78%, transparent) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
-  backdrop-filter: blur(18px) !important;
   box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12) !important;
   animation: fw-music-search-slide-in 160ms ease-out;
 }
