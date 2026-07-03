@@ -34,7 +34,16 @@ export default function DiscoverTemplate({ children }: { children: React.ReactNo
         .discover-header-search-row .discover-header-search-clear svg {
           width: 12px !important;
           height: 12px !important;
-          transform: scale(1.25) translateX(1px) !important;
+          transform: scale(1.25) !important;
+          transform-origin: center !important;
+        }
+
+        .discover-header-search-row .discover-header-search-clear path {
+          d: path("M6.34 4.93 12 10.59l5.66-5.66a1 1 0 1 1 1.41 1.41L13.41 12l5.66 5.66a1 1 0 0 1-1.41 1.41L12 13.41l-5.66 5.66a1 1 0 0 1-1.41-1.41L10.59 12 4.93 6.34a1 1 0 0 1 1.41-1.41Z") !important;
+          fill: currentColor !important;
+          stroke: none !important;
+          transform: scale(0.5) !important;
+          transform-origin: 0 0 !important;
         }
 
         .discover-header-search-row .discover-header-search-divider {
