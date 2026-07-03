@@ -21,6 +21,7 @@ import "../components/admin/AdminPageLayout.css";
 import "../../../packages/shared/styles/music-sort-button-width.css";
 import "../../../packages/shared/styles/playlist-library.css";
 import "../../../packages/shared/styles/shell-chrome.css";
+import "../../../packages/shared/styles/header-search-bar.css";
 import "../../../packages/shared/styles/header-search-toolbar.css";
 import "../../../packages/shared/styles/music-side-filter.css";
 import "./music-library-web-layout.css";
