@@ -34,6 +34,15 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   animation: fw-music-search-slide-in 160ms ease-out;
 }
 
+:where(html.light, html[data-theme="light"])
+  main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky.is-scroll-revealed
+  > .fw-toolbar-header-search-row {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky.is-scroll-revealed:has(> .fw-filter-panel-wrap.has-selected-filter-section)
