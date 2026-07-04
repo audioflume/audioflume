@@ -101,10 +101,10 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   z-index: var(--filmwave-z-search-filter, 60) !important;
   width: auto !important;
   height: var(--fw-music-secondary-row-height, 50px) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
-  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.1) !important;
-  clip-path: inset(0 0 -72px 0) !important;
+  box-shadow: none !important;
   animation: fw-music-search-slide-in 160ms ease-out;
 }
 
