@@ -28,13 +28,14 @@ export default function DiscoverSharedHeaderSearch() {
         .discover-shared-header-search .fw-toolbar-header-search-row {
           display: flex !important;
           width: 100% !important;
-          height: 50px !important;
+          height: 42px !important;
           align-items: center !important;
-          border: 0 !important;
+          border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
           border-radius: 0 !important;
-          background: var(--filmwave-chrome-surface) !important;
-          background-color: var(--filmwave-chrome-surface) !important;
-          padding: 0 24px !important;
+          background: var(--bg-primary) !important;
+          background-color: var(--bg-primary) !important;
+          box-shadow: none !important;
+          padding: 0 14px !important;
         }
 
         .discover-shared-header-search .fw-toolbar-header-search-form {
@@ -49,10 +50,10 @@ export default function DiscoverSharedHeaderSearch() {
           box-sizing: border-box !important;
           display: flex !important;
           width: 100% !important;
-          height: 40px !important;
-          min-height: 40px !important;
+          height: 100% !important;
+          min-height: 100% !important;
           align-items: center !important;
-          gap: 8px !important;
+          gap: 12px !important;
           border: 0 !important;
           border-radius: 0 !important;
           background: transparent !important;
@@ -66,14 +67,14 @@ export default function DiscoverSharedHeaderSearch() {
         }
 
         .discover-shared-header-search .fw-toolbar-search-static.has-value {
-          gap: 5px !important;
+          gap: 9px !important;
         }
 
         .discover-shared-header-search .fw-toolbar-search-static-icon {
           display: inline-flex !important;
-          width: 16px !important;
-          height: 40px !important;
-          flex: 0 0 16px !important;
+          width: 13px !important;
+          height: 42px !important;
+          flex: 0 0 13px !important;
           align-items: center !important;
           justify-content: center !important;
           color: var(--text-muted) !important;
@@ -83,23 +84,27 @@ export default function DiscoverSharedHeaderSearch() {
 
         .discover-shared-header-search .fw-toolbar-search-static-icon svg {
           display: block !important;
-          width: 16px !important;
-          height: 16px !important;
+          width: 13px !important;
+          height: 13px !important;
         }
 
         .discover-shared-header-search .fw-toolbar-search-static-input {
           display: block !important;
-          height: 40px !important;
-          font-size: 15px !important;
-          font-weight: 300 !important;
-          line-height: 40px !important;
+          height: 42px !important;
+          color: var(--text-primary) !important;
+          font-family: inherit !important;
+          font-size: 12px !important;
+          font-style: italic !important;
+          font-weight: 400 !important;
+          line-height: 42px !important;
           padding: 0 !important;
         }
 
         .discover-shared-header-search .fw-toolbar-search-static-input::placeholder {
           color: var(--text-muted) !important;
-          font-size: 15px !important;
-          font-weight: 300 !important;
+          font-size: 12px !important;
+          font-style: italic !important;
+          font-weight: 400 !important;
         }
 
         main > section {
@@ -134,7 +139,7 @@ export default function DiscoverSharedHeaderSearch() {
           searchPlaceholder="Search music library"
           onSearchChange={setSearchValue}
           searchInputRef={searchInputRef}
-          searchIcon={<SearchIcon size={16} />}
+          searchIcon={<SearchIcon size={13} />}
         />
       </div>
     </>
