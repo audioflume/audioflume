@@ -3,20 +3,19 @@ type SearchIconProps = {
   className?: string;
 };
 
-export default function SearchIcon({ size = 16, className }: SearchIconProps) {
+export default function SearchIcon({ size = 13, className }: SearchIconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 38.31 38.31"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      viewBox="0 0 24 24"
       aria-hidden="true"
+      className={className}
     >
       <path
-        d="M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z"
         fill="currentColor"
+        fillRule="evenodd"
+        d="M10.5 3a7.5 7.5 0 1 0 4.71 13.33l4.13 4.13a1.4 1.4 0 0 0 1.98-1.98l-4.13-4.13A7.5 7.5 0 0 0 10.5 3ZM5.8 10.5a4.7 4.7 0 1 1 9.4 0 4.7 4.7 0 0 1-9.4 0Z"
       />
     </svg>
   );
