@@ -97,7 +97,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
+  border-radius: 0;
   background: var(--text-primary);
   padding: 0 6px 1px;
   color: var(--bg-primary);
