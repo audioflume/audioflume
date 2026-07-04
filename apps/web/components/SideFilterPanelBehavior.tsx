@@ -31,7 +31,10 @@ function createLinkMatchButton() {
   button.setAttribute("aria-label", "Open Desktop Sync companion app");
   button.innerHTML = `
     <span class="fw-filter-ai-linkmatch-copy">
-      <span class="fw-filter-ai-linkmatch-title">Desktop Sync</span>
+      <span class="fw-filter-ai-linkmatch-title-row">
+        <span class="fw-filter-ai-linkmatch-title">Desktop Sync</span>
+        <span class="fw-filter-ai-linkmatch-pill">App</span>
+      </span>
       <span class="fw-filter-ai-linkmatch-detail-row">
         <span class="fw-filter-ai-linkmatch-detail">Save songs, sync locally</span>
         <span class="fw-filter-ai-linkmatch-arrow" aria-hidden="true">↗</span>
