@@ -60,6 +60,24 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ra
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(
+    .filmwave-search-pill-icon-btn,
+    .filmwave-search-pill-icon-static,
+    .filmwave-search-pill-icon-circle,
+    .fw-toolbar-search-icon,
+    .fw-toolbar-search-static-icon,
+    .fw-toolbar-search-static-clear,
+    .fw-toolbar-search-static-divider,
+    .filmwave-search-pill-input,
+    .fw-toolbar-search input,
+    .fw-toolbar-search-static-input
+  ) {
+  transform: translateY(1px) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
   > .fw-toolbar-sticky.is-scroll-revealed::before {
   content: "";
   position: fixed !important;
