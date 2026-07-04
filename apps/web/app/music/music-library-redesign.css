@@ -104,6 +104,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
   box-shadow: 0 20px 56px rgba(0, 0, 0, 0.1) !important;
+  clip-path: inset(0 0 -72px 0) !important;
   animation: fw-music-search-slide-in 160ms ease-out;
 }
 
