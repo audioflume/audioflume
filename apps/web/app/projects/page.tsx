@@ -253,18 +253,18 @@ export default function ProjectsPage() {
         .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 24px 50px 0; }
         .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 130px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
-        .projects-status-pill { display: inline-flex; width: 110px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); font-size: 12px; font-weight: 600; }
+        .projects-status-pill { display: inline-flex; width: 110px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
         .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
         .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; font-style: italic; }
         .projects-search input::placeholder { color: var(--text-muted); }
         .projects-search-clear { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
         .projects-search-clear:hover { background: var(--bg-hover); color: var(--text-primary); }
         .projects-control-right { display: flex; justify-content: flex-end; align-items: center; gap: 18px; }
-        .projects-sort-button { height: 42px; display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 16px; color: var(--text-secondary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-sort-button { height: 42px; display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 16px; color: var(--text-secondary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .projects-sort-button:hover, .projects-sort-button.is-open { background: var(--bg-hover); border-color: var(--border-hover); color: var(--text-primary); }
         .projects-sort-dropdown { min-width: 154px; }
         .projects-sort-dropdown button.is-active { background: var(--bg-hover); color: var(--text-primary); }
-        .projects-new-button { height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 22px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700; transition: opacity 0.15s ease; }
+        .projects-new-button { height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 22px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; transition: opacity 0.15s ease; }
         .projects-new-button:hover { opacity: 0.82; }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
         .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 76px; border-top: 1px solid var(--border-subtle); }
@@ -274,11 +274,11 @@ export default function ProjectsPage() {
         .projects-row-icon { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; overflow: visible; border: 0; border-radius: 0; background: transparent; color: var(--text-primary); }
         .projects-row-icon-inner { display: block; transform: translateY(-2px) scale(0.58); transform-origin: center; }
         .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-        .projects-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--text-primary); }
-        .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); }
+        .projects-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
+        .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11.5px; line-height: 1.35; color: var(--text-secondary); }
         .projects-row-actions { display: inline-flex; justify-self: end; align-items: center; gap: 8px; }
         .projects-row-edit,
-        .projects-row-view { display: inline-flex; width: fit-content; height: 32px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-family: inherit; font-size: 11px; font-weight: 600; text-decoration: none; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-row-view { display: inline-flex; width: fit-content; height: 32px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-family: inherit; font-size: 11px; font-weight: 500; text-decoration: none; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .projects-row-view { min-width: 112px; gap: 7px; }
         .projects-row-edit { min-width: 58px; cursor: pointer; }
         .projects-row-edit:hover,
@@ -287,7 +287,7 @@ export default function ProjectsPage() {
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
         .projects-empty h2, .projects-error h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
         .projects-empty p, .projects-error p { max-width: 360px; font-size: 13px; line-height: 1.5; color: var(--text-muted); }
-        .projects-retry-button { height: 36px; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 14px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700; }
+        .projects-retry-button { height: 36px; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 14px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; }
         .projects-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .projects-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: projects-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes projects-skeleton-shimmer { 100% { transform: translateX(100%); } }
