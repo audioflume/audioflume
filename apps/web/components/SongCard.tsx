@@ -226,7 +226,7 @@ export default function SongCard({
         }
         coverBadge={
           song.aiGenerated ? (
-            <span className="filmwave-song-ai-badge" aria-label="Made with AI">
+            <span className="filmwave-song-ai-badge" aria-label="Made with AI" title="Made with AI">
               <AiGeneratedIcon />
             </span>
           ) : null
