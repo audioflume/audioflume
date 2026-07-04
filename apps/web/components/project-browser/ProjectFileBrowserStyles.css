@@ -2,3 +2,7 @@
 @import "./ProjectFileBrowserLayout.css";
 @import "./ProjectFileBrowserCards.css";
 @import "./ProjectFileBrowserInteractions.css";
+
+.project-detail-page .project-tabs-row.fw-filter-rail > .project-tab-utility {
+  margin-top: auto !important;
+}
