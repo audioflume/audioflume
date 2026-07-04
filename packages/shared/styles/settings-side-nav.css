@@ -51,7 +51,7 @@
 
 .filmwave-settings-side-nav-item:hover,
 .filmwave-settings-side-nav-item.is-active {
-  background: var(--bg-hover-strong);
+  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
