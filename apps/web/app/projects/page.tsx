@@ -273,9 +273,9 @@ export default function ProjectsPage() {
         .projects-row-link { display: grid; min-width: 0; min-height: 72px; grid-template-columns: 62px minmax(180px, 1fr); align-items: center; color: inherit; text-decoration: none; }
         .projects-row-icon { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; overflow: visible; border: 0; border-radius: 0; background: transparent; color: var(--text-primary); }
         .projects-row-icon-inner { display: block; transform: translateY(-2px) scale(0.58); transform-origin: center; }
-        .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+        .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 0; }
         .projects-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
-        .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11.5px; line-height: 1.35; color: var(--text-secondary); }
+        .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 2px 0 0; font-size: 11.5px; line-height: 1.35; color: var(--text-subtle); }
         .projects-row-actions { display: inline-flex; justify-self: end; align-items: center; gap: 8px; }
         .projects-row-edit,
         .projects-row-view { display: inline-flex; width: fit-content; height: 32px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-family: inherit; font-size: 11px; font-weight: 500; text-decoration: none; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
