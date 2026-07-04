@@ -10,6 +10,7 @@ type Theme = ThemeMode;
 
 const OLD_THEME_STORAGE_KEY = "filmwave-theme";
 const THEME_STORAGE_KEY = "filmwave-theme-mode";
+const THEME_COOKIE_MAX_AGE = 31536000;
 
 const ThemeContext = createContext<{
   theme: Theme;
@@ -29,7 +30,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setThemeState(nextTheme);
     window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
     window.localStorage.setItem(OLD_THEME_STORAGE_KEY, nextTheme);
-    document.cookie = `filmwave-theme-mode=${nextTheme};path=/;max-age=31536000`;
+    document.cookie = `${THEME_STORAGE_KEY}=${nextTheme};path=/;max-age=${THEME_COOKIE_MAX_AGE}`;
+    document.cookie = `${OLD_THEME_STORAGE_KEY}=${nextTheme};path=/;max-age=${THEME_COOKIE_MAX_AGE}`;
     document.documentElement.classList.toggle("light", nextTheme === "light");
     document.documentElement.dataset.theme = nextTheme;
   };
