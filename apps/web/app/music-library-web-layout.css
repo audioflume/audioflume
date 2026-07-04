@@ -124,6 +124,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   justify-content: center !important;
   color: var(--text-muted) !important;
   line-height: 0 !important;
+  transform: translateY(-2px) !important;
   pointer-events: none !important;
 }
 
@@ -156,6 +157,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   line-height: 1.2 !important;
   outline: none !important;
   padding: 0 !important;
+  transform: translateY(-2px) !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
