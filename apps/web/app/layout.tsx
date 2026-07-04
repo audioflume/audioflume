@@ -31,6 +31,20 @@ import "../../../packages/shared/styles/music-shared-controls.css";
 
 const TYPEKIT_STYLESHEET = "https://use.typekit.net/tjk0kys.css";
 const R2_CDN_ORIGIN = "https://pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev";
+const THEME_BOOT_SCRIPT = `
+(function () {
+  try {
+    var theme = window.localStorage.getItem("filmwave-theme-mode") || window.localStorage.getItem("filmwave-theme");
+    if (theme !== "light" && theme !== "dark") {
+      var cookieMatch = document.cookie.match(/(?:^|; )filmwave-theme-mode=(light|dark)/) || document.cookie.match(/(?:^|; )filmwave-theme=(light|dark)/);
+      theme = cookieMatch ? cookieMatch[1] : "dark";
+    }
+
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.classList.toggle("light", theme === "light");
+  } catch (_) {}
+})();
+`;
 
 export const metadata: Metadata = {
   title: "Filmwave",
@@ -43,7 +57,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const themeCookie = cookieStore.get("filmwave-theme")?.value;
+  const themeCookie =
+    cookieStore.get("filmwave-theme-mode")?.value ??
+    cookieStore.get("filmwave-theme")?.value;
   const sidebarCollapsedCookie = cookieStore.get(
     "filmwave-sidebar-collapsed",
   )?.value;
@@ -52,8 +68,9 @@ export default async function RootLayout({
 
   return (
     <ClerkProvider>
-      <html lang="en" data-theme={initialTheme}>
+      <html lang="en" data-theme={initialTheme} suppressHydrationWarning>
         <head>
+          <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
           <link rel="stylesheet" href={TYPEKIT_STYLESHEET} />
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
