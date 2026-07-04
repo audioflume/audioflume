@@ -261,14 +261,6 @@
   padding-top: 16px !important;
 }
 
-@media (max-width: 760px) {
-  .fw-music-page-shell {
-    --fw-music-content-inset-right: 18px;
-    padding-right: 18px !important;
-    padding-left: 18px !important;
-  }
-}
-
 /* ─── Restore web top-nav/sidebar-hidden layout ───────────── */
 
 body {
