@@ -34,7 +34,6 @@ body:has(.filmwave-music-player) .fw-song-list {
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
   --filmwave-side-filter-divider-color: color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent);
-  --fw-desktop-sync-gradient: linear-gradient(90deg, #111111 0%, #7a7a7a 100%);
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail {
@@ -84,10 +83,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai-linkmatch-title {
   display: block;
   min-width: 0;
-  background: var(--fw-desktop-sync-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--text-primary);
   font-size: 13.5px;
   font-weight: 600;
   line-height: 1.08;
@@ -100,12 +96,12 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  background: var(--fw-desktop-sync-gradient);
+  border-radius: 3px;
+  background: var(--text-primary);
   padding: 0 6px;
-  color: #ffffff;
-  font-size: 8px;
-  font-weight: 500;
+  color: var(--bg-primary);
+  font-size: 7.5px;
+  font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1;
 }
