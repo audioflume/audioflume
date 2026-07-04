@@ -137,6 +137,20 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
   transform: translateY(0.5px);
 }
 
+html.fw-display-exclude-ai-songs
+  main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-song-list
+  .filmwave-song-card:has(.filmwave-song-ai-badge) {
+  display: none !important;
+}
+
+html.fw-display-ai-songs-only
+  main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-song-list
+  .filmwave-song-card:not(:has(.filmwave-song-ai-badge)) {
+  display: none !important;
+}
+
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail-item {
   position: relative !important;
   box-sizing: border-box !important;
