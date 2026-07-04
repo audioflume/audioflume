@@ -113,20 +113,20 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[d
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active {
   border-radius: 0 !important;
-  background: transparent !important;
-  background-color: transparent !important;
+  background: var(--bg-hover-strong) !important;
+  background-color: var(--bg-hover-strong) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:hover {
   border-radius: 0 !important;
-  background: var(--bg-hover) !important;
-  background-color: var(--bg-hover) !important;
+  background: var(--bg-hover-strong) !important;
+  background-color: var(--bg-hover-strong) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active:hover {
   border-radius: 0 !important;
-  background: var(--bg-hover) !important;
-  background-color: var(--bg-hover) !important;
+  background: var(--bg-hover-strong) !important;
+  background-color: var(--bg-hover-strong) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
