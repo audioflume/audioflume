@@ -219,12 +219,17 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
     .filmwave-search-pill-icon-circle,
     .fw-toolbar-search-icon,
     .fw-toolbar-search-static-icon,
-    .fw-toolbar-search-static-clear,
-    .fw-toolbar-search-static-divider,
     .filmwave-search-pill-input,
     .fw-toolbar-search input,
     .fw-toolbar-search-static-input
   ) {
+  transform: translateY(-2px) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  :is(.fw-toolbar-search-static-clear, .fw-toolbar-search-static-divider) {
   transform: none !important;
 }
 
