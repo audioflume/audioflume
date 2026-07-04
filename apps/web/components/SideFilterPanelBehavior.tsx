@@ -27,13 +27,13 @@ function createLinkMatchButton() {
   const button = document.createElement("button");
   button.type = "button";
   button.className = LINKMATCH_BUTTON_CLASS;
-  button.dataset.feature = "linkmatch-ai";
-  button.setAttribute("aria-label", "Open LinkMatch AI");
+  button.dataset.feature = "desktop-sync";
+  button.setAttribute("aria-label", "Open Desktop Sync companion app");
   button.innerHTML = `
     <span class="fw-filter-ai-linkmatch-copy">
-      <span class="fw-filter-ai-linkmatch-title">LinkMatch AI</span>
+      <span class="fw-filter-ai-linkmatch-title">Desktop Sync</span>
       <span class="fw-filter-ai-linkmatch-detail-row">
-        <span class="fw-filter-ai-linkmatch-detail">Paste a link, find similar songs</span>
+        <span class="fw-filter-ai-linkmatch-detail">Save songs, sync locally</span>
         <span class="fw-filter-ai-linkmatch-arrow" aria-hidden="true">↗</span>
       </span>
     </span>
