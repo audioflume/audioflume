@@ -34,6 +34,7 @@ body:has(.filmwave-music-player) .fw-song-list {
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
   --filmwave-side-filter-divider-color: color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent);
+  --fw-desktop-sync-gradient: linear-gradient(90deg, #e0a12f 0%, #d15d4b 100%);
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail {
@@ -83,7 +84,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai-linkmatch-title {
   display: block;
   min-width: 0;
-  background: linear-gradient(90deg, #4d8dff 0%, #b05b96 100%);
+  background: var(--fw-desktop-sync-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -100,9 +101,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--text-primary) 12%, transparent);
+  background: var(--fw-desktop-sync-gradient);
   padding: 0 6px;
-  color: var(--text-secondary);
+  color: #ffffff;
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.02em;
