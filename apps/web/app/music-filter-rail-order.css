@@ -2,61 +2,113 @@
 
 /* Keep the web music filter rail in its final order before client-side behavior runs.
    This prevents the category buttons from briefly painting in React's default group order on refresh. */
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(1) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(1) {
   order: 1;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(2) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(2) {
   order: 2;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(3) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(3) {
   order: 4;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(4) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(4) {
   order: 3;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(5) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(5) {
   order: 5;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(6) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(6) {
   order: 6;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(7) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(7) {
   order: 7;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(8) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(8) {
   order: 12;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label {
   font-size: 0;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label::after {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label::after {
   content: "Playlists";
   font-size: 12.5px;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(9) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(9) {
   order: 8;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(10) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(10) {
   order: 9;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(11) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(11) {
   order: 10;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(12) {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(12) {
   order: 11;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-ai-linkmatch {
+  order: 0;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="mood"] {
+  order: 1;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="genre"] {
+  order: 2;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="instruments"] {
+  order: 3;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="region"] {
+  order: 4;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="vocals"] {
+  order: 5;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="build"] {
+  order: 6;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="cuePoints"] {
+  order: 7;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="duration"] {
+  order: 8;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="bpm"] {
+  order: 9;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="key"] {
+  order: 10;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="display"] {
+  order: 11;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="playlist"] {
+  order: 12;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active {
@@ -102,11 +154,13 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-option.is-selected {
   border-radius: 0 !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item[data-filter-section-id="playlist"].is-active) .fw-filter-group-label {
   font-size: 0;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label::before {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label::before,
+main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item[data-filter-section-id="playlist"].is-active) .fw-filter-group-label::before {
   content: "Playlists";
   font-size: 11px;
 }
