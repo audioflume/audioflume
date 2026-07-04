@@ -151,6 +151,11 @@ html.fw-display-ai-songs-only
   display: none !important;
 }
 
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-option-check,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-option-check * {
+  pointer-events: none !important;
+}
+
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail-item {
   position: relative !important;
   box-sizing: border-box !important;
