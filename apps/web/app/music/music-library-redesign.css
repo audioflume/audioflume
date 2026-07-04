@@ -101,7 +101,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   z-index: var(--filmwave-z-search-filter, 60) !important;
   width: auto !important;
   height: var(--fw-music-secondary-row-height, 50px) !important;
-  border-bottom: 1px solid var(--border-subtle) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
   box-shadow: none !important;
