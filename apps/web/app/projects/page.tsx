@@ -2,8 +2,8 @@
 
 import CreateProjectModal from "@/components/CreateProjectModal";
 import DropdownShell from "@/components/DropdownShell";
+import EditProjectModal from "@/components/EditProjectModal";
 import Footer from "@/components/Footer";
-import SortIcon from "@/components/icons/SortIcon";
 import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
@@ -84,25 +84,43 @@ function ArrowIcon() {
   );
 }
 
-function ProjectRow({ project }: { project: Project }) {
+function ProjectRow({
+  project,
+  onEdit,
+}: {
+  project: Project;
+  onEdit: (project: Project) => void;
+}) {
   return (
-    <Link href={`/projects/${project.id}`} className="projects-row">
-      <div className="projects-row-icon" aria-hidden="true">
-        <span className="projects-row-icon-inner">
-          <FolderGlyph />
-        </span>
-      </div>
+    <div className="projects-row">
+      <Link href={`/projects/${project.id}`} className="projects-row-link">
+        <div className="projects-row-icon" aria-hidden="true">
+          <span className="projects-row-icon-inner">
+            <FolderGlyph />
+          </span>
+        </div>
 
-      <div className="projects-row-main">
-        <span>{project.name}</span>
-        <small>{project.description?.trim() || "No description"}</small>
-      </div>
+        <div className="projects-row-main">
+          <span>{project.name}</span>
+          <small>{project.description?.trim() || "No description"}</small>
+        </div>
+      </Link>
 
-      <span className="projects-row-view">
-        View Project
-        <ArrowIcon />
-      </span>
-    </Link>
+      <div className="projects-row-actions">
+        <button
+          type="button"
+          className="projects-row-edit"
+          onClick={() => onEdit(project)}
+        >
+          Edit
+        </button>
+
+        <Link href={`/projects/${project.id}`} className="projects-row-view">
+          View Project
+          <ArrowIcon />
+        </Link>
+      </div>
+    </div>
   );
 }
 
@@ -131,6 +149,11 @@ export default function ProjectsPage() {
   const [sortMode, setSortMode] = useState<ProjectSortMode>("newest");
   const [sortOpen, setSortOpen] = useState(false);
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [isSavingProject, setIsSavingProject] = useState(false);
+  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(null);
 
   const playerVisible = Boolean(currentSong);
   const cleanQuery = query.trim().toLowerCase();
@@ -145,14 +168,94 @@ export default function ProjectsPage() {
     return sortProjects(filtered, sortMode);
   }, [projects, cleanQuery, sortMode]);
 
+  function openEditProject(project: Project) {
+    setEditingProject(project);
+    setEditName(project.name);
+    setEditDescription(project.description ?? "");
+  }
+
+  async function handleSaveEdit() {
+    if (!editingProject || isSavingProject) return;
+
+    const cleanName = editName.trim();
+    const cleanDescription = editDescription.trim();
+
+    if (!cleanName) return;
+
+    setIsSavingProject(true);
+
+    try {
+      const res = await fetch(`/api/projects/${editingProject.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: cleanName,
+          description: cleanDescription || null,
+        }),
+      });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) throw new Error(data?.error || "Failed to save project");
+
+      setProjects((current) =>
+        current.map((project) =>
+          project.id === editingProject.id
+            ? data || {
+                ...project,
+                name: cleanName,
+                description: cleanDescription || null,
+              }
+            : project,
+        ),
+      );
+      setEditingProject(null);
+    } catch (err) {
+      console.error("Failed to save project", err);
+    } finally {
+      setIsSavingProject(false);
+    }
+  }
+
+  async function handleDeleteProject() {
+    if (!editingProject || deletingProjectId) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${editingProject.name}"? This cannot be undone.`,
+    );
+
+    if (!confirmed) return;
+
+    const projectIdToDelete = editingProject.id;
+
+    setDeletingProjectId(projectIdToDelete);
+
+    try {
+      const res = await fetch(`/api/projects/${projectIdToDelete}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to delete project");
+
+      setProjects((current) =>
+        current.filter((project) => project.id !== projectIdToDelete),
+      );
+      setEditingProject(null);
+    } catch (err) {
+      console.error("Failed to delete project", err);
+    } finally {
+      setDeletingProjectId(null);
+    }
+  }
+
   return (
     <>
       <style>{`
-        .projects-page { position: relative; margin-left: var(--sidebar-width); margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); transition: margin-left 0.2s ease; }
+        .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 24px 50px 0; }
         .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 130px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
         .projects-status-pill { display: inline-flex; width: 110px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); font-size: 12px; font-weight: 600; }
-        .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid var(--text-primary); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); }
+        .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
         .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; font-style: italic; }
         .projects-search input::placeholder { color: var(--text-muted); }
         .projects-search-clear { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
@@ -166,14 +269,21 @@ export default function ProjectsPage() {
         .projects-new-button:hover { opacity: 0.82; }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
         .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 76px; border-top: 1px solid var(--border-subtle); }
-        .projects-row { display: grid; min-height: 72px; grid-template-columns: 62px minmax(180px, 1fr) 136px; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; text-decoration: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+        .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) auto; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
         .projects-row:hover { background: var(--bg-hover); }
+        .projects-row-link { display: grid; min-width: 0; min-height: 72px; grid-template-columns: 62px minmax(180px, 1fr); align-items: center; color: inherit; text-decoration: none; }
         .projects-row-icon { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; overflow: visible; border: 0; border-radius: 0; background: transparent; color: var(--text-primary); }
         .projects-row-icon-inner { display: block; transform: translateY(-2px) scale(0.58); transform-origin: center; }
         .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
         .projects-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--text-primary); }
         .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); }
-        .projects-row-view { display: inline-flex; width: fit-content; min-width: 112px; height: 32px; align-items: center; justify-content: center; justify-self: end; gap: 7px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-size: 11px; font-weight: 600; transition: background 0.15s ease, border-color 0.15s ease; }
+        .projects-row-actions { display: inline-flex; justify-self: end; align-items: center; gap: 8px; }
+        .projects-row-edit,
+        .projects-row-view { display: inline-flex; width: fit-content; height: 32px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-family: inherit; font-size: 11px; font-weight: 600; text-decoration: none; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-row-view { min-width: 112px; gap: 7px; }
+        .projects-row-edit { min-width: 58px; cursor: pointer; }
+        .projects-row-edit:hover,
+        .projects-row-view:hover,
         .projects-row:hover .projects-row-view { border-color: var(--text-primary); background: var(--text-primary); color: var(--bg-primary); }
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
         .projects-empty h2, .projects-error h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
@@ -182,12 +292,12 @@ export default function ProjectsPage() {
         .projects-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .projects-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: projects-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes projects-skeleton-shimmer { 100% { transform: translateX(100%); } }
-        .projects-row-skeleton { cursor: default; pointer-events: none; }
+        .projects-row-skeleton { grid-template-columns: 42px minmax(0, 1fr) 128px; cursor: default; pointer-events: none; }
         .projects-skeleton-icon { width: 42px; height: 42px; }
         .projects-skeleton-copy { display: flex; min-width: 0; flex-direction: column; gap: 9px; }
         .projects-skeleton-title { width: min(220px, 52%); height: 9px; }
         .projects-skeleton-line { width: min(360px, 78%); height: 8px; }
-        .projects-skeleton-button { justify-self: end; width: 112px; height: 32px; }
+        .projects-skeleton-button { justify-self: end; width: 128px; height: 32px; }
         @media (max-width: 940px) {
           .projects-shell { padding-left: 24px; padding-right: 24px; }
           .projects-control-bar { grid-template-columns: 1fr; gap: 12px; }
@@ -196,8 +306,9 @@ export default function ProjectsPage() {
           .projects-list { margin-top: 36px; }
         }
         @media (max-width: 640px) {
-          .projects-row { grid-template-columns: 46px minmax(0, 1fr); gap: 10px; padding: 12px 0; }
-          .projects-row-view { grid-column: 2; justify-self: start; }
+          .projects-row { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 12px; }
+          .projects-row-link { min-height: 42px; grid-template-columns: 46px minmax(0, 1fr); }
+          .projects-row-actions { justify-self: start; padding-left: 46px; }
         }
       `}</style>
 
@@ -318,7 +429,11 @@ export default function ProjectsPage() {
           ) : displayedProjects.length > 0 ? (
             <section className="projects-list" aria-label="Projects">
               {displayedProjects.map((project) => (
-                <ProjectRow key={project.id} project={project} />
+                <ProjectRow
+                  key={project.id}
+                  project={project}
+                  onEdit={openEditProject}
+                />
               ))}
             </section>
           ) : (
@@ -349,6 +464,22 @@ export default function ProjectsPage() {
         onProjectCreated={(project) => {
           setProjects((current) => [project, ...current]);
           setCreateProjectOpen(false);
+        }}
+      />
+
+      <EditProjectModal
+        isOpen={Boolean(editingProject)}
+        project={editingProject}
+        name={editName}
+        description={editDescription}
+        isSaving={isSavingProject || deletingProjectId === editingProject?.id}
+        onNameChange={setEditName}
+        onDescriptionChange={setEditDescription}
+        onSave={handleSaveEdit}
+        onDelete={handleDeleteProject}
+        onClose={() => {
+          if (isSavingProject || deletingProjectId) return;
+          setEditingProject(null);
         }}
       />
     </>
