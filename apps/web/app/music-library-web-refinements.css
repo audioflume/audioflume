@@ -240,7 +240,7 @@
 .filmwave-app-header,
 .desktop-header,
 .desktop-app-header {
-  border-bottom-color: var(--filmwave-header-border-color, var(--border)) !important;
+  border-bottom-color: color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
 }
 
 .fw-music-page-shell,
