@@ -3,7 +3,6 @@
 import CreateProjectModal from "@/components/CreateProjectModal";
 import DropdownShell from "@/components/DropdownShell";
 import EditProjectModal from "@/components/EditProjectModal";
-import Footer from "@/components/Footer";
 import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
@@ -448,13 +447,6 @@ export default function ProjectsPage() {
               </div>
             </div>
           )}
-
-          <div
-            className="pt-12 pb-1"
-            style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
-          >
-            <Footer />
-          </div>
         </div>
       </main>
 
