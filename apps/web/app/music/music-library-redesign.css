@@ -252,7 +252,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-sticky.is-scroll-revealed
   > .fw-toolbar-header-search-row {
   position: fixed !important;
-  top: var(--filmwave-header-height, 56px) !important;
+  top: calc(var(--filmwave-header-height, 56px) - 1px) !important;
   right: 0 !important;
   left: var(--filmwave-side-filter-rail-width) !important;
   z-index: var(--filmwave-z-search-filter, 60) !important;
