@@ -1,5 +1,6 @@
 "use client";
 
+import CreateProjectModal from "@/components/CreateProjectModal";
 import DropdownShell from "@/components/DropdownShell";
 import Footer from "@/components/Footer";
 import SortIcon from "@/components/icons/SortIcon";
@@ -11,20 +12,6 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 
 type ProjectSortMode = "newest" | "oldest" | "alphabetical";
-
-function formatProjectDate(value: string | null | undefined) {
-  if (!value) return "Date unavailable";
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) return "Date unavailable";
-
-  return date.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
 
 function getProjectTimestamp(project: Project) {
   const time = new Date(project.created_at).getTime();
@@ -72,6 +59,20 @@ function SearchIcon() {
   );
 }
 
+function ChevronIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M4 6L8 10L12 6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function ArrowIcon() {
   return (
     <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
@@ -83,11 +84,9 @@ function ArrowIcon() {
   );
 }
 
-function ProjectRow({ project, index }: { project: Project; index: number }) {
+function ProjectRow({ project }: { project: Project }) {
   return (
     <Link href={`/projects/${project.id}`} className="projects-row">
-      <div className="projects-row-number">{String(index + 1).padStart(2, "0")}</div>
-
       <div className="projects-row-icon" aria-hidden="true">
         <span className="projects-row-icon-inner">
           <FolderGlyph />
@@ -99,11 +98,10 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
         <small>{project.description?.trim() || "No description"}</small>
       </div>
 
-      <div className="projects-row-date">{formatProjectDate(project.created_at)}</div>
-
-      <div className="projects-row-arrow">
+      <span className="projects-row-view">
+        View Project
         <ArrowIcon />
-      </div>
+      </span>
     </Link>
   );
 }
@@ -113,14 +111,12 @@ function ProjectSkeletonList() {
     <div className="projects-list">
       {Array.from({ length: 9 }, (_, index) => (
         <div key={index} className="projects-row projects-row-skeleton">
-          <div className="projects-skeleton-block projects-skeleton-number" />
           <div className="projects-skeleton-block projects-skeleton-icon" />
           <div className="projects-skeleton-copy">
             <div className="projects-skeleton-block projects-skeleton-title" />
             <div className="projects-skeleton-block projects-skeleton-line" />
           </div>
-          <div className="projects-skeleton-block projects-skeleton-date" />
-          <div className="projects-skeleton-block projects-skeleton-arrow" />
+          <div className="projects-skeleton-block projects-skeleton-button" />
         </div>
       ))}
     </div>
@@ -129,10 +125,12 @@ function ProjectSkeletonList() {
 
 export default function ProjectsPage() {
   const { currentSong } = usePlayer();
-  const { projects, loading, error, refetchProjects } = useProjectsContext();
+  const { projects, setProjects, loading, error, refetchProjects } =
+    useProjectsContext();
   const [query, setQuery] = useState("");
   const [sortMode, setSortMode] = useState<ProjectSortMode>("newest");
   const [sortOpen, setSortOpen] = useState(false);
+  const [createProjectOpen, setCreateProjectOpen] = useState(false);
 
   const playerVisible = Boolean(currentSong);
   const cleanQuery = query.trim().toLowerCase();
@@ -151,81 +149,66 @@ export default function ProjectsPage() {
     <>
       <style>{`
         .projects-page { position: relative; margin-left: var(--sidebar-width); margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); transition: margin-left 0.2s ease; }
-        .projects-shell { position: relative; z-index: 1; padding: 0 24px; }
-        .projects-hero { display: flex; min-height: 78px; align-items: flex-end; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--border); padding: 0 0 16px; }
-        .projects-title-wrap { min-width: 0; }
-        .projects-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-        .projects-title { margin-top: 8px; font-family: var(--font-instrument-sans); font-size: 26px; font-weight: 500; line-height: 1; letter-spacing: -0.035em; color: var(--text-primary); }
-        .projects-meta { display: flex; flex: 0 0 auto; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; font-size: 11px; color: var(--text-secondary); }
-        .projects-dot { color: var(--text-muted); }
-        .projects-control-bar { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border-subtle); padding: 10px 0; }
-        .projects-search { display: flex; min-width: 260px; width: min(420px, 100%); height: 30px; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 10px; color: var(--text-muted); }
-        .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; }
+        .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 24px 50px 0; }
+        .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 130px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
+        .projects-status-pill { display: inline-flex; width: 110px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); font-size: 12px; font-weight: 600; }
+        .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid var(--text-primary); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); }
+        .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; font-style: italic; }
         .projects-search input::placeholder { color: var(--text-muted); }
-        .projects-search-clear { display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
+        .projects-search-clear { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
         .projects-search-clear:hover { background: var(--bg-hover); color: var(--text-primary); }
-        .projects-control-right { display: flex; align-items: center; gap: 8px; }
-        .projects-sort-button { height: 30px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 10px; color: var(--text-secondary); cursor: pointer; font-family: inherit; font-size: 11px; font-weight: 500; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-control-right { display: flex; justify-content: flex-end; align-items: center; gap: 18px; }
+        .projects-sort-button { height: 42px; display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 16px; color: var(--text-secondary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .projects-sort-button:hover, .projects-sort-button.is-open { background: var(--bg-hover); border-color: var(--border-hover); color: var(--text-primary); }
         .projects-sort-dropdown { min-width: 154px; }
         .projects-sort-dropdown button.is-active { background: var(--bg-hover); color: var(--text-primary); }
-        .projects-list { display: flex; flex-direction: column; }
-        .projects-list-head { display: grid; min-height: 34px; grid-template-columns: 42px 44px minmax(180px, 1fr) 132px 28px; align-items: center; border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 10px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; }
-        .projects-row { display: grid; min-height: 68px; grid-template-columns: 42px 44px minmax(180px, 1fr) 132px 28px; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; text-decoration: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+        .projects-new-button { height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 22px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700; transition: opacity 0.15s ease; }
+        .projects-new-button:hover { opacity: 0.82; }
+        .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
+        .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 76px; border-top: 1px solid var(--border-subtle); }
+        .projects-row { display: grid; min-height: 72px; grid-template-columns: 62px minmax(180px, 1fr) 136px; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; text-decoration: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
         .projects-row:hover { background: var(--bg-hover); }
-        .projects-row-number { color: var(--text-muted); font-size: 10px; font-weight: 600; letter-spacing: 0.05em; }
-        .projects-row-icon { display: flex; width: 34px; height: 34px; align-items: center; justify-content: center; overflow: visible; border: 1px solid var(--border-subtle); border-radius: 0; background: var(--bg-secondary); color: var(--text-secondary); }
-        .projects-row-icon-inner { display: block; transform: translateY(-2px) scale(0.5); transform-origin: center; }
+        .projects-row-icon { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; overflow: visible; border: 0; border-radius: 0; background: transparent; color: var(--text-primary); }
+        .projects-row-icon-inner { display: block; transform: translateY(-2px) scale(0.58); transform-origin: center; }
         .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-        .projects-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; color: var(--text-primary); }
+        .projects-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--text-primary); }
         .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); }
-        .projects-row-date { color: var(--text-secondary); font-size: 11px; text-align: right; }
-        .projects-row-arrow { display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; justify-self: end; color: var(--text-muted); transition: color 0.15s ease; }
-        .projects-row:hover .projects-row-arrow { color: var(--text-primary); }
+        .projects-row-view { display: inline-flex; width: fit-content; min-width: 112px; height: 32px; align-items: center; justify-content: center; justify-self: end; gap: 7px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-size: 11px; font-weight: 600; transition: background 0.15s ease, border-color 0.15s ease; }
+        .projects-row:hover .projects-row-view { border-color: var(--text-primary); background: var(--text-primary); color: var(--bg-primary); }
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
-        .projects-empty h2, .projects-error h2 { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-        .projects-empty p, .projects-error p { max-width: 320px; font-size: 12px; line-height: 1.6; }
-        .projects-retry-button { height: 30px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 12px; color: var(--text-primary); cursor: pointer; font-family: inherit; font-size: 11px; font-weight: 500; }
-        .projects-retry-button:hover { background: var(--bg-hover); }
+        .projects-empty h2, .projects-error h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+        .projects-empty p, .projects-error p { max-width: 360px; font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+        .projects-retry-button { height: 36px; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 14px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700; }
         .projects-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .projects-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: projects-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes projects-skeleton-shimmer { 100% { transform: translateX(100%); } }
         .projects-row-skeleton { cursor: default; pointer-events: none; }
-        .projects-skeleton-number { width: 22px; height: 8px; }
-        .projects-skeleton-icon { width: 34px; height: 34px; }
+        .projects-skeleton-icon { width: 42px; height: 42px; }
         .projects-skeleton-copy { display: flex; min-width: 0; flex-direction: column; gap: 9px; }
         .projects-skeleton-title { width: min(220px, 52%); height: 9px; }
         .projects-skeleton-line { width: min(360px, 78%); height: 8px; }
-        .projects-skeleton-date { justify-self: end; width: 72px; height: 8px; }
-        .projects-skeleton-arrow { justify-self: end; width: 18px; height: 18px; }
-        @media (max-width: 720px) {
-          .projects-hero { align-items: flex-start; flex-direction: column; justify-content: flex-end; gap: 12px; padding-top: 28px; }
-          .projects-meta { justify-content: flex-start; }
-          .projects-control-bar { align-items: stretch; flex-direction: column; }
-          .projects-search { width: 100%; }
-          .projects-control-right { justify-content: flex-end; }
-          .projects-list-head { display: none; }
-          .projects-row { grid-template-columns: 34px minmax(0, 1fr) 28px; gap: 12px; padding: 12px 0; }
-          .projects-row-number, .projects-row-date { display: none; }
-          .projects-row-icon { width: 34px; }
+        .projects-skeleton-button { justify-self: end; width: 112px; height: 32px; }
+        @media (max-width: 940px) {
+          .projects-shell { padding-left: 24px; padding-right: 24px; }
+          .projects-control-bar { grid-template-columns: 1fr; gap: 12px; }
+          .projects-status-pill { width: 100%; }
+          .projects-control-right { justify-content: space-between; }
+          .projects-list { margin-top: 36px; }
+        }
+        @media (max-width: 640px) {
+          .projects-row { grid-template-columns: 46px minmax(0, 1fr); gap: 10px; padding: 12px 0; }
+          .projects-row-view { grid-column: 2; justify-self: start; }
         }
       `}</style>
 
       <main className="projects-page">
         <div className="projects-shell">
-          <section className="projects-hero">
-            <div className="projects-title-wrap">
-              <div className="projects-kicker">Project Library</div>
-              <h1 className="projects-title">Projects</h1>
-            </div>
-            <div className="projects-meta">
-              <span>{projects.length} projects</span>
-              <span className="projects-dot">·</span>
-              <span>{displayedProjects.length} shown</span>
-            </div>
-          </section>
-
           <section className="projects-control-bar">
+            <span className="projects-status-pill">
+              Active
+              <ChevronIcon />
+            </span>
+
             <label className="projects-search">
               <SearchIcon />
               <input
@@ -266,8 +249,11 @@ export default function ProjectsPage() {
                     className={`projects-sort-button${open ? " is-open" : ""}`}
                     aria-label="Sort projects"
                   >
-                    <SortIcon />
-                    <SortLabel sortMode={sortMode} />
+                    <span>Sort By</span>
+                    <ChevronIcon />
+                    <span className="sr-only">
+                      <SortLabel sortMode={sortMode} />
+                    </span>
                   </button>
                 )}
               >
@@ -302,44 +288,49 @@ export default function ProjectsPage() {
                   Alphabetical
                 </button>
               </DropdownShell>
+
+              <button
+                type="button"
+                className="projects-new-button"
+                onClick={() => setCreateProjectOpen(true)}
+              >
+                + New Project
+              </button>
             </div>
           </section>
 
           {error && !loading ? (
-            <div className="projects-error">
-              <h2>Couldn&apos;t load projects</h2>
-              <p>{error}</p>
-              <button
-                type="button"
-                className="projects-retry-button"
-                onClick={refetchProjects}
-              >
-                Try again
-              </button>
+            <div className="projects-empty-space">
+              <div className="projects-error">
+                <h2>Couldn&apos;t load projects</h2>
+                <p>{error}</p>
+                <button
+                  type="button"
+                  className="projects-retry-button"
+                  onClick={refetchProjects}
+                >
+                  Try again
+                </button>
+              </div>
             </div>
           ) : loading ? (
             <ProjectSkeletonList />
           ) : displayedProjects.length > 0 ? (
             <section className="projects-list" aria-label="Projects">
-              <div className="projects-list-head" aria-hidden="true">
-                <span>No.</span>
-                <span />
-                <span>Name</span>
-                <span style={{ textAlign: "right" }}>Created</span>
-                <span />
-              </div>
-              {displayedProjects.map((project, index) => (
-                <ProjectRow key={project.id} project={project} index={index} />
+              {displayedProjects.map((project) => (
+                <ProjectRow key={project.id} project={project} />
               ))}
             </section>
           ) : (
-            <div className="projects-empty">
-              <h2>{cleanQuery ? "No matching projects" : "No projects yet"}</h2>
-              <p>
-                {cleanQuery
-                  ? "Try searching for a different project name."
-                  : "Create a project from the sidebar, then it will appear here."}
-              </p>
+            <div className="projects-empty-space">
+              <div className="projects-empty">
+                <h2>{cleanQuery ? "No matching projects" : "Stay organized with Projects"}</h2>
+                <p>
+                  {cleanQuery
+                    ? "Try searching for a different project name."
+                    : "Save songs, organize files, and keep every project workspace in one place."}
+                </p>
+              </div>
             </div>
           )}
 
@@ -351,6 +342,15 @@ export default function ProjectsPage() {
           </div>
         </div>
       </main>
+
+      <CreateProjectModal
+        isOpen={createProjectOpen}
+        onClose={() => setCreateProjectOpen(false)}
+        onProjectCreated={(project) => {
+          setProjects((current) => [project, ...current]);
+          setCreateProjectOpen(false);
+        }}
+      />
     </>
   );
 }
