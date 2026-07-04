@@ -16,7 +16,21 @@ body:has(.filmwave-music-player) .fw-song-list {
 .fw-song-list .filmwave-song-card,
 .fw-song-list .desktop-song-card,
 .fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+  --filmwave-song-card-padding-y: 12px !important;
+  --filmwave-song-card-padding-left: 12px !important;
+  --filmwave-song-card-padding-right: 16px !important;
   border-radius: 0 !important;
+  padding: 12px 16px 12px 12px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail {
+  box-sizing: border-box !important;
+  padding: 10px 8px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail-item {
+  box-sizing: border-box !important;
+  padding: 0 8px 0 12px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
