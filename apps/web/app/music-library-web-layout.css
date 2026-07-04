@@ -70,8 +70,10 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-sticky
   > .fw-toolbar-header-search-row
   > .fw-toolbar-header-search-form {
+  display: flex !important;
   width: 100% !important;
   height: 100% !important;
+  align-items: center !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -113,12 +115,15 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
     .fw-toolbar-search-icon,
     .fw-toolbar-search-static-icon
   ) {
+  display: inline-flex !important;
   width: 13px !important;
-  height: 42px !important;
+  height: 13px !important;
   flex: 0 0 13px !important;
+  align-self: center !important;
   align-items: center !important;
   justify-content: center !important;
   color: var(--text-muted) !important;
+  line-height: 0 !important;
   pointer-events: none !important;
 }
 
@@ -138,8 +143,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   :is(.filmwave-search-pill-input, .fw-toolbar-search input, .fw-toolbar-search-static-input) {
   display: block !important;
   min-width: 0 !important;
-  height: 42px !important;
+  height: auto !important;
   flex: 1 1 auto !important;
+  align-self: center !important;
   border: 0 !important;
   background: transparent !important;
   color: var(--text-primary) !important;
@@ -147,7 +153,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   font-size: 12px !important;
   font-style: italic !important;
   font-weight: 400 !important;
-  line-height: 42px !important;
+  line-height: 1.2 !important;
   outline: none !important;
   padding: 0 !important;
 }
@@ -160,6 +166,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   font-size: 12px !important;
   font-style: italic !important;
   font-weight: 400 !important;
+  line-height: 1.2 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
