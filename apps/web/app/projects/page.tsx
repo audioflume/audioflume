@@ -74,7 +74,7 @@ function SearchIcon() {
 
 function ArrowIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
       <path
         fill="currentColor"
         d="M7.4 5.4a1.2 1.2 0 0 1 1.2-1.2h8.8a1.2 1.2 0 0 1 1.2 1.2v8.8a1.2 1.2 0 1 1-2.4 0V8.3l-9.05 9.05a1.2 1.2 0 0 1-1.7-1.7L14.5 6.6H8.6a1.2 1.2 0 0 1-1.2-1.2Z"
@@ -83,43 +83,44 @@ function ArrowIcon() {
   );
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectRow({ project, index }: { project: Project; index: number }) {
   return (
-    <Link href={`/projects/${project.id}`} className="projects-card">
-      <div className="projects-card-icon">
-        <span className="projects-card-icon-inner">
+    <Link href={`/projects/${project.id}`} className="projects-row">
+      <div className="projects-row-number">{String(index + 1).padStart(2, "0")}</div>
+
+      <div className="projects-row-icon" aria-hidden="true">
+        <span className="projects-row-icon-inner">
           <FolderGlyph />
         </span>
       </div>
 
-      <div className="projects-card-copy">
-        <span className="projects-card-kicker">Project</span>
-        <h3>{project.name}</h3>
-        <p>{project.description?.trim() || "No description yet"}</p>
+      <div className="projects-row-main">
+        <span>{project.name}</span>
+        <small>{project.description?.trim() || "No description"}</small>
       </div>
 
-      <div className="projects-card-bottom">
-        <span>{formatProjectDate(project.created_at)}</span>
-        <span className="projects-card-arrow">
-          <ArrowIcon />
-        </span>
+      <div className="projects-row-date">{formatProjectDate(project.created_at)}</div>
+
+      <div className="projects-row-arrow">
+        <ArrowIcon />
       </div>
     </Link>
   );
 }
 
-function ProjectSkeletonGrid() {
+function ProjectSkeletonList() {
   return (
-    <div className="projects-grid">
+    <div className="projects-list">
       {Array.from({ length: 9 }, (_, index) => (
-        <div key={index} className="projects-card projects-card-skeleton">
+        <div key={index} className="projects-row projects-row-skeleton">
+          <div className="projects-skeleton-block projects-skeleton-number" />
           <div className="projects-skeleton-block projects-skeleton-icon" />
           <div className="projects-skeleton-copy">
-            <div className="projects-skeleton-block projects-skeleton-kicker" />
             <div className="projects-skeleton-block projects-skeleton-title" />
             <div className="projects-skeleton-block projects-skeleton-line" />
-            <div className="projects-skeleton-block projects-skeleton-line short" />
           </div>
+          <div className="projects-skeleton-block projects-skeleton-date" />
+          <div className="projects-skeleton-block projects-skeleton-arrow" />
         </div>
       ))}
     </div>
@@ -150,63 +151,73 @@ export default function ProjectsPage() {
     <>
       <style>{`
         .projects-page { position: relative; margin-left: var(--sidebar-width); margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); transition: margin-left 0.2s ease; }
-        .projects-shell { position: relative; z-index: 1; padding: 0 32px; }
-        .projects-hero { display: block; padding: 88px 0 0; }
+        .projects-shell { position: relative; z-index: 1; padding: 0 24px; }
+        .projects-hero { display: flex; min-height: 78px; align-items: flex-end; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--border); padding: 0 0 16px; }
+        .projects-title-wrap { min-width: 0; }
         .projects-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-        .projects-title { margin-top: 8px; max-width: 640px; font-family: var(--font-instrument-sans); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
-        .projects-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
+        .projects-title { margin-top: 8px; font-family: var(--font-instrument-sans); font-size: 26px; font-weight: 500; line-height: 1; letter-spacing: -0.035em; color: var(--text-primary); }
+        .projects-meta { display: flex; flex: 0 0 auto; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .projects-dot { color: var(--text-muted); }
-        .projects-control-bar { min-height: 34px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; margin-bottom: 32px; }
-        .projects-search { display: flex; min-width: 260px; width: min(420px, 100%); height: 34px; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-secondary); padding: 0 12px; color: var(--text-muted); }
+        .projects-control-bar { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border-subtle); padding: 10px 0; }
+        .projects-search { display: flex; min-width: 260px; width: min(420px, 100%); height: 30px; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 10px; color: var(--text-muted); }
         .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; }
         .projects-search input::placeholder { color: var(--text-muted); }
-        .projects-search-clear { display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; border: 0; border-radius: 999px; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
+        .projects-search-clear { display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
         .projects-search-clear:hover { background: var(--bg-hover); color: var(--text-primary); }
         .projects-control-right { display: flex; align-items: center; gap: 8px; }
-        .projects-sort-button { height: 34px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-secondary); padding: 0 12px; color: var(--text-secondary); cursor: pointer; font-family: inherit; font-size: 11px; font-weight: 500; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-        .projects-sort-button:hover, .projects-sort-button.is-open { background: var(--icon-button-hover); border-color: var(--border-hover); color: var(--text-primary); }
+        .projects-sort-button { height: 30px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 10px; color: var(--text-secondary); cursor: pointer; font-family: inherit; font-size: 11px; font-weight: 500; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-sort-button:hover, .projects-sort-button.is-open { background: var(--bg-hover); border-color: var(--border-hover); color: var(--text-primary); }
         .projects-sort-dropdown { min-width: 154px; }
         .projects-sort-dropdown button.is-active { background: var(--bg-hover); color: var(--text-primary); }
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
-        .projects-card { min-height: 190px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; border: 1px solid var(--border-subtle); border-radius: 18px; background: var(--bg-card); padding: 16px; color: inherit; text-decoration: none; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
-        .projects-card:hover { border-color: var(--border); background: var(--bg-hover); transform: translateY(-1px); }
-        .projects-card-icon { display: flex; height: 42px; width: 42px; align-items: center; justify-content: center; overflow: visible; border-radius: 12px; background: var(--bg-secondary); color: var(--text-primary); }
-        .projects-card-icon-inner { display: block; transform: translateY(-2px) scale(0.64); transform-origin: center; }
-        .projects-card-copy { min-width: 0; }
-        .projects-card-kicker { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.11em; text-transform: uppercase; color: var(--text-muted); }
-        .projects-card h3 { margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-instrument-sans); font-size: 22px; font-weight: 500; line-height: 1.08; letter-spacing: -0.045em; color: var(--text-primary); }
-        .projects-card p { margin-top: 10px; display: -webkit-box; min-height: 34px; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 11px; line-height: 1.55; color: var(--text-secondary); }
-        .projects-card-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--border-subtle); padding-top: 12px; font-size: 11px; color: var(--text-muted); }
-        .projects-card-arrow { display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; border-radius: 999px; background: var(--bg-secondary); color: var(--text-secondary); transition: background 0.15s ease, color 0.15s ease; }
-        .projects-card:hover .projects-card-arrow { background: var(--text-primary); color: var(--bg-primary); }
+        .projects-list { display: flex; flex-direction: column; }
+        .projects-list-head { display: grid; min-height: 34px; grid-template-columns: 42px 44px minmax(180px, 1fr) 132px 28px; align-items: center; border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 10px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; }
+        .projects-row { display: grid; min-height: 68px; grid-template-columns: 42px 44px minmax(180px, 1fr) 132px 28px; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; text-decoration: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+        .projects-row:hover { background: var(--bg-hover); }
+        .projects-row-number { color: var(--text-muted); font-size: 10px; font-weight: 600; letter-spacing: 0.05em; }
+        .projects-row-icon { display: flex; width: 34px; height: 34px; align-items: center; justify-content: center; overflow: visible; border: 1px solid var(--border-subtle); border-radius: 0; background: var(--bg-secondary); color: var(--text-secondary); }
+        .projects-row-icon-inner { display: block; transform: translateY(-2px) scale(0.5); transform-origin: center; }
+        .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+        .projects-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; color: var(--text-primary); }
+        .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); }
+        .projects-row-date { color: var(--text-secondary); font-size: 11px; text-align: right; }
+        .projects-row-arrow { display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; justify-self: end; color: var(--text-muted); transition: color 0.15s ease; }
+        .projects-row:hover .projects-row-arrow { color: var(--text-primary); }
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
         .projects-empty h2, .projects-error h2 { font-size: 14px; font-weight: 500; color: var(--text-primary); }
         .projects-empty p, .projects-error p { max-width: 320px; font-size: 12px; line-height: 1.6; }
-        .projects-retry-button { height: 30px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-secondary); padding: 0 12px; color: var(--text-primary); cursor: pointer; font-family: inherit; font-size: 11px; font-weight: 500; }
+        .projects-retry-button { height: 30px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 12px; color: var(--text-primary); cursor: pointer; font-family: inherit; font-size: 11px; font-weight: 500; }
         .projects-retry-button:hover { background: var(--bg-hover); }
         .projects-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .projects-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: projects-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes projects-skeleton-shimmer { 100% { transform: translateX(100%); } }
-        .projects-card-skeleton { cursor: default; transform: none !important; }
-        .projects-skeleton-icon { width: 42px; height: 42px; border-radius: 12px; }
-        .projects-skeleton-copy { display: flex; flex-direction: column; gap: 10px; }
-        .projects-skeleton-kicker { width: 54px; height: 8px; }
-        .projects-skeleton-title { width: 72%; height: 18px; }
-        .projects-skeleton-line { width: 100%; height: 9px; }
-        .projects-skeleton-line.short { width: 58%; }
+        .projects-row-skeleton { cursor: default; pointer-events: none; }
+        .projects-skeleton-number { width: 22px; height: 8px; }
+        .projects-skeleton-icon { width: 34px; height: 34px; }
+        .projects-skeleton-copy { display: flex; min-width: 0; flex-direction: column; gap: 9px; }
+        .projects-skeleton-title { width: min(220px, 52%); height: 9px; }
+        .projects-skeleton-line { width: min(360px, 78%); height: 8px; }
+        .projects-skeleton-date { justify-self: end; width: 72px; height: 8px; }
+        .projects-skeleton-arrow { justify-self: end; width: 18px; height: 18px; }
         @media (max-width: 720px) {
+          .projects-hero { align-items: flex-start; flex-direction: column; justify-content: flex-end; gap: 12px; padding-top: 28px; }
+          .projects-meta { justify-content: flex-start; }
           .projects-control-bar { align-items: stretch; flex-direction: column; }
           .projects-search { width: 100%; }
           .projects-control-right { justify-content: flex-end; }
-          .projects-title { font-size: 48px; }
+          .projects-list-head { display: none; }
+          .projects-row { grid-template-columns: 34px minmax(0, 1fr) 28px; gap: 12px; padding: 12px 0; }
+          .projects-row-number, .projects-row-date { display: none; }
+          .projects-row-icon { width: 34px; }
         }
       `}</style>
 
       <main className="projects-page">
         <div className="projects-shell">
           <section className="projects-hero">
-            <div className="projects-kicker">Project Library</div>
-            <h1 className="projects-title">Projects</h1>
+            <div className="projects-title-wrap">
+              <div className="projects-kicker">Project Library</div>
+              <h1 className="projects-title">Projects</h1>
+            </div>
             <div className="projects-meta">
               <span>{projects.length} projects</span>
               <span className="projects-dot">·</span>
@@ -307,11 +318,18 @@ export default function ProjectsPage() {
               </button>
             </div>
           ) : loading ? (
-            <ProjectSkeletonGrid />
+            <ProjectSkeletonList />
           ) : displayedProjects.length > 0 ? (
-            <section className="projects-grid">
-              {displayedProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
+            <section className="projects-list" aria-label="Projects">
+              <div className="projects-list-head" aria-hidden="true">
+                <span>No.</span>
+                <span />
+                <span>Name</span>
+                <span style={{ textAlign: "right" }}>Created</span>
+                <span />
+              </div>
+              {displayedProjects.map((project, index) => (
+                <ProjectRow key={project.id} project={project} index={index} />
               ))}
             </section>
           ) : (
