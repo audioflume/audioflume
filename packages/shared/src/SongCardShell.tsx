@@ -83,7 +83,7 @@ export function SongCardShell({
       style={expandedStyle}
     >
       <style>
-        {`.filmwave-song-card .filmwave-song-stems-trigger:hover, .filmwave-song-card .filmwave-song-stems-trigger[aria-expanded="true"] { background: var(--text-primary) !important; color: var(--bg-primary) !important; } .filmwave-song-ai-badge { position: absolute; right: 4px; bottom: 4px; z-index: 2; display: inline-flex; width: 17px; height: 17px; align-items: center; justify-content: center; border-radius: 999px; background: rgba(0, 0, 0, 0.64); color: #fff; pointer-events: none; box-shadow: 0 5px 14px rgba(0, 0, 0, 0.22); } .filmwave-song-ai-badge svg { width: 12px; height: 12px; }`}
+        {`.filmwave-song-card .filmwave-song-stems-trigger:hover, .filmwave-song-card .filmwave-song-stems-trigger[aria-expanded="true"] { background: var(--text-primary) !important; color: var(--bg-primary) !important; } .filmwave-song-ai-badge { position: absolute; right: 4px; bottom: 4px; z-index: 2; display: inline-flex; width: 17px; height: 17px; align-items: center; justify-content: center; border-radius: 999px; background: rgba(0, 0, 0, 0.64); color: #fff; pointer-events: auto; box-shadow: 0 5px 14px rgba(0, 0, 0, 0.22); } .filmwave-song-ai-badge svg { width: 12px; height: 12px; }`}
       </style>
 
       {expandedContent && (
