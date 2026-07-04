@@ -177,3 +177,18 @@ main > section:has(.fw-filter-panel-wrap)
   :is(.fw-toolbar-search-static-icon, .fw-toolbar-search-static-input) {
   transform: none !important;
 }
+
+main > section:has(.fw-filter-panel-wrap):has(.fw-music-content-column)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky.is-scroll-revealed
+  > .fw-toolbar-header-search-row {
+  top: var(--filmwave-header-height, 56px) !important;
+  left: var(--filmwave-side-filter-rail-width) !important;
+}
+
+main > section:has(.fw-filter-panel-wrap):has(.fw-music-content-column)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky.is-scroll-revealed:has(> .fw-filter-panel-wrap.has-selected-filter-section)
+  > .fw-toolbar-header-search-row {
+  left: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
+}
