@@ -32,6 +32,10 @@ body:has(.filmwave-music-player) .fw-song-list {
   }
 }
 
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
+  --filmwave-side-filter-divider-color: color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent);
+}
+
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail {
   box-sizing: border-box !important;
   gap: 0 !important;
@@ -54,7 +58,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ra
   right: 0;
   left: 0;
   height: 1px;
-  background: var(--border-subtle);
+  background: var(--filmwave-side-filter-divider-color);
   pointer-events: none;
 }
 
