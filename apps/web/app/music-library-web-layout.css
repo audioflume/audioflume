@@ -24,7 +24,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   z-index: var(--filmwave-z-search-filter, 60) !important;
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) !important;
-  align-items: stretch !important;
+  align-items: center !important;
   width: auto !important;
   max-width: none !important;
   height: var(--fw-music-secondary-row-height) !important;
@@ -53,14 +53,16 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   grid-column: 1 !important;
   grid-row: 1 !important;
   display: flex !important;
+  align-self: center !important;
   align-items: center !important;
   width: 100% !important;
-  height: 100% !important;
-  border: 0 !important;
+  height: 42px !important;
+  border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
   border-radius: 0 !important;
-  background: var(--filmwave-chrome-surface) !important;
-  background-color: var(--filmwave-chrome-surface) !important;
-  padding: 0 24px !important;
+  background: var(--bg-primary) !important;
+  background-color: var(--bg-primary) !important;
+  box-shadow: none !important;
+  padding: 0 14px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -79,10 +81,10 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   box-sizing: border-box !important;
   display: flex !important;
   width: 100% !important;
-  height: 40px !important;
-  min-height: 40px !important;
+  height: 100% !important;
+  min-height: 100% !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 12px !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -98,7 +100,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static:has(.fw-toolbar-search-static-clear) {
-  gap: 5px !important;
+  gap: 9px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -111,9 +113,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
     .fw-toolbar-search-icon,
     .fw-toolbar-search-static-icon
   ) {
-  width: 16px !important;
-  height: 40px !important;
-  flex: 0 0 16px !important;
+  width: 13px !important;
+  height: 42px !important;
+  flex: 0 0 13px !important;
   align-items: center !important;
   justify-content: center !important;
   color: var(--text-muted) !important;
@@ -126,8 +128,8 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   :is(.filmwave-search-pill-icon-circle, .fw-toolbar-search-icon, .fw-toolbar-search-static-icon)
   svg {
   display: block !important;
-  width: 16px !important;
-  height: 16px !important;
+  width: 13px !important;
+  height: 13px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -136,15 +138,16 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   :is(.filmwave-search-pill-input, .fw-toolbar-search input, .fw-toolbar-search-static-input) {
   display: block !important;
   min-width: 0 !important;
-  height: 40px !important;
+  height: 42px !important;
   flex: 1 1 auto !important;
   border: 0 !important;
   background: transparent !important;
   color: var(--text-primary) !important;
   font-family: inherit !important;
-  font-size: 15px !important;
-  font-weight: 300 !important;
-  line-height: 40px !important;
+  font-size: 12px !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  line-height: 42px !important;
   outline: none !important;
   padding: 0 !important;
 }
@@ -154,8 +157,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-sticky
   :is(.filmwave-search-pill-input, .fw-toolbar-search input, .fw-toolbar-search-static-input)::placeholder {
   color: var(--text-muted) !important;
-  font-size: 15px !important;
-  font-weight: 300 !important;
+  font-size: 12px !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -164,9 +168,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-toolbar-search-static-clear {
   box-sizing: border-box !important;
   display: inline-flex !important;
-  width: 14px !important;
-  height: 40px !important;
-  flex: 0 0 14px !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex: 0 0 20px !important;
   align-items: center !important;
   justify-content: center !important;
   border: 0 !important;
@@ -174,7 +178,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   background: transparent !important;
   color: var(--text-muted) !important;
   cursor: pointer !important;
-  margin-right: 2px !important;
+  margin-right: 0 !important;
   padding: 0 !important;
 }
 
@@ -182,6 +186,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-clear:hover {
+  background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
 }
 
@@ -199,13 +204,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-divider {
-  display: inline-flex !important;
-  width: 1px !important;
-  height: 16px !important;
-  flex: 0 0 1px !important;
-  border-radius: 1px !important;
-  background: var(--border) !important;
-  margin-right: 4px !important;
+  display: none !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
