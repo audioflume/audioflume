@@ -6,3 +6,17 @@
 .project-detail-page .project-tabs-row.fw-filter-rail > .project-tab-utility {
   margin-top: auto !important;
 }
+
+.project-detail-page .project-sort-row .fw-quick-chip:is(.is-selected, .is-active, [aria-pressed="true"], [data-active="true"]) {
+  border-color: var(--text-primary) !important;
+  background: var(--text-primary) !important;
+  background-color: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+.project-detail-page .project-sort-row .fw-quick-chip:is(.is-selected, .is-active, [aria-pressed="true"], [data-active="true"]):hover {
+  border-color: var(--text-primary) !important;
+  background: var(--text-primary) !important;
+  background-color: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
