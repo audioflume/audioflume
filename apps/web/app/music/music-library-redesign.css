@@ -34,16 +34,28 @@ body:has(.filmwave-music-player) .fw-song-list {
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail {
   box-sizing: border-box !important;
+  gap: 0 !important;
   padding: 10px 8px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail-item {
+  position: relative !important;
   box-sizing: border-box !important;
+  border-top: 0 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
   padding: 0 8px 0 12px !important;
 }
 
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail-item + .fw-filter-rail-item {
-  border-top: 1px solid var(--border-subtle) !important;
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail-item + .fw-filter-rail-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--border-subtle);
+  pointer-events: none;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
