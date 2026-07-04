@@ -40,7 +40,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:n
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(8) .fw-filter-rail-label::after {
   content: "Playlists";
-  font-size: 14px;
+  font-size: 12.5px;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:nth-child(9) {
