@@ -28,7 +28,7 @@
   height: calc(100dvh - var(--filmwave-header-height, 56px) - var(--filmwave-sidebar-bottom-offset, var(--filmwave-sidebar-float-inset, 12px)) - var(--filmwave-sidebar-float-inset, 12px)) !important;
   min-height: 0 !important;
   margin: 0 !important;
-  gap: 2px !important;
+  gap: 0 !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   border: 0 !important;
@@ -45,7 +45,7 @@
   display: flex !important;
   flex: 0 0 auto !important;
   flex-direction: column !important;
-  margin-top: auto !important;
+  margin-top: 0 !important;
   padding: 14px 8px 8px 4px !important;
   border-top: 1px solid var(--border-subtle) !important;
   color: var(--text-muted) !important;
@@ -90,6 +90,7 @@
 }
 
 .project-detail-page .project-tabs-row .fw-filter-rail-item {
+  position: relative !important;
   display: flex !important;
   width: 100% !important;
   height: 38px !important;
@@ -102,6 +103,7 @@
   border-radius: 0 !important;
   background: transparent !important;
   color: var(--text-secondary) !important;
+  margin: 0 !important;
   padding: 0 8px 0 12px !important;
   font-family: inherit !important;
   font-size: 12.5px !important;
@@ -110,19 +112,33 @@
   transition: background-color 160ms ease, color 160ms ease !important;
 }
 
+.project-detail-page .project-tabs-row .fw-filter-rail-item + .fw-filter-rail-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--filmwave-side-filter-divider-color, var(--border-subtle));
+  pointer-events: none;
+}
+
 .project-detail-page .project-tabs-row .fw-filter-rail-item:hover {
   background: var(--bg-hover) !important;
+  background-color: var(--bg-hover) !important;
   color: var(--text-primary) !important;
 }
 
 .project-detail-page .project-tabs-row .fw-filter-rail-item.is-active {
-  background: var(--bg-hover-strong) !important;
+  background: var(--bg-hover) !important;
+  background-color: var(--bg-hover) !important;
   color: var(--text-primary) !important;
   font-weight: 400 !important;
 }
 
 .project-detail-page .project-tabs-row .fw-filter-rail-item.is-active:hover {
-  background: var(--bg-hover-strong) !important;
+  background: var(--bg-hover) !important;
+  background-color: var(--bg-hover) !important;
   color: var(--text-primary) !important;
 }
 
