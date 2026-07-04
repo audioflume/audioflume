@@ -2,7 +2,6 @@
 
 import DropdownShell from "@/components/DropdownShell";
 import Footer from "@/components/Footer";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import SortIcon from "@/components/icons/SortIcon";
 import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
 import { usePlayer } from "@/context/PlayerContext";
