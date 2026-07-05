@@ -251,7 +251,7 @@ export default function ProjectsPage() {
     <>
       <style>{`
         .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
-        .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 24px 50px 0; }
+        .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: var(--fw-music-content-inset, 20px) var(--fw-music-content-inset-right, 20px) 0 var(--fw-music-content-inset-left, 28px); }
         .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 130px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
         .projects-status-pill { display: inline-flex; width: 110px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
         .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
@@ -298,7 +298,7 @@ export default function ProjectsPage() {
         .projects-skeleton-line { width: min(360px, 78%); height: 8px; }
         .projects-skeleton-button { justify-self: end; width: 128px; height: 32px; }
         @media (max-width: 940px) {
-          .projects-shell { padding-left: 24px; padding-right: 24px; }
+          .projects-shell { padding-left: var(--fw-music-content-inset-left, 28px); padding-right: var(--fw-music-content-inset-right, 20px); }
           .projects-control-bar { grid-template-columns: 1fr; gap: 12px; }
           .projects-status-pill { width: 100%; }
           .projects-control-right { justify-content: space-between; }
