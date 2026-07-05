@@ -59,6 +59,19 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-
   order: 11;
 }
 
+html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch))::before {
+  content: "" !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  width: 100% !important;
+  min-height: 76px !important;
+  flex: 0 0 auto !important;
+  border-bottom: 1px solid var(--filmwave-side-filter-divider-color) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  order: 0 !important;
+}
+
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-ai-linkmatch {
   order: 0;
 }
