@@ -215,6 +215,162 @@ section.curated-playlists-page-layer {
   padding-top: 12px !important;
 }
 
+.playlists-page .playlist-index {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  border-top: 1px solid var(--border-subtle) !important;
+}
+
+.playlists-page .playlist-index-row-shell {
+  position: relative !important;
+  cursor: pointer !important;
+}
+
+.playlists-page .playlist-index .playlist-index-row {
+  position: relative !important;
+  display: grid !important;
+  min-height: 72px !important;
+  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  gap: 0 !important;
+  align-items: center !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+  padding: 0 50px 0 18px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transform: none !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+
+.playlists-page .playlist-index .playlist-index-row.is-reordering {
+  grid-template-columns: 24px 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  padding-right: 18px !important;
+}
+
+.playlists-page .playlist-index .playlist-index-row:hover,
+.playlists-page .playlist-index-row-shell:hover .playlist-index-row,
+.playlists-page .playlist-index .playlist-create-row:hover {
+  border-color: var(--border-subtle) !important;
+  background: var(--bg-hover) !important;
+  transform: none !important;
+}
+
+.playlists-page .playlist-index .playlist-row-number {
+  display: none !important;
+}
+
+.playlists-page .playlist-index .playlist-row-cover {
+  position: relative !important;
+  width: 42px !important;
+  height: 42px !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  background: var(--bg-secondary) !important;
+}
+
+.playlists-page .playlist-index .playlist-row-main {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+.playlists-page .playlist-index .playlist-row-main span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--text-primary) !important;
+}
+
+.playlists-page .playlist-index .playlist-row-main small {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  margin: 2px 0 0 !important;
+  font-size: 11.5px !important;
+  line-height: 1.35 !important;
+  color: var(--text-subtle) !important;
+}
+
+.playlists-page .playlist-index .playlist-row-count {
+  justify-self: end !important;
+  text-align: right !important;
+  font-size: 11.5px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+  color: var(--text-subtle) !important;
+}
+
+.playlists-page .playlist-index-row-shell .playlist-card-menu-wrap {
+  position: absolute !important;
+  top: 50% !important;
+  right: 18px !important;
+  left: auto !important;
+  z-index: 12 !important;
+  transform: translateY(-50%) !important;
+}
+
+.playlists-page .playlist-index-row-shell .playlist-menu-btn {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 0 !important;
+  opacity: 1 !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row.playlist-index-row {
+  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row .playlist-create-mark {
+  grid-column: 1 !important;
+  width: 42px !important;
+  height: 42px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row .playlist-create-copy {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  text-align: left !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row .playlist-create-copy span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: normal !important;
+  color: var(--text-primary) !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row .playlist-create-copy small {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  margin: 2px 0 0 !important;
+  font-size: 11.5px !important;
+  line-height: 1.35 !important;
+  color: var(--text-subtle) !important;
+}
+
 section.curated-playlists-page-layer > div > .playlists-tabs-row + div {
   margin-top: 0 !important;
 }
