@@ -59,6 +59,10 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-
   order: 11;
 }
 
+html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) {
+  position: relative !important;
+}
+
 html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch))::before {
   content: "" !important;
   box-sizing: border-box !important;
@@ -70,6 +74,56 @@ html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw
   margin: 0 !important;
   padding: 0 !important;
   order: 0 !important;
+}
+
+html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch))::after {
+  content: "App" !important;
+  position: absolute !important;
+  top: 19px !important;
+  left: 104px !important;
+  z-index: 1 !important;
+  display: inline-flex !important;
+  box-sizing: border-box !important;
+  height: 16px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 0 !important;
+  background: var(--text-primary) !important;
+  padding: 0 6px 1px !important;
+  color: var(--bg-primary) !important;
+  font-size: 7.5px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
+}
+
+html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(1)::before {
+  content: "Desktop Sync" !important;
+  position: absolute !important;
+  top: 20px !important;
+  left: 12px !important;
+  z-index: 1 !important;
+  display: block !important;
+  color: var(--text-primary) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.08 !important;
+  pointer-events: none !important;
+}
+
+html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(1)::after {
+  content: "Save songs, sync locally  ↗" !important;
+  position: absolute !important;
+  top: 45px !important;
+  left: 12px !important;
+  z-index: 1 !important;
+  display: block !important;
+  color: var(--text-muted) !important;
+  font-size: 10.5px !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+  pointer-events: none !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-ai-linkmatch {
