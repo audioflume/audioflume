@@ -21,7 +21,7 @@ export default function DiscoverSharedHeaderSearch() {
           width: auto !important;
           margin-left: 0 !important;
           margin-bottom: 14px !important;
-          padding: calc(var(--filmwave-header-height, 56px) + 20px) 32px 0 32px !important;
+          padding: calc(var(--filmwave-header-height, 56px) + 22px) 32px 0 32px !important;
           transition: margin-left 200ms ease !important;
         }
 
