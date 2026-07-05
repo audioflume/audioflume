@@ -2,10 +2,14 @@
 @import "../../../../packages/shared/styles/music-filter-column-controls.css";
 @import "./fw-hero.css";
 
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
+  padding-top: calc(var(--filmwave-header-height, 56px) + 22px) !important;
+}
+
+html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky {
-  margin-top: 22px !important;
+  margin-top: 0 !important;
 }
 
 /* Main music library and project music tabs only need player-safe scroll space when the player is visible. */
