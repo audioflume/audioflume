@@ -266,8 +266,9 @@ export default function ProjectsPage() {
         .projects-sort-dropdown button.is-active { background: var(--bg-hover); color: var(--text-primary); }
         .projects-new-button { height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 22px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; transition: opacity 0.15s ease; }
         .projects-new-button:hover { opacity: 0.82; }
+        .projects-title { margin: 36px 0 20px; max-width: 640px; font-size: 1.6em; font-weight: 500; line-height: 1; letter-spacing: -0.035em; color: var(--text-primary); }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
-        .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 76px; border-top: 1px solid var(--border-subtle); }
+        .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 12px; border-top: 1px solid var(--border-subtle); }
         .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) auto; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
         .projects-row:hover { background: var(--bg-hover); }
         .projects-row-link { display: grid; min-width: 0; min-height: 72px; grid-template-columns: 62px minmax(180px, 1fr); align-items: center; color: inherit; text-decoration: none; }
@@ -302,7 +303,8 @@ export default function ProjectsPage() {
           .projects-control-bar { grid-template-columns: 1fr; gap: 12px; }
           .projects-status-pill { width: 100%; }
           .projects-control-right { justify-content: space-between; }
-          .projects-list { margin-top: 36px; }
+          .projects-title { margin-top: 36px; }
+          .projects-list { margin-top: 12px; }
         }
         @media (max-width: 640px) {
           .projects-shell { padding-left: 20px; padding-right: 20px; }
@@ -409,6 +411,8 @@ export default function ProjectsPage() {
               </button>
             </div>
           </section>
+
+          <h1 className="projects-title">Projects</h1>
 
           {error && !loading ? (
             <div className="projects-empty-space">
