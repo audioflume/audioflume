@@ -349,6 +349,7 @@ export default function CuratedPlaylistsPage() {
         .curated-playlists-page-layer {
           position: relative;
           z-index: 1;
+          padding-top: calc(var(--filmwave-header-height, 56px) + 32px) !important;
         }
       `}</style>
 
