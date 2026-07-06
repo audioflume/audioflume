@@ -9,22 +9,7 @@ html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
 html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky {
-  grid-template-columns: minmax(0, 1fr) !important;
   margin-top: 0 !important;
-}
-
-html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-toolbar-float {
-  display: none !important;
-}
-
-html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-toolbar-header-search-row {
-  grid-column: 1 !important;
 }
 
 /* Main music library and project music tabs only need player-safe scroll space when the player is visible. */
