@@ -233,12 +233,12 @@ const DISCOVER_LAYOUT_STYLE = `
   main > section[class*="ml-[var(--sidebar-width)]"] .discover-skeleton-card,
   main > section[class*="ml-[var(--sidebar-width)]"] .discover-skeleton-shelf-card {
     border-width: 0 !important;
-    border-radius: 5px !important;
+    border-radius: 0 !important;
   }
 
   main > section[class*="ml-[var(--sidebar-width)]"] article[aria-label^="Play "] > div:first-of-type,
   main > section[class*="ml-[var(--sidebar-width)]"] a[href^="/curated-playlists/"] > div[class*="overflow-hidden"] {
-    border-radius: 5px !important;
+    border-radius: 0 !important;
   }
 
   main > section[class*="ml-[var(--sidebar-width)]"] a[href^="/curated-playlists/"]:hover {
