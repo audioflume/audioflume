@@ -229,11 +229,11 @@ const DISCOVER_LAYOUT_STYLE = `
     display: none !important;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] h2 {
+  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section > div:first-child > div:first-child > h2 {
     font-family: var(--font-instrument-sans) !important;
     font-size: 1.5rem !important;
-    line-height: 2rem !important;
     font-weight: 500 !important;
+    line-height: 2rem !important;
     letter-spacing: -0.05em !important;
   }
 
