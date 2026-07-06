@@ -111,12 +111,7 @@ export default function PlaylistTopControls() {
 
   return (
     <section className="playlists-top-controls" aria-label="Playlist controls">
-      <span className="playlists-status-pill">
-        Active
-        <ChevronIcon />
-      </span>
-
-      <label className="playlists-search">
+      <label className="playlists-search" style={{ gridColumn: "1 / 3" }}>
         <SearchIcon />
         <input
           type="text"
