@@ -198,6 +198,7 @@ export default function DropdownShell({
       const side = frozenSideRef.current;
       const resolvedPlacement: Placement =
         placement === "bottom-start" &&
+        referenceRef.current?.closest(".playlists-page") &&
         referenceRef.current?.querySelector(".playlist-menu-btn-grid")
           ? "bottom-end"
           : placement;
