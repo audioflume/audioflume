@@ -89,13 +89,17 @@ function getSongField(song: unknown, field: string) {
 }
 
 function getSongFilterValues(song: unknown, fields: string[]) {
-  return fields.flatMap((field) => toFilterStringArray(getSongField(song, field)));
+  return fields.flatMap((field) =>
+    toFilterStringArray(getSongField(song, field)),
+  );
 }
 
 function optionIsUsedBySongValues(values: string[], option: string) {
   const normalizedOption = normalizeFilterValue(option);
 
-  return values.some((value) => normalizeFilterValue(value) === normalizedOption);
+  return values.some(
+    (value) => normalizeFilterValue(value) === normalizedOption,
+  );
 }
 
 function filterOptionsWithSongs<T extends string>(
@@ -104,7 +108,9 @@ function filterOptionsWithSongs<T extends string>(
   fields: string[],
 ) {
   return options.filter((option) =>
-    songs.some((song) => optionIsUsedBySongValues(getSongFilterValues(song, fields), option)),
+    songs.some((song) =>
+      optionIsUsedBySongValues(getSongFilterValues(song, fields), option),
+    ),
   );
 }
 
@@ -187,14 +193,30 @@ export default function MusicPage() {
     setFilters((current) => ({ ...current, showEditPointMarkers: value }));
 
   const availableFilterOptions = useMemo(() => {
-    const moods = filterOptionsWithSongs(MOOD_OPTIONS, songs, ["moods", "mood"]);
-    const genres = filterOptionsWithSongs(GENRE_OPTIONS, songs, ["genres", "genre"]);
-    const regions = filterOptionsWithSongs(REGION_OPTIONS, songs, ["regions", "region"]);
-    const instruments = filterOptionsWithSongs(INSTRUMENT_OPTIONS, songs, ["instruments"]);
-    const builds = filterOptionsWithSongs(BUILD_OPTIONS, songs, ["builds", "build"]);
+    const moods = filterOptionsWithSongs(MOOD_OPTIONS, songs, [
+      "moods",
+      "mood",
+    ]);
+    const genres = filterOptionsWithSongs(GENRE_OPTIONS, songs, [
+      "genres",
+      "genre",
+    ]);
+    const regions = filterOptionsWithSongs(REGION_OPTIONS, songs, [
+      "regions",
+      "region",
+    ]);
+    const instruments = filterOptionsWithSongs(INSTRUMENT_OPTIONS, songs, [
+      "instruments",
+    ]);
+    const builds = filterOptionsWithSongs(BUILD_OPTIONS, songs, [
+      "builds",
+      "build",
+    ]);
     const vocals = filterOptionsWithSongs(VOCALS_OPTIONS, songs, ["vocals"]);
     const vocalFilters = [
-      ...(songs.some(songIsInstrumental) ? [INSTRUMENTAL_VOCAL_FILTER_OPTION] : []),
+      ...(songs.some(songIsInstrumental)
+        ? [INSTRUMENTAL_VOCAL_FILTER_OPTION]
+        : []),
       ...vocals,
     ];
     const cuePoints = EDIT_POINT_FILTER_OPTIONS.filter((option) =>
@@ -362,30 +384,42 @@ export default function MusicPage() {
     if (!filtersHydrated || songsLoading || songs.length === 0) return;
 
     setFilters((current) => {
+      const availableMoods = availableFilterOptions.moods as readonly string[];
+      const availableGenres =
+        availableFilterOptions.genres as readonly string[];
+      const availableRegions =
+        availableFilterOptions.regions as readonly string[];
+      const availableInstruments =
+        availableFilterOptions.instruments as readonly string[];
+      const availableBuilds =
+        availableFilterOptions.builds as readonly string[];
+      const availableVocals =
+        availableFilterOptions.vocals as readonly string[];
+
       const nextSelectedMoods = current.selectedMoods.filter((value) =>
-        availableFilterOptions.moods.includes(value),
+        availableMoods.includes(value),
       );
       const nextSelectedGenres = current.selectedGenres.filter((value) =>
-        availableFilterOptions.genres.includes(value),
+        availableGenres.includes(value),
       );
       const nextSelectedRegions = current.selectedRegions.filter((value) =>
-        availableFilterOptions.regions.includes(value),
+        availableRegions.includes(value),
       );
-      const nextSelectedInstruments = current.selectedInstruments.filter((value) =>
-        availableFilterOptions.instruments.includes(value),
+      const nextSelectedInstruments = current.selectedInstruments.filter(
+        (value) => availableInstruments.includes(value),
       );
       const nextSelectedBuilds = current.selectedBuilds.filter((value) =>
-        availableFilterOptions.builds.includes(value),
+        availableBuilds.includes(value),
       );
       const nextSelectedVocals = current.selectedVocals.filter((value) =>
-        availableFilterOptions.vocals.includes(value),
+        availableVocals.includes(value),
       );
       const nextSelectedEditPoints = current.selectedEditPoints.filter((type) =>
         availableFilterOptions.cuePoints.some((option) => option.type === type),
       );
       const nextInstrumental =
         current.instrumental &&
-        availableFilterOptions.vocals.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
+        availableVocals.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
 
       const changed =
         nextSelectedMoods.length !== current.selectedMoods.length ||
@@ -411,7 +445,13 @@ export default function MusicPage() {
         instrumental: nextInstrumental,
       };
     });
-  }, [availableFilterOptions, filtersHydrated, setFilters, songs.length, songsLoading]);
+  }, [
+    availableFilterOptions,
+    filtersHydrated,
+    setFilters,
+    songs.length,
+    songsLoading,
+  ]);
 
   const filteredSongs = useMemo(() => {
     if (!filtersHydrated) return [];
@@ -468,11 +508,15 @@ export default function MusicPage() {
   }, [filteredSongs, sortMode]);
 
   function getSongOrderId(song: (typeof sortedSongs)[number], index: number) {
-    return getMusicSongIdentityValues(song)[0] ?? getMusicSongStableId(song, index);
+    return (
+      getMusicSongIdentityValues(song)[0] ?? getMusicSongStableId(song, index)
+    );
   }
 
   function createShuffleOrder(sourceSongs: typeof sortedSongs) {
-    return shuffleIds(sourceSongs.map((song, index) => getSongOrderId(song, index)));
+    return shuffleIds(
+      sourceSongs.map((song, index) => getSongOrderId(song, index)),
+    );
   }
 
   function toggleShuffle() {
@@ -578,9 +622,9 @@ export default function MusicPage() {
       id: "cuePoints",
       label: "Cue Points",
       options: availableFilterOptions.cuePoints.map((option) => option.label),
-      selected: availableFilterOptions.cuePoints.filter((option) =>
-        selectedEditPoints.includes(option.type),
-      ).map((option) => option.label),
+      selected: availableFilterOptions.cuePoints
+        .filter((option) => selectedEditPoints.includes(option.type))
+        .map((option) => option.label),
       onToggle: (label: string) => {
         const option = availableFilterOptions.cuePoints.find(
           (item) => item.label === label,
@@ -630,10 +674,14 @@ export default function MusicPage() {
                     setSelectedMoods(selectedMoods.filter((item) => item !== v))
                   }
                   onRemoveGenre={(v) =>
-                    setSelectedGenres(selectedGenres.filter((item) => item !== v))
+                    setSelectedGenres(
+                      selectedGenres.filter((item) => item !== v),
+                    )
                   }
                   onRemoveRegion={(v) =>
-                    setSelectedRegions(selectedRegions.filter((item) => item !== v))
+                    setSelectedRegions(
+                      selectedRegions.filter((item) => item !== v),
+                    )
                   }
                   onRemoveInstrument={(v) =>
                     setSelectedInstruments(
@@ -641,10 +689,14 @@ export default function MusicPage() {
                     )
                   }
                   onRemoveBuild={(v) =>
-                    setSelectedBuilds(selectedBuilds.filter((item) => item !== v))
+                    setSelectedBuilds(
+                      selectedBuilds.filter((item) => item !== v),
+                    )
                   }
                   onRemoveVocal={(v) =>
-                    setSelectedVocals(selectedVocals.filter((item) => item !== v))
+                    setSelectedVocals(
+                      selectedVocals.filter((item) => item !== v),
+                    )
                   }
                   onRemoveDuration={(v) =>
                     setSelectedDurations(
@@ -660,7 +712,10 @@ export default function MusicPage() {
                   onRemoveBpm={() => setBpmValue(null)}
                   onRemoveKey={() => setKeyValue(null)}
                   onRemovePlaylist={() =>
-                    setFilters((current) => ({ ...current, selectedPlaylist: null }))
+                    setFilters((current) => ({
+                      ...current,
+                      selectedPlaylist: null,
+                    }))
                   }
                 />
               ) : undefined
@@ -670,7 +725,9 @@ export default function MusicPage() {
               open={filtersOpen}
               groups={filterChipGroups}
               playlists={playlistChipOptions}
-              selectedPlaylistId={selectedPlaylistId ? String(selectedPlaylistId) : null}
+              selectedPlaylistId={
+                selectedPlaylistId ? String(selectedPlaylistId) : null
+              }
               onSelectPlaylist={(playlist) =>
                 setFilters((current) => ({
                   ...current,

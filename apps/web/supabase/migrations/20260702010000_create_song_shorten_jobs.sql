@@ -63,3 +63,4 @@ drop trigger if exists set_song_shorten_jobs_updated_at on public.song_shorten_j
 create trigger set_song_shorten_jobs_updated_at
 before update on public.song_shorten_jobs
 for each row execute function public.set_song_shorten_jobs_updated_at();
+

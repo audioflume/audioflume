@@ -1,0 +1,9 @@
+{
+  "source": "/Users/jordanwende/Desktop/Rain Dance - Amber Caravan.wav",
+  "targetSeconds": 30,
+  "title": null,
+  "artist": null,
+  "endpoint": "http://localhost:8000/interpret",
+  "prompt": "Create a new short musical interpretation of the provided source song. Use the provided source audio as the reference track. The output must be exactly about 30 seconds long. Do not simply cut, loop, crossfade, remix, master, or clean up the original audio. Generate a newly arranged short version that preserves the source song's tempo feel, key center, instrumentation, groove, emotional tone, production style, and overall identity. The result should feel like an intentional short version of the same cue, with a clear beginning, musical development, and natural ending/resolution. Avoid abrupt edits, forced crossfades, generic stock music, unrelated melodies, unrelated chord progressions, and sudden instrumentation changes. Return only the generated audio file.",
+  "createdAt": "2026-07-02T23:05:38.954Z"
+}
