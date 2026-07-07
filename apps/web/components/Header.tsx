@@ -165,6 +165,7 @@ export default function Header() {
         }
 
         .filmwave-playlists-mega-menu {
+          z-index: calc(var(--filmwave-z-player, 120) + 10) !important;
           overflow: visible !important;
           border-top: 0 !important;
           border-bottom: 0 !important;
