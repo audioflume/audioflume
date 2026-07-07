@@ -1,3 +1,15 @@
 .curated-playlists-page-layer .mb-6.grid {
   margin-top: 8px !important;
 }
+
+.curated-playlists-page-layer + footer {
+  padding-right: 32px !important;
+  padding-left: 32px !important;
+}
+
+@media (max-width: 640px) {
+  .curated-playlists-page-layer + footer {
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+  }
+}
