@@ -120,136 +120,167 @@ export default function PlaylistTopControls() {
   }
 
   return (
-    <section className="playlists-top-controls" aria-label="Playlist controls">
-      <DropdownShell
-        open={playlistScopeOpen}
-        onOpenChange={setPlaylistScopeOpen}
-        placement="bottom-start"
-        className="playlist-scope-dropdown"
-        offsetAmount={6}
-        flippedOffsetAmount={6}
-        collisionPadding={{
-          top: 112,
-          right: 16,
-          bottom: playerVisible ? 96 : 24,
-          left: 16,
-        }}
-        trigger={({ open }) => (
-          <button
-            type="button"
-            className={`playlists-status-pill playlists-scope-button${open ? " is-open" : ""}`}
-            aria-label="Playlist visibility scope"
-          >
-            <span>{playlistScope}</span>
-            <ChevronIcon />
-          </button>
-        )}
-      >
-        {PLAYLIST_SCOPE_OPTIONS.map((option) => (
-          <button
-            key={option}
-            type="button"
-            className={playlistScope === option ? "is-active" : ""}
-            aria-checked={playlistScope === option}
-            onClick={() => {
-              setPlaylistScope(option);
-              setPlaylistScopeOpen(false);
-            }}
-          >
-            {option}
-          </button>
-        ))}
-      </DropdownShell>
+    <>
+      <style>{`
+        .playlists-top-controls {
+          grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto) !important;
+        }
 
-      <label className="playlists-search">
-        <SearchIcon />
-        <input
-          type="text"
-          value={query}
-          placeholder="Search playlists"
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        {query.length > 0 && (
-          <button
-            type="button"
-            className="playlists-search-clear"
-            aria-label="Clear playlist search"
-            onClick={() => setQuery("")}
-          >
-            ×
-          </button>
-        )}
-      </label>
+        .playlists-status-pill {
+          width: 150px !important;
+        }
 
-      {preferencesLoaded && (
-        <div className="playlists-control-right">
-          <button
-            type="button"
-            className="playlists-view-button"
-            aria-label={viewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
-            onClick={toggleViewMode}
-          >
-            {viewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
-          </button>
+        .playlist-scope-dropdown {
+          min-width: 178px !important;
+        }
 
-          <DropdownShell
-            open={sortOpen}
-            onOpenChange={setSortOpen}
-            placement="bottom-end"
-            className="playlist-sort-dropdown"
-            offsetAmount={6}
-            flippedOffsetAmount={6}
-            collisionPadding={{
-              top: 112,
-              right: 16,
-              bottom: playerVisible ? 96 : 24,
-              left: 16,
-            }}
-            trigger={({ open }) => (
+        .playlist-scope-dropdown button.is-active {
+          background: var(--filmwave-menu-hover) !important;
+          color: var(--filmwave-menu-text) !important;
+        }
+
+        @media (max-width: 940px) {
+          .playlists-top-controls {
+            grid-template-columns: 1fr !important;
+          }
+
+          .playlists-status-pill {
+            width: 100% !important;
+          }
+        }
+      `}</style>
+
+      <section className="playlists-top-controls" aria-label="Playlist controls">
+        <DropdownShell
+          open={playlistScopeOpen}
+          onOpenChange={setPlaylistScopeOpen}
+          placement="bottom-start"
+          className="playlist-scope-dropdown"
+          offsetAmount={6}
+          flippedOffsetAmount={6}
+          collisionPadding={{
+            top: 112,
+            right: 16,
+            bottom: playerVisible ? 96 : 24,
+            left: 16,
+          }}
+          trigger={({ open }) => (
+            <button
+              type="button"
+              className={`playlists-status-pill playlists-scope-button${open ? " is-open" : ""}`}
+              aria-label="Playlist visibility scope"
+            >
+              <span>{playlistScope}</span>
+              <ChevronIcon />
+            </button>
+          )}
+        >
+          {PLAYLIST_SCOPE_OPTIONS.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={playlistScope === option ? "is-active" : ""}
+              aria-checked={playlistScope === option}
+              onClick={() => {
+                setPlaylistScope(option);
+                setPlaylistScopeOpen(false);
+              }}
+            >
+              {option}
+            </button>
+          ))}
+        </DropdownShell>
+
+        <label className="playlists-search">
+          <SearchIcon />
+          <input
+            type="text"
+            value={query}
+            placeholder="Search playlists"
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          {query.length > 0 && (
+            <button
+              type="button"
+              className="playlists-search-clear"
+              aria-label="Clear playlist search"
+              onClick={() => setQuery("")}
+            >
+              ×
+            </button>
+          )}
+        </label>
+
+        {preferencesLoaded && (
+          <div className="playlists-control-right">
+            <button
+              type="button"
+              className="playlists-view-button"
+              aria-label={viewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
+              onClick={toggleViewMode}
+            >
+              {viewMode === "grid" ? <ListViewIcon /> : <GridViewIcon />}
+            </button>
+
+            <DropdownShell
+              open={sortOpen}
+              onOpenChange={setSortOpen}
+              placement="bottom-end"
+              className="playlist-sort-dropdown"
+              offsetAmount={6}
+              flippedOffsetAmount={6}
+              collisionPadding={{
+                top: 112,
+                right: 16,
+                bottom: playerVisible ? 96 : 24,
+                left: 16,
+              }}
+              trigger={({ open }) => (
+                <button
+                  type="button"
+                  className={`playlists-sort-button${open ? " is-open" : ""}`}
+                  aria-label="Sort playlists"
+                >
+                  <span>Sort By</span>
+                  <ChevronIcon />
+                  <span className="sr-only">
+                    <SortLabel sortMode={sortMode} />
+                  </span>
+                </button>
+              )}
+            >
               <button
                 type="button"
-                className={`playlists-sort-button${open ? " is-open" : ""}`}
-                aria-label="Sort playlists"
+                className={sortMode === "custom" ? "is-active" : ""}
+                onClick={() => {
+                  setSortMode("custom");
+                  setSortOpen(false);
+                }}
               >
-                <span>Sort By</span>
-                <ChevronIcon />
-                <span className="sr-only">
-                  <SortLabel sortMode={sortMode} />
-                </span>
+                Custom
               </button>
-            )}
-          >
-            <button
-              type="button"
-              className={sortMode === "custom" ? "is-active" : ""}
-              onClick={() => {
-                setSortMode("custom");
-                setSortOpen(false);
-              }}
-            >
-              Custom
-            </button>
-            <button
-              type="button"
-              className={sortMode === "alphabetical" ? "is-active" : ""}
-              onClick={() => {
-                setSortMode("alphabetical");
-                setSortOpen(false);
-              }}
-            >
-              Alphabetical
-            </button>
-          </DropdownShell>
+              <button
+                type="button"
+                className={sortMode === "alphabetical" ? "is-active" : ""}
+                onClick={() => {
+                  setSortMode("alphabetical");
+                  setSortOpen(false);
+                }}
+              >
+                Alphabetical
+              </button>
+            </DropdownShell>
 
-          <button
-            type="button"
-            className="playlists-new-button"
-            onClick={openCreatePlaylist}
-          >
-            + New Playlist
-          </button>
-        </div>
-      )}
-    </section>
+            <button
+              type="button"
+              className="playlists-new-button"
+              onClick={openCreatePlaylist}
+            >
+              + New Playlist
+            </button>
+          </div>
+        )}
+      </section>
+    </>
   );
 }
