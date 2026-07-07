@@ -9,6 +9,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const PLAYLIST_SKELETON_VIEW_MODE_KEY = "filmwave-playlist-skeleton-view-mode";
+const PLAYLIST_SCOPE_OPTIONS = [
+  "All playlists",
+  "My playlists",
+  "Public Playlists",
+] as const;
+
+type PlaylistScopeOption = (typeof PLAYLIST_SCOPE_OPTIONS)[number];
 
 function SearchIcon() {
   return (
@@ -73,6 +80,9 @@ export default function PlaylistTopControls() {
     preferencesLoaded,
   } = useUserPreferences();
   const [query, setQuery] = useState("");
+  const [playlistScope, setPlaylistScope] =
+    useState<PlaylistScopeOption>("All playlists");
+  const [playlistScopeOpen, setPlaylistScopeOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
   const playerVisible = Boolean(currentSong);
@@ -111,7 +121,47 @@ export default function PlaylistTopControls() {
 
   return (
     <section className="playlists-top-controls" aria-label="Playlist controls">
-      <label className="playlists-search" style={{ gridColumn: "1 / 3" }}>
+      <DropdownShell
+        open={playlistScopeOpen}
+        onOpenChange={setPlaylistScopeOpen}
+        placement="bottom-start"
+        className="playlist-scope-dropdown"
+        offsetAmount={6}
+        flippedOffsetAmount={6}
+        collisionPadding={{
+          top: 112,
+          right: 16,
+          bottom: playerVisible ? 96 : 24,
+          left: 16,
+        }}
+        trigger={({ open }) => (
+          <button
+            type="button"
+            className={`playlists-status-pill playlists-scope-button${open ? " is-open" : ""}`}
+            aria-label="Playlist visibility scope"
+          >
+            <span>{playlistScope}</span>
+            <ChevronIcon />
+          </button>
+        )}
+      >
+        {PLAYLIST_SCOPE_OPTIONS.map((option) => (
+          <button
+            key={option}
+            type="button"
+            className={playlistScope === option ? "is-active" : ""}
+            aria-checked={playlistScope === option}
+            onClick={() => {
+              setPlaylistScope(option);
+              setPlaylistScopeOpen(false);
+            }}
+          >
+            {option}
+          </button>
+        ))}
+      </DropdownShell>
+
+      <label className="playlists-search">
         <SearchIcon />
         <input
           type="text"
