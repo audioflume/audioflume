@@ -28,7 +28,6 @@ export default function Footer({
   const pathname = usePathname();
   const footerRef = useRef<HTMLElement | null>(null);
   const playerVisible = Boolean(currentSong);
-  const isCuratedPlaylistsPage = pathname === "/curated-playlists";
 
   useEffect(() => {
     const parent = footerRef.current?.parentElement;
@@ -48,15 +47,6 @@ export default function Footer({
       ref={footerRef}
       className={`box-border w-full pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
       style={{
-        marginLeft: isCuratedPlaylistsPage
-          ? "calc(var(--sidebar-width) + 32px)"
-          : undefined,
-        width: isCuratedPlaylistsPage
-          ? "calc(100% - var(--sidebar-width) - 64px)"
-          : undefined,
-        transition: isCuratedPlaylistsPage
-          ? "margin-left 0.2s ease, width 0.2s ease"
-          : undefined,
         paddingBottom: playerPadding
           ? playerVisible
             ? "calc(72px + 8px)"
