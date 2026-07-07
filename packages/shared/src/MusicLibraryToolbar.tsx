@@ -2,7 +2,9 @@
 
 import {
   useRef,
+  useState,
   type CSSProperties,
+  type FocusEvent as ReactFocusEvent,
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
@@ -40,6 +42,72 @@ function ClearXIcon() {
         d="M6.34 4.93 12 10.59l5.66-5.66a1 1 0 1 1 1.41 1.41L13.41 12l5.66 5.66a1 1 0 0 1-1.41 1.41L12 13.41l-5.66 5.66a1 1 0 0 1-1.41-1.41L10.59 12 4.93 6.34a1 1 0 0 1 1.41-1.41Z"
       />
     </svg>
+  );
+}
+
+const PLAYLIST_SCOPE_OPTIONS = [
+  "All playlists",
+  "My playlists",
+  "Public Playlists",
+] as const;
+
+type PlaylistScopeOption = (typeof PLAYLIST_SCOPE_OPTIONS)[number];
+
+function PlaylistScopeDropdown() {
+  const [open, setOpen] = useState(false);
+  const [selectedOption, setSelectedOption] =
+    useState<PlaylistScopeOption>("All playlists");
+
+  function handleBlur(event: ReactFocusEvent<HTMLDivElement>) {
+    const nextTarget = event.relatedTarget;
+
+    if (nextTarget instanceof Node && event.currentTarget.contains(nextTarget)) {
+      return;
+    }
+
+    setOpen(false);
+  }
+
+  return (
+    <div className="fw-toolbar-playlist-scope" onBlur={handleBlur}>
+      <button
+        type="button"
+        className={`fw-toolbar-playlist-scope-button${open ? " is-open" : ""}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span>{selectedOption}</span>
+        <span
+          className={`fw-toolbar-playlist-scope-chevron${open ? " is-open" : ""}`}
+          aria-hidden="true"
+        >
+          <ChevronDownIcon />
+        </span>
+      </button>
+
+      {open && (
+        <div className="fw-toolbar-playlist-scope-menu" role="menu">
+          {PLAYLIST_SCOPE_OPTIONS.map((option) => (
+            <button
+              key={option}
+              type="button"
+              role="menuitemradio"
+              aria-checked={selectedOption === option}
+              className={`fw-toolbar-playlist-scope-option${
+                selectedOption === option ? " is-selected" : ""
+              }`}
+              onClick={() => {
+                setSelectedOption(option);
+                setOpen(false);
+              }}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -138,6 +206,8 @@ export function MusicLibraryToolbar({
           searchIcon={searchIcon}
         />
       )}
+
+      {isStickyHeaderSearch && <PlaylistScopeDropdown />}
 
       {renderToolbarChrome && (
         <div className="fw-toolbar-float">
