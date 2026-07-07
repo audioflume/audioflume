@@ -13,6 +13,11 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           min-height: calc(100vh - var(--filmwave-header-height, 56px)) !important;
         }
 
+        .projects-page .projects-row-icon {
+          width: 62px !important;
+          height: 50px !important;
+        }
+
         .projects-page .projects-row-icon-inner {
           display: inline-flex !important;
           align-items: center !important;
@@ -21,8 +26,8 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-row-icon-inner .project-folder-glyph {
-          width: 19px !important;
-          height: 16px !important;
+          width: 58px !important;
+          height: 50px !important;
         }
       `}</style>
       {children}
