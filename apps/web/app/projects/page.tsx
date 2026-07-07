@@ -252,8 +252,8 @@ export default function ProjectsPage() {
       <style>{`
         .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 22px 32px 0 32px; }
-        .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 130px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
-        .projects-status-pill { display: inline-flex; width: 110px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
+        .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
+        .projects-status-pill { display: inline-flex; width: 150px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
         .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
         .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; font-style: italic; }
         .projects-search input::placeholder { color: var(--text-muted); }
