@@ -11,6 +11,16 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 
 type ProjectSortMode = "newest" | "oldest" | "alphabetical";
+type ProjectStatusMode = "active" | "all" | "archived";
+
+const PROJECT_STATUS_OPTIONS: Array<{
+  value: ProjectStatusMode;
+  label: string;
+}> = [
+  { value: "active", label: "Active" },
+  { value: "all", label: "All Projects" },
+  { value: "archived", label: "Archived" },
+];
 
 function getProjectTimestamp(project: Project) {
   const time = new Date(project.created_at).getTime();
@@ -44,6 +54,13 @@ function SortLabel({ sortMode }: { sortMode: ProjectSortMode }) {
   if (sortMode === "alphabetical") return <>Alphabetical</>;
   if (sortMode === "oldest") return <>Oldest first</>;
   return <>Newest first</>;
+}
+
+function StatusLabel({ statusMode }: { statusMode: ProjectStatusMode }) {
+  return (
+    PROJECT_STATUS_OPTIONS.find((option) => option.value === statusMode)?.label ||
+    "Active"
+  );
 }
 
 function SearchIcon() {
@@ -145,6 +162,9 @@ export default function ProjectsPage() {
   const { projects, setProjects, loading, error, refetchProjects } =
     useProjectsContext();
   const [query, setQuery] = useState("");
+  const [projectStatusMode, setProjectStatusMode] =
+    useState<ProjectStatusMode>("active");
+  const [statusOpen, setStatusOpen] = useState(false);
   const [sortMode, setSortMode] = useState<ProjectSortMode>("newest");
   const [sortOpen, setSortOpen] = useState(false);
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
@@ -253,7 +273,10 @@ export default function ProjectsPage() {
         .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 22px 32px 0 32px; }
         .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
-        .projects-status-pill { display: inline-flex; width: 150px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
+        .projects-status-pill { display: inline-flex; width: 150px; height: 42px; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0 14px; color: var(--text-secondary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-status-pill:hover, .projects-status-pill.is-open { background: var(--bg-hover); border-color: var(--border-hover); color: var(--text-primary); }
+        .projects-status-dropdown { min-width: 150px; }
+        .projects-status-dropdown button.is-active { background: var(--filmwave-menu-hover); color: var(--filmwave-menu-text); }
         .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
         .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; font-style: italic; }
         .projects-search input::placeholder { color: var(--text-muted); }
@@ -317,10 +340,47 @@ export default function ProjectsPage() {
       <main className="projects-page">
         <div className="projects-shell">
           <section className="projects-control-bar">
-            <span className="projects-status-pill">
-              Active
-              <ChevronIcon />
-            </span>
+            <DropdownShell
+              open={statusOpen}
+              onOpenChange={setStatusOpen}
+              placement="bottom-start"
+              className="projects-status-dropdown"
+              offsetAmount={6}
+              flippedOffsetAmount={6}
+              collisionPadding={{
+                top: 112,
+                right: 16,
+                bottom: playerVisible ? 96 : 24,
+                left: 16,
+              }}
+              trigger={({ open }) => (
+                <button
+                  type="button"
+                  className={`projects-status-pill${open ? " is-open" : ""}`}
+                  aria-label="Project status filter"
+                >
+                  <span>
+                    <StatusLabel statusMode={projectStatusMode} />
+                  </span>
+                  <ChevronIcon />
+                </button>
+              )}
+            >
+              {PROJECT_STATUS_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={projectStatusMode === option.value ? "is-active" : ""}
+                  aria-checked={projectStatusMode === option.value}
+                  onClick={() => {
+                    setProjectStatusMode(option.value);
+                    setStatusOpen(false);
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </DropdownShell>
 
             <label className="projects-search">
               <SearchIcon />
