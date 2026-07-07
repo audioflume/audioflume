@@ -37,16 +37,6 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <style>{`
-        .account-content-area {
-          background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%);
-        }
-
-        :where(html.dark, html[data-theme="dark"]) .account-content-area {
-          background: var(--bg-primary);
-        }
-      `}</style>
-
       <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
         <SettingsSideNav
           kicker="Account"
@@ -62,7 +52,7 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
           }))}
         />
 
-        <section className="account-content-area min-w-0 px-5 pt-[88px] md:px-8 xl:px-10">
+        <section className="min-w-0 px-5 pt-[88px] md:px-8 xl:px-10">
           <div className="mx-auto max-w-[1180px]">
             <div className="mb-8 flex items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
               <div className="text-xs text-[var(--text-muted)]">
