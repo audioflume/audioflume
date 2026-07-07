@@ -69,9 +69,11 @@ export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
+  const [playlistOverlayTop, setPlaylistOverlayTop] = useState<number | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [curatedPreview, setCuratedPreview] = useState<CuratedPlaylistPreview[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
+  const playlistsMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -88,6 +90,26 @@ export default function Header() {
   useEffect(() => {
     setPlaylistsMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!playlistsMenuOpen) {
+      setPlaylistOverlayTop(null);
+      return;
+    }
+
+    function syncPlaylistOverlayTop() {
+      const rect = playlistsMenuRef.current?.getBoundingClientRect();
+      setPlaylistOverlayTop(rect ? Math.max(rect.bottom, 0) : null);
+    }
+
+    const frame = window.requestAnimationFrame(syncPlaylistOverlayTop);
+    window.addEventListener("resize", syncPlaylistOverlayTop);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", syncPlaylistOverlayTop);
+    };
+  }, [playlistsMenuOpen, curatedPreview.length]);
 
   useEffect(() => {
     let cancelled = false;
@@ -144,6 +166,7 @@ export default function Header() {
 
   function closePlaylistsMenu() {
     setPlaylistsMenuOpen(false);
+    setPlaylistOverlayTop(null);
   }
 
   return (
@@ -177,22 +200,24 @@ export default function Header() {
         }
 
         .filmwave-playlists-mega-menu::after {
-          content: "" !important;
-          position: absolute !important;
-          top: 100% !important;
-          right: 0 !important;
-          bottom: auto !important;
-          left: 0 !important;
-          z-index: 0 !important;
-          height: calc(100vh - var(--filmwave-header-height, 75px)) !important;
-          background: rgba(0, 0, 0, 0.48) !important;
-          pointer-events: none !important;
+          content: none !important;
+          display: none !important;
         }
 
         .filmwave-playlists-mega-inner {
           position: relative !important;
           z-index: 1 !important;
           background: var(--bg-primary) !important;
+        }
+
+        .filmwave-playlists-page-overlay {
+          position: fixed !important;
+          right: 0 !important;
+          bottom: 0 !important;
+          left: 0 !important;
+          z-index: 2147482999 !important;
+          background: rgba(0, 0, 0, 0.48) !important;
+          pointer-events: none !important;
         }
       `}</style>
 
@@ -219,6 +244,7 @@ export default function Header() {
                       onBlur={(event) => {
                         if (!event.currentTarget.contains(event.relatedTarget)) {
                           setPlaylistsMenuOpen(false);
+                          setPlaylistOverlayTop(null);
                         }
                       }}
                     >
@@ -233,7 +259,12 @@ export default function Header() {
                         {link.label}
                       </Link>
 
-                      <div className="filmwave-playlists-mega-menu" role="menu" aria-label="Playlist navigation">
+                      <div
+                        ref={playlistsMenuRef}
+                        className="filmwave-playlists-mega-menu"
+                        role="menu"
+                        aria-label="Playlist navigation"
+                      >
                         <div className="filmwave-playlists-mega-inner">
                           <div className="filmwave-playlists-mega-feature-grid" aria-label="Featured curated playlists">
                             {curatedPreview.length > 0 ? (
@@ -371,6 +402,14 @@ export default function Header() {
           </>
         }
       />
+
+      {playlistsMenuOpen && playlistOverlayTop !== null && (
+        <div
+          className="filmwave-playlists-page-overlay"
+          aria-hidden="true"
+          style={{ top: `${playlistOverlayTop}px` }}
+        />
+      )}
     </>
   );
 }
