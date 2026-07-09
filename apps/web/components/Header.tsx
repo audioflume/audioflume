@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-import FilmwaveLogoIcon from "@/components/icons/FilmwaveLogoIcon";
 import UserMenu from "@/components/UserMenu";
 
 type CuratedPlaylistPreview = {
@@ -172,6 +171,18 @@ export default function Header() {
   return (
     <>
       <style>{`
+        .filmwave-header-tonal-wordmark {
+          display: inline-flex !important;
+          align-items: center !important;
+          color: var(--text-primary) !important;
+          font-family: var(--font-satoshi), "aktiv-grotesk", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+          font-size: 21px !important;
+          font-weight: 600 !important;
+          letter-spacing: -0.045em !important;
+          line-height: 1 !important;
+          text-transform: lowercase !important;
+        }
+
         .filmwave-header-nav-item-playlists:hover .filmwave-playlists-mega-menu,
         .filmwave-header-nav-item-playlists:focus-within .filmwave-playlists-mega-menu {
           visibility: hidden !important;
@@ -195,7 +206,7 @@ export default function Header() {
           box-shadow: none !important;
         }
 
-        :where(html.light, html[data-theme="light"]) .filmwave-playlists-mega-menu {
+        :where(html.light, html[data-theme="light") .filmwave-playlists-mega-menu {
           box-shadow: none !important;
         }
 
@@ -223,8 +234,8 @@ export default function Header() {
 
       <HeaderShell
         logo={
-          <Link href="/discover" className="filmwave-header-logo-action" aria-label="Filmwave Home">
-            <FilmwaveLogoIcon className="filmwave-header-logo-mark" />
+          <Link href="/discover" className="filmwave-header-logo-action" aria-label="tonal Home">
+            <span className="filmwave-header-tonal-wordmark">tonal</span>
           </Link>
         }
         actions={
