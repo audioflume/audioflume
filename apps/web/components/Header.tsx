@@ -206,7 +206,7 @@ export default function Header() {
           box-shadow: none !important;
         }
 
-        :where(html.light, html[data-theme="light") .filmwave-playlists-mega-menu {
+        :where(html.light, html[data-theme="light"]) .filmwave-playlists-mega-menu {
           box-shadow: none !important;
         }
 
