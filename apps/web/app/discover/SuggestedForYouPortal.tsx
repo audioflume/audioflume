@@ -12,7 +12,7 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
   if (songs.length === 0) return null;
 
   return (
-    <section className="discover-suggested-for-you-section mt-10" aria-label="Suggested for you">
+    <section className="discover-suggested-for-you-section mt-10" aria-label="Newly added">
       <style>{`
         .discover-suggested-for-you-section h2 {
           font-size: 1.4em !important;
@@ -23,7 +23,7 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
         }
 
         .discover-suggested-library-list {
-          border-top: 1px solid var(--border-subtle) !important;
+          border-top: 0 !important;
         }
 
         .discover-suggested-library-list .filmwave-song-card,
@@ -36,7 +36,7 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
-            Suggested for you
+            Newly added
           </h2>
         </div>
       </div>
