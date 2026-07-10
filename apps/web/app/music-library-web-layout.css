@@ -275,7 +275,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
 :where(html.light, html[data-theme="light"])
   main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-ai-linkmatch {
-  background: var(--bg-hover-strong);
+  background: var(--bg-hover);
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai-linkmatch:hover {
