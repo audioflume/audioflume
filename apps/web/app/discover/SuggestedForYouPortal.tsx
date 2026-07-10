@@ -158,7 +158,44 @@ function SuggestedForYouSection({ songs }: { songs: Song[] }) {
   if (songs.length === 0) return null;
 
   return (
-    <section className="mt-10" aria-label="Suggested for you">
+    <section className="discover-suggested-for-you-section mt-10" aria-label="Suggested for you">
+      <style>{`
+        .discover-suggested-for-you-section h2 {
+          font-size: 1.4em !important;
+          font-weight: 300 !important;
+          font-variation-settings: "wght" 300 !important;
+          line-height: 2rem !important;
+          letter-spacing: -0.035em !important;
+        }
+
+        .discover-suggested-for-you-section article[aria-label^="Play "] {
+          border-width: 0 !important;
+          border-radius: 0 !important;
+          background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
+        }
+
+        .discover-suggested-for-you-section article[aria-label^="Play "]:hover,
+        .discover-suggested-for-you-section article[aria-label^="Play "]:focus-visible {
+          background: color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%) !important;
+        }
+
+        html.light .discover-suggested-for-you-section article[aria-label^="Play "],
+        html[data-theme="light"] .discover-suggested-for-you-section article[aria-label^="Play "] {
+          background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
+        }
+
+        html.light .discover-suggested-for-you-section article[aria-label^="Play "]:hover,
+        html.light .discover-suggested-for-you-section article[aria-label^="Play "]:focus-visible,
+        html[data-theme="light"] .discover-suggested-for-you-section article[aria-label^="Play "]:hover,
+        html[data-theme="light"] .discover-suggested-for-you-section article[aria-label^="Play "]:focus-visible {
+          background: color-mix(in srgb, var(--bg-primary) 91%, var(--text-primary) 9%) !important;
+        }
+
+        .discover-suggested-for-you-section article[aria-label^="Play "] > div:first-of-type {
+          border-radius: 0 !important;
+        }
+      `}</style>
+
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
