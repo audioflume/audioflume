@@ -209,17 +209,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ra
   padding: 0 8px 0 12px !important;
 }
 
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail-item + .fw-filter-rail-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 1px;
-  background: var(--filmwave-side-filter-divider-color);
-  pointer-events: none;
-}
-
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
