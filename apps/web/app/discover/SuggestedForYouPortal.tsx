@@ -28,6 +28,7 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
 
         .discover-suggested-library-list .filmwave-song-card,
         .discover-suggested-library-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+          border-bottom: 0 !important;
           padding-left: 0 !important;
         }
       `}</style>
