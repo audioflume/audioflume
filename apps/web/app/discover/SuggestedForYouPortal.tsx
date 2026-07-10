@@ -17,6 +17,7 @@ import { useSongs } from "@/hooks/useSongs";
 import type { Song } from "@/lib/types";
 
 const SUGGESTED_SONG_COUNT = 10;
+const SUGGESTED_PORTAL_ID = "discover-suggested-for-you-portal";
 
 function getFallbackGradient(index: number) {
   const gradients = [
@@ -187,21 +188,50 @@ export default function SuggestedForYouPortal() {
   useEffect(() => {
     if (loading) return;
 
-    const readyHeading = Array.from(document.querySelectorAll("h2")).find(
-      (heading) => heading.textContent?.trim() === "Ready-to-cut tracks",
-    );
-    const readySection = readyHeading?.closest("section");
-    const parent = readySection?.parentElement;
+    let createdNode: HTMLElement | null = null;
+    let timeoutId: number | null = null;
 
-    if (!readySection || !parent) return;
+    function mountPortal() {
+      const existingNode = document.getElementById(SUGGESTED_PORTAL_ID);
 
-    const node = document.createElement("div");
-    node.id = "discover-suggested-for-you-portal";
-    parent.insertBefore(node, readySection);
-    setPortalNode(node);
+      if (existingNode) {
+        setPortalNode(existingNode);
+        return true;
+      }
+
+      const readyHeading = Array.from(document.querySelectorAll("h2")).find(
+        (heading) => heading.textContent?.trim() === "Ready-to-cut tracks",
+      );
+      const readySection = readyHeading?.closest("section");
+      const parent = readySection?.parentElement;
+
+      if (!readySection || !parent) return false;
+
+      createdNode = document.createElement("div");
+      createdNode.id = SUGGESTED_PORTAL_ID;
+      parent.insertBefore(createdNode, readySection);
+      setPortalNode(createdNode);
+      return true;
+    }
+
+    if (mountPortal()) {
+      return () => {
+        createdNode?.remove();
+        setPortalNode(null);
+      };
+    }
+
+    const observer = new MutationObserver(() => {
+      if (mountPortal()) observer.disconnect();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    timeoutId = window.setTimeout(() => observer.disconnect(), 10000);
 
     return () => {
-      node.remove();
+      observer.disconnect();
+      if (timeoutId) window.clearTimeout(timeoutId);
+      createdNode?.remove();
       setPortalNode(null);
     };
   }, [loading]);
