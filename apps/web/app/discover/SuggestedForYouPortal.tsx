@@ -21,23 +21,6 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
           line-height: 2rem !important;
           letter-spacing: -0.035em !important;
         }
-
-        .discover-suggested-library-list {
-          display: flex !important;
-          flex-direction: column !important;
-          gap: 4px !important;
-          margin: 10px 20px 28px !important;
-        }
-
-        .discover-suggested-library-list .filmwave-song-card,
-        .discover-suggested-library-list .desktop-song-card,
-        .discover-suggested-library-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
-          --filmwave-song-card-padding-left: 24px;
-          --filmwave-song-card-padding-right: 18px;
-          --filmwave-song-card-hover-bg: var(--bg-hover);
-          border-bottom: 0 !important;
-          border-radius: 16px !important;
-        }
       `}</style>
 
       <div className="mb-4 flex items-end justify-between gap-4">
