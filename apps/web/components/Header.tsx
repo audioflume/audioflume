@@ -176,7 +176,7 @@ export default function Header() {
           align-items: center !important;
           color: var(--text-primary) !important;
           font-family: var(--font-satoshi), "aktiv-grotesk", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-          font-size: 17px !important;
+          font-size: 18px !important;
           font-weight: 600 !important;
           letter-spacing: -0.045em !important;
           line-height: 1 !important;
