@@ -22,13 +22,24 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
           letter-spacing: -0.035em !important;
         }
 
-        .discover-suggested-library-list {
-          border-top: 1px solid var(--border-subtle) !important;
+        .discover-suggested-library-block {
+          box-sizing: border-box !important;
+          width: min(100%, 980px) !important;
+          border: 1px solid var(--border-subtle) !important;
+          background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
+          padding: 6px 0 !important;
+        }
+
+        html.light .discover-suggested-library-block,
+        html[data-theme="light"] .discover-suggested-library-block {
+          background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
         }
 
         .discover-suggested-library-list .filmwave-song-card,
         .discover-suggested-library-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
-          padding-left: 0 !important;
+          border-bottom: 0 !important;
+          padding-right: 14px !important;
+          padding-left: 14px !important;
         }
       `}</style>
 
@@ -40,10 +51,12 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
         </div>
       </div>
 
-      <div className="discover-suggested-library-list">
-        {songs.map((song) => (
-          <SongCard key={song.id} song={song} />
-        ))}
+      <div className="discover-suggested-library-block">
+        <div className="discover-suggested-library-list">
+          {songs.map((song) => (
+            <SongCard key={song.id} song={song} />
+          ))}
+        </div>
       </div>
     </section>
   );
