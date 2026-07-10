@@ -23,13 +23,20 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
         }
 
         .discover-suggested-library-list {
-          border-top: 0 !important;
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 4px !important;
+          margin: 10px 20px 28px !important;
         }
 
         .discover-suggested-library-list .filmwave-song-card,
+        .discover-suggested-library-list .desktop-song-card,
         .discover-suggested-library-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+          --filmwave-song-card-padding-left: 24px;
+          --filmwave-song-card-padding-right: 18px;
+          --filmwave-song-card-hover-bg: var(--bg-hover);
           border-bottom: 0 !important;
-          padding-left: 0 !important;
+          border-radius: 16px !important;
         }
       `}</style>
 
@@ -41,7 +48,7 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
         </div>
       </div>
 
-      <div className="discover-suggested-library-list">
+      <div className="fw-song-list discover-suggested-library-list">
         {songs.map((song) => (
           <SongCard key={song.id} song={song} />
         ))}
