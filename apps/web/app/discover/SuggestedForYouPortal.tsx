@@ -1,9 +1,11 @@
 "use client";
 
+import { MusicListShell } from "@filmwave/shared";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import SongCard from "@/components/SongCard";
 import { useSongs } from "@/hooks/useSongs";
+import "../music/music-library-redesign.css";
 
 const SUGGESTED_SONG_COUNT = 10;
 const SUGGESTED_PORTAL_ID = "discover-suggested-for-you-portal";
@@ -31,11 +33,11 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
         </div>
       </div>
 
-      <div className="fw-song-list discover-suggested-library-list">
+      <MusicListShell title="Newly added">
         {songs.map((song) => (
           <SongCard key={song.id} song={song} />
         ))}
-      </div>
+      </MusicListShell>
     </section>
   );
 }
