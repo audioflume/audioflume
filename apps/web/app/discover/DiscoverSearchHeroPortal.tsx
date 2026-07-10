@@ -86,10 +86,17 @@ function DiscoverHeroSearchBar() {
 
 function DiscoverSearchHero({ imageSrc }: { imageSrc: string | null }) {
   return (
-    <section className="discover-search-hero-block relative mt-2 min-h-[360px] overflow-hidden border border-[var(--border)] bg-[var(--bg-secondary)]">
+    <section className="discover-search-hero-block relative min-h-[360px] overflow-hidden border-y border-[var(--border)] bg-[var(--bg-secondary)]">
       <style>{`
         .discover-header-search-row {
           display: none !important;
+        }
+
+        .discover-search-hero-block {
+          width: 100vw !important;
+          margin-right: -32px !important;
+          margin-bottom: 32px !important;
+          margin-left: calc(-1 * (var(--sidebar-width, 0px) + 32px)) !important;
         }
       `}</style>
 
