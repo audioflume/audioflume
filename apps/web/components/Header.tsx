@@ -181,7 +181,7 @@ export default function Header() {
           letter-spacing: -0.045em !important;
           line-height: 1 !important;
           text-transform: lowercase !important;
-          transform: translateY(1px) !important;
+          transform: translateY(-1px) !important;
         }
 
         .filmwave-header-nav-item-playlists:hover .filmwave-playlists-mega-menu,
