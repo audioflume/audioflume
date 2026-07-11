@@ -150,7 +150,7 @@ const DISCOVER_LAYOUT_STYLE = `
   .discover-hero-content h1 {
     margin: 0 0 18px;
     font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
-    font-size: clamp(20px, 1.65vw, 27px) !important;
+    font-size: clamp(18px, 1.45vw, 24px) !important;
     font-weight: 400 !important;
     letter-spacing: -0.045em !important;
     line-height: 1.1 !important;
@@ -264,7 +264,7 @@ const DISCOVER_LAYOUT_STYLE = `
   .discover-song-section .fw-song-list-title {
     margin: 0;
     font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
-    font-size: clamp(20px, 1.65vw, 27px) !important;
+    font-size: clamp(18px, 1.45vw, 24px) !important;
     font-weight: 400 !important;
     letter-spacing: -0.045em !important;
     line-height: 1.1 !important;
