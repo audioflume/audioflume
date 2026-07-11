@@ -53,6 +53,11 @@ export default function DiscoverHeaderScrollState() {
         transform: translateY(-10px);
       }
 
+      .discover-hero-search {
+        background: #fff !important;
+        background-color: #fff !important;
+      }
+
       body:has(.discover-page-root)
         .filmwave-header
         .filmwave-header-actions
