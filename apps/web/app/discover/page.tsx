@@ -25,17 +25,15 @@ import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import "../music/music-library-redesign.css";
 
 const NEW_SONG_COUNT = 10;
+const HERO_BACKGROUND_IMAGE =
+  "https://images.filmwave.io/images/discover/donny-jiang-KFTPuUsIFME-unsplash.jpg";
 
 function formatTrackCount(count?: number) {
   const safeCount = Number(count || 0);
   return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
 }
 
-function DiscoverHero({
-  backgroundImage,
-}: {
-  backgroundImage: string | null;
-}) {
+function DiscoverHero() {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
@@ -52,19 +50,15 @@ function DiscoverHero({
 
   return (
     <section className="discover-hero" aria-label="Discover music">
-      {backgroundImage ? (
-        <Image
-          src={backgroundImage}
-          alt=""
-          fill
-          priority
-          unoptimized
-          sizes="100vw"
-          className="discover-hero-image"
-        />
-      ) : (
-        <div className="discover-hero-fallback" aria-hidden="true" />
-      )}
+      <Image
+        src={HERO_BACKGROUND_IMAGE}
+        alt=""
+        fill
+        priority
+        unoptimized
+        sizes="100vw"
+        className="discover-hero-image"
+      />
 
       <div className="discover-hero-overlay" aria-hidden="true" />
 
@@ -359,15 +353,6 @@ export default function DiscoverPage() {
       .slice(0, 10);
   }, [playlists]);
 
-  const heroImage = useMemo(
-    () =>
-      discoverBlocks.find((playlist) => playlist.cover_image_url)
-        ?.cover_image_url ??
-      playlists.find((playlist) => playlist.cover_image_url)?.cover_image_url ??
-      null,
-    [discoverBlocks, playlists],
-  );
-
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
@@ -380,8 +365,8 @@ export default function DiscoverPage() {
   }, [playableSongs, setQueue, songsLoading]);
 
   return (
-    <main className="discover-page-root">
-      <DiscoverHero backgroundImage={heroImage} />
+    <main className="discover-page-root" style={{ marginLeft: 0 }}>
+      <DiscoverHero />
 
       <div className="discover-content">
         <DiscoverMoodShelf
