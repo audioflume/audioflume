@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   type FormEvent,
+  type KeyboardEvent,
+  type MouseEvent,
   useEffect,
   useMemo,
   useRef,
@@ -15,22 +17,51 @@ import {
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
+import WaveformIcon from "@/components/icons/WaveformIcon";
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import type { Song } from "@/lib/types";
 
 import "../music/music-library-redesign.css";
 
 const NEW_SONG_COUNT = 10;
+const READY_TO_CUT_SONG_COUNT = 9;
 const HERO_BACKGROUND_IMAGE =
   "https://images.filmwave.io/images/discover/donny-jiang-KFTPuUsIFME-unsplash.jpg";
 
 function formatTrackCount(count?: number) {
   const safeCount = Number(count || 0);
   return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
+}
+
+function getFallbackGradient(index: number) {
+  const gradients = [
+    "linear-gradient(135deg, #372f4f 0%, #111111 48%, #75649a 100%)",
+    "linear-gradient(135deg, #1f3d3a 0%, #111111 52%, #4d8c7b 100%)",
+    "linear-gradient(135deg, #4f3529 0%, #111111 50%, #b66c45 100%)",
+    "linear-gradient(135deg, #25364f 0%, #111111 52%, #6287c4 100%)",
+    "linear-gradient(135deg, #45233d 0%, #111111 52%, #b75d91 100%)",
+  ];
+
+  return gradients[index % gradients.length];
+}
+
+function stopPlaybackKeyEvent(event: KeyboardEvent<HTMLElement>) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.nativeEvent.stopImmediatePropagation();
+}
+
+function stopPlaybackMouseEvent(event: MouseEvent<HTMLElement>) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.nativeEvent.stopImmediatePropagation();
 }
 
 function DiscoverHero() {
@@ -398,6 +429,173 @@ function DiscoverSongs({
   );
 }
 
+function ReadyToCutCoverImage({
+  song,
+  index,
+}: {
+  song: Song;
+  index: number;
+}) {
+  return (
+    <div
+      className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]"
+      style={{
+        background: song.coverArt ? undefined : getFallbackGradient(index),
+      }}
+    >
+      {song.coverArt ? (
+        <Image
+          src={song.coverArt}
+          alt={`${song.title} cover art`}
+          fill
+          sizes="36px"
+          className="object-cover"
+          unoptimized
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center text-[var(--text-muted)]">
+          <WaveformIcon size={20} />
+        </div>
+      )}
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+    </div>
+  );
+}
+
+function ReadyToCutPlayButton({ song }: { song: Song }) {
+  const { currentSong, isPlaying, togglePlayPause } = usePlayer();
+  const active = currentSong?.id === song.id;
+  const playing = active && isPlaying;
+
+  return (
+    <button
+      type="button"
+      onClick={(event) => {
+        stopPlaybackMouseEvent(event);
+        togglePlayPause(song);
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+
+        stopPlaybackKeyEvent(event);
+
+        if (!event.repeat) togglePlayPause(song);
+      }}
+      onKeyUp={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+
+        stopPlaybackKeyEvent(event);
+      }}
+      className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(0,0,0,0.22)] transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
+      disabled={!song.audioUrl}
+      aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+    >
+      {playing ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+    </button>
+  );
+}
+
+function useReadyToCutPlayableCard(song: Song) {
+  const { togglePlayPause } = usePlayer();
+
+  function playCard() {
+    if (!song.audioUrl) return;
+
+    togglePlayPause(song);
+  }
+
+  return {
+    role: "button",
+    tabIndex: song.audioUrl ? 0 : -1,
+    onClick: (event: MouseEvent<HTMLElement>) => {
+      stopPlaybackMouseEvent(event);
+      playCard();
+    },
+    onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      stopPlaybackKeyEvent(event);
+
+      if (!event.repeat) playCard();
+    },
+    onKeyUp: (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      stopPlaybackKeyEvent(event);
+    },
+  };
+}
+
+function ReadyToCutSongCard({ song, index }: { song: Song; index: number }) {
+  const cardPlayProps = useReadyToCutPlayableCard(song);
+
+  return (
+    <article
+      {...cardPlayProps}
+      className="group flex h-[54px] cursor-pointer items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_92%,var(--text-primary)_8%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_88%,var(--text-primary)_12%)] focus:outline-none focus-visible:bg-[var(--bg-hover)]"
+      aria-label={`Play ${song.title} by ${song.artist}`}
+    >
+      <ReadyToCutCoverImage song={song} index={index} />
+
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
+          {song.title}
+        </h3>
+
+        <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
+          <span className="truncate">{song.artist}</span>
+          <span>•</span>
+          <span>{song.key || "—"}</span>
+          <span>•</span>
+          <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
+        </div>
+      </div>
+
+      <ReadyToCutPlayButton song={song} />
+    </article>
+  );
+}
+
+function ReadyToCutTracks({
+  songs,
+  loading,
+}: {
+  songs: Song[];
+  loading: boolean;
+}) {
+  if (!loading && songs.length === 0) return null;
+
+  return (
+    <section className="discover-section discover-ready-to-cut-section">
+      <div className="discover-section-heading">
+        <h2>Ready-to-cut tracks</h2>
+
+        <Link
+          href="/music"
+          className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
+        >
+          Open music
+        </Link>
+      </div>
+
+      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        {loading
+          ? Array.from({ length: READY_TO_CUT_SONG_COUNT }).map((_, index) => (
+              <div
+                key={index}
+                className="h-[54px] bg-[var(--bg-secondary)]"
+                aria-hidden="true"
+              />
+            ))
+          : songs.map((song, index) => (
+              <ReadyToCutSongCard key={song.id} song={song} index={index + 30} />
+            ))}
+      </div>
+    </section>
+  );
+}
+
 export default function DiscoverPage() {
   const { songs, loading: songsLoading } = useSongs();
   const { currentSong, setQueue } = usePlayer();
@@ -458,6 +656,10 @@ export default function DiscoverPage() {
     [songs],
   );
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
+  const readyToCutSongs = playableSongs.slice(
+    NEW_SONG_COUNT,
+    NEW_SONG_COUNT + READY_TO_CUT_SONG_COUNT,
+  );
   const playerVisible = Boolean(currentSong);
 
   useEffect(() => {
@@ -478,6 +680,7 @@ export default function DiscoverPage() {
           loading={playlistsLoading}
         />
         <DiscoverSongs songs={recentSongs} loading={songsLoading} />
+        <ReadyToCutTracks songs={readyToCutSongs} loading={songsLoading} />
 
         <div
           className="discover-footer-wrap"
