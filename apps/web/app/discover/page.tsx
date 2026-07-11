@@ -379,10 +379,11 @@ function DiscoverSongs({
 
   return (
     <section className="discover-section discover-song-section">
-      <MusicListShell
-        title="Newly added tracks"
-        meta={loading ? undefined : `${songs.length} tracks`}
-      >
+      <div className="discover-section-heading">
+        <h2>Newly added tracks</h2>
+      </div>
+
+      <MusicListShell title={null}>
         {loading
           ? Array.from({ length: 6 }).map((_, index) => (
               <div
