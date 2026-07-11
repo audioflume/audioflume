@@ -260,6 +260,14 @@ const DISCOVER_LAYOUT_STYLE = `
     margin-bottom: 16px;
   }
 
+  .discover-section-heading > a {
+    color: var(--text-subtle);
+  }
+
+  .discover-section-heading > a:hover {
+    color: var(--text-primary);
+  }
+
   .discover-section-heading h2,
   .discover-song-section .fw-song-list-title {
     margin: 0;
