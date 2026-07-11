@@ -150,7 +150,7 @@ const DISCOVER_LAYOUT_STYLE = `
   .discover-hero-content h1 {
     margin: 0 0 18px;
     font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
-    font-size: clamp(25px, 2.5vw, 42px);
+    font-size: clamp(20px, 1.65vw, 27px);
     font-weight: 500;
     letter-spacing: -0.045em;
     line-height: 1.05;
