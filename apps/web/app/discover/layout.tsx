@@ -1,357 +1,546 @@
-import DiscoverSharedHeaderSearch from "./DiscoverSharedHeaderSearch";
+import DiscoverHeaderScrollState from "./DiscoverSharedHeaderSearch";
 
 const DISCOVER_LAYOUT_STYLE = `
-  .discover-header-search-row {
-    position: fixed !important;
-    top: var(--filmwave-header-height, 56px) !important;
-    right: 0 !important;
-    left: 0 !important;
-    z-index: var(--filmwave-z-search-filter, 60) !important;
-    display: flex !important;
-    height: var(--filmwave-header-height, 56px) !important;
-    align-items: center !important;
-    border-bottom: 1px solid var(--border) !important;
-    background: var(--bg-primary) !important;
-    padding: 0 28px !important;
+  body:has(.discover-page-root) {
+    --discover-page-gutter: clamp(28px, 5.2vw, 82px);
   }
 
-  .discover-header-search-form {
-    display: flex !important;
-    width: 100% !important;
-    height: 100% !important;
-    align-items: center !important;
+  body:has(.discover-page-root) .filmwave-header,
+  body:has(.discover-page-root) .filmwave-header .filmwave-header-tonal-wordmark,
+  body:has(.discover-page-root) .filmwave-header .filmwave-header-logo-action,
+  body:has(.discover-page-root) .filmwave-header .filmwave-header-nav-link,
+  body:has(.discover-page-root) .filmwave-header .filmwave-header-actions {
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease !important;
   }
 
-  .discover-header-search {
-    box-sizing: border-box !important;
-    display: flex !important;
-    width: 100% !important;
-    height: 40px !important;
-    min-height: 40px !important;
-    align-items: center !important;
-    gap: 8px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
+  body:not(.filmwave-discover-scrolled):has(.discover-page-root) .filmwave-header {
+    --filmwave-chrome-surface: transparent;
+    border-bottom-color: rgba(255, 255, 255, 0.12) !important;
     background: transparent !important;
     background-color: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    padding: 0 !important;
-    cursor: text !important;
+    color: #fff !important;
   }
 
-  .discover-header-search.has-value {
-    gap: 5px !important;
+  body:not(.filmwave-discover-scrolled):has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-tonal-wordmark,
+  body:not(.filmwave-discover-scrolled):has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-logo-action,
+  body:not(.filmwave-discover-scrolled):has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-actions {
+    color: #fff !important;
   }
 
-  .discover-header-search-icon {
-    display: inline-flex !important;
-    width: 16px !important;
-    height: 40px !important;
-    flex: 0 0 16px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: var(--text-muted) !important;
-    pointer-events: none !important;
+  body:not(.filmwave-discover-scrolled):has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-nav-link {
+    color: rgba(255, 255, 255, 0.72) !important;
   }
 
-  .discover-header-search-icon svg {
-    display: block !important;
-    width: 16px !important;
-    height: 16px !important;
+  body:not(.filmwave-discover-scrolled):has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-nav-link:hover,
+  body:not(.filmwave-discover-scrolled):has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-nav-link.is-active {
+    background: rgba(255, 255, 255, 0.13) !important;
+    color: #fff !important;
   }
 
-  .discover-header-search-clear {
-    box-sizing: border-box !important;
-    display: inline-flex !important;
-    width: 14px !important;
-    height: 40px !important;
-    flex: 0 0 14px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    color: var(--text-muted) !important;
-    cursor: pointer !important;
-    margin-right: 2px !important;
-    padding: 0 !important;
-  }
-
-  .discover-header-search-clear:hover {
+  body.filmwave-discover-scrolled:has(.discover-page-root) .filmwave-header {
+    --filmwave-chrome-surface: var(--bg-primary);
+    border-bottom-color: var(--border) !important;
+    background: var(--bg-primary) !important;
+    background-color: var(--bg-primary) !important;
     color: var(--text-primary) !important;
   }
 
-  .discover-header-search-clear svg {
-    display: block !important;
-    width: 12px !important;
-    height: 12px !important;
-  }
-
-  .discover-header-search-divider {
-    display: inline-flex !important;
-    width: 1px !important;
-    height: 16px !important;
-    flex: 0 0 1px !important;
-    border-radius: 1px !important;
-    background: var(--border) !important;
-    margin-right: 4px !important;
-  }
-
-  .discover-header-search-input {
-    display: block !important;
-    min-width: 0 !important;
-    height: 40px !important;
-    flex: 1 1 auto !important;
-    border: 0 !important;
-    background: transparent !important;
+  body.filmwave-discover-scrolled:has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-tonal-wordmark,
+  body.filmwave-discover-scrolled:has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-logo-action,
+  body.filmwave-discover-scrolled:has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-actions {
     color: var(--text-primary) !important;
-    font-family: inherit !important;
-    font-size: 15px !important;
-    font-weight: 300 !important;
-    line-height: 40px !important;
-    outline: none !important;
-    padding: 0 !important;
   }
 
-  .discover-header-search-input::placeholder {
-    color: var(--text-muted) !important;
-    font-size: 15px !important;
-    font-weight: 300 !important;
+  body.filmwave-discover-scrolled:has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-nav-link {
+    color: var(--text-secondary) !important;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div:first-child {
-    display: none !important;
+  body.filmwave-discover-scrolled:has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-nav-link:hover,
+  body.filmwave-discover-scrolled:has(.discover-page-root)
+    .filmwave-header
+    .filmwave-header-nav-link.is-active {
+    background: var(--bg-hover-strong) !important;
+    color: var(--text-primary) !important;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form {
-    box-sizing: border-box !important;
-    height: 50px !important;
-    min-height: 50px !important;
-    align-items: center !important;
-    gap: 8px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: var(--filmwave-chrome-surface) !important;
-    background-color: var(--filmwave-chrome-surface) !important;
-    padding: 0 24px !important;
+  .discover-page-root {
+    min-height: 100vh;
+    overflow: hidden;
+    margin-left: var(--sidebar-width);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: margin-left 200ms ease;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form:hover,
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form:focus-within {
-    background: var(--filmwave-chrome-surface) !important;
-    background-color: var(--filmwave-chrome-surface) !important;
+  .discover-hero {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: clamp(500px, 69vh, 760px);
+    overflow: hidden;
+    align-items: stretch;
+    background: #0b0d0d;
+    color: #fff;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form > div:first-child {
-    width: 16px !important;
-    height: 40px !important;
-    flex: 0 0 16px !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    color: var(--text-muted) !important;
+  .discover-hero-image,
+  .discover-hero-fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form > div:first-child svg {
-    width: 16px !important;
-    height: 16px !important;
+  .discover-hero-fallback {
+    background:
+      radial-gradient(circle at 70% 38%, rgba(126, 144, 125, 0.42), transparent 34%),
+      linear-gradient(115deg, #07100f 0%, #17231f 55%, #0d1110 100%);
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form > input {
-    height: 40px !important;
-    font-size: 15px !important;
-    font-weight: 300 !important;
-    line-height: 40px !important;
+  .discover-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.08) 30%, rgba(0, 0, 0, 0.54) 100%),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.1) 72%);
+    pointer-events: none;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form > input::placeholder {
-    color: var(--text-muted) !important;
-    font-size: 15px !important;
-    font-weight: 300 !important;
+  .discover-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: calc(var(--filmwave-header-height) + 48px) var(--discover-page-gutter) 54px;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form > div[class*="lg:flex"],
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > section > form > button[type="submit"] {
-    display: none !important;
+  .discover-hero-content {
+    width: min(860px, 100%);
+    margin-top: 6vh;
   }
 
-  form[class*="min-h-[58px]"][class*="cursor-text"] {
-    box-sizing: border-box !important;
-    height: 50px !important;
-    min-height: 50px !important;
-    align-items: center !important;
-    gap: 8px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: var(--filmwave-chrome-surface) !important;
-    background-color: var(--filmwave-chrome-surface) !important;
-    padding: 0 24px !important;
+  .discover-hero-content h1 {
+    margin: 0 0 18px;
+    font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
+    font-size: clamp(25px, 2.5vw, 42px);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
   }
 
-  form[class*="min-h-[58px]"][class*="cursor-text"]:hover,
-  form[class*="min-h-[58px]"][class*="cursor-text"]:focus-within {
-    background: var(--filmwave-chrome-surface) !important;
-    background-color: var(--filmwave-chrome-surface) !important;
+  .discover-hero-search {
+    display: grid;
+    width: min(780px, 100%);
+    min-height: 58px;
+    grid-template-columns: 44px minmax(0, 1fr) 120px;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.96);
+    color: #111;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.18);
   }
 
-  form[class*="min-h-[58px]"][class*="cursor-text"] > div:first-child {
-    width: 16px !important;
-    height: 40px !important;
-    flex: 0 0 16px !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    color: var(--text-muted) !important;
+  .discover-hero-search-icon {
+    display: inline-flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    color: #777;
   }
 
-  form[class*="min-h-[58px]"][class*="cursor-text"] > div:first-child svg {
-    width: 16px !important;
-    height: 16px !important;
+  .discover-hero-search input {
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    color: #111;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 400;
+    outline: none;
+    padding: 0 14px 0 0;
   }
 
-  form[class*="min-h-[58px]"][class*="cursor-text"] > input {
-    height: 40px !important;
-    font-size: 15px !important;
-    font-weight: 300 !important;
-    line-height: 40px !important;
+  .discover-hero-search input::placeholder {
+    color: #888;
   }
 
-  form[class*="min-h-[58px]"][class*="cursor-text"] > input::placeholder {
-    color: var(--text-muted) !important;
-    font-size: 15px !important;
-    font-weight: 300 !important;
+  .discover-hero-search button {
+    height: calc(100% - 16px);
+    cursor: pointer;
+    border: 0;
+    background: #111;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 8px;
+    padding: 0 20px;
+    transition: opacity 150ms ease;
   }
 
-  form[class*="min-h-[58px]"][class*="cursor-text"] > div[class*="lg:flex"],
-  form[class*="min-h-[58px]"][class*="cursor-text"] > button[type="submit"],
-  form[class*="min-h-[58px]"][class*="cursor-text"] + div {
-    display: none !important;
+  .discover-hero-search button:hover {
+    opacity: 0.82;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section > div:first-child > div:first-child > h2 {
-    font-size: 1.4em !important;
-    font-weight: 300 !important;
-    font-variation-settings: "wght" 300 !important;
-    line-height: 2rem !important;
-    letter-spacing: -0.035em !important;
+  .discover-hero-values {
+    display: grid;
+    width: min(780px, 100%);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(28px, 7vw, 92px);
+    margin-top: 28px;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] a[href^="/curated-playlists/"],
-  main > section[class*="ml-[var(--sidebar-width)]"] .discover-skeleton-card,
-  main > section[class*="ml-[var(--sidebar-width)]"] .discover-skeleton-shelf-card {
-    border-width: 0 !important;
-    border-radius: 0 !important;
+  .discover-hero-values > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 5px;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] article[aria-label^="Play "] > div:first-of-type,
-  main > section[class*="ml-[var(--sidebar-width)]"] a[href^="/curated-playlists/"] > div[class*="overflow-hidden"] {
-    border-radius: 0 !important;
+  .discover-hero-values strong {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] a[href^="/curated-playlists/"]:hover {
-    border-width: 0 !important;
-    border-color: transparent !important;
+  .discover-hero-values span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 10.5px;
+    font-weight: 400;
+    line-height: 1.45;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div[class*="mt-2"][class*="grid"],
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div[class*="mt-2"][class*="grid"] > div[class*="grid"],
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:first-child > div[class*="mt-2"][class*="grid"] > div[class*="grid"] > div[class*="grid-cols-2"] {
-    gap: 8px !important;
+  .discover-content {
+    padding: 42px var(--discover-page-gutter) 0;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "] {
-    border-width: 0 !important;
-    border-radius: 0 !important;
-    background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
+  .discover-section {
+    margin-top: 58px;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:hover,
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
-    background: color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%) !important;
+  .discover-section:first-child {
+    margin-top: 0;
   }
 
-  html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "],
-  html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "] {
-    background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
+  .discover-section-heading {
+    display: flex;
+    min-height: 34px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 16px;
   }
 
-  html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:hover,
-  html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:focus-visible,
-  html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:hover,
-  html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:nth-of-type(2) > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
-    background: color-mix(in srgb, var(--bg-primary) 91%, var(--text-primary) 9%) !important;
+  .discover-section-heading h2,
+  .discover-song-section .fw-song-list-title {
+    margin: 0;
+    font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
+    font-size: clamp(20px, 1.65vw, 27px) !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.045em !important;
+    line-height: 1.1 !important;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] {
-    border-width: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    padding: 0 !important;
+  .discover-shelf-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
-    display: block !important;
-    column-count: 1;
-    column-gap: 8px;
+  .discover-shelf-controls button {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 0;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      opacity 150ms ease;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] {
-    position: relative !important;
-    display: grid !important;
+  .discover-shelf-controls button:hover:not(:disabled) {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .discover-shelf-controls button:disabled {
+    cursor: default;
+    opacity: 0.28;
+  }
+
+  .discover-mood-scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .discover-mood-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .discover-mood-card {
+    display: block;
+    min-width: min(43vw, 560px);
+    flex: 0 0 min(43vw, 560px);
+    scroll-snap-align: start;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .discover-mood-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1.72 / 1;
+    overflow: hidden;
+    background: var(--bg-secondary);
+  }
+
+  .discover-mood-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.2));
+    pointer-events: none;
+  }
+
+  .discover-mood-image img {
+    transition: transform 500ms ease;
+  }
+
+  .discover-mood-card:hover .discover-mood-image img {
+    transform: scale(1.025);
+  }
+
+  .discover-card-arrow {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.14);
+    color: #fff;
+    backdrop-filter: blur(8px);
+  }
+
+  .discover-mood-card h3,
+  .discover-playlist-card h3 {
+    margin: 10px 0 0;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .discover-mood-card p,
+  .discover-playlist-card p {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 10.5px;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  .discover-playlist-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(10px, 1.25vw, 18px);
+  }
+
+  .discover-playlist-card {
+    display: block;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .discover-playlist-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--bg-secondary);
+  }
+
+  .discover-playlist-image img {
+    transition: transform 500ms ease;
+  }
+
+  .discover-playlist-card:hover .discover-playlist-image img {
+    transform: scale(1.025);
+  }
+
+  .discover-media-fallback {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--bg-tertiary) 82%, var(--text-muted) 18%), var(--bg-secondary));
+  }
+
+  .discover-song-section .fw-song-list {
     width: 100% !important;
-    break-inside: avoid !important;
-    grid-template-columns: 24px minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    margin-bottom: 4px !important;
-    border-radius: 0 !important;
-    background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
+    margin: 0 !important;
   }
 
-  html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "],
-  html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] {
-    background: color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%) !important;
+  .discover-song-section .fw-song-list-head {
+    margin-bottom: 12px !important;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] > div:nth-of-type(1) > div:first-child > span {
-    position: absolute !important;
-    top: 50% !important;
-    right: 118px !important;
-    display: inline !important;
-    transform: translateY(-50%) !important;
+  .discover-song-skeleton {
+    width: 100%;
+    height: 64px;
+    margin-bottom: 2px;
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "] > div:nth-of-type(2) {
-    gap: 18px !important;
+  .discover-card-skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-secondary);
   }
 
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:hover,
-  main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
-    background: color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%) !important;
+  .discover-mood-card.discover-card-skeleton {
+    aspect-ratio: 1.72 / 1;
   }
 
-  html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:hover,
-  html.light main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:focus-visible,
-  html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:hover,
-  html[data-theme="light"] main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] > article[aria-label^="Play "]:focus-visible {
-    background: color-mix(in srgb, var(--bg-primary) 91%, var(--text-primary) 9%) !important;
+  .discover-playlist-card.discover-card-skeleton {
+    aspect-ratio: 1;
   }
 
-  @media (min-width: 768px) {
-    main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
-      column-count: 2;
+  .discover-card-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--bg-hover) 58%, transparent),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: discover-card-shimmer 1.45s ease-in-out infinite;
+  }
+
+  @keyframes discover-card-shimmer {
+    to {
+      transform: translateX(100%);
     }
   }
 
-  @media (min-width: 1280px) {
-    main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
-      column-count: 3;
+  .discover-footer-wrap {
+    padding-top: 64px;
+  }
+
+  @media (max-width: 1280px) {
+    .discover-playlist-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 
-  @media (min-width: 1536px) {
-    main > section[class*="ml-[var(--sidebar-width)]"] > div[class*="px-8"] > section:last-of-type > div[class*="rounded"] > div[class*="grid"] {
-      column-count: 4;
+  @media (max-width: 980px) {
+    .discover-page-root {
+      margin-left: var(--sidebar-width);
+    }
+
+    .discover-mood-card {
+      min-width: min(68vw, 500px);
+      flex-basis: min(68vw, 500px);
+    }
+
+    .discover-playlist-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    body:has(.discover-page-root) {
+      --discover-page-gutter: 20px;
+    }
+
+    .discover-hero {
+      min-height: 590px;
+    }
+
+    .discover-hero-inner {
+      align-items: flex-end;
+      padding-bottom: 42px;
+    }
+
+    .discover-hero-content {
+      margin-top: 0;
+    }
+
+    .discover-hero-search {
+      grid-template-columns: 40px minmax(0, 1fr) 92px;
+    }
+
+    .discover-hero-values {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .discover-mood-card {
+      min-width: 82vw;
+      flex-basis: 82vw;
+    }
+
+    .discover-playlist-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body:has(.discover-page-root) *,
+    body:has(.discover-page-root) *::before,
+    body:has(.discover-page-root) *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
     }
   }
 `;
@@ -364,7 +553,7 @@ export default function DiscoverLayout({
   return (
     <>
       <style>{DISCOVER_LAYOUT_STYLE}</style>
-      <DiscoverSharedHeaderSearch />
+      <DiscoverHeaderScrollState />
       {children}
     </>
   );
