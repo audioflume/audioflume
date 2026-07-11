@@ -380,7 +380,7 @@ const DISCOVER_LAYOUT_STYLE = `
   .discover-playlist-card h3 {
     margin: 10px 0 0;
     color: var(--text-primary);
-    font-size: 12.5px;
+    font-size: 13.5px;
     font-weight: 500;
     line-height: 1.25;
   }
@@ -389,7 +389,7 @@ const DISCOVER_LAYOUT_STYLE = `
   .discover-playlist-card p {
     margin: 4px 0 0;
     color: var(--text-muted);
-    font-size: 10.5px;
+    font-size: 11.5px;
     font-weight: 400;
     line-height: 1.45;
   }
