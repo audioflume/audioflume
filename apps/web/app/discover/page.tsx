@@ -357,12 +357,12 @@ function DiscoverPlaylistGrid({
 
   return (
     <section className="discover-section">
-      <div className="discover-section-heading">
+      <div className="discover-section-heading" style={{ alignItems: "baseline" }}>
         <h2>Curated playlists</h2>
 
         <Link
           href="/curated-playlists"
-          className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
+          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           Explore all playlists
         </Link>
@@ -575,12 +575,12 @@ function ReadyToCutTracks({
 
   return (
     <section className="discover-section discover-ready-to-cut-section">
-      <div className="discover-section-heading">
+      <div className="discover-section-heading" style={{ alignItems: "baseline" }}>
         <h2>Ready-to-cut tracks</h2>
 
         <Link
           href="/music"
-          className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
+          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           Explore more tracks
         </Link>
