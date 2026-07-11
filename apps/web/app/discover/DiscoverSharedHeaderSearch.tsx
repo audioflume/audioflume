@@ -1,35 +1,33 @@
-const DISCOVER_NO_SEARCH_STYLE = `
-  .discover-header-search-row {
-    display: none !important;
-  }
+"use client";
 
-  main > section {
-    padding-top: calc(var(--filmwave-header-height, 56px) + 22px) !important;
-  }
+import { useEffect } from "react";
 
-  main > section > div[class*="px-8"] {
-    padding-top: 0 !important;
-  }
+const DISCOVER_SCROLLED_CLASS = "filmwave-discover-scrolled";
+const DISCOVER_SCROLL_THRESHOLD = 18;
 
-  main > section[class*="ml-[var(--sidebar-width)]"]
-    > div[class*="px-8"]
-    > section:first-child
-    > div:first-child,
-  main > section[class*="ml-[var(--sidebar-width)]"]
-    > div[class*="px-8"]
-    > section:first-child
-    > section {
-    display: none !important;
-  }
+export default function DiscoverHeaderScrollState() {
+  useEffect(() => {
+    let frame = 0;
 
-  main > section[class*="ml-[var(--sidebar-width)]"]
-    > div[class*="px-8"]
-    > section:first-child
-    > div[class*="mt-2"][class*="grid"] {
-    margin-top: 0 !important;
-  }
-`;
+    function syncHeaderState() {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        document.body.classList.toggle(
+          DISCOVER_SCROLLED_CLASS,
+          window.scrollY > DISCOVER_SCROLL_THRESHOLD,
+        );
+      });
+    }
 
-export default function DiscoverSharedHeaderSearch() {
-  return <style>{DISCOVER_NO_SEARCH_STYLE}</style>;
+    syncHeaderState();
+    window.addEventListener("scroll", syncHeaderState, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", syncHeaderState);
+      document.body.classList.remove(DISCOVER_SCROLLED_CLASS);
+    };
+  }, []);
+
+  return null;
 }
