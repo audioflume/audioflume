@@ -166,7 +166,11 @@ function DiscoverMoodShelf({
         }
 
         .discover-mood-section .curated-playlist-shelf-prev-floating {
-          left: var(--discover-page-gutter);
+          left: 2rem;
+        }
+
+        .discover-mood-section .discover-mood-shelf-floating {
+          top: calc((min(43vw, 560px) / 1.72) / 2);
         }
 
         .discover-mood-section .playlist-gallery-card {
@@ -202,10 +206,44 @@ function DiscoverMoodShelf({
           background: white;
           color: black;
         }
+
+        @media (max-width: 980px) {
+          .discover-mood-section .discover-mood-shelf-floating {
+            top: calc((min(68vw, 500px) / 1.72) / 2);
+          }
+        }
+
+        @media (max-width: 720px) {
+          .discover-mood-section .discover-mood-shelf-floating {
+            top: calc((82vw / 1.72) / 2);
+          }
+        }
       `}</style>
 
       <div className="discover-section-heading">
         <h2>Explore these moods</h2>
+
+        <div className="hidden items-center gap-2 sm:flex">
+          <button
+            type="button"
+            onClick={() => scroll("prev")}
+            disabled={!canScrollPrev}
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
+            aria-label="Scroll Explore these moods left"
+          >
+            <ChevronLeftIcon size={16} />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => scroll("next")}
+            disabled={!canScrollNext}
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
+            aria-label="Scroll Explore these moods right"
+          >
+            <ChevronRightIcon size={16} />
+          </button>
+        </div>
       </div>
 
       <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
@@ -213,7 +251,7 @@ function DiscoverMoodShelf({
           type="button"
           onClick={() => scroll("prev")}
           disabled={!canScrollPrev}
-          className="curated-playlist-shelf-prev-floating absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+          className="discover-mood-shelf-floating curated-playlist-shelf-prev-floating absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
           aria-label="Scroll Explore these moods left"
         >
           <ChevronLeftIcon size={18} />
@@ -223,7 +261,7 @@ function DiscoverMoodShelf({
           type="button"
           onClick={() => scroll("next")}
           disabled={!canScrollNext}
-          className="absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+          className="discover-mood-shelf-floating absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
           aria-label="Scroll Explore these moods right"
         >
           <ChevronRightIcon size={18} />
