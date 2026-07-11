@@ -359,6 +359,13 @@ function DiscoverPlaylistGrid({
     <section className="discover-section">
       <div className="discover-section-heading">
         <h2>Curated playlists</h2>
+
+        <Link
+          href="/curated-playlists"
+          className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
+        >
+          Explore all playlists
+        </Link>
       </div>
 
       <div className="discover-playlist-grid">
@@ -575,7 +582,7 @@ function ReadyToCutTracks({
           href="/music"
           className="hidden text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] sm:block"
         >
-          Open music
+          Explore more tracks
         </Link>
       </div>
 
@@ -656,10 +663,7 @@ export default function DiscoverPage() {
     [songs],
   );
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
-  const readyToCutSongs = playableSongs.slice(
-    NEW_SONG_COUNT,
-    NEW_SONG_COUNT + READY_TO_CUT_SONG_COUNT,
-  );
+  const readyToCutSongs = playableSongs.slice(0, READY_TO_CUT_SONG_COUNT);
   const playerVisible = Boolean(currentSong);
 
   useEffect(() => {
