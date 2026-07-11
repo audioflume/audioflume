@@ -151,23 +151,87 @@ function DiscoverMoodShelf({
 
   if (!loading && playlists.length === 0) return null;
 
-  const floatingArrowClass =
-    "absolute z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-[0_8px_28px_rgba(0,0,0,0.18)] transition hover:bg-[var(--bg-hover)] disabled:pointer-events-none disabled:opacity-0";
-
   return (
     <section className="discover-section discover-mood-section">
+      <style>{`
+        .discover-mood-section .curated-playlist-shelf-viewport {
+          margin-left: calc(var(--discover-page-gutter) * -1);
+          margin-right: calc(var(--discover-page-gutter) * -1);
+          overflow: hidden;
+        }
+
+        .discover-mood-section .curated-playlist-shelf-scroller {
+          padding-left: var(--discover-page-gutter);
+          padding-right: 5rem;
+        }
+
+        .discover-mood-section .curated-playlist-shelf-prev-floating {
+          left: var(--discover-page-gutter);
+        }
+
+        .discover-mood-section .playlist-gallery-card {
+          position: relative;
+          min-width: 0;
+          cursor: pointer;
+        }
+
+        .discover-mood-section .playlist-gallery-top-row {
+          position: relative;
+          z-index: 4;
+          display: flex;
+          justify-content: flex-end;
+          padding: 16px;
+        }
+
+        .discover-mood-section .playlist-gallery-arrow {
+          display: flex;
+          width: 32px;
+          height: 32px;
+          flex-shrink: 0;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.12);
+          color: white;
+          backdrop-filter: blur(12px);
+          transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+        }
+
+        .discover-mood-section .playlist-gallery-card:hover .playlist-gallery-arrow,
+        .discover-mood-section .playlist-gallery-card.is-menu-open .playlist-gallery-arrow {
+          background: white;
+          color: black;
+        }
+      `}</style>
+
       <div className="discover-section-heading">
         <h2>Explore these moods</h2>
       </div>
 
-      <div className="relative">
+      <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
+        <button
+          type="button"
+          onClick={() => scroll("prev")}
+          disabled={!canScrollPrev}
+          className="curated-playlist-shelf-prev-floating absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+          aria-label="Scroll Explore these moods left"
+        >
+          <ChevronLeftIcon size={18} />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => scroll("next")}
+          disabled={!canScrollNext}
+          className="absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+          aria-label="Scroll Explore these moods right"
+        >
+          <ChevronRightIcon size={18} />
+        </button>
+
         <div
           ref={scrollerRef}
-          className="discover-mood-scroller"
-          style={{
-            overscrollBehaviorX: "none",
-            overscrollBehaviorY: "auto",
-          }}
+          className="curated-playlist-shelf-scroller flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {loading
             ? Array.from({ length: 4 }).map((_, index) => (
@@ -181,7 +245,7 @@ function DiscoverMoodShelf({
                 <Link
                   key={playlist.id}
                   href={`/curated-playlists/${playlist.id}`}
-                  className="discover-mood-card"
+                  className="discover-mood-card playlist-gallery-card"
                 >
                   <div className="discover-mood-image">
                     {playlist.cover_image_url ? (
@@ -196,43 +260,18 @@ function DiscoverMoodShelf({
                     ) : (
                       <div className="discover-media-fallback" />
                     )}
-                    <span className="discover-card-arrow" aria-hidden="true">
-                      <ArrowUpRightIcon />
-                    </span>
+
+                    <div className="playlist-gallery-top-row">
+                      <div className="playlist-gallery-arrow">
+                        <ArrowUpRightIcon />
+                      </div>
+                    </div>
                   </div>
                   <h3>{playlist.name}</h3>
                   {playlist.description && <p>{playlist.description}</p>}
                 </Link>
               ))}
         </div>
-
-        <button
-          type="button"
-          className={floatingArrowClass}
-          style={{
-            top: "clamp(90px, 15vw, 163px)",
-            left: "calc((var(--discover-page-gutter) * -1) + 18px)",
-          }}
-          aria-label="Previous moods"
-          disabled={!canScrollPrev}
-          onClick={() => scroll("prev")}
-        >
-          <ChevronLeftIcon size={15} />
-        </button>
-
-        <button
-          type="button"
-          className={floatingArrowClass}
-          style={{
-            top: "clamp(90px, 15vw, 163px)",
-            right: "calc((var(--discover-page-gutter) * -1) + 18px)",
-          }}
-          aria-label="Next moods"
-          disabled={!canScrollNext}
-          onClick={() => scroll("next")}
-        >
-          <ChevronRightIcon size={15} />
-        </button>
       </div>
     </section>
   );
