@@ -151,66 +151,88 @@ function DiscoverMoodShelf({
 
   if (!loading && playlists.length === 0) return null;
 
+  const floatingArrowClass =
+    "absolute z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-[0_8px_28px_rgba(0,0,0,0.18)] transition hover:bg-[var(--bg-hover)] disabled:pointer-events-none disabled:opacity-0";
+
   return (
     <section className="discover-section discover-mood-section">
       <div className="discover-section-heading">
         <h2>Explore these moods</h2>
-        <div className="discover-shelf-controls" aria-label="Mood shelf controls">
-          <button
-            type="button"
-            aria-label="Previous moods"
-            disabled={!canScrollPrev}
-            onClick={() => scroll("prev")}
-          >
-            <ChevronLeftIcon size={14} />
-          </button>
-          <button
-            type="button"
-            aria-label="Next moods"
-            disabled={!canScrollNext}
-            onClick={() => scroll("next")}
-          >
-            <ChevronRightIcon size={14} />
-          </button>
-        </div>
       </div>
 
-      <div ref={scrollerRef} className="discover-mood-scroller">
-        {loading
-          ? Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={index}
-                className="discover-mood-card discover-card-skeleton"
-                aria-hidden="true"
-              />
-            ))
-          : playlists.map((playlist) => (
-              <Link
-                key={playlist.id}
-                href={`/curated-playlists/${playlist.id}`}
-                className="discover-mood-card"
-              >
-                <div className="discover-mood-image">
-                  {playlist.cover_image_url ? (
-                    <Image
-                      src={playlist.cover_image_url}
-                      alt={playlist.name}
-                      fill
-                      unoptimized
-                      sizes="(min-width: 1280px) 34vw, (min-width: 768px) 55vw, 84vw"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="discover-media-fallback" />
-                  )}
-                  <span className="discover-card-arrow" aria-hidden="true">
-                    <ArrowUpRightIcon />
-                  </span>
-                </div>
-                <h3>{playlist.name}</h3>
-                {playlist.description && <p>{playlist.description}</p>}
-              </Link>
-            ))}
+      <div className="relative">
+        <div
+          ref={scrollerRef}
+          className="discover-mood-scroller"
+          style={{
+            overscrollBehaviorX: "none",
+            overscrollBehaviorY: "auto",
+          }}
+        >
+          {loading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="discover-mood-card discover-card-skeleton"
+                  aria-hidden="true"
+                />
+              ))
+            : playlists.map((playlist) => (
+                <Link
+                  key={playlist.id}
+                  href={`/curated-playlists/${playlist.id}`}
+                  className="discover-mood-card"
+                >
+                  <div className="discover-mood-image">
+                    {playlist.cover_image_url ? (
+                      <Image
+                        src={playlist.cover_image_url}
+                        alt={playlist.name}
+                        fill
+                        unoptimized
+                        sizes="(min-width: 1280px) 34vw, (min-width: 768px) 55vw, 84vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="discover-media-fallback" />
+                    )}
+                    <span className="discover-card-arrow" aria-hidden="true">
+                      <ArrowUpRightIcon />
+                    </span>
+                  </div>
+                  <h3>{playlist.name}</h3>
+                  {playlist.description && <p>{playlist.description}</p>}
+                </Link>
+              ))}
+        </div>
+
+        <button
+          type="button"
+          className={floatingArrowClass}
+          style={{
+            top: "clamp(90px, 15vw, 163px)",
+            left: "calc((var(--discover-page-gutter) * -1) + 18px)",
+          }}
+          aria-label="Previous moods"
+          disabled={!canScrollPrev}
+          onClick={() => scroll("prev")}
+        >
+          <ChevronLeftIcon size={15} />
+        </button>
+
+        <button
+          type="button"
+          className={floatingArrowClass}
+          style={{
+            top: "clamp(90px, 15vw, 163px)",
+            right: "calc((var(--discover-page-gutter) * -1) + 18px)",
+          }}
+          aria-label="Next moods"
+          disabled={!canScrollNext}
+          onClick={() => scroll("next")}
+        >
+          <ChevronRightIcon size={15} />
+        </button>
       </div>
     </section>
   );
