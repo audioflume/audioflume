@@ -13,11 +13,12 @@
 
 .curated-playlist-shelf-heading h2 {
   margin: 0;
-  font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
-  font-size: clamp(18px, 1.45vw, 24px);
-  font-weight: 400;
-  letter-spacing: -0.045em;
-  line-height: 1.1;
+  color: var(--text-primary) !important;
+  font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
+  font-size: clamp(18px, 1.45vw, 24px) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 1.1 !important;
 }
 
 .curated-playlist-shelf-heading p {
@@ -76,7 +77,7 @@
 .curated-playlist-card-details {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 18px;
-  align-items: end;
+  align-items: start;
   gap: 6px;
   margin-top: 10px;
 }
@@ -115,6 +116,7 @@
   height: 18px;
   align-items: center;
   justify-content: center;
+  margin-top: 1px;
 }
 
 .curated-playlist-menu-button {
