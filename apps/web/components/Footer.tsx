@@ -66,7 +66,7 @@ export default function Footer({
           <div className="flex -translate-y-1 flex-col gap-3">
             <div className="w-[92px]">
               <span className="filmwave-header-tonal-wordmark filmwave-footer-tonal-wordmark">
-                toneshack
+                audioflume
               </span>
             </div>
 
