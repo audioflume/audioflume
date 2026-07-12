@@ -40,7 +40,8 @@
   gap: 5px !important;
 }
 
-.fw-toolbar-search-static-icon {
+.fw-toolbar-search-static-icon,
+.discover-hero-search-icon {
   display: inline-flex !important;
   width: 16px !important;
   height: 40px !important;
@@ -53,7 +54,8 @@
   pointer-events: none !important;
 }
 
-.fw-toolbar-search-static-icon svg {
+.fw-toolbar-search-static-icon svg,
+.discover-hero-search-icon svg {
   display: block !important;
   width: 16px !important;
   height: 16px !important;
@@ -96,7 +98,8 @@
   margin-right: 4px !important;
 }
 
-.fw-toolbar-search-static-input {
+.fw-toolbar-search-static-input,
+.discover-hero-search input {
   display: block !important;
   min-width: 0 !important;
   height: 40px !important;
@@ -112,7 +115,8 @@
   padding: 0 !important;
 }
 
-.fw-toolbar-search-static-input::placeholder {
+.fw-toolbar-search-static-input::placeholder,
+.discover-hero-search input::placeholder {
   color: var(--text-muted) !important;
   font-size: 15px !important;
   font-weight: 300 !important;
