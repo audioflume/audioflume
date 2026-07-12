@@ -5,7 +5,7 @@ import { useEffect } from "react";
 const DISCOVER_SCROLLED_CLASS = "filmwave-discover-scrolled";
 const DISCOVER_SCROLL_THRESHOLD = 18;
 const HEADER_MENU_OPEN_SELECTOR =
-  ".filmwave-header-nav-item-playlists.is-open, .filmwave-header-account-trigger.is-open";
+  ".filmwave-header-nav-item-playlists.is-open";
 
 export default function DiscoverHeaderScrollState() {
   useEffect(() => {
