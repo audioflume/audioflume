@@ -93,6 +93,12 @@ export default function DiscoverHeaderScrollState() {
           --fw-header-search-row-height: 58px;
           --fw-header-search-field-height: 58px;
           --fw-header-search-transform: none;
+          box-sizing: border-box !important;
+          width: min(780px, 100%) !important;
+          height: 58px !important;
+          min-height: 58px !important;
+          max-height: 58px !important;
+          grid-template-columns: minmax(0, 1fr) !important;
           border: 1px solid rgba(255, 255, 255, 0.7) !important;
           background: #fff !important;
           background-color: #fff !important;
@@ -100,26 +106,16 @@ export default function DiscoverHeaderScrollState() {
           padding: 0 !important;
         }
 
-        .discover-hero-search:not(.has-shared-search)
-          > .discover-hero-search-icon,
-        .discover-hero-search:not(.has-shared-search) > input,
-        .discover-hero-search:not(.has-shared-search) > button {
-          visibility: hidden;
-        }
-
-        .discover-hero-search.has-shared-search {
-          grid-template-columns: minmax(0, 1fr) !important;
-        }
-
-        .discover-hero-search.has-shared-search > .discover-hero-search-icon,
-        .discover-hero-search.has-shared-search > input,
-        .discover-hero-search.has-shared-search > button {
+        .discover-hero-search > .discover-hero-search-icon,
+        .discover-hero-search > input,
+        .discover-hero-search > button {
           display: none !important;
         }
 
         .discover-hero-search-shared {
           display: grid;
           width: 100%;
+          min-width: 0;
           height: 100%;
           grid-template-columns: minmax(0, 1fr) 120px;
           align-items: center;
