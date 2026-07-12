@@ -23,7 +23,6 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
-import { primaryPillButtonClass } from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -444,7 +443,7 @@ function DiscoverSongs({
       <div className="mt-5 flex justify-center">
         <Link
           href="/music"
-          className={`${primaryPillButtonClass} hover:opacity-80`}
+          className="inline-flex h-11 items-center justify-center rounded-none bg-[var(--bg-elevated)] px-7 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
         >
           Explore music library
         </Link>
