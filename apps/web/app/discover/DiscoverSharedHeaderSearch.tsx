@@ -4,8 +4,17 @@ import { useEffect } from "react";
 
 const DISCOVER_SCROLLED_CLASS = "filmwave-discover-scrolled";
 const DISCOVER_SCROLL_THRESHOLD = 18;
-const HEADER_MENU_OPEN_SELECTOR =
-  ".filmwave-header-nav-item-playlists.is-open";
+const HEADER_MENU_OPEN_SELECTOR = ".filmwave-header-nav-item-playlists.is-open";
+const SEARCH_CLEAR_ICON = `
+  <span class="fw-toolbar-search-static-clear-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M6.34 4.93 12 10.59l5.66-5.66a1 1 0 1 1 1.41 1.41L13.41 12l5.66 5.66a1 1 0 0 1-1.41 1.41L12 13.41l-5.66 5.66a1 1 0 0 1-1.41-1.41L10.59 12 4.93 6.34a1 1 0 0 1 1.41-1.41Z"
+      />
+    </svg>
+  </span>
+`;
 
 export default function DiscoverHeaderScrollState() {
   useEffect(() => {
@@ -47,6 +56,63 @@ export default function DiscoverHeaderScrollState() {
     };
   }, []);
 
+  useEffect(() => {
+    const searchForm = document.querySelector<HTMLFormElement>(
+      ".discover-hero-search",
+    );
+    const searchIcon = searchForm?.querySelector<HTMLElement>(
+      ".discover-hero-search-icon",
+    );
+    const searchInput = searchForm?.querySelector<HTMLInputElement>("input");
+
+    if (!searchForm || !searchIcon || !searchInput) return;
+
+    searchForm.classList.add("fw-toolbar-search-static");
+    searchIcon.classList.add("fw-toolbar-search-static-icon");
+    searchInput.classList.add("fw-toolbar-search-static-input");
+
+    const clearButton = document.createElement("button");
+    clearButton.type = "button";
+    clearButton.className = "fw-toolbar-search-static-clear";
+    clearButton.setAttribute("aria-label", "Clear search");
+    clearButton.innerHTML = SEARCH_CLEAR_ICON;
+    clearButton.hidden = true;
+    searchInput.before(clearButton);
+
+    function syncSearchState() {
+      const hasValue = searchInput.value.length > 0;
+      searchForm.classList.toggle("has-value", hasValue);
+      clearButton.hidden = !hasValue;
+    }
+
+    function clearSearch(event: MouseEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const valueSetter = Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        "value",
+      )?.set;
+      valueSetter?.call(searchInput, "");
+      searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+      searchInput.focus();
+      syncSearchState();
+    }
+
+    searchInput.addEventListener("input", syncSearchState);
+    clearButton.addEventListener("click", clearSearch);
+    syncSearchState();
+
+    return () => {
+      searchInput.removeEventListener("input", syncSearchState);
+      clearButton.removeEventListener("click", clearSearch);
+      clearButton.remove();
+      searchForm.classList.remove("fw-toolbar-search-static", "has-value");
+      searchIcon.classList.remove("fw-toolbar-search-static-icon");
+      searchInput.classList.remove("fw-toolbar-search-static-input");
+    };
+  }, []);
+
   return (
     <style>{`
       .discover-hero-content {
@@ -56,16 +122,19 @@ export default function DiscoverHeaderScrollState() {
       .discover-hero-search {
         --text-primary: #111;
         --text-muted: rgba(17, 17, 17, 0.42);
+        --bg-hover: rgba(17, 17, 17, 0.045);
+        --fw-header-search-field-height: 58px;
+        --fw-header-search-transform: none;
+        --fw-header-search-content-transform: translateX(4px);
+        border: 1px solid rgba(255, 255, 255, 0.7) !important;
         background: #fff !important;
         background-color: #fff !important;
+        box-shadow: 0 16px 45px rgba(0, 0, 0, 0.18) !important;
+        padding: 0 8px 0 18px !important;
       }
 
-      .discover-hero-search-icon {
-        transform: translateX(4px) !important;
-      }
-
-      .discover-hero-search input {
-        padding-left: 4px !important;
+      .discover-hero-search > button[type="submit"] {
+        margin-left: auto;
       }
 
       .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible) {

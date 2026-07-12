@@ -169,15 +169,6 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
   font-weight: 400 !important;
 }
 
-main > section:has(.fw-filter-panel-wrap)
-  .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-toolbar-header-search-row
-  .fw-toolbar-search.fw-toolbar-search-static
-  :is(.fw-toolbar-search-static-icon, .fw-toolbar-search-static-input) {
-  transform: none !important;
-}
-
 main > section:has(.fw-filter-panel-wrap):has(.fw-music-content-column)
   > .fw-music-content-column
   > .fw-toolbar-sticky.is-scroll-revealed

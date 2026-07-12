@@ -3,25 +3,26 @@
 .fw-toolbar-header-search-row {
   display: flex !important;
   width: 100% !important;
-  height: 50px !important;
+  height: var(--fw-header-search-row-height, 50px) !important;
   align-items: center !important;
-  padding: 0 !important;
+  padding: var(--fw-header-search-row-padding, 0) !important;
 }
 
 .fw-toolbar-header-search-form {
-  display: block !important;
+  display: flex !important;
   width: 100% !important;
   height: 100% !important;
+  align-items: center !important;
 }
 
 .fw-toolbar-search-static {
   box-sizing: border-box !important;
   display: flex !important;
   width: 100% !important;
-  height: 40px !important;
-  min-height: 40px !important;
+  height: var(--fw-header-search-field-height, 40px) !important;
+  min-height: var(--fw-header-search-field-height, 40px) !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: var(--fw-header-search-gap, 12px) !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -31,17 +32,15 @@
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   padding: 0 !important;
-  transform: translateY(4px) !important;
+  transform: var(--fw-header-search-transform, translateY(4px)) !important;
   cursor: text !important;
 }
 
-.fw-toolbar-search-static.has-value,
-.fw-toolbar-search-static:has(.fw-toolbar-search-static-clear) {
-  gap: 5px !important;
+.fw-toolbar-search-static.has-value {
+  gap: var(--fw-header-search-active-gap, 9px) !important;
 }
 
-.fw-toolbar-search-static-icon,
-.discover-hero-search-icon {
+.fw-toolbar-search-static-icon {
   display: inline-flex !important;
   width: 13px !important;
   height: 13px !important;
@@ -52,12 +51,11 @@
   color: var(--text-muted) !important;
   line-height: 0 !important;
   margin: 0 !important;
-  transform: none !important;
+  transform: var(--fw-header-search-content-transform, none) !important;
   pointer-events: none !important;
 }
 
-.fw-toolbar-search-static-icon svg,
-.discover-hero-search-icon svg {
+.fw-toolbar-search-static-icon svg {
   display: block !important;
   width: 13px !important;
   height: 13px !important;
@@ -66,9 +64,9 @@
 .fw-toolbar-search-static-clear {
   box-sizing: border-box !important;
   display: inline-flex !important;
-  width: 14px !important;
-  height: 40px !important;
-  flex: 0 0 14px !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex: 0 0 20px !important;
   align-items: center !important;
   justify-content: center !important;
   border: 0 !important;
@@ -76,12 +74,26 @@
   background: transparent !important;
   color: var(--text-muted) !important;
   cursor: pointer !important;
-  margin: 0 2px 0 0 !important;
+  margin: 0 !important;
   padding: 0 !important;
+  opacity: 1 !important;
+}
+
+.fw-toolbar-search-static-clear[hidden] {
+  display: none !important;
 }
 
 .fw-toolbar-search-static-clear:hover {
+  background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
+  opacity: 1 !important;
+}
+
+.fw-toolbar-search-static-clear-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: scale(1.25) !important;
 }
 
 .fw-toolbar-search-static-clear svg {
@@ -90,18 +102,7 @@
   height: 12px !important;
 }
 
-.fw-toolbar-search-static-divider {
-  display: inline-flex !important;
-  width: 1px !important;
-  height: 16px !important;
-  flex: 0 0 1px !important;
-  border-radius: 1px !important;
-  background: var(--border) !important;
-  margin-right: 4px !important;
-}
-
-.fw-toolbar-search-static-input,
-.discover-hero-search input {
+.fw-toolbar-search-static-input {
   display: block !important;
   min-width: 0 !important;
   height: auto !important;
@@ -112,19 +113,24 @@
   color: var(--text-primary) !important;
   font-family: inherit !important;
   font-size: 12px !important;
-  font-style: italic !important;
+  font-style: normal !important;
   font-weight: 400 !important;
   line-height: 1.2 !important;
   outline: none !important;
   padding: 0 !important;
-  transform: none !important;
+  transform: var(--fw-header-search-content-transform, none) !important;
 }
 
-.fw-toolbar-search-static-input::placeholder,
-.discover-hero-search input::placeholder {
+.fw-toolbar-search-static-input::placeholder {
   color: var(--text-muted) !important;
   font-size: 12px !important;
   font-style: italic !important;
   font-weight: 400 !important;
   line-height: 1.2 !important;
+}
+
+.fw-toolbar-search-static-input::-webkit-search-cancel-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
 }

@@ -2,6 +2,7 @@
 
 import {
   type CSSProperties,
+  type FormEvent as ReactFormEvent,
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
   type Ref,
@@ -21,7 +22,9 @@ function HeaderSearchClearIcon() {
 export type HeaderSearchBarProps = {
   searchValue: string;
   searchPlaceholder?: string;
+  searchAriaLabel?: string;
   onSearchChange: (value: string) => void;
+  onSubmitSearch?: (value: string) => void;
   searchInputRef?: Ref<HTMLInputElement>;
   searchIcon?: ReactNode;
   className?: string;
@@ -34,7 +37,9 @@ export type HeaderSearchBarProps = {
 export function HeaderSearchBar({
   searchValue,
   searchPlaceholder,
+  searchAriaLabel,
   onSearchChange,
+  onSubmitSearch,
   searchInputRef,
   searchIcon,
   className = "",
@@ -62,68 +67,42 @@ export function HeaderSearchBar({
     window.requestAnimationFrame(focusSearchInput);
   }
 
+  function handleSubmit(event: ReactFormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    onSubmitSearch?.(searchValue.trim());
+  }
+
   return (
-    <div className={`fw-toolbar-header-search-row${rowClassName ? ` ${rowClassName}` : ""}`}>
+    <div
+      className={`fw-toolbar-header-search-row${rowClassName ? ` ${rowClassName}` : ""}`}
+    >
       <form
         className={`fw-toolbar-header-search-form${formClassName ? ` ${formClassName}` : ""}`}
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={handleSubmit}
       >
         <div
           className={`fw-toolbar-search fw-toolbar-search-static${hasSearchValue ? " has-value" : ""}${className ? ` ${className}` : ""}`}
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            width: "100%",
-            height: 40,
-            minHeight: 40,
-            alignItems: "center",
-            gap: 9,
-            border: 0,
-            background: "transparent",
-            boxShadow: "none",
-            padding: 0,
-            ...style,
-          }}
+          style={style}
           onClick={focusSearchInput}
         >
-          <span
-            className="fw-toolbar-search-static-icon"
-            aria-hidden="true"
-            style={{
-              display: "inline-flex",
-              width: 15,
-              height: 40,
-              flex: "0 0 15px",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--text-primary)",
-              cursor: "default",
-              lineHeight: 1,
-              marginLeft: 4,
-              marginRight: 4,
-              pointerEvents: "none",
-            }}
-          >
+          <span className="fw-toolbar-search-static-icon" aria-hidden="true">
             {searchIcon}
           </span>
 
           {hasSearchValue && (
-            <>
-              <button
-                type="button"
-                className="fw-toolbar-search-static-clear"
-                onClick={handleSearchClear}
-                aria-label="Clear search"
+            <button
+              type="button"
+              className="fw-toolbar-search-static-clear"
+              onClick={handleSearchClear}
+              aria-label="Clear search"
+            >
+              <span
+                className="fw-toolbar-search-static-clear-icon"
+                aria-hidden="true"
               >
-                <span
-                  aria-hidden="true"
-                  style={{ display: "inline-flex", transform: "scale(1.25)" }}
-                >
-                  <HeaderSearchClearIcon />
-                </span>
-              </button>
-              <span className="fw-toolbar-search-static-divider" aria-hidden="true" />
-            </>
+                <HeaderSearchClearIcon />
+              </span>
+            </button>
           )}
 
           <input
@@ -131,22 +110,9 @@ export function HeaderSearchBar({
             type="text"
             value={searchValue}
             placeholder={searchPlaceholder}
+            aria-label={searchAriaLabel ?? searchPlaceholder}
             onChange={(event) => onSearchChange(event.target.value)}
             className={`fw-toolbar-search-static-input${inputClassName ? ` ${inputClassName}` : ""}`}
-            style={{
-              minWidth: 0,
-              height: 40,
-              flex: "1 1 auto",
-              border: 0,
-              background: "transparent",
-              color: "var(--text-primary)",
-              fontFamily: "inherit",
-              fontSize: 15,
-              fontWeight: 400,
-              lineHeight: "40px",
-              outline: "none",
-              padding: 0,
-            }}
           />
         </div>
       </form>
