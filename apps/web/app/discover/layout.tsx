@@ -247,16 +247,6 @@ const DISCOVER_LAYOUT_STYLE = `
     color: var(--text-primary);
   }
 
-  .discover-section-heading h2,
-  .discover-song-section .fw-song-list-title {
-    margin: 0;
-    font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
-    font-size: clamp(18px, 1.45vw, 24px) !important;
-    font-weight: 400 !important;
-    letter-spacing: -0.045em !important;
-    line-height: 1.1 !important;
-  }
-
   .discover-shelf-controls {
     display: inline-flex;
     align-items: center;
