@@ -14,15 +14,18 @@ import {
   useState,
 } from "react";
 
+import DropdownShell from "@/components/DropdownShell";
+import Footer from "@/components/Footer";
+import SongCard from "@/components/SongCard";
+import Toast from "@/components/Toast";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import MoreIcon from "@/components/icons/MoreIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import WaveformIcon from "@/components/icons/WaveformIcon";
-import Footer from "@/components/Footer";
-import SongCard from "@/components/SongCard";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -38,6 +41,54 @@ const HERO_BACKGROUND_IMAGE =
 function formatTrackCount(count?: number) {
   const safeCount = Number(count || 0);
   return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
+}
+
+async function addCuratedPlaylistToMyPlaylists(
+  playlist: CuratedPlaylist,
+): Promise<void> {
+  const createRes = await fetch("/api/playlists", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: playlist.name,
+      cover_image_url: playlist.cover_image_url ?? null,
+      position: 0,
+    }),
+  });
+
+  if (!createRes.ok) {
+    const err = await createRes.json().catch(() => ({}));
+    throw new Error(err?.error || "Failed to create playlist");
+  }
+
+  const newPlaylist = await createRes.json();
+  const newPlaylistId = newPlaylist.id;
+  const songsRes = await fetch(
+    `/api/curated-playlists/${encodeURIComponent(String(playlist.id))}/songs`,
+  );
+
+  if (!songsRes.ok) return;
+
+  const songs = await songsRes.json();
+
+  if (!Array.isArray(songs) || songs.length === 0) return;
+
+  for (let index = 0; index < songs.length; index += 1) {
+    const song = songs[index];
+    const songId = song.song_id ?? song.id;
+
+    if (!songId) continue;
+
+    try {
+      await fetch(`/api/playlists/${newPlaylistId}/songs`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ song_id: songId, position: index }),
+      });
+    } catch (error) {
+      console.warn(`Error adding song ${songId}:`, error);
+    }
+  }
 }
 
 function getFallbackGradient(index: number) {
@@ -350,6 +401,134 @@ function DiscoverMoodShelf({
   );
 }
 
+function DiscoverPlaylistMenu({
+  playlist,
+  open,
+  onOpenChange,
+  onAdd,
+  saving,
+  playerVisible,
+}: {
+  playlist: CuratedPlaylist;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAdd: () => void;
+  saving: boolean;
+  playerVisible: boolean;
+}) {
+  return (
+    <div data-playlist-menu className="playlist-card-menu-wrap">
+      <DropdownShell
+        open={open}
+        onOpenChange={onOpenChange}
+        placement="bottom-start"
+        strategy="fixed"
+        usePortal
+        offsetAmount={5}
+        flippedOffsetAmount={5}
+        crossAxisOffset={0}
+        collisionPadding={{
+          top: 68,
+          right: 16,
+          bottom: playerVisible ? 85 : 13,
+          left: 16,
+        }}
+        trigger={({ open: triggerOpen }) => (
+          <button
+            type="button"
+            className={`playlist-menu-btn playlist-menu-btn-grid ${
+              triggerOpen ? "is-open" : ""
+            }`}
+            aria-label={`${playlist.name} options`}
+            disabled={saving}
+          >
+            <MoreIcon />
+          </button>
+        )}
+      >
+        <button type="button" onClick={onAdd} disabled={saving}>
+          {saving ? "Adding…" : "Add to My Playlists"}
+        </button>
+      </DropdownShell>
+    </div>
+  );
+}
+
+function DiscoverPlaylistCard({
+  playlist,
+  open,
+  onOpenChange,
+  onAddSuccess,
+  onAddError,
+  playerVisible,
+}: {
+  playlist: CuratedPlaylist;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAddSuccess: (name: string) => void;
+  onAddError: (message: string) => void;
+  playerVisible: boolean;
+}) {
+  const [saving, setSaving] = useState(false);
+
+  async function handleAddToMyPlaylists() {
+    if (saving) return;
+
+    onOpenChange(false);
+    setSaving(true);
+
+    try {
+      await addCuratedPlaylistToMyPlaylists(playlist);
+      onAddSuccess(playlist.name);
+    } catch (error) {
+      onAddError(
+        error instanceof Error ? error.message : "Failed to add playlist",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div
+      className={`discover-playlist-card-shell playlist-gallery-card ${
+        open ? "is-menu-open" : ""
+      }`}
+    >
+      <Link
+        href={`/curated-playlists/${playlist.id}`}
+        className="discover-playlist-card"
+      >
+        <div className="discover-playlist-image">
+          {playlist.cover_image_url ? (
+            <Image
+              src={playlist.cover_image_url}
+              alt={playlist.name}
+              fill
+              unoptimized
+              sizes="(min-width: 1400px) 18vw, (min-width: 900px) 24vw, 46vw"
+              className="object-cover"
+            />
+          ) : (
+            <div className="discover-media-fallback" />
+          )}
+        </div>
+        <h3>{playlist.name}</h3>
+        <p>{formatTrackCount(playlist.song_count)}</p>
+      </Link>
+
+      <DiscoverPlaylistMenu
+        playlist={playlist}
+        open={open}
+        onOpenChange={onOpenChange}
+        onAdd={handleAddToMyPlaylists}
+        saving={saving}
+        playerVisible={playerVisible}
+      />
+    </div>
+  );
+}
+
 function DiscoverPlaylistGrid({
   playlists,
   loading,
@@ -357,10 +536,70 @@ function DiscoverPlaylistGrid({
   playlists: CuratedPlaylist[];
   loading: boolean;
 }) {
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { currentSong } = usePlayer();
+  const playerVisible = Boolean(currentSong);
+
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 2400);
+  }
+
   if (!loading && playlists.length === 0) return null;
 
   return (
-    <section className="discover-section">
+    <section className="discover-section discover-curated-playlist-section">
+      <style>{`
+        .discover-curated-playlist-section .discover-playlist-card-shell {
+          position: relative;
+          min-width: 0;
+        }
+
+        .discover-curated-playlist-section .discover-playlist-card h3,
+        .discover-curated-playlist-section .discover-playlist-card p {
+          padding-right: 24px;
+        }
+
+        .discover-curated-playlist-section .playlist-card-menu-wrap {
+          position: absolute;
+          right: 0;
+          bottom: 18px;
+          z-index: 12;
+          display: flex;
+          width: 18px;
+          height: 18px;
+        }
+
+        .discover-curated-playlist-section .playlist-menu-btn-grid {
+          display: flex;
+          width: 18px;
+          min-width: 18px;
+          height: 18px;
+          cursor: pointer;
+          align-items: center;
+          justify-content: center;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          color: var(--text-secondary);
+          padding: 0;
+          opacity: 1;
+          transition: color 0.15s ease;
+        }
+
+        .discover-curated-playlist-section .playlist-menu-btn-grid:hover,
+        .discover-curated-playlist-section .playlist-menu-btn-grid.is-open {
+          background: transparent;
+          color: var(--text-primary);
+        }
+
+        .discover-curated-playlist-section .playlist-menu-btn-grid svg {
+          width: 15px;
+          height: 15px;
+        }
+      `}</style>
+
       <div
         className="discover-section-heading"
         style={{ alignItems: "baseline" }}
@@ -385,30 +624,26 @@ function DiscoverPlaylistGrid({
               />
             ))
           : playlists.map((playlist) => (
-              <Link
+              <DiscoverPlaylistCard
                 key={playlist.id}
-                href={`/curated-playlists/${playlist.id}`}
-                className="discover-playlist-card"
-              >
-                <div className="discover-playlist-image">
-                  {playlist.cover_image_url ? (
-                    <Image
-                      src={playlist.cover_image_url}
-                      alt={playlist.name}
-                      fill
-                      unoptimized
-                      sizes="(min-width: 1400px) 18vw, (min-width: 900px) 24vw, 46vw"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="discover-media-fallback" />
-                  )}
-                </div>
-                <h3>{playlist.name}</h3>
-                <p>{formatTrackCount(playlist.song_count)}</p>
-              </Link>
+                playlist={playlist}
+                open={openMenuId === playlist.id}
+                onOpenChange={(nextOpen) =>
+                  setOpenMenuId(nextOpen ? playlist.id : null)
+                }
+                onAddSuccess={(name) =>
+                  showToast(`"${name}" added to My Playlists`)
+                }
+                onAddError={showToast}
+                playerVisible={playerVisible}
+              />
             ))}
       </div>
+
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
     </section>
   );
 }
