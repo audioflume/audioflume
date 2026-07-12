@@ -443,6 +443,85 @@ function DiscoverSongs({
   );
 }
 
+function DiscoverProductionStyleCard({
+  playlist,
+}: {
+  playlist: CuratedPlaylist;
+}) {
+  const supportingText = playlist.description || playlist.kicker;
+
+  return (
+    <Link
+      href={`/curated-playlists/${playlist.id}`}
+      className="discover-playlist-card group"
+    >
+      <div className="relative aspect-[1.55/1] w-full overflow-hidden bg-[var(--bg-secondary)]">
+        {playlist.cover_image_url ? (
+          <Image
+            src={playlist.cover_image_url}
+            alt={playlist.name}
+            fill
+            unoptimized
+            sizes="(min-width: 1280px) 23vw, (min-width: 640px) 46vw, 100vw"
+            className="object-cover transition duration-500 group-hover:scale-[1.025]"
+          />
+        ) : (
+          <div className="discover-media-fallback" />
+        )}
+
+        <div className="discover-card-arrow">
+          <ArrowUpRightIcon />
+        </div>
+      </div>
+
+      <h3>{playlist.name}</h3>
+      {supportingText && <p>{supportingText}</p>}
+    </Link>
+  );
+}
+
+function DiscoverProductionStyles({
+  playlists,
+  loading,
+}: {
+  playlists: CuratedPlaylist[];
+  loading: boolean;
+}) {
+  if (!loading && playlists.length === 0) return null;
+
+  return (
+    <section className="discover-section discover-production-section">
+      <div className="discover-section-heading" style={{ alignItems: "baseline" }}>
+        <h2>Browse by production style</h2>
+
+        <Link
+          href="/music"
+          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+        >
+          Explore music library
+        </Link>
+      </div>
+
+      <div className="grid gap-[clamp(10px,1.25vw,18px)] sm:grid-cols-2 xl:grid-cols-4">
+        {loading
+          ? Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="discover-card-skeleton aspect-[1.55/1] w-full"
+                aria-hidden="true"
+              />
+            ))
+          : playlists.map((playlist) => (
+              <DiscoverProductionStyleCard
+                key={playlist.id}
+                playlist={playlist}
+              />
+            ))}
+      </div>
+    </section>
+  );
+}
+
 function ReadyToCutCoverImage({
   song,
   index,
@@ -650,6 +729,18 @@ export default function DiscoverPage() {
     [playlists],
   );
 
+  const productionBlocks = useMemo(
+    () =>
+      playlists
+        .filter((playlist) =>
+          playlist.discover_section?.startsWith("production_style_"),
+        )
+        .sort((a, b) =>
+          (a.discover_section ?? "").localeCompare(b.discover_section ?? ""),
+        ),
+    [playlists],
+  );
+
   const curatedPlaylists = useMemo(() => {
     const selected = playlists
       .filter(
@@ -691,6 +782,10 @@ export default function DiscoverPage() {
           loading={playlistsLoading}
         />
         <DiscoverSongs songs={recentSongs} loading={songsLoading} />
+        <DiscoverProductionStyles
+          playlists={productionBlocks}
+          loading={playlistsLoading}
+        />
         <ReadyToCutTracks songs={readyToCutSongs} loading={songsLoading} />
 
         <div
