@@ -125,10 +125,11 @@
   border: 0 !important;
   background: transparent !important;
   color: var(--text-primary) !important;
-  font-family: var(--font-satoshi) !important;
+  font-family: "aktiv-grotesk", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif !important;
   font-size: 12px !important;
   font-style: normal !important;
-  font-synthesis: none !important;
+  font-synthesis: weight !important;
   font-weight: 500 !important;
   letter-spacing: 0 !important;
   line-height: 1.2 !important;
