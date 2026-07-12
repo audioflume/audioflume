@@ -37,7 +37,7 @@
 }
 
 .fw-toolbar-search-static.has-value {
-  gap: var(--fw-header-search-active-gap, 9px) !important;
+  gap: var(--fw-header-search-active-gap, 8px) !important;
 }
 
 .fw-toolbar-search-static-icon {
@@ -51,7 +51,7 @@
   color: var(--text-muted) !important;
   line-height: 0 !important;
   margin: 0 !important;
-  transform: var(--fw-header-search-content-transform, none) !important;
+  transform: none !important;
   pointer-events: none !important;
 }
 
@@ -72,6 +72,7 @@
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
+  background-color: transparent !important;
   color: var(--text-muted) !important;
   cursor: pointer !important;
   margin: 0 !important;
@@ -83,8 +84,10 @@
   display: none !important;
 }
 
-.fw-toolbar-search-static-clear:hover {
-  background: var(--bg-hover) !important;
+.fw-toolbar-search-static-clear:hover,
+.fw-toolbar-search-static-clear:focus-visible {
+  background: transparent !important;
+  background-color: transparent !important;
   color: var(--text-primary) !important;
   opacity: 1 !important;
 }
@@ -100,6 +103,17 @@
   display: block !important;
   width: 12px !important;
   height: 12px !important;
+}
+
+.fw-toolbar-search-static-divider {
+  display: inline-flex !important;
+  width: 1px !important;
+  height: 16px !important;
+  flex: 0 0 1px !important;
+  align-self: center !important;
+  background: var(--border) !important;
+  margin: 0 !important;
+  pointer-events: none !important;
 }
 
 .fw-toolbar-search-static-input {
@@ -118,7 +132,7 @@
   line-height: 1.2 !important;
   outline: none !important;
   padding: 0 !important;
-  transform: var(--fw-header-search-content-transform, none) !important;
+  transform: none !important;
 }
 
 .fw-toolbar-search-static-input::placeholder {
