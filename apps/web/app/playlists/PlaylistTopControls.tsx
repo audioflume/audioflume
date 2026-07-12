@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 const PLAYLIST_SKELETON_VIEW_MODE_KEY = "filmwave-playlist-skeleton-view-mode";
 const PLAYLIST_SCOPE_OPTIONS = [
   "All playlists",
-  "My playlists",
+  "Private Playlists",
   "Public Playlists",
 ] as const;
 
