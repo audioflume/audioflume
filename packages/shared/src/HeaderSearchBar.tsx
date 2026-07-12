@@ -3,6 +3,7 @@
 import {
   type CSSProperties,
   type FormEvent as ReactFormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
   type Ref,
@@ -32,6 +33,7 @@ export type HeaderSearchBarProps = {
   formClassName?: string;
   inputClassName?: string;
   style?: CSSProperties;
+  renderForm?: boolean;
 };
 
 export function HeaderSearchBar({
@@ -47,6 +49,7 @@ export function HeaderSearchBar({
   formClassName = "",
   inputClassName = "",
   style,
+  renderForm = true,
 }: HeaderSearchBarProps) {
   const hasSearchValue = searchValue.length > 0;
 
@@ -67,61 +70,85 @@ export function HeaderSearchBar({
     window.requestAnimationFrame(focusSearchInput);
   }
 
-  function handleSubmit(event: ReactFormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function submitSearch() {
     onSubmitSearch?.(searchValue.trim());
   }
+
+  function handleSubmit(event: ReactFormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitSearch();
+  }
+
+  function handleInputKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
+    if (renderForm || event.key !== "Enter") return;
+    event.preventDefault();
+    event.stopPropagation();
+    submitSearch();
+  }
+
+  const searchField = (
+    <div
+      className={`fw-toolbar-search fw-toolbar-search-static${hasSearchValue ? " has-value" : ""}${className ? ` ${className}` : ""}`}
+      style={style}
+      onClick={focusSearchInput}
+    >
+      <span className="fw-toolbar-search-static-icon" aria-hidden="true">
+        {searchIcon}
+      </span>
+
+      {hasSearchValue && (
+        <>
+          <button
+            type="button"
+            className="fw-toolbar-search-static-clear"
+            onClick={handleSearchClear}
+            aria-label="Clear search"
+          >
+            <span
+              className="fw-toolbar-search-static-clear-icon"
+              aria-hidden="true"
+            >
+              <HeaderSearchClearIcon />
+            </span>
+          </button>
+          <span
+            className="fw-toolbar-search-static-divider"
+            aria-hidden="true"
+          />
+        </>
+      )}
+
+      <input
+        ref={searchInputRef}
+        type="text"
+        value={searchValue}
+        placeholder={searchPlaceholder}
+        aria-label={searchAriaLabel ?? searchPlaceholder}
+        onChange={(event) => onSearchChange(event.target.value)}
+        onKeyDown={handleInputKeyDown}
+        className={`fw-toolbar-search-static-input${inputClassName ? ` ${inputClassName}` : ""}`}
+      />
+    </div>
+  );
 
   return (
     <div
       className={`fw-toolbar-header-search-row${rowClassName ? ` ${rowClassName}` : ""}`}
     >
-      <form
-        className={`fw-toolbar-header-search-form${formClassName ? ` ${formClassName}` : ""}`}
-        onSubmit={handleSubmit}
-      >
-        <div
-          className={`fw-toolbar-search fw-toolbar-search-static${hasSearchValue ? " has-value" : ""}${className ? ` ${className}` : ""}`}
-          style={style}
-          onClick={focusSearchInput}
+      {renderForm ? (
+        <form
+          className={`fw-toolbar-header-search-form${formClassName ? ` ${formClassName}` : ""}`}
+          onSubmit={handleSubmit}
         >
-          <span className="fw-toolbar-search-static-icon" aria-hidden="true">
-            {searchIcon}
-          </span>
-
-          {hasSearchValue && (
-            <>
-              <button
-                type="button"
-                className="fw-toolbar-search-static-clear"
-                onClick={handleSearchClear}
-                aria-label="Clear search"
-              >
-                <span
-                  className="fw-toolbar-search-static-clear-icon"
-                  aria-hidden="true"
-                >
-                  <HeaderSearchClearIcon />
-                </span>
-              </button>
-              <span
-                className="fw-toolbar-search-static-divider"
-                aria-hidden="true"
-              />
-            </>
-          )}
-
-          <input
-            ref={searchInputRef}
-            type="text"
-            value={searchValue}
-            placeholder={searchPlaceholder}
-            aria-label={searchAriaLabel ?? searchPlaceholder}
-            onChange={(event) => onSearchChange(event.target.value)}
-            className={`fw-toolbar-search-static-input${inputClassName ? ` ${inputClassName}` : ""}`}
-          />
+          {searchField}
+        </form>
+      ) : (
+        <div
+          className={`fw-toolbar-header-search-form${formClassName ? ` ${formClassName}` : ""}`}
+        >
+          {searchField}
         </div>
-      </form>
+      )}
     </div>
   );
 }

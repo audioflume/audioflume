@@ -1,22 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { HeaderSearchBar } from "@filmwave/shared";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
+import SearchIcon from "@/components/icons/SearchIcon";
 
 const DISCOVER_SCROLLED_CLASS = "filmwave-discover-scrolled";
 const DISCOVER_SCROLL_THRESHOLD = 18;
 const HEADER_MENU_OPEN_SELECTOR = ".filmwave-header-nav-item-playlists.is-open";
-const SEARCH_CLEAR_ICON = `
-  <span class="fw-toolbar-search-static-clear-icon" aria-hidden="true">
-    <svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M6.34 4.93 12 10.59l5.66-5.66a1 1 0 1 1 1.41 1.41L13.41 12l5.66 5.66a1 1 0 0 1-1.41 1.41L12 13.41l-5.66 5.66a1 1 0 0 1-1.41-1.41L10.59 12 4.93 6.34a1 1 0 0 1 1.41-1.41Z"
-      />
-    </svg>
-  </span>
-`;
 
 export default function DiscoverHeaderScrollState() {
+  const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
+  const [searchMount, setSearchMount] = useState<HTMLFormElement | null>(null);
+
   useEffect(() => {
     let frame = 0;
 
@@ -57,147 +56,175 @@ export default function DiscoverHeaderScrollState() {
   }, []);
 
   useEffect(() => {
-    const searchForm = document.querySelector<HTMLFormElement>(
+    const mount = document.querySelector<HTMLFormElement>(
       ".discover-hero-search",
     );
-    const searchIcon = searchForm?.querySelector<HTMLElement>(
-      ".discover-hero-search-icon",
-    );
-    const searchInput = searchForm?.querySelector<HTMLInputElement>("input");
+    if (!mount) return;
 
-    if (!searchForm || !searchIcon || !searchInput) return;
-
-    searchForm.classList.add("fw-toolbar-search-static");
-    searchIcon.classList.add("fw-toolbar-search-static-icon");
-    searchInput.classList.add("fw-toolbar-search-static-input");
-
-    const clearButton = document.createElement("button");
-    clearButton.type = "button";
-    clearButton.className = "fw-toolbar-search-static-clear";
-    clearButton.setAttribute("aria-label", "Clear search");
-    clearButton.innerHTML = SEARCH_CLEAR_ICON;
-    clearButton.hidden = true;
-
-    const divider = document.createElement("span");
-    divider.className = "fw-toolbar-search-static-divider";
-    divider.setAttribute("aria-hidden", "true");
-    divider.hidden = true;
-
-    searchInput.before(clearButton, divider);
-
-    function syncSearchState() {
-      const hasValue = searchInput.value.length > 0;
-      searchForm.classList.toggle("has-value", hasValue);
-      clearButton.hidden = !hasValue;
-      divider.hidden = !hasValue;
-    }
-
-    function clearSearch(event: MouseEvent) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const valueSetter = Object.getOwnPropertyDescriptor(
-        HTMLInputElement.prototype,
-        "value",
-      )?.set;
-      valueSetter?.call(searchInput, "");
-      searchInput.dispatchEvent(new Event("input", { bubbles: true }));
-      searchInput.focus();
-      syncSearchState();
-    }
-
-    searchInput.addEventListener("input", syncSearchState);
-    clearButton.addEventListener("click", clearSearch);
-    syncSearchState();
+    mount.classList.add("has-shared-search");
+    setSearchMount(mount);
 
     return () => {
-      searchInput.removeEventListener("input", syncSearchState);
-      clearButton.removeEventListener("click", clearSearch);
-      clearButton.remove();
-      divider.remove();
-      searchForm.classList.remove("fw-toolbar-search-static", "has-value");
-      searchIcon.classList.remove("fw-toolbar-search-static-icon");
-      searchInput.classList.remove("fw-toolbar-search-static-input");
+      mount.classList.remove("has-shared-search");
+      setSearchMount(null);
     };
   }, []);
 
+  function submitSearch(value: string) {
+    const cleanSearch = value.trim();
+    router.push(
+      cleanSearch
+        ? `/music?search=${encodeURIComponent(cleanSearch)}`
+        : "/music",
+    );
+  }
+
   return (
-    <style>{`
-      .discover-hero-content {
-        transform: translateY(-10px);
-      }
+    <>
+      <style>{`
+        .discover-hero-content {
+          transform: translateY(-10px);
+        }
 
-      .discover-hero-search {
-        --text-primary: #111;
-        --text-muted: rgba(17, 17, 17, 0.42);
-        --border: rgba(17, 17, 17, 0.09);
-        --fw-header-search-field-height: 58px;
-        --fw-header-search-transform: none;
-        border: 1px solid rgba(255, 255, 255, 0.7) !important;
-        background: #fff !important;
-        background-color: #fff !important;
-        box-shadow: 0 16px 45px rgba(0, 0, 0, 0.18) !important;
-        padding: 0 8px 0 18px !important;
-      }
+        .discover-hero-search {
+          --text-primary: #111;
+          --text-muted: rgba(17, 17, 17, 0.42);
+          --border: rgba(17, 17, 17, 0.09);
+          --fw-header-search-row-height: 58px;
+          --fw-header-search-field-height: 58px;
+          --fw-header-search-transform: none;
+          border: 1px solid rgba(255, 255, 255, 0.7) !important;
+          background: #fff !important;
+          background-color: #fff !important;
+          box-shadow: 0 16px 45px rgba(0, 0, 0, 0.18) !important;
+          padding: 0 !important;
+        }
 
-      .discover-hero-search > button[type="submit"] {
-        margin-left: auto;
-      }
+        .discover-hero-search.has-shared-search {
+          grid-template-columns: minmax(0, 1fr) !important;
+        }
 
-      .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible) {
-        background: color-mix(
-          in srgb,
-          var(--bg-primary) 96%,
-          var(--text-primary) 4%
-        );
-      }
+        .discover-hero-search.has-shared-search > .discover-hero-search-icon,
+        .discover-hero-search.has-shared-search > input,
+        .discover-hero-search.has-shared-search > button {
+          display: none !important;
+        }
 
-      body:has(.discover-page-root)
-        .discover-curated-playlist-section
-        .playlist-menu-btn-grid {
-        opacity: 0 !important;
-        transition:
-          opacity 0.15s ease,
-          color 0.15s ease !important;
-      }
+        .discover-hero-search-shared {
+          display: grid;
+          width: 100%;
+          height: 100%;
+          grid-template-columns: minmax(0, 1fr) 120px;
+          align-items: center;
+        }
 
-      body:has(.discover-page-root)
-        .discover-curated-playlist-section
-        .discover-playlist-card-shell:hover
-        .playlist-menu-btn-grid,
-      body:has(.discover-page-root)
-        .discover-curated-playlist-section
-        .discover-playlist-card-shell.is-menu-open
-        .playlist-menu-btn-grid,
-      body:has(.discover-page-root)
-        .discover-curated-playlist-section
-        .discover-playlist-card-shell:focus-within
-        .playlist-menu-btn-grid {
-        opacity: 1 !important;
-      }
+        .discover-hero-search-shared .fw-toolbar-header-search-row {
+          min-width: 0;
+          padding-left: 18px !important;
+        }
 
-      body:has(
+        .discover-hero-search-submit {
+          height: calc(100% - 16px);
+          cursor: pointer;
+          border: 0;
+          background: #111;
+          color: #fff;
+          font-family: inherit;
+          font-size: 12px;
+          font-weight: 500;
+          margin-right: 8px;
+          padding: 0 20px;
+          transition: opacity 150ms ease;
+        }
+
+        .discover-hero-search-submit:hover {
+          opacity: 0.82;
+        }
+
+        @media (max-width: 720px) {
+          .discover-hero-search-shared {
+            grid-template-columns: minmax(0, 1fr) 92px;
+          }
+        }
+
+        .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible) {
+          background: color-mix(
+            in srgb,
+            var(--bg-primary) 96%,
+            var(--text-primary) 4%
+          );
+        }
+
+        body:has(.discover-page-root)
           .discover-curated-playlist-section
-            .playlist-card-menu-wrap
-            .is-dropdown-open
-        )
-        > .filmwave-dropdown-shell {
-        translate: calc(-100% + 18px) 0 !important;
-      }
+          .playlist-menu-btn-grid {
+          opacity: 0 !important;
+          transition:
+            opacity 0.15s ease,
+            color 0.15s ease !important;
+        }
 
-      body:has(.discover-page-root)
-        .filmwave-header
-        .filmwave-header-actions
-        .filmwave-header-nav
-        .filmwave-header-nav-link:hover,
-      body:has(.discover-page-root)
-        .filmwave-header
-        .filmwave-header-actions
-        .filmwave-header-nav
-        .filmwave-header-nav-link.is-active {
-        background: transparent !important;
-        background-color: transparent !important;
-      }
-    `}</style>
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-card-shell:hover
+          .playlist-menu-btn-grid,
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-card-shell.is-menu-open
+          .playlist-menu-btn-grid,
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-card-shell:focus-within
+          .playlist-menu-btn-grid {
+          opacity: 1 !important;
+        }
+
+        body:has(
+            .discover-curated-playlist-section
+              .playlist-card-menu-wrap
+              .is-dropdown-open
+          )
+          > .filmwave-dropdown-shell {
+          translate: calc(-100% + 18px) 0 !important;
+        }
+
+        body:has(.discover-page-root)
+          .filmwave-header
+          .filmwave-header-actions
+          .filmwave-header-nav
+          .filmwave-header-nav-link:hover,
+        body:has(.discover-page-root)
+          .filmwave-header
+          .filmwave-header-actions
+          .filmwave-header-nav
+          .filmwave-header-nav-link.is-active {
+          background: transparent !important;
+          background-color: transparent !important;
+        }
+      `}</style>
+
+      {searchMount &&
+        createPortal(
+          <div className="discover-hero-search-shared">
+            <HeaderSearchBar
+              searchValue={searchValue}
+              searchPlaceholder="Search music library"
+              searchAriaLabel="Search music library"
+              onSearchChange={setSearchValue}
+              onSubmitSearch={submitSearch}
+              searchIcon={<SearchIcon />}
+              renderForm={false}
+            />
+            <button
+              type="button"
+              className="discover-hero-search-submit"
+              onClick={() => submitSearch(searchValue)}
+            >
+              Search
+            </button>
+          </div>,
+          searchMount,
+        )}
+    </>
   );
 }
