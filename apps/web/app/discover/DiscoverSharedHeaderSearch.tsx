@@ -58,6 +58,14 @@ export default function DiscoverHeaderScrollState() {
         background-color: #fff !important;
       }
 
+      .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible) {
+        background: color-mix(
+          in srgb,
+          var(--bg-primary) 96%,
+          var(--text-primary) 4%
+        );
+      }
+
       body:has(.discover-page-root)
         .filmwave-header
         .filmwave-header-actions
