@@ -50,10 +50,9 @@
   align-items: center !important;
   justify-content: center !important;
   color: var(--text-muted) !important;
-  cursor: default !important;
   line-height: 0 !important;
-  margin-left: 4px !important;
-  margin-right: 4px !important;
+  margin: 0 !important;
+  transform: none !important;
   pointer-events: none !important;
 }
 
