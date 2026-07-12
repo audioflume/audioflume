@@ -210,7 +210,8 @@ function DiscoverMoodShelf({
           cursor: pointer;
         }
 
-        .discover-mood-section .playlist-gallery-top-row {
+        .discover-mood-section .playlist-gallery-top-row,
+        .discover-production-section .playlist-gallery-top-row {
           position: relative;
           z-index: 4;
           display: flex;
@@ -218,7 +219,8 @@ function DiscoverMoodShelf({
           padding: 16px;
         }
 
-        .discover-mood-section .playlist-gallery-arrow {
+        .discover-mood-section .playlist-gallery-arrow,
+        .discover-production-section .playlist-gallery-arrow {
           display: flex;
           width: 32px;
           height: 32px;
@@ -233,7 +235,9 @@ function DiscoverMoodShelf({
         }
 
         .discover-mood-section .playlist-gallery-card:hover .playlist-gallery-arrow,
-        .discover-mood-section .playlist-gallery-card.is-menu-open .playlist-gallery-arrow {
+        .discover-mood-section .playlist-gallery-card.is-menu-open .playlist-gallery-arrow,
+        .discover-production-section .playlist-gallery-card:hover .playlist-gallery-arrow,
+        .discover-production-section .playlist-gallery-card.is-menu-open .playlist-gallery-arrow {
           background: white;
           color: black;
         }
@@ -453,9 +457,9 @@ function DiscoverProductionStyleCard({
   return (
     <Link
       href={`/curated-playlists/${playlist.id}`}
-      className="discover-playlist-card group"
+      className="discover-playlist-card playlist-gallery-card group"
     >
-      <div className="relative aspect-[1.55/1] w-full overflow-hidden bg-[var(--bg-secondary)]">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--bg-secondary)]">
         {playlist.cover_image_url ? (
           <Image
             src={playlist.cover_image_url}
@@ -469,8 +473,10 @@ function DiscoverProductionStyleCard({
           <div className="discover-media-fallback" />
         )}
 
-        <div className="discover-card-arrow">
-          <ArrowUpRightIcon />
+        <div className="playlist-gallery-top-row">
+          <div className="playlist-gallery-arrow">
+            <ArrowUpRightIcon />
+          </div>
         </div>
       </div>
 
@@ -507,7 +513,7 @@ function DiscoverProductionStyles({
           ? Array.from({ length: 4 }).map((_, index) => (
               <div
                 key={index}
-                className="discover-card-skeleton aspect-[1.55/1] w-full"
+                className="discover-card-skeleton aspect-[4/5] w-full"
                 aria-hidden="true"
               />
             ))
