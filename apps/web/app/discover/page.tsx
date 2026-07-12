@@ -94,7 +94,7 @@ function DiscoverHero() {
       <div className="discover-hero-overlay" aria-hidden="true" />
 
       <div className="discover-hero-inner">
-        <div className="discover-hero-content">
+        <div className="discover-hero-content max-w-[780px]">
           <h1>Find the cue that fits the scene</h1>
 
           <form className="discover-hero-search" onSubmit={handleSubmit}>
@@ -443,7 +443,7 @@ function DiscoverSongs({
       <div className="mt-5 flex justify-center">
         <Link
           href="/music"
-          className="inline-flex h-11 items-center justify-center rounded-none bg-[var(--bg-elevated)] px-7 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
+          className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--bg-elevated)] px-10 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
         >
           Explore music library
         </Link>
