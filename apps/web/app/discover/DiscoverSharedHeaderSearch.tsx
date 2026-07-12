@@ -58,6 +58,50 @@ export default function DiscoverHeaderScrollState() {
         background-color: #fff !important;
       }
 
+      .discover-hero-search-icon {
+        display: inline-flex !important;
+        width: 13px !important;
+        height: 13px !important;
+        align-self: center !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: #777 !important;
+        line-height: 0 !important;
+        pointer-events: none !important;
+      }
+
+      .discover-hero-search-icon svg {
+        display: block !important;
+        width: 13px !important;
+        height: 13px !important;
+      }
+
+      .discover-hero-search input {
+        display: block !important;
+        min-width: 0 !important;
+        height: auto !important;
+        align-self: center !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #111 !important;
+        font-family: inherit !important;
+        font-size: 12px !important;
+        font-style: italic !important;
+        font-weight: 400 !important;
+        line-height: 1.2 !important;
+        outline: none !important;
+        padding: 0 14px 0 0 !important;
+        transform: none !important;
+      }
+
+      .discover-hero-search input::placeholder {
+        color: #777 !important;
+        font-size: 12px !important;
+        font-style: italic !important;
+        font-weight: 400 !important;
+        line-height: 1.2 !important;
+      }
+
       .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible) {
         background: color-mix(
           in srgb,
