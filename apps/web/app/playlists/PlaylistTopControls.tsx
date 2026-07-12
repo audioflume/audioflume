@@ -221,6 +221,10 @@ export default function PlaylistTopControls() {
           grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto) !important;
         }
 
+        .playlists-top-controls.is-search-only {
+          grid-template-columns: minmax(300px, 640px) !important;
+        }
+
         .playlists-status-pill {
           width: 150px !important;
         }
@@ -254,46 +258,51 @@ export default function PlaylistTopControls() {
         }
       `}</style>
 
-      <section className="playlists-top-controls" aria-label="Playlist controls">
-        <DropdownShell
-          open={playlistScopeOpen}
-          onOpenChange={setPlaylistScopeOpen}
-          placement="bottom-start"
-          className="playlist-scope-dropdown"
-          offsetAmount={6}
-          flippedOffsetAmount={6}
-          collisionPadding={{
-            top: 112,
-            right: 16,
-            bottom: playerVisible ? 96 : 24,
-            left: 16,
-          }}
-          trigger={({ open }) => (
-            <button
-              type="button"
-              className={`playlists-status-pill playlists-scope-button${open ? " is-open" : ""}`}
-              aria-label="Playlist visibility scope"
-            >
-              <span>{playlistScope}</span>
-              <ChevronIcon />
-            </button>
-          )}
-        >
-          {PLAYLIST_SCOPE_OPTIONS.map((option) => (
-            <button
-              key={option}
-              type="button"
-              className={playlistScope === option ? "is-active" : ""}
-              aria-checked={playlistScope === option}
-              onClick={() => {
-                setPlaylistScope(option);
-                setPlaylistScopeOpen(false);
-              }}
-            >
-              {option}
-            </button>
-          ))}
-        </DropdownShell>
+      <section
+        className={`playlists-top-controls${isCuratedPlaylistsPage ? " is-search-only" : ""}`}
+        aria-label="Playlist controls"
+      >
+        {isMyPlaylistsPage && (
+          <DropdownShell
+            open={playlistScopeOpen}
+            onOpenChange={setPlaylistScopeOpen}
+            placement="bottom-start"
+            className="playlist-scope-dropdown"
+            offsetAmount={6}
+            flippedOffsetAmount={6}
+            collisionPadding={{
+              top: 112,
+              right: 16,
+              bottom: playerVisible ? 96 : 24,
+              left: 16,
+            }}
+            trigger={({ open }) => (
+              <button
+                type="button"
+                className={`playlists-status-pill playlists-scope-button${open ? " is-open" : ""}`}
+                aria-label="Playlist visibility scope"
+              >
+                <span>{playlistScope}</span>
+                <ChevronIcon />
+              </button>
+            )}
+          >
+            {PLAYLIST_SCOPE_OPTIONS.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={playlistScope === option ? "is-active" : ""}
+                aria-checked={playlistScope === option}
+                onClick={() => {
+                  setPlaylistScope(option);
+                  setPlaylistScopeOpen(false);
+                }}
+              >
+                {option}
+              </button>
+            ))}
+          </DropdownShell>
+        )}
 
         <label className="playlists-search">
           <SearchIcon />
@@ -315,7 +324,7 @@ export default function PlaylistTopControls() {
           )}
         </label>
 
-        {preferencesLoaded && (
+        {isMyPlaylistsPage && preferencesLoaded && (
           <div className="playlists-control-right">
             <button
               type="button"
