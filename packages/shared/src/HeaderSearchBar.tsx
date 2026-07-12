@@ -90,19 +90,25 @@ export function HeaderSearchBar({
           </span>
 
           {hasSearchValue && (
-            <button
-              type="button"
-              className="fw-toolbar-search-static-clear"
-              onClick={handleSearchClear}
-              aria-label="Clear search"
-            >
-              <span
-                className="fw-toolbar-search-static-clear-icon"
-                aria-hidden="true"
+            <>
+              <button
+                type="button"
+                className="fw-toolbar-search-static-clear"
+                onClick={handleSearchClear}
+                aria-label="Clear search"
               >
-                <HeaderSearchClearIcon />
-              </span>
-            </button>
+                <span
+                  className="fw-toolbar-search-static-clear-icon"
+                  aria-hidden="true"
+                >
+                  <HeaderSearchClearIcon />
+                </span>
+              </button>
+              <span
+                className="fw-toolbar-search-static-divider"
+                aria-hidden="true"
+              />
+            </>
           )}
 
           <input
