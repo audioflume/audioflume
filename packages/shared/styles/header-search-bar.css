@@ -133,7 +133,7 @@
   line-height: 1.2 !important;
   outline: none !important;
   padding: 0 !important;
-  transform: translateY(-2px) !important;
+  transform: translateY(-1px) !important;
 }
 
 .fw-toolbar-search-static-input::placeholder {
