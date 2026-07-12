@@ -45,7 +45,8 @@ export default function Footer({
     <>
       <style>{`
         .filmwave-footer-tonal-wordmark.filmwave-header-tonal-wordmark {
-          font-size: 16px !important;
+          color: var(--text-muted) !important;
+          font-size: 17px !important;
           transform: none !important;
         }
       `}</style>
