@@ -488,6 +488,8 @@ const DISCOVER_LAYOUT_STYLE = `
   }
 
   .discover-footer-wrap {
+    margin-right: calc(32px - var(--discover-page-gutter));
+    margin-left: calc(32px - var(--discover-page-gutter));
     padding-top: 64px;
   }
 
