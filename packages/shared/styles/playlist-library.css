@@ -325,3 +325,16 @@
   line-height: 1.45 !important;
   letter-spacing: normal !important;
 }
+
+/* Shared section-title typography for Discover and Curated Playlists. */
+.discover-section-heading h2,
+.curated-playlist-shelf-heading h2,
+.discover-song-section .fw-song-list-title {
+  margin: 0 !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
+  font-size: clamp(18px, 1.45vw, 24px) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 1.1 !important;
+}
