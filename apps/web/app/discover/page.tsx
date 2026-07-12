@@ -452,7 +452,7 @@ function ReadyToCutCoverImage({
 }) {
   return (
     <div
-      className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md bg-[var(--bg-tertiary)]"
+      className="relative h-9 w-9 shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
       style={{
         background: song.coverArt ? undefined : getFallbackGradient(index),
       }}
@@ -547,7 +547,7 @@ function ReadyToCutSongCard({ song, index }: { song: Song; index: number }) {
   return (
     <article
       {...cardPlayProps}
-      className="group flex h-[54px] cursor-pointer items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_92%,var(--text-primary)_8%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_88%,var(--text-primary)_12%)] focus:outline-none focus-visible:bg-[var(--bg-hover)]"
+      className="group flex h-[54px] cursor-pointer items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
       <ReadyToCutCoverImage song={song} index={index} />
