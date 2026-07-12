@@ -292,92 +292,94 @@ export default function CuratedPlaylistShelf({
   if (!playlists.length) return null;
 
   return (
-    <section className={`curated-playlist-shelf ${className}`}>
-      <div className="curated-playlist-shelf-heading">
-        <div className="min-w-0">
-          <h2>{title}</h2>
+    <div className={className}>
+      <section className="curated-playlist-shelf">
+        <div className="discover-section-heading curated-playlist-shelf-heading">
+          <div className="min-w-0">
+            <h2>{title}</h2>
 
-          {description && <p>{description}</p>}
+            {description && <p>{description}</p>}
+          </div>
+
+          <div className="hidden items-center gap-2 sm:flex">
+            <button
+              type="button"
+              onClick={() => scrollPlaylists("prev")}
+              disabled={!canScrollPrev}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
+              aria-label={`Scroll ${title} left`}
+            >
+              <ChevronLeftIcon size={16} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollPlaylists("next")}
+              disabled={!canScrollNext}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
+              aria-label={`Scroll ${title} right`}
+            >
+              <ChevronRightIcon size={16} />
+            </button>
+
+            {viewAllHref && (
+              <Link
+                href={viewAllHref}
+                className="ml-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              >
+                View playlists
+              </Link>
+            )}
+          </div>
         </div>
 
-        <div className="hidden items-center gap-2 sm:flex">
+        <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
           <button
             type="button"
             onClick={() => scrollPlaylists("prev")}
             disabled={!canScrollPrev}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
+            className="curated-playlist-shelf-prev-floating absolute z-20 hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
             aria-label={`Scroll ${title} left`}
           >
-            <ChevronLeftIcon size={16} />
+            <ChevronLeftIcon size={18} />
           </button>
 
           <button
             type="button"
             onClick={() => scrollPlaylists("next")}
             disabled={!canScrollNext}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
+            className="curated-playlist-shelf-next-floating absolute right-8 z-20 hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
             aria-label={`Scroll ${title} right`}
           >
-            <ChevronRightIcon size={16} />
+            <ChevronRightIcon size={18} />
           </button>
 
-          {viewAllHref && (
-            <Link
-              href={viewAllHref}
-              className="ml-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-            >
-              View playlists
-            </Link>
-          )}
+          <div
+            ref={scrollerRef}
+            className="curated-playlist-shelf-scroller flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {playlists.map((playlist, index) => (
+              <CuratedPlaylistCard
+                key={playlist.id}
+                playlist={playlist}
+                index={index}
+                openMenuId={openMenuId}
+                setOpenMenuId={setOpenMenuId}
+                onAddSuccess={(name) =>
+                  showToast(`"${name}" added to My Playlists`)
+                }
+                onAddError={showToast}
+                playerVisible={playerVisible}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
-        <button
-          type="button"
-          onClick={() => scrollPlaylists("prev")}
-          disabled={!canScrollPrev}
-          className="curated-playlist-shelf-prev-floating absolute z-20 hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
-          aria-label={`Scroll ${title} left`}
-        >
-          <ChevronLeftIcon size={18} />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => scrollPlaylists("next")}
-          disabled={!canScrollNext}
-          className="curated-playlist-shelf-next-floating absolute right-8 z-20 hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
-          aria-label={`Scroll ${title} right`}
-        >
-          <ChevronRightIcon size={18} />
-        </button>
-
-        <div
-          ref={scrollerRef}
-          className="curated-playlist-shelf-scroller flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {playlists.map((playlist, index) => (
-            <CuratedPlaylistCard
-              key={playlist.id}
-              playlist={playlist}
-              index={index}
-              openMenuId={openMenuId}
-              setOpenMenuId={setOpenMenuId}
-              onAddSuccess={(name) =>
-                showToast(`"${name}" added to My Playlists`)
-              }
-              onAddError={showToast}
-              playerVisible={playerVisible}
-            />
-          ))}
-        </div>
-      </div>
-
-      <Toast
-        message={toastMessage}
-        bottomOffset={playerVisible ? "88px" : "24px"}
-      />
-    </section>
+        <Toast
+          message={toastMessage}
+          bottomOffset={playerVisible ? "88px" : "24px"}
+        />
+      </section>
+    </div>
   );
 }
