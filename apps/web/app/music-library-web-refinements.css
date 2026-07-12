@@ -70,15 +70,6 @@
   height: 16px !important;
 }
 
-.fw-toolbar-search input {
-  font-size: 15px !important;
-  font-weight: 300 !important;
-}
-
-.fw-toolbar-search input::placeholder {
-  color: var(--text-muted) !important;
-}
-
 .fw-toolbar-filter-actions {
   display: inline-flex;
   flex-shrink: 0;
@@ -258,96 +249,5 @@
 }
 
 .fw-music-content-column {
-  padding-top: 16px !important;
-}
-
-/* ─── Restore web top-nav/sidebar-hidden layout ───────────── */
-
-body {
-  --sidebar-width: 0px;
-  --filmwave-page-sidebar-offset: 0px;
-  --filmwave-sidebar-current-panel-width: 0px;
-  --filmwave-sidebar-top-offset: var(--filmwave-header-height);
-}
-
-.filmwave-app-header,
-.desktop-header,
-body > header,
-.filmwave-header {
-  display: block !important;
-}
-
-.desktop-app-sidebar {
-  display: none !important;
-}
-
-main > section[class*="ml-[var(--sidebar-width)]"],
-.playlists-page,
-.playlist-detail-page,
-.favorites-page,
-.project-detail-page {
-  margin-left: 0 !important;
-}
-
-main > section[class*="pt-14"] {
-  padding-top: var(--filmwave-header-height) !important;
-}
-
-.playlist-detail-page,
-.favorites-page,
-.project-detail-page {
-  margin-top: var(--filmwave-header-height) !important;
-  min-height: calc(100vh - var(--filmwave-header-height)) !important;
-}
-
-.playlists-page {
-  margin-top: 0 !important;
-}
-
-.filmwave-header-actions {
-  gap: 18px !important;
-}
-
-.filmwave-header-nav {
-  display: inline-flex !important;
-  height: 100% !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
-
-.filmwave-header-nav-link {
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 0 8px !important;
-  color: var(--text-secondary) !important;
-  font-size: 12px !important;
-}
-
-.filmwave-header-nav-link:hover,
-.filmwave-header-nav-link.is-active {
-  background: transparent !important;
-  color: var(--text-primary) !important;
-}
-
-.filmwave-header-account-wrap {
-  position: relative !important;
-  display: inline-flex !important;
-  height: 100% !important;
-  align-items: center !important;
-}
-
-.filmwave-header-account-trigger {
-  width: 32px !important;
-  height: 32px !important;
-  justify-content: center !important;
-  padding: 0 !important;
-}
-
-.filmwave-header-account-label {
-  display: none !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) {
-  --filmwave-side-filter-sidebar-offset: 0px !important;
-  margin-left: 0 !important;
+  min-width: 0 !important;
 }
