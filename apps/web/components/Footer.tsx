@@ -9,10 +9,10 @@ const productLinks = ["Music", "SFX", "VFX", "Colour", "Curated"];
 const companyLinks = ["Home", "Support", "About", "Partnerships", "Contact"];
 
 const footerHeaderClass =
-  "text-[9px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]";
+  "text-[8px] font-normal uppercase tracking-[0.08em] text-[var(--text-muted)]";
 
 const footerLinkClass =
-  "cursor-pointer leading-none transition hover:text-[var(--text-primary)]";
+  "cursor-pointer font-normal leading-none transition hover:text-[var(--text-primary)]";
 
 type FooterProps = {
   className?: string;
@@ -53,7 +53,7 @@ export default function Footer({
 
       <footer
         ref={footerRef}
-        className={`box-border w-full pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
+        className={`box-border w-full pt-10 text-[10px] font-normal text-[var(--text-muted)] ${className}`}
         style={{
           paddingBottom: playerPadding
             ? playerVisible
@@ -70,7 +70,7 @@ export default function Footer({
               </span>
             </div>
 
-            <span className="max-w-[180px] text-[11px] leading-4 text-[var(--text-muted)]">
+            <span className="max-w-[180px] text-[10px] font-normal leading-4 text-[var(--text-muted)]">
               Music and creative assets for filmmakers.
             </span>
           </div>
