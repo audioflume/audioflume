@@ -2,6 +2,154 @@
   margin-top: 8px !important;
 }
 
+/* Match the Discover section-heading typography. */
+.curated-playlists-page-layer
+  section:has(.curated-playlist-shelf-viewport)
+  > .mb-4
+  h2 {
+  margin: 0;
+  font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
+  font-size: clamp(18px, 1.45vw, 24px);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+/* Keep the existing 210px image block, with card details beneath it. */
+.curated-playlists-page-layer .playlist-gallery-art-wrap {
+  min-height: 268px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.curated-playlists-page-layer .playlist-gallery-art {
+  box-sizing: border-box;
+  inset: 0 0 auto;
+  height: 210px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+}
+
+.curated-playlists-page-layer .playlist-gallery-card:hover .playlist-gallery-art,
+.curated-playlists-page-layer .playlist-gallery-card.is-menu-open .playlist-gallery-art {
+  border-color: var(--border);
+}
+
+.curated-playlists-page-layer .playlist-gallery-art::after {
+  display: none;
+}
+
+.curated-playlists-page-layer .playlist-gallery-content {
+  top: 210px;
+  right: 0;
+  bottom: auto;
+  left: 0;
+}
+
+.curated-playlists-page-layer .playlist-gallery-kicker {
+  display: none;
+}
+
+.curated-playlists-page-layer .playlist-gallery-content h3 {
+  margin: 10px 0 0;
+  overflow: hidden;
+  padding-right: 24px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.curated-playlists-page-layer .playlist-gallery-content p {
+  margin: 4px 0 0;
+  overflow: hidden;
+  padding-right: 24px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Place the menu beneath the image, matching the Discover cards. */
+.curated-playlists-page-layer .playlist-card-menu-wrap {
+  position: absolute;
+  right: 0;
+  bottom: 18px;
+  left: auto;
+  z-index: 12;
+  display: flex;
+  width: 18px;
+  height: 18px;
+}
+
+.curated-playlists-page-layer .playlist-menu-btn-grid {
+  display: flex;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0;
+  opacity: 0;
+  transition:
+    opacity 150ms ease,
+    color 150ms ease;
+}
+
+.curated-playlists-page-layer
+  .playlist-gallery-card:hover
+  .playlist-menu-btn-grid,
+.curated-playlists-page-layer
+  .playlist-gallery-card.is-menu-open
+  .playlist-menu-btn-grid,
+.curated-playlists-page-layer
+  .playlist-gallery-card:focus-within
+  .playlist-menu-btn-grid {
+  opacity: 1;
+}
+
+.curated-playlists-page-layer
+  .playlist-gallery-card
+  [data-playlist-menu]
+  .playlist-menu-btn-grid:hover,
+.curated-playlists-page-layer
+  .playlist-gallery-card
+  [data-playlist-menu]
+  .playlist-menu-btn-grid.is-open {
+  background: transparent;
+  color: var(--text-primary);
+  box-shadow: none;
+}
+
+.curated-playlists-page-layer .playlist-menu-btn-grid svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* The dropdown is portaled to body; align its right edge with the trigger. */
+body:has(
+    .curated-playlists-page-layer
+      .playlist-card-menu-wrap
+      .is-dropdown-open
+  )
+  > .filmwave-dropdown-shell {
+  translate: calc(-100% + 18px) 0;
+}
+
 .curated-playlists-page-layer + footer {
   padding-right: 32px !important;
   padding-left: 32px !important;
