@@ -12,7 +12,7 @@ const PLAYLIST_SKELETON_VIEW_MODE_KEY = "filmwave-playlist-skeleton-view-mode";
 const PLAYLIST_SCOPE_OPTIONS = [
   "All playlists",
   "Private playlists",
-  "Public Playlists",
+  "Public playlists",
 ] as const;
 
 type PlaylistScopeOption = (typeof PLAYLIST_SCOPE_OPTIONS)[number];
