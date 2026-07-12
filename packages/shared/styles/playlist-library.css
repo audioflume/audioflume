@@ -234,19 +234,11 @@
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
-  font-family: var(--font-instrument-sans) !important;
-  font-size: 17px !important;
-  font-weight: 500 !important;
-  line-height: 1.1 !important;
-  letter-spacing: -0.045em !important;
   color: var(--text-primary) !important;
 }
 
 .playlists-page .playlist-gallery-content p {
   margin-top: 5px !important;
-  font-size: 13px !important;
-  font-weight: 400 !important;
-  line-height: 1.15 !important;
   color: var(--text-secondary) !important;
 }
 
@@ -309,4 +301,25 @@
 .playlist-gallery-content h3 {
   margin-top: 0;
   font-size: 22px !important;
+}
+
+/* Shared playlist title and count typography across Discover and My Playlists. */
+.discover-mood-card h3,
+.discover-playlist-card h3,
+.playlists-page .playlist-gallery-content h3,
+.playlists-page .playlist-row-main span {
+  font-family: inherit !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: normal !important;
+}
+
+.discover-mood-card p,
+.discover-playlist-card p,
+.playlists-page .playlist-gallery-content p,
+.playlists-page .playlist-row-count {
+  font-size: 11.5px !important;
+  font-weight: 400 !important;
+  line-height: 1.45 !important;
 }
