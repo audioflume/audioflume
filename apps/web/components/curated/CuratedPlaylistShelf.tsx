@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
@@ -71,8 +70,8 @@ async function addCuratedPlaylistToMyPlaylists(
 
   if (!Array.isArray(songs) || songs.length === 0) return;
 
-  for (let i = 0; i < songs.length; i++) {
-    const song = songs[i];
+  for (let index = 0; index < songs.length; index += 1) {
+    const song = songs[index];
     const songId = song.song_id ?? song.id;
 
     if (!songId) continue;
@@ -81,7 +80,7 @@ async function addCuratedPlaylistToMyPlaylists(
       await fetch(`/api/playlists/${newPlaylistId}/songs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ song_id: songId, position: i }),
+        body: JSON.stringify({ song_id: songId, position: index }),
       });
     } catch (err) {
       console.warn(`Error adding song ${songId}:`, err);
@@ -105,11 +104,11 @@ function CuratedPlaylistMenu({
   playerVisible: boolean;
 }) {
   return (
-    <div data-playlist-menu className="playlist-card-menu-wrap">
+    <div data-playlist-menu className="curated-playlist-menu-wrap">
       <DropdownShell
         open={open}
         onOpenChange={onOpenChange}
-        placement="bottom-start"
+        placement="bottom-end"
         strategy="fixed"
         usePortal
         offsetAmount={5}
@@ -121,11 +120,11 @@ function CuratedPlaylistMenu({
           bottom: playerVisible ? 85 : 13,
           left: 16,
         }}
-        trigger={({ open }) => (
+        trigger={({ open: triggerOpen }) => (
           <button
             type="button"
-            className={`playlist-menu-btn playlist-menu-btn-grid ${
-              open ? "is-open" : ""
+            className={`curated-playlist-menu-button ${
+              triggerOpen ? "is-open" : ""
             }`}
             aria-label={`${playlist.name} options`}
             disabled={saving}
@@ -183,58 +182,49 @@ export function CuratedPlaylistCard({
 
   return (
     <div className="curated-playlist-card-shell">
-      <div
-        className={`playlist-gallery-card ${isMenuOpen ? "is-menu-open" : ""}`}
+      <article
+        className={`curated-playlist-card ${isMenuOpen ? "is-menu-open" : ""}`}
       >
-        <Link href={href} className="playlist-gallery-link">
-          <div className="playlist-gallery-art-wrap">
-            <div
-              className="playlist-gallery-art"
-              style={{
-                background: playlist.cover_image_url
-                  ? "var(--media-overlay-solid)"
-                  : fallbackGradient,
-              }}
-            >
-              {playlist.cover_image_url && (
-                <Image
-                  src={playlist.cover_image_url}
-                  alt={playlist.name}
-                  fill
-                  sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
-                  className="object-cover"
-                  unoptimized
-                />
-              )}
-            </div>
-
-            <div className="playlist-gallery-top-row">
-              <div className="playlist-gallery-arrow">
-                <ArrowUpRightIcon />
-              </div>
-            </div>
-
-            <div className="playlist-gallery-content">
-              <div className="playlist-gallery-kicker">{playlist.kicker}</div>
-
-              <h3>{playlist.name}</h3>
-
-              <p>{formatSongCount(playlist.song_count)}</p>
-            </div>
+        <Link href={href} className="curated-playlist-image-link">
+          <div
+            className="curated-playlist-image"
+            style={{
+              background: playlist.cover_image_url
+                ? "var(--media-overlay-solid)"
+                : fallbackGradient,
+            }}
+          >
+            {playlist.cover_image_url && (
+              <Image
+                src={playlist.cover_image_url}
+                alt={playlist.name}
+                fill
+                sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
+                className="object-cover"
+                unoptimized
+              />
+            )}
           </div>
         </Link>
 
-        <CuratedPlaylistMenu
-          playlist={playlist}
-          open={isMenuOpen}
-          onOpenChange={(nextOpen) => {
-            setOpenMenuId(nextOpen ? playlist.id : null);
-          }}
-          onAdd={handleAddToMyPlaylists}
-          saving={saving}
-          playerVisible={playerVisible}
-        />
-      </div>
+        <div className="curated-playlist-card-details">
+          <Link href={href} className="curated-playlist-card-copy">
+            <h3>{playlist.name}</h3>
+            <p>{formatSongCount(playlist.song_count)}</p>
+          </Link>
+
+          <CuratedPlaylistMenu
+            playlist={playlist}
+            open={isMenuOpen}
+            onOpenChange={(nextOpen) => {
+              setOpenMenuId(nextOpen ? playlist.id : null);
+            }}
+            onAdd={handleAddToMyPlaylists}
+            saving={saving}
+            playerVisible={playerVisible}
+          />
+        </div>
+      </article>
     </div>
   );
 }
@@ -252,10 +242,10 @@ export default function CuratedPlaylistShelf({
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const { currentSong } = usePlayer();
-  const playerVisible = !!currentSong;
+  const playerVisible = Boolean(currentSong);
 
-  function showToast(msg: string) {
-    setToastMessage(msg);
+  function showToast(message: string) {
+    setToastMessage(message);
     window.setTimeout(() => setToastMessage(null), 2400);
   }
 
@@ -302,304 +292,92 @@ export default function CuratedPlaylistShelf({
   if (!playlists.length) return null;
 
   return (
-    <>
-      <style>{`
-        .curated-playlist-shelf-viewport {
-          margin-left: calc((var(--sidebar-width) + 2rem) * -1);
-          margin-right: -2rem;
-          overflow: hidden;
-        }
+    <section className={`curated-playlist-shelf ${className}`}>
+      <div className="curated-playlist-shelf-heading">
+        <div className="min-w-0">
+          <h2>{title}</h2>
 
-        .curated-playlist-shelf-scroller {
-          padding-left: calc(var(--sidebar-width) + 2rem);
-          padding-right: 5rem;
-        }
-
-        .curated-playlist-shelf-prev-floating {
-          left: calc(var(--sidebar-width) + 2rem);
-        }
-
-        .curated-playlist-card-shell {
-          flex: 0 0 250px;
-          min-width: 250px;
-        }
-
-        @media (min-width: 640px) {
-          .curated-playlist-card-shell {
-            flex-basis: 285px;
-            min-width: 285px;
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .curated-playlist-card-shell {
-            flex-basis: 320px;
-            min-width: 320px;
-          }
-        }
-
-        .playlist-gallery-card {
-          position: relative;
-          min-width: 0;
-          cursor: pointer;
-        }
-
-        .playlist-gallery-link {
-          display: block;
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .playlist-gallery-art-wrap {
-          position: relative;
-          min-height: 210px;
-          border-radius: 18px;
-          overflow: hidden;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-subtle);
-          transition: none;
-        }
-
-        .playlist-gallery-card:hover .playlist-gallery-art-wrap,
-        .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap {
-          border-color: var(--border);
-        }
-
-        .playlist-gallery-art {
-          position: absolute;
-          inset: 0;
-        }
-
-        .playlist-gallery-art::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.18) 58%, transparent);
-          pointer-events: none;
-        }
-
-        .playlist-gallery-art img {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.7s ease;
-        }
-
-        .playlist-gallery-card:hover .playlist-gallery-art img,
-        .playlist-gallery-card.is-menu-open .playlist-gallery-art img {
-          transform: scale(1.025);
-        }
-
-        .playlist-gallery-top-row {
-          position: relative;
-          z-index: 4;
-          display: flex;
-          justify-content: flex-end;
-          padding: 16px;
-        }
-
-        .playlist-gallery-arrow {
-          display: flex;
-          width: 32px;
-          height: 32px;
-          flex-shrink: 0;
-          align-items: center;
-          justify-content: center;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.12);
-          color: white;
-          backdrop-filter: blur(12px);
-          transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
-        }
-
-        .playlist-gallery-card:hover .playlist-gallery-arrow,
-        .playlist-gallery-card.is-menu-open .playlist-gallery-arrow {
-          background: white;
-          color: black;
-        }
-
-        .playlist-gallery-content {
-          position: absolute;
-          left: 16px;
-          right: 16px;
-          bottom: 16px;
-          z-index: 4;
-        }
-
-        .playlist-gallery-kicker {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: rgba(255, 255, 255, 0.52);
-        }
-
-        .playlist-gallery-content h3 {
-          margin-top: 8px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-family: var(--font-instrument-sans);
-          font-size: 25px;
-          font-weight: 500;
-          line-height: 1.15;
-          letter-spacing: -0.055em;
-          color: white;
-        }
-
-        .playlist-gallery-content p {
-          margin-top: 12px;
-          font-size: 11px;
-          font-weight: 500;
-          color: rgba(255, 255, 255, 0.58);
-        }
-
-        .playlist-card-menu-wrap {
-          position: absolute;
-          z-index: 12;
-          top: 16px;
-          left: 16px;
-        }
-
-        .playlist-menu-btn {
-          opacity: 0;
-          transition:
-            opacity 0.15s ease,
-            background-color 0.15s ease,
-            color 0.15s ease,
-            box-shadow 0.15s ease;
-        }
-
-        .playlist-menu-btn-grid {
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid rgba(255, 255, 255, 0.14);
-          border-radius: 999px;
-          background-color: rgba(255, 255, 255, 0.1);
-          color: rgba(255, 255, 255, 0.72);
-          cursor: pointer;
-          backdrop-filter: blur(12px);
-        }
-
-        .playlist-gallery-card:hover .playlist-menu-btn-grid,
-        .playlist-menu-btn-grid.is-open {
-          opacity: 1;
-        }
-
-        .playlist-gallery-card:hover .playlist-menu-btn-grid:not(:hover):not(.is-open) {
-          background-color: rgba(255, 255, 255, 0.1);
-          color: rgba(255, 255, 255, 0.72);
-          box-shadow: none;
-        }
-
-        .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid:hover,
-        .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid.is-open {
-          background-color: white;
-          color: black;
-        }
-      `}</style>
-
-      <section className={className}>
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <div>
-            <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
-              {title}
-            </h2>
-
-            {description && (
-              <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                {description}
-              </p>
-            )}
-          </div>
-
-          <div className="hidden items-center gap-2 sm:flex">
-            <button
-              type="button"
-              onClick={() => scrollPlaylists("prev")}
-              disabled={!canScrollPrev}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
-              aria-label={`Scroll ${title} left`}
-            >
-              <ChevronLeftIcon size={16} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollPlaylists("next")}
-              disabled={!canScrollNext}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
-              aria-label={`Scroll ${title} right`}
-            >
-              <ChevronRightIcon size={16} />
-            </button>
-
-            {viewAllHref && (
-              <Link
-                href={viewAllHref}
-                className="ml-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-              >
-                View playlists
-              </Link>
-            )}
-          </div>
+          {description && <p>{description}</p>}
         </div>
 
-        <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
+        <div className="hidden items-center gap-2 sm:flex">
           <button
             type="button"
             onClick={() => scrollPlaylists("prev")}
             disabled={!canScrollPrev}
-            className="curated-playlist-shelf-prev-floating absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
             aria-label={`Scroll ${title} left`}
           >
-            <ChevronLeftIcon size={18} />
+            <ChevronLeftIcon size={16} />
           </button>
 
           <button
             type="button"
             onClick={() => scrollPlaylists("next")}
             disabled={!canScrollNext}
-            className="absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
             aria-label={`Scroll ${title} right`}
           >
-            <ChevronRightIcon size={18} />
+            <ChevronRightIcon size={16} />
           </button>
 
-          <div
-            ref={scrollerRef}
-            className="curated-playlist-shelf-scroller flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {playlists.map((playlist, index) => (
-              <CuratedPlaylistCard
-                key={playlist.id}
-                playlist={playlist}
-                index={index}
-                openMenuId={openMenuId}
-                setOpenMenuId={setOpenMenuId}
-                onAddSuccess={(name) =>
-                  showToast(`"${name}" added to My Playlists`)
-                }
-                onAddError={(msg) => showToast(msg)}
-                playerVisible={playerVisible}
-              />
-            ))}
-          </div>
+          {viewAllHref && (
+            <Link
+              href={viewAllHref}
+              className="ml-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+            >
+              View playlists
+            </Link>
+          )}
         </div>
+      </div>
 
-        <Toast
-          message={toastMessage}
-          bottomOffset={playerVisible ? "88px" : "24px"}
-        />
-      </section>
-    </>
+      <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
+        <button
+          type="button"
+          onClick={() => scrollPlaylists("prev")}
+          disabled={!canScrollPrev}
+          className="curated-playlist-shelf-prev-floating absolute z-20 hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+          aria-label={`Scroll ${title} left`}
+        >
+          <ChevronLeftIcon size={18} />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => scrollPlaylists("next")}
+          disabled={!canScrollNext}
+          className="curated-playlist-shelf-next-floating absolute right-8 z-20 hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+          aria-label={`Scroll ${title} right`}
+        >
+          <ChevronRightIcon size={18} />
+        </button>
+
+        <div
+          ref={scrollerRef}
+          className="curated-playlist-shelf-scroller flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {playlists.map((playlist, index) => (
+            <CuratedPlaylistCard
+              key={playlist.id}
+              playlist={playlist}
+              index={index}
+              openMenuId={openMenuId}
+              setOpenMenuId={setOpenMenuId}
+              onAddSuccess={(name) =>
+                showToast(`"${name}" added to My Playlists`)
+              }
+              onAddError={showToast}
+              playerVisible={playerVisible}
+            />
+          ))}
+        </div>
+      </div>
+
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
+    </section>
   );
 }
