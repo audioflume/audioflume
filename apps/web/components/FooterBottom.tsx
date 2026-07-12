@@ -7,7 +7,7 @@ export default function FooterBottom({ className = "" }: FooterBottomProps) {
     <div
       className={`flex min-h-9 items-center justify-between border-t border-[var(--border-subtle)] text-[9px] font-normal leading-none text-[var(--text-muted)] ${className}`}
     >
-      <span>© 2026 Filmwave</span>
+      <span>© 2026 Audioflume</span>
       <span>All rights reserved</span>
     </div>
   );
