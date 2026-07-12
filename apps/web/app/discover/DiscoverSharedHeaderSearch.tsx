@@ -67,6 +67,39 @@ export default function DiscoverHeaderScrollState() {
       }
 
       body:has(.discover-page-root)
+        .discover-curated-playlist-section
+        .playlist-menu-btn-grid {
+        opacity: 0 !important;
+        transition:
+          opacity 0.15s ease,
+          color 0.15s ease !important;
+      }
+
+      body:has(.discover-page-root)
+        .discover-curated-playlist-section
+        .discover-playlist-card-shell:hover
+        .playlist-menu-btn-grid,
+      body:has(.discover-page-root)
+        .discover-curated-playlist-section
+        .discover-playlist-card-shell.is-menu-open
+        .playlist-menu-btn-grid,
+      body:has(.discover-page-root)
+        .discover-curated-playlist-section
+        .discover-playlist-card-shell:focus-within
+        .playlist-menu-btn-grid {
+        opacity: 1 !important;
+      }
+
+      body:has(
+          .discover-curated-playlist-section
+            .playlist-card-menu-wrap
+            .is-dropdown-open
+        )
+        > .filmwave-dropdown-shell {
+        translate: calc(-100% + 18px) 0 !important;
+      }
+
+      body:has(.discover-page-root)
         .filmwave-header
         .filmwave-header-actions
         .filmwave-header-nav
