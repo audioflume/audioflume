@@ -125,9 +125,10 @@
   border: 0 !important;
   background: transparent !important;
   color: var(--text-primary) !important;
-  font-family: inherit !important;
+  font-family: var(--font-satoshi) !important;
   font-size: 12px !important;
   font-style: normal !important;
+  font-synthesis: none !important;
   font-weight: 400 !important;
   line-height: 1.2 !important;
   outline: none !important;
