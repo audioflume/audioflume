@@ -117,13 +117,13 @@ export default function DiscoverHeaderScrollState() {
           width: 100%;
           min-width: 0;
           height: 100%;
-          grid-template-columns: minmax(0, 1fr) 120px;
+          grid-template-columns: minmax(0, 1fr) 132px;
           align-items: center;
         }
 
         .discover-hero-search-shared .fw-toolbar-header-search-row {
           min-width: 0;
-          padding-left: 18px !important;
+          padding-left: 22px !important;
         }
 
         .discover-hero-search-submit {
@@ -146,7 +146,7 @@ export default function DiscoverHeaderScrollState() {
 
         @media (max-width: 720px) {
           .discover-hero-search-shared {
-            grid-template-columns: minmax(0, 1fr) 92px;
+            grid-template-columns: minmax(0, 1fr) 104px;
           }
         }
 
