@@ -5,11 +5,10 @@ import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const PLAYLIST_SKELETON_VIEW_MODE_KEY = "filmwave-playlist-skeleton-view-mode";
-const OPEN_CREATE_PLAYLIST_KEY = "filmwave-open-create-playlist";
 const PLAYLIST_SCOPE_OPTIONS = [
   "All playlists",
   "My playlists",
@@ -70,37 +69,8 @@ function applyPlaylistSearchFilter(query: string) {
   });
 }
 
-function applyCuratedPlaylistSearchFilter(query: string) {
-  const cleanQuery = query.trim().toLowerCase();
-  const shelves = document.querySelectorAll<HTMLElement>(
-    ".curated-playlists-page-layer .curated-playlist-shelf",
-  );
-
-  shelves.forEach((shelf) => {
-    const cards = shelf.querySelectorAll<HTMLElement>(
-      ".curated-playlist-card-shell",
-    );
-    let visibleCardCount = 0;
-
-    cards.forEach((card) => {
-      const matches =
-        !cleanQuery || getPlaylistCardName(card).includes(cleanQuery);
-      card.hidden = !matches;
-
-      if (matches) visibleCardCount += 1;
-    });
-
-    const shelfWrapper = shelf.parentElement;
-
-    if (shelfWrapper instanceof HTMLElement) {
-      shelfWrapper.hidden = cards.length > 0 && visibleCardCount === 0;
-    }
-  });
-}
-
 export default function PlaylistTopControls() {
   const pathname = usePathname();
-  const router = useRouter();
   const { currentSong } = usePlayer();
   const {
     playlistViewMode: viewMode,
@@ -117,89 +87,24 @@ export default function PlaylistTopControls() {
 
   const playerVisible = Boolean(currentSong);
   const isMyPlaylistsPage = pathname === "/playlists";
-  const isCuratedPlaylistsPage = pathname === "/curated-playlists";
-  const isPlaylistLibraryPage =
-    isMyPlaylistsPage || isCuratedPlaylistsPage;
 
   useEffect(() => {
-    if (!isPlaylistLibraryPage) return;
+    if (!isMyPlaylistsPage) return;
 
-    const applySearchFilter = () => {
-      if (isCuratedPlaylistsPage) {
-        applyCuratedPlaylistSearchFilter(query);
-        return;
-      }
+    applyPlaylistSearchFilter(query);
 
-      applyPlaylistSearchFilter(query);
-    };
-
-    applySearchFilter();
-
-    const target =
-      document.querySelector(
-        isCuratedPlaylistsPage
-          ? ".curated-playlists-page-layer"
-          : ".playlists-page",
-      ) || document.body;
-    const observer = new MutationObserver(applySearchFilter);
+    const target = document.querySelector(".playlists-page") || document.body;
+    const observer = new MutationObserver(() => applyPlaylistSearchFilter(query));
     observer.observe(target, { childList: true, subtree: true });
 
     return () => {
       observer.disconnect();
     };
-  }, [
-    isCuratedPlaylistsPage,
-    isMyPlaylistsPage,
-    isPlaylistLibraryPage,
-    query,
-  ]);
+  }, [isMyPlaylistsPage, query]);
 
-  useEffect(() => {
-    if (!isMyPlaylistsPage) return;
-    if (
-      window.sessionStorage.getItem(OPEN_CREATE_PLAYLIST_KEY) !== "true"
-    ) {
-      return;
-    }
-
-    window.sessionStorage.removeItem(OPEN_CREATE_PLAYLIST_KEY);
-
-    let attempts = 0;
-    let animationFrame = 0;
-
-    const tryOpenCreatePlaylist = () => {
-      const createButton = document.querySelector<HTMLButtonElement>(
-        ".playlists-page button.playlist-create-card, .playlists-page button.playlist-create-row",
-      );
-
-      if (createButton) {
-        createButton.click();
-        return;
-      }
-
-      attempts += 1;
-
-      if (attempts < 30) {
-        animationFrame = window.requestAnimationFrame(tryOpenCreatePlaylist);
-      }
-    };
-
-    tryOpenCreatePlaylist();
-
-    return () => {
-      window.cancelAnimationFrame(animationFrame);
-    };
-  }, [isMyPlaylistsPage]);
-
-  if (!isPlaylistLibraryPage) return null;
+  if (!isMyPlaylistsPage) return null;
 
   function openCreatePlaylist() {
-    if (isCuratedPlaylistsPage) {
-      window.sessionStorage.setItem(OPEN_CREATE_PLAYLIST_KEY, "true");
-      router.push("/playlists");
-      return;
-    }
-
     const createButton = document.querySelector<HTMLButtonElement>(
       ".playlists-page button.playlist-create-card, .playlists-page button.playlist-create-row",
     );
@@ -221,10 +126,6 @@ export default function PlaylistTopControls() {
           grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto) !important;
         }
 
-        .playlists-top-controls.is-search-only {
-          grid-template-columns: minmax(300px, 640px) !important;
-        }
-
         .playlists-status-pill {
           width: 150px !important;
         }
@@ -238,15 +139,6 @@ export default function PlaylistTopControls() {
           color: var(--filmwave-menu-text) !important;
         }
 
-        body:has(section.curated-playlists-page-layer) .playlists-top-controls {
-          width: calc(100% - var(--sidebar-width) - 64px) !important;
-          margin-left: calc(var(--sidebar-width) + 32px) !important;
-        }
-
-        body:has(.playlists-top-controls) section.curated-playlists-page-layer {
-          padding-top: 0 !important;
-        }
-
         @media (max-width: 940px) {
           .playlists-top-controls {
             grid-template-columns: 1fr !important;
@@ -258,51 +150,46 @@ export default function PlaylistTopControls() {
         }
       `}</style>
 
-      <section
-        className={`playlists-top-controls${isCuratedPlaylistsPage ? " is-search-only" : ""}`}
-        aria-label="Playlist controls"
-      >
-        {isMyPlaylistsPage && (
-          <DropdownShell
-            open={playlistScopeOpen}
-            onOpenChange={setPlaylistScopeOpen}
-            placement="bottom-start"
-            className="playlist-scope-dropdown"
-            offsetAmount={6}
-            flippedOffsetAmount={6}
-            collisionPadding={{
-              top: 112,
-              right: 16,
-              bottom: playerVisible ? 96 : 24,
-              left: 16,
-            }}
-            trigger={({ open }) => (
-              <button
-                type="button"
-                className={`playlists-status-pill playlists-scope-button${open ? " is-open" : ""}`}
-                aria-label="Playlist visibility scope"
-              >
-                <span>{playlistScope}</span>
-                <ChevronIcon />
-              </button>
-            )}
-          >
-            {PLAYLIST_SCOPE_OPTIONS.map((option) => (
-              <button
-                key={option}
-                type="button"
-                className={playlistScope === option ? "is-active" : ""}
-                aria-checked={playlistScope === option}
-                onClick={() => {
-                  setPlaylistScope(option);
-                  setPlaylistScopeOpen(false);
-                }}
-              >
-                {option}
-              </button>
-            ))}
-          </DropdownShell>
-        )}
+      <section className="playlists-top-controls" aria-label="Playlist controls">
+        <DropdownShell
+          open={playlistScopeOpen}
+          onOpenChange={setPlaylistScopeOpen}
+          placement="bottom-start"
+          className="playlist-scope-dropdown"
+          offsetAmount={6}
+          flippedOffsetAmount={6}
+          collisionPadding={{
+            top: 112,
+            right: 16,
+            bottom: playerVisible ? 96 : 24,
+            left: 16,
+          }}
+          trigger={({ open }) => (
+            <button
+              type="button"
+              className={`playlists-status-pill playlists-scope-button${open ? " is-open" : ""}`}
+              aria-label="Playlist visibility scope"
+            >
+              <span>{playlistScope}</span>
+              <ChevronIcon />
+            </button>
+          )}
+        >
+          {PLAYLIST_SCOPE_OPTIONS.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={playlistScope === option ? "is-active" : ""}
+              aria-checked={playlistScope === option}
+              onClick={() => {
+                setPlaylistScope(option);
+                setPlaylistScopeOpen(false);
+              }}
+            >
+              {option}
+            </button>
+          ))}
+        </DropdownShell>
 
         <label className="playlists-search">
           <SearchIcon />
@@ -324,7 +211,7 @@ export default function PlaylistTopControls() {
           )}
         </label>
 
-        {isMyPlaylistsPage && preferencesLoaded && (
+        {preferencesLoaded && (
           <div className="playlists-control-right">
             <button
               type="button"
