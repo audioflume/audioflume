@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import FooterBottom from "@/components/FooterBottom";
-import Logo from "@/components/Logo";
 import { usePlayer } from "@/context/PlayerContext";
 
 const productLinks = ["Music", "SFX", "VFX", "Colour", "Curated"];
@@ -43,64 +42,75 @@ export default function Footer({
   if (pathname === "/music") return null;
 
   return (
-    <footer
-      ref={footerRef}
-      className={`box-border w-full pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
-      style={{
-        paddingBottom: playerPadding
-          ? playerVisible
-            ? "calc(72px + 8px)"
-            : "8px"
-          : "8px",
-      }}
-    >
-      <div className="grid gap-8 pb-6 md:grid-cols-[minmax(160px,1fr)_auto_auto_minmax(150px,auto)] md:gap-10">
-        <div className="flex -translate-y-1 flex-col gap-3">
-          <div className="w-[92px] text-[var(--text-muted)]">
-            <Logo />
+    <>
+      <style>{`
+        .filmwave-footer-tonal-wordmark.filmwave-header-tonal-wordmark {
+          font-size: 16px !important;
+          transform: none !important;
+        }
+      `}</style>
+
+      <footer
+        ref={footerRef}
+        className={`box-border w-full pt-10 text-[11px] font-medium text-[var(--text-muted)] ${className}`}
+        style={{
+          paddingBottom: playerPadding
+            ? playerVisible
+              ? "calc(72px + 8px)"
+              : "8px"
+            : "8px",
+        }}
+      >
+        <div className="grid gap-8 pb-6 md:grid-cols-[minmax(160px,1fr)_auto_auto_minmax(150px,auto)] md:gap-10">
+          <div className="flex -translate-y-1 flex-col gap-3">
+            <div className="w-[92px]">
+              <span className="filmwave-header-tonal-wordmark filmwave-footer-tonal-wordmark">
+                toneshack
+              </span>
+            </div>
+
+            <span className="max-w-[180px] text-[11px] leading-4 text-[var(--text-muted)]">
+              Music and creative assets for filmmakers.
+            </span>
           </div>
-
-          <span className="max-w-[180px] text-[11px] leading-4 text-[var(--text-muted)]">
-            Music and creative assets for filmmakers.
-          </span>
-        </div>
-
-        <div className="grid gap-2.5">
-          <span className={footerHeaderClass}>Library</span>
 
           <div className="grid gap-2.5">
-            {productLinks.map((link) => (
-              <span key={link} className={footerLinkClass}>
-                {link}
-              </span>
-            ))}
-          </div>
-        </div>
+            <span className={footerHeaderClass}>Library</span>
 
-        <div className="grid gap-2.5">
-          <span className={footerHeaderClass}>Company</span>
+            <div className="grid gap-2.5">
+              {productLinks.map((link) => (
+                <span key={link} className={footerLinkClass}>
+                  {link}
+                </span>
+              ))}
+            </div>
+          </div>
 
           <div className="grid gap-2.5">
-            {companyLinks.map((link) => (
-              <span key={link} className={footerLinkClass}>
-                {link}
-              </span>
-            ))}
+            <span className={footerHeaderClass}>Company</span>
+
+            <div className="grid gap-2.5">
+              {companyLinks.map((link) => (
+                <span key={link} className={footerLinkClass}>
+                  {link}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-rows-[auto_1fr] gap-2.5">
+            <span className={footerHeaderClass}>Contact</span>
+
+            <div className="grid content-end gap-2.5">
+              <span className="leading-none">+1 (250) 667-0766</span>
+              <span className="leading-none">hello@filmwave.io</span>
+              <span className="leading-none">Made in Canada</span>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-rows-[auto_1fr] gap-2.5">
-          <span className={footerHeaderClass}>Contact</span>
-
-          <div className="grid content-end gap-2.5">
-            <span className="leading-none">+1 (250) 667-0766</span>
-            <span className="leading-none">hello@filmwave.io</span>
-            <span className="leading-none">Made in Canada</span>
-          </div>
-        </div>
-      </div>
-
-      <FooterBottom />
-    </footer>
+        <FooterBottom />
+      </footer>
+    </>
   );
 }
