@@ -160,7 +160,7 @@ const DISCOVER_LAYOUT_STYLE = `
     display: grid;
     width: min(780px, 100%);
     min-height: 58px;
-    grid-template-columns: 44px minmax(0, 1fr) 120px;
+    grid-template-columns: 39px minmax(0, 1fr) 120px;
     align-items: center;
     border: 1px solid rgba(255, 255, 255, 0.7);
     background: rgba(255, 255, 255, 0.96);
@@ -169,28 +169,7 @@ const DISCOVER_LAYOUT_STYLE = `
   }
 
   .discover-hero-search-icon {
-    display: inline-flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    color: #777;
-  }
-
-  .discover-hero-search input {
-    min-width: 0;
-    height: 100%;
-    border: 0;
-    background: transparent;
-    color: #111;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 400;
-    outline: none;
-    padding: 0 14px 0 0;
-  }
-
-  .discover-hero-search input::placeholder {
-    color: #888;
+    justify-self: center;
   }
 
   .discover-hero-search button {
@@ -534,7 +513,7 @@ const DISCOVER_LAYOUT_STYLE = `
     }
 
     .discover-hero-search {
-      grid-template-columns: 40px minmax(0, 1fr) 92px;
+      grid-template-columns: 39px minmax(0, 1fr) 92px;
     }
 
     .discover-hero-values {
