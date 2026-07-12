@@ -55,9 +55,17 @@ export default function DiscoverHeaderScrollState() {
 
       .discover-hero-search {
         --text-primary: #111;
-        --text-muted: #777;
+        --text-muted: rgba(17, 17, 17, 0.42);
         background: #fff !important;
         background-color: #fff !important;
+      }
+
+      .discover-hero-search-icon {
+        transform: translateX(4px) !important;
+      }
+
+      .discover-hero-search input {
+        padding-left: 4px !important;
       }
 
       .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible) {
