@@ -23,6 +23,7 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
+import { primaryPillButtonClass } from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -361,7 +362,10 @@ function DiscoverPlaylistGrid({
 
   return (
     <section className="discover-section">
-      <div className="discover-section-heading" style={{ alignItems: "baseline" }}>
+      <div
+        className="discover-section-heading"
+        style={{ alignItems: "baseline" }}
+      >
         <h2>Curated playlists</h2>
 
         <Link
@@ -421,15 +425,8 @@ function DiscoverSongs({
 
   return (
     <section className="discover-section discover-song-section">
-      <div className="discover-section-heading" style={{ alignItems: "baseline" }}>
+      <div className="discover-section-heading">
         <h2>Newly added tracks</h2>
-
-        <Link
-          href="/music"
-          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-        >
-          Explore music library
-        </Link>
       </div>
 
       <MusicListShell title={null}>
@@ -443,6 +440,15 @@ function DiscoverSongs({
             ))
           : songs.map((song) => <SongCard key={song.id} song={song} />)}
       </MusicListShell>
+
+      <div className="mt-5 flex justify-center">
+        <Link
+          href="/music"
+          className={`${primaryPillButtonClass} hover:opacity-80`}
+        >
+          Explore music library
+        </Link>
+      </div>
     </section>
   );
 }
@@ -497,15 +503,8 @@ function DiscoverProductionStyles({
 
   return (
     <section className="discover-section discover-production-section">
-      <div className="discover-section-heading" style={{ alignItems: "baseline" }}>
+      <div className="discover-section-heading">
         <h2>Browse by production style</h2>
-
-        <Link
-          href="/music"
-          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-        >
-          Explore music library
-        </Link>
       </div>
 
       <div className="grid gap-[clamp(10px,1.25vw,18px)] sm:grid-cols-2 xl:grid-cols-4">
@@ -528,13 +527,7 @@ function DiscoverProductionStyles({
   );
 }
 
-function ReadyToCutCoverImage({
-  song,
-  index,
-}: {
-  song: Song;
-  index: number;
-}) {
+function ReadyToCutCoverImage({ song, index }: { song: Song; index: number }) {
   return (
     <div
       className="relative h-9 w-9 shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
@@ -667,7 +660,10 @@ function ReadyToCutTracks({
 
   return (
     <section className="discover-section discover-ready-to-cut-section">
-      <div className="discover-section-heading" style={{ alignItems: "baseline" }}>
+      <div
+        className="discover-section-heading"
+        style={{ alignItems: "baseline" }}
+      >
         <h2>Ready-to-cut tracks</h2>
 
         <Link
@@ -688,7 +684,11 @@ function ReadyToCutTracks({
               />
             ))
           : songs.map((song, index) => (
-              <ReadyToCutSongCard key={song.id} song={song} index={index + 30} />
+              <ReadyToCutSongCard
+                key={song.id}
+                song={song}
+                index={index + 30}
+              />
             ))}
       </div>
     </section>
