@@ -2,11 +2,16 @@
   margin-top: 8px !important;
 }
 
-/* Match the Discover section-heading typography. */
-.curated-playlists-page-layer
-  section:has(.curated-playlist-shelf-viewport)
-  > .mb-4
-  h2 {
+.curated-playlist-shelf-heading {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.curated-playlist-shelf-heading h2 {
   margin: 0;
   font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
   font-size: clamp(18px, 1.45vw, 24px);
@@ -15,48 +20,74 @@
   line-height: 1.1;
 }
 
-/* Keep the existing 210px image block, with card details beneath it. */
-.curated-playlists-page-layer .playlist-gallery-art-wrap {
-  min-height: 268px;
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+.curated-playlist-shelf-heading p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.45;
 }
 
-.curated-playlists-page-layer .playlist-gallery-art {
-  box-sizing: border-box;
-  inset: 0 0 auto;
+.curated-playlist-shelf-viewport {
+  margin-right: -2rem;
+  margin-left: calc((var(--sidebar-width) + 2rem) * -1);
+  overflow: hidden;
+}
+
+.curated-playlist-shelf-scroller {
+  align-items: flex-start;
+  padding-right: 5rem;
+  padding-left: calc(var(--sidebar-width) + 2rem);
+}
+
+.curated-playlist-card-shell {
+  min-width: 250px;
+  flex: 0 0 250px;
+}
+
+.curated-playlist-card {
+  min-width: 0;
+}
+
+.curated-playlist-image-link,
+.curated-playlist-card-copy {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.curated-playlist-image {
+  position: relative;
+  width: 100%;
   height: 210px;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
+  background: var(--bg-secondary);
 }
 
-.curated-playlists-page-layer .playlist-gallery-card:hover .playlist-gallery-art,
-.curated-playlists-page-layer .playlist-gallery-card.is-menu-open .playlist-gallery-art {
-  border-color: var(--border);
+.curated-playlist-image img {
+  transition: transform 500ms ease;
 }
 
-.curated-playlists-page-layer .playlist-gallery-art::after {
-  display: none;
+.curated-playlist-card:hover .curated-playlist-image img,
+.curated-playlist-card.is-menu-open .curated-playlist-image img {
+  transform: scale(1.025);
 }
 
-.curated-playlists-page-layer .playlist-gallery-content {
-  top: 210px;
-  right: 0;
-  bottom: auto;
-  left: 0;
+.curated-playlist-card-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18px;
+  align-items: end;
+  gap: 6px;
+  margin-top: 10px;
 }
 
-.curated-playlists-page-layer .playlist-gallery-kicker {
-  display: none;
+.curated-playlist-card-copy {
+  min-width: 0;
 }
 
-.curated-playlists-page-layer .playlist-gallery-content h3 {
-  margin: 10px 0 0;
+.curated-playlist-card-copy h3 {
+  margin: 0;
   overflow: hidden;
-  padding-right: 24px;
   color: var(--text-primary);
   font-family: inherit;
   font-size: 13.5px;
@@ -67,10 +98,9 @@
   white-space: nowrap;
 }
 
-.curated-playlists-page-layer .playlist-gallery-content p {
+.curated-playlist-card-copy p {
   margin: 4px 0 0;
   overflow: hidden;
-  padding-right: 24px;
   color: var(--text-muted);
   font-size: 11.5px;
   font-weight: 400;
@@ -79,19 +109,15 @@
   white-space: nowrap;
 }
 
-/* Place the menu beneath the image, matching the Discover cards. */
-.curated-playlists-page-layer .playlist-card-menu-wrap {
-  position: absolute;
-  right: 0;
-  bottom: 18px;
-  left: auto;
-  z-index: 12;
+.curated-playlist-menu-wrap {
   display: flex;
   width: 18px;
   height: 18px;
+  align-items: center;
+  justify-content: center;
 }
 
-.curated-playlists-page-layer .playlist-menu-btn-grid {
+.curated-playlist-menu-button {
   display: flex;
   width: 18px;
   min-width: 18px;
@@ -110,49 +136,53 @@
     color 150ms ease;
 }
 
-.curated-playlists-page-layer
-  .playlist-gallery-card:hover
-  .playlist-menu-btn-grid,
-.curated-playlists-page-layer
-  .playlist-gallery-card.is-menu-open
-  .playlist-menu-btn-grid,
-.curated-playlists-page-layer
-  .playlist-gallery-card:focus-within
-  .playlist-menu-btn-grid {
+.curated-playlist-card:hover .curated-playlist-menu-button,
+.curated-playlist-card.is-menu-open .curated-playlist-menu-button,
+.curated-playlist-card:focus-within .curated-playlist-menu-button {
   opacity: 1;
 }
 
-.curated-playlists-page-layer
-  .playlist-gallery-card
-  [data-playlist-menu]
-  .playlist-menu-btn-grid:hover,
-.curated-playlists-page-layer
-  .playlist-gallery-card
-  [data-playlist-menu]
-  .playlist-menu-btn-grid.is-open {
+.curated-playlist-menu-button:hover,
+.curated-playlist-menu-button.is-open,
+.curated-playlist-menu-button:focus-visible {
   background: transparent;
   color: var(--text-primary);
   box-shadow: none;
 }
 
-.curated-playlists-page-layer .playlist-menu-btn-grid svg {
+.curated-playlist-menu-button svg {
   width: 15px;
   height: 15px;
 }
 
-/* The dropdown is portaled to body; align its right edge with the trigger. */
-body:has(
-    .curated-playlists-page-layer
-      .playlist-card-menu-wrap
-      .is-dropdown-open
-  )
-  > .filmwave-dropdown-shell {
-  translate: calc(-100% + 18px) 0;
+.curated-playlist-shelf-prev-floating {
+  top: 105px;
+  left: calc(var(--sidebar-width) + 2rem);
+  transform: translateY(-50%);
+}
+
+.curated-playlist-shelf-next-floating {
+  top: 105px;
+  transform: translateY(-50%);
 }
 
 .curated-playlists-page-layer + footer {
   padding-right: 32px !important;
   padding-left: 32px !important;
+}
+
+@media (min-width: 640px) {
+  .curated-playlist-card-shell {
+    min-width: 285px;
+    flex-basis: 285px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .curated-playlist-card-shell {
+    min-width: 320px;
+    flex-basis: 320px;
+  }
 }
 
 @media (max-width: 640px) {
