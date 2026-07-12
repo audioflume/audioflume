@@ -235,8 +235,8 @@ export default function Header() {
 
       <HeaderShell
         logo={
-          <Link href="/discover" className="filmwave-header-logo-action" aria-label="toneshack Home">
-            <span className="filmwave-header-tonal-wordmark">toneshack</span>
+          <Link href="/discover" className="filmwave-header-logo-action" aria-label="audioflume Home">
+            <span className="filmwave-header-tonal-wordmark">audioflume</span>
           </Link>
         }
         actions={
