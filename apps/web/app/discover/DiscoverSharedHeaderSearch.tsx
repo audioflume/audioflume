@@ -77,12 +77,19 @@ export default function DiscoverHeaderScrollState() {
     clearButton.setAttribute("aria-label", "Clear search");
     clearButton.innerHTML = SEARCH_CLEAR_ICON;
     clearButton.hidden = true;
-    searchInput.before(clearButton);
+
+    const divider = document.createElement("span");
+    divider.className = "fw-toolbar-search-static-divider";
+    divider.setAttribute("aria-hidden", "true");
+    divider.hidden = true;
+
+    searchInput.before(clearButton, divider);
 
     function syncSearchState() {
       const hasValue = searchInput.value.length > 0;
       searchForm.classList.toggle("has-value", hasValue);
       clearButton.hidden = !hasValue;
+      divider.hidden = !hasValue;
     }
 
     function clearSearch(event: MouseEvent) {
@@ -107,6 +114,7 @@ export default function DiscoverHeaderScrollState() {
       searchInput.removeEventListener("input", syncSearchState);
       clearButton.removeEventListener("click", clearSearch);
       clearButton.remove();
+      divider.remove();
       searchForm.classList.remove("fw-toolbar-search-static", "has-value");
       searchIcon.classList.remove("fw-toolbar-search-static-icon");
       searchInput.classList.remove("fw-toolbar-search-static-input");
@@ -122,10 +130,9 @@ export default function DiscoverHeaderScrollState() {
       .discover-hero-search {
         --text-primary: #111;
         --text-muted: rgba(17, 17, 17, 0.42);
-        --bg-hover: rgba(17, 17, 17, 0.045);
+        --border: rgba(17, 17, 17, 0.09);
         --fw-header-search-field-height: 58px;
         --fw-header-search-transform: none;
-        --fw-header-search-content-transform: translateX(4px);
         border: 1px solid rgba(255, 255, 255, 0.7) !important;
         background: #fff !important;
         background-color: #fff !important;
