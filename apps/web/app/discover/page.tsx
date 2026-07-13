@@ -659,8 +659,18 @@ function DiscoverSongs({
 
   return (
     <section className="discover-section discover-song-section">
-      <div className="discover-section-heading">
+      <div
+        className="discover-section-heading"
+        style={{ alignItems: "baseline" }}
+      >
         <h2>Newly added tracks</h2>
+
+        <Link
+          href="/music"
+          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+        >
+          Explore music library
+        </Link>
       </div>
 
       <MusicListShell title={null}>
