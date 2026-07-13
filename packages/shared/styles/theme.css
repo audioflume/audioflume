@@ -31,6 +31,21 @@
   --text-subtle: rgba(255, 255, 255, 0.4);
   --icon-color: rgba(255, 255, 255, 0.4);
 
+  /* Canonical Filmwave interface styling. */
+  --filmwave-ui-radius-control: 0px;
+  --filmwave-ui-radius-panel: 0px;
+  --filmwave-ui-border-color: var(--border);
+  --filmwave-ui-divider-color: var(--border);
+  --filmwave-ui-control-background: var(--bg-secondary);
+  --filmwave-ui-control-hover-background: var(--bg-hover);
+  --filmwave-ui-control-text: var(--text-secondary);
+  --filmwave-ui-control-text-active: var(--text-primary);
+  --filmwave-ui-title-font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
+  --filmwave-ui-title-font-size: clamp(18px, 1.45vw, 24px);
+  --filmwave-ui-title-font-weight: 400;
+  --filmwave-ui-title-letter-spacing: -0.045em;
+  --filmwave-ui-title-line-height: 1.1;
+
   --waveform-color: rgba(255, 255, 255, 0.3);
   --waveform-progress: #ffffff;
 
