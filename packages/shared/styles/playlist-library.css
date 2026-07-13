@@ -330,7 +330,8 @@
 .discover-section-heading h2,
 .curated-playlist-shelf-heading h2,
 .discover-song-section .fw-song-list-title,
-.playlists-page .playlists-title {
+.playlists-page .playlists-hero .playlists-title,
+.playlists-page .playlists-hero .playlists-title::before {
   margin: 0 !important;
   color: var(--text-primary) !important;
   font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
@@ -338,4 +339,8 @@
   font-weight: 400 !important;
   letter-spacing: -0.045em !important;
   line-height: 1.1 !important;
+}
+
+.playlists-page .playlists-hero .playlists-title {
+  color: transparent !important;
 }
