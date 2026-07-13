@@ -6,7 +6,7 @@
   --filmwave-side-filter-detail-width: 184px;
   --filmwave-side-filter-sidebar-gap: var(--filmwave-sidebar-float-inset, 12px);
   --filmwave-side-filter-content-gap: 14px;
-  --filmwave-side-filter-divider-color: var(--border-subtle);
+  --filmwave-side-filter-divider-color: var(--filmwave-ui-divider-color);
 }
 
 main > section:has(.fw-filter-panel-wrap) {
@@ -221,7 +221,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-option-list {
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item {
   height: 38px !important;
-  border-radius: 11px !important;
+  border-radius: var(--filmwave-ui-radius-control);
   font-weight: 400 !important;
   transition: background-color 160ms ease, color 160ms ease !important;
 }
@@ -258,142 +258,5 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item:has(.fw-filter-ra
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: var(--text-primary) !important;
-  color: var(--bg-primary) !important;
-  line-height: 1 !important;
-  cursor: pointer !important;
-  transition: background-color 160ms ease, color 160ms ease !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-toolbar-filters-count {
-  background: var(--text-primary) !important;
-  color: var(--bg-primary) !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-option-check {
-  border-radius: 0 !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-option.is-selected .fw-filter-option-check,
-main > section:has(.fw-filter-panel-wrap) .fw-filter-chip.is-selected {
-  border-color: var(--text-primary) !important;
-  background: var(--text-primary) !important;
-  color: var(--bg-primary) !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::before {
-  content: "✓";
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  font-size: 10px !important;
-  font-weight: 500 !important;
-  line-height: 1 !important;
-  transform: translateY(-0.5px) !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only:hover::before {
-  display: none !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover {
-  font-size: 0 !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after {
-  content: "×";
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  font-size: 12px !important;
-  font-weight: 450 !important;
-  line-height: 1 !important;
-  transform: translateY(-1px) !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  transform: translateY(0px) !important;
-  pointer-events: none !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count-check svg {
-  display: block !important;
-  width: 10px !important;
-  height: 10px !important;
-}
-
-main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active {
-  background: transparent !important;
-  color: var(--text-secondary) !important;
-}
-
-main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
-  opacity: 0 !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item-playlists {
-  order: 900 !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all {
-  order: 1000 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  align-self: flex-start !important;
-  width: auto !important;
-  height: 22px !important;
-  min-height: 0 !important;
-  margin: 12px 8px 0 !important;
-  padding: 0 8px !important;
-  border: 0 !important;
-  border-radius: 999px !important;
-  background: var(--bg-control) !important;
-  color: var(--text-secondary) !important;
-  font-family: inherit !important;
-  font-size: 10.5px !important;
   font-weight: 400 !important;
-  line-height: 1 !important;
-  letter-spacing: 0 !important;
-  cursor: pointer !important;
-  opacity: 1 !important;
-  text-decoration: none !important;
-  transition: background 150ms ease, color 150ms ease !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all:hover {
-  background: var(--bg-control-hover) !important;
-  border-color: transparent !important;
-  color: var(--text-primary) !important;
-  opacity: 1 !important;
-  text-decoration: none !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) > .fw-quick-row,
-main > section:has(.fw-filter-panel-wrap) > .overflow-hidden,
-main > section:has(.fw-filter-panel-wrap) > .px-5,
-main > section:has(.fw-filter-panel-wrap) > .fw-song-list,
-main > section:has(.fw-filter-panel-wrap) > footer {
-  grid-column: 2 !important;
-  min-width: 0 !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) > .fw-quick-row {
-  padding-left: 0 !important;
-}
-
-main > section:has(.fw-filter-panel-wrap) > .fw-song-list {
-  margin-left: 0 !important;
 }
