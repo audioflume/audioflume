@@ -21,6 +21,7 @@ type GroupMeta = {
   description: string | null;
 };
 
+const FEATURED_PLAYLIST_COUNT = 3;
 const FEATURED_TRACK_COUNT = 6;
 
 function SkeletonBlock({ className = "" }: { className?: string }) {
@@ -211,14 +212,22 @@ function FeaturedPlaylistSkeleton() {
 }
 
 function FeaturedPlaylistBlock({
-  playlist,
+  playlists,
+  activeIndex,
+  onSelect,
   songs,
   songsLoading,
 }: {
-  playlist: CuratedPlaylist;
+  playlists: CuratedPlaylist[];
+  activeIndex: number;
+  onSelect: (index: number) => void;
   songs: CuratedPlaylistSong[];
   songsLoading: boolean;
 }) {
+  const playlist = playlists[activeIndex];
+
+  if (!playlist) return null;
+
   const visibleSongs = songs.slice(0, FEATURED_TRACK_COUNT);
   const totalSongCount = Math.max(playlist.song_count ?? 0, songs.length);
   const remainingSongCount = Math.max(totalSongCount - visibleSongs.length, 0);
@@ -226,7 +235,7 @@ function FeaturedPlaylistBlock({
     remainingSongCount > 0
       ? `View ${remainingSongCount} more song${remainingSongCount === 1 ? "" : "s"}`
       : `View all ${totalSongCount} song${totalSongCount === 1 ? "" : "s"}`;
-  const supportingText = playlist.description || playlist.kicker;
+  const supportingText = playlist.description;
   const playlistHref = `/curated-playlists/${playlist.id}`;
 
   return (
@@ -234,17 +243,14 @@ function FeaturedPlaylistBlock({
       className="curated-featured-playlist"
       aria-labelledby={`curated-featured-playlist-${playlist.id}`}
     >
-      <Link
-        href={playlistHref}
-        className="curated-featured-playlist-image-panel"
-        aria-label={`Open featured playlist ${playlist.name}`}
-      >
+      <div className="curated-featured-playlist-image-panel">
         {playlist.cover_image_url ? (
           <Image
+            key={playlist.id}
             src={playlist.cover_image_url}
             alt=""
             fill
-            priority
+            priority={activeIndex === 0}
             unoptimized
             sizes="(min-width: 981px) 66vw, 100vw"
             className="curated-featured-playlist-image"
@@ -270,11 +276,31 @@ function FeaturedPlaylistBlock({
               {supportingText}
             </p>
           )}
-          <span className="curated-featured-playlist-button">
+          <Link href={playlistHref} className="curated-featured-playlist-button">
             Explore playlist
-          </span>
+          </Link>
         </div>
-      </Link>
+
+        {playlists.length > 1 && (
+          <div
+            className="curated-featured-playlist-indicators"
+            aria-label="Featured playlists"
+          >
+            {playlists.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                className={index === activeIndex ? "is-active" : ""}
+                aria-label={`Show featured playlist ${item.name}`}
+                aria-pressed={index === activeIndex}
+                onClick={() => onSelect(index)}
+              >
+                <span />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       <aside
         className="curated-featured-playlist-tracks"
@@ -319,7 +345,10 @@ export default function CuratedPlaylistsPage() {
   const [groups, setGroups] = useState<GroupMeta[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [featuredSongs, setFeaturedSongs] = useState<CuratedPlaylistSong[]>([]);
+  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
+  const [featuredSongsByPlaylist, setFeaturedSongsByPlaylist] = useState<
+    Record<number, CuratedPlaylistSong[]>
+  >({});
   const [featuredSongsLoading, setFeaturedSongsLoading] = useState(false);
 
   useEffect(() => {
@@ -383,24 +412,34 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
-  const featuredPlaylist = useMemo(() => {
-    const playlistsWithArtwork = playlists.filter((playlist) =>
-      Boolean(playlist.cover_image_url),
-    );
-    const discoverFeatured = playlistsWithArtwork
+  const featuredPlaylists = useMemo(() => {
+    const orderedFeatured = playlists
       .filter((playlist) => playlist.show_on_discover)
-      .sort((a, b) => a.discover_position - b.discover_position)[0];
+      .sort((a, b) => a.discover_position - b.discover_position);
+    const orderedFallbacks = playlists
+      .filter((playlist) => !playlist.show_on_discover)
+      .sort((a, b) => a.position - b.position);
 
-    return discoverFeatured ?? playlistsWithArtwork[0] ?? playlists[0] ?? null;
+    return [...orderedFeatured, ...orderedFallbacks].slice(
+      0,
+      FEATURED_PLAYLIST_COUNT,
+    );
   }, [playlists]);
 
-  const featuredPlaylistId = featuredPlaylist?.id;
+  useEffect(() => {
+    if (activeFeaturedIndex >= featuredPlaylists.length) {
+      setActiveFeaturedIndex(0);
+    }
+  }, [activeFeaturedIndex, featuredPlaylists.length]);
 
   useEffect(() => {
     let cancelled = false;
+    const featuredPlaylistIds = featuredPlaylists.map(
+      (playlist) => playlist.id,
+    );
 
-    if (!featuredPlaylistId) {
-      setFeaturedSongs([]);
+    if (featuredPlaylistIds.length === 0) {
+      setFeaturedSongsByPlaylist({});
       setFeaturedSongsLoading(false);
       return () => {
         cancelled = true;
@@ -409,24 +448,31 @@ export default function CuratedPlaylistsPage() {
 
     setFeaturedSongsLoading(true);
 
-    fetch(
-      `/api/curated-playlists/${encodeURIComponent(String(featuredPlaylistId))}/songs`,
+    Promise.all(
+      featuredPlaylistIds.map(async (playlistId) => {
+        try {
+          const response = await fetch(
+            `/api/curated-playlists/${encodeURIComponent(String(playlistId))}/songs`,
+          );
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              data?.error || `Failed to load featured playlist ${playlistId}`,
+            );
+          }
+
+          return [playlistId, Array.isArray(data) ? data : []] as const;
+        } catch (fetchError) {
+          console.error("Featured playlist songs fetch failed:", fetchError);
+          return [playlistId, []] as const;
+        }
+      }),
     )
-      .then(async (response) => {
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data?.error || "Failed to load featured playlist songs");
-        }
-        return data;
-      })
-      .then((data) => {
+      .then((entries) => {
         if (!cancelled) {
-          setFeaturedSongs(Array.isArray(data) ? data : []);
+          setFeaturedSongsByPlaylist(Object.fromEntries(entries));
         }
-      })
-      .catch((fetchError) => {
-        console.error("Featured playlist songs fetch failed:", fetchError);
-        if (!cancelled) setFeaturedSongs([]);
       })
       .finally(() => {
         if (!cancelled) setFeaturedSongsLoading(false);
@@ -435,11 +481,16 @@ export default function CuratedPlaylistsPage() {
     return () => {
       cancelled = true;
     };
-  }, [featuredPlaylistId]);
+  }, [featuredPlaylists]);
 
+  const activeFeaturedPlaylist = featuredPlaylists[activeFeaturedIndex] ?? null;
+  const activeFeaturedSongs = useMemo(() => {
+    if (!activeFeaturedPlaylist) return [];
+    return featuredSongsByPlaylist[activeFeaturedPlaylist.id] ?? [];
+  }, [activeFeaturedPlaylist, featuredSongsByPlaylist]);
   const playableFeaturedSongs = useMemo(
-    () => featuredSongs.filter((song) => Boolean(song.audioUrl)),
-    [featuredSongs],
+    () => activeFeaturedSongs.filter((song) => Boolean(song.audioUrl)),
+    [activeFeaturedSongs],
   );
 
   useEffect(() => {
@@ -484,10 +535,12 @@ export default function CuratedPlaylistsPage() {
 
           {loading && <FeaturedPlaylistSkeleton />}
 
-          {!loading && featuredPlaylist && (
+          {!loading && featuredPlaylists.length > 0 && (
             <FeaturedPlaylistBlock
-              playlist={featuredPlaylist}
-              songs={featuredSongs}
+              playlists={featuredPlaylists}
+              activeIndex={activeFeaturedIndex}
+              onSelect={setActiveFeaturedIndex}
+              songs={activeFeaturedSongs}
               songsLoading={featuredSongsLoading}
             />
           )}
