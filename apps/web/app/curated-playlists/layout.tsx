@@ -73,6 +73,47 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     }
   }
 
+  .curated-featured-playlist-next-button {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    z-index: 5;
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    color: #111;
+    padding: 0;
+    transition: background-color 150ms ease;
+  }
+
+  .curated-featured-playlist-next-button:hover {
+    background: rgba(255, 255, 255, 0.86);
+  }
+
+  .curated-featured-playlist-next-button:focus-visible {
+    outline: 1px solid #fff;
+    outline-offset: -3px;
+  }
+
+  .curated-featured-playlist-count {
+    position: absolute;
+    right: 22px;
+    bottom: 42px;
+    z-index: 4;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 10px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
   .curated-featured-playlist-indicators {
     position: absolute;
     right: 22px;
