@@ -24,7 +24,7 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
 
   .curated-featured-library-link {
     position: absolute;
-    top: calc(var(--filmwave-header-height, 56px) + 55px);
+    top: calc(var(--filmwave-header-height, 56px) + 53px);
     right: var(--curated-page-gutter);
     z-index: 4;
     display: none;
