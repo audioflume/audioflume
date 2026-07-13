@@ -552,6 +552,12 @@ export default function CuratedPlaylistsPage() {
         <div className="px-8">
           <PlaylistTabsRail />
 
+          {(loading || featuredPlaylists.length > 0) && (
+            <div className="discover-section-heading curated-featured-playlist-heading">
+              <h2>Featured playlists</h2>
+            </div>
+          )}
+
           {loading && <FeaturedPlaylistSkeleton />}
 
           {!loading && featuredPlaylists.length > 0 && (
