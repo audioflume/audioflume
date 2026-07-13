@@ -188,6 +188,10 @@ section.curated-playlists-page-layer {
   display: block !important;
   margin: 0 !important;
   max-width: 640px !important;
+  font-size: 1.6em !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.035em !important;
   color: transparent !important;
 }
 
@@ -234,3 +238,400 @@ section.curated-playlists-page-layer {
   border-bottom: 1px solid var(--border-subtle) !important;
   border-radius: 0 !important;
   background: transparent !important;
+  color: inherit !important;
+  padding: 0 50px 0 18px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transform: none !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+
+.playlists-page .playlist-index .playlist-index-row.is-reordering {
+  grid-template-columns: 24px 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  padding-right: 18px !important;
+}
+
+.playlists-page .playlist-index .playlist-index-row:hover,
+.playlists-page .playlist-index-row-shell:hover .playlist-index-row,
+.playlists-page .playlist-index .playlist-create-row:hover {
+  border-color: var(--border-subtle) !important;
+  background: var(--bg-hover) !important;
+  transform: none !important;
+}
+
+.playlists-page .playlist-index .playlist-row-number {
+  display: none !important;
+}
+
+.playlists-page .playlist-index .playlist-row-cover {
+  position: relative !important;
+  width: 42px !important;
+  height: 42px !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  background: var(--bg-secondary) !important;
+}
+
+.playlists-page .playlist-index .playlist-row-main {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+.playlists-page .playlist-index .playlist-row-main span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--text-primary) !important;
+}
+
+.playlists-page .playlist-index .playlist-row-main small {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  margin: 2px 0 0 !important;
+  font-size: 11.5px !important;
+  line-height: 1.35 !important;
+  color: var(--text-subtle) !important;
+}
+
+.playlists-page .playlist-index .playlist-row-count {
+  justify-self: end !important;
+  text-align: right !important;
+  font-size: 11.5px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+  color: var(--text-subtle) !important;
+}
+
+.playlists-page .playlist-index-row-shell .playlist-card-menu-wrap {
+  position: absolute !important;
+  top: 50% !important;
+  right: 18px !important;
+  left: auto !important;
+  z-index: 12 !important;
+  transform: translateY(-50%) !important;
+}
+
+.playlists-page .playlist-index-row-shell .playlist-menu-btn {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 0 !important;
+  opacity: 1 !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row.playlist-index-row {
+  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row .playlist-create-mark {
+  grid-column: 1 !important;
+  width: 42px !important;
+  height: 42px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row .playlist-create-copy {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  text-align: left !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row .playlist-create-copy span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: normal !important;
+  color: var(--text-primary) !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row .playlist-create-copy small {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  margin: 2px 0 0 !important;
+  font-size: 11.5px !important;
+  line-height: 1.35 !important;
+  color: var(--text-subtle) !important;
+}
+
+section.curated-playlists-page-layer > div > .playlists-tabs-row + div {
+  margin-top: 0 !important;
+}
+
+section.curated-playlists-page-layer > div > .playlists-tabs-row + div > div:first-child > div:first-child {
+  display: none !important;
+}
+
+section.curated-playlists-page-layer h1 {
+  font-weight: 500 !important;
+  font-variation-settings: "wght" 500 !important;
+  letter-spacing: -0.035em !important;
+}
+
+section.curated-playlists-page-layer section.mt-10 h2 {
+  font-size: 1.4em !important;
+  font-weight: 300 !important;
+  font-variation-settings: "wght" 300 !important;
+  letter-spacing: -0.035em !important;
+}
+
+.playlists-page .playlist-gallery-art::before,
+.playlists-page .playlist-gallery-art::after,
+.playlists-page .playlist-gallery-art-layer {
+  display: none !important;
+  box-shadow: none !important;
+}
+
+.playlists-page .playlist-gallery-art-layer-back {
+  box-shadow: none !important;
+}
+
+.playlists-page .playlist-gallery-art-layer-middle {
+  box-shadow: none !important;
+}
+
+.playlists-page .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image) {
+  box-shadow: none !important;
+}
+
+.playlists-page .playlist-gallery-card:hover .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image),
+.playlists-page .playlist-gallery-card.is-menu-open .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image) {
+  transform: translateY(-8px) !important;
+}
+
+.playlists-page .playlist-gallery-card:hover .playlist-gallery-art-layer-middle,
+.playlists-page .playlist-gallery-card.is-menu-open .playlist-gallery-art-layer-middle {
+  transform: translateY(-4px) !important;
+}
+
+.playlists-page .playlist-gallery-card:hover .playlist-gallery-art-layer-back,
+.playlists-page .playlist-gallery-card.is-menu-open .playlist-gallery-art-layer-back {
+  transform: translateY(-1px) !important;
+}
+
+.playlists-page .playlist-gallery-card {
+  position: relative !important;
+}
+
+.playlists-page .playlist-gallery-content {
+  margin-top: 12px !important;
+  padding-right: 22px !important;
+}
+
+.playlists-page .playlist-gallery-content h3 {
+  font-size: 13px !important;
+  letter-spacing: -0.035em !important;
+}
+
+.playlists-page .playlist-gallery-content p {
+  margin-top: 3px !important;
+}
+
+.playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-card-menu-wrap {
+  position: absolute !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 8 !important;
+  display: flex !important;
+  width: 18px !important;
+  height: 18px !important;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: var(--text-secondary) !important;
+  padding: 0 !important;
+}
+
+.playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid:hover,
+.playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid.is-open {
+  border: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: var(--text-primary) !important;
+}
+
+.playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid::before,
+.playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid::after {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.playlists-page .playlist-create-card {
+  background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
+}
+
+.playlists-page .playlist-create-card:hover {
+  background: color-mix(in srgb, var(--bg-primary) 93%, var(--text-primary) 7%) !important;
+}
+
+.playlists-page .playlist-create-card .playlist-create-mark {
+  border-color: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
+  background: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease !important;
+}
+
+.playlists-page .playlist-create-card:hover .playlist-create-mark {
+  border-color: color-mix(in srgb, var(--bg-primary) 78%, var(--text-primary) 22%) !important;
+  background: color-mix(in srgb, var(--bg-primary) 78%, var(--text-primary) 22%) !important;
+}
+
+.playlists-page .playlist-create-card .playlist-create-copy span {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--text-secondary) !important;
+}
+
+.drag-preview-card {
+  width: clamp(190px, 13vw, 230px) !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.drag-preview-card .playlist-gallery-art-wrap {
+  position: relative !important;
+  display: flex !important;
+  min-height: 0 !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.drag-preview-card .playlist-gallery-art {
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.drag-preview-card .playlist-gallery-art::after {
+  display: none !important;
+}
+
+.drag-preview-card .playlist-gallery-art img {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+  transform: none !important;
+}
+
+.drag-preview-card .playlist-gallery-content {
+  position: static !important;
+  margin-top: 12px !important;
+  padding-right: 0 !important;
+}
+
+.drag-preview-card .playlist-gallery-content .playlist-gallery-kicker {
+  display: none !important;
+}
+
+.drag-preview-card .playlist-gallery-content h3 {
+  margin: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-family: var(--font-instrument-sans) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.035em !important;
+  color: var(--text-primary) !important;
+}
+
+.drag-preview-card .playlist-gallery-content p {
+  margin-top: 3px !important;
+  font-size: 13px !important;
+  line-height: 1.2 !important;
+  color: var(--text-muted) !important;
+}
+
+@media (max-width: 940px) {
+  .playlists-top-controls {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .playlists-status-pill {
+    width: 100% !important;
+  }
+
+  .playlists-control-right {
+    justify-content: space-between !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .playlists-top-controls {
+    width: calc(100% - 40px) !important;
+    margin-right: 20px !important;
+    margin-left: 20px !important;
+  }
+
+  .playlists-control-right {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+}
