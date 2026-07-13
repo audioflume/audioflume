@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import "./curated-playlists.css";
 
@@ -19,6 +20,30 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
   .curated-featured-playlist-heading {
     margin-top: 0 !important;
     margin-bottom: 21px;
+  }
+
+  .curated-featured-library-link {
+    position: absolute;
+    top: calc(var(--filmwave-header-height, 56px) + 51px);
+    right: var(--curated-page-gutter);
+    z-index: 4;
+    display: none;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
+    display: inline-flex;
+  }
+
+  .curated-featured-library-link:hover,
+  .curated-featured-library-link:focus-visible {
+    color: var(--text-primary);
+    outline: none;
   }
 
   .curated-featured-playlist-heading + .curated-featured-playlist {
@@ -209,6 +234,9 @@ export default function CuratedPlaylistsLayout({
   return (
     <>
       <style>{CURATED_PLAYLISTS_LAYOUT_STYLE}</style>
+      <Link href="/music" className="curated-featured-library-link">
+        Explore music library
+      </Link>
       {children}
     </>
   );
