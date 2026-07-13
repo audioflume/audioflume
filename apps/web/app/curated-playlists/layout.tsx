@@ -18,7 +18,7 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
 
   .curated-featured-playlist-heading {
     margin-top: 0 !important;
-    margin-bottom: 16px;
+    margin-bottom: 21px;
   }
 
   .curated-featured-playlist-heading + .curated-featured-playlist {
