@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import CuratedHeaderScrollState from "./CuratedHeaderScrollState";
 import "./curated-playlists.css";
 
 export default function CuratedPlaylistsLayout({
@@ -9,9 +9,7 @@ export default function CuratedPlaylistsLayout({
 }) {
   return (
     <>
-      <Link href="/music" className="curated-featured-library-link">
-        Explore music library
-      </Link>
+      <CuratedHeaderScrollState />
       {children}
     </>
   );
