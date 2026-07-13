@@ -262,24 +262,47 @@ function FeaturedPlaylistBlock({
 
         <div className="curated-featured-playlist-overlay" aria-hidden="true" />
 
-        <div className="curated-featured-playlist-copy">
-          <span className="curated-featured-playlist-kicker">
-            {playlist.kicker || "Featured playlist"}
-          </span>
-          <h1
-            id={`curated-featured-playlist-${playlist.id}`}
-            className="curated-featured-playlist-title"
+        <div className="curated-featured-playlist-content">
+          <Link
+            href={playlistHref}
+            className="curated-featured-playlist-cover-link"
+            aria-label={`Explore ${playlist.name}`}
           >
-            {playlist.name}
-          </h1>
-          {supportingText && (
-            <p className="curated-featured-playlist-description">
-              {supportingText}
-            </p>
-          )}
-          <Link href={playlistHref} className="curated-featured-playlist-button">
-            Explore playlist
+            {playlist.cover_image_url ? (
+              <Image
+                key={`${playlist.id}-cover`}
+                src={playlist.cover_image_url}
+                alt={`${playlist.name} playlist cover`}
+                fill
+                priority={activeIndex === 0}
+                unoptimized
+                sizes="(min-width: 1281px) 20vw, (min-width: 981px) 25vw, (min-width: 721px) 33vw, 50vw"
+                className="curated-featured-playlist-cover-image"
+              />
+            ) : (
+              <span className="curated-featured-playlist-cover-fallback" />
+            )}
           </Link>
+
+          <div className="curated-featured-playlist-copy">
+            <span className="curated-featured-playlist-kicker">
+              {playlist.kicker || "Featured playlist"}
+            </span>
+            <h1
+              id={`curated-featured-playlist-${playlist.id}`}
+              className="curated-featured-playlist-title"
+            >
+              {playlist.name}
+            </h1>
+            {supportingText && (
+              <p className="curated-featured-playlist-description">
+                {supportingText}
+              </p>
+            )}
+            <Link href={playlistHref} className="curated-featured-playlist-button">
+              Explore playlist
+            </Link>
+          </div>
         </div>
 
         {playlists.length > 1 && (
