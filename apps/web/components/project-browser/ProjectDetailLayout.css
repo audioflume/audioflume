@@ -112,17 +112,6 @@
   transition: background-color 160ms ease, color 160ms ease !important;
 }
 
-.project-detail-page .project-tabs-row .fw-filter-rail-item + .fw-filter-rail-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 1px;
-  background: var(--filmwave-side-filter-divider-color, var(--border-subtle));
-  pointer-events: none;
-}
-
 .project-detail-page .project-tabs-row .fw-filter-rail-item:hover {
   background: var(--bg-hover) !important;
   background-color: var(--bg-hover) !important;
