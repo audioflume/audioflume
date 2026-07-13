@@ -24,11 +24,11 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
 
   .curated-featured-library-link {
     position: absolute;
-    top: calc(var(--filmwave-header-height, 56px) + 51px);
+    top: calc(var(--filmwave-header-height, 56px) + 55px);
     right: var(--curated-page-gutter);
     z-index: 4;
     display: none;
-    color: var(--text-secondary);
+    color: color-mix(in srgb, var(--text-secondary) 80%, var(--text-primary) 20%);
     font-size: 12px;
     font-weight: 500;
     line-height: 1;
