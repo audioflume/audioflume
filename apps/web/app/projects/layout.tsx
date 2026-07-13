@@ -25,20 +25,20 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-list {
-          border-top-color: var(--border) !important;
+          border-top-color: var(--filmwave-ui-divider-color) !important;
         }
 
         .projects-page .projects-row {
-          border-bottom-color: var(--border) !important;
+          border-bottom-color: var(--filmwave-ui-divider-color) !important;
         }
 
         .projects-page .projects-title {
           color: var(--text-primary) !important;
-          font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
-          font-size: clamp(18px, 1.45vw, 24px) !important;
-          font-weight: 400 !important;
-          letter-spacing: -0.045em !important;
-          line-height: 1.1 !important;
+          font-family: var(--filmwave-ui-title-font-family) !important;
+          font-size: var(--filmwave-ui-title-font-size) !important;
+          font-weight: var(--filmwave-ui-title-font-weight) !important;
+          letter-spacing: var(--filmwave-ui-title-letter-spacing) !important;
+          line-height: var(--filmwave-ui-title-line-height) !important;
         }
 
         @media (max-width: 720px) {
