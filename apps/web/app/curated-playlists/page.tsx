@@ -186,6 +186,29 @@ function CuratedPlaylistsLoadingSkeleton() {
   );
 }
 
+function EditorialFeatureLoading() {
+  return (
+    <section
+      className="curated-editorial-feature curated-editorial-feature-loading"
+      aria-hidden="true"
+    >
+      <div className="curated-editorial-feature-topline">
+        <span className="curated-editorial-loading-block curated-editorial-loading-label" />
+        <span className="curated-editorial-loading-block curated-editorial-loading-label" />
+      </div>
+      <div className="curated-editorial-feature-grid">
+        <div className="curated-editorial-loading-block curated-editorial-loading-media" />
+        <div className="curated-editorial-loading-copy">
+          <span className="curated-editorial-loading-block curated-editorial-loading-meta" />
+          <span className="curated-editorial-loading-block curated-editorial-loading-title" />
+          <span className="curated-editorial-loading-block curated-editorial-loading-description" />
+          <span className="curated-editorial-loading-block curated-editorial-loading-link" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function CuratedPlaylistsPage() {
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [groups, setGroups] = useState<GroupMeta[]>([]);
@@ -296,55 +319,86 @@ export default function CuratedPlaylistsPage() {
 
   const featuredCopy =
     featuredPlaylist?.description || featuredPlaylist?.kicker || "";
+  const featuredTrackCount = featuredPlaylist?.song_count ?? 0;
+  const featuredTrackLabel = `${featuredTrackCount} track${
+    featuredTrackCount === 1 ? "" : "s"
+  }`;
 
   return (
-    <main className="discover-page-root" style={{ marginLeft: 0 }}>
-      <section className="discover-hero" aria-label="Featured playlist">
-        {featuredPlaylist?.cover_image_url ? (
-          <Image
-            src={featuredPlaylist.cover_image_url}
-            alt=""
-            fill
-            priority
-            unoptimized
-            sizes="100vw"
-            className="discover-hero-image"
-          />
-        ) : (
-          <div className="discover-hero-fallback" />
-        )}
-
-        <div className="discover-hero-overlay" aria-hidden="true" />
-
-        <div className="discover-hero-inner">
-          <div className="discover-hero-content max-w-[620px]">
-            {!loading && featuredPlaylist && (
-              <>
-                <div className="mb-3 text-[10px] font-medium uppercase tracking-[0.11em] text-white/65">
-                  Featured playlist
-                </div>
-                <h1>{featuredPlaylist.name}</h1>
-                {featuredCopy && (
-                  <p className="max-w-[500px] text-[11.5px] font-normal leading-[1.55] text-white/70">
-                    {featuredCopy}
-                  </p>
-                )}
-                <Link
-                  href={`/curated-playlists/${featuredPlaylist.id}`}
-                  className="mt-6 inline-flex w-fit items-center gap-2 border-b border-white/45 pb-1 text-[11px] font-medium text-white transition-colors hover:border-white"
-                >
-                  View playlist
-                  <ArrowUpRightIcon size={12} />
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section className="curated-playlists-page-layer ml-[var(--sidebar-width)] min-h-screen pt-8 transition-[margin-left] duration-200">
+    <main className="curated-playlists-page-root">
+      <section className="curated-playlists-page-layer">
         <div className="px-8">
           <PlaylistTabsRail />
+
+          {loading && <EditorialFeatureLoading />}
+
+          {!loading && featuredPlaylist && (
+            <section
+              className="curated-editorial-feature"
+              aria-labelledby={`featured-playlist-${featuredPlaylist.id}`}
+            >
+              <div className="curated-editorial-feature-topline">
+                <span>Featured selection</span>
+                <span>Curated journal / 01</span>
+              </div>
+
+              <div className="curated-editorial-feature-grid">
+                <Link
+                  href={`/curated-playlists/${featuredPlaylist.id}`}
+                  className="curated-editorial-feature-media"
+                  aria-label={`Open ${featuredPlaylist.name}`}
+                >
+                  {featuredPlaylist.cover_image_url ? (
+                    <Image
+                      src={featuredPlaylist.cover_image_url}
+                      alt=""
+                      fill
+                      priority
+                      unoptimized
+                      sizes="(min-width: 981px) 66vw, 100vw"
+                      className="curated-editorial-feature-image"
+                    />
+                  ) : (
+                    <div className="curated-editorial-feature-fallback" />
+                  )}
+                  <span className="curated-editorial-feature-caption">
+                    {featuredPlaylist.playlist_group || "Editor Picks"}
+                  </span>
+                </Link>
+
+                <div className="curated-editorial-feature-copy">
+                  <span className="curated-editorial-feature-index" aria-hidden="true">
+                    01
+                  </span>
+                  <div className="curated-editorial-feature-meta">
+                    <span>{featuredPlaylist.playlist_group || "Editor Picks"}</span>
+                    <span className="curated-editorial-feature-meta-divider" />
+                    <span>{featuredTrackLabel}</span>
+                  </div>
+                  <h1
+                    id={`featured-playlist-${featuredPlaylist.id}`}
+                    className="curated-editorial-feature-title"
+                  >
+                    {featuredPlaylist.name}
+                  </h1>
+                  {featuredCopy && (
+                    <p className="curated-editorial-feature-description">
+                      {featuredCopy}
+                    </p>
+                  )}
+                  <Link
+                    href={`/curated-playlists/${featuredPlaylist.id}`}
+                    className="curated-editorial-feature-link"
+                  >
+                    Explore the collection
+                    <span className="curated-editorial-feature-link-icon">
+                      <ArrowUpRightIcon size={12} />
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            </section>
+          )}
 
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
