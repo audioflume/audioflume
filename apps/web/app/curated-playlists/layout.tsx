@@ -6,6 +6,10 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     --curated-page-gutter: clamp(28px, 5.2vw, 82px);
   }
 
+  .curated-playlists-page-layer {
+    padding-bottom: 64px;
+  }
+
   .curated-playlists-page-layer > div {
     padding-right: var(--curated-page-gutter) !important;
     padding-left: var(--curated-page-gutter) !important;
@@ -58,9 +62,9 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
 
   .curated-featured-playlist-indicators {
     position: absolute;
-    right: 16px;
+    right: 22px;
     bottom: 14px;
-    left: 16px;
+    left: 22px;
     z-index: 4;
     display: flex;
     align-items: center;
