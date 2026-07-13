@@ -198,8 +198,28 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     margin-left: calc(var(--curated-page-gutter) * -1) !important;
   }
 
-  .curated-playlist-shelf-scroller {
+  .curated-playlist-shelf-scroller,
+  .curated-playlist-skeleton-shelf > .relative > .flex {
+    --curated-playlist-card-gap: clamp(10px, 1.25vw, 18px);
+    gap: var(--curated-playlist-card-gap) !important;
+    padding-right: var(--curated-page-gutter) !important;
     padding-left: var(--curated-page-gutter) !important;
+  }
+
+  .curated-playlist-card-shell,
+  .curated-playlist-skeleton-card-shell {
+    min-width: 0 !important;
+    flex: 0 0 calc(
+      (100% - var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)) / 5
+    ) !important;
+  }
+
+  .curated-playlist-image,
+  .curated-playlist-skeleton-card {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 1;
   }
 
   .curated-playlist-shelf-prev-floating {
@@ -211,8 +231,22 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     margin-left: calc(var(--curated-page-gutter) * -1) !important;
   }
 
-  .curated-playlist-skeleton-shelf > .relative > .flex {
-    padding-left: var(--curated-page-gutter) !important;
+  @media (max-width: 1280px) {
+    .curated-playlist-card-shell,
+    .curated-playlist-skeleton-card-shell {
+      flex-basis: calc(
+        (100% - var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)) / 4
+      ) !important;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .curated-playlist-card-shell,
+    .curated-playlist-skeleton-card-shell {
+      flex-basis: calc(
+        (100% - var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)) / 3
+      ) !important;
+    }
   }
 
   @media (max-width: 720px) {
@@ -222,6 +256,13 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
 
     .curated-playlists-page-root .curated-featured-playlist-title {
       font-size: 28px !important;
+    }
+
+    .curated-playlist-card-shell,
+    .curated-playlist-skeleton-card-shell {
+      flex-basis: calc(
+        (100% - var(--curated-playlist-card-gap)) / 2
+      ) !important;
     }
   }
 `;
