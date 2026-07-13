@@ -32,7 +32,7 @@
   overflow-x: hidden !important;
   overflow-y: auto !important;
   border: 0 !important;
-  border-right: 1px solid var(--border) !important;
+  border-right: 1px solid var(--filmwave-ui-divider-color) !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding: 10px 8px !important;
@@ -100,7 +100,7 @@
   justify-content: flex-start !important;
   gap: 8px !important;
   border: 0 !important;
-  border-radius: 0 !important;
+  border-radius: var(--filmwave-ui-radius-control) !important;
   background: transparent !important;
   color: var(--text-secondary) !important;
   margin: 0 !important;
@@ -185,7 +185,7 @@
   display: flex !important;
   min-height: 56px !important;
   align-items: stretch !important;
-  border-bottom: 1px solid var(--border) !important;
+  border-bottom: 1px solid var(--filmwave-ui-divider-color) !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
@@ -207,11 +207,11 @@
   min-height: 28px !important;
   margin: 0 !important;
   color: var(--text-primary) !important;
-  font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
-  font-size: clamp(18px, 1.45vw, 24px) !important;
-  font-weight: 400 !important;
-  letter-spacing: -0.045em !important;
-  line-height: 1.1 !important;
+  font-family: var(--filmwave-ui-title-font-family) !important;
+  font-size: var(--filmwave-ui-title-font-size) !important;
+  font-weight: var(--filmwave-ui-title-font-weight) !important;
+  letter-spacing: var(--filmwave-ui-title-letter-spacing) !important;
+  line-height: var(--filmwave-ui-title-line-height) !important;
 }
 
 .project-detail-page .project-detail-meta {
