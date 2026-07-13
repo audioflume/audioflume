@@ -28,10 +28,10 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     right: var(--curated-page-gutter);
     z-index: 4;
     display: none;
-    color: color-mix(in srgb, var(--text-secondary) 80%, var(--text-primary) 20%);
-    font-size: 12px;
+    color: var(--text-subtle) !important;
+    font-size: 0.75rem;
     font-weight: 500;
-    line-height: 1;
+    line-height: 1rem;
     text-decoration: none;
     transition: color 150ms ease;
   }
@@ -42,7 +42,7 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
 
   .curated-featured-library-link:hover,
   .curated-featured-library-link:focus-visible {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
     outline: none;
   }
 
