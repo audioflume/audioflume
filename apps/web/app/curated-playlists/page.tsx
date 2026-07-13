@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
@@ -297,198 +298,53 @@ export default function CuratedPlaylistsPage() {
     featuredPlaylist?.description || featuredPlaylist?.kicker || "";
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <style>{`
-        section.curated-playlists-page-layer {
-          position: relative;
-          z-index: 1;
-          padding-top: calc(var(--filmwave-header-height, 56px) + 32px) !important;
-        }
+    <main className="discover-page-root" style={{ marginLeft: 0 }}>
+      <section className="discover-hero" aria-label="Featured playlist">
+        {featuredPlaylist?.cover_image_url ? (
+          <Image
+            src={featuredPlaylist.cover_image_url}
+            alt=""
+            fill
+            priority
+            unoptimized
+            sizes="100vw"
+            className="discover-hero-image"
+          />
+        ) : (
+          <div className="discover-hero-fallback" />
+        )}
 
-        .curated-featured-banner {
-          position: relative;
-          display: block;
-          min-height: clamp(320px, 42vw, 560px);
-          overflow: hidden;
-          margin-top: 24px;
-          background: var(--bg-secondary);
-          color: #fff;
-          text-decoration: none;
-        }
+        <div className="discover-hero-overlay" aria-hidden="true" />
 
-        .curated-featured-banner-image,
-        .curated-featured-banner-fallback,
-        .curated-featured-banner-overlay {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-        }
-
-        .curated-featured-banner-image {
-          object-fit: cover;
-          transition: transform 700ms ease;
-        }
-
-        .curated-featured-banner:hover .curated-featured-banner-image {
-          transform: scale(1.018);
-        }
-
-        .curated-featured-banner-fallback {
-          background:
-            radial-gradient(circle at 72% 34%, rgba(128, 142, 126, 0.5), transparent 34%),
-            linear-gradient(120deg, #111816 0%, #28332f 55%, #0c0f0e 100%);
-        }
-
-        .curated-featured-banner-overlay {
-          background:
-            linear-gradient(90deg, rgba(0, 0, 0, 0.76) 0%, rgba(0, 0, 0, 0.38) 48%, rgba(0, 0, 0, 0.08) 78%),
-            linear-gradient(180deg, rgba(0, 0, 0, 0.04) 30%, rgba(0, 0, 0, 0.5) 100%);
-        }
-
-        .curated-featured-banner-content {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          min-height: inherit;
-          max-width: 560px;
-          flex-direction: column;
-          justify-content: flex-end;
-          padding: clamp(24px, 4vw, 52px);
-        }
-
-        .curated-featured-banner-eyebrow {
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.11em;
-          line-height: 1;
-          text-transform: uppercase;
-          color: rgba(255, 255, 255, 0.68);
-        }
-
-        .curated-featured-banner-title {
-          margin: 10px 0 0;
-          font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
-          font-size: clamp(25px, 2.7vw, 38px);
-          font-weight: 500;
-          letter-spacing: -0.045em;
-          line-height: 1.04;
-          color: #fff;
-        }
-
-        .curated-featured-banner-copy {
-          max-width: 440px;
-          margin: 12px 0 0;
-          font-size: 12px;
-          font-weight: 400;
-          line-height: 1.55;
-          color: rgba(255, 255, 255, 0.72);
-        }
-
-        .curated-featured-banner-link {
-          display: inline-flex;
-          width: fit-content;
-          align-items: center;
-          gap: 7px;
-          margin-top: 20px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.42);
-          padding-bottom: 4px;
-          font-size: 11px;
-          font-weight: 500;
-          line-height: 1;
-          color: #fff;
-          transition: border-color 150ms ease;
-        }
-
-        .curated-featured-banner:hover .curated-featured-banner-link {
-          border-color: #fff;
-        }
-
-        .curated-featured-banner.is-loading {
-          pointer-events: none;
-        }
-
-        .curated-featured-banner.is-loading::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          transform: translateX(-100%);
-          background: linear-gradient(
-            90deg,
-            transparent,
-            color-mix(in srgb, var(--bg-hover) 52%, transparent),
-            transparent
-          );
-          animation: curated-featured-banner-shimmer 1.6s ease-in-out infinite;
-        }
-
-        @keyframes curated-featured-banner-shimmer {
-          100% {
-            transform: translateX(100%);
-          }
-        }
-
-        @media (max-width: 720px) {
-          .curated-featured-banner {
-            min-height: 340px;
-          }
-
-          .curated-featured-banner-content {
-            padding: 24px;
-          }
-
-          .curated-featured-banner-overlay {
-            background:
-              linear-gradient(90deg, rgba(0, 0, 0, 0.68) 0%, rgba(0, 0, 0, 0.28) 100%),
-              linear-gradient(180deg, rgba(0, 0, 0, 0.04) 20%, rgba(0, 0, 0, 0.72) 100%);
-          }
-        }
-      `}</style>
-
-      <section className="curated-playlists-page-layer ml-[var(--sidebar-width)] min-h-screen pt-6 transition-[margin-left] duration-200">
-        <div className="px-8">
-          <PlaylistTabsRail />
-
-          {loading && (
-            <div
-              className="curated-featured-banner is-loading"
-              aria-hidden="true"
-            />
-          )}
-
-          {!loading && featuredPlaylist && (
-            <Link
-              href={`/curated-playlists/${featuredPlaylist.id}`}
-              className="curated-featured-banner"
-              aria-label={`Open featured playlist ${featuredPlaylist.name}`}
-            >
-              {featuredPlaylist.cover_image_url ? (
-                <img
-                  src={featuredPlaylist.cover_image_url}
-                  alt=""
-                  className="curated-featured-banner-image"
-                />
-              ) : (
-                <div className="curated-featured-banner-fallback" />
-              )}
-              <div className="curated-featured-banner-overlay" />
-              <div className="curated-featured-banner-content">
-                <span className="curated-featured-banner-eyebrow">
+        <div className="discover-hero-inner">
+          <div className="discover-hero-content max-w-[620px]">
+            {!loading && featuredPlaylist && (
+              <>
+                <div className="mb-3 text-[10px] font-medium uppercase tracking-[0.11em] text-white/65">
                   Featured playlist
-                </span>
-                <h1 className="curated-featured-banner-title">
-                  {featuredPlaylist.name}
-                </h1>
+                </div>
+                <h1>{featuredPlaylist.name}</h1>
                 {featuredCopy && (
-                  <p className="curated-featured-banner-copy">{featuredCopy}</p>
+                  <p className="max-w-[500px] text-[11.5px] font-normal leading-[1.55] text-white/70">
+                    {featuredCopy}
+                  </p>
                 )}
-                <span className="curated-featured-banner-link">
+                <Link
+                  href={`/curated-playlists/${featuredPlaylist.id}`}
+                  className="mt-6 inline-flex w-fit items-center gap-2 border-b border-white/45 pb-1 text-[11px] font-medium text-white transition-colors hover:border-white"
+                >
                   View playlist
                   <ArrowUpRightIcon size={12} />
-                </span>
-              </div>
-            </Link>
-          )}
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="curated-playlists-page-layer ml-[var(--sidebar-width)] min-h-screen pt-8 transition-[margin-left] duration-200">
+        <div className="px-8">
+          <PlaylistTabsRail />
 
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
