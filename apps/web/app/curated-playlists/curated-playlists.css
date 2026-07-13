@@ -6,7 +6,8 @@ body:has(.curated-playlists-page-root) {
   --curated-featured-cover-size: calc(
     (
         100vw - var(--curated-page-gutter) - var(--curated-page-gutter) -
-          (var(--curated-playlist-card-gap) * 4)
+          var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
+          var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
       ) /
       5
   );
@@ -102,12 +103,15 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
 .curated-featured-playlist {
   position: relative;
   display: grid;
-  width: calc(100% + (var(--curated-page-gutter) * 2));
+  width: calc(
+    100% + var(--curated-page-gutter) + var(--curated-page-gutter)
+  );
   min-height: var(--curated-featured-hero-height);
   grid-template-columns:
     minmax(0, 1fr)
     calc(var(--curated-featured-tracks-width) + var(--curated-page-gutter));
-  margin: 0 calc(var(--curated-page-gutter) * -1);
+  margin-right: calc(0px - var(--curated-page-gutter));
+  margin-left: calc(0px - var(--curated-page-gutter));
   overflow: hidden;
   background: #101112;
   isolation: isolate;
@@ -548,8 +552,8 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
 
 .curated-playlist-shelf-viewport {
   container-type: inline-size;
-  margin-right: calc(var(--curated-page-gutter) * -1) !important;
-  margin-left: calc(var(--curated-page-gutter) * -1) !important;
+  margin-right: calc(0px - var(--curated-page-gutter)) !important;
+  margin-left: calc(0px - var(--curated-page-gutter)) !important;
   overflow: hidden;
 }
 
@@ -565,7 +569,12 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
 .curated-playlist-skeleton-card-shell {
   min-width: 0 !important;
   flex: 0 0 calc(
-    (100% - (var(--curated-playlist-card-gap) * 4)) / 5
+    (
+        100% - var(--curated-playlist-card-gap) -
+          var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
+          var(--curated-playlist-card-gap)
+      ) /
+      5
   ) !important;
 }
 
@@ -686,8 +695,11 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
 .curated-playlist-shelf-prev-floating,
 .curated-playlist-shelf-next-floating {
   top: calc(
-    (100cqw - (var(--curated-page-gutter) * 2) -
-          (var(--curated-playlist-card-gap) * 4)) /
+    (
+        100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+          var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
+          var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
+      ) /
       10
   ) !important;
   transform: translateY(-50%);
@@ -698,8 +710,8 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
 }
 
 .curated-playlist-skeleton-shelf > .relative {
-  margin-right: calc(var(--curated-page-gutter) * -1) !important;
-  margin-left: calc(var(--curated-page-gutter) * -1) !important;
+  margin-right: calc(0px - var(--curated-page-gutter)) !important;
+  margin-left: calc(0px - var(--curated-page-gutter)) !important;
 }
 
 .curated-playlists-page-layer ~ footer {
@@ -712,7 +724,8 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
     --curated-featured-cover-size: calc(
       (
           100vw - var(--curated-page-gutter) - var(--curated-page-gutter) -
-            (var(--curated-playlist-card-gap) * 3)
+            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
+            var(--curated-playlist-card-gap)
         ) /
         4
     );
@@ -721,15 +734,22 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
   .curated-playlist-card-shell,
   .curated-playlist-skeleton-card-shell {
     flex-basis: calc(
-      (100% - (var(--curated-playlist-card-gap) * 3)) / 4
+      (
+          100% - var(--curated-playlist-card-gap) -
+            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
+        ) /
+        4
     ) !important;
   }
 
   .curated-playlist-shelf-prev-floating,
   .curated-playlist-shelf-next-floating {
     top: calc(
-      (100cqw - (var(--curated-page-gutter) * 2) -
-            (var(--curated-playlist-card-gap) * 3)) /
+      (
+          100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
+            var(--curated-playlist-card-gap)
+        ) /
         8
     ) !important;
   }
@@ -750,7 +770,7 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
     --curated-featured-cover-size: calc(
       (
           100vw - var(--curated-page-gutter) - var(--curated-page-gutter) -
-            (var(--curated-playlist-card-gap) * 2)
+            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
         ) /
         3
     );
@@ -791,15 +811,21 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
   .curated-playlist-card-shell,
   .curated-playlist-skeleton-card-shell {
     flex-basis: calc(
-      (100% - (var(--curated-playlist-card-gap) * 2)) / 3
+      (
+          100% - var(--curated-playlist-card-gap) -
+            var(--curated-playlist-card-gap)
+        ) /
+        3
     ) !important;
   }
 
   .curated-playlist-shelf-prev-floating,
   .curated-playlist-shelf-next-floating {
     top: calc(
-      (100cqw - (var(--curated-page-gutter) * 2) -
-            (var(--curated-playlist-card-gap) * 2)) /
+      (
+          100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
+        ) /
         6
     ) !important;
   }
@@ -854,8 +880,10 @@ body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
   .curated-playlist-shelf-prev-floating,
   .curated-playlist-shelf-next-floating {
     top: calc(
-      (100cqw - (var(--curated-page-gutter) * 2) -
-            var(--curated-playlist-card-gap)) /
+      (
+          100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+            var(--curated-playlist-card-gap)
+        ) /
         4
     ) !important;
   }
