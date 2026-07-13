@@ -24,6 +24,14 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           margin-left: calc(var(--projects-content-gutter) - var(--projects-shell-gutter)) !important;
         }
 
+        .projects-page .projects-list {
+          border-top-color: var(--border) !important;
+        }
+
+        .projects-page .projects-row {
+          border-bottom-color: var(--border) !important;
+        }
+
         .projects-page .projects-title {
           color: var(--text-primary) !important;
           font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
