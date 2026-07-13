@@ -7,6 +7,7 @@ import CuratedFeaturedTrackRow from "@/components/curated/CuratedFeaturedTrackRo
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type {
   CuratedPlaylist,
@@ -282,23 +283,41 @@ function FeaturedPlaylistBlock({
         </div>
 
         {playlists.length > 1 && (
-          <div
-            className="curated-featured-playlist-indicators"
-            aria-label="Featured playlists"
-          >
-            {playlists.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                className={index === activeIndex ? "is-active" : ""}
-                aria-label={`Show featured playlist ${item.name}`}
-                aria-pressed={index === activeIndex}
-                onClick={() => onSelect(index)}
-              >
-                <span />
-              </button>
-            ))}
-          </div>
+          <>
+            <button
+              type="button"
+              className="curated-featured-playlist-next-button"
+              aria-label="Show next featured playlist"
+              onClick={() => onSelect((activeIndex + 1) % playlists.length)}
+            >
+              <ChevronRightIcon size={18} />
+            </button>
+
+            <span
+              className="curated-featured-playlist-count"
+              aria-live="polite"
+            >
+              {activeIndex + 1}/{playlists.length}
+            </span>
+
+            <div
+              className="curated-featured-playlist-indicators"
+              aria-label="Featured playlists"
+            >
+              {playlists.map((item, index) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={index === activeIndex ? "is-active" : ""}
+                  aria-label={`Show featured playlist ${item.name}`}
+                  aria-pressed={index === activeIndex}
+                  onClick={() => onSelect(index)}
+                >
+                  <span />
+                </button>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
