@@ -1,3 +1,45 @@
+body:has(.curated-playlists-page-root) {
+  --curated-page-gutter: clamp(28px, 5.2vw, 82px);
+  --curated-playlist-card-gap: clamp(10px, 1.25vw, 18px);
+  --curated-featured-tracks-width: clamp(340px, 29vw, 430px);
+  --curated-featured-hero-height: clamp(520px, 42vw, 650px);
+  --curated-featured-cover-size: calc(
+    (
+        100vw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+          (var(--curated-playlist-card-gap) * 4)
+      ) /
+      5
+  );
+}
+
+body:has(.curated-playlists-page-root) .filmwave-header,
+body:has(.curated-playlists-page-root) .filmwave-app-header,
+body:has(.curated-playlists-page-root) > header {
+  position: absolute !important;
+  border-bottom: 0 !important;
+  background: transparent !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+body:has(.curated-playlists-page-root) .filmwave-header-tonal-wordmark,
+body:has(.curated-playlists-page-root) .filmwave-header-logo-action {
+  color: #fff !important;
+}
+
+body:has(.curated-playlists-page-root) .filmwave-header-nav-link,
+body:has(.curated-playlists-page-root) .filmwave-header .filmwave-header-nav-link {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+body:has(.curated-playlists-page-root) .filmwave-header-nav-link:hover,
+body:has(.curated-playlists-page-root) .filmwave-header-nav-link.is-active {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+}
+
 .curated-playlists-page-root {
   min-height: 100vh;
   overflow: hidden;
@@ -9,30 +51,77 @@
 
 .curated-playlists-page-layer {
   min-height: 100vh;
-  padding-top: calc(var(--filmwave-header-height, 56px) + 32px);
+  padding-top: 0 !important;
+  padding-bottom: 64px;
+}
+
+.curated-playlists-page-layer > div {
+  position: relative;
+  padding-right: var(--curated-page-gutter) !important;
+  padding-left: var(--curated-page-gutter) !important;
+}
+
+.curated-featured-playlist-heading {
+  position: absolute;
+  top: calc(var(--filmwave-header-height, 75px) + 24px);
+  left: var(--curated-page-gutter);
+  z-index: 4;
+  min-height: 0;
+  margin: 0 !important;
+  pointer-events: none;
+}
+
+body:has(.curated-playlists-page-root) .curated-featured-playlist-heading h2 {
+  color: #fff !important;
+}
+
+.curated-featured-library-link {
+  position: absolute;
+  top: calc(var(--filmwave-header-height, 75px) + 28px);
+  right: var(--curated-page-gutter);
+  z-index: 5;
+  display: none;
+  color: rgba(255, 255, 255, 0.62) !important;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1rem;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+body:has(.curated-featured-playlist-heading) .curated-featured-library-link {
+  display: inline-flex;
+}
+
+.curated-featured-library-link:hover,
+.curated-featured-library-link:focus-visible {
+  color: #fff !important;
+  outline: none;
 }
 
 .curated-featured-playlist {
+  position: relative;
   display: grid;
-  min-height: 412px;
-  grid-template-columns: minmax(0, 1.65fr) minmax(330px, 0.75fr);
-  margin-top: 24px;
+  width: calc(100% + (var(--curated-page-gutter) * 2));
+  min-height: var(--curated-featured-hero-height);
+  grid-template-columns:
+    minmax(0, 1fr)
+    calc(var(--curated-featured-tracks-width) + var(--curated-page-gutter));
+  margin: 0 calc(var(--curated-page-gutter) * -1);
   overflow: hidden;
-  background: #101010;
+  background: #101112;
+  isolation: isolate;
 }
 
 .curated-featured-playlist-image-panel {
-  position: relative;
-  display: block;
-  min-height: 412px;
-  overflow: hidden;
+  display: contents;
   color: #fff;
-  text-decoration: none;
 }
 
 .curated-featured-playlist-image,
 .curated-featured-playlist-fallback,
-.curated-featured-playlist-overlay {
+.curated-featured-playlist-overlay,
+.curated-featured-playlist-loading-image {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -40,81 +129,152 @@
 }
 
 .curated-featured-playlist-image {
+  z-index: 0;
   object-fit: cover;
-  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  object-position: center;
+  animation: curated-featured-playlist-swap 260ms ease-out both;
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.curated-featured-playlist-image-panel:hover .curated-featured-playlist-image {
-  transform: scale(1.018);
+.curated-featured-playlist:hover .curated-featured-playlist-image {
+  transform: scale(1.012);
 }
 
 .curated-featured-playlist-fallback {
+  z-index: 0;
   background:
     radial-gradient(circle at 72% 34%, rgba(130, 143, 126, 0.4), transparent 34%),
     linear-gradient(120deg, #111816 0%, #28332f 55%, #0c0f0e 100%);
 }
 
 .curated-featured-playlist-overlay {
+  z-index: 1;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.64) 0%, rgba(0, 0, 0, 0.22) 58%, rgba(0, 0, 0, 0.06) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.06) 28%, rgba(0, 0, 0, 0.56) 100%);
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.68) 0%,
+      rgba(0, 0, 0, 0.34) 46%,
+      rgba(0, 0, 0, 0.18) 72%,
+      rgba(0, 0, 0, 0.3) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.42) 0%,
+      rgba(0, 0, 0, 0.02) 30%,
+      rgba(0, 0, 0, 0.08) 66%,
+      rgba(0, 0, 0, 0.62) 100%
+    );
   pointer-events: none;
+}
+
+.curated-featured-playlist-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-width: 0;
+  min-height: var(--curated-featured-hero-height);
+  grid-column: 1;
+  align-items: center;
+  gap: clamp(24px, 2.8vw, 46px);
+  padding:
+    calc(var(--filmwave-header-height, 75px) + 78px)
+    clamp(28px, 3vw, 48px)
+    78px
+    var(--curated-page-gutter);
+}
+
+.curated-featured-playlist-cover-link {
+  position: relative;
+  display: block;
+  width: var(--curated-featured-cover-size);
+  height: var(--curated-featured-cover-size);
+  min-width: 0;
+  flex: 0 0 var(--curated-featured-cover-size);
+  overflow: hidden;
+  background: #101112;
+  color: inherit;
+  text-decoration: none;
+}
+
+.curated-featured-playlist-cover-image,
+.curated-featured-playlist-cover-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.curated-featured-playlist-cover-image {
+  object-fit: cover;
+  transition: transform 500ms ease;
+}
+
+.curated-featured-playlist-cover-link:hover .curated-featured-playlist-cover-image {
+  transform: scale(1.025);
+}
+
+.curated-featured-playlist-cover-fallback {
+  background:
+    radial-gradient(circle at 72% 34%, rgba(130, 143, 126, 0.4), transparent 34%),
+    linear-gradient(120deg, #111816 0%, #28332f 55%, #0c0f0e 100%);
 }
 
 .curated-featured-playlist-copy {
   position: relative;
   z-index: 1;
   display: flex;
-  min-height: 412px;
+  min-width: 0;
   max-width: 520px;
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding: clamp(34px, 5vw, 72px);
+  padding: 0;
+  transform: translateY(-4px);
 }
 
 .curated-featured-playlist-copy::before {
   content: "FEATURED PLAYLIST";
   order: 0;
+  color: rgba(255, 255, 255, 0.72);
   font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.11em;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.7);
 }
 
 .curated-featured-playlist-kicker {
   order: 2;
   max-width: 430px;
-  margin-top: 18px;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 11.5px;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.3;
   text-transform: none;
-  color: rgba(255, 255, 255, 0.86);
 }
 
 .curated-featured-playlist-title {
   order: 1;
   max-width: 480px;
   margin: 9px 0 0;
+  color: #fff;
   font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
-  font-size: clamp(30px, 3.2vw, 46px);
-  font-weight: 500;
+  font-size: clamp(30px, 3.2vw, 48px);
+  font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.98;
-  color: #fff;
 }
 
 .curated-featured-playlist-description {
   order: 3;
   max-width: 430px;
   margin: 5px 0 0;
+  color: rgba(255, 255, 255, 0.68);
   font-size: 10px;
   font-weight: 400;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.68);
 }
 
 .curated-featured-playlist-button {
@@ -124,6 +284,7 @@
   height: 36px;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   margin-top: 24px;
   background: #fff;
   padding: 0 20px;
@@ -131,26 +292,44 @@
   font-size: 11px;
   font-weight: 500;
   line-height: 1;
+  text-decoration: none;
   transition:
     background-color 150ms ease,
     color 150ms ease;
 }
 
-.curated-featured-playlist-image-panel:hover .curated-featured-playlist-button {
+.curated-featured-playlist-button::after {
+  content: "↗";
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.curated-featured-playlist-button:hover,
+.curated-featured-playlist-button:focus-visible {
   background: rgba(255, 255, 255, 0.86);
+  outline: none;
 }
 
 .curated-featured-playlist-tracks {
-  --bg-primary: #101010;
+  --bg-primary: #101112;
   --bg-tertiary: #292929;
   --text-primary: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.56);
 
+  position: relative;
+  z-index: 2;
   display: flex;
+  width: var(--curated-featured-tracks-width);
   min-width: 0;
-  min-height: 412px;
+  min-height: 0;
+  max-height: calc(var(--curated-featured-hero-height) - 150px);
+  grid-column: 2;
+  align-self: center;
+  justify-self: start;
   flex-direction: column;
-  background: #101010;
+  overflow: hidden;
+  background: rgba(16, 17, 18, 0.94);
   padding: 22px 20px 17px;
 }
 
@@ -189,6 +368,103 @@
   font-size: 11px;
 }
 
+.curated-featured-playlist-next-button {
+  position: absolute;
+  top: 50%;
+  right: calc(
+    var(--curated-featured-tracks-width) + var(--curated-page-gutter) + 12px
+  );
+  z-index: 5;
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transform: translateY(-50%);
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  padding: 0;
+}
+
+.curated-featured-playlist-next-button:hover {
+  background: transparent;
+  color: #fff;
+}
+
+.curated-featured-playlist-next-button:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: -3px;
+}
+
+.curated-featured-playlist-count {
+  position: absolute;
+  right: calc(
+    var(--curated-featured-tracks-width) + var(--curated-page-gutter) + 22px
+  );
+  bottom: 42px;
+  z-index: 4;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 10px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.curated-featured-playlist-indicators {
+  position: absolute;
+  right: calc(
+    var(--curated-featured-tracks-width) + var(--curated-page-gutter) + 22px
+  );
+  bottom: 14px;
+  left: var(--curated-page-gutter);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+}
+
+.curated-featured-playlist-indicators button {
+  height: 18px;
+  min-width: 0;
+  flex: 1 1 0;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  padding: 8px 0;
+}
+
+.curated-featured-playlist-indicators button span {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  transition:
+    height 160ms ease,
+    background-color 160ms ease;
+}
+
+.curated-featured-playlist-indicators button.is-active span {
+  height: 2px;
+  background: #fff;
+}
+
+.curated-featured-playlist-indicators button:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 2px;
+}
+
+@keyframes curated-featured-playlist-swap {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .curated-featured-playlist-track-skeleton,
 .curated-featured-playlist-loading-row,
 .curated-featured-playlist-loading-image,
@@ -198,14 +474,25 @@
   background: rgba(255, 255, 255, 0.07);
 }
 
+.curated-featured-playlist-loading-image {
+  z-index: 0;
+}
+
 .curated-featured-playlist-track-skeleton,
 .curated-featured-playlist-loading-row {
   height: 54px;
 }
 
 .curated-featured-playlist-loading-tracks {
+  position: relative;
+  z-index: 2;
   display: grid;
+  width: var(--curated-featured-tracks-width);
+  grid-column: 2;
+  align-self: center;
+  justify-self: start;
   gap: 2px;
+  background: rgba(16, 17, 18, 0.94);
   padding: 22px 20px 17px;
 }
 
@@ -260,20 +547,26 @@
 }
 
 .curated-playlist-shelf-viewport {
-  margin-right: -2rem;
-  margin-left: -2rem;
+  container-type: inline-size;
+  margin-right: calc(var(--curated-page-gutter) * -1) !important;
+  margin-left: calc(var(--curated-page-gutter) * -1) !important;
   overflow: hidden;
 }
 
-.curated-playlist-shelf-scroller {
+.curated-playlist-shelf-scroller,
+.curated-playlist-skeleton-shelf > .relative > .flex {
   align-items: flex-start;
-  padding-right: 5rem;
-  padding-left: 2rem;
+  gap: var(--curated-playlist-card-gap) !important;
+  padding-right: var(--curated-page-gutter) !important;
+  padding-left: var(--curated-page-gutter) !important;
 }
 
-.curated-playlist-card-shell {
-  min-width: 250px;
-  flex: 0 0 250px;
+.curated-playlist-card-shell,
+.curated-playlist-skeleton-card-shell {
+  min-width: 0 !important;
+  flex: 0 0 calc(
+    (100% - (var(--curated-playlist-card-gap) * 4)) / 5
+  ) !important;
 }
 
 .curated-playlist-card {
@@ -287,10 +580,13 @@
   text-decoration: none;
 }
 
-.curated-playlist-image {
+.curated-playlist-image,
+.curated-playlist-skeleton-card {
   position: relative;
-  width: 100%;
-  height: 210px;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 1;
   overflow: hidden;
   background: var(--bg-secondary);
 }
@@ -358,7 +654,7 @@
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--filmwave-ui-radius-control, 0);
   background: transparent;
   color: var(--text-secondary);
   padding: 0;
@@ -387,15 +683,23 @@
   height: 15px;
 }
 
-.curated-playlist-shelf-prev-floating {
-  top: 105px;
-  left: 2rem;
+.curated-playlist-shelf-prev-floating,
+.curated-playlist-shelf-next-floating {
+  top: calc(
+    (100cqw - (var(--curated-page-gutter) * 2) -
+          (var(--curated-playlist-card-gap) * 4)) /
+      10
+  ) !important;
   transform: translateY(-50%);
 }
 
-.curated-playlist-shelf-next-floating {
-  top: 105px;
-  transform: translateY(-50%);
+.curated-playlist-shelf-prev-floating {
+  left: 2rem !important;
+}
+
+.curated-playlist-skeleton-shelf > .relative {
+  margin-right: calc(var(--curated-page-gutter) * -1) !important;
+  margin-left: calc(var(--curated-page-gutter) * -1) !important;
 }
 
 .curated-playlists-page-layer ~ footer {
@@ -403,39 +707,128 @@
   padding-left: 32px !important;
 }
 
+@media (max-width: 1280px) {
+  body:has(.curated-playlists-page-root) {
+    --curated-featured-cover-size: calc(
+      (
+          100vw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+            (var(--curated-playlist-card-gap) * 3)
+        ) /
+        4
+    );
+  }
+
+  .curated-playlist-card-shell,
+  .curated-playlist-skeleton-card-shell {
+    flex-basis: calc(
+      (100% - (var(--curated-playlist-card-gap) * 3)) / 4
+    ) !important;
+  }
+
+  .curated-playlist-shelf-prev-floating,
+  .curated-playlist-shelf-next-floating {
+    top: calc(
+      (100cqw - (var(--curated-page-gutter) * 2) -
+            (var(--curated-playlist-card-gap) * 3)) /
+        8
+    ) !important;
+  }
+}
+
+@media (max-width: 1080px) {
+  body:has(.curated-playlists-page-root) {
+    --curated-featured-tracks-width: clamp(320px, 34vw, 370px);
+  }
+
+  .curated-featured-playlist-content {
+    gap: 24px;
+  }
+}
+
 @media (max-width: 980px) {
+  body:has(.curated-playlists-page-root) {
+    --curated-featured-cover-size: calc(
+      (
+          100vw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+            (var(--curated-playlist-card-gap) * 2)
+        ) /
+        3
+    );
+    --curated-featured-hero-height: auto;
+  }
+
   .curated-featured-playlist {
     grid-template-columns: 1fr;
   }
 
-  .curated-featured-playlist-image-panel,
-  .curated-featured-playlist-copy,
-  .curated-featured-playlist-loading-image {
-    min-height: 340px;
+  .curated-featured-playlist-content {
+    min-height: 560px;
+    grid-column: 1;
+    padding-right: var(--curated-page-gutter);
   }
 
-  .curated-featured-playlist-tracks {
-    min-height: 0;
+  .curated-featured-playlist-tracks,
+  .curated-featured-playlist-loading-tracks {
+    width: auto;
+    grid-column: 1;
+    align-self: auto;
+    justify-self: stretch;
+    margin: 0 var(--curated-page-gutter) 72px;
+  }
+
+  .curated-featured-playlist-next-button {
+    right: var(--curated-page-gutter);
+  }
+
+  .curated-featured-playlist-count {
+    right: calc(var(--curated-page-gutter) + 2px);
+  }
+
+  .curated-featured-playlist-indicators {
+    right: var(--curated-page-gutter);
+  }
+
+  .curated-playlist-card-shell,
+  .curated-playlist-skeleton-card-shell {
+    flex-basis: calc(
+      (100% - (var(--curated-playlist-card-gap) * 2)) / 3
+    ) !important;
+  }
+
+  .curated-playlist-shelf-prev-floating,
+  .curated-playlist-shelf-next-floating {
+    top: calc(
+      (100cqw - (var(--curated-page-gutter) * 2) -
+            (var(--curated-playlist-card-gap) * 2)) /
+        6
+    ) !important;
   }
 }
 
 @media (max-width: 720px) {
-  .curated-playlists-page-layer {
-    padding-top: calc(var(--filmwave-header-height, 56px) + 20px);
+  body:has(.curated-playlists-page-root) {
+    --curated-page-gutter: 20px;
+    --curated-featured-cover-size: calc(
+      (
+          100vw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+            var(--curated-playlist-card-gap)
+        ) /
+        2
+    );
   }
 
-  .curated-featured-playlist {
-    margin-top: 20px;
+  .curated-featured-playlist-heading {
+    top: calc(var(--filmwave-header-height, 75px) + 18px);
   }
 
-  .curated-featured-playlist-image-panel,
-  .curated-featured-playlist-copy,
-  .curated-featured-playlist-loading-image {
-    min-height: 280px;
+  .curated-featured-library-link {
+    top: calc(var(--filmwave-header-height, 75px) + 22px);
   }
 
-  .curated-featured-playlist-copy {
-    padding: 26px;
+  .curated-featured-playlist-content {
+    min-height: 520px;
+    padding-top: calc(var(--filmwave-header-height, 75px) + 68px);
+    padding-bottom: 64px;
   }
 
   .curated-featured-playlist-title {
@@ -450,18 +843,49 @@
   .curated-featured-playlist-loading-tracks {
     padding: 16px;
   }
-}
 
-@media (min-width: 640px) {
-  .curated-playlist-card-shell {
-    min-width: 285px;
-    flex-basis: 285px;
+  .curated-playlist-card-shell,
+  .curated-playlist-skeleton-card-shell {
+    flex-basis: calc(
+      (100% - var(--curated-playlist-card-gap)) / 2
+    ) !important;
+  }
+
+  .curated-playlist-shelf-prev-floating,
+  .curated-playlist-shelf-next-floating {
+    top: calc(
+      (100cqw - (var(--curated-page-gutter) * 2) -
+            var(--curated-playlist-card-gap)) /
+        4
+    ) !important;
   }
 }
 
-@media (min-width: 1024px) {
-  .curated-playlist-card-shell {
-    min-width: 320px;
-    flex-basis: 320px;
+@media (max-width: 560px) {
+  .curated-featured-library-link {
+    display: none !important;
+  }
+
+  .curated-featured-playlist-content {
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+    padding:
+      calc(var(--filmwave-header-height, 75px) + 76px)
+      var(--curated-page-gutter)
+      72px;
+  }
+
+  .curated-featured-playlist-copy {
+    width: 100%;
+    max-width: none;
+    transform: none;
+  }
+
+  .curated-featured-playlist-tracks,
+  .curated-featured-playlist-loading-tracks {
+    margin-right: var(--curated-page-gutter);
+    margin-left: var(--curated-page-gutter);
   }
 }
