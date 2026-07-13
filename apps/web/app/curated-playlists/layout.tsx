@@ -15,6 +15,14 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     padding-left: var(--curated-page-gutter) !important;
   }
 
+  .curated-featured-playlist-heading {
+    margin-top: 24px;
+  }
+
+  .curated-featured-playlist-heading + .curated-featured-playlist {
+    margin-top: 0;
+  }
+
   .curated-playlists-page-root .curated-featured-playlist,
   .curated-playlists-page-root .curated-featured-playlist-tracks {
     background: #101112;
@@ -79,7 +87,7 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
 
   .curated-featured-playlist-next-button {
     position: absolute;
-    top: 50%;
+    top: calc(50% - 11px);
     right: 0;
     z-index: 5;
     display: inline-flex;
