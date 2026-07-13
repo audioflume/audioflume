@@ -7,7 +7,7 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
   }
 
   section.curated-playlists-page-layer {
-    padding-top: calc(var(--filmwave-header-height, 56px) + 50px) !important;
+    padding-top: calc(var(--filmwave-header-height, 56px) + 45px) !important;
     padding-bottom: 64px;
   }
 
