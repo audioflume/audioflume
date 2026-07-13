@@ -15,6 +15,19 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     padding-left: var(--curated-page-gutter) !important;
   }
 
+  .curated-playlists-page-root .curated-featured-playlist,
+  .curated-playlists-page-root .curated-featured-playlist-tracks {
+    background: #101112;
+  }
+
+  .curated-playlists-page-root .curated-featured-playlist-tracks {
+    --bg-primary: #101112;
+  }
+
+  .curated-playlists-page-root .curated-featured-playlist-copy {
+    transform: translateY(-10px);
+  }
+
   .curated-playlists-page-root .curated-featured-playlist-title {
     font-size: clamp(25px, 2.3vw, 36px) !important;
     font-weight: 400 !important;
