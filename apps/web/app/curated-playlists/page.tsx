@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import PlaylistTabsRail from "../playlists/PlaylistTabsRail";
 import "../playlists/playlists-tabs-rail.css";
@@ -252,14 +252,15 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
-  const heroBackgroundImage = useMemo(() => {
-    const playlistImages = playlists
-      .map((playlist) => playlist.cover_image_url)
-      .filter((url): url is string => Boolean(url));
+  const featuredPlaylist = useMemo(() => {
+    const playlistsWithArtwork = playlists.filter((playlist) =>
+      Boolean(playlist.cover_image_url),
+    );
+    const discoverFeatured = playlistsWithArtwork
+      .filter((playlist) => playlist.show_on_discover)
+      .sort((a, b) => a.discover_position - b.discover_position)[0];
 
-    if (playlistImages.length === 0) return "";
-
-    return playlistImages[Math.floor(Math.random() * playlistImages.length)] ?? "";
+    return discoverFeatured ?? playlistsWithArtwork[0] ?? playlists[0] ?? null;
   }, [playlists]);
 
   const groupedPlaylists = useMemo(() => {
@@ -292,96 +293,202 @@ export default function CuratedPlaylistsPage() {
       .filter((group) => group.playlists.length > 0);
   }, [playlists, groups]);
 
+  const featuredCopy =
+    featuredPlaylist?.description || featuredPlaylist?.kicker || "";
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
-        .curated-playlists-hero-bg {
-          pointer-events: none;
-          position: absolute;
-          inset: 0 0 auto 0;
-          z-index: 0;
-          height: min(620px, 70vh);
-          overflow: hidden;
-        }
-
-        .curated-playlists-hero-bg-image {
-          position: absolute;
-          inset: -36px 0 0 0;
-          background-size: cover;
-          background-position: center 38%;
-          opacity: 0.68;
-          filter: blur(1px);
-          transform: scale(1.04);
-          transform-origin: center top;
-        }
-
-        .curated-playlists-hero-bg::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          background: linear-gradient(
-            to right,
-            rgba(10, 10, 10, 0.62) 0%,
-            rgba(10, 10, 10, 0.28) 22%,
-            rgba(10, 10, 10, 0.28) 72%,
-            rgba(10, 10, 10, 0.58) 100%
-          );
-        }
-
-        .curated-playlists-hero-bg::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 2;
-          background: linear-gradient(
-            to bottom,
-            rgba(10, 10, 10, 0.08) 0%,
-            rgba(10, 10, 10, 0.28) 42%,
-            var(--bg-primary) 100%
-          );
-        }
-
-        :where(html.light, html[data-theme="light"]) .curated-playlists-hero-bg {
-          display: none;
-        }
-
         section.curated-playlists-page-layer {
           position: relative;
           z-index: 1;
           padding-top: calc(var(--filmwave-header-height, 56px) + 32px) !important;
         }
-      `}</style>
 
-      {heroBackgroundImage && (
-        <div className="curated-playlists-hero-bg" aria-hidden="true">
-          <div
-            className="curated-playlists-hero-bg-image"
-            style={{ backgroundImage: `url(${JSON.stringify(heroBackgroundImage)})` }}
-          />
-        </div>
-      )}
+        .curated-featured-banner {
+          position: relative;
+          display: block;
+          min-height: clamp(320px, 42vw, 560px);
+          overflow: hidden;
+          margin-top: 24px;
+          background: var(--bg-secondary);
+          color: #fff;
+          text-decoration: none;
+        }
+
+        .curated-featured-banner-image,
+        .curated-featured-banner-fallback,
+        .curated-featured-banner-overlay {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .curated-featured-banner-image {
+          object-fit: cover;
+          transition: transform 700ms ease;
+        }
+
+        .curated-featured-banner:hover .curated-featured-banner-image {
+          transform: scale(1.018);
+        }
+
+        .curated-featured-banner-fallback {
+          background:
+            radial-gradient(circle at 72% 34%, rgba(128, 142, 126, 0.5), transparent 34%),
+            linear-gradient(120deg, #111816 0%, #28332f 55%, #0c0f0e 100%);
+        }
+
+        .curated-featured-banner-overlay {
+          background:
+            linear-gradient(90deg, rgba(0, 0, 0, 0.76) 0%, rgba(0, 0, 0, 0.38) 48%, rgba(0, 0, 0, 0.08) 78%),
+            linear-gradient(180deg, rgba(0, 0, 0, 0.04) 30%, rgba(0, 0, 0, 0.5) 100%);
+        }
+
+        .curated-featured-banner-content {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          min-height: inherit;
+          max-width: 560px;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: clamp(24px, 4vw, 52px);
+        }
+
+        .curated-featured-banner-eyebrow {
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.11em;
+          line-height: 1;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.68);
+        }
+
+        .curated-featured-banner-title {
+          margin: 10px 0 0;
+          font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
+          font-size: clamp(25px, 2.7vw, 38px);
+          font-weight: 500;
+          letter-spacing: -0.045em;
+          line-height: 1.04;
+          color: #fff;
+        }
+
+        .curated-featured-banner-copy {
+          max-width: 440px;
+          margin: 12px 0 0;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 1.55;
+          color: rgba(255, 255, 255, 0.72);
+        }
+
+        .curated-featured-banner-link {
+          display: inline-flex;
+          width: fit-content;
+          align-items: center;
+          gap: 7px;
+          margin-top: 20px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+          padding-bottom: 4px;
+          font-size: 11px;
+          font-weight: 500;
+          line-height: 1;
+          color: #fff;
+          transition: border-color 150ms ease;
+        }
+
+        .curated-featured-banner:hover .curated-featured-banner-link {
+          border-color: #fff;
+        }
+
+        .curated-featured-banner.is-loading {
+          pointer-events: none;
+        }
+
+        .curated-featured-banner.is-loading::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transform: translateX(-100%);
+          background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--bg-hover) 52%, transparent),
+            transparent
+          );
+          animation: curated-featured-banner-shimmer 1.6s ease-in-out infinite;
+        }
+
+        @keyframes curated-featured-banner-shimmer {
+          100% {
+            transform: translateX(100%);
+          }
+        }
+
+        @media (max-width: 720px) {
+          .curated-featured-banner {
+            min-height: 340px;
+          }
+
+          .curated-featured-banner-content {
+            padding: 24px;
+          }
+
+          .curated-featured-banner-overlay {
+            background:
+              linear-gradient(90deg, rgba(0, 0, 0, 0.68) 0%, rgba(0, 0, 0, 0.28) 100%),
+              linear-gradient(180deg, rgba(0, 0, 0, 0.04) 20%, rgba(0, 0, 0, 0.72) 100%);
+          }
+        }
+      `}</style>
 
       <section className="curated-playlists-page-layer ml-[var(--sidebar-width)] min-h-screen pt-6 transition-[margin-left] duration-200">
         <div className="px-8">
           <PlaylistTabsRail />
 
-          <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
-            <div>
-              <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                <PlaylistIcon size={13} />
-                Made for you
+          {loading && (
+            <div
+              className="curated-featured-banner is-loading"
+              aria-hidden="true"
+            />
+          )}
+
+          {!loading && featuredPlaylist && (
+            <Link
+              href={`/curated-playlists/${featuredPlaylist.id}`}
+              className="curated-featured-banner"
+              aria-label={`Open featured playlist ${featuredPlaylist.name}`}
+            >
+              {featuredPlaylist.cover_image_url ? (
+                <img
+                  src={featuredPlaylist.cover_image_url}
+                  alt=""
+                  className="curated-featured-banner-image"
+                />
+              ) : (
+                <div className="curated-featured-banner-fallback" />
+              )}
+              <div className="curated-featured-banner-overlay" />
+              <div className="curated-featured-banner-content">
+                <span className="curated-featured-banner-eyebrow">
+                  Featured playlist
+                </span>
+                <h1 className="curated-featured-banner-title">
+                  {featuredPlaylist.name}
+                </h1>
+                {featuredCopy && (
+                  <p className="curated-featured-banner-copy">{featuredCopy}</p>
+                )}
+                <span className="curated-featured-banner-link">
+                  View playlist
+                  <ArrowUpRightIcon size={12} />
+                </span>
               </div>
-              <h1 className="max-w-[520px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,64px)] font-medium leading-[0.9] tracking-[-0.07em]">
-                Playlists built around the scenes you&rsquo;re cutting.
-              </h1>
-            </div>
-            <p className="max-w-[560px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">
-              Every collection is hand-picked for a specific mood, tone, or
-              production style — so you can skip the search and go straight to
-              auditioning.
-            </p>
-          </div>
+            </Link>
+          )}
 
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
