@@ -52,6 +52,10 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     gap: 8px;
   }
 
+  .curated-featured-playlist-image-panel:hover .curated-featured-playlist-button {
+    background: #fff;
+  }
+
   .curated-featured-playlist-button::after {
     content: "↗";
     font-size: 12px;
@@ -87,14 +91,14 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     justify-content: center;
     border: 0;
     border-radius: 0;
-    background: #fff;
-    color: #111;
+    background: transparent;
+    color: #fff;
     padding: 0;
-    transition: background-color 150ms ease;
   }
 
   .curated-featured-playlist-next-button:hover {
-    background: rgba(255, 255, 255, 0.86);
+    background: transparent;
+    color: #fff;
   }
 
   .curated-featured-playlist-next-button:focus-visible {
