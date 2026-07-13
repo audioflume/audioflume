@@ -13,6 +13,22 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
 
   .curated-playlists-page-root .curated-featured-playlist-title {
     font-size: clamp(25px, 2.3vw, 36px) !important;
+    font-weight: 400 !important;
+  }
+
+  .curated-featured-playlist-description {
+    display: none;
+  }
+
+  .curated-featured-playlist-copy::after {
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    order: 3;
+    max-width: 430px;
+    margin-top: 5px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.5;
   }
 
   .curated-featured-playlist-button {
@@ -65,10 +81,13 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     width: 100%;
     height: 1px;
     background: rgba(255, 255, 255, 0.3);
-    transition: background-color 160ms ease;
+    transition:
+      height 160ms ease,
+      background-color 160ms ease;
   }
 
   .curated-featured-playlist-indicators button.is-active span {
+    height: 2px;
     background: rgba(255, 255, 255, 1);
   }
 
