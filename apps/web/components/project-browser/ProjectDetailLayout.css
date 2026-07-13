@@ -32,7 +32,7 @@
   overflow-x: hidden !important;
   overflow-y: auto !important;
   border: 0 !important;
-  border-right: 0 !important;
+  border-right: 1px solid var(--filmwave-side-filter-divider-color, var(--border-subtle)) !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding: 10px 8px !important;
@@ -47,7 +47,7 @@
   flex-direction: column !important;
   margin-top: 0 !important;
   padding: 14px 8px 8px 4px !important;
-  border-top: 0 !important;
+  border-top: 1px solid var(--border-subtle) !important;
   color: var(--text-muted) !important;
 }
 
@@ -105,11 +105,18 @@
   color: var(--text-secondary) !important;
   margin: 0 !important;
   padding: 0 8px 0 12px !important;
+  box-shadow: none !important;
   font-family: inherit !important;
   font-size: 12.5px !important;
   font-weight: 400 !important;
   text-align: left !important;
   transition: background-color 160ms ease, color 160ms ease !important;
+}
+
+.project-detail-page .project-tabs-row .fw-filter-rail-item::before,
+.project-detail-page .project-tabs-row .fw-filter-rail-item::after {
+  content: none !important;
+  display: none !important;
 }
 
 .project-detail-page .project-tabs-row .fw-filter-rail-item:hover {
