@@ -231,7 +231,7 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
   }
 
   .curated-playlist-shelf-prev-floating {
-    left: var(--curated-page-gutter) !important;
+    left: 2rem !important;
   }
 
   .curated-playlist-skeleton-shelf > .relative {
