@@ -6,7 +6,8 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
     --curated-page-gutter: clamp(28px, 5.2vw, 82px);
   }
 
-  .curated-playlists-page-layer {
+  section.curated-playlists-page-layer {
+    padding-top: calc(var(--filmwave-header-height, 56px) + 50px) !important;
     padding-bottom: 64px;
   }
 
@@ -16,7 +17,7 @@ const CURATED_PLAYLISTS_LAYOUT_STYLE = `
   }
 
   .curated-featured-playlist-heading {
-    margin-top: 28px;
+    margin-top: 0 !important;
     margin-bottom: 16px;
   }
 
