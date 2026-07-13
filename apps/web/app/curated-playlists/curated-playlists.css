@@ -1,3 +1,7 @@
+.curated-playlists-page-layer .mb-6.grid {
+  margin-top: 8px !important;
+}
+
 .curated-playlist-shelf-heading {
   display: flex;
   min-height: 34px;

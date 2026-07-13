@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import PlaylistTabsRail from "../playlists/PlaylistTabsRail";
 import "../playlists/playlists-tabs-rail.css";
@@ -251,6 +253,17 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
+  const featuredPlaylist = useMemo(() => {
+    const playlistsWithArtwork = playlists.filter((playlist) =>
+      Boolean(playlist.cover_image_url),
+    );
+    const discoverFeatured = playlistsWithArtwork
+      .filter((playlist) => playlist.show_on_discover)
+      .sort((a, b) => a.discover_position - b.discover_position)[0];
+
+    return discoverFeatured ?? playlistsWithArtwork[0] ?? playlists[0] ?? null;
+  }, [playlists]);
+
   const groupedPlaylists = useMemo(() => {
     const playlistMap = new Map<string, CuratedPlaylist[]>();
 
@@ -281,17 +294,55 @@ export default function CuratedPlaylistsPage() {
       .filter((group) => group.playlists.length > 0);
   }, [playlists, groups]);
 
-  return (
-    <main className="relative min-h-screen overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <style>{`
-        section.curated-playlists-page-layer {
-          position: relative;
-          z-index: 1;
-          padding-top: calc(var(--filmwave-header-height, 56px) + 32px) !important;
-        }
-      `}</style>
+  const featuredCopy =
+    featuredPlaylist?.description || featuredPlaylist?.kicker || "";
 
-      <section className="curated-playlists-page-layer ml-[var(--sidebar-width)] min-h-screen pt-6 transition-[margin-left] duration-200">
+  return (
+    <main className="discover-page-root" style={{ marginLeft: 0 }}>
+      <section className="discover-hero" aria-label="Featured playlist">
+        {featuredPlaylist?.cover_image_url ? (
+          <Image
+            src={featuredPlaylist.cover_image_url}
+            alt=""
+            fill
+            priority
+            unoptimized
+            sizes="100vw"
+            className="discover-hero-image"
+          />
+        ) : (
+          <div className="discover-hero-fallback" />
+        )}
+
+        <div className="discover-hero-overlay" aria-hidden="true" />
+
+        <div className="discover-hero-inner">
+          <div className="discover-hero-content max-w-[620px]">
+            {!loading && featuredPlaylist && (
+              <>
+                <div className="mb-3 text-[10px] font-medium uppercase tracking-[0.11em] text-white/65">
+                  Featured playlist
+                </div>
+                <h1>{featuredPlaylist.name}</h1>
+                {featuredCopy && (
+                  <p className="max-w-[500px] text-[11.5px] font-normal leading-[1.55] text-white/70">
+                    {featuredCopy}
+                  </p>
+                )}
+                <Link
+                  href={`/curated-playlists/${featuredPlaylist.id}`}
+                  className="mt-6 inline-flex w-fit items-center gap-2 border-b border-white/45 pb-1 text-[11px] font-medium text-white transition-colors hover:border-white"
+                >
+                  View playlist
+                  <ArrowUpRightIcon size={12} />
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="curated-playlists-page-layer ml-[var(--sidebar-width)] min-h-screen pt-8 transition-[margin-left] duration-200">
         <div className="px-8">
           <PlaylistTabsRail />
 
