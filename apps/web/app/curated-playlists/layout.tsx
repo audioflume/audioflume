@@ -37,9 +37,9 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-track-list
     > article:focus-visible {
-    background: var(--bg-primary) !important;
-    background-color: var(--bg-primary) !important;
-    color: var(--text-primary) !important;
+    background: #101112 !important;
+    background-color: #101112 !important;
+    color: #fff !important;
   }
 
   body:has(.curated-playlists-page-root)
@@ -48,7 +48,7 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-track-list
     > article:focus-visible h3 {
-    color: var(--text-primary) !important;
+    color: #fff !important;
   }
 
   body:has(.curated-playlists-page-root)
@@ -57,7 +57,54 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-track-list
     > article:focus-visible h3 + div {
-    color: var(--text-secondary) !important;
+    color: #808080 !important;
+  }
+
+  html.light body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover,
+  html.light body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible,
+  html[data-theme="light"] body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover,
+  html[data-theme="light"] body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible {
+    background: #fff !important;
+    background-color: #fff !important;
+    color: #111 !important;
+  }
+
+  html.light body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover h3,
+  html.light body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible h3,
+  html[data-theme="light"] body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover h3,
+  html[data-theme="light"] body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible h3 {
+    color: #111 !important;
+  }
+
+  html.light body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover h3 + div,
+  html.light body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible h3 + div,
+  html[data-theme="light"] body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover h3 + div,
+  html[data-theme="light"] body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible h3 + div {
+    color: rgba(17, 17, 17, 0.62) !important;
   }
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-show-all {
