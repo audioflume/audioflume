@@ -25,28 +25,26 @@ const CURATED_FEATURED_STYLE = `
     transform: scale(1.055);
   }
 
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-loading-image::before,
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-loading-image::after {
+    top: calc(50% + 43px) !important;
+  }
+
   body:has(.curated-playlists-page-root) .curated-featured-playlist-tracks,
   body:has(.curated-playlists-page-root) .curated-featured-playlist-loading-tracks {
     background: transparent !important;
     background-color: transparent !important;
   }
 
-  body:has(.curated-playlists-page-root)
-    .curated-featured-playlist-loading-tracks {
-    display: none !important;
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-tracks {
+    padding-bottom: 42px !important;
   }
 
   body:has(.curated-playlists-page-root)
-    .curated-featured-playlist-tracks:has(
-      .curated-featured-playlist-track-skeleton
-    )::after {
-    content: "";
-    display: block;
-    width: 1px;
-    height: 10px;
-    flex: 0 0 10px;
-    margin: 15px auto 0;
-    visibility: hidden;
+    .curated-featured-playlist-loading-tracks {
+    display: none !important;
   }
 
   body:has(.curated-playlists-page-root)
@@ -133,11 +131,15 @@ const CURATED_FEATURED_STYLE = `
   }
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-show-all {
+    position: absolute;
+    bottom: 17px;
+    left: 50%;
     display: inline-flex;
     width: fit-content;
     align-self: center;
     justify-content: center;
-    margin: 15px auto 0;
+    margin: 0;
+    transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.66);
     font-size: 10px;
     font-weight: 500;
@@ -228,9 +230,48 @@ const CURATED_FEATURED_STYLE = `
     background-color: transparent !important;
   }
 
+  @media (max-width: 980px) {
+    body:has(.curated-playlists-page-root)
+      .curated-featured-playlist-loading-image::before,
+    body:has(.curated-playlists-page-root)
+      .curated-featured-playlist-loading-image::after {
+      top: 338px !important;
+    }
+  }
+
   @media (max-width: 720px) {
     body:has(.curated-playlists-page-root) .curated-featured-playlist-title {
       font-size: 26px !important;
+    }
+
+    body:has(.curated-playlists-page-root)
+      .curated-featured-playlist-loading-image::before,
+    body:has(.curated-playlists-page-root)
+      .curated-featured-playlist-loading-image::after {
+      top: 340px !important;
+    }
+
+    body:has(.curated-playlists-page-root) .curated-featured-playlist-tracks {
+      padding-bottom: 41px !important;
+    }
+
+    body:has(.curated-playlists-page-root) .curated-featured-playlist-show-all {
+      bottom: 16px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    body:has(.curated-playlists-page-root)
+      .curated-featured-playlist-loading-image::before {
+      top: calc(var(--filmwave-header-height, 75px) + 86px) !important;
+    }
+
+    body:has(.curated-playlists-page-root)
+      .curated-featured-playlist-loading-image::after {
+      top: calc(
+        var(--filmwave-header-height, 75px) + var(--curated-featured-cover-size) +
+          108px
+      ) !important;
     }
   }
 `;
