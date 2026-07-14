@@ -15,6 +15,8 @@ const FEATURED_TRACK_ROW_SELECTOR =
 const PLAYLIST_CARD_LINK_SELECTOR = ".curated-playlist-card-copy";
 const INDICATOR_SELECTOR = ".curated-featured-playlist-indicators button";
 const NEXT_BUTTON_SELECTOR = ".curated-featured-playlist-next-button";
+const FEATURED_HEADING_SELECTOR = ".curated-featured-playlist-heading h2";
+const FEATURED_HEADING_TEXT = "Curated Playlists";
 
 function getRenderedSongCount(href: string) {
   if (!href) return null;
@@ -41,6 +43,14 @@ export default function CuratedFeaturedCarouselControls() {
     let frame = 0;
 
     function syncControls() {
+      const heading = document.querySelector<HTMLElement>(
+        FEATURED_HEADING_SELECTOR,
+      );
+
+      if (heading && heading.textContent !== FEATURED_HEADING_TEXT) {
+        heading.textContent = FEATURED_HEADING_TEXT;
+      }
+
       window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(() => {
         const nextPanel = document.querySelector<HTMLElement>(
