@@ -31,9 +31,22 @@ const CURATED_FEATURED_STYLE = `
     background-color: transparent !important;
   }
 
-  body:has(.curated-playlists-page-root) .curated-featured-playlist-loading,
-  body:has(.curated-playlists-page-root) .curated-featured-playlist-track-skeleton {
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-loading-tracks {
     display: none !important;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-tracks:has(
+      .curated-featured-playlist-track-skeleton
+    )::after {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 10px;
+    flex: 0 0 10px;
+    margin: 15px auto 0;
+    visibility: hidden;
   }
 
   body:has(.curated-playlists-page-root)
@@ -229,8 +242,8 @@ export default function CuratedPlaylistsLayout({
 }) {
   return (
     <>
-      <style>{CURATED_FEATURED_STYLE}</style>
       <CuratedPlaylistsLoadingStyles />
+      <style>{CURATED_FEATURED_STYLE}</style>
       <CuratedHeaderScrollState />
       <CuratedFeaturedCarouselControls />
       {children}
