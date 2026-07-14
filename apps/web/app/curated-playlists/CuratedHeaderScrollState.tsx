@@ -7,6 +7,7 @@ const CURATED_SCROLL_THRESHOLD = 18;
 const HEADER_MENU_OPEN_SELECTOR = ".filmwave-header-nav-item-playlists.is-open";
 const FEATURED_TRACK_SELECTOR =
   ".curated-featured-playlist-tracks, .curated-featured-playlist-loading-tracks";
+const FEATURED_COVER_SELECTOR = ".curated-featured-playlist-cover-link";
 const STACKED_FEATURED_MEDIA_QUERY = "(max-width: 980px)";
 
 type PreviousInlineValue = {
@@ -35,10 +36,10 @@ export default function CuratedHeaderScrollState() {
     pageLayer?.style.setProperty("padding-top", "0px", "important");
 
     function syncFeaturedTrackPosition() {
+      const featuredCover = document.querySelector<HTMLElement>(
+        FEATURED_COVER_SELECTOR,
+      );
       const headerHeight = header?.getBoundingClientRect().height || 75;
-      const translateValue = stackedFeaturedQuery.matches
-        ? "none"
-        : `0 ${headerHeight / 2}px`;
 
       document
         .querySelectorAll<HTMLElement>(FEATURED_TRACK_SELECTOR)
@@ -50,7 +51,21 @@ export default function CuratedHeaderScrollState() {
             });
           }
 
-          trackPanel.style.setProperty("translate", translateValue);
+          if (stackedFeaturedQuery.matches) {
+            trackPanel.style.setProperty("translate", "none");
+            return;
+          }
+
+          trackPanel.style.setProperty("translate", "none");
+
+          const coverBottom = featuredCover?.getBoundingClientRect().bottom;
+          const trackBottom = trackPanel.getBoundingClientRect().bottom;
+          const offset =
+            typeof coverBottom === "number"
+              ? coverBottom - trackBottom
+              : headerHeight / 2;
+
+          trackPanel.style.setProperty("translate", `0 ${offset}px`);
         });
     }
 
