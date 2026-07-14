@@ -10,7 +10,6 @@ import UserMenu from "@/components/UserMenu";
 type CuratedPlaylistPreview = {
   id: number;
   name: string;
-  kicker?: string | null;
   cover_image_url?: string | null;
   song_count?: number | null;
 };
@@ -24,8 +23,16 @@ const TOP_NAV_LINKS = [
 ];
 
 const PLAYLIST_PAGE_LINKS = [
-  { href: "/playlists", label: "My Playlists", detail: "Your saved collections" },
-  { href: "/curated-playlists", label: "Curated Collections", detail: "Filmwave editor picks" },
+  {
+    href: "/playlists",
+    label: "My Playlists",
+    detail: "Your saved collections",
+  },
+  {
+    href: "/curated-playlists",
+    label: "Curated Collections",
+    detail: "Filmwave editor picks",
+  },
   {
     href: "/playlists?tab=community-playlists",
     label: "Community Playlists",
@@ -34,18 +41,8 @@ const PLAYLIST_PAGE_LINKS = [
 ];
 
 const PLAYLIST_QUICK_SECTIONS = [
-  {
-    title: "My Playlists",
-    eyebrow: "Your library",
-    description: "Open your saved playlists, organize tracks, and keep project-specific collections close.",
-    href: "/playlists",
-  },
-  {
-    title: "Curated Playlists",
-    eyebrow: "Made by Filmwave",
-    description: "Browse hand-built collections for scenes, moods, pacing, and production styles.",
-    href: "/curated-playlists",
-  },
+  { title: "My Playlists", href: "/playlists" },
+  { title: "Curated Playlists", href: "/curated-playlists" },
 ];
 
 function formatTrackCount(count?: number | null) {
@@ -57,7 +54,11 @@ function playlistNavIsActive(pathname: string | null, href: string) {
   if (!pathname) return false;
 
   if (href === "/playlists") {
-    return pathname === "/playlists" || pathname.startsWith("/playlists/") || pathname.startsWith("/curated-playlists");
+    return (
+      pathname === "/playlists" ||
+      pathname.startsWith("/playlists/") ||
+      pathname.startsWith("/curated-playlists")
+    );
   }
 
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -68,9 +69,13 @@ export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
-  const [playlistOverlayTop, setPlaylistOverlayTop] = useState<number | null>(null);
+  const [playlistOverlayTop, setPlaylistOverlayTop] = useState<number | null>(
+    null,
+  );
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [curatedPreview, setCuratedPreview] = useState<CuratedPlaylistPreview[]>([]);
+  const [curatedPreview, setCuratedPreview] = useState<
+    CuratedPlaylistPreview[]
+  >([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const playlistsMenuRef = useRef<HTMLDivElement>(null);
 
@@ -219,7 +224,35 @@ export default function Header() {
         .filmwave-playlists-mega-inner {
           position: relative !important;
           z-index: 1 !important;
+          grid-template-columns: minmax(0, 1.7fr) minmax(220px, 0.55fr) !important;
+          gap: 44px !important;
           background: var(--bg-primary) !important;
+        }
+
+        .filmwave-playlists-mega-content {
+          display: block !important;
+        }
+
+        .filmwave-playlists-mega-links {
+          margin-top: 0 !important;
+        }
+
+        .filmwave-playlists-mega-feature-copy {
+          gap: 0 !important;
+        }
+
+        .filmwave-playlists-mega-feature-title {
+          font-size: 13.5px !important;
+          font-weight: 500 !important;
+          letter-spacing: 0 !important;
+          line-height: 1.25 !important;
+        }
+
+        .filmwave-playlists-mega-feature-detail {
+          margin-top: 4px !important;
+          font-size: 11.5px !important;
+          font-weight: 400 !important;
+          line-height: 1.45 !important;
         }
 
         .filmwave-playlists-page-overlay {
@@ -231,11 +264,22 @@ export default function Header() {
           background: rgba(0, 0, 0, 0.48) !important;
           pointer-events: none !important;
         }
+
+        @media (max-width: 980px) {
+          .filmwave-playlists-mega-inner {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+        }
       `}</style>
 
       <HeaderShell
         logo={
-          <Link href="/discover" className="filmwave-header-logo-action" aria-label="audioflume Home">
+          <Link
+            href="/discover"
+            className="filmwave-header-logo-action"
+            aria-label="audioflume Home"
+          >
             <span className="filmwave-header-tonal-wordmark">audioflume</span>
           </Link>
         }
@@ -254,7 +298,9 @@ export default function Header() {
                       onMouseLeave={() => setPlaylistsMenuOpen(false)}
                       onFocus={() => setPlaylistsMenuOpen(true)}
                       onBlur={(event) => {
-                        if (!event.currentTarget.contains(event.relatedTarget)) {
+                        if (
+                          !event.currentTarget.contains(event.relatedTarget)
+                        ) {
                           setPlaylistsMenuOpen(false);
                           setPlaylistOverlayTop(null);
                         }
@@ -278,9 +324,12 @@ export default function Header() {
                         aria-label="Playlist navigation"
                       >
                         <div className="filmwave-playlists-mega-inner">
-                          <div className="filmwave-playlists-mega-feature-grid" aria-label="Featured curated playlists">
+                          <div
+                            className="filmwave-playlists-mega-feature-grid"
+                            aria-label="Featured curated playlists"
+                          >
                             {curatedPreview.length > 0 ? (
-                              curatedPreview.map((playlist, index) => (
+                              curatedPreview.map((playlist) => (
                                 <Link
                                   key={playlist.id}
                                   href={`/curated-playlists/${playlist.id}`}
@@ -290,13 +339,13 @@ export default function Header() {
                                 >
                                   <span className="filmwave-playlists-mega-feature-image">
                                     {playlist.cover_image_url && (
-                                      <img src={playlist.cover_image_url} alt="" />
+                                      <img
+                                        src={playlist.cover_image_url}
+                                        alt=""
+                                      />
                                     )}
                                   </span>
                                   <span className="filmwave-playlists-mega-feature-copy">
-                                    <span className="filmwave-playlists-mega-feature-kicker">
-                                      {playlist.kicker || (index === 0 ? "Curated" : "Collection")}
-                                    </span>
                                     <span className="filmwave-playlists-mega-feature-title">
                                       {playlist.name}
                                     </span>
@@ -317,14 +366,11 @@ export default function Header() {
                                 >
                                   <span className="filmwave-playlists-mega-feature-image" />
                                   <span className="filmwave-playlists-mega-feature-copy">
-                                    <span className="filmwave-playlists-mega-feature-kicker">
-                                      {section.eyebrow}
-                                    </span>
                                     <span className="filmwave-playlists-mega-feature-title">
                                       {section.title}
                                     </span>
                                     <span className="filmwave-playlists-mega-feature-detail">
-                                      Explore collections
+                                      0 tracks
                                     </span>
                                   </span>
                                 </Link>
@@ -334,7 +380,6 @@ export default function Header() {
 
                           <div className="filmwave-playlists-mega-content">
                             <div className="filmwave-playlists-mega-link-column">
-                              <span className="filmwave-playlists-mega-label">Playlist pages</span>
                               <div className="filmwave-playlists-mega-links">
                                 {PLAYLIST_PAGE_LINKS.map((pageLink) => (
                                   <Link
@@ -349,24 +394,6 @@ export default function Header() {
                                   </Link>
                                 ))}
                               </div>
-                            </div>
-
-                            <div className="filmwave-playlists-mega-quick-grid">
-                              {PLAYLIST_QUICK_SECTIONS.map((section) => (
-                                <div key={section.href} className="filmwave-playlists-mega-quick-card">
-                                  <span className="filmwave-playlists-mega-label">{section.eyebrow}</span>
-                                  <h3>{section.title}</h3>
-                                  <p>{section.description}</p>
-                                  <Link
-                                    href={section.href}
-                                    className="filmwave-playlists-mega-button"
-                                    role="menuitem"
-                                    onClick={closePlaylistsMenu}
-                                  >
-                                    Explore all
-                                  </Link>
-                                </div>
-                              ))}
                             </div>
                           </div>
                         </div>
