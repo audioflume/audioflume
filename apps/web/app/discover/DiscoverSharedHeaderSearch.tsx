@@ -105,7 +105,7 @@ export default function DiscoverHeaderScrollState() {
         if (playlistGrid) {
           ctaMount = document.createElement("div");
           ctaMount.className =
-            "discover-curated-playlist-cta-mount mt-5 flex justify-center";
+            "discover-curated-playlist-cta-mount mt-8 flex justify-center";
           playlistGrid.insertAdjacentElement("afterend", ctaMount);
           setCuratedCtaMount(ctaMount);
         }
