@@ -6,15 +6,12 @@ import { useEffect, useMemo, useState } from "react";
 import CuratedFeaturedTrackRow from "@/components/curated/CuratedFeaturedTrackRow";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type {
   CuratedPlaylist,
   CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
-import PlaylistTabsRail from "../playlists/PlaylistTabsRail";
-import "../playlists/playlists-tabs-rail.css";
 
 type GroupMeta = {
   name: string;
@@ -23,7 +20,7 @@ type GroupMeta = {
 };
 
 const FEATURED_PLAYLIST_COUNT = 3;
-const FEATURED_TRACK_COUNT = 6;
+const FEATURED_TRACK_COUNT = 5;
 
 function SkeletonBlock({ className = "" }: { className?: string }) {
   return <span className={`curated-playlist-skeleton-block ${className}`} />;
@@ -206,7 +203,6 @@ function FeaturedPlaylistSkeleton() {
         {Array.from({ length: FEATURED_TRACK_COUNT }).map((_, index) => (
           <div key={index} className="curated-featured-playlist-loading-row" />
         ))}
-        <div className="curated-featured-playlist-loading-link" />
       </div>
     </section>
   );
@@ -230,12 +226,6 @@ function FeaturedPlaylistBlock({
   if (!playlist) return null;
 
   const visibleSongs = songs.slice(0, FEATURED_TRACK_COUNT);
-  const totalSongCount = Math.max(playlist.song_count ?? 0, songs.length);
-  const remainingSongCount = Math.max(totalSongCount - visibleSongs.length, 0);
-  const remainingLabel =
-    remainingSongCount > 0
-      ? `View ${remainingSongCount} more song${remainingSongCount === 1 ? "" : "s"}`
-      : `View all ${totalSongCount} song${totalSongCount === 1 ? "" : "s"}`;
   const supportingText = playlist.description;
   const playlistHref = `/curated-playlists/${playlist.id}`;
 
@@ -371,11 +361,6 @@ function FeaturedPlaylistBlock({
             </div>
           )}
         </div>
-
-        <Link href={playlistHref} className="curated-featured-playlist-more-link">
-          {remainingLabel}
-          <ArrowUpRightIcon size={11} />
-        </Link>
       </aside>
     </section>
   );
@@ -573,8 +558,6 @@ export default function CuratedPlaylistsPage() {
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
         <div className="px-8">
-          <PlaylistTabsRail />
-
           {(loading || featuredPlaylists.length > 0) && (
             <div className="discover-section-heading curated-featured-playlist-heading">
               <h2>Featured playlists</h2>
