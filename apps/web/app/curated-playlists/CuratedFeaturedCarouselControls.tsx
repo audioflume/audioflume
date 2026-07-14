@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -10,12 +10,22 @@ const FEATURED_PANEL_SELECTOR = ".curated-featured-playlist-image-panel";
 const FEATURED_SECTION_SELECTOR = ".curated-featured-playlist";
 const FEATURED_TRACKS_SELECTOR = ".curated-featured-playlist-tracks";
 const FEATURED_COVER_LINK_SELECTOR = ".curated-featured-playlist-cover-link";
+const FEATURED_TRACK_ROW_SELECTOR =
+  ".curated-featured-playlist-track-list > article";
+const PLAYLIST_CARD_LINK_SELECTOR = ".curated-playlist-card-copy";
 const INDICATOR_SELECTOR = ".curated-featured-playlist-indicators button";
 const NEXT_BUTTON_SELECTOR = ".curated-featured-playlist-next-button";
 
-function getPlaylistId(href: string) {
-  const match = href.match(/\/curated-playlists\/([^/?#]+)/);
-  return match?.[1] ?? "";
+function getRenderedSongCount(href: string) {
+  if (!href) return null;
+
+  const playlistLink = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>(PLAYLIST_CARD_LINK_SELECTOR),
+  ).find((link) => link.getAttribute("href") === href);
+  const countText = playlistLink?.querySelector("p")?.textContent?.trim() ?? "";
+  const countMatch = countText.match(/^(\d+)/);
+
+  return countMatch ? Number(countMatch[1]) : null;
 }
 
 export default function CuratedFeaturedCarouselControls() {
@@ -24,10 +34,10 @@ export default function CuratedFeaturedCarouselControls() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [playlistCount, setPlaylistCount] = useState(0);
   const [playlistHref, setPlaylistHref] = useState("");
-  const [playlistId, setPlaylistId] = useState("");
   const [songCount, setSongCount] = useState<number | null>(null);
+  const [songsReady, setSongsReady] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let frame = 0;
 
     function syncControls() {
@@ -59,7 +69,8 @@ export default function CuratedFeaturedCarouselControls() {
         setPlaylistCount(indicators.length);
         setActiveIndex(nextActiveIndex >= 0 ? nextActiveIndex : 0);
         setPlaylistHref(nextPlaylistHref);
-        setPlaylistId(getPlaylistId(nextPlaylistHref));
+        setSongCount(getRenderedSongCount(nextPlaylistHref));
+        setSongsReady(Boolean(nextTrackPanel?.querySelector(FEATURED_TRACK_ROW_SELECTOR)));
       });
     }
 
@@ -78,35 +89,6 @@ export default function CuratedFeaturedCarouselControls() {
       observer.disconnect();
     };
   }, []);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    if (!playlistId) {
-      setSongCount(null);
-      return () => controller.abort();
-    }
-
-    setSongCount(null);
-
-    fetch(
-      `/api/curated-playlists/${encodeURIComponent(playlistId)}/songs`,
-      { signal: controller.signal },
-    )
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Failed to load playlist songs");
-        return response.json();
-      })
-      .then((songs) => {
-        setSongCount(Array.isArray(songs) ? songs.length : 0);
-      })
-      .catch((error) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
-        setSongCount(null);
-      });
-
-    return () => controller.abort();
-  }, [playlistId]);
 
   function selectOffset(offset: number) {
     if (!panel) return;
@@ -158,7 +140,11 @@ export default function CuratedFeaturedCarouselControls() {
       : null;
 
   const songLinkPortal =
-    trackPanel && playlistHref && songCount !== null && songCount > 0
+    trackPanel &&
+    songsReady &&
+    playlistHref &&
+    songCount !== null &&
+    songCount > 0
       ? createPortal(
           <Link
             href={playlistHref}
