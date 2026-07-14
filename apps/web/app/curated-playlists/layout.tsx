@@ -32,16 +32,8 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-track-list
     > article:focus-visible {
-    background: color-mix(
-      in srgb,
-      var(--bg-primary) 94%,
-      var(--text-primary) 6%
-    ) !important;
-    background-color: color-mix(
-      in srgb,
-      var(--bg-primary) 94%,
-      var(--text-primary) 6%
-    ) !important;
+    background: rgba(0, 0, 0, 0.28) !important;
+    background-color: rgba(0, 0, 0, 0.28) !important;
   }
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-show-all {
