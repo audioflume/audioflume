@@ -8,6 +8,10 @@ const HEADER_MENU_OPEN_SELECTOR = ".filmwave-header-nav-item-playlists.is-open";
 const FEATURED_TRACK_SELECTOR =
   ".curated-featured-playlist-tracks, .curated-featured-playlist-loading-tracks";
 const FEATURED_COVER_SELECTOR = ".curated-featured-playlist-cover-link";
+const FEATURED_SECTION_SELECTOR = ".curated-featured-playlist";
+const FEATURED_NEXT_SELECTOR = ".curated-featured-playlist-next-button";
+const FEATURED_COUNT_SELECTOR = ".curated-featured-playlist-count";
+const FEATURED_INDICATORS_SELECTOR = ".curated-featured-playlist-indicators";
 const STACKED_FEATURED_MEDIA_QUERY = "(max-width: 980px)";
 
 type PreviousInlineValue = {
@@ -32,8 +36,53 @@ export default function CuratedHeaderScrollState() {
     const previousPaddingTopPriority =
       pageLayer?.style.getPropertyPriority("padding-top") ?? "";
     const previousTrackTranslations = new Map<HTMLElement, PreviousInlineValue>();
+    const previousMeasuredStyles = new Map<
+      HTMLElement,
+      Map<string, PreviousInlineValue>
+    >();
 
     pageLayer?.style.setProperty("padding-top", "0px", "important");
+
+    function setMeasuredStyle(
+      element: HTMLElement | null,
+      property: string,
+      value: string,
+    ) {
+      if (!element) return;
+
+      let elementStyles = previousMeasuredStyles.get(element);
+
+      if (!elementStyles) {
+        elementStyles = new Map<string, PreviousInlineValue>();
+        previousMeasuredStyles.set(element, elementStyles);
+      }
+
+      if (!elementStyles.has(property)) {
+        elementStyles.set(property, {
+          value: element.style.getPropertyValue(property),
+          priority: element.style.getPropertyPriority(property),
+        });
+      }
+
+      element.style.setProperty(property, value);
+    }
+
+    function restoreMeasuredStyle(element: HTMLElement | null, property: string) {
+      if (!element) return;
+
+      const previousValue = previousMeasuredStyles.get(element)?.get(property);
+      if (!previousValue) return;
+
+      if (previousValue.value) {
+        element.style.setProperty(
+          property,
+          previousValue.value,
+          previousValue.priority,
+        );
+      } else {
+        element.style.removeProperty(property);
+      }
+    }
 
     function syncFeaturedTrackPosition() {
       const featuredCover = document.querySelector<HTMLElement>(
@@ -51,8 +100,25 @@ export default function CuratedHeaderScrollState() {
             });
           }
 
+          const featuredSection = trackPanel.closest<HTMLElement>(
+            FEATURED_SECTION_SELECTOR,
+          );
+          const nextButton =
+            featuredSection?.querySelector<HTMLElement>(FEATURED_NEXT_SELECTOR) ??
+            null;
+          const count =
+            featuredSection?.querySelector<HTMLElement>(FEATURED_COUNT_SELECTOR) ??
+            null;
+          const indicators =
+            featuredSection?.querySelector<HTMLElement>(
+              FEATURED_INDICATORS_SELECTOR,
+            ) ?? null;
+
           if (stackedFeaturedQuery.matches) {
             trackPanel.style.setProperty("translate", "none");
+            restoreMeasuredStyle(nextButton, "top");
+            restoreMeasuredStyle(count, "right");
+            restoreMeasuredStyle(indicators, "right");
             return;
           }
 
@@ -66,6 +132,21 @@ export default function CuratedHeaderScrollState() {
               : headerHeight / 2;
 
           trackPanel.style.setProperty("translate", `0 ${offset}px`);
+
+          if (!featuredSection) return;
+
+          const featuredRect = featuredSection.getBoundingClientRect();
+          const trackRect = trackPanel.getBoundingClientRect();
+          const trackCenter =
+            trackRect.top - featuredRect.top + trackRect.height / 2;
+          const trackRightInset = Math.max(
+            0,
+            featuredRect.right - trackRect.right,
+          );
+
+          setMeasuredStyle(nextButton, "top", `${trackCenter}px`);
+          setMeasuredStyle(count, "right", `${trackRightInset}px`);
+          setMeasuredStyle(indicators, "right", `${trackRightInset}px`);
         });
     }
 
@@ -126,6 +207,16 @@ export default function CuratedHeaderScrollState() {
         } else {
           trackPanel.style.removeProperty("translate");
         }
+      });
+
+      previousMeasuredStyles.forEach((properties, element) => {
+        properties.forEach(({ value, priority }, property) => {
+          if (value) {
+            element.style.setProperty(property, value, priority);
+          } else {
+            element.style.removeProperty(property);
+          }
+        });
       });
 
       if (pageLayer) {
