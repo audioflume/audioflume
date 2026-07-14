@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import CuratedFeaturedCarouselControls from "./CuratedFeaturedCarouselControls";
 import CuratedHeaderScrollState from "./CuratedHeaderScrollState";
 import "./curated-playlists.css";
 
@@ -16,6 +17,62 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root) .curated-featured-playlist-loading-tracks {
     background: #101112 !important;
     background-color: #101112 !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-next-button,
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-count {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-navigation {
+    position: absolute;
+    right: var(--curated-page-gutter);
+    bottom: 35px;
+    z-index: 5;
+    display: inline-flex;
+    height: 22px;
+    align-items: center;
+    gap: 7px;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-navigation-button {
+    display: inline-flex;
+    width: 18px;
+    height: 22px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    transition: color 150ms ease;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-navigation-button:hover,
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-navigation-button:focus-visible {
+    color: #fff;
+    outline: none;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-navigation-button.is-previous
+    svg {
+    transform: rotate(180deg);
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-navigation-count {
+    margin-left: 5px;
+    font-size: 10px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
   }
 
   body:has(.curated-playlists-page-root) .filmwave-playlists-mega-menu {
@@ -52,6 +109,7 @@ export default function CuratedPlaylistsLayout({
     <>
       <style>{CURATED_FEATURED_STYLE}</style>
       <CuratedHeaderScrollState />
+      <CuratedFeaturedCarouselControls />
       {children}
     </>
   );
