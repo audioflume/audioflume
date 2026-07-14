@@ -257,10 +257,6 @@ export default function DiscoverHeaderScrollState() {
           translate: calc(-100% + 18px) 0 !important;
         }
 
-        body:has(.discover-page-root) .filmwave-playlists-mega-menu {
-          padding-bottom: 6px !important;
-        }
-
         body:has(.discover-page-root)
           .filmwave-header
           .filmwave-header-actions
