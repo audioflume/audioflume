@@ -12,7 +12,6 @@ import type {
   CuratedPlaylist,
   CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
-import CuratedMoodBrowse from "./CuratedMoodBrowse";
 
 type GroupMeta = {
   name: string;
@@ -576,8 +575,6 @@ export default function CuratedPlaylistsPage() {
               songsLoading={featuredSongsLoading}
             />
           )}
-
-          <CuratedMoodBrowse />
 
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
