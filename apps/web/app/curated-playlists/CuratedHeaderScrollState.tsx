@@ -13,6 +13,7 @@ const FEATURED_NEXT_SELECTOR = ".curated-featured-playlist-next-button";
 const FEATURED_COUNT_SELECTOR = ".curated-featured-playlist-count";
 const FEATURED_INDICATORS_SELECTOR = ".curated-featured-playlist-indicators";
 const STACKED_FEATURED_MEDIA_QUERY = "(max-width: 980px)";
+const FEATURED_TRACK_VERTICAL_OFFSET = 16;
 
 type PreviousInlineValue = {
   value: string;
@@ -128,8 +129,8 @@ export default function CuratedHeaderScrollState() {
           const trackBottom = trackPanel.getBoundingClientRect().bottom;
           const offset =
             typeof coverBottom === "number"
-              ? coverBottom - trackBottom
-              : headerHeight / 2;
+              ? coverBottom - trackBottom + FEATURED_TRACK_VERTICAL_OFFSET
+              : headerHeight / 2 + FEATURED_TRACK_VERTICAL_OFFSET;
 
           trackPanel.style.setProperty("translate", `0 ${offset}px`);
 
