@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import CuratedFeaturedCarouselControls from "./CuratedFeaturedCarouselControls";
 import CuratedHeaderScrollState from "./CuratedHeaderScrollState";
+import CuratedPlaylistsLoadingStyles from "./CuratedPlaylistsLoadingStyles";
 import "./curated-playlists.css";
 
 const CURATED_FEATURED_STYLE = `
@@ -218,6 +219,7 @@ export default function CuratedPlaylistsLayout({
   return (
     <>
       <style>{CURATED_FEATURED_STYLE}</style>
+      <CuratedPlaylistsLoadingStyles />
       <CuratedHeaderScrollState />
       <CuratedFeaturedCarouselControls />
       {children}
