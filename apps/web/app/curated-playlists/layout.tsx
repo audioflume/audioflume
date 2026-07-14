@@ -18,6 +18,20 @@ const CURATED_FEATURED_STYLE = `
     background-color: #101112 !important;
   }
 
+  body:has(.curated-playlists-page-root)
+    .filmwave-header
+    .filmwave-header-actions
+    .filmwave-header-nav
+    .filmwave-header-nav-link:hover,
+  body:has(.curated-playlists-page-root)
+    .filmwave-header
+    .filmwave-header-actions
+    .filmwave-header-nav
+    .filmwave-header-nav-link.is-active {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
   @media (max-width: 720px) {
     body:has(.curated-playlists-page-root) .curated-featured-playlist-title {
       font-size: 26px !important;
