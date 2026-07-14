@@ -287,6 +287,7 @@ export default function Header() {
           width: 100% !important;
           align-self: stretch !important;
           align-items: center !important;
+          transform: translateY(-24px) !important;
         }
 
         .filmwave-playlists-mega-link-column,
@@ -338,6 +339,7 @@ export default function Header() {
 
           .filmwave-playlists-mega-content {
             align-self: start !important;
+            transform: none !important;
           }
         }
       `}</style>
