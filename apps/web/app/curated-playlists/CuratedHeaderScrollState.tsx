@@ -13,7 +13,7 @@ const FEATURED_NEXT_SELECTOR = ".curated-featured-playlist-next-button";
 const FEATURED_COUNT_SELECTOR = ".curated-featured-playlist-count";
 const FEATURED_INDICATORS_SELECTOR = ".curated-featured-playlist-indicators";
 const STACKED_FEATURED_MEDIA_QUERY = "(max-width: 980px)";
-const FEATURED_TRACK_VERTICAL_OFFSET = 16;
+const FEATURED_TRACK_VERTICAL_OFFSET = 32;
 
 type PreviousInlineValue = {
   value: string;
