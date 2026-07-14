@@ -43,6 +43,10 @@ const PLAYLIST_PAGE_LINKS = [
 const PLAYLIST_QUICK_SECTIONS = [
   { title: "My Playlists", href: "/playlists" },
   { title: "Curated Playlists", href: "/curated-playlists" },
+  {
+    title: "Community Playlists",
+    href: "/playlists?tab=community-playlists",
+  },
 ];
 
 function formatTrackCount(count?: number | null) {
@@ -101,17 +105,28 @@ export default function Header() {
       return;
     }
 
+    const menu = playlistsMenuRef.current;
+
     function syncPlaylistOverlayTop() {
-      const rect = playlistsMenuRef.current?.getBoundingClientRect();
-      setPlaylistOverlayTop(rect ? Math.max(rect.bottom, 0) : null);
+      const rect = menu?.getBoundingClientRect();
+      setPlaylistOverlayTop(
+        rect ? Math.max(Math.floor(rect.bottom) - 1, 0) : null,
+      );
     }
 
     const frame = window.requestAnimationFrame(syncPlaylistOverlayTop);
+    const resizeObserver =
+      menu && typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(syncPlaylistOverlayTop)
+        : null;
+
+    resizeObserver?.observe(menu);
     window.addEventListener("resize", syncPlaylistOverlayTop);
 
     return () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", syncPlaylistOverlayTop);
+      resizeObserver?.disconnect();
     };
   }, [playlistsMenuOpen, curatedPreview.length]);
 
@@ -129,7 +144,7 @@ export default function Header() {
         setCuratedPreview(
           data
             .filter((playlist) => Boolean(playlist?.cover_image_url))
-            .slice(0, 2),
+            .slice(0, 3),
         );
       } catch {
         if (!cancelled) setCuratedPreview([]);
@@ -209,6 +224,8 @@ export default function Header() {
           overflow: visible !important;
           border-top: 0 !important;
           border-bottom: 0 !important;
+          background: var(--bg-primary) !important;
+          padding: 0 !important;
           box-shadow: none !important;
         }
 
@@ -224,24 +241,58 @@ export default function Header() {
         .filmwave-playlists-mega-inner {
           position: relative !important;
           z-index: 1 !important;
-          grid-template-columns: minmax(0, 1.7fr) minmax(220px, 0.55fr) !important;
+          box-sizing: border-box !important;
+          grid-template-columns: minmax(0, 1fr) minmax(220px, 0.32fr) !important;
           gap: 44px !important;
           background: var(--bg-primary) !important;
         }
 
-        .filmwave-playlists-mega-content {
-          display: block !important;
+        .filmwave-playlists-mega-feature-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 18px !important;
+          align-items: start !important;
         }
 
-        .filmwave-playlists-mega-links {
-          margin-top: 0 !important;
+        .filmwave-playlists-mega-feature {
+          position: relative !important;
+          display: block !important;
+          min-height: 0 !important;
+          overflow: visible !important;
+          border: 0 !important;
+          background: transparent !important;
+          color: inherit !important;
+        }
+
+        .filmwave-playlists-mega-feature:hover {
+          border-color: transparent !important;
+        }
+
+        .filmwave-playlists-mega-feature-image {
+          position: relative !important;
+          inset: auto !important;
+          display: block !important;
+          width: 100% !important;
+          height: auto !important;
+          aspect-ratio: 1 !important;
+          overflow: hidden !important;
+          background: var(--bg-secondary) !important;
+        }
+
+        .filmwave-playlists-mega-feature-image::after {
+          content: none !important;
+          display: none !important;
         }
 
         .filmwave-playlists-mega-feature-copy {
+          position: static !important;
+          display: flex !important;
+          margin-top: 10px !important;
           gap: 0 !important;
+          color: inherit !important;
         }
 
         .filmwave-playlists-mega-feature-title {
+          color: var(--text-primary) !important;
           font-size: 13.5px !important;
           font-weight: 500 !important;
           letter-spacing: 0 !important;
@@ -250,9 +301,19 @@ export default function Header() {
 
         .filmwave-playlists-mega-feature-detail {
           margin-top: 4px !important;
+          color: var(--text-muted) !important;
           font-size: 11.5px !important;
           font-weight: 400 !important;
           line-height: 1.45 !important;
+        }
+
+        .filmwave-playlists-mega-content {
+          display: block !important;
+          align-self: start !important;
+        }
+
+        .filmwave-playlists-mega-links {
+          margin-top: 0 !important;
         }
 
         .filmwave-playlists-page-overlay {
@@ -341,7 +402,7 @@ export default function Header() {
                                     {playlist.cover_image_url && (
                                       <img
                                         src={playlist.cover_image_url}
-                                        alt=""
+                                        alt={playlist.name}
                                       />
                                     )}
                                   </span>
