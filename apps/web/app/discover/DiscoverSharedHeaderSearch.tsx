@@ -1,8 +1,9 @@
 "use client";
 
 import { HeaderSearchBar } from "@filmwave/shared";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import SearchIcon from "@/components/icons/SearchIcon";
@@ -10,11 +11,17 @@ import SearchIcon from "@/components/icons/SearchIcon";
 const DISCOVER_SCROLLED_CLASS = "filmwave-discover-scrolled";
 const DISCOVER_SCROLL_THRESHOLD = 18;
 const HEADER_MENU_OPEN_SELECTOR = ".filmwave-header-nav-item-playlists.is-open";
+const CURATED_HEADING_LINK_SELECTOR =
+  ".discover-curated-playlist-section .discover-section-heading > a";
+const CURATED_PLAYLIST_GRID_SELECTOR =
+  ".discover-curated-playlist-section .discover-playlist-grid";
 
 export default function DiscoverHeaderScrollState() {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [searchMount, setSearchMount] = useState<HTMLFormElement | null>(null);
+  const [curatedCtaMount, setCuratedCtaMount] =
+    useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -67,6 +74,63 @@ export default function DiscoverHeaderScrollState() {
     return () => {
       mount.classList.remove("has-shared-search");
       setSearchMount(null);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    let headingLink: HTMLAnchorElement | null = null;
+    let originalHeadingText = "";
+    let ctaMount: HTMLDivElement | null = null;
+
+    function syncCuratedCallsToAction() {
+      const nextHeadingLink = document.querySelector<HTMLAnchorElement>(
+        CURATED_HEADING_LINK_SELECTOR,
+      );
+
+      if (nextHeadingLink && nextHeadingLink !== headingLink) {
+        if (headingLink?.isConnected) {
+          headingLink.textContent = originalHeadingText;
+        }
+
+        headingLink = nextHeadingLink;
+        originalHeadingText = nextHeadingLink.textContent ?? "";
+        nextHeadingLink.textContent = "Explore curated music";
+      }
+
+      if (!ctaMount) {
+        const playlistGrid = document.querySelector<HTMLElement>(
+          CURATED_PLAYLIST_GRID_SELECTOR,
+        );
+
+        if (playlistGrid) {
+          ctaMount = document.createElement("div");
+          ctaMount.className =
+            "discover-curated-playlist-cta-mount mt-5 flex justify-center";
+          playlistGrid.insertAdjacentElement("afterend", ctaMount);
+          setCuratedCtaMount(ctaMount);
+        }
+      }
+    }
+
+    syncCuratedCallsToAction();
+
+    const observer = new MutationObserver(syncCuratedCallsToAction);
+
+    if (!headingLink || !ctaMount) {
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    return () => {
+      observer.disconnect();
+
+      if (headingLink?.isConnected) {
+        headingLink.textContent = originalHeadingText;
+      }
+
+      ctaMount?.remove();
     };
   }, []);
 
@@ -150,7 +214,9 @@ export default function DiscoverHeaderScrollState() {
           }
         }
 
-        .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible) {
+        .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible),
+        .discover-curated-playlist-cta-mount
+          > a:not(:hover):not(:focus-visible) {
           background: color-mix(
             in srgb,
             var(--bg-primary) 96%,
@@ -231,6 +297,17 @@ export default function DiscoverHeaderScrollState() {
             </button>
           </div>,
           searchMount,
+        )}
+
+      {curatedCtaMount &&
+        createPortal(
+          <Link
+            href="/curated-playlists"
+            className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--bg-elevated)] px-10 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
+          >
+            Explore curated music
+          </Link>,
+          curatedCtaMount,
         )}
     </>
   );
