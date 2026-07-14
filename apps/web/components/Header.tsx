@@ -211,7 +211,7 @@ export default function Header() {
           position: relative !important;
           z-index: 1 !important;
           box-sizing: border-box !important;
-          grid-template-columns: max-content 220px !important;
+          grid-template-columns: max-content 280px !important;
           justify-content: start !important;
           gap: 44px !important;
           background: var(--bg-primary) !important;
@@ -282,18 +282,61 @@ export default function Header() {
         }
 
         .filmwave-playlists-mega-content {
-          display: block !important;
-          align-self: start !important;
+          display: flex !important;
+          width: 280px !important;
+          align-self: stretch !important;
+          align-items: center !important;
+        }
+
+        .filmwave-playlists-mega-link-column,
+        .filmwave-playlists-mega-links {
+          width: 100% !important;
         }
 
         .filmwave-playlists-mega-links {
           margin-top: 0 !important;
         }
 
+        .filmwave-playlists-mega-page-link {
+          position: relative !important;
+          width: 100% !important;
+          padding-right: 30px !important;
+          text-decoration: none !important;
+        }
+
+        .filmwave-playlists-mega-page-link::after {
+          content: "↗";
+          position: absolute;
+          top: 50%;
+          right: 0;
+          color: var(--text-secondary);
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1;
+          transform: translateY(-50%);
+          transition: color 150ms ease;
+        }
+
+        .filmwave-playlists-mega-page-link:hover,
+        .filmwave-playlists-mega-page-link:focus-visible,
+        .filmwave-playlists-mega-page-link:hover span,
+        .filmwave-playlists-mega-page-link:focus-visible span {
+          text-decoration: none !important;
+        }
+
+        .filmwave-playlists-mega-page-link:hover::after,
+        .filmwave-playlists-mega-page-link:focus-visible::after {
+          color: var(--text-primary);
+        }
+
         @media (max-width: 980px) {
           .filmwave-playlists-mega-inner {
             grid-template-columns: max-content !important;
             gap: 24px !important;
+          }
+
+          .filmwave-playlists-mega-content {
+            align-self: start !important;
           }
         }
       `}</style>
