@@ -62,8 +62,8 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-track-list
     > article:focus-visible {
-    background: #101112 !important;
-    background-color: #101112 !important;
+    background: var(--filmwave-menu-bg) !important;
+    background-color: var(--filmwave-menu-bg) !important;
     color: #fff !important;
   }
 
