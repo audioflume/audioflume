@@ -73,15 +73,11 @@ export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
-  const [playlistOverlayTop, setPlaylistOverlayTop] = useState<number | null>(
-    null,
-  );
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [curatedPreview, setCuratedPreview] = useState<
     CuratedPlaylistPreview[]
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
-  const playlistsMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -98,37 +94,6 @@ export default function Header() {
   useEffect(() => {
     setPlaylistsMenuOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    if (!playlistsMenuOpen) {
-      setPlaylistOverlayTop(null);
-      return;
-    }
-
-    const menu = playlistsMenuRef.current;
-
-    function syncPlaylistOverlayTop() {
-      const rect = menu?.getBoundingClientRect();
-      setPlaylistOverlayTop(
-        rect ? Math.max(Math.floor(rect.bottom) - 1, 0) : null,
-      );
-    }
-
-    const frame = window.requestAnimationFrame(syncPlaylistOverlayTop);
-    const resizeObserver =
-      menu && typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(syncPlaylistOverlayTop)
-        : null;
-
-    resizeObserver?.observe(menu);
-    window.addEventListener("resize", syncPlaylistOverlayTop);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("resize", syncPlaylistOverlayTop);
-      resizeObserver?.disconnect();
-    };
-  }, [playlistsMenuOpen, curatedPreview.length]);
 
   useEffect(() => {
     let cancelled = false;
@@ -185,7 +150,6 @@ export default function Header() {
 
   function closePlaylistsMenu() {
     setPlaylistsMenuOpen(false);
-    setPlaylistOverlayTop(null);
   }
 
   return (
@@ -227,6 +191,7 @@ export default function Header() {
           background: var(--bg-primary) !important;
           padding: 0 !important;
           box-shadow: none !important;
+          isolation: isolate !important;
         }
 
         :where(html.light, html[data-theme="light"]) .filmwave-playlists-mega-menu {
@@ -234,21 +199,34 @@ export default function Header() {
         }
 
         .filmwave-playlists-mega-menu::after {
-          content: none !important;
-          display: none !important;
+          content: "" !important;
+          position: absolute !important;
+          top: calc(100% - 1px) !important;
+          right: 0 !important;
+          left: 0 !important;
+          z-index: 0 !important;
+          display: block !important;
+          height: 100vh !important;
+          background: rgba(0, 0, 0, 0.48) !important;
+          pointer-events: none !important;
         }
 
         .filmwave-playlists-mega-inner {
           position: relative !important;
           z-index: 1 !important;
           box-sizing: border-box !important;
-          grid-template-columns: minmax(0, 1fr) minmax(220px, 0.32fr) !important;
+          grid-template-columns: max-content 220px !important;
+          justify-content: start !important;
           gap: 44px !important;
           background: var(--bg-primary) !important;
         }
 
         .filmwave-playlists-mega-feature-grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          --filmwave-playlists-mega-card-size: clamp(150px, 10vw, 180px);
+          grid-template-columns: repeat(
+            3,
+            var(--filmwave-playlists-mega-card-size)
+          ) !important;
           gap: 18px !important;
           align-items: start !important;
         }
@@ -316,19 +294,9 @@ export default function Header() {
           margin-top: 0 !important;
         }
 
-        .filmwave-playlists-page-overlay {
-          position: fixed !important;
-          right: 0 !important;
-          bottom: 0 !important;
-          left: 0 !important;
-          z-index: 2147482999 !important;
-          background: rgba(0, 0, 0, 0.48) !important;
-          pointer-events: none !important;
-        }
-
         @media (max-width: 980px) {
           .filmwave-playlists-mega-inner {
-            grid-template-columns: 1fr !important;
+            grid-template-columns: max-content !important;
             gap: 24px !important;
           }
         }
@@ -363,7 +331,6 @@ export default function Header() {
                           !event.currentTarget.contains(event.relatedTarget)
                         ) {
                           setPlaylistsMenuOpen(false);
-                          setPlaylistOverlayTop(null);
                         }
                       }}
                     >
@@ -379,7 +346,6 @@ export default function Header() {
                       </Link>
 
                       <div
-                        ref={playlistsMenuRef}
                         className="filmwave-playlists-mega-menu"
                         role="menu"
                         aria-label="Playlist navigation"
@@ -502,14 +468,6 @@ export default function Header() {
           </>
         }
       />
-
-      {playlistsMenuOpen && playlistOverlayTop !== null && (
-        <div
-          className="filmwave-playlists-page-overlay"
-          aria-hidden="true"
-          style={{ top: `${playlistOverlayTop}px` }}
-        />
-      )}
     </>
   );
 }
