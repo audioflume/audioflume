@@ -17,7 +17,6 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root) .curated-featured-playlist-loading-tracks {
     background: transparent !important;
     background-color: transparent !important;
-    transform: translateY(16px) !important;
   }
 
   body:has(.curated-playlists-page-root)
