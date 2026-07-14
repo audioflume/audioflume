@@ -14,8 +14,8 @@ const CURATED_FEATURED_STYLE = `
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-tracks,
   body:has(.curated-playlists-page-root) .curated-featured-playlist-loading-tracks {
-    background: transparent !important;
-    background-color: transparent !important;
+    background: #101112 !important;
+    background-color: #101112 !important;
   }
 
   body:has(.curated-playlists-page-root) .filmwave-playlists-mega-menu {
