@@ -30,7 +30,14 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
 
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-loading-image {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
     display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
     border-radius: 0 !important;
     background:
       linear-gradient(
