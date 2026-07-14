@@ -14,6 +14,40 @@ const CURATED_FEATURED_STYLE = `
     font-size: clamp(22px, 2vw, 32px) !important;
   }
 
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-image {
+    filter: blur(10px);
+    transform: scale(1.04);
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist:hover
+    .curated-featured-playlist-image {
+    transform: scale(1.055);
+  }
+
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-overlay {
+    background:
+      linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.58) 38%,
+          rgba(0, 0, 0, 0.16) 72%,
+          rgba(0, 0, 0, 0) 100%
+        )
+        right center / 58% 100% no-repeat,
+      linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.08) 30%,
+        rgba(0, 0, 0, 0.54) 100%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.5) 0%,
+        rgba(0, 0, 0, 0.1) 72%
+      );
+  }
+
   body:has(.curated-playlists-page-root) .curated-featured-playlist-tracks,
   body:has(.curated-playlists-page-root) .curated-featured-playlist-loading-tracks {
     background: transparent !important;
