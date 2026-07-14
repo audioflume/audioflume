@@ -5,7 +5,7 @@ import { useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
-import styles from "./curated-playlists-loading.module.css";
+import CuratedPlaylistsLoadingStyles from "./CuratedPlaylistsLoadingStyles";
 
 const FEATURED_PANEL_SELECTOR = ".curated-featured-playlist-image-panel";
 const FEATURED_SECTION_SELECTOR = ".curated-featured-playlist";
@@ -40,9 +40,6 @@ export default function CuratedFeaturedCarouselControls() {
 
   useLayoutEffect(() => {
     let frame = 0;
-    const body = document.body;
-
-    body.classList.add(styles.skeletonStyles);
 
     function syncControls() {
       window.cancelAnimationFrame(frame);
@@ -91,7 +88,6 @@ export default function CuratedFeaturedCarouselControls() {
     return () => {
       window.cancelAnimationFrame(frame);
       observer.disconnect();
-      body.classList.remove(styles.skeletonStyles);
     };
   }, []);
 
@@ -163,6 +159,7 @@ export default function CuratedFeaturedCarouselControls() {
 
   return (
     <>
+      <CuratedPlaylistsLoadingStyles />
       {navigationPortal}
       {songLinkPortal}
     </>
