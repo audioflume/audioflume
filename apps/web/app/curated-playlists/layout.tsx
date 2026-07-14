@@ -15,8 +15,55 @@ const CURATED_FEATURED_STYLE = `
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-tracks,
   body:has(.curated-playlists-page-root) .curated-featured-playlist-loading-tracks {
-    background: #101112 !important;
-    background-color: #101112 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover,
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible {
+    background: color-mix(
+      in srgb,
+      var(--bg-primary) 94%,
+      var(--text-primary) 6%
+    ) !important;
+    background-color: color-mix(
+      in srgb,
+      var(--bg-primary) 94%,
+      var(--text-primary) 6%
+    ) !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-show-all {
+    display: inline-flex;
+    width: fit-content;
+    align-self: center;
+    justify-content: center;
+    margin: 15px auto 0;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-show-all:hover,
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-show-all:focus-visible {
+    color: #fff;
+    outline: none;
   }
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-next-button,
