@@ -211,8 +211,9 @@ export default function Header() {
           position: relative !important;
           z-index: 1 !important;
           box-sizing: border-box !important;
-          grid-template-columns: max-content 280px !important;
-          justify-content: start !important;
+          width: 100% !important;
+          grid-template-columns: max-content minmax(280px, 1fr) !important;
+          justify-content: stretch !important;
           gap: 44px !important;
           background: var(--bg-primary) !important;
         }
@@ -283,7 +284,7 @@ export default function Header() {
 
         .filmwave-playlists-mega-content {
           display: flex !important;
-          width: 280px !important;
+          width: 100% !important;
           align-self: stretch !important;
           align-items: center !important;
         }
