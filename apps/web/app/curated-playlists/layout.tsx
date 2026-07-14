@@ -18,6 +18,10 @@ const CURATED_FEATURED_STYLE = `
     background-color: #101112 !important;
   }
 
+  body:has(.curated-playlists-page-root) .filmwave-playlists-mega-menu {
+    padding-bottom: 6px !important;
+  }
+
   body:has(.curated-playlists-page-root)
     .filmwave-header
     .filmwave-header-actions
