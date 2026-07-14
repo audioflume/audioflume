@@ -37,8 +37,27 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-track-list
     > article:focus-visible {
-    background: rgba(0, 0, 0, 0.5) !important;
-    background-color: rgba(0, 0, 0, 0.5) !important;
+    background: var(--bg-primary) !important;
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover h3,
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible h3 {
+    color: var(--text-primary) !important;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:hover h3 + div,
+  body:has(.curated-playlists-page-root)
+    .curated-featured-playlist-track-list
+    > article:focus-visible h3 + div {
+    color: var(--text-secondary) !important;
   }
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-show-all {
