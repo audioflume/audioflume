@@ -5,8 +5,7 @@ import { useLayoutEffect } from "react";
 const CURATED_SCROLLED_CLASS = "filmwave-curated-scrolled";
 const CURATED_SCROLL_THRESHOLD = 18;
 const HEADER_MENU_OPEN_SELECTOR = ".filmwave-header-nav-item-playlists.is-open";
-const FEATURED_TRACK_SELECTOR =
-  ".curated-featured-playlist-tracks, .curated-featured-playlist-loading-tracks";
+const FEATURED_TRACK_SELECTOR = ".curated-featured-playlist-tracks";
 const FEATURED_COVER_SELECTOR = ".curated-featured-playlist-cover-link";
 const FEATURED_SECTION_SELECTOR = ".curated-featured-playlist";
 const FEATURED_NEXT_SELECTOR = ".curated-featured-playlist-next-button";
