@@ -43,10 +43,6 @@ const PLAYLIST_PAGE_LINKS = [
 const PLAYLIST_QUICK_SECTIONS = [
   { title: "My Playlists", href: "/playlists" },
   { title: "Curated Playlists", href: "/curated-playlists" },
-  {
-    title: "Community Playlists",
-    href: "/playlists?tab=community-playlists",
-  },
 ];
 
 function formatTrackCount(count?: number | null) {
@@ -109,7 +105,7 @@ export default function Header() {
         setCuratedPreview(
           data
             .filter((playlist) => Boolean(playlist?.cover_image_url))
-            .slice(0, 3),
+            .slice(0, 2),
         );
       } catch {
         if (!cancelled) setCuratedPreview([]);
@@ -222,10 +218,10 @@ export default function Header() {
         }
 
         .filmwave-playlists-mega-feature-grid {
-          --filmwave-playlists-mega-card-size: clamp(150px, 10vw, 180px);
+          --filmwave-playlists-mega-card-width: clamp(280px, 24vw, 390px);
           grid-template-columns: repeat(
-            3,
-            var(--filmwave-playlists-mega-card-size)
+            2,
+            var(--filmwave-playlists-mega-card-width)
           ) !important;
           gap: 18px !important;
           align-items: start !important;
@@ -251,7 +247,7 @@ export default function Header() {
           display: block !important;
           width: 100% !important;
           height: auto !important;
-          aspect-ratio: 1 !important;
+          aspect-ratio: 16 / 9 !important;
           overflow: hidden !important;
           background: var(--bg-secondary) !important;
         }
