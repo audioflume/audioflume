@@ -40,6 +40,9 @@ export default function CuratedFeaturedCarouselControls() {
 
   useLayoutEffect(() => {
     let frame = 0;
+    const body = document.body;
+
+    body.classList.add(styles.skeletonStyles);
 
     function syncControls() {
       window.cancelAnimationFrame(frame);
@@ -88,6 +91,7 @@ export default function CuratedFeaturedCarouselControls() {
     return () => {
       window.cancelAnimationFrame(frame);
       observer.disconnect();
+      body.classList.remove(styles.skeletonStyles);
     };
   }, []);
 
@@ -159,7 +163,6 @@ export default function CuratedFeaturedCarouselControls() {
 
   return (
     <>
-      <span className={styles.skeletonStyles} aria-hidden="true" />
       {navigationPortal}
       {songLinkPortal}
     </>
