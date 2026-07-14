@@ -19,6 +19,11 @@ const CURATED_FEATURED_STYLE = `
     background-color: transparent !important;
   }
 
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-loading,
+  body:has(.curated-playlists-page-root) .curated-featured-playlist-track-skeleton {
+    display: none !important;
+  }
+
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-track-list
     > article {
@@ -32,8 +37,8 @@ const CURATED_FEATURED_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-featured-playlist-track-list
     > article:focus-visible {
-    background: rgba(0, 0, 0, 0.28) !important;
-    background-color: rgba(0, 0, 0, 0.28) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
   }
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-show-all {
