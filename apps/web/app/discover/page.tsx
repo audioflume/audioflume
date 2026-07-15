@@ -34,7 +34,7 @@ import type { Song } from "@/lib/types";
 import "../music/music-library-redesign.css";
 
 const NEW_SONG_COUNT = 10;
-const READY_TO_CUT_SONG_COUNT = 9;
+const READY_TO_CUT_SONG_COUNT = 12;
 const HERO_BACKGROUND_IMAGE =
   "https://images.filmwave.io/images/discover/donny-jiang-KFTPuUsIFME-unsplash.jpg";
 
