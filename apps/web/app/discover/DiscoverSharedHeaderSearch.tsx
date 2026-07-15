@@ -191,7 +191,8 @@ export default function DiscoverHeaderScrollState() {
         }
 
         .discover-hero-search-submit {
-          height: calc(100% - 16px);
+          box-sizing: border-box;
+          height: 36px;
           cursor: pointer;
           border: 0;
           background: #111;
@@ -199,7 +200,7 @@ export default function DiscoverHeaderScrollState() {
           font-family: inherit;
           font-size: 12px;
           font-weight: 500;
-          margin-right: 8px;
+          margin: 0 10px;
           padding: 0 20px;
           transition: opacity 150ms ease;
         }
