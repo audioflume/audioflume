@@ -15,6 +15,8 @@ const CURATED_HEADING_LINK_SELECTOR =
   ".discover-curated-playlist-section .discover-section-heading > a";
 const CURATED_PLAYLIST_GRID_SELECTOR =
   ".discover-curated-playlist-section .discover-playlist-grid";
+const MOOD_SHELF_SCROLLER_SELECTOR =
+  ".discover-mood-section .curated-playlist-shelf-scroller";
 
 export default function DiscoverHeaderScrollState() {
   const router = useRouter();
@@ -74,6 +76,56 @@ export default function DiscoverHeaderScrollState() {
     return () => {
       mount.classList.remove("has-shared-search");
       setSearchMount(null);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    let firstFrame = 0;
+    let secondFrame = 0;
+    let observer: MutationObserver | null = null;
+
+    function resetMoodShelf() {
+      const scroller = document.querySelector<HTMLElement>(
+        MOOD_SHELF_SCROLLER_SELECTOR,
+      );
+
+      if (!scroller) return false;
+
+      scroller.scrollLeft = 0;
+      scroller.dispatchEvent(new Event("scroll"));
+      return true;
+    }
+
+    function scheduleMoodShelfReset() {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+
+      resetMoodShelf();
+      firstFrame = window.requestAnimationFrame(() => {
+        resetMoodShelf();
+        secondFrame = window.requestAnimationFrame(resetMoodShelf);
+      });
+    }
+
+    if (resetMoodShelf()) {
+      scheduleMoodShelfReset();
+    } else {
+      observer = new MutationObserver(() => {
+        if (!resetMoodShelf()) return;
+
+        observer?.disconnect();
+        scheduleMoodShelfReset();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    window.addEventListener("pageshow", scheduleMoodShelfReset);
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+      window.removeEventListener("pageshow", scheduleMoodShelfReset);
+      observer?.disconnect();
     };
   }, []);
 
