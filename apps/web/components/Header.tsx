@@ -306,13 +306,6 @@ export default function Header() {
           text-decoration: none !important;
         }
 
-        .filmwave-playlists-mega-page-link > span,
-        .filmwave-playlists-mega-page-link > small {
-          display: block;
-          transform: translateX(0);
-          transition: transform 150ms ease;
-        }
-
         .filmwave-playlists-mega-page-link::after {
           content: "↗";
           position: absolute;
@@ -331,13 +324,6 @@ export default function Header() {
         .filmwave-playlists-mega-page-link:hover span,
         .filmwave-playlists-mega-page-link:focus-visible span {
           text-decoration: none !important;
-        }
-
-        .filmwave-playlists-mega-page-link:hover > span,
-        .filmwave-playlists-mega-page-link:hover > small,
-        .filmwave-playlists-mega-page-link:focus-visible > span,
-        .filmwave-playlists-mega-page-link:focus-visible > small {
-          transform: translateX(4px);
         }
 
         .filmwave-playlists-mega-page-link:hover::after,
