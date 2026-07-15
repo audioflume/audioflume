@@ -311,12 +311,12 @@ export default function Header() {
           position: absolute;
           top: 50%;
           right: 0;
-          color: var(--text-secondary);
+          color: var(--text-primary);
           font-size: 12px;
           font-weight: 500;
           line-height: 1;
           transform: translateY(-50%);
-          transition: color 150ms ease;
+          transition: transform 150ms ease;
         }
 
         .filmwave-playlists-mega-page-link:hover,
@@ -328,7 +328,7 @@ export default function Header() {
 
         .filmwave-playlists-mega-page-link:hover::after,
         .filmwave-playlists-mega-page-link:focus-visible::after {
-          color: var(--text-primary);
+          transform: translate(2px, calc(-50% - 2px));
         }
 
         @media (max-width: 980px) {
