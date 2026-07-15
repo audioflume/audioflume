@@ -124,7 +124,7 @@ export default function DiscoverHeaderScrollState() {
           });
 
         setStaffFavorites(
-          [...editorPicks, ...fallbackPlaylists].slice(0, 5),
+          [...editorPicks, ...fallbackPlaylists].slice(0, 4),
         );
       })
       .catch(() => {
@@ -343,7 +343,7 @@ export default function DiscoverHeaderScrollState() {
 
         .discover-staff-favorites-grid {
           display: grid;
-          grid-template-columns: repeat(5, minmax(0, 1fr));
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: clamp(22px, 2.2vw, 42px);
         }
 
@@ -583,7 +583,7 @@ export default function DiscoverHeaderScrollState() {
 
             <div className="discover-staff-favorites-grid">
               {staffFavoritesLoading
-                ? Array.from({ length: 5 }).map((_, index) => (
+                ? Array.from({ length: 4 }).map((_, index) => (
                     <div
                       key={index}
                       className="discover-staff-favorite-card"
