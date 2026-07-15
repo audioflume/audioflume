@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import FooterBottom from "@/components/FooterBottom";
 import { usePlayer } from "@/context/PlayerContext";
 
+// Recovery deployment: runtime behavior is unchanged.
 const productLinks = ["Music", "SFX", "VFX", "Colour", "Curated"];
 const companyLinks = ["Home", "Support", "About", "Partnerships", "Contact"];
 
