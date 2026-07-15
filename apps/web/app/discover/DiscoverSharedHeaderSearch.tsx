@@ -190,9 +190,12 @@ export default function DiscoverHeaderScrollState() {
           padding-left: 22px !important;
         }
 
-        .discover-hero-search-submit {
-          box-sizing: border-box;
-          height: 36px;
+        .discover-hero-search .discover-hero-search-submit {
+          box-sizing: border-box !important;
+          height: 36px !important;
+          min-height: 36px !important;
+          max-height: 36px !important;
+          align-self: center !important;
           cursor: pointer;
           border: 0;
           background: #111;
@@ -200,13 +203,36 @@ export default function DiscoverHeaderScrollState() {
           font-family: inherit;
           font-size: 12px;
           font-weight: 500;
-          margin: 0 10px;
+          margin: 0 10px !important;
           padding: 0 20px;
           transition: opacity 150ms ease;
         }
 
-        .discover-hero-search-submit:hover {
+        .discover-hero-search .discover-hero-search-submit:hover {
           opacity: 0.82;
+        }
+
+        body:has(.discover-page-root)
+          .discover-mood-section
+          .curated-playlist-shelf-viewport {
+          margin-right: calc(var(--discover-page-gutter) * -1) !important;
+          margin-left: calc(var(--discover-page-gutter) * -1) !important;
+          overflow: hidden !important;
+        }
+
+        body:has(.discover-page-root)
+          .discover-mood-section
+          .curated-playlist-shelf-scroller {
+          display: flex !important;
+          flex-wrap: nowrap !important;
+          align-items: flex-start !important;
+          gap: 12px !important;
+          overflow-x: auto !important;
+          overflow-y: hidden !important;
+          padding-right: 5rem !important;
+          padding-left: var(--discover-page-gutter) !important;
+          overscroll-behavior-x: contain !important;
+          scroll-snap-type: x proximity !important;
         }
 
         @media (max-width: 720px) {
