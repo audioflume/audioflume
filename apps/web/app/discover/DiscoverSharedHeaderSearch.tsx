@@ -1,12 +1,14 @@
 "use client";
 
 import { HeaderSearchBar } from "@filmwave/shared";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import SearchIcon from "@/components/icons/SearchIcon";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 const DISCOVER_SCROLLED_CLASS = "filmwave-discover-scrolled";
 const DISCOVER_SCROLL_THRESHOLD = 18;
@@ -15,6 +17,12 @@ const CURATED_HEADING_LINK_SELECTOR =
   ".discover-curated-playlist-section .discover-section-heading > a";
 const CURATED_PLAYLIST_GRID_SELECTOR =
   ".discover-curated-playlist-section .discover-playlist-grid";
+const DISCOVER_SONG_SECTION_SELECTOR = ".discover-song-section";
+
+function formatTrackCount(count?: number) {
+  const safeCount = Number(count || 0);
+  return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
+}
 
 export default function DiscoverHeaderScrollState() {
   const router = useRouter();
@@ -22,6 +30,10 @@ export default function DiscoverHeaderScrollState() {
   const [searchMount, setSearchMount] = useState<HTMLFormElement | null>(null);
   const [curatedCtaMount, setCuratedCtaMount] =
     useState<HTMLDivElement | null>(null);
+  const [staffFavoritesMount, setStaffFavoritesMount] =
+    useState<HTMLElement | null>(null);
+  const [staffFavorites, setStaffFavorites] = useState<CuratedPlaylist[]>([]);
+  const [staffFavoritesLoading, setStaffFavoritesLoading] = useState(true);
 
   useEffect(() => {
     let frame = 0;
@@ -74,6 +86,56 @@ export default function DiscoverHeaderScrollState() {
     return () => {
       mount.classList.remove("has-shared-search");
       setSearchMount(null);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/curated-playlists")
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load curated playlists");
+        return response.json();
+      })
+      .then((data) => {
+        if (cancelled || !Array.isArray(data)) return;
+
+        const playlists = data as CuratedPlaylist[];
+        const editorPicks = playlists
+          .filter((playlist) => playlist.playlist_group === "Editor Picks")
+          .sort((a, b) => a.position - b.position);
+        const editorPickIds = new Set(editorPicks.map((playlist) => playlist.id));
+        const fallbackPlaylists = playlists
+          .filter((playlist) => !editorPickIds.has(playlist.id))
+          .sort((a, b) => {
+            const discoverDifference =
+              Number(b.show_on_discover) - Number(a.show_on_discover);
+
+            if (discoverDifference !== 0) return discoverDifference;
+
+            const discoverPositionDifference =
+              a.discover_position - b.discover_position;
+
+            if (discoverPositionDifference !== 0) {
+              return discoverPositionDifference;
+            }
+
+            return a.position - b.position;
+          });
+
+        setStaffFavorites(
+          [...editorPicks, ...fallbackPlaylists].slice(0, 5),
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setStaffFavorites([]);
+      })
+      .finally(() => {
+        if (!cancelled) setStaffFavoritesLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
     };
   }, []);
 
@@ -131,6 +193,42 @@ export default function DiscoverHeaderScrollState() {
       }
 
       ctaMount?.remove();
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    let mount: HTMLElement | null = null;
+
+    function syncStaffFavoritesMount() {
+      if (mount) return;
+
+      const songSection = document.querySelector<HTMLElement>(
+        DISCOVER_SONG_SECTION_SELECTOR,
+      );
+
+      if (!songSection) return;
+
+      mount = document.createElement("section");
+      mount.className =
+        "discover-section discover-staff-favorites-section";
+      songSection.insertAdjacentElement("afterend", mount);
+      setStaffFavoritesMount(mount);
+    }
+
+    syncStaffFavoritesMount();
+
+    const observer = new MutationObserver(syncStaffFavoritesMount);
+
+    if (!mount) {
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    return () => {
+      observer.disconnect();
+      mount?.remove();
     };
   }, []);
 
@@ -243,11 +341,122 @@ export default function DiscoverHeaderScrollState() {
           top: min(12.5vw, 162.8px) !important;
         }
 
+        .discover-staff-favorites-grid {
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: clamp(22px, 2.2vw, 42px);
+        }
+
+        .discover-staff-favorite-card {
+          display: grid;
+          min-width: 0;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+          align-items: start;
+          gap: clamp(14px, 1.15vw, 22px);
+          color: inherit;
+          text-decoration: none;
+        }
+
+        .discover-staff-favorite-image {
+          position: relative;
+          width: 100%;
+          min-width: 0;
+          aspect-ratio: 1;
+          overflow: hidden;
+          background: var(--bg-secondary);
+        }
+
+        .discover-staff-favorite-image img {
+          object-fit: cover;
+          transition: transform 500ms ease;
+        }
+
+        .discover-staff-favorite-card:hover
+          .discover-staff-favorite-image
+          img {
+          transform: scale(1.025);
+        }
+
+        .discover-staff-favorite-copy {
+          min-width: 0;
+          padding-top: 3px;
+        }
+
+        .discover-staff-favorite-copy h3 {
+          margin: 0;
+          overflow: hidden;
+          color: var(--text-primary);
+          font-size: 13.5px;
+          font-weight: 500;
+          line-height: 1.25;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .discover-staff-favorite-count {
+          display: block;
+          margin-top: 4px;
+          color: var(--text-muted);
+          font-size: 11px;
+          font-weight: 400;
+          line-height: 1.25;
+        }
+
+        .discover-staff-favorite-description {
+          display: -webkit-box;
+          margin: clamp(20px, 1.8vw, 32px) 0 0;
+          overflow: hidden;
+          color: var(--text-muted);
+          font-size: 11.5px;
+          font-weight: 400;
+          line-height: 1.45;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+        }
+
+        .discover-staff-favorite-skeleton-copy {
+          display: flex;
+          min-width: 0;
+          flex-direction: column;
+          padding-top: 3px;
+        }
+
+        .discover-staff-favorite-skeleton-line {
+          display: block;
+          height: 11px;
+        }
+
+        .discover-staff-favorite-skeleton-line.is-title {
+          width: 80%;
+        }
+
+        .discover-staff-favorite-skeleton-line.is-count {
+          width: 48%;
+          height: 9px;
+          margin-top: 7px;
+        }
+
+        .discover-staff-favorite-skeleton-line.is-description {
+          width: 100%;
+          height: 32px;
+          margin-top: clamp(20px, 1.8vw, 32px);
+        }
+
+        @media (max-width: 1280px) {
+          .discover-staff-favorites-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+        }
+
         @media (max-width: 980px) {
           body:has(.discover-page-root)
             .discover-mood-section
             .discover-mood-shelf-floating {
             top: min(19.77vw, 145.35px) !important;
+          }
+
+          .discover-staff-favorites-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 
@@ -260,6 +469,16 @@ export default function DiscoverHeaderScrollState() {
             .discover-mood-section
             .discover-mood-shelf-floating {
             top: 23.84vw !important;
+          }
+        }
+
+        @media (max-width: 620px) {
+          .discover-staff-favorites-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .discover-staff-favorite-card {
+            grid-template-columns: 120px minmax(0, 1fr);
           }
         }
 
@@ -353,6 +572,65 @@ export default function DiscoverHeaderScrollState() {
             Explore curated music
           </Link>,
           curatedCtaMount,
+        )}
+
+      {staffFavoritesMount &&
+        createPortal(
+          <>
+            <div className="discover-section-heading">
+              <h2>Staff Favorites</h2>
+            </div>
+
+            <div className="discover-staff-favorites-grid">
+              {staffFavoritesLoading
+                ? Array.from({ length: 5 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="discover-staff-favorite-card"
+                      aria-hidden="true"
+                    >
+                      <div className="discover-staff-favorite-image discover-card-skeleton" />
+                      <div className="discover-staff-favorite-skeleton-copy">
+                        <span className="discover-staff-favorite-skeleton-line is-title discover-card-skeleton" />
+                        <span className="discover-staff-favorite-skeleton-line is-count discover-card-skeleton" />
+                        <span className="discover-staff-favorite-skeleton-line is-description discover-card-skeleton" />
+                      </div>
+                    </div>
+                  ))
+                : staffFavorites.map((playlist) => (
+                    <Link
+                      key={playlist.id}
+                      href={`/curated-playlists/${playlist.id}`}
+                      className="discover-staff-favorite-card"
+                    >
+                      <div className="discover-staff-favorite-image">
+                        {playlist.cover_image_url ? (
+                          <Image
+                            src={playlist.cover_image_url}
+                            alt={playlist.name}
+                            fill
+                            unoptimized
+                            sizes="(min-width: 1280px) 9vw, (min-width: 980px) 15vw, (min-width: 620px) 22vw, 120px"
+                          />
+                        ) : (
+                          <div className="discover-media-fallback" />
+                        )}
+                      </div>
+
+                      <div className="discover-staff-favorite-copy">
+                        <h3>{playlist.name}</h3>
+                        <span className="discover-staff-favorite-count">
+                          {formatTrackCount(playlist.song_count)}
+                        </span>
+                        <p className="discover-staff-favorite-description">
+                          {playlist.description || playlist.kicker}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+            </div>
+          </>,
+          staffFavoritesMount,
         )}
     </>
   );
