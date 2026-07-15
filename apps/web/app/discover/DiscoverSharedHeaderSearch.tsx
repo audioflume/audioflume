@@ -17,7 +17,7 @@ const CURATED_HEADING_LINK_SELECTOR =
   ".discover-curated-playlist-section .discover-section-heading > a";
 const CURATED_PLAYLIST_GRID_SELECTOR =
   ".discover-curated-playlist-section .discover-playlist-grid";
-const DISCOVER_SONG_SECTION_SELECTOR = ".discover-song-section";
+const DISCOVER_SONG_SECTION_SELECTOR = ".discover-production-section";
 
 function formatTrackCount(count?: number) {
   const safeCount = Number(count || 0);
