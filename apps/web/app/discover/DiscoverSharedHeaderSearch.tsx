@@ -181,7 +181,7 @@ export default function DiscoverHeaderScrollState() {
           width: 100%;
           min-width: 0;
           height: 100%;
-          grid-template-columns: minmax(0, 1fr) 148px;
+          grid-template-columns: minmax(0, 1fr) 160px;
           align-items: center;
         }
 
@@ -238,26 +238,26 @@ export default function DiscoverHeaderScrollState() {
         body:has(.discover-page-root)
           .discover-mood-section
           .discover-mood-shelf-floating {
-          top: calc((min(43vw, 560px) / 1.72) / 2) !important;
+          top: min(12.5vw, 162.8px) !important;
         }
 
         @media (max-width: 980px) {
           body:has(.discover-page-root)
             .discover-mood-section
             .discover-mood-shelf-floating {
-            top: calc((min(68vw, 500px) / 1.72) / 2) !important;
+            top: min(19.77vw, 145.35px) !important;
           }
         }
 
         @media (max-width: 720px) {
           .discover-hero-search-shared {
-            grid-template-columns: minmax(0, 1fr) 116px;
+            grid-template-columns: minmax(0, 1fr) 124px;
           }
 
           body:has(.discover-page-root)
             .discover-mood-section
             .discover-mood-shelf-floating {
-            top: calc((82vw / 1.72) / 2) !important;
+            top: 23.84vw !important;
           }
         }
 
