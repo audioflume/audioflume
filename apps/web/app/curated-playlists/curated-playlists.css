@@ -341,22 +341,28 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist-heading h2 {
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
-  transition:
-    background-color 150ms ease,
-    color 150ms ease;
 }
 
 .curated-featured-playlist-button::after {
   content: "↗";
+  display: inline-block;
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
+  transform: translate(0, 0);
+  transition: transform 150ms ease;
 }
 
 .curated-featured-playlist-button:hover,
 .curated-featured-playlist-button:focus-visible {
-  background: rgba(255, 255, 255, 0.86);
+  background: #fff;
+  color: #111;
   outline: none;
+}
+
+.curated-featured-playlist-button:hover::after,
+.curated-featured-playlist-button:focus-visible::after {
+  transform: translate(2px, -2px);
 }
 
 .curated-featured-playlist-tracks {
