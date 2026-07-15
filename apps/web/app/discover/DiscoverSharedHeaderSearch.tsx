@@ -181,7 +181,7 @@ export default function DiscoverHeaderScrollState() {
           width: 100%;
           min-width: 0;
           height: 100%;
-          grid-template-columns: minmax(0, 1fr) 160px;
+          grid-template-columns: minmax(0, 1fr) 154px;
           align-items: center;
         }
 
@@ -251,7 +251,7 @@ export default function DiscoverHeaderScrollState() {
 
         @media (max-width: 720px) {
           .discover-hero-search-shared {
-            grid-template-columns: minmax(0, 1fr) 124px;
+            grid-template-columns: minmax(0, 1fr) 120px;
           }
 
           body:has(.discover-page-root)
