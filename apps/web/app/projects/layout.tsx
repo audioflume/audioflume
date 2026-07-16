@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import type { ReactNode } from "react";
 
 export default function ProjectsLayout({ children }: { children: ReactNode }) {
@@ -41,6 +42,20 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           line-height: var(--filmwave-ui-title-line-height) !important;
         }
 
+        .projects-route-footer {
+          box-sizing: border-box;
+          width: 100%;
+          padding-right: var(--projects-content-gutter, clamp(28px, 5.2vw, 82px));
+          padding-left: var(--projects-content-gutter, clamp(28px, 5.2vw, 82px));
+        }
+
+        body:has(.project-detail-page) .projects-route-footer {
+          width: calc(100% - var(--sidebar-width));
+          margin-left: var(--sidebar-width);
+          padding-right: 40px;
+          padding-left: 40px;
+        }
+
         @media (max-width: 720px) {
           body:has(.projects-page) {
             --projects-content-gutter: 20px;
@@ -52,8 +67,20 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
             --projects-shell-gutter: 20px;
           }
         }
+
+        @media (max-width: 520px) {
+          body:has(.project-detail-page) .projects-route-footer {
+            width: 100%;
+            margin-left: 0;
+            padding-right: 18px;
+            padding-left: 18px;
+          }
+        }
       `}</style>
       {children}
+      <div className="projects-route-footer">
+        <Footer />
+      </div>
     </>
   );
 }
