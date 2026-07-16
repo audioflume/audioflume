@@ -184,10 +184,15 @@
   position: relative !important;
   display: flex !important;
   min-height: 56px !important;
-  align-items: stretch !important;
-  border-bottom: 1px solid var(--filmwave-ui-divider-color) !important;
+  align-items: center !important;
+  border-bottom: 0 !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+.project-detail-page .project-detail-controls {
+  align-self: center !important;
+  margin-top: 0 !important;
 }
 
 .project-detail-page .project-detail-header-row {
