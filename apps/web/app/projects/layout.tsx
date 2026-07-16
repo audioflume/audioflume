@@ -50,8 +50,12 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .project-detail-content-footer {
+          grid-column: 2 !important;
           box-sizing: border-box;
-          width: 100%;
+          min-width: 0;
+          width: auto;
+          margin-right: var(--project-detail-content-inset-right, 20px);
+          margin-left: var(--project-detail-content-inset-left, 28px);
         }
 
         @media (max-width: 720px) {
@@ -63,6 +67,15 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         @media (max-width: 640px) {
           body:has(.projects-page) {
             --projects-shell-gutter: 20px;
+          }
+        }
+
+        @media (max-width: 520px) {
+          .project-detail-content-footer {
+            grid-column: auto !important;
+            width: 100%;
+            margin-right: 0;
+            margin-left: 0;
           }
         }
       `}</style>
