@@ -20,7 +20,7 @@ export default function ProjectsRouteFooter() {
 
     function findDetailTarget() {
       const nextTarget = document.querySelector<HTMLElement>(
-        ".project-detail-page .project-tab-panel",
+        "main.project-detail-page > .project-detail-shell",
       );
 
       setDetailTarget(nextTarget);
