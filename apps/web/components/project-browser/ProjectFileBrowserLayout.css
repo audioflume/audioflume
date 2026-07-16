@@ -63,7 +63,7 @@
 }
 
 .project-detail-page .project-detail-hero {
-  border-bottom: 1px solid var(--border) !important;
+  border-bottom: 0 !important;
 }
 
 .project-detail-page .project-detail-hero::after {
