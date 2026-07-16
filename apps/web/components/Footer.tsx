@@ -7,6 +7,35 @@ import { useEffect, useRef } from "react";
 import FooterBottom from "@/components/FooterBottom";
 import { usePlayer } from "@/context/PlayerContext";
 
+const sitemapSections = [
+  {
+    label: "Library",
+    links: [
+      { href: "/discover", label: "Discover" },
+      { href: "/music", label: "Music" },
+      { href: "/curated-playlists", label: "Curated playlists" },
+      { href: "/sound-fx", label: "Sound FX" },
+    ],
+  },
+  {
+    label: "Workspace",
+    links: [
+      { href: "/playlists", label: "My playlists" },
+      { href: "/favorites", label: "Favorites" },
+      { href: "/projects", label: "Projects" },
+    ],
+  },
+  {
+    label: "Account",
+    links: [
+      { href: "/account/profile", label: "Profile" },
+      { href: "/account/membership", label: "Membership" },
+      { href: "/account/settings", label: "Settings" },
+      { href: "/account/support", label: "Support" },
+    ],
+  },
+];
+
 const footerHeaderClass =
   "text-[8px] font-normal uppercase tracking-[0.08em] text-[var(--text-muted)]";
 
@@ -65,7 +94,7 @@ export default function Footer({
             : "8px",
         }}
       >
-        <div className="grid gap-8 pb-6 md:grid-cols-[minmax(160px,1fr)_minmax(280px,auto)] md:items-end md:gap-12">
+        <div className="grid gap-8 pb-6 md:grid-cols-[minmax(160px,1fr)_auto] md:items-start md:gap-12">
           <div className="flex -translate-y-1 flex-col gap-3">
             <div className="w-[92px]">
               <span className="filmwave-header-tonal-wordmark filmwave-footer-tonal-wordmark">
@@ -78,30 +107,25 @@ export default function Footer({
             </span>
           </div>
 
-          <div className="grid gap-3 md:justify-items-end md:text-right">
-            <span className={footerHeaderClass}>Made for the edit</span>
+          <nav
+            aria-label="Footer sitemap"
+            className="grid gap-8 sm:grid-cols-3 md:justify-self-end md:gap-12"
+          >
+            {sitemapSections.map((section) => (
+              <div key={section.label} className="grid content-start gap-3">
+                <span className={footerHeaderClass}>{section.label}</span>
 
-            <p className="max-w-[320px] text-[10px] font-normal leading-4 text-[var(--text-muted)]">
-              Find the music, sound, and creative tools that help the cut come together.
-            </p>
-
-            <div className="flex flex-wrap gap-x-5 gap-y-2.5 md:justify-end">
-              <Link href="/music" className={footerLinkClass}>
-                Browse music
-                <span aria-hidden="true">↗</span>
-              </Link>
-
-              <Link href="/curated-playlists" className={footerLinkClass}>
-                Curated playlists
-                <span aria-hidden="true">↗</span>
-              </Link>
-
-              <a href="mailto:hello@filmwave.io" className={footerLinkClass}>
-                Contact
-                <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          </div>
+                <div className="grid gap-2.5">
+                  {section.links.map((link) => (
+                    <Link key={link.href} href={link.href} className={footerLinkClass}>
+                      {link.label}
+                      <span aria-hidden="true">↗</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </nav>
         </div>
 
         <FooterBottom className="filmwave-footer-bottom" />
