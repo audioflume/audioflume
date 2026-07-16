@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import SearchIcon from "@/components/icons/SearchIcon";
 import type { ProjectSyncState } from "@/lib/project-detail/projectDetailUtils";
 import type { Project } from "@/lib/types";
+import { useEffect, useState } from "react";
 
 type ProjectDetailHeaderProps = {
   assetsLoaded: boolean;
@@ -32,6 +33,7 @@ export default function ProjectDetailHeader({
   totalFileCount,
 }: ProjectDetailHeaderProps) {
   const [hasActiveSyncOperations, setHasActiveSyncOperations] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -107,6 +109,46 @@ export default function ProjectDetailHeader({
     };
   }, [project.id]);
 
+  useEffect(() => {
+    const projectPage = document.querySelector<HTMLElement>(
+      ".project-detail-page",
+    );
+
+    if (!projectPage) return;
+
+    function applySearchFilter() {
+      const cleanQuery = searchQuery.trim().toLowerCase();
+      const items = projectPage.querySelectorAll<HTMLElement>(
+        ".project-browser-grid > div, .project-browser-list > :not(.project-browser-list-head)",
+      );
+
+      items.forEach((item) => {
+        const itemText = item.textContent?.toLowerCase() ?? "";
+        item.hidden = Boolean(cleanQuery) && !itemText.includes(cleanQuery);
+      });
+    }
+
+    applySearchFilter();
+
+    const observer = new MutationObserver(applySearchFilter);
+    observer.observe(projectPage, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+
+    return () => {
+      observer.disconnect();
+      projectPage
+        .querySelectorAll<HTMLElement>(
+          ".project-browser-grid > div, .project-browser-list > :not(.project-browser-list-head)",
+        )
+        .forEach((item) => {
+          item.hidden = false;
+        });
+    };
+  }, [searchQuery]);
+
   const visibleSyncState: ProjectSyncState = hasActiveSyncOperations
     ? "syncing"
     : syncState;
@@ -138,6 +180,33 @@ export default function ProjectDetailHeader({
       {project.description && (
         <p className="project-detail-description">{project.description}</p>
       )}
+
+      <div className="project-detail-controls">
+        <label className="project-detail-search">
+          <SearchIcon />
+          <input
+            type="text"
+            value={searchQuery}
+            placeholder="Search project files"
+            onChange={(event) => setSearchQuery(event.target.value)}
+          />
+          {searchQuery.length > 0 && (
+            <button
+              type="button"
+              className="project-detail-search-clear"
+              aria-label="Clear project search"
+              onClick={() => setSearchQuery("")}
+            >
+              ×
+            </button>
+          )}
+        </label>
+
+        <div
+          id="project-detail-toolbar-slot"
+          className="project-detail-toolbar-slot"
+        />
+      </div>
     </section>
   );
 }
