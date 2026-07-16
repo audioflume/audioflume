@@ -84,7 +84,15 @@ export default function ProjectDetailPageClient() {
     [projects, projectId],
   );
 
-  const totalFileCount = projectAssets.length;
+  const totalFileCount = useMemo(
+    () =>
+      new Set(
+        projectAssets
+          .filter((asset) => asset.asset_type !== "folder")
+          .map((asset) => `${asset.asset_type}:${asset.asset_id}`),
+      ).size,
+    [projectAssets],
+  );
   const assetsLoaded = !projectSongsLoading && !projectFoldersLoading;
   const syncState =
     projectSongsLoading || projectFoldersLoading
