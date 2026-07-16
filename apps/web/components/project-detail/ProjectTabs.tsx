@@ -42,6 +42,13 @@ type ProjectSyncSizeResponse = {
   sizeBytes?: number | string | null;
 };
 
+type ProjectSyncOperationsResponse = {
+  operations?: Array<{ id: string }>;
+};
+
+const SYNC_OPERATIONS_IDLE_POLL_MS = 15000;
+const SYNC_OPERATIONS_ACTIVE_POLL_MS = 3000;
+
 function ProjectTabChevronIcon() {
   return (
     <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
@@ -89,6 +96,7 @@ function getPositiveSizeBytes(value: number | string | null | undefined) {
 function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | null }) {
   const params = useParams();
   const projectId = String(params.projectId || "");
+  const [hasActiveSyncOperations, setHasActiveSyncOperations] = useState(false);
   const [readiness, setReadiness] = useState<LocalReadinessState>({
     totalFiles: null,
     readyFiles: null,
@@ -101,6 +109,83 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
     loading: true,
     error: false,
   });
+
+  useEffect(() => {
+    if (!projectId) {
+      setHasActiveSyncOperations(false);
+      return;
+    }
+
+    let cancelled = false;
+    let timeoutId: number | null = null;
+    let abortController: AbortController | null = null;
+
+    function clearPollTimer() {
+      if (!timeoutId) return;
+      window.clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+
+    function scheduleNextPoll(delay: number) {
+      clearPollTimer();
+      if (cancelled || document.hidden) return;
+
+      timeoutId = window.setTimeout(() => {
+        void loadSyncOperations();
+      }, delay);
+    }
+
+    async function loadSyncOperations() {
+      if (cancelled || document.hidden) return;
+
+      abortController?.abort();
+      abortController = new AbortController();
+
+      try {
+        const response = await fetch(
+          `/api/projects/${encodeURIComponent(projectId)}/sync-operations`,
+          { cache: "no-store", signal: abortController.signal },
+        );
+        const data = (await response.json()) as ProjectSyncOperationsResponse;
+        const hasActiveOperations = Boolean(data.operations?.length);
+
+        if (cancelled) return;
+
+        setHasActiveSyncOperations(hasActiveOperations);
+        scheduleNextPoll(
+          hasActiveOperations
+            ? SYNC_OPERATIONS_ACTIVE_POLL_MS
+            : SYNC_OPERATIONS_IDLE_POLL_MS,
+        );
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (cancelled) return;
+
+        setHasActiveSyncOperations(false);
+        scheduleNextPoll(SYNC_OPERATIONS_IDLE_POLL_MS);
+      }
+    }
+
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        clearPollTimer();
+        abortController?.abort();
+        return;
+      }
+
+      void loadSyncOperations();
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    void loadSyncOperations();
+
+    return () => {
+      cancelled = true;
+      clearPollTimer();
+      abortController?.abort();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [projectId]);
 
   useEffect(() => {
     if (!projectId) {
@@ -287,7 +372,16 @@ function ProjectTabUtilityStatus({ syncSizeBytes }: { syncSizeBytes?: number | n
       <span className="project-tab-utility-line project-tab-utility-heading">
         Desktop sync
       </span>
-      <span className="project-tab-utility-line">{countLabel}</span>
+      {hasActiveSyncOperations ? (
+        <span className="project-tab-utility-line" aria-live="polite">
+          <span className="project-sync-status is-syncing">
+            <span>Syncing</span>
+            <span className="project-sync-status-dot" aria-hidden="true" />
+          </span>
+        </span>
+      ) : (
+        <span className="project-tab-utility-line">{countLabel}</span>
+      )}
       <span className="project-tab-utility-line project-tab-utility-version">
         {sizeLabel}
       </span>
