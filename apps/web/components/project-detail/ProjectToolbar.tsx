@@ -1,9 +1,13 @@
+"use client";
+
 import DropdownShell from "@/components/DropdownShell";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import type { ProjectFileView } from "@/lib/project-detail/projectDetailUtils";
 import type { Project } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 function FolderPlusIcon() {
   return (
@@ -39,11 +43,17 @@ export default function ProjectToolbar({
   onToggleFileViewMode,
   onToast,
 }: ProjectToolbarProps) {
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setPortalTarget(document.getElementById("project-detail-toolbar-slot"));
+  }, []);
+
   function closeMenu() {
     onProjectMoreOpenChange(false);
   }
 
-  return (
+  const toolbar = (
     <div className="project-toolbar-actions">
       <button
         type="button"
@@ -136,4 +146,6 @@ export default function ProjectToolbar({
       </DropdownShell>
     </div>
   );
+
+  return portalTarget ? createPortal(toolbar, portalTarget) : null;
 }
