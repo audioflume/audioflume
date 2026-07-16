@@ -50,10 +50,14 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         body:has(.project-detail-page) .projects-route-footer {
-          width: calc(100% - var(--sidebar-width));
-          margin-left: var(--sidebar-width);
-          padding-right: 40px;
-          padding-left: 40px;
+          width: auto;
+          margin-right: var(--fw-music-content-inset-right, 20px);
+          margin-left: calc(
+            var(--sidebar-width) + 168px +
+              var(--fw-music-content-inset-left, 28px)
+          );
+          padding-right: 0;
+          padding-left: 0;
         }
 
         @media (max-width: 720px) {
@@ -71,6 +75,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         @media (max-width: 520px) {
           body:has(.project-detail-page) .projects-route-footer {
             width: 100%;
+            margin-right: 0;
             margin-left: 0;
             padding-right: 18px;
             padding-left: 18px;
