@@ -51,6 +51,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
 
         .project-detail-content-footer {
           grid-column: 2 !important;
+          order: 999;
           box-sizing: border-box;
           min-width: 0;
           width: auto;
