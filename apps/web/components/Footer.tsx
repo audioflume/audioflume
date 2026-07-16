@@ -115,7 +115,7 @@ export default function Footer({
                   href={link.href}
                   className="group grid content-start gap-2 focus-visible:outline-none"
                 >
-                  <span className="inline-flex items-center gap-1.5 text-[10px] leading-none text-[var(--text-secondary)] transition-colors group-hover:text-[var(--text-primary)] group-focus-visible:text-[var(--text-primary)]">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)] transition-colors group-hover:text-[var(--text-primary)] group-focus-visible:text-[var(--text-primary)]">
                     {link.label}
                     <span aria-hidden="true">↗</span>
                   </span>
