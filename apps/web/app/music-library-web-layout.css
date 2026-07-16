@@ -2,6 +2,7 @@
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
   --filmwave-side-filter-content-gap: 0px;
+  display: grid !important;
   grid-template-columns: minmax(0, 1fr) !important;
   column-gap: 0 !important;
   gap: 0 !important;
