@@ -39,7 +39,7 @@ const sitemapLinks = [
 const footerHeaderClass =
   "text-[8px] font-normal uppercase tracking-[0.08em] text-[var(--text-muted)]";
 
-const footerSitemapLinkClass =
+const footerLinkClass =
   "inline-flex w-fit font-normal leading-none text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
 
 type FooterProps = {
@@ -85,7 +85,7 @@ export default function Footer({
 
       <footer
         ref={footerRef}
-        className={`box-border w-full bg-[var(--bg-tertiary)] pt-10 text-[10px] font-normal text-[var(--text-muted)] ${className}`}
+        className={`box-border w-full pt-10 text-[10px] font-normal text-[var(--text-muted)] ${className}`}
         style={{
           paddingBottom: playerPadding
             ? playerVisible
@@ -107,20 +107,20 @@ export default function Footer({
             </span>
           </div>
 
-          <div className="grid gap-6 md:justify-self-end">
-            <div className="grid gap-2 sm:grid-cols-3">
+          <div className="grid gap-7 md:justify-self-end">
+            <div className="grid gap-5 sm:grid-cols-3 sm:gap-8">
               {utilityLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="group grid min-h-[88px] gap-4 bg-[var(--bg-card)] p-4 transition-colors hover:bg-[var(--bg-elevated)] focus-visible:bg-[var(--bg-elevated)] focus-visible:outline-none"
+                  className="group grid content-start gap-2 focus-visible:outline-none"
                 >
-                  <span className="flex items-start justify-between gap-4 text-[10px] leading-none text-[var(--text-secondary)] transition-colors group-hover:text-[var(--text-primary)]">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] leading-none text-[var(--text-secondary)] transition-colors group-hover:text-[var(--text-primary)] group-focus-visible:text-[var(--text-primary)]">
                     {link.label}
                     <span aria-hidden="true">↗</span>
                   </span>
 
-                  <span className="self-end text-[9px] font-normal leading-4 text-[var(--text-muted)]">
+                  <span className="max-w-[150px] text-[9px] font-normal leading-4 text-[var(--text-muted)]">
                     {link.detail}
                   </span>
                 </Link>
@@ -129,7 +129,7 @@ export default function Footer({
 
             <div className="grid gap-4">
               <div className="grid gap-3">
-                <span className={footerHeaderClass}>Navigate</span>
+                <span className={footerHeaderClass}>Site map</span>
 
                 <nav
                   aria-label="Footer sitemap"
@@ -139,7 +139,7 @@ export default function Footer({
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={footerSitemapLinkClass}
+                      className={footerLinkClass}
                     >
                       {link.label}
                     </Link>
@@ -148,10 +148,7 @@ export default function Footer({
               </div>
 
               <div className="flex flex-wrap gap-x-5 gap-y-2 text-[9px] leading-none text-[var(--text-muted)]">
-                <a
-                  href="mailto:hello@filmwave.io"
-                  className={footerSitemapLinkClass}
-                >
+                <a href="mailto:hello@filmwave.io" className={footerLinkClass}>
                   hello@filmwave.io
                 </a>
                 <span>Made in Canada</span>
