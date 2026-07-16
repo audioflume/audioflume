@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer";
 import type { ReactNode } from "react";
+import ProjectsRouteFooter from "./ProjectsRouteFooter";
 
 export default function ProjectsLayout({ children }: { children: ReactNode }) {
   return (
@@ -49,15 +49,9 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           padding-left: var(--projects-content-gutter, clamp(28px, 5.2vw, 82px));
         }
 
-        body:has(.project-detail-page) .projects-route-footer {
-          width: auto;
-          margin-right: var(--fw-music-content-inset-right, 20px);
-          margin-left: calc(
-            var(--sidebar-width) + 168px +
-              var(--fw-music-content-inset-left, 28px)
-          );
-          padding-right: 0;
-          padding-left: 0;
+        .project-detail-content-footer {
+          box-sizing: border-box;
+          width: 100%;
         }
 
         @media (max-width: 720px) {
@@ -71,21 +65,9 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
             --projects-shell-gutter: 20px;
           }
         }
-
-        @media (max-width: 520px) {
-          body:has(.project-detail-page) .projects-route-footer {
-            width: 100%;
-            margin-right: 0;
-            margin-left: 0;
-            padding-right: 18px;
-            padding-left: 18px;
-          }
-        }
       `}</style>
       {children}
-      <div className="projects-route-footer">
-        <Footer />
-      </div>
+      <ProjectsRouteFooter />
     </>
   );
 }
