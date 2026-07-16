@@ -45,8 +45,8 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         .projects-route-footer {
           box-sizing: border-box;
           width: 100%;
-          padding-right: var(--projects-content-gutter, clamp(28px, 5.2vw, 82px));
-          padding-left: var(--projects-content-gutter, clamp(28px, 5.2vw, 82px));
+          padding-right: 32px;
+          padding-left: 32px;
         }
 
         .project-detail-content-footer {
