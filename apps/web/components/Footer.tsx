@@ -92,9 +92,17 @@ export default function Footer({
           border-top: 0 !important;
         }
 
+        main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+          > .fw-music-content-column {
+          display: flex !important;
+          min-height: calc(100vh - var(--filmwave-header-height, 56px)) !important;
+          flex-direction: column !important;
+        }
+
         .music-page-footer-wrap {
           box-sizing: border-box;
           width: auto;
+          margin-top: auto;
           margin-left: calc(var(--filmwave-side-filter-rail-width) + 8px);
         }
 
