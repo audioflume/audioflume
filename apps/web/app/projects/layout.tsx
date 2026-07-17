@@ -161,6 +161,67 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           margin-left: var(--project-detail-content-inset-left, 28px);
         }
 
+        @media (max-width: 940px) {
+          .projects-page .projects-control-bar {
+            grid-template-columns: 150px minmax(0, 1fr) auto !important;
+            align-items: start !important;
+            gap: 12px !important;
+          }
+
+          .projects-page .projects-status-pill {
+            width: 150px !important;
+          }
+
+          .projects-page .projects-control-right {
+            justify-content: flex-end !important;
+            flex-wrap: nowrap !important;
+            gap: 8px !important;
+          }
+
+          .projects-page .projects-sort-button,
+          .projects-page .projects-new-button {
+            width: 42px !important;
+            min-width: 42px !important;
+            padding: 0 !important;
+          }
+
+          .projects-page .projects-sort-button {
+            gap: 0 !important;
+          }
+
+          .projects-page .projects-sort-button > span:not(.sr-only),
+          .projects-page .projects-sort-button > svg {
+            display: none !important;
+          }
+
+          .projects-page .projects-sort-button::before {
+            content: "";
+            display: block;
+            width: 17px;
+            height: 17px;
+            background: currentColor;
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%205V19%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M4.5%2016.5L7%2019L9.5%2016.5%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%207H20%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2012H18%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2017H16%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%205V19%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M4.5%2016.5L7%2019L9.5%2016.5%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%207H20%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2012H18%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2017H16%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+            -webkit-mask-position: center;
+            mask-position: center;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-size: contain;
+            mask-size: contain;
+          }
+
+          .projects-page .projects-new-button {
+            font-size: 0 !important;
+          }
+
+          .projects-page .projects-new-button::before {
+            content: "+";
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1;
+          }
+        }
+
         @media (max-width: 720px) {
           body:has(.projects-page) {
             --projects-content-gutter: 20px;
@@ -170,6 +231,22 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         @media (max-width: 640px) {
           body:has(.projects-page) {
             --projects-shell-gutter: 20px;
+          }
+
+          .projects-page .projects-control-bar {
+            grid-template-columns: 120px minmax(0, 1fr) auto !important;
+            gap: 8px !important;
+          }
+
+          .projects-page .projects-status-pill {
+            width: 120px !important;
+            padding-right: 12px !important;
+            padding-left: 12px !important;
+          }
+
+          .projects-page .projects-control-right {
+            flex-wrap: nowrap !important;
+            gap: 6px !important;
           }
 
           .projects-page .projects-row:not(.projects-row-skeleton) {
