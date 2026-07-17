@@ -44,6 +44,15 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           border-bottom-color: var(--filmwave-ui-divider-color) !important;
         }
 
+        .projects-page .projects-row-main small,
+        .projects-page .projects-skeleton-line {
+          display: none !important;
+        }
+
+        .projects-page .projects-skeleton-copy {
+          gap: 0 !important;
+        }
+
         .projects-page .projects-title {
           color: var(--text-primary) !important;
           font-family: var(--filmwave-ui-title-font-family) !important;
