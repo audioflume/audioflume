@@ -111,7 +111,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   > .fw-toolbar-header-search-row {
-  padding-right: 250px !important;
+  width: auto !important;
+  margin-right: 268px !important;
+  padding-right: 20px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -136,6 +138,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   display: inline-flex !important;
   height: 42px !important;
   min-height: 42px !important;
+  flex-shrink: 0 !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
@@ -150,7 +153,14 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   font-weight: 500 !important;
   line-height: 1 !important;
   cursor: pointer !important;
+  white-space: nowrap !important;
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease !important;
+}
+
+.fw-toolbar-header-actions .filmwave-music-sort-button {
+  width: 128px !important;
+  min-width: 128px !important;
+  flex: 0 0 128px !important;
 }
 
 .fw-toolbar-header-actions .fw-music-header-action:hover,
@@ -210,17 +220,18 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-header-search-row {
   position: fixed !important;
   top: calc(var(--filmwave-header-height, 56px) - 1px) !important;
-  right: 0 !important;
+  right: 268px !important;
   left: var(--filmwave-side-filter-rail-width) !important;
   z-index: var(--filmwave-z-search-filter, 60) !important;
   width: auto !important;
   height: 42px !important;
+  margin-right: 0 !important;
   border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
   border-radius: 0 !important;
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
   box-shadow: none !important;
-  padding: 0 250px 0 14px !important;
+  padding: 0 14px !important;
   animation: fw-music-search-slide-in 160ms ease-out;
 }
 
@@ -248,7 +259,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
     > .fw-music-content-column
     > .fw-toolbar-sticky
     > .fw-toolbar-header-search-row {
-    padding-right: 122px !important;
+    width: auto !important;
+    margin-right: 122px !important;
+    padding-right: 20px !important;
   }
 
   main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -263,6 +276,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-toolbar-header-actions .filmwave-music-sort-button {
     width: 42px !important;
     min-width: 42px !important;
+    flex: 0 0 42px !important;
     padding: 0 !important;
     gap: 0 !important;
   }
@@ -293,7 +307,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
     > .fw-music-content-column
     > .fw-toolbar-sticky.is-scroll-revealed
     > .fw-toolbar-header-search-row {
-    padding-right: 122px !important;
+    right: 122px !important;
+    margin-right: 0 !important;
+    padding-right: 14px !important;
   }
 
   main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
