@@ -45,7 +45,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-row:not(.projects-row-skeleton) {
-          grid-template-columns: minmax(0, 1fr) minmax(84px, 120px) 32px !important;
+          grid-template-columns: minmax(0, 1fr) minmax(84px, 120px) 50px !important;
           gap: 0 !important;
         }
 
@@ -173,7 +173,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           }
 
           .projects-page .projects-row:not(.projects-row-skeleton) {
-            grid-template-columns: minmax(0, 1fr) minmax(70px, 96px) 32px !important;
+            grid-template-columns: minmax(0, 1fr) minmax(70px, 96px) 50px !important;
             gap: 0 !important;
             padding: 0 18px !important;
           }
