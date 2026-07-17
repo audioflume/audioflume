@@ -53,7 +53,11 @@ export default function PlaylistDetailBackButton() {
     <>
       <style>{`
         .playlist-detail-page .playlist-detail-shell {
+          --playlist-detail-control-inset-left: var(--fw-music-content-inset-left, 28px);
+          --playlist-detail-control-inset-right: var(--fw-music-content-inset-right, 20px);
           grid-template-columns: 82px minmax(0, 1fr) 42px !important;
+          padding-left: var(--playlist-detail-control-inset-left) !important;
+          padding-right: var(--playlist-detail-control-inset-right) !important;
         }
 
         .playlist-detail-page .playlist-detail-browser-back {
@@ -79,6 +83,41 @@ export default function PlaylistDetailBackButton() {
         .playlist-detail-page .playlist-detail-top-actions > button:last-child {
           grid-column: 3 !important;
           grid-row: 1 !important;
+        }
+
+        .playlist-detail-page .playlist-detail-hero,
+        .playlist-detail-page .playlist-detail-quick-row,
+        .playlist-detail-page .playlist-detail-section,
+        .playlist-detail-page .playlist-detail-shell > .playlist-detail-empty {
+          margin-left: calc(
+            var(--playlist-detail-page-gutter) -
+              var(--playlist-detail-control-inset-left)
+          ) !important;
+          margin-right: calc(
+            var(--playlist-detail-page-gutter) -
+              var(--playlist-detail-control-inset-right)
+          ) !important;
+        }
+
+        .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
+          margin-left: calc(
+            32px - var(--playlist-detail-control-inset-left)
+          ) !important;
+          margin-right: calc(
+            32px - var(--playlist-detail-control-inset-right)
+          ) !important;
+        }
+
+        @media (max-width: 720px) {
+          .playlist-detail-page .playlist-detail-shell {
+            --playlist-detail-control-inset-left: 20px;
+            --playlist-detail-control-inset-right: 20px;
+          }
+
+          .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
+            margin-left: 12px !important;
+            margin-right: 12px !important;
+          }
         }
       `}</style>
       <button
