@@ -126,54 +126,23 @@ export function MusicLibraryToolbar({
     clearFiltersFromCount(event);
   }
 
-  const headerSearch = (
-    <HeaderSearchBar
-      searchValue={searchValue}
-      searchPlaceholder={searchPlaceholder}
-      onSearchChange={onSearchChange}
-      searchInputRef={searchInputRef}
-      searchIcon={searchIcon}
-      style={{ minWidth: 0 }}
-    />
-  );
-
   return (
     <div
       className={`fw-toolbar-sticky${isStickyHeaderSearch ? " fw-header-search-shell" : ""}${className ? ` ${className}` : ""}`}
       style={stickyTop !== undefined ? { top: stickyTop } : undefined}
     >
-      {isStickyHeaderSearch && headerActions ? (
-        <div
-          className="fw-toolbar-header-layout"
-          style={{
-            gridColumn: 2,
-            gridRow: 1,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) auto",
-            alignItems: "center",
-            gap: 12,
-            boxSizing: "border-box",
-            minWidth: 0,
-            width: "100%",
-            height: "100%",
-            padding: "0 20px",
-          }}
-        >
-          <div style={{ minWidth: 0, width: "100%" }}>{headerSearch}</div>
-          <div
-            className="fw-toolbar-header-actions"
-            style={{
-              display: "flex",
-              flexShrink: 0,
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            {headerActions}
-          </div>
-        </div>
-      ) : (
-        isStickyHeaderSearch && headerSearch
+      {isStickyHeaderSearch && (
+        <HeaderSearchBar
+          searchValue={searchValue}
+          searchPlaceholder={searchPlaceholder}
+          onSearchChange={onSearchChange}
+          searchInputRef={searchInputRef}
+          searchIcon={searchIcon}
+        />
+      )}
+
+      {isStickyHeaderSearch && headerActions && (
+        <div className="fw-toolbar-header-actions">{headerActions}</div>
       )}
 
       {renderToolbarChrome && (
