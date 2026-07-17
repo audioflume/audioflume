@@ -20,7 +20,41 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
         body:has(.playlist-detail-page) {
           --playlist-detail-page-gutter: clamp(28px, 5.2vw, 82px);
-          --playlist-detail-featured-cover-size: clamp(190px, 18vw, 280px);
+          --playlist-detail-featured-card-gap: clamp(10px, 1.25vw, 18px);
+          --playlist-detail-featured-hero-height: clamp(500px, 69vh, 760px);
+          --playlist-detail-featured-padding-top: calc(
+            var(--filmwave-header-height, 75px) + 86px
+          );
+          --playlist-detail-featured-padding-bottom: 76px;
+          --playlist-detail-featured-cover-size: calc(
+            (
+                100vw - var(--playlist-detail-page-gutter) -
+                  var(--playlist-detail-page-gutter) -
+                  var(--playlist-detail-featured-card-gap) -
+                  var(--playlist-detail-featured-card-gap) -
+                  var(--playlist-detail-featured-card-gap) -
+                  var(--playlist-detail-featured-card-gap)
+              ) /
+              5
+          );
+          --playlist-detail-featured-content-top: calc(
+            var(--playlist-detail-featured-padding-top) +
+              (
+                  var(--playlist-detail-featured-hero-height) -
+                    var(--playlist-detail-featured-padding-top) -
+                    var(--playlist-detail-featured-padding-bottom) -
+                    var(--playlist-detail-featured-cover-size)
+                ) /
+                2
+          );
+          --playlist-detail-featured-flow-top: 120px;
+          --playlist-detail-featured-offset: max(
+            0px,
+            calc(
+              var(--playlist-detail-featured-content-top) -
+                var(--playlist-detail-featured-flow-top)
+            )
+          );
         }
 
         .playlists-route-shell > .playlists-page {
@@ -185,16 +219,20 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           min-height: 0;
           align-items: center !important;
           gap: clamp(24px, 2.8vw, 46px) !important;
-          margin-top: 12px;
+          margin-top: 0;
           overflow: visible;
           background: transparent;
           color: var(--text-primary);
-          padding: 24px 0 30px !important;
+          padding:
+            var(--playlist-detail-featured-offset)
+            0
+            30px !important;
         }
 
         .playlist-detail-page .playlist-detail-cover {
           position: relative;
           z-index: 1;
+          display: block !important;
           width: var(--playlist-detail-featured-cover-size) !important;
           height: var(--playlist-detail-featured-cover-size) !important;
           min-height: 0 !important;
@@ -259,7 +297,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         .playlist-detail-page .playlist-detail-actions > button {
           display: inline-flex !important;
           height: 36px !important;
-          min-width: 150px;
+          min-width: 170px;
           align-items: center !important;
           justify-content: center !important;
           gap: 8px !important;
@@ -308,9 +346,45 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           padding-top: 64px !important;
         }
 
+        @media (max-width: 1280px) {
+          body:has(.playlist-detail-page) {
+            --playlist-detail-featured-cover-size: calc(
+              (
+                  100vw - var(--playlist-detail-page-gutter) -
+                    var(--playlist-detail-page-gutter) -
+                    var(--playlist-detail-featured-card-gap) -
+                    var(--playlist-detail-featured-card-gap) -
+                    var(--playlist-detail-featured-card-gap)
+                ) /
+                4
+            );
+          }
+        }
+
+        @media (max-width: 1080px) {
+          .playlist-detail-page .playlist-detail-hero {
+            gap: 24px !important;
+          }
+        }
+
+        @media (max-width: 980px) {
+          body:has(.playlist-detail-page) {
+            --playlist-detail-featured-cover-size: calc(
+              (
+                  100vw - var(--playlist-detail-page-gutter) -
+                    var(--playlist-detail-page-gutter) -
+                    var(--playlist-detail-featured-card-gap) -
+                    var(--playlist-detail-featured-card-gap)
+                ) /
+                3
+            );
+            --playlist-detail-featured-hero-height: 590px;
+          }
+        }
+
         @media (max-width: 760px) {
           body:has(.playlist-detail-page) {
-            --playlist-detail-featured-cover-size: min(70vw, 280px);
+            --playlist-detail-featured-flow-top: 132px;
           }
 
           .playlist-detail-page .playlist-detail-shell {
@@ -334,18 +408,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
             grid-row: 2;
           }
 
-          .playlist-detail-page .playlist-detail-hero {
-            min-height: 0;
-            flex-direction: column;
-            align-items: flex-start !important;
-            padding: 20px 0 30px !important;
-          }
-
-          .playlist-detail-page .playlist-detail-hero > .min-w-0 {
-            width: 100%;
-            transform: none;
-          }
-
           .playlist-detail-page .playlist-detail-actions {
             flex-wrap: wrap;
           }
@@ -358,10 +420,26 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
           body:has(.playlist-detail-page) {
             --playlist-detail-page-gutter: 20px;
+            --playlist-detail-featured-cover-size: calc(
+              (
+                  100vw - var(--playlist-detail-page-gutter) -
+                    var(--playlist-detail-page-gutter) -
+                    var(--playlist-detail-featured-card-gap)
+                ) /
+                2
+            );
+            --playlist-detail-featured-padding-top: calc(
+              var(--filmwave-header-height, 75px) + 78px
+            );
+            --playlist-detail-featured-padding-bottom: 64px;
           }
 
           .playlist-detail-page .playlist-detail-title {
             font-size: 26px !important;
+          }
+
+          .playlist-detail-page .playlist-detail-actions > button {
+            min-width: 160px;
           }
 
           .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
@@ -382,6 +460,28 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           .playlist-detail-page .playlist-detail-actions > button {
             min-width: 0;
             flex: 1 1 0;
+          }
+        }
+
+        @media (max-width: 560px) {
+          body:has(.playlist-detail-page) {
+            --playlist-detail-featured-padding-top: calc(
+              var(--filmwave-header-height, 75px) + 86px
+            );
+            --playlist-detail-featured-content-top:
+              var(--playlist-detail-featured-padding-top);
+          }
+
+          .playlist-detail-page .playlist-detail-hero {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 22px !important;
+          }
+
+          .playlist-detail-page .playlist-detail-hero > .min-w-0 {
+            width: 100%;
+            max-width: none;
+            transform: none;
           }
         }
       `}</style>
