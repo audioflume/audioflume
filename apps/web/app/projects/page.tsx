@@ -90,22 +90,10 @@ function ChevronIcon() {
   );
 }
 
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M7.4 5.4a1.2 1.2 0 0 1 1.2-1.2h8.8a1.2 1.2 0 0 1 1.2 1.2v8.8a1.2 1.2 0 1 1-2.4 0V8.3l-9.05 9.05a1.2 1.2 0 0 1-1.7-1.7L14.5 6.6H8.6a1.2 1.2 0 0 1-1.2-1.2Z"
-      />
-    </svg>
-  );
-}
-
 type ProjectRowProps = {
   project: Project;
   isRenaming: boolean;
   renameName: string;
-  isSaving: boolean;
   menuOpen: boolean;
   onMenuOpenChange: (open: boolean) => void;
   onRenameNameChange: (name: string) => void;
@@ -120,7 +108,6 @@ function ProjectRow({
   project,
   isRenaming,
   renameName,
-  isSaving,
   menuOpen,
   onMenuOpenChange,
   onRenameNameChange,
@@ -148,24 +135,29 @@ function ProjectRow({
               autoFocus
               aria-label={`Rename ${project.name}`}
               onFocus={(event) => event.currentTarget.select()}
+              onBlur={(event) => {
+                if (event.currentTarget.dataset.cancelRename === "true") {
+                  delete event.currentTarget.dataset.cancelRename;
+                  onCancelRename();
+                  return;
+                }
+
+                onSaveRename(project);
+              }}
               onChange={(event) => onRenameNameChange(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   event.preventDefault();
-                  onSaveRename(project);
+                  event.currentTarget.blur();
                 }
 
-                if (event.key === "Escape") onCancelRename();
+                if (event.key === "Escape") {
+                  event.preventDefault();
+                  event.currentTarget.dataset.cancelRename = "true";
+                  event.currentTarget.blur();
+                }
               }}
             />
-            <button
-              type="button"
-              className="projects-row-rename-save"
-              disabled={!renameName.trim() || isSaving}
-              onClick={() => onSaveRename(project)}
-            >
-              {isSaving ? "Saving" : "Save"}
-            </button>
           </div>
         ) : (
           <span>{project.name}</span>
@@ -255,11 +247,6 @@ function ProjectRow({
             </button>
           </DropdownShell>
         )}
-
-        <Link href={`/projects/${project.id}`} className="projects-row-view">
-          View Project
-          <ArrowIcon />
-        </Link>
       </div>
     </div>
   );
@@ -333,7 +320,11 @@ export default function ProjectsPage() {
     if (savingProjectId || renamingProjectId !== project.id) return;
 
     const cleanName = renameName.trim();
-    if (!cleanName) return;
+
+    if (!cleanName) {
+      cancelRename();
+      return;
+    }
 
     if (cleanName === project.name) {
       cancelRename();
@@ -434,15 +425,11 @@ export default function ProjectsPage() {
         .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 0; }
         .projects-row-main > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
         .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 2px 0 0; font-size: 11.5px; line-height: 1.35; color: var(--text-subtle); }
-        .projects-row-rename { display: flex; min-width: 0; align-items: center; gap: 8px; }
+        .projects-row-rename { display: flex; min-width: 0; align-items: center; }
         .projects-row-rename-input { box-sizing: border-box; width: min(360px, 100%); min-width: 0; height: 32px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 10px; color: var(--text-primary); font-family: inherit; font-size: 13.5px; font-weight: 500; outline: none; }
         .projects-row-rename-input:focus { border-color: var(--text-primary); }
-        .projects-row-rename-save { display: inline-flex; height: 32px; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 12px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 11px; font-weight: 500; }
-        .projects-row-rename-save:disabled { cursor: default; opacity: 0.55; }
         .projects-row-actions { display: inline-flex; justify-self: end; align-items: center; gap: 8px; }
         .projects-row-actions > .project-toolbar-icon-button { flex: 0 0 auto; }
-        .projects-row-view { display: inline-flex; width: fit-content; min-width: 112px; height: 32px; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-family: inherit; font-size: 11px; font-weight: 500; text-decoration: none; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-        .projects-row-view:hover, .projects-row:hover .projects-row-view { border-color: var(--text-primary); background: var(--text-primary); color: var(--bg-primary); }
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
         .projects-empty h2, .projects-error h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
         .projects-empty p, .projects-error p { max-width: 360px; font-size: 13px; line-height: 1.5; color: var(--text-muted); }
@@ -450,12 +437,12 @@ export default function ProjectsPage() {
         .projects-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .projects-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: projects-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes projects-skeleton-shimmer { 100% { transform: translateX(100%); } }
-        .projects-row-skeleton { grid-template-columns: 42px minmax(0, 1fr) 128px; cursor: default; pointer-events: none; }
+        .projects-row-skeleton { grid-template-columns: 42px minmax(0, 1fr) 42px; cursor: default; pointer-events: none; }
         .projects-skeleton-icon { width: 42px; height: 42px; }
         .projects-skeleton-copy { display: flex; min-width: 0; flex-direction: column; gap: 9px; }
         .projects-skeleton-title { width: min(220px, 52%); height: 9px; }
         .projects-skeleton-line { width: min(360px, 78%); height: 8px; }
-        .projects-skeleton-button { justify-self: end; width: 128px; height: 32px; }
+        .projects-skeleton-button { justify-self: end; width: 42px; height: 42px; }
         @media (max-width: 940px) {
           .projects-shell { padding-left: 32px; padding-right: 32px; }
           .projects-control-bar { grid-template-columns: 1fr; gap: 12px; }
@@ -636,7 +623,6 @@ export default function ProjectsPage() {
                   renameName={
                     renamingProjectId === project.id ? renameName : project.name
                   }
-                  isSaving={savingProjectId === project.id}
                   menuOpen={openProjectMenuId === project.id}
                   onMenuOpenChange={(open) =>
                     setOpenProjectMenuId(open ? project.id : null)
