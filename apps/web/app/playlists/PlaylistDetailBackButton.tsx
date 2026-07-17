@@ -53,6 +53,11 @@ export default function PlaylistDetailBackButton() {
     <button
       type="button"
       className="playlist-detail-browser-back"
+      style={{
+        top: "22px",
+        right: "auto",
+        left: "var(--playlist-detail-page-gutter)",
+      }}
       onClick={() => router.back()}
       aria-label="Go back to the previous page"
     >
