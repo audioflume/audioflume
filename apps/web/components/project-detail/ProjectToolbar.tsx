@@ -38,7 +38,7 @@ export default function ProjectToolbar({
   projectMoreOpen,
   onCreateFolder,
   onDeleteProject,
-  onOpenEdit,
+  onOpenEdit: _onOpenEdit,
   onProjectMoreOpenChange,
   onToggleFileViewMode,
   onToast,
@@ -54,13 +54,11 @@ export default function ProjectToolbar({
   }
 
   function startRename() {
-    const renameEvent = new CustomEvent("filmwave:project-rename-request", {
-      cancelable: true,
-      detail: { projectId: project.id },
-    });
-
-    const shouldUseLegacyEdit = window.dispatchEvent(renameEvent);
-    if (shouldUseLegacyEdit) onOpenEdit();
+    window.dispatchEvent(
+      new CustomEvent("filmwave:project-rename-request", {
+        detail: { projectId: project.id },
+      }),
+    );
   }
 
   const toolbar = (
