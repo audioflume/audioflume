@@ -96,6 +96,7 @@ export default function Footer({
           box-sizing: border-box;
           width: auto !important;
           margin-left: var(--filmwave-side-filter-rail-width);
+          padding-top: 72px !important;
         }
 
         .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.has-selected-filter-section)
