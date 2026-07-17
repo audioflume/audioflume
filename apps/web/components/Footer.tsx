@@ -95,19 +95,14 @@ export default function Footer({
         .music-page-footer-wrap {
           box-sizing: border-box;
           width: auto;
-          margin-right: var(--project-detail-content-inset-right, 20px);
-          margin-left: calc(
-            var(--filmwave-side-filter-rail-width) +
-              var(--project-detail-content-inset-left, 28px)
-          );
+          margin-left: calc(var(--filmwave-side-filter-rail-width) + 8px);
         }
 
         .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.has-selected-filter-section)
           ~ .music-page-footer-wrap {
           margin-left: calc(
             var(--filmwave-side-filter-rail-width) +
-              var(--filmwave-side-filter-detail-width) +
-              var(--project-detail-content-inset-left, 28px)
+              var(--filmwave-side-filter-detail-width) + 8px
           );
         }
       `}</style>
