@@ -37,11 +37,32 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-list {
-          border-top-color: var(--filmwave-ui-divider-color) !important;
+          border-top-color: var(--border-subtle) !important;
         }
 
         .projects-page .projects-row {
-          border-bottom-color: var(--filmwave-ui-divider-color) !important;
+          border-bottom-color: var(--border-subtle) !important;
+        }
+
+        .projects-page .projects-row:not(.projects-row-skeleton) {
+          grid-template-columns: minmax(0, 1fr) minmax(84px, 120px) 32px !important;
+          gap: 0 !important;
+        }
+
+        .projects-page .projects-row-count {
+          grid-column: 2;
+          justify-self: end;
+          text-align: right;
+          font-size: 11.5px;
+          font-weight: 400;
+          line-height: 1.35;
+          color: var(--text-subtle);
+        }
+
+        .projects-page .projects-row-actions {
+          grid-column: 3;
+          justify-self: end !important;
+          padding-left: 0 !important;
         }
 
         .projects-page .projects-row-main small,
@@ -64,22 +85,23 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
 
         .projects-page .projects-row-actions .project-toolbar-icon-button {
           display: inline-flex !important;
-          width: 42px !important;
-          min-width: 42px !important;
-          height: 42px !important;
+          width: 32px !important;
+          min-width: 32px !important;
+          height: 32px !important;
           align-items: center !important;
           justify-content: center !important;
-          border: 1px solid var(--border) !important;
+          border: 0 !important;
           border-radius: 0 !important;
-          background: var(--bg-secondary) !important;
+          background: transparent !important;
           padding: 0 !important;
-          color: var(--text-secondary) !important;
+          color: var(--icon-color) !important;
+          opacity: 1 !important;
         }
 
         .projects-page .projects-row-actions .project-toolbar-icon-button:hover,
         .projects-page .projects-row-actions .project-toolbar-icon-button.is-active {
-          border-color: var(--border-hover) !important;
-          background: var(--bg-hover) !important;
+          border-color: transparent !important;
+          background: var(--icon-button-hover) !important;
           color: var(--text-primary) !important;
         }
 
@@ -148,6 +170,12 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         @media (max-width: 640px) {
           body:has(.projects-page) {
             --projects-shell-gutter: 20px;
+          }
+
+          .projects-page .projects-row:not(.projects-row-skeleton) {
+            grid-template-columns: minmax(0, 1fr) minmax(70px, 96px) 32px !important;
+            gap: 0 !important;
+            padding: 0 18px !important;
           }
         }
 
