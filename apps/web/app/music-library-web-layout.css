@@ -359,3 +359,35 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   ~ .fw-song-list {
   margin-left: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
 }
+
+/* The music footer is a direct sibling of the content column. Keep it below the
+   complete song list and aligned to the same content area. */
+main > section:has(> .fw-music-content-column + footer) {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+main > section:has(> .fw-music-content-column + footer) > .fw-music-content-column {
+  width: 100% !important;
+  flex: 0 0 auto !important;
+  order: 1;
+}
+
+main > section:has(> .fw-music-content-column + footer) > footer {
+  box-sizing: border-box;
+  display: block !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+  order: 2;
+  margin-right: var(--fw-music-content-inset-right, 28px);
+  margin-left: calc(var(--filmwave-side-filter-rail-width) + var(--fw-music-content-inset-right, 28px));
+}
+
+main > section:has(> .fw-music-content-column + footer):has(.fw-filter-panel-wrap.has-selected-filter-section)
+  > footer {
+  margin-left: calc(
+    var(--filmwave-side-filter-rail-width) +
+      var(--filmwave-side-filter-detail-width) +
+      var(--fw-music-content-inset-right, 28px)
+  );
+}
