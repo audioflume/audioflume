@@ -185,11 +185,11 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           min-height: 0;
           align-items: center !important;
           gap: clamp(24px, 2.8vw, 46px) !important;
-          margin-top: 32px;
+          margin-top: 12px;
           overflow: visible;
           background: transparent;
           color: var(--text-primary);
-          padding: 36px 0 30px !important;
+          padding: 24px 0 30px !important;
         }
 
         .playlist-detail-page .playlist-detail-cover {
@@ -338,7 +338,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
             min-height: 0;
             flex-direction: column;
             align-items: flex-start !important;
-            padding: 32px 0 30px !important;
+            padding: 20px 0 30px !important;
           }
 
           .playlist-detail-page .playlist-detail-hero > .min-w-0 {
