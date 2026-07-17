@@ -18,6 +18,10 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           --playlists-shell-gutter: 32px;
         }
 
+        body:has(.playlist-detail-page) {
+          --playlist-detail-page-gutter: clamp(28px, 5.2vw, 82px);
+        }
+
         .playlists-route-shell > .playlists-page {
           display: flex !important;
           min-height: 0 !important;
@@ -66,6 +70,8 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           column-gap: 18px;
           align-items: center;
           padding-top: 22px;
+          padding-right: var(--playlist-detail-page-gutter) !important;
+          padding-left: var(--playlist-detail-page-gutter) !important;
         }
 
         .playlist-detail-page .playlist-detail-top-actions {
@@ -174,6 +180,43 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           grid-row: 2;
         }
 
+        .playlist-detail-page .playlist-detail-cover {
+          border-radius: 0 !important;
+        }
+
+        .playlist-detail-page .playlist-detail-quick-row,
+        .playlist-detail-page .playlist-detail-section {
+          margin-right: 0 !important;
+          margin-left: 0 !important;
+        }
+
+        .playlist-detail-page .playlist-detail-quick-row {
+          padding-right: 0 !important;
+          padding-left: 0 !important;
+        }
+
+        .playlist-detail-page .playlist-detail-section > div {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .playlist-detail-page .playlist-detail-section .filmwave-song-card {
+          --filmwave-song-card-padding-y: 12px !important;
+          --filmwave-song-card-padding-left: 12px !important;
+          --filmwave-song-card-padding-right: 16px !important;
+          --filmwave-song-card-hover-bg: var(--bg-hover);
+          border-bottom: 0 !important;
+          border-radius: 0 !important;
+          padding: 12px 16px 12px 12px !important;
+        }
+
+        .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
+          margin-right: calc(32px - var(--playlist-detail-page-gutter)) !important;
+          margin-left: calc(32px - var(--playlist-detail-page-gutter)) !important;
+          padding-top: 64px !important;
+        }
+
         .playlist-detail-page .playlist-detail-actions > button,
         .playlist-detail-page .playlist-detail-skeleton-button {
           border-radius: 0 !important;
@@ -211,6 +254,15 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         @media (max-width: 720px) {
           body:has(.playlists-page) {
             --playlists-content-gutter: 20px;
+          }
+
+          body:has(.playlist-detail-page) {
+            --playlist-detail-page-gutter: 20px;
+          }
+
+          .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
+            margin-right: 12px !important;
+            margin-left: 12px !important;
           }
         }
 
