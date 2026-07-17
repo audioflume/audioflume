@@ -91,7 +91,13 @@ export default function ProjectDetailHeader({
   async function handleSaveRename() {
     const cleanName = renameName.trim();
 
-    if (!cleanName || isSavingRename) return;
+    if (isSavingRename) return;
+
+    if (!cleanName) {
+      setRenameName(project.name);
+      setIsRenaming(false);
+      return;
+    }
 
     if (cleanName === project.name) {
       setIsRenaming(false);
@@ -154,7 +160,6 @@ export default function ProjectDetailHeader({
           display: flex;
           min-width: 0;
           align-items: center;
-          gap: 8px;
         }
 
         .project-detail-page .project-detail-rename-input {
@@ -177,28 +182,6 @@ export default function ProjectDetailHeader({
 
         .project-detail-page .project-detail-rename-input:focus {
           border-color: var(--text-primary);
-        }
-
-        .project-detail-page .project-detail-rename-save {
-          display: inline-flex;
-          height: 32px;
-          flex: 0 0 auto;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid var(--text-primary);
-          border-radius: 0;
-          background: var(--text-primary);
-          padding: 0 12px;
-          color: var(--bg-primary);
-          cursor: pointer;
-          font-family: inherit;
-          font-size: 11px;
-          font-weight: 500;
-        }
-
-        .project-detail-page .project-detail-rename-save:disabled {
-          cursor: default;
-          opacity: 0.55;
         }
 
         .project-detail-page .project-detail-description {
@@ -234,27 +217,30 @@ export default function ProjectDetailHeader({
                 autoFocus
                 aria-label="Project name"
                 onFocus={(event) => event.currentTarget.select()}
+                onBlur={(event) => {
+                  if (event.currentTarget.dataset.cancelRename === "true") {
+                    delete event.currentTarget.dataset.cancelRename;
+                    setRenameName(project.name);
+                    setIsRenaming(false);
+                    return;
+                  }
+
+                  void handleSaveRename();
+                }}
                 onChange={(event) => setRenameName(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
                     event.preventDefault();
-                    void handleSaveRename();
+                    event.currentTarget.blur();
                   }
 
                   if (event.key === "Escape") {
-                    setRenameName(project.name);
-                    setIsRenaming(false);
+                    event.preventDefault();
+                    event.currentTarget.dataset.cancelRename = "true";
+                    event.currentTarget.blur();
                   }
                 }}
               />
-              <button
-                type="button"
-                className="project-detail-rename-save"
-                disabled={!renameName.trim() || isSavingRename}
-                onClick={() => void handleSaveRename()}
-              >
-                {isSavingRename ? "Saving" : "Save"}
-              </button>
             </div>
           ) : (
             <h1 className="project-detail-title">{project.name}</h1>
