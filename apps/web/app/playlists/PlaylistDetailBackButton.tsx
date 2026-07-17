@@ -53,19 +53,32 @@ export default function PlaylistDetailBackButton() {
     <>
       <style>{`
         .playlist-detail-page .playlist-detail-shell {
-          grid-template-columns: minmax(0, 1fr) 42px 82px !important;
+          grid-template-columns: 82px minmax(0, 1fr) 42px !important;
         }
 
         .playlist-detail-page .playlist-detail-browser-back {
           position: static !important;
-          grid-column: 3 !important;
+          top: auto !important;
+          right: auto !important;
+          left: auto !important;
+          grid-column: 1 !important;
           grid-row: 1 !important;
           width: 82px !important;
           min-width: 82px !important;
           height: 42px !important;
-          justify-self: end;
+          justify-self: start;
           margin: 0 !important;
           padding: 0 14px !important;
+        }
+
+        .playlist-detail-page .playlist-detail-search-sticky {
+          grid-column: 2 !important;
+          grid-row: 1 !important;
+        }
+
+        .playlist-detail-page .playlist-detail-top-actions > button:last-child {
+          grid-column: 3 !important;
+          grid-row: 1 !important;
         }
       `}</style>
       <button
