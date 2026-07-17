@@ -53,6 +53,43 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           line-height: var(--filmwave-ui-title-line-height) !important;
         }
 
+        .projects-page .projects-row-actions .project-toolbar-icon-button {
+          display: inline-flex !important;
+          width: 42px !important;
+          min-width: 42px !important;
+          height: 42px !important;
+          align-items: center !important;
+          justify-content: center !important;
+          border: 1px solid var(--border) !important;
+          border-radius: 0 !important;
+          background: var(--bg-secondary) !important;
+          padding: 0 !important;
+          color: var(--text-secondary) !important;
+        }
+
+        .projects-page .projects-row-actions .project-toolbar-icon-button:hover,
+        .projects-page .projects-row-actions .project-toolbar-icon-button.is-active {
+          border-color: var(--border-hover) !important;
+          background: var(--bg-hover) !important;
+          color: var(--text-primary) !important;
+        }
+
+        .projects-page .projects-row-rename-input,
+        .project-detail-page .project-detail-rename-input {
+          border: 0 !important;
+          background: transparent !important;
+          padding: 0 !important;
+          box-shadow: none !important;
+          outline: none !important;
+        }
+
+        .projects-page .projects-row-rename-input:focus,
+        .project-detail-page .project-detail-rename-input:focus {
+          border-color: transparent !important;
+          box-shadow: none !important;
+          outline: none !important;
+        }
+
         .projects-route-footer {
           box-sizing: border-box;
           width: 100%;
