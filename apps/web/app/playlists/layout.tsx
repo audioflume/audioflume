@@ -47,7 +47,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
                 ) /
                 2
           );
-          --playlist-detail-featured-flow-top: 120px;
+          --playlist-detail-featured-flow-top: 162px;
           --playlist-detail-featured-offset: max(
             0px,
             calc(
@@ -384,7 +384,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
         @media (max-width: 760px) {
           body:has(.playlist-detail-page) {
-            --playlist-detail-featured-flow-top: 132px;
+            --playlist-detail-featured-flow-top: 174px;
           }
 
           .playlist-detail-page .playlist-detail-shell {
