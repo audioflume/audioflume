@@ -92,15 +92,15 @@ export default function Footer({
           border-top: 0 !important;
         }
 
-        .music-page-footer {
+        .music-page-footer-wrap {
           box-sizing: border-box;
-          width: auto !important;
+          width: auto;
           margin-left: var(--filmwave-side-filter-rail-width);
-          padding-top: 72px !important;
+          padding-top: 32px;
         }
 
         .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.has-selected-filter-section)
-          ~ .music-page-footer {
+          ~ .music-page-footer-wrap {
           margin-left: calc(
             var(--filmwave-side-filter-rail-width) +
               var(--filmwave-side-filter-detail-width)
@@ -110,7 +110,7 @@ export default function Footer({
 
       <footer
         ref={footerRef}
-        className={`box-border w-full pt-10 text-[10px] font-normal text-[var(--text-muted)] ${isMusicPage ? "music-page-footer " : ""}${className}`}
+        className={`box-border w-full pt-10 text-[10px] font-normal text-[var(--text-muted)] ${className}`}
         style={{
           paddingBottom: playerPadding
             ? playerVisible
@@ -187,7 +187,14 @@ export default function Footer({
     </>
   );
 
-  if (isMusicPage) return musicTarget ? createPortal(footer, musicTarget) : null;
+  if (isMusicPage) {
+    return musicTarget
+      ? createPortal(
+          <div className="music-page-footer-wrap">{footer}</div>,
+          musicTarget,
+        )
+      : null;
+  }
 
   return footer;
 }
