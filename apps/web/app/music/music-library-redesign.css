@@ -109,18 +109,39 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-toolbar-header-search-row {
-  width: auto !important;
-  margin-right: 268px !important;
-  padding-right: 20px !important;
+  > .fw-toolbar-sticky:not(.is-scroll-revealed) {
+  grid-template-columns:
+    calc(var(--filmwave-side-filter-rail-width) + 1px)
+    minmax(0, 1fr)
+    auto !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
-  > .fw-toolbar-sticky
-  > .fw-toolbar-header-actions {
+  > .fw-toolbar-sticky:not(.is-scroll-revealed)
+  > .fw-toolbar-header-search-row {
   grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 12px 0 0 !important;
+  padding: 0 0 0 20px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:not(.is-scroll-revealed)
+  > .fw-toolbar-header-search-row
+  > .fw-toolbar-header-search-form {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky:not(.is-scroll-revealed)
+  > .fw-toolbar-header-actions {
+  grid-column: 3 !important;
   grid-row: 1 !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 1) !important;
   display: flex !important;
@@ -257,16 +278,16 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 @media (max-width: 980px) {
   main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
     > .fw-music-content-column
-    > .fw-toolbar-sticky
+    > .fw-toolbar-sticky:not(.is-scroll-revealed)
     > .fw-toolbar-header-search-row {
-    width: auto !important;
-    margin-right: 122px !important;
-    padding-right: 20px !important;
+    min-width: 0 !important;
+    margin-right: 12px !important;
+    padding-right: 0 !important;
   }
 
   main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
     > .fw-music-content-column
-    > .fw-toolbar-sticky
+    > .fw-toolbar-sticky:not(.is-scroll-revealed)
     > .fw-toolbar-header-actions {
     gap: 8px !important;
     margin-right: 12px !important;
