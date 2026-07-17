@@ -180,73 +180,71 @@ function ProjectRow({
       )}
 
       <div className="projects-row-actions">
-        {!isRenaming && (
-          <DropdownShell
-            open={menuOpen}
-            onOpenChange={onMenuOpenChange}
-            placement="bottom-end"
-            offsetAmount={8}
-            collisionPadding={{
-              top: 72,
-              right: 16,
-              bottom: 88,
-              left: 16,
+        <DropdownShell
+          open={menuOpen}
+          onOpenChange={onMenuOpenChange}
+          placement="bottom-end"
+          offsetAmount={8}
+          collisionPadding={{
+            top: 72,
+            right: 16,
+            bottom: 88,
+            left: 16,
+          }}
+          trigger={({ open }) => (
+            <button
+              type="button"
+              className={`project-toolbar-icon-button ${open ? "is-active" : ""}`}
+              aria-label={`More actions for ${project.name}`}
+              aria-expanded={open}
+              title="More"
+            >
+              <MoreIcon />
+            </button>
+          )}
+        >
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              onMenuOpenChange(false);
+              onStartRename(project);
             }}
-            trigger={({ open }) => (
-              <button
-                type="button"
-                className={`project-toolbar-icon-button ${open ? "is-active" : ""}`}
-                aria-label={`More actions for ${project.name}`}
-                aria-expanded={open}
-                title="More"
-              >
-                <MoreIcon />
-              </button>
-            )}
           >
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                onMenuOpenChange(false);
-                onStartRename(project);
-              }}
-            >
-              Rename
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                onMenuOpenChange(false);
-                onToast("Version history coming soon");
-              }}
-            >
-              Version history
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                onMenuOpenChange(false);
-                onToast("Archive project coming soon");
-              }}
-            >
-              Archive project
-            </button>
-            <button
-              type="button"
-              className="danger-hover"
-              role="menuitem"
-              onClick={() => {
-                onMenuOpenChange(false);
-                onDeleteProject(project);
-              }}
-            >
-              Delete project
-            </button>
-          </DropdownShell>
-        )}
+            Rename
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              onMenuOpenChange(false);
+              onToast("Version history coming soon");
+            }}
+          >
+            Version history
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              onMenuOpenChange(false);
+              onToast("Archive project coming soon");
+            }}
+          >
+            Archive project
+          </button>
+          <button
+            type="button"
+            className="danger-hover"
+            role="menuitem"
+            onClick={() => {
+              onMenuOpenChange(false);
+              onDeleteProject(project);
+            }}
+          >
+            Delete project
+          </button>
+        </DropdownShell>
       </div>
     </div>
   );
