@@ -3,20 +3,31 @@ import ProjectsRouteFooter from "./ProjectsRouteFooter";
 
 export default function ProjectsLayout({ children }: { children: ReactNode }) {
   return (
-    <>
+    <div className="projects-route-shell">
       <style>{`
+        .projects-route-shell {
+          display: flex;
+          min-height: 100vh;
+          flex-direction: column;
+        }
+
         body:has(.projects-page) {
           --projects-content-gutter: clamp(28px, 5.2vw, 82px);
           --projects-shell-gutter: 32px;
         }
 
+        .projects-route-shell > .projects-page {
+          min-height: 0 !important;
+          flex: 1 1 auto;
+        }
+
         .projects-page {
           margin-top: var(--filmwave-header-height, 56px) !important;
-          min-height: calc(100vh - var(--filmwave-header-height, 56px)) !important;
+          min-height: 0 !important;
         }
 
         .projects-page .projects-shell {
-          min-height: calc(100vh - var(--filmwave-header-height, 56px)) !important;
+          min-height: 0 !important;
         }
 
         .projects-page .projects-title,
@@ -45,13 +56,36 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         .projects-route-footer {
           box-sizing: border-box;
           width: 100%;
+          margin-top: auto;
           padding-right: 32px;
           padding-left: 32px;
         }
 
+        .project-detail-page > .project-detail-shell {
+          grid-template-rows: auto auto minmax(0, 1fr) auto !important;
+        }
+
+        .project-detail-page .project-detail-hero {
+          grid-row: 1 !important;
+        }
+
+        .project-detail-page .project-sort-row {
+          grid-row: 2 !important;
+        }
+
+        .project-detail-page .project-tab-panel {
+          grid-row: 3 !important;
+        }
+
+        .project-detail-page .project-footer-wrap {
+          display: none !important;
+        }
+
         .project-detail-content-footer {
           grid-column: 2 !important;
+          grid-row: 4 !important;
           order: 999;
+          align-self: end !important;
           box-sizing: border-box;
           min-width: 0;
           width: auto;
@@ -82,6 +116,6 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
       `}</style>
       {children}
       <ProjectsRouteFooter />
-    </>
+    </div>
   );
 }
