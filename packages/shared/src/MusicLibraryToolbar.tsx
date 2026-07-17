@@ -54,6 +54,7 @@ export type MusicLibraryToolbarProps = {
   onToggleFilters: () => void;
   onClearFilters?: () => void;
   actions?: ReactNode;
+  headerActions?: ReactNode;
   chips?: ReactNode;
   stickyTop?: CSSProperties["top"];
   renderToolbarChrome?: boolean;
@@ -72,6 +73,7 @@ export function MusicLibraryToolbar({
   onToggleFilters,
   onClearFilters,
   actions,
+  headerActions,
   chips,
   stickyTop,
   renderToolbarChrome = true,
@@ -137,6 +139,10 @@ export function MusicLibraryToolbar({
           searchInputRef={searchInputRef}
           searchIcon={searchIcon}
         />
+      )}
+
+      {isStickyHeaderSearch && headerActions && (
+        <div className="fw-toolbar-header-actions">{headerActions}</div>
       )}
 
       {renderToolbarChrome && (
