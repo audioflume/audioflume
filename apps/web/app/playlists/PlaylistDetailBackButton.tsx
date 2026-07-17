@@ -50,20 +50,34 @@ export default function PlaylistDetailBackButton() {
   if (!isPlaylistDetail || !target) return null;
 
   return createPortal(
-    <button
-      type="button"
-      className="playlist-detail-browser-back"
-      style={{
-        top: "22px",
-        right: "auto",
-        left: "var(--playlist-detail-page-gutter)",
-      }}
-      onClick={() => router.back()}
-      aria-label="Go back to the previous page"
-    >
-      <BackIcon />
-      <span>Back</span>
-    </button>,
+    <>
+      <style>{`
+        .playlist-detail-page .playlist-detail-shell {
+          grid-template-columns: minmax(0, 1fr) 42px 82px !important;
+        }
+
+        .playlist-detail-page .playlist-detail-browser-back {
+          position: static !important;
+          grid-column: 3 !important;
+          grid-row: 1 !important;
+          width: 82px !important;
+          min-width: 82px !important;
+          height: 42px !important;
+          justify-self: end;
+          margin: 0 !important;
+          padding: 0 14px !important;
+        }
+      `}</style>
+      <button
+        type="button"
+        className="playlist-detail-browser-back"
+        onClick={() => router.back()}
+        aria-label="Go back to the previous page"
+      >
+        <BackIcon />
+        <span>Back</span>
+      </button>
+    </>,
     target,
   );
 }
