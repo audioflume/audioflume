@@ -2,8 +2,9 @@
 
 import CreateProjectModal from "@/components/CreateProjectModal";
 import DropdownShell from "@/components/DropdownShell";
-import EditProjectModal from "@/components/EditProjectModal";
+import MoreIcon from "@/components/icons/MoreIcon";
 import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
+import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
 import type { Project } from "@/lib/types";
@@ -100,36 +101,160 @@ function ArrowIcon() {
   );
 }
 
+type ProjectRowProps = {
+  project: Project;
+  isRenaming: boolean;
+  renameName: string;
+  isSaving: boolean;
+  menuOpen: boolean;
+  onMenuOpenChange: (open: boolean) => void;
+  onRenameNameChange: (name: string) => void;
+  onStartRename: (project: Project) => void;
+  onCancelRename: () => void;
+  onSaveRename: (project: Project) => void;
+  onDeleteProject: (project: Project) => void;
+  onToast: (message: string) => void;
+};
+
 function ProjectRow({
   project,
-  onEdit,
-}: {
-  project: Project;
-  onEdit: (project: Project) => void;
-}) {
-  return (
-    <div className="projects-row">
-      <Link href={`/projects/${project.id}`} className="projects-row-link">
-        <div className="projects-row-icon" aria-hidden="true">
-          <span className="projects-row-icon-inner">
-            <FolderGlyph />
-          </span>
-        </div>
+  isRenaming,
+  renameName,
+  isSaving,
+  menuOpen,
+  onMenuOpenChange,
+  onRenameNameChange,
+  onStartRename,
+  onCancelRename,
+  onSaveRename,
+  onDeleteProject,
+  onToast,
+}: ProjectRowProps) {
+  const projectCopy = (
+    <>
+      <div className="projects-row-icon" aria-hidden="true">
+        <span className="projects-row-icon-inner">
+          <FolderGlyph />
+        </span>
+      </div>
 
-        <div className="projects-row-main">
+      <div className="projects-row-main">
+        {isRenaming ? (
+          <div className="projects-row-rename">
+            <input
+              className="projects-row-rename-input"
+              type="text"
+              value={renameName}
+              autoFocus
+              aria-label={`Rename ${project.name}`}
+              onFocus={(event) => event.currentTarget.select()}
+              onChange={(event) => onRenameNameChange(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  onSaveRename(project);
+                }
+
+                if (event.key === "Escape") onCancelRename();
+              }}
+            />
+            <button
+              type="button"
+              className="projects-row-rename-save"
+              disabled={!renameName.trim() || isSaving}
+              onClick={() => onSaveRename(project)}
+            >
+              {isSaving ? "Saving" : "Save"}
+            </button>
+          </div>
+        ) : (
           <span>{project.name}</span>
-          <small>{project.description?.trim() || "No description"}</small>
+        )}
+        <small>{project.description?.trim() || "No description"}</small>
+      </div>
+    </>
+  );
+
+  return (
+    <div className={`projects-row${isRenaming ? " is-renaming" : ""}`}>
+      {isRenaming ? (
+        <div className="projects-row-link projects-row-link-static">
+          {projectCopy}
         </div>
-      </Link>
+      ) : (
+        <Link href={`/projects/${project.id}`} className="projects-row-link">
+          {projectCopy}
+        </Link>
+      )}
 
       <div className="projects-row-actions">
-        <button
-          type="button"
-          className="projects-row-edit"
-          onClick={() => onEdit(project)}
-        >
-          Edit
-        </button>
+        {!isRenaming && (
+          <DropdownShell
+            open={menuOpen}
+            onOpenChange={onMenuOpenChange}
+            placement="bottom-end"
+            offsetAmount={8}
+            collisionPadding={{
+              top: 72,
+              right: 16,
+              bottom: 88,
+              left: 16,
+            }}
+            trigger={({ open }) => (
+              <button
+                type="button"
+                className={`project-toolbar-icon-button ${open ? "is-active" : ""}`}
+                aria-label={`More actions for ${project.name}`}
+                aria-expanded={open}
+                title="More"
+              >
+                <MoreIcon />
+              </button>
+            )}
+          >
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onMenuOpenChange(false);
+                onStartRename(project);
+              }}
+            >
+              Rename
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onMenuOpenChange(false);
+                onToast("Version history coming soon");
+              }}
+            >
+              Version history
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onMenuOpenChange(false);
+                onToast("Archive project coming soon");
+              }}
+            >
+              Archive project
+            </button>
+            <button
+              type="button"
+              className="danger-hover"
+              role="menuitem"
+              onClick={() => {
+                onMenuOpenChange(false);
+                onDeleteProject(project);
+              }}
+            >
+              Delete project
+            </button>
+          </DropdownShell>
+        )}
 
         <Link href={`/projects/${project.id}`} className="projects-row-view">
           View Project
@@ -168,11 +293,12 @@ export default function ProjectsPage() {
   const [sortMode, setSortMode] = useState<ProjectSortMode>("newest");
   const [sortOpen, setSortOpen] = useState(false);
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
-  const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [editName, setEditName] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [isSavingProject, setIsSavingProject] = useState(false);
+  const [openProjectMenuId, setOpenProjectMenuId] = useState<number | null>(null);
+  const [renamingProjectId, setRenamingProjectId] = useState<number | null>(null);
+  const [renameName, setRenameName] = useState("");
+  const [savingProjectId, setSavingProjectId] = useState<number | null>(null);
   const [deletingProjectId, setDeletingProjectId] = useState<number | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const playerVisible = Boolean(currentSong);
   const cleanQuery = query.trim().toLowerCase();
@@ -187,81 +313,88 @@ export default function ProjectsPage() {
     return sortProjects(filtered, sortMode);
   }, [projects, cleanQuery, sortMode]);
 
-  function openEditProject(project: Project) {
-    setEditingProject(project);
-    setEditName(project.name);
-    setEditDescription(project.description ?? "");
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
   }
 
-  async function handleSaveEdit() {
-    if (!editingProject || isSavingProject) return;
+  function startRename(project: Project) {
+    setOpenProjectMenuId(null);
+    setRenamingProjectId(project.id);
+    setRenameName(project.name);
+  }
 
-    const cleanName = editName.trim();
-    const cleanDescription = editDescription.trim();
+  function cancelRename() {
+    setRenamingProjectId(null);
+    setRenameName("");
+  }
 
+  async function handleSaveRename(project: Project) {
+    if (savingProjectId || renamingProjectId !== project.id) return;
+
+    const cleanName = renameName.trim();
     if (!cleanName) return;
 
-    setIsSavingProject(true);
+    if (cleanName === project.name) {
+      cancelRename();
+      return;
+    }
+
+    setSavingProjectId(project.id);
 
     try {
-      const res = await fetch(`/api/projects/${editingProject.id}`, {
+      const res = await fetch(`/api/projects/${project.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: cleanName,
-          description: cleanDescription || null,
-        }),
+        body: JSON.stringify({ name: cleanName }),
       });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
 
-      if (!res.ok) throw new Error(data?.error || "Failed to save project");
+      if (!res.ok) throw new Error(data?.error || "Failed to rename project");
 
       setProjects((current) =>
-        current.map((project) =>
-          project.id === editingProject.id
-            ? data || {
-                ...project,
-                name: cleanName,
-                description: cleanDescription || null,
-              }
-            : project,
+        current.map((item) =>
+          item.id === project.id ? data || { ...item, name: cleanName } : item,
         ),
       );
-      setEditingProject(null);
+      cancelRename();
+      showToast("Project renamed");
     } catch (err) {
-      console.error("Failed to save project", err);
+      console.error("Failed to rename project", err);
+      showToast("Couldn't rename project");
     } finally {
-      setIsSavingProject(false);
+      setSavingProjectId(null);
     }
   }
 
-  async function handleDeleteProject() {
-    if (!editingProject || deletingProjectId) return;
+  async function handleDeleteProject(project: Project) {
+    if (deletingProjectId) return;
 
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${editingProject.name}"? This cannot be undone.`,
+      `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
     );
 
     if (!confirmed) return;
 
-    const projectIdToDelete = editingProject.id;
-
-    setDeletingProjectId(projectIdToDelete);
+    setDeletingProjectId(project.id);
 
     try {
-      const res = await fetch(`/api/projects/${projectIdToDelete}`, {
+      const res = await fetch(`/api/projects/${project.id}`, {
         method: "DELETE",
       });
 
       if (!res.ok) throw new Error("Failed to delete project");
 
       setProjects((current) =>
-        current.filter((project) => project.id !== projectIdToDelete),
+        current.filter((item) => item.id !== project.id),
       );
-      setEditingProject(null);
+
+      if (renamingProjectId === project.id) cancelRename();
+      showToast("Project deleted");
     } catch (err) {
       console.error("Failed to delete project", err);
+      showToast("Couldn't delete project");
     } finally {
       setDeletingProjectId(null);
     }
@@ -295,19 +428,21 @@ export default function ProjectsPage() {
         .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) auto; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
         .projects-row:hover { background: var(--bg-hover); }
         .projects-row-link { display: grid; min-width: 0; min-height: 72px; grid-template-columns: 62px minmax(180px, 1fr); align-items: center; color: inherit; text-decoration: none; }
+        .projects-row-link-static { cursor: default; }
         .projects-row-icon { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; overflow: visible; border: 0; border-radius: 0; background: transparent; color: var(--text-primary); }
         .projects-row-icon-inner { display: block; transform: translateY(-2px) scale(0.58); transform-origin: center; }
         .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 0; }
-        .projects-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
+        .projects-row-main > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
         .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 2px 0 0; font-size: 11.5px; line-height: 1.35; color: var(--text-subtle); }
+        .projects-row-rename { display: flex; min-width: 0; align-items: center; gap: 8px; }
+        .projects-row-rename-input { box-sizing: border-box; width: min(360px, 100%); min-width: 0; height: 32px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 10px; color: var(--text-primary); font-family: inherit; font-size: 13.5px; font-weight: 500; outline: none; }
+        .projects-row-rename-input:focus { border-color: var(--text-primary); }
+        .projects-row-rename-save { display: inline-flex; height: 32px; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 12px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 11px; font-weight: 500; }
+        .projects-row-rename-save:disabled { cursor: default; opacity: 0.55; }
         .projects-row-actions { display: inline-flex; justify-self: end; align-items: center; gap: 8px; }
-        .projects-row-edit,
-        .projects-row-view { display: inline-flex; width: fit-content; height: 32px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-family: inherit; font-size: 11px; font-weight: 500; text-decoration: none; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-        .projects-row-view { min-width: 112px; gap: 7px; }
-        .projects-row-edit { min-width: 58px; cursor: pointer; }
-        .projects-row-edit:hover,
-        .projects-row-view:hover,
-        .projects-row:hover .projects-row-view { border-color: var(--text-primary); background: var(--text-primary); color: var(--bg-primary); }
+        .projects-row-actions > .project-toolbar-icon-button { flex: 0 0 auto; }
+        .projects-row-view { display: inline-flex; width: fit-content; min-width: 112px; height: 32px; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 12px; color: var(--text-primary); font-family: inherit; font-size: 11px; font-weight: 500; text-decoration: none; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-row-view:hover, .projects-row:hover .projects-row-view { border-color: var(--text-primary); background: var(--text-primary); color: var(--bg-primary); }
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
         .projects-empty h2, .projects-error h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
         .projects-empty p, .projects-error p { max-width: 360px; font-size: 13px; line-height: 1.5; color: var(--text-muted); }
@@ -334,6 +469,7 @@ export default function ProjectsPage() {
           .projects-row { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 12px; }
           .projects-row-link { min-height: 42px; grid-template-columns: 46px minmax(0, 1fr); }
           .projects-row-actions { justify-self: start; padding-left: 46px; }
+          .projects-row-rename { width: 100%; }
         }
       `}</style>
 
@@ -496,7 +632,25 @@ export default function ProjectsPage() {
                 <ProjectRow
                   key={project.id}
                   project={project}
-                  onEdit={openEditProject}
+                  isRenaming={renamingProjectId === project.id}
+                  renameName={
+                    renamingProjectId === project.id ? renameName : project.name
+                  }
+                  isSaving={savingProjectId === project.id}
+                  menuOpen={openProjectMenuId === project.id}
+                  onMenuOpenChange={(open) =>
+                    setOpenProjectMenuId(open ? project.id : null)
+                  }
+                  onRenameNameChange={setRenameName}
+                  onStartRename={startRename}
+                  onCancelRename={cancelRename}
+                  onSaveRename={(targetProject) => {
+                    void handleSaveRename(targetProject);
+                  }}
+                  onDeleteProject={(targetProject) => {
+                    void handleDeleteProject(targetProject);
+                  }}
+                  onToast={showToast}
                 />
               ))}
             </section>
@@ -515,28 +669,17 @@ export default function ProjectsPage() {
         </div>
       </main>
 
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
+
       <CreateProjectModal
         isOpen={createProjectOpen}
         onClose={() => setCreateProjectOpen(false)}
         onProjectCreated={(project) => {
           setProjects((current) => [project, ...current]);
           setCreateProjectOpen(false);
-        }}
-      />
-
-      <EditProjectModal
-        isOpen={Boolean(editingProject)}
-        project={editingProject}
-        name={editName}
-        description={editDescription}
-        isSaving={isSavingProject || deletingProjectId === editingProject?.id}
-        onNameChange={setEditName}
-        onDescriptionChange={setEditDescription}
-        onSave={handleSaveEdit}
-        onDelete={handleDeleteProject}
-        onClose={() => {
-          if (isSavingProject || deletingProjectId) return;
-          setEditingProject(null);
         }}
       />
     </>
