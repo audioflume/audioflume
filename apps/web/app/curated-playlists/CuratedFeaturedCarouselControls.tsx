@@ -5,6 +5,7 @@ import { useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import CuratedPlaylistDetailChrome from "./CuratedPlaylistDetailChrome";
 
 const FEATURED_PANEL_SELECTOR = ".curated-featured-playlist-image-panel";
 const FEATURED_SECTION_SELECTOR = ".curated-featured-playlist";
@@ -158,6 +159,7 @@ export default function CuratedFeaturedCarouselControls() {
 
   return (
     <>
+      <CuratedPlaylistDetailChrome />
       {navigationPortal}
       {songLinkPortal}
     </>
