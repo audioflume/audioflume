@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import FooterBottom from "@/components/FooterBottom";
 import { usePlayer } from "@/context/PlayerContext";
@@ -50,9 +52,21 @@ export default function Footer({
   className = "",
   playerPadding = true,
 }: FooterProps) {
+  const pathname = usePathname();
   const { currentSong } = usePlayer();
   const footerRef = useRef<HTMLElement | null>(null);
+  const [musicTarget, setMusicTarget] = useState<HTMLElement | null>(null);
   const playerVisible = Boolean(currentSong);
+  const isMusicPage = pathname === "/music";
+
+  useEffect(() => {
+    if (!isMusicPage) {
+      setMusicTarget(null);
+      return;
+    }
+
+    setMusicTarget(document.querySelector<HTMLElement>(".fw-music-content-column"));
+  }, [isMusicPage]);
 
   useEffect(() => {
     const parent = footerRef.current?.parentElement;
@@ -63,9 +77,9 @@ export default function Footer({
     if (inlinePaddingBottom === "72px" || inlinePaddingBottom === "8px") {
       parent.style.paddingBottom = "0px";
     }
-  }, [playerVisible]);
+  }, [playerVisible, musicTarget]);
 
-  return (
+  const footer = (
     <>
       <style>{`
         .filmwave-footer-tonal-wordmark.filmwave-header-tonal-wordmark {
@@ -77,11 +91,25 @@ export default function Footer({
         .filmwave-footer-bottom {
           border-top: 0 !important;
         }
+
+        .music-page-footer {
+          box-sizing: border-box;
+          width: auto !important;
+          margin-left: var(--filmwave-side-filter-rail-width);
+        }
+
+        .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.has-selected-filter-section)
+          ~ .music-page-footer {
+          margin-left: calc(
+            var(--filmwave-side-filter-rail-width) +
+              var(--filmwave-side-filter-detail-width)
+          );
+        }
       `}</style>
 
       <footer
         ref={footerRef}
-        className={`box-border w-full pt-10 text-[10px] font-normal text-[var(--text-muted)] ${className}`}
+        className={`box-border w-full pt-10 text-[10px] font-normal text-[var(--text-muted)] ${isMusicPage ? "music-page-footer " : ""}${className}`}
         style={{
           paddingBottom: playerPadding
             ? playerVisible
@@ -157,4 +185,8 @@ export default function Footer({
       </footer>
     </>
   );
+
+  if (isMusicPage) return musicTarget ? createPortal(footer, musicTarget) : null;
+
+  return footer;
 }
