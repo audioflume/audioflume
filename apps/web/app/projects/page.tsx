@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 
 type ProjectSortMode = "newest" | "oldest" | "alphabetical";
 type ProjectStatusMode = "active" | "all" | "archived";
+type ProjectWithFileCount = Project & { file_count?: number };
 
 const PROJECT_STATUS_OPTIONS: Array<{
   value: ProjectStatusMode;
@@ -26,6 +27,15 @@ const PROJECT_STATUS_OPTIONS: Array<{
 function getProjectTimestamp(project: Project) {
   const time = new Date(project.created_at).getTime();
   return Number.isFinite(time) ? time : 0;
+}
+
+function getProjectFileCount(project: Project) {
+  const count = Number((project as ProjectWithFileCount).file_count ?? 0);
+  return Number.isFinite(count) ? Math.max(0, count) : 0;
+}
+
+function formatFileCount(count: number) {
+  return `${count} file${count === 1 ? "" : "s"}`;
 }
 
 function sortProjects(projects: Project[], sortMode: ProjectSortMode) {
@@ -179,6 +189,10 @@ function ProjectRow({
         </Link>
       )}
 
+      <div className="projects-row-count">
+        {formatFileCount(getProjectFileCount(project))}
+      </div>
+
       <div className="projects-row-actions">
         <DropdownShell
           open={menuOpen}
@@ -260,6 +274,7 @@ function ProjectSkeletonList() {
             <div className="projects-skeleton-block projects-skeleton-title" />
             <div className="projects-skeleton-block projects-skeleton-line" />
           </div>
+          <div className="projects-skeleton-block projects-skeleton-count" />
           <div className="projects-skeleton-block projects-skeleton-button" />
         </div>
       ))}
@@ -344,7 +359,13 @@ export default function ProjectsPage() {
 
       setProjects((current) =>
         current.map((item) =>
-          item.id === project.id ? data || { ...item, name: cleanName } : item,
+          item.id === project.id
+            ? {
+                ...item,
+                ...(data || {}),
+                name: data?.name || cleanName,
+              }
+            : item,
         ),
       );
       cancelRename();
@@ -414,7 +435,7 @@ export default function ProjectsPage() {
         .projects-title { margin: 36px 0 20px; max-width: 640px; font-size: 1.6em; font-weight: 500; line-height: 1; letter-spacing: -0.035em; color: var(--text-primary); }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
         .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 12px; border-top: 1px solid var(--border-subtle); }
-        .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) auto; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
+        .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) minmax(84px, 120px) 32px; gap: 0; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
         .projects-row:hover { background: var(--bg-hover); }
         .projects-row-link { display: grid; min-width: 0; min-height: 72px; grid-template-columns: 62px minmax(180px, 1fr); align-items: center; color: inherit; text-decoration: none; }
         .projects-row-link-static { cursor: default; }
@@ -426,6 +447,7 @@ export default function ProjectsPage() {
         .projects-row-rename { display: flex; min-width: 0; align-items: center; }
         .projects-row-rename-input { box-sizing: border-box; width: min(360px, 100%); min-width: 0; height: 32px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 10px; color: var(--text-primary); font-family: inherit; font-size: 13.5px; font-weight: 500; outline: none; }
         .projects-row-rename-input:focus { border-color: var(--text-primary); }
+        .projects-row-count { justify-self: end; text-align: right; font-size: 11.5px; font-weight: 400; line-height: 1.35; color: var(--text-subtle); }
         .projects-row-actions { display: inline-flex; justify-self: end; align-items: center; gap: 8px; }
         .projects-row-actions > .project-toolbar-icon-button { flex: 0 0 auto; }
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
@@ -435,12 +457,13 @@ export default function ProjectsPage() {
         .projects-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .projects-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: projects-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes projects-skeleton-shimmer { 100% { transform: translateX(100%); } }
-        .projects-row-skeleton { grid-template-columns: 42px minmax(0, 1fr) 42px; cursor: default; pointer-events: none; }
+        .projects-row-skeleton { grid-template-columns: 42px minmax(0, 1fr) minmax(84px, 120px) 32px; cursor: default; pointer-events: none; }
         .projects-skeleton-icon { width: 42px; height: 42px; }
         .projects-skeleton-copy { display: flex; min-width: 0; flex-direction: column; gap: 9px; }
         .projects-skeleton-title { width: min(220px, 52%); height: 9px; }
         .projects-skeleton-line { width: min(360px, 78%); height: 8px; }
-        .projects-skeleton-button { justify-self: end; width: 42px; height: 42px; }
+        .projects-skeleton-count { justify-self: end; width: 58px; height: 8px; }
+        .projects-skeleton-button { justify-self: end; width: 32px; height: 32px; }
         @media (max-width: 940px) {
           .projects-shell { padding-left: 32px; padding-right: 32px; }
           .projects-control-bar { grid-template-columns: 1fr; gap: 12px; }
@@ -451,10 +474,11 @@ export default function ProjectsPage() {
         }
         @media (max-width: 640px) {
           .projects-shell { padding-left: 20px; padding-right: 20px; }
-          .projects-row { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 12px; }
-          .projects-row-link { min-height: 42px; grid-template-columns: 46px minmax(0, 1fr); }
-          .projects-row-actions { justify-self: start; padding-left: 46px; }
+          .projects-row { grid-template-columns: minmax(0, 1fr) minmax(70px, 96px) 32px; gap: 0; padding: 0 18px; }
+          .projects-row-link { min-height: 72px; grid-template-columns: 46px minmax(0, 1fr); }
+          .projects-row-actions { justify-self: end; padding-left: 0; }
           .projects-row-rename { width: 100%; }
+          .projects-row-skeleton { grid-template-columns: 42px minmax(0, 1fr) minmax(70px, 96px) 32px; }
         }
       `}</style>
 
