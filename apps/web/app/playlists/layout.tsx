@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
+import PlaylistDetailBackButton from "./PlaylistDetailBackButton";
 import PlaylistTopControls from "./PlaylistTopControls";
 import "./playlists-tabs-rail.css";
 
 export default function PlaylistsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="playlists-route-shell">
+      <PlaylistDetailBackButton />
       <PlaylistTopControls />
       <style>{`
         .playlists-route-shell {
@@ -196,6 +198,42 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
 
         .playlist-detail-page .playlist-detail-top-actions > button:last-child svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        .playlist-detail-page .playlist-detail-browser-back {
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index: 3;
+          display: inline-flex;
+          box-sizing: border-box;
+          min-width: 82px;
+          height: 42px;
+          cursor: pointer;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          border: 1px solid var(--border);
+          border-radius: 0;
+          background: var(--bg-secondary);
+          padding: 0 14px;
+          color: var(--text-secondary);
+          font-family: inherit;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 1;
+          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+
+        .playlist-detail-page .playlist-detail-browser-back:hover {
+          border-color: var(--border-hover);
+          background: var(--bg-hover);
+          color: var(--text-primary);
+        }
+
+        .playlist-detail-page .playlist-detail-browser-back svg {
           width: 14px;
           height: 14px;
         }
