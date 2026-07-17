@@ -182,15 +182,14 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         .playlist-detail-page .playlist-detail-hero {
           position: relative;
           display: flex !important;
-          min-height: clamp(420px, 56vh, 620px);
+          min-height: 0;
           align-items: center !important;
           gap: clamp(24px, 2.8vw, 46px) !important;
           margin-top: 32px;
-          overflow: hidden;
-          background: #0b0d0d;
-          color: #fff;
-          isolation: isolate;
-          padding: 64px clamp(28px, 3vw, 48px) !important;
+          overflow: visible;
+          background: transparent;
+          color: var(--text-primary);
+          padding: 36px 0 30px !important;
         }
 
         .playlist-detail-page .playlist-detail-cover {
@@ -202,11 +201,11 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           flex: 0 0 var(--playlist-detail-featured-cover-size);
           overflow: hidden;
           border-radius: 0 !important;
-          background: #101112;
+          background: var(--bg-secondary);
         }
 
         .playlist-detail-page .playlist-detail-cover::after {
-          background: linear-gradient(to top, rgba(0, 0, 0, 0.24), transparent) !important;
+          display: none !important;
         }
 
         .playlist-detail-page .playlist-detail-hero > .min-w-0 {
@@ -229,9 +228,9 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         .playlist-detail-page .playlist-detail-title {
           max-width: 480px !important;
           margin: 0 !important;
-          color: #fff !important;
+          color: var(--text-primary) !important;
           font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
-          font-size: clamp(30px, 3.2vw, 48px) !important;
+          font-size: clamp(22px, 2vw, 32px) !important;
           font-weight: 400 !important;
           letter-spacing: -0.055em !important;
           line-height: 0.98 !important;
@@ -240,14 +239,14 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         .playlist-detail-page .playlist-detail-meta {
           margin-top: 16px !important;
           gap: 8px !important;
-          color: rgba(255, 255, 255, 0.72) !important;
+          color: var(--text-secondary) !important;
           font-size: 11.5px !important;
           font-weight: 400;
           line-height: 1.4;
         }
 
         .playlist-detail-page .playlist-detail-dot {
-          color: rgba(255, 255, 255, 0.52) !important;
+          color: var(--text-muted) !important;
         }
 
         .playlist-detail-page .playlist-detail-actions {
@@ -270,28 +269,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           font-size: 11px !important;
           font-weight: 500 !important;
           line-height: 1 !important;
-        }
-
-        .playlist-detail-page .playlist-detail-actions > button:first-child {
-          border: 1px solid #fff !important;
-          background: #fff !important;
-          color: #111 !important;
-        }
-
-        .playlist-detail-page .playlist-detail-actions > button:first-child:hover {
-          border-color: rgba(255, 255, 255, 0.86) !important;
-          background: rgba(255, 255, 255, 0.86) !important;
-        }
-
-        .playlist-detail-page .playlist-detail-actions > button:last-child {
-          border: 1px solid rgba(255, 255, 255, 0.48) !important;
-          background: rgba(255, 255, 255, 0.08) !important;
-          color: #fff !important;
-        }
-
-        .playlist-detail-page .playlist-detail-actions > button:last-child:hover {
-          border-color: rgba(255, 255, 255, 0.78) !important;
-          background: rgba(255, 255, 255, 0.14) !important;
         }
 
         .playlist-detail-page .playlist-detail-skeleton-button {
@@ -361,7 +338,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
             min-height: 0;
             flex-direction: column;
             align-items: flex-start !important;
-            padding: 38px 28px 42px !important;
+            padding: 32px 0 30px !important;
           }
 
           .playlist-detail-page .playlist-detail-hero > .min-w-0 {
@@ -383,6 +360,10 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
             --playlist-detail-page-gutter: 20px;
           }
 
+          .playlist-detail-page .playlist-detail-title {
+            font-size: 26px !important;
+          }
+
           .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
             margin-right: 12px !important;
             margin-left: 12px !important;
@@ -392,11 +373,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         @media (max-width: 640px) {
           body:has(.playlists-page) {
             --playlists-shell-gutter: 20px;
-          }
-
-          .playlist-detail-page .playlist-detail-hero {
-            padding-right: 20px !important;
-            padding-left: 20px !important;
           }
 
           .playlist-detail-page .playlist-detail-actions {
