@@ -186,6 +186,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           }
 
           .projects-page .projects-sort-button {
+            justify-content: center !important;
             gap: 0 !important;
           }
 
