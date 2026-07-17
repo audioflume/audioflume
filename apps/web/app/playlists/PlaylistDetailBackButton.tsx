@@ -32,7 +32,7 @@ export default function PlaylistDetailBackButton() {
 
     const updateTarget = () => {
       const nextTarget = document.querySelector<HTMLElement>(
-        ".playlist-detail-page .playlist-detail-hero",
+        ".playlist-detail-page .playlist-detail-shell",
       );
       setTarget((currentTarget) =>
         currentTarget === nextTarget ? currentTarget : nextTarget,
@@ -53,11 +53,6 @@ export default function PlaylistDetailBackButton() {
     <button
       type="button"
       className="playlist-detail-browser-back"
-      style={{
-        top: "calc(var(--playlist-detail-featured-offset) - 54px)",
-        right: "auto",
-        left: "calc(var(--playlist-detail-featured-cover-size) - 82px)",
-      }}
       onClick={() => router.back()}
       aria-label="Go back to the previous page"
     >
