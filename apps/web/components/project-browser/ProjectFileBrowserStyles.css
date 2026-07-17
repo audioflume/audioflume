@@ -3,6 +3,12 @@
 @import "./ProjectFileBrowserCards.css";
 @import "./ProjectFileBrowserInteractions.css";
 
+.project-file-browser.project-file-browser
+  .project-browser-grid
+  .project-file-card-meta {
+  margin-top: 0 !important;
+}
+
 .project-detail-page .project-tabs-row.fw-filter-rail > .project-tab-utility {
   margin-top: auto !important;
 }
