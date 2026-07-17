@@ -53,6 +53,16 @@ export default function ProjectToolbar({
     onProjectMoreOpenChange(false);
   }
 
+  function startRename() {
+    const renameEvent = new CustomEvent("filmwave:project-rename-request", {
+      cancelable: true,
+      detail: { projectId: project.id },
+    });
+
+    const shouldUseLegacyEdit = window.dispatchEvent(renameEvent);
+    if (shouldUseLegacyEdit) onOpenEdit();
+  }
+
   const toolbar = (
     <div className="project-toolbar-actions">
       <button
@@ -107,10 +117,10 @@ export default function ProjectToolbar({
           role="menuitem"
           onClick={() => {
             closeMenu();
-            onOpenEdit();
+            startRename();
           }}
         >
-          Edit project
+          Rename
         </button>
         <button
           type="button"
