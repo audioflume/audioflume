@@ -4,12 +4,36 @@ import "./playlists-tabs-rail.css";
 
 export default function PlaylistsLayout({ children }: { children: ReactNode }) {
   return (
-    <>
+    <div className="playlists-route-shell">
       <PlaylistTopControls />
       <style>{`
+        .playlists-route-shell {
+          display: flex;
+          min-height: 100vh;
+          flex-direction: column;
+        }
+
         body:has(.playlists-page) {
           --playlists-content-gutter: clamp(28px, 5.2vw, 82px);
           --playlists-shell-gutter: 32px;
+        }
+
+        .playlists-route-shell > .playlists-page {
+          display: flex !important;
+          min-height: 0 !important;
+          flex: 1 1 auto;
+          flex-direction: column;
+        }
+
+        .playlists-page .playlists-shell {
+          display: flex !important;
+          min-height: 0 !important;
+          flex: 1 1 auto;
+          flex-direction: column;
+        }
+
+        .playlists-page .playlists-shell > div:has(> footer) {
+          margin-top: auto;
         }
 
         .playlists-page .playlists-hero,
@@ -49,6 +73,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
       `}</style>
       {children}
-    </>
+    </div>
   );
 }
