@@ -22,7 +22,34 @@ export async function GET() {
 
     if (error) throw error;
 
-    return NextResponse.json((data ?? []).map(normalizeProject));
+    const projects = (data ?? []).map(normalizeProject);
+    const projectIds = projects.map((project) => project.id);
+
+    if (projectIds.length === 0) {
+      return NextResponse.json([]);
+    }
+
+    const { data: assetRows, error: assetsError } = await supabaseServer
+      .from("project_assets")
+      .select("project_id")
+      .in("project_id", projectIds);
+
+    if (assetsError) throw assetsError;
+
+    const fileCounts = new Map<number, number>();
+
+    (assetRows ?? []).forEach((row) => {
+      const projectId = Number(row.project_id);
+      if (!Number.isFinite(projectId)) return;
+      fileCounts.set(projectId, (fileCounts.get(projectId) ?? 0) + 1);
+    });
+
+    return NextResponse.json(
+      projects.map((project) => ({
+        ...project,
+        file_count: fileCounts.get(project.id) ?? 0,
+      })),
+    );
   } catch (err) {
     console.error("Projects fetch error:", err);
     return NextResponse.json(
@@ -86,7 +113,10 @@ export async function POST(req: Request) {
       userId,
     });
 
-    return NextResponse.json(normalizeProject(data));
+    return NextResponse.json({
+      ...normalizeProject(data),
+      file_count: 0,
+    });
   } catch (err) {
     console.error("Project create error:", err);
     return NextResponse.json(
