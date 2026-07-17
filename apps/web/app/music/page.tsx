@@ -14,11 +14,11 @@ import {
   MOOD_OPTIONS,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
   MusicFilterPanel,
+  MusicLibrarySortControl,
   MusicLibraryToolbar,
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
-  MusicQuickChipsEnd,
   QUICK_FILTERS,
   REGION_OPTIONS,
   ShuffleIconSmall,
@@ -655,6 +655,31 @@ export default function MusicPage() {
             filtersOpen={filtersOpen}
             onToggleFilters={() => setFiltersOpen((open) => !open)}
             onClearFilters={clearAllFilters}
+            headerActions={
+              <>
+                <button
+                  type="button"
+                  aria-pressed={shuffleActive}
+                  className={`fw-music-header-action fw-music-header-shuffle${
+                    shuffleActive ? " is-active" : ""
+                  }`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    toggleShuffle();
+                  }}
+                >
+                  <ShuffleIconSmall size={14} />
+                  <span className="fw-music-header-action-label">Shuffle</span>
+                </button>
+                <MusicLibrarySortControl
+                  value={sortMode === "popular" ? "downloaded" : "recent"}
+                  onChange={(value) =>
+                    selectSortMode(value === "downloaded" ? "popular" : "recent")
+                  }
+                />
+              </>
+            }
             chips={
               hasActiveFilters ? (
                 <FilterTags
@@ -773,46 +798,6 @@ export default function MusicPage() {
                 </MusicQuickChip>
               );
             })}
-
-            <MusicQuickChipsEnd>
-              <button
-                type="button"
-                aria-pressed={shuffleActive}
-                className={`fw-filter-chip fw-quick-chip${shuffleActive ? " is-selected" : ""}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  toggleShuffle();
-                }}
-              >
-                <ShuffleIconSmall size={13} />
-                <span>Shuffle</span>
-              </button>
-              <button
-                type="button"
-                aria-pressed={sortMode === "recent"}
-                className={`fw-filter-chip fw-quick-chip${sortMode === "recent" ? " is-selected" : ""}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  selectSortMode("recent");
-                }}
-              >
-                Most Recent
-              </button>
-              <button
-                type="button"
-                aria-pressed={sortMode === "popular"}
-                className={`fw-filter-chip fw-quick-chip${sortMode === "popular" ? " is-selected" : ""}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  selectSortMode("popular");
-                }}
-              >
-                Most Popular
-              </button>
-            </MusicQuickChipsEnd>
           </MusicQuickChips>
 
           {songsError && (
