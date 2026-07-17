@@ -3,6 +3,8 @@
 import DropdownShell from "@/components/DropdownShell";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
+import SortIcon from "@/components/icons/SortIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePathname } from "next/navigation";
@@ -139,13 +141,74 @@ export default function PlaylistTopControls() {
           color: var(--filmwave-menu-text) !important;
         }
 
+        .playlists-sort-button-icon,
+        .playlists-new-button-icon {
+          align-items: center;
+          justify-content: center;
+        }
+
+        .playlists-sort-button-icon {
+          display: none;
+        }
+
+        .playlists-new-button-icon {
+          display: inline-flex;
+        }
+
         @media (max-width: 940px) {
           .playlists-top-controls {
-            grid-template-columns: 1fr !important;
+            grid-template-columns: 150px minmax(0, 1fr) auto !important;
+            align-items: start !important;
+            gap: 12px !important;
           }
 
           .playlists-status-pill {
-            width: 100% !important;
+            width: 150px !important;
+          }
+
+          .playlists-control-right {
+            justify-content: flex-end !important;
+            flex-wrap: nowrap !important;
+            gap: 8px !important;
+          }
+
+          .playlists-sort-button,
+          .playlists-new-button {
+            width: 42px !important;
+            min-width: 42px !important;
+            padding: 0 !important;
+          }
+
+          .playlists-sort-button {
+            gap: 0 !important;
+          }
+
+          .playlists-sort-button-icon {
+            display: inline-flex;
+          }
+
+          .playlists-sort-button-label,
+          .playlists-sort-button-chevron,
+          .playlists-new-button-label {
+            display: none;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .playlists-top-controls {
+            grid-template-columns: 120px minmax(0, 1fr) auto !important;
+            gap: 8px !important;
+          }
+
+          .playlists-status-pill {
+            width: 120px !important;
+            padding-right: 12px !important;
+            padding-left: 12px !important;
+          }
+
+          .playlists-control-right {
+            flex-wrap: nowrap !important;
+            gap: 6px !important;
           }
         }
       `}</style>
@@ -241,8 +304,13 @@ export default function PlaylistTopControls() {
                   className={`playlists-sort-button${open ? " is-open" : ""}`}
                   aria-label="Sort playlists"
                 >
-                  <span>Sort By</span>
-                  <ChevronIcon />
+                  <span className="playlists-sort-button-icon" aria-hidden="true">
+                    <SortIcon />
+                  </span>
+                  <span className="playlists-sort-button-label">Sort By</span>
+                  <span className="playlists-sort-button-chevron">
+                    <ChevronIcon />
+                  </span>
                   <span className="sr-only">
                     <SortLabel sortMode={sortMode} />
                   </span>
@@ -275,8 +343,12 @@ export default function PlaylistTopControls() {
               type="button"
               className="playlists-new-button"
               onClick={openCreatePlaylist}
+              aria-label="New playlist"
             >
-              + New Playlist
+              <span className="playlists-new-button-icon" aria-hidden="true">
+                <PlusIcon size={16} />
+              </span>
+              <span className="playlists-new-button-label">New Playlist</span>
             </button>
           </div>
         )}
