@@ -32,6 +32,7 @@ const PLAYLISTS_STORAGE_PREFIX = "filmwave-playlists:";
 let cachedUserId: string | null = null;
 let cachedPlaylists: Playlist[] | null = null;
 let pendingPlaylistsRequest: Promise<Playlist[]> | null = null;
+let playlistMutationVersion = 0;
 
 function getPlaylistsStorageKey(userId: string) {
   return `${PLAYLISTS_STORAGE_PREFIX}${userId}`;
@@ -99,6 +100,8 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
             ? (update as (previous: Playlist[]) => Playlist[])(current)
             : update;
 
+        playlistMutationVersion += 1;
+
         if (userId) {
           cachedUserId = userId;
           cachedPlaylists = next;
@@ -137,6 +140,7 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
 
       if (!background) setLoading(true);
       setError(null);
+      const requestMutationVersion = playlistMutationVersion;
 
       try {
         if (
@@ -148,10 +152,17 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
         }
 
         const nextPlaylists = await pendingPlaylistsRequest;
+        pendingPlaylistsRequest = null;
+
+        if (
+          background &&
+          requestMutationVersion !== playlistMutationVersion
+        ) {
+          return;
+        }
 
         cachedUserId = userId;
         cachedPlaylists = nextPlaylists;
-        pendingPlaylistsRequest = null;
 
         if (!mountedRef.current) return;
 
