@@ -48,6 +48,11 @@ type PlaylistSong = Song & {
   created_at: string;
 };
 
+const PLAYLIST_SONG_SELECT =
+  "id, playlist_id, song_id, position, created_at";
+const SONG_SELECT =
+  "id, title, artist, audio_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, instruments, builds, vocals, instrumental, edit_points";
+
 async function verifyPlaylistOwner(playlistId: string, userId: string) {
   const { data, error } = await supabaseServer
     .from("playlists")
@@ -157,25 +162,32 @@ export async function GET(_req: Request, context: RouteContext) {
 
   try {
     const { playlistId } = await context.params;
-    const isOwner = await verifyPlaylistOwner(playlistId, userId);
+    const [ownershipResult, playlistSongsResult] = await Promise.all([
+      supabaseServer
+        .from("playlists")
+        .select("id")
+        .eq("id", playlistId)
+        .eq("clerk_user_id", userId)
+        .maybeSingle(),
+      supabaseServer
+        .from("playlist_songs")
+        .select(PLAYLIST_SONG_SELECT)
+        .eq("playlist_id", playlistId)
+        .order("position", { ascending: true }),
+    ]);
 
-    if (!isOwner) {
+    if (ownershipResult.error) throw ownershipResult.error;
+
+    if (!ownershipResult.data) {
       return NextResponse.json(
         { error: `Playlist ${playlistId} not found for user` },
         { status: 404 },
       );
     }
 
-    const { data: playlistSongs, error: playlistSongsError } =
-      await supabaseServer
-        .from("playlist_songs")
-        .select("*")
-        .eq("playlist_id", playlistId)
-        .order("position", { ascending: true });
+    if (playlistSongsResult.error) throw playlistSongsResult.error;
 
-    if (playlistSongsError) throw playlistSongsError;
-
-    const rows = (playlistSongs ?? []) as PlaylistSongRow[];
+    const rows = (playlistSongsResult.data ?? []) as PlaylistSongRow[];
 
     if (!rows.length) return NextResponse.json([]);
 
@@ -189,7 +201,7 @@ export async function GET(_req: Request, context: RouteContext) {
     // uuid type mismatch when song_id contains Airtable record IDs like "recXXX"
     const { data: songs, error: songsError } = await supabaseServer
       .from("songs")
-      .select("*")
+      .select(SONG_SELECT)
       .filter("id", "in", `(${songIds.map((id) => `"${id}"`).join(",")})`);
 
     if (songsError) throw songsError;
