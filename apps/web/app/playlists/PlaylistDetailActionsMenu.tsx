@@ -1,0 +1,321 @@
+"use client";
+
+import DropdownShell from "@/components/DropdownShell";
+import MoreIcon from "@/components/icons/MoreIcon";
+import Toast from "@/components/Toast";
+import { usePlayer } from "@/context/PlayerContext";
+import { usePlaylists } from "@/hooks/usePlaylists";
+import type { Playlist } from "@/lib/types";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+
+export default function PlaylistDetailActionsMenu() {
+  const pathname = usePathname();
+  const { currentSong } = usePlayer();
+  const { playlists, setPlaylists } = usePlaylists();
+  const playlistId = pathname.match(/^\/playlists\/([^/]+)$/)?.[1] ?? null;
+  const isPlaylistDetail = playlistId !== null;
+
+  const [actionsTarget, setActionsTarget] = useState<HTMLElement | null>(null);
+  const [renameTarget, setRenameTarget] = useState<HTMLElement | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [renaming, setRenaming] = useState(false);
+  const [renameName, setRenameName] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const cancelRenameRef = useRef(false);
+
+  const playlist = useMemo(
+    () => playlists.find((item) => String(item.id) === playlistId) ?? null,
+    [playlists, playlistId],
+  );
+
+  useEffect(() => {
+    if (!isPlaylistDetail) {
+      setActionsTarget(null);
+      setRenameTarget(null);
+      return;
+    }
+
+    const updateTargets = () => {
+      const nextActionsTarget = document.querySelector<HTMLElement>(
+        ".playlist-detail-page .playlist-detail-top-actions",
+      );
+      const nextRenameTarget = document.querySelector<HTMLElement>(
+        ".playlist-detail-page .playlist-detail-hero > .min-w-0",
+      );
+
+      setActionsTarget((current) =>
+        current === nextActionsTarget ? current : nextActionsTarget,
+      );
+      setRenameTarget((current) =>
+        current === nextRenameTarget ? current : nextRenameTarget,
+      );
+    };
+
+    updateTargets();
+
+    const observer = new MutationObserver(updateTargets);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, [isPlaylistDetail]);
+
+  useEffect(() => {
+    setMenuOpen(false);
+    setRenaming(false);
+    setRenameName("");
+    setSaving(false);
+  }, [playlistId]);
+
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
+
+  function startRename() {
+    if (!playlist) return;
+    setMenuOpen(false);
+    setRenameName(playlist.name);
+    setRenaming(true);
+  }
+
+  function cancelRename() {
+    setRenaming(false);
+    setRenameName("");
+  }
+
+  async function saveRename() {
+    if (!playlist || !renaming || saving) return;
+
+    const cleanName = renameName.trim();
+
+    if (!cleanName || cleanName === playlist.name) {
+      cancelRename();
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const response = await fetch(`/api/playlists/${playlist.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: cleanName }),
+      });
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to rename playlist");
+      }
+
+      setPlaylists((current) =>
+        current.map((item) =>
+          item.id === playlist.id
+            ? {
+                ...item,
+                ...(data || {}),
+                name: data?.name || cleanName,
+              }
+            : item,
+        ),
+      );
+      cancelRename();
+      showToast("Playlist renamed");
+    } catch (error) {
+      console.error("Failed to rename playlist", error);
+      showToast("Couldn't rename playlist");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function openExistingEditModal() {
+    setMenuOpen(false);
+    document
+      .querySelector<HTMLButtonElement>(
+        ".playlist-detail-page .playlist-detail-top-actions > button:nth-of-type(2)",
+      )
+      ?.click();
+  }
+
+  if (!isPlaylistDetail) return null;
+
+  const menu =
+    actionsTarget && playlist
+      ? createPortal(
+          <div className="playlist-detail-more-menu">
+            <DropdownShell
+              open={menuOpen}
+              onOpenChange={setMenuOpen}
+              placement="bottom-end"
+              className="playlist-detail-more-dropdown"
+              offsetAmount={8}
+              collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
+              trigger={({ open }) => (
+                <button
+                  type="button"
+                  className={`playlist-detail-more-button${open ? " is-active" : ""}`}
+                  aria-label={`More actions for ${playlist.name}`}
+                  aria-expanded={open}
+                  title="More"
+                >
+                  <MoreIcon />
+                </button>
+              )}
+            >
+              <button type="button" role="menuitem" onClick={startRename}>
+                Rename
+              </button>
+              <button type="button" role="menuitem" onClick={openExistingEditModal}>
+                Edit
+              </button>
+              <button type="button" role="menuitem" disabled aria-disabled="true">
+                Make Public
+              </button>
+            </DropdownShell>
+          </div>,
+          actionsTarget,
+        )
+      : null;
+
+  const renameField =
+    renaming && renameTarget && playlist
+      ? createPortal(
+          <div className="playlist-detail-rename-shell">
+            <input
+              type="text"
+              className="playlist-detail-rename-input"
+              value={renameName}
+              autoFocus
+              disabled={saving}
+              aria-label={`Rename ${playlist.name}`}
+              onFocus={(event) => event.currentTarget.select()}
+              onChange={(event) => setRenameName(event.target.value)}
+              onBlur={() => {
+                if (cancelRenameRef.current) {
+                  cancelRenameRef.current = false;
+                  cancelRename();
+                  return;
+                }
+
+                void saveRename();
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  event.currentTarget.blur();
+                }
+
+                if (event.key === "Escape") {
+                  event.preventDefault();
+                  cancelRenameRef.current = true;
+                  event.currentTarget.blur();
+                }
+              }}
+            />
+          </div>,
+          renameTarget,
+        )
+      : null;
+
+  return (
+    <>
+      <style>{`
+        .playlist-detail-page .playlist-detail-top-actions > button:not(:first-child) {
+          display: none !important;
+        }
+
+        .playlist-detail-page .playlist-detail-more-menu {
+          grid-column: 3 !important;
+          grid-row: 1 !important;
+          justify-self: end;
+        }
+
+        .playlist-detail-page .playlist-detail-more-button {
+          box-sizing: border-box;
+          display: inline-flex;
+          width: 42px;
+          min-width: 42px;
+          height: 42px;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid var(--border);
+          border-radius: 0;
+          background: var(--bg-secondary);
+          padding: 0;
+          color: var(--text-secondary);
+          cursor: pointer;
+          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+
+        .playlist-detail-page .playlist-detail-more-button:hover,
+        .playlist-detail-page .playlist-detail-more-button.is-active {
+          border-color: var(--border-hover);
+          background: var(--bg-hover);
+          color: var(--text-primary);
+        }
+
+        .playlist-detail-page .playlist-detail-more-button svg {
+          display: block;
+          width: 16px;
+          height: 16px;
+        }
+
+        .playlist-detail-more-dropdown {
+          min-width: 154px;
+        }
+
+        .playlist-detail-more-dropdown button:disabled {
+          cursor: default;
+          opacity: 0.42;
+        }
+
+        .playlist-detail-more-dropdown button:disabled:hover {
+          background: transparent;
+          color: inherit;
+        }
+
+        .playlist-detail-page:has(.playlist-detail-rename-shell) .playlist-detail-title {
+          display: none !important;
+        }
+
+        .playlist-detail-page .playlist-detail-rename-shell {
+          order: -1;
+          width: min(480px, 100%);
+          max-width: 480px;
+        }
+
+        .playlist-detail-page .playlist-detail-rename-input {
+          box-sizing: border-box;
+          width: 100%;
+          min-width: 0;
+          height: 42px;
+          border: 1px solid var(--border);
+          border-radius: 0;
+          background: var(--bg-primary);
+          padding: 0 12px;
+          color: var(--text-primary);
+          font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
+          font-size: clamp(22px, 2vw, 32px);
+          font-weight: 400;
+          letter-spacing: -0.055em;
+          line-height: 0.98;
+          outline: none;
+        }
+
+        .playlist-detail-page .playlist-detail-rename-input:focus {
+          border-color: var(--text-primary);
+        }
+      `}</style>
+      {menu}
+      {renameField}
+      <Toast
+        message={toastMessage}
+        bottomOffset={currentSong ? "88px" : "24px"}
+      />
+    </>
+  );
+}
