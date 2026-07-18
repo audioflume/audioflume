@@ -14,7 +14,7 @@ export async function GET() {
   try {
     const { data, error } = await supabaseServer
       .from("playlists")
-      .select("*")
+      .select("id, clerk_user_id, name, cover_image_url, position")
       .eq("clerk_user_id", userId)
       .order("position", { ascending: true });
 
