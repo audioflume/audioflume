@@ -9,6 +9,19 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+const PLAYLIST_GRADIENTS = [
+  "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
+  "linear-gradient(135deg,#1f3d3a 0%,#111111 52%,#4d8c7b 100%)",
+  "linear-gradient(135deg,#4f3529 0%,#111111 50%,#b66c45 100%)",
+  "linear-gradient(135deg,#25364f 0%,#111111 52%,#6287c4 100%)",
+  "linear-gradient(135deg,#45233d 0%,#111111 52%,#b75d91 100%)",
+  "linear-gradient(135deg,#0f172a 0%,#111111 52%,#1e3a5f 100%)",
+  "linear-gradient(135deg,#003344 0%,#111111 52%,#00516b 100%)",
+  "linear-gradient(135deg,#3d2800 0%,#111111 52%,#6b4500 100%)",
+  "linear-gradient(135deg,#1a0a2e 0%,#111111 52%,#2d1554 100%)",
+  "linear-gradient(135deg,#0a2e0a 0%,#111111 52%,#145214 100%)",
+];
+
 export default function PlaylistDetailActionsMenu() {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
@@ -29,6 +42,14 @@ export default function PlaylistDetailActionsMenu() {
     () => playlists.find((item) => String(item.id) === playlistId) ?? null,
     [playlists, playlistId],
   );
+
+  const playlistIndex = useMemo(() => {
+    const index = playlists.findIndex((item) => String(item.id) === playlistId);
+    return index >= 0 ? index : 0;
+  }, [playlists, playlistId]);
+
+  const placeholderGradient =
+    PLAYLIST_GRADIENTS[playlistIndex % PLAYLIST_GRADIENTS.length];
 
   useEffect(() => {
     if (!isPlaylistDetail) {
@@ -223,6 +244,10 @@ export default function PlaylistDetailActionsMenu() {
   return (
     <>
       <style>{`
+        .playlist-detail-page .playlist-detail-cover:not(:has(img)) {
+          background: ${placeholderGradient} !important;
+        }
+
         .playlist-detail-page .playlist-detail-top-actions > button:not(:first-child) {
           display: none !important;
         }
