@@ -142,7 +142,9 @@ export function MusicLibraryToolbar({
       )}
 
       {isStickyHeaderSearch && headerActions && (
-        <div className="fw-toolbar-header-actions">{headerActions}</div>
+        <div className="fw-toolbar-header-actions" style={{ marginLeft: 6 }}>
+          {headerActions}
+        </div>
       )}
 
       {renderToolbarChrome && (
