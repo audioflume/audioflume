@@ -21,11 +21,48 @@ type PlaylistsContextValue = {
   refetchPlaylists: () => Promise<void>;
 };
 
+type FetchPlaylistsOptions = {
+  force?: boolean;
+  background?: boolean;
+};
+
 const PlaylistsContext = createContext<PlaylistsContextValue | null>(null);
+const PLAYLISTS_STORAGE_PREFIX = "filmwave-playlists:";
 
 let cachedUserId: string | null = null;
 let cachedPlaylists: Playlist[] | null = null;
 let pendingPlaylistsRequest: Promise<Playlist[]> | null = null;
+
+function getPlaylistsStorageKey(userId: string) {
+  return `${PLAYLISTS_STORAGE_PREFIX}${userId}`;
+}
+
+function readStoredPlaylists(userId: string) {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const stored = window.localStorage.getItem(getPlaylistsStorageKey(userId));
+    if (!stored) return null;
+
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? (parsed as Playlist[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredPlaylists(userId: string, playlists: Playlist[]) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(
+      getPlaylistsStorageKey(userId),
+      JSON.stringify(playlists),
+    );
+  } catch {
+    // The in-memory cache remains available if browser storage is unavailable.
+  }
+}
 
 async function requestPlaylists() {
   const res = await fetch("/api/playlists");
@@ -47,13 +84,35 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
   const { user, isLoaded } = useUser();
   const userId = user?.id ?? null;
 
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [playlists, setPlaylistsState] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mountedRef = useRef(true);
 
+  const setPlaylists = useCallback<
+    React.Dispatch<React.SetStateAction<Playlist[]>>
+  >(
+    (update) => {
+      setPlaylistsState((current) => {
+        const next =
+          typeof update === "function"
+            ? (update as (previous: Playlist[]) => Playlist[])(current)
+            : update;
+
+        if (userId) {
+          cachedUserId = userId;
+          cachedPlaylists = next;
+          writeStoredPlaylists(userId, next);
+        }
+
+        return next;
+      });
+    },
+    [userId],
+  );
+
   const fetchPlaylists = useCallback(
-    async ({ force = false }: { force?: boolean } = {}) => {
+    async ({ force = false, background = false }: FetchPlaylistsOptions = {}) => {
       if (!isLoaded) return;
 
       if (!userId) {
@@ -63,24 +122,28 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
 
         if (!mountedRef.current) return;
 
-        setPlaylists([]);
+        setPlaylistsState([]);
         setLoading(false);
         setError(null);
         return;
       }
 
       if (!force && cachedUserId === userId && cachedPlaylists) {
-        setPlaylists(cachedPlaylists);
+        setPlaylistsState(cachedPlaylists);
         setLoading(false);
         setError(null);
         return;
       }
 
-      setLoading(true);
+      if (!background) setLoading(true);
       setError(null);
 
       try {
-        if (force || cachedUserId !== userId || !pendingPlaylistsRequest) {
+        if (
+          cachedUserId !== userId ||
+          !pendingPlaylistsRequest ||
+          (force && !background)
+        ) {
           pendingPlaylistsRequest = requestPlaylists();
         }
 
@@ -98,12 +161,14 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
 
         if (!mountedRef.current) return;
 
-        setError(
-          err instanceof Error ? err.message : "Failed to load playlists",
-        );
+        if (!background || !cachedPlaylists || cachedUserId !== userId) {
+          setError(
+            err instanceof Error ? err.message : "Failed to load playlists",
+          );
+        }
 
         if (!cachedPlaylists || cachedUserId !== userId) {
-          setPlaylists([]);
+          setPlaylistsState([]);
         }
       } finally {
         if (mountedRef.current) {
@@ -111,7 +176,7 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
         }
       }
     },
-    [isLoaded, userId],
+    [isLoaded, setPlaylists, userId],
   );
 
   const refetchPlaylists = useCallback(async () => {
@@ -129,8 +194,32 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    fetchPlaylists();
-  }, [fetchPlaylists]);
+    if (!isLoaded) return;
+
+    if (!userId) {
+      void fetchPlaylists();
+      return;
+    }
+
+    if (cachedUserId === userId && cachedPlaylists) {
+      void fetchPlaylists();
+      return;
+    }
+
+    const storedPlaylists = readStoredPlaylists(userId);
+
+    if (storedPlaylists) {
+      cachedUserId = userId;
+      cachedPlaylists = storedPlaylists;
+      setPlaylistsState(storedPlaylists);
+      setLoading(false);
+      setError(null);
+      void fetchPlaylists({ force: true, background: true });
+      return;
+    }
+
+    void fetchPlaylists();
+  }, [fetchPlaylists, isLoaded, userId]);
 
   const value = useMemo(
     () => ({
@@ -140,7 +229,7 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
       error,
       refetchPlaylists,
     }),
-    [playlists, loading, error, refetchPlaylists],
+    [playlists, setPlaylists, loading, error, refetchPlaylists],
   );
 
   return (
