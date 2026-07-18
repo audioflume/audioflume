@@ -1,17 +1,25 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import { getSongs } from "@/lib/songs";
 
 type PlaylistSongRow = {
   playlist_id: number;
   song_id: string;
 };
 
+type PlaylistGenreRow = {
+  id: string | number;
+  genres: string[] | null;
+};
+
 type PlaylistStats = {
   songCount: number;
   topGenres: string[];
 };
+
+function quoteFilterValue(value: string) {
+  return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
+}
 
 export async function GET() {
   const { userId } = await auth();
@@ -64,37 +72,74 @@ export async function GET() {
   }
 
   const rows = (playlistSongs ?? []) as PlaylistSongRow[];
-  const songs = await getSongs();
-  const songsById = new Map(songs.map((song) => [song.id, song]));
+  const uniqueSongIds = [
+    ...new Set(rows.map((row) => row.song_id).filter(Boolean)),
+  ];
+
+  let songRows: PlaylistGenreRow[] = [];
+
+  if (uniqueSongIds.length > 0) {
+    const { data: songs, error: songsError } = await supabaseServer
+      .from("songs")
+      .select("id, genres")
+      .filter(
+        "id",
+        "in",
+        `(${uniqueSongIds.map(quoteFilterValue).join(",")})`,
+      );
+
+    if (songsError) {
+      return NextResponse.json(
+        {
+          error: songsError.message,
+          details: songsError.details,
+          hint: songsError.hint,
+          code: songsError.code,
+        },
+        { status: 500 },
+      );
+    }
+
+    songRows = (songs ?? []) as PlaylistGenreRow[];
+  }
+
+  const genresBySongId = new Map(
+    songRows.map((song) => [
+      String(song.id),
+      Array.isArray(song.genres) ? song.genres : [],
+    ]),
+  );
+  const rowsByPlaylistId = new Map<number, PlaylistSongRow[]>();
+
+  rows.forEach((row) => {
+    const current = rowsByPlaylistId.get(row.playlist_id) ?? [];
+    current.push(row);
+    rowsByPlaylistId.set(row.playlist_id, current);
+  });
 
   const stats = Object.fromEntries(
     playlistIds.map((playlistId): [number, PlaylistStats] => {
-      const rowsForPlaylist = rows.filter(
-        (row) => row.playlist_id === playlistId,
-      );
-
-      const validSongsForPlaylist = rowsForPlaylist
-        .map((row) => songsById.get(row.song_id))
-        .filter((song): song is NonNullable<typeof song> => Boolean(song));
-
       const genreCounts = new Map<string, number>();
+      let songCount = 0;
 
-      validSongsForPlaylist.forEach((song) => {
-        song.genres.forEach((genre) => {
+      (rowsByPlaylistId.get(playlistId) ?? []).forEach((row) => {
+        const genres = genresBySongId.get(row.song_id);
+        if (!genres) return;
+
+        songCount += 1;
+        genres.forEach((genre) => {
           genreCounts.set(genre, (genreCounts.get(genre) || 0) + 1);
         });
       });
 
-      const topGenres = [...genreCounts.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 3)
-        .map(([genre]) => genre);
-
       return [
         playlistId,
         {
-          songCount: validSongsForPlaylist.length,
-          topGenres,
+          songCount,
+          topGenres: [...genreCounts.entries()]
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(([genre]) => genre),
         },
       ];
     }),
