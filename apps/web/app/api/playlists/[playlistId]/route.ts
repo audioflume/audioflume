@@ -7,6 +7,38 @@ type RouteContext = {
   params: Promise<{ playlistId: string }> | { playlistId: string };
 };
 
+type PlaylistUpdate = {
+  name?: string;
+  cover_image_url?: string | null;
+};
+
+function getErrorResponse(error: unknown) {
+  if (error instanceof Error) {
+    return { error: error.message };
+  }
+
+  if (error && typeof error === "object") {
+    const value = error as {
+      message?: unknown;
+      details?: unknown;
+      hint?: unknown;
+      code?: unknown;
+    };
+
+    return {
+      error:
+        typeof value.message === "string"
+          ? value.message
+          : "Failed to update playlist",
+      details: typeof value.details === "string" ? value.details : undefined,
+      hint: typeof value.hint === "string" ? value.hint : undefined,
+      code: typeof value.code === "string" ? value.code : undefined,
+    };
+  }
+
+  return { error: "Failed to update playlist" };
+}
+
 export async function PATCH(req: Request, context: RouteContext) {
   const { userId } = await auth();
 
@@ -27,18 +59,44 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
-    const updates: {
-      name: string;
-      cover_image_url?: string | null;
-    } = {
-      name: cleanName,
-    };
+    const { data: existingPlaylist, error: existingPlaylistError } =
+      await supabaseServer
+        .from("playlists")
+        .select("id, clerk_user_id, name, cover_image_url, position")
+        .eq("id", playlistId)
+        .eq("clerk_user_id", userId)
+        .maybeSingle();
+
+    if (existingPlaylistError) {
+      throw existingPlaylistError;
+    }
+
+    if (!existingPlaylist) {
+      return NextResponse.json(
+        { error: "Playlist not found" },
+        { status: 404 },
+      );
+    }
+
+    const updates: PlaylistUpdate = {};
+
+    if (cleanName !== existingPlaylist.name) {
+      updates.name = cleanName;
+    }
 
     if (Object.prototype.hasOwnProperty.call(body, "cover_image_url")) {
-      updates.cover_image_url =
+      const nextCover =
         typeof body.cover_image_url === "string" && body.cover_image_url.trim()
           ? body.cover_image_url
           : null;
+
+      if (nextCover !== existingPlaylist.cover_image_url) {
+        updates.cover_image_url = nextCover;
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json(normalizePlaylist(existingPlaylist));
     }
 
     const { data, error } = await supabaseServer
@@ -46,7 +104,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       .update(updates)
       .eq("id", playlistId)
       .eq("clerk_user_id", userId)
-      .select()
+      .select("id, clerk_user_id, name, cover_image_url, position")
       .single();
 
     if (error) {
@@ -57,12 +115,7 @@ export async function PATCH(req: Request, context: RouteContext) {
   } catch (err) {
     console.error("Playlist update failed:", err);
 
-    return NextResponse.json(
-      {
-        error: err instanceof Error ? err.message : "Failed to update playlist",
-      },
-      { status: 500 },
-    );
+    return NextResponse.json(getErrorResponse(err), { status: 500 });
   }
 }
 
