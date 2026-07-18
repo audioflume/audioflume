@@ -299,7 +299,7 @@ export default function PlaylistDetailPage() {
     }
   };
 
-  const showLoading = playlistsLoading || songsLoading;
+  const showPlaylistLoading = playlistsLoading;
 
   return (
     <>
@@ -390,12 +390,12 @@ export default function PlaylistDetailPage() {
             </button>
           </div>
 
-          {showLoading ? (
+          {showPlaylistLoading ? (
             <PlaylistDetailSkeleton />
-          ) : error ? (
+          ) : !playlist ? (
             <div className="playlist-detail-empty">
               <h2>Couldn&apos;t load playlist</h2>
-              <p>{error}</p>
+              <p>The playlist could not be found.</p>
             </div>
           ) : (
             <>
@@ -490,7 +490,14 @@ export default function PlaylistDetailPage() {
               </div>
 
               <section className="playlist-detail-section">
-                {songs.length === 0 ? (
+                {songsLoading ? (
+                  <SkeletonSongList />
+                ) : error ? (
+                  <div className="playlist-detail-empty">
+                    <h2>Couldn&apos;t load playlist songs</h2>
+                    <p>{error}</p>
+                  </div>
+                ) : songs.length === 0 ? (
                   <div className="playlist-detail-empty">
                     <h2>No songs yet</h2>
                     <p>Add songs from the music library, then they will appear here as a playable playlist.</p>
@@ -521,7 +528,7 @@ export default function PlaylistDetailPage() {
             </>
           )}
 
-          {!showLoading && (
+          {!showPlaylistLoading && (
             <div className="pt-10" style={{ paddingBottom: playerVisible ? "72px" : "8px" }}>
               <Footer />
             </div>
