@@ -5,7 +5,6 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
-import type { Playlist } from "@/lib/types";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
