@@ -291,11 +291,11 @@ export default function PlaylistDetailActionsMenu() {
           box-sizing: border-box;
           width: 100%;
           min-width: 0;
-          height: 42px;
-          border: 1px solid var(--border);
+          height: auto;
+          border: 0;
           border-radius: 0;
-          background: var(--bg-primary);
-          padding: 0 12px;
+          background: transparent;
+          padding: 0;
           color: var(--text-primary);
           font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
           font-size: clamp(22px, 2vw, 32px);
@@ -303,10 +303,6 @@ export default function PlaylistDetailActionsMenu() {
           letter-spacing: -0.055em;
           line-height: 0.98;
           outline: none;
-        }
-
-        .playlist-detail-page .playlist-detail-rename-input:focus {
-          border-color: var(--text-primary);
         }
       `}</style>
       {menu}
