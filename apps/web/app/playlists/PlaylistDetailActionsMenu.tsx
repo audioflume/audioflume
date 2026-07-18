@@ -1,11 +1,12 @@
 "use client";
 
 import DropdownShell from "@/components/DropdownShell";
+import EditPlaylistModal from "@/components/EditPlaylistModal";
 import MoreIcon from "@/components/icons/MoreIcon";
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -22,8 +23,19 @@ const PLAYLIST_GRADIENTS = [
   "linear-gradient(135deg,#0a2e0a 0%,#111111 52%,#145214 100%)",
 ];
 
+function parseResponse(text: string) {
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
 export default function PlaylistDetailActionsMenu() {
   const pathname = usePathname();
+  const router = useRouter();
   const { currentSong } = usePlayer();
   const { playlists, setPlaylists } = usePlaylists();
   const playlistId = pathname.match(/^\/playlists\/([^/]+)$/)?.[1] ?? null;
@@ -35,6 +47,11 @@ export default function PlaylistDetailActionsMenu() {
   const [renaming, setRenaming] = useState(false);
   const [renameName, setRenameName] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editCoverPreview, setEditCoverPreview] = useState<string | null>(null);
+  const [editOriginalCover, setEditOriginalCover] = useState<string | null>(null);
+  const [editSaving, setEditSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const cancelRenameRef = useRef(false);
 
@@ -87,6 +104,11 @@ export default function PlaylistDetailActionsMenu() {
     setRenaming(false);
     setRenameName("");
     setSaving(false);
+    setEditOpen(false);
+    setEditName("");
+    setEditCoverPreview(null);
+    setEditOriginalCover(null);
+    setEditSaving(false);
   }, [playlistId]);
 
   function showToast(message: string) {
@@ -124,8 +146,7 @@ export default function PlaylistDetailActionsMenu() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: cleanName }),
       });
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : null;
+      const data = parseResponse(await response.text());
 
       if (!response.ok) {
         throw new Error(data?.error || "Failed to rename playlist");
@@ -152,13 +173,112 @@ export default function PlaylistDetailActionsMenu() {
     }
   }
 
-  function openExistingEditModal() {
+  function openEditModal() {
+    if (!playlist) return;
+
+    const currentCover = playlist.cover_image_url ?? null;
     setMenuOpen(false);
-    document
-      .querySelector<HTMLButtonElement>(
-        ".playlist-detail-page .playlist-detail-top-actions > button:nth-of-type(2)",
-      )
-      ?.click();
+    setEditName(playlist.name);
+    setEditCoverPreview(currentCover);
+    setEditOriginalCover(currentCover);
+    setEditOpen(true);
+  }
+
+  async function saveEdit() {
+    if (!playlist || editSaving) return;
+
+    const cleanName = editName.trim();
+    if (!cleanName) return;
+
+    const payload: {
+      name: string;
+      cover_image_url?: string | null;
+    } = {
+      name: cleanName,
+    };
+
+    if (editCoverPreview !== editOriginalCover) {
+      payload.cover_image_url = editCoverPreview;
+    }
+
+    setEditSaving(true);
+
+    try {
+      const response = await fetch(`/api/playlists/${playlist.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = parseResponse(await response.text());
+
+      if (!response.ok) {
+        throw new Error(
+          data?.error || response.statusText || "Failed to save playlist",
+        );
+      }
+
+      setPlaylists((current) =>
+        current.map((item) =>
+          item.id === playlist.id
+            ? {
+                ...item,
+                ...(data || {}),
+                name: data?.name || cleanName,
+                cover_image_url:
+                  data?.cover_image_url !== undefined
+                    ? data.cover_image_url
+                    : payload.cover_image_url !== undefined
+                      ? payload.cover_image_url
+                      : item.cover_image_url,
+              }
+            : item,
+        ),
+      );
+      setEditOpen(false);
+      showToast("Changes saved");
+    } catch (error) {
+      console.error("Failed to save playlist", error);
+      showToast(
+        error instanceof Error ? error.message : "Couldn't save playlist",
+      );
+    } finally {
+      setEditSaving(false);
+    }
+  }
+
+  async function deletePlaylist() {
+    if (!playlist || editSaving) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${playlist.name}"? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    setEditSaving(true);
+
+    try {
+      const response = await fetch(`/api/playlists/${playlist.id}`, {
+        method: "DELETE",
+      });
+      const data = parseResponse(await response.text());
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to delete playlist");
+      }
+
+      setPlaylists((current) =>
+        current.filter((item) => item.id !== playlist.id),
+      );
+      setEditOpen(false);
+      router.push("/playlists");
+    } catch (error) {
+      console.error("Failed to delete playlist", error);
+      showToast(
+        error instanceof Error ? error.message : "Couldn't delete playlist",
+      );
+    } finally {
+      setEditSaving(false);
+    }
   }
 
   if (!isPlaylistDetail) return null;
@@ -189,7 +309,7 @@ export default function PlaylistDetailActionsMenu() {
               <button type="button" role="menuitem" onClick={startRename}>
                 Rename
               </button>
-              <button type="button" role="menuitem" onClick={openExistingEditModal}>
+              <button type="button" role="menuitem" onClick={openEditModal}>
                 Edit
               </button>
               <button type="button" role="menuitem" disabled aria-disabled="true">
@@ -332,6 +452,20 @@ export default function PlaylistDetailActionsMenu() {
       `}</style>
       {menu}
       {renameField}
+      <EditPlaylistModal
+        isOpen={editOpen && !!playlist}
+        playlist={playlist}
+        name={editName}
+        coverPreview={editCoverPreview}
+        isSaving={editSaving}
+        onNameChange={setEditName}
+        onCoverPreviewChange={setEditCoverPreview}
+        onSave={saveEdit}
+        onDelete={deletePlaylist}
+        onClose={() => {
+          if (!editSaving) setEditOpen(false);
+        }}
+      />
       <Toast
         message={toastMessage}
         bottomOffset={currentSong ? "88px" : "24px"}
