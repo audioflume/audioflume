@@ -27,12 +27,23 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
+    const updates: {
+      name: string;
+      cover_image_url?: string | null;
+    } = {
+      name: cleanName,
+    };
+
+    if (Object.prototype.hasOwnProperty.call(body, "cover_image_url")) {
+      updates.cover_image_url =
+        typeof body.cover_image_url === "string" && body.cover_image_url.trim()
+          ? body.cover_image_url
+          : null;
+    }
+
     const { data, error } = await supabaseServer
       .from("playlists")
-      .update({
-        name: cleanName,
-        cover_image_url: body.cover_image_url || null,
-      })
+      .update(updates)
       .eq("id", playlistId)
       .eq("clerk_user_id", userId)
       .select()
