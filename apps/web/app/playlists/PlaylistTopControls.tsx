@@ -124,6 +124,10 @@ export default function PlaylistTopControls() {
   return (
     <>
       <style>{`
+        .playlists-page .playlist-gallery-letters {
+          display: none !important;
+        }
+
         .playlists-top-controls {
           grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto) !important;
         }
