@@ -4,8 +4,8 @@
   --font-instrument-sans: var(--font-satoshi);
 }
 
-.playlists-page .playlist-gallery-rename-input,
-.playlists-page .playlist-row-rename-input {
+.playlists-page .playlist-gallery-content > .playlist-gallery-rename-input,
+.playlists-page .playlist-row-main > .playlist-row-rename-input {
   font-family: var(--font-satoshi) !important;
   font-style: normal !important;
   font-variant: normal !important;
@@ -19,10 +19,11 @@
   -webkit-font-smoothing: inherit !important;
 }
 
-.playlists-page .playlist-gallery-rename-input {
+.playlists-page .playlist-gallery-content > .playlist-gallery-rename-input {
   height: 16.25px !important;
   min-height: 16.25px !important;
   font-size: 13px !important;
+  font-weight: 500 !important;
   line-height: 1.25 !important;
   letter-spacing: -0.035em !important;
 }
