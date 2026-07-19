@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { storePlaylistCover } from "@/lib/playlistCoverStorage";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { normalizePlaylist, getPlaylistErrorResponse } from "@/lib/playlists";
 import { toSmartTitleCase } from "@/lib/smartTitleCase";
@@ -63,6 +64,11 @@ export async function POST(req: Request) {
       );
     }
 
+    const coverImageUrl = await storePlaylistCover(
+      body.cover_image_url,
+      userId,
+    );
+
     const { data: existingPlaylists, error: positionError } =
       await supabaseServer
         .from("playlists")
@@ -85,7 +91,7 @@ export async function POST(req: Request) {
       .insert({
         clerk_user_id: userId,
         name: cleanName,
-        cover_image_url: body.cover_image_url || null,
+        cover_image_url: coverImageUrl,
         position:
           typeof body.position === "number" && Number.isFinite(body.position)
             ? body.position
