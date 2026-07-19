@@ -235,7 +235,18 @@ function PlaylistMenu({
         <button type="button" onClick={onEdit}>
           Edit
         </button>
-        <button type="button" onClick={onReorder}>
+        <button
+          type="button"
+          onPointerDown={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onReorder();
+          }}
+          onClick={(event) => {
+            event.preventDefault();
+            if (event.detail === 0) onReorder();
+          }}
+        >
           Reorder
         </button>
         <button type="button" className="danger-hover" onClick={onDelete}>
@@ -364,10 +375,7 @@ function SortablePlaylistItem({
             setOpenMenuId(nextOpen ? playlist.id : null)
           }
           onEdit={() => openEdit(playlist)}
-          onReorder={() => {
-            setOpenMenuId(null);
-            startReorder();
-          }}
+          onReorder={startReorder}
           onDelete={() => handleDeletePlaylist(playlist)}
           playerVisible={playerVisible}
         />
@@ -455,10 +463,7 @@ function SortablePlaylistItem({
           setOpenMenuId(nextOpen ? playlist.id : null)
         }
         onEdit={() => openEdit(playlist)}
-        onReorder={() => {
-          setOpenMenuId(null);
-          startReorder();
-        }}
+        onReorder={startReorder}
         onDelete={() => handleDeletePlaylist(playlist)}
         playerVisible={playerVisible}
       />
@@ -650,9 +655,9 @@ export default function PlaylistsPage() {
   const startReorder = () => {
     setOpenMenuId(null);
     setOpenSortMenu(false);
-    setSortMode("custom");
-    setReorderSnapshot(playlists);
+    setReorderSnapshot([...playlists]);
     setIsEditing(true);
+    if (sortMode !== "custom") setSortMode("custom");
   };
 
   const handleCancelReorder = () => {
