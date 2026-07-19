@@ -312,6 +312,44 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           line-height: 0.98 !important;
         }
 
+        .playlists-route-shell
+          .playlist-detail-page:has(.playlist-detail-rename-shell)
+          .playlist-detail-title {
+          display: block !important;
+          visibility: hidden !important;
+        }
+
+        .playlists-route-shell
+          .playlist-detail-page
+          .playlist-detail-hero
+          > .min-w-0
+          .playlist-detail-rename-shell {
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          z-index: 2;
+          order: 0 !important;
+          box-sizing: border-box;
+          width: min(480px, 100%) !important;
+          max-width: 480px !important;
+          margin: 0 !important;
+        }
+
+        .playlists-route-shell
+          .playlist-detail-page
+          .playlist-detail-hero
+          > .min-w-0
+          .playlist-detail-rename-input {
+          width: 100% !important;
+          height: auto !important;
+          min-height: 0 !important;
+          font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
+          font-size: clamp(22px, 2vw, 32px) !important;
+          font-weight: 400 !important;
+          letter-spacing: -0.055em !important;
+          line-height: 0.98 !important;
+        }
+
         .playlist-detail-page .playlist-detail-meta {
           margin-top: 16px !important;
           gap: 8px !important;
@@ -473,6 +511,14 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           }
 
           .playlist-detail-page .playlist-detail-title {
+            font-size: 26px !important;
+          }
+
+          .playlists-route-shell
+            .playlist-detail-page
+            .playlist-detail-hero
+            > .min-w-0
+            .playlist-detail-rename-input {
             font-size: 26px !important;
           }
 
