@@ -366,6 +366,13 @@ export default function PlaylistDetailActionsMenu() {
               <button type="button" role="menuitem" disabled aria-disabled="true">
                 Make Public
               </button>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => void deletePlaylist()}
+              >
+                Delete
+              </button>
             </DropdownShell>
           </div>,
           actionsTarget,
