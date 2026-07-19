@@ -123,6 +123,10 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           outline: none !important;
         }
 
+        .projects-page .projects-row-rename-input {
+          transform: translateY(-1px);
+        }
+
         .project-detail-page .project-detail-rename-row,
         .project-detail-page .project-detail-rename-input {
           box-sizing: border-box;
