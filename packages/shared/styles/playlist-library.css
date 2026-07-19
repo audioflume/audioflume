@@ -344,3 +344,53 @@
 .playlists-page .playlists-hero .playlists-title {
   color: transparent !important;
 }
+
+/* Keep inline rename controls identical to the text they replace. */
+.playlists-page .playlist-gallery-rename-input {
+  display: block !important;
+  width: 100% !important;
+  height: 16.875px !important;
+  min-height: 16.875px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  appearance: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  box-shadow: none !important;
+  font-family: inherit !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: normal !important;
+}
+
+.playlists-page .playlist-row-rename-input {
+  display: block !important;
+  width: 100% !important;
+  height: 18.225px !important;
+  min-height: 18.225px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  appearance: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  box-shadow: none !important;
+  font-family: inherit !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: normal !important;
+}
+
+.playlists-page .playlist-gallery-rename-input:focus,
+.playlists-page .playlist-row-rename-input:focus {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
