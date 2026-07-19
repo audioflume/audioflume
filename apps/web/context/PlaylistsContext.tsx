@@ -205,6 +205,32 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (!userId) return;
+
+    const storageKey = getPlaylistsStorageKey(userId);
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== storageKey || !event.newValue) return;
+
+      try {
+        const nextPlaylists = JSON.parse(event.newValue);
+        if (!Array.isArray(nextPlaylists)) return;
+
+        cachedUserId = userId;
+        cachedPlaylists = nextPlaylists as Playlist[];
+        setPlaylistsState(nextPlaylists as Playlist[]);
+        setLoading(false);
+        setError(null);
+      } catch {
+        // Ignore malformed playlist cache updates from another tab.
+      }
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [userId]);
+
+  useEffect(() => {
     if (!isLoaded) return;
 
     if (!userId) {
@@ -213,7 +239,9 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
     }
 
     if (cachedUserId === userId && cachedPlaylists) {
-      void fetchPlaylists();
+      setPlaylistsState(cachedPlaylists);
+      setLoading(false);
+      setError(null);
       return;
     }
 
@@ -225,7 +253,6 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
       setPlaylistsState(storedPlaylists);
       setLoading(false);
       setError(null);
-      void fetchPlaylists({ force: true, background: true });
       return;
     }
 
