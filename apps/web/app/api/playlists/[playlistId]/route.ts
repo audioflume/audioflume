@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { storePlaylistCover } from "@/lib/playlistCoverStorage";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
@@ -69,10 +70,11 @@ export async function PATCH(req: Request, context: RouteContext) {
     );
 
     if (coverWasIncluded) {
-      updates.cover_image_url =
-        typeof body.cover_image_url === "string" && body.cover_image_url.trim()
-          ? body.cover_image_url
-          : null;
+      stage = "store-cover";
+      updates.cover_image_url = await storePlaylistCover(
+        body.cover_image_url,
+        userId,
+      );
     }
 
     stage = "update-playlist";
