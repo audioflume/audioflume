@@ -54,6 +54,7 @@ export default function PlaylistDetailActionsMenu() {
   const [editSaving, setEditSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const cancelRenameRef = useRef(false);
+  const renameEditorRef = useRef<HTMLDivElement>(null);
 
   const playlist = useMemo(
     () => playlists.find((item) => String(item.id) === playlistId) ?? null,
@@ -110,6 +111,22 @@ export default function PlaylistDetailActionsMenu() {
     setEditOriginalCover(null);
     setEditSaving(false);
   }, [playlistId]);
+
+  useEffect(() => {
+    if (!renaming || !renameTarget || !playlist) return;
+
+    const editor = renameEditorRef.current;
+    if (!editor) return;
+
+    editor.textContent = playlist.name;
+    editor.focus();
+
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(editor);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  }, [playlist, renameTarget, renaming]);
 
   function showToast(message: string) {
     setToastMessage(message);
@@ -359,15 +376,19 @@ export default function PlaylistDetailActionsMenu() {
     renaming && renameTarget && playlist
       ? createPortal(
           <div className="playlist-detail-rename-shell">
-            <input
-              type="text"
+            <div
+              ref={renameEditorRef}
               className="playlist-detail-rename-input"
-              value={renameName}
-              autoFocus
-              disabled={saving}
+              contentEditable={!saving}
+              suppressContentEditableWarning
+              role="textbox"
+              tabIndex={0}
+              spellCheck={false}
               aria-label={`Rename ${playlist.name}`}
-              onFocus={(event) => event.currentTarget.select()}
-              onChange={(event) => setRenameName(event.target.value)}
+              aria-disabled={saving}
+              onInput={(event) =>
+                setRenameName(event.currentTarget.textContent ?? "")
+              }
               onBlur={() => {
                 if (cancelRenameRef.current) {
                   cancelRenameRef.current = false;
@@ -468,20 +489,26 @@ export default function PlaylistDetailActionsMenu() {
 
         .playlist-detail-page .playlist-detail-rename-input {
           box-sizing: border-box;
+          display: block;
           width: 100%;
           min-width: 0;
           height: auto;
+          margin: 0;
+          overflow: hidden;
           border: 0;
           border-radius: 0;
           background: transparent;
           padding: 0;
           color: var(--text-primary);
+          caret-color: var(--text-primary);
           font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
           font-size: clamp(22px, 2vw, 32px);
           font-weight: 400;
           letter-spacing: -0.055em;
           line-height: 0.98;
           outline: none;
+          transform: none !important;
+          white-space: nowrap;
         }
       `}</style>
       {menu}
