@@ -17,6 +17,7 @@
   font-synthesis: none !important;
   text-rendering: inherit !important;
   -webkit-font-smoothing: inherit !important;
+  transform: translateY(-1px);
 }
 
 .playlists-page .playlist-gallery-content > .playlist-gallery-rename-input {
