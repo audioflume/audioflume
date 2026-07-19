@@ -49,6 +49,29 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           gap: 0 !important;
         }
 
+        .projects-page .projects-row.is-renaming {
+          box-sizing: border-box;
+          height: 72px !important;
+          min-height: 72px !important;
+          max-height: 72px !important;
+        }
+
+        .projects-page .projects-row.is-renaming .projects-row-link {
+          box-sizing: border-box;
+          height: 72px !important;
+          min-height: 72px !important;
+          max-height: 72px !important;
+        }
+
+        .projects-page .projects-row.is-renaming .projects-row-rename,
+        .projects-page .projects-row.is-renaming .projects-row-rename-input {
+          box-sizing: border-box;
+          height: 18.225px !important;
+          min-height: 18.225px !important;
+          max-height: 18.225px !important;
+          line-height: 1.35 !important;
+        }
+
         .projects-page .projects-row-count {
           grid-column: 2;
           justify-self: end;
@@ -112,6 +135,14 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           padding: 0 !important;
           box-shadow: none !important;
           outline: none !important;
+        }
+
+        .project-detail-page .project-detail-rename-row,
+        .project-detail-page .project-detail-rename-input {
+          box-sizing: border-box;
+          height: 28px !important;
+          min-height: 28px !important;
+          max-height: 28px !important;
         }
 
         .projects-page .projects-row-rename-input:focus,
@@ -202,7 +233,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
             height: 17px;
             background: currentColor;
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%205V19%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M4.5%2016.5L7%2019L9.5%2016.5%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%207H20%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2012H18%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2017H16%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%205V19%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M4.5%2016.5L7%2019L9.5%2016.5%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%207H20%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2012H18%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2017H16%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%205V19%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M4.5%2016.5L7%2019L9.5%2016.5%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%207H20%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2012H18%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2017H16%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
             -webkit-mask-position: center;
             mask-position: center;
             -webkit-mask-repeat: no-repeat;
