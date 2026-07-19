@@ -233,7 +233,7 @@ function PlaylistMenu({
         )}
       >
         <button type="button" onClick={onEdit}>
-          Edit Details
+          Edit
         </button>
         <button type="button" onClick={onReorder}>
           Reorder
