@@ -187,7 +187,7 @@ function PlaylistMenu({
   open,
   onOpenChange,
   onEdit,
-  onReorder,
+  onRename,
   onDelete,
   playerVisible,
   viewMode,
@@ -196,7 +196,7 @@ function PlaylistMenu({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onEdit: () => void;
-  onReorder: () => void;
+  onRename: () => void;
   onDelete: () => void;
   playerVisible: boolean;
   viewMode: PlaylistViewMode;
@@ -235,19 +235,8 @@ function PlaylistMenu({
         <button type="button" onClick={onEdit}>
           Edit
         </button>
-        <button
-          type="button"
-          onPointerDown={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            onReorder();
-          }}
-          onClick={(event) => {
-            event.preventDefault();
-            if (event.detail === 0) onReorder();
-          }}
-        >
-          Reorder
+        <button type="button" onClick={onRename}>
+          Rename
         </button>
         <button type="button" className="danger-hover" onClick={onDelete}>
           Delete
@@ -257,15 +246,73 @@ function PlaylistMenu({
   );
 }
 
+function PlaylistRenameInput({
+  playlist,
+  value,
+  saving,
+  className,
+  onChange,
+  onSave,
+  onCancel,
+}: {
+  playlist: Playlist;
+  value: string;
+  saving: boolean;
+  className: string;
+  onChange: (value: string) => void;
+  onSave: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <input
+      type="text"
+      className={`playlist-rename-input ${className}`}
+      value={value}
+      autoFocus
+      disabled={saving}
+      aria-label={`Rename ${playlist.name}`}
+      onFocus={(event) => event.currentTarget.select()}
+      onChange={(event) => onChange(event.target.value)}
+      onBlur={(event) => {
+        if (event.currentTarget.dataset.cancelRename === "true") {
+          delete event.currentTarget.dataset.cancelRename;
+          onCancel();
+          return;
+        }
+
+        onSave();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          event.currentTarget.blur();
+        }
+
+        if (event.key === "Escape") {
+          event.preventDefault();
+          event.currentTarget.dataset.cancelRename = "true";
+          event.currentTarget.blur();
+        }
+      }}
+    />
+  );
+}
+
 function SortablePlaylistItem({
   playlist,
   index,
   isEditing,
+  isRenaming,
+  isSavingRename,
+  renameName,
   isDeleting,
   openMenuId,
   setOpenMenuId,
-  startReorder,
   openEdit,
+  startRename,
+  cancelRename,
+  saveRename,
+  setRenameName,
   handleDeletePlaylist,
   playerVisible,
   viewMode,
@@ -274,11 +321,17 @@ function SortablePlaylistItem({
   playlist: Playlist;
   index: number;
   isEditing: boolean;
+  isRenaming: boolean;
+  isSavingRename: boolean;
+  renameName: string;
   isDeleting: boolean;
   openMenuId: number | null;
   setOpenMenuId: (id: number | null) => void;
-  startReorder: () => void;
   openEdit: (p: Playlist) => void;
+  startRename: (p: Playlist) => void;
+  cancelRename: () => void;
+  saveRename: (p: Playlist) => void;
+  setRenameName: (value: string) => void;
   handleDeletePlaylist: (p: Playlist) => void;
   playerVisible: boolean;
   viewMode: PlaylistViewMode;
@@ -304,7 +357,7 @@ function SortablePlaylistItem({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.35 : 1,
-    cursor: isEditing ? "grab" : "pointer",
+    cursor: isEditing ? "grab" : isRenaming ? "default" : "pointer",
   };
 
   if (viewMode === "list") {
@@ -334,6 +387,42 @@ function SortablePlaylistItem({
           </div>
           <div className="playlist-row-count">
             {formatSongCount(stats?.songCount ?? 0)}
+          </div>
+        </div>
+      );
+    }
+
+    if (isRenaming) {
+      return (
+        <div
+          ref={setNodeRef}
+          className="playlist-index-row-shell is-renaming"
+          style={style}
+        >
+          <div className="playlist-index-row playlist-index-row-static">
+            <div className="playlist-row-number">
+              {String(index + 1).padStart(2, "0")}
+            </div>
+            <PlaylistArtwork
+              playlist={playlist}
+              index={index}
+              className="playlist-row-cover"
+            />
+            <div className="playlist-row-main">
+              <PlaylistRenameInput
+                playlist={playlist}
+                value={renameName}
+                saving={isSavingRename}
+                className="playlist-row-rename-input"
+                onChange={setRenameName}
+                onSave={() => saveRename(playlist)}
+                onCancel={cancelRename}
+              />
+              <small>{formatGenres(stats?.topGenres ?? [])}</small>
+            </div>
+            <div className="playlist-row-count">
+              {formatSongCount(stats?.songCount ?? 0)}
+            </div>
           </div>
         </div>
       );
@@ -375,7 +464,7 @@ function SortablePlaylistItem({
             setOpenMenuId(nextOpen ? playlist.id : null)
           }
           onEdit={() => openEdit(playlist)}
-          onReorder={startReorder}
+          onRename={() => startRename(playlist)}
           onDelete={() => handleDeletePlaylist(playlist)}
           playerVisible={playerVisible}
         />
@@ -411,6 +500,48 @@ function SortablePlaylistItem({
           <div className="playlist-gallery-content">
             <h3>{playlist.name}</h3>
             <p>{formatSongCount(stats?.songCount ?? 0)}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isRenaming) {
+    return (
+      <div
+        ref={setNodeRef}
+        className="playlist-gallery-card is-renaming"
+        style={style}
+      >
+        <div className="playlist-gallery-link playlist-gallery-link-static">
+          <div className="playlist-gallery-art-wrap">
+            <PlaylistArtwork
+              playlist={playlist}
+              index={index}
+              className="playlist-gallery-art"
+            />
+            {!cover && (
+              <div className="playlist-gallery-letters">
+                {playlist.name.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+            <div className="playlist-gallery-top-row">
+              <div className="playlist-gallery-arrow">
+                <ArrowUpRightIcon />
+              </div>
+            </div>
+            <div className="playlist-gallery-content">
+              <PlaylistRenameInput
+                playlist={playlist}
+                value={renameName}
+                saving={isSavingRename}
+                className="playlist-gallery-rename-input"
+                onChange={setRenameName}
+                onSave={() => saveRename(playlist)}
+                onCancel={cancelRename}
+              />
+              <p>{formatSongCount(stats?.songCount ?? 0)}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -463,7 +594,7 @@ function SortablePlaylistItem({
           setOpenMenuId(nextOpen ? playlist.id : null)
         }
         onEdit={() => openEdit(playlist)}
-        onReorder={startReorder}
+        onRename={() => startRename(playlist)}
         onDelete={() => handleDeletePlaylist(playlist)}
         playerVisible={playerVisible}
       />
@@ -554,6 +685,9 @@ export default function PlaylistsPage() {
   );
   const [isEditing, setIsEditing] = useState(false);
   const [editingPlaylist, setEditingPlaylist] = useState<Playlist | null>(null);
+  const [renamingPlaylistId, setRenamingPlaylistId] = useState<number | null>(null);
+  const [renameName, setRenameName] = useState("");
+  const [savingRenameId, setSavingRenameId] = useState<number | null>(null);
   const [showNewModal, setShowNewModal] = useState(false);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const [isSavingPlaylist, setIsSavingPlaylist] = useState(false);
@@ -704,6 +838,65 @@ export default function PlaylistsPage() {
     setEditingPlaylist(playlist);
     setEditName(playlist.name);
     setEditCoverPreview(playlist.cover_image_url ?? null);
+  };
+
+  const startRename = (playlist: Playlist) => {
+    setOpenMenuId(null);
+    setOpenSortMenu(false);
+    setRenamingPlaylistId(playlist.id);
+    setRenameName(playlist.name);
+  };
+
+  const cancelRename = () => {
+    setRenamingPlaylistId(null);
+    setRenameName("");
+  };
+
+  const saveRename = async (playlist: Playlist) => {
+    if (savingRenameId || renamingPlaylistId !== playlist.id) return;
+
+    const cleanName = renameName.trim();
+    if (!cleanName || cleanName === playlist.name) {
+      cancelRename();
+      return;
+    }
+
+    setSavingRenameId(playlist.id);
+
+    try {
+      const res = await fetch(`/api/playlists/${playlist.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: cleanName }),
+      });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        console.warn("Failed to rename playlist", data || res.statusText);
+        showToast(data?.error || "Couldn't rename playlist");
+        return;
+      }
+
+      setPlaylists((current) =>
+        current.map((item) =>
+          item.id === playlist.id
+            ? {
+                ...item,
+                ...(data || {}),
+                name: data?.name || cleanName,
+              }
+            : item,
+        ),
+      );
+      cancelRename();
+      showToast("Playlist renamed");
+    } catch (err) {
+      console.warn("Failed to rename playlist", err);
+      showToast("Couldn't rename playlist");
+    } finally {
+      setSavingRenameId(null);
+    }
   };
 
   const handleSaveEdit = async () => {
@@ -892,6 +1085,7 @@ export default function PlaylistsPage() {
         .playlist-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
         .playlist-gallery-card { position: relative; min-width: 0; cursor: pointer; }
         .playlist-gallery-link { display: block; color: inherit; text-decoration: none; }
+        .playlist-gallery-link-static, .playlist-index-row-static { cursor: default !important; }
         .playlist-gallery-art-wrap { position: relative; min-height: 210px; border-radius: 18px; overflow: hidden; background: var(--bg-secondary); border: 1px solid var(--border-subtle); transition: none; }
         .playlist-gallery-card:hover .playlist-gallery-art-wrap, .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap { border-color: var(--border); }
         .playlist-gallery-art { position: absolute; inset: 0; }
@@ -907,10 +1101,15 @@ export default function PlaylistsPage() {
         .playlist-gallery-kicker { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.52); }
         .playlist-gallery-content h3 { margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-instrument-sans); font-size: 25px; font-weight: 500; line-height: 1.15; letter-spacing: -0.055em; color: white; }
         .playlist-gallery-content p { margin-top: 12px; font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.58); }
+        .playlist-rename-input { box-sizing: border-box; width: 100%; min-width: 0; height: auto; border: 0 !important; border-radius: 0 !important; outline: 0 !important; background: transparent !important; padding: 0 !important; color: var(--text-primary); box-shadow: none !important; font-family: inherit; }
+        .playlist-rename-input:focus { border: 0 !important; outline: 0 !important; box-shadow: none !important; }
+        .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-instrument-sans); font-size: 13px; font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; }
+        .playlist-row-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; letter-spacing: normal; }
         .playlist-gallery-handle { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); }
         .playlist-gallery-card.is-reordering .playlist-gallery-art-wrap { border-style: dashed; }
         .playlist-index { display: flex; flex-direction: column; gap: 8px; }
         .playlist-index-row-shell { position: relative; cursor: pointer; }
+        .playlist-index-row-shell.is-renaming { cursor: default; }
         .playlist-index-row { position: relative; min-height: 76px; display: grid; grid-template-columns: 40px 50px minmax(0, 1fr) minmax(84px, 120px); gap: 14px; align-items: center; border: 1px solid var(--border-subtle); border-radius: 16px; background: var(--bg-card); padding: 11px 50px 11px 13px; color: inherit; text-decoration: none; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease; }
         .playlist-index-row.is-reordering { grid-template-columns: 16px 40px 50px minmax(0, 1fr) minmax(84px, 120px); padding-right: 18px; }
         .playlist-index-row:hover, .playlist-index-row-shell:hover .playlist-index-row { background: var(--bg-hover); border-color: var(--border); transform: translateY(-1px); }
@@ -1164,11 +1363,17 @@ export default function PlaylistsPage() {
                         playlist={playlist}
                         index={index}
                         isEditing={isEditing}
+                        isRenaming={renamingPlaylistId === playlist.id}
+                        isSavingRename={savingRenameId === playlist.id}
+                        renameName={renameName}
                         isDeleting={deletingPlaylistId === playlist.id}
                         openMenuId={openMenuId}
                         setOpenMenuId={setOpenMenuId}
-                        startReorder={startReorder}
                         openEdit={openEdit}
+                        startRename={startRename}
+                        cancelRename={cancelRename}
+                        saveRename={saveRename}
+                        setRenameName={setRenameName}
                         handleDeletePlaylist={handleDeletePlaylist}
                         playerVisible={playerVisible}
                         viewMode={viewMode}
