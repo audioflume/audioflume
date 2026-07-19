@@ -340,14 +340,26 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           .playlist-detail-hero
           > .min-w-0
           .playlist-detail-rename-input {
+          -webkit-appearance: none !important;
+          appearance: none !important;
+          display: block !important;
           width: 100% !important;
           height: auto !important;
           min-height: 0 !important;
+          margin: 0 !important;
+          border: 0 !important;
+          background: transparent !important;
+          padding: 0 !important;
+          box-shadow: none !important;
+          outline: 0 !important;
+          color: var(--text-primary) !important;
           font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif !important;
           font-size: clamp(22px, 2vw, 32px) !important;
           font-weight: 400 !important;
           letter-spacing: -0.055em !important;
           line-height: 0.98 !important;
+          vertical-align: top !important;
+          transform: translateY(-1px);
         }
 
         .playlist-detail-page .playlist-detail-meta {
