@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import { normalizePlaylist } from "@/lib/playlists";
 
 type RouteContext = {
   params: Promise<{ playlistId: string }> | { playlistId: string };
@@ -64,8 +63,12 @@ export async function PATCH(req: Request, context: RouteContext) {
     const updates: PlaylistUpdate = {
       name: cleanName,
     };
+    const coverWasIncluded = Object.prototype.hasOwnProperty.call(
+      body,
+      "cover_image_url",
+    );
 
-    if (Object.prototype.hasOwnProperty.call(body, "cover_image_url")) {
+    if (coverWasIncluded) {
       updates.cover_image_url =
         typeof body.cover_image_url === "string" && body.cover_image_url.trim()
           ? body.cover_image_url
@@ -79,7 +82,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       .update(updates)
       .eq("id", playlistId)
       .eq("clerk_user_id", userId)
-      .select("id, clerk_user_id, name, cover_image_url, position")
+      .select("id, position")
       .maybeSingle();
 
     if (error) {
@@ -93,7 +96,14 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
-    return NextResponse.json(normalizePlaylist(data));
+    return NextResponse.json({
+      id: data.id,
+      position: data.position,
+      name: cleanName,
+      ...(coverWasIncluded
+        ? { cover_image_url: updates.cover_image_url ?? null }
+        : {}),
+    });
   } catch (err) {
     console.error(`Playlist update failed during ${stage}:`, err);
 
