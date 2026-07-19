@@ -3,3 +3,18 @@
     BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-instrument-sans: var(--font-satoshi);
 }
+
+.playlists-page .playlist-gallery-rename-input,
+.playlists-page .playlist-row-rename-input {
+  font-family: var(--font-satoshi) !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  font-stretch: normal !important;
+  font-kerning: auto !important;
+  font-optical-sizing: auto !important;
+  font-feature-settings: normal !important;
+  font-variation-settings: "wght" 500 !important;
+  font-synthesis: none !important;
+  text-rendering: inherit !important;
+  -webkit-font-smoothing: inherit !important;
+}
