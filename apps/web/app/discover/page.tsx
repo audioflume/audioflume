@@ -36,7 +36,7 @@ import "../music/music-library-redesign.css";
 const NEW_SONG_COUNT = 10;
 const READY_TO_CUT_SONG_COUNT = 12;
 const HERO_BACKGROUND_IMAGE =
-  "https://images.filmwave.io/images/discover/donny-jiang-KFTPuUsIFME-unsplash.jpg";
+  "https://images.filmwave.io/images/discover/b7cb4a48-bd82-44d1-b02e-c104dac45339-gigapixel-low%20resolution%20v2-2x.jpeg";
 
 function formatTrackCount(count?: number) {
   const safeCount = Number(count || 0);
