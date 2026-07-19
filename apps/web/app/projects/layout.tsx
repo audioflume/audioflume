@@ -124,7 +124,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-row-rename-input {
-          transform: translateY(-1px);
+          transform: translateY(-1.5px);
         }
 
         .project-detail-page .project-detail-rename-row,
