@@ -49,20 +49,6 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           gap: 0 !important;
         }
 
-        .projects-page .projects-row.is-renaming {
-          box-sizing: border-box;
-          height: 72px !important;
-          min-height: 72px !important;
-          max-height: 72px !important;
-        }
-
-        .projects-page .projects-row.is-renaming .projects-row-link {
-          box-sizing: border-box;
-          height: 72px !important;
-          min-height: 72px !important;
-          max-height: 72px !important;
-        }
-
         .projects-page .projects-row.is-renaming .projects-row-rename,
         .projects-page .projects-row.is-renaming .projects-row-rename-input {
           box-sizing: border-box;
