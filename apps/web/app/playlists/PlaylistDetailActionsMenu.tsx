@@ -149,7 +149,13 @@ export default function PlaylistDetailActionsMenu() {
       const data = parseResponse(await response.text());
 
       if (!response.ok) {
-        throw new Error(data?.error || "Failed to rename playlist");
+        console.warn("Playlist rename failed", {
+          status: response.status,
+          statusText: response.statusText,
+          response: data,
+        });
+        showToast(data?.error || "Couldn't rename playlist");
+        return;
       }
 
       setPlaylists((current) =>
@@ -166,8 +172,10 @@ export default function PlaylistDetailActionsMenu() {
       cancelRename();
       showToast("Playlist renamed");
     } catch (error) {
-      console.error("Failed to rename playlist", error);
-      showToast("Couldn't rename playlist");
+      console.warn("Playlist rename request failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      showToast("Couldn't reach the playlist service");
     } finally {
       setSaving(false);
     }
@@ -201,6 +209,16 @@ export default function PlaylistDetailActionsMenu() {
       payload.cover_image_url = editCoverPreview;
     }
 
+    const diagnostics = {
+      playlistId: playlist.id,
+      nameChanged: cleanName !== playlist.name,
+      coverChanged: editCoverPreview !== editOriginalCover,
+      coverPayloadLength:
+        typeof payload.cover_image_url === "string"
+          ? payload.cover_image_url.length
+          : 0,
+    };
+
     setEditSaving(true);
 
     try {
@@ -212,9 +230,18 @@ export default function PlaylistDetailActionsMenu() {
       const data = parseResponse(await response.text());
 
       if (!response.ok) {
-        throw new Error(
-          data?.error || response.statusText || "Failed to save playlist",
+        console.warn("Playlist save failed", {
+          ...diagnostics,
+          status: response.status,
+          statusText: response.statusText,
+          response: data,
+        });
+        showToast(
+          data?.stage
+            ? `${data?.error || "Couldn't save playlist"} (${data.stage})`
+            : data?.error || "Couldn't save playlist",
         );
+        return;
       }
 
       setPlaylists((current) =>
@@ -237,10 +264,11 @@ export default function PlaylistDetailActionsMenu() {
       setEditOpen(false);
       showToast("Changes saved");
     } catch (error) {
-      console.error("Failed to save playlist", error);
-      showToast(
-        error instanceof Error ? error.message : "Couldn't save playlist",
-      );
+      console.warn("Playlist save request failed", {
+        ...diagnostics,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      showToast("Couldn't reach the playlist service");
     } finally {
       setEditSaving(false);
     }
@@ -263,7 +291,13 @@ export default function PlaylistDetailActionsMenu() {
       const data = parseResponse(await response.text());
 
       if (!response.ok) {
-        throw new Error(data?.error || "Failed to delete playlist");
+        console.warn("Playlist delete failed", {
+          status: response.status,
+          statusText: response.statusText,
+          response: data,
+        });
+        showToast(data?.error || "Couldn't delete playlist");
+        return;
       }
 
       setPlaylists((current) =>
@@ -272,10 +306,10 @@ export default function PlaylistDetailActionsMenu() {
       setEditOpen(false);
       router.push("/playlists");
     } catch (error) {
-      console.error("Failed to delete playlist", error);
-      showToast(
-        error instanceof Error ? error.message : "Couldn't delete playlist",
-      );
+      console.warn("Playlist delete request failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      showToast("Couldn't reach the playlist service");
     } finally {
       setEditSaving(false);
     }
