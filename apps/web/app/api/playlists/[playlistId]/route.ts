@@ -8,13 +8,13 @@ type RouteContext = {
 };
 
 type PlaylistUpdate = {
-  name?: string;
+  name: string;
   cover_image_url?: string | null;
 };
 
-function getErrorResponse(error: unknown) {
+function getErrorResponse(error: unknown, stage: string) {
   if (error instanceof Error) {
-    return { error: error.message };
+    return { error: error.message, stage };
   }
 
   if (error && typeof error === "object") {
@@ -33,10 +33,11 @@ function getErrorResponse(error: unknown) {
       details: typeof value.details === "string" ? value.details : undefined,
       hint: typeof value.hint === "string" ? value.hint : undefined,
       code: typeof value.code === "string" ? value.code : undefined,
+      stage,
     };
   }
 
-  return { error: "Failed to update playlist" };
+  return { error: "Failed to update playlist", stage };
 }
 
 export async function PATCH(req: Request, context: RouteContext) {
@@ -46,10 +47,11 @@ export async function PATCH(req: Request, context: RouteContext) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  let stage = "parse-request";
+
   try {
     const { playlistId } = await context.params;
     const body = await req.json();
-
     const cleanName = typeof body.name === "string" ? body.name.trim() : "";
 
     if (!cleanName) {
@@ -59,45 +61,18 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
-    const { data: existingPlaylist, error: existingPlaylistError } =
-      await supabaseServer
-        .from("playlists")
-        .select("id, clerk_user_id, name, cover_image_url, position")
-        .eq("id", playlistId)
-        .eq("clerk_user_id", userId)
-        .maybeSingle();
-
-    if (existingPlaylistError) {
-      throw existingPlaylistError;
-    }
-
-    if (!existingPlaylist) {
-      return NextResponse.json(
-        { error: "Playlist not found" },
-        { status: 404 },
-      );
-    }
-
-    const updates: PlaylistUpdate = {};
-
-    if (cleanName !== existingPlaylist.name) {
-      updates.name = cleanName;
-    }
+    const updates: PlaylistUpdate = {
+      name: cleanName,
+    };
 
     if (Object.prototype.hasOwnProperty.call(body, "cover_image_url")) {
-      const nextCover =
+      updates.cover_image_url =
         typeof body.cover_image_url === "string" && body.cover_image_url.trim()
           ? body.cover_image_url
           : null;
-
-      if (nextCover !== existingPlaylist.cover_image_url) {
-        updates.cover_image_url = nextCover;
-      }
     }
 
-    if (Object.keys(updates).length === 0) {
-      return NextResponse.json(normalizePlaylist(existingPlaylist));
-    }
+    stage = "update-playlist";
 
     const { data, error } = await supabaseServer
       .from("playlists")
@@ -105,17 +80,24 @@ export async function PATCH(req: Request, context: RouteContext) {
       .eq("id", playlistId)
       .eq("clerk_user_id", userId)
       .select("id, clerk_user_id, name, cover_image_url, position")
-      .single();
+      .maybeSingle();
 
     if (error) {
       throw error;
     }
 
+    if (!data) {
+      return NextResponse.json(
+        { error: "Playlist not found", stage },
+        { status: 404 },
+      );
+    }
+
     return NextResponse.json(normalizePlaylist(data));
   } catch (err) {
-    console.error("Playlist update failed:", err);
+    console.error(`Playlist update failed during ${stage}:`, err);
 
-    return NextResponse.json(getErrorResponse(err), { status: 500 });
+    return NextResponse.json(getErrorResponse(err, stage), { status: 500 });
   }
 }
 
