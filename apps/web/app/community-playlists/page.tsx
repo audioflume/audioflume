@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
+import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import "../../../../packages/shared/styles/music-side-filter.css";
@@ -299,6 +300,13 @@ export default function CommunityPlaylistsPage() {
                   {playlist.cover_image_url && (
                     <img className="community-cover" src={playlist.cover_image_url} alt="" />
                   )}
+                  <button
+                    className="community-like"
+                    type="button"
+                    aria-label={`Like ${playlist.name}`}
+                  >
+                    <HeartIcon />
+                  </button>
                 </div>
                 <div className="community-card-title-row">
                   <h2>{playlist.name}</h2>
