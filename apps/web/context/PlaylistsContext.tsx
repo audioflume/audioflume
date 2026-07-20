@@ -26,17 +26,37 @@ type FetchPlaylistsOptions = {
   background?: boolean;
 };
 
+type PlaylistCoverMigrationResponse = {
+  found: number;
+  migrated: number;
+  failed: number;
+  failures?: Array<{
+    id: number;
+    name: string;
+    error: string;
+  }>;
+};
+
 const PlaylistsContext = createContext<PlaylistsContextValue | null>(null);
 const PLAYLISTS_STORAGE_PREFIX = "filmwave-playlists:";
+const PLAYLIST_COVER_MIGRATION_STORAGE_PREFIX =
+  "filmwave-playlist-cover-migration-v1:";
 const MAX_STORED_PLAYLISTS_CHARACTERS = 2_000_000;
 
 let cachedUserId: string | null = null;
 let cachedPlaylists: Playlist[] | null = null;
 let pendingPlaylistsRequest: Promise<Playlist[]> | null = null;
+let pendingPlaylistCoverMigration: Promise<PlaylistCoverMigrationResponse> | null =
+  null;
+let pendingPlaylistCoverMigrationUserId: string | null = null;
 let playlistMutationVersion = 0;
 
 function getPlaylistsStorageKey(userId: string) {
   return `${PLAYLISTS_STORAGE_PREFIX}${userId}`;
+}
+
+function getPlaylistCoverMigrationStorageKey(userId: string) {
+  return `${PLAYLIST_COVER_MIGRATION_STORAGE_PREFIX}${userId}`;
 }
 
 function sanitizePlaylist(playlist: Playlist): Playlist {
@@ -102,6 +122,33 @@ function writeStoredPlaylists(userId: string, playlists: Playlist[]) {
   }
 }
 
+function hasCompletedPlaylistCoverMigration(userId: string) {
+  if (typeof window === "undefined") return false;
+
+  try {
+    return (
+      window.localStorage.getItem(
+        getPlaylistCoverMigrationStorageKey(userId),
+      ) === "complete"
+    );
+  } catch {
+    return false;
+  }
+}
+
+function markPlaylistCoverMigrationComplete(userId: string) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(
+      getPlaylistCoverMigrationStorageKey(userId),
+      "complete",
+    );
+  } catch {
+    // A future page load can safely retry the idempotent migration check.
+  }
+}
+
 async function requestPlaylists() {
   const res = await fetch("/api/playlists");
   const text = await res.text();
@@ -118,6 +165,38 @@ async function requestPlaylists() {
   }
 
   return sanitized;
+}
+
+function requestPlaylistCoverMigration(userId: string) {
+  if (
+    pendingPlaylistCoverMigration &&
+    pendingPlaylistCoverMigrationUserId === userId
+  ) {
+    return pendingPlaylistCoverMigration;
+  }
+
+  pendingPlaylistCoverMigrationUserId = userId;
+  pendingPlaylistCoverMigration = fetch("/api/playlists/migrate-covers", {
+    method: "POST",
+  })
+    .then(async (res) => {
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to restore playlist covers");
+      }
+
+      return data as PlaylistCoverMigrationResponse;
+    })
+    .finally(() => {
+      if (pendingPlaylistCoverMigrationUserId === userId) {
+        pendingPlaylistCoverMigration = null;
+        pendingPlaylistCoverMigrationUserId = null;
+      }
+    });
+
+  return pendingPlaylistCoverMigration;
 }
 
 export function PlaylistsProvider({ children }: { children: ReactNode }) {
@@ -270,6 +349,49 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
     }
 
     void fetchPlaylists();
+  }, [fetchPlaylists, isLoaded, userId]);
+
+  useEffect(() => {
+    if (!isLoaded || !userId || hasCompletedPlaylistCoverMigration(userId)) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function restoreLegacyPlaylistCovers() {
+      try {
+        if (pendingPlaylistsRequest) {
+          try {
+            await pendingPlaylistsRequest;
+          } catch {
+            // The migration check can still run if the initial list request failed.
+          }
+        }
+
+        const result = await requestPlaylistCoverMigration(userId);
+        if (cancelled) return;
+
+        if (result.migrated > 0) {
+          cachedPlaylists = null;
+          pendingPlaylistsRequest = null;
+          await fetchPlaylists({ force: true, background: true });
+        }
+
+        if (result.failed === 0) {
+          markPlaylistCoverMigrationComplete(userId);
+        } else {
+          console.warn("Some playlist covers could not be restored", result.failures);
+        }
+      } catch (migrationError) {
+        console.warn("Playlist cover restoration failed", migrationError);
+      }
+    }
+
+    void restoreLegacyPlaylistCovers();
+
+    return () => {
+      cancelled = true;
+    };
   }, [fetchPlaylists, isLoaded, userId]);
 
   const value = useMemo(
