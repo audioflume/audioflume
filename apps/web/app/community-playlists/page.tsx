@@ -117,7 +117,7 @@ export default function CommunityPlaylistsPage() {
   const [query, setQuery] = useState("");
 
   return (
-    <main className="community-page playlists-page">
+    <main className="community-page">
       <aside className="community-sidebar" aria-label="Community playlist discovery">
         <section className="community-sidebar-section community-categories">
           <p className="community-sidebar-heading">Categories</p>
@@ -146,7 +146,9 @@ export default function CommunityPlaylistsPage() {
 
       <section className="community-content">
         <div className="community-heading-row">
-          <h1 className="playlists-title">Community Playlists</h1>
+          <div className="community-title-style-scope playlists-page">
+            <h1 className="playlists-title">Playlists</h1>
+          </div>
           <label className="community-search">
             <SearchIcon size={13} />
             <input
