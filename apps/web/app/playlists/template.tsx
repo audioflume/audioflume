@@ -29,6 +29,7 @@ type MountedPublicIcon = {
   root: Root;
   host: HTMLSpanElement;
   title: HTMLElement;
+  detail: boolean;
 };
 
 export default function PlaylistsTemplate({ children }: { children: ReactNode }) {
@@ -39,17 +40,40 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
   const toastTimerRef = useRef<number | null>(null);
   const publicIconRootsRef = useRef<Map<string, MountedPublicIcon>>(new Map());
 
+  function disposeMountedIcon(mounted: MountedPublicIcon) {
+    mounted.title.classList.remove("playlist-name-has-public-icon");
+    mounted.title.parentElement?.classList.remove("playlist-detail-public-title-parent");
+
+    window.setTimeout(() => {
+      mounted.root.unmount();
+      mounted.host.remove();
+    }, 0);
+  }
+
+  function positionDetailIcon(mounted: MountedPublicIcon) {
+    if (!mounted.detail) return;
+
+    const parent = mounted.title.parentElement;
+    if (!parent) return;
+
+    parent.classList.add("playlist-detail-public-title-parent");
+
+    const titleRect = mounted.title.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+    const left = titleRect.right - parentRect.left + 6;
+    const top = titleRect.top - parentRect.top + titleRect.height - 14;
+
+    mounted.host.style.left = `${left}px`;
+    mounted.host.style.top = `${top}px`;
+  }
+
   useEffect(() => {
     return () => {
       if (toastTimerRef.current !== null) {
         window.clearTimeout(toastTimerRef.current);
       }
 
-      publicIconRootsRef.current.forEach(({ root, host, title }) => {
-        root.unmount();
-        host.remove();
-        title.classList.remove("playlist-name-has-public-icon");
-      });
+      publicIconRootsRef.current.forEach(disposeMountedIcon);
       publicIconRootsRef.current.clear();
     };
   }, []);
@@ -114,15 +138,17 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           !matchingTarget || matchingTarget.element !== mounted.title;
 
         if (!targetKeys.has(key) || targetChanged || !mounted.host.isConnected) {
-          mounted.root.unmount();
-          mounted.host.remove();
-          mounted.title.classList.remove("playlist-name-has-public-icon");
+          disposeMountedIcon(mounted);
           publicIconRootsRef.current.delete(key);
         }
       });
 
       targets.forEach((target) => {
-        if (publicIconRootsRef.current.has(target.key)) return;
+        const existing = publicIconRootsRef.current.get(target.key);
+        if (existing) {
+          positionDetailIcon(existing);
+          return;
+        }
 
         const host = document.createElement("span");
         host.className = `playlist-public-icon-host${target.detail ? " is-detail" : ""}`;
@@ -136,25 +162,27 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         const root = createRoot(host);
         root.render(<PublicPlaylistIcon className="playlist-public-name-icon" />);
 
-        publicIconRootsRef.current.set(target.key, {
+        const mounted = {
           root,
           host,
           title: target.element,
-        });
+          detail: target.detail,
+        };
+
+        publicIconRootsRef.current.set(target.key, mounted);
+        positionDetailIcon(mounted);
       });
     }
 
     syncPublicIcons();
     const observer = new MutationObserver(syncPublicIcons);
     observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("resize", syncPublicIcons);
 
     return () => {
       observer.disconnect();
-      publicIconRootsRef.current.forEach(({ root, host, title }) => {
-        root.unmount();
-        host.remove();
-        title.classList.remove("playlist-name-has-public-icon");
-      });
+      window.removeEventListener("resize", syncPublicIcons);
+      publicIconRootsRef.current.forEach(disposeMountedIcon);
       publicIconRootsRef.current.clear();
     };
   }, [pathname, playlists]);
@@ -294,6 +322,8 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         }
 
         .playlist-public-icon-host {
+          position: relative;
+          top: 1px;
           display: inline-flex;
           margin-left: 6px;
           align-items: center;
@@ -303,20 +333,14 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           vertical-align: baseline;
         }
 
-        .playlist-gallery-content .playlist-public-icon-host,
-        .playlist-row-main .playlist-public-icon-host {
-          color: var(--text-muted);
-        }
-
-        .playlist-detail-page .playlist-detail-title.playlist-name-has-public-icon {
-          display: inline-flex !important;
-          vertical-align: baseline;
+        .playlist-detail-public-title-parent {
+          position: relative !important;
         }
 
         .playlist-public-icon-host.is-detail {
-          position: relative;
-          top: -1px;
-          vertical-align: baseline;
+          position: absolute;
+          top: 0;
+          margin-left: 0;
         }
       `}</style>
       {children}
