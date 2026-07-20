@@ -209,7 +209,6 @@
 }
 
 .community-tabs button {
-  position: relative;
   height: 36px;
   min-height: 36px;
   max-height: 36px;
@@ -232,18 +231,8 @@
 }
 
 .community-tabs button.is-active {
-  background: transparent;
-  color: var(--text-primary);
-}
-
-.community-tabs button.is-active::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 3px;
-  left: 0;
-  height: 2px;
   background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .community-grid {
