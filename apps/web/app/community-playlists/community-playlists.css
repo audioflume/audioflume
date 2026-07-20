@@ -1,14 +1,19 @@
 .community-page {
-  min-height: calc(100vh - var(--filmwave-header-height, 56px));
+  height: calc(100vh - var(--filmwave-header-height, 56px));
   margin-top: var(--filmwave-header-height, 56px);
   display: grid;
   grid-template-columns: 276px minmax(0, 1fr);
+  overflow: hidden;
   background: var(--bg-primary);
   color: var(--text-primary);
 }
 
 .community-sidebar {
-  min-height: calc(100vh - var(--filmwave-header-height, 56px));
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border-right: 1px solid var(--border-subtle);
   background: var(--bg-primary);
 }
@@ -28,6 +33,10 @@
   font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+}
+
+.community-categories {
+  flex: 0 0 auto;
 }
 
 .community-categories nav {
@@ -51,10 +60,24 @@
   outline: none;
 }
 
-.community-featured-list {
+.community-featured {
+  min-height: 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  padding-bottom: 18px;
+}
+
+.community-featured-list {
+  min-height: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   gap: 21px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 8px;
+  scrollbar-width: thin;
 }
 
 .community-featured-item {
@@ -100,6 +123,10 @@
 
 .community-content {
   min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 40px 36px 76px;
 }
 
@@ -110,15 +137,15 @@
   gap: 36px;
 }
 
-.community-heading-row h1 {
-  margin: 0;
-  max-width: 640px;
-  color: var(--text-primary);
-  font-family: var(--font-instrument-sans);
-  font-size: 1.6em;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.035em;
+.community-page .playlists-title {
+  margin: 0 !important;
+  max-width: 640px !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-instrument-sans) !important;
+  font-size: 1.6em !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.035em !important;
 }
 
 .community-search {
@@ -269,8 +296,8 @@
 
 .community-like {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 5px;
+  right: 5px;
   display: inline-flex;
   width: 26px;
   height: 26px;
@@ -281,7 +308,6 @@
   color: #fff;
   cursor: pointer;
   padding: 0;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
 }
 
 .community-like svg {
@@ -351,7 +377,7 @@
   height: 22px;
   flex: 0 0 22px;
   border-radius: 50%;
-  background: #8d8d8d;
+  background: #bdbdbd;
 }
 
 .community-track-count {
@@ -389,11 +415,16 @@
 
 @media (max-width: 760px) {
   .community-page {
+    height: auto;
+    min-height: calc(100vh - var(--filmwave-header-height, 56px));
     display: block;
+    overflow: visible;
   }
 
   .community-sidebar {
+    height: auto;
     min-height: 0;
+    overflow: visible;
     border-right: 0;
     border-bottom: 1px solid var(--border-subtle);
   }
@@ -408,6 +439,8 @@
   }
 
   .community-content {
+    height: auto;
+    overflow: visible;
     padding: 28px 20px 72px;
   }
 
