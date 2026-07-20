@@ -5,6 +5,7 @@ import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
+import "../playlists/playlists-tabs-rail.css";
 import "./community-playlists.css";
 
 const categories = [
@@ -116,7 +117,7 @@ export default function CommunityPlaylistsPage() {
   const [query, setQuery] = useState("");
 
   return (
-    <main className="community-page">
+    <main className="community-page playlists-page">
       <aside className="community-sidebar" aria-label="Community playlist discovery">
         <section className="community-sidebar-section community-categories">
           <p className="community-sidebar-heading">Categories</p>
@@ -145,7 +146,7 @@ export default function CommunityPlaylistsPage() {
 
       <section className="community-content">
         <div className="community-heading-row">
-          <h1 id="community-playlists-title">Community Playlists</h1>
+          <h1 className="playlists-title">Community Playlists</h1>
           <label className="community-search">
             <SearchIcon size={13} />
             <input
