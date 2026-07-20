@@ -36,6 +36,13 @@ function applyDesktopCorsHeaders(response: NextResponse, request: NextRequest) {
 }
 
 export default clerkMiddleware(async (auth, request) => {
+  if (
+    request.nextUrl.pathname === "/playlists" &&
+    request.nextUrl.searchParams.get("tab") === "community-playlists"
+  ) {
+    return NextResponse.redirect(new URL("/playlists/community", request.url));
+  }
+
   if (request.nextUrl.pathname.startsWith("/api/desktop")) {
     if (request.method === "OPTIONS") {
       return applyDesktopCorsHeaders(
