@@ -231,8 +231,8 @@
 }
 
 .community-tabs button.is-active {
-  background: transparent;
-  color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .community-grid {
