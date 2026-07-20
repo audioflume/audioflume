@@ -25,7 +25,6 @@ const PLAYLIST_GRADIENTS = [
 
 function parseResponse(text: string) {
   if (!text) return null;
-
   try {
     return JSON.parse(text);
   } catch {
@@ -47,6 +46,7 @@ export default function PlaylistDetailActionsMenu() {
   const [renaming, setRenaming] = useState(false);
   const [renameName, setRenameName] = useState("");
   const [saving, setSaving] = useState(false);
+  const [visibilitySaving, setVisibilitySaving] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [editCoverPreview, setEditCoverPreview] = useState<string | null>(null);
@@ -83,7 +83,6 @@ export default function PlaylistDetailActionsMenu() {
       const nextRenameTarget = document.querySelector<HTMLElement>(
         ".playlist-detail-page .playlist-detail-hero > .min-w-0",
       );
-
       setActionsTarget((current) =>
         current === nextActionsTarget ? current : nextActionsTarget,
       );
@@ -93,10 +92,8 @@ export default function PlaylistDetailActionsMenu() {
     };
 
     updateTargets();
-
     const observer = new MutationObserver(updateTargets);
     observer.observe(document.body, { childList: true, subtree: true });
-
     return () => observer.disconnect();
   }, [isPlaylistDetail]);
 
@@ -105,6 +102,7 @@ export default function PlaylistDetailActionsMenu() {
     setRenaming(false);
     setRenameName("");
     setSaving(false);
+    setVisibilitySaving(false);
     setEditOpen(false);
     setEditName("");
     setEditCoverPreview(null);
@@ -114,13 +112,11 @@ export default function PlaylistDetailActionsMenu() {
 
   useEffect(() => {
     if (!renaming || !renameTarget || !playlist) return;
-
     const editor = renameEditorRef.current;
     if (!editor) return;
 
     editor.textContent = playlist.name;
     editor.focus();
-
     const selection = window.getSelection();
     const range = document.createRange();
     range.selectNodeContents(editor);
@@ -147,16 +143,13 @@ export default function PlaylistDetailActionsMenu() {
 
   async function saveRename() {
     if (!playlist || !renaming || saving) return;
-
     const cleanName = renameName.trim();
-
     if (!cleanName || cleanName === playlist.name) {
       cancelRename();
       return;
     }
 
     setSaving(true);
-
     try {
       const response = await fetch(`/api/playlists/${playlist.id}`, {
         method: "PATCH",
@@ -164,34 +157,18 @@ export default function PlaylistDetailActionsMenu() {
         body: JSON.stringify({ name: cleanName }),
       });
       const data = parseResponse(await response.text());
-
       if (!response.ok) {
-        console.warn("Playlist rename failed", {
-          status: response.status,
-          statusText: response.statusText,
-          response: data,
-        });
         showToast(data?.error || "Couldn't rename playlist");
         return;
       }
-
       setPlaylists((current) =>
         current.map((item) =>
-          item.id === playlist.id
-            ? {
-                ...item,
-                ...(data || {}),
-                name: data?.name || cleanName,
-              }
-            : item,
+          item.id === playlist.id ? { ...item, ...data } : item,
         ),
       );
       cancelRename();
       showToast("Playlist renamed");
-    } catch (error) {
-      console.warn("Playlist rename request failed", {
-        error: error instanceof Error ? error.message : String(error),
-      });
+    } catch {
       showToast("Couldn't reach the playlist service");
     } finally {
       setSaving(false);
@@ -200,7 +177,6 @@ export default function PlaylistDetailActionsMenu() {
 
   function openEditModal() {
     if (!playlist) return;
-
     const currentCover = playlist.cover_image_url ?? null;
     setMenuOpen(false);
     setEditName(playlist.name);
@@ -211,33 +187,17 @@ export default function PlaylistDetailActionsMenu() {
 
   async function saveEdit() {
     if (!playlist || editSaving) return;
-
     const cleanName = editName.trim();
     if (!cleanName) return;
 
-    const payload: {
-      name: string;
-      cover_image_url?: string | null;
-    } = {
+    const payload: { name: string; cover_image_url?: string | null } = {
       name: cleanName,
     };
-
     if (editCoverPreview !== editOriginalCover) {
       payload.cover_image_url = editCoverPreview;
     }
 
-    const diagnostics = {
-      playlistId: playlist.id,
-      nameChanged: cleanName !== playlist.name,
-      coverChanged: editCoverPreview !== editOriginalCover,
-      coverPayloadLength:
-        typeof payload.cover_image_url === "string"
-          ? payload.cover_image_url.length
-          : 0,
-    };
-
     setEditSaving(true);
-
     try {
       const response = await fetch(`/api/playlists/${playlist.id}`, {
         method: "PATCH",
@@ -245,87 +205,77 @@ export default function PlaylistDetailActionsMenu() {
         body: JSON.stringify(payload),
       });
       const data = parseResponse(await response.text());
-
       if (!response.ok) {
-        console.warn("Playlist save failed", {
-          ...diagnostics,
-          status: response.status,
-          statusText: response.statusText,
-          response: data,
-        });
-        showToast(
-          data?.stage
-            ? `${data?.error || "Couldn't save playlist"} (${data.stage})`
-            : data?.error || "Couldn't save playlist",
-        );
+        showToast(data?.error || "Couldn't save playlist");
         return;
       }
-
       setPlaylists((current) =>
         current.map((item) =>
-          item.id === playlist.id
-            ? {
-                ...item,
-                ...(data || {}),
-                name: data?.name || cleanName,
-                cover_image_url:
-                  data?.cover_image_url !== undefined
-                    ? data.cover_image_url
-                    : payload.cover_image_url !== undefined
-                      ? payload.cover_image_url
-                      : item.cover_image_url,
-              }
-            : item,
+          item.id === playlist.id ? { ...item, ...data } : item,
         ),
       );
       setEditOpen(false);
       showToast("Changes saved");
-    } catch (error) {
-      console.warn("Playlist save request failed", {
-        ...diagnostics,
-        error: error instanceof Error ? error.message : String(error),
-      });
+    } catch {
       showToast("Couldn't reach the playlist service");
     } finally {
       setEditSaving(false);
     }
   }
 
+  async function togglePublic() {
+    if (!playlist || visibilitySaving) return;
+    const nextPublic = !playlist.is_public;
+    setMenuOpen(false);
+    setVisibilitySaving(true);
+
+    try {
+      const response = await fetch(`/api/playlists/${playlist.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_public: nextPublic }),
+      });
+      const data = parseResponse(await response.text());
+      if (!response.ok) {
+        showToast(data?.error || "Couldn't update playlist visibility");
+        return;
+      }
+      setPlaylists((current) =>
+        current.map((item) =>
+          item.id === playlist.id ? { ...item, ...data } : item,
+        ),
+      );
+      showToast(nextPublic ? "Playlist is now public" : "Playlist is now private");
+    } catch {
+      showToast("Couldn't reach the playlist service");
+    } finally {
+      setVisibilitySaving(false);
+    }
+  }
+
   async function deletePlaylist() {
     if (!playlist || editSaving) return;
-
     const confirmed = window.confirm(
       `Are you sure you want to delete "${playlist.name}"? This cannot be undone.`,
     );
     if (!confirmed) return;
 
     setEditSaving(true);
-
     try {
       const response = await fetch(`/api/playlists/${playlist.id}`, {
         method: "DELETE",
       });
       const data = parseResponse(await response.text());
-
       if (!response.ok) {
-        console.warn("Playlist delete failed", {
-          status: response.status,
-          statusText: response.statusText,
-          response: data,
-        });
         showToast(data?.error || "Couldn't delete playlist");
         return;
       }
-
       setPlaylists((current) =>
         current.filter((item) => item.id !== playlist.id),
       );
       setEditOpen(false);
       router.push("/playlists");
-    } catch (error) {
-      console.warn("Playlist delete request failed", {
-        error: error instanceof Error ? error.message : String(error),
-      });
+    } catch {
       showToast("Couldn't reach the playlist service");
     } finally {
       setEditSaving(false);
@@ -357,14 +307,19 @@ export default function PlaylistDetailActionsMenu() {
                 </button>
               )}
             >
-              <button type="button" role="menuitem" onClick={startRename}>
-                Rename
-              </button>
               <button type="button" role="menuitem" onClick={openEditModal}>
                 Edit
               </button>
-              <button type="button" role="menuitem" disabled aria-disabled="true">
-                Make Public
+              <button type="button" role="menuitem" onClick={startRename}>
+                Rename
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                disabled={visibilitySaving}
+                onClick={() => void togglePublic()}
+              >
+                {playlist.is_public ? "Make Private" : "Make Public"}
               </button>
               <button
                 type="button"
@@ -402,7 +357,6 @@ export default function PlaylistDetailActionsMenu() {
                   cancelRename();
                   return;
                 }
-
                 void saveRename();
               }}
               onKeyDown={(event) => {
@@ -410,7 +364,6 @@ export default function PlaylistDetailActionsMenu() {
                   event.preventDefault();
                   event.currentTarget.blur();
                 }
-
                 if (event.key === "Escape") {
                   event.preventDefault();
                   cancelRenameRef.current = true;
@@ -426,97 +379,17 @@ export default function PlaylistDetailActionsMenu() {
   return (
     <>
       <style>{`
-        .playlist-detail-page .playlist-detail-cover:not(:has(img)) {
-          background: ${placeholderGradient} !important;
-        }
-
-        .playlist-detail-page .playlist-detail-top-actions > button:not(:first-child) {
-          display: none !important;
-        }
-
-        .playlist-detail-page .playlist-detail-more-menu {
-          grid-column: 3 !important;
-          grid-row: 1 !important;
-          justify-self: end;
-        }
-
-        .playlist-detail-page .playlist-detail-more-button {
-          box-sizing: border-box;
-          display: inline-flex;
-          width: 42px;
-          min-width: 42px;
-          height: 42px;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid var(--border);
-          border-radius: 0;
-          background: var(--bg-secondary);
-          padding: 0;
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-        }
-
-        .playlist-detail-page .playlist-detail-more-button:hover,
-        .playlist-detail-page .playlist-detail-more-button.is-active {
-          border-color: var(--border-hover);
-          background: var(--bg-hover);
-          color: var(--text-primary);
-        }
-
-        .playlist-detail-page .playlist-detail-more-button svg {
-          display: block;
-          width: 16px;
-          height: 16px;
-        }
-
-        .playlist-detail-more-dropdown {
-          min-width: 154px;
-        }
-
-        .playlist-detail-more-dropdown button:disabled {
-          cursor: default;
-          opacity: 0.42;
-        }
-
-        .playlist-detail-more-dropdown button:disabled:hover {
-          background: transparent;
-          color: inherit;
-        }
-
-        .playlist-detail-page:has(.playlist-detail-rename-shell) .playlist-detail-title {
-          display: none !important;
-        }
-
-        .playlist-detail-page .playlist-detail-rename-shell {
-          order: -1;
-          width: min(480px, 100%);
-          max-width: 480px;
-        }
-
-        .playlist-detail-page .playlist-detail-rename-input {
-          box-sizing: border-box;
-          display: block;
-          width: 100%;
-          min-width: 0;
-          height: auto;
-          margin: 0;
-          overflow: hidden;
-          border: 0;
-          border-radius: 0;
-          background: transparent;
-          padding: 0;
-          color: var(--text-primary);
-          caret-color: var(--text-primary);
-          font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
-          font-size: clamp(22px, 2vw, 32px);
-          font-weight: 400;
-          letter-spacing: -0.055em;
-          line-height: 0.98;
-          outline: none;
-          transform: none !important;
-          white-space: nowrap;
-        }
+        .playlist-detail-page .playlist-detail-cover:not(:has(img)) { background: ${placeholderGradient} !important; }
+        .playlist-detail-page .playlist-detail-top-actions > button:not(:first-child) { display: none !important; }
+        .playlist-detail-page .playlist-detail-more-menu { grid-column: 3 !important; grid-row: 1 !important; justify-self: end; }
+        .playlist-detail-page .playlist-detail-more-button { box-sizing: border-box; display: inline-flex; width: 42px; min-width: 42px; height: 42px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0; color: var(--text-secondary); cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .playlist-detail-page .playlist-detail-more-button:hover, .playlist-detail-page .playlist-detail-more-button.is-active { border-color: var(--border-hover); background: var(--bg-hover); color: var(--text-primary); }
+        .playlist-detail-page .playlist-detail-more-button svg { display: block; width: 16px; height: 16px; }
+        .playlist-detail-more-dropdown { min-width: 154px; }
+        .playlist-detail-more-dropdown button:disabled { cursor: default; opacity: 0.42; }
+        .playlist-detail-page:has(.playlist-detail-rename-shell) .playlist-detail-title { display: none !important; }
+        .playlist-detail-page .playlist-detail-rename-shell { order: -1; width: min(480px, 100%); max-width: 480px; }
+        .playlist-detail-page .playlist-detail-rename-input { box-sizing: border-box; display: block; width: 100%; min-width: 0; height: auto; margin: 0; overflow: hidden; border: 0; border-radius: 0; background: transparent; padding: 0; color: var(--text-primary); caret-color: var(--text-primary); font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif; font-size: clamp(22px, 2vw, 32px); font-weight: 400; letter-spacing: -0.055em; line-height: 0.98; outline: none; transform: none !important; white-space: nowrap; }
       `}</style>
       {menu}
       {renameField}
