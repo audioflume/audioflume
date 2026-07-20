@@ -39,6 +39,26 @@ function getErrorResponse(error: unknown, stage: string) {
   return { error: "Failed to update playlist", stage };
 }
 
+function parseCoverImageUrl(value: unknown): string | null | undefined {
+  if (value == null || value === "") return null;
+  if (typeof value !== "string") return undefined;
+
+  const cleanValue = value.trim();
+  if (!cleanValue) return null;
+  if (cleanValue.startsWith("data:") || cleanValue.startsWith("blob:")) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(cleanValue);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? cleanValue
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function PATCH(req: Request, context: RouteContext) {
   const { userId } = await auth();
 
@@ -69,10 +89,19 @@ export async function PATCH(req: Request, context: RouteContext) {
     );
 
     if (coverWasIncluded) {
-      updates.cover_image_url =
-        typeof body.cover_image_url === "string" && body.cover_image_url.trim()
-          ? body.cover_image_url
-          : null;
+      const coverImageUrl = parseCoverImageUrl(body.cover_image_url);
+
+      if (coverImageUrl === undefined) {
+        return NextResponse.json(
+          {
+            error: "Playlist cover must be an uploaded image URL",
+            stage,
+          },
+          { status: 400 },
+        );
+      }
+
+      updates.cover_image_url = coverImageUrl;
     }
 
     stage = "update-playlist";
