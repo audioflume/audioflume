@@ -113,6 +113,17 @@ const playlists = [
 
 const featured = [playlists[2], playlists[6], playlists[5], playlists[0], playlists[4]];
 
+function FilterRailChevron() {
+  return (
+    <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8.6 5.3a1.3 1.3 0 0 1 1.84.04l5.5 5.76a1.3 1.3 0 0 1 0 1.8l-5.5 5.76a1.3 1.3 0 0 1-1.88-1.8L13.2 12 8.56 7.14a1.3 1.3 0 0 1 .04-1.84Z"
+      />
+    </svg>
+  );
+}
+
 export default function CommunityPlaylistsPage() {
   const { currentSong } = usePlayer();
   const [query, setQuery] = useState("");
@@ -177,51 +188,54 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-categories nav {
-          gap: 2px !important;
+          gap: 0 !important;
         }
 
-        .community-categories a {
-          position: relative;
+        .community-categories a.fw-filter-rail-item {
+          position: relative !important;
+          box-sizing: border-box !important;
           display: flex !important;
           width: 100% !important;
           height: 38px !important;
-          flex-shrink: 0;
-          align-items: center;
-          justify-content: space-between;
-          border-radius: var(--filmwave-ui-radius-control) !important;
-          background: transparent;
-          padding: 0 8px 0 12px;
+          flex-shrink: 0 !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          border-top: 0 !important;
+          border-radius: 0 !important;
+          margin: 0 !important;
+          background: transparent !important;
+          background-color: transparent !important;
+          padding: 0 8px 0 12px !important;
           color: var(--text-secondary) !important;
           font-family: inherit !important;
           font-size: 12.5px !important;
           font-weight: 400 !important;
           line-height: normal !important;
+          opacity: 1 !important;
           transition: background-color 160ms ease, color 160ms ease !important;
         }
 
-        .community-categories a::after {
-          content: "";
-          width: 6px;
-          height: 6px;
-          flex: 0 0 6px;
-          border-top: 1.5px solid currentColor;
-          border-right: 1.5px solid currentColor;
-          opacity: 0;
-          transform: rotate(45deg);
-          transition: opacity 160ms ease;
+        .community-categories a.fw-filter-rail-item .fw-filter-rail-chevron {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          opacity: 0 !important;
+          color: currentColor !important;
+          transition: opacity 160ms ease, color 160ms ease !important;
         }
 
-        .community-categories a:hover,
-        .community-categories a:focus-visible {
+        .community-categories a.fw-filter-rail-item:hover,
+        .community-categories a.fw-filter-rail-item:focus-visible {
           background: var(--bg-hover) !important;
+          background-color: var(--bg-hover) !important;
           color: var(--text-primary) !important;
           opacity: 1 !important;
-          outline: none;
+          outline: none !important;
         }
 
-        .community-categories a:hover::after,
-        .community-categories a:focus-visible::after {
-          opacity: 0.65;
+        .community-categories a.fw-filter-rail-item:hover .fw-filter-rail-chevron,
+        .community-categories a.fw-filter-rail-item:focus-visible .fw-filter-rail-chevron {
+          opacity: 0.65 !important;
         }
 
         .community-featured {
@@ -271,7 +285,16 @@ export default function CommunityPlaylistsPage() {
             <p className="community-sidebar-heading">Categories</p>
             <nav aria-label="Community playlist categories">
               {categories.map((category) => (
-                <a key={category} href={`#${category.toLowerCase()}`}>{category}</a>
+                <a
+                  className="fw-filter-rail-item"
+                  key={category}
+                  href={`#${category.toLowerCase()}`}
+                >
+                  <span className="fw-filter-rail-label">{category}</span>
+                  <span className="fw-filter-rail-chevron" aria-hidden="true">
+                    <FilterRailChevron />
+                  </span>
+                </a>
               ))}
             </nav>
           </section>
