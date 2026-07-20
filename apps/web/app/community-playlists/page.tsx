@@ -78,6 +78,36 @@ const playlists = [
     tracks: 17,
     cover: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=900&q=88",
   },
+  {
+    title: "Coastal Calm",
+    creator: "Isla D.",
+    tracks: 15,
+    cover: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    title: "Rainy City",
+    creator: "Urban Tapes",
+    tracks: 26,
+    cover: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    title: "Morning Light",
+    creator: "Hannah S.",
+    tracks: 14,
+    cover: "https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    title: "Quiet Frames",
+    creator: "Theo R.",
+    tracks: 21,
+    cover: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    title: "After the Storm",
+    creator: "Maya L.",
+    tracks: 18,
+    cover: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=88&sat=-35",
+  },
 ];
 
 const featured = [playlists[2], playlists[6], playlists[5], playlists[0], playlists[4]];
@@ -115,7 +145,7 @@ export default function CommunityPlaylistsPage() {
 
       <section className="community-content">
         <div className="community-heading-row">
-          <h1>Community Playlists</h1>
+          <h1 className="playlists-title">Community Playlists</h1>
           <label className="community-search">
             <SearchIcon size={13} />
             <input
