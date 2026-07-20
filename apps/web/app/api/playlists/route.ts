@@ -35,7 +35,7 @@ export async function GET() {
     const [playlistsResult, coversResult] = await Promise.all([
       supabaseServer
         .from("playlists")
-        .select("id, clerk_user_id, name, position")
+        .select("id, clerk_user_id, name, position, is_public, published_at")
         .eq("clerk_user_id", userId)
         .order("position", { ascending: true }),
       supabaseServer
@@ -146,6 +146,8 @@ export async function POST(req: Request) {
           typeof body.position === "number" && Number.isFinite(body.position)
             ? body.position
             : nextPosition,
+        is_public: false,
+        published_at: null,
       })
       .select()
       .single();
