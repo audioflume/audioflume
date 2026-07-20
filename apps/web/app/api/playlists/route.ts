@@ -4,6 +4,26 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import { normalizePlaylist, getPlaylistErrorResponse } from "@/lib/playlists";
 import { toSmartTitleCase } from "@/lib/smartTitleCase";
 
+function parseCoverImageUrl(value: unknown): string | null | undefined {
+  if (value == null || value === "") return null;
+  if (typeof value !== "string") return undefined;
+
+  const cleanValue = value.trim();
+  if (!cleanValue) return null;
+  if (cleanValue.startsWith("data:") || cleanValue.startsWith("blob:")) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(cleanValue);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? cleanValue
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function GET() {
   const { userId } = await auth();
 
@@ -12,17 +32,44 @@ export async function GET() {
   }
 
   try {
-    const { data, error } = await supabaseServer
-      .from("playlists")
-      .select("id, clerk_user_id, name, cover_image_url, position")
-      .eq("clerk_user_id", userId)
-      .order("position", { ascending: true });
+    const [playlistsResult, coversResult] = await Promise.all([
+      supabaseServer
+        .from("playlists")
+        .select("id, clerk_user_id, name, position")
+        .eq("clerk_user_id", userId)
+        .order("position", { ascending: true }),
+      supabaseServer
+        .from("playlists")
+        .select("id, cover_image_url")
+        .eq("clerk_user_id", userId)
+        .not("cover_image_url", "like", "data:%")
+        .not("cover_image_url", "like", "blob:%"),
+    ]);
 
-    if (error) {
-      throw error;
+    if (playlistsResult.error) {
+      throw playlistsResult.error;
     }
 
-    return NextResponse.json((data ?? []).map(normalizePlaylist));
+    if (coversResult.error) {
+      throw coversResult.error;
+    }
+
+    const coversByPlaylistId = new Map(
+      (coversResult.data ?? []).map((playlist) => [
+        Number(playlist.id),
+        playlist.cover_image_url,
+      ]),
+    );
+
+    return NextResponse.json(
+      (playlistsResult.data ?? []).map((playlist) =>
+        normalizePlaylist({
+          ...playlist,
+          cover_image_url:
+            coversByPlaylistId.get(Number(playlist.id)) ?? null,
+        }),
+      ),
+    );
   } catch (err) {
     console.error("Supabase playlists fetch error:", err);
 
@@ -63,6 +110,15 @@ export async function POST(req: Request) {
       );
     }
 
+    const coverImageUrl = parseCoverImageUrl(body.cover_image_url);
+
+    if (coverImageUrl === undefined) {
+      return NextResponse.json(
+        { error: "Playlist cover must be an uploaded image URL" },
+        { status: 400 },
+      );
+    }
+
     const { data: existingPlaylists, error: positionError } =
       await supabaseServer
         .from("playlists")
@@ -85,7 +141,7 @@ export async function POST(req: Request) {
       .insert({
         clerk_user_id: userId,
         name: cleanName,
-        cover_image_url: body.cover_image_url || null,
+        cover_image_url: coverImageUrl,
         position:
           typeof body.position === "number" && Number.isFinite(body.position)
             ? body.position
