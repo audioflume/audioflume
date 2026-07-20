@@ -195,16 +195,17 @@ export default function CommunityPlaylistsPage() {
         .community-featured {
           min-height: 0 !important;
           height: auto !important;
-          flex: 1 1 auto !important;
-          overflow: hidden !important;
-          padding-bottom: 0 !important;
+          flex: 0 0 auto !important;
+          overflow: visible !important;
+          padding-bottom: 32px !important;
         }
 
         .community-featured-list {
           min-height: 0 !important;
-          flex: 1 1 auto !important;
-          overflow-y: auto !important;
-          padding-bottom: 32px !important;
+          flex: 0 0 auto !important;
+          overflow: visible !important;
+          overscroll-behavior: auto !important;
+          padding-bottom: 0 !important;
         }
 
         .community-track-count {
