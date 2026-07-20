@@ -7,7 +7,7 @@ import { usePlaylists } from "@/hooks/usePlaylists";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { createRoot, type Root } from "react-dom/client";
 
 function parseResponse(text: string) {
   if (!text) return null;
@@ -25,30 +25,40 @@ type PublicIconTarget = {
   detail: boolean;
 };
 
+type MountedPublicIcon = {
+  root: Root;
+  host: HTMLSpanElement;
+  title: HTMLElement;
+};
+
 export default function PlaylistsTemplate({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
   const { playlists, setPlaylists } = usePlaylists();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [publicIconTargets, setPublicIconTargets] = useState<PublicIconTarget[]>([]);
   const toastTimerRef = useRef<number | null>(null);
+  const publicIconRootsRef = useRef<Map<string, MountedPublicIcon>>(new Map());
 
   useEffect(() => {
     return () => {
       if (toastTimerRef.current !== null) {
         window.clearTimeout(toastTimerRef.current);
       }
+
+      publicIconRootsRef.current.forEach(({ root, host, title }) => {
+        root.unmount();
+        host.remove();
+        title.classList.remove("playlist-name-has-public-icon");
+      });
+      publicIconRootsRef.current.clear();
     };
   }, []);
 
   useEffect(() => {
-    if (!pathname.startsWith("/playlists")) {
-      setPublicIconTargets([]);
-      return;
-    }
+    if (!pathname.startsWith("/playlists")) return;
 
-    function syncPublicIconTargets() {
-      const nextTargets: PublicIconTarget[] = [];
+    function collectTargets() {
+      const targets: PublicIconTarget[] = [];
 
       if (pathname === "/playlists") {
         document
@@ -69,7 +79,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
             );
             if (!name) return;
 
-            nextTargets.push({
+            targets.push({
               key: `playlist-${playlist.id}`,
               element: name,
               detail: false,
@@ -83,7 +93,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         );
 
         if (playlist?.is_public && title) {
-          nextTargets.push({
+          targets.push({
             key: `playlist-detail-${playlist.id}`,
             element: title,
             detail: true,
@@ -91,25 +101,62 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         }
       }
 
-      setPublicIconTargets((current) => {
-        const unchanged =
-          current.length === nextTargets.length &&
-          current.every(
-            (target, index) =>
-              target.key === nextTargets[index]?.key &&
-              target.element === nextTargets[index]?.element &&
-              target.detail === nextTargets[index]?.detail,
-          );
+      return targets;
+    }
 
-        return unchanged ? current : nextTargets;
+    function syncPublicIcons() {
+      const targets = collectTargets();
+      const targetKeys = new Set(targets.map((target) => target.key));
+
+      publicIconRootsRef.current.forEach((mounted, key) => {
+        const matchingTarget = targets.find((target) => target.key === key);
+        const targetChanged =
+          !matchingTarget || matchingTarget.element !== mounted.title;
+
+        if (!targetKeys.has(key) || targetChanged || !mounted.host.isConnected) {
+          mounted.root.unmount();
+          mounted.host.remove();
+          mounted.title.classList.remove("playlist-name-has-public-icon");
+          publicIconRootsRef.current.delete(key);
+        }
+      });
+
+      targets.forEach((target) => {
+        if (publicIconRootsRef.current.has(target.key)) return;
+
+        const host = document.createElement("span");
+        host.className = `playlist-public-icon-host${target.detail ? " is-detail" : ""}`;
+        host.dataset.playlistPublicIconHost = target.key;
+        host.title = "Public playlist";
+        host.setAttribute("aria-label", "Public playlist");
+
+        target.element.classList.add("playlist-name-has-public-icon");
+        target.element.insertAdjacentElement("afterend", host);
+
+        const root = createRoot(host);
+        root.render(<PublicPlaylistIcon className="playlist-public-name-icon" />);
+
+        publicIconRootsRef.current.set(target.key, {
+          root,
+          host,
+          title: target.element,
+        });
       });
     }
 
-    syncPublicIconTargets();
-    const observer = new MutationObserver(syncPublicIconTargets);
+    syncPublicIcons();
+    const observer = new MutationObserver(syncPublicIcons);
     observer.observe(document.body, { childList: true, subtree: true });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      publicIconRootsRef.current.forEach(({ root, host, title }) => {
+        root.unmount();
+        host.remove();
+        title.classList.remove("playlist-name-has-public-icon");
+      });
+      publicIconRootsRef.current.clear();
+    };
   }, [pathname, playlists]);
 
   useEffect(() => {
@@ -242,10 +289,13 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
   return (
     <>
       <style>{`
-        .playlist-public-name-icon {
+        .playlist-name-has-public-icon {
+          display: inline !important;
+        }
+
+        .playlist-public-icon-host {
           display: inline-flex;
           margin-left: 6px;
-          flex: 0 0 auto;
           align-items: center;
           justify-content: center;
           color: var(--text-muted);
@@ -253,25 +303,16 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           vertical-align: baseline;
         }
 
-        .playlist-gallery-content .playlist-public-name-icon {
+        .playlist-gallery-content .playlist-public-icon-host {
           color: rgba(255, 255, 255, 0.62);
         }
 
-        .playlist-detail-title .playlist-public-name-icon {
+        .playlist-public-icon-host.is-detail {
           position: relative;
-          top: 5px;
+          top: 1px;
         }
       `}</style>
       {children}
-      {publicIconTargets.map((target) =>
-        createPortal(
-          <PublicPlaylistIcon
-            className={`playlist-public-name-icon${target.detail ? " is-detail" : ""}`}
-          />,
-          target.element,
-          target.key,
-        ),
-      )}
       <Toast
         message={toastMessage}
         bottomOffset={currentSong ? "88px" : "24px"}
