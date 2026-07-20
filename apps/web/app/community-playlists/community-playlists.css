@@ -13,7 +13,9 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
   border-right: 1px solid var(--border-subtle);
   background: var(--bg-primary);
 }
@@ -61,8 +63,9 @@
 }
 
 .community-featured {
-  min-height: 0;
-  flex: 1 1 auto;
+  min-height: 220px;
+  height: clamp(220px, 44vh, 460px);
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   padding-bottom: 18px;
@@ -137,15 +140,18 @@
   gap: 36px;
 }
 
-.community-page .playlists-title {
+#community-playlists-title {
+  display: block !important;
   margin: 0 !important;
   max-width: 640px !important;
   color: var(--text-primary) !important;
   font-family: var(--font-instrument-sans) !important;
-  font-size: 1.6em !important;
+  font-size: 25.6px !important;
+  font-style: normal !important;
   font-weight: 500 !important;
   line-height: 1 !important;
   letter-spacing: -0.035em !important;
+  text-transform: none !important;
 }
 
 .community-search {
