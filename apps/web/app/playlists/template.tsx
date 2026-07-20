@@ -361,7 +361,8 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           grid-column: 4;
           width: 18px;
           margin-left: 0;
-          justify-self: center;
+          justify-self: end;
+          transform: translateX(4px);
           color: var(--text-muted) !important;
         }
 
