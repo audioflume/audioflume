@@ -121,6 +121,8 @@ export type FilmwavePlaylist = {
   name: string;
   cover_image_url: string | null;
   position: number;
+  is_public: boolean;
+  published_at: string | null;
 };
 
 export type FilmwavePlaylistSong = FilmwaveSong & {
