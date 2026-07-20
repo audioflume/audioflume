@@ -61,7 +61,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
     const titleRect = mounted.title.getBoundingClientRect();
     const parentRect = parent.getBoundingClientRect();
     const left = titleRect.right - parentRect.left + 6;
-    const top = titleRect.top - parentRect.top + titleRect.height - 15;
+    const top = titleRect.top - parentRect.top + titleRect.height - 14.5;
 
     mounted.host.style.left = `${left}px`;
     mounted.host.style.top = `${top}px`;
