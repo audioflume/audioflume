@@ -1,6 +1,6 @@
-.community-page {
+.community-page.playlists-page {
   height: calc(100vh - var(--filmwave-header-height, 56px));
-  margin-top: var(--filmwave-header-height, 56px);
+  margin-top: var(--filmwave-header-height, 56px) !important;
   display: grid;
   grid-template-columns: 276px minmax(0, 1fr);
   overflow: hidden;
@@ -140,18 +140,8 @@
   gap: 36px;
 }
 
-#community-playlists-title {
-  display: block !important;
-  margin: 0 !important;
-  max-width: 640px !important;
-  color: var(--text-primary) !important;
-  font-family: var(--font-instrument-sans) !important;
-  font-size: 25.6px !important;
-  font-style: normal !important;
-  font-weight: 500 !important;
-  line-height: 1 !important;
-  letter-spacing: -0.035em !important;
-  text-transform: none !important;
+.community-page.playlists-page .playlists-title::before {
+  content: "Community Playlists";
 }
 
 .community-search {
@@ -400,7 +390,7 @@
 }
 
 @media (max-width: 1040px) {
-  .community-page {
+  .community-page.playlists-page {
     grid-template-columns: 220px minmax(0, 1fr);
   }
 
@@ -420,7 +410,7 @@
 }
 
 @media (max-width: 760px) {
-  .community-page {
+  .community-page.playlists-page {
     height: auto;
     min-height: calc(100vh - var(--filmwave-header-height, 56px));
     display: block;
