@@ -28,6 +28,7 @@ type FetchPlaylistsOptions = {
 
 const PlaylistsContext = createContext<PlaylistsContextValue | null>(null);
 const PLAYLISTS_STORAGE_PREFIX = "filmwave-playlists:";
+const MAX_STORED_PLAYLISTS_CHARACTERS = 2_000_000;
 
 let cachedUserId: string | null = null;
 let cachedPlaylists: Playlist[] | null = null;
@@ -38,16 +39,52 @@ function getPlaylistsStorageKey(userId: string) {
   return `${PLAYLISTS_STORAGE_PREFIX}${userId}`;
 }
 
+function sanitizePlaylist(playlist: Playlist): Playlist {
+  const coverImageUrl = playlist.cover_image_url;
+
+  if (
+    typeof coverImageUrl === "string" &&
+    (coverImageUrl.startsWith("data:") || coverImageUrl.startsWith("blob:"))
+  ) {
+    return {
+      ...playlist,
+      cover_image_url: null,
+    };
+  }
+
+  return playlist;
+}
+
+function sanitizePlaylists(value: unknown): Playlist[] | null {
+  if (!Array.isArray(value)) return null;
+  return value.map((playlist) => sanitizePlaylist(playlist as Playlist));
+}
+
 function readStoredPlaylists(userId: string) {
   if (typeof window === "undefined") return null;
 
+  const storageKey = getPlaylistsStorageKey(userId);
+
   try {
-    const stored = window.localStorage.getItem(getPlaylistsStorageKey(userId));
+    const stored = window.localStorage.getItem(storageKey);
     if (!stored) return null;
 
-    const parsed = JSON.parse(stored);
-    return Array.isArray(parsed) ? (parsed as Playlist[]) : null;
+    if (stored.length > MAX_STORED_PLAYLISTS_CHARACTERS) {
+      window.localStorage.removeItem(storageKey);
+      return null;
+    }
+
+    const sanitized = sanitizePlaylists(JSON.parse(stored));
+    if (!sanitized) return null;
+
+    const cleanStored = JSON.stringify(sanitized);
+    if (cleanStored !== stored) {
+      window.localStorage.setItem(storageKey, cleanStored);
+    }
+
+    return sanitized;
   } catch {
+    window.localStorage.removeItem(storageKey);
     return null;
   }
 }
@@ -58,7 +95,7 @@ function writeStoredPlaylists(userId: string, playlists: Playlist[]) {
   try {
     window.localStorage.setItem(
       getPlaylistsStorageKey(userId),
-      JSON.stringify(playlists),
+      JSON.stringify(playlists.map(sanitizePlaylist)),
     );
   } catch {
     // The in-memory cache remains available if browser storage is unavailable.
@@ -74,11 +111,13 @@ async function requestPlaylists() {
     throw new Error(data?.error || "Failed to load playlists");
   }
 
-  if (!Array.isArray(data)) {
+  const sanitized = sanitizePlaylists(data);
+
+  if (!sanitized) {
     throw new Error("Invalid playlists response");
   }
 
-  return data as Playlist[];
+  return sanitized;
 }
 
 export function PlaylistsProvider({ children }: { children: ReactNode }) {
@@ -99,16 +138,17 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
           typeof update === "function"
             ? (update as (previous: Playlist[]) => Playlist[])(current)
             : update;
+        const sanitizedNext = next.map(sanitizePlaylist);
 
         playlistMutationVersion += 1;
 
         if (userId) {
           cachedUserId = userId;
-          cachedPlaylists = next;
-          writeStoredPlaylists(userId, next);
+          cachedPlaylists = sanitizedNext;
+          writeStoredPlaylists(userId, sanitizedNext);
         }
 
-        return next;
+        return sanitizedNext;
       });
     },
     [userId],
