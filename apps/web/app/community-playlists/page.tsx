@@ -117,93 +117,135 @@ export default function CommunityPlaylistsPage() {
   const [query, setQuery] = useState("");
 
   return (
-    <main className="community-page">
-      <aside className="community-sidebar" aria-label="Community playlist discovery">
-        <section className="community-sidebar-section community-categories">
-          <p className="community-sidebar-heading">Categories</p>
-          <nav aria-label="Community playlist categories">
-            {categories.map((category) => (
-              <a key={category} href={`#${category.toLowerCase()}`}>{category}</a>
-            ))}
-          </nav>
-        </section>
+    <>
+      <style>{`
+        .community-page {
+          height: calc(100vh - var(--filmwave-header-height, 56px));
+          margin-top: var(--filmwave-header-height, 56px);
+          display: grid;
+          grid-template-columns: 276px minmax(0, 1fr);
+          overflow: hidden;
+          background: var(--bg-primary);
+          color: var(--text-primary);
+        }
 
-        <section className="community-sidebar-section community-featured">
-          <p className="community-sidebar-heading">Featured Playlists</p>
-          <div className="community-featured-list">
-            {featured.map((playlist) => (
-              <a className="community-featured-item" href="#community-grid" key={playlist.title}>
-                <img src={playlist.cover} alt="" />
-                <span>
-                  <strong>{playlist.title}</strong>
-                  <small>{playlist.tracks} songs</small>
-                </span>
-              </a>
+        .community-title-style-scope.playlists-page {
+          position: static !important;
+          display: block !important;
+          min-height: 0 !important;
+          margin: 0 !important;
+          overflow: visible !important;
+          background: transparent !important;
+        }
+
+        .community-title-style-scope.playlists-page .playlists-title::before {
+          content: "Community Playlists";
+        }
+
+        @media (max-width: 1040px) {
+          .community-page {
+            grid-template-columns: 220px minmax(0, 1fr);
+          }
+        }
+
+        @media (max-width: 760px) {
+          .community-page {
+            height: auto;
+            min-height: calc(100vh - var(--filmwave-header-height, 56px));
+            display: block;
+            overflow: visible;
+          }
+        }
+      `}</style>
+
+      <main className="community-page">
+        <aside className="community-sidebar" aria-label="Community playlist discovery">
+          <section className="community-sidebar-section community-categories">
+            <p className="community-sidebar-heading">Categories</p>
+            <nav aria-label="Community playlist categories">
+              {categories.map((category) => (
+                <a key={category} href={`#${category.toLowerCase()}`}>{category}</a>
+              ))}
+            </nav>
+          </section>
+
+          <section className="community-sidebar-section community-featured">
+            <p className="community-sidebar-heading">Featured Playlists</p>
+            <div className="community-featured-list">
+              {featured.map((playlist) => (
+                <a className="community-featured-item" href="#community-grid" key={playlist.title}>
+                  <img src={playlist.cover} alt="" />
+                  <span>
+                    <strong>{playlist.title}</strong>
+                    <small>{playlist.tracks} songs</small>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </section>
+        </aside>
+
+        <section className="community-content">
+          <div className="community-heading-row">
+            <div className="community-title-style-scope playlists-page">
+              <h1 className="playlists-title">Playlists</h1>
+            </div>
+            <label className="community-search">
+              <SearchIcon size={13} />
+              <input
+                type="text"
+                value={query}
+                placeholder="Search community playlists..."
+                aria-label="Search community playlists"
+                onChange={(event) => setQuery(event.target.value)}
+              />
+              {query.length > 0 && (
+                <button
+                  type="button"
+                  className="community-search-clear"
+                  aria-label="Clear community playlist search"
+                  onClick={() => setQuery("")}
+                >
+                  ×
+                </button>
+              )}
+            </label>
+          </div>
+
+          <div className="community-tabs" role="tablist" aria-label="Community playlist sorting">
+            {["Trending", "Recent", "Most Liked", "Staff Picks"].map((tab, index) => (
+              <button type="button" key={tab} className={index === 0 ? "is-active" : ""}>{tab}</button>
+            ))}
+          </div>
+
+          <div className="community-grid" id="community-grid">
+            {playlists.map((playlist) => (
+              <article className="community-card" key={playlist.title}>
+                <div className="community-cover-wrap">
+                  <img className="community-cover" src={playlist.cover} alt="" />
+                  <button className="community-like" type="button" aria-label={`Like ${playlist.title}`}>
+                    <HeartIcon />
+                  </button>
+                  <button className="community-play" type="button" aria-label={`Preview ${playlist.title}`}>
+                    <PlayIconSmall size={15} />
+                  </button>
+                </div>
+                <div className="community-card-title-row">
+                  <h2>{playlist.title}</h2>
+                  <button className="community-more playlist-menu-btn-grid" type="button" aria-label={`More options for ${playlist.title}`}>
+                    <MoreIcon />
+                  </button>
+                </div>
+                <div className="community-creator">
+                  <span className="community-avatar" aria-hidden="true" />
+                  <span>by {playlist.creator}</span>
+                </div>
+                <p className="community-track-count">{playlist.tracks} songs</p>
+              </article>
             ))}
           </div>
         </section>
-      </aside>
-
-      <section className="community-content">
-        <div className="community-heading-row">
-          <div className="community-title-style-scope playlists-page">
-            <h1 className="playlists-title">Playlists</h1>
-          </div>
-          <label className="community-search">
-            <SearchIcon size={13} />
-            <input
-              type="text"
-              value={query}
-              placeholder="Search community playlists..."
-              aria-label="Search community playlists"
-              onChange={(event) => setQuery(event.target.value)}
-            />
-            {query.length > 0 && (
-              <button
-                type="button"
-                className="community-search-clear"
-                aria-label="Clear community playlist search"
-                onClick={() => setQuery("")}
-              >
-                ×
-              </button>
-            )}
-          </label>
-        </div>
-
-        <div className="community-tabs" role="tablist" aria-label="Community playlist sorting">
-          {["Trending", "Recent", "Most Liked", "Staff Picks"].map((tab, index) => (
-            <button type="button" key={tab} className={index === 0 ? "is-active" : ""}>{tab}</button>
-          ))}
-        </div>
-
-        <div className="community-grid" id="community-grid">
-          {playlists.map((playlist) => (
-            <article className="community-card" key={playlist.title}>
-              <div className="community-cover-wrap">
-                <img className="community-cover" src={playlist.cover} alt="" />
-                <button className="community-like" type="button" aria-label={`Like ${playlist.title}`}>
-                  <HeartIcon />
-                </button>
-                <button className="community-play" type="button" aria-label={`Preview ${playlist.title}`}>
-                  <PlayIconSmall size={15} />
-                </button>
-              </div>
-              <div className="community-card-title-row">
-                <h2>{playlist.title}</h2>
-                <button className="community-more playlist-menu-btn-grid" type="button" aria-label={`More options for ${playlist.title}`}>
-                  <MoreIcon />
-                </button>
-              </div>
-              <div className="community-creator">
-                <span className="community-avatar" aria-hidden="true" />
-                <span>by {playlist.creator}</span>
-              </div>
-              <p className="community-track-count">{playlist.tracks} songs</p>
-            </article>
-          ))}
-        </div>
-      </section>
-    </main>
+      </main>
+    </>
   );
 }
