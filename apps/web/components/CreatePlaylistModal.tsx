@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 import {
   modalFieldLabelClass,
@@ -33,6 +33,22 @@ export default function CreatePlaylistModal({
   onClose,
 }: CreatePlaylistModalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const localCoverPreviewRef = useRef<string | null>(null);
+  const [localCoverPreview, setLocalCoverPreview] = useState<string | null>(
+    null,
+  );
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [coverUploadError, setCoverUploadError] = useState<string | null>(null);
+  const busy = isCreating || isUploadingCover;
+  const visibleCoverPreview = localCoverPreview || coverPreview;
+
+  useEffect(() => {
+    return () => {
+      if (localCoverPreviewRef.current) {
+        URL.revokeObjectURL(localCoverPreviewRef.current);
+      }
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -42,9 +58,20 @@ export default function CreatePlaylistModal({
     }
   }
 
-  function clearFormAndClose() {
-    if (isCreating) return;
+  function releaseLocalCoverPreview() {
+    if (localCoverPreviewRef.current) {
+      URL.revokeObjectURL(localCoverPreviewRef.current);
+      localCoverPreviewRef.current = null;
+    }
 
+    setLocalCoverPreview(null);
+  }
+
+  function clearFormAndClose() {
+    if (busy) return;
+
+    releaseLocalCoverPreview();
+    setCoverUploadError(null);
     onNameChange("");
     onCoverPreviewChange(null);
     clearFileInput();
@@ -52,26 +79,56 @@ export default function CreatePlaylistModal({
   }
 
   function removeCoverImage() {
-    if (isCreating) return;
+    if (busy) return;
 
+    releaseLocalCoverPreview();
+    setCoverUploadError(null);
     onCoverPreviewChange(null);
     clearFileInput();
   }
 
-  function handleCoverChange(file: File) {
-    const reader = new FileReader();
+  async function handleCoverChange(file: File) {
+    if (busy) return;
 
-    reader.onloadend = () => {
-      if (typeof reader.result === "string") {
-        onCoverPreviewChange(reader.result);
+    releaseLocalCoverPreview();
+    setCoverUploadError(null);
+
+    const objectUrl = URL.createObjectURL(file);
+    localCoverPreviewRef.current = objectUrl;
+    setLocalCoverPreview(objectUrl);
+    setIsUploadingCover(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("name", name.trim() || "playlist");
+
+      const response = await fetch("/api/playlists/images/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || typeof data?.imageUrl !== "string") {
+        throw new Error(data?.error || "Failed to upload playlist cover");
       }
-    };
 
-    reader.readAsDataURL(file);
+      onCoverPreviewChange(data.imageUrl);
+    } catch (error) {
+      setCoverUploadError(
+        error instanceof Error
+          ? error.message
+          : "Failed to upload playlist cover",
+      );
+    } finally {
+      releaseLocalCoverPreview();
+      setIsUploadingCover(false);
+      clearFileInput();
+    }
   }
 
   function handleSubmit() {
-    if (!isCreating) onCreate();
+    if (!busy) onCreate();
   }
 
   return (
@@ -88,7 +145,7 @@ export default function CreatePlaylistModal({
         <div className="flex w-full items-center justify-between gap-3">
           <button
             type="button"
-            disabled={isCreating}
+            disabled={busy}
             className="flex h-8 cursor-pointer items-center gap-1.5 rounded-none px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
           >
             Unsplash
@@ -97,11 +154,11 @@ export default function CreatePlaylistModal({
 
           <button
             type="button"
-            disabled={isCreating || !name.trim()}
+            disabled={busy || !name.trim()}
             onClick={handleSubmit}
             className={modalPrimaryButtonClass}
           >
-            {isCreating ? (
+            {busy ? (
               <LoadingSpinner size={18} stroke={9} color="var(--bg-primary)" />
             ) : (
               "Create"
@@ -141,19 +198,19 @@ export default function CreatePlaylistModal({
             type="file"
             accept="image/*"
             className="hidden"
-            disabled={isCreating}
+            disabled={busy}
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (!file) return;
-              handleCoverChange(file);
+              void handleCoverChange(file);
             }}
           />
 
-          {coverPreview ? (
+          {visibleCoverPreview ? (
             <div className="group relative mt-2 h-[112px] w-[112px] overflow-visible">
               <button
                 type="button"
-                disabled={isCreating}
+                disabled={busy}
                 onClick={(e) => {
                   e.stopPropagation();
                   removeCoverImage();
@@ -166,12 +223,12 @@ export default function CreatePlaylistModal({
 
               <div
                 onClick={() => {
-                  if (!isCreating) fileInputRef.current?.click();
+                  if (!busy) fileInputRef.current?.click();
                 }}
                 className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)]"
               >
                 <img
-                  src={coverPreview}
+                  src={visibleCoverPreview}
                   alt="Playlist cover preview"
                   className="h-full w-full object-cover"
                 />
@@ -181,30 +238,40 @@ export default function CreatePlaylistModal({
                     Change image
                   </span>
                 </div>
+
+                {isUploadingCover && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-preview)]">
+                    <LoadingSpinner size={20} stroke={8} color="white" />
+                  </div>
+                )}
               </div>
             </div>
           ) : (
             <div
               onClick={() => {
-                if (!isCreating) fileInputRef.current?.click();
+                if (!busy) fileInputRef.current?.click();
               }}
               onDrop={(e) => {
                 e.preventDefault();
-                if (isCreating) return;
+                if (busy) return;
                 const file = e.dataTransfer.files?.[0];
                 if (!file) return;
-                handleCoverChange(file);
+                void handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
               className="group mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-tertiary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-tertiary-hover)]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-muted)] transition group-hover:bg-[var(--icon-button-hover)] group-hover:text-[var(--text-secondary)]">
-                <UploadIcon />
+                {isUploadingCover ? (
+                  <LoadingSpinner size={18} stroke={8} />
+                ) : (
+                  <UploadIcon />
+                )}
               </div>
 
               <div className="min-w-0">
                 <div className="text-xs font-medium text-[var(--text-primary)]">
-                  Drop image here
+                  {isUploadingCover ? "Uploading…" : "Drop image here"}
                 </div>
 
                 <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
@@ -212,6 +279,12 @@ export default function CreatePlaylistModal({
                 </div>
               </div>
             </div>
+          )}
+
+          {coverUploadError && (
+            <p className="mt-2 text-[11px] text-[var(--danger)]">
+              {coverUploadError}
+            </p>
           )}
         </div>
       </form>
