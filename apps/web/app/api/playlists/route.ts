@@ -32,19 +32,26 @@ export async function GET() {
   }
 
   try {
-    const [playlistsResult, coversResult] = await Promise.all([
-      supabaseServer
+    let playlistsResult = await supabaseServer
+      .from("playlists")
+      .select("id, clerk_user_id, name, position, is_public, published_at")
+      .eq("clerk_user_id", userId)
+      .order("position", { ascending: true });
+
+    if (playlistsResult.error) {
+      playlistsResult = await supabaseServer
         .from("playlists")
-        .select("id, clerk_user_id, name, position, is_public, published_at")
+        .select("id, clerk_user_id, name, position")
         .eq("clerk_user_id", userId)
-        .order("position", { ascending: true }),
-      supabaseServer
-        .from("playlists")
-        .select("id, cover_image_url")
-        .eq("clerk_user_id", userId)
-        .not("cover_image_url", "like", "data:%")
-        .not("cover_image_url", "like", "blob:%"),
-    ]);
+        .order("position", { ascending: true });
+    }
+
+    const coversResult = await supabaseServer
+      .from("playlists")
+      .select("id, cover_image_url")
+      .eq("clerk_user_id", userId)
+      .not("cover_image_url", "like", "data:%")
+      .not("cover_image_url", "like", "blob:%");
 
     if (playlistsResult.error) {
       throw playlistsResult.error;
@@ -146,8 +153,6 @@ export async function POST(req: Request) {
           typeof body.position === "number" && Number.isFinite(body.position)
             ? body.position
             : nextPosition,
-        is_public: false,
-        published_at: null,
       })
       .select()
       .single();
