@@ -239,9 +239,9 @@
 .community-tabs button.is-active::after {
   content: "";
   position: absolute;
-  right: 15px;
+  right: 0;
   bottom: 3px;
-  left: 15px;
+  left: 0;
   height: 2px;
   background: var(--text-primary);
 }
