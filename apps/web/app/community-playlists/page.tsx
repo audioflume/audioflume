@@ -138,6 +138,11 @@ export default function CommunityPlaylistsPage() {
           background: transparent !important;
         }
 
+        .community-title-style-scope.playlists-page .playlists-hero {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
         .community-title-style-scope.playlists-page .playlists-title::before {
           content: "Community Playlists";
         }
