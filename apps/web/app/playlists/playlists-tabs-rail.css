@@ -514,9 +514,7 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 .playlists-page .playlist-create-card .playlist-create-mark {
   border-color: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
   background: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
-  transition:
-    border-color 160ms ease,
-    background 160ms ease !important;
+  transition: none !important;
 }
 
 .playlists-page .playlist-create-card:hover .playlist-create-mark {
