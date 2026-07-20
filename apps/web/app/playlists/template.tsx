@@ -167,7 +167,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         host.setAttribute("aria-label", "Public playlist");
 
         if (target.list) {
-          target.element.appendChild(host);
+          target.element.insertAdjacentElement("beforebegin", host);
         } else {
           target.element.classList.add("playlist-name-has-public-icon");
           target.element.insertAdjacentElement("afterend", host);
@@ -348,7 +348,20 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           vertical-align: baseline;
         }
 
+        .playlist-index-row:not(.is-reordering):not(.playlist-create-row) {
+          grid-template-columns: 40px 50px minmax(0, 1fr) 18px minmax(84px, 120px) !important;
+        }
+
+        .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-count {
+          grid-column: 5;
+        }
+
         .playlist-public-icon-host.is-list {
+          position: static;
+          grid-column: 4;
+          width: 18px;
+          margin-left: 0;
+          justify-self: center;
           color: var(--text-muted) !important;
         }
 
@@ -360,6 +373,12 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           position: absolute;
           top: 0;
           margin-left: 0;
+        }
+
+        @media (max-width: 520px) {
+          .playlist-index-row:not(.is-reordering):not(.playlist-create-row) {
+            grid-template-columns: 18px 50px minmax(0, 1fr) 18px minmax(70px, 96px) !important;
+          }
         }
       `}</style>
       {children}
