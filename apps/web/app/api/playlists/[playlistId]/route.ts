@@ -2,13 +2,15 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
-type RouteContext = {
+ type RouteContext = {
   params: Promise<{ playlistId: string }> | { playlistId: string };
 };
 
 type PlaylistUpdate = {
-  name: string;
+  name?: string;
   cover_image_url?: string | null;
+  is_public?: boolean;
+  published_at?: string | null;
 };
 
 function getErrorResponse(error: unknown, stage: string) {
@@ -71,26 +73,26 @@ export async function PATCH(req: Request, context: RouteContext) {
   try {
     const { playlistId } = await context.params;
     const body = await req.json();
-    const cleanName = typeof body.name === "string" ? body.name.trim() : "";
+    const updates: PlaylistUpdate = {};
 
-    if (!cleanName) {
-      return NextResponse.json(
-        { error: "Missing playlist name" },
-        { status: 400 },
-      );
+    const nameWasIncluded = Object.prototype.hasOwnProperty.call(body, "name");
+    if (nameWasIncluded) {
+      const cleanName = typeof body.name === "string" ? body.name.trim() : "";
+      if (!cleanName) {
+        return NextResponse.json(
+          { error: "Missing playlist name" },
+          { status: 400 },
+        );
+      }
+      updates.name = cleanName;
     }
 
-    const updates: PlaylistUpdate = {
-      name: cleanName,
-    };
     const coverWasIncluded = Object.prototype.hasOwnProperty.call(
       body,
       "cover_image_url",
     );
-
     if (coverWasIncluded) {
       const coverImageUrl = parseCoverImageUrl(body.cover_image_url);
-
       if (coverImageUrl === undefined) {
         return NextResponse.json(
           {
@@ -100,8 +102,29 @@ export async function PATCH(req: Request, context: RouteContext) {
           { status: 400 },
         );
       }
-
       updates.cover_image_url = coverImageUrl;
+    }
+
+    const publicWasIncluded = Object.prototype.hasOwnProperty.call(
+      body,
+      "is_public",
+    );
+    if (publicWasIncluded) {
+      if (typeof body.is_public !== "boolean") {
+        return NextResponse.json(
+          { error: "Invalid playlist visibility" },
+          { status: 400 },
+        );
+      }
+      updates.is_public = body.is_public;
+      updates.published_at = body.is_public ? new Date().toISOString() : null;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json(
+        { error: "No playlist changes supplied" },
+        { status: 400 },
+      );
     }
 
     stage = "update-playlist";
@@ -111,7 +134,9 @@ export async function PATCH(req: Request, context: RouteContext) {
       .update(updates)
       .eq("id", playlistId)
       .eq("clerk_user_id", userId)
-      .select("id, position")
+      .select(
+        "id, clerk_user_id, name, cover_image_url, position, is_public, published_at",
+      )
       .maybeSingle();
 
     if (error) {
@@ -125,14 +150,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
-    return NextResponse.json({
-      id: data.id,
-      position: data.position,
-      name: cleanName,
-      ...(coverWasIncluded
-        ? { cover_image_url: updates.cover_image_url ?? null }
-        : {}),
-    });
+    return NextResponse.json(data);
   } catch (err) {
     console.error(`Playlist update failed during ${stage}:`, err);
 
