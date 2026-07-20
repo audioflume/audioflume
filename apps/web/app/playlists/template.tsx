@@ -350,6 +350,11 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
 
         .playlist-index-row:not(.is-reordering):not(.playlist-create-row) {
           grid-template-columns: 40px 50px minmax(0, 1fr) 18px minmax(84px, 120px) !important;
+          column-gap: 14px !important;
+        }
+
+        .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-main {
+          padding-left: 2px;
         }
 
         .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-count {
@@ -362,7 +367,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           width: 18px;
           margin-left: 0;
           justify-self: end;
-          transform: translateX(4px);
+          transform: translateX(6px);
           color: var(--text-muted) !important;
         }
 
