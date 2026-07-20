@@ -23,6 +23,7 @@ type PublicIconTarget = {
   key: string;
   element: HTMLElement;
   detail: boolean;
+  list: boolean;
 };
 
 type MountedPublicIcon = {
@@ -30,6 +31,7 @@ type MountedPublicIcon = {
   host: HTMLSpanElement;
   title: HTMLElement;
   detail: boolean;
+  list: boolean;
 };
 
 export default function PlaylistsTemplate({ children }: { children: ReactNode }) {
@@ -98,15 +100,18 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
 
             if (!playlist?.is_public) return;
 
-            const name = link.querySelector<HTMLElement>(
-              ".playlist-gallery-content h3, .playlist-row-main > span",
+            const listCount = link.querySelector<HTMLElement>(".playlist-row-count");
+            const gridName = link.querySelector<HTMLElement>(
+              ".playlist-gallery-content h3",
             );
-            if (!name) return;
+            const target = listCount ?? gridName;
+            if (!target) return;
 
             targets.push({
               key: `playlist-${playlist.id}`,
-              element: name,
+              element: target,
               detail: false,
+              list: Boolean(listCount),
             });
           });
       } else {
@@ -121,6 +126,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
             key: `playlist-detail-${playlist.id}`,
             element: title,
             detail: true,
+            list: false,
           });
         }
       }
@@ -135,7 +141,9 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
       publicIconRootsRef.current.forEach((mounted, key) => {
         const matchingTarget = targets.find((target) => target.key === key);
         const targetChanged =
-          !matchingTarget || matchingTarget.element !== mounted.title;
+          !matchingTarget ||
+          matchingTarget.element !== mounted.title ||
+          matchingTarget.list !== mounted.list;
 
         if (!targetKeys.has(key) || targetChanged || !mounted.host.isConnected) {
           disposeMountedIcon(mounted);
@@ -151,13 +159,19 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         }
 
         const host = document.createElement("span");
-        host.className = `playlist-public-icon-host${target.detail ? " is-detail" : ""}`;
+        host.className = `playlist-public-icon-host${
+          target.detail ? " is-detail" : target.list ? " is-list" : ""
+        }`;
         host.dataset.playlistPublicIconHost = target.key;
         host.title = "Public playlist";
         host.setAttribute("aria-label", "Public playlist");
 
-        target.element.classList.add("playlist-name-has-public-icon");
-        target.element.insertAdjacentElement("afterend", host);
+        if (target.list) {
+          target.element.appendChild(host);
+        } else {
+          target.element.classList.add("playlist-name-has-public-icon");
+          target.element.insertAdjacentElement("afterend", host);
+        }
 
         const root = createRoot(host);
         root.render(<PublicPlaylistIcon className="playlist-public-name-icon" />);
@@ -167,6 +181,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           host,
           title: target.element,
           detail: target.detail,
+          list: target.list,
         };
 
         publicIconRootsRef.current.set(target.key, mounted);
@@ -331,6 +346,10 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           color: var(--text-muted);
           line-height: 0;
           vertical-align: baseline;
+        }
+
+        .playlist-public-icon-host.is-list {
+          color: var(--text-muted) !important;
         }
 
         .playlist-detail-public-title-parent {
