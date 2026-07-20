@@ -6,6 +6,7 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
+import type { Playlist } from "@/lib/types";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -39,6 +40,7 @@ export default function PlaylistDetailActionsMenu() {
   const { playlists, setPlaylists } = usePlaylists();
   const playlistId = pathname.match(/^\/playlists\/([^/]+)$/)?.[1] ?? null;
   const isPlaylistDetail = playlistId !== null;
+  const isMyPlaylistsPage = pathname === "/playlists";
 
   const [actionsTarget, setActionsTarget] = useState<HTMLElement | null>(null);
   const [renameTarget, setRenameTarget] = useState<HTMLElement | null>(null);
@@ -69,6 +71,32 @@ export default function PlaylistDetailActionsMenu() {
   const placeholderGradient =
     PLAYLIST_GRADIENTS[playlistIndex % PLAYLIST_GRADIENTS.length];
 
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
+
+  async function updatePlaylistVisibility(targetPlaylist: Playlist) {
+    const nextPublic = !targetPlaylist.is_public;
+    const response = await fetch(`/api/playlists/${targetPlaylist.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_public: nextPublic }),
+    });
+    const data = parseResponse(await response.text());
+
+    if (!response.ok) {
+      throw new Error(data?.error || "Couldn't update playlist visibility");
+    }
+
+    setPlaylists((current) =>
+      current.map((item) =>
+        item.id === targetPlaylist.id ? { ...item, ...data } : item,
+      ),
+    );
+    showToast(nextPublic ? "Playlist is now public" : "Playlist is now private");
+  }
+
   useEffect(() => {
     if (!isPlaylistDetail) {
       setActionsTarget(null);
@@ -98,6 +126,74 @@ export default function PlaylistDetailActionsMenu() {
   }, [isPlaylistDetail]);
 
   useEffect(() => {
+    if (!isMyPlaylistsPage) return;
+
+    function injectPublicAction() {
+      const openTrigger = document.querySelector<HTMLElement>(
+        '.playlists-page [data-playlist-menu] [data-dropdown-open="true"]',
+      );
+      if (!openTrigger) return;
+
+      const card = openTrigger.closest<HTMLElement>(
+        ".playlist-gallery-card, .playlist-index-row-shell",
+      );
+      const playlistLink = card?.querySelector<HTMLAnchorElement>(
+        'a[href^="/playlists/"]',
+      );
+      const idMatch = playlistLink?.getAttribute("href")?.match(/^\/playlists\/(\d+)$/);
+      const targetPlaylist = playlists.find(
+        (item) => item.id === Number(idMatch?.[1]),
+      );
+      if (!targetPlaylist) return;
+
+      const playlistShell = Array.from(
+        document.querySelectorAll<HTMLElement>(".filmwave-dropdown-shell"),
+      ).find((shell) => {
+        const labels = Array.from(shell.querySelectorAll(":scope > button")).map(
+          (button) => button.textContent?.trim(),
+        );
+        return labels.includes("Edit") && labels.includes("Rename") && labels.includes("Delete");
+      });
+      if (!playlistShell) return;
+
+      const existing = playlistShell.querySelector<HTMLButtonElement>(
+        "[data-playlist-public-action]",
+      );
+      if (existing) {
+        existing.textContent = targetPlaylist.is_public ? "Make Private" : "Make Public";
+        return;
+      }
+
+      const publicButton = document.createElement("button");
+      publicButton.type = "button";
+      publicButton.dataset.playlistPublicAction = "true";
+      publicButton.textContent = targetPlaylist.is_public ? "Make Private" : "Make Public";
+      publicButton.addEventListener("click", async () => {
+        publicButton.disabled = true;
+        try {
+          await updatePlaylistVisibility(targetPlaylist);
+          document.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+          );
+        } catch (error) {
+          showToast(error instanceof Error ? error.message : "Couldn't update playlist visibility");
+          publicButton.disabled = false;
+        }
+      });
+
+      const renameButton = Array.from(
+        playlistShell.querySelectorAll<HTMLButtonElement>(":scope > button"),
+      ).find((button) => button.textContent?.trim() === "Rename");
+      playlistShell.insertBefore(publicButton, renameButton?.nextSibling ?? null);
+    }
+
+    injectPublicAction();
+    const observer = new MutationObserver(injectPublicAction);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [isMyPlaylistsPage, playlists, setPlaylists]);
+
+  useEffect(() => {
     setMenuOpen(false);
     setRenaming(false);
     setRenameName("");
@@ -114,7 +210,6 @@ export default function PlaylistDetailActionsMenu() {
     if (!renaming || !renameTarget || !playlist) return;
     const editor = renameEditorRef.current;
     if (!editor) return;
-
     editor.textContent = playlist.name;
     editor.focus();
     const selection = window.getSelection();
@@ -123,11 +218,6 @@ export default function PlaylistDetailActionsMenu() {
     selection?.removeAllRanges();
     selection?.addRange(range);
   }, [playlist, renameTarget, renaming]);
-
-  function showToast(message: string) {
-    setToastMessage(message);
-    window.setTimeout(() => setToastMessage(null), 1800);
-  }
 
   function startRename() {
     if (!playlist) return;
@@ -225,29 +315,12 @@ export default function PlaylistDetailActionsMenu() {
 
   async function togglePublic() {
     if (!playlist || visibilitySaving) return;
-    const nextPublic = !playlist.is_public;
     setMenuOpen(false);
     setVisibilitySaving(true);
-
     try {
-      const response = await fetch(`/api/playlists/${playlist.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ is_public: nextPublic }),
-      });
-      const data = parseResponse(await response.text());
-      if (!response.ok) {
-        showToast(data?.error || "Couldn't update playlist visibility");
-        return;
-      }
-      setPlaylists((current) =>
-        current.map((item) =>
-          item.id === playlist.id ? { ...item, ...data } : item,
-        ),
-      );
-      showToast(nextPublic ? "Playlist is now public" : "Playlist is now private");
-    } catch {
-      showToast("Couldn't reach the playlist service");
+      await updatePlaylistVisibility(playlist);
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "Couldn't update playlist visibility");
     } finally {
       setVisibilitySaving(false);
     }
@@ -282,7 +355,14 @@ export default function PlaylistDetailActionsMenu() {
     }
   }
 
-  if (!isPlaylistDetail) return null;
+  if (!isPlaylistDetail) {
+    return (
+      <Toast
+        message={toastMessage}
+        bottomOffset={currentSong ? "88px" : "24px"}
+      />
+    );
+  }
 
   const menu =
     actionsTarget && playlist
