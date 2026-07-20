@@ -303,13 +303,20 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           vertical-align: baseline;
         }
 
-        .playlist-gallery-content .playlist-public-icon-host {
-          color: rgba(255, 255, 255, 0.62);
+        .playlist-gallery-content .playlist-public-icon-host,
+        .playlist-row-main .playlist-public-icon-host {
+          color: var(--text-muted);
+        }
+
+        .playlist-detail-page .playlist-detail-title.playlist-name-has-public-icon {
+          display: inline-flex !important;
+          vertical-align: baseline;
         }
 
         .playlist-public-icon-host.is-detail {
           position: relative;
-          top: 1px;
+          top: -1px;
+          vertical-align: baseline;
         }
       `}</style>
       {children}
