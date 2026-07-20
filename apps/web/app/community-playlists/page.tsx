@@ -413,7 +413,7 @@ export default function CommunityPlaylistsPage() {
           </div>
 
           <div className="community-footer-wrap">
-            <Footer />
+            <Footer playerPadding={false} />
           </div>
         </section>
       </main>
