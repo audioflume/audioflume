@@ -145,6 +145,7 @@ export default function CommunityPlaylistsPage() {
 
         .community-content {
           padding-top: 22px !important;
+          padding-bottom: 0 !important;
         }
 
         .community-title-style-scope.playlists-page {
@@ -175,12 +176,52 @@ export default function CommunityPlaylistsPage() {
           text-transform: uppercase !important;
         }
 
+        .community-categories nav {
+          gap: 2px !important;
+        }
+
         .community-categories a {
+          position: relative;
+          display: flex !important;
+          width: 100% !important;
+          height: 38px !important;
+          flex-shrink: 0;
+          align-items: center;
+          justify-content: space-between;
+          border-radius: var(--filmwave-ui-radius-control) !important;
+          background: transparent;
+          padding: 0 8px 0 12px;
           color: var(--text-secondary) !important;
           font-family: inherit !important;
           font-size: 12.5px !important;
           font-weight: 400 !important;
           line-height: normal !important;
+          transition: background-color 160ms ease, color 160ms ease !important;
+        }
+
+        .community-categories a::after {
+          content: "";
+          width: 6px;
+          height: 6px;
+          flex: 0 0 6px;
+          border-top: 1.5px solid currentColor;
+          border-right: 1.5px solid currentColor;
+          opacity: 0;
+          transform: rotate(45deg);
+          transition: opacity 160ms ease;
+        }
+
+        .community-categories a:hover,
+        .community-categories a:focus-visible {
+          background: var(--bg-hover) !important;
+          color: var(--text-primary) !important;
+          opacity: 1 !important;
+          outline: none;
+        }
+
+        .community-categories a:hover::after,
+        .community-categories a:focus-visible::after {
+          opacity: 0.65;
         }
 
         .community-featured {
@@ -200,6 +241,11 @@ export default function CommunityPlaylistsPage() {
 
         .community-track-count {
           margin-top: 5px !important;
+        }
+
+        .community-footer-wrap {
+          padding-top: 48px;
+          padding-bottom: 0;
         }
 
         @media (max-width: 1040px) {
@@ -302,10 +348,7 @@ export default function CommunityPlaylistsPage() {
             ))}
           </div>
 
-          <div
-            className="pt-12 pb-1"
-            style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
-          >
+          <div className="community-footer-wrap">
             <Footer />
           </div>
         </section>
