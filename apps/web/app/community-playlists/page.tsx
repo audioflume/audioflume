@@ -5,6 +5,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import MoreIcon from "@/components/icons/MoreIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
+import "../../../../packages/shared/styles/music-side-filter.css";
 import "../playlists/playlists-tabs-rail.css";
 import "./community-playlists.css";
 
@@ -189,53 +190,6 @@ export default function CommunityPlaylistsPage() {
 
         .community-categories nav {
           gap: 0 !important;
-        }
-
-        .community-categories a.fw-filter-rail-item {
-          position: relative !important;
-          box-sizing: border-box !important;
-          display: flex !important;
-          width: 100% !important;
-          height: 38px !important;
-          flex-shrink: 0 !important;
-          align-items: center !important;
-          justify-content: space-between !important;
-          border-top: 0 !important;
-          border-radius: 0 !important;
-          margin: 0 !important;
-          background: transparent !important;
-          background-color: transparent !important;
-          padding: 0 8px 0 12px !important;
-          color: var(--text-secondary) !important;
-          font-family: inherit !important;
-          font-size: 12.5px !important;
-          font-weight: 400 !important;
-          line-height: normal !important;
-          opacity: 1 !important;
-          transition: background-color 160ms ease, color 160ms ease !important;
-        }
-
-        .community-categories a.fw-filter-rail-item .fw-filter-rail-chevron {
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          opacity: 0 !important;
-          color: currentColor !important;
-          transition: opacity 160ms ease, color 160ms ease !important;
-        }
-
-        .community-categories a.fw-filter-rail-item:hover,
-        .community-categories a.fw-filter-rail-item:focus-visible {
-          background: var(--bg-hover) !important;
-          background-color: var(--bg-hover) !important;
-          color: var(--text-primary) !important;
-          opacity: 1 !important;
-          outline: none !important;
-        }
-
-        .community-categories a.fw-filter-rail-item:hover .fw-filter-rail-chevron,
-        .community-categories a.fw-filter-rail-item:focus-visible .fw-filter-rail-chevron {
-          opacity: 0.65 !important;
         }
 
         .community-featured {
