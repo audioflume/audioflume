@@ -139,7 +139,7 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-title-style-scope.playlists-page .playlists-title {
-          font-family: var(--font-instrument-sans) !important;
+          font-family: var(--font-satoshi) !important;
         }
 
         .community-title-style-scope.playlists-page .playlists-title::before {
