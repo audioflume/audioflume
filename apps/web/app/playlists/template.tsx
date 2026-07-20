@@ -349,16 +349,20 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         }
 
         .playlist-index-row:not(.is-reordering):not(.playlist-create-row) {
-          grid-template-columns: 40px 50px minmax(0, 1fr) 12px 64px !important;
+          grid-template-columns: 50px minmax(0, 1fr) 12px 64px !important;
           column-gap: 14px !important;
         }
 
+        .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-number {
+          display: none;
+        }
+
         .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-cover {
-          grid-column: 2;
+          grid-column: 1;
         }
 
         .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-main {
-          grid-column: 3;
+          grid-column: 2;
           width: auto;
           min-width: 0;
           max-width: none;
@@ -367,7 +371,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         }
 
         .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-count {
-          grid-column: 5;
+          grid-column: 4;
           width: 64px;
           justify-self: start;
           text-align: left;
@@ -375,7 +379,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
 
         .playlist-public-icon-host.is-list {
           position: static;
-          grid-column: 4;
+          grid-column: 3;
           width: 12px;
           margin-left: 0;
           justify-self: end;
@@ -395,7 +399,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
 
         @media (max-width: 520px) {
           .playlist-index-row:not(.is-reordering):not(.playlist-create-row) {
-            grid-template-columns: 18px 50px minmax(0, 1fr) 12px 64px !important;
+            grid-template-columns: 50px minmax(0, 1fr) 12px 64px !important;
           }
         }
       `}</style>
