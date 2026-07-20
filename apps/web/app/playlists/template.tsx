@@ -323,7 +323,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
 
         .playlist-public-icon-host {
           position: relative;
-          top: 1px;
+          top: 3px;
           display: inline-flex;
           margin-left: 6px;
           align-items: center;
