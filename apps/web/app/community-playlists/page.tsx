@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
+import Footer from "@/components/Footer";
 import MoreIcon from "@/components/icons/MoreIcon";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import "../playlists/playlists-tabs-rail.css";
 import "./community-playlists.css";
@@ -198,6 +198,10 @@ export default function CommunityPlaylistsPage() {
           padding-bottom: 32px !important;
         }
 
+        .community-track-count {
+          margin-top: 5px !important;
+        }
+
         @media (max-width: 1040px) {
           .community-page {
             grid-template-columns: 220px minmax(0, 1fr);
@@ -282,9 +286,6 @@ export default function CommunityPlaylistsPage() {
               <article className="community-card" key={playlist.title}>
                 <div className="community-cover-wrap">
                   <img className="community-cover" src={playlist.cover} alt="" />
-                  <button className="community-play" type="button" aria-label={`Preview ${playlist.title}`}>
-                    <PlayIconSmall size={15} />
-                  </button>
                 </div>
                 <div className="community-card-title-row">
                   <h2>{playlist.title}</h2>
@@ -299,6 +300,13 @@ export default function CommunityPlaylistsPage() {
                 </div>
               </article>
             ))}
+          </div>
+
+          <div
+            className="pt-12 pb-1"
+            style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
+          >
+            <Footer />
           </div>
         </section>
       </main>
