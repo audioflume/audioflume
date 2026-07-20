@@ -187,8 +187,10 @@ export default function CommunityPlaylistsPage() {
 
         <section className="community-content">
           <div className="community-heading-row">
-            <div className="community-title-style-scope playlists-page playlists-hero">
-              <h1 className="playlists-title">Playlists</h1>
+            <div className="community-title-style-scope playlists-page">
+              <div className="playlists-hero">
+                <h1 className="playlists-title">Playlists</h1>
+              </div>
             </div>
             <label className="community-search">
               <SearchIcon size={13} />
