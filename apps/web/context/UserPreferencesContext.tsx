@@ -105,6 +105,24 @@ function hasLocalEditPointMarkerVisibilityPreference() {
   );
 }
 
+function suppressPlaylistViewTransition() {
+  if (typeof window === "undefined") return;
+
+  const createTile = document.querySelector<HTMLElement>(
+    ".playlist-create-card, .playlist-create-row",
+  );
+
+  if (!createTile) return;
+
+  createTile.style.transition = "none";
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      createTile.style.removeProperty("transition");
+    });
+  });
+}
+
 export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const [playlistViewMode, setPlaylistViewModeState] =
     useState<PlaylistViewMode>("grid");
@@ -299,6 +317,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   };
 
   const setPlaylistViewMode = (value: PlaylistViewMode) => {
+    suppressPlaylistViewTransition();
     setPlaylistViewModeState(value);
     window.localStorage.setItem(LOCAL_PLAYLIST_VIEW_MODE_KEY, value);
     patchPreferences({ playlist_view_mode: value });
