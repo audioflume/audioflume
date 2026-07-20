@@ -353,12 +353,22 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           column-gap: 14px !important;
         }
 
+        .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-cover {
+          grid-column: 2;
+        }
+
         .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-main {
-          padding-left: 8px;
+          grid-column: 3;
+          width: auto;
+          min-width: 0;
+          max-width: none;
+          padding-left: 0;
+          justify-self: stretch;
         }
 
         .playlist-index-row:not(.is-reordering):not(.playlist-create-row) .playlist-row-count {
           grid-column: 5;
+          width: 64px;
           justify-self: start;
           text-align: left;
         }
@@ -369,7 +379,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
           width: 12px;
           margin-left: 0;
           justify-self: end;
-          transform: translateX(8px);
+          transform: translateX(12px);
           color: var(--text-muted) !important;
         }
 
