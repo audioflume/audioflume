@@ -138,10 +138,6 @@ export default function CommunityPlaylistsPage() {
           background: transparent !important;
         }
 
-        .community-title-style-scope.playlists-page .playlists-title {
-          font-family: var(--font-satoshi) !important;
-        }
-
         .community-title-style-scope.playlists-page .playlists-title::before {
           content: "Community Playlists";
         }
@@ -191,7 +187,7 @@ export default function CommunityPlaylistsPage() {
 
         <section className="community-content">
           <div className="community-heading-row">
-            <div className="community-title-style-scope playlists-page">
+            <div className="community-title-style-scope playlists-page playlists-hero">
               <h1 className="playlists-title">Playlists</h1>
             </div>
             <label className="community-search">
