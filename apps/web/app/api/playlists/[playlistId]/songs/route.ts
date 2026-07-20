@@ -37,6 +37,7 @@ type SupabaseSongRow = {
   builds: string[] | null;
   vocals: string[] | null;
   instrumental: boolean | null;
+  ai_generated: boolean | null;
   edit_points: string | null;
 };
 
@@ -51,7 +52,7 @@ type PlaylistSong = Song & {
 const PLAYLIST_SONG_SELECT =
   "id, playlist_id, song_id, position, created_at";
 const SONG_SELECT =
-  "id, title, artist, audio_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, instruments, builds, vocals, instrumental, edit_points";
+  "id, title, artist, audio_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, instruments, builds, vocals, instrumental, ai_generated, edit_points";
 
 async function verifyPlaylistOwner(playlistId: string, userId: string) {
   const { data, error } = await supabaseServer
@@ -135,6 +136,7 @@ function normalizeSongRow(row: SupabaseSongRow): Song {
     builds: Array.isArray(row.builds) ? row.builds : [],
     vocals: Array.isArray(row.vocals) ? row.vocals : [],
     instrumental: Boolean(row.instrumental),
+    aiGenerated: Boolean(row.ai_generated),
     editPoints: String(row.edit_points || '{"markers":[],"ranges":[]}'),
   };
 }
