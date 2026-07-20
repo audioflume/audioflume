@@ -17,6 +17,11 @@ export function normalizePlaylist(value: unknown): Playlist {
       Number.isFinite(playlist.position)
         ? playlist.position
         : 0,
+    is_public: playlist.is_public === true,
+    published_at:
+      typeof playlist.published_at === "string" && playlist.published_at
+        ? playlist.published_at
+        : null,
   };
 }
 
