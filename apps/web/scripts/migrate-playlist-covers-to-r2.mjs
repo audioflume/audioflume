@@ -2,6 +2,7 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { createClient } from "@supabase/supabase-js";
 import { loadEnvConfig } from "@next/env";
 import sharp from "sharp";
+import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const projectDir = fileURLToPath(new URL("..", import.meta.url));
@@ -56,32 +57,41 @@ function safePathSegment(value) {
   );
 }
 
+function isEmbeddedImage(value) {
+  return (
+    typeof value === "string" &&
+    value.trimStart().toLowerCase().startsWith("data:image/")
+  );
+}
+
 function decodeDataUrl(dataUrl) {
-  const commaIndex = dataUrl.indexOf(",");
+  const match = dataUrl.trim().match(/^data:image\/[a-z0-9.+-]+;base64,(.+)$/is);
 
-  if (commaIndex < 0) {
-    throw new Error("Invalid data URL");
-  }
-
-  const metadata = dataUrl.slice(0, commaIndex);
-  const encoded = dataUrl.slice(commaIndex + 1);
-
-  if (!/^data:image\/[a-z0-9.+-]+;base64$/i.test(metadata)) {
+  if (!match) {
     throw new Error("Unsupported playlist cover data URL");
   }
 
-  return Buffer.from(encoded, "base64");
+  return Buffer.from(match[1], "base64");
 }
 
 async function getEmbeddedPlaylistCovers() {
   const { data, error } = await supabase
     .from("playlists")
     .select("id, clerk_user_id, name, cover_image_url")
-    .like("cover_image_url", "data:image/%")
+    .not("cover_image_url", "is", null)
     .order("id", { ascending: true });
 
   if (error) throw error;
-  return data ?? [];
+
+  const rows = data ?? [];
+  const embeddedRows = rows.filter((playlist) =>
+    isEmbeddedImage(playlist.cover_image_url),
+  );
+
+  return {
+    totalRows: rows.length,
+    embeddedRows,
+  };
 }
 
 async function migratePlaylistCover(playlist) {
@@ -93,7 +103,7 @@ async function migratePlaylistCover(playlist) {
     .toBuffer();
   const key = `images/user-playlists/${safePathSegment(
     playlist.clerk_user_id,
-  )}/${playlist.id}/cover-${Date.now()}.webp`;
+  )}/${playlist.id}/cover-${Date.now()}-${randomUUID()}.webp`;
   const imageUrl = `${publicUrl}/${key}`;
 
   await r2Client.send(
@@ -121,8 +131,12 @@ async function migratePlaylistCover(playlist) {
   };
 }
 
-const playlists = await getEmbeddedPlaylistCovers();
+const { totalRows, embeddedRows: playlists } =
+  await getEmbeddedPlaylistCovers();
 
+console.log(
+  `Checked ${totalRows} playlist${totalRows === 1 ? "" : "s"} with cover values.`,
+);
 console.log(
   `Found ${playlists.length} playlist${
     playlists.length === 1 ? "" : "s"
