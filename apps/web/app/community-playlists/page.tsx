@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import MoreIcon from "@/components/icons/MoreIcon";
@@ -8,6 +8,18 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import "../../../../packages/shared/styles/music-side-filter.css";
 import "../playlists/playlists-tabs-rail.css";
 import "./community-playlists.css";
+
+type CommunityPlaylist = {
+  id: number;
+  name: string;
+  cover_image_url: string | null;
+  published_at: string | null;
+  song_count: number;
+  creator: {
+    name: string;
+    imageUrl: string | null;
+  };
+};
 
 const categories = [
   "Documentary",
@@ -18,101 +30,6 @@ const categories = [
   "Urban",
   "Drama",
 ];
-
-const playlists = [
-  {
-    title: "Modern Western",
-    creator: "Jake R.",
-    tracks: 24,
-    cover: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Cinematic Tension",
-    creator: "Sarah M.",
-    tracks: 31,
-    cover: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Indie Roadtrip",
-    creator: "Wes Hicks",
-    tracks: 18,
-    cover: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Documentary Moments",
-    creator: "Film North",
-    tracks: 27,
-    cover: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Late Nights",
-    creator: "Louis V.",
-    tracks: 16,
-    cover: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "A Breath of Air",
-    creator: "Olivia K.",
-    tracks: 22,
-    cover: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Emotional Piano",
-    creator: "James G.",
-    tracks: 19,
-    cover: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "New York State of Mind",
-    creator: "Alex B.",
-    tracks: 23,
-    cover: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Open Roads",
-    creator: "Matt D.",
-    tracks: 20,
-    cover: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Desert Skies",
-    creator: "Nora L.",
-    tracks: 17,
-    cover: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Coastal Calm",
-    creator: "Isla D.",
-    tracks: 15,
-    cover: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Rainy City",
-    creator: "Urban Tapes",
-    tracks: 26,
-    cover: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Morning Light",
-    creator: "Hannah S.",
-    tracks: 14,
-    cover: "https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "Quiet Frames",
-    creator: "Theo R.",
-    tracks: 21,
-    cover: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?auto=format&fit=crop&w=900&q=88",
-  },
-  {
-    title: "After the Storm",
-    creator: "Maya L.",
-    tracks: 18,
-    cover: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=88&sat=-35",
-  },
-];
-
-const featured = [playlists[2], playlists[6], playlists[5], playlists[0], playlists[4]];
 
 function FilterRailChevron() {
   return (
@@ -128,7 +45,48 @@ function FilterRailChevron() {
 export default function CommunityPlaylistsPage() {
   const { currentSong } = usePlayer();
   const [query, setQuery] = useState("");
+  const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
+  const [loading, setLoading] = useState(true);
   const playerVisible = !!currentSong;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCommunityPlaylists() {
+      try {
+        const response = await fetch("/api/community-playlists", {
+          cache: "no-store",
+        });
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data?.error || "Could not load playlists");
+        if (!cancelled) setPlaylists(data?.playlists ?? []);
+      } catch (error) {
+        console.warn("Community playlists request failed", error);
+        if (!cancelled) setPlaylists([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void loadCommunityPlaylists();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const filteredPlaylists = useMemo(() => {
+    const cleanQuery = query.trim().toLowerCase();
+    if (!cleanQuery) return playlists;
+
+    return playlists.filter(
+      (playlist) =>
+        playlist.name.toLowerCase().includes(cleanQuery) ||
+        playlist.creator.name.toLowerCase().includes(cleanQuery),
+    );
+  }, [playlists, query]);
+
+  const featured = playlists.slice(0, 10);
 
   return (
     <>
@@ -217,6 +175,25 @@ export default function CommunityPlaylistsPage() {
           padding-bottom: 0;
         }
 
+        .community-empty-state {
+          grid-column: 1 / -1;
+          min-height: 220px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-muted);
+          font-size: 12px;
+        }
+
+        .community-avatar-image {
+          display: block;
+          width: 22px;
+          height: 22px;
+          flex: 0 0 22px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
         @media (max-width: 1040px) {
           .community-page {
             grid-template-columns: 220px minmax(0, 1fr);
@@ -258,11 +235,15 @@ export default function CommunityPlaylistsPage() {
             <p className="community-sidebar-heading">Featured Playlists</p>
             <div className="community-featured-list">
               {featured.map((playlist) => (
-                <a className="community-featured-item" href="#community-grid" key={playlist.title}>
-                  <img src={playlist.cover} alt="" />
+                <a className="community-featured-item" href="#community-grid" key={playlist.id}>
+                  {playlist.cover_image_url ? (
+                    <img src={playlist.cover_image_url} alt="" />
+                  ) : (
+                    <span className="community-featured-placeholder" aria-hidden="true" />
+                  )}
                   <span>
-                    <strong>{playlist.title}</strong>
-                    <small>{playlist.tracks} songs</small>
+                    <strong>{playlist.name}</strong>
+                    <small>{playlist.song_count} songs</small>
                   </span>
                 </a>
               ))}
@@ -306,21 +287,33 @@ export default function CommunityPlaylistsPage() {
           </div>
 
           <div className="community-grid" id="community-grid">
-            {playlists.map((playlist) => (
-              <article className="community-card" key={playlist.title}>
+            {!loading && filteredPlaylists.length === 0 && (
+              <div className="community-empty-state">
+                {query.trim() ? "No public playlists match your search." : "No public playlists yet."}
+              </div>
+            )}
+
+            {filteredPlaylists.map((playlist) => (
+              <article className="community-card" key={playlist.id}>
                 <div className="community-cover-wrap">
-                  <img className="community-cover" src={playlist.cover} alt="" />
+                  {playlist.cover_image_url && (
+                    <img className="community-cover" src={playlist.cover_image_url} alt="" />
+                  )}
                 </div>
                 <div className="community-card-title-row">
-                  <h2>{playlist.title}</h2>
-                  <button className="community-more playlist-menu-btn-grid" type="button" aria-label={`More options for ${playlist.title}`}>
+                  <h2>{playlist.name}</h2>
+                  <button className="community-more playlist-menu-btn-grid" type="button" aria-label={`More options for ${playlist.name}`}>
                     <MoreIcon />
                   </button>
                 </div>
-                <p className="community-track-count">{playlist.tracks} songs</p>
+                <p className="community-track-count">{playlist.song_count} songs</p>
                 <div className="community-creator">
-                  <span className="community-avatar" aria-hidden="true" />
-                  <span>by {playlist.creator}</span>
+                  {playlist.creator.imageUrl ? (
+                    <img className="community-avatar-image" src={playlist.creator.imageUrl} alt="" />
+                  ) : (
+                    <span className="community-avatar" aria-hidden="true" />
+                  )}
+                  <span>by {playlist.creator.name}</span>
                 </div>
               </article>
             ))}
