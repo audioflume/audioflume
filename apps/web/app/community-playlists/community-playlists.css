@@ -112,45 +112,70 @@
 
 .community-heading-row h1 {
   margin: 0;
+  max-width: 640px;
   color: var(--text-primary);
-  font-size: clamp(28px, 2.25vw, 34px);
+  font-family: var(--font-instrument-sans);
+  font-size: 1.6em;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
 }
 
 .community-search {
   display: flex;
+  width: 100%;
   height: 42px;
   align-items: center;
-  gap: 11px;
-  border: 1px solid var(--border);
+  gap: 12px;
+  border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent);
   border-radius: 0;
   background: var(--bg-primary);
   padding: 0 14px;
   color: var(--text-muted);
+  box-shadow: none;
 }
 
-.community-search svg {
-  width: 16px;
-  height: 16px;
+.community-search > svg {
+  width: 13px;
+  height: 13px;
   flex: 0 0 auto;
 }
 
 .community-search input {
   min-width: 0;
-  width: 100%;
+  flex: 1 1 auto;
   border: 0;
   outline: 0;
   background: transparent;
   color: var(--text-primary);
-  font: inherit;
+  font-family: inherit;
   font-size: 12px;
+  font-style: italic;
 }
 
 .community-search input::placeholder {
   color: var(--text-muted);
-  font-style: italic;
+}
+
+.community-search-clear {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.community-search-clear:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .community-tabs {
@@ -228,11 +253,17 @@
   color: #111;
   cursor: pointer;
   padding: 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  transition: transform 150ms ease;
+}
+
+.community-play:hover,
+.community-play:focus-visible {
+  transform: scale(1.05);
+  outline: none;
 }
 
 .community-play svg {
-  width: 17px;
-  height: 17px;
   transform: translateX(1px);
 }
 
@@ -254,8 +285,8 @@
 }
 
 .community-like svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
 .community-card-title-row {
@@ -279,15 +310,29 @@
 }
 
 .community-more {
+  display: inline-flex;
   width: 24px;
   height: 24px;
+  align-items: center;
+  justify-content: center;
   border: 0;
+  border-radius: 0;
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
   padding: 0;
-  font-size: 13px;
-  letter-spacing: 1px;
+  transition: color 150ms ease;
+}
+
+.community-more:hover,
+.community-more:focus-visible {
+  color: var(--text-primary);
+  outline: none;
+}
+
+.community-more svg {
+  width: 15px;
+  height: 15px;
 }
 
 .community-creator {
@@ -305,13 +350,8 @@
   width: 22px;
   height: 22px;
   flex: 0 0 22px;
-  align-items: center;
-  justify-content: center;
   border-radius: 50%;
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  font-size: 8px;
-  font-weight: 600;
+  background: #8d8d8d;
 }
 
 .community-track-count {
