@@ -22,6 +22,8 @@ type CommunityPlaylist = {
   };
 };
 
+const COMMUNITY_LIKES_STORAGE_KEY = "filmwave-community-playlist-likes";
+
 const categories = [
   "Documentary",
   "Travel",
@@ -47,8 +49,45 @@ export default function CommunityPlaylistsPage() {
   const { currentSong } = usePlayer();
   const [query, setQuery] = useState("");
   const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
+  const [likedPlaylistIds, setLikedPlaylistIds] = useState<Set<number>>(
+    () => new Set(),
+  );
+  const [likesLoaded, setLikesLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const playerVisible = !!currentSong;
+
+  useEffect(() => {
+    try {
+      const storedLikes = window.localStorage.getItem(
+        COMMUNITY_LIKES_STORAGE_KEY,
+      );
+      const parsedLikes = storedLikes ? JSON.parse(storedLikes) : [];
+
+      if (Array.isArray(parsedLikes)) {
+        setLikedPlaylistIds(
+          new Set(
+            parsedLikes.filter(
+              (playlistId): playlistId is number =>
+                typeof playlistId === "number" && Number.isFinite(playlistId),
+            ),
+          ),
+        );
+      }
+    } catch {
+      setLikedPlaylistIds(new Set());
+    } finally {
+      setLikesLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!likesLoaded) return;
+
+    window.localStorage.setItem(
+      COMMUNITY_LIKES_STORAGE_KEY,
+      JSON.stringify([...likedPlaylistIds]),
+    );
+  }, [likedPlaylistIds, likesLoaded]);
 
   useEffect(() => {
     let cancelled = false;
@@ -88,6 +127,20 @@ export default function CommunityPlaylistsPage() {
   }, [playlists, query]);
 
   const featured = playlists.slice(0, 10);
+
+  function togglePlaylistLike(playlistId: number) {
+    setLikedPlaylistIds((current) => {
+      const next = new Set(current);
+
+      if (next.has(playlistId)) {
+        next.delete(playlistId);
+      } else {
+        next.add(playlistId);
+      }
+
+      return next;
+    });
+  }
 
   return (
     <>
@@ -195,6 +248,29 @@ export default function CommunityPlaylistsPage() {
           object-fit: cover;
         }
 
+        .community-cover {
+          transition: transform 0.7s ease;
+        }
+
+        .community-card:hover .community-cover {
+          transform: scale(1.025);
+        }
+
+        .community-like {
+          z-index: 2;
+          transition: transform 150ms ease, opacity 150ms ease;
+        }
+
+        .community-like:hover,
+        .community-like:focus-visible {
+          transform: scale(1.08);
+          outline: none;
+        }
+
+        .community-like.is-liked {
+          --favorite-icon-color: #fff;
+        }
+
         @media (max-width: 1040px) {
           .community-page {
             grid-template-columns: 220px minmax(0, 1fr);
@@ -294,37 +370,46 @@ export default function CommunityPlaylistsPage() {
               </div>
             )}
 
-            {filteredPlaylists.map((playlist) => (
-              <article className="community-card" key={playlist.id}>
-                <div className="community-cover-wrap">
-                  {playlist.cover_image_url && (
-                    <img className="community-cover" src={playlist.cover_image_url} alt="" />
-                  )}
-                  <button
-                    className="community-like"
-                    type="button"
-                    aria-label={`Like ${playlist.name}`}
-                  >
-                    <HeartIcon />
-                  </button>
-                </div>
-                <div className="community-card-title-row">
-                  <h2>{playlist.name}</h2>
-                  <button className="community-more playlist-menu-btn-grid" type="button" aria-label={`More options for ${playlist.name}`}>
-                    <MoreIcon />
-                  </button>
-                </div>
-                <p className="community-track-count">{playlist.song_count} songs</p>
-                <div className="community-creator">
-                  {playlist.creator.imageUrl ? (
-                    <img className="community-avatar-image" src={playlist.creator.imageUrl} alt="" />
-                  ) : (
-                    <span className="community-avatar" aria-hidden="true" />
-                  )}
-                  <span>by {playlist.creator.name}</span>
-                </div>
-              </article>
-            ))}
+            {filteredPlaylists.map((playlist) => {
+              const isLiked = likedPlaylistIds.has(playlist.id);
+
+              return (
+                <article className="community-card" key={playlist.id}>
+                  <div className="community-cover-wrap">
+                    {playlist.cover_image_url && (
+                      <img className="community-cover" src={playlist.cover_image_url} alt="" />
+                    )}
+                    <button
+                      className={`community-like${isLiked ? " is-liked" : ""}`}
+                      type="button"
+                      aria-label={`${isLiked ? "Unlike" : "Like"} ${playlist.name}`}
+                      aria-pressed={isLiked}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        togglePlaylistLike(playlist.id);
+                      }}
+                    >
+                      <HeartIcon filled={isLiked} />
+                    </button>
+                  </div>
+                  <div className="community-card-title-row">
+                    <h2>{playlist.name}</h2>
+                    <button className="community-more playlist-menu-btn-grid" type="button" aria-label={`More options for ${playlist.name}`}>
+                      <MoreIcon />
+                    </button>
+                  </div>
+                  <p className="community-track-count">{playlist.song_count} songs</p>
+                  <div className="community-creator">
+                    {playlist.creator.imageUrl ? (
+                      <img className="community-avatar-image" src={playlist.creator.imageUrl} alt="" />
+                    ) : (
+                      <span className="community-avatar" aria-hidden="true" />
+                    )}
+                    <span>by {playlist.creator.name}</span>
+                  </div>
+                </article>
+              );
+            })}
           </div>
 
           <div className="community-footer-wrap">
