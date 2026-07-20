@@ -145,7 +145,7 @@ export default function CommunityPlaylistsPage() {
 
       <section className="community-content">
         <div className="community-heading-row">
-          <h1 className="playlists-title">Community Playlists</h1>
+          <h1 id="community-playlists-title">Community Playlists</h1>
           <label className="community-search">
             <SearchIcon size={13} />
             <input
