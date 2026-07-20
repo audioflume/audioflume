@@ -139,12 +139,43 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-title-style-scope.playlists-page .playlists-hero {
-          margin: 0 !important;
           padding: 0 !important;
+          margin: 0 !important;
         }
 
         .community-title-style-scope.playlists-page .playlists-title::before {
           content: "Community Playlists";
+        }
+
+        .community-sidebar-heading {
+          color: var(--text-muted) !important;
+          font-family: inherit !important;
+          font-size: 10.5px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.09em !important;
+          line-height: normal !important;
+          text-transform: uppercase !important;
+        }
+
+        .community-categories a {
+          color: var(--text-secondary) !important;
+          font-family: inherit !important;
+          font-size: 12.5px !important;
+          font-weight: 400 !important;
+          line-height: normal !important;
+        }
+
+        .community-featured {
+          min-height: 0 !important;
+          height: auto !important;
+          flex: 1 1 auto !important;
+          overflow: hidden !important;
+        }
+
+        .community-featured-list {
+          min-height: 0 !important;
+          flex: 1 1 auto !important;
+          overflow-y: auto !important;
         }
 
         @media (max-width: 1040px) {
