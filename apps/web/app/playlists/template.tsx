@@ -1,11 +1,13 @@
 "use client";
 
+import PublicPlaylistIcon from "@/components/icons/PublicPlaylistIcon";
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 function parseResponse(text: string) {
   if (!text) return null;
@@ -17,26 +19,18 @@ function parseResponse(text: string) {
   }
 }
 
-function createPublicIcon() {
-  const icon = document.createElement("span");
-  icon.className = "playlist-public-status-icon";
-  icon.dataset.playlistPublicStatus = "true";
-  icon.title = "Public playlist";
-  icon.setAttribute("aria-label", "Public playlist");
-  icon.innerHTML = `
-    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="8.25" stroke="currentColor" stroke-width="1.7" />
-      <path d="M3.9 12h16.2M12 3.75c2.05 2.25 3.1 5 3.1 8.25S14.05 18 12 20.25C9.95 18 8.9 15.25 8.9 12S9.95 6 12 3.75Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-  `;
-  return icon;
-}
+type PublicIconTarget = {
+  key: string;
+  element: HTMLElement;
+  detail: boolean;
+};
 
 export default function PlaylistsTemplate({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
   const { playlists, setPlaylists } = usePlaylists();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [publicIconTargets, setPublicIconTargets] = useState<PublicIconTarget[]>([]);
   const toastTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -48,12 +42,13 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
   }, []);
 
   useEffect(() => {
-    if (!pathname.startsWith("/playlists")) return;
+    if (!pathname.startsWith("/playlists")) {
+      setPublicIconTargets([]);
+      return;
+    }
 
-    function syncPublicIcons() {
-      document
-        .querySelectorAll<HTMLElement>("[data-playlist-public-status]")
-        .forEach((icon) => icon.remove());
+    function syncPublicIconTargets() {
+      const nextTargets: PublicIconTarget[] = [];
 
       if (pathname === "/playlists") {
         document
@@ -61,8 +56,12 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
             '.playlist-gallery-card a[href^="/playlists/"], .playlist-index-row-shell a[href^="/playlists/"]',
           )
           .forEach((link) => {
-            const idMatch = link.getAttribute("href")?.match(/^\/playlists\/(\d+)$/);
-            const playlist = playlists.find((item) => item.id === Number(idMatch?.[1]));
+            const idMatch = link
+              .getAttribute("href")
+              ?.match(/^\/playlists\/(\d+)$/);
+            const playlistId = Number(idMatch?.[1]);
+            const playlist = playlists.find((item) => item.id === playlistId);
+
             if (!playlist?.is_public) return;
 
             const name = link.querySelector<HTMLElement>(
@@ -70,34 +69,47 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
             );
             if (!name) return;
 
-            name.classList.add("playlist-name-with-status");
-            name.appendChild(createPublicIcon());
+            nextTargets.push({
+              key: `playlist-${playlist.id}`,
+              element: name,
+              detail: false,
+            });
           });
-        return;
+      } else {
+        const detailId = pathname.match(/^\/playlists\/(\d+)$/)?.[1];
+        const playlist = playlists.find((item) => String(item.id) === detailId);
+        const title = document.querySelector<HTMLElement>(
+          ".playlist-detail-page .playlist-detail-title",
+        );
+
+        if (playlist?.is_public && title) {
+          nextTargets.push({
+            key: `playlist-detail-${playlist.id}`,
+            element: title,
+            detail: true,
+          });
+        }
       }
 
-      const detailId = pathname.match(/^\/playlists\/(\d+)$/)?.[1];
-      const playlist = playlists.find((item) => String(item.id) === detailId);
-      if (!playlist?.is_public) return;
+      setPublicIconTargets((current) => {
+        const unchanged =
+          current.length === nextTargets.length &&
+          current.every(
+            (target, index) =>
+              target.key === nextTargets[index]?.key &&
+              target.element === nextTargets[index]?.element &&
+              target.detail === nextTargets[index]?.detail,
+          );
 
-      const title = document.querySelector<HTMLElement>(
-        ".playlist-detail-page .playlist-detail-title",
-      );
-      if (!title) return;
-
-      title.classList.add("playlist-name-with-status", "playlist-detail-title-with-status");
-      title.appendChild(createPublicIcon());
+        return unchanged ? current : nextTargets;
+      });
     }
 
-    const frame = window.requestAnimationFrame(syncPublicIcons);
-    const retries = [150, 400, 800, 1400].map((delay) =>
-      window.setTimeout(syncPublicIcons, delay),
-    );
+    syncPublicIconTargets();
+    const observer = new MutationObserver(syncPublicIconTargets);
+    observer.observe(document.body, { childList: true, subtree: true });
 
-    return () => {
-      window.cancelAnimationFrame(frame);
-      retries.forEach((retry) => window.clearTimeout(retry));
-    };
+    return () => observer.disconnect();
   }, [pathname, playlists]);
 
   useEffect(() => {
@@ -230,31 +242,36 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
   return (
     <>
       <style>{`
-        .playlist-name-with-status {
-          display: inline-flex !important;
-          max-width: 100%;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .playlist-public-status-icon {
+        .playlist-public-name-icon {
           display: inline-flex;
+          margin-left: 6px;
           flex: 0 0 auto;
           align-items: center;
           justify-content: center;
           color: var(--text-muted);
           line-height: 0;
+          vertical-align: baseline;
         }
 
-        .playlist-gallery-content .playlist-public-status-icon {
+        .playlist-gallery-content .playlist-public-name-icon {
           color: rgba(255, 255, 255, 0.62);
         }
 
-        .playlist-detail-title-with-status .playlist-public-status-icon {
-          transform: translateY(3px);
+        .playlist-detail-title .playlist-public-name-icon {
+          position: relative;
+          top: 5px;
         }
       `}</style>
       {children}
+      {publicIconTargets.map((target) =>
+        createPortal(
+          <PublicPlaylistIcon
+            className={`playlist-public-name-icon${target.detail ? " is-detail" : ""}`}
+          />,
+          target.element,
+          target.key,
+        ),
+      )}
       <Toast
         message={toastMessage}
         bottomOffset={currentSong ? "88px" : "24px"}
