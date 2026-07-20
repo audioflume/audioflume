@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePlayer } from "@/context/PlayerContext";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -114,7 +115,9 @@ const playlists = [
 const featured = [playlists[2], playlists[6], playlists[5], playlists[0], playlists[4]];
 
 export default function CommunityPlaylistsPage() {
+  const { currentSong } = usePlayer();
   const [query, setQuery] = useState("");
+  const playerVisible = !!currentSong;
 
   return (
     <>
@@ -127,6 +130,10 @@ export default function CommunityPlaylistsPage() {
           overflow: hidden;
           background: var(--bg-primary);
           color: var(--text-primary);
+        }
+
+        .community-page.is-player-visible {
+          height: calc(100vh - var(--filmwave-header-height, 56px) - 72px);
         }
 
         .community-title-style-scope.playlists-page {
@@ -185,7 +192,8 @@ export default function CommunityPlaylistsPage() {
         }
 
         @media (max-width: 760px) {
-          .community-page {
+          .community-page,
+          .community-page.is-player-visible {
             height: auto;
             min-height: calc(100vh - var(--filmwave-header-height, 56px));
             display: block;
@@ -194,7 +202,7 @@ export default function CommunityPlaylistsPage() {
         }
       `}</style>
 
-      <main className="community-page">
+      <main className={`community-page${playerVisible ? " is-player-visible" : ""}`}>
         <aside className="community-sidebar" aria-label="Community playlist discovery">
           <section className="community-sidebar-section community-categories">
             <p className="community-sidebar-heading">Categories</p>
