@@ -136,6 +136,18 @@ export default function CommunityPlaylistsPage() {
           height: calc(100vh - var(--filmwave-header-height, 56px) - 72px);
         }
 
+        .community-sidebar {
+          border-right-color: var(--border) !important;
+        }
+
+        .community-sidebar-section + .community-sidebar-section {
+          border-top-color: var(--border) !important;
+        }
+
+        .community-content {
+          padding-top: 22px !important;
+        }
+
         .community-title-style-scope.playlists-page {
           position: static !important;
           display: block !important;
