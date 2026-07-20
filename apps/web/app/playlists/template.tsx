@@ -57,7 +57,9 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
 
       if (pathname === "/playlists") {
         document
-          .querySelectorAll<HTMLAnchorElement>('a[href^="/playlists/"]')
+          .querySelectorAll<HTMLAnchorElement>(
+            '.playlist-gallery-card a[href^="/playlists/"], .playlist-index-row-shell a[href^="/playlists/"]',
+          )
           .forEach((link) => {
             const idMatch = link.getAttribute("href")?.match(/^\/playlists\/(\d+)$/);
             const playlist = playlists.find((item) => item.id === Number(idMatch?.[1]));
@@ -83,16 +85,18 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
       );
       if (!title) return;
 
-      title.classList.add("playlist-name-with-status");
+      title.classList.add("playlist-name-with-status", "playlist-detail-title-with-status");
       title.appendChild(createPublicIcon());
     }
 
     const frame = window.requestAnimationFrame(syncPublicIcons);
-    const retry = window.setTimeout(syncPublicIcons, 250);
+    const retries = [150, 400, 800, 1400].map((delay) =>
+      window.setTimeout(syncPublicIcons, delay),
+    );
 
     return () => {
       window.cancelAnimationFrame(frame);
-      window.clearTimeout(retry);
+      retries.forEach((retry) => window.clearTimeout(retry));
     };
   }, [pathname, playlists]);
 
@@ -244,6 +248,10 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
 
         .playlist-gallery-content .playlist-public-status-icon {
           color: rgba(255, 255, 255, 0.62);
+        }
+
+        .playlist-detail-title-with-status .playlist-public-status-icon {
+          transform: translateY(3px);
         }
       `}</style>
       {children}
