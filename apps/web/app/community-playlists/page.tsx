@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
-import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
@@ -189,12 +188,14 @@ export default function CommunityPlaylistsPage() {
           height: auto !important;
           flex: 1 1 auto !important;
           overflow: hidden !important;
+          padding-bottom: 0 !important;
         }
 
         .community-featured-list {
           min-height: 0 !important;
           flex: 1 1 auto !important;
           overflow-y: auto !important;
+          padding-bottom: 32px !important;
         }
 
         @media (max-width: 1040px) {
@@ -281,9 +282,6 @@ export default function CommunityPlaylistsPage() {
               <article className="community-card" key={playlist.title}>
                 <div className="community-cover-wrap">
                   <img className="community-cover" src={playlist.cover} alt="" />
-                  <button className="community-like" type="button" aria-label={`Like ${playlist.title}`}>
-                    <HeartIcon />
-                  </button>
                   <button className="community-play" type="button" aria-label={`Preview ${playlist.title}`}>
                     <PlayIconSmall size={15} />
                   </button>
@@ -294,11 +292,11 @@ export default function CommunityPlaylistsPage() {
                     <MoreIcon />
                   </button>
                 </div>
+                <p className="community-track-count">{playlist.tracks} songs</p>
                 <div className="community-creator">
                   <span className="community-avatar" aria-hidden="true" />
                   <span>by {playlist.creator}</span>
                 </div>
-                <p className="community-track-count">{playlist.tracks} songs</p>
               </article>
             ))}
           </div>
