@@ -108,17 +108,21 @@ function hasLocalEditPointMarkerVisibilityPreference() {
 function suppressPlaylistViewTransition() {
   if (typeof window === "undefined") return;
 
-  const createTile = document.querySelector<HTMLElement>(
-    ".playlist-create-card, .playlist-create-row",
+  const transitioningElements = document.querySelectorAll<HTMLElement>(
+    ".playlist-create-card, .playlist-create-row, .playlist-create-mark",
   );
 
-  if (!createTile) return;
+  if (!transitioningElements.length) return;
 
-  createTile.style.transition = "none";
+  transitioningElements.forEach((element) => {
+    element.style.transition = "none";
+  });
 
   window.requestAnimationFrame(() => {
     window.requestAnimationFrame(() => {
-      createTile.style.removeProperty("transition");
+      transitioningElements.forEach((element) => {
+        element.style.removeProperty("transition");
+      });
     });
   });
 }
