@@ -221,9 +221,9 @@
   cursor: pointer;
   font-family: inherit;
   font-size: 12.5px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: normal;
-  line-height: 1;
+  line-height: normal;
   transition: color 150ms ease;
 }
 
