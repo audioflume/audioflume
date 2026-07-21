@@ -341,7 +341,7 @@ export default function PlaylistDetailPage() {
         .playlist-detail-search-sticky { position: sticky; top: 55px; z-index: 90; margin-left: -28px; margin-right: -28px; background: var(--bg-primary); }
         .playlist-detail-search-row { display: flex; min-height: 49px; align-items: center; gap: 3px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0 28px; cursor: text; }
         .playlist-detail-search-inner { display: flex; width: 320px; flex-shrink: 0; align-items: center; gap: 8px; padding: 12px 16px 12px 0; cursor: text; }
-        .playlist-detail-search-input { width: 100%; background: transparent; font-size: 15px; font-weight: 300; color: var(--text-primary); outline: none; }
+        .playlist-detail-search-input { width: 100%; background: transparent; color: var(--text-primary); font-family: var(--font-aktiv-grotesk); font-size: 12px; font-weight: 400; font-style: italic; letter-spacing: normal; line-height: normal; outline: none; }
         .playlist-detail-search-input::placeholder { color: var(--text-muted); }
         .playlist-detail-quick-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -28px; margin-right: -28px; background: var(--bg-primary); padding: 16px 28px; }
         .playlist-detail-section { margin-left: -28px; margin-right: -28px; }
