@@ -154,3 +154,5 @@ jobs:
           git add -A
           git commit -m "Move playlist public icon into metadata"
           git push origin main
+
+# trigger
