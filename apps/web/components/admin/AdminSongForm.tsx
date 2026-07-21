@@ -1565,7 +1565,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     return (
       <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
         <div className="px-8 pt-14">
-          <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+          <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
             Not authorized
           </h1>
 
@@ -1591,7 +1591,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     return (
       <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
         <div className="px-8 pt-14">
-          <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+          <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
             Edit Song
           </h1>
 
@@ -1679,7 +1679,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         <div className="flex items-end justify-between gap-4 pb-8">
           <div className="min-w-0">
             <div>
-              <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
                 {pageTitle}
               </h1>
 

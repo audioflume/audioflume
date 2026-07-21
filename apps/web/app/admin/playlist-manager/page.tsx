@@ -705,7 +705,7 @@ export default function PlaylistManagerPage() {
           />
         ) : (
           <aside className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-            <h2 className="font-[family-name:var(--font-instrument-sans)] text-xl font-medium tracking-[-0.05em]">
+            <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-xl font-medium tracking-[-0.05em]">
               Discover sections
             </h2>
             <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">

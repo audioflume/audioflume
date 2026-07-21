@@ -745,7 +745,7 @@ export default function SoundFxPage() {
               <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-[var(--text-muted)]">
                 Sound FX Library
               </div>
-              <h1 className="mt-2 max-w-[760px] font-[family-name:var(--font-instrument-sans)] text-[56px] font-medium leading-[0.94] tracking-[-0.055em] text-[var(--text-primary)]">
+              <h1 className="mt-2 max-w-[760px] font-[family-name:var(--font-aktiv-grotesk)] text-[56px] font-medium leading-[0.94] tracking-[-0.055em] text-[var(--text-primary)]">
                 Find the right sound faster.
               </h1>
               <p className="mt-4 max-w-[560px] text-sm leading-6 text-[var(--text-secondary)]">

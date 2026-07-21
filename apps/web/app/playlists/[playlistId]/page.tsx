@@ -334,7 +334,7 @@ export default function PlaylistDetailPage() {
           pointer-events: none;
         }
         .playlist-detail-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-        .playlist-detail-title { margin-top: 8px; max-width: 640px; font-family: var(--font-instrument-sans); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
+        .playlist-detail-title { margin-top: 8px; max-width: 640px; font-family: var(--font-aktiv-grotesk); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
         .playlist-detail-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .playlist-detail-dot { color: var(--text-muted); }
         .playlist-detail-actions { margin-top: 24px; display: flex; align-items: center; gap: 8px; }

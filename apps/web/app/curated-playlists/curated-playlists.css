@@ -314,7 +314,7 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist-heading h2 {
   max-width: 480px;
   margin: 9px 0 0;
   color: #fff;
-  font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
+  font-family: var(--font-aktiv-grotesk), var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(30px, 3.2vw, 48px);
   font-weight: 400;
   letter-spacing: -0.055em;

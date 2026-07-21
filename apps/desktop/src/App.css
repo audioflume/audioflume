@@ -23,7 +23,7 @@
 :root {
   color: var(--text-primary);
   background: var(--bg-primary);
-  font-family: var(--font-satoshi);
+  font-family: var(--font-aktiv-grotesk);
 }
 
 * {

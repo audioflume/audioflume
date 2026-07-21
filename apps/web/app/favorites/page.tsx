@@ -245,7 +245,7 @@ export default function FavoritesPage() {
         .favorites-title {
           margin-top: 8px;
           max-width: 640px;
-          font-family: var(--font-instrument-sans);
+          font-family: var(--font-aktiv-grotesk);
           font-size: 56px;
           font-weight: 500;
           line-height: 0.94;

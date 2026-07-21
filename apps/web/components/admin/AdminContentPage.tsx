@@ -38,7 +38,7 @@ export default function AdminContentPage({
 
           <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
             <div className="min-w-0">
-              <h1 className="font-[family-name:var(--font-instrument-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
                 {title}
               </h1>
 

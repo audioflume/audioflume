@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[var(--bg-primary)] px-8 text-[var(--text-primary)]">
       <div className="max-w-[520px] text-center">
-        <h1 className="font-[family-name:var(--font-instrument-sans)] text-[44px] font-medium leading-none tracking-[-0.055em]">
+        <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[44px] font-medium leading-none tracking-[-0.055em]">
           Filmwave
         </h1>
 

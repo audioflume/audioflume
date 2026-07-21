@@ -27,7 +27,7 @@ function SuggestedForYouSection({ songs }: { songs: ReturnType<typeof useSongs>[
 
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
             Newly added
           </h2>
         </div>

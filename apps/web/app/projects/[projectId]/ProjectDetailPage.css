@@ -3,7 +3,7 @@
 .project-detail-hero { grid-column: 2; min-width: 0; display: block; margin: 0 auto; width: 100%; max-width: 1180px; border-bottom: 0; padding: 44px 40px 18px; }
 .project-detail-header-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .project-detail-kicker, .project-file-browser-kicker, .project-file-section-heading { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-.project-detail-title { margin: 0; max-width: 640px; font-family: var(--font-instrument-sans); font-size: 24px; font-weight: 500; line-height: 1; letter-spacing: -0.025em; color: var(--text-primary); }
+.project-detail-title { margin: 0; max-width: 640px; font-family: var(--font-aktiv-grotesk); font-size: 24px; font-weight: 500; line-height: 1; letter-spacing: -0.025em; color: var(--text-primary); }
 .project-detail-meta { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 11px; line-height: 1; color: var(--text-secondary); }
 .project-detail-dot { color: var(--text-muted); }
 .project-detail-description { margin-top: 10px; max-width: 520px; font-size: 12px; line-height: 1.65; color: var(--text-secondary); }

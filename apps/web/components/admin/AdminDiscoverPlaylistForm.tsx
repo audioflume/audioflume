@@ -227,7 +227,7 @@ export default function AdminDiscoverPlaylistForm({
       >
         <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-5">
-            <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
+            <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
               Discover block details
             </h2>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
@@ -335,7 +335,7 @@ export default function AdminDiscoverPlaylistForm({
           </div>
 
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-            <h3 className="font-[family-name:var(--font-instrument-sans)] text-xl font-medium tracking-[-0.05em]">
+            <h3 className="font-[family-name:var(--font-aktiv-grotesk)] text-xl font-medium tracking-[-0.05em]">
               Card preview
             </h3>
             <div className="relative mt-4 min-h-[320px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
@@ -354,7 +354,7 @@ export default function AdminDiscoverPlaylistForm({
                 <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55">
                   {kicker || "Kicker text"}
                 </div>
-                <div className="mt-2 font-[family-name:var(--font-instrument-sans)] text-3xl font-medium leading-none tracking-[-0.055em]">
+                <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-3xl font-medium leading-none tracking-[-0.055em]">
                   {name || "Discover block title"}
                 </div>
                 {description && (
@@ -377,7 +377,7 @@ export default function AdminDiscoverPlaylistForm({
         <section className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">
+              <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
                 Songs
               </h2>
               <p className="mt-1 text-sm text-[var(--text-secondary)]">

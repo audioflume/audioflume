@@ -1042,7 +1042,7 @@ export default function PlaylistsPage() {
         .playlists-shell { position: relative; z-index: 1; padding: 0 32px; }
         .playlists-hero { display: block; padding: 88px 0 0; }
         .playlists-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-        .playlists-title { margin-top: 8px; max-width: 640px; font-family: var(--font-instrument-sans); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
+        .playlists-title { margin-top: 8px; max-width: 640px; font-family: var(--font-aktiv-grotesk); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
         .playlists-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .playlists-dot { color: var(--text-muted); }
         .playlists-control-bar { min-height: 34px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: -34px; margin-bottom: 32px; }
@@ -1093,17 +1093,17 @@ export default function PlaylistsPage() {
         .playlist-gallery-art img, .playlist-row-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
         .playlist-gallery-art img { transition: transform 0.7s ease; }
         .playlist-gallery-card:hover .playlist-gallery-art img, .playlist-gallery-card.is-menu-open .playlist-gallery-art img { transform: scale(1.025); }
-        .playlist-gallery-letters { position: absolute; left: 18px; bottom: 18px; z-index: 1; font-family: var(--font-instrument-sans); font-size: 44px; font-weight: 500; line-height: 0.9; letter-spacing: -0.07em; color: rgba(255, 255, 255, 0.12); pointer-events: none; }
+        .playlist-gallery-letters { position: absolute; left: 18px; bottom: 18px; z-index: 1; font-family: var(--font-aktiv-grotesk); font-size: 44px; font-weight: 500; line-height: 0.9; letter-spacing: -0.07em; color: rgba(255, 255, 255, 0.12); pointer-events: none; }
         .playlist-gallery-top-row { position: relative; z-index: 4; display: flex; justify-content: flex-end; padding: 16px; }
         .playlist-gallery-arrow { display: flex; width: 32px; height: 32px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: white; backdrop-filter: blur(12px); transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease; }
         .playlist-gallery-card:hover .playlist-gallery-arrow, .playlist-gallery-card.is-menu-open .playlist-gallery-arrow { background: white; color: black; }
         .playlist-gallery-content { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 4; }
         .playlist-gallery-kicker { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.52); }
-        .playlist-gallery-content h3 { margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-instrument-sans); font-size: 25px; font-weight: 500; line-height: 1.15; letter-spacing: -0.055em; color: white; }
+        .playlist-gallery-content h3 { margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-aktiv-grotesk); font-size: 25px; font-weight: 500; line-height: 1.15; letter-spacing: -0.055em; color: white; }
         .playlist-gallery-content p { margin-top: 12px; font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.58); }
         .playlist-rename-input { box-sizing: border-box; width: 100%; min-width: 0; height: auto; border: 0 !important; border-radius: 0 !important; outline: 0 !important; background: transparent !important; padding: 0 !important; color: var(--text-primary); box-shadow: none !important; font-family: inherit; }
         .playlist-rename-input:focus { border: 0 !important; outline: 0 !important; box-shadow: none !important; }
-        .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-instrument-sans); font-size: 13px; font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; }
+        .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-aktiv-grotesk); font-size: 13px; font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; }
         .playlist-row-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; letter-spacing: normal; }
         .playlist-gallery-handle { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); }
         .playlist-gallery-card.is-reordering .playlist-gallery-art-wrap { border-style: dashed; }

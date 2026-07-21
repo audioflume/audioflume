@@ -517,7 +517,7 @@ export default function AdminPlaylistGroupManager({
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">Groups</div>
-            <h2 className="mt-2 font-[family-name:var(--font-instrument-sans)] text-2xl font-medium tracking-[-0.05em]">Playlist Groups</h2>
+            <h2 className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">Playlist Groups</h2>
             <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">Create, rename, and delete the row headers used on the Curated Playlists page.</p>
           </div>
           <button type="button" className={primaryPillButtonClass} onClick={openCreateModal}>

@@ -208,7 +208,7 @@ export function AccountHero({ config }: { config: HeroConfig }) {
       <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.72fr)] xl:items-end">
         <div>
           <div className="mb-3 inline-flex items-center text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">{config.eyebrow}</div>
-          <h1 className="max-w-[760px] font-[family-name:var(--font-instrument-sans)] text-[clamp(42px,6vw,76px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">{config.title}</h1>
+          <h1 className="max-w-[760px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,76px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">{config.title}</h1>
         </div>
         <p className="max-w-[520px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">{config.description}</p>
       </div>
