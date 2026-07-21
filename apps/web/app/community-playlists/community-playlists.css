@@ -135,7 +135,7 @@
 
 .community-heading-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 640px);
   align-items: center;
   gap: 36px;
 }
@@ -146,8 +146,7 @@
 
 .community-search {
   display: flex;
-  width: 320px;
-  max-width: 100%;
+  width: 100%;
   height: 42px;
   align-items: center;
   gap: 12px;
