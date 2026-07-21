@@ -92,15 +92,36 @@ function getPlaylistCardName(card: HTMLElement) {
   ).toLowerCase();
 }
 
-function applyPlaylistSearchFilter(query: string) {
+function getPlaylistIdFromCard(card: HTMLElement) {
+  const link = card.querySelector<HTMLAnchorElement>('a[href^="/playlists/"]');
+  const match = link?.getAttribute("href")?.match(/^\/playlists\/(\d+)/);
+  return match ? Number(match[1]) : null;
+}
+
+function applyPlaylistFilters(
+  query: string,
+  scope: PlaylistScopeOption,
+  playlists: Playlist[],
+) {
   const cleanQuery = query.trim().toLowerCase();
+  const playlistVisibility = new Map(
+    playlists.map((playlist) => [playlist.id, playlist.is_public]),
+  );
   const nodes = document.querySelectorAll<HTMLElement>(
     ".playlists-page .playlist-gallery-card:not(.is-reordering), .playlists-page .playlist-index-row-shell",
   );
 
   nodes.forEach((node) => {
-    const matches = !cleanQuery || getPlaylistCardName(node).includes(cleanQuery);
-    node.hidden = !matches;
+    const playlistId = getPlaylistIdFromCard(node);
+    const isPublic = playlistId == null ? null : playlistVisibility.get(playlistId);
+    const matchesSearch =
+      !cleanQuery || getPlaylistCardName(node).includes(cleanQuery);
+    const matchesScope =
+      scope === "All playlists" ||
+      (scope === "Public playlists" && isPublic === true) ||
+      (scope === "Private playlists" && isPublic === false);
+
+    node.hidden = !(matchesSearch && matchesScope);
   });
 }
 
@@ -279,16 +300,18 @@ export default function PlaylistTopControls() {
   useEffect(() => {
     if (!isMyPlaylistsPage) return;
 
-    applyPlaylistSearchFilter(query);
+    applyPlaylistFilters(query, playlistScope, playlists);
 
     const target = document.querySelector(".playlists-page") || document.body;
-    const observer = new MutationObserver(() => applyPlaylistSearchFilter(query));
+    const observer = new MutationObserver(() =>
+      applyPlaylistFilters(query, playlistScope, playlists),
+    );
     observer.observe(target, { childList: true, subtree: true });
 
     return () => {
       observer.disconnect();
     };
-  }, [isMyPlaylistsPage, query]);
+  }, [isMyPlaylistsPage, playlistScope, playlists, query]);
 
   const startReorder = useCallback(() => {
     const libraryTarget = document.querySelector<HTMLElement>(
