@@ -305,7 +305,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           max-width: 480px !important;
           margin: 0 !important;
           color: var(--text-primary) !important;
-          font-family: var(--font-aktiv-grotesk), var(--font-aktiv-grotesk), sans-serif !important;
+          font-family: var(--font-aktiv-grotesk), sans-serif !important;
           font-size: clamp(22px, 2vw, 32px) !important;
           font-weight: 400 !important;
           letter-spacing: -0.055em !important;
@@ -353,7 +353,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           box-shadow: none !important;
           outline: 0 !important;
           color: var(--text-primary) !important;
-          font-family: var(--font-aktiv-grotesk), var(--font-aktiv-grotesk), sans-serif !important;
+          font-family: var(--font-aktiv-grotesk), sans-serif !important;
           font-size: clamp(22px, 2vw, 32px) !important;
           font-weight: 400 !important;
           letter-spacing: -0.055em !important;

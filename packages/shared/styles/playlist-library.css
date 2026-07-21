@@ -334,7 +334,7 @@
 .playlists-page .playlists-hero .playlists-title::before {
   margin: 0 !important;
   color: var(--text-primary) !important;
-  font-family: var(--font-aktiv-grotesk), var(--font-aktiv-grotesk), sans-serif !important;
+  font-family: var(--font-aktiv-grotesk), sans-serif !important;
   font-size: clamp(18px, 1.45vw, 24px) !important;
   font-weight: 400 !important;
   letter-spacing: -0.045em !important;

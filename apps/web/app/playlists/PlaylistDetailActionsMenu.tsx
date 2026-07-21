@@ -389,7 +389,7 @@ export default function PlaylistDetailActionsMenu() {
         .playlist-detail-more-dropdown button:disabled { cursor: default; opacity: 0.42; }
         .playlist-detail-page:has(.playlist-detail-rename-shell) .playlist-detail-title { display: none !important; }
         .playlist-detail-page .playlist-detail-rename-shell { order: -1; width: min(480px, 100%); max-width: 480px; }
-        .playlist-detail-page .playlist-detail-rename-input { box-sizing: border-box; display: block; width: 100%; min-width: 0; height: auto; margin: 0; overflow: hidden; border: 0; border-radius: 0; background: transparent; padding: 0; color: var(--text-primary); caret-color: var(--text-primary); font-family: var(--font-aktiv-grotesk), var(--font-aktiv-grotesk), sans-serif; font-size: clamp(22px, 2vw, 32px); font-weight: 400; letter-spacing: -0.055em; line-height: 0.98; outline: none; transform: none !important; white-space: nowrap; }
+        .playlist-detail-page .playlist-detail-rename-input { box-sizing: border-box; display: block; width: 100%; min-width: 0; height: auto; margin: 0; overflow: hidden; border: 0; border-radius: 0; background: transparent; padding: 0; color: var(--text-primary); caret-color: var(--text-primary); font-family: var(--font-aktiv-grotesk), sans-serif; font-size: clamp(22px, 2vw, 32px); font-weight: 400; letter-spacing: -0.055em; line-height: 0.98; outline: none; transform: none !important; white-space: nowrap; }
       `}</style>
       {menu}
       {renameField}

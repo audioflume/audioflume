@@ -149,7 +149,7 @@ const DISCOVER_LAYOUT_STYLE = `
 
   .discover-hero-content h1 {
     margin: 0 0 18px;
-    font-family: var(--font-aktiv-grotesk), var(--font-aktiv-grotesk), sans-serif;
+    font-family: var(--font-aktiv-grotesk), sans-serif;
     font-size: clamp(18px, 1.45vw, 24px) !important;
     font-weight: 400 !important;
     letter-spacing: -0.045em !important;
