@@ -22,93 +22,17 @@ type CommunityPlaylist = {
   };
 };
 
-type CategoryIconName =
-  | "cinematic"
-  | "documentary"
-  | "travelAmbient"
-  | "commercial"
-  | "urban"
-  | "background"
-  | "drama";
-
 const COMMUNITY_LIKES_STORAGE_KEY = "filmwave-community-playlist-likes";
 
-const categories: Array<{ label: string; icon: CategoryIconName }> = [
-  { label: "Cinematic", icon: "cinematic" },
-  { label: "Documentary", icon: "documentary" },
-  { label: "TravelAmbient", icon: "travelAmbient" },
-  { label: "Commercial", icon: "commercial" },
-  { label: "Urban", icon: "urban" },
-  { label: "Background", icon: "background" },
-  { label: "Drama", icon: "drama" },
+const categories = [
+  "Documentary",
+  "Travel",
+  "Sports",
+  "Ambient",
+  "Western",
+  "Urban",
+  "Drama",
 ];
-
-function CategoryIcon({ name }: { name: CategoryIconName }) {
-  const paths: Record<CategoryIconName, React.ReactNode> = {
-    cinematic: (
-      <>
-        <path d="M3 8h18v11H3z" />
-        <path d="m4 8 3-4h4L8 8m5 0 3-4h4l-3 4" />
-        <path d="M8 13h8" />
-      </>
-    ),
-    documentary: (
-      <>
-        <rect x="3" y="6" width="13" height="12" rx="1" />
-        <path d="m16 10 5-3v10l-5-3z" />
-        <circle cx="8" cy="10" r="1.5" />
-      </>
-    ),
-    travelAmbient: (
-      <>
-        <circle cx="12" cy="12" r="8" />
-        <path d="m15.5 8.5-2.1 4.9-4.9 2.1 2.1-4.9z" />
-      </>
-    ),
-    commercial: (
-      <>
-        <rect x="3" y="7" width="18" height="12" rx="1" />
-        <path d="M9 7V5h6v2M3 12h18M10 12v2h4v-2" />
-      </>
-    ),
-    urban: (
-      <>
-        <path d="M4 20V9h6v11M10 20V4h7v16M17 20v-8h3v8" />
-        <path d="M7 12h1M7 15h1M13 8h1M13 11h1M13 14h1" />
-      </>
-    ),
-    background: (
-      <>
-        <path d="m12 4 8 4-8 4-8-4z" />
-        <path d="m4 12 8 4 8-4M4 16l8 4 8-4" />
-      </>
-    ),
-    drama: (
-      <>
-        <path d="M4 5h7v6c0 3-1.5 5-3.5 6C5.5 16 4 14 4 11z" />
-        <path d="M13 5h7v6c0 3-1.5 5-3.5 6-1.1-.6-2-1.4-2.6-2.5" />
-        <path d="M6 9h1M9 9h1M15 9h1M18 9h1M6.5 13c.7-.5 1.3-.5 2 0M15 13c.7.5 1.3.5 2 0" />
-      </>
-    ),
-  };
-
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="15"
-      height="15"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      style={{ flex: "0 0 15px" }}
-    >
-      {paths[name]}
-    </svg>
-  );
-}
 
 function FilterRailChevron() {
   return (
@@ -372,11 +296,10 @@ export default function CommunityPlaylistsPage() {
               {categories.map((category) => (
                 <a
                   className="fw-filter-rail-item"
-                  key={category.label}
-                  href={`#${category.label.toLowerCase()}`}
+                  key={category}
+                  href={`#${category.toLowerCase()}`}
                 >
-                  <CategoryIcon name={category.icon} />
-                  <span className="fw-filter-rail-label">{category.label}</span>
+                  <span className="fw-filter-rail-label">{category}</span>
                   <span className="fw-filter-rail-chevron" aria-hidden="true">
                     <FilterRailChevron />
                   </span>
