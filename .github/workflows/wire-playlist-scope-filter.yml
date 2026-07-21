@@ -1,0 +1,128 @@
+name: Wire playlist visibility filter
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/wire-playlist-scope-filter.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Wire playlist visibility filtering
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          path = Path('apps/web/app/playlists/PlaylistTopControls.tsx')
+          text = path.read_text()
+
+          old_function = '''function applyPlaylistSearchFilter(query: string) {
+  const cleanQuery = query.trim().toLowerCase();
+  const nodes = document.querySelectorAll<HTMLElement>(
+    ".playlists-page .playlist-gallery-card:not(.is-reordering), .playlists-page .playlist-index-row-shell",
+  );
+
+  nodes.forEach((node) => {
+    const matches = !cleanQuery || getPlaylistCardName(node).includes(cleanQuery);
+    node.hidden = !matches;
+  });
+}'''
+
+          new_function = '''function getPlaylistIdFromCard(card: HTMLElement) {
+  const link = card.querySelector<HTMLAnchorElement>('a[href^="/playlists/"]');
+  const match = link?.getAttribute("href")?.match(/^\\/playlists\\/(\\d+)/);
+  return match ? Number(match[1]) : null;
+}
+
+function applyPlaylistFilters(
+  query: string,
+  scope: PlaylistScopeOption,
+  playlists: Playlist[],
+) {
+  const cleanQuery = query.trim().toLowerCase();
+  const playlistVisibility = new Map(
+    playlists.map((playlist) => [playlist.id, playlist.is_public]),
+  );
+  const nodes = document.querySelectorAll<HTMLElement>(
+    ".playlists-page .playlist-gallery-card:not(.is-reordering), .playlists-page .playlist-index-row-shell",
+  );
+
+  nodes.forEach((node) => {
+    const playlistId = getPlaylistIdFromCard(node);
+    const isPublic = playlistId == null ? null : playlistVisibility.get(playlistId);
+    const matchesSearch =
+      !cleanQuery || getPlaylistCardName(node).includes(cleanQuery);
+    const matchesScope =
+      scope === "All playlists" ||
+      (scope === "Public playlists" && isPublic === true) ||
+      (scope === "Private playlists" && isPublic === false);
+
+    node.hidden = !(matchesSearch && matchesScope);
+  });
+}'''
+
+          if old_function not in text:
+              raise SystemExit('Existing playlist search filter function was not found')
+          text = text.replace(old_function, new_function, 1)
+
+          old_effect = '''  useEffect(() => {
+    if (!isMyPlaylistsPage) return;
+
+    applyPlaylistSearchFilter(query);
+
+    const target = document.querySelector(".playlists-page") || document.body;
+    const observer = new MutationObserver(() => applyPlaylistSearchFilter(query));
+    observer.observe(target, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isMyPlaylistsPage, query]);'''
+
+          new_effect = '''  useEffect(() => {
+    if (!isMyPlaylistsPage) return;
+
+    applyPlaylistFilters(query, playlistScope, playlists);
+
+    const target = document.querySelector(".playlists-page") || document.body;
+    const observer = new MutationObserver(() =>
+      applyPlaylistFilters(query, playlistScope, playlists),
+    );
+    observer.observe(target, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isMyPlaylistsPage, playlistScope, playlists, query]);'''
+
+          if old_effect not in text:
+              raise SystemExit('Existing playlist search effect was not found')
+          text = text.replace(old_effect, new_effect, 1)
+
+          path.write_text(text)
+          Path('.github/workflows/wire-playlist-scope-filter.yml').unlink()
+          PY
+
+      - name: Verify and commit
+        shell: bash
+        run: |
+          grep -q 'function applyPlaylistFilters' apps/web/app/playlists/PlaylistTopControls.tsx
+          grep -q 'scope === "Public playlists" && isPublic === true' apps/web/app/playlists/PlaylistTopControls.tsx
+          grep -q 'scope === "Private playlists" && isPublic === false' apps/web/app/playlists/PlaylistTopControls.tsx
+          grep -q '\[isMyPlaylistsPage, playlistScope, playlists, query\]' apps/web/app/playlists/PlaylistTopControls.tsx
+          git config user.name "filmwave-webmaster"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Make playlist visibility filter functional"
+          git push origin main
