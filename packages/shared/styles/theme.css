@@ -40,7 +40,7 @@
   --filmwave-ui-control-hover-background: var(--bg-hover);
   --filmwave-ui-control-text: var(--text-secondary);
   --filmwave-ui-control-text-active: var(--text-primary);
-  --filmwave-ui-title-font-family: var(--font-instrument-sans), var(--font-satoshi), sans-serif;
+  --filmwave-ui-title-font-family: var(--font-aktiv-grotesk), sans-serif;
   --filmwave-ui-title-font-size: clamp(18px, 1.45vw, 24px);
   --filmwave-ui-title-font-weight: 400;
   --filmwave-ui-title-letter-spacing: -0.045em;
@@ -124,5 +124,5 @@
 :where(body) {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-satoshi);
+  font-family: var(--font-aktiv-grotesk);
 }
