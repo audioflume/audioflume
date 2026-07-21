@@ -186,9 +186,9 @@ body > header > div {
   padding: 0 16px;
   font-family: inherit;
   font-size: 12.5px !important;
-  font-weight: 500 !important;
+  font-weight: 400 !important;
   letter-spacing: normal !important;
-  line-height: 1;
+  line-height: normal !important;
   text-decoration: none;
   transition:
     background 150ms ease,
@@ -563,6 +563,12 @@ body > header > div {
   font-size: 10px;
   font-weight: 600;
   line-height: 1;
+}
+
+.filmwave-header .filmwave-header-avatar,
+.filmwave-header .filmwave-header-account-trigger:hover .filmwave-header-avatar,
+.filmwave-header .filmwave-header-account-trigger.is-open .filmwave-header-avatar {
+  box-shadow: none !important;
 }
 
 .filmwave-header-avatar img {
