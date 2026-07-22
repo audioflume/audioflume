@@ -1,6 +1,10 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
+import {
+  isCommunityPlaylistCategory,
+  normalizeCommunityPlaylistCategories,
+} from "@/lib/communityPlaylistCategories";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +14,8 @@ type CommunityPlaylistRow = {
   name: string;
   cover_image_url: string | null;
   published_at: string | null;
+  primary_category: string | null;
+  secondary_categories: string[] | null;
 };
 
 function getDisplayName(user: {
@@ -28,7 +34,9 @@ export async function GET() {
   try {
     const { data: playlists, error: playlistsError } = await supabaseServer
       .from("playlists")
-      .select("id, clerk_user_id, name, cover_image_url, published_at")
+      .select(
+        "id, clerk_user_id, name, cover_image_url, published_at, primary_category, secondary_categories",
+      )
       .eq("is_public", true)
       .order("published_at", { ascending: false, nullsFirst: false });
 
@@ -86,6 +94,14 @@ export async function GET() {
           name: playlist.name,
           cover_image_url: playlist.cover_image_url,
           published_at: playlist.published_at,
+          primary_category: isCommunityPlaylistCategory(
+            playlist.primary_category,
+          )
+            ? playlist.primary_category
+            : null,
+          secondary_categories: normalizeCommunityPlaylistCategories(
+            playlist.secondary_categories,
+          ),
           song_count: songCounts.get(playlist.id) ?? 0,
           creator: usersById.get(playlist.clerk_user_id) ?? {
             name: "Filmwave member",
