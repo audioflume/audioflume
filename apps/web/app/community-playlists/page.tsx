@@ -243,7 +243,8 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-categories .fw-filter-rail-item.is-active {
-          background: var(--bg-hover-strong) !important;
+          background: var(--bg-hover) !important;
+          background-color: var(--bg-hover) !important;
           color: var(--text-primary) !important;
         }
 
