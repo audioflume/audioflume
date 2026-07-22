@@ -27,11 +27,11 @@ const COMMUNITY_LIKES_STORAGE_KEY = "filmwave-community-playlist-likes";
 const categories = [
   "Documentary",
   "Travel",
-  "Sports",
   "Ambient",
-  "Western",
+  "Cinematic",
   "Urban",
-  "Drama",
+  "Commercial",
+  "Background",
 ];
 
 function FilterRailChevron() {
@@ -358,7 +358,7 @@ export default function CommunityPlaylistsPage() {
           </div>
 
           <div className="community-tabs" role="tablist" aria-label="Community playlist sorting">
-            {["Trending", "Recent", "Most Liked", "Staff Picks", "Favorites"].map((tab, index) => (
+            {["Trending", "Recent", "Most Liked", "Favorites"].map((tab, index) => (
               <button type="button" key={tab} className={index === 0 ? "is-active" : ""}>{tab}</button>
             ))}
           </div>
