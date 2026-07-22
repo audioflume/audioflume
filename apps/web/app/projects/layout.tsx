@@ -59,6 +59,8 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-row-count {
+          position: relative;
+          display: block;
           grid-column: 2;
           justify-self: end;
           text-align: right;
@@ -66,6 +68,21 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           font-weight: 400;
           line-height: 1.35;
           color: var(--text-subtle);
+        }
+
+        .projects-page .projects-row-archive-icon {
+          position: absolute;
+          top: 50%;
+          right: calc(100% + 2px);
+          display: inline-flex;
+          width: 12px;
+          height: 13px;
+          margin: 0;
+          align-items: center;
+          justify-content: center;
+          transform: translateY(-50%);
+          color: var(--text-muted);
+          line-height: 0;
         }
 
         .projects-page .projects-row-actions {
