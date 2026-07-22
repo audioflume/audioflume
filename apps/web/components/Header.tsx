@@ -70,6 +70,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const [curatedPreview, setCuratedPreview] = useState<
     CuratedPlaylistPreview[]
   >([]);
@@ -143,6 +144,11 @@ export default function Header() {
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
     : "";
+  const avatarImage = profileImage || user?.imageUrl || null;
+
+  useEffect(() => {
+    setAvatarImageFailed(false);
+  }, [avatarImage]);
 
   function closePlaylistsMenu() {
     setPlaylistsMenuOpen(false);
@@ -492,9 +498,19 @@ export default function Header() {
                 aria-label="Open user menu"
                 aria-expanded={menuOpen}
               >
-                <span className="filmwave-header-avatar">
-                  {profileImage ? (
-                    <img src={profileImage} alt="Profile" />
+                <span
+                  className="filmwave-header-avatar"
+                  style={{
+                    backgroundColor:
+                      avatarImage && !avatarImageFailed ? undefined : "#808080",
+                  }}
+                >
+                  {avatarImage && !avatarImageFailed ? (
+                    <img
+                      src={avatarImage}
+                      alt="Profile"
+                      onError={() => setAvatarImageFailed(true)}
+                    />
                   ) : (
                     initials
                   )}
