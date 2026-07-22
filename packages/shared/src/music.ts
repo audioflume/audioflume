@@ -123,8 +123,8 @@ export type FilmwavePlaylist = {
   position: number;
   is_public: boolean;
   published_at: string | null;
-  primary_category: string | null;
-  secondary_categories: string[];
+  primary_category?: string | null;
+  secondary_categories?: string[];
 };
 
 export type FilmwavePlaylistSong = FilmwaveSong & {
