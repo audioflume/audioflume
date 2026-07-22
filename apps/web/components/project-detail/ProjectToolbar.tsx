@@ -125,16 +125,6 @@ export default function ProjectToolbar({
           role="menuitem"
           onClick={() => {
             closeMenu();
-            onToast("Version history coming soon");
-          }}
-        >
-          Version history
-        </button>
-        <button
-          type="button"
-          role="menuitem"
-          onClick={() => {
-            closeMenu();
             onToast("Archive project coming soon");
           }}
         >

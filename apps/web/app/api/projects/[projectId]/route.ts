@@ -41,6 +41,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       name?: string;
       description?: string | null;
       position?: number | null;
+      is_archived?: boolean;
     } = {};
 
     if ("name" in body) {
@@ -67,6 +68,17 @@ export async function PATCH(req: Request, context: RouteContext) {
       const nextPosition = Number(body.position);
 
       updates.position = Number.isFinite(nextPosition) ? nextPosition : null;
+    }
+
+    if ("is_archived" in body) {
+      if (typeof body.is_archived !== "boolean") {
+        return NextResponse.json(
+          { error: "Invalid archive state" },
+          { status: 400 },
+        );
+      }
+
+      updates.is_archived = body.is_archived;
     }
 
     if (Object.keys(updates).length === 0) {

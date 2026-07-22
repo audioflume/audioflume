@@ -100,6 +100,16 @@ function ChevronIcon() {
   );
 }
 
+function ArchiveIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 9V19H19V9" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      <path d="M4 5H20V9H4V5Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      <path d="M9.5 13H14.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 type ProjectRowProps = {
   project: Project;
   isRenaming: boolean;
@@ -111,7 +121,7 @@ type ProjectRowProps = {
   onCancelRename: () => void;
   onSaveRename: (project: Project) => void;
   onDeleteProject: (project: Project) => void;
-  onToast: (message: string) => void;
+  onToggleArchive: (project: Project) => void;
 };
 
 function ProjectRow({
@@ -125,7 +135,7 @@ function ProjectRow({
   onCancelRename,
   onSaveRename,
   onDeleteProject,
-  onToast,
+  onToggleArchive,
 }: ProjectRowProps) {
   const projectCopy = (
     <>
@@ -190,7 +200,12 @@ function ProjectRow({
       )}
 
       <div className="projects-row-count">
-        {formatFileCount(getProjectFileCount(project))}
+        <span>{formatFileCount(getProjectFileCount(project))}</span>
+        {project.is_archived && (
+          <span className="projects-row-archive-icon" aria-label="Archived project" title="Archived project">
+            <ArchiveIcon />
+          </span>
+        )}
       </div>
 
       <div className="projects-row-actions">
@@ -232,20 +247,10 @@ function ProjectRow({
             role="menuitem"
             onClick={() => {
               onMenuOpenChange(false);
-              onToast("Version history coming soon");
+              onToggleArchive(project);
             }}
           >
-            Version history
-          </button>
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              onMenuOpenChange(false);
-              onToast("Archive project coming soon");
-            }}
-          >
-            Archive project
+            {project.is_archived ? "Restore project" : "Archive project"}
           </button>
           <button
             type="button"
@@ -298,20 +303,27 @@ export default function ProjectsPage() {
   const [renameName, setRenameName] = useState("");
   const [savingProjectId, setSavingProjectId] = useState<number | null>(null);
   const [deletingProjectId, setDeletingProjectId] = useState<number | null>(null);
+  const [archivingProjectId, setArchivingProjectId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const playerVisible = Boolean(currentSong);
   const cleanQuery = query.trim().toLowerCase();
 
   const displayedProjects = useMemo(() => {
-    const filtered = cleanQuery
-      ? projects.filter((project) =>
+    const statusFiltered = projects.filter((project) => {
+      if (projectStatusMode === "all") return true;
+      if (projectStatusMode === "archived") return project.is_archived;
+      return !project.is_archived;
+    });
+
+    const queryFiltered = cleanQuery
+      ? statusFiltered.filter((project) =>
           project.name.toLowerCase().includes(cleanQuery),
         )
-      : projects;
+      : statusFiltered;
 
-    return sortProjects(filtered, sortMode);
-  }, [projects, cleanQuery, sortMode]);
+    return sortProjects(queryFiltered, sortMode);
+  }, [projects, cleanQuery, projectStatusMode, sortMode]);
 
   function showToast(message: string) {
     setToastMessage(message);
@@ -375,6 +387,41 @@ export default function ProjectsPage() {
       showToast("Couldn't rename project");
     } finally {
       setSavingProjectId(null);
+    }
+  }
+
+  async function handleToggleArchive(project: Project) {
+    if (archivingProjectId) return;
+
+    const nextArchived = !project.is_archived;
+    setArchivingProjectId(project.id);
+
+    try {
+      const res = await fetch(`/api/projects/${project.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_archived: nextArchived }),
+      });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to update project archive state");
+      }
+
+      setProjects((current) =>
+        current.map((item) =>
+          item.id === project.id
+            ? { ...item, ...(data || {}), is_archived: nextArchived }
+            : item,
+        ),
+      );
+      showToast(nextArchived ? "Project archived" : "Project restored");
+    } catch (err) {
+      console.error("Failed to update project archive state", err);
+      showToast(nextArchived ? "Couldn't archive project" : "Couldn't restore project");
+    } finally {
+      setArchivingProjectId(null);
     }
   }
 
@@ -447,7 +494,8 @@ export default function ProjectsPage() {
         .projects-row-rename { display: flex; min-width: 0; align-items: center; }
         .projects-row-rename-input { box-sizing: border-box; width: min(360px, 100%); min-width: 0; height: 32px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 10px; color: var(--text-primary); font-family: inherit; font-size: 13.5px; font-weight: 500; outline: none; }
         .projects-row-rename-input:focus { border-color: var(--text-primary); }
-        .projects-row-count { justify-self: end; text-align: right; font-size: 11.5px; font-weight: 400; line-height: 1.35; color: var(--text-subtle); }
+        .projects-row-count { display: inline-flex; justify-self: end; align-items: center; gap: 10px; text-align: right; font-size: 11.5px; font-weight: 400; line-height: 1.35; color: var(--text-subtle); }
+        .projects-row-archive-icon { display: inline-flex; width: 13px; height: 13px; flex: 0 0 13px; align-items: center; justify-content: center; color: var(--text-muted); line-height: 0; }
         .projects-row-actions { display: inline-flex; justify-self: end; align-items: center; gap: 8px; }
         .projects-row-actions > .project-toolbar-icon-button { flex: 0 0 auto; }
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
