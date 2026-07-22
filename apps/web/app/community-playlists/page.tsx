@@ -6,6 +6,10 @@ import Footer from "@/components/Footer";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
+import {
+  COMMUNITY_PLAYLIST_CATEGORIES,
+  type CommunityPlaylistCategory,
+} from "@/lib/communityPlaylistCategories";
 import "../../../../packages/shared/styles/music-side-filter.css";
 import "../playlists/playlists-tabs-rail.css";
 import "./community-playlists.css";
@@ -15,6 +19,8 @@ type CommunityPlaylist = {
   name: string;
   cover_image_url: string | null;
   published_at: string | null;
+  primary_category: CommunityPlaylistCategory | null;
+  secondary_categories: CommunityPlaylistCategory[];
   song_count: number;
   creator: {
     name: string;
@@ -24,15 +30,7 @@ type CommunityPlaylist = {
 
 const COMMUNITY_LIKES_STORAGE_KEY = "filmwave-community-playlist-likes";
 
-const categories = [
-  "Documentary",
-  "Travel",
-  "Ambient",
-  "Cinematic",
-  "Urban",
-  "Commercial",
-  "Background",
-];
+type CategoryFilter = "All" | CommunityPlaylistCategory;
 
 function FilterRailChevron() {
   return (
@@ -48,6 +46,8 @@ function FilterRailChevron() {
 export default function CommunityPlaylistsPage() {
   const { currentSong } = usePlayer();
   const [query, setQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] =
+    useState<CategoryFilter>("All");
   const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
   const [likedPlaylistIds, setLikedPlaylistIds] = useState<Set<number>>(
     () => new Set(),
@@ -115,16 +115,45 @@ export default function CommunityPlaylistsPage() {
     };
   }, []);
 
+  const categoryCounts = useMemo(() => {
+    const counts = new Map<CommunityPlaylistCategory, number>();
+
+    for (const playlist of playlists) {
+      const assignedCategories = new Set([
+        ...(playlist.primary_category ? [playlist.primary_category] : []),
+        ...playlist.secondary_categories,
+      ]);
+
+      for (const category of assignedCategories) {
+        counts.set(category, (counts.get(category) ?? 0) + 1);
+      }
+    }
+
+    return counts;
+  }, [playlists]);
+
   const filteredPlaylists = useMemo(() => {
     const cleanQuery = query.trim().toLowerCase();
-    if (!cleanQuery) return playlists;
 
-    return playlists.filter(
-      (playlist) =>
+    return playlists.filter((playlist) => {
+      const categoryMatches =
+        selectedCategory === "All" ||
+        playlist.primary_category === selectedCategory ||
+        playlist.secondary_categories.includes(selectedCategory);
+
+      if (!categoryMatches) return false;
+      if (!cleanQuery) return true;
+
+      return (
         playlist.name.toLowerCase().includes(cleanQuery) ||
-        playlist.creator.name.toLowerCase().includes(cleanQuery),
-    );
-  }, [playlists, query]);
+        playlist.creator.name.toLowerCase().includes(cleanQuery) ||
+        playlist.primary_category?.toLowerCase().includes(cleanQuery) ||
+        playlist.secondary_categories.some((category) =>
+          category.toLowerCase().includes(cleanQuery),
+        )
+      );
+    });
+  }, [playlists, query, selectedCategory]);
 
   const featured = playlists.slice(0, 10);
 
@@ -202,6 +231,30 @@ export default function CommunityPlaylistsPage() {
 
         .community-categories nav {
           gap: 0 !important;
+        }
+
+        .community-categories .fw-filter-rail-item {
+          width: 100%;
+          border: 0;
+          background: transparent;
+          font-family: inherit;
+          text-align: left;
+          cursor: pointer;
+        }
+
+        .community-categories .fw-filter-rail-item.is-active {
+          background: var(--bg-hover-strong) !important;
+          color: var(--text-primary) !important;
+        }
+
+        .community-category-count {
+          margin-left: auto;
+          color: var(--text-muted);
+          font-size: 10px;
+        }
+
+        .community-categories .fw-filter-rail-item.is-active .community-category-count {
+          color: var(--text-secondary);
         }
 
         .community-featured {
@@ -293,17 +346,34 @@ export default function CommunityPlaylistsPage() {
           <section className="community-sidebar-section community-categories">
             <p className="community-sidebar-heading">Categories</p>
             <nav aria-label="Community playlist categories">
-              {categories.map((category) => (
-                <a
-                  className="fw-filter-rail-item"
+              <button
+                type="button"
+                className={`fw-filter-rail-item${selectedCategory === "All" ? " is-active" : ""}`}
+                aria-pressed={selectedCategory === "All"}
+                onClick={() => setSelectedCategory("All")}
+              >
+                <span className="fw-filter-rail-label">All</span>
+                <span className="community-category-count">{playlists.length}</span>
+                <span className="fw-filter-rail-chevron" aria-hidden="true">
+                  <FilterRailChevron />
+                </span>
+              </button>
+              {COMMUNITY_PLAYLIST_CATEGORIES.map((category) => (
+                <button
+                  type="button"
+                  className={`fw-filter-rail-item${selectedCategory === category ? " is-active" : ""}`}
                   key={category}
-                  href={`#${category.toLowerCase()}`}
+                  aria-pressed={selectedCategory === category}
+                  onClick={() => setSelectedCategory(category)}
                 >
                   <span className="fw-filter-rail-label">{category}</span>
+                  <span className="community-category-count">
+                    {categoryCounts.get(category) ?? 0}
+                  </span>
                   <span className="fw-filter-rail-chevron" aria-hidden="true">
                     <FilterRailChevron />
                   </span>
-                </a>
+                </button>
               ))}
             </nav>
           </section>
@@ -366,7 +436,11 @@ export default function CommunityPlaylistsPage() {
           <div className="community-grid" id="community-grid">
             {!loading && filteredPlaylists.length === 0 && (
               <div className="community-empty-state">
-                {query.trim() ? "No public playlists match your search." : "No public playlists yet."}
+                {query.trim()
+                  ? "No public playlists match your search."
+                  : selectedCategory !== "All"
+                    ? `No public playlists are assigned to ${selectedCategory} yet.`
+                    : "No public playlists yet."}
               </div>
             )}
 
