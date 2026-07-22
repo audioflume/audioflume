@@ -45,8 +45,10 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-row:not(.projects-row-skeleton) {
-          grid-template-columns: minmax(0, 1fr) 12px minmax(84px, 120px) 50px !important;
-          column-gap: 0 !important;
+          position: relative;
+          grid-template-columns: minmax(0, 1fr) 12px 64px !important;
+          column-gap: 14px !important;
+          padding-right: 68px !important;
         }
 
         .projects-page .projects-row.is-renaming .projects-row-rename,
@@ -65,14 +67,16 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           align-items: center;
           justify-content: center;
           justify-self: end;
+          transform: translateX(12px);
           color: var(--text-muted);
           line-height: 0;
         }
 
         .projects-page .projects-row-count {
           grid-column: 3;
-          justify-self: end;
-          text-align: right;
+          width: 64px;
+          justify-self: start;
+          text-align: left;
           font-size: 11.5px;
           font-weight: 400;
           line-height: 1.35;
@@ -80,9 +84,13 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-row-actions {
-          grid-column: 4;
-          justify-self: end !important;
+          position: absolute;
+          top: 50%;
+          right: 12px;
+          width: 32px;
+          justify-self: auto !important;
           padding-left: 0 !important;
+          transform: translateY(-50%);
         }
 
         .projects-page .projects-row-main small,
@@ -283,9 +291,9 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           }
 
           .projects-page .projects-row:not(.projects-row-skeleton) {
-            grid-template-columns: minmax(0, 1fr) 12px minmax(70px, 96px) 50px !important;
-            column-gap: 0 !important;
-            padding: 0 18px !important;
+            grid-template-columns: minmax(0, 1fr) 12px 64px !important;
+            column-gap: 14px !important;
+            padding: 0 68px 0 18px !important;
           }
         }
 
