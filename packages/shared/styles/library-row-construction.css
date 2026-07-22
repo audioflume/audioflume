@@ -64,7 +64,7 @@ html body .projects-route-shell .projects-page .projects-row:not(.projects-row-s
   align-items: center !important;
   justify-content: center !important;
   justify-self: end !important;
-  transform: translateX(-23px) !important;
+  transform: translateX(-13px) !important;
   color: var(--text-muted) !important;
   line-height: 0 !important;
 }
