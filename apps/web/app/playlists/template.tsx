@@ -1,9 +1,11 @@
 "use client";
 
+import PublishPlaylistModal from "@/components/PublishPlaylistModal";
 import PublicPlaylistIcon from "@/components/icons/PublicPlaylistIcon";
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
+import type { CommunityPlaylistCategory } from "@/lib/communityPlaylistCategories";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
@@ -39,8 +41,69 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
   const { currentSong } = usePlayer();
   const { playlists, setPlaylists } = usePlaylists();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [publishPlaylistId, setPublishPlaylistId] = useState<number | null>(null);
+  const [visibilitySaving, setVisibilitySaving] = useState(false);
   const toastTimerRef = useRef<number | null>(null);
   const publicIconRootsRef = useRef<Map<string, MountedPublicIcon>>(new Map());
+
+  const publishPlaylist =
+    publishPlaylistId === null
+      ? null
+      : playlists.find((item) => item.id === publishPlaylistId) ?? null;
+
+  function showToast(message: string) {
+    setToastMessage(message);
+
+    if (toastTimerRef.current !== null) {
+      window.clearTimeout(toastTimerRef.current);
+    }
+
+    toastTimerRef.current = window.setTimeout(() => {
+      setToastMessage(null);
+      toastTimerRef.current = null;
+    }, 1800);
+  }
+
+  async function publishWithCategories(
+    primaryCategory: CommunityPlaylistCategory,
+    secondaryCategories: CommunityPlaylistCategory[],
+  ) {
+    if (!publishPlaylist || visibilitySaving) return;
+
+    setVisibilitySaving(true);
+    try {
+      const response = await fetch(`/api/playlists/${publishPlaylist.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          is_public: true,
+          primary_category: primaryCategory,
+          secondary_categories: secondaryCategories,
+        }),
+      });
+      const data = parseResponse(await response.text());
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Couldn't update playlist visibility");
+      }
+
+      setPlaylists((current) =>
+        current.map((item) =>
+          item.id === publishPlaylist.id ? { ...item, ...data } : item,
+        ),
+      );
+      setPublishPlaylistId(null);
+      showToast("Playlist is now public");
+    } catch (error) {
+      showToast(
+        error instanceof Error
+          ? error.message
+          : "Couldn't update playlist visibility",
+      );
+    } finally {
+      setVisibilitySaving(false);
+    }
+  }
 
   function disposeMountedIcon(mounted: MountedPublicIcon) {
     mounted.title.classList.remove("playlist-name-has-public-icon");
@@ -208,19 +271,6 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
   useEffect(() => {
     if (pathname !== "/playlists") return;
 
-    function showToast(message: string) {
-      setToastMessage(message);
-
-      if (toastTimerRef.current !== null) {
-        window.clearTimeout(toastTimerRef.current);
-      }
-
-      toastTimerRef.current = window.setTimeout(() => {
-        setToastMessage(null);
-        toastTimerRef.current = null;
-      }, 1800);
-    }
-
     function findPlaylistMenu() {
       return Array.from(
         document.querySelectorAll<HTMLElement>(".filmwave-dropdown-shell"),
@@ -257,14 +307,22 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         : "Make Public";
 
       publicButton.addEventListener("click", async () => {
-        const nextPublic = !playlist.is_public;
+        document.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+        );
+
+        if (!playlist.is_public) {
+          setPublishPlaylistId(playlist.id);
+          return;
+        }
+
         publicButton.disabled = true;
 
         try {
           const response = await fetch(`/api/playlists/${playlist.id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ is_public: nextPublic }),
+            body: JSON.stringify({ is_public: false }),
           });
           const data = parseResponse(await response.text());
 
@@ -279,14 +337,7 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
               item.id === playlist.id ? { ...item, ...data } : item,
             ),
           );
-          showToast(
-            nextPublic
-              ? "Playlist is now public"
-              : "Playlist is now private",
-          );
-          document.dispatchEvent(
-            new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
-          );
+          showToast("Playlist is now private");
         } catch (error) {
           showToast(
             error instanceof Error
@@ -407,6 +458,22 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
         }
       `}</style>
       {children}
+      {publishPlaylist && (
+        <PublishPlaylistModal
+          isOpen={publishPlaylistId !== null}
+          playlistId={publishPlaylist.id}
+          playlistName={publishPlaylist.name}
+          initialPrimaryCategory={publishPlaylist.primary_category ?? null}
+          initialSecondaryCategories={publishPlaylist.secondary_categories ?? []}
+          isSaving={visibilitySaving}
+          onClose={() => {
+            if (!visibilitySaving) setPublishPlaylistId(null);
+          }}
+          onPublish={(primaryCategory, secondaryCategories) =>
+            void publishWithCategories(primaryCategory, secondaryCategories)
+          }
+        />
+      )}
       <Toast
         message={toastMessage}
         bottomOffset={currentSong ? "88px" : "24px"}
