@@ -64,7 +64,7 @@ html body .projects-route-shell .projects-page .projects-row:not(.projects-row-s
   align-items: center !important;
   justify-content: center !important;
   justify-self: end !important;
-  transform: translateX(-8px) !important;
+  transform: translateX(-33px) !important;
   color: var(--text-muted) !important;
   line-height: 0 !important;
 }
@@ -85,7 +85,7 @@ html body .playlists-route-shell .playlists-page .playlist-index-row-shell > .pl
 html body .projects-route-shell .projects-page .projects-row:not(.projects-row-skeleton) > .projects-row-actions {
   position: absolute !important;
   top: 50% !important;
-  right: 24px !important;
+  right: 40px !important;
   left: auto !important;
   z-index: 12 !important;
   display: inline-flex !important;
