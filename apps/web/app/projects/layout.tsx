@@ -45,8 +45,8 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-row:not(.projects-row-skeleton) {
-          grid-template-columns: minmax(0, 1fr) minmax(84px, 120px) 50px !important;
-          gap: 0 !important;
+          grid-template-columns: minmax(0, 1fr) 12px 64px 50px !important;
+          column-gap: 14px !important;
         }
 
         .projects-page .projects-row.is-renaming .projects-row-rename,
@@ -58,35 +58,26 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           line-height: 1.35 !important;
         }
 
-        .projects-page .projects-row-count {
-          position: relative;
-          display: block;
+        .projects-page .projects-row-archive-status {
           grid-column: 2;
+          width: 12px;
           justify-self: end;
-          text-align: right;
+          transform: translateX(12px);
+        }
+
+        .projects-page .projects-row-count {
+          grid-column: 3;
+          width: 64px;
+          justify-self: start;
+          text-align: left;
           font-size: 11.5px;
           font-weight: 400;
           line-height: 1.35;
           color: var(--text-subtle);
         }
 
-        .projects-page .projects-row-archive-icon {
-          position: absolute;
-          top: 50%;
-          right: calc(100% + 2px);
-          display: inline-flex;
-          width: 12px;
-          height: 13px;
-          margin: 0;
-          align-items: center;
-          justify-content: center;
-          transform: translateY(-50%);
-          color: var(--text-muted);
-          line-height: 0;
-        }
-
         .projects-page .projects-row-actions {
-          grid-column: 3;
+          grid-column: 4;
           justify-self: end !important;
           padding-left: 0 !important;
         }
@@ -289,8 +280,8 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           }
 
           .projects-page .projects-row:not(.projects-row-skeleton) {
-            grid-template-columns: minmax(0, 1fr) minmax(70px, 96px) 50px !important;
-            gap: 0 !important;
+            grid-template-columns: minmax(0, 1fr) 12px 64px 50px !important;
+            column-gap: 14px !important;
             padding: 0 18px !important;
           }
         }
