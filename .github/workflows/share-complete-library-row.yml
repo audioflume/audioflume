@@ -1,0 +1,420 @@
+name: Share complete library row
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/share-complete-library-row.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply source changes
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          component = Path('apps/web/components/LibraryListRow.tsx')
+          component.write_text('''import Link from "next/link";
+import type { CSSProperties, ReactNode, Ref } from "react";
+
+type LibraryListRowProps = {
+  href?: string;
+  shellRef?: Ref<HTMLDivElement>;
+  style?: CSSProperties;
+  className?: string;
+  leading: ReactNode;
+  content: ReactNode;
+  status?: ReactNode;
+  statusLabel?: string;
+  count: ReactNode;
+  actions: ReactNode;
+  overlay?: ReactNode;
+};
+
+export default function LibraryListRow({
+  href,
+  shellRef,
+  style,
+  className = "",
+  leading,
+  content,
+  status,
+  statusLabel,
+  count,
+  actions,
+  overlay,
+}: LibraryListRowProps) {
+  const rowContents = (
+    <>
+      <div className="filmwave-library-row-leading">{leading}</div>
+      <div className="filmwave-library-row-content">{content}</div>
+      <span
+        className="filmwave-library-row-status"
+        aria-label={status ? statusLabel : undefined}
+        title={status ? statusLabel : undefined}
+      >
+        {status}
+      </span>
+      <span className="filmwave-library-row-count">{count}</span>
+    </>
+  );
+
+  return (
+    <div
+      ref={shellRef}
+      className={`filmwave-library-row-shell ${className}`.trim()}
+      style={style}
+    >
+      {href ? (
+        <Link href={href} className="filmwave-library-row-link">
+          {rowContents}
+        </Link>
+      ) : (
+        <div className="filmwave-library-row-link filmwave-library-row-link-static">
+          {rowContents}
+        </div>
+      )}
+      {overlay}
+      <div className="filmwave-library-row-actions">{actions}</div>
+    </div>
+  );
+}
+''')
+
+          css = Path('packages/shared/styles/library-list-row.css')
+          css.write_text('''/* Shared My Playlists / Projects list-row construction. */
+.filmwave-library-row-shell {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.filmwave-library-row-link {
+  display: grid;
+  min-width: 0;
+  min-height: 76px;
+  grid-template-columns: 50px minmax(0, 1fr) 12px 64px;
+  column-gap: 14px;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  background: transparent;
+  padding: 11px 68px 11px 13px;
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.filmwave-library-row-shell:hover > .filmwave-library-row-link {
+  background: var(--bg-hover);
+}
+
+.filmwave-library-row-link-static {
+  cursor: default;
+}
+
+.filmwave-library-row-leading {
+  display: flex;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: flex-start;
+  grid-column: 1;
+}
+
+.filmwave-library-row-content {
+  min-width: 0;
+  grid-column: 2;
+}
+
+.filmwave-library-row-status {
+  display: inline-flex;
+  width: 12px;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  grid-column: 3;
+  transform: translateX(12px);
+  color: var(--text-muted);
+  line-height: 0;
+}
+
+.filmwave-library-row-count {
+  width: 64px;
+  justify-self: start;
+  grid-column: 4;
+  color: var(--text-subtle);
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.filmwave-library-row-actions {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  z-index: 12;
+  display: inline-flex;
+  width: 32px;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 520px) {
+  .filmwave-library-row-link {
+    grid-template-columns: 50px minmax(0, 1fr) 12px 64px;
+    column-gap: 12px;
+  }
+}
+''')
+
+          globals_path = Path('apps/web/app/globals.css')
+          globals = globals_path.read_text()
+          anchor = '@import "../../../packages/shared/styles/project-browser-icons.css";\n'
+          import_line = '@import "../../../packages/shared/styles/library-list-row.css";\n'
+          if import_line not in globals:
+              if anchor not in globals:
+                  raise SystemExit('globals import anchor missing')
+              globals = globals.replace(anchor, anchor + import_line)
+          globals_path.write_text(globals)
+
+          playlist_path = Path('apps/web/app/playlists/page.tsx')
+          playlist = playlist_path.read_text()
+          playlist = playlist.replace(
+              'import ListRowStatusCount from "@/components/ListRowStatusCount";\n',
+              'import LibraryListRow from "@/components/LibraryListRow";\n',
+          )
+
+          playlist_pattern = re.compile(r'''    return \(\n      <div ref=\{setNodeRef\} className="playlist-index-row-shell" style=\{style\}>\n        <Link href=\{playlistHref\} className="playlist-index-row">.*?        </PlaylistMenu>\n      </div>\n    \);''', re.S)
+          playlist_replacement = '''    return (
+      <LibraryListRow
+        shellRef={setNodeRef}
+        style={style}
+        className="playlist-index-row-shell"
+        href={playlistHref}
+        leading={
+          <PlaylistArtwork
+            playlist={playlist}
+            index={index}
+            className="playlist-row-cover"
+          />
+        }
+        content={
+          <div className="playlist-row-main">
+            <span>{playlist.name}</span>
+            <small>{formatGenres(stats?.topGenres ?? [])}</small>
+          </div>
+        }
+        status={
+          playlist.is_public ? (
+            <PublicPlaylistIcon className="playlist-public-name-icon" />
+          ) : undefined
+        }
+        statusLabel="Public playlist"
+        count={formatSongCount(stats?.songCount ?? 0)}
+        overlay={
+          isDeleting ? (
+            <div className="playlist-deleting-overlay">
+              <LoadingSpinner
+                size={24}
+                stroke={7}
+                color="var(--media-overlay-contrast)"
+              />
+            </div>
+          ) : undefined
+        }
+        actions={
+          <PlaylistMenu
+            playlist={playlist}
+            viewMode={viewMode}
+            open={openMenuId === playlist.id}
+            onOpenChange={(nextOpen) =>
+              setOpenMenuId(nextOpen ? playlist.id : null)
+            }
+            onEdit={() => openEdit(playlist)}
+            onRename={() => startRename(playlist)}
+            onDelete={() => handleDeletePlaylist(playlist)}
+            playerVisible={playerVisible}
+          />
+        }
+      />
+    );'''
+          playlist, count = playlist_pattern.subn(playlist_replacement, playlist, count=1)
+          if count != 1:
+              raise SystemExit(f'playlist normal row replacement count={count}')
+          playlist_path.write_text(playlist)
+
+          template_path = Path('apps/web/app/playlists/template.tsx')
+          template = template_path.read_text()
+          template = template.replace(
+              "'.playlist-gallery-card a[href^=\"/playlists/\"], .playlist-index-row-shell a[href^=\"/playlists/\"]'",
+              "'.playlist-gallery-card a[href^=\"/playlists/\"]'",
+          )
+          template = template.replace(
+              '''            const listCount = link.querySelector<HTMLElement>(".playlist-row-count");
+            const gridName = link.querySelector<HTMLElement>(
+              ".playlist-gallery-content h3",
+            );
+            const target = listCount ?? gridName;
+            if (!target) return;
+
+            targets.push({
+              key: `playlist-${playlist.id}`,
+              element: target,
+              detail: false,
+              list: Boolean(listCount),
+            });''',
+              '''            const gridName = link.querySelector<HTMLElement>(
+              ".playlist-gallery-content h3",
+            );
+            if (!gridName) return;
+
+            targets.push({
+              key: `playlist-${playlist.id}`,
+              element: gridName,
+              detail: false,
+              list: false,
+            });''',
+          )
+          template_path.write_text(template)
+
+          project_path = Path('apps/web/app/projects/page.tsx')
+          project = project_path.read_text()
+          project = project.replace(
+              'import ListRowStatusCount from "@/components/ListRowStatusCount";\n',
+              'import LibraryListRow from "@/components/LibraryListRow";\n',
+          )
+
+          project_pattern = re.compile(r'''  return \(\n    <div className=\{`projects-row\$\{isRenaming \? " is-renaming" : ""\}`\}>.*?    </div>\n  \);\n\}''', re.S)
+          project_replacement = '''  const actions = (
+    <DropdownShell
+      open={menuOpen}
+      onOpenChange={onMenuOpenChange}
+      placement="bottom-end"
+      offsetAmount={8}
+      collisionPadding={{
+        top: 72,
+        right: 16,
+        bottom: 88,
+        left: 16,
+      }}
+      trigger={({ open }) => (
+        <button
+          type="button"
+          className={`project-toolbar-icon-button ${open ? "is-active" : ""}`}
+          aria-label={`More actions for ${project.name}`}
+          aria-expanded={open}
+          title="More"
+        >
+          <MoreIcon />
+        </button>
+      )}
+    >
+      <button
+        type="button"
+        role="menuitem"
+        onClick={() => {
+          onMenuOpenChange(false);
+          onStartRename(project);
+        }}
+      >
+        Rename
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        onClick={() => {
+          onMenuOpenChange(false);
+          onToggleArchive(project);
+        }}
+      >
+        {project.is_archived ? "Restore project" : "Archive project"}
+      </button>
+      <button
+        type="button"
+        className="danger-hover"
+        role="menuitem"
+        onClick={() => {
+          onMenuOpenChange(false);
+          onDeleteProject(project);
+        }}
+      >
+        Delete project
+      </button>
+    </DropdownShell>
+  );
+
+  return (
+    <LibraryListRow
+      className={`projects-library-row${isRenaming ? " is-renaming" : ""}`}
+      href={isRenaming ? undefined : `/projects/${project.id}`}
+      leading={<div className="projects-row-icon" aria-hidden="true"><span className="projects-row-icon-inner"><FolderGlyph /></span></div>}
+      content={projectCopy}
+      status={project.is_archived ? <ArchiveIcon /> : undefined}
+      statusLabel="Archived project"
+      count={formatFileCount(getProjectFileCount(project))}
+      actions={actions}
+    />
+  );
+}'''
+          project, count = project_pattern.subn(project_replacement, project, count=1)
+          if count != 1:
+              raise SystemExit(f'project row replacement count={count}')
+          project_path.write_text(project)
+
+          layout_path = Path('apps/web/app/projects/layout.tsx')
+          layout = layout_path.read_text()
+          blocks = [
+              r'''\n        \.projects-page \.projects-row:not\(\.projects-row-skeleton\) \{.*?\n        \}\n''',
+              r'''\n        \.projects-page \.projects-row-archive-status \{.*?\n        \}\n''',
+              r'''\n        \.projects-page \.projects-row-count \{.*?\n        \}\n''',
+              r'''\n        \.projects-page \.projects-row-actions \{.*?\n        \}\n''',
+          ]
+          for pattern in blocks:
+              layout = re.sub(pattern, '\n', layout, count=1, flags=re.S)
+          layout = re.sub(
+              r'''\n          \.projects-page \.projects-row:not\(\.projects-row-skeleton\) \{.*?\n          \}\n''',
+              '\n',
+              layout,
+              count=1,
+              flags=re.S,
+          )
+          layout_path.write_text(layout)
+
+          # Remove the obsolete partial component only after all usages are gone.
+          obsolete = Path('apps/web/components/ListRowStatusCount.tsx')
+          for path in [playlist_path, project_path]:
+              if 'ListRowStatusCount' in path.read_text():
+                  raise SystemExit(f'obsolete component remains in {path}')
+          if obsolete.exists():
+              obsolete.unlink()
+
+          # Validate the complete shared construction is used by both pages.
+          if playlist_path.read_text().count('<LibraryListRow') < 1:
+              raise SystemExit('playlist shared row missing')
+          if project_path.read_text().count('<LibraryListRow') < 1:
+              raise SystemExit('project shared row missing')
+          if '.playlist-index-row-shell a[href^="/playlists/"]' in template_path.read_text():
+              raise SystemExit('playlist list DOM injection still active')
+          PY
+      - name: Commit source changes
+        run: |
+          rm .github/workflows/share-complete-library-row.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Share complete playlist and project row construction"
+          git push origin main
