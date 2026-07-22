@@ -21,7 +21,10 @@ export type EditPoints = FilmwaveEditPoints;
 
 export type Song = FilmwaveSong;
 
-export type Playlist = FilmwavePlaylist;
+export type Playlist = FilmwavePlaylist & {
+  primary_category: string | null;
+  secondary_categories: string[];
+};
 
 export type PlaylistSong = FilmwavePlaylistSong;
 
