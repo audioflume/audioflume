@@ -1,5 +1,6 @@
 name: Fix project archive column
 
+# One-time source correction
 on:
   push:
     branches:
