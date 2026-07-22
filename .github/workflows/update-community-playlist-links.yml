@@ -71,3 +71,5 @@ jobs:
           git add -A
           git commit -m "Update community playlist links"
           git push origin main
+
+# trigger
