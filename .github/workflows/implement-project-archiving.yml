@@ -1,0 +1,156 @@
+name: Implement project archiving
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/implement-project-archiving.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Implement project archiving
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          def replace_once(path_string, old, new):
+              path = Path(path_string)
+              text = path.read_text()
+              if old not in text:
+                  raise SystemExit(f'Expected block not found in {path_string}: {old[:80]!r}')
+              path.write_text(text.replace(old, new, 1))
+
+          replace_once(
+              'packages/shared/src/projects.ts',
+              '''  position: number | null;\n  created_at: string;\n};''',
+              '''  position: number | null;\n  is_archived: boolean;\n  created_at: string;\n};''',
+          )
+
+          replace_once(
+              'apps/web/lib/projects.ts',
+              '''    position:\n      typeof project.position === "number" && Number.isFinite(project.position)\n        ? project.position\n        : null,\n    created_at: String(project.created_at || ""),''',
+              '''    position:\n      typeof project.position === "number" && Number.isFinite(project.position)\n        ? project.position\n        : null,\n    is_archived: project.is_archived === true,\n    created_at: String(project.created_at || ""),''',
+          )
+
+          replace_once(
+              'apps/web/app/api/projects/[projectId]/route.ts',
+              '''      position?: number | null;\n    } = {};''',
+              '''      position?: number | null;\n      is_archived?: boolean;\n    } = {};''',
+          )
+          replace_once(
+              'apps/web/app/api/projects/[projectId]/route.ts',
+              '''    if ("position" in body) {\n      const nextPosition = Number(body.position);\n\n      updates.position = Number.isFinite(nextPosition) ? nextPosition : null;\n    }\n\n    if (Object.keys(updates).length === 0) {''',
+              '''    if ("position" in body) {\n      const nextPosition = Number(body.position);\n\n      updates.position = Number.isFinite(nextPosition) ? nextPosition : null;\n    }\n\n    if ("is_archived" in body) {\n      if (typeof body.is_archived !== "boolean") {\n        return NextResponse.json(\n          { error: "Invalid archive state" },\n          { status: 400 },\n        );\n      }\n\n      updates.is_archived = body.is_archived;\n    }\n\n    if (Object.keys(updates).length === 0) {''',
+          )
+
+          replace_once(
+              'apps/web/components/project-detail/ProjectToolbar.tsx',
+              '''        <button\n          type="button"\n          role="menuitem"\n          onClick={() => {\n            closeMenu();\n            onToast("Version history coming soon");\n          }}\n        >\n          Version history\n        </button>\n''',
+              '',
+          )
+
+          page = Path('apps/web/app/projects/page.tsx')
+          text = page.read_text()
+
+          text = text.replace(
+              '''function ChevronIcon() {\n  return (\n    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">\n      <path\n        d="M4 6L8 10L12 6"\n        stroke="currentColor"\n        strokeWidth="2"\n        strokeLinecap="round"\n        strokeLinejoin="round"\n      />\n    </svg>\n  );\n}\n''',
+              '''function ChevronIcon() {\n  return (\n    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">\n      <path\n        d="M4 6L8 10L12 6"\n        stroke="currentColor"\n        strokeWidth="2"\n        strokeLinecap="round"\n        strokeLinejoin="round"\n      />\n    </svg>\n  );\n}\n\nfunction ArchiveIcon() {\n  return (\n    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">\n      <path d="M5 9V19H19V9" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />\n      <path d="M4 5H20V9H4V5Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />\n      <path d="M9.5 13H14.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />\n    </svg>\n  );\n}\n''',
+              1,
+          )
+
+          text = text.replace(
+              '''  onDeleteProject: (project: Project) => void;\n  onToast: (message: string) => void;''',
+              '''  onDeleteProject: (project: Project) => void;\n  onToggleArchive: (project: Project) => void;''',
+              1,
+          )
+          text = text.replace(
+              '''  onDeleteProject,\n  onToast,''',
+              '''  onDeleteProject,\n  onToggleArchive,''',
+              1,
+          )
+
+          text = text.replace(
+              '''      <div className="projects-row-count">\n        {formatFileCount(getProjectFileCount(project))}\n      </div>''',
+              '''      <div className="projects-row-count">\n        <span>{formatFileCount(getProjectFileCount(project))}</span>\n        {project.is_archived && (\n          <span className="projects-row-archive-icon" aria-label="Archived project" title="Archived project">\n            <ArchiveIcon />\n          </span>\n        )}\n      </div>''',
+              1,
+          )
+
+          text = text.replace(
+              '''          <button\n            type="button"\n            role="menuitem"\n            onClick={() => {\n              onMenuOpenChange(false);\n              onToast("Version history coming soon");\n            }}\n          >\n            Version history\n          </button>\n''',
+              '',
+              1,
+          )
+          text = text.replace(
+              '''          <button\n            type="button"\n            role="menuitem"\n            onClick={() => {\n              onMenuOpenChange(false);\n              onToast("Archive project coming soon");\n            }}\n          >\n            Archive project\n          </button>''',
+              '''          <button\n            type="button"\n            role="menuitem"\n            onClick={() => {\n              onMenuOpenChange(false);\n              onToggleArchive(project);\n            }}\n          >\n            {project.is_archived ? "Restore project" : "Archive project"}\n          </button>''',
+              1,
+          )
+
+          text = text.replace(
+              '''  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(null);\n  const [toastMessage, setToastMessage] = useState<string | null>(null);''',
+              '''  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(null);\n  const [archivingProjectId, setArchivingProjectId] = useState<number | null>(null);\n  const [toastMessage, setToastMessage] = useState<string | null>(null);''',
+              1,
+          )
+
+          text = text.replace(
+              '''  const displayedProjects = useMemo(() => {\n    const filtered = cleanQuery\n      ? projects.filter((project) =>\n          project.name.toLowerCase().includes(cleanQuery),\n        )\n      : projects;\n\n    return sortProjects(filtered, sortMode);\n  }, [projects, cleanQuery, sortMode]);''',
+              '''  const displayedProjects = useMemo(() => {\n    const statusFiltered = projects.filter((project) => {\n      if (projectStatusMode === "all") return true;\n      if (projectStatusMode === "archived") return project.is_archived;\n      return !project.is_archived;\n    });\n\n    const queryFiltered = cleanQuery\n      ? statusFiltered.filter((project) =>\n          project.name.toLowerCase().includes(cleanQuery),\n        )\n      : statusFiltered;\n\n    return sortProjects(queryFiltered, sortMode);\n  }, [projects, cleanQuery, projectStatusMode, sortMode]);''',
+              1,
+          )
+
+          marker = '''  async function handleDeleteProject(project: Project) {'''
+          handler = '''  async function handleToggleArchive(project: Project) {\n    if (archivingProjectId) return;\n\n    const nextArchived = !project.is_archived;\n    setArchivingProjectId(project.id);\n\n    try {\n      const res = await fetch(`/api/projects/${project.id}`, {\n        method: "PATCH",\n        headers: { "Content-Type": "application/json" },\n        body: JSON.stringify({ is_archived: nextArchived }),\n      });\n      const text = await res.text();\n      const data = text ? JSON.parse(text) : null;\n\n      if (!res.ok) {\n        throw new Error(data?.error || "Failed to update project archive state");\n      }\n\n      setProjects((current) =>\n        current.map((item) =>\n          item.id === project.id\n            ? { ...item, ...(data || {}), is_archived: nextArchived }\n            : item,\n        ),\n      );\n      showToast(nextArchived ? "Project archived" : "Project restored");\n    } catch (err) {\n      console.error("Failed to update project archive state", err);\n      showToast(nextArchived ? "Couldn't archive project" : "Couldn't restore project");\n    } finally {\n      setArchivingProjectId(null);\n    }\n  }\n\n'''
+          if marker not in text:
+              raise SystemExit('Delete handler marker not found')
+          text = text.replace(marker, handler + marker, 1)
+
+          text = text.replace(
+              '''        .projects-row-count { justify-self: end; text-align: right; font-size: 11.5px; font-weight: 400; line-height: 1.35; color: var(--text-subtle); }''',
+              '''        .projects-row-count { display: inline-flex; justify-self: end; align-items: center; gap: 10px; text-align: right; font-size: 11.5px; font-weight: 400; line-height: 1.35; color: var(--text-subtle); }\n        .projects-row-archive-icon { display: inline-flex; width: 13px; height: 13px; flex: 0 0 13px; align-items: center; justify-content: center; color: var(--text-muted); line-height: 0; }''',
+              1,
+          )
+
+          text = text.replace(
+              '''                   onDeleteProject={(targetProject) => {\n                     void handleDeleteProject(targetProject);\n                   }}\n                   onToast={showToast}''',
+              '''                   onDeleteProject={(targetProject) => {\n                     void handleDeleteProject(targetProject);\n                   }}\n                   onToggleArchive={(targetProject) => {\n                     void handleToggleArchive(targetProject);\n                   }}''',
+              1,
+          )
+
+          if text == page.read_text():
+              raise SystemExit('Projects page was not changed')
+          page.write_text(text)
+
+          migration = Path('apps/web/supabase/migrations/20260722000000_project_archiving.sql')
+          migration.write_text('''alter table public.projects\n  add column if not exists is_archived boolean not null default false;\n\ncreate index if not exists projects_clerk_user_archived_idx\n  on public.projects (clerk_user_id, is_archived);\n''')
+
+          Path('.github/workflows/implement-project-archiving.yml').unlink()
+          PY
+
+      - name: Verify and commit
+        shell: bash
+        run: |
+          ! grep -q 'Version history' apps/web/app/projects/page.tsx
+          ! grep -q 'Version history' apps/web/components/project-detail/ProjectToolbar.tsx
+          grep -q 'projectStatusMode === "archived"' apps/web/app/projects/page.tsx
+          grep -q 'is_archived: nextArchived' apps/web/app/projects/page.tsx
+          grep -q 'ArchiveIcon' apps/web/app/projects/page.tsx
+          grep -q 'is_archived?: boolean' apps/web/app/api/projects/\[projectId\]/route.ts
+          grep -q 'is_archived: boolean' packages/shared/src/projects.ts
+          test -f apps/web/supabase/migrations/20260722000000_project_archiving.sql
+          npm run style:guard
+          git config user.name "filmwave-webmaster"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Add project archiving and filters"
+          git push origin main
