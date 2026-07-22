@@ -16,8 +16,8 @@ type PublishPlaylistModalProps = {
   isOpen: boolean;
   playlistId: number;
   playlistName: string;
-  initialPrimaryCategory: string | null;
-  initialSecondaryCategories: string[];
+  initialPrimaryCategory?: string | null;
+  initialSecondaryCategories?: string[] | null;
   isSaving: boolean;
   onClose: () => void;
   onPublish: (
@@ -30,8 +30,8 @@ export default function PublishPlaylistModal({
   isOpen,
   playlistId,
   playlistName,
-  initialPrimaryCategory,
-  initialSecondaryCategories,
+  initialPrimaryCategory = null,
+  initialSecondaryCategories = [],
   isSaving,
   onClose,
   onPublish,
@@ -52,7 +52,10 @@ export default function PublishPlaylistModal({
     const validInitialPrimary = COMMUNITY_PLAYLIST_CATEGORIES.find(
       (category) => category === initialPrimaryCategory,
     );
-    const validInitialSecondary = initialSecondaryCategories
+    const safeInitialSecondary = Array.isArray(initialSecondaryCategories)
+      ? initialSecondaryCategories
+      : [];
+    const validInitialSecondary = safeInitialSecondary
       .filter((category): category is CommunityPlaylistCategory =>
         COMMUNITY_PLAYLIST_CATEGORIES.includes(
           category as CommunityPlaylistCategory,
@@ -76,6 +79,7 @@ export default function PublishPlaylistModal({
       })
       .then((songs) => {
         if (cancelled) return;
+
         const suggestions = suggestCommunityPlaylistCategories(
           playlistName,
           songs,
@@ -162,7 +166,9 @@ export default function PublishPlaylistModal({
         <header className="publish-playlist-modal-header">
           <div>
             <p className="publish-playlist-modal-kicker">Community Playlist</p>
-            <h2 id="publish-playlist-title">Choose where this playlist belongs</h2>
+            <h2 id="publish-playlist-title">
+              Choose where this playlist belongs
+            </h2>
             <p>{suggestionCopy}</p>
           </div>
           <button
@@ -266,13 +272,17 @@ export default function PublishPlaylistModal({
           box-shadow: 0 28px 90px rgba(0, 0, 0, 0.32);
         }
 
-        .publish-playlist-modal-header {
+        .publish-playlist-modal-header,
+        .publish-playlist-modal-footer {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
           gap: 24px;
-          border-bottom: 1px solid var(--border);
           padding: 24px;
+        }
+
+        .publish-playlist-modal-header {
+          border-bottom: 1px solid var(--border);
         }
 
         .publish-playlist-modal-kicker {
@@ -328,7 +338,8 @@ export default function PublishPlaylistModal({
           font-weight: 600;
         }
 
-        .publish-playlist-modal-label-row span {
+        .publish-playlist-modal-label-row span,
+        .publish-playlist-modal-footer p {
           color: var(--text-muted);
           font-size: 10.5px;
         }
@@ -339,46 +350,42 @@ export default function PublishPlaylistModal({
           gap: 8px;
         }
 
-        .publish-playlist-category-grid button {
-          min-height: 38px;
+        .publish-playlist-category-grid button,
+        .publish-playlist-modal-footer button {
           border: 1px solid var(--border);
           background: var(--bg-secondary);
-          color: var(--text-secondary);
-          padding: 8px 10px;
+          color: var(--text-primary);
           font-family: inherit;
           font-size: 11.5px;
           cursor: pointer;
-          transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
         }
 
-        .publish-playlist-category-grid button:hover:not(:disabled) {
-          border-color: var(--border-hover);
-          color: var(--text-primary);
+        .publish-playlist-category-grid button {
+          min-height: 38px;
+          padding: 8px 10px;
+          color: var(--text-secondary);
         }
 
-        .publish-playlist-category-grid button.is-selected {
+        .publish-playlist-category-grid button.is-selected,
+        .publish-playlist-modal-footer button.is-primary {
           border-color: var(--text-primary);
           background: var(--text-primary);
           color: var(--bg-primary);
         }
 
-        .publish-playlist-category-grid button:disabled {
+        .publish-playlist-category-grid button:disabled,
+        .publish-playlist-modal-footer button:disabled {
           cursor: default;
-          opacity: 0.35;
+          opacity: 0.4;
         }
 
         .publish-playlist-modal-footer {
-          display: flex;
           align-items: center;
-          justify-content: space-between;
-          gap: 20px;
           padding: 20px 24px;
         }
 
         .publish-playlist-modal-footer p {
           margin: 0;
-          color: var(--text-muted);
-          font-size: 10.5px;
         }
 
         .publish-playlist-modal-footer > div {
@@ -388,25 +395,8 @@ export default function PublishPlaylistModal({
 
         .publish-playlist-modal-footer button {
           height: 36px;
-          border: 1px solid var(--border);
-          background: var(--bg-secondary);
-          color: var(--text-primary);
           padding: 0 16px;
-          font-family: inherit;
-          font-size: 11.5px;
           font-weight: 500;
-          cursor: pointer;
-        }
-
-        .publish-playlist-modal-footer button.is-primary {
-          border-color: var(--text-primary);
-          background: var(--text-primary);
-          color: var(--bg-primary);
-        }
-
-        .publish-playlist-modal-footer button:disabled {
-          cursor: default;
-          opacity: 0.45;
         }
 
         @media (max-width: 640px) {
