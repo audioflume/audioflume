@@ -46,6 +46,13 @@
   --filmwave-ui-title-letter-spacing: -0.045em;
   --filmwave-ui-title-line-height: 1.1;
 
+  /* Shared playlist/project list-row trailing geometry. */
+  --filmwave-list-row-status-width: 12px;
+  --filmwave-list-row-count-width: 64px;
+  --filmwave-list-row-action-width: 50px;
+  --filmwave-list-row-column-gap: 14px;
+  --filmwave-list-row-status-offset: 12px;
+
   --waveform-color: rgba(255, 255, 255, 0.3);
   --waveform-progress: #ffffff;
 
@@ -125,4 +132,52 @@
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk);
+}
+
+/* Shared My Playlists / Projects trailing list-row layout. */
+body .playlist-index-row:not(.is-reordering):not(.playlist-create-row) {
+  grid-template-columns:
+    50px minmax(0, 1fr) var(--filmwave-list-row-status-width)
+    var(--filmwave-list-row-count-width) !important;
+  column-gap: var(--filmwave-list-row-column-gap) !important;
+}
+
+body
+  .playlist-index-row:not(.is-reordering):not(.playlist-create-row)
+  .playlist-row-count {
+  width: var(--filmwave-list-row-count-width) !important;
+  justify-self: start !important;
+  text-align: left !important;
+}
+
+body .playlist-public-icon-host.is-list {
+  width: var(--filmwave-list-row-status-width) !important;
+  justify-self: end !important;
+  transform: translateX(var(--filmwave-list-row-status-offset)) !important;
+}
+
+body
+  .projects-route-shell
+  .projects-page
+  .projects-row:not(.projects-row-skeleton) {
+  grid-template-columns:
+    minmax(0, 1fr) var(--filmwave-list-row-status-width)
+    var(--filmwave-list-row-count-width) var(--filmwave-list-row-action-width) !important;
+  column-gap: var(--filmwave-list-row-column-gap) !important;
+}
+
+body .projects-route-shell .projects-page .projects-row-archive-status {
+  width: var(--filmwave-list-row-status-width) !important;
+  justify-self: end !important;
+  transform: translateX(var(--filmwave-list-row-status-offset)) !important;
+}
+
+body .projects-route-shell .projects-page .projects-row-count {
+  width: var(--filmwave-list-row-count-width) !important;
+  justify-self: start !important;
+  text-align: left !important;
+}
+
+body .projects-route-shell .projects-page .projects-row-actions {
+  width: var(--filmwave-list-row-action-width);
 }
