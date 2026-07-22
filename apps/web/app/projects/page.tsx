@@ -706,7 +706,9 @@ export default function ProjectsPage() {
                   onDeleteProject={(targetProject) => {
                     void handleDeleteProject(targetProject);
                   }}
-                  onToast={showToast}
+                  onToggleArchive={(targetProject) => {
+                    void handleToggleArchive(targetProject);
+                  }}
                 />
               ))}
             </section>
