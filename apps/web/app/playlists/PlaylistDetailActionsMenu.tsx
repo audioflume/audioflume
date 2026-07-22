@@ -2,10 +2,12 @@
 
 import DropdownShell from "@/components/DropdownShell";
 import EditPlaylistModal from "@/components/EditPlaylistModal";
+import PublishPlaylistModal from "@/components/PublishPlaylistModal";
 import MoreIcon from "@/components/icons/MoreIcon";
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
+import type { CommunityPlaylistCategory } from "@/lib/communityPlaylistCategories";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -47,6 +49,7 @@ export default function PlaylistDetailActionsMenu() {
   const [renameName, setRenameName] = useState("");
   const [saving, setSaving] = useState(false);
   const [visibilitySaving, setVisibilitySaving] = useState(false);
+  const [publishOpen, setPublishOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [editCoverPreview, setEditCoverPreview] = useState<string | null>(null);
@@ -109,6 +112,7 @@ export default function PlaylistDetailActionsMenu() {
     setRenameName("");
     setSaving(false);
     setVisibilitySaving(false);
+    setPublishOpen(false);
     setEditOpen(false);
     setEditName("");
     setEditCoverPreview(null);
@@ -223,17 +227,46 @@ export default function PlaylistDetailActionsMenu() {
     }
   }
 
-  async function togglePublic() {
+  function togglePublic() {
     if (!playlist || visibilitySaving) return;
-    const nextPublic = !playlist.is_public;
     setMenuOpen(false);
+
+    if (!playlist.is_public) {
+      setPublishOpen(true);
+      return;
+    }
+
+    void updateVisibility(false);
+  }
+
+  async function publishPlaylist(
+    primaryCategory: CommunityPlaylistCategory,
+    secondaryCategories: CommunityPlaylistCategory[],
+  ) {
+    await updateVisibility(true, primaryCategory, secondaryCategories);
+  }
+
+  async function updateVisibility(
+    nextPublic: boolean,
+    primaryCategory?: CommunityPlaylistCategory,
+    secondaryCategories: CommunityPlaylistCategory[] = [],
+  ) {
+    if (!playlist || visibilitySaving) return;
     setVisibilitySaving(true);
 
     try {
       const response = await fetch(`/api/playlists/${playlist.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ is_public: nextPublic }),
+        body: JSON.stringify(
+          nextPublic
+            ? {
+                is_public: true,
+                primary_category: primaryCategory,
+                secondary_categories: secondaryCategories,
+              }
+            : { is_public: false },
+        ),
       });
       const data = parseResponse(await response.text());
       if (!response.ok) {
@@ -245,6 +278,7 @@ export default function PlaylistDetailActionsMenu() {
           item.id === playlist.id ? { ...item, ...data } : item,
         ),
       );
+      setPublishOpen(false);
       showToast(nextPublic ? "Playlist is now public" : "Playlist is now private");
     } catch {
       showToast("Couldn't reach the playlist service");
@@ -317,7 +351,7 @@ export default function PlaylistDetailActionsMenu() {
                 type="button"
                 role="menuitem"
                 disabled={visibilitySaving}
-                onClick={() => void togglePublic()}
+                onClick={togglePublic}
               >
                 {playlist.is_public ? "Make Private" : "Make Public"}
               </button>
@@ -393,6 +427,22 @@ export default function PlaylistDetailActionsMenu() {
       `}</style>
       {menu}
       {renameField}
+      {playlist && (
+        <PublishPlaylistModal
+          isOpen={publishOpen}
+          playlistId={playlist.id}
+          playlistName={playlist.name}
+          initialPrimaryCategory={playlist.primary_category}
+          initialSecondaryCategories={playlist.secondary_categories}
+          isSaving={visibilitySaving}
+          onClose={() => {
+            if (!visibilitySaving) setPublishOpen(false);
+          }}
+          onPublish={(primaryCategory, secondaryCategories) =>
+            void publishPlaylist(primaryCategory, secondaryCategories)
+          }
+        />
+      )}
       <EditPlaylistModal
         isOpen={editOpen && !!playlist}
         playlist={playlist}
