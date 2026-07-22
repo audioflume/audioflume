@@ -4,7 +4,7 @@ export type FilmwaveProject = {
   name: string;
   description: string | null;
   position: number | null;
-  is_archived: boolean;
+  is_archived?: boolean;
   created_at: string;
 };
 
