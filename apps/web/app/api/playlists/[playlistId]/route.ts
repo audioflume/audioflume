@@ -1,6 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
+import {
+  isCommunityPlaylistCategory,
+  normalizeCommunityPlaylistCategories,
+} from "@/lib/communityPlaylistCategories";
 
  type RouteContext = {
   params: Promise<{ playlistId: string }> | { playlistId: string };
@@ -11,6 +15,8 @@ type PlaylistUpdate = {
   cover_image_url?: string | null;
   is_public?: boolean;
   published_at?: string | null;
+  primary_category?: string | null;
+  secondary_categories?: string[];
 };
 
 function getErrorResponse(error: unknown, stage: string) {
@@ -105,6 +111,50 @@ export async function PATCH(req: Request, context: RouteContext) {
       updates.cover_image_url = coverImageUrl;
     }
 
+    const categoryWasIncluded = Object.prototype.hasOwnProperty.call(
+      body,
+      "primary_category",
+    );
+    const secondaryWasIncluded = Object.prototype.hasOwnProperty.call(
+      body,
+      "secondary_categories",
+    );
+
+    if (categoryWasIncluded) {
+      if (
+        body.primary_category !== null &&
+        !isCommunityPlaylistCategory(body.primary_category)
+      ) {
+        return NextResponse.json(
+          { error: "Invalid primary playlist category" },
+          { status: 400 },
+        );
+      }
+      updates.primary_category = body.primary_category;
+    }
+
+    if (secondaryWasIncluded) {
+      if (!Array.isArray(body.secondary_categories)) {
+        return NextResponse.json(
+          { error: "Invalid related playlist categories" },
+          { status: 400 },
+        );
+      }
+
+      const secondaryCategories = normalizeCommunityPlaylistCategories(
+        body.secondary_categories,
+      ).filter((category) => category !== updates.primary_category);
+
+      if (secondaryCategories.length !== body.secondary_categories.length) {
+        return NextResponse.json(
+          { error: "Related categories must be valid and unique" },
+          { status: 400 },
+        );
+      }
+
+      updates.secondary_categories = secondaryCategories;
+    }
+
     const publicWasIncluded = Object.prototype.hasOwnProperty.call(
       body,
       "is_public",
@@ -116,6 +166,20 @@ export async function PATCH(req: Request, context: RouteContext) {
           { status: 400 },
         );
       }
+
+      if (body.is_public) {
+        const requestedPrimary = categoryWasIncluded
+          ? updates.primary_category
+          : undefined;
+
+        if (!requestedPrimary) {
+          return NextResponse.json(
+            { error: "Choose a primary category before publishing" },
+            { status: 400 },
+          );
+        }
+      }
+
       updates.is_public = body.is_public;
       updates.published_at = body.is_public ? new Date().toISOString() : null;
     }
@@ -135,7 +199,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       .eq("id", playlistId)
       .eq("clerk_user_id", userId)
       .select(
-        "id, clerk_user_id, name, cover_image_url, position, is_public, published_at",
+        "id, clerk_user_id, name, cover_image_url, position, is_public, published_at, primary_category, secondary_categories",
       )
       .maybeSingle();
 
