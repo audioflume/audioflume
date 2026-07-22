@@ -34,9 +34,19 @@ export async function GET() {
   try {
     let playlistsResult = await supabaseServer
       .from("playlists")
-      .select("id, clerk_user_id, name, position, is_public, published_at")
+      .select(
+        "id, clerk_user_id, name, position, is_public, published_at, primary_category, secondary_categories",
+      )
       .eq("clerk_user_id", userId)
       .order("position", { ascending: true });
+
+    if (playlistsResult.error) {
+      playlistsResult = await supabaseServer
+        .from("playlists")
+        .select("id, clerk_user_id, name, position, is_public, published_at")
+        .eq("clerk_user_id", userId)
+        .order("position", { ascending: true });
+    }
 
     if (playlistsResult.error) {
       playlistsResult = await supabaseServer
