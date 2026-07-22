@@ -1,0 +1,89 @@
+name: Align project archive icon
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/align-project-archive-icon.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Match playlist status icon placement
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          path = Path('apps/web/app/projects/page.tsx')
+          text = path.read_text()
+
+          old_markup = '''      <div className="projects-row-count">
+        <span>{formatFileCount(getProjectFileCount(project))}</span>
+        {project.is_archived && (
+          <span className="projects-row-archive-icon" aria-label="Archived project" title="Archived project">
+            <ArchiveIcon />
+          </span>
+        )}
+      </div>'''
+          new_markup = '''      {project.is_archived && (
+        <span
+          className="projects-row-archive-icon"
+          aria-label="Archived project"
+          title="Archived project"
+        >
+          <ArchiveIcon />
+        </span>
+      )}
+
+      <div className="projects-row-count">
+        {formatFileCount(getProjectFileCount(project))}
+      </div>'''
+          if old_markup not in text:
+              raise SystemExit('Expected archive icon markup not found')
+          text = text.replace(old_markup, new_markup, 1)
+
+          old_row = '.projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) minmax(84px, 120px) 32px; gap: 0; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }'
+          new_row = '.projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) 12px minmax(84px, 120px) 32px; column-gap: 14px; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }'
+          if old_row not in text:
+              raise SystemExit('Expected projects row CSS not found')
+          text = text.replace(old_row, new_row, 1)
+
+          old_count = '.projects-row-count { display: inline-flex; justify-self: end; align-items: center; gap: 10px; text-align: right; font-size: 11.5px; font-weight: 400; line-height: 1.35; color: var(--text-subtle); }\n        .projects-row-archive-icon { display: inline-flex; width: 13px; height: 13px; flex: 0 0 13px; align-items: center; justify-content: center; color: var(--text-muted); line-height: 0; }'
+          new_count = '.projects-row-count { grid-column: 3; justify-self: end; text-align: right; font-size: 11.5px; font-weight: 400; line-height: 1.35; color: var(--text-subtle); }\n        .projects-row-archive-icon { display: inline-flex; grid-column: 2; width: 12px; height: 13px; align-items: center; justify-content: center; justify-self: end; transform: translateX(12px); color: var(--text-muted); line-height: 0; }\n        .projects-row-actions { grid-column: 4; }'
+          if old_count not in text:
+              raise SystemExit('Expected archive icon CSS not found')
+          text = text.replace(old_count, new_count, 1)
+
+          old_mobile = '.projects-row { grid-template-columns: minmax(0, 1fr) minmax(70px, 96px) 32px; gap: 0; padding: 0 18px; }'
+          new_mobile = '.projects-row { grid-template-columns: minmax(0, 1fr) 12px minmax(70px, 96px) 32px; column-gap: 14px; padding: 0 18px; }'
+          if old_mobile not in text:
+              raise SystemExit('Expected mobile projects row CSS not found')
+          text = text.replace(old_mobile, new_mobile, 1)
+
+          path.write_text(text)
+          Path('.github/workflows/align-project-archive-icon.yml').unlink()
+          PY
+
+      - name: Verify and commit
+        shell: bash
+        run: |
+          grep -q 'grid-template-columns: minmax(0, 1fr) 12px minmax(84px, 120px) 32px' apps/web/app/projects/page.tsx
+          grep -q 'grid-column: 2' apps/web/app/projects/page.tsx
+          grep -q 'transform: translateX(12px)' apps/web/app/projects/page.tsx
+          grep -q 'grid-column: 3' apps/web/app/projects/page.tsx
+          npm run style:guard
+          git config user.name "filmwave-webmaster"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Align project archive icon with playlist status icon"
+          git push origin main
