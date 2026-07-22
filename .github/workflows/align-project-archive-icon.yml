@@ -1,5 +1,6 @@
 name: Align project archive icon
 
+# One-time source update
 on:
   push:
     branches:
