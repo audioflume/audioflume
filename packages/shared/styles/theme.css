@@ -49,7 +49,9 @@
   /* Shared playlist/project list-row trailing geometry. */
   --filmwave-list-row-status-width: 12px;
   --filmwave-list-row-count-width: 64px;
-  --filmwave-list-row-action-width: 50px;
+  --filmwave-list-row-action-width: 32px;
+  --filmwave-list-row-action-inset: 12px;
+  --filmwave-list-row-action-reserve: 68px;
   --filmwave-list-row-column-gap: 14px;
   --filmwave-list-row-status-offset: 12px;
 
@@ -160,10 +162,12 @@ body
   .projects-route-shell
   .projects-page
   .projects-row:not(.projects-row-skeleton) {
+  position: relative;
   grid-template-columns:
     minmax(0, 1fr) var(--filmwave-list-row-status-width)
-    var(--filmwave-list-row-count-width) var(--filmwave-list-row-action-width) !important;
+    var(--filmwave-list-row-count-width) !important;
   column-gap: var(--filmwave-list-row-column-gap) !important;
+  padding-right: var(--filmwave-list-row-action-reserve) !important;
 }
 
 body .projects-route-shell .projects-page .projects-row-archive-status {
@@ -179,5 +183,9 @@ body .projects-route-shell .projects-page .projects-row-count {
 }
 
 body .projects-route-shell .projects-page .projects-row-actions {
+  position: absolute;
+  top: 50%;
+  right: var(--filmwave-list-row-action-inset);
   width: var(--filmwave-list-row-action-width);
+  transform: translateY(-50%);
 }
