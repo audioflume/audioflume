@@ -98,18 +98,16 @@ export default function PlaylistsTemplate({ children }: { children: ReactNode })
 
             if (!playlist?.is_public) return;
 
-            const listCount = link.querySelector<HTMLElement>(".playlist-row-count");
             const gridName = link.querySelector<HTMLElement>(
               ".playlist-gallery-content h3",
             );
-            const target = listCount ?? gridName;
-            if (!target) return;
+            if (!gridName) return;
 
             targets.push({
               key: `playlist-${playlist.id}`,
-              element: target,
+              element: gridName,
               detail: false,
-              list: Boolean(listCount),
+              list: false,
             });
           });
       } else {

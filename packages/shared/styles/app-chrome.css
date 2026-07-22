@@ -585,3 +585,32 @@ body > header > div {
   z-index: var(--filmwave-z-dropdown);
   width: min(280px, calc(100vw - 24px));
 }
+
+/* Shared trailing status/count geometry for playlist and project list rows. */
+.filmwave-list-row-status {
+  display: inline-flex;
+  width: 12px;
+  height: 14px;
+  align-items: center;
+  justify-content: flex-end;
+  justify-self: end;
+  transform: translateX(12px);
+  color: var(--text-muted);
+  line-height: 0;
+}
+
+.filmwave-list-row-status > svg,
+.filmwave-list-row-status > span,
+.filmwave-list-row-status > span > svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+}
+
+.filmwave-list-row-count {
+  width: 64px;
+  justify-self: start;
+  text-align: left;
+}
+

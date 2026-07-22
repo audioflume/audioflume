@@ -4,6 +4,8 @@ import type { Playlist } from "@/lib/types";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import ListRowStatusCount from "@/components/ListRowStatusCount";
+import PublicPlaylistIcon from "@/components/icons/PublicPlaylistIcon";
 import EditPlaylistModal from "@/components/EditPlaylistModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import Toast from "@/components/Toast";
@@ -443,9 +445,17 @@ function SortablePlaylistItem({
             <span>{playlist.name}</span>
             <small>{formatGenres(stats?.topGenres ?? [])}</small>
           </div>
-          <div className="playlist-row-count">
-            {formatSongCount(stats?.songCount ?? 0)}
-          </div>
+          <ListRowStatusCount
+            status={
+              playlist.is_public ? (
+                <PublicPlaylistIcon className="playlist-public-name-icon" />
+              ) : undefined
+            }
+            statusLabel="Public playlist"
+            count={formatSongCount(stats?.songCount ?? 0)}
+            statusClassName="playlist-row-public-status"
+            countClassName="playlist-row-count"
+          />
         </Link>
         {isDeleting && (
           <div className="playlist-deleting-overlay">

@@ -3,6 +3,7 @@
 import CreateProjectModal from "@/components/CreateProjectModal";
 import DropdownShell from "@/components/DropdownShell";
 import MoreIcon from "@/components/icons/MoreIcon";
+import ListRowStatusCount from "@/components/ListRowStatusCount";
 import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
@@ -199,17 +200,13 @@ function ProjectRow({
         </Link>
       )}
 
-      <div className="projects-row-archive-status">
-        {project.is_archived && (
-          <span className="projects-row-archive-icon" aria-label="Archived project" title="Archived project">
-            <ArchiveIcon />
-          </span>
-        )}
-      </div>
-
-      <div className="projects-row-count">
-        {formatFileCount(getProjectFileCount(project))}
-      </div>
+      <ListRowStatusCount
+        status={project.is_archived ? <ArchiveIcon /> : undefined}
+        statusLabel="Archived project"
+        count={formatFileCount(getProjectFileCount(project))}
+        statusClassName="projects-row-archive-status"
+        countClassName="projects-row-count"
+      />
 
       <div className="projects-row-actions">
         <DropdownShell

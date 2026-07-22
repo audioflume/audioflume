@@ -61,22 +61,11 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-row-archive-status {
-          display: inline-flex;
           grid-column: 2;
-          width: 12px;
-          align-items: center;
-          justify-content: center;
-          justify-self: end;
-          transform: translateX(12px);
-          color: var(--text-muted);
-          line-height: 0;
         }
 
         .projects-page .projects-row-count {
           grid-column: 3;
-          width: 64px;
-          justify-self: start;
-          text-align: left;
           font-size: 11.5px;
           font-weight: 400;
           line-height: 1.35;
