@@ -28,7 +28,7 @@
   height: calc(100dvh - var(--filmwave-header-height, 56px) - var(--filmwave-sidebar-bottom-offset, var(--filmwave-sidebar-float-inset, 12px)) - var(--filmwave-sidebar-float-inset, 12px)) !important;
   min-height: 0 !important;
   margin: 0 !important;
-  gap: 0 !important;
+  gap: 1px !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   border: 0 !important;
