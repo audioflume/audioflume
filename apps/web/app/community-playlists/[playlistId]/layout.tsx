@@ -8,6 +8,12 @@ export default function CommunityPlaylistDetailLayout({
 }) {
   return (
     <>
+      <style>{`
+        .community-detail-page {
+          margin-left: var(--filmwave-page-sidebar-offset) !important;
+          margin-top: var(--filmwave-header-height, 75px) !important;
+        }
+      `}</style>
       <CommunityPlaylistDetailChrome />
       {children}
     </>
