@@ -28,9 +28,15 @@ type CommunityPlaylist = {
   };
 };
 
-const COMMUNITY_LIKES_STORAGE_KEY = "filmwave-community-playlist-likes";
-
 type CategoryFilter = "All" | CommunityPlaylistCategory;
+type CommunityTab = "Trending" | "Recent" | "Most Liked" | "Favorites";
+
+const COMMUNITY_TABS: CommunityTab[] = [
+  "Trending",
+  "Recent",
+  "Most Liked",
+  "Favorites",
+];
 
 function FilterRailChevron() {
   return (
@@ -43,73 +49,67 @@ function FilterRailChevron() {
   );
 }
 
+function parseFavoriteIds(value: unknown) {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((playlistId) => Number(playlistId))
+    .filter((playlistId) => Number.isInteger(playlistId) && playlistId > 0);
+}
+
 export default function CommunityPlaylistsPage() {
   const { currentSong } = usePlayer();
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
+  const [activeTab, setActiveTab] = useState<CommunityTab>("Trending");
   const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
-  const [likedPlaylistIds, setLikedPlaylistIds] = useState<Set<number>>(
+  const [favoritePlaylistIds, setFavoritePlaylistIds] = useState<Set<number>>(
     () => new Set(),
   );
-  const [likesLoaded, setLikesLoaded] = useState(false);
+  const [pendingFavoriteIds, setPendingFavoriteIds] = useState<Set<number>>(
+    () => new Set(),
+  );
   const [loading, setLoading] = useState(true);
   const playerVisible = !!currentSong;
 
   useEffect(() => {
-    try {
-      const storedLikes = window.localStorage.getItem(
-        COMMUNITY_LIKES_STORAGE_KEY,
-      );
-      const parsedLikes = storedLikes ? JSON.parse(storedLikes) : [];
-
-      if (Array.isArray(parsedLikes)) {
-        setLikedPlaylistIds(
-          new Set(
-            parsedLikes.filter(
-              (playlistId): playlistId is number =>
-                typeof playlistId === "number" && Number.isFinite(playlistId),
-            ),
-          ),
-        );
-      }
-    } catch {
-      setLikedPlaylistIds(new Set());
-    } finally {
-      setLikesLoaded(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!likesLoaded) return;
-
-    window.localStorage.setItem(
-      COMMUNITY_LIKES_STORAGE_KEY,
-      JSON.stringify([...likedPlaylistIds]),
-    );
-  }, [likedPlaylistIds, likesLoaded]);
-
-  useEffect(() => {
     let cancelled = false;
 
-    async function loadCommunityPlaylists() {
+    async function loadCommunityData() {
       try {
-        const response = await fetch("/api/community-playlists", {
-          cache: "no-store",
-        });
-        const data = await response.json();
+        const [playlistsResponse, favoritesResponse] = await Promise.all([
+          fetch("/api/community-playlists", { cache: "no-store" }),
+          fetch("/api/community-playlist-favorites", { cache: "no-store" }),
+        ]);
 
-        if (!response.ok) throw new Error(data?.error || "Could not load playlists");
-        if (!cancelled) setPlaylists(data?.playlists ?? []);
+        const playlistsData = await playlistsResponse.json();
+        if (!playlistsResponse.ok) {
+          throw new Error(playlistsData?.error || "Could not load playlists");
+        }
+
+        let favoriteIds: number[] = [];
+        if (favoritesResponse.ok) {
+          const favoritesData = await favoritesResponse.json();
+          favoriteIds = parseFavoriteIds(favoritesData?.favorite_playlist_ids);
+        }
+
+        if (!cancelled) {
+          setPlaylists(playlistsData?.playlists ?? []);
+          setFavoritePlaylistIds(new Set(favoriteIds));
+        }
       } catch (error) {
         console.warn("Community playlists request failed", error);
-        if (!cancelled) setPlaylists([]);
+        if (!cancelled) {
+          setPlaylists([]);
+          setFavoritePlaylistIds(new Set());
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
-    void loadCommunityPlaylists();
+    void loadCommunityData();
     return () => {
       cancelled = true;
     };
@@ -142,6 +142,12 @@ export default function CommunityPlaylistsPage() {
         playlist.secondary_categories.includes(selectedCategory);
 
       if (!categoryMatches) return false;
+      if (
+        activeTab === "Favorites" &&
+        !favoritePlaylistIds.has(playlist.id)
+      ) {
+        return false;
+      }
       if (!cleanQuery) return true;
 
       return (
@@ -153,22 +159,60 @@ export default function CommunityPlaylistsPage() {
         )
       );
     });
-  }, [playlists, query, selectedCategory]);
+  }, [activeTab, favoritePlaylistIds, playlists, query, selectedCategory]);
 
   const featured = playlists.slice(0, 10);
 
-  function togglePlaylistLike(playlistId: number) {
-    setLikedPlaylistIds((current) => {
+  async function togglePlaylistFavorite(playlistId: number) {
+    if (pendingFavoriteIds.has(playlistId)) return;
+
+    const wasFavorite = favoritePlaylistIds.has(playlistId);
+
+    setPendingFavoriteIds((current) => new Set(current).add(playlistId));
+    setFavoritePlaylistIds((current) => {
       const next = new Set(current);
-
-      if (next.has(playlistId)) {
-        next.delete(playlistId);
-      } else {
-        next.add(playlistId);
-      }
-
+      if (wasFavorite) next.delete(playlistId);
+      else next.add(playlistId);
       return next;
     });
+
+    try {
+      const response = await fetch("/api/community-playlist-favorites", {
+        method: wasFavorite ? "DELETE" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playlist_id: playlistId }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || "Could not update favorite playlist");
+      }
+    } catch (error) {
+      console.warn("Community playlist favorite update failed", error);
+      setFavoritePlaylistIds((current) => {
+        const next = new Set(current);
+        if (wasFavorite) next.add(playlistId);
+        else next.delete(playlistId);
+        return next;
+      });
+    } finally {
+      setPendingFavoriteIds((current) => {
+        const next = new Set(current);
+        next.delete(playlistId);
+        return next;
+      });
+    }
+  }
+
+  function getEmptyStateMessage() {
+    if (query.trim()) return "No public playlists match your search.";
+    if (activeTab === "Favorites") {
+      return "You have not favorited any community playlists yet.";
+    }
+    if (selectedCategory !== "All") {
+      return `No public playlists are assigned to ${selectedCategory} yet.`;
+    }
+    return "No public playlists yet.";
   }
 
   return (
@@ -325,6 +369,10 @@ export default function CommunityPlaylistsPage() {
           --favorite-icon-color: #fff;
         }
 
+        .community-like:disabled {
+          cursor: default;
+        }
+
         @media (max-width: 1040px) {
           .community-page {
             grid-template-columns: 220px minmax(0, 1fr);
@@ -429,24 +477,28 @@ export default function CommunityPlaylistsPage() {
           </div>
 
           <div className="community-tabs" role="tablist" aria-label="Community playlist sorting">
-            {["Trending", "Recent", "Most Liked", "Favorites"].map((tab, index) => (
-              <button type="button" key={tab} className={index === 0 ? "is-active" : ""}>{tab}</button>
+            {COMMUNITY_TABS.map((tab) => (
+              <button
+                type="button"
+                role="tab"
+                key={tab}
+                className={activeTab === tab ? "is-active" : ""}
+                aria-selected={activeTab === tab}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </button>
             ))}
           </div>
 
           <div className="community-grid" id="community-grid">
             {!loading && filteredPlaylists.length === 0 && (
-              <div className="community-empty-state">
-                {query.trim()
-                  ? "No public playlists match your search."
-                  : selectedCategory !== "All"
-                    ? `No public playlists are assigned to ${selectedCategory} yet.`
-                    : "No public playlists yet."}
-              </div>
+              <div className="community-empty-state">{getEmptyStateMessage()}</div>
             )}
 
             {filteredPlaylists.map((playlist) => {
-              const isLiked = likedPlaylistIds.has(playlist.id);
+              const isFavorite = favoritePlaylistIds.has(playlist.id);
+              const isPending = pendingFavoriteIds.has(playlist.id);
 
               return (
                 <article className="community-card" key={playlist.id}>
@@ -455,21 +507,26 @@ export default function CommunityPlaylistsPage() {
                       <img className="community-cover" src={playlist.cover_image_url} alt="" />
                     )}
                     <button
-                      className={`community-like${isLiked ? " is-liked" : ""}`}
+                      className={`community-like${isFavorite ? " is-liked" : ""}`}
                       type="button"
-                      aria-label={`${isLiked ? "Unlike" : "Like"} ${playlist.name}`}
-                      aria-pressed={isLiked}
+                      aria-label={`${isFavorite ? "Remove from favorites" : "Add to favorites"}: ${playlist.name}`}
+                      aria-pressed={isFavorite}
+                      disabled={isPending}
                       onClick={(event) => {
                         event.stopPropagation();
-                        togglePlaylistLike(playlist.id);
+                        void togglePlaylistFavorite(playlist.id);
                       }}
                     >
-                      <HeartIcon filled={isLiked} />
+                      <HeartIcon filled={isFavorite} />
                     </button>
                   </div>
                   <div className="community-card-title-row">
                     <h2>{playlist.name}</h2>
-                    <button className="community-more playlist-menu-btn-grid" type="button" aria-label={`More options for ${playlist.name}`}>
+                    <button
+                      className="community-more playlist-menu-btn-grid"
+                      type="button"
+                      aria-label={`More options for ${playlist.name}`}
+                    >
                       <MoreIcon />
                     </button>
                   </div>
