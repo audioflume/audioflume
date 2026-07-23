@@ -48,6 +48,10 @@
   gap: 16px;
 }
 
+.community-categories .fw-filter-rail-item + .fw-filter-rail-item {
+  margin-top: 1px !important;
+}
+
 .community-categories a {
   width: fit-content;
   color: var(--text-primary);
