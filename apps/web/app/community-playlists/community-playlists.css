@@ -401,6 +401,18 @@
   line-height: 1;
 }
 
+.community-creator-overlay {
+  left: 4px !important;
+  right: auto !important;
+  bottom: 4px !important;
+  max-width: calc(100% - 8px) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
 @media (max-width: 1320px) {
   .community-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
