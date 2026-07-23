@@ -166,8 +166,7 @@ export default function CommunityPlaylistsPage() {
 
   const filteredPlaylists = useMemo(() => {
     const cleanQuery = query.trim().toLowerCase();
-
-    return playlists.filter((playlist) => {
+    const filtered = playlists.filter((playlist) => {
       const categoryMatches =
         selectedCategory === "All" ||
         playlist.primary_category === selectedCategory ||
@@ -191,6 +190,16 @@ export default function CommunityPlaylistsPage() {
         )
       );
     });
+
+    if (activeTab === "Most Liked") {
+      return [...filtered].sort((a, b) => {
+        const likeDifference = b.like_count - a.like_count;
+        if (likeDifference !== 0) return likeDifference;
+        return b.play_count - a.play_count;
+      });
+    }
+
+    return filtered;
   }, [activeTab, favoritePlaylistIds, playlists, query, selectedCategory]);
 
   const featured = playlists.slice(0, 10);
