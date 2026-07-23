@@ -236,8 +236,7 @@
 .community-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  column-gap: 38px;
-  row-gap: 58px;
+  gap: clamp(10px, 1.25vw, 18px);
   margin-top: 30px;
 }
 
