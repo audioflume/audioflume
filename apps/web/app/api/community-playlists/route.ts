@@ -16,6 +16,7 @@ type CommunityPlaylistRow = {
   published_at: string | null;
   primary_category: string | null;
   secondary_categories: string[] | null;
+  play_count: number | string | null;
 };
 
 function getDisplayName(user: {
@@ -35,7 +36,7 @@ export async function GET() {
     const { data: playlists, error: playlistsError } = await supabaseServer
       .from("playlists")
       .select(
-        "id, clerk_user_id, name, cover_image_url, published_at, primary_category, secondary_categories",
+        "id, clerk_user_id, name, cover_image_url, published_at, primary_category, secondary_categories, play_count",
       )
       .eq("is_public", true)
       .order("published_at", { ascending: false, nullsFirst: false });
@@ -51,17 +52,30 @@ export async function GET() {
     }
 
     const playlistIds = rows.map((playlist) => playlist.id);
-    const { data: playlistSongs, error: songsError } = await supabaseServer
-      .from("playlist_songs")
-      .select("playlist_id")
-      .in("playlist_id", playlistIds);
+    const [playlistSongsResult, favoritesResult] = await Promise.all([
+      supabaseServer
+        .from("playlist_songs")
+        .select("playlist_id")
+        .in("playlist_id", playlistIds),
+      supabaseServer
+        .from("community_playlist_favorites")
+        .select("playlist_id")
+        .in("playlist_id", playlistIds),
+    ]);
 
-    if (songsError) throw songsError;
+    if (playlistSongsResult.error) throw playlistSongsResult.error;
+    if (favoritesResult.error) throw favoritesResult.error;
 
     const songCounts = new Map<number, number>();
-    for (const item of playlistSongs ?? []) {
+    for (const item of playlistSongsResult.data ?? []) {
       const playlistId = Number(item.playlist_id);
       songCounts.set(playlistId, (songCounts.get(playlistId) ?? 0) + 1);
+    }
+
+    const likeCounts = new Map<number, number>();
+    for (const item of favoritesResult.data ?? []) {
+      const playlistId = Number(item.playlist_id);
+      likeCounts.set(playlistId, (likeCounts.get(playlistId) ?? 0) + 1);
     }
 
     const userIds = [...new Set(rows.map((playlist) => playlist.clerk_user_id))];
@@ -103,6 +117,8 @@ export async function GET() {
             playlist.secondary_categories,
           ),
           song_count: songCounts.get(playlist.id) ?? 0,
+          play_count: Math.max(0, Number(playlist.play_count) || 0),
+          like_count: likeCounts.get(playlist.id) ?? 0,
           creator: usersById.get(playlist.clerk_user_id) ?? {
             name: "Filmwave member",
             imageUrl: null,
