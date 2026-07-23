@@ -18,6 +18,65 @@ const PLAYLIST_CARD_LINK_SELECTOR = ".curated-playlist-card-copy";
 const INDICATOR_SELECTOR = ".curated-featured-playlist-indicators button";
 const NEXT_BUTTON_SELECTOR = ".curated-featured-playlist-next-button";
 
+const CURATED_PLAYLIST_CARD_STYLE = `
+  body:has(.curated-playlists-page-root) .curated-playlist-image,
+  body:has(.curated-playlists-page-root) .curated-playlist-skeleton-card {
+    aspect-ratio: 32 / 21 !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-prev-floating,
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-next-floating {
+    top: calc(
+      (
+          100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
+            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
+        ) /
+        15.238095
+    ) !important;
+  }
+
+  @media (max-width: 1280px) {
+    body:has(.curated-playlists-page-root) .curated-playlist-shelf-prev-floating,
+    body:has(.curated-playlists-page-root) .curated-playlist-shelf-next-floating {
+      top: calc(
+        (
+            100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+              var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
+              var(--curated-playlist-card-gap)
+          ) /
+          12.190476
+      ) !important;
+    }
+  }
+
+  @media (max-width: 980px) {
+    body:has(.curated-playlists-page-root) .curated-playlist-shelf-prev-floating,
+    body:has(.curated-playlists-page-root) .curated-playlist-shelf-next-floating {
+      top: calc(
+        (
+            100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+              var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
+          ) /
+          9.142857
+      ) !important;
+    }
+  }
+
+  @media (max-width: 720px) {
+    body:has(.curated-playlists-page-root) .curated-playlist-shelf-prev-floating,
+    body:has(.curated-playlists-page-root) .curated-playlist-shelf-next-floating {
+      top: calc(
+        (
+            100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
+              var(--curated-playlist-card-gap)
+          ) /
+          6.095238
+      ) !important;
+    }
+  }
+`;
+
 function getRenderedSongCount(href: string) {
   if (!href) return null;
 
@@ -160,6 +219,7 @@ export default function CuratedFeaturedCarouselControls() {
 
   return (
     <>
+      <style>{CURATED_PLAYLIST_CARD_STYLE}</style>
       <CuratedPlaylistDetailChrome />
       <CuratedPlaylistDetailMoreMenu />
       {navigationPortal}
