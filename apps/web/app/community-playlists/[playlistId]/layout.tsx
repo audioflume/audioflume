@@ -15,8 +15,8 @@ export default function CommunityPlaylistDetailLayout({
         }
 
         .community-detail-page .community-detail-shell {
-          grid-template-columns: 82px minmax(0, 1fr) 2px 42px 42px !important;
-          column-gap: 8px !important;
+          grid-template-columns: 82px minmax(0, 1fr) 42px 42px !important;
+          column-gap: 13px !important;
         }
 
         .community-detail-page .community-detail-more-button svg {
@@ -25,21 +25,23 @@ export default function CommunityPlaylistDetailLayout({
         }
 
         .community-detail-page .community-detail-favorite-button {
-          grid-column: 4 !important;
-          transform: none;
+          grid-column: 3 !important;
+          transform: translateX(5px);
         }
 
         .community-detail-page .community-detail-more-menu {
-          grid-column: 5 !important;
+          grid-column: 4 !important;
         }
 
         @media (max-width: 640px) {
           .community-detail-page .community-detail-shell {
             grid-template-columns: 82px minmax(0, 1fr) 42px !important;
+            column-gap: 18px !important;
           }
 
           .community-detail-page .community-detail-favorite-button {
             grid-column: 3 !important;
+            transform: none;
           }
         }
       `}</style>
