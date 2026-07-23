@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import HeartIcon from "@/components/icons/HeartIcon";
@@ -41,6 +42,9 @@ const COMMUNITY_TABS: CommunityTab[] = [
   "Favorites",
 ];
 
+const RECENT_COMMUNITY_PLAYLISTS_KEY =
+  "filmwave-recent-community-playlists";
+
 function FilterRailChevron() {
   return (
     <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
@@ -79,6 +83,21 @@ function parseFavoriteIds(value: unknown) {
     .filter((playlistId) => Number.isInteger(playlistId) && playlistId > 0);
 }
 
+function getStoredRecentPlaylistIds() {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const storedValue = window.localStorage.getItem(
+      RECENT_COMMUNITY_PLAYLISTS_KEY,
+    );
+    return storedValue
+      ? parseFavoriteIds(JSON.parse(storedValue)).slice(0, 5)
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 function formatCompactCount(value: number) {
   const count = Math.max(0, Number(value) || 0);
   if (count < 1000) return String(count);
@@ -112,6 +131,7 @@ export default function CommunityPlaylistsPage() {
   const [pendingFavoriteIds, setPendingFavoriteIds] = useState<Set<number>>(
     () => new Set(),
   );
+  const [recentPlaylistIds, setRecentPlaylistIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const playerVisible = !!currentSong;
 
@@ -160,6 +180,23 @@ export default function CommunityPlaylistsPage() {
     void loadCommunityData();
     return () => {
       cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    function syncRecentPlaylistIds() {
+      setRecentPlaylistIds(getStoredRecentPlaylistIds());
+    }
+
+    syncRecentPlaylistIds();
+    window.addEventListener("focus", syncRecentPlaylistIds);
+    window.addEventListener("pageshow", syncRecentPlaylistIds);
+    window.addEventListener("storage", syncRecentPlaylistIds);
+
+    return () => {
+      window.removeEventListener("focus", syncRecentPlaylistIds);
+      window.removeEventListener("pageshow", syncRecentPlaylistIds);
+      window.removeEventListener("storage", syncRecentPlaylistIds);
     };
   }, []);
 
@@ -245,6 +282,18 @@ export default function CommunityPlaylistsPage() {
   }, [activeTab, favoritePlaylistIds, playlists, query, selectedCategory]);
 
   const featured = playlists.slice(0, 10);
+  const recentPlaylists = useMemo(
+    () =>
+      recentPlaylistIds
+        .map((playlistId) =>
+          playlists.find((playlist) => playlist.id === playlistId),
+        )
+        .filter(
+          (playlist): playlist is CommunityPlaylist => Boolean(playlist),
+        )
+        .slice(0, 5),
+    [playlists, recentPlaylistIds],
+  );
 
   async function togglePlaylistFavorite(playlistId: number) {
     if (pendingFavoriteIds.has(playlistId)) return;
@@ -471,6 +520,106 @@ export default function CommunityPlaylistsPage() {
           flex: 0 0 14px;
         }
 
+        .community-jump-back {
+          margin-top: 30px;
+        }
+
+        .community-jump-back-heading {
+          margin: 0;
+          color: var(--text-primary);
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 1.2;
+          letter-spacing: -0.035em;
+        }
+
+        .community-jump-back-list {
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 12px;
+          margin-top: 16px;
+        }
+
+        .community-jump-back-item {
+          min-width: 0;
+          display: flex;
+          min-height: 82px;
+          align-items: center;
+          gap: 12px;
+          border-radius: 12px;
+          background: var(--bg-secondary);
+          padding: 9px;
+          color: inherit;
+          text-decoration: none;
+          transition: background-color 150ms ease, transform 150ms ease;
+        }
+
+        .community-jump-back-item:hover,
+        .community-jump-back-item:focus-visible {
+          background: var(--bg-hover);
+          transform: translateY(-1px);
+          outline: none;
+        }
+
+        .community-jump-back-cover,
+        .community-jump-back-placeholder {
+          display: block;
+          width: 64px;
+          height: 64px;
+          flex: 0 0 64px;
+          border-radius: 10px;
+          background: var(--bg-elevated);
+          object-fit: cover;
+        }
+
+        .community-jump-back-copy {
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .community-jump-back-copy strong,
+        .community-jump-back-copy small {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .community-jump-back-copy strong {
+          color: var(--text-primary);
+          font-size: 13px;
+          font-weight: 500;
+          line-height: 1.15;
+        }
+
+        .community-jump-back-copy small {
+          color: var(--text-muted);
+          font-size: 11px;
+          line-height: 1.15;
+        }
+
+        .community-cover-link {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          display: block;
+          color: inherit;
+          text-decoration: none;
+        }
+
+        .community-title-link {
+          color: inherit;
+          text-decoration: none;
+          transition: opacity 150ms ease;
+        }
+
+        .community-title-link:hover,
+        .community-title-link:focus-visible {
+          opacity: 0.62;
+          outline: none;
+        }
+
         .community-creator-overlay {
           position: absolute;
           right: 8px;
@@ -552,9 +701,19 @@ export default function CommunityPlaylistsPage() {
           cursor: default;
         }
 
+        @media (max-width: 1320px) {
+          .community-jump-back-list {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }
+        }
+
         @media (max-width: 1040px) {
           .community-page {
             grid-template-columns: 220px minmax(0, 1fr);
+          }
+
+          .community-jump-back-list {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
           }
         }
 
@@ -565,6 +724,16 @@ export default function CommunityPlaylistsPage() {
             min-height: calc(100vh - var(--filmwave-header-height, 56px));
             display: block;
             overflow: visible;
+          }
+
+          .community-jump-back-list {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 480px) {
+          .community-jump-back-list {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
@@ -610,7 +779,11 @@ export default function CommunityPlaylistsPage() {
             <p className="community-sidebar-heading">Featured Playlists</p>
             <div className="community-featured-list">
               {featured.map((playlist) => (
-                <a className="community-featured-item" href="#community-grid" key={playlist.id}>
+                <Link
+                  className="community-featured-item"
+                  href={`/community-playlists/${playlist.id}`}
+                  key={playlist.id}
+                >
                   {playlist.cover_image_url ? (
                     <img src={playlist.cover_image_url} alt="" />
                   ) : (
@@ -620,7 +793,7 @@ export default function CommunityPlaylistsPage() {
                     <strong>{playlist.name}</strong>
                     <small>{playlist.song_count} songs</small>
                   </span>
-                </a>
+                </Link>
               ))}
             </div>
           </section>
@@ -655,6 +828,45 @@ export default function CommunityPlaylistsPage() {
             </label>
           </div>
 
+          {recentPlaylists.length > 0 && (
+            <section className="community-jump-back" aria-labelledby="community-jump-back-heading">
+              <h2
+                className="community-jump-back-heading"
+                id="community-jump-back-heading"
+              >
+                Jump Back In
+              </h2>
+              <div className="community-jump-back-list">
+                {recentPlaylists.map((playlist) => (
+                  <Link
+                    className="community-jump-back-item"
+                    href={`/community-playlists/${playlist.id}`}
+                    key={playlist.id}
+                  >
+                    {playlist.cover_image_url ? (
+                      <img
+                        className="community-jump-back-cover"
+                        src={playlist.cover_image_url}
+                        alt=""
+                      />
+                    ) : (
+                      <span
+                        className="community-jump-back-placeholder"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span className="community-jump-back-copy">
+                      <strong>{playlist.name}</strong>
+                      <small>
+                        {playlist.creator.name} · {playlist.song_count} songs
+                      </small>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
           <div className="community-tabs" role="tablist" aria-label="Community playlist sorting">
             {COMMUNITY_TABS.map((tab) => (
               <button
@@ -682,9 +894,23 @@ export default function CommunityPlaylistsPage() {
               return (
                 <article className="community-card" key={playlist.id}>
                   <div className="community-cover-wrap">
-                    {playlist.cover_image_url && (
-                      <img className="community-cover" src={playlist.cover_image_url} alt="" />
-                    )}
+                    <Link
+                      className="community-cover-link"
+                      href={`/community-playlists/${playlist.id}`}
+                      aria-label={`Open ${playlist.name}`}
+                    >
+                      {playlist.cover_image_url && (
+                        <img className="community-cover" src={playlist.cover_image_url} alt="" />
+                      )}
+                      <div className="community-creator-overlay">
+                        {playlist.creator.imageUrl ? (
+                          <img className="community-avatar-image" src={playlist.creator.imageUrl} alt="" />
+                        ) : (
+                          <span className="community-avatar" aria-hidden="true" />
+                        )}
+                        <span>{playlist.creator.name}</span>
+                      </div>
+                    </Link>
                     <button
                       className={`community-like${isFavorite ? " is-liked" : ""}`}
                       type="button"
@@ -698,17 +924,16 @@ export default function CommunityPlaylistsPage() {
                     >
                       <HeartIcon filled={isFavorite} />
                     </button>
-                    <div className="community-creator-overlay">
-                      {playlist.creator.imageUrl ? (
-                        <img className="community-avatar-image" src={playlist.creator.imageUrl} alt="" />
-                      ) : (
-                        <span className="community-avatar" aria-hidden="true" />
-                      )}
-                      <span>{playlist.creator.name}</span>
-                    </div>
                   </div>
                   <div className="community-card-title-row">
-                    <h2>{playlist.name}</h2>
+                    <h2>
+                      <Link
+                        className="community-title-link"
+                        href={`/community-playlists/${playlist.id}`}
+                      >
+                        {playlist.name}
+                      </Link>
+                    </h2>
                     <button
                       className="community-more playlist-menu-btn-grid"
                       type="button"
