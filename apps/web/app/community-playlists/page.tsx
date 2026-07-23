@@ -22,6 +22,8 @@ type CommunityPlaylist = {
   primary_category: CommunityPlaylistCategory | null;
   secondary_categories: CommunityPlaylistCategory[];
   song_count: number;
+  play_count: number;
+  like_count: number;
   creator: {
     name: string;
     imageUrl: string | null;
@@ -49,12 +51,42 @@ function FilterRailChevron() {
   );
 }
 
+function PlayCountIcon() {
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      <path fill="currentColor" d="M5.25 3.4a1 1 0 0 1 1.53-.84l8.4 6.1a1.65 1.65 0 0 1 0 2.68l-8.4 6.1a1 1 0 0 1-1.53-.84V3.4Z" />
+    </svg>
+  );
+}
+
+function LikeCountIcon() {
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M7.2 17.1H4.55a1.35 1.35 0 0 1-1.35-1.35V9.4c0-.75.6-1.35 1.35-1.35H7.2v9.05Zm1.4 0V8.02l2.28-4.23c.35-.66 1.12-.98 1.83-.77.78.23 1.25 1.02 1.08 1.82l-.65 3.02h2.1c1.2 0 2.08 1.12 1.8 2.29l-1.25 5.35a2.08 2.08 0 0 1-2.03 1.6H8.6Z"
+      />
+    </svg>
+  );
+}
+
 function parseFavoriteIds(value: unknown) {
   if (!Array.isArray(value)) return [];
 
   return value
     .map((playlistId) => Number(playlistId))
     .filter((playlistId) => Number.isInteger(playlistId) && playlistId > 0);
+}
+
+function formatCompactCount(value: number) {
+  const count = Math.max(0, Number(value) || 0);
+  if (count < 1000) return String(count);
+  if (count < 1_000_000) {
+    const compact = count / 1000;
+    return `${compact >= 10 ? Math.round(compact) : compact.toFixed(1).replace(/\.0$/, "")}K`;
+  }
+  const compact = count / 1_000_000;
+  return `${compact >= 10 ? Math.round(compact) : compact.toFixed(1).replace(/\.0$/, "")}M`;
 }
 
 export default function CommunityPlaylistsPage() {
@@ -167,6 +199,7 @@ export default function CommunityPlaylistsPage() {
     if (pendingFavoriteIds.has(playlistId)) return;
 
     const wasFavorite = favoritePlaylistIds.has(playlistId);
+    const countDelta = wasFavorite ? -1 : 1;
 
     setPendingFavoriteIds((current) => new Set(current).add(playlistId));
     setFavoritePlaylistIds((current) => {
@@ -175,6 +208,16 @@ export default function CommunityPlaylistsPage() {
       else next.add(playlistId);
       return next;
     });
+    setPlaylists((current) =>
+      current.map((playlist) =>
+        playlist.id === playlistId
+          ? {
+              ...playlist,
+              like_count: Math.max(0, playlist.like_count + countDelta),
+            }
+          : playlist,
+      ),
+    );
 
     try {
       const response = await fetch("/api/community-playlist-favorites", {
@@ -195,6 +238,16 @@ export default function CommunityPlaylistsPage() {
         else next.delete(playlistId);
         return next;
       });
+      setPlaylists((current) =>
+        current.map((playlist) =>
+          playlist.id === playlistId
+            ? {
+                ...playlist,
+                like_count: Math.max(0, playlist.like_count - countDelta),
+              }
+            : playlist,
+        ),
+      );
     } finally {
       setPendingFavoriteIds((current) => {
         const next = new Set(current);
@@ -322,6 +375,68 @@ export default function CommunityPlaylistsPage() {
           margin-top: 5px !important;
         }
 
+        .community-engagement {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-top: 9px;
+          color: var(--text-muted);
+          font-size: 11px;
+          line-height: 1;
+        }
+
+        .community-engagement-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+        }
+
+        .community-engagement-item svg {
+          display: block;
+          width: 14px;
+          height: 14px;
+          flex: 0 0 14px;
+        }
+
+        .community-creator-overlay {
+          position: absolute;
+          right: 8px;
+          bottom: 8px;
+          z-index: 2;
+          display: inline-flex;
+          max-width: calc(100% - 16px);
+          align-items: center;
+          gap: 7px;
+          border-radius: 999px;
+          background: rgba(12, 12, 12, 0.72);
+          padding: 5px 8px 5px 5px;
+          color: #fff;
+          font-size: 10.5px;
+          line-height: 1;
+          -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+        }
+
+        .community-creator-overlay > span:last-child {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .community-avatar-image,
+        .community-creator-overlay .community-avatar {
+          display: block;
+          width: 20px;
+          height: 20px;
+          flex: 0 0 20px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .community-creator-overlay .community-avatar {
+          background: #808080;
+        }
+
         .community-footer-wrap {
           padding-top: 48px;
           padding-bottom: 0;
@@ -337,15 +452,6 @@ export default function CommunityPlaylistsPage() {
           font-size: 12px;
         }
 
-        .community-avatar-image {
-          display: block;
-          width: 22px;
-          height: 22px;
-          flex: 0 0 22px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-
         .community-cover {
           transition: transform 0.7s ease;
         }
@@ -355,7 +461,7 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-like {
-          z-index: 2;
+          z-index: 3;
           transition: transform 150ms ease, opacity 150ms ease;
         }
 
@@ -519,6 +625,14 @@ export default function CommunityPlaylistsPage() {
                     >
                       <HeartIcon filled={isFavorite} />
                     </button>
+                    <div className="community-creator-overlay">
+                      {playlist.creator.imageUrl ? (
+                        <img className="community-avatar-image" src={playlist.creator.imageUrl} alt="" />
+                      ) : (
+                        <span className="community-avatar" aria-hidden="true" />
+                      )}
+                      <span>{playlist.creator.name}</span>
+                    </div>
                   </div>
                   <div className="community-card-title-row">
                     <h2>{playlist.name}</h2>
@@ -531,13 +645,15 @@ export default function CommunityPlaylistsPage() {
                     </button>
                   </div>
                   <p className="community-track-count">{playlist.song_count} songs</p>
-                  <div className="community-creator">
-                    {playlist.creator.imageUrl ? (
-                      <img className="community-avatar-image" src={playlist.creator.imageUrl} alt="" />
-                    ) : (
-                      <span className="community-avatar" aria-hidden="true" />
-                    )}
-                    <span>by {playlist.creator.name}</span>
+                  <div className="community-engagement" aria-label="Playlist engagement">
+                    <span className="community-engagement-item" title={`${playlist.play_count} plays`}>
+                      <PlayCountIcon />
+                      <span>{formatCompactCount(playlist.play_count)}</span>
+                    </span>
+                    <span className="community-engagement-item" title={`${playlist.like_count} likes`}>
+                      <LikeCountIcon />
+                      <span>{formatCompactCount(playlist.like_count)}</span>
+                    </span>
                   </div>
                 </article>
               );
