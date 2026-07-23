@@ -236,7 +236,8 @@
 .community-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 39px 24px;
+  column-gap: 38px;
+  row-gap: 58px;
   margin-top: 30px;
 }
 
@@ -507,7 +508,6 @@
 
   .community-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 32px 18px;
   }
 }
 
