@@ -34,6 +34,21 @@ html body .projects-route-shell .projects-page .projects-row:not(.projects-row-s
   min-height: 0 !important;
 }
 
+/* Expand the project link across the full row while keeping the More button independent. */
+html body .projects-route-shell .projects-page .projects-row:not(.projects-row-skeleton):not(.is-renaming) > .projects-row-link {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  display: grid !important;
+  grid-template-columns: 50px minmax(0, 1fr) 12px 64px !important;
+  column-gap: 14px !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  min-height: 100% !important;
+  padding: inherit !important;
+}
+
 html body .playlists-route-shell .playlists-page .playlist-index-row .playlist-row-cover,
 html body .projects-route-shell .projects-page .projects-row:not(.projects-row-skeleton) .projects-row-icon {
   grid-column: 1 !important;
@@ -103,5 +118,9 @@ html body .projects-route-shell .projects-page .projects-row:not(.projects-row-s
     grid-template-columns: 50px minmax(0, 1fr) 12px 64px !important;
     column-gap: 12px !important;
     padding: 11px 68px 11px 13px !important;
+  }
+
+  html body .projects-route-shell .projects-page .projects-row:not(.projects-row-skeleton):not(.is-renaming) > .projects-row-link {
+    column-gap: 12px !important;
   }
 }
