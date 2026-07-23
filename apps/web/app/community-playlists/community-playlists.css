@@ -25,7 +25,8 @@
 }
 
 .community-sidebar-section + .community-sidebar-section {
-  border-top: 1px solid var(--border-subtle);
+  border-top: 0;
+  background: linear-gradient(var(--border), var(--border)) center top / calc(100% - 56px) 1px no-repeat;
 }
 
 .community-sidebar-heading {
