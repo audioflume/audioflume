@@ -235,31 +235,6 @@
   outline: none;
 }
 
-:where(html.light, html[data-theme="light"]) .community-tabs {
-  gap: 8px;
-}
-
-:where(html.light, html[data-theme="light"]) .community-tabs button {
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
-  border-radius: 999px;
-  background: var(--bg-hover);
-  padding: 0 18px;
-  transition: background-color 150ms ease, color 150ms ease;
-}
-
-:where(html.light, html[data-theme="light"]) .community-tabs button:hover,
-:where(html.light, html[data-theme="light"]) .community-tabs button:focus-visible {
-  background: var(--bg-hover-strong);
-  color: var(--text-primary);
-}
-
-:where(html.light, html[data-theme="light"]) .community-tabs button.is-active {
-  background: var(--text-primary);
-  color: var(--bg-primary);
-}
-
 .community-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
