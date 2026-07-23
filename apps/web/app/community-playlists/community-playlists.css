@@ -136,14 +136,11 @@
 }
 
 .community-heading-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 640px);
-  align-items: center;
-  gap: 36px;
+  display: block;
 }
 
-.community-page.playlists-page .playlists-title::before {
-  content: "Community Playlists";
+.community-page .community-title-style-scope.playlists-page {
+  display: none !important;
 }
 
 .community-search {
