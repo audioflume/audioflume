@@ -20,7 +20,7 @@ export default function CommunityPlaylistDetailLayout({
         }
 
         .community-detail-page .community-detail-favorite-button {
-          transform: translateX(16px);
+          transform: translateX(10px);
         }
 
         @media (max-width: 640px) {
