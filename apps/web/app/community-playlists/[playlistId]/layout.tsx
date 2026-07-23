@@ -14,12 +14,12 @@ export default function CommunityPlaylistDetailLayout({
           margin-top: var(--filmwave-header-height, 75px) !important;
         }
 
-        .community-detail-page .community-detail-shell {
+        body .community-detail-page .community-detail-shell {
           grid-template-columns: 82px minmax(0, 1fr) 42px 42px !important;
           column-gap: 13px !important;
         }
 
-        .community-detail-page .community-detail-more-button svg {
+        body .community-detail-page .community-detail-more-button svg {
           width: 14px !important;
           height: 14px !important;
         }
@@ -34,7 +34,7 @@ export default function CommunityPlaylistDetailLayout({
         }
 
         @media (max-width: 640px) {
-          .community-detail-page .community-detail-shell {
+          body .community-detail-page .community-detail-shell {
             grid-template-columns: 82px minmax(0, 1fr) 42px !important;
             column-gap: 18px !important;
           }
