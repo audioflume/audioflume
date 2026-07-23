@@ -414,29 +414,12 @@
   backdrop-filter: none !important;
 }
 
-.community-content {
-  display: flex !important;
-  flex-direction: column;
+.community-jump-back-heading {
+  display: none !important;
 }
 
-.community-heading-row {
-  order: 0;
-}
-
-.community-tabs {
-  order: 1;
-}
-
-.community-jump-back {
-  order: 2;
-}
-
-.community-grid {
-  order: 3;
-}
-
-.community-footer-wrap {
-  order: 4;
+.community-jump-back-list {
+  margin-top: 0 !important;
 }
 
 .community-jump-back-item,
