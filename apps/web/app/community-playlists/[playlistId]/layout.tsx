@@ -14,18 +14,32 @@ export default function CommunityPlaylistDetailLayout({
           margin-top: var(--filmwave-header-height, 75px) !important;
         }
 
+        .community-detail-page .community-detail-shell {
+          grid-template-columns: 82px minmax(0, 1fr) 2px 42px 42px !important;
+          column-gap: 8px !important;
+        }
+
         .community-detail-page .community-detail-more-button svg {
           width: 14px !important;
           height: 14px !important;
         }
 
         .community-detail-page .community-detail-favorite-button {
-          transform: translateX(10px);
+          grid-column: 4 !important;
+          transform: none;
+        }
+
+        .community-detail-page .community-detail-more-menu {
+          grid-column: 5 !important;
         }
 
         @media (max-width: 640px) {
+          .community-detail-page .community-detail-shell {
+            grid-template-columns: 82px minmax(0, 1fr) 42px !important;
+          }
+
           .community-detail-page .community-detail-favorite-button {
-            transform: none;
+            grid-column: 3 !important;
           }
         }
       `}</style>
