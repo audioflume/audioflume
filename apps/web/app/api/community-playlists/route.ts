@@ -8,6 +8,8 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
 type CommunityPlaylistRow = {
   id: number;
   clerk_user_id: string;
@@ -59,7 +61,7 @@ export async function GET() {
         .in("playlist_id", playlistIds),
       supabaseServer
         .from("community_playlist_favorites")
-        .select("playlist_id")
+        .select("playlist_id, created_at")
         .in("playlist_id", playlistIds),
     ]);
 
@@ -73,9 +75,20 @@ export async function GET() {
     }
 
     const likeCounts = new Map<number, number>();
+    const sevenDayLikeCounts = new Map<number, number>();
+    const sevenDaysAgo = Date.now() - SEVEN_DAYS_MS;
+
     for (const item of favoritesResult.data ?? []) {
       const playlistId = Number(item.playlist_id);
       likeCounts.set(playlistId, (likeCounts.get(playlistId) ?? 0) + 1);
+
+      const createdAt = new Date(String(item.created_at ?? "")).getTime();
+      if (Number.isFinite(createdAt) && createdAt >= sevenDaysAgo) {
+        sevenDayLikeCounts.set(
+          playlistId,
+          (sevenDayLikeCounts.get(playlistId) ?? 0) + 1,
+        );
+      }
     }
 
     const userIds = [...new Set(rows.map((playlist) => playlist.clerk_user_id))];
@@ -119,6 +132,7 @@ export async function GET() {
           song_count: songCounts.get(playlist.id) ?? 0,
           play_count: Math.max(0, Number(playlist.play_count) || 0),
           like_count: likeCounts.get(playlist.id) ?? 0,
+          seven_day_like_count: sevenDayLikeCounts.get(playlist.id) ?? 0,
           creator: usersById.get(playlist.clerk_user_id) ?? {
             name: "Filmwave member",
             imageUrl: null,
