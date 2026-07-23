@@ -24,6 +24,7 @@ type CommunityPlaylist = {
   song_count: number;
   play_count: number;
   like_count: number;
+  seven_day_like_count: number;
   creator: {
     name: string;
     imageUrl: string | null;
@@ -89,6 +90,12 @@ function formatCompactCount(value: number) {
   return `${compact >= 10 ? Math.round(compact) : compact.toFixed(1).replace(/\.0$/, "")}M`;
 }
 
+function getPublishedTime(value: string | null) {
+  if (!value) return 0;
+  const timestamp = new Date(value).getTime();
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
 export default function CommunityPlaylistsPage() {
   const { currentSong } = usePlayer();
   const [query, setQuery] = useState("");
@@ -97,6 +104,9 @@ export default function CommunityPlaylistsPage() {
   const [activeTab, setActiveTab] = useState<CommunityTab>("Trending");
   const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
   const [favoritePlaylistIds, setFavoritePlaylistIds] = useState<Set<number>>(
+    () => new Set(),
+  );
+  const [recentFavoritePlaylistIds, setRecentFavoritePlaylistIds] = useState<Set<number>>(
     () => new Set(),
   );
   const [pendingFavoriteIds, setPendingFavoriteIds] = useState<Set<number>>(
@@ -121,20 +131,26 @@ export default function CommunityPlaylistsPage() {
         }
 
         let favoriteIds: number[] = [];
+        let recentFavoriteIds: number[] = [];
         if (favoritesResponse.ok) {
           const favoritesData = await favoritesResponse.json();
           favoriteIds = parseFavoriteIds(favoritesData?.favorite_playlist_ids);
+          recentFavoriteIds = parseFavoriteIds(
+            favoritesData?.recent_favorite_playlist_ids,
+          );
         }
 
         if (!cancelled) {
           setPlaylists(playlistsData?.playlists ?? []);
           setFavoritePlaylistIds(new Set(favoriteIds));
+          setRecentFavoritePlaylistIds(new Set(recentFavoriteIds));
         }
       } catch (error) {
         console.warn("Community playlists request failed", error);
         if (!cancelled) {
           setPlaylists([]);
           setFavoritePlaylistIds(new Set());
+          setRecentFavoritePlaylistIds(new Set());
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -191,6 +207,32 @@ export default function CommunityPlaylistsPage() {
       );
     });
 
+    if (activeTab === "Trending") {
+      return [...filtered].sort((a, b) => {
+        const recentLikeDifference =
+          b.seven_day_like_count - a.seven_day_like_count;
+        if (recentLikeDifference !== 0) return recentLikeDifference;
+
+        const playDifference = b.play_count - a.play_count;
+        if (playDifference !== 0) return playDifference;
+
+        const publishedDifference =
+          getPublishedTime(b.published_at) - getPublishedTime(a.published_at);
+        if (publishedDifference !== 0) return publishedDifference;
+
+        return b.id - a.id;
+      });
+    }
+
+    if (activeTab === "Recent") {
+      return [...filtered].sort((a, b) => {
+        const publishedDifference =
+          getPublishedTime(b.published_at) - getPublishedTime(a.published_at);
+        if (publishedDifference !== 0) return publishedDifference;
+        return b.id - a.id;
+      });
+    }
+
     if (activeTab === "Most Liked") {
       return [...filtered].sort((a, b) => {
         const likeDifference = b.like_count - a.like_count;
@@ -208,10 +250,18 @@ export default function CommunityPlaylistsPage() {
     if (pendingFavoriteIds.has(playlistId)) return;
 
     const wasFavorite = favoritePlaylistIds.has(playlistId);
+    const wasRecentFavorite = recentFavoritePlaylistIds.has(playlistId);
     const countDelta = wasFavorite ? -1 : 1;
+    const recentCountDelta = wasFavorite ? (wasRecentFavorite ? -1 : 0) : 1;
 
     setPendingFavoriteIds((current) => new Set(current).add(playlistId));
     setFavoritePlaylistIds((current) => {
+      const next = new Set(current);
+      if (wasFavorite) next.delete(playlistId);
+      else next.add(playlistId);
+      return next;
+    });
+    setRecentFavoritePlaylistIds((current) => {
       const next = new Set(current);
       if (wasFavorite) next.delete(playlistId);
       else next.add(playlistId);
@@ -223,6 +273,10 @@ export default function CommunityPlaylistsPage() {
           ? {
               ...playlist,
               like_count: Math.max(0, playlist.like_count + countDelta),
+              seven_day_like_count: Math.max(
+                0,
+                playlist.seven_day_like_count + recentCountDelta,
+              ),
             }
           : playlist,
       ),
@@ -247,12 +301,22 @@ export default function CommunityPlaylistsPage() {
         else next.delete(playlistId);
         return next;
       });
+      setRecentFavoritePlaylistIds((current) => {
+        const next = new Set(current);
+        if (wasRecentFavorite) next.add(playlistId);
+        else next.delete(playlistId);
+        return next;
+      });
       setPlaylists((current) =>
         current.map((playlist) =>
           playlist.id === playlistId
             ? {
                 ...playlist,
                 like_count: Math.max(0, playlist.like_count - countDelta),
+                seven_day_like_count: Math.max(
+                  0,
+                  playlist.seven_day_like_count - recentCountDelta,
+                ),
               }
             : playlist,
         ),
