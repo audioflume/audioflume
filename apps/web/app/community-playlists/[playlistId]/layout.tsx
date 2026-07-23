@@ -13,6 +13,21 @@ export default function CommunityPlaylistDetailLayout({
           margin-left: var(--filmwave-page-sidebar-offset) !important;
           margin-top: var(--filmwave-header-height, 75px) !important;
         }
+
+        .community-detail-page .community-detail-more-button svg {
+          width: 14px !important;
+          height: 14px !important;
+        }
+
+        .community-detail-page .community-detail-favorite-button {
+          transform: translateX(16px);
+        }
+
+        @media (max-width: 640px) {
+          .community-detail-page .community-detail-favorite-button {
+            transform: none;
+          }
+        }
       `}</style>
       <CommunityPlaylistDetailChrome />
       {children}
