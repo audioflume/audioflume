@@ -2,6 +2,8 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
 function parsePlaylistId(value: unknown) {
   const playlistId = Number(value);
   return Number.isInteger(playlistId) && playlistId > 0 ? playlistId : null;
@@ -17,15 +19,25 @@ export async function GET() {
   try {
     const { data, error } = await supabaseServer
       .from("community_playlist_favorites")
-      .select("playlist_id")
+      .select("playlist_id, created_at")
       .eq("clerk_user_id", userId)
       .order("created_at", { ascending: false });
 
     if (error) throw error;
 
+    const favorites = data ?? [];
+    const sevenDaysAgo = Date.now() - SEVEN_DAYS_MS;
+
     return NextResponse.json(
       {
-        favorite_playlist_ids: (data ?? [])
+        favorite_playlist_ids: favorites
+          .map((item) => Number(item.playlist_id))
+          .filter((playlistId) => Number.isInteger(playlistId)),
+        recent_favorite_playlist_ids: favorites
+          .filter((item) => {
+            const createdAt = new Date(String(item.created_at ?? "")).getTime();
+            return Number.isFinite(createdAt) && createdAt >= sevenDaysAgo;
+          })
           .map((item) => Number(item.playlist_id))
           .filter((playlistId) => Number.isInteger(playlistId)),
       },
