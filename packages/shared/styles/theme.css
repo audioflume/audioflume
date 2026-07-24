@@ -3,8 +3,8 @@
 :where(:root) {
   color-scheme: dark;
 
-  --bg-primary: #101112;
-  --bg-secondary: #101112;
+  --bg-primary: #000000;
+  --bg-secondary: #000000;
   --bg-tertiary: #1a1b1c;
   --bg-tertiary-hover: #232426;
   --bg-panel: #1a1b1c;
