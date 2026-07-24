@@ -53,8 +53,10 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading p {
+    display: block !important;
+    visibility: visible !important;
     max-width: 620px;
-    margin-top: 9px !important;
+    margin: 9px 0 0 !important;
     color: var(--text-muted) !important;
     font-family: "JetBrains Mono Filmwave", monospace !important;
     font-size: clamp(8px, 0.55vw, 9.5px) !important;
@@ -62,6 +64,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     letter-spacing: 0 !important;
     line-height: 1.55 !important;
     text-transform: uppercase !important;
+    opacity: 1 !important;
   }
 
   body:has(.curated-playlists-page-root)
