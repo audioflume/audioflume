@@ -35,11 +35,66 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     flex: none !important;
   }
 
+  body:has(.curated-playlists-page-root) .curated-playlist-card {
+    position: relative;
+  }
+
   body:has(.curated-playlists-page-root) .curated-playlist-image,
   body:has(.curated-playlists-page-root) .curated-playlist-skeleton-card {
     width: 100% !important;
     height: auto !important;
     aspect-ratio: 16 / 9 !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-card-details,
+  body:has(.curated-playlists-page-root) .curated-playlist-card-copy {
+    display: contents !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-card-copy h3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    align-items: center;
+    justify-content: center;
+    margin: 0 !important;
+    overflow: visible !important;
+    padding: 20px;
+    color: #fff !important;
+    font-family: var(--font-aktiv-grotesk), sans-serif !important;
+    font-size: clamp(16px, 1.25vw, 22px) !important;
+    font-weight: 500 !important;
+    font-kerning: normal !important;
+    letter-spacing: 0 !important;
+    line-height: 1.05 !important;
+    text-align: center;
+    text-overflow: clip !important;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+    text-transform: uppercase !important;
+    white-space: normal !important;
+    pointer-events: none;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-card-copy p {
+    display: none !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-menu-wrap {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 6;
+    margin: 0 !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-menu-button {
+    color: #fff !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
   }
 
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading h2 {
