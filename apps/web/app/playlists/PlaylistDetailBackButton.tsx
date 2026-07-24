@@ -91,6 +91,7 @@ export default function PlaylistDetailBackButton() {
                   --playlist-detail-control-inset-left: var(--fw-music-content-inset-left, 28px);
                   --playlist-detail-control-inset-right: var(--fw-music-content-inset-right, 20px);
                   grid-template-columns: 82px minmax(0, 1fr) 42px !important;
+                  padding-top: 0 !important;
                   padding-left: var(--playlist-detail-control-inset-left) !important;
                   padding-right: var(--playlist-detail-control-inset-right) !important;
                 }
@@ -234,13 +235,14 @@ export default function PlaylistDetailBackButton() {
 
                 .playlist-detail-page .playlist-detail-browser-back,
                 .playlist-detail-page .playlist-detail-search-sticky,
-                .playlist-detail-page .playlist-detail-top-actions > button:last-child {
+                .playlist-detail-page .playlist-detail-more-menu {
                   position: relative !important;
                   z-index: 4 !important;
+                  margin-top: 22px !important;
                 }
 
                 .playlist-detail-page .playlist-detail-browser-back,
-                .playlist-detail-page .playlist-detail-top-actions > button:last-child {
+                .playlist-detail-page .playlist-detail-more-button {
                   border-color: rgba(255, 255, 255, 0.34) !important;
                   background: rgba(0, 0, 0, 0.18) !important;
                   color: #fff !important;
@@ -248,7 +250,8 @@ export default function PlaylistDetailBackButton() {
                 }
 
                 .playlist-detail-page .playlist-detail-browser-back:hover,
-                .playlist-detail-page .playlist-detail-top-actions > button:last-child:hover {
+                .playlist-detail-page .playlist-detail-more-button:hover,
+                .playlist-detail-page .playlist-detail-more-button.is-active {
                   border-color: rgba(255, 255, 255, 0.52) !important;
                   background: rgba(255, 255, 255, 0.14) !important;
                   color: #fff !important;
