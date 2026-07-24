@@ -126,9 +126,7 @@ html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-floa
   display: none !important;
 }
 
-.playlist-detail-page .playlist-detail-browser-back,
 .playlist-detail-page .playlist-detail-search-sticky,
-.community-detail-page .community-detail-browser-back,
 .community-detail-page .community-detail-search-sticky {
   display: none !important;
 }
