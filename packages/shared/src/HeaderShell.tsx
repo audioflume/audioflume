@@ -46,22 +46,31 @@ export function HeaderShell({
     dragSurfaceProps ?? {};
 
   return (
-    <header
-      className={`filmwave-header${className ? ` ${className}` : ""}`}
-      onPointerDownCapture={onPointerDownCapture}
-    >
-      <div
-        className={`filmwave-header-inner${innerClassName ? ` ${innerClassName}` : ""}`}
+    <>
+      <style>{`
+        .filmwave-header-nav-link,
+        .filmwave-header .filmwave-header-nav-link {
+          font-size: 13.5px !important;
+        }
+      `}</style>
+
+      <header
+        className={`filmwave-header${className ? ` ${className}` : ""}`}
+        onPointerDownCapture={onPointerDownCapture}
       >
-        <div className="filmwave-header-logo-slot">{logo}</div>
         <div
-          className={`filmwave-header-drag-surface${
-            dragSurfaceClassName ? ` ${dragSurfaceClassName}` : ""
-          }`}
-          {...restDragSurfaceProps}
-        />
-        <div className="filmwave-header-actions">{actions}</div>
-      </div>
-    </header>
+          className={`filmwave-header-inner${innerClassName ? ` ${innerClassName}` : ""}`}
+        >
+          <div className="filmwave-header-logo-slot">{logo}</div>
+          <div
+            className={`filmwave-header-drag-surface${
+              dragSurfaceClassName ? ` ${dragSurfaceClassName}` : ""
+            }`}
+            {...restDragSurfaceProps}
+          />
+          <div className="filmwave-header-actions">{actions}</div>
+        </div>
+      </header>
+    </>
   );
 }
