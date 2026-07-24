@@ -223,18 +223,20 @@ export default function CuratedPlaylistDetailMoreMenu() {
         body .playlist-detail-page .playlist-detail-hero {
           isolation: isolate;
           box-sizing: border-box !important;
+          grid-row: 1 / span 2 !important;
+          z-index: 0;
           width: calc(
             100% + var(--playlist-detail-control-inset-left) +
               var(--playlist-detail-control-inset-right)
           ) !important;
           min-height: var(--playlist-detail-featured-hero-height) !important;
-          margin-top: 22px !important;
+          margin-top: 0 !important;
           margin-right: calc(0px - var(--playlist-detail-control-inset-right)) !important;
           margin-left: calc(0px - var(--playlist-detail-control-inset-left)) !important;
           overflow: hidden !important;
           background-color: #0b0d0d !important;
           color: #fff !important;
-          padding: clamp(58px, 7vh, 86px) var(--playlist-detail-page-gutter) !important;
+          padding: clamp(96px, 12vh, 132px) var(--playlist-detail-page-gutter) clamp(58px, 7vh, 86px) !important;
         }
 
         body .playlist-detail-page .playlist-detail-hero::before,
@@ -315,6 +317,44 @@ export default function CuratedPlaylistDetailMoreMenu() {
           background: rgba(255, 255, 255, 0.16) !important;
         }
 
+        .playlist-detail-page .playlist-detail-browser-back,
+        .playlist-detail-page .playlist-detail-search-sticky,
+        .playlist-detail-page .playlist-detail-more-menu {
+          position: relative !important;
+          z-index: 4 !important;
+        }
+
+        .playlist-detail-page .playlist-detail-browser-back,
+        .playlist-detail-page .playlist-detail-more-button {
+          border-color: rgba(255, 255, 255, 0.34) !important;
+          background: rgba(0, 0, 0, 0.18) !important;
+          color: #fff !important;
+          backdrop-filter: blur(12px);
+        }
+
+        .playlist-detail-page .playlist-detail-browser-back:hover,
+        .playlist-detail-page .playlist-detail-more-button:hover,
+        .playlist-detail-page .playlist-detail-more-button.is-active {
+          border-color: rgba(255, 255, 255, 0.52) !important;
+          background: rgba(255, 255, 255, 0.14) !important;
+          color: #fff !important;
+        }
+
+        .playlist-detail-page .playlist-detail-search-row {
+          border-color: rgba(255, 255, 255, 0.34) !important;
+          background: rgba(0, 0, 0, 0.18) !important;
+          color: rgba(255, 255, 255, 0.72) !important;
+          backdrop-filter: blur(12px);
+        }
+
+        .playlist-detail-page .playlist-detail-search-input {
+          color: #fff !important;
+        }
+
+        .playlist-detail-page .playlist-detail-search-input::placeholder {
+          color: rgba(255, 255, 255, 0.62) !important;
+        }
+
         @media (max-width: 720px) {
           body .playlist-detail-page .playlist-detail-hero {
             padding-right: var(--playlist-detail-page-gutter) !important;
@@ -325,7 +365,7 @@ export default function CuratedPlaylistDetailMoreMenu() {
         @media (max-width: 560px) {
           body .playlist-detail-page .playlist-detail-hero {
             min-height: auto !important;
-            padding-top: 48px !important;
+            padding-top: 112px !important;
             padding-bottom: 56px !important;
           }
         }
