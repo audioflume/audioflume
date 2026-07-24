@@ -135,7 +135,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
   font-size: clamp(8px, 0.55vw, 9.5px);
   font-weight: 400;
   letter-spacing: 0;
-  line-height: 1.9;
+  line-height: 2.05;
   text-transform: uppercase;
 }
 
