@@ -8,40 +8,50 @@ import { createPortal } from "react-dom";
 import FooterBottom from "@/components/FooterBottom";
 import { usePlayer } from "@/context/PlayerContext";
 
-const utilityLinks = [
+const footerGroups = [
   {
-    href: "/music",
-    label: "Browse music",
-    detail: "Search the full catalogue",
+    title: "Explore",
+    links: [
+      { href: "/discover", label: "Discover" },
+      { href: "/music", label: "Browse music" },
+      { href: "/sound-fx", label: "Sound effects" },
+      { href: "/curated-playlists", label: "Curated playlists" },
+    ],
   },
   {
-    href: "/curated-playlists",
-    label: "Curated playlists",
-    detail: "Browse editor selections",
+    title: "Create",
+    links: [
+      { href: "/playlists", label: "My playlists" },
+      { href: "/projects", label: "Projects" },
+      { href: "/favorites", label: "Favorites" },
+      { href: "#", label: "Desktop app" },
+    ],
   },
   {
-    href: "/account/support",
-    label: "Support",
-    detail: "Help, account and licensing",
+    title: "Company",
+    links: [
+      { href: "#", label: "About Audioflume" },
+      { href: "#", label: "Artist submissions" },
+      { href: "#", label: "Licensing" },
+      { href: "mailto:hello@filmwave.io", label: "Contact" },
+    ],
+  },
+  {
+    title: "Support",
+    links: [
+      { href: "/account/support", label: "Help centre" },
+      { href: "/account/membership", label: "Membership" },
+      { href: "/account/settings", label: "Account settings" },
+      { href: "#", label: "Privacy" },
+    ],
   },
 ];
-
-const sitemapLinks = [
-  { href: "/discover", label: "Discover" },
-  { href: "/sound-fx", label: "Sound FX" },
-  { href: "/playlists", label: "Playlists" },
-  { href: "/favorites", label: "Favorites" },
-  { href: "/projects", label: "Projects" },
-  { href: "/account/profile", label: "Profile" },
-  { href: "/account/membership", label: "Membership" },
-  { href: "/account/settings", label: "Settings" },
-];
-
-const footerHeaderClass =
-  "text-[8px] font-normal uppercase tracking-[0.08em] text-[var(--text-muted)]";
 
 const footerLinkClass =
-  "inline-flex w-fit font-normal leading-none text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
+  "inline-flex w-fit text-[11px] font-normal leading-[1.45] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
+
+const footerHeadingClass =
+  "text-[11px] font-medium leading-none text-[var(--text-primary)]";
 
 type FooterProps = {
   className?: string;
@@ -83,8 +93,8 @@ export default function Footer({
     <>
       <style>{`
         .filmwave-footer-tonal-wordmark.filmwave-header-tonal-wordmark {
-          color: var(--text-muted) !important;
-          font-size: 17px !important;
+          color: var(--text-primary) !important;
+          font-size: 18px !important;
           transform: none !important;
         }
 
@@ -117,7 +127,7 @@ export default function Footer({
 
       <footer
         ref={footerRef}
-        className={`box-border w-full pt-10 text-[10px] font-normal text-[var(--text-muted)] ${className}`}
+        className={`box-border w-full text-[10px] font-normal text-[var(--text-muted)] ${className}`}
         style={{
           paddingBottom: playerPadding
             ? playerVisible
@@ -126,65 +136,58 @@ export default function Footer({
             : "8px",
         }}
       >
-        <div className="grid gap-8 pb-6 md:grid-cols-[minmax(160px,1fr)_minmax(480px,620px)] md:items-start md:gap-12">
-          <div className="flex -translate-y-1 flex-col gap-3">
-            <div className="w-[92px]">
+        <div className="border-t border-[var(--border-subtle)] pt-12">
+          <div className="grid gap-x-10 gap-y-11 pb-12 sm:grid-cols-2 lg:grid-cols-[minmax(190px,1.35fr)_repeat(4,minmax(110px,0.72fr))] lg:gap-x-12">
+            <div className="flex max-w-[250px] flex-col items-start gap-5">
               <span className="filmwave-header-tonal-wordmark filmwave-footer-tonal-wordmark">
                 audioflume
               </span>
+
+              <p className="m-0 text-[11px] font-normal leading-[1.65] text-[var(--text-muted)]">
+                Human-curated music, sound effects and creative tools built for filmmakers.
+              </p>
+
+              <p className="m-0 text-[10px] font-normal leading-[1.55] text-[var(--text-muted)]">
+                Practical licensing. Thoughtful discovery. A faster path from search to edit.
+              </p>
             </div>
 
-            <span className="max-w-[180px] text-[10px] font-normal leading-4 text-[var(--text-muted)]">
-              Music and creative assets for filmmakers.
-            </span>
-          </div>
+            {footerGroups.map((group) => (
+              <div key={group.title} className="flex flex-col gap-5">
+                <h2 className={`m-0 ${footerHeadingClass}`}>{group.title}</h2>
 
-          <div className="grid gap-7 md:justify-self-end">
-            <div className="grid gap-5 sm:grid-cols-3 sm:gap-8">
-              {utilityLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="group grid content-start gap-2 focus-visible:outline-none"
-                >
-                  <span className="inline-flex items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)] transition-colors group-hover:text-[var(--text-primary)] group-focus-visible:text-[var(--text-primary)]">
-                    {link.label}
-                    <span aria-hidden="true">↗</span>
-                  </span>
-
-                  <span className="max-w-[150px] text-[9px] font-normal leading-4 text-[var(--text-muted)]">
-                    {link.detail}
-                  </span>
-                </Link>
-              ))}
-            </div>
-
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <span className={footerHeaderClass}>Site map</span>
-
-                <nav
-                  aria-label="Footer sitemap"
-                  className="flex flex-wrap gap-x-5 gap-y-2.5"
-                >
-                  {sitemapLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={footerLinkClass}
-                    >
+                <nav aria-label={`${group.title} footer links`} className="flex flex-col gap-3">
+                  {group.links.map((link) => (
+                    <Link key={`${group.title}-${link.label}`} href={link.href} className={footerLinkClass}>
                       {link.label}
                     </Link>
                   ))}
                 </nav>
               </div>
+            ))}
+          </div>
 
-              <div className="flex flex-wrap gap-x-5 gap-y-2 text-[9px] leading-none text-[var(--text-muted)]">
-                <a href="mailto:hello@filmwave.io" className={footerLinkClass}>
-                  hello@filmwave.io
-                </a>
-                <span>Made in Canada</span>
-              </div>
+          <div className="flex flex-col gap-5 border-t border-[var(--border-subtle)] py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <a href="mailto:hello@filmwave.io" className={footerLinkClass}>
+                hello@filmwave.io
+              </a>
+              <span className="text-[10px] text-[var(--text-muted)]">Made in Canada</span>
+              <Link href="#" className={footerLinkClass}>
+                Terms
+              </Link>
+              <Link href="#" className={footerLinkClass}>
+                Privacy
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-5" aria-label="Social links">
+              <a href="#" className={footerLinkClass} aria-label="Audioflume on Instagram">
+                Instagram ↗
+              </a>
+              <a href="#" className={footerLinkClass} aria-label="Audioflume on YouTube">
+                YouTube ↗
+              </a>
             </div>
           </div>
         </div>
