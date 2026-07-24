@@ -4,22 +4,59 @@ import { getCuratedPlaylistError } from "@/lib/curatedPlaylists";
 
 export const dynamic = "force-dynamic";
 
+function normalizeGroupName(value: unknown) {
+  return String(value || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase();
+}
+
 export async function GET() {
   try {
-    const { data, error } = await supabaseServer
+    const { data: groups, error: groupsError } = await supabaseServer
       .from("curated_playlist_groups")
       .select("*")
       .order("position", { ascending: true });
 
-    if (error) throw error;
+    if (groupsError) throw groupsError;
+
+    const playlistDescriptions = new Map<string, string>();
+    const { data: playlists, error: playlistsError } = await supabaseServer
+      .from("curated_playlists")
+      .select("playlist_group, description")
+      .order("position", { ascending: true });
+
+    if (playlistsError) {
+      console.warn(
+        "Curated playlist description fallback fetch failed:",
+        playlistsError,
+      );
+    } else {
+      for (const playlist of playlists ?? []) {
+        const groupKey = normalizeGroupName(playlist.playlist_group);
+        const description = String(playlist.description || "").trim();
+
+        if (groupKey && description && !playlistDescriptions.has(groupKey)) {
+          playlistDescriptions.set(groupKey, description);
+        }
+      }
+    }
 
     return NextResponse.json(
-      (data ?? []).map((row) => ({
-        id: Number(row.id),
-        name: String(row.name || ""),
-        position: Number(row.position || 0),
-        description: row.description ? String(row.description) : null,
-      })),
+      (groups ?? []).map((row) => {
+        const name = String(row.name || "");
+        const groupDescription = String(row.description || "").trim();
+
+        return {
+          id: Number(row.id),
+          name,
+          position: Number(row.position || 0),
+          description:
+            groupDescription ||
+            playlistDescriptions.get(normalizeGroupName(name)) ||
+            null,
+        };
+      }),
       {
         headers: {
           "Cache-Control": "no-store, max-age=0",
