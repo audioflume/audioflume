@@ -55,6 +55,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
 .curated-video-hero-overlay {
   z-index: 1;
   background:
+    linear-gradient(180deg, transparent 68%, rgba(0, 0, 0, 0.38) 84%, #000 100%),
     linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.03) 44%, rgba(0, 0, 0, 0.15) 100%),
     linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 58%);
   pointer-events: none;
@@ -77,7 +78,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
 .curated-video-hero-content h1 {
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(22px, 1.65vw, 30px);
+  font-size: clamp(24px, 1.8vw, 33px);
   font-weight: 500;
   letter-spacing: normal;
   line-height: 1;
