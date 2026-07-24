@@ -91,7 +91,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
   font-size: clamp(9px, 0.68vw, 11px);
   font-weight: 400;
   letter-spacing: 0;
-  line-height: 1.22;
+  line-height: 1.08;
   text-transform: uppercase;
 }
 
@@ -118,7 +118,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
   display: flex;
   max-width: 330px;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
   align-self: start;
 }
 
@@ -135,7 +135,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
   font-size: clamp(8px, 0.55vw, 9.5px);
   font-weight: 400;
   letter-spacing: 0;
-  line-height: 1.6;
+  line-height: 1.7;
   text-transform: uppercase;
 }
 
