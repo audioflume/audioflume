@@ -173,6 +173,7 @@ export default function CuratedPlaylistDetailMoreMenu() {
         body .playlist-detail-page .playlist-detail-shell {
           grid-template-columns: 82px minmax(0, 1fr) 42px !important;
           column-gap: 18px !important;
+          padding-top: 0 !important;
         }
 
         .playlist-detail-page .playlist-detail-more-menu {
@@ -322,6 +323,7 @@ export default function CuratedPlaylistDetailMoreMenu() {
         .playlist-detail-page .playlist-detail-more-menu {
           position: relative !important;
           z-index: 4 !important;
+          margin-top: 22px !important;
         }
 
         .playlist-detail-page .playlist-detail-browser-back,
