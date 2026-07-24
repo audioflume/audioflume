@@ -18,7 +18,7 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist > *:not(.curat
 body:has(.curated-playlists-page-root) .curated-featured-playlist {
   min-height: clamp(500px, 69vh, 760px) !important;
   grid-template-columns: 1fr !important;
-  background: transparent !important;
+  background: #000 !important;
 }
 
 body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
@@ -45,20 +45,6 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
   inset: 0;
   width: 100%;
   height: 100%;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 70%,
-    rgba(0, 0, 0, 0.72) 82%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 70%,
-    rgba(0, 0, 0, 0.72) 82%,
-    transparent 100%
-  );
 }
 
 .curated-video-hero-media {
@@ -69,6 +55,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
 .curated-video-hero-overlay {
   z-index: 1;
   background:
+    linear-gradient(180deg, transparent 68%, rgba(0, 0, 0, 0.38) 84%, #000 100%),
     linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.03) 44%, rgba(0, 0, 0, 0.15) 100%),
     linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 58%);
   pointer-events: none;
