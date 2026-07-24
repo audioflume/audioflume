@@ -73,7 +73,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     line-height: 1.05 !important;
     text-align: center;
     text-overflow: clip !important;
-    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
     text-transform: uppercase !important;
     white-space: normal !important;
     pointer-events: none;
