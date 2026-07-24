@@ -1,5 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -28,6 +29,13 @@ import "./music-library-web-layout.css";
 import "../../../packages/shared/styles/header-search-shell.css";
 import "./music-filter-rail-order.css";
 import "../../../packages/shared/styles/music-shared-controls.css";
+
+const jetBrainsMono = localFont({
+  src: "../../../packages/shared/fonts/JetBrainsMono-Regular.woff2",
+  weight: "400",
+  style: "normal",
+  variable: "--font-jetbrains-mono-filmwave",
+});
 
 const TYPEKIT_STYLESHEET = "https://use.typekit.net/tjk0kys.css";
 const R2_CDN_ORIGIN = "https://pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev";
@@ -68,7 +76,12 @@ export default async function RootLayout({
 
   return (
     <ClerkProvider>
-      <html lang="en" data-theme={initialTheme} suppressHydrationWarning>
+      <html
+        lang="en"
+        className={jetBrainsMono.variable}
+        data-theme={initialTheme}
+        suppressHydrationWarning
+      >
         <head>
           <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
           <link rel="stylesheet" href={TYPEKIT_STYLESHEET} />
@@ -76,7 +89,7 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
           <style>{`
             html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
-              font-family: "JetBrains Mono Filmwave", monospace !important;
+              font-family: var(--font-jetbrains-mono-filmwave), monospace !important;
               font-size: 10.5px !important;
               text-transform: uppercase !important;
             }
