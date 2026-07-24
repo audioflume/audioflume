@@ -53,18 +53,21 @@ export default function CuratedJumpBackIn() {
     if (!isLandingPage) return;
 
     const syncMount = () => {
-      const heading = document.querySelector<HTMLElement>(
-        ".curated-playlists-page-root .curated-featured-playlist-heading",
+      const banner = document.querySelector<HTMLElement>(
+        ".curated-playlists-page-root .curated-featured-playlist",
       );
-      if (!heading?.parentElement) return;
+      if (!banner?.parentElement) return;
 
-      let mount = heading.parentElement.querySelector<HTMLElement>(
+      let mount = banner.parentElement.querySelector<HTMLElement>(
         ":scope > .curated-jump-back-mount",
       );
       if (!mount) {
         mount = document.createElement("div");
         mount.className = "curated-jump-back-mount";
-        heading.parentElement.insertBefore(mount, heading);
+      }
+
+      if (banner.nextElementSibling !== mount) {
+        banner.insertAdjacentElement("afterend", mount);
       }
       setMountNode(mount);
     };
