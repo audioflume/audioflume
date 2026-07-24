@@ -167,30 +167,32 @@ body .community-detail-page .community-detail-hero > .min-w-0 {
   transform: none !important;
 }
 
-.playlist-detail-page .playlist-detail-browser-back,
-.playlist-detail-page .playlist-detail-more-button,
-.community-detail-page .community-detail-browser-back,
-.community-detail-page .community-detail-more-button {
+body .playlist-detail-page .playlist-detail-shell .playlist-detail-browser-back,
+body .playlist-detail-page .playlist-detail-shell .playlist-detail-more-button,
+body .community-detail-page .community-detail-shell .community-detail-browser-back,
+body .community-detail-page .community-detail-shell .community-detail-more-button {
   border-color: transparent !important;
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-.playlist-detail-page .playlist-detail-browser-back:hover,
-.playlist-detail-page .playlist-detail-browser-back:focus-visible,
-.playlist-detail-page .playlist-detail-more-button:hover,
-.playlist-detail-page .playlist-detail-more-button:focus-visible,
-.playlist-detail-page .playlist-detail-more-button.is-active,
-.community-detail-page .community-detail-browser-back:hover,
-.community-detail-page .community-detail-browser-back:focus-visible,
-.community-detail-page .community-detail-more-button:hover,
-.community-detail-page .community-detail-more-button:focus-visible,
-.community-detail-page .community-detail-more-button.is-active {
+body .playlist-detail-page .playlist-detail-shell .playlist-detail-browser-back:hover,
+body .playlist-detail-page .playlist-detail-shell .playlist-detail-browser-back:focus-visible,
+body .playlist-detail-page .playlist-detail-shell .playlist-detail-more-button:hover,
+body .playlist-detail-page .playlist-detail-shell .playlist-detail-more-button:focus-visible,
+body .playlist-detail-page .playlist-detail-shell .playlist-detail-more-button.is-active,
+body .community-detail-page .community-detail-shell .community-detail-browser-back:hover,
+body .community-detail-page .community-detail-shell .community-detail-browser-back:focus-visible,
+body .community-detail-page .community-detail-shell .community-detail-more-button:hover,
+body .community-detail-page .community-detail-shell .community-detail-more-button:focus-visible,
+body .community-detail-page .community-detail-shell .community-detail-more-button.is-active {
   border-color: transparent !important;
   background: transparent !important;
   background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Hide the old AI Tools block while Curated Playlists lives in the Library nav. */
