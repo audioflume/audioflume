@@ -76,6 +76,7 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
           <style>{`
             html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
+              font-family: "JetBrains Mono Filmwave", monospace !important;
               font-size: 11.5px !important;
             }
           `}</style>
