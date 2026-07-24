@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import CuratedJumpBackIn from "./CuratedJumpBackIn";
+import CuratedVideoHero from "./CuratedVideoHero";
+import "./curated-video-hero.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
@@ -68,6 +70,7 @@ export default function CuratedPlaylistsTemplate({
   return (
     <>
       <style>{CURATED_LANDING_CARD_RATIO_STYLE}</style>
+      <CuratedVideoHero />
       <CuratedJumpBackIn />
       {children}
     </>
