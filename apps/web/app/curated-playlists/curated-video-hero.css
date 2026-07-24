@@ -21,14 +21,6 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
   background: #000 !important;
 }
 
-body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
-  font-family: "JetBrains Mono Filmwave", monospace !important;
-  font-size: 9px !important;
-  font-weight: 400 !important;
-  letter-spacing: 0 !important;
-  text-transform: uppercase !important;
-}
-
 .curated-video-hero {
   position: absolute;
   inset: 0;
