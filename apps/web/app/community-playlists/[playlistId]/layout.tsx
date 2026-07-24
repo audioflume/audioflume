@@ -64,6 +64,7 @@ export default function CommunityPlaylistDetailLayout({
         body .community-detail-page .community-detail-shell {
           grid-template-columns: 82px minmax(0, 1fr) 42px 42px !important;
           column-gap: 13px !important;
+          padding-top: 0 !important;
         }
 
         body .community-detail-page .community-detail-more-button svg {
@@ -188,6 +189,7 @@ export default function CommunityPlaylistDetailLayout({
         .community-detail-page .community-detail-more-menu {
           position: relative !important;
           z-index: 4 !important;
+          margin-top: 22px !important;
         }
 
         .community-detail-page .community-detail-browser-back,
