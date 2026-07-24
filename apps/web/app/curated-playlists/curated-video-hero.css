@@ -118,7 +118,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
   display: flex;
   max-width: 330px;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   align-self: start;
 }
 
