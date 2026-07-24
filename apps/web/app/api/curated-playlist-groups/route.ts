@@ -4,6 +4,21 @@ import { getCuratedPlaylistError } from "@/lib/curatedPlaylists";
 
 export const dynamic = "force-dynamic";
 
+const DEFAULT_GROUP_DESCRIPTIONS: Record<string, string> = {
+  "editor picks":
+    "Handpicked playlists selected for strong storytelling, pacing, and cinematic range.",
+  "featured playlists":
+    "A rotating selection of standout playlists chosen by the Filmwave team.",
+  "newly added":
+    "Freshly published playlists and recent additions to the Filmwave library.",
+  "popular right now":
+    "The playlists filmmakers are exploring, saving, and using most right now.",
+  tension:
+    "Slow pressure, uneasy textures, rising suspense, and restrained cinematic builds.",
+  ambient:
+    "Spacious tones, subtle movement, soft textures, and atmospheric sound beds.",
+};
+
 function normalizeGroupName(value: unknown) {
   return String(value || "")
     .trim()
@@ -45,6 +60,7 @@ export async function GET() {
     return NextResponse.json(
       (groups ?? []).map((row) => {
         const name = String(row.name || "");
+        const groupKey = normalizeGroupName(name);
         const groupDescription = String(row.description || "").trim();
 
         return {
@@ -53,7 +69,8 @@ export async function GET() {
           position: Number(row.position || 0),
           description:
             groupDescription ||
-            playlistDescriptions.get(normalizeGroupName(name)) ||
+            playlistDescriptions.get(groupKey) ||
+            DEFAULT_GROUP_DESCRIPTIONS[groupKey] ||
             null,
         };
       }),
