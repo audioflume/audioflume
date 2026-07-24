@@ -154,6 +154,18 @@ body .community-detail-page .community-detail-hero {
   padding-bottom: 0 !important;
 }
 
+@media (min-width: 561px) {
+  body .playlist-detail-page .playlist-detail-hero > .min-w-0,
+  body .community-detail-page .community-detail-hero > .min-w-0 {
+    position: absolute !important;
+    top: 50% !important;
+    right: var(--playlist-detail-page-gutter) !important;
+    left: var(--playlist-detail-page-gutter) !important;
+    width: auto !important;
+    transform: translateY(-50%) !important;
+  }
+}
+
 /* Hide the old AI Tools block while Curated Playlists lives in the Library nav. */
 .desktop-app-sidebar-inner > .desktop-sidebar-section:nth-of-type(2):not(.is-projects-section) {
   display: none;
