@@ -306,12 +306,12 @@ main > section[class*="pt-14"] {
   gap: 6px !important;
 }
 
-.filmwave-header-nav-link {
+.filmwave-header .filmwave-header-nav-link {
   border-radius: 0 !important;
   background: transparent !important;
   padding: 0 8px !important;
   color: var(--text-secondary) !important;
-  font-size: 12.5px !important;
+  font-size: 11.5px !important;
 }
 
 .filmwave-header-nav-link:hover,
