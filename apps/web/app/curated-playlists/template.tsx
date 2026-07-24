@@ -4,6 +4,12 @@ import CuratedVideoHero from "./CuratedVideoHero";
 import "./curated-video-hero.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf {
+    width: min(100%, 1120px);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
     margin-right: 0 !important;
     margin-left: 0 !important;
@@ -15,7 +21,8 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     .curated-playlist-skeleton-shelf > .relative > .flex {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--curated-playlist-card-gap) !important;
+    column-gap: clamp(24px, 2.4vw, 38px) !important;
+    row-gap: clamp(30px, 3vw, 46px) !important;
     overflow: visible !important;
     padding-right: 0 !important;
     padding-left: 0 !important;
@@ -37,8 +44,11 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
 
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading h2 {
     font-family: var(--font-aktiv-grotesk), sans-serif;
+    font-size: clamp(20px, 1.45vw, 27px);
     font-weight: 500;
     letter-spacing: normal;
+    line-height: 1;
+    text-transform: uppercase;
   }
 
   body:has(.curated-playlists-page-root)
