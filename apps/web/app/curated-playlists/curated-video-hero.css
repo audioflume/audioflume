@@ -23,10 +23,10 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
 
 body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
   font-family: "JetBrains Mono Filmwave", monospace !important;
-  font-size: 10px !important;
+  font-size: 9px !important;
   font-weight: 400 !important;
   letter-spacing: 0 !important;
-  text-transform: capitalize !important;
+  text-transform: uppercase !important;
 }
 
 .curated-video-hero {
@@ -87,13 +87,30 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
 .curated-video-hero-primary-copy {
   width: min(100%, 390px);
   margin: 0;
-  font-size: clamp(8px, 0.58vw, 10px);
+  font-size: clamp(9px, 0.68vw, 11px);
   font-weight: 400;
   letter-spacing: 0;
-  line-height: 1.45;
-  text-align: justify;
-  text-align-last: left;
+  line-height: 1.5;
   text-transform: uppercase;
+}
+
+.curated-video-hero-primary-copy span {
+  display: block;
+}
+
+.curated-video-hero-primary-copy span:nth-child(-n + 2) {
+  text-align: justify;
+  text-align-last: justify;
+}
+
+.curated-video-hero-primary-copy span:nth-child(-n + 2)::after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+}
+
+.curated-video-hero-primary-copy span:last-child {
+  text-align: left;
 }
 
 .curated-video-hero-secondary-copy {
@@ -106,7 +123,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
 
 .curated-video-hero-secondary-copy strong {
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(10px, 0.72vw, 13px);
+  font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 500;
   letter-spacing: normal;
   line-height: 1.15;
@@ -114,7 +131,7 @@ body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
 }
 
 .curated-video-hero-secondary-copy span {
-  font-size: clamp(7px, 0.47vw, 8.5px);
+  font-size: clamp(8px, 0.55vw, 9.5px);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.45;
