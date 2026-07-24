@@ -21,6 +21,11 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
   background: #0b0d0d !important;
 }
 
+body:has(.curated-playlists-page-root) .filmwave-header-nav-link {
+  font-family: "JetBrains Mono Filmwave", monospace !important;
+  font-weight: 500 !important;
+}
+
 .curated-video-hero {
   position: absolute;
   inset: 0;
@@ -52,35 +57,35 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
 }
 
 .curated-video-hero-content {
-  position: relative;
+  position: absolute;
+  top: var(--filmwave-header-height, 75px);
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 2;
   display: grid;
-  min-height: inherit;
   grid-template-columns: minmax(240px, 1.1fr) minmax(280px, 1fr) minmax(300px, 1.05fr);
   align-items: center;
   column-gap: clamp(36px, 5vw, 92px);
-  padding:
-    calc(var(--filmwave-header-height, 75px) + 48px)
-    var(--curated-page-gutter)
-    64px;
+  padding: 0 var(--curated-page-gutter);
   text-transform: uppercase;
 }
 
 .curated-video-hero-content h1 {
   margin: 0;
-  font-family: inherit;
-  font-size: clamp(24px, 2.15vw, 38px);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(20px, 1.5vw, 30px);
   font-weight: 500;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.04em;
   line-height: 1;
 }
 
 .curated-video-hero-primary-copy {
   margin: 0;
-  font-size: clamp(13px, 1.05vw, 18px);
+  font-size: clamp(10px, 0.72vw, 13px);
   font-weight: 500;
   letter-spacing: 0.015em;
-  line-height: 1.42;
+  line-height: 1.48;
 }
 
 .curated-video-hero-secondary-copy {
@@ -91,14 +96,15 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
 }
 
 .curated-video-hero-secondary-copy strong {
-  font-size: clamp(13px, 1vw, 17px);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(11px, 0.8vw, 15px);
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.2;
 }
 
 .curated-video-hero-secondary-copy span {
-  font-size: clamp(9px, 0.68vw, 11px);
+  font-size: clamp(8px, 0.56vw, 10px);
   font-weight: 500;
   letter-spacing: 0.03em;
   line-height: 1.5;
@@ -120,7 +126,6 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
     grid-template-columns: 1fr;
     align-content: center;
     row-gap: 26px;
-    padding-top: calc(var(--filmwave-header-height, 75px) + 54px);
   }
 
   .curated-video-hero-secondary-copy {
