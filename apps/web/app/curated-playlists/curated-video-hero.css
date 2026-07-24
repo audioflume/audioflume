@@ -1,11 +1,3 @@
-@font-face {
-  font-family: "JetBrains Mono Filmwave";
-  src: url("../../../../packages/shared/fonts/JetBrainsMono-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 body:has(.curated-playlists-page-root) .curated-featured-playlist-heading {
   display: none !important;
 }
@@ -27,7 +19,7 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
   z-index: 5;
   overflow: hidden;
   color: #fff;
-  font-family: "JetBrains Mono Filmwave", monospace;
+  font-family: var(--font-jetbrains-mono-filmwave), monospace;
   font-weight: 400;
 }
 
