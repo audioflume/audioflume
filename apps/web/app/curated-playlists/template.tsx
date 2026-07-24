@@ -66,7 +66,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     padding: 20px;
     color: #fff !important;
     font-family: "JetBrains Mono Filmwave", monospace !important;
-    font-size: clamp(28px, 2.1vw, 38px) !important;
+    font-size: clamp(14px, 1vw, 18px) !important;
     font-weight: 600 !important;
     font-kerning: normal !important;
     letter-spacing: 0 !important;
