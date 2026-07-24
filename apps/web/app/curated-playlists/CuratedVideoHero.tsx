@@ -44,13 +44,7 @@ export default function CuratedVideoHero() {
         <h1>Curated Playlists</h1>
 
         <p className="curated-video-hero-primary-copy">
-          <span>Discover</span>
-          <span>Curated</span>
-          <span>Music</span>
-          <span>Playlists</span>
-          <span>Premium Audio</span>
-          <span>Soundtracks</span>
-          <span>For Film</span>
+          Discover curated music playlists premium audio soundtracks for film
         </p>
 
         <div className="curated-video-hero-secondary-copy">
