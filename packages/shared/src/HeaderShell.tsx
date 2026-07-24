@@ -49,7 +49,7 @@ export function HeaderShell({
     <>
       <style>{`
         html body .filmwave-header .filmwave-header-nav .filmwave-header-nav-link {
-          font-size: 13.5px !important;
+          font-size: 13px !important;
         }
       `}</style>
 
