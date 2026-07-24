@@ -5,59 +5,68 @@ import "./curated-video-hero.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
-    --curated-landing-card-height: calc(
-      (
-          100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
-            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
-            var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
-        ) /
-        5
-    );
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    overflow: visible !important;
   }
 
-  body:has(.curated-playlists-page-root) .curated-playlist-card-shell {
-    flex-basis: calc(var(--curated-landing-card-height) * 16 / 9) !important;
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-scroller,
+  body:has(.curated-playlists-page-root)
+    .curated-playlist-skeleton-shelf > .relative > .flex {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--curated-playlist-card-gap) !important;
+    overflow: visible !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
   }
 
-  body:has(.curated-playlists-page-root) .curated-playlist-image {
-    height: var(--curated-landing-card-height) !important;
-    aspect-ratio: auto !important;
+  body:has(.curated-playlists-page-root) .curated-playlist-card-shell,
+  body:has(.curated-playlists-page-root) .curated-playlist-skeleton-card-shell {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: none !important;
   }
 
-  @media (max-width: 1280px) {
-    body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
-      --curated-landing-card-height: calc(
-        (
-            100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
-              var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap) -
-              var(--curated-playlist-card-gap)
-          ) /
-          4
-      );
+  body:has(.curated-playlists-page-root) .curated-playlist-image,
+  body:has(.curated-playlists-page-root) .curated-playlist-skeleton-card {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading h2 {
+    font-family: var(--font-aktiv-grotesk), sans-serif;
+    font-weight: 500;
+    letter-spacing: normal;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-playlist-shelf-heading > .hidden,
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-prev-floating,
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-next-floating {
+    display: none !important;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-playlist-skeleton-shelf > .relative {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  @media (max-width: 900px) {
+    body:has(.curated-playlists-page-root) .curated-playlist-shelf-scroller,
+    body:has(.curated-playlists-page-root)
+      .curated-playlist-skeleton-shelf > .relative > .flex {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (max-width: 980px) {
-    body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
-      --curated-landing-card-height: calc(
-        (
-            100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
-              var(--curated-playlist-card-gap) - var(--curated-playlist-card-gap)
-          ) /
-          3
-      );
-    }
-  }
-
-  @media (max-width: 720px) {
-    body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
-      --curated-landing-card-height: calc(
-        (
-            100cqw - var(--curated-page-gutter) - var(--curated-page-gutter) -
-              var(--curated-playlist-card-gap)
-          ) /
-          2
-      );
+  @media (max-width: 560px) {
+    body:has(.curated-playlists-page-root) .curated-playlist-shelf-scroller,
+    body:has(.curated-playlists-page-root)
+      .curated-playlist-skeleton-shelf > .relative > .flex {
+      grid-template-columns: 1fr;
     }
   }
 `;
