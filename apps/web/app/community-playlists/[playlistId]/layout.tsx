@@ -90,14 +90,15 @@ export default function CommunityPlaylistDetailLayout({
             100% + var(--playlist-detail-control-inset-left) +
               var(--playlist-detail-control-inset-right)
           ) !important;
-          min-height: var(--playlist-detail-featured-hero-height) !important;
+          min-height: clamp(360px, 48vh, 500px) !important;
+          gap: 0 !important;
           margin-top: 0 !important;
           margin-right: calc(0px - var(--playlist-detail-control-inset-right)) !important;
           margin-left: calc(0px - var(--playlist-detail-control-inset-left)) !important;
           overflow: hidden !important;
           background-color: #0b0d0d !important;
           color: #fff !important;
-          padding: clamp(96px, 12vh, 132px) var(--playlist-detail-page-gutter) clamp(58px, 7vh, 86px) !important;
+          padding: clamp(92px, 10vh, 108px) var(--playlist-detail-page-gutter) clamp(38px, 5vh, 54px) !important;
         }
 
         body .community-detail-page .community-detail-hero::before,
@@ -108,14 +109,14 @@ export default function CommunityPlaylistDetailLayout({
         }
 
         body .community-detail-page .community-detail-hero::before {
-          inset: -14px;
+          inset: 0;
           z-index: 0;
           background-image: var(--playlist-detail-banner-image);
           background-position: center;
           background-repeat: no-repeat;
           background-size: cover;
-          filter: blur(10px);
-          transform: scale(1.04);
+          filter: none;
+          transform: none;
         }
 
         body .community-detail-page .community-detail-hero::after {
@@ -135,13 +136,15 @@ export default function CommunityPlaylistDetailLayout({
             );
         }
 
-        body .community-detail-page .community-detail-cover,
-        body .community-detail-page .community-detail-hero > .min-w-0 {
-          z-index: 2 !important;
+        body .community-detail-page .community-detail-cover {
+          display: none !important;
         }
 
-        body .community-detail-page .community-detail-cover {
-          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+        body .community-detail-page .community-detail-hero > .min-w-0 {
+          z-index: 2 !important;
+          width: 100%;
+          max-width: 680px !important;
+          transform: none !important;
         }
 
         body .community-detail-page .community-detail-title {
@@ -251,8 +254,8 @@ export default function CommunityPlaylistDetailLayout({
         @media (max-width: 560px) {
           body .community-detail-page .community-detail-hero {
             min-height: auto !important;
-            padding-top: 112px !important;
-            padding-bottom: 56px !important;
+            padding-top: 100px !important;
+            padding-bottom: 42px !important;
           }
         }
       `}</style>
