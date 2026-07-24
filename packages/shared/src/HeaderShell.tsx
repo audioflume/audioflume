@@ -48,8 +48,7 @@ export function HeaderShell({
   return (
     <>
       <style>{`
-        .filmwave-header-nav-link,
-        .filmwave-header .filmwave-header-nav-link {
+        html body .filmwave-header .filmwave-header-nav .filmwave-header-nav-link {
           font-size: 13.5px !important;
         }
       `}</style>
