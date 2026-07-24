@@ -66,8 +66,8 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     padding: 20px;
     color: #fff !important;
     font-family: var(--font-aktiv-grotesk), sans-serif !important;
-    font-size: clamp(24px, 1.8vw, 33px) !important;
-    font-weight: 500 !important;
+    font-size: clamp(28px, 2.1vw, 38px) !important;
+    font-weight: 600 !important;
     font-kerning: normal !important;
     letter-spacing: 0 !important;
     line-height: 1.05 !important;
@@ -92,8 +92,21 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
 
   body:has(.curated-playlists-page-root) .curated-playlist-menu-button {
     color: #fff !important;
-    opacity: 1 !important;
+    opacity: 0 !important;
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+    transition: opacity 150ms ease, color 150ms ease !important;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-playlist-card:hover
+    .curated-playlist-menu-button,
+  body:has(.curated-playlists-page-root)
+    .curated-playlist-card:focus-within
+    .curated-playlist-menu-button,
+  body:has(.curated-playlists-page-root)
+    .curated-playlist-card.is-menu-open
+    .curated-playlist-menu-button {
+    opacity: 1 !important;
   }
 
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading h2 {
