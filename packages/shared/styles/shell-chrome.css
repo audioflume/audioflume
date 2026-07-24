@@ -121,6 +121,19 @@ html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-floa
   padding-top: var(--filmwave-sidebar-float-inset);
 }
 
+/* Simplify playlist interior controls while preserving the page-owned layout. */
+.playlist-detail-page .playlist-detail-search-sticky,
+.community-detail-page .community-detail-search-sticky,
+.playlist-detail-page .playlist-detail-quick-row,
+.community-detail-page .community-detail-quick-row {
+  display: none !important;
+}
+
+.playlist-detail-page .playlist-detail-section,
+.community-detail-page .community-detail-section {
+  margin-top: 28px !important;
+}
+
 /* Hide the old AI Tools block while Curated Playlists lives in the Library nav. */
 .desktop-app-sidebar-inner > .desktop-sidebar-section:nth-of-type(2):not(.is-projects-section) {
   display: none;
