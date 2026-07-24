@@ -52,6 +52,18 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     text-transform: uppercase !important;
   }
 
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading p {
+    max-width: 620px;
+    margin-top: 9px !important;
+    color: var(--text-muted) !important;
+    font-family: "JetBrains Mono Filmwave", monospace !important;
+    font-size: clamp(8px, 0.55vw, 9.5px) !important;
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.55 !important;
+    text-transform: uppercase !important;
+  }
+
   body:has(.curated-playlists-page-root)
     .curated-playlist-shelf-heading > .hidden,
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-prev-floating,
