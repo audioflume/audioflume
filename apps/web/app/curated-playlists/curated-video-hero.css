@@ -1,0 +1,129 @@
+@font-face {
+  font-family: "JetBrains Mono Filmwave";
+  src: url("../../../../packages/shared/fonts/JetBrainsMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+body:has(.curated-playlists-page-root) .curated-featured-playlist-heading {
+  display: none !important;
+}
+
+body:has(.curated-playlists-page-root) .curated-featured-playlist > *:not(.curated-video-hero) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body:has(.curated-playlists-page-root) .curated-featured-playlist {
+  min-height: clamp(500px, 69vh, 760px) !important;
+  grid-template-columns: 1fr !important;
+  background: #0b0d0d !important;
+}
+
+.curated-video-hero {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  color: #fff;
+  font-family: "JetBrains Mono Filmwave", monospace;
+}
+
+.curated-video-hero-media,
+.curated-video-hero-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.curated-video-hero-media {
+  z-index: 0;
+  object-fit: cover;
+}
+
+.curated-video-hero-overlay {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.06) 42%, rgba(0, 0, 0, 0.2) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0) 58%);
+  pointer-events: none;
+}
+
+.curated-video-hero-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  min-height: inherit;
+  grid-template-columns: minmax(240px, 1.1fr) minmax(280px, 1fr) minmax(300px, 1.05fr);
+  align-items: center;
+  column-gap: clamp(36px, 5vw, 92px);
+  padding:
+    calc(var(--filmwave-header-height, 75px) + 48px)
+    var(--curated-page-gutter)
+    64px;
+  text-transform: uppercase;
+}
+
+.curated-video-hero-content h1 {
+  margin: 0;
+  font-family: inherit;
+  font-size: clamp(24px, 2.15vw, 38px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.curated-video-hero-primary-copy {
+  margin: 0;
+  font-size: clamp(13px, 1.05vw, 18px);
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  line-height: 1.42;
+}
+
+.curated-video-hero-secondary-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: center;
+}
+
+.curated-video-hero-secondary-copy strong {
+  font-size: clamp(13px, 1vw, 17px);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.curated-video-hero-secondary-copy span {
+  font-size: clamp(9px, 0.68vw, 11px);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+}
+
+@media (max-width: 980px) {
+  .curated-video-hero-content {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 34px;
+  }
+
+  .curated-video-hero-secondary-copy {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .curated-video-hero-content {
+    grid-template-columns: 1fr;
+    align-content: center;
+    row-gap: 26px;
+    padding-top: calc(var(--filmwave-header-height, 75px) + 54px);
+  }
+
+  .curated-video-hero-secondary-copy {
+    grid-column: 1;
+  }
+}
