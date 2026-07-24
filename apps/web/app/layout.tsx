@@ -77,7 +77,8 @@ export default async function RootLayout({
           <style>{`
             html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
               font-family: "JetBrains Mono Filmwave", monospace !important;
-              font-size: 11.5px !important;
+              font-size: 10.5px !important;
+              text-transform: uppercase !important;
             }
           `}</style>
         </head>
