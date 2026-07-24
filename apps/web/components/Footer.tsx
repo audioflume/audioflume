@@ -5,58 +5,63 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import FooterBottom from "@/components/FooterBottom";
 import { usePlayer } from "@/context/PlayerContext";
 
-const footerGroups = [
-  {
-    title: "Explore",
-    links: [
-      { href: "/discover", label: "Discover" },
-      { href: "/music", label: "Browse music" },
-      { href: "/sound-fx", label: "Sound effects" },
-      { href: "/curated-playlists", label: "Curated playlists" },
-    ],
-  },
-  {
-    title: "Create",
-    links: [
-      { href: "/playlists", label: "My playlists" },
-      { href: "/projects", label: "Projects" },
-      { href: "/favorites", label: "Favorites" },
-      { href: "#", label: "Desktop app" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { href: "#", label: "About Audioflume" },
-      { href: "#", label: "Artist submissions" },
-      { href: "#", label: "Licensing" },
-      { href: "mailto:hello@filmwave.io", label: "Contact" },
-    ],
-  },
-  {
-    title: "Support",
-    links: [
-      { href: "/account/support", label: "Help centre" },
-      { href: "/account/membership", label: "Membership" },
-      { href: "/account/settings", label: "Account settings" },
-      { href: "#", label: "Privacy" },
-    ],
-  },
+const companyLinks = [
+  { href: "#", label: "Our story" },
+  { href: "#", label: "Artist applications" },
+  { href: "mailto:hello@filmwave.io", label: "Contact" },
+  { href: "/account/membership", label: "Pricing" },
+  { href: "#", label: "Affiliate partnerships" },
+];
+
+const listenLinks = [
+  { href: "/discover", label: "What’s new" },
+  { href: "/curated-playlists", label: "Playlists" },
+  { href: "/music", label: "Browse music" },
+  { href: "/sound-fx", label: "Browse sound effects" },
+];
+
+const quickLinks = [
+  { href: "/music", label: "Cinematic" },
+  { href: "/music", label: "Documentary" },
+  { href: "/music", label: "Pop" },
+  { href: "/music", label: "Ambient" },
 ];
 
 const footerLinkClass =
   "inline-flex w-fit text-[11px] font-normal leading-[1.45] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
 
 const footerHeadingClass =
-  "text-[11px] font-medium leading-none text-[var(--text-primary)]";
+  "m-0 text-[11px] font-medium leading-none text-[var(--text-primary)]";
 
 type FooterProps = {
   className?: string;
   playerPadding?: boolean;
 };
+
+function InstagramIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="17.4" cy="6.7" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+function YouTubeIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M21 12c0-2.5-.25-4.2-.6-5.15-.3-.8-.95-1.45-1.75-1.75C17.7 4.75 15.5 4.5 12 4.5s-5.7.25-6.65.6c-.8.3-1.45.95-1.75 1.75C3.25 7.8 3 9.5 3 12s.25 4.2.6 5.15c.3.8.95 1.45 1.75 1.75.95.35 3.15.6 6.65.6s5.7-.25 6.65-.6c.8-.3 1.45-.95 1.75-1.75.35-.95.6-2.65.6-5.15Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
+      <path d="m10 8.8 5.2 3.2-5.2 3.2V8.8Z" fill="currentColor" />
+    </svg>
+  );
+}
 
 export default function Footer({
   className = "",
@@ -92,16 +97,6 @@ export default function Footer({
   const footer = (
     <>
       <style>{`
-        .filmwave-footer-tonal-wordmark.filmwave-header-tonal-wordmark {
-          color: var(--text-primary) !important;
-          font-size: 18px !important;
-          transform: none !important;
-        }
-
-        .filmwave-footer-bottom {
-          border-top: 0 !important;
-        }
-
         main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
           > .fw-music-content-column {
           display: flex !important;
@@ -136,63 +131,87 @@ export default function Footer({
             : "8px",
         }}
       >
-        <div className="border-t border-[var(--border-subtle)] pt-12">
-          <div className="grid gap-x-10 gap-y-11 pb-12 sm:grid-cols-2 lg:grid-cols-[minmax(190px,1.35fr)_repeat(4,minmax(110px,0.72fr))] lg:gap-x-12">
-            <div className="flex max-w-[250px] flex-col items-start gap-5">
-              <span className="filmwave-header-tonal-wordmark filmwave-footer-tonal-wordmark">
-                audioflume
-              </span>
-
-              <p className="m-0 text-[11px] font-normal leading-[1.65] text-[var(--text-muted)]">
-                Human-curated music, sound effects and creative tools built for filmmakers.
-              </p>
-
-              <p className="m-0 text-[10px] font-normal leading-[1.55] text-[var(--text-muted)]">
-                Practical licensing. Thoughtful discovery. A faster path from search to edit.
-              </p>
-            </div>
-
-            {footerGroups.map((group) => (
-              <div key={group.title} className="flex flex-col gap-5">
-                <h2 className={`m-0 ${footerHeadingClass}`}>{group.title}</h2>
-
-                <nav aria-label={`${group.title} footer links`} className="flex flex-col gap-3">
-                  {group.links.map((link) => (
-                    <Link key={`${group.title}-${link.label}`} href={link.href} className={footerLinkClass}>
+        <div className="border-t border-[var(--border-subtle)] px-0 pb-14 pt-14">
+          <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-[0.9fr_0.8fr_0.8fr_1.45fr_0.9fr] lg:gap-x-14">
+            <div className="flex flex-col gap-5">
+              <h2 className={footerHeadingClass}>Company</h2>
+              <nav aria-label="Company footer links" className="flex flex-col gap-3">
+                {companyLinks.map((link) =>
+                  link.href.startsWith("mailto:") ? (
+                    <a key={link.label} href={link.href} className={footerLinkClass}>
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link key={link.label} href={link.href} className={footerLinkClass}>
                       {link.label}
                     </Link>
-                  ))}
-                </nav>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-5 border-t border-[var(--border-subtle)] py-5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <a href="mailto:hello@filmwave.io" className={footerLinkClass}>
-                hello@filmwave.io
-              </a>
-              <span className="text-[10px] text-[var(--text-muted)]">Made in Canada</span>
-              <Link href="#" className={footerLinkClass}>
-                Terms
-              </Link>
-              <Link href="#" className={footerLinkClass}>
-                Privacy
-              </Link>
+                  ),
+                )}
+              </nav>
             </div>
 
-            <div className="flex items-center gap-5" aria-label="Social links">
-              <a href="#" className={footerLinkClass} aria-label="Audioflume on Instagram">
-                Instagram ↗
-              </a>
-              <a href="#" className={footerLinkClass} aria-label="Audioflume on YouTube">
-                YouTube ↗
-              </a>
+            <div className="flex flex-col gap-5">
+              <h2 className={footerHeadingClass}>Listen</h2>
+              <nav aria-label="Listen footer links" className="flex flex-col gap-3">
+                {listenLinks.map((link) => (
+                  <Link key={link.label} href={link.href} className={footerLinkClass}>
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            <div className="flex flex-col gap-5">
+              <h2 className={footerHeadingClass}>Quick Links</h2>
+              <nav aria-label="Quick footer links" className="flex flex-col gap-3">
+                {quickLinks.map((link) => (
+                  <Link key={link.label} href={link.href} className={footerLinkClass}>
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            <div className="flex max-w-[370px] flex-col gap-5">
+              <h2 className={footerHeadingClass}>Who is Audioflume?</h2>
+              <div className="flex flex-col gap-2 text-[11px] font-normal leading-[1.75] text-[var(--text-muted)]">
+                <p className="m-0">
+                  We are filmmakers, musicians and creative technologists building a more thoughtful way to find, organize and license music for moving images.
+                </p>
+                <p className="m-0">© 2026 Audioflume</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-5">
+              <h2 className={footerHeadingClass}>Built for Story</h2>
+              <nav aria-label="Legal footer links" className="flex flex-col gap-3">
+                <Link href="#" className={footerLinkClass}>
+                  Licensing terms
+                </Link>
+                <Link href="#" className={footerLinkClass}>
+                  Privacy
+                </Link>
+              </nav>
+
+              <div className="mt-4 flex items-center gap-5 text-[var(--text-muted)]" aria-label="Social links">
+                <a
+                  href="#"
+                  className="transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none"
+                  aria-label="Audioflume on Instagram"
+                >
+                  <InstagramIcon />
+                </a>
+                <a
+                  href="#"
+                  className="transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none"
+                  aria-label="Audioflume on YouTube"
+                >
+                  <YouTubeIcon />
+                </a>
+              </div>
             </div>
           </div>
         </div>
-
-        <FooterBottom className="filmwave-footer-bottom" />
       </footer>
     </>
   );
