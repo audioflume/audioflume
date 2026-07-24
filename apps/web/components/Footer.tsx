@@ -30,7 +30,7 @@ const quickLinks = [
 ];
 
 const footerLinkClass =
-  "inline-flex w-fit text-[11px] font-normal leading-[1.45] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
+  "inline-flex w-fit text-[11px] font-normal leading-[1.75] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
 
 const footerHeadingClass =
   "m-0 text-[11px] font-medium leading-none text-[var(--text-primary)]";
@@ -135,7 +135,7 @@ export default function Footer({
           <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-[0.9fr_0.8fr_0.8fr_1.45fr_0.9fr] lg:gap-x-14">
             <div className="flex flex-col gap-5">
               <h2 className={footerHeadingClass}>Company</h2>
-              <nav aria-label="Company footer links" className="flex flex-col gap-3">
+              <nav aria-label="Company footer links" className="flex flex-col gap-0">
                 {companyLinks.map((link) =>
                   link.href.startsWith("mailto:") ? (
                     <a key={link.label} href={link.href} className={footerLinkClass}>
@@ -152,7 +152,7 @@ export default function Footer({
 
             <div className="flex flex-col gap-5">
               <h2 className={footerHeadingClass}>Listen</h2>
-              <nav aria-label="Listen footer links" className="flex flex-col gap-3">
+              <nav aria-label="Listen footer links" className="flex flex-col gap-0">
                 {listenLinks.map((link) => (
                   <Link key={link.label} href={link.href} className={footerLinkClass}>
                     {link.label}
@@ -163,7 +163,7 @@ export default function Footer({
 
             <div className="flex flex-col gap-5">
               <h2 className={footerHeadingClass}>Quick Links</h2>
-              <nav aria-label="Quick footer links" className="flex flex-col gap-3">
+              <nav aria-label="Quick footer links" className="flex flex-col gap-0">
                 {quickLinks.map((link) => (
                   <Link key={link.label} href={link.href} className={footerLinkClass}>
                     {link.label}
@@ -184,7 +184,7 @@ export default function Footer({
 
             <div className="flex flex-col gap-5">
               <h2 className={footerHeadingClass}>Built for Story</h2>
-              <nav aria-label="Legal footer links" className="flex flex-col gap-3">
+              <nav aria-label="Legal footer links" className="flex flex-col gap-0">
                 <Link href="#" className={footerLinkClass}>
                   Licensing terms
                 </Link>
