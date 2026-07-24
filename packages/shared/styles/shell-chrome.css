@@ -167,6 +167,32 @@ body .community-detail-page .community-detail-hero > .min-w-0 {
   transform: none !important;
 }
 
+.playlist-detail-page .playlist-detail-browser-back,
+.playlist-detail-page .playlist-detail-more-button,
+.community-detail-page .community-detail-browser-back,
+.community-detail-page .community-detail-more-button {
+  border-color: transparent !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.playlist-detail-page .playlist-detail-browser-back:hover,
+.playlist-detail-page .playlist-detail-browser-back:focus-visible,
+.playlist-detail-page .playlist-detail-more-button:hover,
+.playlist-detail-page .playlist-detail-more-button:focus-visible,
+.playlist-detail-page .playlist-detail-more-button.is-active,
+.community-detail-page .community-detail-browser-back:hover,
+.community-detail-page .community-detail-browser-back:focus-visible,
+.community-detail-page .community-detail-more-button:hover,
+.community-detail-page .community-detail-more-button:focus-visible,
+.community-detail-page .community-detail-more-button.is-active {
+  border-color: transparent !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 /* Hide the old AI Tools block while Curated Playlists lives in the Library nav. */
 .desktop-app-sidebar-inner > .desktop-sidebar-section:nth-of-type(2):not(.is-projects-section) {
   display: none;
