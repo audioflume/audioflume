@@ -54,8 +54,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 .discover-integrated-search-icon {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  color: #111;
+  justify-content: flex-start;
+  padding-left: 18px;
+  color: var(--text-muted);
   pointer-events: none;
 }
 
