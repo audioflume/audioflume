@@ -44,14 +44,10 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   line-height: 0.94;
 }
 
-.discover-reference-intro-title p {
-  width: 270px;
+.discover-reference-intro-title .curated-video-hero-primary-copy {
+  width: min(100%, 300px);
   margin: 108px 0 0;
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: 8px;
-  font-weight: 400;
-  line-height: 1.55;
-  text-transform: uppercase;
 }
 
 .discover-reference-intro-center {
