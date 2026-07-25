@@ -92,9 +92,10 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-integrated-values strong {
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(12px, 0.95vw, 16px);
+  font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 500;
-  line-height: 1.1;
+  letter-spacing: normal;
+  line-height: 1.15;
   text-transform: uppercase;
 }
 
