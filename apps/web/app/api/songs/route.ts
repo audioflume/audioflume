@@ -1,7 +1,8 @@
 import { getSongs } from "@/lib/songs";
 import { NextResponse } from "next/server";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function isAdminSongsRequest(req: Request) {
   const requestUrl = new URL(req.url);
@@ -24,14 +25,10 @@ export async function GET(req: Request) {
     const responseSongs = adminSongsRequest ? [...songs].reverse() : songs;
 
     return NextResponse.json(responseSongs, {
-      headers: adminSongsRequest
-        ? {
-            "Cache-Control": "private, no-store",
-            Vary: "Referer",
-          }
-        : {
-            "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=7200",
-          },
+      headers: {
+        "Cache-Control": "private, no-store, max-age=0",
+        Vary: "Referer",
+      },
     });
   } catch (error) {
     console.error("Failed to load songs:", error);
