@@ -4,17 +4,7 @@ body:has(.discover-page-root) .discover-hero {
 }
 
 body:has(.discover-page-root) .discover-hero-image {
-  display: none;
-}
-
-body:has(.discover-page-root) .discover-hero-video {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 body:has(.discover-page-root) .discover-hero-overlay {
@@ -71,45 +61,13 @@ body:has(.discover-page-root)
 }
 
 body:has(.discover-page-root) .discover-mood-section {
-  width: 100vw;
-  max-width: none;
-  margin-right: calc(50% - 50vw);
-  margin-left: calc(50% - 50vw);
-}
-
-body:has(.discover-page-root) .discover-mood-section .discover-section-heading {
-  width: min(calc(100% - (var(--discover-page-gutter) * 2)), 1120px);
-  margin-right: auto;
-  margin-left: auto;
-}
-
-body:has(.discover-page-root)
-  .discover-mood-section
-  .curated-playlist-shelf-viewport {
-  width: 100%;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-  overflow: hidden;
-}
-
-body:has(.discover-page-root)
-  .discover-mood-section
-  .curated-playlist-shelf-scroller {
-  padding-right: 0 !important;
-  padding-left: max(
-    var(--discover-page-gutter),
-    calc((100vw - 1120px) / 2)
-  ) !important;
-  scroll-padding-left: max(
-    var(--discover-page-gutter),
-    calc((100vw - 1120px) / 2)
-  );
+  display: none;
 }
 
 body:has(.discover-page-root)
   .discover-mood-section
   + .discover-curated-playlist-section {
-  margin-top: clamp(96px, 9vw, 144px);
+  margin-top: 0;
 }
 
 body:has(.discover-page-root)
@@ -158,7 +116,7 @@ body:has(.discover-page-root)
   justify-content: center;
   margin: 0;
   padding: 20px;
-  color: #fff;
+  color: #fff !important;
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
   font-size: clamp(14px, 1vw, 18px);
   font-weight: 400;
