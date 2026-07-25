@@ -4,132 +4,10 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   content: none !important;
 }
 
-body:has(.discover-page-root) .discover-hero-content {
-  display: block !important;
-  width: 100% !important;
-  max-width: none !important;
-  transform: translateY(-4vh) !important;
-}
-
-body:has(.discover-page-root)
-  .discover-hero-content.has-discover-reference-layout
-  > :not(.discover-reference-hero-mount) {
-  display: none !important;
-  visibility: hidden !important;
-}
-
 .discover-reference-hero-mount,
 .discover-reference-intro-mount,
 .discover-reference-outro-mount {
   width: 100%;
-}
-
-.discover-reference-hero {
-  width: 100%;
-}
-
-.discover-reference-hero-grid {
-  display: grid;
-  grid-template-columns: 34% 40% 26%;
-  align-items: start;
-  gap: 0;
-  padding: 0 clamp(110px, 15vw, 255px);
-  color: #fff;
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-weight: 400;
-}
-
-.discover-reference-hero h1,
-.discover-reference-intro h2,
-.discover-reference-outro h2 {
-  margin: 0;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.discover-reference-hero h1 {
-  font-size: clamp(24px, 1.8vw, 33px);
-  font-weight: 500;
-  letter-spacing: normal;
-  line-height: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.discover-reference-hero h1::before,
-.discover-reference-hero h1::after {
-  display: none !important;
-  content: none !important;
-}
-
-.discover-reference-hero-grid p {
-  margin: 0;
-  color: #fff;
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.discover-reference-hero-grid > p:first-of-type {
-  width: min(100%, 300px);
-  font-size: clamp(9px, 0.68vw, 11px);
-  line-height: 0.95;
-  text-align: left;
-  text-align-last: auto;
-  white-space: nowrap;
-}
-
-.discover-reference-hero-grid > p:last-of-type {
-  max-width: 330px;
-  font-size: clamp(8px, 0.55vw, 9.5px);
-  line-height: 2.05;
-}
-
-.discover-reference-hero-grid strong {
-  display: inline;
-  margin: 0;
-  color: #fff;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(11px, 0.8vw, 14px);
-  font-weight: 500;
-  letter-spacing: normal;
-  line-height: 1.15;
-  text-transform: uppercase;
-}
-
-.discover-reference-search {
-  display: grid;
-  width: min(100%, 680px);
-  height: 50px;
-  grid-template-columns: minmax(0, 1fr) 118px;
-  margin: 30px auto 0;
-  background: #fff;
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
-}
-
-.discover-reference-search input {
-  width: 100%;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: #111;
-  padding: 0 20px;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 12px;
-}
-
-.discover-reference-search button {
-  height: 32px;
-  align-self: center;
-  cursor: pointer;
-  border: 0;
-  background: #111;
-  color: #fff;
-  margin-right: 7px;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 10px;
 }
 
 .discover-reference-intro-mount {
@@ -139,55 +17,74 @@ body:has(.discover-page-root)
 
 .discover-reference-intro {
   position: relative;
-  display: grid;
+  width: 100%;
+  aspect-ratio: 1120 / 520;
   min-height: 520px;
-  grid-template-columns: 34% 38% 28%;
-  align-items: start;
-  column-gap: 0;
-  padding-top: 48px;
   color: #fff;
 }
 
+.discover-reference-intro h2,
+.discover-reference-outro h2 {
+  margin: 0;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.discover-reference-intro-title {
+  position: absolute;
+  top: 10.6%;
+  left: 2.5%;
+  width: 32%;
+}
+
 .discover-reference-intro-title h2 {
-  font-size: clamp(38px, 3.15vw, 48px);
-  letter-spacing: -0.035em;
-  line-height: 0.96;
+  font-size: clamp(36px, 4.3vw, 54px);
+  letter-spacing: -0.045em;
+  line-height: 0.94;
 }
 
 .discover-reference-intro-title p {
-  width: min(100%, 270px);
-  margin: 100px 0 0;
+  width: 270px;
+  margin: 108px 0 0;
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
   font-size: 8px;
-  line-height: 1.5;
+  font-weight: 400;
+  line-height: 1.55;
   text-transform: uppercase;
 }
 
 .discover-reference-intro-center {
-  display: grid;
-  grid-template-rows: 150px auto auto auto;
-  align-items: start;
-  padding-left: 18px;
+  position: absolute;
+  top: 0;
+  left: 39.1%;
+  width: 36.5%;
+  height: 100%;
 }
 
 .discover-reference-intro-center > svg:first-child {
-  width: 34px;
-  height: 34px;
-  margin-top: 14px;
-  justify-self: center;
-  color: rgba(255, 255, 255, 0.82);
+  position: absolute;
+  top: 13.8%;
+  left: 60%;
+  width: 40px;
+  height: 40px;
+  color: rgba(255, 255, 255, 0.78);
+  transform: translateX(-50%);
 }
 
 .discover-reference-pulse-copy {
+  position: absolute;
+  top: 50.2%;
+  left: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
 }
 
 .discover-reference-pulse-copy strong,
 .discover-reference-outro strong {
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 400;
   text-transform: uppercase;
 }
@@ -202,61 +99,52 @@ body:has(.discover-page-root)
 }
 
 .discover-reference-intro-center > svg:nth-of-type(2) {
-  width: 186px;
-  margin-top: 22px;
-  justify-self: end;
-  margin-right: 14px;
+  position: absolute;
+  top: 54.2%;
+  left: 62%;
+  width: 132px;
   color: rgba(255, 255, 255, 0.9);
 }
 
 .discover-reference-intro-center > p {
-  max-width: 350px;
-  margin: 50px 0 0;
+  position: absolute;
+  top: 74.5%;
+  left: 0;
+  width: 350px;
+  max-width: 88%;
+  margin: 0;
   color: rgba(255, 255, 255, 0.8);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1.55;
 }
 
 .discover-reference-orange-panel {
-  position: relative;
-  width: 230px;
-  margin: 16px 0 0;
-  justify-self: end;
-  padding-top: 0;
+  position: absolute;
+  top: 7.3%;
+  left: 74.6%;
+  width: 22%;
+  margin: 0;
+  padding: 0;
 }
 
 .discover-reference-orange-panel > svg:first-child {
-  top: -58px !important;
+  top: -18px !important;
   right: 0 !important;
-  width: 20px !important;
-  height: 190px !important;
+  width: 18px !important;
+  height: 167px !important;
 }
 
 .discover-reference-orange-panel img {
   display: block;
   width: 100%;
-  aspect-ratio: 0.95;
+  aspect-ratio: 246 / 258;
   object-fit: cover;
 }
 
+.discover-reference-orange-panel::after,
 .discover-reference-index {
-  position: absolute;
-  top: -22px;
-  right: 0;
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: 8px;
-  line-height: 1.2;
-}
-
-.discover-reference-orange-panel::after {
-  content: "";
-  position: absolute;
-  top: -10px;
-  right: -1px;
-  width: 1px;
-  height: 74px;
-  background: rgba(255, 255, 255, 0.72);
+  display: none;
 }
 
 .discover-reference-outro-mount {
@@ -344,71 +232,70 @@ body:has(.discover-page-root) .discover-footer-wrap {
   margin-top: 0 !important;
 }
 
-@media (max-width: 1180px) {
-  .discover-reference-hero-grid {
-    grid-template-columns: 32% 38% 30%;
-    padding-right: clamp(48px, 8vw, 96px);
-    padding-left: clamp(48px, 8vw, 96px);
-  }
-
-  .discover-reference-intro {
-    padding-right: 24px;
-    padding-left: 24px;
-  }
-}
-
-@media (max-width: 980px) {
-  .discover-reference-hero-grid {
-    grid-template-columns: 1fr 1fr;
-    column-gap: 48px;
-    row-gap: 28px;
-  }
-
-  .discover-reference-hero-grid > p:last-of-type {
-    grid-column: 2;
-  }
-}
-
 @media (max-width: 900px) {
-  .discover-reference-intro,
+  .discover-reference-intro {
+    display: grid;
+    min-height: 0;
+    aspect-ratio: auto;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding: 48px 24px 0;
+  }
+
+  .discover-reference-intro-title,
+  .discover-reference-intro-center,
+  .discover-reference-orange-panel {
+    position: relative;
+    inset: auto;
+    width: auto;
+    height: auto;
+  }
+
+  .discover-reference-intro-title {
+    grid-column: 1 / -1;
+  }
+
+  .discover-reference-intro-title p {
+    margin-top: 48px;
+  }
+
+  .discover-reference-intro-center {
+    display: grid;
+    gap: 24px;
+  }
+
+  .discover-reference-intro-center > svg:first-child,
+  .discover-reference-pulse-copy,
+  .discover-reference-intro-center > svg:nth-of-type(2),
+  .discover-reference-intro-center > p {
+    position: relative;
+    inset: auto;
+    max-width: 100%;
+    transform: none;
+  }
+
+  .discover-reference-intro-center > svg:first-child {
+    justify-self: start;
+  }
+
+  .discover-reference-intro-center > p {
+    width: auto;
+  }
+
+  .discover-reference-orange-panel {
+    width: min(100%, 300px);
+  }
+
   .discover-reference-outro {
     grid-template-columns: 1fr 1fr;
   }
 
-  .discover-reference-intro-title,
   .discover-reference-outro > div:first-child {
     grid-column: 1 / -1;
   }
 
-  .discover-reference-orange-panel {
-    max-width: 300px;
-  }
-
   .discover-reference-outro > p {
     grid-column: 2;
-  }
-}
-
-@media (max-width: 720px) {
-  .discover-reference-hero-grid {
-    grid-template-columns: 1fr;
-    align-items: start;
-    row-gap: 24px;
-    padding-right: 20px;
-    padding-left: 20px;
-  }
-
-  .discover-reference-hero h1,
-  .discover-reference-hero-grid > p:first-of-type {
-    white-space: normal;
-  }
-
-  .discover-reference-hero-grid > p:first-of-type {
-    width: min(100%, 300px);
-  }
-
-  .discover-reference-hero-grid > p:last-of-type {
-    grid-column: 1;
   }
 }
 
@@ -418,13 +305,7 @@ body:has(.discover-page-root) .discover-footer-wrap {
     grid-template-columns: 1fr;
   }
 
-  .discover-reference-search {
-    grid-template-columns: minmax(0, 1fr) 96px;
-    margin-top: 22px;
-  }
-
   .discover-reference-intro {
-    min-height: 0;
     padding-right: 0;
     padding-left: 0;
   }
@@ -433,25 +314,8 @@ body:has(.discover-page-root) .discover-footer-wrap {
     margin-top: 36px;
   }
 
-  .discover-reference-intro-center {
-    grid-template-rows: auto;
-    gap: 24px;
-    padding-left: 0;
-  }
-
-  .discover-reference-intro-center > svg:first-child {
-    justify-self: start;
-  }
-
-  .discover-reference-intro-center > svg:nth-of-type(2) {
-    justify-self: start;
-    margin-right: 0;
-  }
-
-  .discover-reference-intro-center > p,
   .discover-reference-outro > p {
     grid-column: 1;
-    margin-top: 0;
   }
 
   .discover-reference-orange-panel {
