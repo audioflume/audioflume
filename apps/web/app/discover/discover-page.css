@@ -1,10 +1,14 @@
 body:has(.discover-page-root) .discover-hero {
-  height: auto;
-  min-height: clamp(500px, 69vh, 760px);
+  height: 100svh;
+  min-height: 680px;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.02) 58%, #000 100%),
+    url("https://images.filmwave.io/images/discover/emil-karlsen-zcoPq6ooluE-unsplash.jpg")
+      center center / cover no-repeat;
 }
 
 body:has(.discover-page-root) .discover-hero-image {
-  display: block;
+  display: none;
 }
 
 body:has(.discover-page-root) .discover-hero-overlay {
@@ -167,5 +171,175 @@ body:has(.discover-page-root)
     .discover-curated-playlist-section
     .discover-playlist-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Discover editorial framing */
+body:has(.discover-page-root) .discover-page-root,
+body:has(.discover-page-root) .discover-content {
+  background: #000;
+}
+
+body:has(.discover-page-root) .discover-content {
+  position: relative;
+  color: #fff;
+}
+
+body:has(.discover-page-root) .discover-curated-playlist-section {
+  position: relative;
+  margin-top: clamp(430px, 42vw, 620px) !important;
+}
+
+body:has(.discover-page-root) .discover-curated-playlist-section::before {
+  content: "MORE MUSIC.\A LESS NOISE.";
+  position: absolute;
+  bottom: calc(100% + clamp(190px, 17vw, 260px));
+  left: 0;
+  width: min(42%, 430px);
+  color: #fff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(38px, 5.2vw, 74px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+  white-space: pre-line;
+}
+
+body:has(.discover-page-root) .discover-curated-playlist-section::after {
+  content:
+    "CURATED FOR THE CUT\A HUMAN-PICKED TRACKS, CLEAR MOODS, LESS TIME LOST TO SEARCH.\A\A TRACKS WITH A PULSE\A MUSIC THAT MOVES THE EDIT WITHOUT GETTING IN THE WAY.";
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + clamp(150px, 12vw, 205px));
+  width: min(51%, 570px);
+  min-height: clamp(210px, 21vw, 300px);
+  padding:
+    clamp(24px, 3vw, 42px)
+    clamp(22px, 2.7vw, 38px)
+    clamp(24px, 3vw, 42px)
+    clamp(112px, 12vw, 170px);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23fff' stroke-width='1' opacity='.7'%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3Ccircle cx='60' cy='60' r='4' fill='%23fff'/%3E%3Cpath d='M60 8v32M60 80v32M8 60h32M80 60h32'/%3E%3C/g%3E%3C/svg%3E")
+      20px 30px / 82px 82px no-repeat,
+    linear-gradient(90deg, rgba(255, 75, 35, 0.95) 0 20%, rgba(255, 75, 35, 0) 20%);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-jetbrains-mono-filmwave), monospace;
+  font-size: clamp(8px, 0.62vw, 10px);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+body:has(.discover-page-root) .discover-footer-wrap {
+  position: relative;
+  margin-top: clamp(370px, 37vw, 560px);
+}
+
+body:has(.discover-page-root) .discover-footer-wrap::before {
+  content: "A LITTLE POLISHED,\A A LITTLE STRANGE.";
+  position: absolute;
+  bottom: calc(100% + clamp(150px, 14vw, 220px));
+  left: max(
+    var(--discover-page-gutter, 28px),
+    calc((100vw - 1120px) / 2)
+  );
+  width: min(38vw, 440px);
+  color: #fff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(30px, 4.2vw, 62px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+  white-space: pre-line;
+}
+
+body:has(.discover-page-root) .discover-footer-wrap::after {
+  content:
+    "TRACKS WITH A PULSE\A CURATED TO MOVE WITH THE CUT, NOT FIGHT IT.\A\A LESS DIGGING. BETTER PICKS.\A A FASTER PATH FROM SEARCH TO TIMELINE.";
+  position: absolute;
+  right: max(
+    var(--discover-page-gutter, 28px),
+    calc((100vw - 1120px) / 2)
+  );
+  bottom: calc(100% + clamp(118px, 10vw, 168px));
+  width: min(50vw, 610px);
+  min-height: 210px;
+  padding: 32px 34px 32px 150px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 80'%3E%3Cg fill='none' stroke='%23fff' stroke-width='1.4'%3E%3Cpath d='M5 40h12l6-17 9 39 9-48 10 55 8-45 8 28 8-20 9 8h13'/%3E%3Ccircle cx='116' cy='40' r='17'/%3E%3Ccircle cx='116' cy='40' r='3' fill='%23fff'/%3E%3C/g%3E%3C/svg%3E")
+      18px 48px / 112px 64px no-repeat;
+  color: rgba(255, 255, 255, 0.76);
+  font-family: var(--font-jetbrains-mono-filmwave), monospace;
+  font-size: clamp(8px, 0.62vw, 10px);
+  font-weight: 400;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+@media (max-width: 820px) {
+  body:has(.discover-page-root) .discover-hero {
+    min-height: 620px;
+  }
+
+  body:has(.discover-page-root) .discover-curated-playlist-section {
+    margin-top: 620px !important;
+  }
+
+  body:has(.discover-page-root) .discover-curated-playlist-section::before {
+    bottom: calc(100% + 420px);
+    width: 100%;
+    font-size: clamp(38px, 11vw, 62px);
+  }
+
+  body:has(.discover-page-root) .discover-curated-playlist-section::after {
+    right: auto;
+    bottom: calc(100% + 95px);
+    left: 0;
+    width: 100%;
+    min-height: 270px;
+    padding: 124px 24px 28px;
+    background-position: 22px 24px, 0 0;
+    background-size: 78px 78px, 100% 100%;
+  }
+
+  body:has(.discover-page-root) .discover-footer-wrap {
+    margin-top: 570px;
+  }
+
+  body:has(.discover-page-root) .discover-footer-wrap::before {
+    bottom: calc(100% + 355px);
+    right: var(--discover-page-gutter, 28px);
+    width: auto;
+    font-size: clamp(34px, 10vw, 56px);
+  }
+
+  body:has(.discover-page-root) .discover-footer-wrap::after {
+    bottom: calc(100% + 80px);
+    left: var(--discover-page-gutter, 28px);
+    width: auto;
+    min-height: 240px;
+    padding: 115px 24px 28px;
+    background-position: 20px 28px;
+    background-size: 112px 64px;
+  }
+}
+
+@media (max-width: 560px) {
+  body:has(.discover-page-root) .discover-hero {
+    height: 100svh;
+    min-height: 560px;
+    background-position: 54% center;
+  }
+
+  body:has(.discover-page-root) .discover-curated-playlist-section {
+    margin-top: 570px !important;
+  }
+
+  body:has(.discover-page-root) .discover-footer-wrap {
+    margin-top: 530px;
   }
 }
