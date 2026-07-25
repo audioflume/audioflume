@@ -54,7 +54,7 @@ function EditorialSymbolsGraphic() {
           <rect x="496.14" y="32.91" width="53.74" height="6.2" />
         </g>
         <g>
-          <path d="M771.95,93.35c-30.98,0-56.18-20.78-56.18-46.31S740.97.72,771.95.72s56.18,20.78,56.18,46.31-25.2,46.31-56.18,46.31ZM771.95,5.72c-28.22,0-51.18,18.53-51.18,41.31s22.96,41.31,51.18,41.31,51.18-18.53,51.18-41.31-22.96-41.31-51.18-41.31Z" />
+          <path d="M771.95,93.35c-30.98,0-56.18-20.78-56.18-46.31S740.97.72,771.95.72s56.18,20.78,56.18,46.31-25.2,46.31-56.18,46.31ZM771.95,5.72c-28.22,0-51.18,18.53-51.18,41.31s22.96,41.31,51.18,41.31,51.18-18.53,51.18-41.31S800.17,5.72,771.95,5.72Z" />
           <g>
             <path d="M736.05,80.36l-3.11-3.91c10.53-8.37,24.38-12.98,39.01-12.98s28.49,4.61,39.01,12.98l-3.11,3.91c-9.65-7.67-22.39-11.9-35.9-11.9s-26.25,4.23-35.9,11.9Z" />
             <path d="M771.95,30.6c-14.63,0-28.49-4.61-39.01-12.99l3.11-3.91c9.65,7.67,22.39,11.9,35.9,11.9s26.25-4.23,35.9-11.9l3.11,3.91c-10.53,8.37-24.38,12.98-39.01,12.98Z" />
@@ -134,7 +134,11 @@ function IntroComposition() {
     <section className="discover-reference-intro" aria-label="About Audioflume">
       <div className="discover-reference-intro-title">
         <h2>More music.<br />Less noise.</h2>
-        <p>Uncover curated music playlists<br />Preview audio soundtracks<br />For film</p>
+        <p className="curated-video-hero-primary-copy">
+          <span>Uncover curated music playlists</span>
+          <span>Preview audio soundtracks</span>
+          <span>For film</span>
+        </p>
       </div>
       <div className="discover-reference-intro-center">
         <CrosshairGraphic />
