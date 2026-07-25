@@ -73,11 +73,30 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   top: 50.2%;
   left: 0;
   display: flex;
+  max-width: 330px;
   flex-direction: column;
-  gap: 7px;
+  gap: 4px;
+  align-self: start;
 }
 
-.discover-reference-pulse-copy strong,
+.discover-reference-pulse-copy strong {
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(11px, 0.8vw, 14px);
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.discover-reference-pulse-copy span {
+  font-family: var(--font-jetbrains-mono-filmwave), monospace;
+  font-size: clamp(8px, 0.55vw, 9.5px);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 2.05;
+  text-transform: uppercase;
+}
+
 .discover-reference-outro strong {
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
   font-size: 9px;
@@ -85,7 +104,6 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   text-transform: uppercase;
 }
 
-.discover-reference-pulse-copy span,
 .discover-reference-outro span {
   color: rgba(255, 255, 255, 0.68);
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
