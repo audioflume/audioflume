@@ -68,6 +68,33 @@ function EditorialSymbolsGraphic() {
   );
 }
 
+function YearMarkerGraphic() {
+  return (
+    <svg
+      viewBox="0 0 56.85 527.66"
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        top: "-24px",
+        right: "-2px",
+        zIndex: 2,
+        width: "29px",
+        height: "270px",
+        overflow: "visible",
+      }}
+    >
+      <style>{`.discover-reference-orange-panel::after { display: none !important; }`}</style>
+      <g fill="#fff">
+        <rect x="27.08" y="406.81" width="1.58" height="8.43" /><rect x="27.08" y="420.86" width="1.58" height="8.43" /><rect x="27.08" y="434.92" width="1.58" height="8.43" /><rect x="27.08" y="448.97" width="1.58" height="8.43" /><rect x="27.08" y="463.02" width="1.58" height="8.43" /><rect x="27.08" y="477.07" width="1.58" height="8.43" /><rect x="27.08" y="491.12" width="1.58" height="8.43" /><rect x="27.08" y="505.17" width="1.58" height="8.43" /><rect x="27.08" y="519.23" width="1.58" height="8.43" /><rect x="27.08" y="280.35" width="1.58" height="8.43" /><rect x="27.08" y="294.4" width="1.58" height="8.43" /><rect x="27.08" y="308.45" width="1.58" height="8.43" /><rect x="27.08" y="322.5" width="1.58" height="8.43" /><rect x="27.08" y="336.55" width="1.58" height="8.43" /><rect x="27.08" y="210.09" width="1.58" height="8.43" /><rect x="27.08" y="196.04" width="1.58" height="8.43" /><rect x="27.08" y="224.14" width="1.58" height="8.43" /><rect x="27.08" y="238.19" width="1.58" height="8.43" /><rect x="27.08" y="252.25" width="1.58" height="8.43" /><rect x="27.08" y="266.3" width="1.58" height="8.43" /><rect x="27.08" y="350.61" width="1.58" height="8.43" /><rect x="27.08" y="364.66" width="1.58" height="8.43" /><rect x="27.08" y="378.71" width="1.58" height="8.43" /><rect x="27.08" y="392.76" width="1.58" height="8.43" />
+        <path d="M.71,37.62v-3.39l12.15-13.5c1.09-1.21,2-2.28,2.73-3.21.73-.93,1.31-1.8,1.76-2.6.44-.78.76-1.52.94-2.23.19-.71.28-1.43.28-2.18,0-.92-.15-1.78-.45-2.58s-.73-1.51-1.29-2.1c-.58-.59-1.27-1.07-2.08-1.41s-1.72-.52-2.74-.52c-1.24,0-2.31.18-3.22.54s-1.66.86-2.25,1.5c-.61.66-1.06,1.46-1.36,2.39s-.45,1.98-.45,3.13H0c0-1.56.27-3.04.81-4.42.54-1.38,1.33-2.59,2.37-3.63,1.02-1.04,2.27-1.86,3.76-2.47C8.43.33,10.12.03,12.02.03c1.75,0,3.32.26,4.72.78,1.4.52,2.59,1.24,3.55,2.15.97.92,1.71,2,2.23,3.26.52,1.26.78,2.62.78,4.1,0,1.1-.19,2.2-.56,3.27s-.88,2.14-1.5,3.2c-.65,1.05-1.39,2.09-2.23,3.12-.84,1.03-1.73,2.05-2.66,3.07l-9.96,10.8h18.62v3.85H.71Z" />
+        <path d="M56.03,29.71c-.54,1.83-1.32,3.36-2.34,4.6-1.02,1.26-2.27,2.21-3.74,2.85-1.48.64-3.17.97-5.07.97s-3.57-.32-5.07-.96c-1.5-.64-2.76-1.59-3.79-2.87-1.04-1.24-1.83-2.77-2.37-4.6s-.81-3.92-.81-6.28v-8.68c0-2.36.27-4.45.81-6.28.54-1.82,1.33-3.37,2.37-4.62,1.02-1.26,2.27-2.21,3.76-2.87s3.17-.98,5.05-.98,3.6.33,5.08.98c1.48.65,2.75,1.61,3.78,2.87,1.02,1.26,1.8,2.8,2.34,4.62.54,1.83.81,3.92.81,6.28v8.68c0,2.36-.27,4.45-.81,6.28ZM52.01,11.41c-.14-1.22-.38-2.31-.73-3.25s-.82-1.73-1.41-2.36c-.58-.64-1.29-1.13-2.13-1.45-.84-.32-1.81-.48-2.92-.48s-2.11.17-2.97.52c-.86.35-1.58.85-2.18,1.51-.71.83-1.24,1.91-1.59,3.22-.35,1.32-.52,2.84-.52,4.57v8.79l14.44-11.08ZM52.11,19.18v-3.26l-14.42,11.03c.15,1.24.42,2.33.81,3.27s.9,1.72,1.53,2.33c.58.58,1.27,1.01,2.09,1.31.81.3,1.73.45,2.75.45,1.07,0,2.02-.16,2.85-.48.83-.32,1.54-.79,2.11-1.4.78-.83,1.35-1.92,1.72-3.26.37-1.34.55-2.92.55-4.74v-5.25Z" />
+        <path d="M.71,104.21v-3.39l12.15-13.5c1.09-1.21,2-2.28,2.73-3.21.73-.93,1.31-1.8,1.76-2.6.44-.78.76-1.52.94-2.23.19-.71.28-1.43.28-2.18,0-.92-.15-1.78-.45-2.58s-.73-1.51-1.29-2.1c-.58-.59-1.27-1.07-2.08-1.41s-1.72-.52-2.74-.52c-1.24,0-2.31.18-3.22.54s-1.66.86-2.25,1.5c-.61.66-1.06,1.46-1.36,2.39s-.45,1.98-.45,3.13H0c0-1.56.27-3.04.81-4.42.54-1.38,1.33-2.59,2.37-3.63,1.02-1.04,2.27-1.86,3.76-2.47,1.48-.61,3.18-.92,5.08-.92,1.75,0,3.32.26,4.72.78,1.4.52,2.59,1.24,3.55,2.15.97.92,1.71,2,2.23,3.26.52,1.26.78,2.62.78,4.1,0,1.1-.19,2.2-.56,3.27s-.88,2.14-1.5,3.2c-.65,1.05-1.39,2.09-2.23,3.12-.84,1.03-1.73,2.05-2.66,3.07l-9.96,10.8h18.62v3.85H.71Z" />
+        <path d="M50.94,71.33h-.41c-2.24,0-4.14.32-5.71.96s-2.85,1.49-3.87,2.56c-1.07,1.12-1.88,2.45-2.43,4-.55,1.55-.88,3.13-.98,4.76.44-.53.95-1.01,1.53-1.46.58-.45,1.21-.84,1.88-1.18.66-.32,1.38-.58,2.15-.78.77-.2,1.58-.29,2.43-.29,1.85,0,3.45.35,4.79,1.06,1.34.71,2.45,1.63,3.31,2.79.87,1.15,1.5,2.46,1.91,3.92.41,1.46.61,2.95.61,4.46,0,1.73-.24,3.36-.72,4.89-.48,1.53-1.21,2.86-2.18,4-.97,1.15-2.17,2.06-3.61,2.72-1.43.66-3.09.99-4.98.99s-3.57-.38-5.02-1.15-2.66-1.76-3.64-2.98c-1.11-1.34-1.93-2.91-2.47-4.7-.54-1.79-.82-3.59-.82-5.39v-2.22c0-3.09.37-6.13,1.1-9.12.73-2.99,2.16-5.54,4.28-7.67,1.46-1.46,3.23-2.56,5.32-3.3s4.46-1.11,7.11-1.11h.41v4.23ZM42.46,84.19c-.75.25-1.44.61-2.09,1.07-.64.46-1.21,1.01-1.71,1.66-.49.65-.88,1.36-1.17,2.14v1.58c0,1.63.2,3.08.59,4.34s.92,2.33,1.58,3.2,1.43,1.52,2.29,1.97c.87.45,1.77.67,2.72.67,1.1,0,2.08-.21,2.93-.64s1.57-1.01,2.16-1.76c.58-.75,1.02-1.64,1.31-2.69.3-1.04.45-2.18.45-3.4,0-1.09-.14-2.14-.41-3.17s-.69-1.94-1.25-2.74c-.56-.8-1.26-1.43-2.11-1.91-.85-.47-1.84-.71-2.98-.71-.8,0-1.57.13-2.32.38Z" />
+      </g>
+    </svg>
+  );
+}
+
 function WaveGraphic() {
   return (
     <svg viewBox="0 0 320 50" aria-hidden="true">
@@ -95,13 +122,7 @@ function HeroComposition() {
         <p><strong>(Tailored sound)</strong><br />Music chosen to fit the cut<br />From first frame to final</p>
       </div>
       <form className="discover-reference-search" onSubmit={submit}>
-        <input
-          type="search"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search music library"
-          aria-label="Search music library"
-        />
+        <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search music library" aria-label="Search music library" />
         <button type="submit">Search</button>
       </form>
     </div>
@@ -115,7 +136,6 @@ function IntroComposition() {
         <h2>More music.<br />Less noise.</h2>
         <p>Uncover curated music playlists<br />Preview audio soundtracks<br />For film</p>
       </div>
-
       <div className="discover-reference-intro-center">
         <CrosshairGraphic />
         <div className="discover-reference-pulse-copy">
@@ -123,15 +143,10 @@ function IntroComposition() {
           <span>Motion without the extra noise<br />Music built to move with the cut</span>
         </div>
         <EditorialSymbolsGraphic />
-        <p>
-          A focused library of tracks selected for editors who need the right
-          feeling quickly. Less digging, fewer dead ends, more momentum between
-          the first frame and final cut.
-        </p>
+        <p>A focused library of tracks selected for editors who need the right feeling quickly. Less digging, fewer dead ends, more momentum between the first frame and final cut.</p>
       </div>
-
       <figure className="discover-reference-orange-panel">
-        <span className="discover-reference-index">28<br />28</span>
+        <YearMarkerGraphic />
         <img src={ORANGE_IMAGE} alt="Abstract orange portrait" />
       </figure>
     </section>
@@ -143,20 +158,14 @@ function OutroComposition() {
     <section className="discover-reference-outro" aria-label="Audioflume approach">
       <div>
         <h2>A little polished,<br />a little strange.</h2>
-        <div className="discover-reference-line-graphic" aria-hidden="true">
-          <span />
-        </div>
+        <div className="discover-reference-line-graphic" aria-hidden="true"><span /></div>
       </div>
       <div>
         <strong>(Tracks with a pulse)</strong>
         <span>Curated music for the cut, not the algorithm</span>
         <WaveGraphic />
       </div>
-      <p>
-        A focused library of distinctive tracks, selected for editors who need
-        character without losing momentum. Human choices, useful categories,
-        and a faster path from search to timeline.
-      </p>
+      <p>A focused library of distinctive tracks, selected for editors who need character without losing momentum. Human choices, useful categories, and a faster path from search to timeline.</p>
     </section>
   );
 }
@@ -168,31 +177,22 @@ export default function DiscoverReferenceLayout() {
 
   useLayoutEffect(() => {
     const heroContent = document.querySelector<HTMLElement>(".discover-hero-content");
-    const firstSection = document.querySelector<HTMLElement>(
-      ".discover-curated-playlist-section",
-    );
+    const firstSection = document.querySelector<HTMLElement>(".discover-curated-playlist-section");
     const footer = document.querySelector<HTMLElement>(".discover-footer-wrap");
-
     if (!heroContent || !firstSection || !footer) return;
-
     heroContent.classList.add("has-discover-reference-layout");
-
     const hero = document.createElement("div");
     hero.className = "discover-reference-hero-mount";
     heroContent.appendChild(hero);
-
     const intro = document.createElement("div");
     intro.className = "discover-reference-intro-mount";
     firstSection.insertAdjacentElement("beforebegin", intro);
-
     const outro = document.createElement("div");
     outro.className = "discover-reference-outro-mount";
     footer.insertAdjacentElement("beforebegin", outro);
-
     setHeroMount(hero);
     setIntroMount(intro);
     setOutroMount(outro);
-
     return () => {
       heroContent.classList.remove("has-discover-reference-layout");
       hero.remove();
