@@ -62,17 +62,19 @@ body:has(.discover-page-root) .discover-section-heading h2 {
   text-transform: uppercase;
 }
 
-body:has(.discover-page-root) .discover-content > .discover-section {
+body:has(.discover-page-root)
+  .discover-content
+  > .discover-section:not(.discover-mood-section) {
   width: min(100%, 1120px);
   margin-right: auto;
   margin-left: auto;
 }
 
 body:has(.discover-page-root) .discover-mood-section {
-  width: calc(100% + (var(--discover-page-gutter) * 2));
+  width: 100vw;
   max-width: none;
-  margin-right: calc(var(--discover-page-gutter) * -1);
-  margin-left: calc(var(--discover-page-gutter) * -1);
+  margin-right: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw);
 }
 
 body:has(.discover-page-root) .discover-mood-section .discover-section-heading {
