@@ -157,17 +157,17 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-outro-mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: clamp(150px, 14vw, 230px) auto clamp(110px, 10vw, 165px);
+  margin: clamp(230px, 18vw, 345px) auto clamp(90px, 8vw, 135px);
 }
 
 .discover-reference-outro {
   position: relative;
   display: grid;
-  min-height: clamp(650px, 46vw, 760px);
-  grid-template-columns: 26% 24% minmax(0, 1fr);
+  min-height: 570px;
+  grid-template-columns: 26% 27% minmax(0, 1fr);
   align-items: start;
-  column-gap: 8%;
-  padding-bottom: 150px;
+  column-gap: 6%;
+  padding-bottom: 105px;
   color: #fff;
 }
 
@@ -177,15 +177,15 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-outro h2 {
-  width: 240px;
+  width: 250px;
   max-width: 100%;
-  font-size: clamp(50px, 4.6vw, 68px);
-  letter-spacing: -0.055em;
-  line-height: 0.88;
+  font-size: clamp(36px, 3.2vw, 48px);
+  letter-spacing: -0.045em;
+  line-height: 0.94;
 }
 
 .discover-reference-outro > div:nth-child(2) {
-  padding-top: 5px;
+  padding-top: 2px;
 }
 
 .discover-reference-outro > div:nth-child(2) svg {
@@ -198,7 +198,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   margin: 0;
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(15px, 1.25vw, 18px);
+  font-size: clamp(12px, 0.95vw, 14px);
   font-weight: 300;
   line-height: 1.55;
 }
@@ -209,7 +209,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   bottom: 0 !important;
   left: 0 !important;
   width: auto !important;
-  height: 104px !important;
+  height: 82px !important;
   margin: 0 !important;
   border-bottom: 2px solid rgba(255, 255, 255, 0.94);
 }
@@ -217,10 +217,10 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-line-graphic::before {
   content: "";
   position: absolute;
-  top: 2px;
+  top: 1px;
   left: 0;
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 2v15M24 31v15M2 24h15M31 24h15M8.4 8.4 19 19M29 29l10.6 10.6M39.6 8.4 29 19M19 29 8.4 39.6' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E");
   background-position: center;
   background-repeat: no-repeat;
@@ -230,11 +230,11 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-line-graphic::after {
   content: "AUDIOFLUME";
   position: absolute;
-  top: 11px;
+  top: 10px;
   left: 72px;
   color: #fff;
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: clamp(19px, 1.8vw, 25px);
+  font-size: clamp(18px, 1.55vw, 23px);
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -243,11 +243,11 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-line-graphic span::before {
   content: "MUSIC LIBRARY";
   position: absolute;
-  top: 11px;
-  left: 36%;
+  top: 10px;
+  left: 31%;
   color: #fff;
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: clamp(19px, 1.8vw, 25px);
+  font-size: clamp(18px, 1.55vw, 23px);
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -260,10 +260,10 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   right: 0;
   border: 1.5px solid rgba(255, 255, 255, 0.94);
   border-radius: 999px;
-  padding: 11px 29px 10px;
+  padding: 10px 27px 9px;
   color: #fff;
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: clamp(18px, 1.7vw, 24px);
+  font-size: clamp(17px, 1.5vw, 22px);
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1;
@@ -328,12 +328,16 @@ body:has(.discover-page-root) .discover-footer-wrap {
     width: min(100%, 300px);
   }
 
+  .discover-reference-outro-mount {
+    margin-top: 200px;
+  }
+
   .discover-reference-outro {
-    min-height: 680px;
+    min-height: 620px;
     grid-template-columns: 1fr 1fr;
     column-gap: 48px;
     row-gap: 42px;
-    padding-bottom: 150px;
+    padding-bottom: 130px;
   }
 
   .discover-reference-outro > div:first-child {
@@ -364,10 +368,14 @@ body:has(.discover-page-root) .discover-footer-wrap {
     margin-top: 36px;
   }
 
+  .discover-reference-outro-mount {
+    margin-top: 150px;
+  }
+
   .discover-reference-outro {
-    min-height: 760px;
+    min-height: 720px;
     row-gap: 32px;
-    padding-bottom: 220px;
+    padding-bottom: 200px;
   }
 
   .discover-reference-outro > div:first-child,
