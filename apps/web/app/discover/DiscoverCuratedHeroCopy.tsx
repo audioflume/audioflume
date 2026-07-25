@@ -50,6 +50,22 @@ export default function DiscoverCuratedHeroCopy() {
         />
         <button type="submit">Search</button>
       </form>
+
+      <div className="discover-integrated-values">
+        <div>
+          <strong>Human Curated Music Library</strong>
+          <span>
+            Human-picked tracks, thoughtful moods, and music chosen for real
+            edits.
+          </span>
+        </div>
+        <div>
+          <strong>Thousands of Sound Effects</strong>
+          <span>
+            Thousands of sound effects, textures, and details for richer edits.
+          </span>
+        </div>
+      </div>
     </section>
   );
 }
