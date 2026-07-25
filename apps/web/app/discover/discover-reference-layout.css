@@ -125,13 +125,14 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   position: absolute;
   top: 74.5%;
   left: 0;
-  width: 350px;
-  max-width: 88%;
+  width: 390px;
+  max-width: 96%;
   margin: 0;
   color: rgba(255, 255, 255, 0.8);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.65;
 }
 
 .discover-reference-orange-panel {
