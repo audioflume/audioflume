@@ -9,33 +9,54 @@ const ORANGE_IMAGE =
 
 function CrosshairGraphic() {
   return (
-    <svg viewBox="0 0 80 80" aria-hidden="true">
-      <circle cx="40" cy="40" r="4" />
-      <line x1="40" y1="8" x2="40" y2="72" />
-      <line x1="8" y1="40" x2="72" y2="40" />
+    <svg viewBox="0 0 96 96" aria-hidden="true">
+      <g fill="none" stroke="currentColor" strokeWidth="1">
+        <circle cx="48" cy="48" r="7" />
+        <circle cx="48" cy="48" r="2" fill="currentColor" stroke="none" />
+        <path d="M48 10v25M48 61v25M10 48h25M61 48h25" />
+        <path d="M42 16h12M42 80h12M16 42v12M80 42v12" />
+      </g>
     </svg>
   );
 }
 
-function ControlGraphic() {
+function EditorialSymbolsGraphic() {
   return (
-    <svg viewBox="0 0 180 34" aria-hidden="true">
-      <circle cx="16" cy="17" r="10" />
-      <path d="M12 17h8M16 13v8" />
-      <circle cx="58" cy="17" r="10" />
-      <path d="M54 17h8" />
-      <rect x="92" y="7" width="20" height="20" />
-      <path d="M96 17h12M102 11v12" />
-      <circle cx="150" cy="17" r="10" />
-      <path d="m146 17 3 3 6-7" />
+    <svg viewBox="0 0 214 44" aria-hidden="true">
+      <g fill="none" stroke="currentColor" strokeWidth="1">
+        <g transform="translate(2 2)">
+          <circle cx="20" cy="20" r="15" />
+          <circle cx="20" cy="20" r="4" />
+          <path d="M20 5v7M20 28v7M5 20h7M28 20h7" />
+        </g>
+
+        <g transform="translate(56 2)">
+          <circle cx="20" cy="20" r="15" />
+          <path d="M10 20c4-8 16-8 20 0-4 8-16 8-20 0Z" />
+          <circle cx="20" cy="20" r="2" fill="currentColor" stroke="none" />
+        </g>
+
+        <g transform="translate(110 2)">
+          <rect x="5" y="5" width="30" height="30" />
+          <rect x="13" y="13" width="14" height="14" />
+          <path d="M5 13h8M27 13h8M5 27h8M27 27h8" />
+        </g>
+
+        <g transform="translate(164 2)">
+          <circle cx="20" cy="20" r="15" />
+          <path d="M20 8v24M8 20h24" />
+          <circle cx="20" cy="20" r="6" />
+        </g>
+      </g>
     </svg>
   );
 }
 
 function WaveGraphic() {
   return (
-    <svg viewBox="0 0 290 44" aria-hidden="true">
-      <path d="M2 22h18l5-9 8 18 8-26 9 34 8-17 8 8 8-20 8 24 9-12 8 7 8-18 9 24 8-13 8 8 8-21 9 29 8-16 8 7 8-14 9 19 8-12 8 7 8-9 9 13h23" />
+    <svg viewBox="0 0 320 50" aria-hidden="true">
+      <path d="M1 25h17l4-5 5 10 6-20 7 30 7-18 7 6 7-12 7 19 7-10 7 4 7-16 7 25 7-15 7 8 7-21 7 31 7-20 7 11 7-18 7 25 7-16 7 7 7-13 7 20 7-12 7 5 7-9 7 14 7-8 7 3 7-5h21" />
+      <path d="M1 25h318" opacity="0.22" />
     </svg>
   );
 }
@@ -54,8 +75,18 @@ function HeroComposition() {
     <div className="discover-reference-hero">
       <div className="discover-reference-hero-grid">
         <h1>Endless audio for film</h1>
-        <p>Browse curated music playlists<br />Preview audio + soundtracks</p>
-        <p><strong>(Tailored sound)</strong><br />Music chosen to fit the cut<br />From first frame to final</p>
+        <p>
+          Browse curated music playlists
+          <br />
+          Preview audio + soundtracks
+        </p>
+        <p>
+          <strong>(Tailored sound)</strong>
+          <br />
+          Music chosen to fit the cut
+          <br />
+          From first frame to final
+        </p>
       </div>
       <form className="discover-reference-search" onSubmit={submit}>
         <input
@@ -75,17 +106,31 @@ function IntroComposition() {
   return (
     <section className="discover-reference-intro" aria-label="About Audioflume">
       <div className="discover-reference-intro-title">
-        <h2>More music.<br />Less noise.</h2>
-        <p>Uncover curated music playlists<br />Preview audio soundtracks<br />For film</p>
+        <h2>
+          More music.
+          <br />
+          Less noise.
+        </h2>
+        <p>
+          Uncover curated music playlists
+          <br />
+          Preview audio soundtracks
+          <br />
+          For film
+        </p>
       </div>
 
       <div className="discover-reference-intro-center">
         <CrosshairGraphic />
         <div className="discover-reference-pulse-copy">
           <strong>(Tracks with a pulse)</strong>
-          <span>Motion without the extra noise<br />Music built to move with the cut</span>
+          <span>
+            Motion without the extra noise
+            <br />
+            Music built to move with the cut
+          </span>
         </div>
-        <ControlGraphic />
+        <EditorialSymbolsGraphic />
         <p>
           A focused library of tracks selected for editors who need the right
           feeling quickly. Less digging, fewer dead ends, more momentum between
@@ -94,7 +139,11 @@ function IntroComposition() {
       </div>
 
       <figure className="discover-reference-orange-panel">
-        <span className="discover-reference-index">28<br />28</span>
+        <span className="discover-reference-index">
+          28
+          <br />
+          28
+        </span>
         <img src={ORANGE_IMAGE} alt="Abstract orange portrait" />
       </figure>
     </section>
@@ -105,7 +154,10 @@ function OutroComposition() {
   return (
     <section className="discover-reference-outro" aria-label="Audioflume approach">
       <div>
-        <h2>A little polished,<br />a little strange.</h2>
+        <h2>
+          A little polished,
+          <br />a little strange.
+        </h2>
         <div className="discover-reference-line-graphic" aria-hidden="true">
           <span />
         </div>
@@ -138,6 +190,8 @@ export default function DiscoverReferenceLayout() {
 
     if (!heroContent || !firstSection || !footer) return;
 
+    heroContent.classList.add("has-discover-reference-layout");
+
     const hero = document.createElement("div");
     hero.className = "discover-reference-hero-mount";
     heroContent.appendChild(hero);
@@ -155,6 +209,7 @@ export default function DiscoverReferenceLayout() {
     setOutroMount(outro);
 
     return () => {
+      heroContent.classList.remove("has-discover-reference-layout");
       hero.remove();
       intro.remove();
       outro.remove();
