@@ -9,12 +9,26 @@ const ORANGE_IMAGE =
 
 function CrosshairGraphic() {
   return (
-    <svg viewBox="0 0 96 96" aria-hidden="true">
-      <g fill="none" stroke="currentColor" strokeWidth="1">
-        <circle cx="48" cy="48" r="7" />
-        <circle cx="48" cy="48" r="2" fill="currentColor" stroke="none" />
-        <path d="M48 10v25M48 61v25M10 48h25M61 48h25" />
-        <path d="M42 16h12M42 80h12M16 42v12M80 42v12" />
+    <svg viewBox="0 0 413.74 413.74" aria-hidden="true">
+      <g fill="#fff">
+        <rect x="204.56" width="4.61" height="28.87" />
+        <rect x="204.56" y="48.11" width="4.61" height="28.87" />
+        <rect x="204.56" y="96.22" width="4.61" height="28.87" />
+        <rect x="204.56" y="144.33" width="4.61" height="28.87" />
+        <rect x="204.56" y="192.44" width="4.61" height="28.87" />
+        <rect x="204.56" y="240.55" width="4.61" height="28.87" />
+        <rect x="204.56" y="288.66" width="4.61" height="28.87" />
+        <rect x="204.56" y="336.77" width="4.61" height="28.87" />
+        <rect x="204.56" y="384.87" width="4.61" height="28.87" />
+        <rect x="397" y="192.44" width="4.61" height="28.87" transform="rotate(90 399.305 206.875)" />
+        <rect x="348.89" y="192.44" width="4.61" height="28.87" transform="rotate(90 351.195 206.875)" />
+        <rect x="300.78" y="192.44" width="4.61" height="28.87" transform="rotate(90 303.085 206.875)" />
+        <rect x="252.67" y="192.44" width="4.61" height="28.87" transform="rotate(90 254.975 206.875)" />
+        <rect x="204.56" y="192.44" width="4.61" height="28.87" transform="rotate(90 206.865 206.875)" />
+        <rect x="156.46" y="192.44" width="4.61" height="28.87" transform="rotate(90 158.765 206.875)" />
+        <rect x="108.35" y="192.44" width="4.61" height="28.87" transform="rotate(90 110.655 206.875)" />
+        <rect x="60.24" y="192.44" width="4.61" height="28.87" transform="rotate(90 62.545 206.875)" />
+        <rect x="12.13" y="192.44" width="4.61" height="28.87" transform="rotate(90 14.435 206.875)" />
       </g>
     </svg>
   );
@@ -77,18 +91,8 @@ function HeroComposition() {
     <div className="discover-reference-hero">
       <div className="discover-reference-hero-grid">
         <h1>Endless audio for film</h1>
-        <p>
-          Browse curated music playlists
-          <br />
-          Preview audio + soundtracks
-        </p>
-        <p>
-          <strong>(Tailored sound)</strong>
-          <br />
-          Music chosen to fit the cut
-          <br />
-          From first frame to final
-        </p>
+        <p>Browse curated music playlists<br />Preview audio + soundtracks</p>
+        <p><strong>(Tailored sound)</strong><br />Music chosen to fit the cut<br />From first frame to final</p>
       </div>
       <form className="discover-reference-search" onSubmit={submit}>
         <input
@@ -108,29 +112,15 @@ function IntroComposition() {
   return (
     <section className="discover-reference-intro" aria-label="About Audioflume">
       <div className="discover-reference-intro-title">
-        <h2>
-          More music.
-          <br />
-          Less noise.
-        </h2>
-        <p>
-          Uncover curated music playlists
-          <br />
-          Preview audio soundtracks
-          <br />
-          For film
-        </p>
+        <h2>More music.<br />Less noise.</h2>
+        <p>Uncover curated music playlists<br />Preview audio soundtracks<br />For film</p>
       </div>
 
       <div className="discover-reference-intro-center">
         <CrosshairGraphic />
         <div className="discover-reference-pulse-copy">
           <strong>(Tracks with a pulse)</strong>
-          <span>
-            Motion without the extra noise
-            <br />
-            Music built to move with the cut
-          </span>
+          <span>Motion without the extra noise<br />Music built to move with the cut</span>
         </div>
         <EditorialSymbolsGraphic />
         <p>
@@ -141,11 +131,7 @@ function IntroComposition() {
       </div>
 
       <figure className="discover-reference-orange-panel">
-        <span className="discover-reference-index">
-          28
-          <br />
-          28
-        </span>
+        <span className="discover-reference-index">28<br />28</span>
         <img src={ORANGE_IMAGE} alt="Abstract orange portrait" />
       </figure>
     </section>
@@ -156,10 +142,7 @@ function OutroComposition() {
   return (
     <section className="discover-reference-outro" aria-label="Audioflume approach">
       <div>
-        <h2>
-          A little polished,
-          <br />a little strange.
-        </h2>
+        <h2>A little polished,<br />a little strange.</h2>
         <div className="discover-reference-line-graphic" aria-hidden="true">
           <span />
         </div>
