@@ -8,12 +8,12 @@ export default function DiscoverCuratedHeroCopy() {
 
   useLayoutEffect(() => {
     const syncMount = () => {
-      const hero = document.querySelector<HTMLElement>(".discover-reference-hero");
-      if (!hero || hero.querySelector(".discover-curated-hero-copy-mount")) return;
+      const heroInner = document.querySelector<HTMLElement>(".discover-hero-inner");
+      if (!heroInner || heroInner.querySelector(".discover-curated-hero-copy-mount")) return;
 
       const nextMount = document.createElement("div");
       nextMount.className = "discover-curated-hero-copy-mount";
-      hero.insertBefore(nextMount, hero.firstChild);
+      heroInner.appendChild(nextMount);
       setMount(nextMount);
     };
 
