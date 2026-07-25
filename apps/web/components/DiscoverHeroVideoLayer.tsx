@@ -92,7 +92,7 @@ export default function DiscoverHeroVideoLayer() {
           text-transform: uppercase !important;
         }
 
-        body:has(.discover-page-root) .discover-curated-playlist-section {
+        body:has(.discover-page-root) .discover-content > .discover-section {
           width: min(100%, 1120px) !important;
           margin-right: auto !important;
           margin-left: auto !important;
