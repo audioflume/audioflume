@@ -81,6 +81,110 @@ export default function DiscoverHeroVideoLayer() {
           line-height: 2.05 !important;
           text-transform: uppercase !important;
         }
+
+        body:has(.discover-page-root) .discover-section-heading h2 {
+          font-family: var(--font-aktiv-grotesk), sans-serif !important;
+          font-size: clamp(18px, 1.25vw, 23px) !important;
+          font-weight: 500 !important;
+          font-kerning: normal !important;
+          letter-spacing: 0 !important;
+          line-height: 1 !important;
+          text-transform: uppercase !important;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          column-gap: clamp(24px, 2.4vw, 38px) !important;
+          row-gap: clamp(30px, 3vw, 46px) !important;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-card-shell {
+          position: relative;
+          min-width: 0;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-card {
+          position: relative;
+          display: block;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-image {
+          width: 100% !important;
+          aspect-ratio: 16 / 9 !important;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-card h3 {
+          position: absolute;
+          inset: 0;
+          z-index: 4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 !important;
+          padding: 20px !important;
+          color: #fff !important;
+          font-family: var(--font-jetbrains-mono-filmwave), monospace !important;
+          font-size: clamp(14px, 1vw, 18px) !important;
+          font-weight: 400 !important;
+          font-kerning: normal !important;
+          letter-spacing: 0 !important;
+          line-height: 1.05 !important;
+          text-align: center;
+          text-transform: uppercase !important;
+          white-space: normal !important;
+          pointer-events: none;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-card p {
+          display: none !important;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .playlist-card-menu-wrap {
+          position: absolute !important;
+          top: 12px !important;
+          right: 12px !important;
+          bottom: auto !important;
+          z-index: 6 !important;
+          width: 18px !important;
+          height: 18px !important;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .playlist-menu-btn-grid {
+          color: #fff !important;
+          text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+        }
+
+        @media (max-width: 900px) {
+          body:has(.discover-page-root)
+            .discover-curated-playlist-section
+            .discover-playlist-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+        }
+
+        @media (max-width: 560px) {
+          body:has(.discover-page-root)
+            .discover-curated-playlist-section
+            .discover-playlist-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
 
       <video
