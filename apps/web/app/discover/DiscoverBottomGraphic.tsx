@@ -7,16 +7,37 @@ export default function DiscoverBottomGraphic() {
   const [mount, setMount] = useState<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
-    const outro = document.querySelector<HTMLElement>(".discover-reference-outro");
-    if (!outro) return;
+    let graphicMount: HTMLDivElement | null = null;
 
-    const graphicMount = document.createElement("div");
-    graphicMount.className = "discover-bottom-graphic-mount";
-    outro.appendChild(graphicMount);
-    setMount(graphicMount);
+    const mountGraphic = () => {
+      const outro = document.querySelector<HTMLElement>(".discover-reference-outro");
+      if (!outro || graphicMount) return false;
+
+      graphicMount = document.createElement("div");
+      graphicMount.className = "discover-bottom-graphic-mount";
+      outro.appendChild(graphicMount);
+      setMount(graphicMount);
+      return true;
+    };
+
+    if (mountGraphic()) {
+      return () => {
+        graphicMount?.remove();
+      };
+    }
+
+    const observer = new MutationObserver(() => {
+      if (mountGraphic()) observer.disconnect();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
-      graphicMount.remove();
+      observer.disconnect();
+      graphicMount?.remove();
     };
   }, []);
 
