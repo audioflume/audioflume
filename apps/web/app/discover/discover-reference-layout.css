@@ -12,7 +12,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-intro-mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: 0 auto clamp(130px, 13vw, 210px);
+  margin: 0 auto clamp(110px, 11vw, 180px);
 }
 
 .discover-reference-intro {
