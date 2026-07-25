@@ -20,6 +20,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   align-items: center;
   justify-content: center;
   padding-top: var(--filmwave-header-height, 75px);
+  transform: translateY(-20px);
   pointer-events: none;
 }
 
