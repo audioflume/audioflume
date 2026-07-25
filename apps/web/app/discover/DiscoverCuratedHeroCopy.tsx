@@ -29,7 +29,7 @@ export default function DiscoverCuratedHeroCopy() {
   return createPortal(
     <div className="curated-video-hero discover-curated-hero-copy-shell">
       <div className="curated-video-hero-content discover-curated-hero-copy">
-        <h1>Endless Audio for Film</h1>
+        <h1>Endless Audio</h1>
 
         <p className="curated-video-hero-primary-copy">
           <span>Browse curated music playlists</span>
