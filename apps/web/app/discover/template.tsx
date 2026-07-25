@@ -8,11 +8,11 @@ import "./discover-curated-hero-copy.css";
 
 export default function DiscoverTemplate({ children }: { children: ReactNode }) {
   return (
-    <>
+    <div className="discover-template-shell">
       {children}
-      <DiscoverReferenceLayout />
       <DiscoverCuratedHeroCopy />
+      <DiscoverReferenceLayout />
       <DiscoverBottomGraphic />
-    </>
+    </div>
   );
 }
