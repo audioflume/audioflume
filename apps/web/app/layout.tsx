@@ -13,7 +13,6 @@ import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
 import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import DiscoverDescriptorPills from "@/components/DiscoverDescriptorPills";
-import DiscoverHeroVideoLayer from "@/components/DiscoverHeroVideoLayer";
 import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
 import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
 import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
@@ -110,7 +109,6 @@ export default async function RootLayout({
                       <PlayerRenderer />
                       <IconButtonTitleSync />
                       <DiscoverDescriptorPills />
-                      <DiscoverHeroVideoLayer />
                       <MusicFilterToolbarBehavior />
                       <SideFilterPanelBehavior />
                       <AdminPageHeaderMount />
