@@ -95,29 +95,6 @@ function YearMarkerGraphic() {
   );
 }
 
-function OutroMarkGraphic() {
-  return (
-    <svg
-      className="discover-reference-outro-mark"
-      viewBox="0 0 330 34"
-      aria-hidden="true"
-    >
-      <g
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="1.4"
-      >
-        <path d="M9 2v8M9 16v8M1 13h6M11 13h6M3.5 7.5l3.8 3.8M10.7 14.7l3.8 3.8M14.5 7.5l-3.8 3.8M7.3 14.7l-3.8 3.8" />
-      </g>
-      <text x="24" y="15">AUDIOFLUME</text>
-      <text x="118" y="15">MUSIC LIBRARY</text>
-      <text x="256" y="15">(AF-26-004)</text>
-      <line x1="0" y1="29" x2="330" y2="29" />
-    </svg>
-  );
-}
-
 function HeroComposition() {
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -176,11 +153,16 @@ function OutroComposition() {
     <section className="discover-reference-outro" aria-label="Audioflume approach">
       <div className="discover-reference-outro-title">
         <h2>A little polished,<br />a little strange.</h2>
-        <OutroMarkGraphic />
+        <img
+          className="discover-reference-outro-mark"
+          src="/images/discover/audioflume-bottom-mark.svg"
+          alt=""
+          aria-hidden="true"
+        />
       </div>
       <div className="discover-reference-outro-pulse">
         <strong>(Tracks with a pulse)</strong>
-        <span>Curated music for the cut, not the algorithm</span>
+        <span>Curated music for the cut,<br />not the algorithm</span>
       </div>
       <p className="discover-reference-outro-description">A focused library of distinctive tracks, selected for editors who need character without losing momentum. Human choices, useful categories, and a faster path from search to timeline.</p>
     </section>
