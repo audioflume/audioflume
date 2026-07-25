@@ -87,27 +87,20 @@ body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-viewport {
   width: 100%;
-  margin-right: 0;
-  margin-left: 0;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
   overflow: hidden;
 }
 
 body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-scroller {
-  padding-right: 0;
-  padding-left: 0;
-  scroll-padding-left: max(
+  padding-right: 0 !important;
+  padding-left: max(
     var(--discover-page-gutter),
     calc((100vw - 1120px) / 2)
-  );
-}
-
-body:has(.discover-page-root)
-  .discover-mood-section
-  .curated-playlist-shelf-scroller
-  > .discover-mood-card:first-child {
-  margin-left: max(
+  ) !important;
+  scroll-padding-left: max(
     var(--discover-page-gutter),
     calc((100vw - 1120px) / 2)
   );
