@@ -204,23 +204,20 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-line-graphic {
-  position: absolute !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  width: auto !important;
-  height: 82px !important;
-  margin: 0 !important;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.94);
+  position: relative;
+  width: 100%;
+  height: 24px;
+  margin-top: 52px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.72);
 }
 
 .discover-reference-line-graphic::before {
   content: "";
   position: absolute;
-  top: 1px;
+  top: 3px;
   left: 0;
-  width: 42px;
-  height: 42px;
+  width: 12px;
+  height: 12px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 2v15M24 31v15M2 24h15M31 24h15M8.4 8.4 19 19M29 29l10.6 10.6M39.6 8.4 29 19M19 29 8.4 39.6' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E");
   background-position: center;
   background-repeat: no-repeat;
@@ -230,11 +227,11 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-line-graphic::after {
   content: "AUDIOFLUME";
   position: absolute;
-  top: 10px;
-  left: 72px;
-  color: #fff;
+  top: 5px;
+  left: 22px;
+  color: rgba(255, 255, 255, 0.86);
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: clamp(18px, 1.55vw, 23px);
+  font-size: 7px;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -243,27 +240,29 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-line-graphic span::before {
   content: "MUSIC LIBRARY";
   position: absolute;
-  top: 10px;
-  left: 31%;
-  color: #fff;
+  top: 5px;
+  left: 49%;
+  color: rgba(255, 255, 255, 0.86);
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: clamp(18px, 1.55vw, 23px);
+  font-size: 7px;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .discover-reference-line-graphic span::after {
   content: "AF-26-004";
   position: absolute;
-  top: 0;
+  top: 1px;
   right: 0;
-  border: 1.5px solid rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: 999px;
-  padding: 10px 27px 9px;
-  color: #fff;
+  padding: 3px 7px 2px;
+  color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: clamp(17px, 1.5vw, 22px);
+  font-size: 6.5px;
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1;
@@ -347,10 +346,6 @@ body:has(.discover-page-root) .discover-footer-wrap {
   .discover-reference-outro > p {
     grid-column: 2;
   }
-
-  .discover-reference-line-graphic span::before {
-    left: 40%;
-  }
 }
 
 @media (max-width: 620px) {
@@ -385,28 +380,6 @@ body:has(.discover-page-root) .discover-footer-wrap {
 
   .discover-reference-outro h2 {
     width: min(100%, 250px);
-  }
-
-  .discover-reference-line-graphic {
-    height: 180px !important;
-  }
-
-  .discover-reference-line-graphic::after {
-    top: 9px;
-    left: 58px;
-    font-size: 17px;
-  }
-
-  .discover-reference-line-graphic span::before {
-    top: 72px;
-    left: 0;
-    font-size: 17px;
-  }
-
-  .discover-reference-line-graphic span::after {
-    top: 58px;
-    font-size: 15px;
-    padding: 9px 16px 8px;
   }
 
   .discover-reference-orange-panel {
