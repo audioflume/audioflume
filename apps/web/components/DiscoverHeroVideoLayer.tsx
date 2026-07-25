@@ -28,6 +28,11 @@ export default function DiscoverHeroVideoLayer() {
   return createPortal(
     <>
       <style>{`
+        body:has(.discover-page-root) .discover-hero {
+          height: 100svh !important;
+          min-height: 100svh !important;
+        }
+
         body:has(.discover-page-root) .discover-hero-image {
           display: none !important;
         }
