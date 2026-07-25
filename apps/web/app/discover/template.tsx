@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import DiscoverBottomGraphic from "./DiscoverBottomGraphic";
 import DiscoverCuratedHeroCopy from "./DiscoverCuratedHeroCopy";
 import DiscoverReferenceLayout from "./DiscoverReferenceLayout";
 import "../curated-playlists/curated-video-hero.css";
@@ -12,7 +11,6 @@ export default function DiscoverTemplate({ children }: { children: ReactNode }) 
       {children}
       <DiscoverCuratedHeroCopy />
       <DiscoverReferenceLayout />
-      <DiscoverBottomGraphic />
     </div>
   );
 }
