@@ -115,8 +115,9 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-intro-center > svg:nth-of-type(2) {
   position: absolute;
   top: 56.5%;
-  left: 68%;
-  width: 132px;
+  left: 71%;
+  z-index: 3;
+  width: 144px;
   color: rgba(255, 255, 255, 0.9);
 }
 
@@ -129,7 +130,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   margin: 0;
   color: rgba(255, 255, 255, 0.8);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.55;
 }
 
@@ -143,10 +144,10 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-orange-panel > svg:first-child {
-  top: -18px !important;
-  right: 0 !important;
-  width: 18px !important;
-  height: 167px !important;
+  top: -28px !important;
+  right: 10px !important;
+  width: 15px !important;
+  height: 140px !important;
 }
 
 .discover-reference-orange-panel img {
