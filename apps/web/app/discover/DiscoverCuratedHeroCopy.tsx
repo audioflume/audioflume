@@ -2,6 +2,7 @@
 
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import SearchIcon from "@/components/icons/SearchIcon";
 
 export default function DiscoverCuratedHeroCopy() {
   const router = useRouter();
@@ -41,6 +42,9 @@ export default function DiscoverCuratedHeroCopy() {
       </div>
 
       <form className="discover-integrated-search" onSubmit={handleSubmit}>
+        <span className="discover-integrated-search-icon" aria-hidden="true">
+          <SearchIcon size={15} />
+        </span>
         <input
           type="search"
           value={search}
