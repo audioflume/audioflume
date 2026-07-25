@@ -50,6 +50,34 @@ function parseStems(value: string | null): StemItem[] {
     .filter((item): item is StemItem => Boolean(item));
 }
 
+function inferStreamingUrls(audioUrl: string) {
+  try {
+    const url = new URL(audioUrl);
+    const pathParts = url.pathname.split("/").filter(Boolean);
+    const audioIndex = pathParts.indexOf("audio");
+
+    if (audioIndex <= 1) {
+      return {
+        playbackUrl: "",
+        hlsUrl: "",
+      };
+    }
+
+    const basePath = pathParts.slice(0, audioIndex).join("/");
+    const origin = `${url.origin}/`;
+
+    return {
+      playbackUrl: `${origin}${basePath}/playback/preview.mp3`,
+      hlsUrl: `${origin}${basePath}/hls/index.m3u8`,
+    };
+  } catch {
+    return {
+      playbackUrl: "",
+      hlsUrl: "",
+    };
+  }
+}
+
 function emptyEditPoints() {
   return JSON.stringify({ markers: [], ranges: [] });
 }
@@ -83,6 +111,12 @@ function editPointRowsToJson(rows: SongEditPointRow[] = []) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeSongRow(row: any): Song {
   const audioUrl = String(row.audio_url || "");
+  const storedPlaybackUrl = String(row.playback_url || "");
+  const storedHlsUrl = String(row.hls_url || "");
+  const hasStreamingAssets = Boolean(storedPlaybackUrl || storedHlsUrl);
+  const inferredStreamingUrls = hasStreamingAssets
+    ? inferStreamingUrls(audioUrl)
+    : { playbackUrl: "", hlsUrl: "" };
   const sizeBytes = Number(row.size_bytes || 0) || undefined;
 
   return {
@@ -90,8 +124,9 @@ export function normalizeSongRow(row: any): Song {
     title: String(row.title || ""),
     artist: String(row.artist || ""),
     audioUrl,
-    playbackUrl: String(row.playback_url || audioUrl),
-    hlsUrl: String(row.hls_url || ""),
+    playbackUrl:
+      inferredStreamingUrls.playbackUrl || storedPlaybackUrl || audioUrl,
+    hlsUrl: inferredStreamingUrls.hlsUrl || storedHlsUrl,
     coverArt: row.cover_url ? String(row.cover_url) : null,
     stems: parseStems(row.stems),
     waveformPeaks: String(row.waveform_peaks || "[]"),
