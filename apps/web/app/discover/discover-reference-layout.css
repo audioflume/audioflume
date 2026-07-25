@@ -11,9 +11,10 @@ body:has(.discover-page-root) .discover-hero-content {
 }
 
 body:has(.discover-page-root)
-  .discover-hero-content
+  .discover-hero-content.has-discover-reference-layout
   > :not(.discover-reference-hero-mount) {
   display: none !important;
+  visibility: hidden !important;
 }
 
 .discover-reference-hero-mount,
@@ -40,20 +41,26 @@ body:has(.discover-page-root)
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-weight: 500;
-  letter-spacing: -0.045em;
   text-transform: uppercase;
 }
 
 .discover-reference-hero h1 {
-  font-size: clamp(17px, 1.35vw, 24px);
+  font-size: clamp(18px, 1.25vw, 23px);
+  font-weight: 500;
+  font-kerning: normal;
+  letter-spacing: 0;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 .discover-reference-hero-grid p {
+  max-width: 620px;
   margin: 0;
-  color: rgba(255, 255, 255, 0.84);
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: clamp(7px, 0.5vw, 9px);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: "JetBrains Mono Filmwave", var(--font-jetbrains-mono-filmwave), monospace;
+  font-size: clamp(8px, 0.55vw, 9.5px);
+  font-weight: 400;
+  letter-spacing: 0;
   line-height: 1.55;
   text-transform: uppercase;
 }
@@ -113,6 +120,7 @@ body:has(.discover-page-root)
 
 .discover-reference-intro-title h2 {
   font-size: clamp(42px, 4.25vw, 64px);
+  letter-spacing: -0.045em;
   line-height: 0.92;
 }
 
@@ -131,12 +139,10 @@ body:has(.discover-page-root)
 }
 
 .discover-reference-intro-center > svg:first-child {
-  width: 70px;
-  height: 70px;
+  width: 76px;
+  height: 76px;
   justify-self: center;
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.72);
-  stroke-width: 1;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .discover-reference-pulse-copy {
@@ -163,11 +169,9 @@ body:has(.discover-page-root)
 }
 
 .discover-reference-intro-center > svg:nth-of-type(2) {
-  width: 180px;
-  margin-top: 16px;
-  fill: none;
-  stroke: #fff;
-  stroke-width: 1;
+  width: 214px;
+  margin-top: 18px;
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .discover-reference-intro-center > p {
@@ -228,6 +232,7 @@ body:has(.discover-page-root)
 
 .discover-reference-outro h2 {
   font-size: clamp(34px, 3.2vw, 48px);
+  letter-spacing: -0.045em;
   line-height: 0.95;
 }
 
