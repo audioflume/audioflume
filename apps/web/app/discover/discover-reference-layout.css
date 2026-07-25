@@ -57,6 +57,12 @@ body:has(.discover-page-root)
   white-space: nowrap;
 }
 
+.discover-reference-hero h1::before,
+.discover-reference-hero h1::after {
+  display: none !important;
+  content: none !important;
+}
+
 .discover-reference-hero-grid p {
   margin: 0;
   color: #fff;
@@ -70,8 +76,9 @@ body:has(.discover-page-root)
   width: min(100%, 300px);
   font-size: clamp(9px, 0.68vw, 11px);
   line-height: 0.95;
-  text-align: justify;
-  text-align-last: justify;
+  text-align: left;
+  text-align-last: auto;
+  white-space: nowrap;
 }
 
 .discover-reference-hero-grid > p:last-of-type {
@@ -81,8 +88,8 @@ body:has(.discover-page-root)
 }
 
 .discover-reference-hero-grid strong {
-  display: block;
-  margin-bottom: 4px;
+  display: inline;
+  margin: 0;
   color: #fff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(11px, 0.8vw, 14px);
@@ -372,7 +379,8 @@ body:has(.discover-page-root) .discover-footer-wrap {
     padding-left: 20px;
   }
 
-  .discover-reference-hero h1 {
+  .discover-reference-hero h1,
+  .discover-reference-hero-grid > p:first-of-type {
     white-space: normal;
   }
 
