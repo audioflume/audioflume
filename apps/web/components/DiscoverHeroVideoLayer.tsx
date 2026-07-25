@@ -63,11 +63,22 @@ export default function DiscoverHeroVideoLayer() {
           text-transform: uppercase !important;
         }
 
-        body:has(.discover-page-root) .discover-hero-values strong,
+        body:has(.discover-page-root) .discover-hero-values strong {
+          font-family: var(--font-aktiv-grotesk), sans-serif !important;
+          font-size: clamp(11px, 0.8vw, 14px) !important;
+          font-weight: 500 !important;
+          letter-spacing: normal !important;
+          line-height: 1.15 !important;
+          text-transform: uppercase !important;
+        }
+
         body:has(.discover-page-root) .discover-hero-values span {
+          color: rgba(255, 255, 255, 0.72) !important;
           font-family: var(--font-jetbrains-mono-filmwave), monospace !important;
-          font-size: 10.5px !important;
+          font-size: clamp(8px, 0.55vw, 9.5px) !important;
+          font-weight: 400 !important;
           letter-spacing: 0 !important;
+          line-height: 2.05 !important;
           text-transform: uppercase !important;
         }
       `}</style>
