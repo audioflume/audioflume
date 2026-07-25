@@ -3,19 +3,23 @@ body:has(.discover-page-root) .discover-reference-hero-grid {
 }
 
 .discover-curated-hero-copy-mount {
-  width: 100%;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
 }
 
 .discover-curated-hero-copy.curated-video-hero-content {
-  position: static;
-  inset: auto;
-  width: 100%;
-  padding-top: 0;
-  padding-bottom: 0;
+  pointer-events: none;
 }
 
-@media (max-width: 980px) {
-  .discover-curated-hero-copy.curated-video-hero-content {
-    position: static;
-  }
+body:has(.discover-page-root) .discover-reference-hero {
+  position: relative;
+  z-index: 4;
+}
+
+body:has(.discover-page-root) .discover-reference-search {
+  position: relative;
+  z-index: 5;
+  pointer-events: auto;
 }
