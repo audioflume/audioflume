@@ -19,6 +19,7 @@ import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
 import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
 import "./music-library-web-refinements.css";
+import "./discover/discover-page.css";
 import "../components/admin/AdminPageLayout.css";
 import "../../../packages/shared/styles/music-sort-button-width.css";
 import "../../../packages/shared/styles/playlist-library.css";
