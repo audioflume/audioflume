@@ -13,6 +13,12 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
   background: #000 !important;
 }
 
+body:has(.curated-playlists-page-root)
+  .curated-playlists-page-layer
+  .mb-6.grid {
+  margin-top: clamp(48px, 5vw, 72px) !important;
+}
+
 .curated-video-hero {
   position: absolute;
   inset: 0;
