@@ -95,11 +95,25 @@ function YearMarkerGraphic() {
   );
 }
 
-function WaveGraphic() {
+function OutroMarkGraphic() {
   return (
-    <svg viewBox="0 0 320 50" aria-hidden="true">
-      <path d="M1 25h17l4-5 5 10 6-20 7 30 7-18 7 6 7-12 7 19 7-10 7 4 7-16 7 25 7-15 7 8 7-21 7 31 7-20 7 11 7-18 7 25 7-16 7 7 7-13 7 20 7-12 7 5 7-9 7 14 7-8 7 3 7-5h21" />
-      <path d="M1 25h318" opacity="0.22" />
+    <svg
+      className="discover-reference-outro-mark"
+      viewBox="0 0 330 34"
+      aria-hidden="true"
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.4"
+      >
+        <path d="M9 2v8M9 16v8M1 13h6M11 13h6M3.5 7.5l3.8 3.8M10.7 14.7l3.8 3.8M14.5 7.5l-3.8 3.8M7.3 14.7l-3.8 3.8" />
+      </g>
+      <text x="24" y="15">AUDIOFLUME</text>
+      <text x="118" y="15">MUSIC LIBRARY</text>
+      <text x="256" y="15">(AF-26-004)</text>
+      <line x1="0" y1="29" x2="330" y2="29" />
     </svg>
   );
 }
@@ -160,16 +174,15 @@ function IntroComposition() {
 function OutroComposition() {
   return (
     <section className="discover-reference-outro" aria-label="Audioflume approach">
-      <div>
+      <div className="discover-reference-outro-title">
         <h2>A little polished,<br />a little strange.</h2>
-        <div className="discover-reference-line-graphic" aria-hidden="true"><span /></div>
+        <OutroMarkGraphic />
       </div>
-      <div>
+      <div className="discover-reference-outro-pulse">
         <strong>(Tracks with a pulse)</strong>
         <span>Curated music for the cut, not the algorithm</span>
-        <WaveGraphic />
       </div>
-      <p>A focused library of distinctive tracks, selected for editors who need character without losing momentum. Human choices, useful categories, and a faster path from search to timeline.</p>
+      <p className="discover-reference-outro-description">A focused library of distinctive tracks, selected for editors who need character without losing momentum. Human choices, useful categories, and a faster path from search to timeline.</p>
     </section>
   );
 }
