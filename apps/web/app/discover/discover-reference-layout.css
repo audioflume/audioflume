@@ -163,16 +163,18 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-outro {
   display: grid;
   min-height: 410px;
-  grid-template-columns: 26% 25% 33%;
-  align-items: start;
-  column-gap: 8%;
+  grid-template-columns: 34% 24% 34%;
+  align-items: stretch;
+  column-gap: 4%;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: clamp(64px, 5.5vw, 82px) 0 clamp(115px, 9vw, 155px);
   color: #fff;
 }
 
 .discover-reference-outro-title {
+  display: flex;
   min-width: 0;
+  flex-direction: column;
 }
 
 .discover-reference-outro h2 {
@@ -187,14 +189,15 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-outro-mark {
   display: block;
   width: 100%;
-  max-width: 380px;
+  max-width: none;
   height: auto;
-  margin-top: clamp(72px, 6vw, 92px);
+  margin-top: auto;
 }
 
 .discover-reference-outro-pulse,
 .discover-reference-outro-description {
-  padding-top: clamp(116px, 8vw, 132px);
+  align-self: end;
+  padding-top: 0;
 }
 
 .discover-reference-outro-pulse {
@@ -297,7 +300,7 @@ body:has(.discover-page-root) .discover-footer-wrap {
 
   .discover-reference-outro-pulse,
   .discover-reference-outro-description {
-    padding-top: 0;
+    align-self: start;
   }
 
   .discover-reference-outro-pulse {
