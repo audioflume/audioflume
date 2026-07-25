@@ -114,8 +114,8 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-intro-center > svg:nth-of-type(2) {
   position: absolute;
-  top: 54.2%;
-  left: 62%;
+  top: 56.5%;
+  left: 68%;
   width: 132px;
   color: rgba(255, 255, 255, 0.9);
 }
@@ -129,7 +129,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   margin: 0;
   color: rgba(255, 255, 255, 0.8);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.55;
 }
 
