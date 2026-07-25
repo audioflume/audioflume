@@ -112,8 +112,12 @@ export async function POST(req: Request) {
     const folder = getFolderForType(type);
     const timestamp = Date.now();
     const fileName = getFileNameForType(file, type);
+    const versionedBaseKey = `${artistSlug}/${titleSlug}/${timestamp}`;
 
-    const key = `${artistSlug}/${titleSlug}/${folder}/${timestamp}-${fileName}`;
+    const key =
+      type === "audio"
+        ? `${versionedBaseKey}/${folder}/${fileName}`
+        : `${artistSlug}/${titleSlug}/${folder}/${timestamp}-${fileName}`;
 
     const url = await uploadFileToR2({
       file,
@@ -124,7 +128,7 @@ export async function POST(req: Request) {
       type === "audio"
         ? await processAudioForStreaming({
             file,
-            baseKey: `${artistSlug}/${titleSlug}`,
+            baseKey: versionedBaseKey,
           })
         : null;
 
