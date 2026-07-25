@@ -26,6 +26,13 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     margin-top: clamp(132px, calc(9vw + 40px), 184px) !important;
   }
 
+  body:has(.curated-playlists-page-root)
+    .curated-playlists-page-layer
+    > div
+    > .mt-10:last-child {
+    margin-bottom: clamp(120px, 10vw, 180px) !important;
+  }
+
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
     margin-right: 0 !important;
     margin-left: 0 !important;
