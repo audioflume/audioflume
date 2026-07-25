@@ -92,12 +92,24 @@ export default function DiscoverHeroVideoLayer() {
           text-transform: uppercase !important;
         }
 
+        body:has(.discover-page-root) .discover-curated-playlist-section {
+          width: min(100%, 1120px) !important;
+          margin-right: auto !important;
+          margin-left: auto !important;
+        }
+
         body:has(.discover-page-root)
           .discover-curated-playlist-section
           .discover-playlist-grid {
           grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
           column-gap: clamp(24px, 2.4vw, 38px) !important;
           row-gap: clamp(30px, 3vw, 46px) !important;
+        }
+
+        body:has(.discover-page-root)
+          .discover-curated-playlist-section
+          .discover-playlist-card-shell:nth-child(n + 10) {
+          display: none !important;
         }
 
         body:has(.discover-page-root)
