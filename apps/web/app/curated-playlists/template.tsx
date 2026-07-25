@@ -6,8 +6,24 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) .curated-playlist-shelf {
     width: min(100%, 1120px);
     margin-right: auto;
-    margin-bottom: clamp(64px, 7vw, 110px);
+    margin-bottom: 0;
     margin-left: auto;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-playlists-page-layer
+    > div
+    > .curated-featured-playlist
+    + .mt-10 {
+    margin-top: clamp(104px, calc(7vw + 40px), 150px) !important;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-playlists-page-layer
+    > div
+    > .mt-10
+    + .mt-10 {
+    margin-top: clamp(132px, calc(9vw + 40px), 184px) !important;
   }
 
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
