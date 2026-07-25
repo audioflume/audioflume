@@ -76,7 +76,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-pulse-copy,
-.discover-reference-outro > div:nth-child(2) {
+.discover-reference-outro-pulse {
   display: flex;
   max-width: 330px;
   flex-direction: column;
@@ -84,7 +84,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-pulse-copy strong,
-.discover-reference-outro > div:nth-child(2) strong {
+.discover-reference-outro-pulse strong {
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 500;
@@ -94,7 +94,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-pulse-copy span,
-.discover-reference-outro > div:nth-child(2) span {
+.discover-reference-outro-pulse span {
   color: rgba(255, 255, 255, 0.76);
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
   font-size: clamp(8px, 0.55vw, 9.5px);
@@ -161,18 +161,15 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-outro {
-  position: relative;
   display: grid;
-  min-height: 570px;
+  min-height: 330px;
   grid-template-columns: 26% 27% minmax(0, 1fr);
   align-items: start;
   column-gap: 6%;
-  padding-bottom: 105px;
   color: #fff;
 }
 
-.discover-reference-outro > div:first-child {
-  position: static;
+.discover-reference-outro-title {
   min-width: 0;
 }
 
@@ -184,15 +181,33 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   line-height: 0.94;
 }
 
-.discover-reference-outro > div:nth-child(2) {
+.discover-reference-outro-mark {
+  display: block;
+  width: min(100%, 230px);
+  height: auto;
+  margin-top: 52px;
+  overflow: visible;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.discover-reference-outro-mark text {
+  fill: currentColor;
+  font-family: var(--font-jetbrains-mono-filmwave), monospace;
+  font-size: 7px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.discover-reference-outro-mark line {
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.discover-reference-outro-pulse {
   padding-top: 2px;
 }
 
-.discover-reference-outro > div:nth-child(2) svg {
-  display: none;
-}
-
-.discover-reference-outro > p {
+.discover-reference-outro-description {
   width: 100%;
   max-width: 500px;
   margin: 0;
@@ -201,72 +216,6 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   font-size: clamp(12px, 0.95vw, 14px);
   font-weight: 300;
   line-height: 1.55;
-}
-
-.discover-reference-line-graphic {
-  position: relative;
-  width: 100%;
-  height: 24px;
-  margin-top: 52px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.72);
-}
-
-.discover-reference-line-graphic::before {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 0;
-  width: 12px;
-  height: 12px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 2v15M24 31v15M2 24h15M31 24h15M8.4 8.4 19 19M29 29l10.6 10.6M39.6 8.4 29 19M19 29 8.4 39.6' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.discover-reference-line-graphic::after {
-  content: "AUDIOFLUME";
-  position: absolute;
-  top: 5px;
-  left: 22px;
-  color: rgba(255, 255, 255, 0.86);
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: 7px;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1;
-}
-
-.discover-reference-line-graphic span::before {
-  content: "MUSIC LIBRARY";
-  position: absolute;
-  top: 5px;
-  left: 49%;
-  color: rgba(255, 255, 255, 0.86);
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: 7px;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-
-.discover-reference-line-graphic span::after {
-  content: "AF-26-004";
-  position: absolute;
-  top: 1px;
-  right: 0;
-  border: 1px solid rgba(255, 255, 255, 0.82);
-  border-radius: 999px;
-  padding: 3px 7px 2px;
-  color: rgba(255, 255, 255, 0.9);
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
-  font-size: 6.5px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  white-space: nowrap;
 }
 
 body:has(.discover-page-root) .discover-footer-wrap {
@@ -332,18 +281,17 @@ body:has(.discover-page-root) .discover-footer-wrap {
   }
 
   .discover-reference-outro {
-    min-height: 620px;
+    min-height: 420px;
     grid-template-columns: 1fr 1fr;
     column-gap: 48px;
     row-gap: 42px;
-    padding-bottom: 130px;
   }
 
-  .discover-reference-outro > div:first-child {
+  .discover-reference-outro-title {
     grid-column: 1;
   }
 
-  .discover-reference-outro > p {
+  .discover-reference-outro-description {
     grid-column: 2;
   }
 }
@@ -368,13 +316,12 @@ body:has(.discover-page-root) .discover-footer-wrap {
   }
 
   .discover-reference-outro {
-    min-height: 720px;
+    min-height: 0;
     row-gap: 32px;
-    padding-bottom: 200px;
   }
 
-  .discover-reference-outro > div:first-child,
-  .discover-reference-outro > p {
+  .discover-reference-outro-title,
+  .discover-reference-outro-description {
     grid-column: 1;
   }
 
