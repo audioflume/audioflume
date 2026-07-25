@@ -27,22 +27,24 @@ export default function DiscoverCuratedHeroCopy() {
   if (!mount) return null;
 
   return createPortal(
-    <div className="curated-video-hero-content discover-curated-hero-copy">
-      <h1>Endless Audio for Film</h1>
+    <div className="curated-video-hero discover-curated-hero-copy-shell">
+      <div className="curated-video-hero-content discover-curated-hero-copy">
+        <h1>Endless Audio for Film</h1>
 
-      <p className="curated-video-hero-primary-copy">
-        <span>Browse curated music playlists</span>
-        <span>Preview audio soundtracks</span>
-        <span>For film</span>
-      </p>
+        <p className="curated-video-hero-primary-copy">
+          <span>Browse curated music playlists</span>
+          <span>Preview audio soundtracks</span>
+          <span>For film</span>
+        </p>
 
-      <div className="curated-video-hero-secondary-copy">
-        <strong>(Tailored Sound)</strong>
-        <span>
-          Music chosen to fit the cut
-          <br />
-          From first frame to final
-        </span>
+        <div className="curated-video-hero-secondary-copy">
+          <strong>(Tailored Sound)</strong>
+          <span>
+            Music chosen to fit the cut
+            <br />
+            From first frame to final
+          </span>
+        </div>
       </div>
     </div>,
     mount,
