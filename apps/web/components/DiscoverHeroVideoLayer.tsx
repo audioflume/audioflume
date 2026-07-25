@@ -60,7 +60,7 @@ export default function DiscoverHeroVideoLayer() {
           font-weight: 500 !important;
           letter-spacing: normal !important;
           line-height: 1 !important;
-          text-transform: uppercase !important;
+          text-transform: none !important;
         }
 
         body:has(.discover-page-root) .discover-hero-values strong {
