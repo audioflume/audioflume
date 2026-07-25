@@ -55,12 +55,7 @@ export default function DiscoverHeroVideoLayer() {
         }
 
         body:has(.discover-page-root) .discover-hero-content h1 {
-          font-family: var(--font-aktiv-grotesk), sans-serif !important;
-          font-size: clamp(24px, 1.8vw, 33px) !important;
-          font-weight: 500 !important;
-          letter-spacing: normal !important;
-          line-height: 1 !important;
-          text-transform: none !important;
+          display: none !important;
         }
 
         body:has(.discover-page-root) .discover-hero-values strong {
