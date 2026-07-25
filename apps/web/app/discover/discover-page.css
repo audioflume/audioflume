@@ -95,12 +95,19 @@ body:has(.discover-page-root)
 body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-scroller {
-  padding-right: 5rem;
-  padding-left: max(
+  padding-right: 0;
+  padding-left: 0;
+  scroll-padding-left: max(
     var(--discover-page-gutter),
     calc((100vw - 1120px) / 2)
   );
-  scroll-padding-left: max(
+}
+
+body:has(.discover-page-root)
+  .discover-mood-section
+  .curated-playlist-shelf-scroller
+  > .discover-mood-card:first-child {
+  margin-left: max(
     var(--discover-page-gutter),
     calc((100vw - 1120px) / 2)
   );
