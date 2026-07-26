@@ -28,7 +28,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-intro-mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: 0 auto clamp(110px, 11vw, 180px);
+  margin: clamp(96px, 8vw, 140px) auto clamp(110px, 11vw, 180px);
 }
 
 .discover-reference-intro {
@@ -147,9 +147,9 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   margin: 0;
   color: var(--text-secondary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 15px;
+  font-size: clamp(14px, 1.1vw, 17px);
   font-weight: 300;
-  line-height: 1.65;
+  line-height: 1.55;
 }
 
 .discover-reference-orange-panel {
@@ -183,7 +183,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-outro-mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: clamp(230px, 18vw, 345px) auto 0;
+  margin: var(--discover-section-gap, clamp(108px, 10vw, 170px)) auto 0;
 }
 
 .discover-reference-outro {
@@ -317,7 +317,7 @@ body:has(.discover-page-root) .discover-footer-wrap {
   }
 
   .discover-reference-outro-mount {
-    margin-top: 200px;
+    margin-top: var(--discover-section-gap, 120px);
   }
 
   .discover-reference-outro {
@@ -380,7 +380,7 @@ body:has(.discover-page-root) .discover-footer-wrap {
   }
 
   .discover-reference-outro-mount {
-    margin-top: 150px;
+    margin-top: var(--discover-section-gap, 88px);
   }
 
   .discover-reference-outro {
