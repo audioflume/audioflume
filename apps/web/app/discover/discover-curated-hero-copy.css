@@ -131,13 +131,13 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 }
 
 .discover-integrated-search button {
-  height: 32px;
+  height: 36px;
   align-self: center;
   cursor: pointer;
   border: 0;
   background: #111;
   color: #fff;
-  margin-right: 9px;
+  margin-right: 7px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 14px;
 }
