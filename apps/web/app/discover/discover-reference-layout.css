@@ -145,7 +145,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   width: 440px;
   max-width: 108%;
   margin: 0;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(14px, 1.1vw, 17px);
   font-weight: 300;
@@ -240,7 +240,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   margin-right: 0;
   margin-bottom: 0;
   margin-left: 0;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(14px, 1.1vw, 17px);
   font-weight: 300;
