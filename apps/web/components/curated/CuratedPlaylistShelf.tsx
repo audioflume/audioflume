@@ -10,6 +10,7 @@ import DropdownShell from "@/components/DropdownShell";
 import Toast from "@/components/Toast";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import { usePlayer } from "@/context/PlayerContext";
+import styles from "./CuratedPlaylistCard.module.css";
 
 export type CuratedPlaylistCardItem = Pick<
   CuratedPlaylist,
@@ -104,7 +105,7 @@ function CuratedPlaylistMenu({
   playerVisible: boolean;
 }) {
   return (
-    <div data-playlist-menu className="curated-playlist-menu-wrap">
+    <div data-playlist-menu className={styles.menuWrap}>
       <DropdownShell
         open={open}
         onOpenChange={onOpenChange}
@@ -123,8 +124,8 @@ function CuratedPlaylistMenu({
         trigger={({ open: triggerOpen }) => (
           <button
             type="button"
-            className={`curated-playlist-menu-button ${
-              triggerOpen ? "is-open" : ""
+            className={`${styles.menuButton} ${
+              triggerOpen ? styles.menuButtonOpen : ""
             }`}
             aria-label={`${playlist.name} options`}
             disabled={saving}
@@ -181,13 +182,11 @@ export function CuratedPlaylistCard({
   }
 
   return (
-    <div className="curated-playlist-card-shell">
-      <article
-        className={`curated-playlist-card ${isMenuOpen ? "is-menu-open" : ""}`}
-      >
-        <Link href={href} className="curated-playlist-image-link">
+    <div className={`curated-playlist-card-shell ${styles.shell}`}>
+      <article className={`${styles.card} ${isMenuOpen ? styles.cardOpen : ""}`}>
+        <Link href={href} className={styles.imageLink}>
           <div
-            className="curated-playlist-image"
+            className={styles.image}
             style={{
               background: playlist.cover_image_url
                 ? "var(--media-overlay-solid)"
@@ -207,8 +206,8 @@ export function CuratedPlaylistCard({
           </div>
         </Link>
 
-        <div className="curated-playlist-card-details">
-          <Link href={href} className="curated-playlist-card-copy">
+        <div className={styles.details}>
+          <Link href={href} className={styles.copy}>
             <h3>{playlist.name}</h3>
             <p>{formatSongCount(playlist.song_count)}</p>
           </Link>
