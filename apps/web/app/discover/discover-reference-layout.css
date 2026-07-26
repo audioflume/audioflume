@@ -28,7 +28,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-intro-mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: clamp(96px, 8vw, 140px) auto clamp(110px, 11vw, 180px);
+  margin: clamp(56px, 5vw, 84px) auto clamp(64px, 6vw, 96px);
 }
 
 .discover-reference-intro {
@@ -183,16 +183,16 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-outro-mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: var(--discover-section-gap, clamp(108px, 10vw, 170px)) auto 0;
+  margin: clamp(42px, 4vw, 64px) auto 0;
 }
 
 .discover-reference-outro {
   display: grid;
-  min-height: 410px;
+  min-height: 330px;
   grid-template-columns: 34% 24% 34%;
   align-items: stretch;
   column-gap: 4%;
-  padding: clamp(64px, 5.5vw, 82px) 0 clamp(115px, 9vw, 155px);
+  padding: clamp(42px, 4vw, 60px) 0 clamp(72px, 6vw, 100px);
   background: var(--bg-primary);
   color: var(--text-primary);
 }
@@ -317,7 +317,7 @@ body:has(.discover-page-root) .discover-footer-wrap {
   }
 
   .discover-reference-outro-mount {
-    margin-top: var(--discover-section-gap, 120px);
+    margin-top: clamp(40px, 5vw, 60px);
   }
 
   .discover-reference-outro {
@@ -325,7 +325,7 @@ body:has(.discover-page-root) .discover-footer-wrap {
     grid-template-columns: 1fr 1fr;
     column-gap: 48px;
     row-gap: 42px;
-    padding-top: 56px;
+    padding-top: 44px;
   }
 
   .discover-reference-outro-title {
@@ -380,12 +380,12 @@ body:has(.discover-page-root) .discover-footer-wrap {
   }
 
   .discover-reference-outro-mount {
-    margin-top: var(--discover-section-gap, 88px);
+    margin-top: 40px;
   }
 
   .discover-reference-outro {
     row-gap: 32px;
-    padding-bottom: 90px;
+    padding-bottom: 64px;
   }
 
   .discover-reference-outro-title,
