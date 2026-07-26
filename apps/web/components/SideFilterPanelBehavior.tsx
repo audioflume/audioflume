@@ -14,7 +14,7 @@ const DISPLAY_AI_EXCLUDE_ROOT_CLASS = "fw-display-exclude-ai-songs";
 const DISPLAY_AI_ONLY_ROOT_CLASS = "fw-display-ai-songs-only";
 
 const DISPLAY_AI_FILTER_OPTIONS = [
-  { value: "exclude", label: "Exclude AI songs" },
+  { value: "exclude", label: "Human made" },
   { value: "only", label: "AI songs only" },
 ] as const;
 
