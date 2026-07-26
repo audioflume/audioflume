@@ -47,7 +47,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   grid-template-columns: 50px minmax(0, 1fr) 118px;
   margin-top: clamp(38px, 3.5vw, 52px);
   background: #fff;
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+  box-shadow: none;
   pointer-events: auto;
 }
 
