@@ -34,7 +34,7 @@ import "../../../packages/shared/styles/music-shared-controls.css";
 const robotoMono = Roboto_Mono({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-jetbrains-mono-filmwave",
+  variable: "--font-roboto-mono-filmwave",
 });
 
 const TYPEKIT_STYLESHEET = "https://use.typekit.net/tjk0kys.css";
@@ -89,7 +89,7 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
           <style>{`
             html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
-              font-family: var(--font-jetbrains-mono-filmwave), monospace !important;
+              font-family: var(--font-roboto-mono-filmwave), monospace !important;
               font-size: 10.5px !important;
               text-transform: uppercase !important;
             }
