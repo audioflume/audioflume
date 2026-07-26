@@ -3,8 +3,22 @@
 }
 
 body:has(.discover-page-root) .discover-template-shell .discover-hero {
-  height: clamp(500px, 69vh, 760px);
-  min-height: clamp(500px, 69vh, 760px);
+  height: clamp(560px, 78vh, 820px);
+  min-height: clamp(560px, 78vh, 820px);
+}
+
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-template-shell
+  .discover-hero {
+  background: url("https://images.filmwave.io/images/discover/emil-karlsen-zcoPq6ooluE-unsplash.jpg")
+    center center / cover no-repeat;
+}
+
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-hero-overlay {
+  background: none;
 }
 
 body:has(.discover-page-root) .discover-hero-content,
@@ -19,8 +33,8 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   z-index: 4;
   display: flex;
   width: 100%;
-  height: clamp(500px, 69vh, 760px);
-  min-height: clamp(500px, 69vh, 760px);
+  height: clamp(560px, 78vh, 820px);
+  min-height: clamp(560px, 78vh, 820px);
   flex-direction: column;
   align-items: center;
   justify-content: center;
