@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 
 const VIDEO_URL =
   "https://pub-cd585d75522a44bb9dad78b6f9974d03.r2.dev/Audioflume%20Banner.mov";
+const CURATED_HERO_HEIGHT = "clamp(500px, 69vh, 760px)";
 
 export default function DiscoverHeroVideoLayer() {
   const [hero, setHero] = useState<HTMLElement | null>(null);
@@ -12,6 +13,12 @@ export default function DiscoverHeroVideoLayer() {
   useEffect(() => {
     const syncHero = () => {
       const nextHero = document.querySelector<HTMLElement>(".discover-hero");
+
+      if (nextHero) {
+        nextHero.style.height = CURATED_HERO_HEIGHT;
+        nextHero.style.minHeight = CURATED_HERO_HEIGHT;
+      }
+
       setHero((current) => (current === nextHero ? current : nextHero));
     };
 
