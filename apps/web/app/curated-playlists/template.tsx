@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import CuratedOutroMount from "./CuratedOutroMount";
 import CuratedVideoHero from "./CuratedVideoHero";
+import "../discover/discover-reference-layout.css";
 import "./curated-video-hero.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
@@ -30,7 +32,13 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     .curated-playlists-page-layer
     > div
     > .mt-10:last-child {
-    margin-bottom: clamp(120px, 10vw, 180px) !important;
+    margin-bottom: 0 !important;
+  }
+
+  :where(html.light, html[data-theme="light"])
+    body:has(.curated-playlists-page-root)
+    .discover-reference-outro-mark {
+    filter: invert(1);
   }
 
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
@@ -212,6 +220,7 @@ export default function CuratedPlaylistsTemplate({
       <style>{CURATED_LANDING_CARD_RATIO_STYLE}</style>
       <CuratedVideoHero />
       {children}
+      <CuratedOutroMount />
     </>
   );
 }
