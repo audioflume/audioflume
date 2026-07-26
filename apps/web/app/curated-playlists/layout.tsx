@@ -5,11 +5,13 @@ import CuratedPlaylistsLoadingStyles from "./CuratedPlaylistsLoadingStyles";
 import "./curated-playlists.css";
 
 const CURATED_FEATURED_STYLE = `
-  body:has(.playlist-detail-page) .playlist-detail-shell {
+  body:has(.playlist-detail-page) .playlist-detail-hero,
+  body:has(.playlist-detail-page) .playlist-detail-section {
     box-sizing: border-box;
     width: min(100%, 1120px);
-    margin-right: auto;
-    margin-left: auto;
+    justify-self: center;
+    margin-right: auto !important;
+    margin-left: auto !important;
   }
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist-copy::before {
