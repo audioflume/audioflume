@@ -8,20 +8,39 @@ export default function CuratedOutroMount() {
   const [mount, setMount] = useState<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
-    const container = document.querySelector<HTMLElement>(
-      ".curated-playlists-page-root .curated-playlists-page-layer > div",
-    );
+    let outroMount: HTMLDivElement | null = null;
 
-    if (!container) return;
+    const syncMount = () => {
+      const container = document.querySelector<HTMLElement>(
+        ".curated-playlists-page-root .curated-playlists-page-layer > div",
+      );
 
-    const outroMount = document.createElement("div");
-    outroMount.className = "discover-reference-outro-mount";
-    outroMount.dataset.curatedOutroMount = "true";
-    container.appendChild(outroMount);
-    setMount(outroMount);
+      if (!container) return;
+
+      if (!outroMount) {
+        outroMount = document.createElement("div");
+        outroMount.className = "discover-reference-outro-mount";
+        outroMount.dataset.curatedOutroMount = "true";
+      }
+
+      if (
+        outroMount.parentElement !== container ||
+        container.lastElementChild !== outroMount
+      ) {
+        container.appendChild(outroMount);
+      }
+
+      setMount((current) => (current === outroMount ? current : outroMount));
+    };
+
+    syncMount();
+
+    const observer = new MutationObserver(syncMount);
+    observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      outroMount.remove();
+      observer.disconnect();
+      outroMount?.remove();
     };
   }, []);
 
