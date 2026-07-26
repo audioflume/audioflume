@@ -101,7 +101,7 @@ body:has(.discover-page-root) .discover-hero-values > div:last-child {
 body:has(.discover-page-root) .discover-hero-values strong,
 body:has(.discover-page-root) .discover-hero-values span {
   color: #fff;
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
+  font-family: var(--font-roboto-mono-filmwave), monospace;
   font-weight: 400;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -231,7 +231,7 @@ body:has(.discover-page-root) .discover-section-heading h2 {
 body:has(.discover-page-root) .discover-section-heading a,
 body:has(.discover-page-root) .discover-section-heading p {
   color: var(--text-secondary) !important;
-  font-family: var(--font-jetbrains-mono-filmwave), monospace !important;
+  font-family: var(--font-roboto-mono-filmwave), monospace !important;
   font-size: 8px !important;
   font-weight: 400 !important;
   text-transform: uppercase;
@@ -268,7 +268,7 @@ body:has(.discover-page-root) .discover-curated-playlist-section .discover-playl
   margin: 0;
   padding: 20px;
   color: #fff !important;
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
+  font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: clamp(11px, 0.85vw, 15px);
   font-weight: 400;
   letter-spacing: 0;
