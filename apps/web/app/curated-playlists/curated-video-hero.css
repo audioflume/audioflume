@@ -28,7 +28,7 @@ body:has(.curated-playlists-page-root)
   z-index: 5;
   overflow: hidden;
   color: #fff;
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
+  font-family: var(--font-roboto-mono-filmwave), monospace;
   font-weight: 400;
 }
 
