@@ -1,0 +1,120 @@
+.shell {
+  min-width: 0;
+}
+
+.card {
+  position: relative;
+  min-width: 0;
+}
+
+.imageLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.image img {
+  transition: transform 500ms ease;
+}
+
+.card:hover .image img,
+.cardOpen .image img {
+  transform: scale(1.025);
+}
+
+.details,
+.copy {
+  display: contents;
+}
+
+.copy {
+  color: inherit;
+  text-decoration: none;
+}
+
+.copy h3 {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  overflow: visible;
+  padding: 20px;
+  color: #fff;
+  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-size: clamp(14px, 1vw, 18px);
+  font-weight: 400;
+  font-kerning: normal;
+  letter-spacing: 0;
+  line-height: 1.05;
+  text-align: center;
+  text-overflow: clip;
+  text-transform: uppercase;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.copy p {
+  display: none;
+}
+
+.menuWrap {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 6;
+  display: flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.menuButton {
+  display: flex;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  padding: 0;
+  opacity: 0;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+  transition: opacity 150ms ease, color 150ms ease;
+}
+
+.card:hover .menuButton,
+.card:focus-within .menuButton,
+.cardOpen .menuButton,
+.menuButtonOpen {
+  opacity: 1;
+}
+
+.menuButton:hover,
+.menuButton:focus-visible,
+.menuButtonOpen {
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+}
+
+.menuButton svg {
+  width: 15px;
+  height: 15px;
+}
