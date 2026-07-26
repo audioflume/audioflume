@@ -54,6 +54,12 @@ body:has(.curated-playlists-page-root)
   pointer-events: none;
 }
 
+:where(html.light, html[data-theme="light"])
+  body:has(.curated-playlists-page-root)
+  .curated-video-hero-overlay {
+  background: none;
+}
+
 .curated-video-hero-content {
   position: absolute;
   top: var(--filmwave-header-height, 75px);
