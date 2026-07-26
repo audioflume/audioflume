@@ -28,7 +28,7 @@ export default function DiscoverCuratedHeroCopy() {
     >
       <div className="curated-video-hero discover-curated-hero-copy-shell">
         <div className="curated-video-hero-content discover-curated-hero-copy">
-          <h1>Endless Audio</h1>
+          <h1>Made for Film</h1>
 
           <p className="curated-video-hero-primary-copy">
             <span>Discover curated music playlists</span>
