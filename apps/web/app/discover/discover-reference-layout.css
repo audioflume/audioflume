@@ -60,20 +60,27 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-intro-title {
   position: absolute;
-  top: 10.6%;
+  top: 0;
+  bottom: 0;
   left: 2.5%;
   width: 32%;
 }
 
 .discover-reference-intro-title h2 {
-  font-size: clamp(42px, 4.8vw, 68px);
+  position: absolute;
+  top: 10.6%;
+  left: 0;
+  font-size: clamp(39px, 4.55vw, 61px);
   letter-spacing: -0.045em;
   line-height: 0.94;
 }
 
 .discover-reference-intro-title .curated-video-hero-primary-copy {
+  position: absolute;
+  bottom: 40.5%;
+  left: 0;
   width: min(100%, 300px);
-  margin: 108px 0 0;
+  margin: 0;
   color: var(--text-secondary);
   font-family: var(--font-jetbrains-mono-filmwave), monospace;
 }
@@ -98,7 +105,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-pulse-copy {
   position: absolute;
-  top: 50.2%;
+  bottom: 40.5%;
   left: 0;
   align-self: start;
 }
@@ -135,7 +142,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-intro-center > svg:nth-of-type(2) {
   position: absolute;
-  top: 56.5%;
+  bottom: 40.5%;
   left: 71%;
   z-index: 3;
   width: 144px;
@@ -296,10 +303,14 @@ body:has(.discover-page-root) .discover-footer-wrap {
   }
 
   .discover-reference-intro-title h2 {
+    position: relative;
+    inset: auto;
     font-size: clamp(36px, 6vw, 54px);
   }
 
-  .discover-reference-intro-title p {
+  .discover-reference-intro-title .curated-video-hero-primary-copy {
+    position: relative;
+    inset: auto;
     margin-top: 48px;
   }
 
@@ -389,7 +400,7 @@ body:has(.discover-page-root) .discover-footer-wrap {
     padding-left: 0;
   }
 
-  .discover-reference-intro-title p {
+  .discover-reference-intro-title .curated-video-hero-primary-copy {
     margin-top: 36px;
   }
 
