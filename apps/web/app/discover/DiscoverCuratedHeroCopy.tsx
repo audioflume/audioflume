@@ -4,6 +4,8 @@ import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import SearchIcon from "@/components/icons/SearchIcon";
 
+const CURATED_HERO_HEIGHT = "clamp(500px, 69vh, 760px)";
+
 export default function DiscoverCuratedHeroCopy() {
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -19,7 +21,11 @@ export default function DiscoverCuratedHeroCopy() {
   }
 
   return (
-    <section className="discover-integrated-hero" aria-label="Discover music">
+    <section
+      className="discover-integrated-hero"
+      aria-label="Discover music"
+      style={{ height: CURATED_HERO_HEIGHT, minHeight: CURATED_HERO_HEIGHT }}
+    >
       <div className="curated-video-hero discover-curated-hero-copy-shell">
         <div className="curated-video-hero-content discover-curated-hero-copy">
           <h1>Endless Audio</h1>
