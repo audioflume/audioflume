@@ -5,6 +5,13 @@ import CuratedPlaylistsLoadingStyles from "./CuratedPlaylistsLoadingStyles";
 import "./curated-playlists.css";
 
 const CURATED_FEATURED_STYLE = `
+  body:has(.playlist-detail-page) .playlist-detail-shell {
+    box-sizing: border-box;
+    width: min(100%, 1120px);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
   body:has(.curated-playlists-page-root) .curated-featured-playlist-copy::before {
     content: none !important;
     display: none !important;
