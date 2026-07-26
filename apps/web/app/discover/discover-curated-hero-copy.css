@@ -97,7 +97,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   display: grid;
   width: min(calc(100% - 40px), 680px);
   height: 50px;
-  grid-template-columns: 50px minmax(0, 1fr) 118px;
+  grid-template-columns: 50px minmax(0, 1fr) 142px;
   margin-top: clamp(38px, 3.5vw, 52px);
   background: #fff;
   box-shadow: none;
@@ -131,15 +131,25 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 }
 
 .discover-integrated-search button {
+  display: inline-flex;
   height: 36px;
   align-self: center;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
   cursor: pointer;
   border: 0;
   background: #111;
   color: #fff;
   margin-right: 7px;
+  padding: 0 14px 0 18px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 14px;
+}
+
+.discover-integrated-search button svg {
+  display: block;
+  flex: 0 0 auto;
 }
 
 .discover-integrated-values {
@@ -201,11 +211,17 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   }
 
   .discover-integrated-search {
-    grid-template-columns: 46px minmax(0, 1fr) 96px;
+    grid-template-columns: 46px minmax(0, 1fr) 122px;
   }
 
   .discover-integrated-search-icon {
     padding-left: 18px;
+  }
+
+  .discover-integrated-search button {
+    gap: 12px;
+    padding-right: 12px;
+    padding-left: 14px;
   }
 
   .discover-integrated-values {
