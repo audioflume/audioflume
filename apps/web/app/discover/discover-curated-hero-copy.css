@@ -2,6 +2,11 @@
   position: relative;
 }
 
+body:has(.discover-page-root) .discover-template-shell .discover-hero {
+  height: clamp(500px, 69vh, 760px);
+  min-height: clamp(500px, 69vh, 760px);
+}
+
 body:has(.discover-page-root) .discover-hero-content,
 body:has(.discover-page-root) .discover-reference-hero-mount {
   display: none !important;
@@ -14,8 +19,8 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   z-index: 4;
   display: flex;
   width: 100%;
-  height: 100svh;
-  min-height: 680px;
+  height: clamp(500px, 69vh, 760px);
+  min-height: clamp(500px, 69vh, 760px);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -38,6 +43,40 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   inset: auto;
   width: 100%;
   pointer-events: none;
+}
+
+.discover-hero-playback-toggle {
+  position: absolute;
+  right: 28px;
+  bottom: 26px;
+  z-index: 6;
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  line-height: 0;
+  opacity: 0.62;
+  transition: opacity 0.15s ease;
+}
+
+.discover-hero-playback-toggle:hover,
+.discover-hero-playback-toggle:focus-visible {
+  opacity: 1;
+}
+
+.discover-hero-playback-toggle:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+.discover-hero-playback-toggle svg {
+  display: block;
 }
 
 .discover-integrated-search {
@@ -133,6 +172,11 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 @media (max-width: 720px) {
   .discover-integrated-hero {
     align-items: stretch;
+  }
+
+  .discover-hero-playback-toggle {
+    right: 20px;
+    bottom: 20px;
   }
 
   .discover-integrated-search,
