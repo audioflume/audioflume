@@ -1,6 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Roboto_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -31,10 +31,9 @@ import "../../../packages/shared/styles/header-search-shell.css";
 import "./music-filter-rail-order.css";
 import "../../../packages/shared/styles/music-shared-controls.css";
 
-const jetBrainsMono = localFont({
-  src: "../../../packages/shared/fonts/JetBrainsMono-Regular.woff2",
-  weight: "400",
-  style: "normal",
+const robotoMono = Roboto_Mono({
+  subsets: ["latin"],
+  display: "swap",
   variable: "--font-jetbrains-mono-filmwave",
 });
 
@@ -79,7 +78,7 @@ export default async function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
-        className={jetBrainsMono.variable}
+        className={robotoMono.variable}
         data-theme={initialTheme}
         suppressHydrationWarning
       >
