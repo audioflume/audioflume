@@ -157,7 +157,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-outro-mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: clamp(230px, 18vw, 345px) auto clamp(90px, 8vw, 135px);
+  margin: clamp(230px, 18vw, 345px) auto 0;
 }
 
 .discover-reference-outro {
@@ -166,7 +166,6 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   grid-template-columns: 34% 24% 34%;
   align-items: stretch;
   column-gap: 4%;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: clamp(64px, 5.5vw, 82px) 0 clamp(115px, 9vw, 155px);
   color: #fff;
 }
@@ -196,18 +195,23 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-outro-pulse,
 .discover-reference-outro-description {
-  align-self: end;
+  align-self: start;
+  margin-top: clamp(170px, 13vw, 205px);
   padding-top: 0;
 }
 
 .discover-reference-outro-pulse {
+  width: fit-content;
   max-width: 300px;
+  justify-self: center;
 }
 
 .discover-reference-outro-description {
   width: 100%;
   max-width: 500px;
-  margin: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(14px, 1.1vw, 17px);
@@ -216,7 +220,16 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 body:has(.discover-page-root) .discover-footer-wrap {
+  box-sizing: border-box;
+  width: calc(
+    100% + var(--discover-editorial-gutter) + var(--discover-editorial-gutter)
+  );
   margin-top: 0 !important;
+  margin-right: calc(0px - var(--discover-editorial-gutter));
+  margin-left: calc(0px - var(--discover-editorial-gutter));
+  padding-top: 40px;
+  padding-right: 28px;
+  padding-left: 28px;
 }
 
 @media (max-width: 900px) {
@@ -301,14 +314,23 @@ body:has(.discover-page-root) .discover-footer-wrap {
   .discover-reference-outro-pulse,
   .discover-reference-outro-description {
     align-self: start;
+    margin-top: 0;
   }
 
   .discover-reference-outro-pulse {
     grid-column: 1;
+    justify-self: start;
   }
 
   .discover-reference-outro-description {
     grid-column: 2;
+  }
+}
+
+@media (max-width: 760px) {
+  body:has(.discover-page-root) .discover-footer-wrap {
+    padding-right: 18px;
+    padding-left: 18px;
   }
 }
 
