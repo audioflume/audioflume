@@ -15,7 +15,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     > div
     > .curated-featured-playlist
     + .mt-10 {
-    margin-top: clamp(104px, calc(7vw + 40px), 150px) !important;
+    margin-top: clamp(64px, 6vw, 96px) !important;
   }
 
   body:has(.curated-playlists-page-root)
@@ -23,7 +23,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     > div
     > .mt-10
     + .mt-10 {
-    margin-top: clamp(132px, calc(9vw + 40px), 184px) !important;
+    margin-top: clamp(64px, 6vw, 96px) !important;
   }
 
   body:has(.curated-playlists-page-root)
@@ -175,6 +175,21 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     body:has(.curated-playlists-page-root)
       .curated-playlist-skeleton-shelf > .relative > .flex {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    body:has(.curated-playlists-page-root)
+      .curated-playlists-page-layer
+      > div
+      > .curated-featured-playlist
+      + .mt-10,
+    body:has(.curated-playlists-page-root)
+      .curated-playlists-page-layer
+      > div
+      > .mt-10
+      + .mt-10 {
+      margin-top: 52px !important;
     }
   }
 
