@@ -135,21 +135,24 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   height: 36px;
   align-self: center;
   align-items: center;
-  justify-content: space-between;
-  gap: 18px;
+  justify-content: center;
+  gap: 8px;
   cursor: pointer;
   border: 0;
   background: #111;
   color: #fff;
   margin-right: 7px;
-  padding: 0 14px 0 18px;
+  padding: 0 16px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 14px;
 }
 
-.discover-integrated-search button svg {
-  display: block;
+.discover-integrated-search-arrow {
+  display: inline-block;
   flex: 0 0 auto;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1;
 }
 
 .discover-integrated-values {
@@ -219,9 +222,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   }
 
   .discover-integrated-search button {
-    gap: 12px;
+    gap: 8px;
     padding-right: 12px;
-    padding-left: 14px;
+    padding-left: 12px;
   }
 
   .discover-integrated-values {
