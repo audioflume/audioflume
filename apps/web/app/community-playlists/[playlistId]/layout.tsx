@@ -19,6 +19,15 @@ export default function CommunityPlaylistDetailLayout({
           column-gap: 13px !important;
         }
 
+        body .community-detail-page .community-detail-hero,
+        body .community-detail-page .community-detail-section {
+          box-sizing: border-box;
+          width: min(100%, 1120px);
+          justify-self: center;
+          margin-right: auto !important;
+          margin-left: auto !important;
+        }
+
         body .community-detail-page .community-detail-more-button svg {
           width: 14px !important;
           height: 14px !important;
