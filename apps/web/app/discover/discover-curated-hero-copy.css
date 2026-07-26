@@ -183,7 +183,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-integrated-values span {
   color: rgba(255, 255, 255, 0.82);
-  font-family: var(--font-jetbrains-mono-filmwave), monospace;
+  font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: clamp(8px, 0.58vw, 10px);
   font-weight: 400;
   line-height: 1.65;
