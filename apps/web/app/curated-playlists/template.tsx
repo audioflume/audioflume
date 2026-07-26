@@ -96,7 +96,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     overflow: visible !important;
     padding: 20px;
     color: #fff !important;
-    font-family: "JetBrains Mono Filmwave", monospace !important;
+    font-family: var(--font-roboto-mono-filmwave), monospace !important;
     font-size: clamp(14px, 1vw, 18px) !important;
     font-weight: 400 !important;
     font-kerning: normal !important;
@@ -156,7 +156,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     max-width: 620px;
     margin: 9px 0 0 !important;
     color: var(--text-muted) !important;
-    font-family: "JetBrains Mono Filmwave", monospace !important;
+    font-family: var(--font-roboto-mono-filmwave), monospace !important;
     font-size: clamp(8px, 0.55vw, 9.5px) !important;
     font-weight: 400 !important;
     letter-spacing: 0 !important;
