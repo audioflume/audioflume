@@ -4,6 +4,26 @@ import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import SearchIcon from "@/components/icons/SearchIcon";
 
+function SearchArrowIcon() {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 15 15"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 11L11 4M6 4H11V9"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function DiscoverCuratedHeroCopy() {
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -52,7 +72,10 @@ export default function DiscoverCuratedHeroCopy() {
           placeholder="Search music library"
           aria-label="Search music library"
         />
-        <button type="submit">Search</button>
+        <button type="submit">
+          <span>Search</span>
+          <SearchArrowIcon />
+        </button>
       </form>
 
       <div className="discover-integrated-values">
