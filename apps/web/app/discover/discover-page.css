@@ -217,7 +217,7 @@ body:has(.discover-page-root) .discover-section-heading {
 }
 
 body:has(.discover-page-root) .discover-section-heading h2 {
-  color: #fff !important;
+  color: var(--text-primary) !important;
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
   font-size: clamp(17px, 1.15vw, 22px) !important;
   font-weight: 500 !important;
@@ -229,7 +229,7 @@ body:has(.discover-page-root) .discover-section-heading h2 {
 
 body:has(.discover-page-root) .discover-section-heading a,
 body:has(.discover-page-root) .discover-section-heading p {
-  color: rgba(255, 255, 255, 0.55) !important;
+  color: var(--text-secondary) !important;
   font-family: var(--font-jetbrains-mono-filmwave), monospace !important;
   font-size: 8px !important;
   font-weight: 400 !important;
