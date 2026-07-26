@@ -137,9 +137,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   border: 0;
   background: #111;
   color: #fff;
-  margin-right: 7px;
+  margin-right: 9px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .discover-integrated-values {
