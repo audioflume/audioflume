@@ -25,17 +25,17 @@ export default function DiscoverCuratedHeroCopy() {
           <h1>Endless Audio</h1>
 
           <p className="curated-video-hero-primary-copy">
-            <span>Browse curated music playlists</span>
-            <span>Preview audio soundtracks</span>
+            <span>Discover curated music playlists</span>
+            <span>Premium audio soundtracks</span>
             <span>For film</span>
           </p>
 
           <div className="curated-video-hero-secondary-copy">
             <strong>(Tailored Sound)</strong>
             <span>
-              Music chosen to fit the cut
+              Discover curated music playlists, premium audio
               <br />
-              From first frame to final
+              soundtracks for film
             </span>
           </div>
         </div>
