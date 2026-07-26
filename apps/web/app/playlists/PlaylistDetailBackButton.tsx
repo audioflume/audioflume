@@ -100,6 +100,15 @@ export default function PlaylistDetailBackButton() {
                   ) !important;
                 }
 
+                .playlist-detail-page .playlist-detail-hero,
+                .playlist-detail-page .playlist-detail-section {
+                  box-sizing: border-box;
+                  width: min(100%, 1120px);
+                  justify-self: center;
+                  margin-right: auto !important;
+                  margin-left: auto !important;
+                }
+
                 .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
                   margin-left: calc(
                     32px - var(--playlist-detail-control-inset-left)
