@@ -8,7 +8,10 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist > *:not(.curat
 }
 
 body:has(.curated-playlists-page-root) .curated-featured-playlist {
-  min-height: clamp(480px, 60vh, 680px) !important;
+  height: clamp(380px, 48vh, 540px) !important;
+  min-height: clamp(380px, 48vh, 540px) !important;
+  max-height: clamp(380px, 48vh, 540px) !important;
+  overflow: hidden;
   grid-template-columns: 1fr !important;
   background: #000 !important;
 }
