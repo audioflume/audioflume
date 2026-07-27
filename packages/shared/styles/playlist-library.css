@@ -345,6 +345,21 @@
   color: transparent !important;
 }
 
+/* Shared playlist detail-title typography across My, Curated, and Community playlists. */
+body .playlist-detail-page .playlist-detail-title,
+body .community-detail-page .community-detail-title {
+  font-size: var(--filmwave-web-type-detail-title) !important;
+}
+
+body
+  .playlists-route-shell
+  .playlist-detail-page
+  .playlist-detail-hero
+  > .min-w-0
+  .playlist-detail-rename-input {
+  font-size: var(--filmwave-web-type-detail-title) !important;
+}
+
 /* Keep inline rename controls identical to the text they replace. */
 .playlists-page .playlist-gallery-rename-input {
   display: block !important;
