@@ -1,12 +1,12 @@
 "use client";
 
+import { HeaderSearchBar } from "@filmwave/shared";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
-import SearchIcon from "@/components/icons/SearchIcon";
 import {
   COMMUNITY_PLAYLIST_CATEGORIES,
   type CommunityPlaylistCategory,
@@ -806,26 +806,14 @@ export default function CommunityPlaylistsPage() {
                 <h1 className="playlists-title">Playlists</h1>
               </div>
             </div>
-            <label className="community-search">
-              <SearchIcon size={13} />
-              <input
-                type="text"
-                value={query}
-                placeholder="Search community playlists..."
-                aria-label="Search community playlists"
-                onChange={(event) => setQuery(event.target.value)}
-              />
-              {query.length > 0 && (
-                <button
-                  type="button"
-                  className="community-search-clear"
-                  aria-label="Clear community playlist search"
-                  onClick={() => setQuery("")}
-                >
-                  ×
-                </button>
-              )}
-            </label>
+            <HeaderSearchBar
+              renderForm={false}
+              searchValue={query}
+              searchPlaceholder="Search community playlists..."
+              searchAriaLabel="Search community playlists"
+              clearAriaLabel="Clear community playlist search"
+              onSearchChange={setQuery}
+            />
           </div>
 
           {recentPlaylists.length > 0 && (
