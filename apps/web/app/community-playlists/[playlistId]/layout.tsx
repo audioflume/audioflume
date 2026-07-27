@@ -15,6 +15,8 @@ export default function CommunityPlaylistDetailLayout({
         }
 
         body .community-detail-page .community-detail-shell {
+          --playlist-detail-control-inset-left: 32px;
+          --playlist-detail-control-inset-right: 32px;
           grid-template-columns: 82px minmax(0, 1fr) 42px 42px !important;
           column-gap: 13px !important;
         }
@@ -40,6 +42,13 @@ export default function CommunityPlaylistDetailLayout({
 
         .community-detail-page .community-detail-more-menu {
           grid-column: 4 !important;
+        }
+
+        @media (max-width: 720px) {
+          body .community-detail-page .community-detail-shell {
+            --playlist-detail-control-inset-left: 20px;
+            --playlist-detail-control-inset-right: 20px;
+          }
         }
 
         @media (max-width: 640px) {

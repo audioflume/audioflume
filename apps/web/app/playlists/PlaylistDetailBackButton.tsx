@@ -54,8 +54,8 @@ export default function PlaylistDetailBackButton() {
             <>
               <style>{`
                 .playlist-detail-page .playlist-detail-shell {
-                  --playlist-detail-control-inset-left: var(--fw-music-content-inset-left, 28px);
-                  --playlist-detail-control-inset-right: var(--fw-music-content-inset-right, 20px);
+                  --playlist-detail-control-inset-left: 32px;
+                  --playlist-detail-control-inset-right: 32px;
                   grid-template-columns: 82px minmax(0, 1fr) 42px !important;
                   padding-left: var(--playlist-detail-control-inset-left) !important;
                   padding-right: var(--playlist-detail-control-inset-right) !important;

@@ -18,6 +18,24 @@ const PLAYLIST_CARD_LINK_SELECTOR = ".curated-playlist-card-copy";
 const INDICATOR_SELECTOR = ".curated-featured-playlist-indicators button";
 const NEXT_BUTTON_SELECTOR = ".curated-featured-playlist-next-button";
 
+const CURATED_DETAIL_CONTROL_INSET_STYLE = `
+  body:has(.playlist-detail-page)
+    .playlist-detail-page
+    .playlist-detail-shell {
+    --playlist-detail-control-inset-left: 32px;
+    --playlist-detail-control-inset-right: 32px;
+  }
+
+  @media (max-width: 720px) {
+    body:has(.playlist-detail-page)
+      .playlist-detail-page
+      .playlist-detail-shell {
+      --playlist-detail-control-inset-left: 20px;
+      --playlist-detail-control-inset-right: 20px;
+    }
+  }
+`;
+
 function getRenderedSongCount(href: string) {
   if (!href) return null;
 
@@ -160,6 +178,7 @@ export default function CuratedFeaturedCarouselControls() {
 
   return (
     <>
+      <style>{CURATED_DETAIL_CONTROL_INSET_STYLE}</style>
       <CuratedPlaylistDetailChrome />
       <CuratedPlaylistDetailMoreMenu />
       {navigationPortal}
