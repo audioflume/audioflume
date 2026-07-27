@@ -27,7 +27,12 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-intro-mount {
-  margin: clamp(56px, 5vw, 84px) 0 clamp(64px, 6vw, 96px);
+  width: min(
+    calc(100% + (var(--discover-editorial-gutter, 0px) * 1.5)),
+    1320px
+  );
+  margin: clamp(56px, 5vw, 84px) 0 clamp(64px, 6vw, 96px) 50%;
+  transform: translateX(-50%);
 }
 
 .discover-reference-intro {
@@ -188,7 +193,8 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-outro-mount {
-  margin: clamp(42px, 4vw, 64px) 0 0;
+  width: min(100%, var(--discover-editorial-width, 1120px));
+  margin: clamp(42px, 4vw, 64px) auto 0;
 }
 
 .discover-reference-outro {
@@ -268,17 +274,10 @@ body:has(.discover-page-root) .discover-footer-wrap {
 }
 
 @media (max-width: 900px) {
-  .discover-reference-intro-mount,
-  .discover-reference-outro-mount {
-    width: 100%;
-    margin-right: 0;
-    margin-left: 0;
-    transform: none;
-  }
-
   .discover-reference-intro-mount {
-    margin-top: clamp(56px, 5vw, 84px);
-    margin-bottom: clamp(64px, 6vw, 96px);
+    width: min(100%, var(--discover-editorial-width, 1120px));
+    margin: clamp(56px, 5vw, 84px) auto clamp(64px, 6vw, 96px);
+    transform: none;
   }
 
   .discover-reference-intro {
