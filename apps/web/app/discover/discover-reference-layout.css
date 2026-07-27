@@ -27,12 +27,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-intro-mount {
-  width: min(
-    calc(100% + (var(--discover-editorial-gutter, 0px) * 1.5)),
-    var(--discover-editorial-width, 1320px)
-  );
-  margin: clamp(56px, 5vw, 84px) 0 clamp(64px, 6vw, 96px) 50%;
-  transform: translateX(-50%);
+  margin: clamp(56px, 5vw, 84px) 0 clamp(64px, 6vw, 96px);
 }
 
 .discover-reference-intro {
@@ -193,12 +188,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-outro-mount {
-  width: min(
-    calc(100% + (var(--discover-editorial-gutter, 0px) * 1.5)),
-    var(--discover-editorial-width, 1320px)
-  );
-  margin: clamp(42px, 4vw, 64px) 0 0 50%;
-  transform: translateX(-50%);
+  margin: clamp(42px, 4vw, 64px) 0 0;
 }
 
 .discover-reference-outro {
@@ -280,9 +270,9 @@ body:has(.discover-page-root) .discover-footer-wrap {
 @media (max-width: 900px) {
   .discover-reference-intro-mount,
   .discover-reference-outro-mount {
-    width: min(100%, var(--discover-editorial-width, 1320px));
-    margin-right: auto;
-    margin-left: auto;
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
     transform: none;
   }
 
