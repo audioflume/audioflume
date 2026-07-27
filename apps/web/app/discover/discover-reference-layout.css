@@ -164,8 +164,8 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   position: absolute;
   top: 74.5%;
   left: 0;
-  width: 480px;
-  max-width: 116%;
+  width: 540px;
+  max-width: 130%;
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
