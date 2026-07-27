@@ -154,9 +154,9 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-intro-center > svg:nth-of-type(2) {
   position: absolute;
   bottom: 40.5%;
-  left: 71%;
+  left: 82%;
   z-index: 3;
-  width: 144px;
+  width: 160px;
   color: var(--text-primary);
 }
 
