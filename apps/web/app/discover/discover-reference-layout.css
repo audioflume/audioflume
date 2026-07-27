@@ -166,7 +166,8 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-orange-panel {
   position: absolute;
   top: 7.3%;
-  left: 74.6%;
+  right: 0;
+  left: auto;
   width: 22%;
   margin: 0;
   padding: 0;
