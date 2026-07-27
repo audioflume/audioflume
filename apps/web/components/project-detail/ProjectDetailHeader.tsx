@@ -1,6 +1,6 @@
 "use client";
 
-import SearchIcon from "@/components/icons/SearchIcon";
+import { HeaderSearchBar } from "@filmwave/shared";
 import { useProjectsContext } from "@/context/ProjectsContext";
 import type { ProjectSyncState } from "@/lib/project-detail/projectDetailUtils";
 import type { Project } from "@/lib/types";
@@ -252,25 +252,20 @@ export default function ProjectDetailHeader({
       </div>
 
       <div className="project-detail-controls">
-        <label className="project-detail-search">
-          <SearchIcon />
-          <input
-            type="text"
-            value={searchQuery}
-            placeholder="Search project files"
-            onChange={(event) => setSearchQuery(event.target.value)}
-          />
-          {searchQuery.length > 0 && (
-            <button
-              type="button"
-              className="project-detail-search-clear"
-              aria-label="Clear project search"
-              onClick={() => setSearchQuery("")}
-            >
-              ×
-            </button>
-          )}
-        </label>
+        <HeaderSearchBar
+          variant="control"
+          renderForm={false}
+          searchValue={searchQuery}
+          searchPlaceholder="Search project files"
+          searchAriaLabel="Search project files"
+          clearAriaLabel="Clear project search"
+          onSearchChange={setSearchQuery}
+          rowStyle={{
+            width: "min(640px, 100%)",
+            minWidth: 0,
+            flex: "1 1 420px",
+          }}
+        />
 
         <div
           id="project-detail-toolbar-slot"
