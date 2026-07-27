@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import DiscoverHeroVideoLayer from "@/components/DiscoverHeroVideoLayer";
 import DiscoverCuratedHeroCopy from "./DiscoverCuratedHeroCopy";
-import DiscoverOutroMount from "./DiscoverOutroMount";
+import DiscoverReferenceLayout from "./DiscoverReferenceLayout";
 import "../curated-playlists/curated-video-hero.css";
 import "./discover-reference-layout.css";
 import "./discover-curated-hero-copy.css";
@@ -12,7 +12,7 @@ export default function DiscoverTemplate({ children }: { children: ReactNode }) 
       {children}
       <DiscoverHeroVideoLayer />
       <DiscoverCuratedHeroCopy />
-      <DiscoverOutroMount />
+      <DiscoverReferenceLayout />
     </div>
   );
 }
