@@ -15,7 +15,6 @@ import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import DiscoverDescriptorPills from "@/components/DiscoverDescriptorPills";
 import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
 import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
-import AdminPageHeaderMount from "@/components/admin/AdminPageHeaderMount";
 import "./globals.css";
 import "./music-library-web-refinements.css";
 import "./discover/discover-page.css";
@@ -110,7 +109,6 @@ export default async function RootLayout({
                       <DiscoverDescriptorPills />
                       <MusicFilterToolbarBehavior />
                       <SideFilterPanelBehavior />
-                      <AdminPageHeaderMount />
                     </FavoritesProvider>
                   </PlayerProvider>
                 </ProjectsProvider>
