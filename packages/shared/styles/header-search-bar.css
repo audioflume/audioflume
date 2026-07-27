@@ -1,11 +1,20 @@
-/* Shared search bar internals used by Music, Projects, and Playlists. */
+/* Shared search bar used by Music, Projects, Project Detail, and Playlists. */
 
 .fw-toolbar-header-search-row {
+  box-sizing: border-box !important;
   display: flex !important;
-  width: 100% !important;
-  height: var(--fw-header-search-row-height, 50px) !important;
+  width: var(--fw-header-search-row-width, 100%) !important;
+  height: 42px !important;
+  min-width: var(--fw-header-search-row-min-width, 0) !important;
+  flex: var(--fw-header-search-row-flex, 0 1 auto) !important;
   align-items: center !important;
-  padding: var(--fw-header-search-row-padding, 0) !important;
+  border: 1px solid
+    color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
+  border-radius: 0 !important;
+  background: var(--bg-primary) !important;
+  background-color: var(--bg-primary) !important;
+  box-shadow: none !important;
+  padding: 0 14px !important;
 }
 
 .fw-toolbar-header-search-form {
@@ -20,11 +29,11 @@
   box-sizing: border-box !important;
   display: flex !important;
   width: 100% !important;
-  height: var(--fw-header-search-field-height, 40px) !important;
-  min-height: var(--fw-header-search-field-height, 40px) !important;
+  height: 100% !important;
+  min-height: 100% !important;
   min-width: 0 !important;
   align-items: center !important;
-  gap: var(--fw-header-search-gap, 12px) !important;
+  gap: 12px !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -34,12 +43,12 @@
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   padding: 0 !important;
-  transform: var(--fw-header-search-transform, translateY(4px)) !important;
+  transform: none !important;
   cursor: text !important;
 }
 
 .fw-toolbar-search-static.has-value {
-  gap: var(--fw-header-search-active-gap, 8px) !important;
+  gap: 8px !important;
 }
 
 .fw-toolbar-search-static-icon {
@@ -151,44 +160,4 @@
   display: none !important;
   -webkit-appearance: none !important;
   appearance: none !important;
-}
-
-.fw-toolbar-header-search-row.is-control {
-  width: var(--fw-control-search-width, 100%) !important;
-  height: 42px !important;
-  min-width: 0 !important;
-  flex: var(--fw-control-search-flex, 0 1 auto) !important;
-}
-
-.fw-toolbar-header-search-row.is-control .fw-toolbar-search-static {
-  height: 42px !important;
-  min-height: 42px !important;
-  gap: 12px !important;
-  border: 1px solid
-    color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
-  background: var(--bg-primary) !important;
-  background-color: var(--bg-primary) !important;
-  padding: 0 14px !important;
-  transform: none !important;
-}
-
-.fw-toolbar-header-search-row.is-control
-  .fw-toolbar-search-static.has-value {
-  gap: 12px !important;
-}
-
-.fw-toolbar-header-search-row.is-control
-  .fw-toolbar-search-static-input {
-  font-size: 12px !important;
-  font-style: italic !important;
-  font-weight: 400 !important;
-  transform: none !important;
-}
-
-.fw-toolbar-header-search-row.is-control
-  .fw-toolbar-search-static-clear:hover,
-.fw-toolbar-header-search-row.is-control
-  .fw-toolbar-search-static-clear:focus-visible {
-  background: var(--bg-hover) !important;
-  background-color: var(--bg-hover) !important;
 }
