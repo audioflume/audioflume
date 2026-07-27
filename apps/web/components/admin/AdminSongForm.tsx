@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUser } from "@clerk/nextjs";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
+import AdminContentPage from "@/components/admin/AdminContentPage";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
@@ -1551,58 +1552,84 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     }
   };
 
+  const titleAction = (
+    <div className="hidden items-center gap-2 lg:flex">
+      {uploadWarnings.length > 0 && !uploadComplete ? (
+        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-error-soft)] px-3 text-xs font-medium text-[var(--status-error)]">
+          <WarningIcon />
+          <span>
+            {uploadWarnings.length} warning
+            {uploadWarnings.length === 1 ? "" : "s"}
+          </span>
+        </div>
+      ) : (
+        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-success-soft)] px-3 text-xs font-medium text-[var(--status-success)]">
+          <span className="h-2 w-2 rounded-full bg-[var(--status-success)]" />
+          <span>Ready</span>
+        </div>
+      )}
+    </div>
+  );
+
   if (!isLoaded) {
     return (
-      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-        <div className="px-8 pt-8 text-sm text-[var(--text-secondary)]">
-          Loading...
+      <AdminContentPage
+        label="Song Editor"
+        title={pageTitle}
+        description={pageDescription}
+      >
+        <div className="flex min-h-[240px] items-center justify-center">
+          <LoadingSpinner size={32} stroke={7} color="var(--text-primary)" />
         </div>
-      </main>
+      </AdminContentPage>
     );
   }
 
   if (!isAdmin) {
     return (
-      <main className="min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-        <div className="px-8 pt-14">
-          <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-            Not authorized
-          </h1>
-
-          <p className="mt-3 text-sm text-[var(--text-secondary)]">
-            You do not have access to this admin page.
-          </p>
-        </div>
-      </main>
+      <AdminContentPage
+        label="Song Editor"
+        title="Not authorized"
+        description="You do not have access to this admin page."
+      >
+        <div />
+      </AdminContentPage>
     );
   }
 
   if (isEditMode && isLoadingSong) {
     return (
-      <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-        <div className="flex min-h-[calc(100vh-56px)] items-center justify-center">
+      <AdminContentPage
+        label="Song Editor"
+        title={pageTitle}
+        description={pageDescription}
+      >
+        <div className="flex min-h-[240px] items-center justify-center">
           <LoadingSpinner size={32} stroke={7} color="var(--text-primary)" />
         </div>
-      </main>
+      </AdminContentPage>
     );
   }
 
   if (isEditMode && loadError) {
     return (
-      <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
-        <div className="px-8 pt-14">
-          <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-            Edit Song
-          </h1>
-
-          <p className="mt-4 text-sm text-[var(--status-error)]">{loadError}</p>
-        </div>
-      </main>
+      <AdminContentPage
+        label="Song Editor"
+        title={pageTitle}
+        description={pageDescription}
+      >
+        <p className="text-sm text-[var(--status-error)]">{loadError}</p>
+      </AdminContentPage>
     );
   }
 
   return (
-    <main className="relative min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+    <AdminContentPage
+      label="Song Editor"
+      title={pageTitle}
+      description={pageDescription}
+      titleAction={titleAction}
+    >
       <style>{`
         .admin-song-form-card {
           overflow: hidden;
@@ -1671,42 +1698,10 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
       `}</style>
 
       <div
-        className="px-8 pt-14"
         style={{
-          paddingBottom: playerVisible ? "152px" : "80px",
+          paddingBottom: playerVisible ? "72px" : undefined,
         }}
       >
-        <div className="flex items-end justify-between gap-4 pb-8">
-          <div className="min-w-0">
-            <div>
-              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-                {pageTitle}
-              </h1>
-
-              <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                {pageDescription}
-              </p>
-            </div>
-          </div>
-
-          <div className="hidden shrink-0 items-center gap-2 lg:flex">
-            {uploadWarnings.length > 0 && !uploadComplete ? (
-              <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-error-soft)] px-3 text-xs font-medium text-[var(--status-error)]">
-                <WarningIcon />
-                <span>
-                  {uploadWarnings.length} warning
-                  {uploadWarnings.length === 1 ? "" : "s"}
-                </span>
-              </div>
-            ) : (
-              <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-success-soft)] px-3 text-xs font-medium text-[var(--status-success)]">
-                <span className="h-2 w-2 rounded-full bg-[var(--status-success)]" />
-                <span>Ready</span>
-              </div>
-            )}
-          </div>
-        </div>
-
         <form
           className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
           onSubmit={(e) => {
@@ -2368,6 +2363,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         message={toastMessage}
         bottomOffset={playerVisible ? "96px" : "24px"}
       />
-    </main>
+    </AdminContentPage>
   );
 }
