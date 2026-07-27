@@ -174,7 +174,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-integrated-values strong {
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: var(--filmwave-web-type-label);
+  font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 500;
   letter-spacing: normal;
   line-height: 1.15;
@@ -184,7 +184,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 .discover-integrated-values span {
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: var(--filmwave-web-type-meta);
+  font-size: clamp(8px, 0.58vw, 10px);
   font-weight: 400;
   line-height: 1.65;
   text-transform: uppercase;

@@ -48,20 +48,6 @@
   --filmwave-ui-title-letter-spacing: -0.045em;
   --filmwave-ui-title-line-height: 1.1;
 
-  /* Stable website typography. These values change only at breakpoints. */
-  --filmwave-web-type-ui-title: 22px;
-  --filmwave-web-type-hero-title: 22px;
-  --filmwave-web-type-section-title: 20px;
-  --filmwave-web-type-feature-title: 32px;
-  --filmwave-web-type-detail-title: 32px;
-  --filmwave-web-type-card-overlay: 16px;
-  --filmwave-web-type-editorial-display: 61px;
-  --filmwave-web-type-editorial-heading: 42px;
-  --filmwave-web-type-body-large: 17px;
-  --filmwave-web-type-label: 14px;
-  --filmwave-web-type-meta: 10px;
-  --filmwave-web-type-meta-small: 8.5px;
-
   --waveform-color: rgba(255, 255, 255, 0.3);
   --waveform-progress: #ffffff;
 
@@ -92,40 +78,6 @@
   --sidebar-width-collapsed: 76px;
   --sidebar-width: var(--sidebar-width-expanded);
   --admin-sidebar-width: 280px;
-}
-
-@media (max-width: 900px) {
-  :where(:root) {
-    --filmwave-web-type-ui-title: 20px;
-    --filmwave-web-type-hero-title: 20px;
-    --filmwave-web-type-section-title: 19px;
-    --filmwave-web-type-feature-title: 28px;
-    --filmwave-web-type-detail-title: 28px;
-    --filmwave-web-type-card-overlay: 15px;
-    --filmwave-web-type-editorial-display: 54px;
-    --filmwave-web-type-editorial-heading: 38px;
-    --filmwave-web-type-body-large: 16px;
-    --filmwave-web-type-label: 13px;
-    --filmwave-web-type-meta: 9.5px;
-    --filmwave-web-type-meta-small: 8px;
-  }
-}
-
-@media (max-width: 620px) {
-  :where(:root) {
-    --filmwave-web-type-ui-title: 18px;
-    --filmwave-web-type-hero-title: 18px;
-    --filmwave-web-type-section-title: 18px;
-    --filmwave-web-type-feature-title: 26px;
-    --filmwave-web-type-detail-title: 24px;
-    --filmwave-web-type-card-overlay: 14px;
-    --filmwave-web-type-editorial-display: 40px;
-    --filmwave-web-type-editorial-heading: 34px;
-    --filmwave-web-type-body-large: 15px;
-    --filmwave-web-type-label: 12px;
-    --filmwave-web-type-meta: 9px;
-    --filmwave-web-type-meta-small: 8px;
-  }
 }
 
 :where(html.light, html[data-theme="light"]) {

@@ -52,7 +52,7 @@
   padding: 20px;
   color: #fff;
   font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: var(--filmwave-web-type-card-overlay);
+  font-size: clamp(14px, 1vw, 18px);
   font-weight: 400;
   font-kerning: normal;
   letter-spacing: 0;

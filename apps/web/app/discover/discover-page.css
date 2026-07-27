@@ -70,7 +70,7 @@ body:has(.discover-page-root) .discover-hero-content h1::after {
   content: "ENDLESS AUDIO FOR FILM";
   display: block;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: var(--filmwave-web-type-hero-title);
+  font-size: clamp(17px, 1.35vw, 24px);
   font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -114,7 +114,7 @@ body:has(.discover-page-root) .discover-hero-values strong {
 
 body:has(.discover-page-root) .discover-hero-values strong::after {
   display: block;
-  font-size: var(--filmwave-web-type-meta);
+  font-size: clamp(8px, 0.58vw, 10px);
   line-height: 1.15;
 }
 
@@ -134,7 +134,7 @@ body:has(.discover-page-root) .discover-hero-values span {
 body:has(.discover-page-root) .discover-hero-values span::after {
   display: block;
   color: rgba(255, 255, 255, 0.82);
-  font-size: var(--filmwave-web-type-meta-small);
+  font-size: clamp(7px, 0.48vw, 8.5px);
   line-height: 1.5;
 }
 
@@ -220,7 +220,7 @@ body:has(.discover-page-root) .discover-section-heading {
 body:has(.discover-page-root) .discover-section-heading h2 {
   color: var(--text-primary) !important;
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
-  font-size: var(--filmwave-web-type-section-title) !important;
+  font-size: clamp(17px, 1.15vw, 22px) !important;
   font-weight: 500 !important;
   font-kerning: normal !important;
   letter-spacing: -0.035em !important;
@@ -269,7 +269,7 @@ body:has(.discover-page-root) .discover-curated-playlist-section .discover-playl
   padding: 20px;
   color: #fff !important;
   font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: var(--filmwave-web-type-card-overlay);
+  font-size: clamp(11px, 0.85vw, 15px);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.05;
