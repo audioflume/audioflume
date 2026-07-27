@@ -62,7 +62,18 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 2.5%;
+  left: max(
+    0px,
+    calc(
+      (
+          100% -
+            (
+              100vw - var(--discover-editorial-gutter, 0px) -
+                var(--discover-editorial-gutter, 0px)
+            )
+        ) / 2
+    )
+  );
   width: 32%;
 }
 
