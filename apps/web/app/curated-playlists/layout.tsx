@@ -5,10 +5,30 @@ import CuratedPlaylistsLoadingStyles from "./CuratedPlaylistsLoadingStyles";
 import "./curated-playlists.css";
 
 const CURATED_FEATURED_STYLE = `
-  body:has(.playlist-detail-page) .playlist-detail-hero,
-  body:has(.playlist-detail-page) .playlist-detail-section {
+  body:has(.curated-playlists-page-root) {
+    --curated-shared-content-inset: 32px;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlists-page-layer > div {
     box-sizing: border-box;
-    width: min(100%, 1120px);
+    width: min(
+      calc(
+        100% + var(--curated-page-gutter) + var(--curated-page-gutter) -
+          var(--curated-shared-content-inset) -
+          var(--curated-shared-content-inset)
+      ),
+      calc(1280px + var(--curated-page-gutter) + var(--curated-page-gutter))
+    );
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  body:has(.playlist-detail-page) .playlist-detail-hero,
+  body:has(.playlist-detail-page) .playlist-detail-quick-row,
+  body:has(.playlist-detail-page) .playlist-detail-section,
+  body:has(.playlist-detail-page) .playlist-detail-shell > .playlist-detail-empty {
+    box-sizing: border-box;
+    width: min(100%, 1280px);
     justify-self: center;
     margin-right: auto !important;
     margin-left: auto !important;
@@ -245,6 +265,10 @@ const CURATED_FEATURED_STYLE = `
   }
 
   @media (max-width: 720px) {
+    body:has(.curated-playlists-page-root) {
+      --curated-shared-content-inset: 20px;
+    }
+
     body:has(.curated-playlists-page-root) .curated-featured-playlist-title {
       font-size: 26px !important;
     }
