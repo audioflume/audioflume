@@ -166,7 +166,18 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 .discover-reference-orange-panel {
   position: absolute;
   top: 7.3%;
-  right: 0;
+  right: max(
+    0px,
+    calc(
+      (
+          100% -
+            (
+              100vw - var(--discover-editorial-gutter, 0px) -
+                var(--discover-editorial-gutter, 0px)
+            )
+        ) / 2
+    )
+  );
   left: auto;
   width: 22%;
   margin: 0;
