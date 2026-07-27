@@ -190,7 +190,7 @@ body:has(.discover-page-root) .discover-content::before {
   background-size: contain;
 }
 
-body:has(.discover-page-root) .discover-content > .discover-section:not(.discover-mood-section) {
+body:has(.discover-page-root) .discover-curated-playlist-section {
   width: min(100%, var(--discover-editorial-width));
   margin-right: auto;
   margin-left: auto;
