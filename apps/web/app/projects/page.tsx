@@ -1,5 +1,6 @@
 "use client";
 
+import { HeaderSearchBar } from "@filmwave/shared";
 import CreateProjectModal from "@/components/CreateProjectModal";
 import DropdownShell from "@/components/DropdownShell";
 import MoreIcon from "@/components/icons/MoreIcon";
@@ -576,25 +577,15 @@ export default function ProjectsPage() {
               ))}
             </DropdownShell>
 
-            <label className="projects-search">
-              <SearchIcon />
-              <input
-                type="text"
-                value={query}
-                placeholder="Search projects"
-                onChange={(event) => setQuery(event.target.value)}
-              />
-              {query.length > 0 && (
-                <button
-                  type="button"
-                  className="projects-search-clear"
-                  aria-label="Clear project search"
-                  onClick={() => setQuery("")}
-                >
-                  ×
-                </button>
-              )}
-            </label>
+            <HeaderSearchBar
+              variant="control"
+              renderForm={false}
+              searchValue={query}
+              searchPlaceholder="Search projects"
+              searchAriaLabel="Search projects"
+              clearAriaLabel="Clear project search"
+              onSearchChange={setQuery}
+            />
 
             <div className="projects-control-right">
               <DropdownShell
