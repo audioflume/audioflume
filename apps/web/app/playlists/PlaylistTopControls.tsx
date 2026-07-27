@@ -1,5 +1,6 @@
 "use client";
 
+import { HeaderSearchBar } from "@filmwave/shared";
 import DropdownShell from "@/components/DropdownShell";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
@@ -669,25 +670,15 @@ export default function PlaylistTopControls() {
           ))}
         </DropdownShell>
 
-        <label className="playlists-search">
-          <SearchIcon />
-          <input
-            type="text"
-            value={query}
-            placeholder="Search playlists"
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          {query.length > 0 && (
-            <button
-              type="button"
-              className="playlists-search-clear"
-              aria-label="Clear playlist search"
-              onClick={() => setQuery("")}
-            >
-              ×
-            </button>
-          )}
-        </label>
+        <HeaderSearchBar
+          variant="control"
+          renderForm={false}
+          searchValue={query}
+          searchPlaceholder="Search playlists"
+          searchAriaLabel="Search playlists"
+          clearAriaLabel="Clear playlist search"
+          onSearchChange={setQuery}
+        />
 
         {preferencesLoaded && (
           <div className="playlists-control-right">
