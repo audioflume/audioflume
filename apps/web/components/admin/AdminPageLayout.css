@@ -12,6 +12,10 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   padding-top: 88px !important;
 }
 
+main:has(.admin-song-form-card) > div.px-8 {
+  padding-top: 88px !important;
+}
+
 /* Source-owned admin page corner system */
 .filmwave-admin-content-page :is(
   [class~="rounded"],
