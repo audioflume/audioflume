@@ -9,6 +9,18 @@ import {
   type Ref,
 } from "react";
 
+function HeaderSearchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M10.5 3a7.5 7.5 0 1 0 4.71 13.33l4.13 4.13a1.4 1.4 0 0 0 1.98-1.98l-4.13-4.13A7.5 7.5 0 0 0 10.5 3ZM5.8 10.5a4.7 4.7 0 1 1 9.4 0 4.7 4.7 0 0 1-9.4 0Z"
+      />
+    </svg>
+  );
+}
+
 function HeaderSearchClearIcon() {
   return (
     <svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true">
@@ -24,6 +36,7 @@ export type HeaderSearchBarProps = {
   searchValue: string;
   searchPlaceholder?: string;
   searchAriaLabel?: string;
+  clearAriaLabel?: string;
   onSearchChange: (value: string) => void;
   onSubmitSearch?: (value: string) => void;
   searchInputRef?: Ref<HTMLInputElement>;
@@ -33,13 +46,16 @@ export type HeaderSearchBarProps = {
   formClassName?: string;
   inputClassName?: string;
   style?: CSSProperties;
+  rowStyle?: CSSProperties;
   renderForm?: boolean;
+  variant?: "header" | "control";
 };
 
 export function HeaderSearchBar({
   searchValue,
   searchPlaceholder,
   searchAriaLabel,
+  clearAriaLabel = "Clear search",
   onSearchChange,
   onSubmitSearch,
   searchInputRef,
@@ -49,9 +65,12 @@ export function HeaderSearchBar({
   formClassName = "",
   inputClassName = "",
   style,
+  rowStyle,
   renderForm = true,
+  variant = "header",
 }: HeaderSearchBarProps) {
   const hasSearchValue = searchValue.length > 0;
+  const isControlVariant = variant === "control";
 
   function focusSearchInput() {
     if (
@@ -86,31 +105,35 @@ export function HeaderSearchBar({
     submitSearch();
   }
 
+  const clearButton = hasSearchValue ? (
+    <button
+      type="button"
+      className="fw-toolbar-search-static-clear"
+      onClick={handleSearchClear}
+      aria-label={clearAriaLabel}
+    >
+      <span
+        className="fw-toolbar-search-static-clear-icon"
+        aria-hidden="true"
+      >
+        <HeaderSearchClearIcon />
+      </span>
+    </button>
+  ) : null;
+
   const searchField = (
     <div
-      className={`fw-toolbar-search fw-toolbar-search-static${hasSearchValue ? " has-value" : ""}${className ? ` ${className}` : ""}`}
+      className={`fw-toolbar-search fw-toolbar-search-static${hasSearchValue ? " has-value" : ""}${isControlVariant ? " is-control" : ""}${className ? ` ${className}` : ""}`}
       style={style}
       onClick={focusSearchInput}
     >
       <span className="fw-toolbar-search-static-icon" aria-hidden="true">
-        {searchIcon}
+        {searchIcon ?? <HeaderSearchIcon />}
       </span>
 
-      {hasSearchValue && (
+      {!isControlVariant && clearButton && (
         <>
-          <button
-            type="button"
-            className="fw-toolbar-search-static-clear"
-            onClick={handleSearchClear}
-            aria-label="Clear search"
-          >
-            <span
-              className="fw-toolbar-search-static-clear-icon"
-              aria-hidden="true"
-            >
-              <HeaderSearchClearIcon />
-            </span>
-          </button>
+          {clearButton}
           <span
             className="fw-toolbar-search-static-divider"
             aria-hidden="true"
@@ -128,23 +151,28 @@ export function HeaderSearchBar({
         onKeyDown={handleInputKeyDown}
         className={`fw-toolbar-search-static-input${inputClassName ? ` ${inputClassName}` : ""}`}
       />
+
+      {isControlVariant && clearButton}
     </div>
   );
 
+  const variantClassName = isControlVariant ? " is-control" : "";
+
   return (
     <div
-      className={`fw-toolbar-header-search-row${rowClassName ? ` ${rowClassName}` : ""}`}
+      className={`fw-toolbar-header-search-row${variantClassName}${rowClassName ? ` ${rowClassName}` : ""}`}
+      style={rowStyle}
     >
       {renderForm ? (
         <form
-          className={`fw-toolbar-header-search-form${formClassName ? ` ${formClassName}` : ""}`}
+          className={`fw-toolbar-header-search-form${variantClassName}${formClassName ? ` ${formClassName}` : ""}`}
           onSubmit={handleSubmit}
         >
           {searchField}
         </form>
       ) : (
         <div
-          className={`fw-toolbar-header-search-form${formClassName ? ` ${formClassName}` : ""}`}
+          className={`fw-toolbar-header-search-form${variantClassName}${formClassName ? ` ${formClassName}` : ""}`}
         >
           {searchField}
         </div>
