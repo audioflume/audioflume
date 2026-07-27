@@ -1,6 +1,6 @@
 body:has(.discover-page-root) {
   --discover-editorial-width: 1320px;
-  --discover-editorial-gutter: clamp(24px, 5vw, 80px);
+  --discover-editorial-gutter: clamp(28px, 5.2vw, 82px);
   --discover-section-gap: clamp(64px, 6vw, 96px);
   background: #000;
 }
@@ -193,13 +193,10 @@ body:has(.discover-page-root) .discover-content::before {
 body:has(.discover-page-root)
   .discover-content
   > .discover-section:not(.discover-mood-section) {
-  width: min(
-    calc(100% + (var(--discover-editorial-gutter) * 1.5)),
-    var(--discover-editorial-width)
-  );
+  width: 100%;
   margin-right: 0;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  margin-left: 0;
+  transform: none;
 }
 
 body:has(.discover-page-root) .discover-mood-section {
@@ -352,9 +349,9 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   body:has(.discover-page-root)
     .discover-content
     > .discover-section:not(.discover-mood-section) {
-    width: min(100%, var(--discover-editorial-width));
-    margin-right: auto;
-    margin-left: auto;
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
     transform: none;
   }
 
