@@ -316,6 +316,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-filter-panel-wrap
   .fw-filter-panel-body {
   grid-template-columns: var(--filmwave-side-filter-rail-width) !important;
+  border-right: 0 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
