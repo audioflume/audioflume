@@ -164,13 +164,14 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   position: absolute;
   top: 74.5%;
   left: 0;
-  width: 440px;
-  max-width: 108%;
+  width: 480px;
+  max-width: 116%;
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(14px, 1.1vw, 17px);
   font-weight: 300;
+  letter-spacing: normal;
   line-height: 1.55;
 }
 
@@ -269,15 +270,16 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-outro-description {
-  width: 100%;
-  max-width: 500px;
+  width: calc(100% + 40px);
+  max-width: 540px;
   margin-right: 0;
   margin-bottom: 0;
-  margin-left: 0;
+  margin-left: -40px;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(14px, 1.1vw, 17px);
   font-weight: 300;
+  letter-spacing: normal;
   line-height: 1.55;
 }
 
@@ -401,6 +403,9 @@ body:has(.discover-page-root) .discover-footer-wrap {
   }
 
   .discover-reference-outro-description {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
     grid-column: 2;
   }
 }
