@@ -154,8 +154,10 @@
 }
 
 .fw-toolbar-header-search-row.is-control {
+  width: var(--fw-control-search-width, 100%) !important;
   height: 42px !important;
   min-width: 0 !important;
+  flex: var(--fw-control-search-flex, 0 1 auto) !important;
 }
 
 .fw-toolbar-header-search-row.is-control .fw-toolbar-search-static {
