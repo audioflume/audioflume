@@ -1,8 +1,8 @@
 body:has(.discover-page-root) {
   --discover-reference-mark-filter: none;
-  --discover-editorial-width: 1320px;
+  --discover-editorial-width: 1280px;
   --discover-content-breakout: calc(
-    var(--discover-editorial-gutter, 0px) * 1.5
+    (var(--discover-editorial-gutter, 0px) * 1.5) - 40px
   );
 }
 
