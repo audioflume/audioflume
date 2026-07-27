@@ -173,7 +173,7 @@ export default function ProjectDetailHeader({
           padding: 0 10px;
           color: var(--text-primary);
           font-family: var(--filmwave-ui-title-font-family);
-          font-size: var(--filmwave-ui-title-font-size);
+          font-size: var(--filmwave-web-type-ui-title);
           font-weight: var(--filmwave-ui-title-font-weight);
           letter-spacing: var(--filmwave-ui-title-letter-spacing);
           line-height: var(--filmwave-ui-title-line-height);
