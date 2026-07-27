@@ -98,12 +98,8 @@ export default function PlaylistDetailBackButton() {
                     var(--playlist-detail-page-gutter) -
                       var(--playlist-detail-control-inset-right)
                   ) !important;
-                }
-
-                .playlist-detail-page .playlist-detail-hero,
-                .playlist-detail-page .playlist-detail-section {
                   box-sizing: border-box;
-                  width: min(100%, 1120px);
+                  width: min(100%, 1280px);
                   justify-self: center;
                   margin-right: auto !important;
                   margin-left: auto !important;
