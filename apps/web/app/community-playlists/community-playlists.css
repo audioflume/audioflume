@@ -16,7 +16,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  border-right: 1px solid var(--border-subtle);
+  border-right: 0;
   background: var(--bg-primary);
 }
 
