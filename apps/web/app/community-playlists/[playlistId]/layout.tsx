@@ -22,9 +22,11 @@ export default function CommunityPlaylistDetailLayout({
         }
 
         body .community-detail-page .community-detail-hero,
-        body .community-detail-page .community-detail-section {
+        body .community-detail-page .community-detail-quick-row,
+        body .community-detail-page .community-detail-section,
+        body .community-detail-page .community-detail-shell > .community-detail-empty {
           box-sizing: border-box;
-          width: min(100%, 1120px);
+          width: min(100%, 1280px);
           justify-self: center;
           margin-right: auto !important;
           margin-left: auto !important;
