@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useRef,
   type CSSProperties,
   type FormEvent as ReactFormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
@@ -69,17 +70,22 @@ export function HeaderSearchBar({
   renderForm = true,
   variant = "header",
 }: HeaderSearchBarProps) {
+  const internalSearchInputRef = useRef<HTMLInputElement | null>(null);
   const hasSearchValue = searchValue.length > 0;
   const isControlVariant = variant === "control";
 
-  function focusSearchInput() {
-    if (
-      searchInputRef &&
-      typeof searchInputRef !== "function" &&
-      "current" in searchInputRef
-    ) {
-      searchInputRef.current?.focus();
+  function assignSearchInputRef(node: HTMLInputElement | null) {
+    internalSearchInputRef.current = node;
+
+    if (typeof searchInputRef === "function") {
+      searchInputRef(node);
+    } else if (searchInputRef && "current" in searchInputRef) {
+      searchInputRef.current = node;
     }
+  }
+
+  function focusSearchInput() {
+    internalSearchInputRef.current?.focus();
   }
 
   function handleSearchClear(event: ReactMouseEvent<HTMLButtonElement>) {
@@ -99,7 +105,7 @@ export function HeaderSearchBar({
   }
 
   function handleInputKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
-    if (renderForm || event.key !== "Enter") return;
+    if (renderForm || !onSubmitSearch || event.key !== "Enter") return;
     event.preventDefault();
     event.stopPropagation();
     submitSearch();
@@ -142,7 +148,7 @@ export function HeaderSearchBar({
       )}
 
       <input
-        ref={searchInputRef}
+        ref={assignSearchInputRef}
         type="text"
         value={searchValue}
         placeholder={searchPlaceholder}
@@ -157,11 +163,18 @@ export function HeaderSearchBar({
   );
 
   const variantClassName = isControlVariant ? " is-control" : "";
+  const resolvedRowStyle = isControlVariant
+    ? ({
+        ...rowStyle,
+        "--fw-control-search-width": rowStyle?.width ?? "100%",
+        "--fw-control-search-flex": rowStyle?.flex ?? "0 1 auto",
+      } as CSSProperties)
+    : rowStyle;
 
   return (
     <div
       className={`fw-toolbar-header-search-row${variantClassName}${rowClassName ? ` ${rowClassName}` : ""}`}
-      style={rowStyle}
+      style={resolvedRowStyle}
     >
       {renderForm ? (
         <form
