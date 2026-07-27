@@ -1,5 +1,9 @@
 body:has(.discover-page-root) {
   --discover-reference-mark-filter: none;
+  --discover-editorial-width: 1320px;
+  --discover-content-breakout: calc(
+    var(--discover-editorial-gutter, 0px) * 1.5
+  );
 }
 
 :where(html.light, html[data-theme="light"]) body:has(.discover-page-root) {
@@ -26,13 +30,23 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   width: 100%;
 }
 
-.discover-reference-intro-mount {
+.discover-reference-intro-mount,
+body:has(.discover-page-root)
+  .discover-content
+  > .discover-section:not(.discover-mood-section),
+.discover-reference-outro-mount {
   width: min(
-    calc(100% + (var(--discover-editorial-gutter, 0px) * 1.5)),
-    1320px
+    calc(100% + var(--discover-content-breakout)),
+    var(--discover-editorial-width)
   );
-  margin: clamp(56px, 5vw, 84px) 0 clamp(64px, 6vw, 96px) 50%;
+  margin-right: 0;
+  margin-left: 50%;
   transform: translateX(-50%);
+}
+
+.discover-reference-intro-mount {
+  margin-top: clamp(56px, 5vw, 84px);
+  margin-bottom: clamp(64px, 6vw, 96px);
 }
 
 .discover-reference-intro {
@@ -217,8 +231,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-outro-mount {
-  width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: clamp(42px, 4vw, 64px) auto 0;
+  margin-top: clamp(42px, 4vw, 64px);
 }
 
 .discover-reference-outro {
@@ -299,10 +312,20 @@ body:has(.discover-page-root) .discover-footer-wrap {
 }
 
 @media (max-width: 900px) {
-  .discover-reference-intro-mount {
-    width: min(100%, var(--discover-editorial-width, 1120px));
-    margin: clamp(56px, 5vw, 84px) auto clamp(64px, 6vw, 96px);
+  .discover-reference-intro-mount,
+  body:has(.discover-page-root)
+    .discover-content
+    > .discover-section:not(.discover-mood-section),
+  .discover-reference-outro-mount {
+    width: min(100%, var(--discover-editorial-width));
+    margin-right: auto;
+    margin-left: auto;
     transform: none;
+  }
+
+  .discover-reference-intro-mount {
+    margin-top: clamp(56px, 5vw, 84px);
+    margin-bottom: clamp(64px, 6vw, 96px);
   }
 
   .discover-reference-intro {
