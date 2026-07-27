@@ -5,6 +5,16 @@ import "../discover/discover-reference-layout.css";
 import "./curated-video-hero.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
+  body:has(.curated-playlists-page-root) {
+    --curated-featured-hero-height: clamp(380px, 48vh, 540px);
+  }
+
+  body:has(.curated-playlists-page-root) .curated-featured-playlist {
+    height: var(--curated-featured-hero-height);
+    min-height: var(--curated-featured-hero-height);
+    max-height: var(--curated-featured-hero-height);
+  }
+
   body:has(.curated-playlists-page-root) .curated-playlist-shelf {
     width: min(100%, 1120px);
     margin-right: auto;
