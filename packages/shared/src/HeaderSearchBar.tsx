@@ -68,11 +68,9 @@ export function HeaderSearchBar({
   style,
   rowStyle,
   renderForm = true,
-  variant = "header",
 }: HeaderSearchBarProps) {
   const internalSearchInputRef = useRef<HTMLInputElement | null>(null);
   const hasSearchValue = searchValue.length > 0;
-  const isControlVariant = variant === "control";
 
   function assignSearchInputRef(node: HTMLInputElement | null) {
     internalSearchInputRef.current = node;
@@ -129,7 +127,7 @@ export function HeaderSearchBar({
 
   const searchField = (
     <div
-      className={`fw-toolbar-search fw-toolbar-search-static${hasSearchValue ? " has-value" : ""}${isControlVariant ? " is-control" : ""}${className ? ` ${className}` : ""}`}
+      className={`fw-toolbar-search fw-toolbar-search-static${hasSearchValue ? " has-value" : ""}${className ? ` ${className}` : ""}`}
       style={style}
       onClick={focusSearchInput}
     >
@@ -137,7 +135,7 @@ export function HeaderSearchBar({
         {searchIcon ?? <HeaderSearchIcon />}
       </span>
 
-      {!isControlVariant && clearButton && (
+      {clearButton && (
         <>
           {clearButton}
           <span
@@ -157,35 +155,31 @@ export function HeaderSearchBar({
         onKeyDown={handleInputKeyDown}
         className={`fw-toolbar-search-static-input${inputClassName ? ` ${inputClassName}` : ""}`}
       />
-
-      {isControlVariant && clearButton}
     </div>
   );
 
-  const variantClassName = isControlVariant ? " is-control" : "";
-  const resolvedRowStyle = isControlVariant
-    ? ({
-        ...rowStyle,
-        "--fw-control-search-width": rowStyle?.width ?? "100%",
-        "--fw-control-search-flex": rowStyle?.flex ?? "0 1 auto",
-      } as CSSProperties)
-    : rowStyle;
+  const resolvedRowStyle = {
+    ...rowStyle,
+    "--fw-header-search-row-width": rowStyle?.width ?? "100%",
+    "--fw-header-search-row-min-width": rowStyle?.minWidth ?? 0,
+    "--fw-header-search-row-flex": rowStyle?.flex ?? "0 1 auto",
+  } as CSSProperties;
 
   return (
     <div
-      className={`fw-toolbar-header-search-row${variantClassName}${rowClassName ? ` ${rowClassName}` : ""}`}
+      className={`fw-toolbar-header-search-row${rowClassName ? ` ${rowClassName}` : ""}`}
       style={resolvedRowStyle}
     >
       {renderForm ? (
         <form
-          className={`fw-toolbar-header-search-form${variantClassName}${formClassName ? ` ${formClassName}` : ""}`}
+          className={`fw-toolbar-header-search-form${formClassName ? ` ${formClassName}` : ""}`}
           onSubmit={handleSubmit}
         >
           {searchField}
         </form>
       ) : (
         <div
-          className={`fw-toolbar-header-search-form${variantClassName}${formClassName ? ` ${formClassName}` : ""}`}
+          className={`fw-toolbar-header-search-form${formClassName ? ` ${formClassName}` : ""}`}
         >
           {searchField}
         </div>
