@@ -182,7 +182,9 @@ export function CuratedPlaylistCard({
   }
 
   return (
-    <div className={`curated-playlist-card-shell ${styles.shell}`}>
+    <div
+      className={`curated-playlist-card-shell discover-playlist-card-shell ${styles.shell}`}
+    >
       <article className={`${styles.card} ${isMenuOpen ? styles.cardOpen : ""}`}>
         <Link href={href} className={styles.imageLink}>
           <div
