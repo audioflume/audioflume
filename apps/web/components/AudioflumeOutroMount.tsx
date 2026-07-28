@@ -30,9 +30,11 @@ export default function AudioflumeOutroMount({
 
       if (adoptExistingMount) {
         if (!outroMount || !outroMount.isConnected) {
-          outroMount = Array.from(parent.children).find((child) =>
+          const existingMount = Array.from(parent.children).find((child) =>
             child.classList.contains("discover-reference-outro-mount"),
-          ) as HTMLDivElement | undefined ?? null;
+          );
+
+          outroMount = existingMount as HTMLDivElement | null;
         }
 
         if (!outroMount) return;
