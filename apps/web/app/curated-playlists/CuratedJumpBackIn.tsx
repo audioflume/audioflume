@@ -126,11 +126,8 @@ export default function CuratedJumpBackIn() {
       if (cancelled) return;
 
       const curatedCards = Array.isArray(curatedData)
-        ? curatedData
-            .filter(
-              (playlist: CuratedPlaylist) => !playlist.discover_section,
-            )
-            .map((playlist: CuratedPlaylist): RecentPlaylistCard => ({
+        ? curatedData.map(
+            (playlist: CuratedPlaylist): RecentPlaylistCard => ({
               key: getRecentPlaylistKey({
                 type: "curated",
                 id: playlist.id,
@@ -139,7 +136,8 @@ export default function CuratedJumpBackIn() {
               name: playlist.name,
               coverImageUrl: playlist.cover_image_url,
               metadata: formatCuratedMetadata(playlist),
-            }))
+            }),
+          )
         : [];
 
       const communityPlaylists = Array.isArray(communityData?.playlists)
