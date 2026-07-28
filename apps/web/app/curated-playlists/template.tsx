@@ -56,31 +56,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     margin-bottom: 0 !important;
   }
 
-  body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-    overflow: visible !important;
-  }
-
-  body:has(.curated-playlists-page-root) .curated-playlist-shelf-scroller,
-  body:has(.curated-playlists-page-root)
-    .curated-playlist-skeleton-shelf > .relative > .flex {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: clamp(24px, 2.4vw, 38px) !important;
-    row-gap: clamp(30px, 3vw, 46px) !important;
-    overflow: visible !important;
-    padding-right: 0 !important;
-    padding-left: 0 !important;
-  }
-
-  body:has(.curated-playlists-page-root) .curated-playlist-card-shell,
-  body:has(.curated-playlists-page-root) .curated-playlist-skeleton-card-shell {
-    width: 100% !important;
-    min-width: 0 !important;
-    flex: none !important;
-  }
-
   body:has(.curated-playlists-page-root) .curated-playlist-card {
     position: relative;
   }
@@ -180,27 +155,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     opacity: 1 !important;
   }
 
-  body:has(.curated-playlists-page-root)
-    .curated-playlist-shelf-heading > .hidden,
-  body:has(.curated-playlists-page-root) .curated-playlist-shelf-prev-floating,
-  body:has(.curated-playlists-page-root) .curated-playlist-shelf-next-floating {
-    display: none !important;
-  }
-
-  body:has(.curated-playlists-page-root)
-    .curated-playlist-skeleton-shelf > .relative {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-  }
-
-  @media (max-width: 900px) {
-    body:has(.curated-playlists-page-root) .curated-playlist-shelf-scroller,
-    body:has(.curated-playlists-page-root)
-      .curated-playlist-skeleton-shelf > .relative > .flex {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
   @media (max-width: 620px) {
     body:has(.curated-playlists-page-root)
       .curated-playlists-page-layer
@@ -213,14 +167,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
       > .mt-10
       + .mt-10 {
       margin-top: 52px !important;
-    }
-  }
-
-  @media (max-width: 560px) {
-    body:has(.curated-playlists-page-root) .curated-playlist-shelf-scroller,
-    body:has(.curated-playlists-page-root)
-      .curated-playlist-skeleton-shelf > .relative > .flex {
-      grid-template-columns: 1fr;
     }
   }
 `;
