@@ -3,7 +3,7 @@
 import { HeaderShell } from "@filmwave/shared";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import UserMenu from "@/components/UserMenu";
 
@@ -45,6 +45,8 @@ const PLAYLIST_QUICK_SECTIONS = [
   { title: "Curated Playlists", href: "/curated-playlists" },
 ];
 
+const HEADER_SCROLL_THRESHOLD = 18;
+
 function formatTrackCount(count?: number | null) {
   const safeCount = Number(count || 0);
   return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
@@ -71,10 +73,47 @@ export default function Header() {
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [avatarImageFailed, setAvatarImageFailed] = useState(false);
+  const [scrolledPastThreshold, setScrolledPastThreshold] = useState(false);
   const [curatedPreview, setCuratedPreview] = useState<
     CuratedPlaylistPreview[]
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
+  const transparentAtTop =
+    pathname === "/discover" || pathname === "/curated-playlists";
+  const headerIsSolid =
+    !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
+  const headerClassName = [
+    "filmwave-web-header",
+    transparentAtTop ? "supports-transparent-header" : "",
+    headerIsSolid ? "is-solid" : "is-transparent",
+    pathname === "/discover" ? "uses-soft-transparent-active-state" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  useLayoutEffect(() => {
+    let frame = 0;
+
+    function syncScrollState() {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        setScrolledPastThreshold(window.scrollY > HEADER_SCROLL_THRESHOLD);
+      });
+    }
+
+    if (!transparentAtTop) {
+      setScrolledPastThreshold(false);
+      return;
+    }
+
+    syncScrollState();
+    window.addEventListener("scroll", syncScrollState, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", syncScrollState);
+    };
+  }, [transparentAtTop]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -168,6 +207,79 @@ export default function Header() {
           line-height: 1 !important;
           text-transform: lowercase !important;
           transform: translateY(-1px) !important;
+        }
+
+        .filmwave-web-header,
+        .filmwave-web-header .filmwave-header-tonal-wordmark,
+        .filmwave-web-header .filmwave-header-logo-action,
+        .filmwave-web-header .filmwave-header-nav-link,
+        .filmwave-web-header .filmwave-header-actions {
+          transition:
+            background-color 180ms ease,
+            border-color 180ms ease,
+            color 180ms ease !important;
+        }
+
+        .filmwave-web-header.is-transparent {
+          --filmwave-chrome-surface: transparent;
+          border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+          background: transparent !important;
+          background-color: transparent !important;
+          color: #fff !important;
+        }
+
+        .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
+        .filmwave-web-header.is-transparent .filmwave-header-logo-action,
+        .filmwave-web-header.is-transparent .filmwave-header-actions {
+          color: #fff !important;
+        }
+
+        .filmwave-web-header.is-transparent .filmwave-header-nav-link {
+          color: rgba(255, 255, 255, 0.72) !important;
+        }
+
+        .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
+        .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active {
+          color: #fff !important;
+        }
+
+        .filmwave-web-header.is-transparent.uses-soft-transparent-active-state
+          .filmwave-header-nav-link:hover,
+        .filmwave-web-header.is-transparent.uses-soft-transparent-active-state
+          .filmwave-header-nav-link.is-active {
+          background: rgba(255, 255, 255, 0.13) !important;
+        }
+
+        .filmwave-web-header.is-transparent:not(.uses-soft-transparent-active-state)
+          .filmwave-header-nav-link:hover,
+        .filmwave-web-header.is-transparent:not(.uses-soft-transparent-active-state)
+          .filmwave-header-nav-link.is-active {
+          background: transparent !important;
+          background-color: transparent !important;
+        }
+
+        .filmwave-web-header.is-solid {
+          --filmwave-chrome-surface: var(--bg-primary);
+          border-bottom-color: var(--border) !important;
+          background: var(--bg-primary) !important;
+          background-color: var(--bg-primary) !important;
+          color: var(--text-primary) !important;
+        }
+
+        .filmwave-web-header.is-solid .filmwave-header-tonal-wordmark,
+        .filmwave-web-header.is-solid .filmwave-header-logo-action,
+        .filmwave-web-header.is-solid .filmwave-header-actions {
+          color: var(--text-primary) !important;
+        }
+
+        .filmwave-web-header.is-solid .filmwave-header-nav-link {
+          color: var(--text-secondary) !important;
+        }
+
+        .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
+        .filmwave-web-header.is-solid .filmwave-header-nav-link.is-active {
+          background: var(--bg-hover-strong) !important;
+          color: var(--text-primary) !important;
         }
 
         .filmwave-header-nav-item-playlists:hover .filmwave-playlists-mega-menu,
@@ -351,6 +463,7 @@ export default function Header() {
       `}</style>
 
       <HeaderShell
+        className={headerClassName}
         logo={
           <Link
             href="/discover"
