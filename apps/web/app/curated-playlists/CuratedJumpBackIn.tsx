@@ -4,63 +4,70 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import {
+  getRecentPlaylistKey,
+  readRecentPlaylists,
+  RECENT_PLAYLISTS_CHANGED_EVENT,
+} from "@/components/RecentPlaylistTracker";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import "./curated-jump-back-in.css";
 
-const STORAGE_KEY = "filmwave-recent-curated-playlists";
-const RECENT_PLAYLIST_LIMIT = 5;
+type CommunityPlaylistSummary = {
+  id: number;
+  name: string;
+  cover_image_url: string | null;
+  song_count: number;
+  creator?: {
+    name?: string;
+  };
+};
 
-function readRecentIds() {
-  if (typeof window === "undefined") return [];
+type RecentPlaylistCard = {
+  key: string;
+  href: string;
+  name: string;
+  coverImageUrl: string | null;
+  metadata: string;
+};
 
-  try {
-    const value = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
-    if (!Array.isArray(value)) return [];
-
-    return value
-      .map((id) => Number(id))
-      .filter((id) => Number.isInteger(id) && id > 0)
-      .slice(0, RECENT_PLAYLIST_LIMIT);
-  } catch {
-    return [];
-  }
+function formatSongCount(count: number | undefined) {
+  if (typeof count !== "number") return "";
+  return `${count} song${count === 1 ? "" : "s"}`;
 }
 
-function storeRecentId(playlistId: number) {
-  try {
-    const nextIds = [
-      playlistId,
-      ...readRecentIds().filter((id) => id !== playlistId),
-    ].slice(0, RECENT_PLAYLIST_LIMIT);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextIds));
-  } catch {
-    // Playlist navigation should still work if local storage is unavailable.
-  }
+function formatCuratedMetadata(playlist: CuratedPlaylist) {
+  return [playlist.playlist_group, formatSongCount(playlist.song_count)]
+    .filter(Boolean)
+    .join(" · ");
 }
 
-function formatPlaylistMetadata(playlist: CuratedPlaylist) {
-  const metadata = [playlist.playlist_group];
+function formatCommunityMetadata(playlist: CommunityPlaylistSummary) {
+  const source = playlist.creator?.name
+    ? `By ${playlist.creator.name}`
+    : "Community";
 
-  if (typeof playlist.song_count === "number") {
-    metadata.push(
-      `${playlist.song_count} song${playlist.song_count === 1 ? "" : "s"}`,
-    );
+  return [source, formatSongCount(playlist.song_count)]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+async function fetchJson(url: string) {
+  try {
+    const response = await fetch(url, { cache: "no-store" });
+    return response.ok ? await response.json() : null;
+  } catch {
+    return null;
   }
-
-  return metadata.filter(Boolean).join(" · ");
 }
 
 export default function CuratedJumpBackIn() {
   const pathname = usePathname();
   const isDiscoverPage = pathname === "/discover";
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
-  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
-  const [recentIds, setRecentIds] = useState<number[]>([]);
-
-  useEffect(() => {
-    const match = pathname.match(/^\/curated-playlists\/(\d+)$/);
-    if (match) storeRecentId(Number(match[1]));
-  }, [pathname]);
+  const [availablePlaylists, setAvailablePlaylists] = useState<
+    RecentPlaylistCard[]
+  >([]);
+  const [recentEntries, setRecentEntries] = useState(readRecentPlaylists);
 
   useEffect(() => {
     if (!isDiscoverPage) return;
@@ -82,7 +89,7 @@ export default function CuratedJumpBackIn() {
         mount.className = "discover-section discover-jump-back-section";
         mount.setAttribute(
           "aria-label",
-          "Recently viewed curated playlists",
+          "Recently viewed playlists",
         );
       }
 
@@ -110,20 +117,51 @@ export default function CuratedJumpBackIn() {
 
     let cancelled = false;
 
-    fetch("/api/curated-playlists")
-      .then((response) => response.json())
-      .then((data) => {
-        if (!cancelled && Array.isArray(data)) {
-          setPlaylists(
-            data.filter(
+    async function loadPlaylists() {
+      const [curatedData, communityData] = await Promise.all([
+        fetchJson("/api/curated-playlists"),
+        fetchJson("/api/community-playlists"),
+      ]);
+
+      if (cancelled) return;
+
+      const curatedCards = Array.isArray(curatedData)
+        ? curatedData
+            .filter(
               (playlist: CuratedPlaylist) => !playlist.discover_section,
-            ),
-          );
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setPlaylists([]);
-      });
+            )
+            .map((playlist: CuratedPlaylist): RecentPlaylistCard => ({
+              key: getRecentPlaylistKey({
+                type: "curated",
+                id: playlist.id,
+              }),
+              href: `/curated-playlists/${playlist.id}`,
+              name: playlist.name,
+              coverImageUrl: playlist.cover_image_url,
+              metadata: formatCuratedMetadata(playlist),
+            }))
+        : [];
+
+      const communityPlaylists = Array.isArray(communityData?.playlists)
+        ? (communityData.playlists as CommunityPlaylistSummary[])
+        : [];
+      const communityCards = communityPlaylists.map(
+        (playlist): RecentPlaylistCard => ({
+          key: getRecentPlaylistKey({
+            type: "community",
+            id: playlist.id,
+          }),
+          href: `/community-playlists/${playlist.id}`,
+          name: playlist.name,
+          coverImageUrl: playlist.cover_image_url,
+          metadata: formatCommunityMetadata(playlist),
+        }),
+      );
+
+      setAvailablePlaylists([...curatedCards, ...communityCards]);
+    }
+
+    void loadPlaylists();
 
     return () => {
       cancelled = true;
@@ -133,26 +171,36 @@ export default function CuratedJumpBackIn() {
   useEffect(() => {
     if (!isDiscoverPage) return;
 
-    const syncRecentIds = () => setRecentIds(readRecentIds());
-    syncRecentIds();
-    window.addEventListener("focus", syncRecentIds);
-    window.addEventListener("pageshow", syncRecentIds);
-    window.addEventListener("storage", syncRecentIds);
+    const syncRecentEntries = () => setRecentEntries(readRecentPlaylists());
+    syncRecentEntries();
+    window.addEventListener("focus", syncRecentEntries);
+    window.addEventListener("pageshow", syncRecentEntries);
+    window.addEventListener("storage", syncRecentEntries);
+    window.addEventListener(
+      RECENT_PLAYLISTS_CHANGED_EVENT,
+      syncRecentEntries,
+    );
 
     return () => {
-      window.removeEventListener("focus", syncRecentIds);
-      window.removeEventListener("pageshow", syncRecentIds);
-      window.removeEventListener("storage", syncRecentIds);
+      window.removeEventListener("focus", syncRecentEntries);
+      window.removeEventListener("pageshow", syncRecentEntries);
+      window.removeEventListener("storage", syncRecentEntries);
+      window.removeEventListener(
+        RECENT_PLAYLISTS_CHANGED_EVENT,
+        syncRecentEntries,
+      );
     };
   }, [isDiscoverPage]);
 
-  const recentPlaylists = useMemo(
-    () =>
-      recentIds
-        .map((id) => playlists.find((playlist) => playlist.id === id))
-        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
-    [playlists, recentIds],
-  );
+  const recentPlaylists = useMemo(() => {
+    const playlistByKey = new Map(
+      availablePlaylists.map((playlist) => [playlist.key, playlist]),
+    );
+
+    return recentEntries
+      .map((entry) => playlistByKey.get(getRecentPlaylistKey(entry)))
+      .filter((playlist): playlist is RecentPlaylistCard => Boolean(playlist));
+  }, [availablePlaylists, recentEntries]);
 
   if (!isDiscoverPage || !mountNode || recentPlaylists.length === 0) {
     return null;
@@ -168,13 +216,13 @@ export default function CuratedJumpBackIn() {
         {recentPlaylists.map((playlist) => (
           <Link
             className="curated-jump-back-item"
-            href={`/curated-playlists/${playlist.id}`}
-            key={playlist.id}
+            href={playlist.href}
+            key={playlist.key}
           >
-            {playlist.cover_image_url ? (
+            {playlist.coverImageUrl ? (
               <img
                 className="curated-jump-back-cover"
-                src={playlist.cover_image_url}
+                src={playlist.coverImageUrl}
                 alt=""
               />
             ) : (
@@ -186,7 +234,7 @@ export default function CuratedJumpBackIn() {
 
             <span className="curated-jump-back-copy">
               <strong>{playlist.name}</strong>
-              <small>{formatPlaylistMetadata(playlist)}</small>
+              <small>{playlist.metadata}</small>
             </span>
           </Link>
         ))}
