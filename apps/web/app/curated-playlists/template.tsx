@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import CuratedJumpBackIn from "./CuratedJumpBackIn";
 import CuratedOutroMount from "./CuratedOutroMount";
 import CuratedVideoHero from "./CuratedVideoHero";
 import "../discover/discover-reference-layout.css";
@@ -244,6 +245,7 @@ export default function CuratedPlaylistsTemplate({
       <style>{CURATED_LANDING_CARD_RATIO_STYLE}</style>
       <CuratedVideoHero />
       {children}
+      <CuratedJumpBackIn />
       <CuratedOutroMount />
     </>
   );
