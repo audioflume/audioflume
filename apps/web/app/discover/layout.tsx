@@ -240,10 +240,12 @@ const DISCOVER_LAYOUT_STYLE = `
   }
 
   .discover-section-heading > a {
-    color: var(--text-subtle);
+    --text-secondary: var(--text-muted);
+    color: var(--text-muted);
   }
 
   .discover-section-heading > a:hover {
+    --text-secondary: var(--text-primary);
     color: var(--text-primary);
   }
 
