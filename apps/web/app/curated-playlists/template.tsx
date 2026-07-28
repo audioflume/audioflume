@@ -16,7 +16,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root) .curated-playlist-shelf {
-    width: min(100%, 1120px);
+    width: min(100%, 1280px);
     margin-right: auto;
     margin-bottom: 0;
     margin-left: auto;
