@@ -8,6 +8,7 @@ import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import "./curated-jump-back-in.css";
 
 const STORAGE_KEY = "filmwave-recent-curated-playlists";
+const RECENT_PLAYLIST_LIMIT = 5;
 
 function readRecentIds() {
   if (typeof window === "undefined") return [];
@@ -19,7 +20,7 @@ function readRecentIds() {
     return value
       .map((id) => Number(id))
       .filter((id) => Number.isInteger(id) && id > 0)
-      .slice(0, 5);
+      .slice(0, RECENT_PLAYLIST_LIMIT);
   } catch {
     return [];
   }
@@ -30,16 +31,28 @@ function storeRecentId(playlistId: number) {
     const nextIds = [
       playlistId,
       ...readRecentIds().filter((id) => id !== playlistId),
-    ].slice(0, 5);
+    ].slice(0, RECENT_PLAYLIST_LIMIT);
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextIds));
   } catch {
     // Playlist navigation should still work if local storage is unavailable.
   }
 }
 
+function formatPlaylistMetadata(playlist: CuratedPlaylist) {
+  const metadata = [playlist.playlist_group];
+
+  if (typeof playlist.song_count === "number") {
+    metadata.push(
+      `${playlist.song_count} song${playlist.song_count === 1 ? "" : "s"}`,
+    );
+  }
+
+  return metadata.filter(Boolean).join(" · ");
+}
+
 export default function CuratedJumpBackIn() {
   const pathname = usePathname();
-  const isLandingPage = pathname === "/curated-playlists";
+  const isDiscoverPage = pathname === "/discover";
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [recentIds, setRecentIds] = useState<number[]>([]);
@@ -50,44 +63,61 @@ export default function CuratedJumpBackIn() {
   }, [pathname]);
 
   useEffect(() => {
-    if (!isLandingPage) return;
+    if (!isDiscoverPage) return;
+
+    let activeMount: HTMLElement | null = null;
 
     const syncMount = () => {
-      const banner = document.querySelector<HTMLElement>(
-        ".curated-playlists-page-root .curated-featured-playlist",
+      const curatedSection = document.querySelector<HTMLElement>(
+        ".discover-page-root .discover-curated-playlist-section",
       );
-      if (!banner?.parentElement) return;
+      if (!curatedSection?.parentElement) return;
 
-      let mount = banner.parentElement.querySelector<HTMLElement>(
-        ":scope > .curated-jump-back-mount",
+      let mount = curatedSection.parentElement.querySelector<HTMLElement>(
+        ":scope > .discover-jump-back-section",
       );
+
       if (!mount) {
-        mount = document.createElement("div");
-        mount.className = "curated-jump-back-mount";
+        mount = document.createElement("section");
+        mount.className = "discover-section discover-jump-back-section";
+        mount.setAttribute(
+          "aria-label",
+          "Recently viewed curated playlists",
+        );
       }
 
-      if (banner.nextElementSibling !== mount) {
-        banner.insertAdjacentElement("afterend", mount);
+      if (curatedSection.previousElementSibling !== mount) {
+        curatedSection.parentElement.insertBefore(mount, curatedSection);
       }
+
+      activeMount = mount;
       setMountNode(mount);
     };
 
     syncMount();
     const observer = new MutationObserver(syncMount);
     observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [isLandingPage]);
+
+    return () => {
+      observer.disconnect();
+      activeMount?.remove();
+      setMountNode(null);
+    };
+  }, [isDiscoverPage]);
 
   useEffect(() => {
-    if (!isLandingPage) return;
+    if (!isDiscoverPage) return;
 
     let cancelled = false;
+
     fetch("/api/curated-playlists")
       .then((response) => response.json())
       .then((data) => {
         if (!cancelled && Array.isArray(data)) {
           setPlaylists(
-            data.filter((playlist: CuratedPlaylist) => !playlist.discover_section),
+            data.filter(
+              (playlist: CuratedPlaylist) => !playlist.discover_section,
+            ),
           );
         }
       })
@@ -98,10 +128,10 @@ export default function CuratedJumpBackIn() {
     return () => {
       cancelled = true;
     };
-  }, [isLandingPage]);
+  }, [isDiscoverPage]);
 
   useEffect(() => {
-    if (!isLandingPage) return;
+    if (!isDiscoverPage) return;
 
     const syncRecentIds = () => setRecentIds(readRecentIds());
     syncRecentIds();
@@ -114,7 +144,7 @@ export default function CuratedJumpBackIn() {
       window.removeEventListener("pageshow", syncRecentIds);
       window.removeEventListener("storage", syncRecentIds);
     };
-  }, [isLandingPage]);
+  }, [isDiscoverPage]);
 
   const recentPlaylists = useMemo(
     () =>
@@ -124,10 +154,16 @@ export default function CuratedJumpBackIn() {
     [playlists, recentIds],
   );
 
-  if (!isLandingPage || !mountNode || recentPlaylists.length === 0) return null;
+  if (!isDiscoverPage || !mountNode || recentPlaylists.length === 0) {
+    return null;
+  }
 
   return createPortal(
-    <section className="curated-jump-back" aria-label="Recently viewed curated playlists">
+    <>
+      <div className="discover-section-heading">
+        <h2>Jump Back In</h2>
+      </div>
+
       <div className="curated-jump-back-list">
         {recentPlaylists.map((playlist) => (
           <Link
@@ -142,21 +178,20 @@ export default function CuratedJumpBackIn() {
                 alt=""
               />
             ) : (
-              <span className="curated-jump-back-placeholder" aria-hidden="true" />
+              <span
+                className="curated-jump-back-placeholder"
+                aria-hidden="true"
+              />
             )}
+
             <span className="curated-jump-back-copy">
               <strong>{playlist.name}</strong>
-              <small>
-                {playlist.playlist_group}
-                {typeof playlist.song_count === "number"
-                  ? ` · ${playlist.song_count} song${playlist.song_count === 1 ? "" : "s"}`
-                  : ""}
-              </small>
+              <small>{formatPlaylistMetadata(playlist)}</small>
             </span>
           </Link>
         ))}
       </div>
-    </section>,
+    </>,
     mountNode,
   );
 }
