@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import AudioflumeOutroMount from "@/components/AudioflumeOutroMount";
 import DiscoverHeroVideoLayer from "@/components/DiscoverHeroVideoLayer";
 import DiscoverCuratedHeroCopy from "./DiscoverCuratedHeroCopy";
 import DiscoverReferenceLayout from "./DiscoverReferenceLayout";
@@ -13,6 +14,10 @@ export default function DiscoverTemplate({ children }: { children: ReactNode }) 
       <DiscoverHeroVideoLayer />
       <DiscoverCuratedHeroCopy />
       <DiscoverReferenceLayout />
+      <AudioflumeOutroMount
+        targetSelector=".discover-footer-wrap"
+        adoptExistingMount
+      />
     </div>
   );
 }
