@@ -30,18 +30,18 @@ export default function DiscoverDescriptorPills() {
     let node: HTMLDivElement | null = null;
 
     function mountSection() {
-      const content = document.querySelector<HTMLElement>(
-        ".discover-page-root .discover-content",
+      const intro = document.querySelector<HTMLElement>(
+        ".discover-reference-intro-mount > .discover-reference-intro",
       );
 
-      if (!content) {
+      if (!intro) {
         frame = window.requestAnimationFrame(mountSection);
         return;
       }
 
       node = document.createElement("div");
       node.className = styles.mount;
-      content.insertBefore(node, content.firstChild);
+      intro.insertAdjacentElement("afterend", node);
       setMountNode(node);
     }
 
