@@ -210,7 +210,7 @@ export default function CuratedJumpBackIn() {
       {createPortal(
         <>
           <div className="discover-section-heading">
-            <h2>Jump Back In</h2>
+            <h2>Last Viewed</h2>
           </div>
 
           <div className="curated-jump-back-list">
