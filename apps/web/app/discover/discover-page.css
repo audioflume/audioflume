@@ -223,7 +223,7 @@ body:has(.discover-page-root) .discover-section-heading h2 {
   font-size: clamp(17px, 1.15vw, 22px) !important;
   font-weight: 500 !important;
   font-kerning: normal !important;
-  letter-spacing: -0.035em !important;
+  letter-spacing: -.025em !important;
   line-height: 1 !important;
   text-transform: uppercase !important;
 }
