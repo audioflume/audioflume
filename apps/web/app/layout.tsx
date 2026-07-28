@@ -87,6 +87,11 @@ export default async function RootLayout({
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
           <style>{`
+            html:not(.light):not([data-theme="light"]) {
+              --bg-primary: #070707;
+              --bg-secondary: #070707;
+            }
+
             html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
               font-family: var(--font-roboto-mono-filmwave), monospace !important;
               font-size: 10.5px !important;
