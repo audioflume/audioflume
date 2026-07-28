@@ -195,10 +195,6 @@ section.curated-playlists-page-layer {
   display: block !important;
   margin: 0 !important;
   max-width: 640px !important;
-  font-size: 1.6em !important;
-  font-weight: 500 !important;
-  line-height: 1 !important;
-  letter-spacing: -0.035em !important;
   color: transparent !important;
 }
 
@@ -389,14 +385,14 @@ section.curated-playlists-page-layer > div > .playlists-tabs-row + div > div:fir
 section.curated-playlists-page-layer h1 {
   font-weight: 500 !important;
   font-variation-settings: "wght" 500 !important;
-  letter-spacing: -0.035em !important;
+  letter-spacing: -.025em !important;
 }
 
 section.curated-playlists-page-layer section.mt-10 h2 {
   font-size: 1.4em !important;
   font-weight: 300 !important;
   font-variation-settings: "wght" 300 !important;
-  letter-spacing: -0.035em !important;
+  letter-spacing: -.025em !important;
 }
 
 .playlists-page .playlist-gallery-art::before,
