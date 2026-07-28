@@ -193,7 +193,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     margin: 9px 0 0 !important;
     color: var(--text-muted) !important;
     font-family: var(--font-roboto-mono-filmwave), monospace !important;
-    font-size: clamp(8px, 0.55vw, 9.5px) !important;
+    font-size: clamp(9px, 0.65vw, 11px) !important;
     font-weight: 400 !important;
     letter-spacing: 0 !important;
     line-height: 1.55 !important;
