@@ -223,20 +223,6 @@ const CURATED_FEATURED_STYLE = `
     line-height: 1;
   }
 
-  body:has(.curated-playlists-page-root)
-    .filmwave-header
-    .filmwave-header-actions
-    .filmwave-header-nav
-    .filmwave-header-nav-link:hover,
-  body:has(.curated-playlists-page-root)
-    .filmwave-header
-    .filmwave-header-actions
-    .filmwave-header-nav
-    .filmwave-header-nav-link.is-active {
-    background: transparent !important;
-    background-color: transparent !important;
-  }
-
   @media (max-width: 980px) {
     body:has(.curated-playlists-page-root)
       .curated-featured-playlist-loading-image::before,
