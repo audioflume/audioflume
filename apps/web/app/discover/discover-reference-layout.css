@@ -305,8 +305,8 @@ body:has(.discover-page-root) .discover-footer-wrap {
   margin-right: calc(0px - var(--discover-editorial-gutter));
   margin-left: calc(0px - var(--discover-editorial-gutter));
   padding-top: 40px;
-  padding-right: 28px;
-  padding-left: 28px;
+  padding-right: 32px;
+  padding-left: 32px;
   background: var(--bg-primary);
   color: var(--text-primary);
 }
@@ -435,8 +435,8 @@ body:has(.discover-page-root) .discover-footer-wrap {
 
 @media (max-width: 760px) {
   body:has(.discover-page-root) .discover-footer-wrap {
-    padding-right: 18px;
-    padding-left: 18px;
+    padding-right: 32px;
+    padding-left: 32px;
   }
 }
 
