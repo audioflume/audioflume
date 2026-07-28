@@ -1,6 +1,6 @@
-.curated-jump-back {
-  margin-top: 30px;
-  margin-bottom: 70px;
+body:has(.discover-page-root) .discover-jump-back-section {
+  margin-top: 0 !important;
+  margin-bottom: var(--discover-section-gap);
 }
 
 .curated-jump-back-list {
