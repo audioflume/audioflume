@@ -1,6 +1,6 @@
 .mount {
   width: 100%;
-  margin: 0;
+  margin: clamp(72px, 7vw, 110px) 0 clamp(28px, 3vw, 46px);
 }
 
 .feature {
