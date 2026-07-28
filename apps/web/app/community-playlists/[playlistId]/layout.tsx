@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import RecentPlaylistTracker from "@/components/RecentPlaylistTracker";
 import CommunityPlaylistDetailChrome from "./CommunityPlaylistDetailChrome";
 
 export default function CommunityPlaylistDetailLayout({
@@ -65,6 +66,7 @@ export default function CommunityPlaylistDetailLayout({
           }
         }
       `}</style>
+      <RecentPlaylistTracker />
       <CommunityPlaylistDetailChrome />
       {children}
     </>
