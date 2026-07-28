@@ -7,6 +7,25 @@ import "./curated-video-hero.css";
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
     --curated-featured-hero-height: clamp(380px, 48vh, 540px);
+    --curated-landing-card-gap: clamp(24px, 2.4vw, 38px);
+    --curated-landing-content-width: min(
+      calc(
+        100vw - var(--curated-page-gutter) - var(--curated-page-gutter)
+      ),
+      1280px
+    );
+    --curated-landing-card-width: calc(
+      (
+          var(--curated-landing-content-width) -
+            var(--curated-landing-card-gap) -
+            var(--curated-landing-card-gap)
+        ) /
+        3
+    );
+    --curated-landing-edge-inset: max(
+      var(--curated-page-gutter),
+      calc((100vw - 1280px) / 2)
+    );
   }
 
   body:has(.curated-playlists-page-root) .curated-featured-playlist {
@@ -31,6 +50,32 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     margin-right: auto;
     margin-bottom: 0;
     margin-left: auto;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
+    width: 100vw;
+    margin-right: calc(50% - 50vw) !important;
+    margin-left: calc(50% - 50vw) !important;
+    overflow: hidden;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-scroller,
+  body:has(.curated-playlists-page-root)
+    .curated-playlist-skeleton-shelf > .relative > .flex {
+    gap: var(--curated-landing-card-gap) !important;
+    padding-right: var(--curated-landing-edge-inset) !important;
+    padding-left: var(--curated-landing-edge-inset) !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-card-shell,
+  body:has(.curated-playlists-page-root) .curated-playlist-skeleton-card-shell {
+    width: var(--curated-landing-card-width) !important;
+    flex: 0 0 var(--curated-landing-card-width) !important;
+  }
+
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-prev-floating,
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-next-floating {
+    top: 50% !important;
   }
 
   body:has(.curated-playlists-page-root)
@@ -155,6 +200,18 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     opacity: 1 !important;
   }
 
+  @media (max-width: 900px) {
+    body:has(.curated-playlists-page-root) {
+      --curated-landing-card-width: calc(
+        (
+            var(--curated-landing-content-width) -
+              var(--curated-landing-card-gap)
+          ) /
+          2
+      );
+    }
+  }
+
   @media (max-width: 620px) {
     body:has(.curated-playlists-page-root)
       .curated-playlists-page-layer
@@ -167,6 +224,12 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
       > .mt-10
       + .mt-10 {
       margin-top: 52px !important;
+    }
+  }
+
+  @media (max-width: 560px) {
+    body:has(.curated-playlists-page-root) {
+      --curated-landing-card-width: var(--curated-landing-content-width);
     }
   }
 `;
