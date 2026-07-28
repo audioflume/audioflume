@@ -1,6 +1,6 @@
 .mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: clamp(-210px, -13vw, -130px) auto clamp(130px, 13vw, 210px);
+  margin: 0 auto;
 }
 
 .feature {
@@ -8,6 +8,7 @@
   grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
   align-items: center;
   gap: clamp(56px, 8vw, 140px);
+  transform: translateY(clamp(-210px, -13vw, -130px));
 }
 
 .visual {
@@ -115,12 +116,15 @@
 }
 
 .body {
-  max-width: 470px;
+  max-width: 360px;
   margin: 44px 0 0;
   color: #fff;
-  font: 400 12px/19px Arial, sans-serif;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
   font-style: normal;
+  font-weight: 400;
   letter-spacing: 0;
+  line-height: 19px;
   text-transform: none;
 }
 
@@ -156,11 +160,6 @@
 }
 
 @media (max-width: 620px) {
-  .mount {
-    margin-top: -130px;
-    margin-bottom: 110px;
-  }
-
   .visual {
     width: min(92%, 330px);
     padding-right: 28px;
