@@ -94,7 +94,7 @@ export default async function RootLayout({
 
             html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
               font-family: var(--font-aktiv-grotesk), sans-serif !important;
-              font-size: 10.5px !important;
+              font-size: 11.5px !important;
               text-transform: none !important;
             }
           `}</style>
