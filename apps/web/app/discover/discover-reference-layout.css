@@ -1,4 +1,5 @@
-body:has(.discover-page-root) {
+body:has(.discover-page-root),
+body:has(.curated-playlists-page-root) {
   --discover-reference-mark-filter: none;
   --discover-editorial-width: 1280px;
   --discover-content-breakout: calc(
@@ -6,12 +7,19 @@ body:has(.discover-page-root) {
   );
 }
 
-:where(html.light, html[data-theme="light"]) body:has(.discover-page-root) {
+body:has(.curated-playlists-page-root) {
+  --discover-editorial-gutter: clamp(24px, 5vw, 80px);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.discover-page-root),
+:where(html.light, html[data-theme="light"])
+  body:has(.curated-playlists-page-root) {
   --discover-reference-mark-filter: invert(1);
 }
 
 body:has(.discover-page-root) .discover-page-root,
 body:has(.discover-page-root) .discover-content,
+.audioflume-outro-region,
 .discover-reference-intro-mount,
 .discover-reference-outro-mount {
   background: var(--bg-primary);
@@ -26,8 +34,18 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 .discover-reference-hero-mount,
 .discover-reference-intro-mount,
+.audioflume-outro-region,
 .discover-reference-outro-mount {
   width: 100%;
+}
+
+body:has(.curated-playlists-page-root) .audioflume-outro-region {
+  width: calc(
+    100% - var(--discover-editorial-gutter) -
+      var(--discover-editorial-gutter)
+  );
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .discover-reference-intro-mount,
