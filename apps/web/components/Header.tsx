@@ -86,7 +86,6 @@ export default function Header() {
     "filmwave-web-header",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
-    pathname === "/discover" ? "uses-soft-transparent-active-state" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -240,22 +239,9 @@ export default function Header() {
 
         .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
         .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active {
-          color: #fff !important;
-        }
-
-        .filmwave-web-header.is-transparent.uses-soft-transparent-active-state
-          .filmwave-header-nav-link:hover,
-        .filmwave-web-header.is-transparent.uses-soft-transparent-active-state
-          .filmwave-header-nav-link.is-active {
-          background: rgba(255, 255, 255, 0.13) !important;
-        }
-
-        .filmwave-web-header.is-transparent:not(.uses-soft-transparent-active-state)
-          .filmwave-header-nav-link:hover,
-        .filmwave-web-header.is-transparent:not(.uses-soft-transparent-active-state)
-          .filmwave-header-nav-link.is-active {
           background: transparent !important;
           background-color: transparent !important;
+          color: #fff !important;
         }
 
         .filmwave-web-header.is-solid {
@@ -278,7 +264,8 @@ export default function Header() {
 
         .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
         .filmwave-web-header.is-solid .filmwave-header-nav-link.is-active {
-          background: var(--bg-hover-strong) !important;
+          background: transparent !important;
+          background-color: transparent !important;
           color: var(--text-primary) !important;
         }
 
