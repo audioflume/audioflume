@@ -15,6 +15,17 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     max-height: var(--curated-featured-hero-height);
   }
 
+  body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
+    padding-bottom: 0;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-playlists-page-root
+    > footer {
+    box-sizing: border-box;
+    padding-top: 40px;
+  }
+
   body:has(.curated-playlists-page-root) .curated-playlist-shelf {
     width: min(100%, 1280px);
     margin-right: auto;
