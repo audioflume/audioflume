@@ -10,7 +10,7 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist > *:not(.curat
 body:has(.curated-playlists-page-root) .curated-featured-playlist {
   overflow: hidden;
   grid-template-columns: 1fr !important;
-  background: #000 !important;
+  background: var(--bg-primary) !important;
 }
 
 body:has(.curated-playlists-page-root)
@@ -45,7 +45,7 @@ body:has(.curated-playlists-page-root)
 .curated-video-hero-overlay {
   z-index: 1;
   background:
-    linear-gradient(180deg, transparent 68%, rgba(0, 0, 0, 0.38) 84%, #000 100%),
+    linear-gradient(180deg, transparent 68%, rgba(0, 0, 0, 0.38) 84%, var(--bg-primary) 100%),
     linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.03) 44%, rgba(0, 0, 0, 0.15) 100%),
     linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 58%);
   pointer-events: none;
