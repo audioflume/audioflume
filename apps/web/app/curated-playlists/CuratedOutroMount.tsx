@@ -11,11 +11,12 @@ export default function CuratedOutroMount() {
     let outroMount: HTMLDivElement | null = null;
 
     const syncMount = () => {
-      const container = document.querySelector<HTMLElement>(
-        ".curated-playlists-page-root .curated-playlists-page-layer > div",
+      const pageRoot = document.querySelector<HTMLElement>(
+        ".curated-playlists-page-root",
       );
+      const footer = pageRoot?.querySelector<HTMLElement>(":scope > footer");
 
-      if (!container) return;
+      if (!pageRoot || !footer) return;
 
       if (!outroMount) {
         outroMount = document.createElement("div");
@@ -24,10 +25,10 @@ export default function CuratedOutroMount() {
       }
 
       if (
-        outroMount.parentElement !== container ||
-        container.lastElementChild !== outroMount
+        outroMount.parentElement !== pageRoot ||
+        outroMount.nextElementSibling !== footer
       ) {
-        container.appendChild(outroMount);
+        pageRoot.insertBefore(outroMount, footer);
       }
 
       setMount((current) => (current === outroMount ? current : outroMount));
