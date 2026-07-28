@@ -34,7 +34,8 @@ export default function AudioflumeOutroMount({
             child.classList.contains("discover-reference-outro-mount"),
           );
 
-          outroMount = existingMount as HTMLDivElement | null;
+          outroMount =
+            existingMount instanceof HTMLDivElement ? existingMount : null;
         }
 
         if (!outroMount) return;
