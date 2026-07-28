@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import {
+import RecentPlaylistTracker, {
   getRecentPlaylistKey,
   readRecentPlaylists,
   RECENT_PLAYLISTS_CHANGED_EVENT,
@@ -203,43 +203,48 @@ export default function CuratedJumpBackIn() {
   }, [availablePlaylists, recentEntries]);
 
   if (!isDiscoverPage || !mountNode || recentPlaylists.length === 0) {
-    return null;
+    return <RecentPlaylistTracker />;
   }
 
-  return createPortal(
+  return (
     <>
-      <div className="discover-section-heading">
-        <h2>Jump Back In</h2>
-      </div>
+      <RecentPlaylistTracker />
+      {createPortal(
+        <>
+          <div className="discover-section-heading">
+            <h2>Jump Back In</h2>
+          </div>
 
-      <div className="curated-jump-back-list">
-        {recentPlaylists.map((playlist) => (
-          <Link
-            className="curated-jump-back-item"
-            href={playlist.href}
-            key={playlist.key}
-          >
-            {playlist.coverImageUrl ? (
-              <img
-                className="curated-jump-back-cover"
-                src={playlist.coverImageUrl}
-                alt=""
-              />
-            ) : (
-              <span
-                className="curated-jump-back-placeholder"
-                aria-hidden="true"
-              />
-            )}
+          <div className="curated-jump-back-list">
+            {recentPlaylists.map((playlist) => (
+              <Link
+                className="curated-jump-back-item"
+                href={playlist.href}
+                key={playlist.key}
+              >
+                {playlist.coverImageUrl ? (
+                  <img
+                    className="curated-jump-back-cover"
+                    src={playlist.coverImageUrl}
+                    alt=""
+                  />
+                ) : (
+                  <span
+                    className="curated-jump-back-placeholder"
+                    aria-hidden="true"
+                  />
+                )}
 
-            <span className="curated-jump-back-copy">
-              <strong>{playlist.name}</strong>
-              <small>{playlist.metadata}</small>
-            </span>
-          </Link>
-        ))}
-      </div>
-    </>,
-    mountNode,
+                <span className="curated-jump-back-copy">
+                  <strong>{playlist.name}</strong>
+                  <small>{playlist.metadata}</small>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </>,
+        mountNode,
+      )}
+    </>
   );
 }
