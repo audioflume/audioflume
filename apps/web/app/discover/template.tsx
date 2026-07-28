@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import AudioflumeOutroMount from "@/components/AudioflumeOutroMount";
 import DiscoverHeroVideoLayer from "@/components/DiscoverHeroVideoLayer";
+import CuratedJumpBackIn from "../curated-playlists/CuratedJumpBackIn";
 import DiscoverCuratedHeroCopy from "./DiscoverCuratedHeroCopy";
 import DiscoverReferenceLayout from "./DiscoverReferenceLayout";
 import "../curated-playlists/curated-video-hero.css";
@@ -14,6 +15,7 @@ export default function DiscoverTemplate({ children }: { children: ReactNode }) 
       <DiscoverHeroVideoLayer />
       <DiscoverCuratedHeroCopy />
       <DiscoverReferenceLayout />
+      <CuratedJumpBackIn />
       <AudioflumeOutroMount
         targetSelector=".discover-footer-wrap"
         adoptExistingMount
