@@ -233,7 +233,7 @@ const DISCOVER_LAYOUT_STYLE = `
   .discover-section-heading {
     display: flex;
     min-height: 34px;
-    align-items: center;
+    align-items: center !important;
     justify-content: space-between;
     gap: 20px;
     margin-bottom: 16px;
