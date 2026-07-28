@@ -1,6 +1,6 @@
 .mount {
   width: min(100%, var(--discover-editorial-width, 1120px));
-  margin: var(--discover-section-gap, 96px) auto 0;
+  margin: clamp(-210px, -13vw, -130px) auto clamp(130px, 13vw, 210px);
 }
 
 .feature {
@@ -118,11 +118,10 @@
   max-width: 470px;
   margin: 44px 0 0;
   color: #fff;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 400;
+  font: 400 12px/19px Arial, sans-serif;
+  font-style: normal;
   letter-spacing: 0;
-  line-height: 19px;
+  text-transform: none;
 }
 
 @media (max-width: 900px) {
@@ -157,6 +156,11 @@
 }
 
 @media (max-width: 620px) {
+  .mount {
+    margin-top: -130px;
+    margin-bottom: 110px;
+  }
+
   .visual {
     width: min(92%, 330px);
     padding-right: 28px;
