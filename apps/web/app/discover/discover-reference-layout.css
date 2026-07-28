@@ -26,6 +26,29 @@ body:has(.discover-page-root) .discover-content,
   color: var(--text-primary);
 }
 
+html:not(.light):not([data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-hero-overlay {
+  background:
+    linear-gradient(
+      180deg,
+      transparent 68%,
+      rgba(0, 0, 0, 0.38) 84%,
+      var(--bg-primary) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.12) 0%,
+      rgba(0, 0, 0, 0.03) 44%,
+      rgba(0, 0, 0, 0.15) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.08) 0%,
+      rgba(0, 0, 0, 0) 58%
+    );
+}
+
 body:has(.discover-page-root) .discover-content::before,
 body:has(.discover-page-root) .discover-footer-wrap::before {
   display: none !important;
