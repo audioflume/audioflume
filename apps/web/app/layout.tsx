@@ -93,6 +93,7 @@ export default async function RootLayout({
             }
 
             html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
+              gap: 12px !important;
               font-family: var(--font-aktiv-grotesk), sans-serif !important;
               font-size: 12.5px !important;
               text-transform: none !important;
