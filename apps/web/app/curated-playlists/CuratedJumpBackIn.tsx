@@ -67,7 +67,7 @@ export default function CuratedJumpBackIn({
   const pathname = usePathname();
   const isDiscoverPage = pathname === "/discover";
   const isCuratedPage = pathname === "/curated-playlists";
-  const renderInline = inline && isDiscoverPage;
+  const renderInline = inline && isDiscoverPage && placement === "hero";
   const isSupportedPage = renderInline || isCuratedPage;
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
   const [availablePlaylists, setAvailablePlaylists] = useState<
