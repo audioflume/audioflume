@@ -1,0 +1,121 @@
+.recent-playlist-card-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.recent-playlist-card {
+  min-width: 0;
+  display: flex;
+  min-height: 66px;
+  align-items: center;
+  gap: 12px;
+  border-radius: 0;
+  background: var(--bg-hover);
+  padding: 7px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 150ms ease;
+}
+
+.recent-playlist-card:hover,
+.recent-playlist-card:focus-visible {
+  background: var(--bg-hover);
+  transform: none;
+  outline: none;
+}
+
+.recent-playlist-card-loading {
+  pointer-events: none;
+}
+
+.recent-playlist-card-cover,
+.recent-playlist-card-placeholder {
+  display: block;
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  border-radius: 0;
+  background: var(--bg-elevated);
+  object-fit: cover;
+}
+
+.recent-playlist-card-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recent-playlist-card-copy strong,
+.recent-playlist-card-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-playlist-card-copy strong {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.recent-playlist-card-copy small {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.15;
+}
+
+.recent-playlist-card-loading-line {
+  display: block;
+  width: 78%;
+  height: 12px;
+  background: var(--bg-elevated);
+}
+
+.recent-playlist-card-loading-line-small {
+  width: 56%;
+  height: 10px;
+}
+
+@media (max-width: 1320px) {
+  .recent-playlist-card-list:not(.is-hero) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1040px) {
+  .recent-playlist-card-list:not(.is-hero) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .recent-playlist-card-list.is-hero {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .recent-playlist-card-list.is-hero::-webkit-scrollbar {
+    display: none;
+  }
+
+  .recent-playlist-card-list.is-hero .recent-playlist-card {
+    min-width: 220px;
+    flex: 0 0 220px;
+  }
+}
+
+@media (max-width: 760px) {
+  .recent-playlist-card-list:not(.is-hero) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .recent-playlist-card-list:not(.is-hero) {
+    grid-template-columns: 1fr;
+  }
+}
