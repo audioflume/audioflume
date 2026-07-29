@@ -7,7 +7,7 @@
   min-height: 100svh;
 }
 
-.discover-template-shell.is-discover-route .discover-hero-inner {
+.discover-template-shell.is-discover-route .discover-integrated-hero {
   padding-bottom: clamp(150px, 19vh, 190px);
 }
 
@@ -46,7 +46,7 @@
 }
 
 @media (max-width: 620px) {
-  .discover-template-shell.is-discover-route .discover-hero-inner {
+  .discover-template-shell.is-discover-route .discover-integrated-hero {
     padding-bottom: 150px;
   }
 
