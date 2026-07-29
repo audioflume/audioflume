@@ -5,11 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
-import MoreIcon from "@/components/icons/MoreIcon";
-import DropdownShell from "@/components/DropdownShell";
-import Toast from "@/components/Toast";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
-import { usePlayer } from "@/context/PlayerContext";
 import styles from "./CuratedPlaylistCard.module.css";
 
 export type CuratedPlaylistCardItem = Pick<
@@ -40,152 +36,22 @@ function formatSongCount(count?: number) {
   return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
 }
 
-async function addCuratedPlaylistToMyPlaylists(
-  playlist: CuratedPlaylistCardItem,
-): Promise<void> {
-  const createRes = await fetch("/api/playlists", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: playlist.name,
-      cover_image_url: playlist.cover_image_url ?? null,
-      position: 0,
-    }),
-  });
-
-  if (!createRes.ok) {
-    const err = await createRes.json().catch(() => ({}));
-    throw new Error(err?.error || "Failed to create playlist");
-  }
-
-  const newPlaylist = await createRes.json();
-  const newPlaylistId = newPlaylist.id;
-
-  const songsRes = await fetch(
-    `/api/curated-playlists/${encodeURIComponent(String(playlist.id))}/songs`,
-  );
-
-  if (!songsRes.ok) return;
-
-  const songs = await songsRes.json();
-
-  if (!Array.isArray(songs) || songs.length === 0) return;
-
-  for (let index = 0; index < songs.length; index += 1) {
-    const song = songs[index];
-    const songId = song.song_id ?? song.id;
-
-    if (!songId) continue;
-
-    try {
-      await fetch(`/api/playlists/${newPlaylistId}/songs`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ song_id: songId, position: index }),
-      });
-    } catch (err) {
-      console.warn(`Error adding song ${songId}:`, err);
-    }
-  }
-}
-
-function CuratedPlaylistMenu({
-  playlist,
-  open,
-  onOpenChange,
-  onAdd,
-  saving,
-  playerVisible,
-}: {
-  playlist: CuratedPlaylistCardItem;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onAdd: () => void;
-  saving: boolean;
-  playerVisible: boolean;
-}) {
-  return (
-    <div data-playlist-menu className={styles.menuWrap}>
-      <DropdownShell
-        open={open}
-        onOpenChange={onOpenChange}
-        placement="bottom-end"
-        strategy="fixed"
-        usePortal
-        offsetAmount={5}
-        flippedOffsetAmount={5}
-        crossAxisOffset={0}
-        collisionPadding={{
-          top: 68,
-          right: 16,
-          bottom: playerVisible ? 85 : 13,
-          left: 16,
-        }}
-        trigger={({ open: triggerOpen }) => (
-          <button
-            type="button"
-            className={`${styles.menuButton} ${
-              triggerOpen ? styles.menuButtonOpen : ""
-            }`}
-            aria-label={`${playlist.name} options`}
-            disabled={saving}
-          >
-            <MoreIcon />
-          </button>
-        )}
-      >
-        <button type="button" onClick={onAdd} disabled={saving}>
-          {saving ? "Adding…" : "Add to My Playlists"}
-        </button>
-      </DropdownShell>
-    </div>
-  );
-}
-
 export function CuratedPlaylistCard({
   playlist,
   index,
-  openMenuId,
-  setOpenMenuId,
-  onAddSuccess,
-  onAddError,
-  playerVisible,
 }: {
   playlist: CuratedPlaylistCardItem;
   index: number;
-  openMenuId: number | null;
-  setOpenMenuId: (id: number | null) => void;
-  onAddSuccess: (name: string) => void;
-  onAddError: (msg: string) => void;
-  playerVisible: boolean;
 }) {
   const href = playlist.href || `/curated-playlists/${playlist.id}`;
-  const isMenuOpen = openMenuId === playlist.id;
-  const [saving, setSaving] = useState(false);
   const fallbackGradient =
     FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
-
-  async function handleAddToMyPlaylists() {
-    if (saving) return;
-
-    setOpenMenuId(null);
-    setSaving(true);
-
-    try {
-      await addCuratedPlaylistToMyPlaylists(playlist);
-      onAddSuccess(playlist.name);
-    } catch (err) {
-      onAddError(err instanceof Error ? err.message : "Failed to add playlist");
-    } finally {
-      setSaving(false);
-    }
-  }
 
   return (
     <div
       className={`curated-playlist-card-shell discover-playlist-card-shell ${styles.shell}`}
     >
-      <article className={`${styles.card} ${isMenuOpen ? styles.cardOpen : ""}`}>
+      <article className={styles.card}>
         <Link href={href} className={styles.imageLink}>
           <div
             className={styles.image}
@@ -214,17 +80,6 @@ export function CuratedPlaylistCard({
             <h3>{playlist.name}</h3>
             <p>{formatSongCount(playlist.song_count)}</p>
           </Link>
-
-          <CuratedPlaylistMenu
-            playlist={playlist}
-            open={isMenuOpen}
-            onOpenChange={(nextOpen) => {
-              setOpenMenuId(nextOpen ? playlist.id : null);
-            }}
-            onAdd={handleAddToMyPlaylists}
-            saving={saving}
-            playerVisible={playerVisible}
-          />
         </div>
       </article>
     </div>
@@ -241,15 +96,6 @@ export default function CuratedPlaylistShelf({
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [imageCenterY, setImageCenterY] = useState<number | null>(null);
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const { currentSong } = usePlayer();
-  const playerVisible = Boolean(currentSong);
-
-  function showToast(message: string) {
-    setToastMessage(message);
-    window.setTimeout(() => setToastMessage(null), 2400);
-  }
 
   function updateScrollState() {
     const scroller = scrollerRef.current;
@@ -389,22 +235,10 @@ export default function CuratedPlaylistShelf({
                 key={playlist.id}
                 playlist={playlist}
                 index={index}
-                openMenuId={openMenuId}
-                setOpenMenuId={setOpenMenuId}
-                onAddSuccess={(name) =>
-                  showToast(`"${name}" added to My Playlists`)
-                }
-                onAddError={showToast}
-                playerVisible={playerVisible}
               />
             ))}
           </div>
         </div>
-
-        <Toast
-          message={toastMessage}
-          bottomOffset={playerVisible ? "88px" : "24px"}
-        />
       </section>
     </div>
   );
