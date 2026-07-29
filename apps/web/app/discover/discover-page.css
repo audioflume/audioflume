@@ -204,7 +204,10 @@ body:has(.discover-page-root) .discover-mood-section {
 }
 
 body:has(.discover-page-root) .discover-mood-section .discover-section-heading {
-  width: min(calc(100% - (var(--discover-page-gutter) * 2)), 1120px);
+  width: min(
+    calc(100% - (var(--discover-editorial-gutter) * 2)),
+    var(--discover-editorial-width)
+  );
   margin-right: auto;
   margin-left: auto;
 }
@@ -223,12 +226,12 @@ body:has(.discover-page-root)
   .curated-playlist-shelf-scroller {
   padding-right: 0 !important;
   padding-left: max(
-    var(--discover-page-gutter),
-    calc((100vw - 1120px) / 2)
+    var(--discover-editorial-gutter),
+    calc((100vw - var(--discover-editorial-width)) / 2)
   ) !important;
   scroll-padding-left: max(
-    var(--discover-page-gutter),
-    calc((100vw - 1120px) / 2)
+    var(--discover-editorial-gutter),
+    calc((100vw - var(--discover-editorial-width)) / 2)
   );
 }
 
