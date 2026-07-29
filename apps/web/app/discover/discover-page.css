@@ -225,11 +225,18 @@ body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-scroller {
   gap: 12px;
-  padding-right: 0 !important;
+  padding-right: max(
+    var(--discover-editorial-gutter),
+    calc((100vw - var(--discover-editorial-width)) / 2)
+  ) !important;
   padding-left: max(
     var(--discover-editorial-gutter),
     calc((100vw - var(--discover-editorial-width)) / 2)
   ) !important;
+  scroll-padding-right: max(
+    var(--discover-editorial-gutter),
+    calc((100vw - var(--discover-editorial-width)) / 2)
+  );
   scroll-padding-left: max(
     var(--discover-editorial-gutter),
     calc((100vw - var(--discover-editorial-width)) / 2)
