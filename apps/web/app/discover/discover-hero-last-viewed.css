@@ -1,0 +1,58 @@
+.discover-template-shell.is-discover-route {
+  position: relative;
+}
+
+.discover-template-shell.is-discover-route .discover-hero {
+  height: 100svh;
+  min-height: 100svh;
+}
+
+.discover-template-shell.is-discover-route .discover-hero-inner {
+  padding-bottom: clamp(150px, 19vh, 190px);
+}
+
+.discover-template-shell.is-discover-route > .discover-hero-last-viewed {
+  position: absolute;
+  top: 100svh;
+  right: 0;
+  left: 0;
+  z-index: 5;
+  padding: 0 var(--discover-editorial-gutter) clamp(24px, 3vw, 40px);
+  transform: translateY(-100%);
+}
+
+.discover-hero-last-viewed-section {
+  width: min(100%, var(--discover-editorial-width));
+  margin: 0 auto;
+}
+
+.discover-hero-last-viewed-heading {
+  display: flex;
+  min-height: 28px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.discover-hero-last-viewed-heading h2 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(17px, 1.15vw, 22px);
+  font-weight: 500;
+  font-kerning: normal;
+  letter-spacing: -.025em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+@media (max-width: 620px) {
+  .discover-template-shell.is-discover-route .discover-hero-inner {
+    padding-bottom: 150px;
+  }
+
+  .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
+    padding-right: 20px;
+    padding-bottom: 24px;
+    padding-left: 20px;
+  }
+}
