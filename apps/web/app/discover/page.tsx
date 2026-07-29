@@ -28,6 +28,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import type { Song } from "@/lib/types";
+import CuratedJumpBackIn from "../curated-playlists/CuratedJumpBackIn";
 
 import "../music/music-library-redesign.css";
 
@@ -767,6 +768,7 @@ export default function DiscoverPage() {
       <DiscoverHero />
 
       <div className="discover-content">
+        <CuratedJumpBackIn inline />
         <DiscoverMoodShelf
           playlists={discoverBlocks}
           loading={playlistsLoading}
