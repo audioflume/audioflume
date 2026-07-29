@@ -102,14 +102,12 @@ export default function CuratedJumpBackIn() {
         return;
       }
 
-      const firstShelf = document.querySelector<HTMLElement>(
-        ".curated-playlists-page-root .curated-playlist-shelf",
+      const featuredPlaylist = document.querySelector<HTMLElement>(
+        ".curated-playlists-page-root .curated-featured-playlist",
       );
-      const firstShelfWrapper = firstShelf?.parentElement;
-      const shelfContainer = firstShelfWrapper?.parentElement;
-      if (!firstShelfWrapper || !shelfContainer) return;
+      if (!featuredPlaylist?.parentElement) return;
 
-      let mount = shelfContainer.querySelector<HTMLElement>(
+      let mount = featuredPlaylist.parentElement.querySelector<HTMLElement>(
         ":scope > .curated-last-viewed-section",
       );
 
@@ -122,8 +120,8 @@ export default function CuratedJumpBackIn() {
         );
       }
 
-      if (firstShelfWrapper.previousElementSibling !== mount) {
-        shelfContainer.insertBefore(mount, firstShelfWrapper);
+      if (featuredPlaylist.nextElementSibling !== mount) {
+        featuredPlaylist.insertAdjacentElement("afterend", mount);
       }
 
       activeMount = mount;
