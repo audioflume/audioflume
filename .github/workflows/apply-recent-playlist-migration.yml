@@ -23,13 +23,6 @@ jobs:
           python <<'PY'
           from pathlib import Path
 
-          curated_path = Path("apps/web/app/curated-playlists/CuratedJumpBackIn.tsx")
-          curated = curated_path.read_text()
-          old_render = '  const renderInline = inline && isDiscoverPage;'
-          new_render = '  const renderInline = inline && isDiscoverPage && placement === "hero";'
-          assert curated.count(old_render) == 1
-          curated_path.write_text(curated.replace(old_render, new_render))
-
           community_path = Path("apps/web/app/community-playlists/page.tsx")
           community = community_path.read_text()
 
@@ -211,6 +204,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add apps/web/app/curated-playlists/CuratedJumpBackIn.tsx apps/web/app/community-playlists/page.tsx
+          git add apps/web/app/community-playlists/page.tsx
           git commit -m "Use shared recent playlist cards everywhere"
           git push origin HEAD:main
