@@ -1,0 +1,123 @@
+name: Apply Community sidebar last viewed move
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/apply-community-sidebar-last-viewed.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Move recent playlists into sidebar
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("apps/web/app/community-playlists/page.tsx")
+          text = path.read_text()
+
+          featured_line = '  const featured = playlists.slice(0, 10);\n'
+          if text.count(featured_line) != 1:
+              raise SystemExit("Expected featured playlist declaration exactly once")
+          text = text.replace(featured_line, "", 1)
+
+          old_sidebar = '''          <section className="community-sidebar-section community-featured">
+            <p className="community-sidebar-heading">Featured Playlists</p>
+            <div className="community-featured-list">
+              {featured.map((playlist) => (
+                <Link
+                  className="community-featured-item"
+                  href={`/community-playlists/${playlist.id}`}
+                  key={playlist.id}
+                >
+                  {playlist.cover_image_url ? (
+                    <img src={playlist.cover_image_url} alt="" />
+                  ) : (
+                    <span className="community-featured-placeholder" aria-hidden="true" />
+                  )}
+                  <span>
+                    <strong>{playlist.name}</strong>
+                    <small>{playlist.song_count} songs</small>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
+'''
+
+          new_sidebar = '''          {recentPlaylists.length > 0 && (
+            <section
+              className="community-sidebar-section community-featured community-sidebar-last-viewed"
+              aria-labelledby="community-sidebar-last-viewed-heading"
+            >
+              <p
+                className="community-sidebar-heading"
+                id="community-sidebar-last-viewed-heading"
+              >
+                Last Viewed
+              </p>
+              <RecentPlaylistCards
+                variant="sidebar"
+                playlists={recentPlaylists.map((playlist) => ({
+                  key: `community:${playlist.id}`,
+                  href: `/community-playlists/${playlist.id}`,
+                  name: playlist.name,
+                  coverImageUrl: playlist.cover_image_url,
+                  metadata: `${playlist.creator.name} · ${playlist.song_count} songs`,
+                }))}
+              />
+            </section>
+          )}
+'''
+
+          if text.count(old_sidebar) != 1:
+              raise SystemExit("Expected Featured Playlists sidebar block exactly once")
+          text = text.replace(old_sidebar, new_sidebar, 1)
+
+          old_main = '''          {recentPlaylists.length > 0 && (
+            <section className="community-jump-back" aria-labelledby="community-jump-back-heading">
+              <h2
+                className="community-jump-back-heading"
+                id="community-jump-back-heading"
+              >
+                Jump Back In
+              </h2>
+              <RecentPlaylistCards
+                playlists={recentPlaylists.map((playlist) => ({
+                  key: `community:${playlist.id}`,
+                  href: `/community-playlists/${playlist.id}`,
+                  name: playlist.name,
+                  coverImageUrl: playlist.cover_image_url,
+                  metadata: `${playlist.creator.name} · ${playlist.song_count} songs`,
+                }))}
+              />
+            </section>
+          )}
+
+'''
+
+          if text.count(old_main) != 1:
+              raise SystemExit("Expected main Jump Back In block exactly once")
+          text = text.replace(old_main, "", 1)
+
+          path.write_text(text)
+          PY
+
+      - name: Commit source change and remove workflow
+        run: |
+          git config user.name "filmwave-webmaster"
+          git config user.email "actions@users.noreply.github.com"
+          rm .github/workflows/apply-community-sidebar-last-viewed.yml
+          git add apps/web/app/community-playlists/page.tsx .github/workflows/apply-community-sidebar-last-viewed.yml
+          git commit -m "Move Community last viewed into sidebar"
+          git push origin main
