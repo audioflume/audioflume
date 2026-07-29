@@ -5,7 +5,7 @@ import DiscoverTemplate from "./discover/template";
 export default function Home() {
   return (
     <DiscoverLayout>
-      <DiscoverTemplate>
+      <DiscoverTemplate showHeroLastViewed={false}>
         <HomePageContent />
       </DiscoverTemplate>
     </DiscoverLayout>
