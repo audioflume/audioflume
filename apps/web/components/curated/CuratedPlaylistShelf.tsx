@@ -332,25 +332,32 @@ export default function CuratedPlaylistShelf({
         </div>
 
         <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
-          <button
-            type="button"
-            onClick={() => scrollPlaylists("prev")}
-            disabled={!canScrollPrev}
-            className="curated-playlist-shelf-prev-floating absolute z-20 hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
-            aria-label={`Scroll ${title} left`}
-          >
-            <ChevronLeftIcon size={18} />
-          </button>
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 grid grid-cols-2 gap-[var(--curated-playlist-card-gap)] px-[var(--curated-page-gutter)] min-[721px]:grid-cols-3 min-[981px]:grid-cols-4 min-[1281px]:grid-cols-5">
+            <span
+              className="col-start-1 row-start-1 aspect-video"
+              aria-hidden="true"
+            />
 
-          <button
-            type="button"
-            onClick={() => scrollPlaylists("next")}
-            disabled={!canScrollNext}
-            className="curated-playlist-shelf-next-floating absolute right-8 z-20 hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
-            aria-label={`Scroll ${title} right`}
-          >
-            <ChevronRightIcon size={18} />
-          </button>
+            <button
+              type="button"
+              onClick={() => scrollPlaylists("prev")}
+              disabled={!canScrollPrev}
+              className="pointer-events-auto absolute left-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+              aria-label={`Scroll ${title} left`}
+            >
+              <ChevronLeftIcon size={18} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollPlaylists("next")}
+              disabled={!canScrollNext}
+              className="pointer-events-auto absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+              aria-label={`Scroll ${title} right`}
+            >
+              <ChevronRightIcon size={18} />
+            </button>
+          </div>
 
           <div
             ref={scrollerRef}
