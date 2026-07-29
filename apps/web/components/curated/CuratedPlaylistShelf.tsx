@@ -23,6 +23,16 @@ type CuratedPlaylistShelfProps = {
   className?: string;
 };
 
+type CuratedPlaylistCardProps = {
+  playlist: CuratedPlaylistCardItem;
+  index: number;
+  openMenuId?: number | null;
+  setOpenMenuId?: (id: number | null) => void;
+  onAddSuccess?: (name: string) => void;
+  onAddError?: (message: string) => void;
+  playerVisible?: boolean;
+};
+
 const FALLBACK_GRADIENTS = [
   "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
   "linear-gradient(135deg,#1f3d3a 0%,#111111 52%,#4d8c7b 100%)",
@@ -39,10 +49,7 @@ function formatSongCount(count?: number) {
 export function CuratedPlaylistCard({
   playlist,
   index,
-}: {
-  playlist: CuratedPlaylistCardItem;
-  index: number;
-}) {
+}: CuratedPlaylistCardProps) {
   const href = playlist.href || `/curated-playlists/${playlist.id}`;
   const fallbackGradient =
     FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
