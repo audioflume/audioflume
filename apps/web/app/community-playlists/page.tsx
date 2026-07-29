@@ -398,7 +398,7 @@ export default function CommunityPlaylistsPage() {
           height: calc(100vh - var(--filmwave-header-height, 56px));
           margin-top: var(--filmwave-header-height, 56px);
           display: grid;
-          grid-template-columns: 276px minmax(0, 1fr){
+          grid-template-columns: 276px minmax(0, 1fr);
           overflow: hidden;
           background: var(--bg-primary);
           color: var(--text-primary);
