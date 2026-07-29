@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import RecentPlaylistCards, {
+  type RecentPlaylistCardItem,
+} from "@/components/RecentPlaylistCards";
 import RecentPlaylistTracker, {
   getRecentPlaylistKey,
   readRecentPlaylists,
@@ -23,16 +25,9 @@ type CommunityPlaylistSummary = {
   };
 };
 
-type RecentPlaylistCard = {
-  key: string;
-  href: string;
-  name: string;
-  coverImageUrl: string | null;
-  metadata: string;
-};
-
 type CuratedJumpBackInProps = {
   inline?: boolean;
+  placement?: "content" | "hero";
 };
 
 function formatSongCount(count: number | undefined) {
@@ -65,33 +60,9 @@ async function fetchJson(url: string) {
   }
 }
 
-function LastViewedLoadingContent() {
-  return (
-    <>
-      <div className="discover-section-heading curated-last-viewed-heading">
-        <h2>Last Viewed</h2>
-      </div>
-
-      <div className="curated-jump-back-list" aria-hidden="true">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <div
-            className="curated-jump-back-item curated-jump-back-item-loading"
-            key={index}
-          >
-            <span className="curated-jump-back-placeholder" />
-            <span className="curated-jump-back-copy">
-              <span className="curated-jump-back-loading-line" />
-              <span className="curated-jump-back-loading-line curated-jump-back-loading-line-small" />
-            </span>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
 export default function CuratedJumpBackIn({
   inline = false,
+  placement = "content",
 }: CuratedJumpBackInProps) {
   const pathname = usePathname();
   const isDiscoverPage = pathname === "/discover";
@@ -100,7 +71,7 @@ export default function CuratedJumpBackIn({
   const isSupportedPage = renderInline || isCuratedPage;
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
   const [availablePlaylists, setAvailablePlaylists] = useState<
-    RecentPlaylistCard[]
+    RecentPlaylistCardItem[]
   >([]);
   const [recentEntries, setRecentEntries] = useState<RecentPlaylistEntry[]>([]);
   const [recentEntriesLoaded, setRecentEntriesLoaded] = useState(false);
@@ -162,7 +133,7 @@ export default function CuratedJumpBackIn({
 
       const curatedCards = Array.isArray(curatedData)
         ? curatedData.map(
-            (playlist: CuratedPlaylist): RecentPlaylistCard => ({
+            (playlist: CuratedPlaylist): RecentPlaylistCardItem => ({
               key: getRecentPlaylistKey({
                 type: "curated",
                 id: playlist.id,
@@ -189,7 +160,7 @@ export default function CuratedJumpBackIn({
         ? (communityData.playlists as CommunityPlaylistSummary[])
         : [];
       const communityCards = communityPlaylists.map(
-        (playlist): RecentPlaylistCard => ({
+        (playlist): RecentPlaylistCardItem => ({
           key: getRecentPlaylistKey({
             type: "community",
             id: playlist.id,
@@ -250,52 +221,36 @@ export default function CuratedJumpBackIn({
 
     return visibleEntries
       .map((entry) => playlistByKey.get(getRecentPlaylistKey(entry)))
-      .filter((playlist): playlist is RecentPlaylistCard => Boolean(playlist))
+      .filter(
+        (playlist): playlist is RecentPlaylistCardItem => Boolean(playlist),
+      )
       .slice(0, 5);
   }, [availablePlaylists, isCuratedPage, recentEntries]);
 
   if (!isSupportedPage) return <RecentPlaylistTracker />;
 
+  const isInlineLoading =
+    renderInline && (!recentEntriesLoaded || !playlistsLoaded);
+  const headingClassName =
+    renderInline && placement === "hero"
+      ? "discover-hero-last-viewed-heading curated-last-viewed-heading"
+      : "discover-section-heading curated-last-viewed-heading";
   const content = (
     <>
-      <div className="discover-section-heading curated-last-viewed-heading">
+      <div className={headingClassName}>
         <h2>Last Viewed</h2>
       </div>
 
-      <div className="curated-jump-back-list">
-        {recentPlaylists.map((playlist) => (
-          <Link
-            className="curated-jump-back-item"
-            href={playlist.href}
-            key={playlist.key}
-          >
-            {playlist.coverImageUrl ? (
-              <img
-                className="curated-jump-back-cover"
-                src={playlist.coverImageUrl}
-                alt=""
-              />
-            ) : (
-              <span
-                className="curated-jump-back-placeholder"
-                aria-hidden="true"
-              />
-            )}
-
-            <span className="curated-jump-back-copy">
-              <strong>{playlist.name}</strong>
-              <small>{playlist.metadata}</small>
-            </span>
-          </Link>
-        ))}
-      </div>
+      <RecentPlaylistCards
+        playlists={recentPlaylists}
+        loading={isInlineLoading}
+        variant={placement === "hero" ? "hero" : "default"}
+      />
     </>
   );
 
   if (renderInline) {
-    const isLoading = !recentEntriesLoaded || !playlistsLoaded;
-
-    if (!isLoading && recentPlaylists.length === 0) {
+    if (!isInlineLoading && recentPlaylists.length === 0) {
       return <RecentPlaylistTracker />;
     }
 
@@ -303,11 +258,15 @@ export default function CuratedJumpBackIn({
       <>
         <RecentPlaylistTracker />
         <section
-          className="discover-section discover-jump-back-section"
+          className={
+            placement === "hero"
+              ? "discover-hero-last-viewed-section"
+              : "discover-section discover-jump-back-section"
+          }
           aria-label="Recently viewed playlists"
-          aria-busy={isLoading}
+          aria-busy={isInlineLoading}
         >
-          {isLoading ? <LastViewedLoadingContent /> : content}
+          {content}
         </section>
       </>
     );
