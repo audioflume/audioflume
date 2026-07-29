@@ -79,7 +79,9 @@ export default function Header() {
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const transparentAtTop =
-    pathname === "/discover" || pathname === "/curated-playlists";
+    pathname === "/" ||
+    pathname === "/discover" ||
+    pathname === "/curated-playlists";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
   const headerClassName = [
@@ -453,7 +455,7 @@ export default function Header() {
         className={headerClassName}
         logo={
           <Link
-            href="/discover"
+            href="/"
             className="filmwave-header-logo-action"
             aria-label="audioflume Home"
           >
