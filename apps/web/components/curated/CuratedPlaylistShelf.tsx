@@ -232,7 +232,6 @@ export function CuratedPlaylistCard({
 
 export default function CuratedPlaylistShelf({
   title,
-  description,
   playlists,
   viewAllHref,
   className = "mt-12",
@@ -298,8 +297,6 @@ export default function CuratedPlaylistShelf({
         <div className="discover-section-heading curated-playlist-shelf-heading">
           <div className="min-w-0">
             <h2>{title}</h2>
-
-            {description && <p>{description}</p>}
           </div>
 
           <div className="hidden items-center gap-2 sm:flex">
