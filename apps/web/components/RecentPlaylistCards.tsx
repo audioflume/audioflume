@@ -15,7 +15,7 @@ type RecentPlaylistCardsProps = {
   playlists?: RecentPlaylistCardItem[];
   loading?: boolean;
   loadingCount?: number;
-  variant?: "default" | "hero";
+  variant?: "default" | "hero" | "sidebar";
 };
 
 export default function RecentPlaylistCards({
@@ -27,6 +27,7 @@ export default function RecentPlaylistCards({
   const listClassName = [
     "recent-playlist-card-list",
     variant === "hero" ? "is-hero" : "",
+    variant === "sidebar" ? "is-sidebar" : "",
   ]
     .filter(Boolean)
     .join(" ");
