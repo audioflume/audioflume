@@ -233,7 +233,8 @@ export default function CuratedJumpBackIn() {
 
     return visibleEntries
       .map((entry) => playlistByKey.get(getRecentPlaylistKey(entry)))
-      .filter((playlist): playlist is RecentPlaylistCard => Boolean(playlist));
+      .filter((playlist): playlist is RecentPlaylistCard => Boolean(playlist))
+      .slice(0, 5);
   }, [availablePlaylists, isCuratedPage, recentEntries]);
 
   if (!isSupportedPage || !mountNode || recentPlaylists.length === 0) {
