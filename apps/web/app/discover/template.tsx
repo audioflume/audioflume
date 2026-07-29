@@ -29,7 +29,7 @@ export default function DiscoverTemplate({
         </div>
       )}
       <DiscoverHeroVideoLayer />
-      <DiscoverCuratedHeroCopy />
+      <DiscoverCuratedHeroCopy showIntroCopy={!showHeroLastViewed} />
       <DiscoverReferenceLayout />
       <AudioflumeOutroMount
         targetSelector=".discover-footer-wrap"
