@@ -105,9 +105,11 @@ export default function CuratedJumpBackIn() {
       const firstShelf = document.querySelector<HTMLElement>(
         ".curated-playlists-page-root .curated-playlist-shelf",
       );
-      if (!firstShelf?.parentElement) return;
+      const firstShelfWrapper = firstShelf?.parentElement;
+      const shelfContainer = firstShelfWrapper?.parentElement;
+      if (!firstShelfWrapper || !shelfContainer) return;
 
-      let mount = firstShelf.parentElement.querySelector<HTMLElement>(
+      let mount = shelfContainer.querySelector<HTMLElement>(
         ":scope > .curated-last-viewed-section",
       );
 
@@ -120,8 +122,8 @@ export default function CuratedJumpBackIn() {
         );
       }
 
-      if (firstShelf.previousElementSibling !== mount) {
-        firstShelf.parentElement.insertBefore(mount, firstShelf);
+      if (firstShelfWrapper.previousElementSibling !== mount) {
+        shelfContainer.insertBefore(mount, firstShelfWrapper);
       }
 
       activeMount = mount;
