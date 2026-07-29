@@ -78,12 +78,12 @@ export default function CuratedJumpBackIn() {
 
     const syncMount = () => {
       if (isDiscoverPage) {
-        const curatedSection = document.querySelector<HTMLElement>(
-          ".discover-page-root .discover-curated-playlist-section",
+        const moodSection = document.querySelector<HTMLElement>(
+          ".discover-page-root .discover-mood-section",
         );
-        if (!curatedSection?.parentElement) return;
+        if (!moodSection?.parentElement) return;
 
-        let mount = curatedSection.parentElement.querySelector<HTMLElement>(
+        let mount = moodSection.parentElement.querySelector<HTMLElement>(
           ":scope > .discover-jump-back-section",
         );
 
@@ -93,8 +93,8 @@ export default function CuratedJumpBackIn() {
           mount.setAttribute("aria-label", "Recently viewed playlists");
         }
 
-        if (curatedSection.previousElementSibling !== mount) {
-          curatedSection.parentElement.insertBefore(mount, curatedSection);
+        if (moodSection.previousElementSibling !== mount) {
+          moodSection.parentElement.insertBefore(mount, moodSection);
         }
 
         activeMount = mount;
