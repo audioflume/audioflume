@@ -197,11 +197,43 @@ body:has(.discover-page-root) .discover-content > .discover-section:not(.discove
 }
 
 body:has(.discover-page-root) .discover-mood-section {
-  display: none;
+  width: 100vw;
+  max-width: none;
+  margin-right: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw);
+}
+
+body:has(.discover-page-root) .discover-mood-section .discover-section-heading {
+  width: min(calc(100% - (var(--discover-page-gutter) * 2)), 1120px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+body:has(.discover-page-root)
+  .discover-mood-section
+  .curated-playlist-shelf-viewport {
+  width: 100%;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  overflow: hidden;
+}
+
+body:has(.discover-page-root)
+  .discover-mood-section
+  .curated-playlist-shelf-scroller {
+  padding-right: 0 !important;
+  padding-left: max(
+    var(--discover-page-gutter),
+    calc((100vw - 1120px) / 2)
+  ) !important;
+  scroll-padding-left: max(
+    var(--discover-page-gutter),
+    calc((100vw - 1120px) / 2)
+  );
 }
 
 body:has(.discover-page-root) .discover-mood-section + .discover-curated-playlist-section {
-  margin-top: 0 !important;
+  margin-top: clamp(96px, 9vw, 144px) !important;
 }
 
 body:has(.discover-page-root) .discover-section {
