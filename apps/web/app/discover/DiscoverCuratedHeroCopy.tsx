@@ -6,7 +6,13 @@ import { useRouter } from "next/navigation";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 
-export default function DiscoverCuratedHeroCopy() {
+type DiscoverCuratedHeroCopyProps = {
+  showIntroCopy?: boolean;
+};
+
+export default function DiscoverCuratedHeroCopy({
+  showIntroCopy = true,
+}: DiscoverCuratedHeroCopyProps) {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
@@ -22,26 +28,28 @@ export default function DiscoverCuratedHeroCopy() {
 
   return (
     <section className="discover-integrated-hero" aria-label="Discover music">
-      <div className="curated-video-hero discover-curated-hero-copy-shell">
-        <div className="curated-video-hero-content discover-curated-hero-copy">
-          <h1>Made for Film</h1>
+      {showIntroCopy && (
+        <div className="curated-video-hero discover-curated-hero-copy-shell">
+          <div className="curated-video-hero-content discover-curated-hero-copy">
+            <h1>Made for Film</h1>
 
-          <p className="curated-video-hero-primary-copy">
-            <span>Discover curated music playlists</span>
-            <span>Premium audio soundtracks</span>
-            <span>For film</span>
-          </p>
+            <p className="curated-video-hero-primary-copy">
+              <span>Discover curated music playlists</span>
+              <span>Premium audio soundtracks</span>
+              <span>For film</span>
+            </p>
 
-          <div className="curated-video-hero-secondary-copy">
-            <strong>(Tailored Sound)</strong>
-            <span>
-              Discover curated music playlists, premium audio
-              <br />
-              soundtracks for film
-            </span>
+            <div className="curated-video-hero-secondary-copy">
+              <strong>(Tailored Sound)</strong>
+              <span>
+                Discover curated music playlists, premium audio
+                <br />
+                soundtracks for film
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <form className="discover-integrated-search" onSubmit={handleSubmit}>
         <span className="discover-integrated-search-icon" aria-hidden="true">
