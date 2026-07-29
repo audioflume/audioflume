@@ -1,7 +1,9 @@
 "use client";
 
 import { type FormEvent, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 
 export default function DiscoverCuratedHeroCopy() {
@@ -61,19 +63,32 @@ export default function DiscoverCuratedHeroCopy() {
       </form>
 
       <div className="discover-integrated-values">
-        <div>
-          <strong>Human Curated Music Library</strong>
+        <Link className="discover-integrated-value-link" href="/music">
+          <strong>
+            Human Curated Music Library
+            <ArrowUpRightIcon
+              size={12}
+              className="discover-integrated-value-arrow"
+            />
+          </strong>
           <span>
             Human-picked tracks, thoughtful moods, and music chosen for real
             edits.
           </span>
-        </div>
-        <div>
-          <strong>Thousands of Sound Effects</strong>
+        </Link>
+
+        <Link className="discover-integrated-value-link" href="/sound-fx">
+          <strong>
+            Thousands of Sound Effects
+            <ArrowUpRightIcon
+              size={12}
+              className="discover-integrated-value-arrow"
+            />
+          </strong>
           <span>
             Thousands of sound effects, textures, and details for richer edits.
           </span>
-        </div>
+        </Link>
       </div>
     </section>
   );
