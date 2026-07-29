@@ -2,7 +2,7 @@
 
 import { type FormEvent, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import AudioflumeOutroSection from "@/components/AudioflumeOutroSection";
 
 const ORANGE_IMAGE =
@@ -150,35 +150,48 @@ function IntroComposition() {
 }
 
 export default function DiscoverReferenceLayout() {
+  const pathname = usePathname();
+  const showIntro = pathname !== "/discover";
   const [heroMount, setHeroMount] = useState<HTMLElement | null>(null);
   const [introMount, setIntroMount] = useState<HTMLElement | null>(null);
   const [outroMount, setOutroMount] = useState<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
     const heroContent = document.querySelector<HTMLElement>(".discover-hero-content");
-    const firstSection = document.querySelector<HTMLElement>(".discover-curated-playlist-section");
+    const firstSection = showIntro
+      ? document.querySelector<HTMLElement>(".discover-curated-playlist-section")
+      : null;
     const footer = document.querySelector<HTMLElement>(".discover-footer-wrap");
-    if (!heroContent || !firstSection || !footer) return;
+    if (!heroContent || !footer || (showIntro && !firstSection)) return;
+
     heroContent.classList.add("has-discover-reference-layout");
+
     const hero = document.createElement("div");
     hero.className = "discover-reference-hero-mount";
     heroContent.appendChild(hero);
-    const intro = document.createElement("div");
-    intro.className = "discover-reference-intro-mount";
-    firstSection.insertAdjacentElement("beforebegin", intro);
+
+    let intro: HTMLDivElement | null = null;
+    if (showIntro && firstSection) {
+      intro = document.createElement("div");
+      intro.className = "discover-reference-intro-mount";
+      firstSection.insertAdjacentElement("beforebegin", intro);
+    }
+
     const outro = document.createElement("div");
     outro.className = "discover-reference-outro-mount";
     footer.insertAdjacentElement("beforebegin", outro);
+
     setHeroMount(hero);
     setIntroMount(intro);
     setOutroMount(outro);
+
     return () => {
       heroContent.classList.remove("has-discover-reference-layout");
       hero.remove();
-      intro.remove();
+      intro?.remove();
       outro.remove();
     };
-  }, []);
+  }, [showIntro]);
 
   return (
     <>
