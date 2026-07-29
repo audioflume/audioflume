@@ -189,6 +189,7 @@ export function CuratedPlaylistCard({
         <Link href={href} className={styles.imageLink}>
           <div
             className={styles.image}
+            data-curated-playlist-image
             style={{
               background: playlist.cover_image_url
                 ? "var(--media-overlay-solid)"
@@ -239,6 +240,7 @@ export default function CuratedPlaylistShelf({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [imageCenterY, setImageCenterY] = useState<number | null>(null);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const { currentSong } = usePlayer();
@@ -289,6 +291,26 @@ export default function CuratedPlaylistShelf({
     };
   }, [playlists.length]);
 
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    const image = scroller?.querySelector<HTMLElement>(
+      "[data-curated-playlist-image]",
+    );
+
+    if (!image) return;
+
+    const updateImageCenter = () => {
+      setImageCenterY(image.getBoundingClientRect().height / 2);
+    };
+
+    updateImageCenter();
+
+    const resizeObserver = new ResizeObserver(updateImageCenter);
+    resizeObserver.observe(image);
+
+    return () => resizeObserver.disconnect();
+  }, [playlists.length]);
+
   if (!playlists.length) return null;
 
   return (
@@ -332,32 +354,31 @@ export default function CuratedPlaylistShelf({
         </div>
 
         <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 grid grid-cols-2 gap-[var(--curated-playlist-card-gap)] px-[var(--curated-page-gutter)] min-[721px]:grid-cols-3 min-[981px]:grid-cols-4 min-[1281px]:grid-cols-5">
-            <span
-              className="col-start-1 row-start-1 aspect-video"
-              aria-hidden="true"
-            />
+          {imageCenterY !== null && (
+            <>
+              <button
+                type="button"
+                onClick={() => scrollPlaylists("prev")}
+                disabled={!canScrollPrev}
+                className="absolute left-8 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+                style={{ top: imageCenterY }}
+                aria-label={`Scroll ${title} left`}
+              >
+                <ChevronLeftIcon size={18} />
+              </button>
 
-            <button
-              type="button"
-              onClick={() => scrollPlaylists("prev")}
-              disabled={!canScrollPrev}
-              className="pointer-events-auto absolute left-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
-              aria-label={`Scroll ${title} left`}
-            >
-              <ChevronLeftIcon size={18} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollPlaylists("next")}
-              disabled={!canScrollNext}
-              className="pointer-events-auto absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
-              aria-label={`Scroll ${title} right`}
-            >
-              <ChevronRightIcon size={18} />
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => scrollPlaylists("next")}
+                disabled={!canScrollNext}
+                className="absolute right-8 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+                style={{ top: imageCenterY }}
+                aria-label={`Scroll ${title} right`}
+              >
+                <ChevronRightIcon size={18} />
+              </button>
+            </>
+          )}
 
           <div
             ref={scrollerRef}
