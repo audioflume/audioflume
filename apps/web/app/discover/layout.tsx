@@ -3,6 +3,11 @@ import DiscoverHeaderScrollState from "./DiscoverSharedHeaderSearch";
 const DISCOVER_LAYOUT_STYLE = `
   body:has(.discover-page-root) {
     --discover-page-gutter: clamp(28px, 5.2vw, 82px);
+    --discover-playlist-card-title-font-family: var(--font-aktiv-grotesk), sans-serif;
+    --discover-playlist-card-title-font-size: 15px;
+    --discover-playlist-card-title-font-weight: 500;
+    --discover-playlist-card-title-letter-spacing: -0.035em;
+    --discover-playlist-card-title-line-height: 1.25;
   }
 
   .discover-page-root {
@@ -276,9 +281,11 @@ const DISCOVER_LAYOUT_STYLE = `
   .discover-playlist-card h3 {
     margin: 10px 0 0;
     color: var(--text-primary);
-    font-size: 13.5px;
-    font-weight: 500;
-    line-height: 1.25;
+    font-family: var(--discover-playlist-card-title-font-family);
+    font-size: var(--discover-playlist-card-title-font-size);
+    font-weight: var(--discover-playlist-card-title-font-weight);
+    letter-spacing: var(--discover-playlist-card-title-letter-spacing);
+    line-height: var(--discover-playlist-card-title-line-height);
   }
 
   .discover-mood-card p,
