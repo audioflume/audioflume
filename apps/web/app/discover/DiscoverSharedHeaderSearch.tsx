@@ -270,31 +270,6 @@ export default function DiscoverHeaderScrollState() {
 
         body:has(.discover-page-root)
           .discover-mood-section
-          .curated-playlist-shelf-viewport {
-          margin-right: calc(var(--discover-page-gutter) * -1) !important;
-          margin-left: calc(var(--discover-page-gutter) * -1) !important;
-          overflow: hidden !important;
-        }
-
-        body:has(.discover-page-root)
-          .discover-mood-section
-          .curated-playlist-shelf-scroller {
-          display: flex !important;
-          flex-wrap: nowrap !important;
-          align-items: flex-start !important;
-          gap: 12px !important;
-          overflow-x: auto !important;
-          overflow-y: hidden !important;
-          padding-right: 5rem !important;
-          padding-left: var(--discover-page-gutter) !important;
-          overscroll-behavior-x: contain !important;
-          scroll-padding-right: 5rem !important;
-          scroll-padding-left: var(--discover-page-gutter) !important;
-          scroll-snap-type: x proximity !important;
-        }
-
-        body:has(.discover-page-root)
-          .discover-mood-section
           .discover-mood-shelf-floating {
           top: min(12.5vw, 162.8px) !important;
         }
