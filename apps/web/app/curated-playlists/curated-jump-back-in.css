@@ -59,6 +59,22 @@ body:has(.curated-playlists-page-root) .curated-last-viewed-heading h2 {
   outline: none;
 }
 
+.curated-jump-back-item-loading {
+  pointer-events: none;
+}
+
+.curated-jump-back-loading-line {
+  display: block;
+  width: 78%;
+  height: 12px;
+  background: var(--bg-elevated);
+}
+
+.curated-jump-back-loading-line-small {
+  width: 56%;
+  height: 10px;
+}
+
 .curated-jump-back-cover,
 .curated-jump-back-placeholder {
   display: block;
