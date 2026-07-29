@@ -5,7 +5,7 @@ body:has(.discover-page-root) .discover-jump-back-section {
 
 body:has(.curated-playlists-page-root) .curated-last-viewed-section {
   width: min(100%, 1280px);
-  margin: clamp(64px, 6vw, 96px) auto 0;
+  margin: 0 auto;
 }
 
 body:has(.curated-playlists-page-root) .curated-last-viewed-section:empty {
@@ -116,10 +116,6 @@ body:has(.curated-playlists-page-root) .curated-last-viewed-heading h2 {
 }
 
 @media (max-width: 620px) {
-  body:has(.curated-playlists-page-root) .curated-last-viewed-section {
-    margin-top: 52px;
-  }
-
   body:has(.curated-playlists-page-root)
     .curated-last-viewed-section
     + .mt-10 {
