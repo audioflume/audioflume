@@ -206,7 +206,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-integrated-value-link:hover .discover-integrated-value-arrow,
 .discover-integrated-value-link:focus-visible .discover-integrated-value-arrow {
-  transform: translate(2px, -2px);
+  transform: translate(1px, -1px);
 }
 
 .discover-integrated-values span {
