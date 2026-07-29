@@ -30,6 +30,10 @@ type RecentPlaylistCard = {
   metadata: string;
 };
 
+type CuratedJumpBackInProps = {
+  inline?: boolean;
+};
+
 function formatSongCount(count: number | undefined) {
   if (typeof count !== "number") return "";
   return `${count} song${count === 1 ? "" : "s"}`;
@@ -60,11 +64,14 @@ async function fetchJson(url: string) {
   }
 }
 
-export default function CuratedJumpBackIn() {
+export default function CuratedJumpBackIn({
+  inline = false,
+}: CuratedJumpBackInProps) {
   const pathname = usePathname();
   const isDiscoverPage = pathname === "/discover";
   const isCuratedPage = pathname === "/curated-playlists";
-  const isSupportedPage = isDiscoverPage || isCuratedPage;
+  const renderInline = inline && isDiscoverPage;
+  const isSupportedPage = renderInline || isCuratedPage;
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
   const [availablePlaylists, setAvailablePlaylists] = useState<
     RecentPlaylistCard[]
@@ -72,36 +79,11 @@ export default function CuratedJumpBackIn() {
   const [recentEntries, setRecentEntries] = useState(readRecentPlaylists);
 
   useEffect(() => {
-    if (!isSupportedPage) return;
+    if (!isCuratedPage) return;
 
     let activeMount: HTMLElement | null = null;
 
     const syncMount = () => {
-      if (isDiscoverPage) {
-        const moodSection = document.querySelector<HTMLElement>(
-          ".discover-page-root .discover-mood-section",
-        );
-        if (!moodSection?.parentElement) return;
-
-        let mount = moodSection.parentElement.querySelector<HTMLElement>(
-          ":scope > .discover-jump-back-section",
-        );
-
-        if (!mount) {
-          mount = document.createElement("section");
-          mount.className = "discover-section discover-jump-back-section";
-          mount.setAttribute("aria-label", "Recently viewed playlists");
-        }
-
-        if (moodSection.previousElementSibling !== mount) {
-          moodSection.parentElement.insertBefore(mount, moodSection);
-        }
-
-        activeMount = mount;
-        setMountNode(mount);
-        return;
-      }
-
       const featuredPlaylist = document.querySelector<HTMLElement>(
         ".curated-playlists-page-root .curated-featured-playlist",
       );
@@ -137,7 +119,7 @@ export default function CuratedJumpBackIn() {
       activeMount?.remove();
       setMountNode(null);
     };
-  }, [isCuratedPage, isDiscoverPage, isSupportedPage]);
+  }, [isCuratedPage]);
 
   useEffect(() => {
     if (!isSupportedPage) return;
@@ -237,49 +219,66 @@ export default function CuratedJumpBackIn() {
       .slice(0, 5);
   }, [availablePlaylists, isCuratedPage, recentEntries]);
 
-  if (!isSupportedPage || !mountNode || recentPlaylists.length === 0) {
+  if (!isSupportedPage || recentPlaylists.length === 0) {
     return <RecentPlaylistTracker />;
   }
+
+  const content = (
+    <>
+      <div className="discover-section-heading curated-last-viewed-heading">
+        <h2>Last Viewed</h2>
+      </div>
+
+      <div className="curated-jump-back-list">
+        {recentPlaylists.map((playlist) => (
+          <Link
+            className="curated-jump-back-item"
+            href={playlist.href}
+            key={playlist.key}
+          >
+            {playlist.coverImageUrl ? (
+              <img
+                className="curated-jump-back-cover"
+                src={playlist.coverImageUrl}
+                alt=""
+              />
+            ) : (
+              <span
+                className="curated-jump-back-placeholder"
+                aria-hidden="true"
+              />
+            )}
+
+            <span className="curated-jump-back-copy">
+              <strong>{playlist.name}</strong>
+              <small>{playlist.metadata}</small>
+            </span>
+          </Link>
+        ))}
+      </div>
+    </>
+  );
+
+  if (renderInline) {
+    return (
+      <>
+        <RecentPlaylistTracker />
+        <section
+          className="discover-section discover-jump-back-section"
+          aria-label="Recently viewed playlists"
+        >
+          {content}
+        </section>
+      </>
+    );
+  }
+
+  if (!mountNode) return <RecentPlaylistTracker />;
 
   return (
     <>
       <RecentPlaylistTracker />
-      {createPortal(
-        <>
-          <div className="discover-section-heading curated-last-viewed-heading">
-            <h2>Last Viewed</h2>
-          </div>
-
-          <div className="curated-jump-back-list">
-            {recentPlaylists.map((playlist) => (
-              <Link
-                className="curated-jump-back-item"
-                href={playlist.href}
-                key={playlist.key}
-              >
-                {playlist.coverImageUrl ? (
-                  <img
-                    className="curated-jump-back-cover"
-                    src={playlist.coverImageUrl}
-                    alt=""
-                  />
-                ) : (
-                  <span
-                    className="curated-jump-back-placeholder"
-                    aria-hidden="true"
-                  />
-                )}
-
-                <span className="curated-jump-back-copy">
-                  <strong>{playlist.name}</strong>
-                  <small>{playlist.metadata}</small>
-                </span>
-              </Link>
-            ))}
-          </div>
-        </>,
-        mountNode,
-      )}
+      {createPortal(content, mountNode)}
     </>
   );
 }
