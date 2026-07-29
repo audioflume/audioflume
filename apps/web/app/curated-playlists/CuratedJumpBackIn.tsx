@@ -63,6 +63,8 @@ async function fetchJson(url: string) {
 export default function CuratedJumpBackIn() {
   const pathname = usePathname();
   const isDiscoverPage = pathname === "/discover";
+  const isCuratedPage = pathname === "/curated-playlists";
+  const isSupportedPage = isDiscoverPage || isCuratedPage;
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
   const [availablePlaylists, setAvailablePlaylists] = useState<
     RecentPlaylistCard[]
@@ -70,31 +72,56 @@ export default function CuratedJumpBackIn() {
   const [recentEntries, setRecentEntries] = useState(readRecentPlaylists);
 
   useEffect(() => {
-    if (!isDiscoverPage) return;
+    if (!isSupportedPage) return;
 
     let activeMount: HTMLElement | null = null;
 
     const syncMount = () => {
-      const curatedSection = document.querySelector<HTMLElement>(
-        ".discover-page-root .discover-curated-playlist-section",
-      );
-      if (!curatedSection?.parentElement) return;
+      if (isDiscoverPage) {
+        const curatedSection = document.querySelector<HTMLElement>(
+          ".discover-page-root .discover-curated-playlist-section",
+        );
+        if (!curatedSection?.parentElement) return;
 
-      let mount = curatedSection.parentElement.querySelector<HTMLElement>(
-        ":scope > .discover-jump-back-section",
+        let mount = curatedSection.parentElement.querySelector<HTMLElement>(
+          ":scope > .discover-jump-back-section",
+        );
+
+        if (!mount) {
+          mount = document.createElement("section");
+          mount.className = "discover-section discover-jump-back-section";
+          mount.setAttribute("aria-label", "Recently viewed playlists");
+        }
+
+        if (curatedSection.previousElementSibling !== mount) {
+          curatedSection.parentElement.insertBefore(mount, curatedSection);
+        }
+
+        activeMount = mount;
+        setMountNode(mount);
+        return;
+      }
+
+      const featuredPlaylist = document.querySelector<HTMLElement>(
+        ".curated-playlists-page-root .curated-featured-playlist",
+      );
+      if (!featuredPlaylist?.parentElement) return;
+
+      let mount = featuredPlaylist.parentElement.querySelector<HTMLElement>(
+        ":scope > .curated-last-viewed-section",
       );
 
       if (!mount) {
         mount = document.createElement("section");
-        mount.className = "discover-section discover-jump-back-section";
+        mount.className = "curated-last-viewed-section";
         mount.setAttribute(
           "aria-label",
-          "Recently viewed playlists",
+          "Recently viewed curated playlists",
         );
       }
 
-      if (curatedSection.previousElementSibling !== mount) {
-        curatedSection.parentElement.insertBefore(mount, curatedSection);
+      if (featuredPlaylist.nextElementSibling !== mount) {
+        featuredPlaylist.insertAdjacentElement("afterend", mount);
       }
 
       activeMount = mount;
@@ -110,18 +137,15 @@ export default function CuratedJumpBackIn() {
       activeMount?.remove();
       setMountNode(null);
     };
-  }, [isDiscoverPage]);
+  }, [isCuratedPage, isDiscoverPage, isSupportedPage]);
 
   useEffect(() => {
-    if (!isDiscoverPage) return;
+    if (!isSupportedPage) return;
 
     let cancelled = false;
 
     async function loadPlaylists() {
-      const [curatedData, communityData] = await Promise.all([
-        fetchJson("/api/curated-playlists"),
-        fetchJson("/api/community-playlists"),
-      ]);
+      const curatedData = await fetchJson("/api/curated-playlists");
 
       if (cancelled) return;
 
@@ -139,6 +163,15 @@ export default function CuratedJumpBackIn() {
             }),
           )
         : [];
+
+      if (isCuratedPage) {
+        setAvailablePlaylists(curatedCards);
+        return;
+      }
+
+      const communityData = await fetchJson("/api/community-playlists");
+
+      if (cancelled) return;
 
       const communityPlaylists = Array.isArray(communityData?.playlists)
         ? (communityData.playlists as CommunityPlaylistSummary[])
@@ -164,10 +197,10 @@ export default function CuratedJumpBackIn() {
     return () => {
       cancelled = true;
     };
-  }, [isDiscoverPage]);
+  }, [isCuratedPage, isSupportedPage]);
 
   useEffect(() => {
-    if (!isDiscoverPage) return;
+    if (!isSupportedPage) return;
 
     const syncRecentEntries = () => setRecentEntries(readRecentPlaylists());
     syncRecentEntries();
@@ -188,19 +221,22 @@ export default function CuratedJumpBackIn() {
         syncRecentEntries,
       );
     };
-  }, [isDiscoverPage]);
+  }, [isSupportedPage]);
 
   const recentPlaylists = useMemo(() => {
     const playlistByKey = new Map(
       availablePlaylists.map((playlist) => [playlist.key, playlist]),
     );
+    const visibleEntries = isCuratedPage
+      ? recentEntries.filter((entry) => entry.type === "curated")
+      : recentEntries;
 
-    return recentEntries
+    return visibleEntries
       .map((entry) => playlistByKey.get(getRecentPlaylistKey(entry)))
       .filter((playlist): playlist is RecentPlaylistCard => Boolean(playlist));
-  }, [availablePlaylists, recentEntries]);
+  }, [availablePlaylists, isCuratedPage, recentEntries]);
 
-  if (!isDiscoverPage || !mountNode || recentPlaylists.length === 0) {
+  if (!isSupportedPage || !mountNode || recentPlaylists.length === 0) {
     return <RecentPlaylistTracker />;
   }
 
@@ -209,7 +245,7 @@ export default function CuratedJumpBackIn() {
       <RecentPlaylistTracker />
       {createPortal(
         <>
-          <div className="discover-section-heading">
+          <div className="discover-section-heading curated-last-viewed-heading">
             <h2>Last Viewed</h2>
           </div>
 
