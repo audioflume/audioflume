@@ -8,7 +8,7 @@ import "./curated-video-hero.css";
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
     --curated-featured-hero-height: clamp(380px, 48vh, 540px);
-    --curated-landing-card-gap: clamp(24px, 2.4vw, 38px);
+    --curated-landing-card-gap: 12px;
     --curated-landing-content-width: min(
       calc(
         100vw - var(--curated-page-gutter) - var(--curated-page-gutter)
