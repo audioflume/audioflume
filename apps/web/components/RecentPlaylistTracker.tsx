@@ -16,7 +16,7 @@ export const RECENT_PLAYLISTS_CHANGED_EVENT =
 const STORAGE_KEY = "filmwave-recent-playlists";
 const LEGACY_CURATED_STORAGE_KEY = "filmwave-recent-curated-playlists";
 const LEGACY_COMMUNITY_STORAGE_KEY = "filmwave-recent-community-playlists";
-const RECENT_PLAYLIST_LIMIT = 5;
+const RECENT_PLAYLIST_LIMIT_PER_TYPE = 5;
 
 function parsePlaylistId(value: unknown) {
   const playlistId = Number(value);
@@ -72,6 +72,19 @@ function dedupeRecentPlaylists(entries: RecentPlaylistEntry[]) {
   });
 }
 
+function limitRecentPlaylistsByType(entries: RecentPlaylistEntry[]) {
+  const counts: Record<RecentPlaylistType, number> = {
+    curated: 0,
+    community: 0,
+  };
+
+  return entries.filter((entry) => {
+    if (counts[entry.type] >= RECENT_PLAYLIST_LIMIT_PER_TYPE) return false;
+    counts[entry.type] += 1;
+    return true;
+  });
+}
+
 export function readRecentPlaylists(): RecentPlaylistEntry[] {
   if (typeof window === "undefined") return [];
 
@@ -82,25 +95,29 @@ export function readRecentPlaylists(): RecentPlaylistEntry[] {
       const parsed = JSON.parse(currentValue);
       if (!Array.isArray(parsed)) return [];
 
-      return dedupeRecentPlaylists(
-        parsed
-          .map(parseRecentPlaylistKey)
-          .filter(
-            (entry): entry is RecentPlaylistEntry => entry !== null,
-          ),
-      ).slice(0, RECENT_PLAYLIST_LIMIT);
+      return limitRecentPlaylistsByType(
+        dedupeRecentPlaylists(
+          parsed
+            .map(parseRecentPlaylistKey)
+            .filter(
+              (entry): entry is RecentPlaylistEntry => entry !== null,
+            ),
+        ),
+      );
     }
 
-    return dedupeRecentPlaylists([
-      ...parseLegacyEntries(
-        window.localStorage.getItem(LEGACY_CURATED_STORAGE_KEY),
-        "curated",
-      ),
-      ...parseLegacyEntries(
-        window.localStorage.getItem(LEGACY_COMMUNITY_STORAGE_KEY),
-        "community",
-      ),
-    ]).slice(0, RECENT_PLAYLIST_LIMIT);
+    return limitRecentPlaylistsByType(
+      dedupeRecentPlaylists([
+        ...parseLegacyEntries(
+          window.localStorage.getItem(LEGACY_CURATED_STORAGE_KEY),
+          "curated",
+        ),
+        ...parseLegacyEntries(
+          window.localStorage.getItem(LEGACY_COMMUNITY_STORAGE_KEY),
+          "community",
+        ),
+      ]),
+    );
   } catch {
     return [];
   }
@@ -123,12 +140,12 @@ export function storeRecentPlaylist(
   try {
     const nextEntry = { type, id: playlistId };
     const nextKey = getRecentPlaylistKey(nextEntry);
-    const nextEntries = [
+    const nextEntries = limitRecentPlaylistsByType([
       nextEntry,
       ...readRecentPlaylists().filter(
         (entry) => getRecentPlaylistKey(entry) !== nextKey,
       ),
-    ].slice(0, RECENT_PLAYLIST_LIMIT);
+    ]);
 
     writeRecentPlaylists(nextEntries);
   } catch {
