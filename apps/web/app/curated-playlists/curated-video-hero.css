@@ -71,7 +71,19 @@ body:has(.curated-playlists-page-root)
   padding: 0 clamp(110px, 15vw, 255px);
 }
 
-.curated-video-hero-content h1 {
+.curated-playlists-intro {
+  display: grid;
+  width: min(100%, 1280px);
+  grid-template-columns: 34% 40% 26%;
+  align-items: start;
+  margin: 0 auto clamp(56px, 6vw, 88px);
+  color: var(--text-primary);
+  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-weight: 400;
+}
+
+.curated-video-hero-content h1,
+.curated-playlists-intro h1 {
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(24px, 1.8vw, 33px);
@@ -142,10 +154,15 @@ body:has(.curated-playlists-page-root)
     padding-right: clamp(48px, 8vw, 96px);
     padding-left: clamp(48px, 8vw, 96px);
   }
+
+  .curated-playlists-intro {
+    grid-template-columns: 32% 38% 30%;
+  }
 }
 
 @media (max-width: 980px) {
-  .curated-video-hero-content {
+  .curated-video-hero-content,
+  .curated-playlists-intro {
     grid-template-columns: 1fr 1fr;
     column-gap: 48px;
     row-gap: 28px;
@@ -166,7 +183,13 @@ body:has(.curated-playlists-page-root)
     padding-left: 20px;
   }
 
-  .curated-video-hero-content h1 {
+  .curated-playlists-intro {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+
+  .curated-video-hero-content h1,
+  .curated-playlists-intro h1 {
     white-space: normal;
   }
 
