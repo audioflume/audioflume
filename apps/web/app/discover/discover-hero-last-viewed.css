@@ -1,10 +1,20 @@
+.discover-template-shell {
+  --discover-integrated-hero-height: 100svh;
+}
+
+body:has(.filmwave-music-player) .discover-template-shell {
+  --discover-integrated-hero-height: calc(
+    100svh - var(--filmwave-player-height, 72px)
+  );
+}
+
 .discover-template-shell.is-discover-route {
   position: relative;
 }
 
 .discover-template-shell.is-discover-route .discover-hero {
-  height: 100svh;
-  min-height: 100svh;
+  height: var(--discover-integrated-hero-height);
+  min-height: var(--discover-integrated-hero-height);
 }
 
 .discover-template-shell.is-discover-route .discover-integrated-hero {
@@ -13,7 +23,7 @@
 
 .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
   position: absolute;
-  top: 100svh;
+  top: var(--discover-integrated-hero-height);
   right: 0;
   left: 0;
   z-index: 5;
