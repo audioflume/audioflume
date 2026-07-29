@@ -303,12 +303,20 @@
 
 /* Shared playlist title and count typography across Discover and My Playlists. */
 .discover-mood-card h3,
-.discover-playlist-card h3,
 .playlists-page .playlist-gallery-content h3,
 .playlists-page .playlist-row-main span {
   color: var(--text-primary) !important;
   font-family: inherit !important;
   font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: normal !important;
+}
+
+.discover-playlist-card h3 {
+  color: var(--text-primary) !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
   font-weight: 500 !important;
   line-height: 1.25 !important;
   letter-spacing: normal !important;
