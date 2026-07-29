@@ -8,6 +8,7 @@ import RecentPlaylistTracker, {
   getRecentPlaylistKey,
   readRecentPlaylists,
   RECENT_PLAYLISTS_CHANGED_EVENT,
+  type RecentPlaylistEntry,
 } from "@/components/RecentPlaylistTracker";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import "./curated-jump-back-in.css";
@@ -64,6 +65,31 @@ async function fetchJson(url: string) {
   }
 }
 
+function LastViewedLoadingContent() {
+  return (
+    <>
+      <div className="discover-section-heading curated-last-viewed-heading">
+        <h2>Last Viewed</h2>
+      </div>
+
+      <div className="curated-jump-back-list" aria-hidden="true">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <div
+            className="curated-jump-back-item curated-jump-back-item-loading"
+            key={index}
+          >
+            <span className="curated-jump-back-placeholder" />
+            <span className="curated-jump-back-copy">
+              <span className="curated-jump-back-loading-line" />
+              <span className="curated-jump-back-loading-line curated-jump-back-loading-line-small" />
+            </span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
 export default function CuratedJumpBackIn({
   inline = false,
 }: CuratedJumpBackInProps) {
@@ -76,7 +102,9 @@ export default function CuratedJumpBackIn({
   const [availablePlaylists, setAvailablePlaylists] = useState<
     RecentPlaylistCard[]
   >([]);
-  const [recentEntries, setRecentEntries] = useState(readRecentPlaylists);
+  const [recentEntries, setRecentEntries] = useState<RecentPlaylistEntry[]>([]);
+  const [recentEntriesLoaded, setRecentEntriesLoaded] = useState(false);
+  const [playlistsLoaded, setPlaylistsLoaded] = useState(false);
 
   useEffect(() => {
     if (!isCuratedPage) return;
@@ -125,6 +153,7 @@ export default function CuratedJumpBackIn({
     if (!isSupportedPage) return;
 
     let cancelled = false;
+    setPlaylistsLoaded(false);
 
     async function loadPlaylists() {
       const curatedData = await fetchJson("/api/curated-playlists");
@@ -148,6 +177,7 @@ export default function CuratedJumpBackIn({
 
       if (isCuratedPage) {
         setAvailablePlaylists(curatedCards);
+        setPlaylistsLoaded(true);
         return;
       }
 
@@ -172,6 +202,7 @@ export default function CuratedJumpBackIn({
       );
 
       setAvailablePlaylists([...curatedCards, ...communityCards]);
+      setPlaylistsLoaded(true);
     }
 
     void loadPlaylists();
@@ -184,7 +215,11 @@ export default function CuratedJumpBackIn({
   useEffect(() => {
     if (!isSupportedPage) return;
 
-    const syncRecentEntries = () => setRecentEntries(readRecentPlaylists());
+    const syncRecentEntries = () => {
+      setRecentEntries(readRecentPlaylists());
+      setRecentEntriesLoaded(true);
+    };
+
     syncRecentEntries();
     window.addEventListener("focus", syncRecentEntries);
     window.addEventListener("pageshow", syncRecentEntries);
@@ -219,9 +254,7 @@ export default function CuratedJumpBackIn({
       .slice(0, 5);
   }, [availablePlaylists, isCuratedPage, recentEntries]);
 
-  if (!isSupportedPage || recentPlaylists.length === 0) {
-    return <RecentPlaylistTracker />;
-  }
+  if (!isSupportedPage) return <RecentPlaylistTracker />;
 
   const content = (
     <>
@@ -260,20 +293,29 @@ export default function CuratedJumpBackIn({
   );
 
   if (renderInline) {
+    const isLoading = !recentEntriesLoaded || !playlistsLoaded;
+
+    if (!isLoading && recentPlaylists.length === 0) {
+      return <RecentPlaylistTracker />;
+    }
+
     return (
       <>
         <RecentPlaylistTracker />
         <section
           className="discover-section discover-jump-back-section"
           aria-label="Recently viewed playlists"
+          aria-busy={isLoading}
         >
-          {content}
+          {isLoading ? <LastViewedLoadingContent /> : content}
         </section>
       </>
     );
   }
 
-  if (!mountNode) return <RecentPlaylistTracker />;
+  if (!mountNode || recentPlaylists.length === 0) {
+    return <RecentPlaylistTracker />;
+  }
 
   return (
     <>
