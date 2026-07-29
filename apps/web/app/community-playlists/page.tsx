@@ -282,7 +282,6 @@ export default function CommunityPlaylistsPage() {
     return filtered;
   }, [activeTab, favoritePlaylistIds, playlists, query, selectedCategory]);
 
-  const featured = playlists.slice(0, 10);
   const recentPlaylists = useMemo(
     () =>
       recentPlaylistIds
@@ -751,28 +750,29 @@ export default function CommunityPlaylistsPage() {
             </nav>
           </section>
 
-          <section className="community-sidebar-section community-featured">
-            <p className="community-sidebar-heading">Featured Playlists</p>
-            <div className="community-featured-list">
-              {featured.map((playlist) => (
-                <Link
-                  className="community-featured-item"
-                  href={`/community-playlists/${playlist.id}`}
-                  key={playlist.id}
-                >
-                  {playlist.cover_image_url ? (
-                    <img src={playlist.cover_image_url} alt="" />
-                  ) : (
-                    <span className="community-featured-placeholder" aria-hidden="true" />
-                  )}
-                  <span>
-                    <strong>{playlist.name}</strong>
-                    <small>{playlist.song_count} songs</small>
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </section>
+          {recentPlaylists.length > 0 && (
+            <section
+              className="community-sidebar-section community-featured community-sidebar-last-viewed"
+              aria-labelledby="community-sidebar-last-viewed-heading"
+            >
+              <p
+                className="community-sidebar-heading"
+                id="community-sidebar-last-viewed-heading"
+              >
+                Last Viewed
+              </p>
+              <RecentPlaylistCards
+                variant="sidebar"
+                playlists={recentPlaylists.map((playlist) => ({
+                  key: `community:${playlist.id}`,
+                  href: `/community-playlists/${playlist.id}`,
+                  name: playlist.name,
+                  coverImageUrl: playlist.cover_image_url,
+                  metadata: `${playlist.creator.name} · ${playlist.song_count} songs`,
+                }))}
+              />
+            </section>
+          )}
         </aside>
 
         <section className="community-content">
@@ -791,26 +791,6 @@ export default function CommunityPlaylistsPage() {
               onSearchChange={setQuery}
             />
           </div>
-
-          {recentPlaylists.length > 0 && (
-            <section className="community-jump-back" aria-labelledby="community-jump-back-heading">
-              <h2
-                className="community-jump-back-heading"
-                id="community-jump-back-heading"
-              >
-                Jump Back In
-              </h2>
-              <RecentPlaylistCards
-                playlists={recentPlaylists.map((playlist) => ({
-                  key: `community:${playlist.id}`,
-                  href: `/community-playlists/${playlist.id}`,
-                  name: playlist.name,
-                  coverImageUrl: playlist.cover_image_url,
-                  metadata: `${playlist.creator.name} · ${playlist.song_count} songs`,
-                }))}
-              />
-            </section>
-          )}
 
           <div className="community-tabs" role="tablist" aria-label="Community playlist sorting">
             {COMMUNITY_TABS.map((tab) => (
