@@ -509,8 +509,9 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist-heading h2 {
   overflow: hidden;
 }
 
-.curated-playlist-shelf-scroller,
-.curated-playlist-skeleton-shelf > .relative > .flex {
+body:has(.curated-playlists-page-root) .curated-playlist-shelf-scroller,
+body:has(.curated-playlists-page-root)
+  .curated-playlist-skeleton-shelf > .relative > .flex {
   align-items: flex-start;
   gap: var(--curated-playlist-card-gap) !important;
   padding-right: var(--curated-page-gutter) !important;
