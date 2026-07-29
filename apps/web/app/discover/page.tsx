@@ -301,7 +301,7 @@ function DiscoverMoodShelf({
 
         <div
           ref={scrollerRef}
-          className="curated-playlist-shelf-scroller flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="curated-playlist-shelf-scroller flex overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {loading
             ? Array.from({ length: 4 }).map((_, index) => (

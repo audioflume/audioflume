@@ -224,6 +224,7 @@ body:has(.discover-page-root)
 body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-scroller {
+  gap: 12px;
   padding-right: 0 !important;
   padding-left: max(
     var(--discover-editorial-gutter),
