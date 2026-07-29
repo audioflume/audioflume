@@ -8,6 +8,10 @@ body:has(.curated-playlists-page-root) .curated-last-viewed-section {
   margin: clamp(64px, 6vw, 96px) auto 0;
 }
 
+body:has(.curated-playlists-page-root) .curated-last-viewed-section:empty {
+  display: none;
+}
+
 body:has(.curated-playlists-page-root)
   .curated-last-viewed-section
   + .mt-10 {
@@ -16,6 +20,16 @@ body:has(.curated-playlists-page-root)
 
 body:has(.curated-playlists-page-root) .curated-last-viewed-heading {
   margin-bottom: 20px !important;
+}
+
+body:has(.curated-playlists-page-root) .curated-last-viewed-heading h2 {
+  font-family: var(--font-aktiv-grotesk), sans-serif !important;
+  font-size: clamp(18px, 1.25vw, 23px) !important;
+  font-weight: 500 !important;
+  font-kerning: normal !important;
+  letter-spacing: -.025em !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
 }
 
 .curated-jump-back-list {
