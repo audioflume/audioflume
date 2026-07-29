@@ -16,7 +16,6 @@ import {
 
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
-import Toast from "@/components/Toast";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
@@ -354,16 +353,6 @@ function DiscoverPlaylistGrid({
   playlists: CuratedPlaylist[];
   loading: boolean;
 }) {
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const { currentSong } = usePlayer();
-  const playerVisible = Boolean(currentSong);
-
-  function showToast(message: string) {
-    setToastMessage(message);
-    window.setTimeout(() => setToastMessage(null), 2400);
-  }
-
   if (!loading && playlists.length === 0) return null;
 
   return (
@@ -396,21 +385,9 @@ function DiscoverPlaylistGrid({
                 key={playlist.id}
                 playlist={playlist}
                 index={index}
-                openMenuId={openMenuId}
-                setOpenMenuId={setOpenMenuId}
-                onAddSuccess={(name) =>
-                  showToast(`"${name}" added to My Playlists`)
-                }
-                onAddError={showToast}
-                playerVisible={playerVisible}
               />
             ))}
       </div>
-
-      <Toast
-        message={toastMessage}
-        bottomOffset={playerVisible ? "88px" : "24px"}
-      />
     </section>
   );
 }
