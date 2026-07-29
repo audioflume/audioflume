@@ -283,6 +283,28 @@ export default function CuratedPlaylistsPage() {
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
         <div className="px-8 pt-[calc(var(--filmwave-header-height,75px)+40px)]">
+          <section
+            className="curated-playlists-intro"
+            aria-labelledby="curated-playlists-intro-title"
+          >
+            <h1 id="curated-playlists-intro-title">Curated Playlists</h1>
+
+            <p className="curated-video-hero-primary-copy">
+              <span>Discover curated music playlists</span>
+              <span>Premium audio soundtracks</span>
+              <span>For film</span>
+            </p>
+
+            <div className="curated-video-hero-secondary-copy">
+              <strong>(Tailored Sound)</strong>
+              <span>
+                Discover curated music playlists, premium audio
+                <br />
+                soundtracks for film
+              </span>
+            </div>
+          </section>
+
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
           {!loading && error && (
