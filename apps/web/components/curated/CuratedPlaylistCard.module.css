@@ -67,7 +67,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   background: var(--bg-secondary);
 }
 
