@@ -407,10 +407,10 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-category-filter-pill {
   display: inline-flex;
-  min-height: 26px;
+  min-height: 22px;
   align-items: center;
   justify-content: center;
-  padding: 3px 12px;
+  padding: 2px 10px;
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.055);
   border-radius: 999px;
@@ -655,9 +655,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   }
 
   .discover-category-filter-pill {
-    min-height: 26px;
-    padding-right: 11px;
-    padding-left: 11px;
+    min-height: 22px;
+    padding-right: 10px;
+    padding-left: 10px;
     font-size: 11px;
   }
 }
