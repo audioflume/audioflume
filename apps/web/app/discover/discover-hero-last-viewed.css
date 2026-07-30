@@ -11,15 +11,29 @@ body:has(.filmwave-music-player)
 
 .discover-template-shell.is-discover-route {
   position: relative;
-  --discover-integrated-hero-height: clamp(580px, 76svh, 760px);
+  --discover-integrated-hero-height: clamp(540px, 56svh, 620px);
 }
 
 body:has(.filmwave-music-player)
   .discover-template-shell.is-discover-route {
   --discover-integrated-hero-height: clamp(
-    580px,
-    calc(76svh - var(--filmwave-player-height, 72px)),
-    760px
+    540px,
+    calc(56svh - var(--filmwave-player-height, 72px)),
+    620px
+  );
+}
+
+body:has(.discover-category-filter-panel)
+  .discover-template-shell.is-discover-route {
+  --discover-integrated-hero-height: clamp(690px, 72svh, 780px);
+}
+
+body:has(.filmwave-music-player):has(.discover-category-filter-panel)
+  .discover-template-shell.is-discover-route {
+  --discover-integrated-hero-height: clamp(
+    690px,
+    calc(72svh - var(--filmwave-player-height, 72px)),
+    780px
   );
 }
 
@@ -32,7 +46,7 @@ body:has(.discover-page-root)
 }
 
 .discover-template-shell.is-discover-route .discover-integrated-hero {
-  padding-bottom: clamp(110px, 13vh, 140px);
+  padding-bottom: clamp(100px, 11vh, 125px);
 }
 
 .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
@@ -46,7 +60,7 @@ body:has(.discover-page-root)
 }
 
 .discover-hero-last-viewed-section {
-  width: min(100%, var(--discover-editorial-width));
+  width: min(100%, 1760px);
   margin: 0 auto;
 }
 
@@ -83,8 +97,22 @@ body:has(.discover-page-root)
     );
   }
 
+  body:has(.discover-category-filter-panel)
+    .discover-template-shell.is-discover-route {
+    --discover-integrated-hero-height: clamp(760px, 92svh, 880px);
+  }
+
+  body:has(.filmwave-music-player):has(.discover-category-filter-panel)
+    .discover-template-shell.is-discover-route {
+    --discover-integrated-hero-height: clamp(
+      760px,
+      calc(92svh - var(--filmwave-player-height, 72px)),
+      880px
+    );
+  }
+
   .discover-template-shell.is-discover-route .discover-integrated-hero {
-    padding-bottom: 125px;
+    padding-bottom: 115px;
   }
 
   .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
