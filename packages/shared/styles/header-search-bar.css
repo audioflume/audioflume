@@ -161,3 +161,62 @@
   -webkit-appearance: none !important;
   appearance: none !important;
 }
+
+body:has(.community-page)
+  .community-page
+  .community-heading-row {
+  height: 48px !important;
+}
+
+body:has(.community-page)
+  .community-page
+  .community-heading-row
+  > .fw-toolbar-header-search-row {
+  height: 48px !important;
+  border-radius: 999px !important;
+}
+
+body:has(.community-page)
+  .community-page
+  .community-heading-row
+  .fw-toolbar-search-static {
+  border-radius: 999px !important;
+}
+
+body:has(.community-page)
+  .community-page
+  .community-heading-row
+  .fw-toolbar-search-static-icon {
+  width: 32px !important;
+  height: 32px !important;
+  flex-basis: 32px !important;
+  margin-right: 8px !important;
+  font-size: 18px !important;
+}
+
+@media (max-width: 760px) {
+  body:has(.community-page)
+    .community-page
+    .community-heading-row {
+    height: auto !important;
+  }
+
+  body:has(.community-page)
+    .community-page
+    .community-heading-row
+    > .fw-toolbar-header-search-row {
+    height: 46px !important;
+    border-radius: 999px !important;
+  }
+
+  body:has(.community-page)
+    .community-page
+    .community-heading-row
+    .fw-toolbar-search-static-icon {
+    width: 30px !important;
+    height: 30px !important;
+    flex-basis: 30px !important;
+    margin-right: 8px !important;
+    font-size: 17px !important;
+  }
+}
