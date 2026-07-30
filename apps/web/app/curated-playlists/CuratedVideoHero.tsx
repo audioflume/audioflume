@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-const HERO_IMAGE_URL =
-  "https://images.filmwave.io/images/discover/b7cb4a48-bd82-44d1-b02e-c104dac45339-gigapixel-low%20resolution%20v2-2x.jpeg";
+const HERO_VIDEO_URL =
+  "https://pub-cd585d75522a44bb9dad78b6f9974d03.r2.dev/Audioflume%20Banner.mov";
 
 export default function CuratedVideoHero() {
   const [target, setTarget] = useState<HTMLElement | null>(null);
@@ -28,10 +28,14 @@ export default function CuratedVideoHero() {
 
   return createPortal(
     <div className="curated-video-hero">
-      <img
+      <video
         className="curated-video-hero-media"
-        src={HERO_IMAGE_URL}
-        alt=""
+        src={HERO_VIDEO_URL}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
         aria-hidden="true"
       />
       <div className="curated-video-hero-overlay" aria-hidden="true" />
