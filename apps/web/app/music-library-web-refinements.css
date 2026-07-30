@@ -196,7 +196,7 @@
   gap: 0 !important;
   break-inside: auto !important;
   -webkit-column-break-inside: auto !important;
-  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border: 1px solid transparent !important;
   border-radius: 999px !important;
   background: #151515 !important;
   padding: 2px 10px !important;
