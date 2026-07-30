@@ -14,6 +14,7 @@ const DISPLAY_AI_FILTER_OPTION_CLASS = "fw-display-ai-filter-option";
 const DISPLAY_AI_FILTER_STORAGE_KEY = "filmwave-display-ai-filter";
 const DISPLAY_AI_EXCLUDE_ROOT_CLASS = "fw-display-exclude-ai-songs";
 const DISPLAY_AI_ONLY_ROOT_CLASS = "fw-display-ai-songs-only";
+const DISPLAY_AI_RAIL_COUNT_CLASS = "fw-display-ai-rail-count";
 const PLAYLIST_FILTER_OPTION_CLASS = "fw-filter-playlist-option";
 const PUBLIC_PLAYLIST_FILTER_OPTION_CLASS = "is-public-playlist";
 
@@ -143,12 +144,50 @@ function getRailItemSectionId(railItem: Element | null) {
   return SECTION_ID_BY_LABEL[label] ?? null;
 }
 
+function syncDisplayAiRailCount(
+  panel: HTMLElement,
+  selectedValue: DisplayAiFilterValue | null,
+) {
+  const displayRailItem = Array.from(
+    panel.querySelectorAll<HTMLElement>(".fw-filter-rail-item"),
+  ).find((railItem) => getRailItemSectionId(railItem) === "display");
+
+  if (!displayRailItem) return;
+
+  const counts = Array.from(
+    displayRailItem.querySelectorAll<HTMLElement>(".fw-filter-rail-count"),
+  );
+  const injectedCount = counts.find((count) =>
+    count.classList.contains(DISPLAY_AI_RAIL_COUNT_CLASS),
+  );
+  const nativeCount = counts.find(
+    (count) => !count.classList.contains(DISPLAY_AI_RAIL_COUNT_CLASS),
+  );
+
+  if (!selectedValue || nativeCount) {
+    injectedCount?.remove();
+    return;
+  }
+
+  if (injectedCount) return;
+
+  const count = document.createElement("span");
+  count.className = `fw-filter-rail-count ${DISPLAY_AI_RAIL_COUNT_CLASS}`;
+  count.textContent = "1";
+
+  const chevron = displayRailItem.querySelector(".fw-filter-rail-chevron");
+  if (chevron) displayRailItem.insertBefore(count, chevron);
+  else displayRailItem.appendChild(count);
+}
+
 function syncDisplayAiFilterOptions() {
   syncDisplayAiRootClasses();
 
   const selectedValue = getStoredDisplayAiFilter();
 
   document.querySelectorAll<HTMLElement>(WEB_MUSIC_FILTER_PANEL_SELECTOR).forEach((panel) => {
+    syncDisplayAiRailCount(panel, selectedValue);
+
     const activeRailItem = panel.querySelector<HTMLElement>(".fw-filter-rail-item.is-active");
     if (getRailItemSectionId(activeRailItem) !== "display") return;
 
