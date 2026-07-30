@@ -133,6 +133,22 @@ export default function DiscoverCuratedHeroCopy({
 
   return (
     <section className="discover-integrated-hero" aria-label="Discover music">
+      <style>{`
+        :where(html.light, html[data-theme="light"])
+          .discover-home-search
+          input[type="search"]::-webkit-search-cancel-button,
+        :where(html.light, html[data-theme="light"])
+          .discover-category-search
+          input[type="search"]::-webkit-search-cancel-button {
+          -webkit-appearance: none;
+          width: 14px;
+          height: 14px;
+          cursor: pointer;
+          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 2l8 8M10 2L2 10' stroke='%23111' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center / 12px 12px no-repeat;
+          opacity: 0.72;
+        }
+      `}</style>
+
       {showIntroCopy ? (
         <>
           <div
@@ -298,7 +314,7 @@ export default function DiscoverCuratedHeroCopy({
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search music library"
+              placeholder="Describe a scene, mood, or feeling"
               aria-label="Search music library"
             />
             <button type="submit" aria-label="Search music library">
