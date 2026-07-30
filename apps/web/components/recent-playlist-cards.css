@@ -44,7 +44,11 @@
   transition: opacity 150ms ease;
 }
 
-.recent-playlist-card-list.is-sidebar .recent-playlist-card:hover,
+.recent-playlist-card-list.is-sidebar .recent-playlist-card:hover {
+  background: transparent;
+  opacity: 1;
+}
+
 .recent-playlist-card-list.is-sidebar .recent-playlist-card:focus-visible {
   background: transparent;
   opacity: 0.62;
@@ -63,6 +67,11 @@
   border-radius: 0;
   background: var(--bg-elevated);
   object-fit: cover;
+}
+
+.recent-playlist-card-list.is-sidebar .recent-playlist-card-cover,
+.recent-playlist-card-list.is-sidebar .recent-playlist-card-placeholder {
+  border-radius: 6px;
 }
 
 .recent-playlist-card-copy {

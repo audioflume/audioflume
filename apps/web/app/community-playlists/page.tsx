@@ -697,7 +697,6 @@ export default function CommunityPlaylistsPage() {
           .community-page {
             grid-template-columns: 220px minmax(0, 1fr);
           }
-
         }
 
         @media (max-width: 760px) {
@@ -708,7 +707,6 @@ export default function CommunityPlaylistsPage() {
             display: block;
             overflow: visible;
           }
-
         }
 
       `}</style>
@@ -759,7 +757,7 @@ export default function CommunityPlaylistsPage() {
                 className="community-sidebar-heading"
                 id="community-sidebar-last-viewed-heading"
               >
-                Last Viewed
+                Jump Back In
               </p>
               <RecentPlaylistCards
                 variant="sidebar"
@@ -818,7 +816,10 @@ export default function CommunityPlaylistsPage() {
 
               return (
                 <article className="community-card" key={playlist.id}>
-                  <div className="community-cover-wrap">
+                  <div
+                    className="community-cover-wrap"
+                    style={{ borderRadius: "6px" }}
+                  >
                     <Link
                       className="community-cover-link"
                       href={`/community-playlists/${playlist.id}`}

@@ -238,7 +238,7 @@ export default function CuratedJumpBackIn({
   const content = (
     <>
       <div className={headingClassName}>
-        <h2>Last Viewed</h2>
+        <h2>{renderInline ? "Jump Back In" : "Last Viewed"}</h2>
       </div>
 
       <RecentPlaylistCards
