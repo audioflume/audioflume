@@ -75,7 +75,7 @@ export default function DiscoverCuratedHeroCopy({
           <strong>
             Human Curated Music Library
             <ArrowUpRightIcon
-              size={14}
+              size={16}
               className="discover-integrated-value-arrow"
             />
           </strong>
@@ -89,7 +89,7 @@ export default function DiscoverCuratedHeroCopy({
           <strong>
             Thousands of Sound Effects
             <ArrowUpRightIcon
-              size={14}
+              size={16}
               className="discover-integrated-value-arrow"
             />
           </strong>
