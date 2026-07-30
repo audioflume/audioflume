@@ -23,9 +23,12 @@ body:has(.filmwave-music-player)
   );
 }
 
-.discover-template-shell.is-discover-route .discover-hero {
+body:has(.discover-page-root)
+  .discover-template-shell.is-discover-route
+  .discover-hero {
   height: var(--discover-integrated-hero-height);
   min-height: var(--discover-integrated-hero-height);
+  background: #000;
 }
 
 .discover-template-shell.is-discover-route .discover-integrated-hero {
