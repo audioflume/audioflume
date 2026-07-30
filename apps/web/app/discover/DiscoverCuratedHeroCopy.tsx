@@ -64,9 +64,6 @@ export default function DiscoverCuratedHeroCopy({
         />
         <button type="submit">
           <span>Search</span>
-          <span className="discover-integrated-search-arrow" aria-hidden="true">
-            ↗
-          </span>
         </button>
       </form>
 
