@@ -1,0 +1,158 @@
+name: Update Discover typography
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/update-discover-typography.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Update shared Discover typography
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path_str: str, old: str, new: str) -> None:
+              path = Path(path_str)
+              text = path.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"Expected one match in {path_str}, found {count}: {old!r}")
+              path.write_text(text.replace(old, new, 1))
+
+          replace_once(
+              "apps/web/app/discover/layout.tsx",
+              "--discover-playlist-card-title-font-size: 15px;",
+              "--discover-playlist-card-title-font-size: 16px;",
+          )
+          replace_once(
+              "apps/web/app/discover/layout.tsx",
+              "--discover-playlist-card-title-font-weight: 500;",
+              "--discover-playlist-card-title-font-weight: 300;",
+          )
+
+          replace_once(
+              "apps/web/components/curated/CuratedPlaylistCard.module.css",
+              "font-size: var(--discover-playlist-card-title-font-size, 15px);",
+              "font-size: var(--discover-playlist-card-title-font-size, 16px);",
+          )
+          replace_once(
+              "apps/web/components/curated/CuratedPlaylistCard.module.css",
+              "font-weight: var(--discover-playlist-card-title-font-weight, 500);",
+              "font-weight: var(--discover-playlist-card-title-font-weight, 300);",
+          )
+
+          replace_once(
+              "apps/web/app/discover/discover-page.css",
+              '''body:has(.discover-page-root) .discover-section-heading h2 {
+            color: var(--text-primary) !important;
+            font-family: var(--font-aktiv-grotesk), sans-serif !important;
+            font-size: clamp(17px, 1.15vw, 22px) !important;
+            font-weight: 500 !important;
+            font-kerning: normal !important;
+            letter-spacing: -.025em !important;
+            line-height: 1 !important;
+            text-transform: uppercase !important;
+          }''',
+              '''body:has(.discover-page-root) .discover-section-heading h2 {
+            color: var(--text-primary) !important;
+            font-family: var(--font-aktiv-grotesk), sans-serif !important;
+            font-size: 24px !important;
+            font-weight: 500 !important;
+            font-kerning: normal !important;
+            letter-spacing: -.035em !important;
+            line-height: 1 !important;
+            text-transform: none !important;
+          }''',
+          )
+
+          for path_str in [
+              "apps/web/app/discover/page.tsx",
+              "apps/web/app/HomePageContent.tsx",
+          ]:
+              path = Path(path_str)
+              text = path.read_text()
+              replacements = {
+                  "<h2>Newly added tracks</h2>": "<h2>Newly Added Tracks</h2>",
+                  "<h2>Browse by production style</h2>": "<h2>Browse by Production Style</h2>",
+                  "<h2>Ready-to-cut tracks</h2>": "<h2>Ready-to-Cut Tracks</h2>",
+              }
+              if path_str.endswith("discover/page.tsx"):
+                  replacements.update({
+                      "<h2>Explore these moods</h2>": "<h2>Explore These Moods</h2>",
+                      "<h2>Curated playlists</h2>": "<h2>Curated Playlists</h2>",
+                  })
+              for old, new in replacements.items():
+                  count = text.count(old)
+                  if count != 1:
+                      raise SystemExit(f"Expected one match in {path_str}, found {count}: {old!r}")
+                  text = text.replace(old, new, 1)
+              path.write_text(text)
+
+          replace_once(
+              "apps/web/app/discover/discover-hero-last-viewed.css",
+              '''.discover-hero-last-viewed-heading {
+            display: flex;
+            min-height: 28px;
+            align-items: center;
+            margin-bottom: 20px;
+          }
+
+          .discover-hero-last-viewed-heading h2 {
+            margin: 0;
+            color: #fff;
+            font-family: var(--font-aktiv-grotesk), sans-serif;
+            font-size: clamp(17px, 1.15vw, 22px);
+            font-weight: 500;
+            font-kerning: normal;
+            letter-spacing: -.025em;
+            line-height: 1;
+            text-transform: uppercase;
+          }''',
+              '''.discover-hero-last-viewed-heading {
+            display: flex;
+            min-height: 0;
+            align-items: center;
+            margin-bottom: 10px;
+          }
+
+          .discover-hero-last-viewed-heading h2 {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.56);
+            font-family: var(--font-aktiv-grotesk), sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            font-kerning: normal;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            text-transform: uppercase;
+          }''',
+          )
+          PY
+
+      - name: Commit source changes and remove workflow
+        run: |
+          git config user.name "filmwave-webmaster"
+          git config user.email "actions@users.noreply.github.com"
+          rm .github/workflows/update-discover-typography.yml
+          git add \
+            apps/web/app/discover/layout.tsx \
+            apps/web/components/curated/CuratedPlaylistCard.module.css \
+            apps/web/app/discover/discover-page.css \
+            apps/web/app/discover/page.tsx \
+            apps/web/app/HomePageContent.tsx \
+            apps/web/app/discover/discover-hero-last-viewed.css \
+            .github/workflows/update-discover-typography.yml
+          git commit -m "Refine Discover card and section typography"
+          git push origin main
