@@ -73,6 +73,14 @@ body:has(.discover-page-root)
   gap: 30px;
 }
 
+body:has(.discover-page-root) .discover-mood-card h3,
+body:has(.discover-page-root)
+  .discover-production-section
+  .discover-playlist-card
+  h3 {
+  font-weight: 400;
+}
+
 .discover-hero-last-viewed-section {
   width: min(100%, var(--discover-editorial-width));
   margin: 0 auto;
