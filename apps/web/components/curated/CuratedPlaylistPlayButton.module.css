@@ -1,0 +1,37 @@
+.button {
+  display: inline-flex;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--text-secondary);
+  box-shadow: none;
+  opacity: 0;
+  transition:
+    color 150ms ease,
+    opacity 150ms ease;
+}
+
+.button:hover,
+.button:focus-visible {
+  background: transparent;
+  color: var(--text-primary);
+  box-shadow: none;
+  opacity: 1;
+}
+
+.button[data-playlist-playing="true"] {
+  opacity: 1;
+}
+
+.button:disabled {
+  cursor: default;
+}
