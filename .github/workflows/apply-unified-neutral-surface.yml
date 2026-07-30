@@ -1,0 +1,215 @@
+name: Apply unified website neutral surface
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/apply-unified-neutral-surface.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/unified-neutral-surface-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Consolidate website neutral surfaces
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_exact(path: str, old: str, new: str, expected: int = 1) -> None:
+              file_path = Path(path)
+              content = file_path.read_text()
+              count = content.count(old)
+              if count != expected:
+                  raise SystemExit(
+                      f"{path}: expected {expected} occurrence(s) of {old!r}, found {count}"
+                  )
+              file_path.write_text(content.replace(old, new))
+
+          # Canonical light/dark value.
+          replace_exact(
+              "packages/shared/styles/theme.css",
+              "  --bg-hover-strong: rgba(245, 248, 255, 0.105);\n",
+              "  --bg-hover-strong: rgba(245, 248, 255, 0.105);\n  --filmwave-neutral-surface: #0d0d0d;\n",
+          )
+          replace_exact(
+              "packages/shared/styles/theme.css",
+              "  --bg-hover-strong: rgba(17, 17, 17, 0.075);\n",
+              "  --bg-hover-strong: rgba(17, 17, 17, 0.075);\n  --filmwave-neutral-surface: #f2f2f2;\n",
+          )
+
+          # Website-only aliases keep desktop styling unchanged while making all
+          # related website surface states resolve from the canonical token.
+          replace_exact(
+              "apps/web/app/globals.css",
+              "  --modal-backdrop: rgba(0, 0, 0, 0.55);\n",
+              "  --modal-backdrop: rgba(0, 0, 0, 0.55);\n"
+              "  --bg-card: var(--filmwave-neutral-surface);\n"
+              "  --bg-elevated: var(--filmwave-neutral-surface);\n"
+              "  --bg-row: var(--filmwave-neutral-surface);\n"
+              "  --bg-row-hover: var(--filmwave-neutral-surface);\n"
+              "  --bg-control: var(--filmwave-neutral-surface);\n"
+              "  --bg-control-hover: var(--filmwave-neutral-surface);\n"
+              "  --bg-hover: var(--filmwave-neutral-surface);\n"
+              "  --bg-hover-strong: var(--filmwave-neutral-surface);\n"
+              "  --icon-button-hover: var(--filmwave-neutral-surface);\n",
+          )
+
+          # Home CTA and Ready-to-Cut cards.
+          replace_exact(
+              "apps/web/app/HomePageContent.tsx",
+              "bg-[var(--bg-elevated)]",
+              "bg-[var(--filmwave-neutral-surface)]",
+          )
+          replace_exact(
+              "apps/web/app/HomePageContent.tsx",
+              "bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)]",
+              "bg-[var(--filmwave-neutral-surface)]",
+          )
+          replace_exact(
+              "apps/web/app/HomePageContent.tsx",
+              "bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]",
+              "bg-[var(--filmwave-neutral-surface)]",
+              expected=2,
+          )
+
+          # Discover CTA and Ready-to-Cut cards.
+          replace_exact(
+              "apps/web/app/discover/page.tsx",
+              "bg-[var(--bg-elevated)]",
+              "bg-[var(--filmwave-neutral-surface)]",
+          )
+          replace_exact(
+              "apps/web/app/discover/page.tsx",
+              "bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)]",
+              "bg-[var(--filmwave-neutral-surface)]",
+          )
+          replace_exact(
+              "apps/web/app/discover/page.tsx",
+              "bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]",
+              "bg-[var(--filmwave-neutral-surface)]",
+              expected=2,
+          )
+          replace_exact(
+              "apps/web/app/discover/DiscoverSharedHeaderSearch.tsx",
+              """          background: color-mix(
+            in srgb,
+            var(--bg-primary) 96%,
+            var(--text-primary) 4%
+          );""",
+              "          background: var(--filmwave-neutral-surface);",
+          )
+          replace_exact(
+              "apps/web/app/discover/DiscoverSharedHeaderSearch.tsx",
+              "bg-[var(--bg-elevated)]",
+              "bg-[var(--filmwave-neutral-surface)]",
+          )
+          replace_exact(
+              "apps/web/app/discover/discover-curated-hero-copy.css",
+              "  border-radius: 28px;\n  background: #111;\n  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);",
+              "  border-radius: 28px;\n  background: var(--filmwave-neutral-surface);\n  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);",
+          )
+          replace_exact(
+              "apps/web/app/discover/discover-curated-hero-copy.css",
+              "  background: var(--bg-hover-strong);\n  box-shadow: none;",
+              "  background: var(--filmwave-neutral-surface);\n  box-shadow: none;",
+          )
+          replace_exact(
+              "apps/web/components/recent-playlist-cards.css",
+              "  --bg-hover: rgba(245, 248, 255, 0.055);",
+              "  --bg-hover: var(--filmwave-neutral-surface);",
+          )
+          replace_exact(
+              "apps/web/app/discover/discover-hero-last-viewed.css",
+              "  --bg-hover: var(--bg-hover-strong);",
+              "  --bg-hover: var(--filmwave-neutral-surface);",
+          )
+
+          # Music Desktop Sync CTA, including its loading placeholder and hover.
+          replace_exact(
+              "apps/web/app/music-library-web-layout.css",
+              "  background: color-mix(in srgb, var(--bg-hover) 38%, transparent);",
+              "  background: var(--filmwave-neutral-surface);",
+              expected=2,
+          )
+          replace_exact(
+              "apps/web/app/music-library-web-layout.css",
+              "  background: color-mix(in srgb, var(--bg-hover) 62%, transparent);",
+              "  background: var(--filmwave-neutral-surface);",
+          )
+          replace_exact(
+              "apps/web/app/music-library-web-layout.css",
+              "  background: var(--bg-hover);\n}\n\nmain > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai-linkmatch:hover {",
+              "  background: var(--filmwave-neutral-surface);\n}\n\nmain > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai-linkmatch:hover {",
+          )
+          replace_exact(
+              "apps/web/app/music-library-web-layout.css",
+              "  background: var(--bg-control-hover);\n}\n\nmain > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai-linkmatch-copy {",
+              "  background: var(--filmwave-neutral-surface);\n}\n\nmain > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai-linkmatch-copy {",
+          )
+
+          # My Playlists create block in both gallery and list views.
+          replace_exact(
+              "packages/shared/styles/playlist-library.css",
+              "  border-radius: 0 !important;\n  background: transparent !important;\n  padding: 16px !important;",
+              "  border-radius: 0 !important;\n  background: var(--filmwave-neutral-surface) !important;\n  padding: 16px !important;",
+          )
+          replace_exact(
+              "packages/shared/styles/playlist-library.css",
+              "  border-color: var(--border-hover) !important;\n  background: transparent !important;",
+              "  border-color: var(--border-hover) !important;\n  background: var(--filmwave-neutral-surface) !important;",
+          )
+          replace_exact(
+              "apps/web/app/playlists/playlists-tabs-rail.css",
+              "  width: 100% !important;\n  text-align: left !important;\n}",
+              "  width: 100% !important;\n  background: var(--filmwave-neutral-surface) !important;\n  text-align: left !important;\n}",
+          )
+
+          # Project file/folder cards: all default, hover, active, and light-mode
+          # variants now resolve to the same opaque surface.
+          for old in (
+              "color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%)",
+              "color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%)",
+              "color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%)",
+              "color-mix(in srgb, var(--bg-primary) 91%, var(--text-primary) 9%)",
+          ):
+              replace_exact(
+                  "apps/web/components/project-browser/ProjectFileBrowserCards.css",
+                  old,
+                  "var(--filmwave-neutral-surface)",
+                  expected=2,
+              )
+          PY
+
+      - name: Commit source changes and remove workflow
+        run: |
+          git config user.name "filmwave-webmaster"
+          git config user.email "filmwave-webmaster@users.noreply.github.com"
+          git rm .github/workflows/apply-unified-neutral-surface.yml
+          git add packages/shared/styles/theme.css
+          git add packages/shared/styles/playlist-library.css
+          git add apps/web/app/globals.css
+          git add apps/web/app/HomePageContent.tsx
+          git add apps/web/app/discover/page.tsx
+          git add apps/web/app/discover/DiscoverSharedHeaderSearch.tsx
+          git add apps/web/app/discover/discover-curated-hero-copy.css
+          git add apps/web/app/discover/discover-hero-last-viewed.css
+          git add apps/web/components/recent-playlist-cards.css
+          git add apps/web/app/music-library-web-layout.css
+          git add apps/web/app/playlists/playlists-tabs-rail.css
+          git add apps/web/components/project-browser/ProjectFileBrowserCards.css
+          git commit -m "Unify website neutral surface colors"
+          git push origin main
