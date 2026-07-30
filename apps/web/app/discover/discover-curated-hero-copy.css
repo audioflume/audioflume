@@ -234,11 +234,11 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-category-search {
   display: grid;
-  width: min(calc(100% - 80px), 1080px);
+  width: min(calc(100% - 80px), 800px);
   height: 68px;
   grid-template-columns: minmax(0, 1fr) 58px;
   align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.035);
+  border: 0;
   border-radius: 28px;
   background: #111;
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
