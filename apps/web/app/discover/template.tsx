@@ -28,7 +28,7 @@ export default function DiscoverTemplate({
           <CuratedJumpBackIn inline placement="hero" />
         </div>
       )}
-      <DiscoverHeroVideoLayer />
+      {!showHeroLastViewed && <DiscoverHeroVideoLayer />}
       <DiscoverCuratedHeroCopy showIntroCopy={!showHeroLastViewed} />
       <DiscoverReferenceLayout />
       <AudioflumeOutroMount
