@@ -86,6 +86,7 @@ export default function Header() {
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
   const headerClassName = [
     "filmwave-web-header",
+    pathname === "/discover" ? "is-discover-route" : "",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
   ]
@@ -246,7 +247,9 @@ export default function Header() {
           color: #fff !important;
         }
 
-        .filmwave-web-header.is-solid {
+        .filmwave-web-header.is-solid,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-discover-route.is-transparent {
           --filmwave-chrome-surface: var(--bg-primary);
           border-bottom-color: var(--border) !important;
           background: var(--bg-primary) !important;
@@ -256,16 +259,34 @@ export default function Header() {
 
         .filmwave-web-header.is-solid .filmwave-header-tonal-wordmark,
         .filmwave-web-header.is-solid .filmwave-header-logo-action,
-        .filmwave-web-header.is-solid .filmwave-header-actions {
+        .filmwave-web-header.is-solid .filmwave-header-actions,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-discover-route.is-transparent
+          .filmwave-header-tonal-wordmark,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-discover-route.is-transparent
+          .filmwave-header-logo-action,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-discover-route.is-transparent
+          .filmwave-header-actions {
           color: var(--text-primary) !important;
         }
 
-        .filmwave-web-header.is-solid .filmwave-header-nav-link {
+        .filmwave-web-header.is-solid .filmwave-header-nav-link,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-discover-route.is-transparent
+          .filmwave-header-nav-link {
           color: var(--text-secondary) !important;
         }
 
         .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
-        .filmwave-web-header.is-solid .filmwave-header-nav-link.is-active {
+        .filmwave-web-header.is-solid .filmwave-header-nav-link.is-active,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-discover-route.is-transparent
+          .filmwave-header-nav-link:hover,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-discover-route.is-transparent
+          .filmwave-header-nav-link.is-active {
           background: transparent !important;
           background-color: transparent !important;
           color: var(--text-primary) !important;

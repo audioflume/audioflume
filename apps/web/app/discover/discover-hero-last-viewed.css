@@ -42,7 +42,7 @@ body:has(.discover-page-root)
   .discover-hero {
   height: var(--discover-integrated-hero-height);
   min-height: var(--discover-integrated-hero-height);
-  background: #000;
+  background: transparent;
 }
 
 .discover-template-shell.is-discover-route .discover-integrated-hero {
@@ -85,25 +85,18 @@ body:has(.discover-page-root)
 
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
-  .discover-template-shell.is-discover-route
-  .discover-hero {
-  background: #f7f7f7;
-}
-
-:where(html.light, html[data-theme="light"])
-  body:has(.discover-page-root)
   .discover-hero-last-viewed-heading h2 {
-  color: #111;
+  color: var(--text-primary);
 }
 
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-hero-last-viewed
   .recent-playlist-card-list.is-hero {
-  --bg-hover: rgba(17, 17, 17, 0.055);
-  --bg-elevated: rgba(17, 17, 17, 0.1);
-  --text-primary: #111;
-  --text-muted: rgba(17, 17, 17, 0.45);
+  --bg-hover: var(--bg-hover-strong);
+  --bg-elevated: var(--bg-control);
+  --text-primary: #111111;
+  --text-muted: rgba(17, 17, 17, 0.42);
 }
 
 @media (max-width: 620px) {
