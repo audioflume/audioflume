@@ -1,0 +1,203 @@
+name: Apply unified website neutral surface v3
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/unified-neutral-surface-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Consolidate website neutral surfaces
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          def replace_exact(path: str, old: str, new: str, expected: int = 1) -> None:
+              file_path = Path(path)
+              content = file_path.read_text()
+              count = content.count(old)
+              if count != expected:
+                  raise SystemExit(f"{path}: expected {expected} occurrence(s), found {count}: {old!r}")
+              file_path.write_text(content.replace(old, new))
+
+          def replace_pattern(path: str, pattern: str, replacement: str, expected: int = 1) -> None:
+              file_path = Path(path)
+              content = file_path.read_text()
+              updated, count = re.subn(pattern, replacement, content, flags=re.MULTILINE | re.DOTALL)
+              if count != expected:
+                  raise SystemExit(f"{path}: expected {expected} regex match(es), found {count}: {pattern!r}")
+              file_path.write_text(updated)
+
+          replace_exact(
+              "packages/shared/styles/theme.css",
+              "  --bg-hover-strong: rgba(245, 248, 255, 0.105);\n",
+              "  --bg-hover-strong: rgba(245, 248, 255, 0.105);\n  --filmwave-neutral-surface: #0d0d0d;\n",
+          )
+          replace_exact(
+              "packages/shared/styles/theme.css",
+              "  --bg-hover-strong: rgba(17, 17, 17, 0.075);\n",
+              "  --bg-hover-strong: rgba(17, 17, 17, 0.075);\n  --filmwave-neutral-surface: #f2f2f2;\n",
+          )
+
+          replace_exact(
+              "apps/web/app/globals.css",
+              "  --modal-backdrop: rgba(0, 0, 0, 0.55);\n",
+              "  --modal-backdrop: rgba(0, 0, 0, 0.55);\n"
+              "  --bg-card: var(--filmwave-neutral-surface);\n"
+              "  --bg-elevated: var(--filmwave-neutral-surface);\n"
+              "  --bg-row: var(--filmwave-neutral-surface);\n"
+              "  --bg-row-hover: var(--filmwave-neutral-surface);\n"
+              "  --bg-control: var(--filmwave-neutral-surface);\n"
+              "  --bg-control-hover: var(--filmwave-neutral-surface);\n"
+              "  --bg-hover: var(--filmwave-neutral-surface);\n"
+              "  --bg-hover-strong: var(--filmwave-neutral-surface);\n"
+              "  --icon-button-hover: var(--filmwave-neutral-surface);\n",
+          )
+
+          for path in (
+              "apps/web/app/HomePageContent.tsx",
+              "apps/web/app/discover/page.tsx",
+          ):
+              replace_exact(
+                  path,
+                  "bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)]",
+                  "bg-[var(--filmwave-neutral-surface)]",
+              )
+              replace_exact(
+                  path,
+                  "bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]",
+                  "bg-[var(--filmwave-neutral-surface)]",
+                  expected=2,
+              )
+
+          replace_pattern(
+              "apps/web/app/discover/DiscoverSharedHeaderSearch.tsx",
+              r"background:\s*color-mix\(\s*in srgb,\s*var\(--bg-primary\) 96%,\s*var\(--text-primary\) 4%\s*\);",
+              "background: var(--filmwave-neutral-surface);",
+          )
+          replace_exact(
+              "apps/web/app/discover/discover-curated-hero-copy.css",
+              "  border-radius: 28px;\n  background: #111;\n  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);",
+              "  border-radius: 28px;\n  background: var(--filmwave-neutral-surface);\n  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);",
+          )
+          replace_exact(
+              "apps/web/components/recent-playlist-cards.css",
+              "  --bg-hover: rgba(245, 248, 255, 0.055);",
+              "  --bg-hover: var(--filmwave-neutral-surface);",
+          )
+
+          replace_exact(
+              "apps/web/app/music-library-web-layout.css",
+              "  background: color-mix(in srgb, var(--bg-hover) 38%, transparent);",
+              "  background: var(--filmwave-neutral-surface);",
+              expected=2,
+          )
+          replace_exact(
+              "apps/web/app/music-library-web-layout.css",
+              "  background: color-mix(in srgb, var(--bg-hover) 62%, transparent);",
+              "  background: var(--filmwave-neutral-surface);",
+          )
+
+          replace_exact(
+              "packages/shared/styles/playlist-library.css",
+              """.playlists-page .playlist-create-card {
+  aspect-ratio: 1 / 1 !important;
+  min-height: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px dashed var(--border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 16px !important;
+  text-align: center !important;
+}""",
+              """.playlists-page .playlist-create-card {
+  aspect-ratio: 1 / 1 !important;
+  min-height: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px dashed var(--border) !important;
+  border-radius: 0 !important;
+  background: var(--filmwave-neutral-surface) !important;
+  padding: 16px !important;
+  text-align: center !important;
+}""",
+          )
+          replace_exact(
+              "packages/shared/styles/playlist-library.css",
+              """.playlists-page .playlist-create-card:hover {
+  border-color: var(--border-hover) !important;
+  background: transparent !important;
+}""",
+              """.playlists-page .playlist-create-card:hover {
+  border-color: var(--border-hover) !important;
+  background: var(--filmwave-neutral-surface) !important;
+}""",
+          )
+          replace_exact(
+              "apps/web/app/playlists/playlists-tabs-rail.css",
+              """.playlists-page .playlist-index .playlist-create-row.playlist-index-row {
+  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  width: 100% !important;
+  text-align: left !important;
+}""",
+              """.playlists-page .playlist-index .playlist-create-row.playlist-index-row {
+  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  width: 100% !important;
+  background: var(--filmwave-neutral-surface) !important;
+  text-align: left !important;
+}""",
+          )
+
+          for old in (
+              "color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%)",
+              "color-mix(in srgb, var(--bg-primary) 92%, var(--text-primary) 8%)",
+              "color-mix(in srgb, var(--bg-primary) 94%, var(--text-primary) 6%)",
+              "color-mix(in srgb, var(--bg-primary) 91%, var(--text-primary) 9%)",
+          ):
+              replace_exact(
+                  "apps/web/components/project-browser/ProjectFileBrowserCards.css",
+                  old,
+                  "var(--filmwave-neutral-surface)",
+                  expected=2,
+              )
+          PY
+
+      - name: Commit source changes and remove temporary files
+        run: |
+          git config user.name "filmwave-webmaster"
+          git config user.email "filmwave-webmaster@users.noreply.github.com"
+          git rm -f .github/workflows/apply-unified-neutral-surface.yml
+          git rm -f .github/workflows/apply-unified-neutral-surface-v2.yml
+          git rm -f .github/workflows/apply-unified-neutral-surface-v3.yml
+          git rm -f .github/unified-neutral-surface-trigger
+          git rm -f .github/unified-neutral-surface-trigger-2
+          git rm -f .github/unified-neutral-surface-trigger-3
+          git rm -f .github/unified-neutral-surface-trigger-branch-note
+          git rm -f .github/unified-neutral-surface-trigger-final-note
+          git add packages/shared/styles/theme.css
+          git add packages/shared/styles/playlist-library.css
+          git add apps/web/app/globals.css
+          git add apps/web/app/HomePageContent.tsx
+          git add apps/web/app/discover/page.tsx
+          git add apps/web/app/discover/DiscoverSharedHeaderSearch.tsx
+          git add apps/web/app/discover/discover-curated-hero-copy.css
+          git add apps/web/components/recent-playlist-cards.css
+          git add apps/web/app/music-library-web-layout.css
+          git add apps/web/app/playlists/playlists-tabs-rail.css
+          git add apps/web/components/project-browser/ProjectFileBrowserCards.css
+          git commit -m "Unify website neutral surface colors"
+          git push origin main
