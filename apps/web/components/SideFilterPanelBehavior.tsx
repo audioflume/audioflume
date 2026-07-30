@@ -3,6 +3,8 @@
 import { useLayoutEffect } from "react";
 import { SideFilterPanelBehavior as SharedSideFilterPanelBehavior } from "@filmwave/shared";
 
+import { usePlaylists } from "@/hooks/usePlaylists";
+
 const LINKMATCH_BUTTON_CLASS = "fw-filter-ai-linkmatch";
 const WEB_MUSIC_FILTER_PANEL_SELECTOR =
   "main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-panel-wrap";
@@ -12,6 +14,8 @@ const DISPLAY_AI_FILTER_OPTION_CLASS = "fw-display-ai-filter-option";
 const DISPLAY_AI_FILTER_STORAGE_KEY = "filmwave-display-ai-filter";
 const DISPLAY_AI_EXCLUDE_ROOT_CLASS = "fw-display-exclude-ai-songs";
 const DISPLAY_AI_ONLY_ROOT_CLASS = "fw-display-ai-songs-only";
+const PLAYLIST_FILTER_OPTION_CLASS = "fw-filter-playlist-option";
+const PUBLIC_PLAYLIST_FILTER_OPTION_CLASS = "is-public-playlist";
 
 const DISPLAY_AI_FILTER_OPTIONS = [
   { value: "exclude", label: "Human made" },
@@ -19,6 +23,10 @@ const DISPLAY_AI_FILTER_OPTIONS = [
 ] as const;
 
 type DisplayAiFilterValue = (typeof DISPLAY_AI_FILTER_OPTIONS)[number]["value"];
+type PlaylistFilterDecoration = {
+  name: string;
+  is_public: boolean;
+};
 
 const SECTION_ID_BY_LABEL: Record<string, string> = {
   Scene: "mood",
@@ -162,6 +170,37 @@ function syncDisplayAiFilterOptions() {
   });
 }
 
+function syncPlaylistFilterOptionClasses(playlists: PlaylistFilterDecoration[]) {
+  document.querySelectorAll<HTMLElement>(WEB_MUSIC_FILTER_PANEL_SELECTOR).forEach((panel) => {
+    const activeRailItem = panel.querySelector<HTMLElement>(".fw-filter-rail-item.is-active");
+    if (getRailItemSectionId(activeRailItem) !== "playlist") return;
+
+    const optionButtons = Array.from(
+      panel.querySelectorAll<HTMLButtonElement>(
+        ".fw-filter-detail .fw-filter-option-list > .fw-filter-option",
+      ),
+    );
+
+    optionButtons.forEach((button, index) => {
+      const playlist = playlists[index];
+      const hasPlaylist = Boolean(playlist);
+      const isPublic = Boolean(playlist?.is_public);
+
+      button.classList.toggle(PLAYLIST_FILTER_OPTION_CLASS, hasPlaylist);
+      button.classList.toggle(PUBLIC_PLAYLIST_FILTER_OPTION_CLASS, isPublic);
+
+      if (isPublic && playlist) {
+        button.setAttribute("aria-label", `${playlist.name}, public playlist`);
+        button.title = "Public playlist";
+        return;
+      }
+
+      button.removeAttribute("aria-label");
+      button.removeAttribute("title");
+    });
+  });
+}
+
 function syncWebRailItemSectionIds(rail: HTMLElement) {
   rail.querySelectorAll<HTMLElement>(".fw-filter-rail-item").forEach((railItem) => {
     const label = railItem.querySelector<HTMLElement>(".fw-filter-rail-label");
@@ -189,35 +228,42 @@ function syncLinkMatchRailButtons() {
   });
 }
 
-function syncWebMusicFilterEnhancements() {
+function syncWebMusicFilterEnhancements(playlists: PlaylistFilterDecoration[]) {
   syncLinkMatchRailButtons();
   syncDisplayAiFilterOptions();
+  syncPlaylistFilterOptionClasses(playlists);
 }
 
 export default function SideFilterPanelBehavior() {
+  const { playlists } = usePlaylists();
+
   useLayoutEffect(() => {
     let syncFrame = 0;
+
+    function syncEnhancements() {
+      syncWebMusicFilterEnhancements(playlists);
+    }
 
     function scheduleSync() {
       if (syncFrame) return;
 
       syncFrame = window.requestAnimationFrame(() => {
         syncFrame = 0;
-        syncWebMusicFilterEnhancements();
+        syncEnhancements();
       });
     }
 
     const observer = new MutationObserver(scheduleSync);
 
-    syncWebMusicFilterEnhancements();
-    window.requestAnimationFrame(syncWebMusicFilterEnhancements);
+    syncEnhancements();
+    window.requestAnimationFrame(syncEnhancements);
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       if (syncFrame) window.cancelAnimationFrame(syncFrame);
       observer.disconnect();
     };
-  }, []);
+  }, [playlists]);
 
   return <SharedSideFilterPanelBehavior />;
 }
