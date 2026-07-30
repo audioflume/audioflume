@@ -55,12 +55,18 @@ body:has(.discover-page-root)
   right: 0;
   left: 0;
   z-index: 5;
-  padding: 0 var(--discover-editorial-gutter) clamp(8px, 1vw, 12px);
+  padding: 0 var(--discover-editorial-gutter);
   transform: translateY(-100%);
 }
 
 body:has(.discover-page-root) .discover-content {
-  padding-top: 12px;
+  padding-top: 8px;
+}
+
+body:has(.discover-page-root)
+  .discover-mood-section
+  .curated-playlist-shelf-scroller {
+  gap: 30px;
 }
 
 .discover-hero-last-viewed-section {
@@ -166,11 +172,11 @@ body:has(.discover-page-root)
 
   .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
     padding-right: 20px;
-    padding-bottom: 10px;
+    padding-bottom: 0;
     padding-left: 20px;
   }
 
   body:has(.discover-page-root) .discover-content {
-    padding-top: 12px;
+    padding-top: 8px;
   }
 }
