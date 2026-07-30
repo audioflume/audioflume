@@ -228,6 +228,40 @@ export default function DiscoverCuratedHeroCopy({
               outline-offset: 3px;
             }
 
+            :where(html:not(.light):not([data-theme="light"]))
+              .discover-home-search {
+              background: var(--filmwave-neutral-surface);
+            }
+
+            :where(html:not(.light):not([data-theme="light"]))
+              .discover-home-search input {
+              color: #fff;
+            }
+
+            :where(html:not(.light):not([data-theme="light"]))
+              .discover-home-search input::placeholder {
+              color: rgba(255, 255, 255, 0.55);
+            }
+
+            :where(html:not(.light):not([data-theme="light"]))
+              .discover-home-search button {
+              background: #191919;
+              color: rgba(255, 255, 255, 0.62);
+            }
+
+            :where(html:not(.light):not([data-theme="light"]))
+              .discover-home-search button:hover,
+            :where(html:not(.light):not([data-theme="light"]))
+              .discover-home-search button:focus-visible {
+              background: #242424;
+              color: #fff;
+            }
+
+            :where(html:not(.light):not([data-theme="light"]))
+              .discover-home-search button:focus-visible {
+              outline-color: rgba(255, 255, 255, 0.72);
+            }
+
             @media (max-width: 980px) {
               .discover-home-search {
                 width: calc(100% - 64px);
