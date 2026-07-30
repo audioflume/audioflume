@@ -41,9 +41,9 @@ body:has(.filmwave-music-player):has(.discover-category-filter-panel)
     :has(.discover-hero-last-viewed-section)
   ) {
   --discover-integrated-hero-height: clamp(
-    370px,
-    calc(49svh - 100px),
-    450px
+    310px,
+    calc(49svh - 160px),
+    390px
   );
 }
 
@@ -52,9 +52,9 @@ body:has(.filmwave-music-player)
     :has(.discover-hero-last-viewed-section)
   ) {
   --discover-integrated-hero-height: clamp(
-    370px,
-    calc(49svh - var(--filmwave-player-height, 72px) - 100px),
-    450px
+    310px,
+    calc(49svh - var(--filmwave-player-height, 72px) - 160px),
+    390px
   );
 }
 
@@ -63,9 +63,9 @@ body:has(.discover-category-filter-panel)
     :has(.discover-hero-last-viewed-section)
   ) {
   --discover-integrated-hero-height: clamp(
-    520px,
-    calc(64svh - 100px),
-    610px
+    460px,
+    calc(64svh - 160px),
+    550px
   );
 }
 
@@ -74,9 +74,9 @@ body:has(.filmwave-music-player):has(.discover-category-filter-panel)
     :has(.discover-hero-last-viewed-section)
   ) {
   --discover-integrated-hero-height: clamp(
-    520px,
-    calc(64svh - var(--filmwave-player-height, 72px) - 100px),
-    610px
+    460px,
+    calc(64svh - var(--filmwave-player-height, 72px) - 160px),
+    550px
   );
 }
 
@@ -239,9 +239,9 @@ body:has(.discover-page-root)
       :has(.discover-hero-last-viewed-section)
     ) {
     --discover-integrated-hero-height: clamp(
-      470px,
-      calc(72svh - 100px),
-      590px
+      410px,
+      calc(72svh - 160px),
+      530px
     );
   }
 
@@ -250,9 +250,9 @@ body:has(.discover-page-root)
       :has(.discover-hero-last-viewed-section)
     ) {
     --discover-integrated-hero-height: clamp(
-      470px,
-      calc(72svh - var(--filmwave-player-height, 72px) - 100px),
-      590px
+      410px,
+      calc(72svh - var(--filmwave-player-height, 72px) - 160px),
+      530px
     );
   }
 
@@ -261,9 +261,9 @@ body:has(.discover-page-root)
       :has(.discover-hero-last-viewed-section)
     ) {
     --discover-integrated-hero-height: clamp(
-      590px,
-      calc(82svh - 100px),
-      710px
+      530px,
+      calc(82svh - 160px),
+      650px
     );
   }
 
@@ -272,9 +272,9 @@ body:has(.discover-page-root)
       :has(.discover-hero-last-viewed-section)
     ) {
     --discover-integrated-hero-height: clamp(
-      590px,
-      calc(82svh - var(--filmwave-player-height, 72px) - 100px),
-      710px
+      530px,
+      calc(82svh - var(--filmwave-player-height, 72px) - 160px),
+      650px
     );
   }
 
