@@ -1,0 +1,103 @@
+name: Apply shared section heading source
+
+on:
+  push:
+    paths:
+      - .github/workflows/apply-shared-section-heading.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update shared heading source and Discover row gap
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          shared_path = Path("packages/shared/styles/playlist-library.css")
+          shared = shared_path.read_text()
+          old_shared = '''/* Shared section-title typography for Discover, Curated Playlists, and My Playlists. */
+          .discover-section-heading h2,
+          .curated-playlist-shelf-heading h2,
+          .discover-song-section .fw-song-list-title,
+          .playlists-page .playlists-hero .playlists-title,
+          .playlists-page .playlists-hero .playlists-title::before {
+            margin: 0 !important;
+            color: var(--text-primary) !important;
+            font-family: var(--font-aktiv-grotesk), sans-serif !important;
+            font-size: clamp(18px, 1.45vw, 24px) !important;
+            font-weight: 400 !important;
+            letter-spacing: -.025em !important;
+            line-height: 1.1 !important;
+          }
+          '''
+          new_shared = '''/* Shared section-title typography for Discover and Curated Playlists. */
+          .discover-section-heading h2,
+          .curated-playlist-shelf-heading h2 {
+            margin: 0 !important;
+            color: var(--text-primary) !important;
+            font-family: var(--font-aktiv-grotesk), sans-serif !important;
+            font-size: 24px !important;
+            font-weight: 500 !important;
+            letter-spacing: -.035em !important;
+            line-height: 1 !important;
+            text-transform: none !important;
+          }
+
+          /* Preserve the existing section-title styling for My Playlists. */
+          .discover-song-section .fw-song-list-title,
+          .playlists-page .playlists-hero .playlists-title,
+          .playlists-page .playlists-hero .playlists-title::before {
+            margin: 0 !important;
+            color: var(--text-primary) !important;
+            font-family: var(--font-aktiv-grotesk), sans-serif !important;
+            font-size: clamp(18px, 1.45vw, 24px) !important;
+            font-weight: 400 !important;
+            letter-spacing: -.025em !important;
+            line-height: 1.1 !important;
+          }
+          '''
+          if shared.count(old_shared) != 1:
+              raise SystemExit("Expected shared section-title block exactly once")
+          shared_path.write_text(shared.replace(old_shared, new_shared))
+
+          discover_path = Path("apps/web/app/discover/discover-page.css")
+          discover = discover_path.read_text()
+          old_heading = '''body:has(.discover-page-root) .discover-section-heading h2 {
+            color: var(--text-primary) !important;
+            font-family: var(--font-aktiv-grotesk), sans-serif !important;
+            font-size: 24px !important;
+            font-weight: 500 !important;
+            font-kerning: normal !important;
+            letter-spacing: -.035em !important;
+            line-height: 1 !important;
+            text-transform: none !important;
+          }
+
+          '''
+          if discover.count(old_heading) != 1:
+              raise SystemExit("Expected Discover heading override exactly once")
+          discover = discover.replace(old_heading, "")
+
+          old_gap = "  row-gap: clamp(22px, 2vw, 32px);"
+          new_gap = "  row-gap: clamp(16px, 1.5vw, 24px);"
+          if discover.count(old_gap) != 1:
+              raise SystemExit("Expected Discover curated row gap exactly once")
+          discover_path.write_text(discover.replace(old_gap, new_gap))
+          PY
+
+      - name: Commit changes and remove temporary workflow
+        run: |
+          rm .github/workflows/apply-shared-section-heading.yml
+          git config user.name "filmwave-webmaster"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/shared/styles/playlist-library.css apps/web/app/discover/discover-page.css .github/workflows/apply-shared-section-heading.yml
+          git commit -m "Share Discover and Curated section title styling"
+          git push
