@@ -38,20 +38,19 @@
 }
 
 .recent-playlist-card-list.is-sidebar .recent-playlist-card {
-  min-height: 66px;
-  border-radius: 12px;
-  background: var(--bg-hover-strong);
-  padding: 7px;
+  min-height: 50px;
+  background: transparent;
+  padding: 0;
   transition: opacity 150ms ease;
 }
 
 .recent-playlist-card-list.is-sidebar .recent-playlist-card:hover {
-  background: var(--bg-hover-strong);
+  background: transparent;
   opacity: 1;
 }
 
 .recent-playlist-card-list.is-sidebar .recent-playlist-card:focus-visible {
-  background: var(--bg-hover-strong);
+  background: transparent;
   opacity: 0.62;
 }
 
