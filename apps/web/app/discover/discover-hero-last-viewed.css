@@ -99,6 +99,38 @@ body:has(.discover-page-root)
   --text-muted: rgba(17, 17, 17, 0.42);
 }
 
+body:has(.discover-page-root)
+  .discover-curated-playlist-section
+  [data-curated-playlist-image],
+body:has(.discover-page-root)
+  .discover-curated-playlist-section
+  .discover-playlist-card.discover-card-skeleton,
+body:has(.discover-page-root) .discover-mood-image,
+body:has(.discover-page-root)
+  .discover-mood-card.discover-card-skeleton,
+body:has(.discover-page-root)
+  .discover-production-section
+  .playlist-gallery-card
+  > div:first-child,
+body:has(.discover-page-root)
+  .discover-production-section
+  .discover-card-skeleton,
+body:has(.discover-page-root) .discover-staff-favorite-image,
+body:has(.discover-page-root)
+  .discover-hero-last-viewed
+  .recent-playlist-card-cover,
+body:has(.discover-page-root)
+  .discover-hero-last-viewed
+  .recent-playlist-card-placeholder {
+  border-radius: 6px;
+}
+
+body:has(.discover-page-root)
+  .discover-hero-last-viewed
+  .recent-playlist-card {
+  border-radius: 12px;
+}
+
 @media (max-width: 620px) {
   .discover-template-shell.is-discover-route {
     --discover-integrated-hero-height: clamp(600px, 76svh, 720px);
