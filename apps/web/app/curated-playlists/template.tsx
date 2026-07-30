@@ -175,16 +175,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     opacity: 1 !important;
   }
 
-  body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading h2 {
-    font-family: var(--font-aktiv-grotesk), sans-serif !important;
-    font-size: clamp(18px, 1.25vw, 23px) !important;
-    font-weight: 500 !important;
-    font-kerning: normal !important;
-    letter-spacing: -.025em !important;
-    line-height: 1 !important;
-    text-transform: uppercase !important;
-  }
-
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading p {
     display: block !important;
     visibility: visible !important;
