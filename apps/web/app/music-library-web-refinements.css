@@ -139,80 +139,14 @@
 
 /* ─── Compact quick filter row controls ───────────────────── */
 
-.fw-music-content-column > .fw-quick-row > .fw-quick-chip {
+.fw-quick-chip {
   min-height: 0 !important;
-  height: 28px !important;
-  gap: 8px !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  height: 22px !important;
   border-radius: 999px !important;
-  background: transparent !important;
-  padding: 0 13px !important;
-  color: rgba(255, 255, 255, 0.92) !important;
-  font-family: var(--font-aktiv-grotesk), sans-serif !important;
-  font-size: 12px !important;
+  padding: 0 8px !important;
+  font-size: 10.5px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease,
-    color 150ms ease !important;
-}
-
-.fw-music-content-column > .fw-quick-row > .fw-quick-chip:hover,
-.fw-music-content-column > .fw-quick-row > .fw-quick-chip:focus-visible {
-  border-color: rgba(255, 255, 255, 0.42) !important;
-  background: transparent !important;
-  color: rgba(255, 255, 255, 0.92) !important;
-}
-
-.fw-music-content-column > .fw-quick-row > .fw-quick-chip.is-selected,
-.fw-music-content-column
-  > .fw-quick-row
-  > .fw-quick-chip[aria-pressed="true"] {
-  border-color: #fff !important;
-  background: #fff !important;
-  color: #111 !important;
-  font-weight: 400 !important;
-}
-
-.fw-music-content-column > .fw-quick-row > .fw-quick-chip:focus-visible {
-  outline: 1px solid currentColor;
-  outline-offset: 3px;
-}
-
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  > .fw-quick-row
-  > .fw-quick-chip {
-  border-color: var(--border-strong) !important;
-  background: transparent !important;
-  color: var(--text-primary) !important;
-}
-
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  > .fw-quick-row
-  > .fw-quick-chip:hover,
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  > .fw-quick-row
-  > .fw-quick-chip:focus-visible {
-  border-color: var(--border-hover) !important;
-  background: transparent !important;
-  color: var(--text-primary) !important;
-}
-
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  > .fw-quick-row
-  > .fw-quick-chip.is-selected,
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  > .fw-quick-row
-  > .fw-quick-chip[aria-pressed="true"] {
-  border-color: var(--text-primary) !important;
-  background: var(--text-primary) !important;
-  color: var(--bg-primary) !important;
 }
 
 .fw-quick-chip:is(:hover, .is-active, [aria-pressed="true"], [data-active="true"]) {
@@ -237,6 +171,104 @@
 .fw-quick-end .filmwave-music-sort-button svg {
   width: 10px !important;
   height: 10px !important;
+}
+
+/* ─── Music filter option pills ────────────────────────────── */
+
+.fw-music-content-column .fw-filter-detail .fw-filter-option-list {
+  display: flex !important;
+  column-width: auto !important;
+  column-gap: 0 !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.fw-music-content-column .fw-filter-detail .fw-filter-option {
+  display: inline-flex !important;
+  width: auto !important;
+  min-height: 26px !important;
+  flex: 0 0 auto !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  break-inside: auto !important;
+  -webkit-column-break-inside: auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border-radius: 999px !important;
+  background: #151515 !important;
+  padding: 3px 12px !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-family: var(--font-aktiv-grotesk), sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease !important;
+}
+
+.fw-music-content-column .fw-filter-detail .fw-filter-option:hover,
+.fw-music-content-column .fw-filter-detail .fw-filter-option:focus-visible {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: #151515 !important;
+  color: #fff !important;
+}
+
+.fw-music-content-column .fw-filter-detail .fw-filter-option.is-selected,
+.fw-music-content-column
+  .fw-filter-detail
+  .fw-filter-option[aria-pressed="true"] {
+  border-color: #fff !important;
+  background: #fff !important;
+  color: #111 !important;
+  font-weight: 400 !important;
+}
+
+.fw-music-content-column .fw-filter-detail .fw-filter-option:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+}
+
+.fw-music-content-column .fw-filter-detail .fw-filter-option-check {
+  display: none !important;
+}
+
+:where(html.light, html[data-theme="light"])
+  .fw-music-content-column
+  .fw-filter-detail
+  .fw-filter-option {
+  border-color: transparent !important;
+  background: var(--bg-hover) !important;
+  color: var(--text-secondary) !important;
+}
+
+:where(html.light, html[data-theme="light"])
+  .fw-music-content-column
+  .fw-filter-detail
+  .fw-filter-option:hover,
+:where(html.light, html[data-theme="light"])
+  .fw-music-content-column
+  .fw-filter-detail
+  .fw-filter-option:focus-visible {
+  border-color: var(--border-strong) !important;
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+:where(html.light, html[data-theme="light"])
+  .fw-music-content-column
+  .fw-filter-detail
+  .fw-filter-option.is-selected,
+:where(html.light, html[data-theme="light"])
+  .fw-music-content-column
+  .fw-filter-detail
+  .fw-filter-option[aria-pressed="true"] {
+  border-color: var(--text-primary) !important;
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
 }
 
 /* ─── Music library alignment rail ────────────────────────── */
