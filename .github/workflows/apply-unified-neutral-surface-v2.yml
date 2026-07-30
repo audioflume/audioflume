@@ -111,55 +111,61 @@ jobs:
               "  background: var(--filmwave-neutral-surface);",
           )
 
-          replace_exact(
-              "packages/shared/styles/playlist-library.css",
-              """.playlists-page .playlist-create-card {
-  aspect-ratio: 1 / 1 !important;
-  min-height: 0 !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: 1px dashed var(--border) !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 16px !important;
-  text-align: center !important;
-}""",
-              """.playlists-page .playlist-create-card {
-  aspect-ratio: 1 / 1 !important;
-  min-height: 0 !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: 1px dashed var(--border) !important;
-  border-radius: 0 !important;
-  background: var(--filmwave-neutral-surface) !important;
-  padding: 16px !important;
-  text-align: center !important;
-}""",
+          playlist_card_old = (
+              ".playlists-page .playlist-create-card {\n"
+              "  aspect-ratio: 1 / 1 !important;\n"
+              "  min-height: 0 !important;\n"
+              "  align-items: center !important;\n"
+              "  justify-content: center !important;\n"
+              "  border: 1px dashed var(--border) !important;\n"
+              "  border-radius: 0 !important;\n"
+              "  background: transparent !important;\n"
+              "  padding: 16px !important;\n"
+              "  text-align: center !important;\n"
+              "}"
+          )
+          playlist_card_new = playlist_card_old.replace(
+              "  background: transparent !important;",
+              "  background: var(--filmwave-neutral-surface) !important;",
           )
           replace_exact(
               "packages/shared/styles/playlist-library.css",
-              """.playlists-page .playlist-create-card:hover {
-  border-color: var(--border-hover) !important;
-  background: transparent !important;
-}""",
-              """.playlists-page .playlist-create-card:hover {
-  border-color: var(--border-hover) !important;
-  background: var(--filmwave-neutral-surface) !important;
-}""",
+              playlist_card_old,
+              playlist_card_new,
+          )
+
+          playlist_hover_old = (
+              ".playlists-page .playlist-create-card:hover {\n"
+              "  border-color: var(--border-hover) !important;\n"
+              "  background: transparent !important;\n"
+              "}"
+          )
+          playlist_hover_new = playlist_hover_old.replace(
+              "  background: transparent !important;",
+              "  background: var(--filmwave-neutral-surface) !important;",
+          )
+          replace_exact(
+              "packages/shared/styles/playlist-library.css",
+              playlist_hover_old,
+              playlist_hover_new,
+          )
+
+          playlist_row_old = (
+              ".playlists-page .playlist-index .playlist-create-row.playlist-index-row {\n"
+              "  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;\n"
+              "  width: 100% !important;\n"
+              "  text-align: left !important;\n"
+              "}"
+          )
+          playlist_row_new = playlist_row_old.replace(
+              "  text-align: left !important;",
+              "  background: var(--filmwave-neutral-surface) !important;\n"
+              "  text-align: left !important;",
           )
           replace_exact(
               "apps/web/app/playlists/playlists-tabs-rail.css",
-              """.playlists-page .playlist-index .playlist-create-row.playlist-index-row {
-  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
-  width: 100% !important;
-  text-align: left !important;
-}""",
-              """.playlists-page .playlist-index .playlist-create-row.playlist-index-row {
-  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
-  width: 100% !important;
-  background: var(--filmwave-neutral-surface) !important;
-  text-align: left !important;
-}""",
+              playlist_row_old,
+              playlist_row_new,
           )
 
           for old in (
