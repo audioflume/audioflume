@@ -101,9 +101,6 @@ body:has(.discover-page-root)
 
 body:has(.discover-page-root)
   .discover-curated-playlist-section
-  [data-curated-playlist-image],
-body:has(.discover-page-root)
-  .discover-curated-playlist-section
   .discover-playlist-card.discover-card-skeleton,
 body:has(.discover-page-root) .discover-mood-image,
 body:has(.discover-page-root)
