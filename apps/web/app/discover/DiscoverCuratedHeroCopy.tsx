@@ -11,7 +11,6 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
-import SearchIcon from "@/components/icons/SearchIcon";
 
 type DiscoverCuratedHeroCopyProps = {
   showIntroCopy?: boolean;
@@ -157,13 +156,107 @@ export default function DiscoverCuratedHeroCopy({
             </div>
           </div>
 
-          <form className="discover-integrated-search" onSubmit={handleSubmit}>
-            <span
-              className="discover-integrated-search-icon"
-              aria-hidden="true"
-            >
-              <SearchIcon size={15} />
-            </span>
+          <style>{`
+            .discover-home-search {
+              display: grid;
+              width: min(calc(100% - 80px), 800px);
+              height: 68px;
+              grid-template-columns: minmax(0, 1fr) 58px;
+              align-items: center;
+              margin-top: clamp(38px, 3.5vw, 52px);
+              border: 0;
+              border-radius: 28px;
+              background: #fff;
+              box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+              pointer-events: auto;
+            }
+
+            .discover-home-search input {
+              width: 100%;
+              min-width: 0;
+              height: 100%;
+              border: 0;
+              outline: 0;
+              background: transparent;
+              color: #111;
+              padding: 0 12px 0 30px;
+              font-family: var(--font-aktiv-grotesk), sans-serif;
+              font-size: clamp(14px, 0.9vw, 17px);
+              font-weight: 400;
+            }
+
+            .discover-home-search input::placeholder {
+              color: rgba(17, 17, 17, 0.55);
+              opacity: 1;
+            }
+
+            .discover-home-search button {
+              display: inline-flex;
+              width: 40px;
+              height: 40px;
+              align-items: center;
+              justify-content: center;
+              justify-self: end;
+              margin-right: 12px;
+              padding: 0;
+              cursor: pointer;
+              border: 0;
+              border-radius: 999px;
+              background: #f2f2f2;
+              color: rgba(17, 17, 17, 0.62);
+              font-family: var(--font-aktiv-grotesk), sans-serif;
+              font-size: 22px;
+              line-height: 1;
+              transition:
+                background-color 150ms ease,
+                color 150ms ease,
+                transform 150ms ease;
+            }
+
+            .discover-home-search button:hover,
+            .discover-home-search button:focus-visible {
+              background: #e4e4e4;
+              color: #111;
+              transform: translateX(1px);
+            }
+
+            .discover-home-search button:focus-visible {
+              outline: 1px solid rgba(17, 17, 17, 0.35);
+              outline-offset: 3px;
+            }
+
+            @media (max-width: 980px) {
+              .discover-home-search {
+                width: calc(100% - 64px);
+                margin-top: 34px;
+              }
+            }
+
+            @media (max-width: 720px) {
+              .discover-home-search {
+                width: calc(100% - 40px);
+                height: 58px;
+                grid-template-columns: minmax(0, 1fr) 52px;
+                margin-right: auto;
+                margin-left: auto;
+                border-radius: 23px;
+              }
+
+              .discover-home-search input {
+                padding-left: 22px;
+                font-size: 14px;
+              }
+
+              .discover-home-search button {
+                width: 36px;
+                height: 36px;
+                margin-right: 9px;
+                font-size: 20px;
+              }
+            }
+          `}</style>
+
+          <form className="discover-home-search" onSubmit={handleSubmit}>
             <input
               type="search"
               value={search}
@@ -171,8 +264,8 @@ export default function DiscoverCuratedHeroCopy({
               placeholder="Search music library"
               aria-label="Search music library"
             />
-            <button type="submit">
-              <span>Search</span>
+            <button type="submit" aria-label="Search music library">
+              <span aria-hidden="true">→</span>
             </button>
           </form>
 
