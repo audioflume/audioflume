@@ -244,7 +244,7 @@ body:has(.discover-page-root)
 }
 
 body:has(.discover-page-root) .discover-mood-section + .discover-curated-playlist-section {
-  margin-top: clamp(96px, 9vw, 144px) !important;
+  margin-top: clamp(64px, 6vw, 96px) !important;
 }
 
 body:has(.discover-page-root) .discover-section {
