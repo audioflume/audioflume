@@ -37,6 +37,49 @@ body:has(.filmwave-music-player):has(.discover-category-filter-panel)
   );
 }
 
+.discover-template-shell.is-discover-route:not(
+    :has(.discover-hero-last-viewed-section)
+  ) {
+  --discover-integrated-hero-height: clamp(
+    370px,
+    calc(49svh - 100px),
+    450px
+  );
+}
+
+body:has(.filmwave-music-player)
+  .discover-template-shell.is-discover-route:not(
+    :has(.discover-hero-last-viewed-section)
+  ) {
+  --discover-integrated-hero-height: clamp(
+    370px,
+    calc(49svh - var(--filmwave-player-height, 72px) - 100px),
+    450px
+  );
+}
+
+body:has(.discover-category-filter-panel)
+  .discover-template-shell.is-discover-route:not(
+    :has(.discover-hero-last-viewed-section)
+  ) {
+  --discover-integrated-hero-height: clamp(
+    520px,
+    calc(64svh - 100px),
+    610px
+  );
+}
+
+body:has(.filmwave-music-player):has(.discover-category-filter-panel)
+  .discover-template-shell.is-discover-route:not(
+    :has(.discover-hero-last-viewed-section)
+  ) {
+  --discover-integrated-hero-height: clamp(
+    520px,
+    calc(64svh - var(--filmwave-player-height, 72px) - 100px),
+    610px
+  );
+}
+
 body:has(.discover-page-root)
   .discover-template-shell.is-discover-route
   .discover-hero {
@@ -49,6 +92,13 @@ body:has(.discover-page-root)
   padding-bottom: clamp(100px, 11vh, 125px);
 }
 
+.discover-template-shell.is-discover-route:not(
+    :has(.discover-hero-last-viewed-section)
+  )
+  .discover-integrated-hero {
+  padding-bottom: 0;
+}
+
 .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
   position: absolute;
   top: var(--discover-integrated-hero-height);
@@ -57,6 +107,13 @@ body:has(.discover-page-root)
   z-index: 5;
   padding: 0 var(--discover-editorial-gutter);
   transform: translateY(-100%);
+}
+
+.discover-template-shell.is-discover-route
+  > .discover-hero-last-viewed:not(
+    :has(.discover-hero-last-viewed-section)
+  ) {
+  display: none;
 }
 
 body:has(.discover-page-root) .discover-category-hero-controls {
@@ -178,8 +235,58 @@ body:has(.discover-page-root)
     );
   }
 
+  .discover-template-shell.is-discover-route:not(
+      :has(.discover-hero-last-viewed-section)
+    ) {
+    --discover-integrated-hero-height: clamp(
+      470px,
+      calc(72svh - 100px),
+      590px
+    );
+  }
+
+  body:has(.filmwave-music-player)
+    .discover-template-shell.is-discover-route:not(
+      :has(.discover-hero-last-viewed-section)
+    ) {
+    --discover-integrated-hero-height: clamp(
+      470px,
+      calc(72svh - var(--filmwave-player-height, 72px) - 100px),
+      590px
+    );
+  }
+
+  body:has(.discover-category-filter-panel)
+    .discover-template-shell.is-discover-route:not(
+      :has(.discover-hero-last-viewed-section)
+    ) {
+    --discover-integrated-hero-height: clamp(
+      590px,
+      calc(82svh - 100px),
+      710px
+    );
+  }
+
+  body:has(.filmwave-music-player):has(.discover-category-filter-panel)
+    .discover-template-shell.is-discover-route:not(
+      :has(.discover-hero-last-viewed-section)
+    ) {
+    --discover-integrated-hero-height: clamp(
+      590px,
+      calc(82svh - var(--filmwave-player-height, 72px) - 100px),
+      710px
+    );
+  }
+
   .discover-template-shell.is-discover-route .discover-integrated-hero {
     padding-bottom: 115px;
+  }
+
+  .discover-template-shell.is-discover-route:not(
+      :has(.discover-hero-last-viewed-section)
+    )
+    .discover-integrated-hero {
+    padding-bottom: 0;
   }
 
   .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
