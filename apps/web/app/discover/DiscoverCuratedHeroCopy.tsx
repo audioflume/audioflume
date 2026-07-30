@@ -211,7 +211,11 @@ export default function DiscoverCuratedHeroCopy({
         </>
       ) : (
         <div className="discover-category-hero-controls">
-          <form className="discover-category-search" onSubmit={handleSubmit}>
+          <form
+            className="discover-category-search"
+            style={{ marginTop: "10px" }}
+            onSubmit={handleSubmit}
+          >
             <input
               type="search"
               value={search}

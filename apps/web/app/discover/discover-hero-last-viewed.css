@@ -60,7 +60,7 @@ body:has(.discover-page-root)
 }
 
 body:has(.discover-page-root) .discover-content {
-  padding-top: 24px;
+  padding-top: 12px;
 }
 
 .discover-hero-last-viewed-section {
@@ -171,6 +171,6 @@ body:has(.discover-page-root)
   }
 
   body:has(.discover-page-root) .discover-content {
-    padding-top: 20px;
+    padding-top: 12px;
   }
 }
