@@ -254,18 +254,28 @@ export default function DiscoverHeaderScrollState() {
           align-self: center !important;
           cursor: pointer;
           border: 0;
-          background: #111;
+          background: #191919;
           color: #fff;
           font-family: inherit;
           font-size: 12px;
           font-weight: 500;
           margin: 0 10px !important;
           padding: 0 20px;
-          transition: opacity 150ms ease;
+          transition:
+            background-color 150ms ease,
+            color 150ms ease;
+        }
+
+        html.light .discover-hero-search .discover-hero-search-submit,
+        html[data-theme="light"]
+          .discover-hero-search
+          .discover-hero-search-submit {
+          background: #e4e4e4;
         }
 
         .discover-hero-search .discover-hero-search-submit:hover {
-          opacity: 0.82;
+          background: #fff;
+          color: #0d0d0d;
         }
 
         body:has(.discover-page-root)
