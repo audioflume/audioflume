@@ -135,7 +135,10 @@ export default function DiscoverCuratedHeroCopy({
     <section className="discover-integrated-hero" aria-label="Discover music">
       {showIntroCopy ? (
         <>
-          <div className="curated-video-hero discover-curated-hero-copy-shell">
+          <div
+            className="curated-video-hero discover-curated-hero-copy-shell"
+            hidden
+          >
             <div className="curated-video-hero-content discover-curated-hero-copy">
               <h1>Made for Film</h1>
 
