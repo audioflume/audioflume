@@ -1,0 +1,60 @@
+name: Apply Discover title and row gap
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/apply-discover-title-row-gap.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply exact source changes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path("apps/web/app/discover/layout.tsx"): (
+                  "--discover-playlist-card-title-font-size: 17px;",
+                  "--discover-playlist-card-title-font-size: 16.5px;",
+              ),
+              Path("apps/web/components/curated/CuratedPlaylistCard.module.css"): (
+                  "font-size: var(--discover-playlist-card-title-font-size, 17px);",
+                  "font-size: var(--discover-playlist-card-title-font-size, 16.5px);",
+              ),
+              Path("apps/web/app/discover/discover-page.css"): (
+                  "row-gap: clamp(30px, 3vw, 46px);",
+                  "row-gap: clamp(22px, 2vw, 32px);",
+              ),
+          }
+
+          for path, (old, new) in replacements.items():
+              content = path.read_text()
+              count = content.count(old)
+              if count != 1:
+                  raise SystemExit(f"Expected exactly one match in {path}, found {count}")
+              path.write_text(content.replace(old, new, 1))
+          PY
+
+      - name: Remove temporary workflow and commit
+        run: |
+          rm .github/workflows/apply-discover-title-row-gap.yml
+          git config user.name "filmwave-webmaster"
+          git config user.email "actions@github.com"
+          git add apps/web/app/discover/layout.tsx \
+            apps/web/components/curated/CuratedPlaylistCard.module.css \
+            apps/web/app/discover/discover-page.css \
+            .github/workflows/apply-discover-title-row-gap.yml
+          git commit -m "Refine Discover card titles and grid spacing"
+          git push origin main
