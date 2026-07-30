@@ -4,7 +4,7 @@ const DISCOVER_LAYOUT_STYLE = `
   body:has(.discover-page-root) {
     --discover-page-gutter: clamp(28px, 5.2vw, 82px);
     --discover-playlist-card-title-font-family: var(--font-aktiv-grotesk), sans-serif;
-    --discover-playlist-card-title-font-size: 17px;
+    --discover-playlist-card-title-font-size: 16.5px;
     --discover-playlist-card-title-font-weight: 300;
     --discover-playlist-card-title-letter-spacing: -0.035em;
     --discover-playlist-card-title-line-height: 1.25;

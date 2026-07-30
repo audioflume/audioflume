@@ -283,7 +283,7 @@ body:has(.discover-page-root) .discover-section-heading p {
 body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   column-gap: 12px;
-  row-gap: clamp(30px, 3vw, 46px);
+  row-gap: clamp(22px, 2vw, 32px);
 }
 
 body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-card-shell:nth-child(n + 10) {
