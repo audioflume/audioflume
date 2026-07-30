@@ -405,7 +405,7 @@
 }
 
 /* Shared main playlist artwork radius across playlist detail routes. */
-.playlist-detail-cover,
-.community-detail-cover {
+html body .playlist-detail-page .playlist-detail-cover,
+html body .community-detail-page .community-detail-cover {
   border-radius: 6px !important;
 }
