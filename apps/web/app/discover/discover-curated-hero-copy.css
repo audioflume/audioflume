@@ -3,10 +3,6 @@
   --discover-integrated-hero-height: clamp(560px, 78vh, 820px);
 }
 
-.discover-template-shell.is-discover-route {
-  --discover-integrated-hero-height: 100svh;
-}
-
 body:has(.discover-page-root) .discover-template-shell .discover-hero {
   height: var(--discover-integrated-hero-height);
   min-height: var(--discover-integrated-hero-height);
