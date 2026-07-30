@@ -33,41 +33,37 @@ jobs:
           header_path = Path("apps/web/components/Header.tsx")
           header = header_path.read_text()
 
-          header = replace_once(
-              header,
-              '''  const headerClassName = [
+          header_replacements = [
+              (
+                  '''  const headerClassName = [
     "filmwave-web-header",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
   ]''',
-              '''  const headerClassName = [
+                  '''  const headerClassName = [
     "filmwave-web-header",
     pathname === "/discover" ? "is-discover-route" : "",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
   ]''',
-              "Discover header route class",
-          )
-
-          header = replace_once(
-              header,
-              '''        .filmwave-web-header.is-solid {
+                  "Discover header route class",
+              ),
+              (
+                  '''        .filmwave-web-header.is-solid {
           --filmwave-chrome-surface: var(--bg-primary);''',
-              '''        .filmwave-web-header.is-solid,
+                  '''        .filmwave-web-header.is-solid,
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent {
           --filmwave-chrome-surface: var(--bg-primary);''',
-              "solid header surface selector",
-          )
-
-          header = replace_once(
-              header,
-              '''        .filmwave-web-header.is-solid .filmwave-header-tonal-wordmark,
+                  "solid header surface selector",
+              ),
+              (
+                  '''        .filmwave-web-header.is-solid .filmwave-header-tonal-wordmark,
         .filmwave-web-header.is-solid .filmwave-header-logo-action,
         .filmwave-web-header.is-solid .filmwave-header-actions {
           color: var(--text-primary) !important;
         }''',
-              '''        .filmwave-web-header.is-solid .filmwave-header-tonal-wordmark,
+                  '''        .filmwave-web-header.is-solid .filmwave-header-tonal-wordmark,
         .filmwave-web-header.is-solid .filmwave-header-logo-action,
         .filmwave-web-header.is-solid .filmwave-header-actions,
         :where(html.light, html[data-theme="light"])
@@ -81,32 +77,28 @@ jobs:
           .filmwave-header-actions {
           color: var(--text-primary) !important;
         }''',
-              "solid header logo colors",
-          )
-
-          header = replace_once(
-              header,
-              '''        .filmwave-web-header.is-solid .filmwave-header-nav-link {
+                  "solid header logo colors",
+              ),
+              (
+                  '''        .filmwave-web-header.is-solid .filmwave-header-nav-link {
           color: var(--text-secondary) !important;
         }''',
-              '''        .filmwave-web-header.is-solid .filmwave-header-nav-link,
+                  '''        .filmwave-web-header.is-solid .filmwave-header-nav-link,
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent
           .filmwave-header-nav-link {
           color: var(--text-secondary) !important;
         }''',
-              "solid header nav colors",
-          )
-
-          header = replace_once(
-              header,
-              '''        .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
+                  "solid header nav colors",
+              ),
+              (
+                  '''        .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
         .filmwave-web-header.is-solid .filmwave-header-nav-link.is-active {
           background: transparent !important;
           background-color: transparent !important;
           color: var(--text-primary) !important;
         }''',
-              '''        .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
+                  '''        .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
         .filmwave-web-header.is-solid .filmwave-header-nav-link.is-active,
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent
@@ -118,126 +110,242 @@ jobs:
           background-color: transparent !important;
           color: var(--text-primary) !important;
         }''',
-              "solid header active nav colors",
-          )
+                  "solid header active nav colors",
+              ),
+          ]
+
+          for old, new, label in header_replacements:
+              header = replace_once(header, old, new, label)
 
           header_path.write_text(header)
 
           hero_path = Path("apps/web/app/discover/discover-curated-hero-copy.css")
           hero = hero_path.read_text()
 
-          replacements = [
+          hero_replacements = [
               (
-                  '''  color: #111;
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-hero-controls {
+  color: #111;
 }''',
-                  '''  color: var(--text-primary);
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-hero-controls {
+  color: var(--text-primary);
 }''',
                   "light category controls text",
               ),
               (
-                  '''  background: #f1f1f1;
-  box-shadow: 0 18px 42px rgba(17, 17, 17, 0.06);''',
-                  '''  background: var(--bg-hover-strong);
-  box-shadow: none;''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search {
+  background: #f1f1f1;
+  box-shadow: 0 18px 42px rgba(17, 17, 17, 0.06);
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search {
+  background: var(--bg-hover-strong);
+  box-shadow: none;
+}''',
                   "light search surface",
               ),
               (
-                  '''  color: #111;
-}
-
-:where(html.light, html[data-theme="light"])
+                  ''':where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
-  .discover-category-search input::placeholder {''',
-                  '''  color: var(--text-primary);
-}
-
-:where(html.light, html[data-theme="light"])
+  .discover-category-search input {
+  color: #111;
+}''',
+                  ''':where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
-  .discover-category-search input::placeholder {''',
+  .discover-category-search input {
+  color: var(--text-primary);
+}''',
                   "light search input text",
               ),
               (
-                  '''  color: rgba(17, 17, 17, 0.48);''',
-                  '''  color: var(--text-muted);''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search input::placeholder {
+  color: rgba(17, 17, 17, 0.48);
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search input::placeholder {
+  color: var(--text-muted);
+}''',
                   "light search placeholder",
               ),
               (
-                  '''  background: #e4e4e4;
-  color: rgba(17, 17, 17, 0.56);''',
-                  '''  background: var(--bg-control-hover);
-  color: var(--text-secondary);''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search button {
+  background: #e4e4e4;
+  color: rgba(17, 17, 17, 0.56);
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search button {
+  background: var(--bg-control-hover);
+  color: var(--text-secondary);
+}''',
                   "light search button",
               ),
               (
-                  '''  background: #d8d8d8;
-  color: #111;''',
-                  '''  background: var(--icon-button-hover);
-  color: var(--text-primary);''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search button:hover,
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search button:focus-visible {
+  background: #d8d8d8;
+  color: #111;
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search button:hover,
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search button:focus-visible {
+  background: var(--icon-button-hover);
+  color: var(--text-primary);
+}''',
                   "light search button hover",
               ),
               (
-                  '''  outline-color: rgba(17, 17, 17, 0.62);''',
-                  '''  outline-color: var(--border-strong);''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search button:focus-visible {
+  outline-color: rgba(17, 17, 17, 0.62);
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-search button:focus-visible {
+  outline-color: var(--border-strong);
+}''',
                   "light search focus",
               ),
               (
-                  '''  color: #111;
-}
-
-:where(html.light, html[data-theme="light"])
+                  ''':where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
-  .discover-category-filter-button {''',
-                  '''  color: var(--text-primary);
-}
-
-:where(html.light, html[data-theme="light"])
+  .discover-category-browser h2 {
+  color: #111;
+}''',
+                  ''':where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
-  .discover-category-filter-button {''',
+  .discover-category-browser h2 {
+  color: var(--text-primary);
+}''',
                   "light category heading",
               ),
               (
-                  '''  border-color: rgba(17, 17, 17, 0.2);
-  color: rgba(17, 17, 17, 0.9);''',
-                  '''  border-color: var(--border-strong);
-  color: var(--text-primary);''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button {
+  border-color: rgba(17, 17, 17, 0.2);
+  color: rgba(17, 17, 17, 0.9);
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}''',
                   "light filter controls",
               ),
               (
-                  '''  border-color: rgba(17, 17, 17, 0.42);''',
-                  '''  border-color: var(--border-hover);''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button:hover,
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button:focus-visible,
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button.has-selection {
+  border-color: rgba(17, 17, 17, 0.42);
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button:hover,
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button:focus-visible,
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button.has-selection {
+  border-color: var(--border-hover);
+}''',
                   "light filter control hover",
               ),
               (
-                  '''  border-color: #111;
-  background: #111;
-  color: #fff;''',
-                  '''  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);''',
-                  "light open filter control",
-              ),
-              (
-                  '''  border-color: transparent;
-  background: #eeeeee;
-  color: rgba(17, 17, 17, 0.82);''',
-                  '''  border-color: transparent;
-  background: var(--bg-hover);
-  color: var(--text-secondary);''',
-                  "light filter pills",
-              ),
-              (
-                  '''  border-color: rgba(17, 17, 17, 0.16);
-  color: #111;''',
-                  '''  border-color: var(--border-strong);
-  color: var(--text-primary);''',
-                  "light filter pill hover",
-              ),
-              (
-                  '''  border-color: #111;
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button.is-open {
+  border-color: #111;
   background: #111;
   color: #fff;
 }''',
-                  '''  border-color: var(--text-primary);
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button.is-open {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}''',
+                  "light open filter control",
+              ),
+              (
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill {
+  border-color: transparent;
+  background: #eeeeee;
+  color: rgba(17, 17, 17, 0.82);
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill {
+  border-color: transparent;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}''',
+                  "light filter pills",
+              ),
+              (
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill:hover,
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill:focus-visible {
+  border-color: rgba(17, 17, 17, 0.16);
+  color: #111;
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill:hover,
+:where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill:focus-visible {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}''',
+                  "light filter pill hover",
+              ),
+              (
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill.is-selected {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill.is-selected {
+  border-color: var(--text-primary);
   background: var(--text-primary);
   color: var(--bg-primary);
 }''',
@@ -245,7 +353,7 @@ jobs:
               ),
           ]
 
-          for old, new, label in replacements:
+          for old, new, label in hero_replacements:
               hero = replace_once(hero, old, new, label)
 
           hero_path.write_text(hero)
@@ -253,18 +361,26 @@ jobs:
           last_path = Path("apps/web/app/discover/discover-hero-last-viewed.css")
           last = last_path.read_text()
 
-          last = replace_once(
-              last,
-              '''  background: #000;
+          last_replacements = [
+              (
+                  '''body:has(.discover-page-root)
+  .discover-template-shell.is-discover-route
+  .discover-hero {
+  height: var(--discover-integrated-hero-height);
+  min-height: var(--discover-integrated-hero-height);
+  background: #000;
 }''',
-              '''  background: transparent;
+                  '''body:has(.discover-page-root)
+  .discover-template-shell.is-discover-route
+  .discover-hero {
+  height: var(--discover-integrated-hero-height);
+  min-height: var(--discover-integrated-hero-height);
+  background: transparent;
 }''',
-              "transparent Discover hero surface",
-          )
-
-          last = replace_once(
-              last,
-              ''':where(html.light, html[data-theme="light"])
+                  "transparent Discover hero surface",
+              ),
+              (
+                  ''':where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-template-shell.is-discover-route
   .discover-hero {
@@ -272,31 +388,47 @@ jobs:
 }
 
 ''',
-              '''''',
-              "remove light hero background",
-          )
-
-          last = replace_once(
-              last,
-              '''  color: #111;
+                  '''''',
+                  "remove light hero background",
+              ),
+              (
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-hero-last-viewed-heading h2 {
+  color: #111;
 }''',
-              '''  color: var(--text-primary);
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-hero-last-viewed-heading h2 {
+  color: var(--text-primary);
 }''',
-              "light Last Viewed heading",
-          )
-
-          last = replace_once(
-              last,
-              '''  --bg-hover: rgba(17, 17, 17, 0.055);
+                  "light Last Viewed heading",
+              ),
+              (
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-hero-last-viewed
+  .recent-playlist-card-list.is-hero {
+  --bg-hover: rgba(17, 17, 17, 0.055);
   --bg-elevated: rgba(17, 17, 17, 0.1);
   --text-primary: #111;
-  --text-muted: rgba(17, 17, 17, 0.45);''',
-              '''  --bg-hover: var(--bg-hover-strong);
+  --text-muted: rgba(17, 17, 17, 0.45);
+}''',
+                  ''':where(html.light, html[data-theme="light"])
+  body:has(.discover-page-root)
+  .discover-hero-last-viewed
+  .recent-playlist-card-list.is-hero {
+  --bg-hover: var(--bg-hover-strong);
   --bg-elevated: var(--bg-control);
   --text-primary: #111111;
-  --text-muted: rgba(17, 17, 17, 0.42);''',
-              "light Last Viewed cards",
-          )
+  --text-muted: rgba(17, 17, 17, 0.42);
+}''',
+                  "light Last Viewed cards",
+              ),
+          ]
+
+          for old, new, label in last_replacements:
+              last = replace_once(last, old, new, label)
 
           last_path.write_text(last)
           PY
