@@ -414,7 +414,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   cursor: pointer;
   border: 1px solid transparent;
   border-radius: 999px;
-  background: #151515;
+  background: var(--filmwave-neutral-surface);
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 12px;
@@ -528,7 +528,6 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   body:has(.discover-page-root)
   .discover-category-filter-pill {
   border-color: transparent;
-  background: var(--bg-hover);
   color: var(--text-secondary);
 }
 
