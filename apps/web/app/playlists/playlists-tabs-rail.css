@@ -330,6 +330,7 @@ section.curated-playlists-page-layer {
 .playlists-page .playlist-index .playlist-create-row.playlist-index-row {
   grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
   width: 100% !important;
+  background: var(--filmwave-neutral-surface) !important;
   text-align: left !important;
 }
 

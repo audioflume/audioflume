@@ -257,14 +257,14 @@
   justify-content: center !important;
   border: 1px dashed var(--border) !important;
   border-radius: 0 !important;
-  background: transparent !important;
+  background: var(--filmwave-neutral-surface) !important;
   padding: 16px !important;
   text-align: center !important;
 }
 
 .playlists-page .playlist-create-card:hover {
   border-color: var(--border-hover) !important;
-  background: transparent !important;
+  background: var(--filmwave-neutral-surface) !important;
 }
 
 .playlists-page .playlist-create-card .playlist-create-copy small {

@@ -240,7 +240,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   align-items: center;
   border: 0;
   border-radius: 28px;
-  background: #111;
+  background: var(--filmwave-neutral-surface);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
 }
 

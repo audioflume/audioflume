@@ -5,7 +5,7 @@
 }
 
 .recent-playlist-card-list.is-hero {
-  --bg-hover: rgba(245, 248, 255, 0.055);
+  --bg-hover: var(--filmwave-neutral-surface);
   --bg-elevated: rgba(245, 248, 255, 0.1);
   --text-primary: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.3);

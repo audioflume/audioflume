@@ -346,7 +346,7 @@ function ReadyToCutSongCard({ song, index }: { song: Song; index: number }) {
   return (
     <article
       {...cardPlayProps}
-      className="group flex h-[54px] cursor-pointer items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
+      className="group flex h-[54px] cursor-pointer items-center gap-2 bg-[var(--filmwave-neutral-surface)] px-2 transition hover:bg-[var(--filmwave-neutral-surface)] focus:outline-none focus-visible:bg-[var(--filmwave-neutral-surface)]"
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
       <ReadyToCutCoverImage song={song} index={index} />

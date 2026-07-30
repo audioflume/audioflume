@@ -194,7 +194,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ra
   flex: 0 0 auto;
   align-items: center;
   border-radius: 0;
-  background: color-mix(in srgb, var(--bg-hover) 38%, transparent);
+  background: var(--filmwave-neutral-surface);
   margin: 0 0 6px;
   padding: 10px 4px 13px 12px;
   order: 0;
@@ -211,7 +211,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
   cursor: pointer;
   border: 0;
   border-radius: 0;
-  background: color-mix(in srgb, var(--bg-hover) 38%, transparent);
+  background: var(--filmwave-neutral-surface);
   margin: 0 0 6px;
   padding: 10px 4px 13px 12px;
   color: var(--text-primary);
@@ -229,7 +229,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ai-linkmatch:hover {
-  background: color-mix(in srgb, var(--bg-hover) 62%, transparent);
+  background: var(--filmwave-neutral-surface);
 }
 
 :where(html.light, html[data-theme="light"])

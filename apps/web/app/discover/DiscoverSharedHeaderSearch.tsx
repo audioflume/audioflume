@@ -418,11 +418,7 @@ export default function DiscoverHeaderScrollState() {
         .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible),
         .discover-curated-playlist-cta-mount
           > a:not(:hover):not(:focus-visible) {
-          background: color-mix(
-            in srgb,
-            var(--bg-primary) 96%,
-            var(--text-primary) 4%
-          );
+          background: var(--filmwave-neutral-surface);
         }
 
         body:has(.discover-page-root)
