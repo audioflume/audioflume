@@ -11,15 +11,15 @@ body:has(.filmwave-music-player)
 
 .discover-template-shell.is-discover-route {
   position: relative;
-  --discover-integrated-hero-height: clamp(620px, 82svh, 820px);
+  --discover-integrated-hero-height: clamp(580px, 76svh, 760px);
 }
 
 body:has(.filmwave-music-player)
   .discover-template-shell.is-discover-route {
   --discover-integrated-hero-height: clamp(
-    620px,
-    calc(82svh - var(--filmwave-player-height, 72px)),
-    820px
+    580px,
+    calc(76svh - var(--filmwave-player-height, 72px)),
+    760px
   );
 }
 
@@ -29,7 +29,7 @@ body:has(.filmwave-music-player)
 }
 
 .discover-template-shell.is-discover-route .discover-integrated-hero {
-  padding-bottom: clamp(125px, 15vh, 155px);
+  padding-bottom: clamp(110px, 13vh, 140px);
 }
 
 .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
@@ -68,20 +68,20 @@ body:has(.filmwave-music-player)
 
 @media (max-width: 620px) {
   .discover-template-shell.is-discover-route {
-    --discover-integrated-hero-height: clamp(680px, 88svh, 820px);
+    --discover-integrated-hero-height: clamp(640px, 82svh, 760px);
   }
 
   body:has(.filmwave-music-player)
     .discover-template-shell.is-discover-route {
     --discover-integrated-hero-height: clamp(
-      680px,
-      calc(88svh - var(--filmwave-player-height, 72px)),
-      820px
+      640px,
+      calc(82svh - var(--filmwave-player-height, 72px)),
+      760px
     );
   }
 
   .discover-template-shell.is-discover-route .discover-integrated-hero {
-    padding-bottom: 135px;
+    padding-bottom: 125px;
   }
 
   .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
