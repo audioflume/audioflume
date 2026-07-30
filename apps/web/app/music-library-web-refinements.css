@@ -210,20 +210,31 @@
   display: none !important;
 }
 
+:is(
+  .filmwave-song-card,
+  .desktop-song-card,
+  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
+) {
+  --filmwave-song-card-hover-bg: var(--filmwave-neutral-surface) !important;
+}
+
 .fw-song-list .filmwave-song-card,
 .fw-song-list .desktop-song-card,
 .fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
   --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y) !important;
-  --filmwave-song-card-hover-bg: var(--filmwave-chrome-surface) !important;
 }
 
-.fw-song-list
-  :is(
-    .filmwave-song-card,
-    .desktop-song-card,
-    .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
-  ):is(:hover, .is-playing, .is-current, .is-active, [aria-current="true"], [data-active="true"]) {
-  background: var(--filmwave-chrome-surface) !important;
+:is(
+  .filmwave-song-card,
+  .desktop-song-card,
+  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
+):is(:hover, .is-playing, .is-current, .is-active, [aria-current="true"], [data-active="true"]) {
+  background: var(--filmwave-neutral-surface) !important;
+}
+
+.filmwave-song-play-overlay,
+.desktop-song-play-overlay {
+  background: transparent !important;
 }
 
 /* ─── Music hero/list spacing cleanup ─────────────────────── */
