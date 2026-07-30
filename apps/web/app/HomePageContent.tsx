@@ -140,7 +140,7 @@ function HomeSongs({
         className="discover-section-heading"
         style={{ alignItems: "baseline" }}
       >
-        <h2>Newly added tracks</h2>
+        <h2>Newly Added Tracks</h2>
 
         <Link
           href="/music"
@@ -225,7 +225,7 @@ function HomeProductionStyles({
   return (
     <section className="discover-section discover-production-section">
       <div className="discover-section-heading">
-        <h2>Browse by production style</h2>
+        <h2>Browse by Production Style</h2>
       </div>
 
       <div className="grid gap-[clamp(10px,1.25vw,18px)] sm:grid-cols-2 xl:grid-cols-4">
@@ -385,7 +385,7 @@ function ReadyToCutTracks({
         className="discover-section-heading"
         style={{ alignItems: "baseline" }}
       >
-        <h2>Ready-to-cut tracks</h2>
+        <h2>Ready-to-Cut Tracks</h2>
 
         <Link
           href="/music"
