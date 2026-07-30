@@ -190,8 +190,14 @@ body:has(.discover-page-root)
   > div:first-child,
 body:has(.discover-page-root)
   .discover-production-section
-  .discover-card-skeleton,
-body:has(.discover-page-root) .discover-staff-favorite-image,
+  .discover-card-skeleton {
+  border-radius: 0;
+}
+
+body:has(.discover-page-root) .discover-staff-favorite-image {
+  border-radius: 12px;
+}
+
 body:has(.discover-page-root)
   .discover-hero-last-viewed
   .recent-playlist-card-cover,
