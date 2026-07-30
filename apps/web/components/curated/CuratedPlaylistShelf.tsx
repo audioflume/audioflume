@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import CuratedPlaylistPlayButton from "./CuratedPlaylistPlayButton";
 import styles from "./CuratedPlaylistCard.module.css";
 
 export type CuratedPlaylistCardItem = Pick<
@@ -80,6 +81,12 @@ export function CuratedPlaylistCard({
             <h3>{playlist.name}</h3>
             <p>{formatSongCount(playlist.song_count)}</p>
           </Link>
+
+          <CuratedPlaylistPlayButton
+            playlistId={playlist.id}
+            playlistName={playlist.name}
+            className={styles.playButton}
+          />
         </div>
       </article>
     </div>
