@@ -1,0 +1,353 @@
+name: Apply Discover hero spacing and light theme
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/apply-discover-hero-theme-spacing.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update Discover hero styling
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(content: str, old: str, new: str, label: str) -> str:
+              count = content.count(old)
+              if count != 1:
+                  raise SystemExit(f"Expected one occurrence for {label}, found {count}")
+              return content.replace(old, new, 1)
+
+          hero_path = Path("apps/web/app/discover/discover-curated-hero-copy.css")
+          hero = hero_path.read_text()
+
+          hero = replace_once(
+              hero,
+              """.discover-category-filter-button {
+  display: inline-flex;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 15px;""",
+              """.discover-category-filter-button {
+  display: inline-flex;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 13px;""",
+              "desktop filter button sizing",
+          )
+
+          hero = replace_once(
+              hero,
+              """.discover-category-filter-pill {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 14px;""",
+              """.discover-category-filter-pill {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 12px;""",
+              "desktop filter pill sizing",
+          )
+
+          hero = replace_once(
+              hero,
+              """  .discover-category-filter-button {
+    height: 32px;
+    gap: 8px;
+    padding-right: 13px;
+    padding-left: 13px;
+    font-size: 11px;
+  }""",
+              """  .discover-category-filter-button {
+    height: 28px;
+    gap: 7px;
+    padding-right: 12px;
+    padding-left: 12px;
+    font-size: 11px;
+  }""",
+              "mobile filter button sizing",
+          )
+
+          hero = replace_once(
+              hero,
+              """  .discover-category-filter-pill {
+    min-height: 29px;
+    padding-right: 12px;
+    padding-left: 12px;
+    font-size: 11px;
+  }""",
+              """  .discover-category-filter-pill {
+    min-height: 26px;
+    padding-right: 11px;
+    padding-left: 11px;
+    font-size: 11px;
+  }""",
+              "mobile filter pill sizing",
+          )
+
+          light_theme = """:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-hero-controls {
+  color: #111;
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-search {
+  background: #f1f1f1;
+  box-shadow: 0 18px 42px rgba(17, 17, 17, 0.06);
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-search input {
+  color: #111;
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-search input::placeholder {
+  color: rgba(17, 17, 17, 0.48);
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-search button {
+  background: #e4e4e4;
+  color: rgba(17, 17, 17, 0.56);
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-search button:hover,
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-search button:focus-visible {
+  background: #d8d8d8;
+  color: #111;
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-search button:focus-visible {
+  outline-color: rgba(17, 17, 17, 0.62);
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-browser h2 {
+  color: #111;
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button {
+  border-color: rgba(17, 17, 17, 0.2);
+  color: rgba(17, 17, 17, 0.9);
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button:hover,
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button:focus-visible,
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button.has-selection {
+  border-color: rgba(17, 17, 17, 0.42);
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-button.is-open {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill {
+  border-color: transparent;
+  background: #eeeeee;
+  color: rgba(17, 17, 17, 0.82);
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill:hover,
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill:focus-visible {
+  border-color: rgba(17, 17, 17, 0.16);
+  color: #111;
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-category-filter-pill.is-selected {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+"""
+
+          hero = replace_once(
+              hero,
+              "@media (max-width: 980px) {",
+              light_theme + "@media (max-width: 980px) {",
+              "light theme insertion",
+          )
+
+          hero_path.write_text(hero)
+
+          last_viewed_path = Path("apps/web/app/discover/discover-hero-last-viewed.css")
+          last_viewed = last_viewed_path.read_text()
+
+          replacements = [
+              (
+                  "--discover-integrated-hero-height: clamp(540px, 56svh, 620px);",
+                  "--discover-integrated-hero-height: clamp(500px, 52svh, 580px);",
+                  "closed hero height",
+              ),
+              (
+                  """    540px,
+    calc(56svh - var(--filmwave-player-height, 72px)),
+    620px""",
+                  """    500px,
+    calc(52svh - var(--filmwave-player-height, 72px)),
+    580px""",
+                  "closed hero player height",
+              ),
+              (
+                  "--discover-integrated-hero-height: clamp(690px, 72svh, 780px);",
+                  "--discover-integrated-hero-height: clamp(650px, 68svh, 740px);",
+                  "expanded hero height",
+              ),
+              (
+                  """    690px,
+    calc(72svh - var(--filmwave-player-height, 72px)),
+    780px""",
+                  """    650px,
+    calc(68svh - var(--filmwave-player-height, 72px)),
+    740px""",
+                  "expanded hero player height",
+              ),
+              (
+                  "padding: 0 var(--discover-editorial-gutter) clamp(24px, 3vw, 40px);",
+                  "padding: 0 var(--discover-editorial-gutter) clamp(12px, 1.5vw, 20px);",
+                  "Last Viewed bottom spacing",
+              ),
+              (
+                  "width: min(100%, 1760px);",
+                  "width: min(100%, var(--discover-editorial-width));",
+                  "Last Viewed content width",
+              ),
+              (
+                  "--discover-integrated-hero-height: clamp(640px, 82svh, 760px);",
+                  "--discover-integrated-hero-height: clamp(600px, 76svh, 720px);",
+                  "mobile closed hero height",
+              ),
+              (
+                  """      640px,
+      calc(82svh - var(--filmwave-player-height, 72px)),
+      760px""",
+                  """      600px,
+      calc(76svh - var(--filmwave-player-height, 72px)),
+      720px""",
+                  "mobile closed player height",
+              ),
+              (
+                  "--discover-integrated-hero-height: clamp(760px, 92svh, 880px);",
+                  "--discover-integrated-hero-height: clamp(720px, 86svh, 840px);",
+                  "mobile expanded hero height",
+              ),
+              (
+                  """      760px,
+      calc(92svh - var(--filmwave-player-height, 72px)),
+      880px""",
+                  """      720px,
+      calc(86svh - var(--filmwave-player-height, 72px)),
+      840px""",
+                  "mobile expanded player height",
+              ),
+              (
+                  """    padding-right: 20px;
+    padding-bottom: 24px;
+    padding-left: 20px;""",
+                  """    padding-right: 20px;
+    padding-bottom: 14px;
+    padding-left: 20px;""",
+                  "mobile Last Viewed bottom spacing",
+              ),
+          ]
+
+          for old, new, label in replacements:
+              last_viewed = replace_once(last_viewed, old, new, label)
+
+          last_viewed_light = """:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-template-shell.is-discover-route
+  .discover-hero {
+  background: #f7f7f7;
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-hero-last-viewed-heading h2 {
+  color: #111;
+}
+
+:where(html.light, html[data-theme=\"light\"])
+  body:has(.discover-page-root)
+  .discover-hero-last-viewed
+  .recent-playlist-card-list.is-hero {
+  --bg-hover: rgba(17, 17, 17, 0.055);
+  --bg-elevated: rgba(17, 17, 17, 0.1);
+  --text-primary: #111;
+  --text-muted: rgba(17, 17, 17, 0.45);
+}
+
+"""
+
+          last_viewed = replace_once(
+              last_viewed,
+              "@media (max-width: 620px) {",
+              last_viewed_light + "@media (max-width: 620px) {",
+              "Last Viewed light theme insertion",
+          )
+
+          last_viewed_path.write_text(last_viewed)
+          PY
+
+      - name: Commit source changes and remove workflow
+        run: |
+          git config user.name "filmwave-webmaster"
+          git config user.email "filmwave-webmaster@users.noreply.github.com"
+          git rm .github/workflows/apply-discover-hero-theme-spacing.yml
+          git add apps/web/app/discover/discover-curated-hero-copy.css
+          git add apps/web/app/discover/discover-hero-last-viewed.css
+          git commit -m "Refine Discover hero spacing and light theme"
+          git push origin main
