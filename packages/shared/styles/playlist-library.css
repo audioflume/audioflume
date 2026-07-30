@@ -324,9 +324,20 @@
   letter-spacing: normal !important;
 }
 
-/* Shared section-title typography for Discover, Curated Playlists, and My Playlists. */
+/* Shared section-title typography for Discover and Curated Playlists. */
 .discover-section-heading h2,
-.curated-playlist-shelf-heading h2,
+.curated-playlist-shelf-heading h2 {
+  margin: 0 !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-aktiv-grotesk), sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 500 !important;
+  letter-spacing: -.035em !important;
+  line-height: 1 !important;
+  text-transform: none !important;
+}
+
+/* Preserve the existing section-title styling for My Playlists. */
 .discover-song-section .fw-song-list-title,
 .playlists-page .playlists-hero .playlists-title,
 .playlists-page .playlists-hero .playlists-title::before {
