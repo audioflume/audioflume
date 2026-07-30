@@ -59,10 +59,6 @@ body:has(.discover-page-root)
   transform: translateY(-100%);
 }
 
-body:has(.discover-page-root) .discover-page-root {
-  --discover-playlist-card-title-font-weight: 400;
-}
-
 body:has(.discover-page-root) .discover-category-hero-controls {
   padding-top: 14px;
 }

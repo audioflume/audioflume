@@ -95,7 +95,7 @@
   color: var(--text-primary);
   font-family: var(--discover-playlist-card-title-font-family, inherit);
   font-size: var(--discover-playlist-card-title-font-size, 16.5px);
-  font-weight: var(--discover-playlist-card-title-font-weight, 300);
+  font-weight: 400;
   letter-spacing: var(--discover-playlist-card-title-letter-spacing, normal);
   line-height: var(--discover-playlist-card-title-line-height, 1.25);
   text-overflow: ellipsis;
