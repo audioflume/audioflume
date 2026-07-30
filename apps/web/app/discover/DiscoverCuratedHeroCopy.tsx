@@ -147,6 +147,24 @@ export default function DiscoverCuratedHeroCopy({
           background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 2l8 8M10 2L2 10' stroke='%23111' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center / 12px 12px no-repeat;
           opacity: 0.72;
         }
+
+        :where(html:not(.light):not([data-theme="light"]))
+          .discover-integrated-hero {
+          --discover-search-arrow-background: #202020;
+          --discover-search-arrow-background-hover: #2b2b2b;
+        }
+
+        :where(html:not(.light):not([data-theme="light"]))
+          .discover-category-search button {
+          background: var(--discover-search-arrow-background);
+        }
+
+        :where(html:not(.light):not([data-theme="light"]))
+          .discover-category-search button:hover,
+        :where(html:not(.light):not([data-theme="light"]))
+          .discover-category-search button:focus-visible {
+          background: var(--discover-search-arrow-background-hover);
+        }
       `}</style>
 
       {showIntroCopy ? (
@@ -261,7 +279,7 @@ export default function DiscoverCuratedHeroCopy({
 
             :where(html:not(.light):not([data-theme="light"]))
               .discover-home-search button {
-              background: #191919;
+              background: var(--discover-search-arrow-background);
               color: rgba(255, 255, 255, 0.62);
             }
 
@@ -269,7 +287,7 @@ export default function DiscoverCuratedHeroCopy({
               .discover-home-search button:hover,
             :where(html:not(.light):not([data-theme="light"]))
               .discover-home-search button:focus-visible {
-              background: #242424;
+              background: var(--discover-search-arrow-background-hover);
               color: #fff;
             }
 
