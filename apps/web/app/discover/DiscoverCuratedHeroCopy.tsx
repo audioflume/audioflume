@@ -238,6 +238,7 @@ export default function DiscoverCuratedHeroCopy({
                     key={group.id}
                     type="button"
                     className={`discover-category-filter-button${isOpen ? " is-open" : ""}${hasSelection ? " has-selection" : ""}`}
+                    style={{ height: "22px" }}
                     aria-expanded={isOpen}
                     aria-controls={panelId}
                     onClick={() =>
@@ -258,6 +259,7 @@ export default function DiscoverCuratedHeroCopy({
               <button
                 type="button"
                 className="discover-category-filter-button is-future"
+                style={{ height: "22px" }}
                 disabled
                 title="Style filters coming soon"
               >
