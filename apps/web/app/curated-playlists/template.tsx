@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 import CuratedOutroMount from "./CuratedOutroMount";
-import CuratedVideoHero from "./CuratedVideoHero";
 import "../discover/discover-reference-layout.css";
-import "./curated-video-hero.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
@@ -35,6 +33,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
+    padding-top: calc(var(--filmwave-header-height, 75px) + 40px) !important;
     padding-bottom: 0;
   }
 
@@ -232,7 +231,6 @@ export default function CuratedPlaylistsTemplate({
   return (
     <>
       <style>{CURATED_LANDING_CARD_RATIO_STYLE}</style>
-      <CuratedVideoHero />
       {children}
       <CuratedOutroMount />
     </>
