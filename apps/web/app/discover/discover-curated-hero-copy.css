@@ -471,8 +471,8 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-search button {
-  background: var(--bg-control-hover);
-  color: var(--text-secondary);
+  background: #e4e4e4;
+  color: rgba(13, 13, 13, 0.62);
 }
 
 :where(html.light, html[data-theme="light"])
@@ -481,8 +481,8 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-search button:focus-visible {
-  background: var(--icon-button-hover);
-  color: var(--text-primary);
+  background: #d9d9d9;
+  color: #0d0d0d;
 }
 
 :where(html.light, html[data-theme="light"])
