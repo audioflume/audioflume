@@ -143,12 +143,12 @@ main > section:has(.fw-filter-panel-wrap)
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-option {
-  border-radius: 0 !important;
+  border-radius: 999px !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-option:hover,
 main > section:has(.fw-filter-panel-wrap) .fw-filter-option.is-selected {
-  border-radius: 0 !important;
+  border-radius: 999px !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail:not(:has(> .fw-filter-ai-linkmatch)) .fw-filter-rail-item:nth-child(8).is-active) .fw-filter-group-label,
