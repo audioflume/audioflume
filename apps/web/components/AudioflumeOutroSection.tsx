@@ -4,7 +4,7 @@ export default function AudioflumeOutroSection() {
       <div className="discover-reference-outro-title">
         <h2
           style={{
-            fontSize: "clamp(40px, 3.5vw, 50px)",
+            fontSize: "clamp(48px, 4.4vw, 62px)",
             textTransform: "none",
           }}
         >
