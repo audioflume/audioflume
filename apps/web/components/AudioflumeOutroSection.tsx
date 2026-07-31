@@ -2,9 +2,14 @@ export default function AudioflumeOutroSection() {
   return (
     <section className="discover-reference-outro" aria-label="Audioflume approach">
       <div className="discover-reference-outro-title">
-        <h2>
-          A little polished,
-          <br />a little strange.
+        <h2
+          style={{
+            fontSize: "clamp(40px, 3.5vw, 50px)",
+            textTransform: "none",
+          }}
+        >
+          A Little Polished,
+          <br />A Little Strange.
         </h2>
         <img
           className="discover-reference-outro-mark"
