@@ -80,6 +80,10 @@
 }
 
 .details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18px;
+  align-items: start;
+  gap: 6px;
   margin-top: 12px;
 }
 
@@ -113,4 +117,13 @@
   line-height: 1.45;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.playButton {
+  margin-top: 1px;
+}
+
+.card:hover :global(.curated-playlist-play-button),
+.card:focus-within :global(.curated-playlist-play-button) {
+  opacity: 1;
 }
