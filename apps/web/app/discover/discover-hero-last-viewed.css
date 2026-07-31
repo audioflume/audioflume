@@ -214,6 +214,60 @@ body:has(.discover-page-root)
 }
 
 body:has(.discover-page-root)
+  .discover-mood-section
+  .playlist-gallery-card,
+body:has(.discover-page-root)
+  .discover-production-section
+  .playlist-gallery-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body:has(.discover-page-root)
+  .discover-mood-section
+  .discover-playlist-card-media-link,
+body:has(.discover-page-root)
+  .discover-production-section
+  .discover-playlist-card-media-link {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+body:has(.discover-page-root)
+  .discover-mood-section
+  .discover-playlist-card-details,
+body:has(.discover-page-root)
+  .discover-production-section
+  .discover-playlist-card-details {
+  display: contents;
+}
+
+body:has(.discover-page-root)
+  .discover-mood-section
+  .discover-playlist-card-copy-link,
+body:has(.discover-page-root)
+  .discover-production-section
+  .discover-playlist-card-copy-link {
+  grid-column: 1;
+  grid-row: 2;
+  margin-top: 10px;
+}
+
+body:has(.discover-page-root)
+  .discover-mood-section
+  .discover-playlist-card-play-button,
+body:has(.discover-page-root)
+  .discover-production-section
+  .discover-playlist-card-play-button {
+  z-index: 5;
+  align-self: end;
+  justify-self: end;
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0 16px 16px 0;
+}
+
+body:has(.discover-page-root)
   .discover-ready-to-cut-section
   article[role="button"] {
   padding-right: 0;
