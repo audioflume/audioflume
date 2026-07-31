@@ -140,9 +140,9 @@ export default function CuratedPlaylistPlayButton({
       aria-busy={loading}
     >
       {isPlaylistPlaying ? (
-        <PauseIcon size={14} />
+        <PauseIcon size={18} />
       ) : (
-        <PlayIconSmall size={14} />
+        <PlayIconSmall size={18} />
       )}
     </button>
   );
