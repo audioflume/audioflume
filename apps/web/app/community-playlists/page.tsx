@@ -34,6 +34,11 @@ type CommunityPlaylist = {
   };
 };
 
+type CommunityPlaylistRanking = Pick<
+  CommunityPlaylist,
+  "like_count" | "seven_day_like_count" | "play_count" | "published_at"
+>;
+
 type CategoryFilter = "All" | CommunityPlaylistCategory;
 type CommunityTab = "Trending" | "Recent" | "Most Liked" | "Favorites";
 
@@ -124,6 +129,9 @@ export default function CommunityPlaylistsPage() {
     useState<CategoryFilter>("All");
   const [activeTab, setActiveTab] = useState<CommunityTab>("Trending");
   const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
+  const [rankingSnapshot, setRankingSnapshot] = useState<
+    Record<number, CommunityPlaylistRanking>
+  >({});
   const [favoritePlaylistIds, setFavoritePlaylistIds] = useState<Set<number>>(
     () => new Set(),
   );
@@ -163,7 +171,24 @@ export default function CommunityPlaylistsPage() {
         }
 
         if (!cancelled) {
-          setPlaylists(playlistsData?.playlists ?? []);
+          const loadedPlaylists: CommunityPlaylist[] =
+            playlistsData?.playlists ?? [];
+
+          setPlaylists(loadedPlaylists);
+          setRankingSnapshot(
+            loadedPlaylists.reduce<Record<number, CommunityPlaylistRanking>>(
+              (snapshot, playlist) => {
+                snapshot[playlist.id] = {
+                  like_count: playlist.like_count,
+                  seven_day_like_count: playlist.seven_day_like_count,
+                  play_count: playlist.play_count,
+                  published_at: playlist.published_at,
+                };
+                return snapshot;
+              },
+              {},
+            ),
+          );
           setFavoritePlaylistIds(new Set(favoriteIds));
           setRecentFavoritePlaylistIds(new Set(recentFavoriteIds));
         }
@@ -171,6 +196,7 @@ export default function CommunityPlaylistsPage() {
         console.warn("Community playlists request failed", error);
         if (!cancelled) {
           setPlaylists([]);
+          setRankingSnapshot({});
           setFavoritePlaylistIds(new Set());
           setRecentFavoritePlaylistIds(new Set());
         }
@@ -248,15 +274,18 @@ export default function CommunityPlaylistsPage() {
 
     if (activeTab === "Trending") {
       return [...filtered].sort((a, b) => {
+        const aRanking = rankingSnapshot[a.id] ?? a;
+        const bRanking = rankingSnapshot[b.id] ?? b;
         const recentLikeDifference =
-          b.seven_day_like_count - a.seven_day_like_count;
+          bRanking.seven_day_like_count - aRanking.seven_day_like_count;
         if (recentLikeDifference !== 0) return recentLikeDifference;
 
-        const playDifference = b.play_count - a.play_count;
+        const playDifference = bRanking.play_count - aRanking.play_count;
         if (playDifference !== 0) return playDifference;
 
         const publishedDifference =
-          getPublishedTime(b.published_at) - getPublishedTime(a.published_at);
+          getPublishedTime(bRanking.published_at) -
+          getPublishedTime(aRanking.published_at);
         if (publishedDifference !== 0) return publishedDifference;
 
         return b.id - a.id;
@@ -274,14 +303,23 @@ export default function CommunityPlaylistsPage() {
 
     if (activeTab === "Most Liked") {
       return [...filtered].sort((a, b) => {
-        const likeDifference = b.like_count - a.like_count;
+        const aRanking = rankingSnapshot[a.id] ?? a;
+        const bRanking = rankingSnapshot[b.id] ?? b;
+        const likeDifference = bRanking.like_count - aRanking.like_count;
         if (likeDifference !== 0) return likeDifference;
-        return b.play_count - a.play_count;
+        return bRanking.play_count - aRanking.play_count;
       });
     }
 
     return filtered;
-  }, [activeTab, favoritePlaylistIds, playlists, query, selectedCategory]);
+  }, [
+    activeTab,
+    favoritePlaylistIds,
+    playlists,
+    query,
+    rankingSnapshot,
+    selectedCategory,
+  ]);
 
   const recentPlaylists = useMemo(
     () =>
@@ -640,6 +678,7 @@ export default function CommunityPlaylistsPage() {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          opacity: 0.6;
         }
 
         .community-avatar-image,
