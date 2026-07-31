@@ -493,13 +493,18 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-sidebar-heading {
-          color: var(--text-muted) !important;
-          font-family: inherit !important;
-          font-size: 10.5px !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.09em !important;
-          line-height: normal !important;
+          color: #fff !important;
+          font-family: var(--font-aktiv-grotesk), sans-serif !important;
+          font-size: 11px !important;
+          font-weight: 500 !important;
+          font-kerning: normal !important;
+          letter-spacing: 0.02em !important;
+          line-height: 1 !important;
           text-transform: uppercase !important;
+        }
+
+        :where(html.light, html[data-theme="light"]) .community-sidebar-heading {
+          color: var(--text-primary) !important;
         }
 
         .community-categories nav {
