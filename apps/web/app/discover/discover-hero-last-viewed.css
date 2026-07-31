@@ -213,6 +213,23 @@ body:has(.discover-page-root)
   border-radius: 12px;
 }
 
+body:has(.discover-page-root)
+  .discover-ready-to-cut-section
+  article[role="button"] {
+  padding-right: 0;
+  padding-left: 0;
+  background: transparent;
+}
+
+body:has(.discover-page-root)
+  .discover-ready-to-cut-section
+  article[role="button"]:hover,
+body:has(.discover-page-root)
+  .discover-ready-to-cut-section
+  article[role="button"]:focus-visible {
+  background: transparent;
+}
+
 @media (max-width: 620px) {
   .discover-template-shell.is-discover-route {
     --discover-integrated-hero-height: clamp(570px, 72svh, 690px);
