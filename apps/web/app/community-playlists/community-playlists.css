@@ -208,7 +208,7 @@
   display: flex;
   align-items: center;
   gap: 22px;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .community-tabs button {
@@ -593,13 +593,11 @@
   width: 13px;
   height: 13px;
   flex: 0 0 13px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect x='9' y='2.5' width='2.5' height='10.5' rx='.7'/%3E%3Cellipse cx='7.2' cy='13.5' rx='3.5' ry='2.7'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect x='9' y='2.5' width='2.5' height='10.5' rx='.7'/%3E%3Cellipse cx='7.2' cy='13.5' rx='3.5' ry='2.7'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .community-engagement-item:last-child svg path {
-  stroke-width: 2.6;
-}
-
-.community-engagement-item:last-child svg path:nth-child(-n + 2) {
-  fill: currentColor;
-  stroke: none;
+  display: none;
 }
