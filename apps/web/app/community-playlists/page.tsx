@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import RecentPlaylistCards from "@/components/RecentPlaylistCards";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
+import MusicIcon from "@/components/icons/MusicIcon";
 import {
   COMMUNITY_PLAYLIST_CATEGORIES,
   type CommunityPlaylistCategory,
@@ -868,7 +869,6 @@ export default function CommunityPlaylistsPage() {
                       <MoreIcon />
                     </button>
                   </div>
-                  <p className="community-track-count">{playlist.song_count} songs</p>
                   <div className="community-engagement" aria-label="Playlist engagement">
                     <span className="community-engagement-item" title={`${playlist.play_count} plays`}>
                       <PlayCountIcon />
@@ -877,6 +877,10 @@ export default function CommunityPlaylistsPage() {
                     <span className="community-engagement-item" title={`${playlist.like_count} likes`}>
                       <LikeCountIcon />
                       <span>{formatCompactCount(playlist.like_count)}</span>
+                    </span>
+                    <span className="community-engagement-item" title={`${playlist.song_count} songs`}>
+                      <MusicIcon />
+                      <span>{formatCompactCount(playlist.song_count)}</span>
                     </span>
                   </div>
                 </article>
