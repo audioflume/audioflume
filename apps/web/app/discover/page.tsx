@@ -16,6 +16,7 @@ import {
 
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
+import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
@@ -207,6 +208,49 @@ function DiscoverMoodShelf({
           cursor: pointer;
         }
 
+        .discover-playlist-card-media-link,
+        .discover-playlist-card-copy-link {
+          display: block;
+          min-width: 0;
+          color: inherit;
+          text-decoration: none;
+        }
+
+        .discover-playlist-card-details {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 18px;
+          align-items: start;
+          gap: 6px;
+          margin-top: 10px;
+        }
+
+        .discover-playlist-card-details h3 {
+          margin: 0;
+        }
+
+        .discover-playlist-card-details p {
+          margin-top: 4px;
+        }
+
+        .discover-playlist-card-play-button {
+          margin-top: 1px;
+        }
+
+        .discover-mood-section
+          .playlist-gallery-card:hover
+          .curated-playlist-play-button,
+        .discover-mood-section
+          .playlist-gallery-card:focus-within
+          .curated-playlist-play-button,
+        .discover-production-section
+          .playlist-gallery-card:hover
+          .curated-playlist-play-button,
+        .discover-production-section
+          .playlist-gallery-card:focus-within
+          .curated-playlist-play-button {
+          opacity: 1;
+        }
+
         .discover-mood-section .playlist-gallery-top-row,
         .discover-production-section .playlist-gallery-top-row {
           position: relative;
@@ -312,34 +356,52 @@ function DiscoverMoodShelf({
                 />
               ))
             : playlists.map((playlist) => (
-                <Link
+                <article
                   key={playlist.id}
-                  href={`/curated-playlists/${playlist.id}`}
                   className="discover-mood-card playlist-gallery-card"
                 >
-                  <div className="discover-mood-image">
-                    {playlist.cover_image_url ? (
-                      <Image
-                        src={playlist.cover_image_url}
-                        alt={playlist.name}
-                        fill
-                        unoptimized
-                        sizes="(min-width: 1280px) 34vw, (min-width: 768px) 55vw, 84vw"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="discover-media-fallback" />
-                    )}
+                  <Link
+                    href={`/curated-playlists/${playlist.id}`}
+                    className="discover-playlist-card-media-link"
+                  >
+                    <div className="discover-mood-image">
+                      {playlist.cover_image_url ? (
+                        <Image
+                          src={playlist.cover_image_url}
+                          alt={playlist.name}
+                          fill
+                          unoptimized
+                          sizes="(min-width: 1280px) 34vw, (min-width: 768px) 55vw, 84vw"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="discover-media-fallback" />
+                      )}
 
-                    <div className="playlist-gallery-top-row">
-                      <div className="playlist-gallery-arrow">
-                        <ArrowUpRightIcon />
+                      <div className="playlist-gallery-top-row">
+                        <div className="playlist-gallery-arrow">
+                          <ArrowUpRightIcon />
+                        </div>
                       </div>
                     </div>
+                  </Link>
+
+                  <div className="discover-playlist-card-details">
+                    <Link
+                      href={`/curated-playlists/${playlist.id}`}
+                      className="discover-playlist-card-copy-link"
+                    >
+                      <h3>{playlist.name}</h3>
+                      {playlist.description && <p>{playlist.description}</p>}
+                    </Link>
+
+                    <CuratedPlaylistPlayButton
+                      playlistId={playlist.id}
+                      playlistName={playlist.name}
+                      className="discover-playlist-card-play-button"
+                    />
                   </div>
-                  <h3>{playlist.name}</h3>
-                  {playlist.description && <p>{playlist.description}</p>}
-                </Link>
+                </article>
               ))}
         </div>
       </div>
@@ -450,34 +512,49 @@ function DiscoverProductionStyleCard({
   const supportingText = playlist.description || playlist.kicker;
 
   return (
-    <Link
-      href={`/curated-playlists/${playlist.id}`}
-      className="discover-playlist-card playlist-gallery-card group"
-    >
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--bg-secondary)]">
-        {playlist.cover_image_url ? (
-          <Image
-            src={playlist.cover_image_url}
-            alt={playlist.name}
-            fill
-            unoptimized
-            sizes="(min-width: 1280px) 23vw, (min-width: 640px) 46vw, 100vw"
-            className="object-cover transition duration-500 group-hover:scale-[1.025]"
-          />
-        ) : (
-          <div className="discover-media-fallback" />
-        )}
+    <article className="discover-playlist-card playlist-gallery-card group">
+      <Link
+        href={`/curated-playlists/${playlist.id}`}
+        className="discover-playlist-card-media-link"
+      >
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--bg-secondary)]">
+          {playlist.cover_image_url ? (
+            <Image
+              src={playlist.cover_image_url}
+              alt={playlist.name}
+              fill
+              unoptimized
+              sizes="(min-width: 1280px) 23vw, (min-width: 640px) 46vw, 100vw"
+              className="object-cover transition duration-500 group-hover:scale-[1.025]"
+            />
+          ) : (
+            <div className="discover-media-fallback" />
+          )}
 
-        <div className="playlist-gallery-top-row">
-          <div className="playlist-gallery-arrow">
-            <ArrowUpRightIcon />
+          <div className="playlist-gallery-top-row">
+            <div className="playlist-gallery-arrow">
+              <ArrowUpRightIcon />
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
 
-      <h3>{playlist.name}</h3>
-      {supportingText && <p>{supportingText}</p>}
-    </Link>
+      <div className="discover-playlist-card-details">
+        <Link
+          href={`/curated-playlists/${playlist.id}`}
+          className="discover-playlist-card-copy-link"
+        >
+          <h3>{playlist.name}</h3>
+          {supportingText && <p>{supportingText}</p>}
+        </Link>
+
+        <CuratedPlaylistPlayButton
+          playlistId={playlist.id}
+          playlistName={playlist.name}
+          className="discover-playlist-card-play-button"
+        />
+      </div>
+    </article>
   );
 }
 
