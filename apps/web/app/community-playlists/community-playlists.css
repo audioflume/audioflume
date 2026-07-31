@@ -588,3 +588,18 @@
   background: var(--text-primary);
   color: var(--bg-primary);
 }
+
+.community-engagement-item:last-child svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+}
+
+.community-engagement-item:last-child svg path {
+  stroke-width: 2.6;
+}
+
+.community-engagement-item:last-child svg path:nth-child(-n + 2) {
+  fill: currentColor;
+  stroke: none;
+}
