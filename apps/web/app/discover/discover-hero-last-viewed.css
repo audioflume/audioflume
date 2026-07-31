@@ -186,7 +186,7 @@ body:has(.discover-page-root)
   .discover-mood-card.discover-card-skeleton,
 body:has(.discover-page-root)
   .discover-production-section
-  .playlist-gallery-card
+  .discover-playlist-card-media-link
   > div:first-child,
 body:has(.discover-page-root)
   .discover-production-section
