@@ -241,7 +241,8 @@ body:has(.discover-page-root)
   .discover-ready-to-cut-section
   article[role="button"]
   > button:last-child {
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+  border: 1px solid var(--border);
+  box-shadow: none;
 }
 
 @media (max-width: 620px) {
