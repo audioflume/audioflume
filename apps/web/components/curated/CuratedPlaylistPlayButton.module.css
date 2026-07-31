@@ -12,18 +12,20 @@
   outline: 0;
   background: transparent;
   padding: 0;
-  color: var(--text-secondary);
+  color: #fff;
   box-shadow: none;
   opacity: 0;
-  transition:
-    color 150ms ease,
-    opacity 150ms ease;
+  transition: opacity 150ms ease;
+}
+
+:global(html.light) .button,
+:global(html[data-theme="light"]) .button {
+  color: #000;
 }
 
 .button:hover,
 .button:focus-visible {
   background: transparent;
-  color: var(--text-primary);
   box-shadow: none;
   opacity: 1;
 }
