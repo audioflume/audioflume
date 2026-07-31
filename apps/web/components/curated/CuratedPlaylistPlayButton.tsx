@@ -101,6 +101,7 @@ export default function CuratedPlaylistPlayButton({
     event.preventDefault();
     event.stopPropagation();
 
+    if (event.detail > 0) event.currentTarget.blur();
     if (loading) return;
 
     if (isCurrentPlaylist && currentSong) {
