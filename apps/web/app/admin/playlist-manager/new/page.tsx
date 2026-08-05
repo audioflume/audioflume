@@ -10,7 +10,7 @@ export default function NewPlaylistPage() {
     <AdminContentPage
       label="Playlist Manager"
       title="Create Playlist"
-      description="Add a new curated playlist with cover image and group assignment."
+      description="Add a new curated playlist with cover image or video and group assignment."
       headerAction={(
         <Link href="/admin/playlist-manager" className={secondaryPillButtonClass}>
           Back to Manager
