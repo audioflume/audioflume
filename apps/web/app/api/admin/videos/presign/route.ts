@@ -80,7 +80,6 @@ function createPresignedPutUrl({
 
   const queryEntries = [
     ["X-Amz-Algorithm", "AWS4-HMAC-SHA256"],
-    ["X-Amz-Content-Sha256", "UNSIGNED-PAYLOAD"],
     ["X-Amz-Credential", `${accessKeyId}/${credentialScope}`],
     ["X-Amz-Date", amzDate],
     ["X-Amz-Expires", String(PRESIGN_EXPIRES_SECONDS)],
