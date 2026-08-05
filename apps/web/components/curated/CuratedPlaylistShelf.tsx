@@ -64,6 +64,19 @@ export function CuratedPlaylistCard({
   const href = playlist.href || `/curated-playlists/${playlist.id}`;
   const fallbackGradient =
     FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
+  const videoActiveRef = useRef(false);
+  const [videoVisible, setVideoVisible] = useState(false);
+
+  function activateVideo(element: HTMLElement) {
+    videoActiveRef.current = true;
+    playCoverVideo(element);
+  }
+
+  function deactivateVideo(element: HTMLElement) {
+    videoActiveRef.current = false;
+    setVideoVisible(false);
+    pauseCoverVideo(element);
+  }
 
   return (
     <div
@@ -73,10 +86,10 @@ export function CuratedPlaylistCard({
         <Link
           href={href}
           className={styles.imageLink}
-          onMouseEnter={(event) => playCoverVideo(event.currentTarget)}
-          onMouseLeave={(event) => pauseCoverVideo(event.currentTarget)}
-          onFocus={(event) => playCoverVideo(event.currentTarget)}
-          onBlur={(event) => pauseCoverVideo(event.currentTarget)}
+          onMouseEnter={(event) => activateVideo(event.currentTarget)}
+          onMouseLeave={(event) => deactivateVideo(event.currentTarget)}
+          onFocus={(event) => activateVideo(event.currentTarget)}
+          onBlur={(event) => deactivateVideo(event.currentTarget)}
         >
           <div
             className={styles.image}
@@ -88,28 +101,32 @@ export function CuratedPlaylistCard({
                   : fallbackGradient,
             }}
           >
-            {playlist.cover_video_url ? (
+            {playlist.cover_image_url && (
+              <Image
+                src={playlist.cover_image_url}
+                alt={playlist.name}
+                fill
+                sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
+                className={styles.media}
+                unoptimized
+              />
+            )}
+
+            {playlist.cover_video_url && (
               <video
                 src={playlist.cover_video_url}
-                poster={playlist.cover_image_url || undefined}
-                className={styles.media}
+                className={`${styles.media} ${styles.coverVideo} ${
+                  videoVisible ? styles.coverVideoVisible : ""
+                }`}
                 muted
                 loop
                 playsInline
                 preload="none"
+                onPlaying={() => {
+                  if (videoActiveRef.current) setVideoVisible(true);
+                }}
                 aria-label={`${playlist.name} cover video`}
               />
-            ) : (
-              playlist.cover_image_url && (
-                <Image
-                  src={playlist.cover_image_url}
-                  alt={playlist.name}
-                  fill
-                  sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
-                  className={styles.media}
-                  unoptimized
-                />
-              )
             )}
           </div>
         </Link>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRef, useState } from "react";
 
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -33,7 +34,21 @@ export default function FeaturedCuratedPlaylist({
   playlist?: CuratedPlaylist;
   loading?: boolean;
 }) {
+  const videoActiveRef = useRef(false);
+  const [videoVisible, setVideoVisible] = useState(false);
+
   if (!loading && !playlist) return null;
+
+  function activateVideo(element: HTMLElement) {
+    videoActiveRef.current = true;
+    playCoverVideo(element);
+  }
+
+  function deactivateVideo(element: HTMLElement) {
+    videoActiveRef.current = false;
+    setVideoVisible(false);
+    pauseCoverVideo(element);
+  }
 
   return (
     <section className={styles.section}>
@@ -51,23 +66,12 @@ export default function FeaturedCuratedPlaylist({
             href={`/curated-playlists/${playlist.id}`}
             className={styles.link}
             aria-label={`Open ${playlist.name}`}
-            onMouseEnter={(event) => playCoverVideo(event.currentTarget)}
-            onMouseLeave={(event) => pauseCoverVideo(event.currentTarget)}
-            onFocus={(event) => playCoverVideo(event.currentTarget)}
-            onBlur={(event) => pauseCoverVideo(event.currentTarget)}
+            onMouseEnter={(event) => activateVideo(event.currentTarget)}
+            onMouseLeave={(event) => deactivateVideo(event.currentTarget)}
+            onFocus={(event) => activateVideo(event.currentTarget)}
+            onBlur={(event) => deactivateVideo(event.currentTarget)}
           >
-            {playlist.cover_video_url ? (
-              <video
-                src={playlist.cover_video_url}
-                poster={playlist.cover_image_url || undefined}
-                className={styles.image}
-                muted
-                loop
-                playsInline
-                preload="none"
-                aria-label={`${playlist.name} cover video`}
-              />
-            ) : playlist.cover_image_url ? (
+            {playlist.cover_image_url && (
               <Image
                 src={playlist.cover_image_url}
                 alt={playlist.name}
@@ -76,8 +80,25 @@ export default function FeaturedCuratedPlaylist({
                 sizes="(min-width: 1280px) 1280px, calc(100vw - 56px)"
                 className={styles.image}
               />
-            ) : (
-              <div className={styles.fallback} />
+            )}
+
+            {!playlist.cover_image_url && <div className={styles.fallback} />}
+
+            {playlist.cover_video_url && (
+              <video
+                src={playlist.cover_video_url}
+                className={`${styles.image} ${styles.video} ${
+                  videoVisible ? styles.videoVisible : ""
+                }`}
+                muted
+                loop
+                playsInline
+                preload="none"
+                onPlaying={() => {
+                  if (videoActiveRef.current) setVideoVisible(true);
+                }}
+                aria-label={`${playlist.name} cover video`}
+              />
             )}
 
             <div className={styles.overlay} aria-hidden="true" />

@@ -37,6 +37,17 @@
   transition: transform 500ms ease;
 }
 
+.video {
+  opacity: 0;
+  transition:
+    opacity 150ms ease,
+    transform 500ms ease;
+}
+
+.videoVisible {
+  opacity: 1;
+}
+
 .card:hover .image,
 .card:focus-within .image {
   transform: scale(1.018);
