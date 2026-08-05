@@ -42,6 +42,18 @@ function formatSongCount(count?: number) {
   return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
 }
 
+function playCoverVideo(element: HTMLElement) {
+  const video = element.querySelector<HTMLVideoElement>("video");
+
+  if (!video) return;
+
+  void video.play().catch(() => {});
+}
+
+function pauseCoverVideo(element: HTMLElement) {
+  element.querySelector<HTMLVideoElement>("video")?.pause();
+}
+
 export function CuratedPlaylistCard({
   playlist,
   index,
@@ -58,7 +70,14 @@ export function CuratedPlaylistCard({
       className={`curated-playlist-card-shell discover-playlist-card-shell ${styles.shell}`}
     >
       <article className={styles.card}>
-        <Link href={href} className={styles.imageLink}>
+        <Link
+          href={href}
+          className={styles.imageLink}
+          onMouseEnter={(event) => playCoverVideo(event.currentTarget)}
+          onMouseLeave={(event) => pauseCoverVideo(event.currentTarget)}
+          onFocus={(event) => playCoverVideo(event.currentTarget)}
+          onBlur={(event) => pauseCoverVideo(event.currentTarget)}
+        >
           <div
             className={styles.image}
             data-curated-playlist-image
@@ -74,11 +93,10 @@ export function CuratedPlaylistCard({
                 src={playlist.cover_video_url}
                 poster={playlist.cover_image_url || undefined}
                 className={styles.media}
-                autoPlay
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="none"
                 aria-label={`${playlist.name} cover video`}
               />
             ) : (

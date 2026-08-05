@@ -14,6 +14,18 @@ function formatSongCount(count?: number) {
   return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
 }
 
+function playCoverVideo(element: HTMLElement) {
+  const video = element.querySelector<HTMLVideoElement>("video");
+
+  if (!video) return;
+
+  void video.play().catch(() => {});
+}
+
+function pauseCoverVideo(element: HTMLElement) {
+  element.querySelector<HTMLVideoElement>("video")?.pause();
+}
+
 export default function FeaturedCuratedPlaylist({
   playlist,
   loading = false,
@@ -39,17 +51,20 @@ export default function FeaturedCuratedPlaylist({
             href={`/curated-playlists/${playlist.id}`}
             className={styles.link}
             aria-label={`Open ${playlist.name}`}
+            onMouseEnter={(event) => playCoverVideo(event.currentTarget)}
+            onMouseLeave={(event) => pauseCoverVideo(event.currentTarget)}
+            onFocus={(event) => playCoverVideo(event.currentTarget)}
+            onBlur={(event) => pauseCoverVideo(event.currentTarget)}
           >
             {playlist.cover_video_url ? (
               <video
                 src={playlist.cover_video_url}
                 poster={playlist.cover_image_url || undefined}
                 className={styles.image}
-                autoPlay
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="none"
                 aria-label={`${playlist.name} cover video`}
               />
             ) : playlist.cover_image_url ? (

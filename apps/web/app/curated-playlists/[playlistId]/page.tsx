@@ -75,6 +75,18 @@ function formatSongCount(count: number) {
   return `${count} song${count === 1 ? "" : "s"}`;
 }
 
+function playCoverVideo(element: HTMLElement) {
+  const video = element.querySelector<HTMLVideoElement>("video");
+
+  if (!video) return;
+
+  void video.play().catch(() => {});
+}
+
+function pauseCoverVideo(element: HTMLElement) {
+  element.querySelector<HTMLVideoElement>("video")?.pause();
+}
+
 function shuffleSongList<T>(songs: T[]) {
   if (songs.length < 2) return [...songs];
   let bestShuffle = [...songs];
@@ -419,16 +431,17 @@ export default function CuratedPlaylistDetailPage() {
                         ? "var(--media-overlay-solid)"
                         : "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
                   }}
+                  onMouseEnter={(event) => playCoverVideo(event.currentTarget)}
+                  onMouseLeave={(event) => pauseCoverVideo(event.currentTarget)}
                 >
                   {playlist?.cover_video_url ? (
                     <video
                       src={playlist.cover_video_url}
                       poster={playlist.cover_image_url || undefined}
-                      autoPlay
                       muted
                       loop
                       playsInline
-                      preload="metadata"
+                      preload="none"
                       aria-label={`${playlist.name} cover video`}
                     />
                   ) : (
