@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
 import TrashIcon from "@/components/icons/TrashIcon";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
+import AdminVideoUpload from "@/components/admin/AdminVideoUpload";
 import type {
   CuratedPlaylist,
   CuratedPlaylistSong,
@@ -30,6 +31,8 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const [name, setName] = useState("");
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [coverVideoUrl, setCoverVideoUrl] = useState("");
+  const [coverVideoTouched, setCoverVideoTouched] = useState(false);
   const [playlistGroup, setPlaylistGroup] = useState(
     DEFAULT_CURATED_PLAYLIST_GROUP,
   );
@@ -65,6 +68,8 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           setName(playlistData.name);
           setKicker(playlistData.kicker);
           setCoverImageUrl(playlistData.cover_image_url || "");
+          setCoverVideoUrl(playlistData.cover_video_url || "");
+          setCoverVideoTouched(false);
           setPlaylistGroup(
             playlistData.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP,
           );
@@ -111,23 +116,29 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           : "/api/admin/curated-playlists";
 
       const method = mode === "edit" ? "PATCH" : "POST";
+      const payload: Record<string, string | boolean> = {
+        name,
+        kicker,
+        cover_image_url: coverImageUrl,
+        playlist_group: playlistGroup,
+        show_on_discover: showOnDiscover,
+      };
+
+      if (coverVideoUrl || coverVideoTouched) {
+        payload.cover_video_url = coverVideoUrl;
+      }
 
       const res = await fetch(endpoint, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          kicker,
-          cover_image_url: coverImageUrl,
-          playlist_group: playlistGroup,
-          show_on_discover: showOnDiscover,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
 
       if (!res.ok) throw new Error(data?.error || "Failed to save playlist");
 
+      setCoverVideoTouched(false);
       setToastMessage(
         mode === "edit" ? "Playlist updated" : "Playlist created",
       );
@@ -187,7 +198,8 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               Playlist details
             </h2>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Add the public metadata used on Curated Playlists cards and rows.
+              Add the public metadata and cover media used on Curated Playlists
+              cards and rows.
             </p>
           </div>
 
@@ -285,19 +297,44 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           </div>
 
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+            <AdminVideoUpload
+              currentUrl={coverVideoUrl}
+              onUploaded={(url) => {
+                setCoverVideoUrl(url);
+                setCoverVideoTouched(true);
+              }}
+              slug={nameSlug}
+            />
+          </div>
+
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <h3 className="font-[family-name:var(--font-aktiv-grotesk)] text-xl font-medium tracking-[-0.05em]">
               Card preview
             </h3>
             <div className="relative mt-4 min-h-[260px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
-              {coverImageUrl && (
-                <Image
-                  src={coverImageUrl}
-                  alt={name || "Playlist preview"}
-                  fill
-                  sizes="360px"
-                  className="object-cover"
-                  unoptimized
+              {coverVideoUrl ? (
+                <video
+                  src={coverVideoUrl}
+                  poster={coverImageUrl || undefined}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-label={name || "Playlist video preview"}
                 />
+              ) : (
+                coverImageUrl && (
+                  <Image
+                    src={coverImageUrl}
+                    alt={name || "Playlist preview"}
+                    fill
+                    sizes="360px"
+                    className="object-cover"
+                    unoptimized
+                  />
+                )
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               <div className="relative z-10 flex min-h-[260px] flex-col justify-end p-4 text-white">
