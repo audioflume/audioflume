@@ -20,6 +20,8 @@ function playCoverVideo(element: HTMLElement) {
 
   if (!video) return;
 
+  video.pause();
+  video.currentTime = 0;
   void video.play().catch(() => {});
 }
 
