@@ -250,7 +250,8 @@ export default function CuratedPlaylistDetailPage() {
           border-radius: 18px;
           background: var(--bg-secondary);
         }
-        .playlist-detail-cover img {
+        .playlist-detail-cover img,
+        .playlist-detail-cover video {
           position: absolute;
           inset: 0;
           width: 100%;
@@ -413,13 +414,27 @@ export default function CuratedPlaylistDetailPage() {
                 <div
                   className="playlist-detail-cover"
                   style={{
-                    background: playlist?.cover_image_url
-                      ? "var(--media-overlay-solid)"
-                      : "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
+                    background:
+                      playlist?.cover_video_url || playlist?.cover_image_url
+                        ? "var(--media-overlay-solid)"
+                        : "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
                   }}
                 >
-                  {playlist?.cover_image_url && (
-                    <img src={playlist.cover_image_url} alt={playlist.name} />
+                  {playlist?.cover_video_url ? (
+                    <video
+                      src={playlist.cover_video_url}
+                      poster={playlist.cover_image_url || undefined}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      aria-label={`${playlist.name} cover video`}
+                    />
+                  ) : (
+                    playlist?.cover_image_url && (
+                      <img src={playlist.cover_image_url} alt={playlist.name} />
+                    )
                   )}
                 </div>
 
