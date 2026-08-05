@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import FeaturedCuratedPlaylist from "./FeaturedCuratedPlaylist";
 
 type GroupMeta = {
   name: string;
@@ -279,11 +280,18 @@ export default function CuratedPlaylistsPage() {
       .filter((group) => group.playlists.length > 0);
   }, [playlists, groups]);
 
+  const featuredPlaylist = groupedPlaylists[0]?.playlists[0];
+
   return (
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
         <div className="px-8">
-          {loading && <CuratedPlaylistsLoadingSkeleton />}
+          {loading && (
+            <>
+              <FeaturedCuratedPlaylist loading />
+              <CuratedPlaylistsLoadingSkeleton />
+            </>
+          )}
 
           {!loading && error && (
             <div className="mt-8 rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-8 text-[var(--text-secondary)]">
@@ -302,6 +310,10 @@ export default function CuratedPlaylistsPage() {
               </Link>
               .
             </div>
+          )}
+
+          {!loading && !error && featuredPlaylist && (
+            <FeaturedCuratedPlaylist playlist={featuredPlaylist} />
           )}
 
           {!loading &&
