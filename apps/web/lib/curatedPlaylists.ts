@@ -99,9 +99,37 @@ export function normalizeCuratedPlaylist(
   };
 }
 
+function getErrorText(err: unknown) {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  if (!err || typeof err !== "object") return "";
+
+  const record = err as Record<string, unknown>;
+
+  return [record.message, record.details, record.hint, record.code]
+    .filter((value): value is string => typeof value === "string")
+    .join(" ");
+}
+
 export function getCuratedPlaylistError(err: unknown, fallback: string) {
+  const message = getErrorText(err);
+  const normalizedMessage = message.toLowerCase();
+
+  if (
+    normalizedMessage.includes("cover_video_url") &&
+    (normalizedMessage.includes("column") ||
+      normalizedMessage.includes("schema cache") ||
+      normalizedMessage.includes("pgrst204") ||
+      normalizedMessage.includes("42703"))
+  ) {
+    return {
+      error:
+        "Cover videos require the Supabase migration apps/web/supabase/migrations/20260805080000_add_curated_playlist_cover_video.sql. Apply that migration, then save the playlist again.",
+    };
+  }
+
   return {
-    error: err instanceof Error ? err.message : fallback,
+    error: message || fallback,
   };
 }
 
