@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import UploadIcon from "@/components/icons/UploadIcon";
 
 const MAX_VIDEO_SIZE_BYTES = 250 * 1024 * 1024;
+const THUMBNAIL_MAX_WIDTH = 1600;
 const ALLOWED_VIDEO_TYPES = new Set([
   "video/mp4",
   "video/webm",
@@ -18,7 +19,9 @@ const VIDEO_TYPE_BY_EXTENSION = new Map([
 
 type Props = {
   currentUrl: string;
+  currentImageUrl?: string;
   onUploaded: (url: string) => void;
+  onThumbnailUploaded?: (url: string) => void;
   onDeleted?: () => void;
   slug: string;
 };
@@ -39,9 +42,104 @@ function getVideoType(file: File) {
   return VIDEO_TYPE_BY_EXTENSION.get(extension) || "";
 }
 
+async function createVideoThumbnail(file: File, slug: string) {
+  const objectUrl = URL.createObjectURL(file);
+  const video = document.createElement("video");
+
+  video.muted = true;
+  video.playsInline = true;
+  video.preload = "auto";
+  video.src = objectUrl;
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      function cleanup() {
+        video.removeEventListener("loadeddata", handleLoadedData);
+        video.removeEventListener("error", handleError);
+      }
+
+      function handleLoadedData() {
+        cleanup();
+        resolve();
+      }
+
+      function handleError() {
+        cleanup();
+        reject(new Error("The browser could not read a frame from this video"));
+      }
+
+      video.addEventListener("loadeddata", handleLoadedData, { once: true });
+      video.addEventListener("error", handleError, { once: true });
+      video.load();
+    });
+
+    if (!video.videoWidth || !video.videoHeight) {
+      throw new Error("The video does not contain a readable frame");
+    }
+
+    const scale = Math.min(1, THUMBNAIL_MAX_WIDTH / video.videoWidth);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(video.videoWidth * scale));
+    canvas.height = Math.max(1, Math.round(video.videoHeight * scale));
+
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      throw new Error("The browser could not create a video thumbnail");
+    }
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(new Error("The browser could not encode the video thumbnail"));
+          }
+        },
+        "image/jpeg",
+        0.86,
+      );
+    });
+
+    return new File([blob], `${slug || "playlist"}-video-cover.jpg`, {
+      type: "image/jpeg",
+    });
+  } finally {
+    video.removeAttribute("src");
+    video.load();
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+async function uploadVideoThumbnail(file: File, slug: string) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("target", "playlist");
+  formData.append("slug", slug || "untitled");
+  formData.append("variant", "card");
+
+  const res = await fetch("/api/admin/images/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data?.error || "Automatic cover image upload failed");
+  }
+
+  return String(data.imageUrl || "");
+}
+
 export default function AdminVideoUpload({
   currentUrl,
+  currentImageUrl = "",
   onUploaded,
+  onThumbnailUploaded,
   onDeleted,
   slug,
 }: Props) {
@@ -99,6 +197,17 @@ export default function AdminVideoUpload({
     localPreviewRef.current = localUrl;
     setPreview(localUrl);
 
+    let thumbnailWarning = "";
+    const shouldGenerateThumbnail =
+      !currentImageUrl.trim() && Boolean(onThumbnailUploaded);
+    const thumbnailFilePromise = shouldGenerateThumbnail
+      ? createVideoThumbnail(file, slug).catch(() => {
+          thumbnailWarning =
+            "the browser could not generate an automatic cover image. Upload one manually.";
+          return null;
+        })
+      : Promise.resolve<File | null>(null);
+
     try {
       const presignRes = await fetch("/api/admin/videos/presign", {
         method: "POST",
@@ -131,9 +240,26 @@ export default function AdminVideoUpload({
         );
       }
 
+      const thumbnailFile = await thumbnailFilePromise;
+
+      if (thumbnailFile && onThumbnailUploaded) {
+        try {
+          const thumbnailUrl = await uploadVideoThumbnail(thumbnailFile, slug);
+
+          if (thumbnailUrl) onThumbnailUploaded(thumbnailUrl);
+        } catch {
+          thumbnailWarning =
+            "the automatic cover image could not be uploaded. Upload one manually.";
+        }
+      }
+
       clearLocalPreview();
       setPreview(presignData.videoUrl);
       onUploaded(presignData.videoUrl);
+
+      if (thumbnailWarning) {
+        setError(`Video uploaded, but ${thumbnailWarning}`);
+      }
     } catch (uploadError) {
       clearLocalPreview();
       setError(
