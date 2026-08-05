@@ -73,8 +73,8 @@ function createPresignedPutUrl({
   const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, "");
   const dateStamp = amzDate.slice(0, 8);
   const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
-  const host = `${bucket}.${accountId}.r2.cloudflarestorage.com`;
-  const canonicalUri = `/${encodeObjectPath(key)}`;
+  const host = `${accountId}.r2.cloudflarestorage.com`;
+  const canonicalUri = `/${encodeRfc3986(bucket)}/${encodeObjectPath(key)}`;
   const signedHeaders = "content-type;host";
   const canonicalHeaders = `content-type:${contentType}\nhost:${host}\n`;
 
