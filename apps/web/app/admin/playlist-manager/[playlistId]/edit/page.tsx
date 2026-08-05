@@ -14,7 +14,7 @@ export default function EditPlaylistPage() {
     <AdminContentPage
       label="Playlist Manager"
       title="Edit Playlist"
-      description="Update metadata, cover image, group, or song list."
+      description="Update metadata, cover image or video, group, or song list."
       headerAction={(
         <Link href="/admin/playlist-manager" className={secondaryPillButtonClass}>
           Back to Manager
