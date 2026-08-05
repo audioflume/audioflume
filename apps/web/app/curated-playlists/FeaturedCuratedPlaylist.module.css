@@ -1,0 +1,176 @@
+.section {
+  width: min(100%, 1280px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 34vw, 440px);
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+}
+
+.link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  color: #fff;
+  text-decoration: none;
+}
+
+.image,
+.fallback,
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 500ms ease;
+}
+
+.card:hover .image,
+.card:focus-within .image {
+  transform: scale(1.018);
+}
+
+.fallback {
+  background:
+    radial-gradient(circle at 72% 32%, rgba(126, 144, 125, 0.42), transparent 35%),
+    linear-gradient(118deg, #101716 0%, #293530 58%, #0c0f0e 100%);
+}
+
+.overlay {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08) 35%, rgba(0, 0, 0, 0.72) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.22), transparent 64%);
+  pointer-events: none;
+}
+
+.arrow {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.card:hover .arrow,
+.card:focus-within .arrow {
+  background: #fff;
+  color: #000;
+}
+
+.copy {
+  position: absolute;
+  right: 72px;
+  bottom: 20px;
+  left: 20px;
+  z-index: 2;
+}
+
+.copy h3 {
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.playButton {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 4;
+}
+
+.card:hover :global(.curated-playlist-play-button),
+.card:focus-within :global(.curated-playlist-play-button) {
+  opacity: 1;
+}
+
+.skeleton {
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 34vw, 440px);
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-tertiary);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--bg-hover) 48%, transparent),
+    transparent
+  );
+  animation: featured-curated-playlist-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes featured-curated-playlist-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 620px) {
+  .card,
+  .skeleton {
+    height: clamp(230px, 62vw, 330px);
+  }
+
+  .copy {
+    right: 64px;
+    bottom: 16px;
+    left: 16px;
+  }
+
+  .copy h3 {
+    font-size: clamp(18px, 5vw, 24px);
+  }
+
+  .playButton {
+    right: 16px;
+    bottom: 16px;
+  }
+}
