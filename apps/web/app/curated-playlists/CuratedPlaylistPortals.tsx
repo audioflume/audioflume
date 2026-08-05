@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 import styles from "./CuratedPlaylistPortals.module.css";
@@ -13,32 +12,86 @@ export type CuratedPlaylistPortalGroup = {
 
 type PortalDefinition = {
   label: string;
+  description: string;
+  icon:
+    | "scissors"
+    | "waveform"
+    | "grid"
+    | "tag"
+    | "globe"
+    | "camera"
+    | "clapper"
+    | "moon";
   targets: string[];
 };
 
 const CATEGORY_PORTALS: PortalDefinition[] = [
-  { label: "For Editors", targets: ["Editor Picks"] },
-  { label: "By Mood", targets: ["Ambient", "Tension"] },
-  { label: "By Genre", targets: ["Commercial", "Documentary"] },
-  { label: "For Brands", targets: ["Commercial"] },
-  { label: "Travel", targets: ["Travel"] },
-  { label: "Documentary", targets: ["Documentary"] },
-  { label: "Cinematic", targets: ["Editor Picks", "Documentary"] },
-  { label: "Dark & Tense", targets: ["Tension"] },
+  {
+    label: "For Editors",
+    description: "Cut with purpose",
+    icon: "scissors",
+    targets: ["Editor Picks"],
+  },
+  {
+    label: "By Mood",
+    description: "Find the feeling",
+    icon: "waveform",
+    targets: ["Ambient", "Tension"],
+  },
+  {
+    label: "By Genre",
+    description: "Explore styles",
+    icon: "grid",
+    targets: ["Commercial", "Documentary"],
+  },
+  {
+    label: "For Brands",
+    description: "Sound with intent",
+    icon: "tag",
+    targets: ["Commercial"],
+  },
+  {
+    label: "Travel",
+    description: "Escape. Explore.",
+    icon: "globe",
+    targets: ["Travel"],
+  },
+  {
+    label: "Documentary",
+    description: "Real stories",
+    icon: "camera",
+    targets: ["Documentary"],
+  },
+  {
+    label: "Cinematic",
+    description: "Big screen energy",
+    icon: "clapper",
+    targets: ["Editor Picks", "Documentary"],
+  },
+  {
+    label: "Dark & Tense",
+    description: "Edge and tension",
+    icon: "moon",
+    targets: ["Tension"],
+  },
 ];
 
 const BOTTOM_PORTALS = [
   {
-    eyebrow: "For Editors",
-    title: "Built for the Edit",
-    description: "Playlists shaped around pacing, movement and the cut.",
-    targets: ["Editor Picks", "Commercial", "Documentary"],
+    title: "For the cut. For the story.",
+    description:
+      "Curated music for editors, directors, and creatives who need every note to serve the moment.",
+    cta: "Learn more",
+    badge: "",
+    targets: ["Editor Picks", "Commercial"],
   },
   {
-    eyebrow: "Browse by Mood",
-    title: "Start With a Feeling",
-    description: "Move through calm, tension, darkness, lift and everything between.",
-    targets: ["Ambient", "Tension", "Travel"],
+    title: "Human Stories",
+    description:
+      "Intimate, authentic, and quietly powerful. Music for real stories told with heart.",
+    cta: "Explore Collection",
+    badge: "New Collection",
+    targets: ["Documentary"],
   },
 ];
 
@@ -74,26 +127,90 @@ function findGroup(
   return groups[0];
 }
 
-function getPortalPlaylist(
-  group: CuratedPlaylistPortalGroup | undefined,
-  fallbackPlaylists: CuratedPlaylist[],
-  index: number,
-) {
+function PortalIcon({ icon }: { icon: PortalDefinition["icon"] }) {
+  const commonProps = {
+    width: 22,
+    height: 22,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.45,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+
+  if (icon === "scissors") {
+    return (
+      <svg {...commonProps}>
+        <circle cx="6" cy="6" r="2.5" />
+        <circle cx="6" cy="18" r="2.5" />
+        <path d="M8.2 7.2 19 17.5M8.2 16.8 19 6.5M14.5 12l4.5 5.5" />
+      </svg>
+    );
+  }
+
+  if (icon === "waveform") {
+    return (
+      <svg {...commonProps}>
+        <path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4" />
+      </svg>
+    );
+  }
+
+  if (icon === "grid") {
+    return (
+      <svg {...commonProps}>
+        <path d="M4 4h4v4H4zM10 4h4v4h-4zM16 4h4v4h-4zM4 10h4v4H4zM10 10h4v4h-4zM16 10h4v4h-4zM4 16h4v4H4zM10 16h4v4h-4zM16 16h4v4h-4z" />
+      </svg>
+    );
+  }
+
+  if (icon === "tag") {
+    return (
+      <svg {...commonProps}>
+        <path d="M4 5.5V11l8.5 8.5L20 12l-8.5-8.5H6z" />
+        <circle cx="8" cy="7.5" r="1" />
+      </svg>
+    );
+  }
+
+  if (icon === "globe") {
+    return (
+      <svg {...commonProps}>
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M3.5 12h17M12 3.5c2.2 2.4 3.3 5.2 3.3 8.5S14.2 18.1 12 20.5M12 3.5C9.8 5.9 8.7 8.7 8.7 12s1.1 6.1 3.3 8.5" />
+      </svg>
+    );
+  }
+
+  if (icon === "camera") {
+    return (
+      <svg {...commonProps}>
+        <path d="M4 7.5h4l1.4-2h5.2l1.4 2h4v11H4z" />
+        <circle cx="12" cy="13" r="3.2" />
+      </svg>
+    );
+  }
+
+  if (icon === "clapper") {
+    return (
+      <svg {...commonProps}>
+        <path d="M4 9h16v10H4zM4 9l2-4h16l-2 4M8 5 6 9M13 5l-2 4M18 5l-2 4" />
+      </svg>
+    );
+  }
+
   return (
-    group?.playlists[0] ||
-    fallbackPlaylists[index % Math.max(fallbackPlaylists.length, 1)]
+    <svg {...commonProps}>
+      <path d="M18.5 15.5A8 8 0 0 1 8.5 5.5 8 8 0 1 0 18.5 15.5Z" />
+    </svg>
   );
 }
 
-function PortalArtwork({
-  playlist,
-  sizes,
-}: {
-  playlist?: CuratedPlaylist;
-  sizes: string;
-}) {
+function BottomPortalArtwork({ playlist }: { playlist?: CuratedPlaylist }) {
   if (!playlist?.cover_image_url) {
-    return <span className={styles.fallback} aria-hidden="true" />;
+    return <span className={styles.bottomFallback} aria-hidden="true" />;
   }
 
   return (
@@ -102,8 +219,8 @@ function PortalArtwork({
       alt=""
       fill
       unoptimized
-      sizes={sizes}
-      className={styles.image}
+      sizes="(min-width: 800px) 38vw, 42vw"
+      className={styles.bottomImage}
     />
   );
 }
@@ -115,19 +232,11 @@ export function CuratedPlaylistCategoryPortals({
 }) {
   if (!groups.length) return null;
 
-  const fallbackPlaylists = groups.flatMap((group) => group.playlists);
-
   return (
-    <section className={styles.categorySection}>
-      <div className={styles.sectionHeading}>
-        <h2>Explore the Collection</h2>
-        <p>Move through the library from the direction that fits the edit.</p>
-      </div>
-
+    <nav className={styles.categorySection} aria-label="Browse curated playlists">
       <div className={styles.categoryGrid}>
-        {CATEGORY_PORTALS.map((portal, index) => {
+        {CATEGORY_PORTALS.map((portal) => {
           const group = findGroup(groups, portal.targets);
-          const playlist = getPortalPlaylist(group, fallbackPlaylists, index);
           const href = group
             ? `#${getCuratedPlaylistGroupId(group.name)}`
             : "/curated-playlists";
@@ -138,23 +247,18 @@ export function CuratedPlaylistCategoryPortals({
               href={href}
               className={styles.categoryPortal}
             >
-              <PortalArtwork
-                playlist={playlist}
-                sizes="(min-width: 1100px) 300px, (min-width: 700px) 46vw, 240px"
-              />
-              <span className={styles.overlay} aria-hidden="true" />
-              <span className={styles.portalIndex}>
-                {String(index + 1).padStart(2, "0")}
+              <span className={styles.icon}>
+                <PortalIcon icon={portal.icon} />
               </span>
-              <span className={styles.portalLabel}>{portal.label}</span>
-              <span className={styles.portalArrow} aria-hidden="true">
-                <ArrowUpRightIcon />
+              <span className={styles.categoryCopy}>
+                <strong>{portal.label}</strong>
+                <span>{portal.description}</span>
               </span>
             </Link>
           );
         })}
       </div>
-    </section>
+    </nav>
   );
 }
 
@@ -165,42 +269,34 @@ export function CuratedPlaylistBottomPortals({
 }) {
   if (!groups.length) return null;
 
-  const fallbackPlaylists = groups.flatMap((group) => group.playlists);
-
   return (
     <section className={styles.bottomSection}>
-      <div className={styles.sectionHeading}>
-        <h2>Keep Exploring</h2>
-      </div>
-
       <div className={styles.bottomGrid}>
-        {BOTTOM_PORTALS.map((portal, index) => {
+        {BOTTOM_PORTALS.map((portal) => {
           const group = findGroup(groups, portal.targets);
-          const playlist = getPortalPlaylist(
-            group,
-            fallbackPlaylists,
-            fallbackPlaylists.length - 1 - index,
-          );
+          const playlist = group?.playlists[0];
           const href = group
             ? `#${getCuratedPlaylistGroupId(group.name)}`
             : "/curated-playlists";
 
           return (
             <Link key={portal.title} href={href} className={styles.bottomPortal}>
-              <PortalArtwork
-                playlist={playlist}
-                sizes="(min-width: 900px) 50vw, 100vw"
-              />
-              <span className={styles.bottomOverlay} aria-hidden="true" />
               <span className={styles.bottomCopy}>
-                <span className={styles.bottomEyebrow}>{portal.eyebrow}</span>
+                {portal.badge && (
+                  <span className={styles.bottomBadge}>{portal.badge}</span>
+                )}
                 <strong>{portal.title}</strong>
                 <span className={styles.bottomDescription}>
                   {portal.description}
                 </span>
+                <span className={styles.bottomCta}>
+                  {portal.cta}
+                  <span aria-hidden="true">→</span>
+                </span>
               </span>
-              <span className={styles.bottomArrow} aria-hidden="true">
-                <ArrowUpRightIcon />
+
+              <span className={styles.bottomMedia}>
+                <BottomPortalArtwork playlist={playlist} />
               </span>
             </Link>
           );

@@ -5,15 +5,9 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
-import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 import styles from "./FeaturedCuratedPlaylist.module.css";
-
-function formatSongCount(count?: number) {
-  const safeCount = Number(count || 0);
-  return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
-}
 
 function playCoverVideo(element: HTMLElement) {
   const video = element.querySelector<HTMLVideoElement>("video");
@@ -27,6 +21,26 @@ function playCoverVideo(element: HTMLElement) {
 
 function pauseCoverVideo(element: HTMLElement) {
   element.querySelector<HTMLVideoElement>("video")?.pause();
+}
+
+function EditorsPickIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 13 13"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="6.5" cy="6.5" r="5.75" stroke="currentColor" />
+      <path
+        d="M6.5 3.4V9.6M3.4 6.5H9.6M4.3 4.3L8.7 8.7M8.7 4.3L4.3 8.7"
+        stroke="currentColor"
+        strokeWidth="0.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 }
 
 export default function FeaturedCuratedPlaylist({
@@ -61,86 +75,91 @@ export default function FeaturedCuratedPlaylist({
   }
 
   const description =
-    playlist.description?.trim() || playlist.kicker?.trim() || "Curated for the cut.";
+    playlist.description?.trim() ||
+    playlist.kicker?.trim() ||
+    "Expansive, emotional, and deeply cinematic. Music for journeys into the unknown.";
 
   return (
     <section className={styles.section}>
-      <article className={styles.card}>
-        <Link
-          href={`/curated-playlists/${playlist.id}`}
-          className={styles.link}
-          aria-label={`Open ${playlist.name}`}
-          onMouseEnter={(event) => activateVideo(event.currentTarget)}
-          onMouseLeave={(event) => deactivateVideo(event.currentTarget)}
-          onFocus={(event) => activateVideo(event.currentTarget)}
-          onBlur={(event) => deactivateVideo(event.currentTarget)}
-        >
-          {playlist.cover_image_url && (
-            <Image
-              src={playlist.cover_image_url}
-              alt={playlist.name}
-              fill
-              unoptimized
-              priority
-              sizes="(min-width: 1280px) 1280px, calc(100vw - 56px)"
-              className={styles.image}
+      <article
+        className={styles.card}
+        onMouseEnter={(event) => activateVideo(event.currentTarget)}
+        onMouseLeave={(event) => deactivateVideo(event.currentTarget)}
+        onFocusCapture={(event) => activateVideo(event.currentTarget)}
+        onBlurCapture={(event) => {
+          if (
+            event.currentTarget.contains(event.relatedTarget as Node | null)
+          ) {
+            return;
+          }
+
+          deactivateVideo(event.currentTarget);
+        }}
+      >
+        {playlist.cover_image_url && (
+          <Image
+            src={playlist.cover_image_url}
+            alt={playlist.name}
+            fill
+            unoptimized
+            priority
+            sizes="(min-width: 1280px) 1280px, calc(100vw - 56px)"
+            className={styles.image}
+          />
+        )}
+
+        {!playlist.cover_image_url && <div className={styles.fallback} />}
+
+        {playlist.cover_video_url && (
+          <video
+            src={playlist.cover_video_url}
+            className={`${styles.image} ${styles.video} ${
+              videoVisible ? styles.videoVisible : ""
+            }`}
+            muted
+            loop
+            playsInline
+            preload="none"
+            onPlaying={() => {
+              if (videoActiveRef.current) setVideoVisible(true);
+            }}
+            aria-label={`${playlist.name} cover video`}
+          />
+        )}
+
+        <div className={styles.overlay} aria-hidden="true" />
+
+        <div className={styles.copy}>
+          <div className={styles.badge}>
+            <EditorsPickIcon />
+            <span>Editor&apos;s Pick</span>
+          </div>
+
+          <h1>{playlist.name}</h1>
+          <p>{description}</p>
+
+          <div className={styles.actions}>
+            <CuratedPlaylistPlayButton
+              playlistId={playlist.id}
+              playlistName={playlist.name}
+              className={styles.playButton}
             />
-          )}
 
-          {!playlist.cover_image_url && <div className={styles.fallback} />}
-
-          {playlist.cover_video_url && (
-            <video
-              src={playlist.cover_video_url}
-              className={`${styles.image} ${styles.video} ${
-                videoVisible ? styles.videoVisible : ""
-              }`}
-              muted
-              loop
-              playsInline
-              preload="none"
-              onPlaying={() => {
-                if (videoActiveRef.current) setVideoVisible(true);
-              }}
-              aria-label={`${playlist.name} cover video`}
-            />
-          )}
-
-          <div className={styles.overlay} aria-hidden="true" />
-          <div className={styles.frame} aria-hidden="true" />
-
-          <div className={styles.topline}>
-            <span>Audioflume Curated</span>
-            <span>Featured / 01</span>
+            <Link
+              href={`/curated-playlists/${playlist.id}`}
+              className={styles.viewButton}
+            >
+              View Playlist
+            </Link>
           </div>
+        </div>
 
-          <div className={styles.arrow} aria-hidden="true">
-            <ArrowUpRightIcon />
-          </div>
-
-          <div className={styles.copy}>
-            <span className={styles.eyebrow}>Featured Playlist</span>
-            <h1>{playlist.name}</h1>
-            <p>{description}</p>
-
-            <div className={styles.meta}>
-              <span>{formatSongCount(playlist.song_count)}</span>
-              <span aria-hidden="true">·</span>
-              <span>{playlist.playlist_group}</span>
-            </div>
-
-            <span className={styles.cta}>
-              Open Playlist
-              <span aria-hidden="true">↗</span>
-            </span>
-          </div>
-        </Link>
-
-        <CuratedPlaylistPlayButton
-          playlistId={playlist.id}
-          playlistName={playlist.name}
-          className={styles.playButton}
-        />
+        <div className={styles.indicators} aria-hidden="true">
+          <span className={styles.indicatorActive} />
+          <span />
+          <span />
+          <span />
+        </div>
       </article>
     </section>
   );
