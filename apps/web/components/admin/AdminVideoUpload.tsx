@@ -10,6 +10,11 @@ const ALLOWED_VIDEO_TYPES = new Set([
   "video/webm",
   "video/quicktime",
 ]);
+const VIDEO_TYPE_BY_EXTENSION = new Map([
+  ["mp4", "video/mp4"],
+  ["webm", "video/webm"],
+  ["mov", "video/quicktime"],
+]);
 
 type Props = {
   currentUrl: string;
@@ -25,6 +30,13 @@ function extractVideoKey(url: string): string | null {
   } catch {
     return null;
   }
+}
+
+function getVideoType(file: File) {
+  if (ALLOWED_VIDEO_TYPES.has(file.type)) return file.type;
+
+  const extension = file.name.toLowerCase().split(".").pop() || "";
+  return VIDEO_TYPE_BY_EXTENSION.get(extension) || "";
 }
 
 export default function AdminVideoUpload({
@@ -66,12 +78,16 @@ export default function AdminVideoUpload({
     userEditedRef.current = true;
     setError("");
 
-    if (!ALLOWED_VIDEO_TYPES.has(file.type)) {
+    const contentType = getVideoType(file);
+
+    if (!contentType) {
+      userEditedRef.current = false;
       setError("Choose an MP4, WebM, or MOV video");
       return;
     }
 
     if (file.size > MAX_VIDEO_SIZE_BYTES) {
+      userEditedRef.current = false;
       setError("Video is too large (max 250 MB)");
       return;
     }
@@ -89,7 +105,7 @@ export default function AdminVideoUpload({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fileName: file.name,
-          fileType: file.type,
+          fileType: contentType,
           fileSize: file.size,
           slug: slug || "untitled",
         }),
@@ -103,7 +119,7 @@ export default function AdminVideoUpload({
 
       const uploadRes = await fetch(presignData.uploadUrl, {
         method: "PUT",
-        headers: { "Content-Type": presignData.contentType || file.type },
+        headers: { "Content-Type": presignData.contentType || contentType },
         body: file,
       });
 
