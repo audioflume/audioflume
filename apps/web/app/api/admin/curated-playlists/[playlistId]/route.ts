@@ -64,6 +64,10 @@ export async function PATCH(req: Request, context: RouteContext) {
         cleanString(body.discover_button_text) || DEFAULT_DISCOVER_BUTTON_TEXT,
     };
 
+    if (hasField(body, "cover_video_url")) {
+      updates.cover_video_url = cleanString(body.cover_video_url) || null;
+    }
+
     if (hasField(body, "discover_section")) {
       updates.discover_section = cleanDiscoverSection(body.discover_section);
     }
