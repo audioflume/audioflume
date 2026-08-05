@@ -5,7 +5,7 @@ export type CuratedPlaylist = {
   name: string;
   kicker: string;
   cover_image_url: string | null;
-  cover_video_url: string | null;
+  cover_video_url?: string | null;
   playlist_group: string;
   position: number;
   description: string;
