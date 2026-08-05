@@ -11,7 +11,12 @@ import styles from "./CuratedPlaylistCard.module.css";
 
 export type CuratedPlaylistCardItem = Pick<
   CuratedPlaylist,
-  "id" | "name" | "kicker" | "cover_image_url" | "song_count"
+  | "id"
+  | "name"
+  | "kicker"
+  | "cover_image_url"
+  | "cover_video_url"
+  | "song_count"
 > & {
   href?: string;
 };
@@ -58,20 +63,35 @@ export function CuratedPlaylistCard({
             className={styles.image}
             data-curated-playlist-image
             style={{
-              background: playlist.cover_image_url
-                ? "var(--media-overlay-solid)"
-                : fallbackGradient,
+              background:
+                playlist.cover_video_url || playlist.cover_image_url
+                  ? "var(--media-overlay-solid)"
+                  : fallbackGradient,
             }}
           >
-            {playlist.cover_image_url && (
-              <Image
-                src={playlist.cover_image_url}
-                alt={playlist.name}
-                fill
-                sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
-                className="object-cover"
-                unoptimized
+            {playlist.cover_video_url ? (
+              <video
+                src={playlist.cover_video_url}
+                poster={playlist.cover_image_url || undefined}
+                className={styles.media}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label={`${playlist.name} cover video`}
               />
+            ) : (
+              playlist.cover_image_url && (
+                <Image
+                  src={playlist.cover_image_url}
+                  alt={playlist.name}
+                  fill
+                  sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
+                  className={styles.media}
+                  unoptimized
+                />
+              )
             )}
           </div>
         </Link>

@@ -40,7 +40,19 @@ export default function FeaturedCuratedPlaylist({
             className={styles.link}
             aria-label={`Open ${playlist.name}`}
           >
-            {playlist.cover_image_url ? (
+            {playlist.cover_video_url ? (
+              <video
+                src={playlist.cover_video_url}
+                poster={playlist.cover_image_url || undefined}
+                className={styles.image}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label={`${playlist.name} cover video`}
+              />
+            ) : playlist.cover_image_url ? (
               <Image
                 src={playlist.cover_image_url}
                 alt={playlist.name}
