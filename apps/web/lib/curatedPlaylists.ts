@@ -5,6 +5,7 @@ export type CuratedPlaylist = {
   name: string;
   kicker: string;
   cover_image_url: string | null;
+  cover_video_url: string | null;
   playlist_group: string;
   position: number;
   description: string;
@@ -30,6 +31,7 @@ type CuratedPlaylistRow = {
   name: string | null;
   kicker: string | null;
   cover_image_url: string | null;
+  cover_video_url?: string | null;
   playlist_group: string | null;
   position: number | null;
   description?: string | null;
@@ -81,6 +83,7 @@ export function normalizeCuratedPlaylist(
     name: String(row.name || "Untitled playlist"),
     kicker: String(row.kicker || "Curated selection"),
     cover_image_url: row.cover_image_url ? String(row.cover_image_url) : null,
+    cover_video_url: row.cover_video_url ? String(row.cover_video_url) : null,
     playlist_group: String(
       row.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP,
     ),
