@@ -137,7 +137,11 @@ export default function AdminVideoUpload({
     } catch (uploadError) {
       clearLocalPreview();
       setError(
-        uploadError instanceof Error ? uploadError.message : "Upload failed",
+        uploadError instanceof TypeError
+          ? "Cloudflare could not be reached from the browser. Check the video bucket CORS policy."
+          : uploadError instanceof Error
+            ? uploadError.message
+            : "Upload failed",
       );
       setPreview(currentUrl);
       userEditedRef.current = false;
