@@ -66,6 +66,7 @@ export async function POST(req: Request) {
     const name = cleanString(body.name);
     const kicker = cleanString(body.kicker);
     const coverImageUrl = cleanString(body.cover_image_url);
+    const coverVideoUrl = cleanString(body.cover_video_url);
     const playlistGroup = cleanString(body.playlist_group) || DEFAULT_CURATED_PLAYLIST_GROUP;
     const description = cleanString(body.description);
     const discoverSection = cleanDiscoverSection(body.discover_section);
@@ -105,19 +106,25 @@ export async function POST(req: Request) {
         ? discoverExisting[0].discover_position + 1
         : 0;
 
+    const insertValues: Record<string, string | number | boolean | null> = {
+      name,
+      kicker: kicker || "Curated selection",
+      cover_image_url: coverImageUrl || null,
+      playlist_group: playlistGroup,
+      description,
+      discover_section: discoverSection,
+      show_on_discover: showOnDiscover,
+      discover_position: nextDiscoverPosition,
+      position: nextPosition,
+    };
+
+    if (coverVideoUrl) {
+      insertValues.cover_video_url = coverVideoUrl;
+    }
+
     const { data, error } = await supabaseServer
       .from("curated_playlists")
-      .insert({
-        name,
-        kicker: kicker || "Curated selection",
-        cover_image_url: coverImageUrl || null,
-        playlist_group: playlistGroup,
-        description,
-        discover_section: discoverSection,
-        show_on_discover: showOnDiscover,
-        discover_position: nextDiscoverPosition,
-        position: nextPosition,
-      })
+      .insert(insertValues)
       .select()
       .single();
 
