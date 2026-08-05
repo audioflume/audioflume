@@ -1,4 +1,9 @@
 import { createHash, createHmac } from "node:crypto";
+import {
+  GetBucketCorsCommand,
+  PutBucketCorsCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
@@ -16,6 +21,14 @@ const VIDEO_EXTENSION_BY_TYPE = new Map([
   ["video/webm", "webm"],
   ["video/quicktime", "mov"],
 ]);
+
+type CorsRule = {
+  AllowedHeaders?: string[];
+  AllowedMethods?: string[];
+  AllowedOrigins?: string[];
+  ExposeHeaders?: string[];
+  MaxAgeSeconds?: number;
+};
 
 function slugify(value: string) {
   return (
@@ -73,13 +86,14 @@ function createPresignedPutUrl({
   const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, "");
   const dateStamp = amzDate.slice(0, 8);
   const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
-  const host = `${accountId}.r2.cloudflarestorage.com`;
-  const canonicalUri = `/${encodeRfc3986(bucket)}/${encodeObjectPath(key)}`;
+  const host = `${bucket}.${accountId}.r2.cloudflarestorage.com`;
+  const canonicalUri = `/${encodeObjectPath(key)}`;
   const signedHeaders = "content-type;host";
   const canonicalHeaders = `content-type:${contentType}\nhost:${host}\n`;
 
   const queryEntries = [
     ["X-Amz-Algorithm", "AWS4-HMAC-SHA256"],
+    ["X-Amz-Content-Sha256", "UNSIGNED-PAYLOAD"],
     ["X-Amz-Credential", `${accessKeyId}/${credentialScope}`],
     ["X-Amz-Date", amzDate],
     ["X-Amz-Expires", String(PRESIGN_EXPIRES_SECONDS)],
@@ -119,6 +133,113 @@ function createPresignedPutUrl({
 
 function buildPublicUrl(publicUrl: string, key: string) {
   return `${publicUrl.replace(/\/$/, "")}/${encodeObjectPath(key)}`;
+}
+
+function getRequestOrigin(req: Request) {
+  const origin = req.headers.get("origin");
+
+  if (!origin) return "";
+
+  try {
+    const parsed = new URL(origin);
+
+    if (!['http:', 'https:'].includes(parsed.protocol)) return "";
+
+    return parsed.origin;
+  } catch {
+    return "";
+  }
+}
+
+function getErrorText(error: unknown) {
+  if (error instanceof Error) return `${error.name} ${error.message}`;
+  if (!error || typeof error !== "object") return "";
+
+  const record = error as Record<string, unknown>;
+
+  return [record.name, record.Code, record.code, record.message]
+    .filter((value): value is string => typeof value === "string")
+    .join(" ");
+}
+
+function isMissingCorsConfiguration(error: unknown) {
+  const message = getErrorText(error).toLowerCase();
+
+  return (
+    message.includes("nosuchcorsconfiguration") ||
+    message.includes("cors configuration does not exist")
+  );
+}
+
+function corsRuleAllowsUpload(rule: CorsRule, origin: string) {
+  const origins = rule.AllowedOrigins ?? [];
+  const methods = rule.AllowedMethods ?? [];
+  const headers = (rule.AllowedHeaders ?? []).map((header) =>
+    header.toLowerCase(),
+  );
+
+  return (
+    (origins.includes(origin) || origins.includes("*")) &&
+    methods.includes("PUT") &&
+    (headers.includes("content-type") || headers.includes("*"))
+  );
+}
+
+async function ensureVideoBucketCors({
+  accountId,
+  accessKeyId,
+  secretAccessKey,
+  bucket,
+  origin,
+}: {
+  accountId: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  bucket: string;
+  origin: string;
+}) {
+  if (!origin) return;
+
+  const client = new S3Client({
+    region: "auto",
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+    requestChecksumCalculation: "WHEN_REQUIRED",
+  });
+
+  let rules: CorsRule[] = [];
+
+  try {
+    const current = await client.send(
+      new GetBucketCorsCommand({ Bucket: bucket }),
+    );
+    rules = current.CORSRules ?? [];
+  } catch (error) {
+    if (!isMissingCorsConfiguration(error)) throw error;
+  }
+
+  if (rules.some((rule) => corsRuleAllowsUpload(rule, origin))) return;
+
+  await client.send(
+    new PutBucketCorsCommand({
+      Bucket: bucket,
+      CORSConfiguration: {
+        CORSRules: [
+          ...rules,
+          {
+            AllowedOrigins: [origin],
+            AllowedMethods: ["PUT"],
+            AllowedHeaders: ["Content-Type"],
+            ExposeHeaders: ["ETag"],
+            MaxAgeSeconds: 3600,
+          },
+        ],
+      },
+    }),
+  );
 }
 
 export async function POST(req: Request) {
@@ -166,6 +287,24 @@ export async function POST(req: Request) {
       throw new Error("Missing Cloudflare R2 credentials");
     }
 
+    const origin = getRequestOrigin(req);
+    let corsWarning = "";
+
+    try {
+      await ensureVideoBucketCors({
+        accountId,
+        accessKeyId,
+        secretAccessKey,
+        bucket,
+        origin,
+      });
+    } catch (corsError) {
+      console.error("Video bucket CORS check failed:", corsError);
+      corsWarning = origin
+        ? `The video bucket must allow PUT requests from ${origin}. The current R2 credentials could not update that CORS rule automatically.`
+        : "The video bucket CORS policy could not be verified.";
+    }
+
     const safeSlug = slugify(slug);
     const videoKey = `playlist covers/${safeSlug}/cover-${Date.now()}.${extension}`;
     const uploadUrl = createPresignedPutUrl({
@@ -183,6 +322,8 @@ export async function POST(req: Request) {
       videoUrl: buildPublicUrl(publicUrl, videoKey),
       contentType: fileType,
       expiresIn: PRESIGN_EXPIRES_SECONDS,
+      allowedOrigin: origin,
+      corsWarning,
     });
   } catch (error) {
     console.error("Video presign failed:", error);
