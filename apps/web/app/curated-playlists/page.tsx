@@ -6,6 +6,11 @@ import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import FeaturedCuratedPlaylist from "./FeaturedCuratedPlaylist";
+import {
+  CuratedPlaylistBottomPortals,
+  CuratedPlaylistCategoryPortals,
+  getCuratedPlaylistGroupId,
+} from "./CuratedPlaylistPortals";
 
 type GroupMeta = {
   name: string;
@@ -316,19 +321,32 @@ export default function CuratedPlaylistsPage() {
             <FeaturedCuratedPlaylist playlist={featuredPlaylist} />
           )}
 
+          {!loading && !error && groupedPlaylists.length > 0 && (
+            <CuratedPlaylistCategoryPortals groups={groupedPlaylists} />
+          )}
+
           {!loading &&
             !error &&
             groupedPlaylists.map(
               ({ name, description, playlists: groupPlaylists }) => (
-                <CuratedPlaylistShelf
+                <div
                   key={name}
-                  title={name}
-                  description={description ?? undefined}
-                  playlists={groupPlaylists}
-                  className="mt-10"
-                />
+                  id={getCuratedPlaylistGroupId(name)}
+                  className="scroll-mt-28"
+                >
+                  <CuratedPlaylistShelf
+                    title={name}
+                    description={description ?? undefined}
+                    playlists={groupPlaylists}
+                    className="mt-10"
+                  />
+                </div>
               ),
             )}
+
+          {!loading && !error && groupedPlaylists.length > 0 && (
+            <CuratedPlaylistBottomPortals groups={groupedPlaylists} />
+          )}
         </div>
       </section>
       <Footer />
