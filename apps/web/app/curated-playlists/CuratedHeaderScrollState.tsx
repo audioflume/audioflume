@@ -2,32 +2,201 @@
 
 import { useLayoutEffect } from "react";
 
+const FEATURED_TRACK_SELECTOR = ".curated-featured-playlist-tracks";
+const FEATURED_COVER_SELECTOR = ".curated-featured-playlist-cover-link";
+const FEATURED_SECTION_SELECTOR = ".curated-featured-playlist";
+const FEATURED_NEXT_SELECTOR = ".curated-featured-playlist-next-button";
+const FEATURED_COUNT_SELECTOR = ".curated-featured-playlist-count";
+const FEATURED_INDICATORS_SELECTOR = ".curated-featured-playlist-indicators";
+const STACKED_FEATURED_MEDIA_QUERY = "(max-width: 980px)";
+const FEATURED_TRACK_VERTICAL_OFFSET = 32;
+
+type PreviousInlineValue = {
+  value: string;
+  priority: string;
+};
+
 export default function CuratedHeaderScrollState() {
   useLayoutEffect(() => {
-    const header = document.querySelector<HTMLElement>(".filmwave-web-header");
-    if (!header) return;
+    const pageLayer = document.querySelector<HTMLElement>(
+      ".curated-playlists-page-layer",
+    );
+    const pageRoot = document.querySelector<HTMLElement>(
+      ".curated-playlists-page-root",
+    );
+    const header = document.querySelector<HTMLElement>(".filmwave-header");
+    const stackedFeaturedQuery = window.matchMedia(
+      STACKED_FEATURED_MEDIA_QUERY,
+    );
+    const previousPaddingTop = pageLayer?.style.getPropertyValue("padding-top") ?? "";
+    const previousPaddingTopPriority =
+      pageLayer?.style.getPropertyPriority("padding-top") ?? "";
+    const previousTrackTranslations = new Map<HTMLElement, PreviousInlineValue>();
+    const previousMeasuredStyles = new Map<
+      HTMLElement,
+      Map<string, PreviousInlineValue>
+    >();
 
-    function applySolidHeader() {
-      if (
-        header.classList.contains("is-solid") &&
-        !header.classList.contains("is-transparent")
-      ) {
-        return;
+    pageLayer?.style.setProperty("padding-top", "0px", "important");
+
+    function setMeasuredStyle(
+      element: HTMLElement | null,
+      property: string,
+      value: string,
+    ) {
+      if (!element) return;
+
+      let elementStyles = previousMeasuredStyles.get(element);
+
+      if (!elementStyles) {
+        elementStyles = new Map<string, PreviousInlineValue>();
+        previousMeasuredStyles.set(element, elementStyles);
       }
 
-      header.classList.remove("is-transparent");
-      header.classList.add("is-solid");
+      if (!elementStyles.has(property)) {
+        elementStyles.set(property, {
+          value: element.style.getPropertyValue(property),
+          priority: element.style.getPropertyPriority(property),
+        });
+      }
+
+      element.style.setProperty(property, value);
     }
 
-    const observer = new MutationObserver(applySolidHeader);
-    observer.observe(header, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
+    function restoreMeasuredStyle(element: HTMLElement | null, property: string) {
+      if (!element) return;
 
-    applySolidHeader();
+      const previousValue = previousMeasuredStyles.get(element)?.get(property);
+      if (!previousValue) return;
 
-    return () => observer.disconnect();
+      if (previousValue.value) {
+        element.style.setProperty(
+          property,
+          previousValue.value,
+          previousValue.priority,
+        );
+      } else {
+        element.style.removeProperty(property);
+      }
+    }
+
+    function syncFeaturedTrackPosition() {
+      const featuredCover = document.querySelector<HTMLElement>(
+        FEATURED_COVER_SELECTOR,
+      );
+      const headerHeight = header?.getBoundingClientRect().height || 75;
+
+      document
+        .querySelectorAll<HTMLElement>(FEATURED_TRACK_SELECTOR)
+        .forEach((trackPanel) => {
+          if (!previousTrackTranslations.has(trackPanel)) {
+            previousTrackTranslations.set(trackPanel, {
+              value: trackPanel.style.getPropertyValue("translate"),
+              priority: trackPanel.style.getPropertyPriority("translate"),
+            });
+          }
+
+          const featuredSection = trackPanel.closest<HTMLElement>(
+            FEATURED_SECTION_SELECTOR,
+          );
+          const nextButton =
+            featuredSection?.querySelector<HTMLElement>(FEATURED_NEXT_SELECTOR) ??
+            null;
+          const count =
+            featuredSection?.querySelector<HTMLElement>(FEATURED_COUNT_SELECTOR) ??
+            null;
+          const indicators =
+            featuredSection?.querySelector<HTMLElement>(
+              FEATURED_INDICATORS_SELECTOR,
+            ) ?? null;
+
+          if (stackedFeaturedQuery.matches) {
+            trackPanel.style.setProperty("translate", "none");
+            restoreMeasuredStyle(nextButton, "top");
+            restoreMeasuredStyle(count, "right");
+            restoreMeasuredStyle(indicators, "right");
+            return;
+          }
+
+          trackPanel.style.setProperty("translate", "none");
+
+          const coverBottom = featuredCover?.getBoundingClientRect().bottom;
+          const trackBottom = trackPanel.getBoundingClientRect().bottom;
+          const offset =
+            typeof coverBottom === "number"
+              ? coverBottom - trackBottom + FEATURED_TRACK_VERTICAL_OFFSET
+              : headerHeight / 2 + FEATURED_TRACK_VERTICAL_OFFSET;
+
+          trackPanel.style.setProperty("translate", `0 ${offset}px`);
+
+          if (!featuredSection) return;
+
+          const featuredRect = featuredSection.getBoundingClientRect();
+          const trackRect = trackPanel.getBoundingClientRect();
+          const trackCenter =
+            trackRect.top - featuredRect.top + trackRect.height / 2;
+          const trackRightInset = Math.max(
+            0,
+            featuredRect.right - trackRect.right,
+          );
+
+          setMeasuredStyle(nextButton, "top", `${trackCenter}px`);
+          setMeasuredStyle(count, "right", `${trackRightInset}px`);
+          setMeasuredStyle(indicators, "right", `${trackRightInset}px`);
+        });
+    }
+
+    const pageObserver = new MutationObserver(syncFeaturedTrackPosition);
+
+    if (pageRoot) {
+      pageObserver.observe(pageRoot, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    syncFeaturedTrackPosition();
+    window.addEventListener("resize", syncFeaturedTrackPosition);
+    stackedFeaturedQuery.addEventListener("change", syncFeaturedTrackPosition);
+
+    return () => {
+      window.removeEventListener("resize", syncFeaturedTrackPosition);
+      stackedFeaturedQuery.removeEventListener(
+        "change",
+        syncFeaturedTrackPosition,
+      );
+      pageObserver.disconnect();
+
+      previousTrackTranslations.forEach(({ value, priority }, trackPanel) => {
+        if (value) {
+          trackPanel.style.setProperty("translate", value, priority);
+        } else {
+          trackPanel.style.removeProperty("translate");
+        }
+      });
+
+      previousMeasuredStyles.forEach((properties, element) => {
+        properties.forEach(({ value, priority }, property) => {
+          if (value) {
+            element.style.setProperty(property, value, priority);
+          } else {
+            element.style.removeProperty(property);
+          }
+        });
+      });
+
+      if (pageLayer) {
+        if (previousPaddingTop) {
+          pageLayer.style.setProperty(
+            "padding-top",
+            previousPaddingTop,
+            previousPaddingTopPriority,
+          );
+        } else {
+          pageLayer.style.removeProperty("padding-top");
+        }
+      }
+    };
   }, []);
 
   return null;
