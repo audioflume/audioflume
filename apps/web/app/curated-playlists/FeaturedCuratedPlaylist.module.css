@@ -1,8 +1,14 @@
 .section {
-  width: min(100%, 1280px);
-  margin-right: auto;
-  margin-left: auto;
-  padding-top: calc(var(--filmwave-header-height, 56px) + 16px);
+  --curated-feature-edge: clamp(12px, 1.5vw, 20px);
+
+  width: auto;
+  margin-right: calc(
+    var(--curated-feature-edge) - var(--curated-page-gutter)
+  );
+  margin-left: calc(
+    var(--curated-feature-edge) - var(--curated-page-gutter)
+  );
+  padding-top: 14px;
 }
 
 .card {
@@ -232,7 +238,9 @@
 
 @media (max-width: 700px) {
   .section {
-    padding-top: calc(var(--filmwave-header-height, 56px) + 12px);
+    --curated-feature-edge: 12px;
+
+    padding-top: 12px;
   }
 
   .card,
