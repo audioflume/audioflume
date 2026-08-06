@@ -106,8 +106,8 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist-heading h2 {
   background:
     linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(0, 0, 0, 0.08) 30%,
+      transparent 0%,
+      transparent 55%,
       rgba(0, 0, 0, 0.54) 100%
     ),
     linear-gradient(
