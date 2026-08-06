@@ -4,7 +4,7 @@ import "../discover/discover-reference-layout.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
-    --curated-featured-hero-height: clamp(380px, 48vh, 540px);
+    --curated-featured-hero-height: clamp(500px, 69vh, 760px);
     --curated-landing-card-gap: 12px;
     --curated-landing-content-width: min(
       calc(

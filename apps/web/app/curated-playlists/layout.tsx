@@ -25,10 +25,6 @@ const CURATED_FEATURED_STYLE = `
     font-size: clamp(22px, 2vw, 32px) !important;
   }
 
-  body:has(.curated-playlists-page-root) .curated-featured-playlist-content {
-    padding-bottom: 104px !important;
-  }
-
   body:has(.curated-playlists-page-root) .curated-featured-playlist-image {
     filter: blur(10px);
     transform: scale(1.04);
@@ -246,10 +242,6 @@ const CURATED_FEATURED_STYLE = `
     body:has(.curated-playlists-page-root)
       .curated-featured-playlist-loading-image::after {
       top: 340px !important;
-    }
-
-    body:has(.curated-playlists-page-root) .curated-featured-playlist-content {
-      padding-bottom: 76px !important;
     }
 
     body:has(.curated-playlists-page-root) .curated-featured-playlist-tracks {
