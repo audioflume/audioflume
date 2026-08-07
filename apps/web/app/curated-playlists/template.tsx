@@ -207,6 +207,13 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     margin-left: auto;
   }
 
+  body:has(.curated-playlists-page-root) .curated-playlist-shelf-heading {
+    width: calc(
+      100vw - var(--curated-feature-edge) - var(--curated-feature-edge)
+    );
+    margin-left: calc(50% - 50vw + var(--curated-feature-edge));
+  }
+
   body:has(.curated-playlists-page-root) .curated-playlist-shelf-viewport {
     width: 100vw;
     margin-right: calc(50% - 50vw) !important;
