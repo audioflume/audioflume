@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
 
 type GroupMeta = {
   name: string;
@@ -528,6 +529,10 @@ export default function CuratedPlaylistsPage() {
             />
           )}
 
+          {!loading && !error && groupedPlaylists.length > 0 && (
+            <CuratedFeatureFilters groups={groupedPlaylists} />
+          )}
+
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
           {!loading && error && (
@@ -553,13 +558,14 @@ export default function CuratedPlaylistsPage() {
             !error &&
             groupedPlaylists.map(
               ({ name, description, playlists: groupPlaylists }) => (
-                <CuratedPlaylistShelf
-                  key={name}
-                  title={name}
-                  description={description ?? undefined}
-                  playlists={groupPlaylists}
-                  className="mt-10"
-                />
+                <div key={name} id={getCuratedGroupId(name)} className="scroll-mt-28">
+                  <CuratedPlaylistShelf
+                    title={name}
+                    description={description ?? undefined}
+                    playlists={groupPlaylists}
+                    className="mt-10"
+                  />
+                </div>
               ),
             )}
         </div>
