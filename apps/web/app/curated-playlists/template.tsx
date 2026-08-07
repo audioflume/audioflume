@@ -7,8 +7,11 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     --curated-feature-edge: 34px;
     --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
     --curated-landing-card-gap: 12px;
-    --curated-landing-content-width: calc(
-      100vw - var(--curated-feature-edge) - var(--curated-feature-edge)
+    --curated-landing-content-width: min(
+      calc(
+        100vw - var(--curated-feature-edge) - var(--curated-feature-edge)
+      ),
+      var(--discover-editorial-width, 1280px)
     );
     --curated-landing-card-width: calc(
       (
