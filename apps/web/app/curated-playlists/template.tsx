@@ -50,7 +50,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     width: var(--curated-feature-title-thumbnail-size);
     height: var(--curated-feature-title-thumbnail-size);
     overflow: hidden;
-    border-radius: 6px;
+    border-radius: 0;
     background: rgba(255, 255, 255, 0.12);
   }
 
