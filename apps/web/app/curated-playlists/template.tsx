@@ -31,7 +31,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
-    padding-top: calc(var(--filmwave-header-height, 75px) + 20px) !important;
+    padding-top: calc(var(--filmwave-header-height, 75px) + 3px) !important;
     padding-bottom: 0;
   }
 
@@ -300,7 +300,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     }
 
     body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
-      padding-top: calc(var(--filmwave-header-height, 75px) + 14px) !important;
+      padding-top: calc(var(--filmwave-header-height, 75px) + 3px) !important;
     }
   }
 
