@@ -5,41 +5,24 @@ body:has(.discover-page-root) .discover-jump-back-section {
 
 body:has(.curated-playlists-page-root) .curated-last-viewed-section {
   width: min(100%, 1280px);
-  margin: clamp(64px, 6vw, 96px) auto 0;
+  margin: 75px auto 0;
 }
 
 body:has(.curated-playlists-page-root) .curated-last-viewed-section:empty {
   display: none;
 }
 
-body:has(.curated-playlists-page-root)
-  .curated-last-viewed-section
-  + .mt-10 {
-  margin-top: clamp(64px, 6vw, 96px) !important;
-}
-
 body:has(.curated-playlists-page-root) .curated-last-viewed-heading {
-  margin-bottom: 20px !important;
-}
-
-body:has(.curated-playlists-page-root) .curated-last-viewed-heading h2 {
-  font-family: var(--font-aktiv-grotesk), sans-serif !important;
-  font-size: clamp(18px, 1.25vw, 23px) !important;
-  font-weight: 500 !important;
-  font-kerning: normal !important;
-  letter-spacing: -.025em !important;
-  line-height: 1 !important;
-  text-transform: uppercase !important;
+  display: flex;
+  min-height: 34px;
+  align-items: center !important;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px !important;
 }
 
 @media (max-width: 620px) {
   body:has(.curated-playlists-page-root) .curated-last-viewed-section {
     margin-top: 52px;
-  }
-
-  body:has(.curated-playlists-page-root)
-    .curated-last-viewed-section
-    + .mt-10 {
-    margin-top: 52px !important;
   }
 }
