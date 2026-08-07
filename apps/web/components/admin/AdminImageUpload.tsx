@@ -36,16 +36,12 @@ export default function AdminImageUpload({
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
   const [preview, setPreview] = useState(currentUrl);
-  const userEditedRef = useRef(false);
 
   useEffect(() => {
-    if (!userEditedRef.current) {
-      setPreview(currentUrl);
-    }
+    setPreview(currentUrl);
   }, [currentUrl]);
 
   async function handleFile(file: File) {
-    userEditedRef.current = true;
     setError("");
     setUploading(true);
 
@@ -73,7 +69,6 @@ export default function AdminImageUpload({
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
       setPreview(currentUrl);
-      userEditedRef.current = false;
     } finally {
       setUploading(false);
     }
@@ -106,7 +101,6 @@ export default function AdminImageUpload({
         }
       }
 
-      userEditedRef.current = true;
       setPreview("");
       onUploaded("");
       onDeleted?.();
@@ -240,7 +234,6 @@ export default function AdminImageUpload({
           type="url"
           value={preview}
           onChange={(e) => {
-            userEditedRef.current = true;
             setPreview(e.target.value);
             onUploaded(e.target.value);
           }}
