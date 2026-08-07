@@ -241,7 +241,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root) div[id^="curated-group-"] {
-    margin-top: 100px;
+    margin-top: 75px;
   }
 
   body:has(.curated-playlists-page-root)
