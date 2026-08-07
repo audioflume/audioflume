@@ -243,6 +243,12 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     margin-top: 100px;
   }
 
+  body:has(.curated-playlists-page-root)
+    .curated-feature-filters
+    + div[id^="curated-group-"] {
+    margin-top: 75px;
+  }
+
   body:has(.curated-playlists-page-root) div[id^="curated-group-"] > div {
     margin-top: 0 !important;
   }
