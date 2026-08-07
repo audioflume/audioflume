@@ -57,11 +57,6 @@ body:has(.curated-playlists-page-root) {
   transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.curated-feature-hero:hover .curated-feature-hero-media,
-.curated-feature-hero:focus-within .curated-feature-hero-media {
-  transform: scale(1.018);
-}
-
 .curated-feature-hero-video {
   opacity: 0;
   animation: none;
