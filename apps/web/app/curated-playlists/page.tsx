@@ -20,8 +20,6 @@ type GroupMeta = {
   description: string | null;
 };
 
-const FEATURED_PLAYLIST_COUNT = 3;
-
 function getTopGenres(songs: CuratedPlaylistSong[]) {
   const genreCounts = new Map<string, { label: string; count: number }>();
 
@@ -497,19 +495,19 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
-  const featuredPlaylists = useMemo(() => {
-    const orderedFeatured = playlists
-      .filter((playlist) => playlist.show_on_discover)
-      .sort((a, b) => a.discover_position - b.discover_position);
-    const orderedFallbacks = playlists
-      .filter((playlist) => !playlist.show_on_discover)
-      .sort((a, b) => a.position - b.position);
+  const featuredPlaylists = useMemo(
+    () =>
+      playlists
+        .filter((playlist) => playlist.show_on_curated_feature)
+        .sort((a, b) => {
+          const timeA = a.created_at ? Date.parse(a.created_at) : 0;
+          const timeB = b.created_at ? Date.parse(b.created_at) : 0;
 
-    return [...orderedFeatured, ...orderedFallbacks].slice(
-      0,
-      FEATURED_PLAYLIST_COUNT,
-    );
-  }, [playlists]);
+          if (timeA !== timeB) return timeB - timeA;
+          return b.id - a.id;
+        }),
+    [playlists],
+  );
 
   useEffect(() => {
     if (activeFeaturedIndex >= featuredPlaylists.length) {

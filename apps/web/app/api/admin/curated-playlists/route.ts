@@ -71,6 +71,7 @@ export async function POST(req: Request) {
     const description = cleanString(body.description);
     const discoverSection = cleanDiscoverSection(body.discover_section);
     const showOnDiscover = cleanBoolean(body.show_on_discover);
+    const showOnCuratedFeature = cleanBoolean(body.show_on_curated_feature);
 
     if (!name) {
       return NextResponse.json({ error: "Missing playlist name" }, { status: 400 });
@@ -114,6 +115,7 @@ export async function POST(req: Request) {
       description,
       discover_section: discoverSection,
       show_on_discover: showOnDiscover,
+      show_on_curated_feature: showOnCuratedFeature,
       discover_position: nextDiscoverPosition,
       position: nextPosition,
     };

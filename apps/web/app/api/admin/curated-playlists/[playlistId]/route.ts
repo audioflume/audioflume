@@ -76,6 +76,12 @@ export async function PATCH(req: Request, context: RouteContext) {
       updates.show_on_discover = cleanBoolean(body.show_on_discover);
     }
 
+    if (hasField(body, "show_on_curated_feature")) {
+      updates.show_on_curated_feature = cleanBoolean(
+        body.show_on_curated_feature,
+      );
+    }
+
     const { data, error } = await supabaseServer
       .from("curated_playlists")
       .update(updates)

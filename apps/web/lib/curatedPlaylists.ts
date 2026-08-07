@@ -11,6 +11,7 @@ export type CuratedPlaylist = {
   description: string;
   discover_section: string | null;
   show_on_discover: boolean;
+  show_on_curated_feature: boolean;
   discover_position: number;
   discover_button_enabled: boolean;
   discover_button_text: string;
@@ -37,6 +38,7 @@ type CuratedPlaylistRow = {
   description?: string | null;
   discover_section?: string | null;
   show_on_discover?: boolean | null;
+  show_on_curated_feature?: boolean | null;
   discover_position?: number | null;
   discover_button_enabled?: boolean | null;
   discover_button_text?: string | null;
@@ -91,6 +93,7 @@ export function normalizeCuratedPlaylist(
     description: String(row.description || ""),
     discover_section: row.discover_section ? String(row.discover_section) : null,
     show_on_discover: Boolean(row.show_on_discover),
+    show_on_curated_feature: Boolean(row.show_on_curated_feature),
     discover_position: Number(row.discover_position || 0),
     discover_button_enabled: row.discover_button_enabled !== false,
     discover_button_text: String(row.discover_button_text || DEFAULT_DISCOVER_BUTTON_TEXT),
@@ -114,6 +117,19 @@ function getErrorText(err: unknown) {
 export function getCuratedPlaylistError(err: unknown, fallback: string) {
   const message = getErrorText(err);
   const normalizedMessage = message.toLowerCase();
+
+  if (
+    normalizedMessage.includes("show_on_curated_feature") &&
+    (normalizedMessage.includes("column") ||
+      normalizedMessage.includes("schema cache") ||
+      normalizedMessage.includes("pgrst204") ||
+      normalizedMessage.includes("42703"))
+  ) {
+    return {
+      error:
+        "Featured curated playlists require the Supabase migration apps/web/supabase/migrations/20260807090000_add_curated_playlist_featured.sql. Apply that migration, then save the playlist again.",
+    };
+  }
 
   if (
     normalizedMessage.includes("cover_video_url") &&

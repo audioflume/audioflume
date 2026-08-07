@@ -36,6 +36,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const [playlistGroup, setPlaylistGroup] = useState(
     DEFAULT_CURATED_PLAYLIST_GROUP,
   );
+  const [showOnCuratedFeature, setShowOnCuratedFeature] = useState(false);
   const [showOnDiscover, setShowOnDiscover] = useState(false);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
   const [loading, setLoading] = useState(mode === "edit");
@@ -72,6 +73,9 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           setCoverVideoTouched(false);
           setPlaylistGroup(
             playlistData.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP,
+          );
+          setShowOnCuratedFeature(
+            Boolean(playlistData.show_on_curated_feature),
           );
           setShowOnDiscover(Boolean(playlistData.show_on_discover));
           setSongs(Array.isArray(songsData) ? songsData : []);
@@ -121,6 +125,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         kicker,
         cover_image_url: coverImageUrl,
         playlist_group: playlistGroup,
+        show_on_curated_feature: showOnCuratedFeature,
         show_on_discover: showOnDiscover,
       };
 
@@ -241,6 +246,24 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                     </option>
                   ))}
                 </select>
+              </label>
+
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
+                <input
+                  type="checkbox"
+                  checked={showOnCuratedFeature}
+                  onChange={(e) => setShowOnCuratedFeature(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 accent-[var(--text-primary)]"
+                />
+                <span>
+                  <span className="block font-medium text-[var(--text-primary)]">
+                    Feature on Curated Playlists
+                  </span>
+                  <span className="mt-1 block text-xs text-[var(--text-muted)]">
+                    Adds this playlist to the featured banner on the Curated
+                    Playlists page.
+                  </span>
+                </span>
               </label>
 
               <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
