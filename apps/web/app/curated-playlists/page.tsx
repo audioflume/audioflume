@@ -252,13 +252,43 @@ function FeaturedPlaylistBlock({
   genres: string[];
 }) {
   const playlist = playlists[activeIndex];
+  const heroRef = useRef<HTMLElement | null>(null);
   const videoActiveRef = useRef(false);
   const [videoVisible, setVideoVisible] = useState(false);
 
   useEffect(() => {
+    const hero = heroRef.current;
+
     videoActiveRef.current = false;
     setVideoVisible(false);
-  }, [playlist?.id]);
+
+    if (!hero || !playlist?.cover_video_url) {
+      if (hero) pauseCoverVideo(hero);
+      return;
+    }
+
+    const shouldActivate =
+      hero.matches(":hover") || hero.contains(document.activeElement);
+
+    if (!shouldActivate) {
+      pauseCoverVideo(hero);
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      if (
+        heroRef.current !== hero ||
+        (!hero.matches(":hover") && !hero.contains(document.activeElement))
+      ) {
+        return;
+      }
+
+      videoActiveRef.current = true;
+      playCoverVideo(hero);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [playlist?.id, playlist?.cover_video_url]);
 
   if (!playlist) return null;
 
@@ -285,6 +315,7 @@ function FeaturedPlaylistBlock({
 
   return (
     <section
+      ref={heroRef}
       className="curated-feature-hero"
       aria-labelledby={`curated-feature-hero-${playlist.id}`}
       onMouseEnter={(event) => activateVideo(event.currentTarget)}
