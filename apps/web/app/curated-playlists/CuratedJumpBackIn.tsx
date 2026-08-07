@@ -13,6 +13,7 @@ import RecentPlaylistTracker, {
   type RecentPlaylistEntry,
 } from "@/components/RecentPlaylistTracker";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import "../discover/discover-hero-last-viewed.css";
 import "./curated-jump-back-in.css";
 
 type CommunityPlaylistSummary = {
@@ -231,13 +232,9 @@ export default function CuratedJumpBackIn({
 
   const isInlineLoading =
     renderInline && (!recentEntriesLoaded || !playlistsLoaded);
-  const headingClassName =
-    renderInline && placement === "hero"
-      ? "discover-hero-last-viewed-heading curated-last-viewed-heading"
-      : "discover-section-heading curated-last-viewed-heading";
   const content = (
     <>
-      <div className={headingClassName}>
+      <div className="discover-hero-last-viewed-heading">
         <h2>Jump Back In</h2>
       </div>
 
