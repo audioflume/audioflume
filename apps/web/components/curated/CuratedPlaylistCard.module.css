@@ -84,17 +84,6 @@
   transition: transform 500ms ease;
 }
 
-.coverVideo {
-  opacity: 0;
-  transition:
-    opacity 150ms ease,
-    transform 500ms ease;
-}
-
-.coverVideoVisible {
-  opacity: 1;
-}
-
 .card:hover .media {
   transform: scale(1.025);
 }
