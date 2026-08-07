@@ -65,29 +65,42 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     height: 38px !important;
   }
 
+  @media (min-width: 721px) {
+    body:has(.curated-playlists-page-root) .curated-feature-hero-info {
+      bottom: 30px;
+    }
+  }
+
   body:has(.curated-playlists-page-root) .curated-feature-hero-tags {
     margin-top: 20px;
   }
 
   body:has(.curated-playlists-page-root) .curated-feature-hero-tags span {
     min-height: 22px;
-    padding-right: 10px;
-    padding-left: 10px;
-    font-size: 11.5px !important;
+    padding: 2px 10px;
+    font-family: var(--font-aktiv-grotesk), sans-serif !important;
+    font-size: 12px !important;
     font-weight: 400 !important;
     letter-spacing: 0 !important;
-    line-height: 1.45 !important;
+    line-height: 1.15 !important;
   }
 
   body:has(.curated-playlists-page-root) .curated-feature-hero-indicators {
-    gap: 8px;
-    margin-top: 40px;
+    gap: 4px;
+    margin-top: 48px;
   }
 
   body:has(.curated-playlists-page-root)
     .curated-feature-hero-indicators
     button {
-    width: 40px;
+    width: 32px;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-feature-hero-indicators
+    button
+    span {
+    height: 2px;
   }
 
   body:has(.curated-playlists-page-root) .curated-feature-hero-open {
