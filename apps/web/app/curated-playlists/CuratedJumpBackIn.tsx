@@ -241,7 +241,7 @@ export default function CuratedJumpBackIn({
       <RecentPlaylistCards
         playlists={recentPlaylists}
         loading={isInlineLoading}
-        variant={placement === "hero" ? "hero" : "default"}
+        variant="hero"
       />
     </>
   );
