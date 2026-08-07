@@ -322,13 +322,12 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <AdminVideoUpload
               currentUrl={coverVideoUrl}
-              currentImageUrl={coverImageUrl}
               onUploaded={(url) => {
                 setCoverVideoUrl(url);
                 setCoverVideoTouched(true);
               }}
               onThumbnailUploaded={(url) => {
-                setCoverImageUrl((current) => current || url);
+                setCoverImageUrl(url);
               }}
               slug={nameSlug}
             />
