@@ -6,11 +6,8 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
     --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
     --curated-landing-card-gap: 12px;
-    --curated-landing-content-width: min(
-      calc(
-        100vw - var(--curated-page-gutter) - var(--curated-page-gutter)
-      ),
-      1280px
+    --curated-landing-content-width: calc(
+      100vw - var(--curated-feature-edge) - var(--curated-feature-edge)
     );
     --curated-landing-card-width: calc(
       (
@@ -20,10 +17,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
         ) /
         3
     );
-    --curated-landing-edge-inset: max(
-      var(--curated-page-gutter),
-      calc((100vw - 1280px) / 2)
-    );
+    --curated-landing-edge-inset: var(--curated-feature-edge);
   }
 
   body:has(.curated-playlists-page-root) .curated-feature-hero {
