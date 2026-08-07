@@ -2,16 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import CuratedFeaturedTrackRow from "@/components/curated/CuratedFeaturedTrackRow";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
-import { usePlayer } from "@/context/PlayerContext";
-import type {
-  CuratedPlaylist,
-  CuratedPlaylistSong,
-} from "@/lib/curatedPlaylists";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 type GroupMeta = {
   name: string;
@@ -20,7 +18,6 @@ type GroupMeta = {
 };
 
 const FEATURED_PLAYLIST_COUNT = 3;
-const FEATURED_TRACK_COUNT = 5;
 
 function SkeletonBlock({ className = "" }: { className?: string }) {
   return <span className={`curated-playlist-skeleton-block ${className}`} />;
@@ -195,188 +192,216 @@ function CuratedPlaylistsLoadingSkeleton() {
 function FeaturedPlaylistSkeleton() {
   return (
     <section
-      className="curated-featured-playlist curated-featured-playlist-loading"
+      className="curated-feature-hero curated-feature-hero-loading"
       aria-hidden="true"
     >
-      <div className="curated-featured-playlist-loading-image" />
-      <div className="curated-featured-playlist-loading-tracks">
-        {Array.from({ length: FEATURED_TRACK_COUNT }).map((_, index) => (
-          <div key={index} className="curated-featured-playlist-loading-row" />
-        ))}
-      </div>
+      <div className="curated-feature-hero-loading-media" />
     </section>
   );
+}
+
+function playCoverVideo(element: HTMLElement) {
+  const video = element.querySelector<HTMLVideoElement>("video");
+
+  if (!video) return;
+
+  video.pause();
+  video.currentTime = 0;
+  void video.play().catch(() => {});
+}
+
+function pauseCoverVideo(element: HTMLElement) {
+  element.querySelector<HTMLVideoElement>("video")?.pause();
 }
 
 function FeaturedPlaylistBlock({
   playlists,
   activeIndex,
   onSelect,
-  songs,
-  songsLoading,
 }: {
   playlists: CuratedPlaylist[];
   activeIndex: number;
   onSelect: (index: number) => void;
-  songs: CuratedPlaylistSong[];
-  songsLoading: boolean;
 }) {
   const playlist = playlists[activeIndex];
+  const videoActiveRef = useRef(false);
+  const [videoVisible, setVideoVisible] = useState(false);
+
+  useEffect(() => {
+    videoActiveRef.current = false;
+    setVideoVisible(false);
+  }, [playlist?.id]);
 
   if (!playlist) return null;
 
-  const visibleSongs = songs.slice(0, FEATURED_TRACK_COUNT);
-  const supportingText = playlist.description;
   const playlistHref = `/curated-playlists/${playlist.id}`;
+  const supportingText =
+    playlist.description?.trim() || playlist.kicker?.trim() || "Curated for the edit.";
+  const songCount = Number(playlist.song_count || 0);
+
+  function activateVideo(element: HTMLElement) {
+    videoActiveRef.current = true;
+    playCoverVideo(element);
+  }
+
+  function deactivateVideo(element: HTMLElement) {
+    videoActiveRef.current = false;
+    setVideoVisible(false);
+    pauseCoverVideo(element);
+  }
+
+  function selectOffset(offset: number) {
+    if (playlists.length < 2) return;
+    onSelect((activeIndex + offset + playlists.length) % playlists.length);
+  }
 
   return (
     <section
-      className="curated-featured-playlist"
-      aria-labelledby={`curated-featured-playlist-${playlist.id}`}
+      className="curated-feature-hero"
+      aria-labelledby={`curated-feature-hero-${playlist.id}`}
+      onMouseEnter={(event) => activateVideo(event.currentTarget)}
+      onMouseLeave={(event) => deactivateVideo(event.currentTarget)}
+      onFocus={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          activateVideo(event.currentTarget);
+        }
+      }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          deactivateVideo(event.currentTarget);
+        }
+      }}
     >
-      <div className="curated-featured-playlist-image-panel">
-        {playlist.cover_image_url ? (
-          <Image
-            key={playlist.id}
-            src={playlist.cover_image_url}
-            alt=""
-            fill
-            priority={activeIndex === 0}
-            unoptimized
-            sizes="(min-width: 981px) 66vw, 100vw"
-            className="curated-featured-playlist-image"
+      {playlist.cover_image_url && (
+        <Image
+          key={`${playlist.id}-feature-image`}
+          src={playlist.cover_image_url}
+          alt=""
+          fill
+          priority={activeIndex === 0}
+          unoptimized
+          sizes="calc(100vw - 40px)"
+          className="curated-feature-hero-media"
+        />
+      )}
+
+      {!playlist.cover_image_url && (
+        <div className="curated-feature-hero-fallback" aria-hidden="true" />
+      )}
+
+      {playlist.cover_video_url && (
+        <video
+          key={`${playlist.id}-feature-video`}
+          src={playlist.cover_video_url}
+          className={`curated-feature-hero-media curated-feature-hero-video${
+            videoVisible ? " is-visible" : ""
+          }`}
+          muted
+          loop
+          playsInline
+          preload="none"
+          onPlaying={() => {
+            if (videoActiveRef.current) setVideoVisible(true);
+          }}
+          aria-label={`${playlist.name} cover video`}
+        />
+      )}
+
+      <div className="curated-feature-hero-overlay" aria-hidden="true" />
+
+      <Link
+        href={playlistHref}
+        className="curated-feature-hero-open"
+        aria-label={`Open ${playlist.name}`}
+      >
+        <ArrowUpRightIcon />
+      </Link>
+
+      <div className="curated-feature-hero-title-block">
+        <span>Featured Playlist</span>
+        <h1 id={`curated-feature-hero-${playlist.id}`}>{playlist.name}</h1>
+      </div>
+
+      <div className="curated-feature-hero-info">
+        <div className="curated-feature-hero-play-row">
+          <CuratedPlaylistPlayButton
+            playlistId={playlist.id}
+            playlistName={playlist.name}
+            className="curated-feature-hero-play-button"
           />
-        ) : (
-          <div className="curated-featured-playlist-fallback" />
-        )}
-
-        <div className="curated-featured-playlist-overlay" aria-hidden="true" />
-
-        <div className="curated-featured-playlist-content">
-          <Link
-            href={playlistHref}
-            className="curated-featured-playlist-cover-link"
-            aria-label={`Explore ${playlist.name}`}
-          >
-            {playlist.cover_image_url ? (
-              <Image
-                key={`${playlist.id}-cover`}
-                src={playlist.cover_image_url}
-                alt={`${playlist.name} playlist cover`}
-                fill
-                priority={activeIndex === 0}
-                unoptimized
-                sizes="(min-width: 1281px) 20vw, (min-width: 981px) 25vw, (min-width: 721px) 33vw, 50vw"
-                className="curated-featured-playlist-cover-image"
-              />
-            ) : (
-              <span className="curated-featured-playlist-cover-fallback" />
-            )}
-          </Link>
-
-          <div className="curated-featured-playlist-copy">
-            <span className="curated-featured-playlist-kicker">
-              {playlist.kicker || "Featured playlist"}
+          <div className="curated-feature-hero-play-copy">
+            <strong>{supportingText}</strong>
+            <span>
+              {songCount} track{songCount === 1 ? "" : "s"}
             </span>
-            <h1
-              id={`curated-featured-playlist-${playlist.id}`}
-              className="curated-featured-playlist-title"
-            >
-              {playlist.name}
-            </h1>
-            {supportingText && (
-              <p className="curated-featured-playlist-description">
-                {supportingText}
-              </p>
-            )}
-            <Link href={playlistHref} className="curated-featured-playlist-button">
-              Explore playlist
-            </Link>
           </div>
         </div>
 
+        {playlist.playlist_group && (
+          <div className="curated-feature-hero-tags">
+            <span>{playlist.playlist_group}</span>
+          </div>
+        )}
+
+        {playlists.length > 1 && (
+          <div
+            className="curated-feature-hero-indicators"
+            aria-label="Featured playlists"
+          >
+            {playlists.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                className={index === activeIndex ? "is-active" : ""}
+                aria-label={`Show featured playlist ${item.name}`}
+                aria-pressed={index === activeIndex}
+                onClick={() => onSelect(index)}
+              >
+                <span />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div
+        className="curated-feature-hero-navigation"
+        aria-label="Featured playlist navigation"
+      >
         {playlists.length > 1 && (
           <>
             <button
               type="button"
-              className="curated-featured-playlist-next-button"
-              aria-label="Show next featured playlist"
-              onClick={() => onSelect((activeIndex + 1) % playlists.length)}
+              className="curated-feature-hero-navigation-button is-previous"
+              aria-label="Show previous featured playlist"
+              onClick={() => selectOffset(-1)}
             >
-              <ChevronRightIcon size={18} />
+              <ChevronRightIcon size={14} />
             </button>
-
-            <span
-              className="curated-featured-playlist-count"
-              aria-live="polite"
+            <button
+              type="button"
+              className="curated-feature-hero-navigation-button"
+              aria-label="Show next featured playlist"
+              onClick={() => selectOffset(1)}
             >
-              {activeIndex + 1}/{playlists.length}
-            </span>
-
-            <div
-              className="curated-featured-playlist-indicators"
-              aria-label="Featured playlists"
-            >
-              {playlists.map((item, index) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={index === activeIndex ? "is-active" : ""}
-                  aria-label={`Show featured playlist ${item.name}`}
-                  aria-pressed={index === activeIndex}
-                  onClick={() => onSelect(index)}
-                >
-                  <span />
-                </button>
-              ))}
-            </div>
+              <ChevronRightIcon size={14} />
+            </button>
           </>
         )}
+        <span className="curated-feature-hero-navigation-count" aria-live="polite">
+          {activeIndex + 1}/{playlists.length}
+        </span>
       </div>
-
-      <aside
-        className="curated-featured-playlist-tracks"
-        aria-label={`${playlist.name} featured tracks`}
-      >
-        <div className="curated-featured-playlist-track-list">
-          {songsLoading
-            ? Array.from({ length: FEATURED_TRACK_COUNT }).map((_, index) => (
-                <div
-                  key={index}
-                  className="curated-featured-playlist-track-skeleton"
-                  aria-hidden="true"
-                />
-              ))
-            : visibleSongs.map((song, index) => (
-                <CuratedFeaturedTrackRow
-                  key={song.id}
-                  song={song}
-                  index={index + 30}
-                />
-              ))}
-
-          {!songsLoading && visibleSongs.length === 0 && (
-            <div className="curated-featured-playlist-empty-tracks">
-              No tracks have been added yet.
-            </div>
-          )}
-        </div>
-      </aside>
     </section>
   );
 }
 
 export default function CuratedPlaylistsPage() {
-  const { setQueue } = usePlayer();
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [groups, setGroups] = useState<GroupMeta[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
-  const [featuredSongsByPlaylist, setFeaturedSongsByPlaylist] = useState<
-    Record<number, CuratedPlaylistSong[]>
-  >({});
-  const [featuredSongsLoading, setFeaturedSongsLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -459,71 +484,6 @@ export default function CuratedPlaylistsPage() {
     }
   }, [activeFeaturedIndex, featuredPlaylists.length]);
 
-  useEffect(() => {
-    let cancelled = false;
-    const featuredPlaylistIds = featuredPlaylists.map(
-      (playlist) => playlist.id,
-    );
-
-    if (featuredPlaylistIds.length === 0) {
-      setFeaturedSongsByPlaylist({});
-      setFeaturedSongsLoading(false);
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    setFeaturedSongsLoading(true);
-
-    Promise.all(
-      featuredPlaylistIds.map(async (playlistId) => {
-        try {
-          const response = await fetch(
-            `/api/curated-playlists/${encodeURIComponent(String(playlistId))}/songs`,
-          );
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(
-              data?.error || `Failed to load featured playlist ${playlistId}`,
-            );
-          }
-
-          return [playlistId, Array.isArray(data) ? data : []] as const;
-        } catch (fetchError) {
-          console.error("Featured playlist songs fetch failed:", fetchError);
-          return [playlistId, []] as const;
-        }
-      }),
-    )
-      .then((entries) => {
-        if (!cancelled) {
-          setFeaturedSongsByPlaylist(Object.fromEntries(entries));
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setFeaturedSongsLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [featuredPlaylists]);
-
-  const activeFeaturedPlaylist = featuredPlaylists[activeFeaturedIndex] ?? null;
-  const activeFeaturedSongs = useMemo(() => {
-    if (!activeFeaturedPlaylist) return [];
-    return featuredSongsByPlaylist[activeFeaturedPlaylist.id] ?? [];
-  }, [activeFeaturedPlaylist, featuredSongsByPlaylist]);
-  const playableFeaturedSongs = useMemo(
-    () => activeFeaturedSongs.filter((song) => Boolean(song.audioUrl)),
-    [activeFeaturedSongs],
-  );
-
-  useEffect(() => {
-    if (!featuredSongsLoading) setQueue(playableFeaturedSongs);
-  }, [featuredSongsLoading, playableFeaturedSongs, setQueue]);
-
   const groupedPlaylists = useMemo(() => {
     const playlistMap = new Map<string, CuratedPlaylist[]>();
 
@@ -558,12 +518,6 @@ export default function CuratedPlaylistsPage() {
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
         <div className="px-8">
-          {(loading || featuredPlaylists.length > 0) && (
-            <div className="discover-section-heading curated-featured-playlist-heading">
-              <h2>Featured playlists</h2>
-            </div>
-          )}
-
           {loading && <FeaturedPlaylistSkeleton />}
 
           {!loading && featuredPlaylists.length > 0 && (
@@ -571,8 +525,6 @@ export default function CuratedPlaylistsPage() {
               playlists={featuredPlaylists}
               activeIndex={activeFeaturedIndex}
               onSelect={setActiveFeaturedIndex}
-              songs={activeFeaturedSongs}
-              songsLoading={featuredSongsLoading}
             />
           )}
 

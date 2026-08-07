@@ -78,10 +78,7 @@ export default function Header() {
     CuratedPlaylistPreview[]
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
-  const transparentAtTop =
-    pathname === "/" ||
-    pathname === "/discover" ||
-    pathname === "/curated-playlists";
+  const transparentAtTop = pathname === "/" || pathname === "/discover";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
   const headerClassName = [

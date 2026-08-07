@@ -4,7 +4,7 @@ import "../discover/discover-reference-layout.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
-    --curated-featured-hero-height: clamp(500px, 69vh, 760px);
+    --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
     --curated-landing-card-gap: 12px;
     --curated-landing-content-width: min(
       calc(
@@ -26,14 +26,14 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     );
   }
 
-  body:has(.curated-playlists-page-root) .curated-featured-playlist {
-    height: var(--curated-featured-hero-height);
-    min-height: var(--curated-featured-hero-height);
-    max-height: var(--curated-featured-hero-height);
+  body:has(.curated-playlists-page-root) .curated-feature-hero {
+    height: var(--curated-feature-hero-height);
+    min-height: var(--curated-feature-hero-height);
+    max-height: var(--curated-feature-hero-height);
   }
 
   body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
-    padding-top: calc(var(--filmwave-header-height, 75px) + 40px) !important;
+    padding-top: calc(var(--filmwave-header-height, 75px) + 20px) !important;
     padding-bottom: 0;
   }
 
@@ -80,7 +80,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-playlists-page-layer
     > div
-    > .curated-featured-playlist
+    > .curated-feature-hero
     + .mt-10 {
     margin-top: clamp(64px, 6vw, 96px) !important;
   }
@@ -202,10 +202,18 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   @media (max-width: 620px) {
+    body:has(.curated-playlists-page-root) {
+      --curated-feature-hero-height: 330px;
+    }
+
+    body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
+      padding-top: calc(var(--filmwave-header-height, 75px) + 14px) !important;
+    }
+
     body:has(.curated-playlists-page-root)
       .curated-playlists-page-layer
       > div
-      > .curated-featured-playlist
+      > .curated-feature-hero
       + .mt-10,
     body:has(.curated-playlists-page-root)
       .curated-playlists-page-layer
@@ -218,6 +226,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
 
   @media (max-width: 560px) {
     body:has(.curated-playlists-page-root) {
+      --curated-feature-hero-height: 320px;
       --curated-landing-card-width: var(--curated-landing-content-width);
     }
   }
