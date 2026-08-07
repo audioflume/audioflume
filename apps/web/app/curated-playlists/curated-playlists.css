@@ -64,6 +64,7 @@ body:has(.curated-playlists-page-root) {
 
 .curated-feature-hero-video {
   opacity: 0;
+  animation: none;
   transition:
     opacity 150ms ease,
     transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
