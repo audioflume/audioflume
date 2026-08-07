@@ -295,7 +295,10 @@ function FeaturedPlaylistBlock({
         }
       }}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        if (
+          !event.currentTarget.contains(event.relatedTarget as Node | null) &&
+          !event.currentTarget.matches(":hover")
+        ) {
           deactivateVideo(event.currentTarget);
         }
       }}
