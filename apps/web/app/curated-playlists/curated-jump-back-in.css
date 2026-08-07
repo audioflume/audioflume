@@ -12,6 +12,13 @@ body:has(.curated-playlists-page-root) .curated-last-viewed-section:empty {
   display: none;
 }
 
+:where(html.light, html[data-theme="light"])
+  body:has(.curated-playlists-page-root)
+  .discover-hero-last-viewed-heading
+  h2 {
+  color: var(--text-primary);
+}
+
 @media (max-width: 620px) {
   body:has(.curated-playlists-page-root) .curated-last-viewed-section {
     margin-top: 52px;
