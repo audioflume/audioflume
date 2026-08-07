@@ -168,16 +168,6 @@ body:has(.discover-page-root)
   color: var(--text-primary);
 }
 
-:where(html.light, html[data-theme="light"])
-  body:has(.discover-page-root)
-  .discover-hero-last-viewed
-  .recent-playlist-card-list.is-hero {
-  --bg-hover: var(--bg-hover-strong);
-  --bg-elevated: var(--bg-control);
-  --text-primary: #111111;
-  --text-muted: rgba(17, 17, 17, 0.42);
-}
-
 body:has(.discover-page-root)
   .discover-curated-playlist-section
   .discover-playlist-card.discover-card-skeleton,
@@ -195,21 +185,6 @@ body:has(.discover-page-root)
 }
 
 body:has(.discover-page-root) .discover-staff-favorite-image {
-  border-radius: 12px;
-}
-
-body:has(.discover-page-root)
-  .discover-hero-last-viewed
-  .recent-playlist-card-cover,
-body:has(.discover-page-root)
-  .discover-hero-last-viewed
-  .recent-playlist-card-placeholder {
-  border-radius: 6px;
-}
-
-body:has(.discover-page-root)
-  .discover-hero-last-viewed
-  .recent-playlist-card {
   border-radius: 12px;
 }
 
