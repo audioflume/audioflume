@@ -19,7 +19,6 @@ const VIDEO_TYPE_BY_EXTENSION = new Map([
 
 type Props = {
   currentUrl: string;
-  currentImageUrl?: string;
   onUploaded: (url: string) => void;
   onThumbnailUploaded?: (url: string) => void;
   onDeleted?: () => void;
@@ -137,7 +136,6 @@ async function uploadVideoThumbnail(file: File, slug: string) {
 
 export default function AdminVideoUpload({
   currentUrl,
-  currentImageUrl = "",
   onUploaded,
   onThumbnailUploaded,
   onDeleted,
@@ -198,9 +196,7 @@ export default function AdminVideoUpload({
     setPreview(localUrl);
 
     let thumbnailWarning = "";
-    const shouldGenerateThumbnail =
-      !currentImageUrl.trim() && Boolean(onThumbnailUploaded);
-    const thumbnailFilePromise = shouldGenerateThumbnail
+    const thumbnailFilePromise = onThumbnailUploaded
       ? createVideoThumbnail(file, slug).catch(() => {
           thumbnailWarning =
             "the browser could not generate an automatic cover image. Upload one manually.";
