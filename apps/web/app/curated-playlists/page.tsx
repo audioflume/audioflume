@@ -497,12 +497,37 @@ export default function CuratedPlaylistsPage() {
           }
         }
 
+        const visiblePlaylists: CuratedPlaylist[] = Array.isArray(playlistData)
+          ? playlistData.filter((playlist) => !playlist.discover_section)
+          : [];
+        const featuredPlaylistIds = visiblePlaylists
+          .filter((playlist) => playlist.show_on_curated_feature)
+          .map((playlist) => playlist.id);
+        const featuredGenreEntries = await Promise.all(
+          featuredPlaylistIds.map(async (playlistId) => {
+            try {
+              const response = await fetch(
+                `/api/curated-playlists/${encodeURIComponent(String(playlistId))}/songs`,
+              );
+              const data = await response.json();
+
+              if (!response.ok || !Array.isArray(data)) {
+                return [playlistId, []] as const;
+              }
+
+              return [
+                playlistId,
+                getTopGenres(data as CuratedPlaylistSong[]),
+              ] as const;
+            } catch {
+              return [playlistId, []] as const;
+            }
+          }),
+        );
+
         if (!cancelled) {
-          setPlaylists(
-            Array.isArray(playlistData)
-              ? playlistData.filter((p) => !p.discover_section)
-              : [],
-          );
+          setPlaylists(visiblePlaylists);
+          setFeaturedGenresByPlaylist(Object.fromEntries(featuredGenreEntries));
           setGroups(
             Array.isArray(groupData)
               ? [...groupData].sort((a, b) => a.position - b.position)
@@ -548,45 +573,6 @@ export default function CuratedPlaylistsPage() {
       setActiveFeaturedIndex(0);
     }
   }, [activeFeaturedIndex, featuredPlaylists.length]);
-
-  useEffect(() => {
-    let cancelled = false;
-    const playlistIds = featuredPlaylists.map((playlist) => playlist.id);
-
-    if (playlistIds.length === 0) {
-      setFeaturedGenresByPlaylist({});
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    Promise.all(
-      playlistIds.map(async (playlistId) => {
-        try {
-          const response = await fetch(
-            `/api/curated-playlists/${encodeURIComponent(String(playlistId))}/songs`,
-          );
-          const data = await response.json();
-
-          if (!response.ok || !Array.isArray(data)) {
-            return [playlistId, []] as const;
-          }
-
-          return [playlistId, getTopGenres(data as CuratedPlaylistSong[])] as const;
-        } catch {
-          return [playlistId, []] as const;
-        }
-      }),
-    ).then((entries) => {
-      if (!cancelled) {
-        setFeaturedGenresByPlaylist(Object.fromEntries(entries));
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [featuredPlaylists]);
 
   const groupedPlaylists = useMemo(() => {
     const playlistMap = new Map<string, CuratedPlaylist[]>();
