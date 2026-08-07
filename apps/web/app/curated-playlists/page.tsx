@@ -405,7 +405,7 @@ function FeaturedPlaylistBlock({
           </div>
         )}
 
-        {playlists.length > 1 && (
+        {playlists.length > 0 && (
           <div
             className="curated-feature-hero-indicators"
             aria-label="Featured playlists"
