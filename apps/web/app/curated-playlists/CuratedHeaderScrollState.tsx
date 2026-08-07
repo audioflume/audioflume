@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useLayoutEffect } from "react";
 
 const FEATURED_TRACK_SELECTOR = ".curated-featured-playlist-tracks";
@@ -17,7 +18,11 @@ type PreviousInlineValue = {
 };
 
 export default function CuratedHeaderScrollState() {
+  const pathname = usePathname();
+
   useLayoutEffect(() => {
+    if (pathname !== "/curated-playlists") return;
+
     const pageLayer = document.querySelector<HTMLElement>(
       ".curated-playlists-page-layer",
     );
@@ -36,6 +41,7 @@ export default function CuratedHeaderScrollState() {
       HTMLElement,
       Map<string, PreviousInlineValue>
     >();
+    let initialFrame = 0;
 
     pageLayer?.style.setProperty("padding-top", "0px", "important");
 
@@ -156,10 +162,12 @@ export default function CuratedHeaderScrollState() {
     }
 
     syncFeaturedTrackPosition();
+    initialFrame = window.requestAnimationFrame(syncFeaturedTrackPosition);
     window.addEventListener("resize", syncFeaturedTrackPosition);
     stackedFeaturedQuery.addEventListener("change", syncFeaturedTrackPosition);
 
     return () => {
+      window.cancelAnimationFrame(initialFrame);
       window.removeEventListener("resize", syncFeaturedTrackPosition);
       stackedFeaturedQuery.removeEventListener(
         "change",
@@ -197,7 +205,7 @@ export default function CuratedHeaderScrollState() {
         }
       }
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

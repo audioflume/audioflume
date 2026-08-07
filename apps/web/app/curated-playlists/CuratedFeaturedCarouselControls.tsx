@@ -55,6 +55,7 @@ export default function CuratedFeaturedCarouselControls() {
   const [playlistCount, setPlaylistCount] = useState(0);
   const [playlistHref, setPlaylistHref] = useState("");
   const [songCount, setSongCount] = useState<number | null>(null);
+  const [visibleSongCount, setVisibleSongCount] = useState(0);
   const [songsReady, setSongsReady] = useState(false);
 
   useLayoutEffect(() => {
@@ -83,6 +84,8 @@ export default function CuratedFeaturedCarouselControls() {
         const nextActiveIndex = indicators.findIndex(
           (button) => button.getAttribute("aria-pressed") === "true",
         );
+        const nextVisibleSongCount =
+          nextTrackPanel?.querySelectorAll(FEATURED_TRACK_ROW_SELECTOR).length ?? 0;
 
         setPanel(nextPanel);
         setTrackPanel(nextTrackPanel);
@@ -90,7 +93,8 @@ export default function CuratedFeaturedCarouselControls() {
         setActiveIndex(nextActiveIndex >= 0 ? nextActiveIndex : 0);
         setPlaylistHref(nextPlaylistHref);
         setSongCount(getRenderedSongCount(nextPlaylistHref));
-        setSongsReady(Boolean(nextTrackPanel?.querySelector(FEATURED_TRACK_ROW_SELECTOR)));
+        setVisibleSongCount(nextVisibleSongCount);
+        setSongsReady(nextVisibleSongCount > 0);
       });
     }
 
@@ -159,18 +163,21 @@ export default function CuratedFeaturedCarouselControls() {
         )
       : null;
 
+  const remainingSongCount =
+    songCount === null ? 0 : Math.max(songCount - visibleSongCount, 0);
+
   const songLinkPortal =
     trackPanel &&
     songsReady &&
     playlistHref &&
-    songCount !== null &&
-    songCount > 0
+    remainingSongCount > 0
       ? createPortal(
           <Link
             href={playlistHref}
             className="curated-featured-playlist-show-all"
           >
-            Show all {songCount} {songCount === 1 ? "song" : "songs"}
+            View {remainingSongCount} more{" "}
+            {remainingSongCount === 1 ? "song" : "songs"}
           </Link>,
           trackPanel,
         )
