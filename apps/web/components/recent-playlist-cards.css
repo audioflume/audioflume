@@ -11,6 +11,14 @@
   --text-muted: rgba(255, 255, 255, 0.3);
 }
 
+:where(html.light, html[data-theme="light"])
+  .recent-playlist-card-list.is-hero {
+  --bg-hover: var(--bg-hover-strong);
+  --bg-elevated: var(--bg-control);
+  --text-primary: #111111;
+  --text-muted: rgba(17, 17, 17, 0.42);
+}
+
 .recent-playlist-card-list.is-sidebar {
   grid-template-columns: 1fr;
   gap: 14px;
@@ -28,6 +36,10 @@
   color: inherit;
   text-decoration: none;
   transition: background-color 150ms ease;
+}
+
+.recent-playlist-card-list.is-hero .recent-playlist-card {
+  border-radius: 12px;
 }
 
 .recent-playlist-card:hover,
@@ -69,6 +81,8 @@
   object-fit: cover;
 }
 
+.recent-playlist-card-list.is-hero .recent-playlist-card-cover,
+.recent-playlist-card-list.is-hero .recent-playlist-card-placeholder,
 .recent-playlist-card-list.is-sidebar .recent-playlist-card-cover,
 .recent-playlist-card-list.is-sidebar .recent-playlist-card-placeholder {
   border-radius: 6px;
