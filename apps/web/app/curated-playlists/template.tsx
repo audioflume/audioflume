@@ -80,7 +80,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root) .curated-feature-hero-indicators {
-    gap: 8px;
+    gap: 6px;
     margin-top: 40px;
   }
 
