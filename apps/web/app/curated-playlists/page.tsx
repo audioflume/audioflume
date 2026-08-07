@@ -378,6 +378,21 @@ function FeaturedPlaylistBlock({
       />
 
       <div className="curated-feature-hero-title-block">
+        {playlist.cover_image_url && (
+          <div
+            className="curated-feature-hero-title-thumbnail"
+            aria-hidden="true"
+          >
+            <Image
+              key={`${playlist.id}-feature-title-thumbnail`}
+              src={playlist.cover_image_url}
+              alt=""
+              fill
+              unoptimized
+              sizes="80px"
+            />
+          </div>
+        )}
         <span>Featured Playlist</span>
         <h1 id={`curated-feature-hero-${playlist.id}`}>{playlist.name}</h1>
       </div>
