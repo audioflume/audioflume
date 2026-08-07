@@ -21,6 +21,17 @@ body:has(.curated-playlists-page-root) .curated-last-viewed-heading {
   margin-bottom: 16px !important;
 }
 
+body:has(.curated-playlists-page-root) .curated-last-viewed-heading h2 {
+  margin: 0 !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-aktiv-grotesk), sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1 !important;
+  text-transform: none !important;
+}
+
 @media (max-width: 620px) {
   body:has(.curated-playlists-page-root) .curated-last-viewed-section {
     margin-top: 52px;
