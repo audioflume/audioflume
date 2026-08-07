@@ -7,9 +7,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
-import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import type {
+  CuratedPlaylist,
+  CuratedPlaylistSong,
+} from "@/lib/curatedPlaylists";
 import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
 
 type GroupMeta = {
@@ -19,6 +21,31 @@ type GroupMeta = {
 };
 
 const FEATURED_PLAYLIST_COUNT = 3;
+
+function getTopGenres(songs: CuratedPlaylistSong[]) {
+  const genreCounts = new Map<string, { label: string; count: number }>();
+
+  for (const song of songs) {
+    for (const rawGenre of song.genres || []) {
+      const label = String(rawGenre || "").trim();
+      if (!label) continue;
+
+      const key = label.toLowerCase();
+      const current = genreCounts.get(key);
+
+      if (current) {
+        current.count += 1;
+      } else {
+        genreCounts.set(key, { label, count: 1 });
+      }
+    }
+  }
+
+  return [...genreCounts.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3)
+    .map((genre) => genre.label);
+}
 
 function SkeletonBlock({ className = "" }: { className?: string }) {
   return <span className={`curated-playlist-skeleton-block ${className}`} />;
@@ -219,10 +246,12 @@ function FeaturedPlaylistBlock({
   playlists,
   activeIndex,
   onSelect,
+  genres,
 }: {
   playlists: CuratedPlaylist[];
   activeIndex: number;
   onSelect: (index: number) => void;
+  genres: string[];
 }) {
   const playlist = playlists[activeIndex];
   const videoActiveRef = useRef(false);
@@ -314,9 +343,7 @@ function FeaturedPlaylistBlock({
         href={playlistHref}
         className="curated-feature-hero-open"
         aria-label={`Open ${playlist.name}`}
-      >
-        <ArrowUpRightIcon />
-      </Link>
+      />
 
       <div className="curated-feature-hero-title-block">
         <span>Featured Playlist</span>
@@ -338,9 +365,11 @@ function FeaturedPlaylistBlock({
           </div>
         </div>
 
-        {playlist.playlist_group && (
+        {genres.length > 0 && (
           <div className="curated-feature-hero-tags">
-            <span>{playlist.playlist_group}</span>
+            {genres.map((genre) => (
+              <span key={genre}>{genre}</span>
+            ))}
           </div>
         )}
 
@@ -403,6 +432,9 @@ export default function CuratedPlaylistsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
+  const [featuredGenresByPlaylist, setFeaturedGenresByPlaylist] = useState<
+    Record<number, string[]>
+  >({});
 
   useEffect(() => {
     let cancelled = false;
@@ -485,6 +517,45 @@ export default function CuratedPlaylistsPage() {
     }
   }, [activeFeaturedIndex, featuredPlaylists.length]);
 
+  useEffect(() => {
+    let cancelled = false;
+    const playlistIds = featuredPlaylists.map((playlist) => playlist.id);
+
+    if (playlistIds.length === 0) {
+      setFeaturedGenresByPlaylist({});
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    Promise.all(
+      playlistIds.map(async (playlistId) => {
+        try {
+          const response = await fetch(
+            `/api/curated-playlists/${encodeURIComponent(String(playlistId))}/songs`,
+          );
+          const data = await response.json();
+
+          if (!response.ok || !Array.isArray(data)) {
+            return [playlistId, []] as const;
+          }
+
+          return [playlistId, getTopGenres(data as CuratedPlaylistSong[])] as const;
+        } catch {
+          return [playlistId, []] as const;
+        }
+      }),
+    ).then((entries) => {
+      if (!cancelled) {
+        setFeaturedGenresByPlaylist(Object.fromEntries(entries));
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [featuredPlaylists]);
+
   const groupedPlaylists = useMemo(() => {
     const playlistMap = new Map<string, CuratedPlaylist[]>();
 
@@ -515,6 +586,11 @@ export default function CuratedPlaylistsPage() {
       .filter((group) => group.playlists.length > 0);
   }, [playlists, groups]);
 
+  const activeFeaturedPlaylist = featuredPlaylists[activeFeaturedIndex];
+  const activeFeaturedGenres = activeFeaturedPlaylist
+    ? featuredGenresByPlaylist[activeFeaturedPlaylist.id] ?? []
+    : [];
+
   return (
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
@@ -526,6 +602,7 @@ export default function CuratedPlaylistsPage() {
               playlists={featuredPlaylists}
               activeIndex={activeFeaturedIndex}
               onSelect={setActiveFeaturedIndex}
+              genres={activeFeaturedGenres}
             />
           )}
 
