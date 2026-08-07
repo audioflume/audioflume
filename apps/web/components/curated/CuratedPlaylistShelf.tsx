@@ -15,7 +15,6 @@ export type CuratedPlaylistCardItem = Pick<
   | "name"
   | "kicker"
   | "cover_image_url"
-  | "cover_video_url"
   | "song_count"
 > & {
   href?: string;
@@ -42,20 +41,6 @@ function formatSongCount(count?: number) {
   return `${safeCount} track${safeCount === 1 ? "" : "s"}`;
 }
 
-function playCoverVideo(element: HTMLElement) {
-  const video = element.querySelector<HTMLVideoElement>("video");
-
-  if (!video) return;
-
-  video.pause();
-  video.currentTime = 0;
-  void video.play().catch(() => {});
-}
-
-function pauseCoverVideo(element: HTMLElement) {
-  element.querySelector<HTMLVideoElement>("video")?.pause();
-}
-
 export function CuratedPlaylistCard({
   playlist,
   index,
@@ -66,41 +51,20 @@ export function CuratedPlaylistCard({
   const href = playlist.href || `/curated-playlists/${playlist.id}`;
   const fallbackGradient =
     FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
-  const videoActiveRef = useRef(false);
-  const [videoVisible, setVideoVisible] = useState(false);
-
-  function activateVideo(element: HTMLElement) {
-    videoActiveRef.current = true;
-    playCoverVideo(element);
-  }
-
-  function deactivateVideo(element: HTMLElement) {
-    videoActiveRef.current = false;
-    setVideoVisible(false);
-    pauseCoverVideo(element);
-  }
 
   return (
     <div
       className={`curated-playlist-card-shell discover-playlist-card-shell ${styles.shell}`}
     >
       <article className={styles.card}>
-        <Link
-          href={href}
-          className={styles.imageLink}
-          onMouseEnter={(event) => activateVideo(event.currentTarget)}
-          onMouseLeave={(event) => deactivateVideo(event.currentTarget)}
-          onFocus={(event) => activateVideo(event.currentTarget)}
-          onBlur={(event) => deactivateVideo(event.currentTarget)}
-        >
+        <Link href={href} className={styles.imageLink}>
           <div
             className={styles.image}
             data-curated-playlist-image
             style={{
-              background:
-                playlist.cover_video_url || playlist.cover_image_url
-                  ? "var(--media-overlay-solid)"
-                  : fallbackGradient,
+              background: playlist.cover_image_url
+                ? "var(--media-overlay-solid)"
+                : fallbackGradient,
             }}
           >
             {playlist.cover_image_url && (
@@ -111,23 +75,6 @@ export function CuratedPlaylistCard({
                 sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
                 className={styles.media}
                 unoptimized
-              />
-            )}
-
-            {playlist.cover_video_url && (
-              <video
-                src={playlist.cover_video_url}
-                className={`${styles.media} ${styles.coverVideo} ${
-                  videoVisible ? styles.coverVideoVisible : ""
-                }`}
-                muted
-                loop
-                playsInline
-                preload="none"
-                onPlaying={() => {
-                  if (videoActiveRef.current) setVideoVisible(true);
-                }}
-                aria-label={`${playlist.name} cover video`}
               />
             )}
           </div>
