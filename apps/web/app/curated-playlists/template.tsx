@@ -5,6 +5,9 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
     --curated-feature-edge: 34px;
     --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
+    --curated-feature-title-thumbnail-size: calc(
+      25.675px + clamp(29.4px, 3.136vw, 47.04px)
+    );
     --curated-landing-card-gap: 12px;
     --curated-landing-content-width: min(
       calc(
@@ -32,6 +35,29 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
     padding-top: calc(var(--filmwave-header-height, 75px) + 20px) !important;
     padding-bottom: 0;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-feature-hero-title-block:has(.curated-feature-hero-title-thumbnail) {
+    padding-left: calc(var(--curated-feature-title-thumbnail-size) + 14px);
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-feature-hero-title-thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--curated-feature-title-thumbnail-size);
+    height: var(--curated-feature-title-thumbnail-size);
+    overflow: hidden;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-feature-hero-title-thumbnail
+    img {
+    object-fit: cover;
   }
 
   body:has(.curated-playlists-page-root)
@@ -200,7 +226,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     .curated-playlists-page-root
     > footer {
     box-sizing: border-box;
-    padding-top: 40px;
+    padding-top: 75px;
   }
 
   body:has(.curated-playlists-page-root) .curated-playlist-shelf {
