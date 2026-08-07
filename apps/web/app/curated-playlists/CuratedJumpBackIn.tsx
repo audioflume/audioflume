@@ -83,12 +83,12 @@ export default function CuratedJumpBackIn({
     let activeMount: HTMLElement | null = null;
 
     const syncMount = () => {
-      const featuredPlaylist = document.querySelector<HTMLElement>(
-        ".curated-playlists-page-root .curated-featured-playlist",
+      const featureFilters = document.querySelector<HTMLElement>(
+        ".curated-playlists-page-root .curated-feature-filters",
       );
-      if (!featuredPlaylist?.parentElement) return;
+      if (!featureFilters?.parentElement) return;
 
-      let mount = featuredPlaylist.parentElement.querySelector<HTMLElement>(
+      let mount = featureFilters.parentElement.querySelector<HTMLElement>(
         ":scope > .curated-last-viewed-section",
       );
 
@@ -101,8 +101,8 @@ export default function CuratedJumpBackIn({
         );
       }
 
-      if (featuredPlaylist.nextElementSibling !== mount) {
-        featuredPlaylist.insertAdjacentElement("afterend", mount);
+      if (featureFilters.nextElementSibling !== mount) {
+        featureFilters.insertAdjacentElement("afterend", mount);
       }
 
       activeMount = mount;
@@ -238,7 +238,7 @@ export default function CuratedJumpBackIn({
   const content = (
     <>
       <div className={headingClassName}>
-        <h2>{renderInline ? "Jump Back In" : "Last Viewed"}</h2>
+        <h2>Jump Back In</h2>
       </div>
 
       <RecentPlaylistCards
