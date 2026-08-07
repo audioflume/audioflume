@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
@@ -226,20 +226,6 @@ function FeaturedPlaylistSkeleton() {
   );
 }
 
-function playCoverVideo(element: HTMLElement) {
-  const video = element.querySelector<HTMLVideoElement>("video");
-
-  if (!video) return;
-
-  video.pause();
-  video.currentTime = 0;
-  void video.play().catch(() => {});
-}
-
-function pauseCoverVideo(element: HTMLElement) {
-  element.querySelector<HTMLVideoElement>("video")?.pause();
-}
-
 function FeaturedPlaylistBlock({
   playlists,
   activeIndex,
@@ -252,43 +238,6 @@ function FeaturedPlaylistBlock({
   genres: string[];
 }) {
   const playlist = playlists[activeIndex];
-  const heroRef = useRef<HTMLElement | null>(null);
-  const videoActiveRef = useRef(false);
-  const [videoVisible, setVideoVisible] = useState(false);
-
-  useEffect(() => {
-    const hero = heroRef.current;
-
-    videoActiveRef.current = false;
-    setVideoVisible(false);
-
-    if (!hero || !playlist?.cover_video_url) {
-      if (hero) pauseCoverVideo(hero);
-      return;
-    }
-
-    const shouldActivate =
-      hero.matches(":hover") || hero.contains(document.activeElement);
-
-    if (!shouldActivate) {
-      pauseCoverVideo(hero);
-      return;
-    }
-
-    const frame = window.requestAnimationFrame(() => {
-      if (
-        heroRef.current !== hero ||
-        (!hero.matches(":hover") && !hero.contains(document.activeElement))
-      ) {
-        return;
-      }
-
-      videoActiveRef.current = true;
-      playCoverVideo(hero);
-    });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [playlist?.id, playlist?.cover_video_url]);
 
   if (!playlist) return null;
 
@@ -297,17 +246,6 @@ function FeaturedPlaylistBlock({
     playlist.description?.trim() || playlist.kicker?.trim() || "Curated for the edit.";
   const songCount = Number(playlist.song_count || 0);
 
-  function activateVideo(element: HTMLElement) {
-    videoActiveRef.current = true;
-    playCoverVideo(element);
-  }
-
-  function deactivateVideo(element: HTMLElement) {
-    videoActiveRef.current = false;
-    setVideoVisible(false);
-    pauseCoverVideo(element);
-  }
-
   function selectOffset(offset: number) {
     if (playlists.length < 2) return;
     onSelect((activeIndex + offset + playlists.length) % playlists.length);
@@ -315,39 +253,10 @@ function FeaturedPlaylistBlock({
 
   return (
     <section
-      ref={heroRef}
       className="curated-feature-hero"
       aria-labelledby={`curated-feature-hero-${playlist.id}`}
-      onMouseEnter={(event) => activateVideo(event.currentTarget)}
-      onMouseLeave={(event) => deactivateVideo(event.currentTarget)}
-      onFocus={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          activateVideo(event.currentTarget);
-        }
-      }}
-      onBlur={(event) => {
-        if (
-          !event.currentTarget.contains(event.relatedTarget as Node | null) &&
-          !event.currentTarget.matches(":hover")
-        ) {
-          deactivateVideo(event.currentTarget);
-        }
-      }}
     >
-      {playlist.cover_image_url && (
-        <Image
-          key={`${playlist.id}-feature-image`}
-          src={playlist.cover_image_url}
-          alt=""
-          fill
-          priority={activeIndex === 0}
-          unoptimized
-          sizes="calc(100vw - 40px)"
-          className="curated-feature-hero-media"
-        />
-      )}
-
-      {!playlist.cover_image_url && (
+      {!playlist.cover_video_url && (
         <div className="curated-feature-hero-fallback" aria-hidden="true" />
       )}
 
@@ -355,16 +264,12 @@ function FeaturedPlaylistBlock({
         <video
           key={`${playlist.id}-feature-video`}
           src={playlist.cover_video_url}
-          className={`curated-feature-hero-media curated-feature-hero-video${
-            videoVisible ? " is-visible" : ""
-          }`}
+          className="curated-feature-hero-media curated-feature-hero-video is-visible"
+          autoPlay
           muted
           loop
           playsInline
-          preload="none"
-          onPlaying={() => {
-            if (videoActiveRef.current) setVideoVisible(true);
-          }}
+          preload="auto"
           aria-label={`${playlist.name} cover video`}
         />
       )}
