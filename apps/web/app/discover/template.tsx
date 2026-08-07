@@ -7,7 +7,6 @@ import DiscoverReferenceLayout from "./DiscoverReferenceLayout";
 import "../curated-playlists/curated-video-hero.css";
 import "./discover-reference-layout.css";
 import "./discover-curated-hero-copy.css";
-import "./discover-hero-last-viewed.css";
 
 type DiscoverTemplateProps = {
   children: ReactNode;
