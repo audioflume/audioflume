@@ -6,11 +6,11 @@ type VolumeIconProps = {
 
 export default function VolumeIcon({
   className,
-  size = 15,
+  size = 16,
   muted = false,
 }: VolumeIconProps) {
   const strokeColor = "var(--filmwave-player-action-icon-color, currentColor)";
-  const strokeWidth = 0.9;
+  const strokeWidth = 1;
   const strokeStyle = { strokeWidth };
 
   return (
