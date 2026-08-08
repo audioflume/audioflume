@@ -76,6 +76,7 @@ const PlayerProgressContext = createContext<PlayerProgressStore | null>(null);
 const PlaybackStoreContext = createContext<PlaybackStore | null>(null);
 
 const PLAYER_STORAGE_KEY = "filmwave-player-state";
+const VOLUME_STORAGE_KEY = "filmwave-player-volume";
 const CLOSE_PLAYER_EVENT = "filmwave:close-player";
 const PLAYER_BROADCAST_CHANNEL = "filmwave-player";
 const STORAGE_WRITE_INTERVAL_MS = 5000;
@@ -324,6 +325,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     volumeRef.current = nextVolume;
     setVolumeState(nextVolume);
     if (audioRef.current) audioRef.current.volume = nextVolume;
+    try {
+      window.localStorage.setItem(VOLUME_STORAGE_KEY, String(nextVolume));
+    } catch {
+      // Ignore storage failures
+    }
   }, []);
 
   const destroyHls = useCallback(() => {
@@ -719,6 +725,32 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     window.localStorage.removeItem(PLAYER_STORAGE_KEY);
+  }, []);
+
+  useEffect(() => {
+    const applyStoredVolume = (storedValue: string | null) => {
+      if (storedValue === null) return;
+      const parsedVolume = Number(storedValue);
+      if (!Number.isFinite(parsedVolume)) return;
+      const nextVolume = Math.max(0, Math.min(1, parsedVolume));
+      volumeRef.current = nextVolume;
+      setVolumeState(nextVolume);
+      if (audioRef.current) audioRef.current.volume = nextVolume;
+    };
+
+    try {
+      applyStoredVolume(window.localStorage.getItem(VOLUME_STORAGE_KEY));
+    } catch {
+      // Ignore storage failures
+    }
+
+    const handleVolumeStorage = (event: StorageEvent) => {
+      if (event.key !== VOLUME_STORAGE_KEY) return;
+      applyStoredVolume(event.newValue);
+    };
+
+    window.addEventListener("storage", handleVolumeStorage);
+    return () => window.removeEventListener("storage", handleVolumeStorage);
   }, []);
 
   useEffect(() => {
