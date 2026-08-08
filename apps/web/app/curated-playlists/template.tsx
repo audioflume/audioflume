@@ -33,7 +33,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
-    padding-top: calc(var(--filmwave-header-height, 75px) + 3px) !important;
     padding-bottom: 0;
   }
 
@@ -329,10 +328,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   @media (max-width: 620px) {
     body:has(.curated-playlists-page-root) {
       --curated-feature-hero-height: 330px;
-    }
-
-    body:has(.curated-playlists-page-root) .curated-playlists-page-layer {
-      padding-top: calc(var(--filmwave-header-height, 75px) + 3px) !important;
     }
   }
 
