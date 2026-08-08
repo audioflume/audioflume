@@ -16,7 +16,7 @@ export const CURATED_BROWSE_FILTERS = [
       { value: "editors:product-tech", label: "Product & Tech" },
       {
         value: "editors:social-short-form",
-        label: "Social & Short Form",
+        label: "Film & Story",
       },
       { value: "editors:lifestyle", label: "Lifestyle" },
     ],
