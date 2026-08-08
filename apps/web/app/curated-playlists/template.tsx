@@ -73,6 +73,12 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root)
+    .curated-feature-hero-title-block
+    > span {
+    margin-left: 4px;
+  }
+
+  body:has(.curated-playlists-page-root)
     .curated-feature-hero-play-copy
     strong {
     font-family: var(--discover-playlist-card-title-font-family, inherit) !important;
@@ -188,6 +194,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     justify-content: center;
     gap: 6px;
     overflow: hidden;
+    cursor: pointer;
     border: 1px solid var(--filmwave-browse-filter-border-color);
     border-radius: 999px;
     background: transparent;
