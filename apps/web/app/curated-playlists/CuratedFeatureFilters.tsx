@@ -36,7 +36,13 @@ export function getCuratedGroupId(name: string) {
   }`;
 }
 
-function FilterIcon({ icon }: { icon: FilterIconName }) {
+function FilterIcon({
+  icon,
+  active = false,
+}: {
+  icon: FilterIconName;
+  active?: boolean;
+}) {
   const commonProps = {
     width: 13,
     height: 13,
@@ -46,6 +52,7 @@ function FilterIcon({ icon }: { icon: FilterIconName }) {
     strokeWidth: 1.45,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
+    style: active ? { color: "inherit" } : undefined,
     "aria-hidden": true,
   };
 
@@ -70,7 +77,7 @@ function FilterIcon({ icon }: { icon: FilterIconName }) {
   if (icon === "grid") {
     return (
       <svg {...commonProps}>
-        <path d="M4 4h4v4H4zM10 4h4v4h-4zM16 4h4v4h-4zM4 10h4v4H4zM10 10h4v4h-4zM16 10h4v4h-4zM4 16h4v4H4zM10 16h4v4h-4zM16 16h4v4h-4z" />
+        <path d="M4 4h4v4H4zM10 4h4v4h-4zM16 4h4v4h-4zM4 10h4v4H4zM10 10h4v4h-4zM16 10h4v4H4zM4 16h4v4H4zM10 16h4v4h-4zM16 16h4v4h-4z" />
       </svg>
     );
   }
@@ -135,9 +142,18 @@ export default function CuratedFeatureFilters({
             type="button"
             className={`curated-feature-filter-pill${isActive ? " is-active" : ""}`}
             aria-pressed={isActive}
+            style={
+              isActive
+                ? {
+                    borderColor: "var(--text-primary)",
+                    background: "var(--text-primary)",
+                    color: "var(--bg-primary)",
+                  }
+                : undefined
+            }
             onClick={() => onFilterChange(isActive ? null : filter.value)}
           >
-            <FilterIcon icon={FILTER_ICONS[filter.value]} />
+            <FilterIcon icon={FILTER_ICONS[filter.value]} active={isActive} />
             <span>{filter.label}</span>
           </button>
         );
