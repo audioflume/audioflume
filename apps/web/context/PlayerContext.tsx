@@ -60,6 +60,8 @@ type PlayerContextType = {
   remotePlayingInAnotherTab: boolean;
   currentTime: number;
   duration: number;
+  volume: number;
+  setVolume: (volume: number) => void;
   togglePlayPause: (song: Song) => void;
   seekTo: (song: Song, progress: number, shouldPlay: boolean) => void;
   registerWaveform: (songId: string, handle: WaveformHandle) => void;
@@ -194,6 +196,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const currentTimeRef = useRef(0);
   const durationRef = useRef(0);
   const isPlayingRef = useRef(false);
+  const volumeRef = useRef(1);
 
   const progressSnapshotRef = useRef<PlayerProgressSnapshot>({
     currentTime: 0,
@@ -217,6 +220,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] = useState(false);
+  const [volume, setVolumeState] = useState(1);
 
   const emitPlaybackUpdate = useCallback(() => {
     playbackSubscribersRef.current.forEach((l) => l());
@@ -313,6 +317,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     [emitProgressUpdate],
   );
 
+  const setVolume = useCallback((value: number) => {
+    const nextVolume = Number.isFinite(value)
+      ? Math.max(0, Math.min(1, value))
+      : 1;
+    volumeRef.current = nextVolume;
+    setVolumeState(nextVolume);
+    if (audioRef.current) audioRef.current.volume = nextVolume;
+  }, []);
+
   const destroyHls = useCallback(() => {
     pendingPlayAfterManifestRef.current = false;
     hlsRef.current?.destroy();
@@ -401,6 +414,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     if (!audioRef.current) {
       const audio = new Audio();
       audio.preload = "auto";
+      audio.volume = volumeRef.current;
 
       audio.addEventListener("play", () => {
         remoteOwnerTabIdRef.current = null;
@@ -830,6 +844,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       currentSong,
       isPlaying,
       remotePlayingInAnotherTab,
+      volume,
+      setVolume,
       togglePlayPause,
       seekTo,
       registerWaveform,
@@ -849,6 +865,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     currentSong,
     isPlaying,
     remotePlayingInAnotherTab,
+    volume,
+    setVolume,
     togglePlayPause,
     seekTo,
     registerWaveform,
