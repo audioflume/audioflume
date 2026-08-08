@@ -4,6 +4,7 @@
   --filmwave-header-nav-height: 32px;
   --filmwave-header-nav-radius: 999px;
   --filmwave-header-border-color: var(--border-strong);
+  --filmwave-page-top-gap: 22px;
 
   --filmwave-sidebar-width-expanded: var(--sidebar-width-expanded, 280px);
   --filmwave-sidebar-width-collapsed: var(--sidebar-width-collapsed, 76px);
