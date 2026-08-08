@@ -75,7 +75,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-feature-hero-title-block
     > span {
-    margin-left: 4px;
+    margin-left: 3px;
   }
 
   body:has(.curated-playlists-page-root)
