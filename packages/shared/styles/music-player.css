@@ -383,10 +383,6 @@
     color 0.15s ease;
 }
 
-.filmwave-player-volume-button {
-  --filmwave-icon-button-icon-size: 17px;
-}
-
 .filmwave-icon-button:hover,
 .filmwave-icon-button.is-open,
 .filmwave-icon-button.is-active,
@@ -501,11 +497,6 @@
 .playlist-icon-btn svg {
   width: var(--filmwave-icon-button-icon-size);
   height: var(--filmwave-icon-button-icon-size);
-}
-
-.filmwave-player-volume-button svg {
-  fill: none;
-  stroke-width: 2.1;
 }
 
 .filmwave-icon-button-plain {
