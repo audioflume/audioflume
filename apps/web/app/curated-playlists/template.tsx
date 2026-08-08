@@ -188,7 +188,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     justify-content: center;
     gap: 6px;
     overflow: hidden;
-    border: 1px solid var(--border);
+    border: 1px solid var(--filmwave-browse-filter-border-color);
     border-radius: 999px;
     background: transparent;
     color: var(--text-primary);
