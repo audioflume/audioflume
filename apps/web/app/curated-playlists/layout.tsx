@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import CuratedFeaturedCarouselControls from "./CuratedFeaturedCarouselControls";
-import CuratedJumpBackIn from "./CuratedJumpBackIn";
 import CuratedPlaylistsLoadingStyles from "./CuratedPlaylistsLoadingStyles";
 import "./curated-playlists.css";
 
@@ -27,7 +26,6 @@ export default function CuratedPlaylistsLayout({
       <CuratedPlaylistsLoadingStyles />
       <style>{CURATED_DETAIL_STYLE}</style>
       <CuratedFeaturedCarouselControls />
-      <CuratedJumpBackIn />
       {children}
     </>
   );
