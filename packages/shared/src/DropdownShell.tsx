@@ -110,6 +110,10 @@ export default function DropdownShell({
   const anchorRef = useRef<Anchor | null>(null);
   const frozenSideRef = useRef<FrozenSide>("bottom");
   const frameRef = useRef<number | null>(null);
+  const collisionTop = getPaddingValue(collisionPadding, "top");
+  const collisionRight = getPaddingValue(collisionPadding, "right");
+  const collisionBottom = getPaddingValue(collisionPadding, "bottom");
+  const collisionLeft = getPaddingValue(collisionPadding, "left");
 
   const measureAnchor = useCallback(() => {
     if (anchorPoint) {
@@ -148,16 +152,13 @@ export default function DropdownShell({
   const chooseSide = useCallback(
     (anchor: Anchor, floatingHeight: number): FrozenSide => {
       const preferredSide = getPlacementParts(placement).side;
-
-      const topPadding = getPaddingValue(collisionPadding, "top");
-      const bottomPadding = getPaddingValue(collisionPadding, "bottom");
       const viewportHeight = getViewportHeight();
 
       const triggerTop = anchor.top - window.scrollY;
       const triggerBottom = anchor.bottom - window.scrollY;
 
-      const availableAbove = triggerTop - topPadding;
-      const availableBelow = viewportHeight - bottomPadding - triggerBottom;
+      const availableAbove = triggerTop - collisionTop;
+      const availableBelow = viewportHeight - collisionBottom - triggerBottom;
 
       if (preferredSide === "top") {
         if (availableAbove >= floatingHeight + flippedOffsetAmount) {
@@ -174,7 +175,13 @@ export default function DropdownShell({
 
       return "bottom";
     },
-    [placement, collisionPadding, flippedOffsetAmount, offsetAmount],
+    [
+      placement,
+      collisionTop,
+      collisionBottom,
+      flippedOffsetAmount,
+      offsetAmount,
+    ],
   );
 
   const updateFloatingPosition = useCallback(
@@ -204,11 +211,6 @@ export default function DropdownShell({
           : placement;
       const { align } = getPlacementParts(resolvedPlacement);
 
-      const topPadding = getPaddingValue(collisionPadding, "top");
-      const rightPadding = getPaddingValue(collisionPadding, "right");
-      const bottomPadding = getPaddingValue(collisionPadding, "bottom");
-      const leftPadding = getPaddingValue(collisionPadding, "left");
-
       const viewportWidth = getViewportWidth();
       const viewportHeight = getViewportHeight();
 
@@ -232,23 +234,23 @@ export default function DropdownShell({
               floatingWidth / 2 +
               crossAxisOffset;
 
-      const minTop = topPadding;
+      const minTop = collisionTop;
       const maxTop = Math.max(
-        topPadding,
-        viewportHeight - bottomPadding - floatingHeight,
+        collisionTop,
+        viewportHeight - collisionBottom - floatingHeight,
       );
 
-      const minLeft = leftPadding;
+      const minLeft = collisionLeft;
       const maxLeft = Math.max(
-        leftPadding,
-        viewportWidth - rightPadding - floatingWidth,
+        collisionLeft,
+        viewportWidth - collisionRight - floatingWidth,
       );
 
       const x = Math.round(clamp(naturalLeft, minLeft, maxLeft));
       const y = Math.round(clamp(naturalTop, minTop, maxTop));
       const maxHeight = Math.max(
         120,
-        viewportHeight - topPadding - bottomPadding,
+        viewportHeight - collisionTop - collisionBottom,
       );
 
       floating.style.transform = `translate3d(${x}px, ${y}px, 0)`;
@@ -259,7 +261,10 @@ export default function DropdownShell({
       measureAnchor,
       chooseSide,
       placement,
-      collisionPadding,
+      collisionTop,
+      collisionRight,
+      collisionBottom,
+      collisionLeft,
       offsetAmount,
       flippedOffsetAmount,
       crossAxisOffset,
