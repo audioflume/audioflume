@@ -403,6 +403,27 @@
   stroke: currentColor;
 }
 
+.filmwave-dropdown-shell.filmwave-player-volume-popover {
+  display: flex;
+  width: 136px;
+  align-items: center;
+  overflow: visible;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  padding: 10px 12px;
+}
+
+.filmwave-player-volume-slider {
+  width: 100%;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--text-primary);
+}
+
+.filmwave-player-volume-button svg {
+  fill: none;
+}
+
 .filmwave-player-marker-toggle[aria-pressed="true"] {
   --edit-points-icon-color: var(--text-primary);
   background: transparent;
