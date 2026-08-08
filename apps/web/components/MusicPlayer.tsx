@@ -16,6 +16,7 @@ import IconButton from "@/components/IconButton";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
+import VolumeIcon from "@/components/icons/VolumeIcon";
 import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
@@ -153,47 +154,6 @@ const CueNextIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-  </svg>
-);
-
-const VolumeIcon = ({ muted = false }: { muted?: boolean }) => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-  >
-    <path
-      d="M5 10V14H8L12 18V6L8 10H5Z"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    {muted ? (
-      <>
-        <path
-          d="M16 9L20 13"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-        <path
-          d="M20 9L16 13"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-      </>
-    ) : (
-      <path
-        d="M16 9C17.5 10.5 17.5 13.5 16 15"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    )}
   </svg>
 );
 
