@@ -9,6 +9,7 @@ import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import type {
+  CuratedBrowseTag,
   CuratedPlaylist,
   CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
@@ -384,6 +385,8 @@ export default function CuratedPlaylistsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
+  const [activeBrowseFilter, setActiveBrowseFilter] =
+    useState<CuratedBrowseTag | null>(null);
   const [featuredGenresByPlaylist, setFeaturedGenresByPlaylist] = useState<
     Record<number, string[]>
   >({});
@@ -494,10 +497,20 @@ export default function CuratedPlaylistsPage() {
     }
   }, [activeFeaturedIndex, featuredPlaylists.length]);
 
+  const filteredPlaylists = useMemo(
+    () =>
+      activeBrowseFilter
+        ? playlists.filter((playlist) =>
+            playlist.browse_tags.includes(activeBrowseFilter),
+          )
+        : playlists,
+    [activeBrowseFilter, playlists],
+  );
+
   const groupedPlaylists = useMemo(() => {
     const playlistMap = new Map<string, CuratedPlaylist[]>();
 
-    for (const playlist of playlists) {
+    for (const playlist of filteredPlaylists) {
       const key = playlist.playlist_group || "Editor Picks";
       if (!playlistMap.has(key)) playlistMap.set(key, []);
       playlistMap.get(key)!.push(playlist);
@@ -522,7 +535,7 @@ export default function CuratedPlaylistsPage() {
         ),
       }))
       .filter((group) => group.playlists.length > 0);
-  }, [playlists, groups]);
+  }, [filteredPlaylists, groups]);
 
   const activeFeaturedPlaylist = featuredPlaylists[activeFeaturedIndex];
   const activeFeaturedGenres = activeFeaturedPlaylist
@@ -544,8 +557,11 @@ export default function CuratedPlaylistsPage() {
             />
           )}
 
-          {!loading && !error && groupedPlaylists.length > 0 && (
-            <CuratedFeatureFilters groups={groupedPlaylists} />
+          {!loading && !error && playlists.length > 0 && (
+            <CuratedFeatureFilters
+              activeFilter={activeBrowseFilter}
+              onFilterChange={setActiveBrowseFilter}
+            />
           )}
 
           {loading && <CuratedPlaylistsLoadingSkeleton />}
@@ -556,7 +572,7 @@ export default function CuratedPlaylistsPage() {
             </div>
           )}
 
-          {!loading && !error && groupedPlaylists.length === 0 && (
+          {!loading && !error && playlists.length === 0 && (
             <div className="mt-8 rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-8 text-[var(--text-secondary)]">
               No curated playlists have been published yet. Visit the admin{" "}
               <Link
@@ -568,6 +584,16 @@ export default function CuratedPlaylistsPage() {
               .
             </div>
           )}
+
+          {!loading &&
+            !error &&
+            playlists.length > 0 &&
+            activeBrowseFilter &&
+            groupedPlaylists.length === 0 && (
+              <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
+                No playlists are assigned to this filter yet.
+              </div>
+            )}
 
           {!loading &&
             !error &&
