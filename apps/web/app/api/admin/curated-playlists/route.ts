@@ -5,6 +5,7 @@ import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   DISCOVER_SECTION_OPTIONS,
   getCuratedPlaylistError,
+  normalizeCuratedBrowseTags,
   normalizeCuratedPlaylist,
 } from "@/lib/curatedPlaylists";
 
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
     const coverImageUrl = cleanString(body.cover_image_url);
     const coverVideoUrl = cleanString(body.cover_video_url);
     const playlistGroup = cleanString(body.playlist_group) || DEFAULT_CURATED_PLAYLIST_GROUP;
+    const browseTags = normalizeCuratedBrowseTags(body.browse_tags);
     const description = cleanString(body.description);
     const discoverSection = cleanDiscoverSection(body.discover_section);
     const showOnDiscover = cleanBoolean(body.show_on_discover);
@@ -107,11 +109,15 @@ export async function POST(req: Request) {
         ? discoverExisting[0].discover_position + 1
         : 0;
 
-    const insertValues: Record<string, string | number | boolean | null> = {
+    const insertValues: Record<
+      string,
+      string | string[] | number | boolean | null
+    > = {
       name,
       kicker: kicker || "Curated selection",
       cover_image_url: coverImageUrl || null,
       playlist_group: playlistGroup,
+      browse_tags: browseTags,
       description,
       discover_section: discoverSection,
       show_on_discover: showOnDiscover,
