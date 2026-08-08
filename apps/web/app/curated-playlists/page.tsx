@@ -22,6 +22,12 @@ type GroupMeta = {
   description: string | null;
 };
 
+type CuratedShelfGroup = {
+  name: string;
+  description: string | null;
+  playlists: CuratedPlaylist[];
+};
+
 function getTopGenres(songs: CuratedPlaylistSong[]) {
   const genreCounts = new Map<string, { label: string; count: number }>();
 
@@ -510,7 +516,7 @@ export default function CuratedPlaylistsPage() {
         playlist.browse_tags.includes(activeBrowseFilter),
       );
 
-      const subcategoryGroups = activeFilter.subcategories
+      const subcategoryGroups: CuratedShelfGroup[] = activeFilter.subcategories
         .map((subcategory) => ({
           name: subcategory.label,
           description: null,
