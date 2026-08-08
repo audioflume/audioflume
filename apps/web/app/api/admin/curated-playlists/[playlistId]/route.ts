@@ -6,6 +6,7 @@ import {
   DEFAULT_DISCOVER_BUTTON_TEXT,
   DISCOVER_SECTION_OPTIONS,
   getCuratedPlaylistError,
+  normalizeCuratedBrowseSubcategories,
   normalizeCuratedBrowseTags,
   normalizeCuratedPlaylist,
 } from "@/lib/curatedPlaylists";
@@ -68,8 +69,19 @@ export async function PATCH(req: Request, context: RouteContext) {
         cleanString(body.discover_button_text) || DEFAULT_DISCOVER_BUTTON_TEXT,
     };
 
-    if (hasField(body, "browse_tags")) {
-      updates.browse_tags = normalizeCuratedBrowseTags(body.browse_tags);
+    const submittedBrowseTags = hasField(body, "browse_tags")
+      ? normalizeCuratedBrowseTags(body.browse_tags)
+      : undefined;
+
+    if (submittedBrowseTags) {
+      updates.browse_tags = submittedBrowseTags;
+    }
+
+    if (hasField(body, "browse_subcategories")) {
+      updates.browse_subcategories = normalizeCuratedBrowseSubcategories(
+        body.browse_subcategories,
+        submittedBrowseTags,
+      );
     }
 
     if (hasField(body, "cover_video_url")) {
