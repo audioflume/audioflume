@@ -8,10 +8,11 @@ import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayB
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
-import type {
-  CuratedBrowseTag,
-  CuratedPlaylist,
-  CuratedPlaylistSong,
+import {
+  CURATED_BROWSE_FILTERS,
+  type CuratedBrowseTag,
+  type CuratedPlaylist,
+  type CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
 import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
 
@@ -497,20 +498,53 @@ export default function CuratedPlaylistsPage() {
     }
   }, [activeFeaturedIndex, featuredPlaylists.length]);
 
-  const filteredPlaylists = useMemo(
-    () =>
-      activeBrowseFilter
-        ? playlists.filter((playlist) =>
-            playlist.browse_tags.includes(activeBrowseFilter),
-          )
-        : playlists,
-    [activeBrowseFilter, playlists],
-  );
-
   const groupedPlaylists = useMemo(() => {
+    if (activeBrowseFilter) {
+      const activeFilter = CURATED_BROWSE_FILTERS.find(
+        (filter) => filter.value === activeBrowseFilter,
+      );
+
+      if (!activeFilter) return [];
+
+      const filteredPlaylists = playlists.filter((playlist) =>
+        playlist.browse_tags.includes(activeBrowseFilter),
+      );
+
+      const subcategoryGroups = activeFilter.subcategories
+        .map((subcategory) => ({
+          name: subcategory.label,
+          description: null,
+          playlists: filteredPlaylists
+            .filter((playlist) =>
+              playlist.browse_subcategories.includes(subcategory.value),
+            )
+            .sort((a, b) => a.position - b.position),
+        }))
+        .filter((group) => group.playlists.length > 0);
+
+      const uncategorizedPlaylists = filteredPlaylists
+        .filter(
+          (playlist) =>
+            !activeFilter.subcategories.some((subcategory) =>
+              playlist.browse_subcategories.includes(subcategory.value),
+            ),
+        )
+        .sort((a, b) => a.position - b.position);
+
+      if (uncategorizedPlaylists.length > 0) {
+        subcategoryGroups.push({
+          name: "More",
+          description: null,
+          playlists: uncategorizedPlaylists,
+        });
+      }
+
+      return subcategoryGroups;
+    }
+
     const playlistMap = new Map<string, CuratedPlaylist[]>();
 
-    for (const playlist of filteredPlaylists) {
+    for (const playlist of playlists) {
       const key = playlist.playlist_group || "Editor Picks";
       if (!playlistMap.has(key)) playlistMap.set(key, []);
       playlistMap.get(key)!.push(playlist);
@@ -535,7 +569,7 @@ export default function CuratedPlaylistsPage() {
         ),
       }))
       .filter((group) => group.playlists.length > 0);
-  }, [filteredPlaylists, groups]);
+  }, [activeBrowseFilter, groups, playlists]);
 
   const activeFeaturedPlaylist = featuredPlaylists[activeFeaturedIndex];
   const activeFeaturedGenres = activeFeaturedPlaylist
