@@ -1,33 +1,30 @@
-import Link from "next/link";
+"use client";
 
-export type CuratedFeatureFilterGroup = {
-  name: string;
+import {
+  CURATED_BROWSE_FILTERS,
+  type CuratedBrowseTag,
+} from "@/lib/curatedPlaylists";
+
+type FilterIconName =
+  | "scissors"
+  | "waveform"
+  | "grid"
+  | "tag"
+  | "globe"
+  | "camera"
+  | "clapper"
+  | "moon";
+
+const FILTER_ICONS: Record<CuratedBrowseTag, FilterIconName> = {
+  editors: "scissors",
+  mood: "waveform",
+  genre: "grid",
+  brands: "tag",
+  travel: "globe",
+  documentary: "camera",
+  cinematic: "clapper",
+  "dark-moody": "moon",
 };
-
-type FilterDefinition = {
-  label: string;
-  icon:
-    | "scissors"
-    | "waveform"
-    | "grid"
-    | "tag"
-    | "globe"
-    | "camera"
-    | "clapper"
-    | "moon";
-  targets: string[];
-};
-
-const FILTERS: FilterDefinition[] = [
-  { label: "For Editors", icon: "scissors", targets: ["Editor Picks"] },
-  { label: "By Mood", icon: "waveform", targets: ["Ambient", "Tension"] },
-  { label: "By Genre", icon: "grid", targets: ["Commercial", "Documentary"] },
-  { label: "For Brands", icon: "tag", targets: ["Commercial"] },
-  { label: "Travel", icon: "globe", targets: ["Travel"] },
-  { label: "Documentary", icon: "camera", targets: ["Documentary"] },
-  { label: "Cinematic", icon: "clapper", targets: ["Editor Picks", "Documentary"] },
-  { label: "Dark & Moody", icon: "moon", targets: ["Tension"] },
-];
 
 export function getCuratedGroupId(name: string) {
   return `curated-group-${
@@ -39,24 +36,7 @@ export function getCuratedGroupId(name: string) {
   }`;
 }
 
-function findGroup(groups: CuratedFeatureFilterGroup[], targets: string[]) {
-  for (const target of targets) {
-    const normalizedTarget = target.toLowerCase();
-    const exact = groups.find(
-      (group) => group.name.toLowerCase() === normalizedTarget,
-    );
-    if (exact) return exact;
-
-    const partial = groups.find((group) =>
-      group.name.toLowerCase().includes(normalizedTarget),
-    );
-    if (partial) return partial;
-  }
-
-  return undefined;
-}
-
-function FilterIcon({ icon }: { icon: FilterDefinition["icon"] }) {
+function FilterIcon({ icon }: { icon: FilterIconName }) {
   const commonProps = {
     width: 13,
     height: 13,
@@ -138,23 +118,28 @@ function FilterIcon({ icon }: { icon: FilterDefinition["icon"] }) {
 }
 
 export default function CuratedFeatureFilters({
-  groups,
+  activeFilter,
+  onFilterChange,
 }: {
-  groups: CuratedFeatureFilterGroup[];
+  activeFilter: CuratedBrowseTag | null;
+  onFilterChange: (filter: CuratedBrowseTag | null) => void;
 }) {
-  if (!groups.length) return null;
-
   return (
-    <nav className="curated-feature-filters" aria-label="Browse curated playlists">
-      {FILTERS.map((filter) => {
-        const group = findGroup(groups, filter.targets);
-        const href = group ? `#${getCuratedGroupId(group.name)}` : "/curated-playlists";
+    <nav className="curated-feature-filters" aria-label="Filter curated playlists">
+      {CURATED_BROWSE_FILTERS.map((filter) => {
+        const isActive = activeFilter === filter.value;
 
         return (
-          <Link key={filter.label} href={href} className="curated-feature-filter-pill">
-            <FilterIcon icon={filter.icon} />
+          <button
+            key={filter.value}
+            type="button"
+            className={`curated-feature-filter-pill${isActive ? " is-active" : ""}`}
+            aria-pressed={isActive}
+            onClick={() => onFilterChange(isActive ? null : filter.value)}
+          >
+            <FilterIcon icon={FILTER_ICONS[filter.value]} />
             <span>{filter.label}</span>
-          </Link>
+          </button>
         );
       })}
     </nav>
