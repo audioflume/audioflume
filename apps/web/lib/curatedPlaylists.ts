@@ -1,5 +1,34 @@
 import type { Song } from "@/lib/types";
 
+export const CURATED_BROWSE_FILTERS = [
+  { value: "editors", label: "For Editors" },
+  { value: "mood", label: "By Mood" },
+  { value: "genre", label: "By Genre" },
+  { value: "brands", label: "For Brands" },
+  { value: "travel", label: "Travel" },
+  { value: "documentary", label: "Documentary" },
+  { value: "cinematic", label: "Cinematic" },
+  { value: "dark-moody", label: "Dark & Moody" },
+] as const;
+
+export type CuratedBrowseTag = (typeof CURATED_BROWSE_FILTERS)[number]["value"];
+
+const CURATED_BROWSE_TAG_VALUES = new Set<CuratedBrowseTag>(
+  CURATED_BROWSE_FILTERS.map((filter) => filter.value),
+);
+
+export function normalizeCuratedBrowseTags(value: unknown): CuratedBrowseTag[] {
+  if (!Array.isArray(value)) return [];
+
+  return [...new Set(
+    value
+      .map((tag) => String(tag || "").trim())
+      .filter((tag): tag is CuratedBrowseTag =>
+        CURATED_BROWSE_TAG_VALUES.has(tag as CuratedBrowseTag),
+      ),
+  )];
+}
+
 export type CuratedPlaylist = {
   id: number;
   name: string;
@@ -7,6 +36,7 @@ export type CuratedPlaylist = {
   cover_image_url: string | null;
   cover_video_url?: string | null;
   playlist_group: string;
+  browse_tags: CuratedBrowseTag[];
   position: number;
   description: string;
   discover_section: string | null;
@@ -34,6 +64,7 @@ type CuratedPlaylistRow = {
   cover_image_url: string | null;
   cover_video_url?: string | null;
   playlist_group: string | null;
+  browse_tags?: unknown;
   position: number | null;
   description?: string | null;
   discover_section?: string | null;
@@ -89,6 +120,7 @@ export function normalizeCuratedPlaylist(
     playlist_group: String(
       row.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP,
     ),
+    browse_tags: normalizeCuratedBrowseTags(row.browse_tags),
     position: Number(row.position || 0),
     description: String(row.description || ""),
     discover_section: row.discover_section ? String(row.discover_section) : null,
@@ -117,6 +149,19 @@ function getErrorText(err: unknown) {
 export function getCuratedPlaylistError(err: unknown, fallback: string) {
   const message = getErrorText(err);
   const normalizedMessage = message.toLowerCase();
+
+  if (
+    normalizedMessage.includes("browse_tags") &&
+    (normalizedMessage.includes("column") ||
+      normalizedMessage.includes("schema cache") ||
+      normalizedMessage.includes("pgrst204") ||
+      normalizedMessage.includes("42703"))
+  ) {
+    return {
+      error:
+        "Curated browse filters require the Supabase migration apps/web/supabase/migrations/20260808104000_add_curated_playlist_browse_tags.sql. Apply that migration, then save the playlist again.",
+    };
+  }
 
   if (
     normalizedMessage.includes("show_on_curated_feature") &&
