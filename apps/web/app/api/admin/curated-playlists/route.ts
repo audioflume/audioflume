@@ -5,6 +5,7 @@ import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   DISCOVER_SECTION_OPTIONS,
   getCuratedPlaylistError,
+  normalizeCuratedBrowseSubcategories,
   normalizeCuratedBrowseTags,
   normalizeCuratedPlaylist,
 } from "@/lib/curatedPlaylists";
@@ -70,6 +71,10 @@ export async function POST(req: Request) {
     const coverVideoUrl = cleanString(body.cover_video_url);
     const playlistGroup = cleanString(body.playlist_group) || DEFAULT_CURATED_PLAYLIST_GROUP;
     const browseTags = normalizeCuratedBrowseTags(body.browse_tags);
+    const browseSubcategories = normalizeCuratedBrowseSubcategories(
+      body.browse_subcategories,
+      browseTags,
+    );
     const description = cleanString(body.description);
     const discoverSection = cleanDiscoverSection(body.discover_section);
     const showOnDiscover = cleanBoolean(body.show_on_discover);
@@ -118,6 +123,7 @@ export async function POST(req: Request) {
       cover_image_url: coverImageUrl || null,
       playlist_group: playlistGroup,
       browse_tags: browseTags,
+      browse_subcategories: browseSubcategories,
       description,
       discover_section: discoverSection,
       show_on_discover: showOnDiscover,
