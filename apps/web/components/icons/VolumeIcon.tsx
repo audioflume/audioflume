@@ -10,7 +10,8 @@ export default function VolumeIcon({
   muted = false,
 }: VolumeIconProps) {
   const strokeColor = "var(--filmwave-player-action-icon-color, currentColor)";
-  const strokeWidth = 0.7;
+  const strokeWidth = 0.9;
+  const strokeStyle = { strokeWidth };
 
   return (
     <svg
@@ -30,6 +31,7 @@ export default function VolumeIcon({
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
+        style={strokeStyle}
       />
 
       {muted ? (
@@ -40,6 +42,7 @@ export default function VolumeIcon({
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
+            style={strokeStyle}
           />
           <path
             d="M21 9L16 15"
@@ -47,6 +50,7 @@ export default function VolumeIcon({
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
+            style={strokeStyle}
           />
         </>
       ) : (
@@ -57,6 +61,7 @@ export default function VolumeIcon({
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
+            style={strokeStyle}
           />
           <path
             d="M18.5 6.5C21.5 9.5 21.5 14.5 18.5 17.5"
@@ -64,6 +69,7 @@ export default function VolumeIcon({
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
+            style={strokeStyle}
           />
         </>
       )}
