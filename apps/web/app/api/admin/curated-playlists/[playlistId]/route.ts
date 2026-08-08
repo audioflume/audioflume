@@ -62,12 +62,15 @@ export async function PATCH(req: Request, context: RouteContext) {
       cover_image_url: cleanString(body.cover_image_url) || null,
       playlist_group:
         cleanString(body.playlist_group) || DEFAULT_CURATED_PLAYLIST_GROUP,
-      browse_tags: normalizeCuratedBrowseTags(body.browse_tags),
       description: cleanString(body.description),
       discover_button_enabled: body.discover_button_enabled !== false,
       discover_button_text:
         cleanString(body.discover_button_text) || DEFAULT_DISCOVER_BUTTON_TEXT,
     };
+
+    if (hasField(body, "browse_tags")) {
+      updates.browse_tags = normalizeCuratedBrowseTags(body.browse_tags);
+    }
 
     if (hasField(body, "cover_video_url")) {
       updates.cover_video_url = cleanString(body.cover_video_url) || null;
