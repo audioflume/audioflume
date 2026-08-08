@@ -18,6 +18,9 @@ body:has(.curated-playlists-page-root) {
 
 .curated-playlists-page-layer {
   min-height: 100vh;
+  padding-top: calc(
+    var(--filmwave-header-height, 75px) + var(--filmwave-page-top-gap, 22px)
+  );
   padding-bottom: 64px;
 }
 
