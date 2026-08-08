@@ -90,7 +90,7 @@ export const CURATED_BROWSE_FILTERS = [
         value: "documentary:science-technology",
         label: "Science & Technology",
       },
-      { value: "documentary:culture-society", label: "Culture & Society" },
+      { value: "documentary:culture-travel", label: "Culture & Travel" },
       { value: "documentary:social-impact", label: "Social Impact" },
       { value: "documentary:sports", label: "Sports" },
     ],
