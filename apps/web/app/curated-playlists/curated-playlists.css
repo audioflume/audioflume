@@ -33,7 +33,7 @@ body:has(.curated-playlists-page-root) {
   height: var(--curated-feature-hero-height);
   margin-left: calc(50% - 50vw + var(--curated-feature-edge));
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #0b0d0d;
   color: #fff;
   isolation: isolate;
