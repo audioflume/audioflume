@@ -54,6 +54,7 @@ export const CURATED_BROWSE_FILTERS = [
     label: "For Brands",
     subcategories: [
       { value: "brands:lifestyle", label: "Lifestyle" },
+      { value: "brands:corporate", label: "Corporate" },
       { value: "brands:tech-innovation", label: "Tech & Innovation" },
       {
         value: "brands:food-hospitality",
