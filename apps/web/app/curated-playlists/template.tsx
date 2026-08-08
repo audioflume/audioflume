@@ -5,8 +5,10 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
     --curated-feature-edge: 34px;
     --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
-    --curated-feature-title-thumbnail-size: calc(
-      25.675px + clamp(29.4px, 3.136vw, 47.04px)
+    --curated-feature-title-thumbnail-size: clamp(
+      64px,
+      calc(5vw + 36px),
+      100px
     );
     --curated-landing-card-gap: 12px;
     --curated-landing-content-width: min(
