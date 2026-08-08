@@ -405,23 +405,83 @@
 
 .filmwave-dropdown-shell.filmwave-player-volume-popover {
   display: flex;
-  width: 136px;
+  width: 118px;
   align-items: center;
   overflow: visible;
   border: 1px solid var(--border);
+  border-radius: 8px;
   background: var(--bg-primary);
-  padding: 10px 12px;
+  padding: 8px 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .filmwave-player-volume-slider {
+  appearance: none;
+  -webkit-appearance: none;
   width: 100%;
-  height: 16px;
+  height: 12px;
   cursor: pointer;
-  accent-color: var(--text-primary);
+  margin: 0;
+  background: transparent;
+}
+
+.filmwave-player-volume-slider::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--border-strong);
+}
+
+.filmwave-player-volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  margin-top: -4px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--text-primary);
+  box-shadow: none;
+}
+
+.filmwave-player-volume-slider::-moz-range-track {
+  height: 2px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--border-strong);
+}
+
+.filmwave-player-volume-slider::-moz-range-progress {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--text-primary);
+}
+
+.filmwave-player-volume-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--text-primary);
+  box-shadow: none;
+}
+
+.filmwave-player-volume-slider:focus-visible {
+  outline: none;
+}
+
+.filmwave-player-volume-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--bg-hover-strong);
+}
+
+.filmwave-player-volume-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--bg-hover-strong);
 }
 
 .filmwave-player-volume-button svg {
+  width: 17px;
+  height: 17px;
   fill: none;
+  stroke-width: 2.1;
 }
 
 .filmwave-player-marker-toggle[aria-pressed="true"] {
@@ -443,6 +503,11 @@
 .playlist-icon-btn svg {
   width: 14px;
   height: 14px;
+}
+
+.filmwave-player-volume-button svg {
+  width: 17px;
+  height: 17px;
 }
 
 .filmwave-icon-button-plain {
