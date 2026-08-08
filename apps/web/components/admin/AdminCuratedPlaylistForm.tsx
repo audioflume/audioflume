@@ -8,10 +8,12 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import AdminVideoUpload from "@/components/admin/AdminVideoUpload";
 import type {
+  CuratedBrowseTag,
   CuratedPlaylist,
   CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
 import {
+  CURATED_BROWSE_FILTERS,
   CURATED_PLAYLIST_GROUPS,
   DEFAULT_CURATED_PLAYLIST_GROUP,
 } from "@/lib/curatedPlaylists";
@@ -36,6 +38,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const [playlistGroup, setPlaylistGroup] = useState(
     DEFAULT_CURATED_PLAYLIST_GROUP,
   );
+  const [browseTags, setBrowseTags] = useState<CuratedBrowseTag[]>([]);
   const [showOnCuratedFeature, setShowOnCuratedFeature] = useState(false);
   const [showOnDiscover, setShowOnDiscover] = useState(false);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
@@ -74,6 +77,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           setPlaylistGroup(
             playlistData.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP,
           );
+          setBrowseTags(playlistData.browse_tags || []);
           setShowOnCuratedFeature(
             Boolean(playlistData.show_on_curated_feature),
           );
@@ -106,6 +110,14 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
     return () => window.clearTimeout(t);
   }, [toastMessage]);
 
+  function toggleBrowseTag(tag: CuratedBrowseTag) {
+    setBrowseTags((current) =>
+      current.includes(tag)
+        ? current.filter((value) => value !== tag)
+        : [...current, tag],
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -120,11 +132,12 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           : "/api/admin/curated-playlists";
 
       const method = mode === "edit" ? "PATCH" : "POST";
-      const payload: Record<string, string | boolean> = {
+      const payload: Record<string, string | boolean | string[]> = {
         name,
         kicker,
         cover_image_url: coverImageUrl,
         playlist_group: playlistGroup,
+        browse_tags: browseTags,
         show_on_curated_feature: showOnCuratedFeature,
         show_on_discover: showOnDiscover,
       };
@@ -247,6 +260,34 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   ))}
                 </select>
               </label>
+
+              <div className="grid gap-2 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
+                <div>
+                  <div className="text-sm font-medium text-[var(--text-primary)]">
+                    Browse filters
+                  </div>
+                  <p className="mt-1 text-xs text-[var(--text-muted)]">
+                    Choose every filter this playlist should appear under on the
+                    Curated Playlists page.
+                  </p>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {CURATED_BROWSE_FILTERS.map((filter) => (
+                    <label
+                      key={filter.value}
+                      className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--text-secondary)]"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={browseTags.includes(filter.value)}
+                        onChange={() => toggleBrowseTag(filter.value)}
+                        className="h-4 w-4 accent-[var(--text-primary)]"
+                      />
+                      <span>{filter.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
 
               <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
                 <input
