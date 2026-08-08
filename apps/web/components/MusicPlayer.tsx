@@ -14,7 +14,6 @@ import AddToProjectModal from "@/components/AddToProjectModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import IconButton from "@/components/IconButton";
 import DownloadIcon from "@/components/icons/DownloadIcon";
-import EditPointsIcon from "@/components/icons/EditPointsIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import { iconButtonClass } from "@/components/uiClasses";
@@ -157,6 +156,47 @@ const CueNextIcon = () => (
   </svg>
 );
 
+const VolumeIcon = ({ muted = false }: { muted?: boolean }) => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M5 10V14H8L12 18V6L8 10H5Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    {muted ? (
+      <>
+        <path
+          d="M16 9L20 13"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        <path
+          d="M20 9L16 13"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </>
+    ) : (
+      <path
+        d="M16 9C17.5 10.5 17.5 13.5 16 15"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    )}
+  </svg>
+);
+
 function CloseIcon() {
   return (
     <svg
@@ -187,6 +227,8 @@ export default function MusicPlayer() {
     currentSong,
     isPlaying,
     remotePlayingInAnotherTab,
+    volume,
+    setVolume,
     togglePlayPause,
     navigateTrack,
     seekTo,
@@ -195,8 +237,7 @@ export default function MusicPlayer() {
   const { currentTime, duration } = usePlayerProgress();
 
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showEditPointMarkers, setShowEditPointMarkers } =
-    useUserPreferences();
+  const { showEditPointMarkers } = useUserPreferences();
 
   const playerRef = useRef<HTMLDivElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
@@ -211,6 +252,7 @@ export default function MusicPlayer() {
   const [playerWidth, setPlayerWidth] = useState(0);
   const [waveformWidth, setWaveformWidth] = useState(0);
   const [peaks, setPeaks] = useState<number[]>([]);
+  const [volumeOpen, setVolumeOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [addToPlaylistOpen, setAddToPlaylistOpen] = useState(false);
   const [addToProjectOpen, setAddToProjectOpen] = useState(false);
@@ -485,6 +527,7 @@ export default function MusicPlayer() {
   }
 
   const handleClosePlayer = () => {
+    setVolumeOpen(false);
     setMoreOpen(false);
     setAddToPlaylistOpen(false);
     setAddToProjectOpen(false);
@@ -706,22 +749,48 @@ export default function MusicPlayer() {
           className="filmwave-player-actions"
           style={{ marginLeft: `${metaToActionsGap - mainGap}px` }}
         >
+          <DropdownShell
+            open={volumeOpen}
+            onOpenChange={setVolumeOpen}
+            placement="top"
+            offsetAmount={8}
+            flippedOffsetAmount={8}
+            collisionPadding={{
+              top: 72,
+              right: 16,
+              bottom: 58,
+              left: 16,
+            }}
+            className="filmwave-player-volume-popover"
+            trigger={({ open }) => (
+              <button
+                type="button"
+                aria-label="Volume"
+                aria-expanded={open}
+                className={`${iconButtonClass} filmwave-player-volume-button ${open ? "is-open" : ""}`}
+              >
+                <VolumeIcon muted={volume === 0} />
+              </button>
+            )}
+          >
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              aria-label="Player volume"
+              className="filmwave-player-volume-slider"
+              onChange={(event) => setVolume(Number(event.currentTarget.value))}
+            />
+          </DropdownShell>
+
           <IconButton
             label={favorited ? "Remove song from favorites" : "Favorite song"}
             active={favorited}
             onClick={() => toggleFavorite(currentSong)}
           >
             <HeartIcon filled={favorited} />
-          </IconButton>
-
-          <IconButton
-            label={
-              showEditPointMarkers ? "Hide cue markers" : "Show cue markers"
-            }
-            active={showEditPointMarkers}
-            onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
-          >
-            <EditPointsIcon />
           </IconButton>
 
           <DropdownShell
