@@ -6,6 +6,7 @@ import {
   DEFAULT_DISCOVER_BUTTON_TEXT,
   DISCOVER_SECTION_OPTIONS,
   getCuratedPlaylistError,
+  normalizeCuratedBrowseTags,
   normalizeCuratedPlaylist,
 } from "@/lib/curatedPlaylists";
 
@@ -52,12 +53,16 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
-    const updates: Record<string, string | boolean | null | number> = {
+    const updates: Record<
+      string,
+      string | string[] | boolean | null | number
+    > = {
       name,
       kicker: cleanString(body.kicker) || "Curated selection",
       cover_image_url: cleanString(body.cover_image_url) || null,
       playlist_group:
         cleanString(body.playlist_group) || DEFAULT_CURATED_PLAYLIST_GROUP,
+      browse_tags: normalizeCuratedBrowseTags(body.browse_tags),
       description: cleanString(body.description),
       discover_button_enabled: body.discover_button_enabled !== false,
       discover_button_text:
