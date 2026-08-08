@@ -19,9 +19,9 @@ export default function VolumeIcon({
       className={className}
     >
       <path
-        d="M4.5 9.25H8L12.5 5.5V18.5L8 14.75H4.5V9.25Z"
+        d="M3.5 8.5H7.75L13 4.25V19.75L7.75 15.5H3.5V8.5Z"
         stroke="currentColor"
-        strokeWidth="2.1"
+        strokeWidth="1.9"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -29,30 +29,30 @@ export default function VolumeIcon({
       {muted ? (
         <>
           <path
-            d="M16.5 9.25L20.5 14.75"
+            d="M16.5 8.5L21.5 15.5"
             stroke="currentColor"
-            strokeWidth="2.1"
+            strokeWidth="1.9"
             strokeLinecap="round"
           />
           <path
-            d="M20.5 9.25L16.5 14.75"
+            d="M21.5 8.5L16.5 15.5"
             stroke="currentColor"
-            strokeWidth="2.1"
+            strokeWidth="1.9"
             strokeLinecap="round"
           />
         </>
       ) : (
         <>
           <path
-            d="M16 9C17.5 10.5 17.5 13.5 16 15"
+            d="M16.25 8C18.25 10 18.25 14 16.25 16"
             stroke="currentColor"
-            strokeWidth="2.1"
+            strokeWidth="1.9"
             strokeLinecap="round"
           />
           <path
-            d="M18.75 6.75C21.65 9.65 21.65 14.35 18.75 17.25"
+            d="M19 5.5C22.5 9 22.5 15 19 18.5"
             stroke="currentColor"
-            strokeWidth="2.1"
+            strokeWidth="1.9"
             strokeLinecap="round"
           />
         </>
