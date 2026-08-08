@@ -363,6 +363,7 @@
 
 .filmwave-icon-button,
 .playlist-icon-btn {
+  --filmwave-icon-button-icon-size: 14px;
   display: inline-flex;
   width: 28px;
   min-width: 28px;
@@ -380,6 +381,10 @@
   transition:
     background 0.15s ease,
     color 0.15s ease;
+}
+
+.filmwave-player-volume-button {
+  --filmwave-icon-button-icon-size: 17px;
 }
 
 .filmwave-icon-button:hover,
@@ -477,23 +482,6 @@
   box-shadow: 0 0 0 3px var(--bg-hover-strong);
 }
 
-.filmwave-player-volume-button svg {
-  width: 17px;
-  height: 17px;
-  fill: none;
-  stroke-width: 2.1;
-}
-
-.filmwave-player-marker-toggle[aria-pressed="true"] {
-  --edit-points-icon-color: var(--text-primary);
-  background: transparent;
-  color: var(--text-primary);
-}
-
-.filmwave-player-marker-toggle[aria-pressed="true"]:hover {
-  background: var(--filmwave-square-icon-hover-bg);
-}
-
 .filmwave-icon-button:disabled {
   cursor: default;
   opacity: 0.45;
@@ -501,13 +489,13 @@
 
 .filmwave-icon-button svg,
 .playlist-icon-btn svg {
-  width: 14px;
-  height: 14px;
+  width: var(--filmwave-icon-button-icon-size);
+  height: var(--filmwave-icon-button-icon-size);
 }
 
 .filmwave-player-volume-button svg {
-  width: 17px;
-  height: 17px;
+  fill: none;
+  stroke-width: 2.1;
 }
 
 .filmwave-icon-button-plain {
