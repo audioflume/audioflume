@@ -168,6 +168,15 @@ function HomeArtworkCollage({ playlists }: { playlists: CuratedPlaylist[] }) {
     if (index === 2) {
       return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%205.jpg";
     }
+    if (index === 3) {
+      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%208.jpg";
+    }
+    if (index === 4) {
+      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%209.jpg";
+    }
+    if (index === 5) {
+      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%207.jpg";
+    }
 
     const playlist = playlists[index % Math.max(playlists.length, 1)];
     return playlist?.cover_image_url || HERO_BACKGROUND_IMAGE;
