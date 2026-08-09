@@ -8,6 +8,8 @@ import {
   type CuratedBrowseTag,
 } from "@/lib/curatedPlaylists";
 
+import "@/components/curated/curated-browse-filters.css";
+
 export function getCuratedGroupId(name: string) {
   return `curated-group-${
     name
