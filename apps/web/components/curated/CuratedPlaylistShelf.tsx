@@ -200,15 +200,6 @@ export default function CuratedPlaylistShelf({
             >
               <ChevronRightIcon size={16} />
             </button>
-
-            {viewAllHref && (
-              <Link
-                href={viewAllHref}
-                className="ml-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-              >
-                {viewAllLabel}
-              </Link>
-            )}
           </div>
         </div>
 
