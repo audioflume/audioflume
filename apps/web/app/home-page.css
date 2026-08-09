@@ -10,7 +10,7 @@
 
 .audioflume-home-intro {
   display: grid;
-  width: calc(100% - (var(--audioflume-home-copy-edge) * 2));
+  width: calc(100% - var(--audioflume-home-copy-edge) - var(--audioflume-home-copy-edge));
   max-width: 1440px;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
   align-items: start;
@@ -97,7 +97,7 @@
 
 .audioflume-home-hero-media {
   position: relative;
-  width: calc(100% - (var(--audioflume-home-media-edge) * 2));
+  width: calc(100% - var(--audioflume-home-media-edge) - var(--audioflume-home-media-edge));
   height: clamp(350px, 40vw, 560px);
   margin: 0 auto;
   overflow: hidden;
@@ -215,7 +215,7 @@
 
 .audioflume-home-filter-row {
   display: grid;
-  width: calc(100% - (var(--audioflume-home-media-edge) * 2));
+  width: calc(100% - var(--audioflume-home-media-edge) - var(--audioflume-home-media-edge));
   grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 8px;
   margin: 16px auto 0;
@@ -249,7 +249,7 @@
 
 .audioflume-home-statement {
   display: grid;
-  width: calc(100% - (var(--audioflume-home-copy-edge) * 2));
+  width: calc(100% - var(--audioflume-home-copy-edge) - var(--audioflume-home-copy-edge));
   max-width: 1440px;
   grid-template-columns: minmax(0, 0.95fr) minmax(390px, 1.05fr);
   align-items: center;
@@ -324,7 +324,7 @@
 }
 
 .audioflume-home-content {
-  width: calc(100% - (var(--audioflume-home-copy-edge) * 2));
+  width: calc(100% - var(--audioflume-home-copy-edge) - var(--audioflume-home-copy-edge));
   max-width: 1440px;
   margin: 0 auto;
 }
