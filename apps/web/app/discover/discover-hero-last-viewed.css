@@ -181,11 +181,11 @@ body:has(.discover-page-root)
 body:has(.discover-page-root)
   .discover-production-section
   .discover-card-skeleton {
-  border-radius: 12px;
+  border-radius: 7px;
 }
 
 body:has(.discover-page-root) .discover-staff-favorite-image {
-  border-radius: 12px;
+  border-radius: 7px;
 }
 
 body:has(.discover-page-root)
