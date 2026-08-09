@@ -333,7 +333,7 @@
   align-items: center;
   gap: clamp(64px, 9vw, 150px);
   margin: 0 auto;
-  padding: clamp(92px, 10vw, 150px) 0 clamp(86px, 9vw, 138px);
+  padding: clamp(68px, 7vw, 108px) 0 clamp(64px, 6.5vw, 102px);
 }
 
 .audioflume-home-statement-copy h2 {
@@ -517,7 +517,7 @@
 
   .audioflume-home-statement {
     gap: 54px;
-    padding: 78px 0 86px;
+    padding: 58px 0 66px;
   }
 
   .audioflume-home-collage {
