@@ -191,7 +191,7 @@ function DiscoverMoodShelf({
 
         .discover-mood-section .curated-playlist-shelf-scroller {
           padding-left: var(--discover-page-gutter);
-          padding-right: 5rem;
+          padding-right: var(--discover-page-gutter);
         }
 
         .discover-mood-section .curated-playlist-shelf-prev-floating {
