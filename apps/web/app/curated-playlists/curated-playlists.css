@@ -1,7 +1,7 @@
 body:has(.curated-playlists-page-root) {
-  --curated-page-gutter: clamp(28px, 5.2vw, 82px);
+  --curated-page-gutter: var(--filmwave-page-gutter);
   --curated-playlist-card-gap: clamp(10px, 1.25vw, 18px);
-  --curated-feature-edge: clamp(16px, 1.5vw, 24px);
+  --curated-feature-edge: var(--filmwave-page-gutter);
   --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
 }
 
@@ -533,11 +533,6 @@ body:has(.curated-playlists-page-root)
   margin-left: calc(0px - var(--curated-page-gutter)) !important;
 }
 
-.curated-playlists-page-layer ~ footer {
-  padding-right: 32px !important;
-  padding-left: 32px !important;
-}
-
 @media (max-width: 1280px) {
   .curated-playlist-card-shell,
   .curated-playlist-skeleton-card-shell {
@@ -588,11 +583,6 @@ body:has(.curated-playlists-page-root)
 }
 
 @media (max-width: 720px) {
-  body:has(.curated-playlists-page-root) {
-    --curated-page-gutter: 20px;
-    --curated-feature-edge: 14px;
-  }
-
   .curated-feature-hero-title-block,
   .curated-feature-hero-info {
     left: 24px;
