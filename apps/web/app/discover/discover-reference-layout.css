@@ -7,6 +7,10 @@ body:has(.curated-playlists-page-root) {
   );
 }
 
+body:has(.discover-page-root) {
+  --discover-editorial-width: 1440px;
+}
+
 body:has(.curated-playlists-page-root) {
   --discover-editorial-gutter: clamp(24px, 5vw, 80px);
 }
