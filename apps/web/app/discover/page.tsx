@@ -15,9 +15,10 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
+import SectionTitle from "@/components/SectionTitle";
 import SongCard from "@/components/SongCard";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
-import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
+import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -296,8 +297,8 @@ function DiscoverMoodShelf({
         }
       `}</style>
 
-      <div className="discover-section-heading">
-        <h2>Explore These Moods</h2>
+      <div className="discover-section-header">
+        <SectionTitle>Explore These Moods</SectionTitle>
 
         <div className="hidden items-center gap-2 sm:flex">
           <button
@@ -409,7 +410,7 @@ function DiscoverMoodShelf({
   );
 }
 
-function DiscoverPlaylistGrid({
+function DiscoverPlaylistShelf({
   playlists,
   loading,
 }: {
@@ -418,40 +419,44 @@ function DiscoverPlaylistGrid({
 }) {
   if (!loading && playlists.length === 0) return null;
 
-  return (
-    <section className="discover-section discover-curated-playlist-section">
-      <div
-        className="discover-section-heading"
-        style={{ alignItems: "baseline" }}
-      >
-        <h2>Curated Playlists</h2>
+  if (loading) {
+    return (
+      <section className="discover-section discover-curated-playlist-section">
+        <div className="discover-section-header">
+          <SectionTitle>Curated Playlists</SectionTitle>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="discover-card-skeleton aspect-video rounded-[12px]"
+              aria-hidden="true"
+            />
+          ))}
+        </div>
+      </section>
+    );
+  }
 
+  return (
+    <div className="discover-section discover-curated-playlist-section">
+      <CuratedPlaylistShelf
+        title="Curated Playlists"
+        playlists={playlists}
+        viewAllHref="/curated-playlists"
+        viewAllLabel="Explore curated music"
+        className=""
+      />
+
+      <div className="discover-curated-playlist-cta mt-8 flex justify-center">
         <Link
           href="/curated-playlists"
-          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--filmwave-neutral-surface)] px-10 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
         >
-          Explore all playlists
+          Explore curated music
         </Link>
       </div>
-
-      <div className="discover-playlist-grid">
-        {loading
-          ? Array.from({ length: 5 }).map((_, index) => (
-              <div
-                key={index}
-                className="discover-playlist-card discover-card-skeleton"
-                aria-hidden="true"
-              />
-            ))
-          : playlists.map((playlist, index) => (
-              <CuratedPlaylistCard
-                key={playlist.id}
-                playlist={playlist}
-                index={index}
-              />
-            ))}
-      </div>
-    </section>
+    </div>
   );
 }
 
@@ -466,11 +471,8 @@ function DiscoverSongs({
 
   return (
     <section className="discover-section discover-song-section">
-      <div
-        className="discover-section-heading"
-        style={{ alignItems: "baseline" }}
-      >
-        <h2>Newly Added Tracks</h2>
+      <div className="discover-section-header">
+        <SectionTitle>Newly Added Tracks</SectionTitle>
 
         <Link
           href="/music"
@@ -569,8 +571,8 @@ function DiscoverProductionStyles({
 
   return (
     <section className="discover-section discover-production-section">
-      <div className="discover-section-heading">
-        <h2>Browse by Production Style</h2>
+      <div className="discover-section-header">
+        <SectionTitle>Browse by Production Style</SectionTitle>
       </div>
 
       <div className="grid gap-[clamp(10px,1.25vw,18px)] sm:grid-cols-2 xl:grid-cols-4">
@@ -726,11 +728,8 @@ function ReadyToCutTracks({
 
   return (
     <section className="discover-section discover-ready-to-cut-section">
-      <div
-        className="discover-section-heading"
-        style={{ alignItems: "baseline" }}
-      >
-        <h2>Ready-to-Cut Tracks</h2>
+      <div className="discover-section-header">
+        <SectionTitle>Ready-to-Cut Tracks</SectionTitle>
 
         <Link
           href="/music"
@@ -850,7 +849,7 @@ export default function DiscoverPage() {
           playlists={discoverBlocks}
           loading={playlistsLoading}
         />
-        <DiscoverPlaylistGrid
+        <DiscoverPlaylistShelf
           playlists={curatedPlaylists}
           loading={playlistsLoading}
         />
