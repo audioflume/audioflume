@@ -31,6 +31,7 @@
 }
 
 .audioflume-home-intro h1 {
+  max-width: 560px;
   font-size: clamp(36px, 3.6vw, 56px);
 }
 
