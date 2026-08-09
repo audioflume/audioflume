@@ -454,9 +454,7 @@
   display: flex;
   align-items: center;
   padding: 0 12px;
-  border-width: 2px;
-  border-style: solid;
-  border-color: rgba(128, 128, 128, 0.22);
+  border: 2px solid rgba(128, 128, 128, 0.14);
   border-radius: 7px;
   color: rgba(128, 128, 128, 0.55);
   pointer-events: none;
@@ -464,7 +462,7 @@
 
 .audioflume-home-waveform-one {
   top: calc(anchor(--audioflume-home-front-playlist-card center) - 38px);
-  transform: translateX(-180px);
+  transform: translateX(-240px);
 }
 
 .audioflume-home-waveform-two {
@@ -476,7 +474,7 @@
   display: block;
   width: 76%;
   height: auto;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .audioflume-home-mock-waveform span {
@@ -552,7 +550,7 @@
 
   .audioflume-home-waveform-one {
     top: calc(anchor(--audioflume-home-front-playlist-card center) - 36px);
-    transform: translateX(-130px);
+    transform: translateX(-170px);
   }
 
   .audioflume-home-waveform-two {
@@ -670,7 +668,7 @@
 
   .audioflume-home-waveform-one {
     top: calc(anchor(--audioflume-home-front-playlist-card center) - 32px);
-    transform: translateX(-92px);
+    transform: translateX(-120px);
   }
 
   .audioflume-home-waveform-two {
