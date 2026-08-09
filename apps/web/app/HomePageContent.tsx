@@ -26,7 +26,7 @@ const HERO_BACKGROUND_IMAGE =
 const HOME_HERO_VIDEO_URL =
   "https://pub-cd585d75522a44bb9dad78b6f9974d03.r2.dev/Audioflume%20Banner.mov";
 
-const HOME_HEADLINE = "Human Curated Music & SFX for Filmmakers and Your Clients";
+const HOME_HEADLINE = "Human Curated Music & SFX Library for Filmmakers and Your Clients";
 const HOME_DESCRIPTION =
   "A highly curated library of royalty free audio and sound effects made with intention for filmmakers.";
 
