@@ -11,7 +11,7 @@
   width: calc(
     100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
-  max-width: var(--filmwave-editorial-max-width);
+  max-width: calc(var(--filmwave-editorial-max-width) - 120px);
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
   align-items: start;
   gap: clamp(56px, 8vw, 150px);
@@ -25,7 +25,7 @@
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.98;
 }
