@@ -1,6 +1,6 @@
 body:has(.discover-page-root) {
-  --discover-editorial-width: 1120px;
-  --discover-editorial-gutter: clamp(16px, 1.8vw, 24px);
+  --discover-editorial-width: var(--filmwave-editorial-max-width);
+  --discover-editorial-gutter: var(--filmwave-page-gutter);
   --discover-section-gap: clamp(64px, 6vw, 96px);
   background: #000;
 }
@@ -191,9 +191,9 @@ body:has(.discover-page-root) .discover-content::before {
 }
 
 body:has(.discover-page-root) .discover-content > .discover-section:not(.discover-mood-section) {
-  width: min(100%, var(--discover-editorial-width));
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 body:has(.discover-page-root) .discover-mood-section {
@@ -204,9 +204,8 @@ body:has(.discover-page-root) .discover-mood-section {
 }
 
 body:has(.discover-page-root) .discover-mood-section .discover-section-heading {
-  width: min(
-    calc(100% - (var(--discover-editorial-gutter) * 2)),
-    var(--discover-editorial-width)
+  width: calc(
+    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
   );
   margin-right: auto;
   margin-left: auto;
@@ -225,22 +224,10 @@ body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-scroller {
   gap: 12px;
-  padding-right: max(
-    var(--discover-editorial-gutter),
-    calc((100vw - var(--discover-editorial-width)) / 2)
-  ) !important;
-  padding-left: max(
-    var(--discover-editorial-gutter),
-    calc((100vw - var(--discover-editorial-width)) / 2)
-  ) !important;
-  scroll-padding-right: max(
-    var(--discover-editorial-gutter),
-    calc((100vw - var(--discover-editorial-width)) / 2)
-  );
-  scroll-padding-left: max(
-    var(--discover-editorial-gutter),
-    calc((100vw - var(--discover-editorial-width)) / 2)
-  );
+  padding-right: var(--filmwave-page-gutter) !important;
+  padding-left: var(--filmwave-page-gutter) !important;
+  scroll-padding-right: var(--filmwave-page-gutter);
+  scroll-padding-left: var(--filmwave-page-gutter);
 }
 
 body:has(.discover-page-root) .discover-mood-section + .discover-curated-playlist-section {
@@ -332,10 +319,12 @@ body:has(.discover-page-root) .discover-curated-playlist-section .playlist-menu-
 
 body:has(.discover-page-root) .discover-footer-wrap {
   position: relative;
-  width: calc(100% + var(--discover-editorial-gutter) + var(--discover-editorial-gutter));
+  width: calc(
+    100% + var(--filmwave-page-gutter) + var(--filmwave-page-gutter)
+  );
   margin-top: clamp(130px, 13vw, 210px);
-  margin-right: calc(0px - var(--discover-editorial-gutter));
-  margin-left: calc(0px - var(--discover-editorial-gutter));
+  margin-right: calc(0px - var(--filmwave-page-gutter));
+  margin-left: calc(0px - var(--filmwave-page-gutter));
 }
 
 body:has(.discover-page-root) .discover-footer-wrap::before {
@@ -382,7 +371,6 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
 @media (max-width: 620px) {
   body:has(.discover-page-root) {
-    --discover-editorial-gutter: 12px;
     --discover-section-gap: 52px;
   }
 
