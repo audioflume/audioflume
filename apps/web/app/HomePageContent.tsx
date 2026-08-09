@@ -323,15 +323,15 @@ function HomePlaylistFeatureVisual() {
         </div>
 
         <div className="audioflume-home-statement-copy audioflume-home-playlist-feature-copy">
-          <span className="audioflume-home-eyebrow">Built for Editors</span>
+          <span className="audioflume-home-eyebrow">Human Curated Playlists</span>
           <h2>{HOME_STATEMENT_HEADLINE}</h2>
           <p>{HOME_STATEMENT_DESCRIPTION}</p>
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
-              href="/music"
+              href="/curated-playlists"
               className={`${playlistDetailPrimaryActionButtonClass} hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
             >
-              Explore Music Library
+              Explore Curated Playlists
             </Link>
           </div>
         </div>
