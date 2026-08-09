@@ -454,7 +454,9 @@
   display: flex;
   align-items: center;
   padding: 0 12px;
-  border: 2px solid rgba(128, 128, 128, 0.22);
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(128, 128, 128, 0.22);
   border-radius: 7px;
   color: rgba(128, 128, 128, 0.55);
   pointer-events: none;
@@ -462,11 +464,12 @@
 
 .audioflume-home-waveform-one {
   top: calc(anchor(--audioflume-home-front-playlist-card center) - 38px);
-  transform: translateX(-85px);
+  transform: translateX(-180px);
 }
 
 .audioflume-home-waveform-two {
   top: calc(anchor(--audioflume-home-front-playlist-card center) + 14px);
+  transform: translateX(-80px);
 }
 
 .audioflume-home-mock-waveform {
@@ -549,11 +552,12 @@
 
   .audioflume-home-waveform-one {
     top: calc(anchor(--audioflume-home-front-playlist-card center) - 36px);
-    transform: translateX(-64px);
+    transform: translateX(-130px);
   }
 
   .audioflume-home-waveform-two {
     top: calc(anchor(--audioflume-home-front-playlist-card center) + 12px);
+    transform: translateX(-60px);
   }
 }
 
@@ -666,10 +670,11 @@
 
   .audioflume-home-waveform-one {
     top: calc(anchor(--audioflume-home-front-playlist-card center) - 32px);
-    transform: translateX(-48px);
+    transform: translateX(-92px);
   }
 
   .audioflume-home-waveform-two {
     top: calc(anchor(--audioflume-home-front-playlist-card center) + 10px);
+    transform: translateX(-44px);
   }
 }
