@@ -7,8 +7,6 @@ import {
   type CuratedBrowseTag,
 } from "@/lib/curatedPlaylists";
 
-import "./curated-browse-filters.css";
-
 type FilterIconName =
   | "scissors"
   | "waveform"
