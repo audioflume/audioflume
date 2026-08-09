@@ -449,6 +449,12 @@
   font-weight: 300;
 }
 
+.audioflume-home-playlist-feature-copy a {
+  width: auto;
+  min-width: 170px;
+  flex: 0 0 auto;
+}
+
 .audioflume-home-waveform {
   --audioflume-home-waveform-width: clamp(334px, 34vw, 478px);
   position: absolute;
@@ -550,11 +556,13 @@
   }
 
   .audioflume-home-playlist-stack {
-    width: min(100%, 680px);
+    order: 2;
+    width: min(calc(100% - 48px), 680px);
     justify-self: center;
   }
 
   .audioflume-home-playlist-feature-copy {
+    order: 1;
     transform: none;
   }
 
@@ -646,7 +654,7 @@
   }
 
   .audioflume-home-playlist-stack {
-    width: 100%;
+    width: calc(100% - 36px);
     height: 360px;
   }
 
