@@ -1,6 +1,4 @@
 .audioflume-home-page-root {
-  --audioflume-home-media-edge: clamp(16px, 1.8vw, 24px);
-  --audioflume-home-copy-edge: clamp(28px, 7.8vw, 96px);
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
@@ -10,8 +8,10 @@
 
 .audioflume-home-intro {
   display: grid;
-  width: calc(100% - var(--audioflume-home-copy-edge) - var(--audioflume-home-copy-edge));
-  max-width: 1440px;
+  width: calc(
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
+  );
+  max-width: var(--filmwave-editorial-max-width);
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
   align-items: start;
   gap: clamp(56px, 8vw, 150px);
@@ -104,7 +104,9 @@
 
 .audioflume-home-hero-media {
   position: relative;
-  width: calc(100% - var(--audioflume-home-media-edge) - var(--audioflume-home-media-edge));
+  width: calc(
+    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+  );
   height: clamp(350px, 40vw, 560px);
   margin: 0 auto;
   overflow: hidden;
@@ -314,15 +316,19 @@
 }
 
 .audioflume-home-filter-row {
-  width: calc(100% - var(--audioflume-home-media-edge) - var(--audioflume-home-media-edge));
+  width: calc(
+    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+  );
   margin-right: auto;
   margin-left: auto;
 }
 
 .audioflume-home-statement {
   display: grid;
-  width: calc(100% - var(--audioflume-home-copy-edge) - var(--audioflume-home-copy-edge));
-  max-width: 1440px;
+  width: calc(
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
+  );
+  max-width: var(--filmwave-editorial-max-width);
   grid-template-columns: minmax(0, 0.95fr) minmax(390px, 1.05fr);
   align-items: center;
   gap: clamp(64px, 9vw, 150px);
@@ -405,8 +411,9 @@
 }
 
 .audioflume-home-content {
-  width: calc(100% - var(--audioflume-home-copy-edge) - var(--audioflume-home-copy-edge));
-  max-width: 1440px;
+  width: calc(
+    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+  );
   margin: 0 auto;
 }
 
@@ -480,11 +487,6 @@
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-page-root {
-    --audioflume-home-copy-edge: 18px;
-    --audioflume-home-media-edge: 12px;
-  }
-
   .audioflume-home-intro {
     padding-top: calc(var(--filmwave-header-height, 75px) + 32px);
     padding-bottom: 36px;
