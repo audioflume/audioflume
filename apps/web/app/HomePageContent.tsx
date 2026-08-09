@@ -31,6 +31,8 @@ const HOME_STATEMENT_HEADLINE =
   "Every Track and Sound Effect Built Specifically For Editors";
 const HOME_DESCRIPTION =
   "A highly curated library of royalty free audio and sound effects made with intention for filmmakers.";
+const HOME_STATEMENT_DESCRIPTION =
+  "Premium film-forward music and sound effects built to work naturally with picture, pacing, emotion, and story.";
 
 function SignUpButton() {
   return (
@@ -211,7 +213,7 @@ function HomeStatement({ playlists }: { playlists: CuratedPlaylist[] }) {
       <div className="audioflume-home-statement-copy">
         <span className="audioflume-home-eyebrow">Sign up today</span>
         <h2>{HOME_STATEMENT_HEADLINE}</h2>
-        <p>{HOME_DESCRIPTION}</p>
+        <p>{HOME_STATEMENT_DESCRIPTION}</p>
         <SignUpButton />
       </div>
 
