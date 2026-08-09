@@ -1,18 +1,10 @@
 body:has(.discover-page-root),
 body:has(.curated-playlists-page-root) {
   --discover-reference-mark-filter: none;
-  --discover-editorial-width: 1280px;
-  --discover-content-breakout: calc(
-    (var(--discover-editorial-gutter, 0px) * 1.5) - 40px
-  );
-}
-
-body:has(.discover-page-root) {
-  --discover-editorial-width: 1440px;
 }
 
 body:has(.curated-playlists-page-root) {
-  --discover-editorial-gutter: clamp(24px, 5vw, 80px);
+  --discover-editorial-width: 1280px;
 }
 
 :where(html.light, html[data-theme="light"]) body:has(.discover-page-root),
@@ -60,33 +52,39 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 }
 
 .discover-reference-hero-mount,
-.discover-reference-intro-mount,
-.audioflume-outro-region,
-.discover-reference-outro-mount {
+.audioflume-outro-region {
   width: 100%;
 }
 
 body:has(.curated-playlists-page-root) .audioflume-outro-region {
   width: calc(
-    100% - var(--discover-editorial-gutter) -
-      var(--discover-editorial-gutter)
+    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
   );
   margin-right: auto;
   margin-left: auto;
 }
 
-.discover-reference-intro-mount,
 body:has(.discover-page-root)
   .discover-content
-  > .discover-section:not(.discover-mood-section),
+  > .discover-section:not(.discover-mood-section) {
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+  transform: none;
+}
+
+.discover-reference-intro-mount,
 .discover-reference-outro-mount {
   width: min(
-    calc(100% + var(--discover-content-breakout)),
-    var(--discover-editorial-width)
+    calc(
+      100% - var(--filmwave-editorial-inner-inset) -
+        var(--filmwave-editorial-inner-inset)
+    ),
+    var(--filmwave-editorial-max-width)
   );
-  margin-right: 0;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  margin-right: auto;
+  margin-left: auto;
+  transform: none;
 }
 
 .discover-reference-intro-mount {
@@ -127,8 +125,8 @@ body:has(.discover-page-root)
       (
           100% -
             (
-              100vw - var(--discover-editorial-gutter, 0px) -
-                var(--discover-editorial-gutter, 0px)
+              100vw - var(--filmwave-page-gutter) -
+                var(--filmwave-page-gutter)
             )
         ) / 2
     )
@@ -243,8 +241,8 @@ body:has(.discover-page-root)
       (
           100% -
             (
-              100vw - var(--discover-editorial-gutter, 0px) -
-                var(--discover-editorial-gutter, 0px)
+              100vw - var(--filmwave-page-gutter) -
+                var(--filmwave-page-gutter)
             )
         ) / 2
     )
@@ -341,33 +339,7 @@ body:has(.discover-page-root)
   line-height: 1.55;
 }
 
-body:has(.discover-page-root) .discover-footer-wrap {
-  box-sizing: border-box;
-  width: calc(
-    100% + var(--discover-editorial-gutter) + var(--discover-editorial-gutter)
-  );
-  margin-top: 0 !important;
-  margin-right: calc(0px - var(--discover-editorial-gutter));
-  margin-left: calc(0px - var(--discover-editorial-gutter));
-  padding-top: 40px;
-  padding-right: 32px;
-  padding-left: 32px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-}
-
 @media (max-width: 900px) {
-  .discover-reference-intro-mount,
-  body:has(.discover-page-root)
-    .discover-content
-    > .discover-section:not(.discover-mood-section),
-  .discover-reference-outro-mount {
-    width: min(100%, var(--discover-editorial-width));
-    margin-right: auto;
-    margin-left: auto;
-    transform: none;
-  }
-
   .discover-reference-intro-mount {
     margin-top: clamp(56px, 5vw, 84px);
     margin-bottom: clamp(64px, 6vw, 96px);
@@ -475,13 +447,6 @@ body:has(.discover-page-root) .discover-footer-wrap {
     max-width: 100%;
     margin-left: 0;
     grid-column: 2;
-  }
-}
-
-@media (max-width: 760px) {
-  body:has(.discover-page-root) .discover-footer-wrap {
-    padding-right: 32px;
-    padding-left: 32px;
   }
 }
 
