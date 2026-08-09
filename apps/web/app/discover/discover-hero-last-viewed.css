@@ -357,9 +357,7 @@ body:has(.discover-page-root)
   }
 
   .discover-template-shell.is-discover-route > .discover-hero-last-viewed {
-    padding-right: 20px;
     padding-bottom: 0;
-    padding-left: 20px;
   }
 
   body:has(.discover-page-root) .discover-content {
