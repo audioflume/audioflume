@@ -189,12 +189,11 @@ function HomeSongs({
   if (!loading && songs.length === 0) return null;
 
   return (
-    <section className="discover-section discover-song-section audioflume-home-songs">
-      <div
-        className="discover-section-heading"
-        style={{ alignItems: "baseline" }}
-      >
-        <h2>Newly Added Tracks</h2>
+    <section className="audioflume-home-songs">
+      <div className="mb-4 flex min-h-[34px] items-center justify-between gap-5">
+        <h2 className="m-0 text-xl font-medium tracking-[-0.04em] text-[var(--text-primary)]">
+          Newly Added Tracks
+        </h2>
         <Link
           href="/music"
           className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
@@ -208,7 +207,7 @@ function HomeSongs({
           ? Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={index}
-                className="discover-song-skeleton discover-card-skeleton"
+                className="mb-0.5 h-16 w-full bg-[var(--bg-secondary)]"
                 aria-hidden="true"
               />
             ))
@@ -279,7 +278,7 @@ export default function HomePageContent() {
       <div className="audioflume-home-content">
         <HomeSongs songs={recentSongs} loading={songsLoading} />
         <div
-          className="discover-footer-wrap"
+          className="pt-16"
           style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
         >
           <Footer />
