@@ -8,12 +8,11 @@ import { type FormEvent, useEffect, useMemo, useState } from "react";
 
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
+import CuratedBrowseFilters from "@/components/curated/CuratedBrowseFilters";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
-import {
-  CURATED_BROWSE_FILTERS,
-  type CuratedPlaylist,
-} from "@/lib/curatedPlaylists";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 import "./music/music-library-redesign.css";
 import "./home-page.css";
@@ -107,16 +106,31 @@ function HomeHeroMedia() {
         </form>
 
         <div className="audioflume-home-media-values">
-          <Link href="/music">
-            <strong>Human curated music library ↗</strong>
+          <Link className="audioflume-home-media-value-link" href="/music">
+            <strong>
+              Human Curated Music Library
+              <ArrowUpRightIcon
+                size={16}
+                className="audioflume-home-media-value-arrow"
+              />
+            </strong>
             <span>
-              Human-picked tracks, thoughtful moods, and music chosen for real edits.
+              Human-picked tracks, thoughtful moods, and music chosen for real
+              edits.
             </span>
           </Link>
-          <Link href="/sound-fx">
-            <strong>Thousands of sound effects ↗</strong>
+
+          <Link className="audioflume-home-media-value-link" href="/sound-fx">
+            <strong>
+              Thousands of Sound Effects
+              <ArrowUpRightIcon
+                size={16}
+                className="audioflume-home-media-value-arrow"
+              />
+            </strong>
             <span>
-              Thousands of sound effects, textures, and details for richer edits.
+              Thousands of sound effects, textures, and details for richer
+              edits.
             </span>
           </Link>
         </div>
@@ -127,18 +141,18 @@ function HomeHeroMedia() {
 
 function HomeBrowseFilters() {
   return (
-    <nav className="audioflume-home-filter-row" aria-label="Browse curated playlists">
-      {CURATED_BROWSE_FILTERS.map((filter) => (
-        <Link key={filter.value} href="/curated-playlists">
-          {filter.label}
-        </Link>
-      ))}
-    </nav>
+    <CuratedBrowseFilters
+      className="audioflume-home-filter-row"
+      ariaLabel="Browse curated playlists"
+      hrefForFilter={(filter) =>
+        `/curated-playlists?filter=${encodeURIComponent(filter)}`
+      }
+    />
   );
 }
 
 function HomeArtworkCollage({ playlists }: { playlists: CuratedPlaylist[] }) {
-  const images = Array.from({ length: 5 }, (_, index) => {
+  const images = Array.from({ length: 6 }, (_, index) => {
     const playlist = playlists[index % Math.max(playlists.length, 1)];
     return playlist?.cover_image_url || HERO_BACKGROUND_IMAGE;
   });
@@ -259,7 +273,7 @@ export default function HomePageContent() {
     () =>
       playlists
         .filter((playlist) => Boolean(playlist.cover_image_url))
-        .slice(0, 5),
+        .slice(0, 6),
     [playlists],
   );
   const playerVisible = Boolean(currentSong);
