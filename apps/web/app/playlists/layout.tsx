@@ -382,21 +382,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           margin-top: 24px !important;
         }
 
-        .playlist-detail-page .playlist-detail-actions > button {
-          display: inline-flex !important;
-          height: 36px !important;
-          min-width: 170px;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 8px !important;
-          border-radius: 0 !important;
-          padding: 0 20px !important;
-          font-family: inherit;
-          font-size: 11px !important;
-          font-weight: 500 !important;
-          line-height: 1 !important;
-        }
-
         .playlist-detail-page .playlist-detail-skeleton-button {
           border-radius: 0 !important;
         }
@@ -534,10 +519,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
             font-size: 26px !important;
           }
 
-          .playlist-detail-page .playlist-detail-actions > button {
-            min-width: 160px;
-          }
-
           .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
             margin-right: 12px !important;
             margin-left: 12px !important;
@@ -551,11 +532,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
           .playlist-detail-page .playlist-detail-actions {
             width: 100%;
-          }
-
-          .playlist-detail-page .playlist-detail-actions > button {
-            min-width: 0;
-            flex: 1 1 0;
           }
         }
 
