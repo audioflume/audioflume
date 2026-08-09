@@ -160,13 +160,13 @@ function HomeBrowseFilters() {
 function HomeArtworkCollage({ playlists }: { playlists: CuratedPlaylist[] }) {
   const images = Array.from({ length: 6 }, (_, index) => {
     if (index === 0) {
-      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%201.jpg";
+      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%204.jpg";
     }
     if (index === 1) {
-      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%203.jpg";
+      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%205.jpg";
     }
     if (index === 2) {
-      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%202.jpg";
+      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%206.jpg";
     }
 
     const playlist = playlists[index % Math.max(playlists.length, 1)];
