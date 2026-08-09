@@ -3,11 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import SectionTitle from "@/components/SectionTitle";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import CuratedPlaylistPlayButton from "./CuratedPlaylistPlayButton";
-import styles from "./CuratedPlaylistCard.module.css";
+import cardStyles from "./CuratedPlaylistCard.module.css";
+import shelfStyles from "./CuratedPlaylistShelf.module.css";
 
 export type CuratedPlaylistCardItem = Pick<
   CuratedPlaylist,
@@ -25,6 +27,7 @@ type CuratedPlaylistShelfProps = {
   description?: string;
   playlists: CuratedPlaylistCardItem[];
   viewAllHref?: string;
+  viewAllLabel?: string;
   className?: string;
 };
 
@@ -53,13 +56,11 @@ export function CuratedPlaylistCard({
     FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
 
   return (
-    <div
-      className={`curated-playlist-card-shell discover-playlist-card-shell ${styles.shell}`}
-    >
-      <article className={styles.card}>
-        <Link href={href} className={styles.imageLink}>
+    <div className={cardStyles.shell}>
+      <article className={cardStyles.card}>
+        <Link href={href} className={cardStyles.imageLink}>
           <div
-            className={styles.image}
+            className={cardStyles.image}
             data-curated-playlist-image
             style={{
               background: playlist.cover_image_url
@@ -72,16 +73,16 @@ export function CuratedPlaylistCard({
                 src={playlist.cover_image_url}
                 alt={playlist.name}
                 fill
-                sizes="(min-width: 1280px) 320px, (min-width: 768px) 285px, 250px"
-                className={styles.media}
+                sizes="(min-width: 1280px) 420px, (min-width: 900px) 32vw, (min-width: 560px) 48vw, 100vw"
+                className={cardStyles.media}
                 unoptimized
               />
             )}
           </div>
         </Link>
 
-        <div className={styles.details}>
-          <Link href={href} className={styles.copy}>
+        <div className={cardStyles.details}>
+          <Link href={href} className={cardStyles.copy}>
             <h3>{playlist.name}</h3>
             <p>{formatSongCount(playlist.song_count)}</p>
           </Link>
@@ -89,7 +90,7 @@ export function CuratedPlaylistCard({
           <CuratedPlaylistPlayButton
             playlistId={playlist.id}
             playlistName={playlist.name}
-            className={styles.playButton}
+            className={cardStyles.playButton}
           />
         </div>
       </article>
@@ -101,6 +102,7 @@ export default function CuratedPlaylistShelf({
   title,
   playlists,
   viewAllHref,
+  viewAllLabel = "View playlists",
   className = "mt-12",
 }: CuratedPlaylistShelfProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -172,10 +174,10 @@ export default function CuratedPlaylistShelf({
 
   return (
     <div className={className}>
-      <section className="curated-playlist-shelf">
-        <div className="discover-section-heading curated-playlist-shelf-heading">
+      <section className={shelfStyles.shelf}>
+        <div className={shelfStyles.heading}>
           <div className="min-w-0">
-            <h2>{title}</h2>
+            <SectionTitle>{title}</SectionTitle>
           </div>
 
           <div className="hidden items-center gap-2 sm:flex">
@@ -204,13 +206,15 @@ export default function CuratedPlaylistShelf({
                 href={viewAllHref}
                 className="ml-2 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
               >
-                View playlists
+                {viewAllLabel}
               </Link>
             )}
           </div>
         </div>
 
-        <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
+        <div
+          className={`group/playlist-shelf relative ${shelfStyles.viewport}`}
+        >
           {imageCenterY !== null && (
             <>
               <button
@@ -239,7 +243,7 @@ export default function CuratedPlaylistShelf({
 
           <div
             ref={scrollerRef}
-            className="curated-playlist-shelf-scroller flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className={`flex overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${shelfStyles.scroller}`}
           >
             {playlists.map((playlist, index) => (
               <CuratedPlaylistCard
