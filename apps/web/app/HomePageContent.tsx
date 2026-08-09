@@ -21,6 +21,8 @@ import "./home-page.css";
 const NEW_SONG_COUNT = 10;
 const HERO_BACKGROUND_IMAGE =
   "https://images.filmwave.io/images/discover/b7cb4a48-bd82-44d1-b02e-c104dac45339-gigapixel-low%20resolution%20v2-2x.jpeg";
+const HOME_HERO_VIDEO_URL =
+  "https://pub-cd585d75522a44bb9dad78b6f9974d03.r2.dev/Audioflume%20Banner.mov";
 
 const HOME_HEADLINE = "Human Curated Music & SFX for Filmmakers and Your Clients";
 const HOME_DESCRIPTION =
@@ -78,6 +80,16 @@ function HomeHeroMedia() {
         sizes="calc(100vw - 40px)"
         className="audioflume-home-hero-image"
       />
+      <video
+        className="audioflume-home-hero-video"
+        src={HOME_HERO_VIDEO_URL}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
       <div className="audioflume-home-hero-overlay" aria-hidden="true" />
 
       <div className="audioflume-home-hero-content">
@@ -134,8 +146,18 @@ function HomeArtworkCollage({ playlists }: { playlists: CuratedPlaylist[] }) {
   return (
     <div className="audioflume-home-collage" aria-hidden="true">
       {images.map((src, index) => (
-        <div key={`${src}-${index}`} className={`audioflume-home-collage-item item-${index + 1}`}>
-          <Image src={src} alt="" fill unoptimized sizes="320px" className="object-cover" />
+        <div
+          key={`${src}-${index}`}
+          className={`audioflume-home-collage-item item-${index + 1}`}
+        >
+          <Image
+            src={src}
+            alt=""
+            fill
+            unoptimized
+            sizes="320px"
+            className="object-cover"
+          />
         </div>
       ))}
     </div>
@@ -168,7 +190,10 @@ function HomeSongs({
 
   return (
     <section className="discover-section discover-song-section audioflume-home-songs">
-      <div className="discover-section-heading" style={{ alignItems: "baseline" }}>
+      <div
+        className="discover-section-heading"
+        style={{ alignItems: "baseline" }}
+      >
         <h2>Newly Added Tracks</h2>
         <Link
           href="/music"
@@ -232,7 +257,10 @@ export default function HomePageContent() {
   );
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
   const visualPlaylists = useMemo(
-    () => playlists.filter((playlist) => Boolean(playlist.cover_image_url)).slice(0, 5),
+    () =>
+      playlists
+        .filter((playlist) => Boolean(playlist.cover_image_url))
+        .slice(0, 5),
     [playlists],
   );
   const playerVisible = Boolean(currentSong);
