@@ -33,7 +33,7 @@ const HOME_HEADLINE = "Human Curated Music & SFX Licensed for Filmmakers and The
 const HOME_STATEMENT_HEADLINE =
   "Every Track and Sound Effect Built Specifically For Editors";
 const HOME_DESCRIPTION =
-  "A highly curated library of royalty free audio and sound effects made with intention for filmmakers.";
+  "A highly curated library of royalty-free audio and sound effects made with intention for filmmakers.";
 const HOME_STATEMENT_DESCRIPTION =
   "Premium film-forward music and SFX built to work naturally with picture, pacing, emotion, and story.";
 
