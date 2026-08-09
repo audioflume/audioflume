@@ -184,54 +184,13 @@
   outline-offset: 3px;
 }
 
-:where(html.light, html[data-theme="light"])
-  .audioflume-home-search
-  input[type="search"]::-webkit-search-cancel-button {
+.audioflume-home-search input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
   width: 14px;
   height: 14px;
   cursor: pointer;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 2l8 8M10 2L2 10' stroke='%23111' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center / 12px 12px no-repeat;
   opacity: 0.72;
-}
-
-:where(html:not(.light):not([data-theme="light"])) .audioflume-home-search {
-  background: var(--filmwave-neutral-surface);
-}
-
-:where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-search
-  input {
-  color: #fff;
-}
-
-:where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-search
-  input::placeholder {
-  color: rgba(255, 255, 255, 0.55);
-}
-
-:where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-search
-  button {
-  background: #202020;
-  color: rgba(255, 255, 255, 0.62);
-}
-
-:where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-search
-  button:hover,
-:where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-search
-  button:focus-visible {
-  background: #2b2b2b;
-  color: #fff;
-}
-
-:where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-search
-  button:focus-visible {
-  outline-color: rgba(255, 255, 255, 0.72);
 }
 
 .audioflume-home-media-values {
