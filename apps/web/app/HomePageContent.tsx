@@ -211,10 +211,23 @@ function HomeStatement({ playlists }: { playlists: CuratedPlaylist[] }) {
   return (
     <section className="audioflume-home-statement">
       <div className="audioflume-home-statement-copy">
-        <span className="audioflume-home-eyebrow">Sign up today</span>
+        <span className="audioflume-home-eyebrow">Built for Editors</span>
         <h2>{HOME_STATEMENT_HEADLINE}</h2>
         <p>{HOME_STATEMENT_DESCRIPTION}</p>
-        <SignUpButton />
+        <div className="mt-5 flex flex-wrap gap-2">
+          <Link
+            href="/music"
+            className={`${playlistDetailActionButtonClass} bg-black text-white`}
+          >
+            Explore Music Library
+          </Link>
+          <Link
+            href="/sound-fx"
+            className={`${playlistDetailActionButtonClass} border border-[var(--border)] bg-transparent text-[var(--text-primary)]`}
+          >
+            Explore SFX
+          </Link>
+        </div>
       </div>
 
       <HomeArtworkCollage playlists={playlists} />
