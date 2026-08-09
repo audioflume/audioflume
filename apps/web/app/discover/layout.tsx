@@ -152,7 +152,7 @@ const DISCOVER_LAYOUT_STYLE = `
     margin-top: 0;
   }
 
-  .discover-section-heading {
+  .discover-section-header {
     display: flex;
     min-height: 34px;
     align-items: center !important;
@@ -161,12 +161,12 @@ const DISCOVER_LAYOUT_STYLE = `
     margin-bottom: 16px;
   }
 
-  .discover-section-heading > a {
+  .discover-section-header > a {
     --text-secondary: var(--text-muted);
     color: var(--text-muted);
   }
 
-  .discover-section-heading > a:hover {
+  .discover-section-header > a:hover {
     --text-secondary: var(--text-primary);
     color: var(--text-primary);
   }
