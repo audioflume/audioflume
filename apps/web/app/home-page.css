@@ -351,8 +351,8 @@
 .audioflume-home-playlist-feature {
   position: relative;
   width: 100%;
-  min-height: clamp(560px, 48vw, 680px);
-  padding-bottom: clamp(40px, 4vw, 70px);
+  min-height: clamp(500px, 42vw, 580px);
+  padding-bottom: clamp(18px, 2vw, 32px);
 }
 
 .audioflume-home-playlist-feature-inner {
@@ -538,7 +538,7 @@
 
   .audioflume-home-playlist-feature {
     min-height: 0;
-    padding-bottom: 80px;
+    padding-bottom: 52px;
   }
 
   .audioflume-home-playlist-feature-inner {
@@ -634,7 +634,7 @@
   }
 
   .audioflume-home-playlist-feature {
-    padding-bottom: 66px;
+    padding-bottom: 44px;
   }
 
   .audioflume-home-playlist-feature-inner {
