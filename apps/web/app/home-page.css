@@ -71,24 +71,6 @@
   margin-top: 18px;
 }
 
-.audioflume-home-signup-button {
-  display: inline-flex;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 16px;
-  cursor: pointer;
-  border-radius: 9999px;
-  background: #000;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
-  text-decoration: none;
-  transition: all 150ms ease;
-}
-
 .audioflume-home-intro-note {
   max-width: 180px;
   color: var(--text-muted);
