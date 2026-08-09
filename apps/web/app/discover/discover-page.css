@@ -322,9 +322,12 @@ body:has(.discover-page-root) .discover-footer-wrap {
   width: calc(
     100% + var(--filmwave-page-gutter) + var(--filmwave-page-gutter)
   );
-  margin-top: clamp(130px, 13vw, 210px);
+  margin-top: 0;
   margin-right: calc(0px - var(--filmwave-page-gutter));
   margin-left: calc(0px - var(--filmwave-page-gutter));
+  padding-top: 40px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 body:has(.discover-page-root) .discover-footer-wrap::before {
