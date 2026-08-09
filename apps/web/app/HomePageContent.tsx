@@ -27,6 +27,8 @@ const HOME_HERO_VIDEO_URL =
   "https://pub-cd585d75522a44bb9dad78b6f9974d03.r2.dev/Audioflume%20Banner.mov";
 
 const HOME_HEADLINE = "Human Curated Music & SFX Library for Filmmakers and Their Clients";
+const HOME_STATEMENT_HEADLINE =
+  "Every Track and Sound Effect Built Specifically For Editors";
 const HOME_DESCRIPTION =
   "A highly curated library of royalty free audio and sound effects made with intention for filmmakers.";
 
@@ -208,7 +210,7 @@ function HomeStatement({ playlists }: { playlists: CuratedPlaylist[] }) {
     <section className="audioflume-home-statement">
       <div className="audioflume-home-statement-copy">
         <span className="audioflume-home-eyebrow">Sign up today</span>
-        <h2>{HOME_HEADLINE}</h2>
+        <h2>{HOME_STATEMENT_HEADLINE}</h2>
         <p>{HOME_DESCRIPTION}</p>
         <SignUpButton />
       </div>
