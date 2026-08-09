@@ -8,8 +8,8 @@ import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
+  playlistDetailPrimaryActionButtonClass,
+  playlistDetailSecondaryActionButtonClass,
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
@@ -483,7 +483,7 @@ export default function CuratedPlaylistDetailPage() {
                       type="button"
                       onClick={playFirstSong}
                       disabled={filteredSongs.length === 0}
-                      className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
+                      className={`${playlistDetailPrimaryActionButtonClass} disabled:cursor-default disabled:opacity-40`}
                     >
                       <PlayIconSmall />
                       Play
@@ -493,7 +493,7 @@ export default function CuratedPlaylistDetailPage() {
                       type="button"
                       onClick={shufflePlaylist}
                       disabled={filteredSongs.length < 2}
-                      className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
+                      className={`${playlistDetailSecondaryActionButtonClass} disabled:cursor-default disabled:opacity-40`}
                     >
                       <ShuffleIconSmall />
                       Shuffle
