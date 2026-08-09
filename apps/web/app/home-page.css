@@ -130,7 +130,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 8%;
 }
 
 .audioflume-home-search {
@@ -353,22 +352,22 @@
 .audioflume-home-collage-item.item-1 {
   top: 18%;
   left: 0;
-  width: 48%;
+  width: 49%;
   height: 54%;
 }
 
 .audioflume-home-collage-item.item-2 {
   top: 0;
   right: 0;
-  width: 47%;
-  height: 42%;
+  width: 49%;
+  height: 44%;
 }
 
 .audioflume-home-collage-item.item-3 {
   right: 0;
   bottom: 0;
-  width: 47%;
-  height: 52%;
+  width: 49%;
+  height: 54%;
 }
 
 .audioflume-home-collage-item.item-4 {
@@ -390,7 +389,7 @@
 }
 
 .audioflume-home-collage-item.item-6 {
-  top: 23%;
+  top: 12%;
   left: 3%;
   z-index: 3;
   width: 15%;
