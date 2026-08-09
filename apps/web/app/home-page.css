@@ -445,7 +445,7 @@
 }
 
 .audioflume-home-waveform {
-  --audioflume-home-waveform-width: clamp(430px, 44vw, 620px);
+  --audioflume-home-waveform-width: clamp(334px, 34vw, 478px);
   position: absolute;
   z-index: 5;
   box-sizing: border-box;
@@ -464,7 +464,7 @@
   top: calc(anchor(--audioflume-home-front-playlist-card center) - 38px);
   left: calc(
     anchor(--audioflume-home-front-playlist-card left) -
-      var(--audioflume-home-waveform-width) + clamp(64px, 7vw, 100px)
+      var(--audioflume-home-waveform-width) + clamp(15px, 2vw, 30px)
   );
 }
 
@@ -472,15 +472,15 @@
   top: calc(anchor(--audioflume-home-front-playlist-card center) + 14px);
   left: calc(
     anchor(--audioflume-home-front-playlist-card left) -
-      var(--audioflume-home-waveform-width) + clamp(220px, 20vw, 300px)
+      var(--audioflume-home-waveform-width) + clamp(170px, 15vw, 230px)
   );
 }
 
 .audioflume-home-mock-waveform {
   display: block;
-  width: 76%;
+  width: 100%;
   height: auto;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .audioflume-home-mock-waveform span {
