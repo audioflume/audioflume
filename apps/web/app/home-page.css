@@ -445,6 +445,10 @@
   transform: translateY(clamp(-46px, -3.4vw, -30px));
 }
 
+.audioflume-home-playlist-feature-copy > p {
+  font-weight: 300;
+}
+
 .audioflume-home-waveform {
   --audioflume-home-waveform-width: clamp(334px, 34vw, 478px);
   position: absolute;
