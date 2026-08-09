@@ -14,6 +14,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
+import "@/components/curated/curated-browse-filters.css";
 import "./music/music-library-redesign.css";
 import "./home-page.css";
 
