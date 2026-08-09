@@ -263,23 +263,60 @@ function HomePlaylistFeatureVisual() {
       <div className="audioflume-home-playlist-feature-inner">
         <div className="audioflume-home-playlist-stack" aria-hidden="true">
           <div className="audioflume-home-playlist-card card-1">
+            <Image
+              src="https://images.filmwave.io/images/home/Audioflume%20Home%20Images%2012.jpg"
+              alt=""
+              fill
+              unoptimized
+              sizes="640px"
+              className="object-cover"
+            />
             <span className="audioflume-home-playlist-card-arrow">
               <ArrowUpRightIcon size={16} />
             </span>
           </div>
           <div className="audioflume-home-playlist-card card-2">
+            <Image
+              src="https://images.filmwave.io/images/home/Audioflume%20Home%20Images%2011.jpg"
+              alt=""
+              fill
+              unoptimized
+              sizes="640px"
+              className="object-cover"
+            />
             <span className="audioflume-home-playlist-card-arrow">
               <ArrowUpRightIcon size={16} />
             </span>
           </div>
           <div className="audioflume-home-playlist-card card-3">
+            <Image
+              src="https://images.filmwave.io/images/home/Audioflume%20Home%20Images%2010.jpg"
+              alt=""
+              fill
+              unoptimized
+              sizes="640px"
+              className="object-cover"
+            />
             <span className="audioflume-home-playlist-card-arrow">
               <ArrowUpRightIcon size={16} />
             </span>
             <span className="audioflume-home-playlist-card-play" />
           </div>
         </div>
-        <div className="audioflume-home-playlist-feature-copy" aria-hidden="true" />
+
+        <div className="audioflume-home-statement-copy audioflume-home-playlist-feature-copy">
+          <span className="audioflume-home-eyebrow">Built for Editors</span>
+          <h2>{HOME_STATEMENT_HEADLINE}</h2>
+          <p>{HOME_STATEMENT_DESCRIPTION}</p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Link
+              href="/music"
+              className={`${playlistDetailPrimaryActionButtonClass} hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
+            >
+              Explore Music Library
+            </Link>
+          </div>
+        </div>
       </div>
 
       <div className="audioflume-home-waveform audioflume-home-waveform-one">
