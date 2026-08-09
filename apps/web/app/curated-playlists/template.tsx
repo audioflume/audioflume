@@ -3,7 +3,6 @@ import "../discover/discover-reference-layout.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
-    --curated-feature-edge: 34px;
     --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
     --curated-feature-title-thumbnail-size: calc(
       25.675px + clamp(29.4px, 3.136vw, 47.04px)
@@ -316,12 +315,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
           ) /
           2
       );
-    }
-  }
-
-  @media (max-width: 760px) {
-    body:has(.curated-playlists-page-root) {
-      --curated-feature-edge: 18px;
     }
   }
 
