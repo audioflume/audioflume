@@ -2,7 +2,7 @@ import DiscoverHeaderScrollState from "./DiscoverSharedHeaderSearch";
 
 const DISCOVER_LAYOUT_STYLE = `
   body:has(.discover-page-root) {
-    --discover-page-gutter: clamp(28px, 5.2vw, 82px);
+    --discover-page-gutter: clamp(16px, 1.8vw, 24px);
     --discover-playlist-card-title-font-family: var(--font-aktiv-grotesk), sans-serif;
     --discover-playlist-card-title-font-size: 16.5px;
     --discover-playlist-card-title-font-weight: 300;
@@ -411,7 +411,7 @@ const DISCOVER_LAYOUT_STYLE = `
 
   @media (max-width: 720px) {
     body:has(.discover-page-root) {
-      --discover-page-gutter: 20px;
+      --discover-page-gutter: 12px;
     }
 
     .discover-hero {
