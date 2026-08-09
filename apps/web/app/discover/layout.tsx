@@ -2,7 +2,7 @@ import DiscoverHeaderScrollState from "./DiscoverSharedHeaderSearch";
 
 const DISCOVER_LAYOUT_STYLE = `
   body:has(.discover-page-root) {
-    --discover-page-gutter: clamp(16px, 1.8vw, 24px);
+    --discover-page-gutter: var(--filmwave-page-gutter);
     --discover-playlist-card-title-font-family: var(--font-aktiv-grotesk), sans-serif;
     --discover-playlist-card-title-font-size: 16.5px;
     --discover-playlist-card-title-font-weight: 300;
@@ -383,8 +383,8 @@ const DISCOVER_LAYOUT_STYLE = `
   }
 
   .discover-footer-wrap {
-    margin-right: calc(32px - var(--discover-page-gutter));
-    margin-left: calc(32px - var(--discover-page-gutter));
+    margin-right: calc(0px - var(--discover-page-gutter));
+    margin-left: calc(0px - var(--discover-page-gutter));
     padding-top: 64px;
   }
 
@@ -410,10 +410,6 @@ const DISCOVER_LAYOUT_STYLE = `
   }
 
   @media (max-width: 720px) {
-    body:has(.discover-page-root) {
-      --discover-page-gutter: 12px;
-    }
-
     .discover-hero {
       min-height: 590px;
     }
