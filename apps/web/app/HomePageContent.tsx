@@ -163,7 +163,7 @@ function HomeArtworkCollage({ playlists }: { playlists: CuratedPlaylist[] }) {
       return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%204.jpg";
     }
     if (index === 1) {
-      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%206.jpg";
+      return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%202.jpg";
     }
     if (index === 2) {
       return "https://images.filmwave.io/images/home/Audioflume%20Home%20Images%205.jpg";
