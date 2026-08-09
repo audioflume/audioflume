@@ -442,6 +442,7 @@
 .audioflume-home-playlist-feature-copy {
   position: relative;
   z-index: 6;
+  transform: translateY(clamp(-46px, -3.4vw, -30px));
 }
 
 .audioflume-home-waveform {
@@ -547,6 +548,10 @@
   .audioflume-home-playlist-stack {
     width: min(100%, 680px);
     justify-self: center;
+  }
+
+  .audioflume-home-playlist-feature-copy {
+    transform: none;
   }
 
   .audioflume-home-waveform {
