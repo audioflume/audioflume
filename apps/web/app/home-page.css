@@ -73,26 +73,20 @@
 
 .audioflume-home-signup-button {
   display: inline-flex;
-  min-width: 142px;
-  height: 42px;
-  flex-shrink: 0;
+  height: 36px;
   align-items: center;
   justify-content: center;
-  background: var(--text-primary);
-  padding: 0 22px;
-  color: var(--bg-primary);
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  gap: 8px;
+  padding: 0 16px;
+  cursor: pointer;
+  border-radius: 9999px;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
   text-decoration: none;
-  text-transform: uppercase;
-  transition: opacity 150ms ease;
-}
-
-.audioflume-home-signup-button:hover,
-.audioflume-home-signup-button:focus-visible {
-  opacity: 0.78;
-  outline: none;
+  transition: all 150ms ease;
 }
 
 .audioflume-home-intro-note {
