@@ -36,6 +36,12 @@ const HOME_DESCRIPTION =
   "A highly curated library of royalty free audio and sound effects made with intention for filmmakers.";
 const HOME_STATEMENT_DESCRIPTION =
   "Premium film-forward music and SFX built to work naturally with picture, pacing, emotion, and story.";
+const MOCK_WAVEFORM_HEIGHTS = [
+  22, 34, 48, 30, 58, 72, 44, 62, 78, 38, 28, 54, 68, 82, 50, 36,
+  64, 74, 56, 42, 70, 86, 60, 34, 52, 76, 66, 46, 32, 58, 72, 80,
+  54, 40, 66, 76, 60, 48, 34, 56, 72, 62, 44, 30, 50, 68, 58, 38,
+  46, 64, 78, 52, 36, 60, 74, 56, 42, 68, 82, 48, 32, 54, 70, 44,
+];
 
 function SignUpButton() {
   return (
@@ -238,6 +244,54 @@ function HomeStatement({ playlists }: { playlists: CuratedPlaylist[] }) {
   );
 }
 
+function MockWaveform() {
+  return (
+    <div className="audioflume-home-mock-waveform" aria-hidden="true">
+      {MOCK_WAVEFORM_HEIGHTS.map((height, index) => (
+        <span key={`${height}-${index}`} style={{ height: `${height}%` }} />
+      ))}
+    </div>
+  );
+}
+
+function HomePlaylistFeatureVisual() {
+  return (
+    <section
+      className="audioflume-home-playlist-feature"
+      aria-label="Playlist workflow preview"
+    >
+      <div className="audioflume-home-playlist-feature-inner">
+        <div className="audioflume-home-playlist-stack" aria-hidden="true">
+          <div className="audioflume-home-playlist-card card-1">
+            <span className="audioflume-home-playlist-card-arrow">
+              <ArrowUpRightIcon size={16} />
+            </span>
+          </div>
+          <div className="audioflume-home-playlist-card card-2">
+            <span className="audioflume-home-playlist-card-arrow">
+              <ArrowUpRightIcon size={16} />
+            </span>
+          </div>
+          <div className="audioflume-home-playlist-card card-3">
+            <span className="audioflume-home-playlist-card-arrow">
+              <ArrowUpRightIcon size={16} />
+            </span>
+            <span className="audioflume-home-playlist-card-play" />
+          </div>
+        </div>
+        <div className="audioflume-home-playlist-feature-copy" aria-hidden="true" />
+      </div>
+
+      <div className="audioflume-home-waveform audioflume-home-waveform-one">
+        <MockWaveform />
+      </div>
+      <div className="audioflume-home-waveform audioflume-home-waveform-two">
+        <MockWaveform />
+      </div>
+    </section>
+  );
+}
+
 function HomeSongs({
   songs,
   loading,
@@ -330,6 +384,7 @@ export default function HomePageContent() {
       <HomeHeroMedia />
       <HomeBrowseFilters />
       <HomeStatement playlists={visualPlaylists} />
+      <HomePlaylistFeatureVisual />
 
       <div className="audioflume-home-content">
         <HomeSongs songs={recentSongs} loading={songsLoading} />
