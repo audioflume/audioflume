@@ -243,7 +243,7 @@ function HomeSongs({
 
 export default function HomePageContent() {
   const { songs, loading: songsLoading } = useSongs();
-  const { currentSong, setQueue } = usePlayer();
+  const { setQueue } = usePlayer();
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
 
   useEffect(() => {
@@ -277,7 +277,6 @@ export default function HomePageContent() {
         .slice(0, 6),
     [playlists],
   );
-  const playerVisible = Boolean(currentSong);
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
@@ -292,13 +291,9 @@ export default function HomePageContent() {
 
       <div className="audioflume-home-content">
         <HomeSongs songs={recentSongs} loading={songsLoading} />
-        <div
-          className="pt-16"
-          style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
-        >
-          <Footer />
-        </div>
       </div>
+
+      <Footer className="mt-16" />
     </main>
   );
 }
