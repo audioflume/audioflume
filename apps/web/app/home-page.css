@@ -89,7 +89,7 @@
   height: clamp(350px, 40vw, 560px);
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 7px;
   background: var(--bg-secondary);
   isolation: isolate;
 }
