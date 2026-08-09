@@ -346,6 +346,152 @@
   border-radius: 0;
 }
 
+.audioflume-home-playlist-feature {
+  position: relative;
+  width: 100%;
+  min-height: clamp(540px, 52vw, 720px);
+}
+
+.audioflume-home-playlist-feature-inner {
+  display: grid;
+  width: calc(
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
+  );
+  max-width: var(--filmwave-editorial-max-width);
+  min-height: inherit;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.9fr);
+  align-items: center;
+  gap: clamp(70px, 9vw, 150px);
+  margin: 0 auto;
+}
+
+.audioflume-home-playlist-stack {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 760px);
+  height: clamp(420px, 40vw, 560px);
+  justify-self: start;
+}
+
+.audioflume-home-playlist-card {
+  position: absolute;
+  width: 82%;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: 7px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+.audioflume-home-playlist-card.card-1 {
+  top: 2%;
+  left: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(68, 241, 231, 0.52), transparent 34%),
+    linear-gradient(135deg, #0b2a33 0%, #087a86 48%, #081c25 100%);
+}
+
+.audioflume-home-playlist-card.card-2 {
+  top: 16%;
+  left: 8%;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 70% 32%, rgba(149, 64, 255, 0.7), transparent 34%),
+    linear-gradient(135deg, #ec0bb4 0%, #7c27db 52%, #32146f 100%);
+}
+
+.audioflume-home-playlist-card.card-3 {
+  top: 31%;
+  left: 17%;
+  z-index: 3;
+  background:
+    radial-gradient(circle at 76% 28%, rgba(165, 194, 49, 0.48), transparent 28%),
+    linear-gradient(125deg, #061011 0%, #101719 58%, #314410 100%);
+}
+
+.audioflume-home-playlist-card-arrow {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.audioflume-home-playlist-card-play {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(8px);
+}
+
+.audioflume-home-playlist-card-play::before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid #fff;
+}
+
+.audioflume-home-playlist-feature-copy {
+  min-height: 1px;
+}
+
+.audioflume-home-waveform {
+  position: absolute;
+  left: -110px;
+  z-index: 5;
+  box-sizing: border-box;
+  width: calc(min(58vw, 920px) + 110px);
+  height: 78px;
+  display: flex;
+  align-items: center;
+  padding: 0 22px 0 110px;
+  border: 3px solid rgba(128, 128, 128, 0.22);
+  border-radius: 8px;
+  color: rgba(128, 128, 128, 0.58);
+  pointer-events: none;
+}
+
+.audioflume-home-waveform-one {
+  top: 39%;
+}
+
+.audioflume-home-waveform-two {
+  top: 55%;
+}
+
+.audioflume-home-mock-waveform {
+  display: flex;
+  width: 100%;
+  height: 46px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.audioflume-home-mock-waveform span {
+  width: 2px;
+  flex: 0 0 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
 .audioflume-home-content {
   width: calc(
     100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
@@ -362,6 +508,11 @@
     grid-template-columns: minmax(0, 1fr) minmax(340px, 0.9fr);
     gap: 56px;
   }
+
+  .audioflume-home-playlist-feature-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.75fr);
+    gap: 54px;
+  }
 }
 
 @media (max-width: 980px) {
@@ -372,7 +523,8 @@
 
 @media (max-width: 820px) {
   .audioflume-home-intro,
-  .audioflume-home-statement {
+  .audioflume-home-statement,
+  .audioflume-home-playlist-feature-inner {
     grid-template-columns: 1fr;
   }
 
@@ -387,6 +539,23 @@
   .audioflume-home-collage {
     width: min(100%, 540px);
     justify-self: center;
+  }
+
+  .audioflume-home-playlist-feature {
+    min-height: 560px;
+  }
+
+  .audioflume-home-playlist-stack {
+    width: min(100%, 680px);
+    justify-self: center;
+  }
+
+  .audioflume-home-playlist-feature-copy {
+    display: none;
+  }
+
+  .audioflume-home-waveform {
+    width: calc(86vw + 90px);
   }
 }
 
@@ -453,5 +622,51 @@
 
   .audioflume-home-collage {
     height: 420px;
+  }
+
+  .audioflume-home-playlist-feature {
+    min-height: 430px;
+  }
+
+  .audioflume-home-playlist-stack {
+    width: 100%;
+    height: 370px;
+  }
+
+  .audioflume-home-playlist-card {
+    width: 84%;
+  }
+
+  .audioflume-home-playlist-card.card-2 {
+    left: 7%;
+  }
+
+  .audioflume-home-playlist-card.card-3 {
+    left: 14%;
+  }
+
+  .audioflume-home-playlist-card-arrow,
+  .audioflume-home-playlist-card-play {
+    width: 32px;
+    height: 32px;
+  }
+
+  .audioflume-home-waveform {
+    left: -60px;
+    width: calc(100vw + 60px);
+    height: 60px;
+    padding: 0 16px 0 60px;
+  }
+
+  .audioflume-home-waveform-one {
+    top: 40%;
+  }
+
+  .audioflume-home-waveform-two {
+    top: 59%;
+  }
+
+  .audioflume-home-mock-waveform {
+    height: 36px;
   }
 }
