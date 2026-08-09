@@ -43,7 +43,7 @@ export default function HomeVideoPlaybackControl() {
   return createPortal(
     <button
       type="button"
-      className="absolute bottom-4 right-4 z-[3] inline-flex h-8 w-8 items-center justify-center rounded-full border-0 bg-black/30 p-0 text-white backdrop-blur-sm transition-colors hover:bg-black/45 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+      className="absolute bottom-4 right-4 z-[3] inline-flex h-8 w-8 items-center justify-center border-0 bg-transparent p-0 text-white transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-white/70"
       onClick={togglePlayback}
       aria-label={isPaused ? "Play banner video" : "Pause banner video"}
     >
