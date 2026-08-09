@@ -11,7 +11,10 @@ import SectionTitle from "@/components/SectionTitle";
 import SongCard from "@/components/SongCard";
 import CuratedBrowseFilters from "@/components/curated/CuratedBrowseFilters";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
-import { playlistDetailActionButtonClass } from "@/components/uiClasses";
+import {
+  playlistDetailActionButtonClass,
+  playlistDetailPrimaryActionButtonClass,
+} from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -38,7 +41,7 @@ function SignUpButton() {
   return (
     <Link
       href="/sign-up"
-      className={`${playlistDetailActionButtonClass} audioflume-home-signup-button bg-black text-white hover:-translate-y-px hover:bg-[#242424] focus-visible:bg-[#242424] focus-visible:outline-none`}
+      className={`${playlistDetailPrimaryActionButtonClass} audioflume-home-signup-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
     >
       Sign up today
     </Link>
@@ -217,13 +220,13 @@ function HomeStatement({ playlists }: { playlists: CuratedPlaylist[] }) {
         <div className="mt-5 flex flex-wrap gap-2">
           <Link
             href="/music"
-            className={`${playlistDetailActionButtonClass} bg-black text-white hover:-translate-y-px hover:bg-[#242424] focus-visible:bg-[#242424] focus-visible:outline-none`}
+            className={`${playlistDetailPrimaryActionButtonClass} hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
           >
             Explore Music Library
           </Link>
           <Link
             href="/sound-fx"
-            className={`${playlistDetailActionButtonClass} border border-[var(--border)] bg-transparent text-[var(--text-primary)] hover:-translate-y-px hover:border-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:border-[var(--text-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none`}
+            className={`${playlistDetailActionButtonClass} border border-[var(--border)] bg-transparent text-[var(--text-primary)] hover:border-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:border-[var(--text-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none`}
           >
             Explore SFX
           </Link>
