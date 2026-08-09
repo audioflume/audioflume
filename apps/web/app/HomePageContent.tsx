@@ -59,7 +59,7 @@ function SignUpButton() {
       href="/sign-up"
       className={`${playlistDetailPrimaryActionButtonClass} audioflume-home-signup-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
     >
-      Sign up today
+      CREATE FREE ACCOUNT
     </Link>
   );
 }
