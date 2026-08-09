@@ -254,7 +254,7 @@
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  border-radius: 12px !important;
+  border-radius: 7px !important;
   background: var(--bg-secondary);
 }
 
