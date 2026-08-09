@@ -203,7 +203,7 @@ body:has(.discover-page-root) .discover-mood-section {
   margin-left: calc(50% - 50vw);
 }
 
-body:has(.discover-page-root) .discover-mood-section .discover-section-heading {
+body:has(.discover-page-root) .discover-mood-section .discover-section-header {
   width: calc(
     100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
   );
@@ -242,79 +242,18 @@ body:has(.discover-page-root) .discover-curated-playlist-section {
   margin-top: 0 !important;
 }
 
-body:has(.discover-page-root) .discover-section-heading {
+body:has(.discover-page-root) .discover-section-header {
   min-height: 28px;
   margin-bottom: 20px !important;
 }
 
-body:has(.discover-page-root) .discover-section-heading a,
-body:has(.discover-page-root) .discover-section-heading p {
+body:has(.discover-page-root) .discover-section-header a,
+body:has(.discover-page-root) .discover-section-header p {
   color: var(--text-secondary) !important;
   font-family: var(--font-roboto-mono-filmwave), monospace !important;
   font-size: clamp(9px, 0.65vw, 11px) !important;
   font-weight: 400 !important;
   text-transform: uppercase;
-}
-
-body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 12px;
-  row-gap: clamp(16px, 1.5vw, 24px);
-}
-
-body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-card-shell:nth-child(n + 10) {
-  display: none;
-}
-
-body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-card-shell,
-body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-card {
-  position: relative;
-  min-width: 0;
-}
-
-body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-image {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-}
-
-body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-card h3 {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 20px;
-  color: #fff !important;
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: clamp(11px, 0.85vw, 15px);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1.05;
-  text-align: center;
-  text-transform: uppercase;
-  white-space: normal;
-  pointer-events: none;
-}
-
-body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-card p {
-  display: none;
-}
-
-body:has(.discover-page-root) .discover-curated-playlist-section .playlist-card-menu-wrap {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  bottom: auto;
-  z-index: 6;
-  width: 18px;
-  height: 18px;
-}
-
-body:has(.discover-page-root) .discover-curated-playlist-section .playlist-menu-btn-grid {
-  color: #fff;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
 }
 
 body:has(.discover-page-root) .discover-footer-wrap {
@@ -336,7 +275,7 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   width: min(calc(100% - var(--discover-editorial-gutter) - var(--discover-editorial-gutter)), var(--discover-editorial-width));
   aspect-ratio: 1120 / 285;
   margin: 0 auto clamp(110px, 10vw, 165px);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 285'%3E%3Crect width='1120' height='285' fill='%23000'/%3E%3Cg fill='%23fff'%3E%3Ctext x='20' y='90' font-family='Arial,sans-serif' font-size='38' font-weight='500' letter-spacing='-2'%3EA LITTLE POLISHED,%3C/text%3E%3Ctext x='20' y='126' font-family='Arial,sans-serif' font-size='38' font-weight='500' letter-spacing='-2'%3EA LITTLE STRANGE.%3C/text%3E%3Ctext x='395' y='101' font-family='monospace' font-size='11'%3E(TRACKS WITH A PULSE)%3C/text%3E%3Ctext x='395' y='119' font-family='monospace' font-size='8'%3ECURATED MUSIC FOR THE CUT, NOT THE ALGORITHM%3C/text%3E%3Ctext x='680' y='94' font-family='Arial,sans-serif' font-size='12'%3EA focused library of distinctive tracks, selected for editors who need%3C/text%3E%3Ctext x='680' y='113' font-family='Arial,sans-serif' font-size='12'%3Echaracter without losing momentum. Human choices, useful categories,%3C/text%3E%3Ctext x='680' y='132' font-family='Arial,sans-serif' font-size='12'%3Eand a faster path from search to timeline.%3C/text%3E%3C/g%3E%3Cg stroke='%23fff' fill='none' stroke-width='1'%3E%3Cline x1='20' y1='198' x2='270' y2='198'/%3E%3Ccircle cx='20' cy='198' r='3' fill='%23fff'/%3E%3Ccircle cx='270' cy='198' r='3'/%3E%3Cpath d='M395 198 h12 v-7 h12 v14 h12 v-20 h12 v27 h12 v-12 h12 v8 h12 v-22 h12 v17 h12 v-9 h12 v12 h12 v-16 h12 v20 h12 v-12 h12'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 285'%3E%3Crect width='1120' height='285' fill='%23000'/%3E%3Cg fill='%23fff'%3E%3Ctext x='20' y='90' font-family='Arial,sans-serif' font-size='38' font-weight='500' letter-spacing='-2'%3EA LITTLE POLISHED,%3C/text%3E%3Ctext x='20' y='126' font-family='Arial,sans-serif' font-size='38' font-weight='500' letter-spacing='-2'%3EA LITTLE STRANGE.%3C/text%3E%3Ctext x='395' y='101' font-family='monospace' font-size='11'%3E(TRACKS WITH A PULSE)%3C/text%3E%3Ctext x='395' y='119' font-family='monospace' font-size='8'%3ECURATED MUSIC FOR THE CUT, NOT THE ALGORITHM%3C/text%3E%3Ctext x='680' y='94' font-family='Arial,sans-serif' font-size='12'%3EA focused library of distinctive tracks, selected for editors who need%3C/text%3E%3Ctext x='680' y='113' font-family='Arial,sans-serif' font-size='12'%3Echaracter without losing momentum. Human choices, useful categories,%3C/text x='680' y='132' fill='%23fff' font-family='Arial,sans-serif' font-size='12'%3Eand a faster path from search to timeline.%3C/text%3E%3C/g%3E%3Cg stroke='%23fff' fill='none' stroke-width='1'%3E%3Cline x1='20' y1='198' x2='270' y2='198'/%3E%3Ccircle cx='20' cy='198' r='3' fill='%23fff'/%3E%3Ccircle cx='270' cy='198' r='3'/%3E%3Cpath d='M395 198 h12 v-7 h12 v14 h12 v-20 h12 v27 h12 v-12 h12 v8 h12 v-22 h12 v17 h12 v-9 h12 v12 h12 v-16 h12 v20 h12 v-12 h12'/%3E%3C/g%3E%3C/svg%3E");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -365,10 +304,6 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
 
   body:has(.discover-page-root) .discover-hero-search {
     grid-row: 3;
-  }
-
-  body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -422,9 +357,5 @@ body:has(.discover-page-root) .discover-footer-wrap::before {
   body:has(.discover-page-root) .discover-footer-wrap::before {
     height: 300px;
     background-size: 820px auto;
-  }
-
-  body:has(.discover-page-root) .discover-curated-playlist-section .discover-playlist-grid {
-    grid-template-columns: 1fr;
   }
 }
