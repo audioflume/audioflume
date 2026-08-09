@@ -35,6 +35,15 @@
   --text-subtle: rgba(255, 255, 255, 0.4);
   --icon-color: rgba(255, 255, 255, 0.4);
 
+  /* Canonical Filmwave page construction. */
+  --filmwave-page-gutter: 50px;
+  --filmwave-editorial-inset: clamp(28px, 7.8vw, 96px);
+  --filmwave-editorial-inner-inset: max(
+    0px,
+    calc(var(--filmwave-editorial-inset) - var(--filmwave-page-gutter))
+  );
+  --filmwave-editorial-max-width: 1440px;
+
   /* Canonical Filmwave interface styling. */
   --filmwave-ui-radius-control: 0px;
   --filmwave-ui-radius-panel: 0px;
@@ -125,6 +134,13 @@
 
   --shadow-ui: 0 18px 55px rgba(0, 0, 0, 0.12);
   --media-overlay-strong: rgba(255, 255, 255, 0.62);
+}
+
+@media (max-width: 620px) {
+  :where(:root) {
+    --filmwave-page-gutter: 18px;
+    --filmwave-editorial-inset: 18px;
+  }
 }
 
 :where(body) {
