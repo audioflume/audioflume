@@ -1,0 +1,10 @@
+.title {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
+  text-transform: none;
+}
