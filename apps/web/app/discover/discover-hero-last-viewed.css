@@ -303,8 +303,8 @@ body:has(.discover-page-root)
   }
 
   .discover-template-shell.is-discover-route:not(
-    :has(.discover-hero-last-viewed-section)
-  ) {
+      :has(.discover-hero-last-viewed-section)
+    ) {
     --discover-integrated-hero-height: clamp(
       410px,
       calc(72svh - 160px),
@@ -350,8 +350,8 @@ body:has(.discover-page-root)
   }
 
   .discover-template-shell.is-discover-route:not(
-    :has(.discover-hero-last-viewed-section)
-  )
+      :has(.discover-hero-last-viewed-section)
+    )
     .discover-integrated-hero {
     padding-bottom: 0;
   }
