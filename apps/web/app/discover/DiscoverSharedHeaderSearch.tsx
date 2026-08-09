@@ -7,13 +7,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+import SectionTitle from "@/components/SectionTitle";
 import SearchIcon from "@/components/icons/SearchIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
-const CURATED_HEADING_LINK_SELECTOR =
-  ".discover-curated-playlist-section .discover-section-heading > a";
-const CURATED_PLAYLIST_GRID_SELECTOR =
-  ".discover-curated-playlist-section .discover-playlist-grid";
 const DISCOVER_SONG_SECTION_SELECTOR = ".discover-production-section";
 
 function formatTrackCount(count?: number) {
@@ -25,8 +22,6 @@ export default function DiscoverHeaderScrollState() {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [searchMount, setSearchMount] = useState<HTMLFormElement | null>(null);
-  const [curatedCtaMount, setCuratedCtaMount] =
-    useState<HTMLDivElement | null>(null);
   const [staffFavoritesMount, setStaffFavoritesMount] =
     useState<HTMLElement | null>(null);
   const [staffFavorites, setStaffFavorites] = useState<CuratedPlaylist[]>([]);
@@ -94,63 +89,6 @@ export default function DiscoverHeaderScrollState() {
 
     return () => {
       cancelled = true;
-    };
-  }, []);
-
-  useLayoutEffect(() => {
-    let headingLink: HTMLAnchorElement | null = null;
-    let originalHeadingText = "";
-    let ctaMount: HTMLDivElement | null = null;
-
-    function syncCuratedCallsToAction() {
-      const nextHeadingLink = document.querySelector<HTMLAnchorElement>(
-        CURATED_HEADING_LINK_SELECTOR,
-      );
-
-      if (nextHeadingLink && nextHeadingLink !== headingLink) {
-        if (headingLink?.isConnected) {
-          headingLink.textContent = originalHeadingText;
-        }
-
-        headingLink = nextHeadingLink;
-        originalHeadingText = nextHeadingLink.textContent ?? "";
-        nextHeadingLink.textContent = "Explore curated music";
-      }
-
-      if (!ctaMount) {
-        const playlistGrid = document.querySelector<HTMLElement>(
-          CURATED_PLAYLIST_GRID_SELECTOR,
-        );
-
-        if (playlistGrid) {
-          ctaMount = document.createElement("div");
-          ctaMount.className =
-            "discover-curated-playlist-cta-mount mt-8 flex justify-center";
-          playlistGrid.insertAdjacentElement("afterend", ctaMount);
-          setCuratedCtaMount(ctaMount);
-        }
-      }
-    }
-
-    syncCuratedCallsToAction();
-
-    const observer = new MutationObserver(syncCuratedCallsToAction);
-
-    if (!headingLink || !ctaMount) {
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
-    }
-
-    return () => {
-      observer.disconnect();
-
-      if (headingLink?.isConnected) {
-        headingLink.textContent = originalHeadingText;
-      }
-
-      ctaMount?.remove();
     };
   }, []);
 
@@ -425,43 +363,8 @@ export default function DiscoverHeaderScrollState() {
           }
         }
 
-        .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible),
-        .discover-curated-playlist-cta-mount
-          > a:not(:hover):not(:focus-visible) {
+        .discover-song-section > .mt-5 > a:not(:hover):not(:focus-visible) {
           background: var(--filmwave-neutral-surface);
-        }
-
-        body:has(.discover-page-root)
-          .discover-curated-playlist-section
-          .playlist-menu-btn-grid {
-          opacity: 0 !important;
-          transition:
-            opacity 0.15s ease,
-            color 0.15s ease !important;
-        }
-
-        body:has(.discover-page-root)
-          .discover-curated-playlist-section
-          .discover-playlist-card-shell:hover
-          .playlist-menu-btn-grid,
-        body:has(.discover-page-root)
-          .discover-curated-playlist-section
-          .discover-playlist-card-shell.is-menu-open
-          .playlist-menu-btn-grid,
-        body:has(.discover-page-root)
-          .discover-curated-playlist-section
-          .discover-playlist-card-shell:focus-within
-          .playlist-menu-btn-grid {
-          opacity: 1 !important;
-        }
-
-        body:has(
-            .discover-curated-playlist-section
-              .playlist-card-menu-wrap
-              .is-dropdown-open
-          )
-          > .filmwave-dropdown-shell {
-          translate: calc(-100% + 18px) 0 !important;
         }
       `}</style>
 
@@ -488,22 +391,11 @@ export default function DiscoverHeaderScrollState() {
           searchMount,
         )}
 
-      {curatedCtaMount &&
-        createPortal(
-          <Link
-            href="/curated-playlists"
-            className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--bg-elevated)] px-10 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
-          >
-            Explore curated music
-          </Link>,
-          curatedCtaMount,
-        )}
-
       {staffFavoritesMount &&
         createPortal(
           <>
-            <div className="discover-section-heading">
-              <h2>Staff Favorites</h2>
+            <div className="discover-section-header">
+              <SectionTitle>Staff Favorites</SectionTitle>
             </div>
 
             <div className="discover-staff-favorites-grid">
