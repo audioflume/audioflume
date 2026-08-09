@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 
 import Footer from "@/components/Footer";
+import SectionTitle from "@/components/SectionTitle";
 import SongCard from "@/components/SongCard";
 import CuratedBrowseFilters from "@/components/curated/CuratedBrowseFilters";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -206,9 +207,7 @@ function HomeSongs({
   return (
     <section className="audioflume-home-songs">
       <div className="mb-4 flex min-h-[34px] items-center justify-between gap-5">
-        <h2 className="m-0 text-xl font-medium tracking-[-0.04em] text-[var(--text-primary)]">
-          Newly Added Tracks
-        </h2>
+        <SectionTitle>Newly Added Tracks</SectionTitle>
         <Link
           href="/music"
           className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
