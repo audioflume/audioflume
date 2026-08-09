@@ -444,10 +444,16 @@
   transform: translateY(clamp(-46px, -3.4vw, -30px));
 }
 
+.audioflume-home-statement .audioflume-home-statement-copy a,
 .audioflume-home-playlist-feature-copy a {
   width: auto;
-  min-width: 170px;
+  min-width: 280px;
+  height: 44px;
   flex: 0 0 auto;
+  padding-right: 40px;
+  padding-left: 40px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .audioflume-home-waveform {
