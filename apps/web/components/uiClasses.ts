@@ -20,6 +20,13 @@ export const primaryPillButtonClass = `${pillButtonClass} bg-[var(--text-primary
 
 export const secondaryPillButtonClass = `${pillButtonClass} border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
 
+export const playlistDetailActionButtonClass =
+  "inline-flex h-9 min-w-[170px] cursor-pointer items-center justify-center gap-2 rounded-none px-5 font-[family-name:inherit] text-[11px] font-medium leading-none transition max-[720px]:min-w-[160px] max-[640px]:min-w-0 max-[640px]:flex-1";
+
+export const playlistDetailPrimaryActionButtonClass = `${playlistDetailActionButtonClass} bg-[var(--text-primary)] text-[var(--bg-primary)]`;
+
+export const playlistDetailSecondaryActionButtonClass = `${playlistDetailActionButtonClass} border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
+
 export const dangerButtonClass =
   "text-[var(--danger)] hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]";
 
