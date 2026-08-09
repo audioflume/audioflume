@@ -11,6 +11,7 @@ import SectionTitle from "@/components/SectionTitle";
 import SongCard from "@/components/SongCard";
 import CuratedBrowseFilters from "@/components/curated/CuratedBrowseFilters";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import { playlistDetailActionButtonClass } from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -31,7 +32,10 @@ const HOME_DESCRIPTION =
 
 function SignUpButton() {
   return (
-    <Link href="/sign-up" className="audioflume-home-signup-button">
+    <Link
+      href="/sign-up"
+      className={`${playlistDetailActionButtonClass} audioflume-home-signup-button bg-black text-white`}
+    >
       Sign up today
     </Link>
   );
