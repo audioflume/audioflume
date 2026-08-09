@@ -382,12 +382,6 @@ const DISCOVER_LAYOUT_STYLE = `
     }
   }
 
-  .discover-footer-wrap {
-    margin-right: calc(0px - var(--discover-page-gutter));
-    margin-left: calc(0px - var(--discover-page-gutter));
-    padding-top: 64px;
-  }
-
   @media (max-width: 1280px) {
     .discover-playlist-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
