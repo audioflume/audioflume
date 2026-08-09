@@ -87,7 +87,7 @@
   height: clamp(350px, 40vw, 560px);
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--bg-secondary);
   isolation: isolate;
 }
@@ -439,7 +439,6 @@
 
   .audioflume-home-hero-media {
     height: 360px;
-    border-radius: 8px;
   }
 
   .audioflume-home-hero-content {
