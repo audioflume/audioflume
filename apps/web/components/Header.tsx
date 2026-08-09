@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
+import cardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import UserMenu from "@/components/UserMenu";
 
 type CuratedPlaylistPreview = {
@@ -524,32 +526,56 @@ export default function Header() {
                             aria-label="Featured curated playlists"
                           >
                             {curatedPreview.length > 0 ? (
-                              curatedPreview.map((playlist) => (
-                                <Link
-                                  key={playlist.id}
-                                  href={`/curated-playlists/${playlist.id}`}
-                                  className="filmwave-playlists-mega-feature"
-                                  role="menuitem"
-                                  onClick={closePlaylistsMenu}
-                                >
-                                  <span className="filmwave-playlists-mega-feature-image">
-                                    {playlist.cover_image_url && (
-                                      <img
-                                        src={playlist.cover_image_url}
-                                        alt={playlist.name}
+                              curatedPreview.map((playlist) => {
+                                const href = `/curated-playlists/${playlist.id}`;
+
+                                return (
+                                  <div
+                                    key={playlist.id}
+                                    className="filmwave-playlists-mega-feature"
+                                  >
+                                    <div className={cardStyles.card}>
+                                      <Link
+                                        href={href}
+                                        className={cardStyles.imageLink}
+                                        role="menuitem"
+                                        onClick={closePlaylistsMenu}
+                                      >
+                                        <div
+                                          className={`${cardStyles.image} filmwave-playlists-mega-feature-image`}
+                                        >
+                                          {playlist.cover_image_url && (
+                                            <img
+                                              src={playlist.cover_image_url}
+                                              alt={playlist.name}
+                                              className={cardStyles.media}
+                                            />
+                                          )}
+                                        </div>
+                                      </Link>
+
+                                      <CuratedPlaylistPlayButton
+                                        playlistId={playlist.id}
+                                        playlistName={playlist.name}
+                                        className={cardStyles.playButton}
                                       />
-                                    )}
-                                  </span>
-                                  <span className="filmwave-playlists-mega-feature-copy">
-                                    <span className="filmwave-playlists-mega-feature-title">
-                                      {playlist.name}
-                                    </span>
-                                    <span className="filmwave-playlists-mega-feature-detail">
-                                      {formatTrackCount(playlist.song_count)}
-                                    </span>
-                                  </span>
-                                </Link>
-                              ))
+                                    </div>
+
+                                    <Link
+                                      href={href}
+                                      className="filmwave-playlists-mega-feature-copy"
+                                      onClick={closePlaylistsMenu}
+                                    >
+                                      <span className="filmwave-playlists-mega-feature-title">
+                                        {playlist.name}
+                                      </span>
+                                      <span className="filmwave-playlists-mega-feature-detail">
+                                        {formatTrackCount(playlist.song_count)}
+                                      </span>
+                                    </Link>
+                                  </div>
+                                );
+                              })
                             ) : (
                               PLAYLIST_QUICK_SECTIONS.map((section) => (
                                 <Link
