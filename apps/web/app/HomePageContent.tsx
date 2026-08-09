@@ -38,7 +38,7 @@ function SignUpButton() {
   return (
     <Link
       href="/sign-up"
-      className={`${playlistDetailActionButtonClass} audioflume-home-signup-button bg-black text-white`}
+      className={`${playlistDetailActionButtonClass} audioflume-home-signup-button bg-black text-white hover:-translate-y-px hover:bg-[#242424] focus-visible:bg-[#242424] focus-visible:outline-none`}
     >
       Sign up today
     </Link>
@@ -217,13 +217,13 @@ function HomeStatement({ playlists }: { playlists: CuratedPlaylist[] }) {
         <div className="mt-5 flex flex-wrap gap-2">
           <Link
             href="/music"
-            className={`${playlistDetailActionButtonClass} bg-black text-white`}
+            className={`${playlistDetailActionButtonClass} bg-black text-white hover:-translate-y-px hover:bg-[#242424] focus-visible:bg-[#242424] focus-visible:outline-none`}
           >
             Explore Music Library
           </Link>
           <Link
             href="/sound-fx"
-            className={`${playlistDetailActionButtonClass} border border-[var(--border)] bg-transparent text-[var(--text-primary)]`}
+            className={`${playlistDetailActionButtonClass} border border-[var(--border)] bg-transparent text-[var(--text-primary)] hover:-translate-y-px hover:border-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:border-[var(--text-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none`}
           >
             Explore SFX
           </Link>
