@@ -2,7 +2,10 @@ import DiscoverHeaderScrollState from "./DiscoverSharedHeaderSearch";
 
 const DISCOVER_LAYOUT_STYLE = `
   body:has(.discover-page-root) {
-    --discover-page-gutter: var(--filmwave-page-gutter);
+    --discover-page-gutter: max(
+      var(--filmwave-editorial-inset),
+      calc((100vw - var(--filmwave-editorial-max-width)) / 2)
+    );
     --discover-playlist-card-title-font-family: var(--font-aktiv-grotesk), sans-serif;
     --discover-playlist-card-title-font-size: 16.5px;
     --discover-playlist-card-title-font-weight: 300;
@@ -146,6 +149,10 @@ const DISCOVER_LAYOUT_STYLE = `
 
   .discover-section {
     margin-top: 58px;
+  }
+
+  .discover-curated-playlist-section {
+    --filmwave-page-gutter: var(--discover-page-gutter);
   }
 
   .discover-section:first-child {
