@@ -244,6 +244,13 @@ body:has(.discover-page-root) .discover-section-header p {
   text-transform: uppercase;
 }
 
+body:has(.discover-page-root) .discover-reference-outro-mount {
+  width: calc(
+    100% - var(--discover-editorial-gutter) - var(--discover-editorial-gutter)
+  );
+  max-width: var(--filmwave-editorial-max-width);
+}
+
 body:has(.discover-page-root) .discover-footer-wrap {
   position: relative;
   width: calc(
