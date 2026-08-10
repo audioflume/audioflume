@@ -218,25 +218,6 @@ body:has(.discover-page-root)
   scroll-padding-left: var(--discover-editorial-gutter);
 }
 
-body:has(.discover-page-root)
-  [class~="group/playlist-shelf"]
-  > .overflow-x-auto {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 44px,
-    #000 calc(100% - 44px),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 44px,
-    #000 calc(100% - 44px),
-    transparent 100%
-  );
-}
-
 body:has(.discover-page-root) .discover-mood-section + .discover-curated-playlist-section {
   margin-top: clamp(64px, 6vw, 96px) !important;
 }
