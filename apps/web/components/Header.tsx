@@ -48,6 +48,7 @@ const PLAYLIST_QUICK_SECTIONS = [
 ];
 
 const HEADER_SCROLL_THRESHOLD = 18;
+const PLAYLISTS_MENU_CLOSE_DELAY = 300;
 
 function formatTrackCount(count?: number | null) {
   const safeCount = Number(count || 0);
@@ -80,6 +81,7 @@ export default function Header() {
     CuratedPlaylistPreview[]
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
+  const playlistsCloseTimeoutRef = useRef<number | null>(null);
   const transparentAtTop = pathname === "/discover";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
@@ -129,8 +131,20 @@ export default function Header() {
   }, [menuOpen]);
 
   useEffect(() => {
+    if (playlistsCloseTimeoutRef.current !== null) {
+      window.clearTimeout(playlistsCloseTimeoutRef.current);
+      playlistsCloseTimeoutRef.current = null;
+    }
     setPlaylistsMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    return () => {
+      if (playlistsCloseTimeoutRef.current !== null) {
+        window.clearTimeout(playlistsCloseTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -190,7 +204,28 @@ export default function Header() {
     setAvatarImageFailed(false);
   }, [avatarImage]);
 
+  function cancelPlaylistsMenuClose() {
+    if (playlistsCloseTimeoutRef.current !== null) {
+      window.clearTimeout(playlistsCloseTimeoutRef.current);
+      playlistsCloseTimeoutRef.current = null;
+    }
+  }
+
+  function openPlaylistsMenu() {
+    cancelPlaylistsMenuClose();
+    setPlaylistsMenuOpen(true);
+  }
+
+  function schedulePlaylistsMenuClose() {
+    cancelPlaylistsMenuClose();
+    playlistsCloseTimeoutRef.current = window.setTimeout(() => {
+      setPlaylistsMenuOpen(false);
+      playlistsCloseTimeoutRef.current = null;
+    }, PLAYLISTS_MENU_CLOSE_DELAY);
+  }
+
   function closePlaylistsMenu() {
+    cancelPlaylistsMenuClose();
     setPlaylistsMenuOpen(false);
   }
 
@@ -302,18 +337,6 @@ export default function Header() {
           background: transparent !important;
           background-color: transparent !important;
           color: var(--text-primary) !important;
-        }
-
-        .filmwave-header-nav-item-playlists.is-open::after {
-          content: "";
-          position: absolute;
-          top: 100%;
-          right: -48px;
-          left: -48px;
-          height: calc(
-            (var(--filmwave-header-height) - var(--filmwave-header-nav-height)) / 2 + 2px
-          );
-          pointer-events: auto;
         }
 
         .filmwave-header-nav-item-playlists:hover .filmwave-playlists-mega-menu,
@@ -518,14 +541,14 @@ export default function Header() {
                     <div
                       key={link.href}
                       className={`filmwave-header-nav-item filmwave-header-nav-item-playlists${playlistsMenuOpen ? " is-open" : ""}`}
-                      onMouseEnter={() => setPlaylistsMenuOpen(true)}
-                      onMouseLeave={() => setPlaylistsMenuOpen(false)}
-                      onFocus={() => setPlaylistsMenuOpen(true)}
+                      onMouseEnter={openPlaylistsMenu}
+                      onMouseLeave={schedulePlaylistsMenuClose}
+                      onFocus={openPlaylistsMenu}
                       onBlur={(event) => {
                         if (
                           !event.currentTarget.contains(event.relatedTarget)
                         ) {
-                          setPlaylistsMenuOpen(false);
+                          closePlaylistsMenu();
                         }
                       }}
                     >
@@ -544,6 +567,8 @@ export default function Header() {
                         className="filmwave-playlists-mega-menu"
                         role="menu"
                         aria-label="Playlist navigation"
+                        onMouseEnter={openPlaylistsMenu}
+                        onMouseLeave={schedulePlaylistsMenuClose}
                       >
                         <div className="filmwave-playlists-mega-inner">
                           <div
