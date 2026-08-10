@@ -1,9 +1,39 @@
 .audioflume-home-page-root {
+  display: flex;
   width: 100%;
   min-height: 100vh;
+  flex-direction: column;
   overflow-x: hidden;
   background: var(--bg-primary);
   color: var(--text-primary);
+}
+
+.audioflume-home-page-root > .audioflume-home-statement {
+  order: 1;
+}
+
+.audioflume-home-page-root > .audioflume-home-playlist-feature {
+  order: 2;
+}
+
+.audioflume-home-page-root > .audioflume-home-hero-media {
+  order: 3;
+}
+
+.audioflume-home-page-root > .audioflume-home-filter-row {
+  order: 4;
+}
+
+.audioflume-home-page-root > .audioflume-home-intro {
+  order: 5;
+}
+
+.audioflume-home-page-root > .audioflume-home-content {
+  order: 6;
+}
+
+.audioflume-home-page-root > footer {
+  order: 7;
 }
 
 .audioflume-home-intro {
@@ -16,7 +46,7 @@
   align-items: start;
   gap: clamp(56px, 8vw, 150px);
   margin: 0 auto;
-  padding-top: calc(var(--filmwave-header-height, 75px) + clamp(42px, 4.6vw, 70px));
+  padding-top: clamp(68px, 7vw, 108px);
   padding-bottom: clamp(46px, 5.4vw, 78px);
 }
 
@@ -84,8 +114,9 @@
 .audioflume-home-hero-media {
   position: relative;
   width: calc(
-    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
+  max-width: var(--filmwave-editorial-max-width);
   height: clamp(350px, 40vw, 560px);
   margin: 0 auto;
   overflow: hidden;
@@ -254,8 +285,9 @@
 
 .audioflume-home-filter-row {
   width: calc(
-    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
+  max-width: var(--filmwave-editorial-max-width);
   margin-right: auto;
   margin-left: auto;
 }
@@ -270,7 +302,10 @@
   align-items: center;
   gap: clamp(64px, 9vw, 150px);
   margin: 0 auto;
-  padding: clamp(68px, 7vw, 108px) 0 clamp(64px, 6.5vw, 102px);
+  padding:
+    calc(var(--filmwave-header-height, 75px) + clamp(42px, 4.6vw, 70px))
+    0
+    clamp(64px, 6.5vw, 102px);
 }
 
 .audioflume-home-statement-copy h2 {
@@ -614,7 +649,7 @@
 
 @media (max-width: 620px) {
   .audioflume-home-intro {
-    padding-top: calc(var(--filmwave-header-height, 75px) + 32px);
+    padding-top: 58px;
     padding-bottom: 36px;
   }
 
@@ -639,7 +674,10 @@
 
   .audioflume-home-statement {
     gap: 54px;
-    padding: 58px 0 66px;
+    padding:
+      calc(var(--filmwave-header-height, 75px) + 32px)
+      0
+      66px;
   }
 
   .audioflume-home-collage {
