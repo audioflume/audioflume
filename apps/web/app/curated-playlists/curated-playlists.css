@@ -1,7 +1,10 @@
 body:has(.curated-playlists-page-root) {
   --curated-page-gutter: var(--filmwave-page-gutter);
   --curated-playlist-card-gap: clamp(10px, 1.25vw, 18px);
-  --curated-feature-edge: var(--filmwave-page-gutter);
+  --curated-feature-edge: max(
+    var(--filmwave-editorial-inset),
+    calc((100vw - var(--filmwave-editorial-max-width)) / 2)
+  );
   --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
 }
 
