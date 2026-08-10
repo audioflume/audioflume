@@ -47,7 +47,7 @@
   gap: clamp(56px, 8vw, 150px);
   margin: 0 auto;
   padding-top: clamp(68px, 7vw, 108px);
-  padding-bottom: clamp(46px, 5.4vw, 78px);
+  padding-bottom: clamp(68px, 7vw, 108px);
 }
 
 .audioflume-home-intro h1,
@@ -284,6 +284,7 @@
 }
 
 .audioflume-home-filter-row {
+  display: none;
   width: calc(
     100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
@@ -539,8 +540,9 @@
 
 .audioflume-home-content {
   width: calc(
-    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
+  max-width: var(--filmwave-editorial-max-width);
   margin: 0 auto;
 }
 
@@ -650,7 +652,7 @@
 @media (max-width: 620px) {
   .audioflume-home-intro {
     padding-top: 58px;
-    padding-bottom: 36px;
+    padding-bottom: 58px;
   }
 
   .audioflume-home-statement h2,
