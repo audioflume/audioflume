@@ -5,6 +5,7 @@ body:has(.curated-playlists-page-root) {
     var(--filmwave-editorial-inset),
     calc((100vw - var(--filmwave-editorial-max-width)) / 2)
   );
+  --curated-feature-hero-edge: var(--filmwave-page-top-gap, 22px);
   --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
 }
 
@@ -42,9 +43,11 @@ body:has(.curated-playlists-page-root) div[id^="curated-group-"] {
 
 .curated-feature-hero {
   position: relative;
-  width: calc(100vw - var(--curated-feature-edge) - var(--curated-feature-edge));
+  width: calc(
+    100vw - var(--curated-feature-hero-edge) - var(--curated-feature-hero-edge)
+  );
   height: var(--curated-feature-hero-height);
-  margin-left: calc(50% - 50vw + var(--curated-feature-edge));
+  margin-left: calc(50% - 50vw + var(--curated-feature-hero-edge));
   overflow: hidden;
   border-radius: 7px;
   background: #0b0d0d;
