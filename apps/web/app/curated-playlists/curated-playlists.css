@@ -30,6 +30,13 @@ body:has(.curated-playlists-page-root) {
   padding-left: var(--curated-page-gutter) !important;
 }
 
+body:has(.curated-playlists-page-root) div[id^="curated-group-"] {
+  --filmwave-page-gutter: max(
+    var(--filmwave-editorial-inset),
+    calc((100vw - var(--filmwave-editorial-max-width)) / 2)
+  );
+}
+
 .curated-feature-hero {
   position: relative;
   width: calc(100vw - var(--curated-feature-edge) - var(--curated-feature-edge));
