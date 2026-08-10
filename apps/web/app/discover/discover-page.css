@@ -1,6 +1,6 @@
 body:has(.discover-page-root) {
   --discover-editorial-width: var(--filmwave-editorial-max-width);
-  --discover-editorial-gutter: var(--filmwave-page-gutter);
+  --discover-editorial-gutter: var(--discover-page-gutter);
   --discover-section-gap: clamp(64px, 6vw, 96px);
   background: #000;
 }
@@ -185,18 +185,16 @@ body:has(.discover-page-root) .discover-content > .discover-section:not(.discove
 }
 
 body:has(.discover-page-root) .discover-mood-section {
-  width: 100vw;
+  width: 100%;
   max-width: none;
-  margin-right: calc(50% - 50vw);
-  margin-left: calc(50% - 50vw);
+  margin-right: 0;
+  margin-left: 0;
 }
 
 body:has(.discover-page-root) .discover-mood-section .discover-section-header {
-  width: calc(
-    100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
-  );
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 body:has(.discover-page-root)
@@ -212,10 +210,10 @@ body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-scroller {
   gap: 12px;
-  padding-right: var(--filmwave-page-gutter) !important;
-  padding-left: var(--filmwave-page-gutter) !important;
-  scroll-padding-right: var(--filmwave-page-gutter);
-  scroll-padding-left: var(--filmwave-page-gutter);
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  scroll-padding-right: 0;
+  scroll-padding-left: 0;
 }
 
 body:has(.discover-page-root) .discover-mood-section + .discover-curated-playlist-section {
@@ -247,11 +245,11 @@ body:has(.discover-page-root) .discover-section-header p {
 body:has(.discover-page-root) .discover-footer-wrap {
   position: relative;
   width: calc(
-    100% + var(--filmwave-page-gutter) + var(--filmwave-page-gutter)
+    100% + var(--discover-editorial-gutter) + var(--discover-editorial-gutter)
   );
   margin-top: 0;
-  margin-right: calc(0px - var(--filmwave-page-gutter));
-  margin-left: calc(0px - var(--filmwave-page-gutter));
+  margin-right: calc(0px - var(--discover-editorial-gutter));
+  margin-left: calc(0px - var(--discover-editorial-gutter));
   padding-top: 40px;
   background: var(--bg-primary);
   color: var(--text-primary);
