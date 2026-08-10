@@ -236,6 +236,11 @@ export default function Header() {
         }
 
         .filmwave-web-header.is-transparent .filmwave-header-nav-link {
+          color: #fff !important;
+        }
+
+        .filmwave-web-header.is-transparent:hover
+          .filmwave-header-nav-link:not(.is-active):not(:hover) {
           color: rgba(255, 255, 255, 0.72) !important;
         }
 
@@ -275,6 +280,14 @@ export default function Header() {
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent
           .filmwave-header-nav-link {
+          color: var(--text-primary) !important;
+        }
+
+        .filmwave-web-header.is-solid:hover
+          .filmwave-header-nav-link:not(.is-active):not(:hover),
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-discover-route.is-transparent:hover
+          .filmwave-header-nav-link:not(.is-active):not(:hover) {
           color: var(--text-secondary) !important;
         }
 
