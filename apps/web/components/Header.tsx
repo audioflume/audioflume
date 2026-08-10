@@ -304,6 +304,18 @@ export default function Header() {
           color: var(--text-primary) !important;
         }
 
+        .filmwave-header-nav-item-playlists.is-open::after {
+          content: "";
+          position: absolute;
+          top: 100%;
+          right: -48px;
+          left: -48px;
+          height: calc(
+            (var(--filmwave-header-height) - var(--filmwave-header-nav-height)) / 2 + 2px
+          );
+          pointer-events: auto;
+        }
+
         .filmwave-header-nav-item-playlists:hover .filmwave-playlists-mega-menu,
         .filmwave-header-nav-item-playlists:focus-within .filmwave-playlists-mega-menu {
           visibility: hidden !important;
