@@ -517,7 +517,7 @@
 }
 
 .audioflume-home-waveform-two {
-  top: calc(anchor(--audioflume-home-front-playlist-card center) + 14px);
+  top: calc(anchor(--audioflume-home-front-playlist-card center) + 18px);
   left: calc(
     anchor(--audioflume-home-front-playlist-card left) -
       var(--audioflume-home-waveform-width) + clamp(170px, 15vw, 230px)
@@ -613,7 +613,7 @@
   }
 
   .audioflume-home-waveform-two {
-    top: calc(anchor(--audioflume-home-front-playlist-card center) + 12px);
+    top: calc(anchor(--audioflume-home-front-playlist-card center) + 18px);
   }
 }
 
@@ -731,6 +731,6 @@
   }
 
   .audioflume-home-waveform-two {
-    top: calc(anchor(--audioflume-home-front-playlist-card center) + 10px);
+    top: calc(anchor(--audioflume-home-front-playlist-card center) + 18px);
   }
 }
