@@ -144,6 +144,11 @@ body:has(.discover-page-root)
   margin: 0 auto;
 }
 
+.discover-hero-last-viewed-section[aria-busy="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .discover-hero-last-viewed-heading {
   display: flex;
   min-height: 0;
