@@ -38,6 +38,27 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   }
 
   body:has(.curated-playlists-page-root)
+    .curated-playlists-page-layer
+    > div
+    > section[aria-labelledby="curated-page-heading"] {
+    width: min(
+      calc(
+        100vw - var(--filmwave-editorial-inset) -
+          var(--filmwave-editorial-inset) -
+          var(--filmwave-editorial-inner-inset) -
+          var(--filmwave-editorial-inner-inset)
+      ),
+      calc(
+        var(--filmwave-editorial-max-width) -
+          var(--filmwave-editorial-inner-inset) -
+          var(--filmwave-editorial-inner-inset)
+      )
+    );
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  body:has(.curated-playlists-page-root)
     .curated-feature-hero-title-block:has(.curated-feature-hero-title-thumbnail) {
     padding-left: calc(var(--curated-feature-title-thumbnail-size) + 14px);
   }
@@ -278,6 +299,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
       flex: 0 0 100%;
       margin-left: 0;
       overflow-x: auto;
+      overflow-y: hidden;
       padding-right: var(--curated-page-gutter);
       padding-left: var(--curated-page-gutter);
       overscroll-behavior-x: contain;
