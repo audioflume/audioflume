@@ -1,11 +1,7 @@
 body:has(.curated-playlists-page-root) {
   --curated-page-gutter: var(--filmwave-page-gutter);
   --curated-playlist-card-gap: clamp(10px, 1.25vw, 18px);
-  --curated-feature-edge: max(
-    var(--filmwave-editorial-inset),
-    calc((100vw - var(--filmwave-editorial-max-width)) / 2)
-  );
-  --curated-feature-hero-edge: var(--filmwave-page-top-gap, 22px);
+  --curated-feature-edge: var(--filmwave-page-gutter);
   --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
 }
 
@@ -34,20 +30,11 @@ body:has(.curated-playlists-page-root) {
   padding-left: var(--curated-page-gutter) !important;
 }
 
-body:has(.curated-playlists-page-root) div[id^="curated-group-"] {
-  --filmwave-page-gutter: max(
-    var(--filmwave-editorial-inset),
-    calc((100vw - var(--filmwave-editorial-max-width)) / 2)
-  );
-}
-
 .curated-feature-hero {
   position: relative;
-  width: calc(
-    100vw - var(--curated-feature-hero-edge) - var(--curated-feature-hero-edge)
-  );
+  width: calc(100vw - var(--curated-feature-edge) - var(--curated-feature-edge));
   height: var(--curated-feature-hero-height);
-  margin-left: calc(50% - 50vw + var(--curated-feature-hero-edge));
+  margin-left: calc(50% - 50vw + var(--curated-feature-edge));
   overflow: hidden;
   border-radius: 7px;
   background: #0b0d0d;
