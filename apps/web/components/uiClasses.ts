@@ -77,8 +77,6 @@ export const squareButtonClass =
 export const primarySquareButtonClass =
   "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none border border-[var(--text-primary)] bg-[var(--text-primary)] px-2.5 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40";
 
-export const quickFilterButtonClass =
-  "cursor-pointer rounded-none bg-[var(--bg-elevated)] px-2 py-[3px] text-[11px] font-medium capitalize leading-[1.2] text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
+export const quickFilterButtonClass = "filmwave-quick-filter-button";
 
-export const quickFilterButtonActiveClass =
-  "bg-[var(--bg-hover)] text-[var(--text-primary)]";
+export const quickFilterButtonActiveClass = "is-active";
