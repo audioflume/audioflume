@@ -359,6 +359,25 @@ export default function CuratedPlaylistsPage() {
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
         <div className="px-8">
+          <section
+            className="mb-[clamp(56px,5vw,80px)] grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(320px,1.05fr)] md:gap-[clamp(64px,9vw,150px)]"
+            aria-labelledby="curated-page-heading"
+          >
+            <div>
+              <span className="audioflume-editorial-eyebrow">Built for Editors</span>
+              <h1
+                id="curated-page-heading"
+                className="audioflume-editorial-display max-w-[660px]"
+              >
+                Every Track and Sound Effect Built Specifically
+              </h1>
+            </div>
+            <p className="audioflume-editorial-support md:pt-[30px]">
+              Premium film-forward music and SFX built to work naturally with
+              picture, pacing, emotion, and story.
+            </p>
+          </section>
+
           {!loading && !error && playlists.length > 0 && (
             <CuratedFeatureFilters
               activeFilter={activeBrowseFilter}
