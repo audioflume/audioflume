@@ -1,18 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import {
   CURATED_BROWSE_FILTERS,
   type CuratedBrowseTag,
   type CuratedPlaylist,
-  type CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
 import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
 
@@ -27,31 +23,6 @@ type CuratedShelfGroup = {
   description: string | null;
   playlists: CuratedPlaylist[];
 };
-
-function getTopGenres(songs: CuratedPlaylistSong[]) {
-  const genreCounts = new Map<string, { label: string; count: number }>();
-
-  for (const song of songs) {
-    for (const rawGenre of song.genres || []) {
-      const label = String(rawGenre || "").trim();
-      if (!label) continue;
-
-      const key = label.toLowerCase();
-      const current = genreCounts.get(key);
-
-      if (current) {
-        current.count += 1;
-      } else {
-        genreCounts.set(key, { label, count: 1 });
-      }
-    }
-  }
-
-  return [...genreCounts.values()]
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 3)
-    .map((genre) => genre.label);
-}
 
 function SkeletonBlock({ className = "" }: { className?: string }) {
   return <span className={`curated-playlist-skeleton-block ${className}`} />;
@@ -223,180 +194,14 @@ function CuratedPlaylistsLoadingSkeleton() {
   );
 }
 
-function FeaturedPlaylistSkeleton() {
-  return (
-    <section
-      className="curated-feature-hero curated-feature-hero-loading"
-      aria-hidden="true"
-    >
-      <div className="curated-feature-hero-loading-media" />
-    </section>
-  );
-}
-
-function FeaturedPlaylistBlock({
-  playlists,
-  activeIndex,
-  onSelect,
-  genres,
-}: {
-  playlists: CuratedPlaylist[];
-  activeIndex: number;
-  onSelect: (index: number) => void;
-  genres: string[];
-}) {
-  const playlist = playlists[activeIndex];
-
-  if (!playlist) return null;
-
-  const playlistHref = `/curated-playlists/${playlist.id}`;
-  const supportingText =
-    playlist.description?.trim() || playlist.kicker?.trim() || "Curated for the edit.";
-  const songCount = Number(playlist.song_count || 0);
-
-  function selectOffset(offset: number) {
-    if (playlists.length < 2) return;
-    onSelect((activeIndex + offset + playlists.length) % playlists.length);
-  }
-
-  return (
-    <section
-      className="curated-feature-hero"
-      aria-labelledby={`curated-feature-hero-${playlist.id}`}
-    >
-      {!playlist.cover_video_url && (
-        <div className="curated-feature-hero-fallback" aria-hidden="true" />
-      )}
-
-      {playlist.cover_video_url && (
-        <video
-          key={`${playlist.id}-feature-video`}
-          src={playlist.cover_video_url}
-          className="curated-feature-hero-media curated-feature-hero-video is-visible"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-label={`${playlist.name} cover video`}
-        />
-      )}
-
-      <div className="curated-feature-hero-overlay" aria-hidden="true" />
-
-      <Link
-        href={playlistHref}
-        className="curated-feature-hero-open"
-        aria-label={`Open ${playlist.name}`}
-      />
-
-      <div className="curated-feature-hero-title-block">
-        {playlist.cover_image_url && (
-          <div
-            className="curated-feature-hero-title-thumbnail"
-            aria-hidden="true"
-          >
-            <Image
-              key={`${playlist.id}-feature-title-thumbnail`}
-              src={playlist.cover_image_url}
-              alt=""
-              fill
-              unoptimized
-              sizes="80px"
-            />
-          </div>
-        )}
-        <span>Featured Playlist</span>
-        <h1 id={`curated-feature-hero-${playlist.id}`}>{playlist.name}</h1>
-      </div>
-
-      <div className="curated-feature-hero-info">
-        <div className="curated-feature-hero-play-row">
-          <CuratedPlaylistPlayButton
-            playlistId={playlist.id}
-            playlistName={playlist.name}
-            className="curated-feature-hero-play-button"
-          />
-          <div className="curated-feature-hero-play-copy">
-            <strong>{supportingText}</strong>
-            <span>
-              {songCount} track{songCount === 1 ? "" : "s"}
-            </span>
-          </div>
-        </div>
-
-        {genres.length > 0 && (
-          <div className="curated-feature-hero-tags">
-            {genres.map((genre) => (
-              <span key={genre}>{genre}</span>
-            ))}
-          </div>
-        )}
-
-        {playlists.length > 0 && (
-          <div
-            className="curated-feature-hero-indicators"
-            aria-label="Featured playlists"
-          >
-            {playlists.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                className={index === activeIndex ? "is-active" : ""}
-                aria-label={`Show featured playlist ${item.name}`}
-                aria-pressed={index === activeIndex}
-                onClick={() => onSelect(index)}
-              >
-                <span />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div
-        className="curated-feature-hero-navigation"
-        aria-label="Featured playlist navigation"
-      >
-        {playlists.length > 1 && (
-          <>
-            <button
-              type="button"
-              className="curated-feature-hero-navigation-button is-previous"
-              aria-label="Show previous featured playlist"
-              onClick={() => selectOffset(-1)}
-            >
-              <ChevronRightIcon size={14} />
-            </button>
-            <button
-              type="button"
-              className="curated-feature-hero-navigation-button"
-              aria-label="Show next featured playlist"
-              onClick={() => selectOffset(1)}
-            >
-              <ChevronRightIcon size={14} />
-            </button>
-          </>
-        )}
-        <span className="curated-feature-hero-navigation-count" aria-live="polite">
-          {activeIndex + 1}/{playlists.length}
-        </span>
-      </div>
-    </section>
-  );
-}
-
 export default function CuratedPlaylistsPage() {
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [groups, setGroups] = useState<GroupMeta[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const [activeBrowseFilter, setActiveBrowseFilter] =
     useState<CuratedBrowseTag | null>(null);
-  const [featuredGenresByPlaylist, setFeaturedGenresByPlaylist] = useState<
-    Record<number, string[]>
-  >({});
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -430,34 +235,9 @@ export default function CuratedPlaylistsPage() {
         const visiblePlaylists: CuratedPlaylist[] = Array.isArray(playlistData)
           ? playlistData.filter((playlist) => !playlist.discover_section)
           : [];
-        const featuredPlaylistIds = visiblePlaylists
-          .filter((playlist) => playlist.show_on_curated_feature)
-          .map((playlist) => playlist.id);
-        const featuredGenreEntries = await Promise.all(
-          featuredPlaylistIds.map(async (playlistId) => {
-            try {
-              const response = await fetch(
-                `/api/curated-playlists/${encodeURIComponent(String(playlistId))}/songs`,
-              );
-              const data = await response.json();
-
-              if (!response.ok || !Array.isArray(data)) {
-                return [playlistId, []] as const;
-              }
-
-              return [
-                playlistId,
-                getTopGenres(data as CuratedPlaylistSong[]),
-              ] as const;
-            } catch {
-              return [playlistId, []] as const;
-            }
-          }),
-        );
 
         if (!cancelled) {
           setPlaylists(visiblePlaylists);
-          setFeaturedGenresByPlaylist(Object.fromEntries(featuredGenreEntries));
           setGroups(
             Array.isArray(groupData)
               ? [...groupData].sort((a, b) => a.position - b.position)
@@ -484,27 +264,23 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
-  const featuredPlaylists = useMemo(
-    () =>
-      playlists
-        .filter((playlist) => playlist.show_on_curated_feature)
-        .sort((a, b) => {
-          const timeA = a.created_at ? Date.parse(a.created_at) : 0;
-          const timeB = b.created_at ? Date.parse(b.created_at) : 0;
-
-          if (timeA !== timeB) return timeB - timeA;
-          return b.id - a.id;
-        }),
-    [playlists],
-  );
-
-  useEffect(() => {
-    if (activeFeaturedIndex >= featuredPlaylists.length) {
-      setActiveFeaturedIndex(0);
-    }
-  }, [activeFeaturedIndex, featuredPlaylists.length]);
-
   const groupedPlaylists = useMemo(() => {
+    const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+    const searchablePlaylists = normalizedSearchQuery
+      ? playlists.filter((playlist) =>
+          [
+            playlist.name,
+            playlist.description,
+            playlist.kicker,
+            playlist.playlist_group,
+          ].some((value) =>
+            String(value || "")
+              .toLowerCase()
+              .includes(normalizedSearchQuery),
+          ),
+        )
+      : playlists;
+
     if (activeBrowseFilter) {
       const activeFilter = CURATED_BROWSE_FILTERS.find(
         (filter) => filter.value === activeBrowseFilter,
@@ -512,7 +288,7 @@ export default function CuratedPlaylistsPage() {
 
       if (!activeFilter) return [];
 
-      const filteredPlaylists = playlists.filter((playlist) =>
+      const filteredPlaylists = searchablePlaylists.filter((playlist) =>
         playlist.browse_tags.includes(activeBrowseFilter),
       );
 
@@ -550,7 +326,7 @@ export default function CuratedPlaylistsPage() {
 
     const playlistMap = new Map<string, CuratedPlaylist[]>();
 
-    for (const playlist of playlists) {
+    for (const playlist of searchablePlaylists) {
       const key = playlist.playlist_group || "Editor Picks";
       if (!playlistMap.has(key)) playlistMap.set(key, []);
       playlistMap.get(key)!.push(playlist);
@@ -575,32 +351,20 @@ export default function CuratedPlaylistsPage() {
         ),
       }))
       .filter((group) => group.playlists.length > 0);
-  }, [activeBrowseFilter, groups, playlists]);
+  }, [activeBrowseFilter, groups, playlists, searchQuery]);
 
-  const activeFeaturedPlaylist = featuredPlaylists[activeFeaturedIndex];
-  const activeFeaturedGenres = activeFeaturedPlaylist
-    ? featuredGenresByPlaylist[activeFeaturedPlaylist.id] ?? []
-    : [];
+  const hasActiveSearch = searchQuery.trim().length > 0;
 
   return (
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
         <div className="px-8">
-          {loading && <FeaturedPlaylistSkeleton />}
-
-          {!loading && featuredPlaylists.length > 0 && (
-            <FeaturedPlaylistBlock
-              playlists={featuredPlaylists}
-              activeIndex={activeFeaturedIndex}
-              onSelect={setActiveFeaturedIndex}
-              genres={activeFeaturedGenres}
-            />
-          )}
-
           {!loading && !error && playlists.length > 0 && (
             <CuratedFeatureFilters
               activeFilter={activeBrowseFilter}
               onFilterChange={setActiveBrowseFilter}
+              searchValue={searchQuery}
+              onSearchChange={setSearchQuery}
             />
           )}
 
@@ -628,10 +392,12 @@ export default function CuratedPlaylistsPage() {
           {!loading &&
             !error &&
             playlists.length > 0 &&
-            activeBrowseFilter &&
+            (activeBrowseFilter || hasActiveSearch) &&
             groupedPlaylists.length === 0 && (
               <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
-                No playlists are assigned to this filter yet.
+                {hasActiveSearch
+                  ? "No curated playlists match your search."
+                  : "No playlists are assigned to this filter yet."}
               </div>
             )}
 
