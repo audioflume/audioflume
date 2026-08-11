@@ -482,6 +482,40 @@ export default function PlaylistManagerPage() {
 
     const reordered = arrayMove(groupPlaylists, oldIndex, newIndex);
 
+    if (activeTab === "discover" && groupName !== DISCOVER_CURATED_GROUP) {
+      const occupiedSections = groupPlaylists
+        .map((playlist) => playlist.discover_section)
+        .filter((section): section is string => Boolean(section));
+
+      if (occupiedSections.length !== reordered.length) return;
+
+      const sectionUpdates = reordered.map((playlist, index) => ({
+        id: playlist.id,
+        section: occupiedSections[index],
+      }));
+      const sectionById = new Map(
+        sectionUpdates.map(({ id, section }) => [id, section]),
+      );
+
+      setPlaylists((prev) =>
+        prev.map((playlist) => {
+          const section = sectionById.get(playlist.id);
+          return section ? { ...playlist, discover_section: section } : playlist;
+        }),
+      );
+
+      fetch("/api/admin/curated-playlists/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "discover-sections",
+          updates: sectionUpdates,
+        }),
+      }).catch(console.error);
+
+      return;
+    }
+
     setPlaylists((prev) =>
       prev.map((playlist) => {
         const idx = reordered.findIndex(
@@ -707,7 +741,6 @@ export default function PlaylistManagerPage() {
                                 <SortablePlaylistRow
                                   key={playlist.id}
                                   playlist={playlist}
-                                  sortable={false}
                                   isLastInGroup={isLastRow}
                                   openDropdownId={openDropdownId}
                                   setOpenDropdownId={setOpenDropdownId}
