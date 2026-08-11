@@ -43,16 +43,10 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     > section[aria-labelledby="curated-page-heading"] {
     width: min(
       calc(
-        100vw - var(--filmwave-editorial-inset) -
-          var(--filmwave-editorial-inset) -
-          var(--filmwave-editorial-inner-inset) -
+        100% - var(--filmwave-editorial-inner-inset) -
           var(--filmwave-editorial-inner-inset)
       ),
-      calc(
-        var(--filmwave-editorial-max-width) -
-          var(--filmwave-editorial-inner-inset) -
-          var(--filmwave-editorial-inner-inset)
-      )
+      var(--filmwave-editorial-max-width)
     );
     margin-right: auto;
     margin-left: auto;
