@@ -6,6 +6,8 @@ type RouteContext = {
   params: Promise<{ playlistId: string }> | { playlistId: string };
 };
 
+type PositionUpdate = { id: number; position: number };
+
 export async function GET(_req: Request, context: RouteContext) {
   const admin = await requireAdmin();
   if (!admin.isAdmin) {
@@ -17,6 +19,57 @@ export async function GET(_req: Request, context: RouteContext) {
     return GET(_req, context);
   } catch {
     return NextResponse.json({ error: "Failed to load songs" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request, context: RouteContext) {
+  const admin = await requireAdmin();
+  if (!admin.isAdmin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
+  try {
+    const { playlistId } = await context.params;
+    const body = await req.json();
+    const updates: PositionUpdate[] = body.updates;
+
+    if (
+      !Array.isArray(updates) ||
+      updates.length === 0 ||
+      updates.some(
+        ({ id, position }) =>
+          !Number.isInteger(Number(id)) ||
+          Number(id) <= 0 ||
+          !Number.isInteger(Number(position)) ||
+          Number(position) < 0,
+      )
+    ) {
+      return NextResponse.json(
+        { error: "Invalid updates format" },
+        { status: 400 },
+      );
+    }
+
+    const results = await Promise.all(
+      updates.map(({ id, position }) =>
+        supabaseServer
+          .from("curated_playlist_songs")
+          .update({ position })
+          .eq("id", id)
+          .eq("curated_playlist_id", playlistId),
+      ),
+    );
+
+    const failed = results.find((result) => result.error);
+    if (failed?.error) throw failed.error;
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Admin curated playlist song reorder failed:", err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Failed to reorder songs" },
+      { status: 500 },
+    );
   }
 }
 
