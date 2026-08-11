@@ -40,19 +40,43 @@
   margin-left: auto;
 }
 
-/* Shared website quick-chip sizing for music quick filters, shuffle, and sort. */
-.fw-quick-chip {
+/* Shared quick-filter button source for Music and other web quick filters. */
+.fw-quick-chip,
+.filmwave-quick-filter-button {
   box-sizing: border-box !important;
+  display: inline-flex;
   min-height: 0 !important;
   height: 22px !important;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
   border-radius: 999px !important;
+  background: var(--bg-control);
   padding: 0 8px !important;
+  color: var(--text-secondary);
+  font-family: inherit;
   font-size: 10.5px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
+  white-space: nowrap;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
 }
 
-.fw-quick-chip:is(:hover, .is-active, .is-selected, [aria-pressed="true"], [data-active="true"]) {
+.fw-quick-chip:hover,
+.filmwave-quick-filter-button:hover {
+  background: var(--bg-control-hover);
+  color: var(--text-primary);
+}
+
+.fw-quick-chip:is(.is-active, .is-selected, [aria-pressed="true"], [data-active="true"]),
+.filmwave-quick-filter-button:is(.is-active, .is-selected, [aria-pressed="true"], [data-active="true"]) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast, #111111);
   font-weight: 400 !important;
 }
 
