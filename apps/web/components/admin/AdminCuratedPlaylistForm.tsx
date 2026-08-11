@@ -3,7 +3,25 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import Toast from "@/components/Toast";
+import DragIconSmall from "@/components/icons/DragIconSmall";
 import TrashIcon from "@/components/icons/TrashIcon";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import AdminVideoUpload from "@/components/admin/AdminVideoUpload";
@@ -29,6 +47,99 @@ type Props = {
   playlistId?: string;
 };
 
+function SortableSongRow({
+  song,
+  onRemove,
+}: {
+  song: CuratedPlaylistSong;
+  onRemove: (songId: string) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: song.curated_playlist_song_id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.3 : 1,
+        position: "relative",
+        zIndex: isDragging ? 1 : "auto",
+      }}
+      className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2"
+    >
+      <button
+        type="button"
+        className="flex h-10 w-7 shrink-0 cursor-grab items-center justify-center text-[var(--text-muted)] opacity-40 active:cursor-grabbing"
+        aria-label={`Drag to reorder ${song.title}`}
+        {...attributes}
+        {...listeners}
+      >
+        <DragIconSmall />
+      </button>
+      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
+        {song.coverArt && (
+          <Image
+            src={song.coverArt}
+            alt={song.title}
+            fill
+            sizes="40px"
+            className="object-cover"
+          />
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-medium">{song.title}</div>
+        <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
+          {song.artist}
+        </div>
+      </div>
+      <button
+        type="button"
+        className={smallIconButtonClass}
+        onClick={() => onRemove(song.id)}
+        aria-label={`Remove ${song.title}`}
+      >
+        <TrashIcon size={14} />
+      </button>
+    </div>
+  );
+}
+
+function DragOverlaySongRow({ song }: { song: CuratedPlaylistSong }) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 shadow-xl">
+      <div className="flex h-10 w-7 shrink-0 items-center justify-center text-[var(--text-muted)] opacity-40">
+        <DragIconSmall />
+      </div>
+      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
+        {song.coverArt && (
+          <Image
+            src={song.coverArt}
+            alt={song.title}
+            fill
+            sizes="40px"
+            className="object-cover"
+          />
+        )}
+      </div>
+      <div className="min-w-0 flex-1 pr-4">
+        <div className="truncate text-sm font-medium">{song.title}</div>
+        <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
+          {song.artist}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -46,11 +157,20 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const [showOnCuratedFeature, setShowOnCuratedFeature] = useState(false);
   const [showOnDiscover, setShowOnDiscover] = useState(false);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
+  const [activeSongRowId, setActiveSongRowId] = useState<number | null>(null);
   const [loading, setLoading] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
   const managerHref = "/admin/playlist-manager";
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
+  const activeSong = activeSongRowId
+    ? (songs.find(
+        (song) => song.curated_playlist_song_id === activeSongRowId,
+      ) ?? null)
+    : null;
 
   useEffect(() => {
     if (mode !== "edit" || !playlistId) return;
@@ -199,6 +319,58 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
       );
     } finally {
       setSaving(false);
+    }
+  }
+
+  function handleSongDragStart(event: DragStartEvent) {
+    setActiveSongRowId(Number(event.active.id));
+  }
+
+  async function handleSongDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    setActiveSongRowId(null);
+
+    if (!playlistId || !over || active.id === over.id) return;
+
+    const oldIndex = songs.findIndex(
+      (song) => song.curated_playlist_song_id === Number(active.id),
+    );
+    const newIndex = songs.findIndex(
+      (song) => song.curated_playlist_song_id === Number(over.id),
+    );
+
+    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
+
+    const previousSongs = songs;
+    const reordered = arrayMove(songs, oldIndex, newIndex).map(
+      (song, index) => ({ ...song, position: index }),
+    );
+
+    setSongs(reordered);
+
+    try {
+      const res = await fetch(
+        `/api/admin/curated-playlists/${playlistId}/songs`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            updates: reordered.map((song, position) => ({
+              id: song.curated_playlist_song_id,
+              position,
+            })),
+          }),
+        },
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to reorder songs");
+    } catch (err) {
+      setSongs(previousSongs);
+      setToastMessage(
+        err instanceof Error ? err.message : "Failed to reorder songs",
+      );
     }
   }
 
@@ -498,8 +670,8 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 Songs
               </h2>
               <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                Add songs from the admin music player dropdown. Remove songs
-                here while editing.
+                Add songs from the admin music player dropdown. Drag to reorder
+                or remove songs here while editing.
               </p>
             </div>
             <span className="text-xs font-medium text-[var(--text-muted)]">
@@ -513,42 +685,31 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               to Playlist.
             </div>
           ) : (
-            <div className="grid gap-2">
-              {songs.map((song) => (
-                <div
-                  key={song.id}
-                  className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2"
-                >
-                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
-                    {song.coverArt && (
-                      <Image
-                        src={song.coverArt}
-                        alt={song.title}
-                        fill
-                        sizes="40px"
-                        className="object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium">
-                      {song.title}
-                    </div>
-                    <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
-                      {song.artist}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className={smallIconButtonClass}
-                    onClick={() => removeSong(song.id)}
-                    aria-label={`Remove ${song.title}`}
-                  >
-                    <TrashIcon size={14} />
-                  </button>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleSongDragStart}
+              onDragEnd={handleSongDragEnd}
+            >
+              <SortableContext
+                items={songs.map((song) => song.curated_playlist_song_id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="grid gap-2">
+                  {songs.map((song) => (
+                    <SortableSongRow
+                      key={song.curated_playlist_song_id}
+                      song={song}
+                      onRemove={removeSong}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </SortableContext>
+
+              <DragOverlay dropAnimation={null}>
+                {activeSong ? <DragOverlaySongRow song={activeSong} /> : null}
+              </DragOverlay>
+            </DndContext>
           )}
         </section>
       )}
