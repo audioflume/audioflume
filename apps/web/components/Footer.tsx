@@ -73,6 +73,8 @@ export default function Footer({
   const [musicTarget, setMusicTarget] = useState<HTMLElement | null>(null);
   const playerVisible = Boolean(currentSong);
   const isMusicPage = pathname === "/music";
+  const isProjectDetailPage = /^\/projects\/[^/]+/.test(pathname);
+  const removePageGutter = isMusicPage || isProjectDetailPage;
 
   useEffect(() => {
     if (!isMusicPage) {
@@ -124,6 +126,8 @@ export default function Footer({
         ref={footerRef}
         className={`box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${className}`}
         style={{
+          paddingRight: removePageGutter ? "0px" : undefined,
+          paddingLeft: removePageGutter ? "0px" : undefined,
           paddingBottom: playerPadding
             ? playerVisible
               ? "calc(72px + 8px)"
