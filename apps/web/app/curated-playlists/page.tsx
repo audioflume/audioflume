@@ -360,7 +360,7 @@ export default function CuratedPlaylistsPage() {
       <section className="curated-playlists-page-layer">
         <div className="px-8">
           <section
-            className="mb-[clamp(56px,5vw,80px)] grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(320px,1.05fr)] md:gap-[clamp(64px,9vw,150px)]"
+            className="mt-[calc(clamp(56px,5vw,80px)-var(--filmwave-page-top-gap,22px))] mb-[clamp(56px,5vw,80px)] grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(320px,1.05fr)] md:gap-[clamp(64px,9vw,150px)]"
             aria-labelledby="curated-page-heading"
           >
             <div>
@@ -372,10 +372,16 @@ export default function CuratedPlaylistsPage() {
                 Every Track and Sound Effect Built Specifically
               </h1>
             </div>
-            <p className="audioflume-editorial-support md:pt-[30px]">
-              Premium film-forward music and SFX built to work naturally with
-              picture, pacing, emotion, and story.
-            </p>
+            <div className="md:pt-[30px]">
+              <p className="audioflume-editorial-support">
+                Premium film-forward music and SFX built to work naturally with
+                picture, pacing, emotion, and story.
+              </p>
+              <p className="mt-4 max-w-[560px] text-[13.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
+                Premium film-forward music and SFX built to work naturally with
+                picture, pacing, emotion, and story.
+              </p>
+            </div>
           </section>
 
           {!loading && !error && playlists.length > 0 && (
