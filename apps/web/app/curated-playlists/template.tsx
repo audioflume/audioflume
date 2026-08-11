@@ -265,6 +265,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   @media (max-width: 1040px) {
     body:has(.curated-playlists-page-root) .curated-feature-filters {
       display: flex;
+      width: calc(100vw - var(--curated-feature-edge));
       overflow-x: auto;
       overscroll-behavior-x: contain;
       scrollbar-width: none;
