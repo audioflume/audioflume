@@ -13,7 +13,7 @@
 .audioflume-home-statement h2,
 .audioflume-home-playlist-feature-copy h2,
 .audioflume-editorial-display {
-  font-size: clamp(38px, 4vw, 62px);
+  font-size: 56px;
 }
 
 .audioflume-home-eyebrow,
@@ -37,13 +37,5 @@
   font-size: clamp(16px, 1.45vw, 20px);
   font-weight: 300;
   letter-spacing: -0.025em;
-  line-height: 1.2;
-}
-
-@media (max-width: 620px) {
-  .audioflume-home-statement h2,
-  .audioflume-home-playlist-feature-copy h2,
-  .audioflume-editorial-display {
-    font-size: clamp(36px, 11vw, 48px);
-  }
+  line-height: 1.35;
 }
