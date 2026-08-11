@@ -134,25 +134,14 @@
   min-width: 0;
   min-height: 0;
   height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
-  grid-template-rows: auto auto auto;
-  column-gap: 16px;
-  align-content: start;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 40px 36px 76px;
 }
 
 .community-heading-row {
-  grid-column: 2;
-  grid-row: 1;
+  width: min(480px, 100%);
   display: block;
-}
-
-.community-page .community-content .community-heading-row > .filmwave-header-search-wrap {
-  width: 100% !important;
-  margin-left: 0 !important;
 }
 
 .community-page .community-title-style-scope.playlists-page {
@@ -217,20 +206,14 @@
 }
 
 .community-tabs {
-  grid-column: 1;
-  grid-row: 1;
-  align-self: center;
-  justify-self: start;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 0;
+  margin-top: 30px;
 }
 
 .community-grid {
-  grid-column: 1 / -1;
-  grid-row: 2;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   column-gap: clamp(10px, 1.25vw, 18px);
@@ -507,11 +490,6 @@
   border-radius: 0 !important;
 }
 
-.community-footer-wrap {
-  grid-column: 1 / -1;
-  grid-row: 3;
-}
-
 @media (max-width: 1320px) {
   .community-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -526,11 +504,6 @@
   .community-sidebar-section {
     padding-right: 20px;
     padding-left: 20px;
-  }
-
-  .community-heading-row {
-    grid-template-columns: 1fr;
-    gap: 22px;
   }
 
   .community-grid {
@@ -565,17 +538,12 @@
 
   .community-content {
     height: auto;
-    display: block;
     overflow: visible;
     padding: 28px 20px 72px;
   }
 
   .community-search {
     width: 100%;
-  }
-
-  .community-tabs {
-    margin-top: 12px;
   }
 
   .community-grid {
