@@ -74,9 +74,9 @@
 
 .fw-quick-chip:is(.is-active, .is-selected, [aria-pressed="true"], [data-active="true"]),
 .filmwave-quick-filter-button:is(.is-active, .is-selected, [aria-pressed="true"], [data-active="true"]) {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--accent-contrast, #111111);
+  border-color: #000000;
+  background: #000000;
+  color: #ffffff;
   font-weight: 400 !important;
 }
 
