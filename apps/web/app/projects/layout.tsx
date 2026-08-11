@@ -154,8 +154,8 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           box-sizing: border-box;
           width: 100%;
           margin-top: auto;
-          padding-right: 32px;
-          padding-left: 32px;
+          padding-right: 0;
+          padding-left: 0;
         }
 
         .project-detail-page > .project-detail-shell {
