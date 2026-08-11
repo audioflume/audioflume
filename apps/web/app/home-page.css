@@ -121,12 +121,13 @@
   margin: 0 auto;
   overflow: hidden;
   border-radius: 7px;
-  background: var(--bg-secondary);
+  background: url("https://images.filmwave.io/images/home/kyle-loftus-FtQE89f3EXA-unsplash.jpg") center center / cover no-repeat;
   isolation: isolate;
 }
 
-.audioflume-home-hero-image {
-  object-fit: cover;
+.audioflume-home-hero-image,
+.audioflume-home-hero-video {
+  display: none;
 }
 
 .audioflume-home-hero-overlay {
