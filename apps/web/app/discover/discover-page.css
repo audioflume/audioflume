@@ -1,6 +1,7 @@
 body:has(.discover-page-root) {
   --discover-editorial-width: var(--filmwave-editorial-max-width);
   --discover-editorial-gutter: var(--discover-page-gutter);
+  --discover-shelf-gutter: 50px;
   --discover-section-gap: clamp(64px, 6vw, 96px);
   background: #000;
 }
@@ -192,9 +193,11 @@ body:has(.discover-page-root) .discover-mood-section {
 }
 
 body:has(.discover-page-root) .discover-mood-section .discover-section-header {
-  width: 100%;
+  width: calc(
+    100vw - var(--discover-shelf-gutter) - var(--discover-shelf-gutter)
+  );
   margin-right: 0;
-  margin-left: 0;
+  margin-left: calc(50% - 50vw + var(--discover-shelf-gutter));
 }
 
 body:has(.discover-page-root)
@@ -212,10 +215,10 @@ body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-scroller {
   gap: 12px;
-  padding-right: var(--discover-editorial-gutter) !important;
-  padding-left: var(--discover-editorial-gutter) !important;
-  scroll-padding-right: var(--discover-editorial-gutter);
-  scroll-padding-left: var(--discover-editorial-gutter);
+  padding-right: var(--discover-shelf-gutter) !important;
+  padding-left: var(--discover-shelf-gutter) !important;
+  scroll-padding-right: var(--discover-shelf-gutter);
+  scroll-padding-left: var(--discover-shelf-gutter);
 }
 
 body:has(.discover-page-root) .discover-mood-section + .discover-curated-playlist-section {
@@ -227,6 +230,7 @@ body:has(.discover-page-root) .discover-section {
 }
 
 body:has(.discover-page-root) .discover-curated-playlist-section {
+  --filmwave-page-gutter: var(--discover-shelf-gutter);
   margin-top: 0 !important;
 }
 
