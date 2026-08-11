@@ -275,11 +275,19 @@ body:has(.discover-page-root)
 }
 
 @media (max-width: 1040px) {
-  .discover-template-shell.is-discover-route .discover-hero-last-viewed-section {
-    width: calc(100% + var(--discover-editorial-gutter));
-    max-width: none;
+  .discover-template-shell.is-discover-route
+    .discover-hero-last-viewed-section
+    .recent-playlist-card-list.is-hero {
+    box-sizing: border-box;
+    width: calc(
+      100% + var(--discover-editorial-gutter) + var(--discover-editorial-gutter)
+    );
     margin-right: calc(0px - var(--discover-editorial-gutter));
-    margin-left: 0;
+    margin-left: calc(0px - var(--discover-editorial-gutter));
+    padding-right: var(--discover-editorial-gutter);
+    padding-left: var(--discover-editorial-gutter);
+    scroll-padding-right: var(--discover-editorial-gutter);
+    scroll-padding-left: var(--discover-editorial-gutter);
   }
 }
 
