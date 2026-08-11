@@ -435,6 +435,19 @@ export default function DiscoverCuratedHeroCopy({
                   aria-hidden="true"
                 />
               </button>
+
+              <button
+                type="button"
+                className="discover-category-filter-button is-future"
+                disabled
+                title="SFX filters coming soon"
+              >
+                <span>SFX</span>
+                <span
+                  className="discover-category-filter-chevron"
+                  aria-hidden="true"
+                />
+              </button>
             </div>
 
             {activeFilter && (
