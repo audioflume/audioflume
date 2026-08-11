@@ -230,8 +230,7 @@ export default function CuratedJumpBackIn({
 
   if (!isSupportedPage) return <RecentPlaylistTracker />;
 
-  const isInlineLoading =
-    renderInline && (!recentEntriesLoaded || !playlistsLoaded);
+  const isInlineLoading = renderInline && !playlistsLoaded;
   const content = (
     <>
       <div className="discover-hero-last-viewed-heading">
@@ -247,7 +246,11 @@ export default function CuratedJumpBackIn({
   );
 
   if (renderInline) {
-    if (!isInlineLoading && recentPlaylists.length === 0) {
+    if (!recentEntriesLoaded || recentEntries.length === 0) {
+      return <RecentPlaylistTracker />;
+    }
+
+    if (playlistsLoaded && recentPlaylists.length === 0) {
       return <RecentPlaylistTracker />;
     }
 
