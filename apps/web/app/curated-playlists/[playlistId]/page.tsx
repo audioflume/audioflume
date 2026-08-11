@@ -1,6 +1,7 @@
 "use client";
 
 import Footer from "@/components/Footer";
+import RecentPlaylistTracker from "@/components/RecentPlaylistTracker";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import FilterTags from "@/components/FilterTags";
@@ -226,6 +227,7 @@ export default function CuratedPlaylistDetailPage() {
 
   return (
     <>
+      <RecentPlaylistTracker />
       <style>{`
         .playlist-detail-page {
           margin-left: var(--sidebar-width);
