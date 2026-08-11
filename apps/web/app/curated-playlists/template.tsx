@@ -182,7 +182,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     );
     grid-template-columns: repeat(8, minmax(0, 1fr));
     gap: 8px;
-    margin-top: 16px;
+    margin-top: 0;
     margin-left: calc(50% - 50vw + var(--curated-feature-edge));
   }
 
