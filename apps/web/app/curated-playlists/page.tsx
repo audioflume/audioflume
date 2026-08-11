@@ -360,7 +360,7 @@ export default function CuratedPlaylistsPage() {
       <section className="curated-playlists-page-layer">
         <div className="px-8">
           <section
-            className="mt-[calc(clamp(56px,5vw,80px)-var(--filmwave-page-top-gap,22px))] mb-[clamp(56px,5vw,80px)] grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)] md:[align-items:last_baseline] md:gap-[clamp(64px,9vw,150px)]"
+            className="mt-[calc(clamp(56px,5vw,80px)-var(--filmwave-page-top-gap,22px))] mb-[clamp(56px,5vw,80px)] grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] md:[align-items:last_baseline] md:gap-[clamp(64px,9vw,150px)]"
             aria-labelledby="curated-page-heading"
           >
             <div>
