@@ -538,42 +538,46 @@ export default function CommunityPlaylistsPage() {
           min-width: 0;
         }
 
-        .community-heading-row > .filmwave-header-search-wrap {
+        .community-sidebar-search {
+          margin-bottom: 24px;
+        }
+
+        .community-sidebar-search > .filmwave-header-search-wrap {
           width: 100% !important;
           margin-left: 0 !important;
         }
 
-        .community-heading-row > .filmwave-header-search-wrap .filmwave-header-search  {
+        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search  {
           width: 100% !important;
         }
 
-        .community-heading-row > .filmwave-header-search-wrap .filmwave-header-search-base {
+        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-base {
           min-height: 32px !important;
           height: 32px !important;
           border-radius: 10px !important;
         }
 
-        .community-heading-row > .filmwave-header-search-wrap .filmwave-header-search-lead {
+        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-lead {
           width: 28px !important;
           margin-left: 6px !important;
         }
 
-        .community-heading-row > .filmwave-header-search-wrap .filmwave-header-search-input {
+        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-input {
           font-size: 10px !important;
         }
 
-        .community-heading-row > .filmwave-header-search-wrap .filmwave-header-search-icon {
+        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-icon {
           width: 16px !important;
           height: 16px !important;
         }
 
-        .community-heading-row > .filmwave-header-search-wrap .filmwave-header-search-clear {
+        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-clear {
           width: 24px !important;
           height: 24px !important;
           margin-right: 4px !important;
         }
 
-        .community-heading-row > .filmwave-header-search-wrap .filmwave-header-search-clear svg {
+        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-clear svg {
           width: 12px !important;
           height: 12px !important;
         }
@@ -785,7 +789,13 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-like {
-          z-index: 3;
+          position: absolute;
+          top: 16px;
+          left: 16px;
+          z-index: 5;
+          grid-column: auto;
+          grid-row: auto;
+          color: #fff;
           transition: transform 150ms ease, opacity 150ms ease;
         }
 
@@ -796,11 +806,15 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-like.is-liked {
-          --favorite-icon-color: var(--text-primary);
+          --favorite-icon-color: #fff;
         }
 
         .community-like:disabled {
           cursor: default;
+        }
+
+        .community-card-title-row {
+          grid-template-columns: minmax(0, 1fr) 24px;
         }
 
 
@@ -825,6 +839,16 @@ export default function CommunityPlaylistsPage() {
       <main className={`community-page${playerVisible ? " is-player-visible" : ""}`}>
         <aside className="community-sidebar" aria-label="Community playlist discovery">
           <section className="community-sidebar-section community-categories">
+            <div className="community-sidebar-search">
+              <HeaderSearchBar
+                renderForm={false}
+                searchValue={query}
+                searchPlaceholder="Search community playlists..."
+                searchAriaLabel="Search community playlists"
+                clearAriaLabel="Clear community playlist search"
+                onSearchChange={setQuery}
+              />
+            </div>
             <p className="community-sidebar-heading">Categories</p>
             <nav aria-label="Community playlist categories">
               <button
@@ -885,22 +909,6 @@ export default function CommunityPlaylistsPage() {
         </aside>
 
         <section className="community-content">
-          <div className="community-heading-row">
-            <div className="community-title-style-scope playlists-page">
-              <div className="playlists-hero">
-                <h1 className="playlists-title">Playlists</h1>
-              </div>
-            </div>
-            <HeaderSearchBar
-              renderForm={false}
-              searchValue={query}
-              searchPlaceholder="Search community playlists..."
-              searchAriaLabel="Search community playlists"
-              clearAriaLabel="Clear community playlist search"
-              onSearchChange={setQuery}
-            />
-          </div>
-
           <div className="community-tabs" role="tablist" aria-label="Community playlist sorting">
             {COMMUNITY_TABS.map((tab) => (
               <button
@@ -958,6 +966,19 @@ export default function CommunityPlaylistsPage() {
                       </div>
                     </Link>
                     <button
+                      className={`community-like${isFavorite ? " is-liked" : ""}`}
+                      type="button"
+                      aria-label={`${isFavorite ? "Remove from favorites" : "Add to favorites"}: ${playlist.name}`}
+                      aria-pressed={isFavorite}
+                      disabled={isPending}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        void togglePlaylistFavorite(playlist.id);
+                      }}
+                    >
+                      <HeartIcon filled={isFavorite} />
+                    </button>
+                    <button
                       className="community-play"
                       type="button"
                       aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
@@ -986,19 +1007,6 @@ export default function CommunityPlaylistsPage() {
                         {playlist.name}
                       </Link>
                     </h2>
-                    <button
-                      className={`community-like${isFavorite ? " is-liked" : ""}`}
-                      type="button"
-                      aria-label={`${isFavorite ? "Remove from favorites" : "Add to favorites"}: ${playlist.name}`}
-                      aria-pressed={isFavorite}
-                      disabled={isPending}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        void togglePlaylistFavorite(playlist.id);
-                      }}
-                    >
-                      <HeartIcon filled={isFavorite} />
-                    </button>
                     <button
                       className="community-more playlist-menu-btn-grid"
                       type="button"
