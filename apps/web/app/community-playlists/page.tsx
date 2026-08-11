@@ -1,7 +1,7 @@
 "use client";
 
 import { HeaderSearchBar } from "@filmwave/shared";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
@@ -9,10 +9,17 @@ import RecentPlaylistCards from "@/components/RecentPlaylistCards";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import {
+  quickFilterButtonActiveClass,
+  quickFilterButtonClass,
+} from "@/components/uiClasses";
 import {
   COMMUNITY_PLAYLIST_CATEGORIES,
   type CommunityPlaylistCategory,
 } from "@/lib/communityPlaylistCategories";
+import type { Song } from "@/lib/types";
 import "../../../../packages/shared/styles/music-side-filter.css";
 import "../playlists/playlists-tabs-rail.css";
 import "./community-playlists.css";
@@ -38,6 +45,11 @@ type CommunityPlaylistRanking = Pick<
   CommunityPlaylist,
   "like_count" | "seven_day_like_count" | "play_count" | "published_at"
 >;
+
+type CommunityPlaylistPlaybackResponse = {
+  songs?: Song[];
+  error?: string;
+};
 
 type CategoryFilter = "All" | CommunityPlaylistCategory;
 type CommunityTab = "Trending" | "Recent" | "Most Liked" | "Favorites";
@@ -123,7 +135,8 @@ function getPublishedTime(value: string | null) {
 }
 
 export default function CommunityPlaylistsPage() {
-  const { currentSong } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const playlistPlaybackCacheRef = useRef(new Map<number, Song[]>());
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
@@ -142,6 +155,8 @@ export default function CommunityPlaylistsPage() {
     () => new Set(),
   );
   const [recentPlaylistIds, setRecentPlaylistIds] = useState<number[]>([]);
+  const [activePlaybackPlaylistId, setActivePlaybackPlaylistId] = useState<number | null>(null);
+  const [loadingPlaybackPlaylistId, setLoadingPlaybackPlaylistId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const playerVisible = !!currentSong;
 
@@ -418,6 +433,57 @@ export default function CommunityPlaylistsPage() {
     }
   }
 
+  async function togglePlaylistPlayback(playlist: CommunityPlaylist) {
+    if (loadingPlaybackPlaylistId === playlist.id) return;
+
+    const cachedSongs = playlistPlaybackCacheRef.current.get(playlist.id) ?? [];
+    const currentSongBelongsToPlaylist = Boolean(
+      currentSong && cachedSongs.some((song) => song.id === currentSong.id),
+    );
+
+    if (
+      activePlaybackPlaylistId === playlist.id &&
+      currentSongBelongsToPlaylist &&
+      currentSong
+    ) {
+      togglePlayPause(currentSong);
+      return;
+    }
+
+    setLoadingPlaybackPlaylistId(playlist.id);
+
+    try {
+      let songs = playlistPlaybackCacheRef.current.get(playlist.id);
+
+      if (!songs) {
+        const response = await fetch(
+          `/api/community-playlists/${encodeURIComponent(String(playlist.id))}`,
+          { cache: "no-store" },
+        );
+        const data = (await response.json()) as CommunityPlaylistPlaybackResponse;
+
+        if (!response.ok) {
+          throw new Error(data?.error || "Failed to load community playlist");
+        }
+
+        songs = Array.isArray(data?.songs) ? data.songs : [];
+        playlistPlaybackCacheRef.current.set(playlist.id, songs);
+      }
+
+      const playableSongs = songs.filter((song) => Boolean(song.audioUrl));
+      const firstSong = playableSongs[0];
+      if (!firstSong) return;
+
+      setQueue(playableSongs);
+      setActivePlaybackPlaylistId(playlist.id);
+      togglePlayPause(firstSong);
+    } catch (error) {
+      console.warn("Community playlist card playback failed", error);
+    } finally {
+      setLoadingPlaybackPlaylistId(null);
+    }
+  }
+
   function getEmptyStateMessage() {
     if (query.trim()) return "No public playlists match your search.";
     if (activeTab === "Favorites") {
@@ -473,8 +539,8 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-heading-row > .filmwave-header-search-wrap {
-          width: min(360vx, 100%) !important;
-          margin-left: auto !important;
+          width: 100% !important;
+          margin-left: 0 !important;
         }
 
         .community-heading-row > .filmwave-header-search-wrap .filmwave-header-search  {
@@ -730,7 +796,7 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-like.is-liked {
-          --favorite-icon-color: #fff;
+          --favorite-icon-color: var(--text-primary);
         }
 
         .community-like:disabled {
@@ -841,7 +907,7 @@ export default function CommunityPlaylistsPage() {
                 type="button"
                 role="tab"
                 key={tab}
-                className={activeTab === tab ? "is-active" : ""}
+                className={`${quickFilterButtonClass} ${activeTab === tab ? quickFilterButtonActiveClass : ""}`}
                 aria-selected={activeTab === tab}
                 onClick={() => setActiveTab(tab)}
               >
@@ -858,6 +924,15 @@ export default function CommunityPlaylistsPage() {
             {filteredPlaylists.map((playlist) => {
               const isFavorite = favoritePlaylistIds.has(playlist.id);
               const isPending = pendingFavoriteIds.has(playlist.id);
+              const cachedPlaylistSongs =
+                playlistPlaybackCacheRef.current.get(playlist.id) ?? [];
+              const isCurrentPlaylist = Boolean(
+                activePlaybackPlaylistId === playlist.id &&
+                  currentSong &&
+                  cachedPlaylistSongs.some((song) => song.id === currentSong.id),
+              );
+              const isPlaylistPlaying = isCurrentPlaylist && isPlaying;
+              const isPlaylistLoading = loadingPlaybackPlaylistId === playlist.id;
 
               return (
                 <article className="community-card" key={playlist.id}>
@@ -883,6 +958,35 @@ export default function CommunityPlaylistsPage() {
                       </div>
                     </Link>
                     <button
+                      className="community-play"
+                      type="button"
+                      aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
+                      aria-pressed={isPlaylistPlaying}
+                      aria-busy={isPlaylistLoading}
+                      data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
+                      disabled={isPlaylistLoading}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        void togglePlaylistPlayback(playlist);
+                      }}
+                    >
+                      {isPlaylistPlaying ? (
+                        <PauseIcon size={18} />
+                      ) : (
+                        <PlayIconSmall size={18} />
+                      )}
+                    </button>
+                  </div>
+                  <div className="community-card-title-row">
+                    <h2>
+                      <Link
+                        className="community-title-link"
+                        href={`/community-playlists/${playlist.id}`}
+                      >
+                        {playlist.name}
+                      </Link>
+                    </h2>
+                    <button
                       className={`community-like${isFavorite ? " is-liked" : ""}`}
                       type="button"
                       aria-label={`${isFavorite ? "Remove from favorites" : "Add to favorites"}: ${playlist.name}`}
@@ -895,16 +999,6 @@ export default function CommunityPlaylistsPage() {
                     >
                       <HeartIcon filled={isFavorite} />
                     </button>
-                  </div>
-                  <div className="community-card-title-row">
-                    <h2>
-                      <Link
-                        className="community-title-link"
-                        href={`/community-playlists/${playlist.id}`}
-                      >
-                        {playlist.name}
-                      </Link>
-                    </h2>
                     <button
                       className="community-more playlist-menu-btn-grid"
                       type="button"
