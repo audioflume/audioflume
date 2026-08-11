@@ -135,7 +135,7 @@
   min-height: 0;
   height: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
   grid-template-rows: auto auto auto;
   column-gap: 16px;
   align-content: start;
@@ -145,7 +145,7 @@
 }
 
 .community-heading-row {
-  grid-column: 1;
+  grid-column: 2;
   grid-row: 1;
   display: block;
 }
@@ -217,40 +217,15 @@
 }
 
 .community-tabs {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 1;
   align-self: center;
   justify-self: start;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 22px;
+  gap: 8px;
   margin-top: 0;
-}
-
-.community-tabs button {
-  height: 36px;
-  min-height: 36px;
-  max-height: 36px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  padding: 0;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 400;
-  letter-spacing: normal;
-  line-height: normal;
-  transition: color 150ms ease;
-}
-
-.community-tabs button:hover,
-.community-tabs button:focus-visible,
-.community-tabs button.is-active {
-  background: transparent;
-  color: var(--text-primary);
-  outline: none;
 }
 
 .community-grid {
@@ -286,6 +261,54 @@
   border-radius: inherit;
 }
 
+.community-cover-link::before,
+.community-cover-link::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.community-cover-link::before {
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.community-cover-link::after {
+  top: 25.5px;
+  right: 25.5px;
+  width: 13px;
+  height: 13px;
+  background: #fff;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.community-card:hover .community-cover-link::before,
+.community-card:focus-within .community-cover-link::before {
+  background: #fff;
+}
+
+.community-card:hover .community-cover-link::after,
+.community-card:focus-within .community-cover-link::after {
+  background: #000;
+}
+
 .community-play,
 .community-like,
 .community-more {
@@ -294,37 +317,47 @@
 
 .community-play {
   position: absolute;
-  right: 15px;
-  bottom: 15px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 5;
   display: inline-flex;
-  width: 42px;
-  height: 42px;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
   align-items: center;
   justify-content: center;
-  border: 0;
-  border-radius: 50%;
-  background: #fff;
-  color: #111;
+  appearance: none;
   cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
   padding: 0;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-  transition: transform 150ms ease;
+  color: #fff;
+  box-shadow: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.community-card:hover .community-play,
+.community-card:focus-within .community-play,
+.community-play:focus-visible,
+.community-play[data-playlist-playing="true"] {
+  opacity: 1;
 }
 
 .community-play:hover,
 .community-play:focus-visible {
-  transform: scale(1.05);
-  outline: none;
+  background: transparent;
+  box-shadow: none;
 }
 
-.community-play svg {
-  transform: translateX(1px);
+.community-play:disabled {
+  cursor: default;
 }
 
 .community-like {
-  position: absolute;
-  top: 5px;
-  right: 5px;
+  position: static;
   display: inline-flex;
   width: 26px;
   height: 26px;
@@ -332,7 +365,7 @@
   justify-content: center;
   border: 0;
   background: transparent;
-  color: #fff;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 0;
 }
@@ -344,20 +377,21 @@
 
 .community-card-title-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 24px;
+  grid-template-columns: minmax(0, 1fr) 26px 24px;
   align-items: center;
   gap: 8px;
-  margin-top: 13px;
+  margin-top: 12px;
 }
 
 .community-card-title-row h2 {
   margin: 0;
   overflow: hidden;
   color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
+  font-family: var(--discover-playlist-card-title-font-family, inherit);
+  font-size: var(--discover-playlist-card-title-font-size, 16.5px);
+  font-weight: 400;
+  letter-spacing: var(--discover-playlist-card-title-letter-spacing, normal);
+  line-height: var(--discover-playlist-card-title-line-height, 1.25);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -537,7 +571,7 @@
   }
 
   .community-tabs {
-    margin-top: 0;
+    margin-top: 12px;
   }
 
   .community-grid {
@@ -549,72 +583,6 @@
   .community-grid {
     grid-template-columns: 1fr;
   }
-}
-
-/* Community playlist sorting pills. */
-.community-page .community-tabs {
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.community-page .community-tabs button {
-  height: auto;
-  min-height: 22px;
-  max-height: none;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: #151515;
-  padding: 2px 10px;
-  color: rgba(255, 255, 255, 0.82);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.15;
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease,
-    color 150ms ease;
-}
-
-.community-page .community-tabs button:hover,
-.community-page .community-tabs button:focus-visible {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: #151515;
-  color: #fff;
-  outline: none;
-}
-
-.community-page .community-tabs button.is-active {
-  border-color: #fff;
-  background: #fff;
-  color: #111;
-}
-
-:where(html.light, html[data-theme="light"])
-  .community-page
-  .community-tabs button {
-  border-color: transparent;
-  background: var(--bg-hover);
-  color: var(--text-secondary);
-}
-
-:where(html.light, html[data-theme="light"])
-  .community-page
-  .community-tabs button:hover,
-:where(html.light, html[data-theme="light"])
-  .community-page
-  .community-tabs button:focus-visible {
-  border-color: var(--border-strong);
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-:where(html.light, html[data-theme="light"])
-  .community-page
-  .community-tabs button.is-active {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
 }
 
 .community-engagement-item:last-child svg {
