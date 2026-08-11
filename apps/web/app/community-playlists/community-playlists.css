@@ -135,7 +135,7 @@
   min-height: 0;
   height: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
   grid-template-rows: auto auto auto;
   column-gap: 16px;
   align-content: start;
@@ -357,6 +357,8 @@
 }
 
 .community-like {
+  grid-column: 3;
+  grid-row: 1;
   position: static;
   display: inline-flex;
   width: 26px;
@@ -377,7 +379,7 @@
 
 .community-card-title-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 26px 24px;
+  grid-template-columns: minmax(0, 1fr) 24px 26px;
   align-items: center;
   gap: 8px;
   margin-top: 12px;
@@ -397,6 +399,8 @@
 }
 
 .community-more {
+  grid-column: 2;
+  grid-row: 1;
   display: inline-flex;
   width: 24px;
   height: 24px;
