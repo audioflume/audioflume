@@ -274,6 +274,15 @@ body:has(.discover-page-root)
   box-shadow: none;
 }
 
+@media (max-width: 1040px) {
+  .discover-template-shell.is-discover-route .discover-hero-last-viewed-section {
+    width: calc(100% + var(--discover-editorial-gutter));
+    max-width: none;
+    margin-right: calc(0px - var(--discover-editorial-gutter));
+    margin-left: 0;
+  }
+}
+
 @media (max-width: 620px) {
   .discover-template-shell.is-discover-route {
     --discover-integrated-hero-height: clamp(570px, 72svh, 690px);
