@@ -203,11 +203,9 @@ body:has(.discover-page-root) .discover-mood-section .discover-section-header {
 body:has(.discover-page-root)
   .discover-mood-section
   .curated-playlist-shelf-viewport {
-  width: calc(
-    100% + var(--discover-editorial-gutter) + var(--discover-editorial-gutter)
-  );
-  margin-right: calc(0px - var(--discover-editorial-gutter)) !important;
-  margin-left: calc(0px - var(--discover-editorial-gutter)) !important;
+  width: 100vw;
+  margin-right: calc(50% - 50vw) !important;
+  margin-left: calc(50% - 50vw) !important;
   overflow: hidden;
 }
 
