@@ -74,7 +74,10 @@ export default function Footer({
   const playerVisible = Boolean(currentSong);
   const isMusicPage = pathname === "/music";
   const isProjectDetailPage = /^\/projects\/[^/]+/.test(pathname);
-  const removePageGutter = isMusicPage || isProjectDetailPage;
+  const isPlaylistDetailPage = /^\/playlists\/[^/]+/.test(pathname);
+  const isCommunityPlaylistsPage = pathname === "/community-playlists";
+  const removePageGutter =
+    isMusicPage || isProjectDetailPage || isCommunityPlaylistsPage;
 
   useEffect(() => {
     if (!isMusicPage) {
@@ -120,11 +123,23 @@ export default function Footer({
               var(--filmwave-side-filter-detail-width) + 8px
           );
         }
+
+        .playlist-detail-page-footer {
+          width: calc(100% + 56px) !important;
+          margin-left: -28px;
+        }
+
+        @media (max-width: 760px) {
+          .playlist-detail-page-footer {
+            width: calc(100% + 36px) !important;
+            margin-left: -18px;
+          }
+        }
       `}</style>
 
       <footer
         ref={footerRef}
-        className={`box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${className}`}
+        className={`box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${isPlaylistDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
         style={{
           paddingRight: removePageGutter ? "0px" : undefined,
           paddingLeft: removePageGutter ? "0px" : undefined,
