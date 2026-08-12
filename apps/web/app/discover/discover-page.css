@@ -179,7 +179,9 @@ body:has(.discover-page-root) .discover-content {
   padding: 0 var(--discover-editorial-gutter);
 }
 
-body:has(.discover-page-root) .discover-content > .discover-section:not(.discover-mood-section) {
+body:has(.discover-page-root)
+  .discover-content
+  > .discover-section:not(.discover-mood-section):not(.discover-production-section):not(.discover-staff-favorites-section):not(.discover-ready-to-cut-section) {
   width: 100%;
   margin-right: 0;
   margin-left: 0;
