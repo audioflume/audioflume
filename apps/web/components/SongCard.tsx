@@ -211,7 +211,6 @@ export default function SongCard({
     <>
       <SongCardShell
         cardRef={cardRef}
-        dataSongCardId={song.id}
         className={`group w-full scroll-mt-48 scroll-mb-40 cursor-pointer transition-colors${
           isCurrentSong ? " is-current" : ""
         }`}
