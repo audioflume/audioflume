@@ -427,13 +427,6 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
     color 150ms ease;
 }
 
-.discover-category-filter-pill:hover,
-.discover-category-filter-pill:focus-visible {
-  border-color: transparent;
-  background: #fff;
-  color: #111;
-}
-
 .discover-category-filter-pill.is-selected {
   border-color: #fff;
   background: #fff;
@@ -531,17 +524,6 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   .discover-category-filter-pill {
   border-color: transparent;
   color: var(--text-secondary);
-}
-
-:where(html.light, html[data-theme="light"])
-  body:has(.discover-page-root)
-  .discover-category-filter-pill:hover,
-:where(html.light, html[data-theme="light"])
-  body:has(.discover-page-root)
-  .discover-category-filter-pill:focus-visible {
-  border-color: transparent;
-  background: #0d0d0d;
-  color: #fff;
 }
 
 :where(html.light, html[data-theme="light"])
