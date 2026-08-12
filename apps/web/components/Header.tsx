@@ -479,6 +479,7 @@ export default function Header() {
 
         .filmwave-playlists-mega-feature-grid {
           --filmwave-playlists-mega-card-width: clamp(280px, 24vw, 390px);
+          order: 2 !important;
           grid-template-columns: repeat(
             2,
             var(--filmwave-playlists-mega-card-width)
@@ -544,6 +545,7 @@ export default function Header() {
         .filmwave-playlists-mega-content {
           display: flex !important;
           width: 100% !important;
+          order: 1 !important;
           align-self: stretch !important;
           align-items: center !important;
           transform: translateY(-24px) !important;
