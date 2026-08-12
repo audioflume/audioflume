@@ -59,22 +59,28 @@
   align-items: flex-end;
   padding: 20px;
   overflow: hidden;
-  border: 1px solid var(--border);
   border-radius: 7px;
-  background: var(--filmwave-neutral-surface, var(--bg-secondary));
+  background: linear-gradient(
+    135deg,
+    color-mix(
+        in srgb,
+        var(--filmwave-neutral-surface, var(--bg-secondary)) 98%,
+        var(--text-primary) 2%
+      )
+      0%,
+    var(--filmwave-neutral-surface, var(--bg-secondary)) 48%,
+    color-mix(
+        in srgb,
+        var(--filmwave-neutral-surface, var(--bg-secondary)) 90%,
+        var(--text-primary) 10%
+      )
+      100%
+  );
   color: var(--text-primary);
   text-decoration: none;
-  transition:
-    background-color 150ms ease,
-    border-color 150ms ease,
-    color 150ms ease;
 }
 
-.portalCard:hover,
 .portalCard:focus-visible {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
   outline: none;
 }
 
@@ -85,19 +91,6 @@
   font-weight: 400;
   letter-spacing: -0.04em;
   line-height: 1.05;
-}
-
-.portalArrow {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  display: flex;
-  width: 32px;
-  height: 32px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid currentColor;
-  border-radius: 999px;
 }
 
 @media (max-width: 900px) {
