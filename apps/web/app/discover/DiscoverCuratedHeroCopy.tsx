@@ -7,7 +7,7 @@ import {
   REGION_OPTIONS,
 } from "@filmwave/shared";
 import { useAuth } from "@clerk/nextjs";
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { type FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -54,34 +54,11 @@ export default function DiscoverCuratedHeroCopy({
 }: DiscoverCuratedHeroCopyProps) {
   const router = useRouter();
   const { userId } = useAuth();
-  const filterAreaRef = useRef<HTMLDivElement | null>(null);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] =
-    useState<DiscoverFilterKey | null>(null);
+    useState<DiscoverFilterKey>("mood");
   const [selectedFilters, setSelectedFilters] =
     useState<DiscoverFilterSelections>(EMPTY_DISCOVER_FILTERS);
-
-  useEffect(() => {
-    if (!activeFilter) return;
-
-    function handlePointerDown(event: PointerEvent) {
-      if (!(event.target instanceof Node)) return;
-      if (filterAreaRef.current?.contains(event.target)) return;
-      setActiveFilter(null);
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setActiveFilter(null);
-    }
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [activeFilter]);
 
   function persistDiscoverFilters(cleanSearch: string) {
     if (!userId) return;
@@ -107,7 +84,6 @@ export default function DiscoverCuratedHeroCopy({
 
     if (!showIntroCopy) {
       persistDiscoverFilters(cleanSearch);
-      setActiveFilter(null);
     }
 
     router.push(
@@ -392,8 +368,11 @@ export default function DiscoverCuratedHeroCopy({
             </button>
           </form>
 
-          <div className="discover-category-browser" ref={filterAreaRef}>
-            <h2>Browse by category</h2>
+          <div className="discover-category-browser">
+            <h2>
+              A highly curated library of royalty-free audio and sound effects
+              made with intention for filmmakers.
+            </h2>
 
             <div className="discover-category-filter-controls">
               {DISCOVER_FILTER_GROUPS.map((group) => {
@@ -406,13 +385,9 @@ export default function DiscoverCuratedHeroCopy({
                     key={group.id}
                     type="button"
                     className={`discover-category-filter-button${isOpen ? " is-open" : ""}${hasSelection ? " has-selection" : ""}`}
-                    aria-expanded={isOpen}
+                    aria-pressed={isOpen}
                     aria-controls={panelId}
-                    onClick={() =>
-                      setActiveFilter((current) =>
-                        current === group.id ? null : group.id,
-                      )
-                    }
+                    onClick={() => setActiveFilter(group.id)}
                   >
                     <span>{group.label}</span>
                     <span
@@ -450,34 +425,32 @@ export default function DiscoverCuratedHeroCopy({
               </button>
             </div>
 
-            {activeFilter && (
-              <div
-                id={`discover-category-panel-${activeFilter}`}
-                className="discover-category-filter-panel"
-                role="group"
-                aria-label={`${DISCOVER_FILTER_GROUPS.find((group) => group.id === activeFilter)?.label} filters`}
-              >
-                {DISCOVER_FILTER_GROUPS.find(
-                  (group) => group.id === activeFilter,
-                )?.options.map((option) => {
-                  const isSelected = selectedFilters[activeFilter].includes(
-                    option,
-                  );
+            <div
+              id={`discover-category-panel-${activeFilter}`}
+              className="discover-category-filter-panel"
+              role="group"
+              aria-label={`${DISCOVER_FILTER_GROUPS.find((group) => group.id === activeFilter)?.label} filters`}
+            >
+              {DISCOVER_FILTER_GROUPS.find(
+                (group) => group.id === activeFilter,
+              )?.options.map((option) => {
+                const isSelected = selectedFilters[activeFilter].includes(
+                  option,
+                );
 
-                  return (
-                    <button
-                      key={option}
-                      type="button"
-                      className={`discover-category-filter-pill${isSelected ? " is-selected" : ""}`}
-                      aria-pressed={isSelected}
-                      onClick={() => toggleFilterOption(activeFilter, option)}
-                    >
-                      {option}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    className={`discover-category-filter-pill${isSelected ? " is-selected" : ""}`}
+                    aria-pressed={isSelected}
+                    onClick={() => toggleFilterOption(activeFilter, option)}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
