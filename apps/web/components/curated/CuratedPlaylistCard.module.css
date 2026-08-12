@@ -95,18 +95,20 @@
 }
 
 .copy {
+  z-index: 4;
   min-width: 0;
+  align-self: end;
   grid-column: 1;
-  grid-row: 2;
-  margin-top: 12px;
-  color: inherit;
+  grid-row: 1;
+  margin: 0 64px 16px 16px;
+  color: #fff;
   text-decoration: none;
 }
 
 .copy h3 {
   margin: 0;
   overflow: hidden;
-  color: var(--text-primary);
+  color: #fff;
   font-family: var(--discover-playlist-card-title-font-family, inherit);
   font-size: var(--discover-playlist-card-title-font-size, 16.5px);
   font-weight: 400;
@@ -119,7 +121,7 @@
 .copy p {
   margin: 3px 0 0;
   overflow: hidden;
-  color: var(--text-muted);
+  color: #fff;
   font-family: inherit;
   font-size: 11.5px;
   font-weight: 400;
