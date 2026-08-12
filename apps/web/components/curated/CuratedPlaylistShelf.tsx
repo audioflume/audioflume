@@ -184,10 +184,6 @@ export default function CuratedPlaylistShelf({
           </div>
 
           <div className="hidden items-center gap-2 sm:flex">
-            {viewAllHref && (
-              <Link href={viewAllHref}>{viewAllLabel}</Link>
-            )}
-
             <button
               type="button"
               onClick={() => scrollPlaylists("prev")}
