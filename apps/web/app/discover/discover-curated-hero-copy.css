@@ -8,12 +8,10 @@ body:has(.discover-page-root) .discover-template-shell .discover-hero {
   min-height: var(--discover-integrated-hero-height);
 }
 
-:where(html.light, html[data-theme="light"])
-  body:has(.discover-page-root)
-  .discover-template-shell
+body:has(.discover-page-root)
+  .discover-template-shell.is-discover-route
   .discover-hero {
-  background: url("https://images.filmwave.io/images/discover/emil-karlsen-zcoPq6ooluE-unsplash.jpg")
-    center center / cover no-repeat;
+  background: var(--bg-primary);
 }
 
 :where(html.light, html[data-theme="light"])
@@ -218,7 +216,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   align-items: center;
   justify-content: flex-start;
   padding-top: calc(
-    var(--filmwave-header-height, 75px) + clamp(38px, 3.7vw, 60px)
+    var(--filmwave-header-height, 75px) + clamp(24px, 2.8vw, 44px)
   );
   transform: none;
 }
@@ -234,14 +232,14 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-category-search {
   display: grid;
-  width: min(calc(100% - 80px), 800px);
+  width: min(calc(100% - 80px), 1120px);
   height: 68px;
   grid-template-columns: minmax(0, 1fr) 58px;
   align-items: center;
   border: 0;
-  border-radius: 28px;
+  border-radius: 34px;
   background: var(--filmwave-neutral-surface);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+  box-shadow: none;
 }
 
 .discover-category-search input {
@@ -303,17 +301,19 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   width: 100%;
   flex-direction: column;
   align-items: center;
-  margin-top: clamp(36px, 3.6vw, 50px);
+  margin-top: clamp(88px, 7vw, 116px);
 }
 
 .discover-category-browser h2 {
+  width: min(calc(100% - 40px), 660px);
   margin: 0;
   color: #fff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(17px, 1.15vw, 22px);
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  line-height: 1;
+  font-size: clamp(18px, 1.25vw, 24px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.28;
+  text-align: center;
 }
 
 .discover-category-filter-controls {
@@ -323,7 +323,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   align-items: center;
   justify-content: center;
   gap: 9px;
-  margin-top: 22px;
+  margin-top: 30px;
 }
 
 .discover-category-filter-button {
@@ -355,9 +355,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 }
 
 .discover-category-filter-button.is-open {
-  border-color: #fff;
-  background: #fff;
-  color: #111;
+  border-color: currentColor;
+  background: transparent;
+  color: inherit;
 }
 
 .discover-category-filter-button:focus-visible {
@@ -377,32 +377,19 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   border-right: 1.5px solid currentColor;
   border-bottom: 1.5px solid currentColor;
   transform: translateY(-2px) rotate(45deg);
-  transition: transform 150ms ease;
-}
-
-.discover-category-filter-button.is-open
-  .discover-category-filter-chevron {
-  transform: translateY(2px) rotate(225deg);
 }
 
 .discover-category-filter-panel {
   display: flex;
-  width: min(calc(100% - 80px), 1320px);
-  max-height: 132px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  width: min(calc(100% - 120px), 1640px);
+  overflow: visible;
   flex-wrap: wrap;
   align-content: flex-start;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 18px;
-  padding: 0 10px 2px;
-  scrollbar-width: none;
-}
-
-.discover-category-filter-panel::-webkit-scrollbar {
-  display: none;
+  margin-top: 42px;
+  padding: 0 20px 2px;
 }
 
 .discover-category-filter-pill {
@@ -519,9 +506,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-filter-button.is-open {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  border-color: var(--border-hover);
+  background: transparent;
+  color: var(--text-primary);
 }
 
 :where(html.light, html[data-theme="light"])
@@ -601,14 +588,14 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
   .discover-template-shell.is-discover-route .discover-integrated-hero {
     align-items: center;
-    padding-top: calc(var(--filmwave-header-height, 75px) + 28px);
+    padding-top: calc(var(--filmwave-header-height, 75px) + 20px);
   }
 
   .discover-category-search {
     width: calc(100% - 40px);
     height: 58px;
     grid-template-columns: minmax(0, 1fr) 52px;
-    border-radius: 23px;
+    border-radius: 29px;
   }
 
   .discover-category-search input {
@@ -624,16 +611,18 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   }
 
   .discover-category-browser {
-    margin-top: 30px;
+    margin-top: 52px;
   }
 
   .discover-category-browser h2 {
+    width: calc(100% - 40px);
     font-size: 18px;
+    line-height: 1.3;
   }
 
   .discover-category-filter-controls {
     gap: 7px;
-    margin-top: 18px;
+    margin-top: 22px;
   }
 
   .discover-category-filter-button {
@@ -647,10 +636,16 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   .discover-category-filter-panel {
     width: calc(100% - 32px);
     max-height: 180px;
+    overflow-y: auto;
     gap: 7px;
-    margin-top: 15px;
+    margin-top: 28px;
     padding-right: 4px;
     padding-left: 4px;
+    scrollbar-width: none;
+  }
+
+  .discover-category-filter-panel::-webkit-scrollbar {
+    display: none;
   }
 
   .discover-category-filter-pill {
