@@ -1,10 +1,8 @@
 "use client";
 
 import {
-  GENRE_OPTIONS,
   MOOD_OPTIONS,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
-  REGION_OPTIONS,
 } from "@filmwave/shared";
 import { useAuth } from "@clerk/nextjs";
 import { type FormEvent, useState } from "react";
@@ -18,16 +16,6 @@ type DiscoverCuratedHeroCopyProps = {
 
 type DiscoverFilterKey = "mood" | "genre" | "region";
 type DiscoverFilterSelections = Record<DiscoverFilterKey, string[]>;
-
-const DISCOVER_FILTER_GROUPS = [
-  { id: "mood", label: "Scene Mood", options: MOOD_OPTIONS },
-  { id: "genre", label: "Genre", options: GENRE_OPTIONS },
-  { id: "region", label: "Region", options: REGION_OPTIONS },
-] satisfies readonly {
-  id: DiscoverFilterKey;
-  label: string;
-  options: readonly string[];
-}[];
 
 const EMPTY_DISCOVER_FILTERS: DiscoverFilterSelections = {
   mood: [],
@@ -55,8 +43,6 @@ export default function DiscoverCuratedHeroCopy({
   const router = useRouter();
   const { userId } = useAuth();
   const [search, setSearch] = useState("");
-  const [activeFilter, setActiveFilter] =
-    useState<DiscoverFilterKey>("mood");
   const [selectedFilters, setSelectedFilters] =
     useState<DiscoverFilterSelections>(EMPTY_DISCOVER_FILTERS);
 
@@ -140,6 +126,57 @@ export default function DiscoverCuratedHeroCopy({
         :where(html:not(.light):not([data-theme="light"]))
           .discover-category-search button:focus-visible {
           background: var(--discover-search-arrow-background-hover);
+        }
+
+        .discover-mood-browser {
+          display: flex;
+          width: 100%;
+          flex-direction: column;
+          align-items: center;
+          pointer-events: auto;
+        }
+
+        .discover-category-description {
+          width: min(calc(100% - 40px), 420px);
+          margin: 56px 0 20px;
+          color: var(--text-primary);
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: clamp(17px, 1.15vw, 22px);
+          font-weight: 300;
+          letter-spacing: -0.025em;
+          line-height: 1.35;
+          text-align: center;
+        }
+
+        .discover-mood-pill-list {
+          display: flex;
+          width: min(calc(100% - 80px), 1320px);
+          overflow: visible;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 0 10px 2px;
+        }
+
+        @media (max-width: 980px) {
+          .discover-mood-pill-list {
+            width: calc(100% - 64px);
+          }
+        }
+
+        @media (max-width: 720px) {
+          .discover-category-description {
+            width: calc(100% - 40px);
+            font-size: 18px;
+          }
+
+          .discover-mood-pill-list {
+            width: calc(100% - 32px);
+            gap: 7px;
+            padding-right: 4px;
+            padding-left: 4px;
+          }
         }
       `}</style>
 
@@ -368,75 +405,19 @@ export default function DiscoverCuratedHeroCopy({
             </button>
           </form>
 
-          <div className="discover-category-browser">
-            <h2>
+          <div className="discover-mood-browser">
+            <p className="discover-category-description">
               A highly curated library of royalty-free audio and sound effects
               made with intention for filmmakers.
-            </h2>
-
-            <div className="discover-category-filter-controls">
-              {DISCOVER_FILTER_GROUPS.map((group) => {
-                const isOpen = activeFilter === group.id;
-                const hasSelection = selectedFilters[group.id].length > 0;
-                const panelId = `discover-category-panel-${group.id}`;
-
-                return (
-                  <button
-                    key={group.id}
-                    type="button"
-                    className={`discover-category-filter-button${isOpen ? " is-open" : ""}${hasSelection ? " has-selection" : ""}`}
-                    aria-pressed={isOpen}
-                    aria-controls={panelId}
-                    onClick={() => setActiveFilter(group.id)}
-                  >
-                    <span>{group.label}</span>
-                    <span
-                      className="discover-category-filter-chevron"
-                      aria-hidden="true"
-                    />
-                  </button>
-                );
-              })}
-
-              <button
-                type="button"
-                className="discover-category-filter-button is-future"
-                disabled
-                title="Style filters coming soon"
-              >
-                <span>Style</span>
-                <span
-                  className="discover-category-filter-chevron"
-                  aria-hidden="true"
-                />
-              </button>
-
-              <button
-                type="button"
-                className="discover-category-filter-button is-future"
-                disabled
-                title="SFX filters coming soon"
-              >
-                <span>SFX</span>
-                <span
-                  className="discover-category-filter-chevron"
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
+            </p>
 
             <div
-              id={`discover-category-panel-${activeFilter}`}
-              className="discover-category-filter-panel"
+              className="discover-mood-pill-list"
               role="group"
-              aria-label={`${DISCOVER_FILTER_GROUPS.find((group) => group.id === activeFilter)?.label} filters`}
+              aria-label="Scene Mood filters"
             >
-              {DISCOVER_FILTER_GROUPS.find(
-                (group) => group.id === activeFilter,
-              )?.options.map((option) => {
-                const isSelected = selectedFilters[activeFilter].includes(
-                  option,
-                );
+              {MOOD_OPTIONS.map((option) => {
+                const isSelected = selectedFilters.mood.includes(option);
 
                 return (
                   <button
@@ -444,7 +425,7 @@ export default function DiscoverCuratedHeroCopy({
                     type="button"
                     className={`discover-category-filter-pill${isSelected ? " is-selected" : ""}`}
                     aria-pressed={isSelected}
-                    onClick={() => toggleFilterOption(activeFilter, option)}
+                    onClick={() => toggleFilterOption("mood", option)}
                   >
                     {option}
                   </button>
