@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import SectionTitle from "@/components/SectionTitle";
-import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -253,12 +252,14 @@ export default function CuratedPlaylistShelf({
 
             {viewAllHref && (
               <div className={shelfStyles.portalShell}>
-                <Link href={viewAllHref} className={shelfStyles.portalCard}>
-                  <span className={shelfStyles.portalLabel}>{viewAllLabel}</span>
-                  <span className={shelfStyles.portalArrow} aria-hidden="true">
-                    <ArrowUpRightIcon />
-                  </span>
-                </Link>
+                <article className={cardStyles.card}>
+                  <Link
+                    href={viewAllHref}
+                    className={`${cardStyles.imageLink} ${shelfStyles.portalCard}`}
+                  >
+                    <span className={shelfStyles.portalLabel}>{viewAllLabel}</span>
+                  </Link>
+                </article>
               </div>
             )}
           </div>
