@@ -138,7 +138,7 @@ export default function DiscoverCuratedHeroCopy({
 
         .discover-category-description {
           width: min(calc(100% - 40px), 420px);
-          margin: 56px 0 40px;
+          margin: 65px 0 40px;
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(17px, 1.15vw, 22px);
