@@ -10,10 +10,7 @@
   line-height: 0.98;
 }
 
-.audioflume-home-statement h2 {
-  font-size: 64px;
-}
-
+.audioflume-home-statement h2,
 .audioflume-home-playlist-feature-copy h2,
 .audioflume-editorial-display {
   font-size: 56px;
