@@ -3,6 +3,7 @@ import AudioflumeOutroMount from "@/components/AudioflumeOutroMount";
 import DiscoverHeroVideoLayer from "@/components/DiscoverHeroVideoLayer";
 import CuratedJumpBackIn from "../curated-playlists/CuratedJumpBackIn";
 import DiscoverCuratedHeroCopy from "./DiscoverCuratedHeroCopy";
+import DiscoverRankingRows from "./DiscoverRankingRows";
 import DiscoverReferenceLayout from "./DiscoverReferenceLayout";
 import "../curated-playlists/curated-video-hero.css";
 import "./discover-reference-layout.css";
@@ -22,6 +23,7 @@ export default function DiscoverTemplate({
       className={`discover-template-shell${showHeroLastViewed ? " is-discover-route" : ""}`}
     >
       {children}
+      <DiscoverRankingRows />
       {showHeroLastViewed && (
         <div className="discover-hero-last-viewed">
           <CuratedJumpBackIn inline placement="hero" />
