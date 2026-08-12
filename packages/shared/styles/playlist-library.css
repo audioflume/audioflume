@@ -47,7 +47,7 @@
   width: 100% !important;
   aspect-ratio: 1 / 1 !important;
   overflow: visible !important;
-  border-radius: 12px !important;
+  border-radius: 7px !important;
   background-size: cover !important;
   background-position: center !important;
   isolation: isolate !important;
@@ -63,7 +63,7 @@
   content: "" !important;
   position: absolute !important;
   height: 100% !important;
-  border-radius: 12px !important;
+  border-radius: 7px !important;
   pointer-events: none !important;
 }
 
@@ -196,7 +196,7 @@
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
-  border-radius: 12px !important;
+  border-radius: 7px !important;
   transform: none !important;
   transition: transform 180ms ease !important;
 }
@@ -256,7 +256,7 @@
   align-items: center !important;
   justify-content: center !important;
   border: 1px dashed var(--border) !important;
-  border-radius: 0 !important;
+  border-radius: 7px !important;
   background: var(--filmwave-neutral-surface) !important;
   padding: 16px !important;
   text-align: center !important;
