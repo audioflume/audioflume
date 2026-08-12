@@ -204,16 +204,15 @@ export function drawWaveformBarsToCanvas({
   const safeProgress = Number.isFinite(progress)
     ? Math.max(0, Math.min(1, progress))
     : 0;
-  const progressBars = Math.floor(bars.length * safeProgress);
+  const progressX = width * safeProgress;
   const midY = height / 2;
 
   context.setTransform(dpr, 0, 0, dpr, 0, 0);
   context.clearRect(0, 0, width, height);
 
+  context.fillStyle = colors.inactiveColor;
   for (let index = 0; index < bars.length; index += 1) {
     const barHeight = bars[index];
-    context.fillStyle =
-      index < progressBars ? colors.progressColor : colors.inactiveColor;
     context.fillRect(
       index * barTotal,
       midY - barHeight / 2,
@@ -221,4 +220,24 @@ export function drawWaveformBarsToCanvas({
       barHeight,
     );
   }
+
+  if (progressX <= 0) return;
+
+  context.save();
+  context.beginPath();
+  context.rect(0, 0, progressX, height);
+  context.clip();
+  context.fillStyle = colors.progressColor;
+
+  for (let index = 0; index < bars.length; index += 1) {
+    const barHeight = bars[index];
+    context.fillRect(
+      index * barTotal,
+      midY - barHeight / 2,
+      barWidth,
+      barHeight,
+    );
+  }
+
+  context.restore();
 }
