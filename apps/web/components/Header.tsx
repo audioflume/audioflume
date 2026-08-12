@@ -471,7 +471,7 @@ export default function Header() {
           z-index: 1 !important;
           box-sizing: border-box !important;
           width: 100% !important;
-          grid-template-columns: max-content minmax(280px, 1fr) !important;
+          grid-template-columns: minmax(280px, 1fr) max-content !important;
           justify-content: stretch !important;
           gap: 44px !important;
           background: var(--bg-primary) !important;
