@@ -168,16 +168,6 @@ const DISCOVER_LAYOUT_STYLE = `
     margin-bottom: 16px;
   }
 
-  .discover-section-header > a {
-    --text-secondary: var(--text-muted);
-    color: var(--text-muted);
-  }
-
-  .discover-section-header > a:hover {
-    --text-secondary: var(--text-primary);
-    color: var(--text-primary);
-  }
-
   .discover-shelf-controls {
     display: inline-flex;
     align-items: center;
