@@ -21,7 +21,7 @@
 
 .recent-playlist-card-list.is-sidebar {
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 20px;
 }
 
 .recent-playlist-card {
