@@ -48,7 +48,6 @@ const PLAYLIST_QUICK_SECTIONS = [
 ];
 
 const HEADER_SCROLL_THRESHOLD = 18;
-const PLAYLISTS_MENU_CLOSE_DELAY = 300;
 
 function formatTrackCount(count?: number | null) {
   const safeCount = Number(count || 0);
@@ -81,7 +80,6 @@ export default function Header() {
     CuratedPlaylistPreview[]
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
-  const playlistsCloseTimeoutRef = useRef<number | null>(null);
   const transparentAtTop = pathname === "/discover";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
@@ -131,20 +129,8 @@ export default function Header() {
   }, [menuOpen]);
 
   useEffect(() => {
-    if (playlistsCloseTimeoutRef.current !== null) {
-      window.clearTimeout(playlistsCloseTimeoutRef.current);
-      playlistsCloseTimeoutRef.current = null;
-    }
     setPlaylistsMenuOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    return () => {
-      if (playlistsCloseTimeoutRef.current !== null) {
-        window.clearTimeout(playlistsCloseTimeoutRef.current);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -204,28 +190,11 @@ export default function Header() {
     setAvatarImageFailed(false);
   }, [avatarImage]);
 
-  function cancelPlaylistsMenuClose() {
-    if (playlistsCloseTimeoutRef.current !== null) {
-      window.clearTimeout(playlistsCloseTimeoutRef.current);
-      playlistsCloseTimeoutRef.current = null;
-    }
-  }
-
   function openPlaylistsMenu() {
-    cancelPlaylistsMenuClose();
     setPlaylistsMenuOpen(true);
   }
 
-  function schedulePlaylistsMenuClose() {
-    cancelPlaylistsMenuClose();
-    playlistsCloseTimeoutRef.current = window.setTimeout(() => {
-      setPlaylistsMenuOpen(false);
-      playlistsCloseTimeoutRef.current = null;
-    }, PLAYLISTS_MENU_CLOSE_DELAY);
-  }
-
   function closePlaylistsMenu() {
-    cancelPlaylistsMenuClose();
     setPlaylistsMenuOpen(false);
   }
 
@@ -641,7 +610,7 @@ export default function Header() {
                       key={link.href}
                       className={`filmwave-header-nav-item filmwave-header-nav-item-playlists${playlistsMenuOpen ? " is-open" : ""}`}
                       onMouseEnter={openPlaylistsMenu}
-                      onMouseLeave={schedulePlaylistsMenuClose}
+                      onMouseLeave={closePlaylistsMenu}
                       onFocus={openPlaylistsMenu}
                       onBlur={(event) => {
                         if (
@@ -667,7 +636,7 @@ export default function Header() {
                         role="menu"
                         aria-label="Playlist navigation"
                         onMouseEnter={openPlaylistsMenu}
-                        onMouseLeave={schedulePlaylistsMenuClose}
+                        onMouseLeave={closePlaylistsMenu}
                       >
                         <div className="filmwave-playlists-mega-inner">
                           <div
