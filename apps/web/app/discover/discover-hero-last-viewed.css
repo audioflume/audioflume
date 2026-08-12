@@ -23,12 +23,12 @@ body:has(.filmwave-music-player)
   );
 }
 
-body:has(.discover-category-filter-panel)
+body:has(.discover-mood-pill-list)
   .discover-template-shell.is-discover-route {
   --discover-integrated-hero-height: clamp(620px, 64svh, 710px);
 }
 
-body:has(.filmwave-music-player):has(.discover-category-filter-panel)
+body:has(.filmwave-music-player):has(.discover-mood-pill-list)
   .discover-template-shell.is-discover-route {
   --discover-integrated-hero-height: clamp(
     620px,
@@ -58,7 +58,7 @@ body:has(.filmwave-music-player)
   );
 }
 
-body:has(.discover-category-filter-panel)
+body:has(.discover-mood-pill-list)
   .discover-template-shell.is-discover-route:not(
     :has(.discover-hero-last-viewed-section)
   ) {
@@ -69,7 +69,7 @@ body:has(.discover-category-filter-panel)
   );
 }
 
-body:has(.filmwave-music-player):has(.discover-category-filter-panel)
+body:has(.filmwave-music-player):has(.discover-mood-pill-list)
   .discover-template-shell.is-discover-route:not(
     :has(.discover-hero-last-viewed-section)
   ) {
@@ -311,12 +311,12 @@ body:has(.discover-page-root)
     );
   }
 
-  body:has(.discover-category-filter-panel)
+  body:has(.discover-mood-pill-list)
     .discover-template-shell.is-discover-route {
     --discover-integrated-hero-height: clamp(690px, 82svh, 810px);
   }
 
-  body:has(.filmwave-music-player):has(.discover-category-filter-panel)
+  body:has(.filmwave-music-player):has(.discover-mood-pill-list)
     .discover-template-shell.is-discover-route {
     --discover-integrated-hero-height: clamp(
       690px,
@@ -346,7 +346,7 @@ body:has(.discover-page-root)
     );
   }
 
-  body:has(.discover-category-filter-panel)
+  body:has(.discover-mood-pill-list)
     .discover-template-shell.is-discover-route:not(
       :has(.discover-hero-last-viewed-section)
     ) {
@@ -357,7 +357,7 @@ body:has(.discover-page-root)
     );
   }
 
-  body:has(.filmwave-music-player):has(.discover-category-filter-panel)
+  body:has(.filmwave-music-player):has(.discover-mood-pill-list)
     .discover-template-shell.is-discover-route:not(
       :has(.discover-hero-last-viewed-section)
     ) {
