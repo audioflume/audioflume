@@ -292,6 +292,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     });
   }, [postPlayerMessage]);
 
+  const claimPlaybackOwnership = useCallback(() => {
+    if (!remoteOwnerTabIdRef.current) return false;
+    remoteOwnerTabIdRef.current = null;
+    setRemotePlayingInAnotherTab(false);
+    postPlayingState();
+    return true;
+  }, [postPlayingState]);
+
   const postPausedState = useCallback(() => {
     postPlayerMessage({
       type: "paused",
@@ -526,11 +534,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }
 
   const safePlay = useCallback(() => {
+    claimPlaybackOwnership();
     const audio = getAudio();
     const current = currentSongRef.current;
     if (!current) return;
     loadSongSource(audio, current, true);
-  }, [loadSongSource]);
+  }, [claimPlaybackOwnership, loadSongSource]);
 
   const safePause = useCallback(() => {
     playRequestIdRef.current += 1;
@@ -581,13 +590,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const playSongDirectly = useCallback(
     (song: Song, shouldPlay?: boolean) => {
       const audio = getAudio();
-      const wasPlaying = shouldPlay !== undefined ? shouldPlay : !audio.paused;
+      const claimedRemotePlayback = claimPlaybackOwnership();
+      const wasPlaying = shouldPlay !== undefined
+        ? shouldPlay
+        : claimedRemotePlayback || !audio.paused;
 
       playRequestIdRef.current += 1;
       pendingSeekRequestIdRef.current += 1;
       pendingPlayAfterManifestRef.current = false;
-      remoteOwnerTabIdRef.current = null;
-      setRemotePlayingInAnotherTab(false);
 
       const previousSong = currentSongRef.current;
       if (previousSong) waveformsRef.current.get(previousSong.id)?.seekTo(0);
@@ -605,7 +615,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       loadSongSource(audio, song, wasPlaying);
     },
-    [emitPlaybackUpdate, loadSongSource, setCurrentTimeState, setDurationState],
+    [claimPlaybackOwnership, emitPlaybackUpdate, loadSongSource, setCurrentTimeState, setDurationState],
   );
 
   playSongDirectlyRef.current = playSongDirectly;
@@ -628,9 +638,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const isSameSong = currentSongRef.current?.id === song.id;
       const seekRequestId = ++pendingSeekRequestIdRef.current;
       const safeProgress = Number.isFinite(progress) ? Math.max(0, Math.min(1, progress)) : 0;
-
-      remoteOwnerTabIdRef.current = null;
-      setRemotePlayingInAnotherTab(false);
+      const claimedRemotePlayback = claimPlaybackOwnership();
+      const shouldContinuePlaying = shouldPlay || claimedRemotePlayback;
 
       if (!isSameSong) {
         playRequestIdRef.current += 1;
@@ -662,12 +671,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setCurrentTimeState(targetTime);
         setDurationState(audio.duration);
 
-        if (!isSameSong || !shouldPlay) {
+        if (!isSameSong || !shouldContinuePlaying) {
           lastStorageWriteTimeRef.current = Date.now();
           writeStoredPlayerState({ currentSong: song, currentTime: targetTime, duration: audio.duration });
         }
 
-        if (shouldPlay) {
+        if (shouldContinuePlaying) {
           if (!audio.paused) { postPlayingState(); } else {
             audio.play().catch((err) => {
               if (!isInterruptedPlayError(err)) console.warn("[Player] play() rejected after seek:", err);
@@ -684,7 +693,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [emitPlaybackUpdate, loadSongSource, postPausedState, postPlayingState, setCurrentTimeState, setDurationState, setIsPlayingState],
+    [claimPlaybackOwnership, emitPlaybackUpdate, loadSongSource, postPausedState, postPlayingState, setCurrentTimeState, setDurationState, setIsPlayingState],
   );
 
   const registerWaveform = useCallback((songId: string, handle: WaveformHandle) => {
@@ -714,7 +723,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       }
 
       const nextSong = queue[nextIdx];
-      const shouldPlay = forcePlay || !audioRef.current?.paused;
+      const shouldPlay =
+        forcePlay ||
+        remoteOwnerTabIdRef.current !== null ||
+        !audioRef.current?.paused;
       playSongDirectly(nextSong, shouldPlay);
       scrollSongCardIntoView(nextSong.id);
     },
