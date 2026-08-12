@@ -110,7 +110,7 @@ function getStoredRecentPlaylistIds() {
       RECENT_COMMUNITY_PLAYLISTS_KEY,
     );
     return storedValue
-      ? parseFavoriteIds(JSON.parse(storedValue)).slice(0, 5)
+      ? parseFavoriteIds(JSON.parse(storedValue)).slice(0, 10)
       : [];
   } catch {
     return [];
@@ -345,7 +345,7 @@ export default function CommunityPlaylistsPage() {
         .filter(
           (playlist): playlist is CommunityPlaylist => Boolean(playlist),
         )
-        .slice(0, 5),
+        .slice(0, 10),
     [playlists, recentPlaylistIds],
   );
 
@@ -843,7 +843,7 @@ export default function CommunityPlaylistsPage() {
               <HeaderSearchBar
                 renderForm={false}
                 searchValue={query}
-                searchPlaceholder="Search community playlists..."
+                searchPlaceholder="Search playlists"
                 searchAriaLabel="Search community playlists"
                 clearAriaLabel="Clear community playlist search"
                 onSearchChange={setQuery}
