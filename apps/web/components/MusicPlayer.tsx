@@ -32,7 +32,14 @@ import {
   getSongCuePointMarkers,
 } from "@/lib/editPointUtils";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 const BAR_WIDTH = 2;
 const BAR_GAP = 1;
@@ -328,7 +335,7 @@ export default function MusicPlayer() {
     [drawPlayerCanvas],
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     waveformBarsRef.current = waveformBars;
     waveformProgressRef.current = progress;
     schedulePlayerCanvasDraw();
