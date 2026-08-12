@@ -275,6 +275,10 @@
     clamp(64px, 6.5vw, 102px);
 }
 
+body:has(.filmwave-music-player) .audioflume-home-statement {
+  min-height: calc(100svh - 72px);
+}
+
 .audioflume-home-statement-copy h2 {
   max-width: 660px;
 }
