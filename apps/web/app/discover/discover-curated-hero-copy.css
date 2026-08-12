@@ -307,6 +307,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 }
 
 .discover-category-browser h2 {
+  width: min(calc(100% - 40px), 420px);
   margin: 0;
   color: #fff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
