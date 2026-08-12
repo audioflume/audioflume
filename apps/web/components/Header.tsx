@@ -70,7 +70,7 @@ function playlistNavIsActive(pathname: string | null, href: string) {
 }
 
 export default function Header() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
@@ -256,6 +256,85 @@ export default function Header() {
             color 180ms ease !important;
         }
 
+        .filmwave-web-header .filmwave-header-inner {
+          justify-content: flex-start !important;
+        }
+
+        .filmwave-web-header .filmwave-header-drag-surface {
+          min-width: 38px !important;
+          flex: 0 0 38px !important;
+        }
+
+        .filmwave-web-header .filmwave-header-actions {
+          min-width: 0 !important;
+          flex: 1 1 auto !important;
+          gap: 0 !important;
+        }
+
+        .filmwave-web-header .filmwave-header-nav {
+          gap: 18px !important;
+        }
+
+        .filmwave-web-header .filmwave-header-nav-link {
+          padding-right: 8px !important;
+          padding-left: 8px !important;
+        }
+
+        .filmwave-header-right-actions {
+          display: inline-flex;
+          height: 100%;
+          flex: 0 0 auto;
+          align-items: center;
+          gap: 34px;
+          margin-left: auto;
+        }
+
+        .filmwave-header-utility-link {
+          display: inline-flex;
+          height: var(--filmwave-header-nav-height);
+          align-items: center;
+          color: inherit;
+          font-family: inherit;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1;
+          text-decoration: none;
+          white-space: nowrap;
+          transition: opacity 150ms ease;
+        }
+
+        .filmwave-header-utility-link:hover,
+        .filmwave-header-utility-link:focus-visible {
+          opacity: 0.65;
+        }
+
+        .filmwave-header-create-account {
+          display: inline-flex;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          background: var(--text-primary);
+          color: var(--bg-primary);
+          padding: 0 18px;
+          font-family: inherit;
+          font-size: 11px;
+          font-weight: 500;
+          line-height: 1;
+          text-decoration: none;
+          white-space: nowrap;
+          transition: opacity 150ms ease;
+        }
+
+        .filmwave-header-create-account:hover,
+        .filmwave-header-create-account:focus-visible {
+          opacity: 0.82;
+        }
+
+        .filmwave-header-account-wrap {
+          display: inline-flex;
+          align-items: center;
+        }
+
         .filmwave-web-header.is-transparent {
           --filmwave-chrome-surface: transparent;
           border-bottom-color: rgba(255, 255, 255, 0.12) !important;
@@ -272,6 +351,11 @@ export default function Header() {
 
         .filmwave-web-header.is-transparent .filmwave-header-nav-link {
           color: #fff !important;
+        }
+
+        .filmwave-web-header.is-transparent .filmwave-header-create-account {
+          background: #fff;
+          color: #111;
         }
 
         .filmwave-web-header.is-transparent:hover
@@ -516,6 +600,19 @@ export default function Header() {
             align-self: start !important;
             transform: none !important;
           }
+
+          .filmwave-web-header .filmwave-header-drag-surface {
+            min-width: 20px !important;
+            flex-basis: 20px !important;
+          }
+
+          .filmwave-web-header .filmwave-header-nav {
+            gap: 8px !important;
+          }
+
+          .filmwave-header-right-actions {
+            gap: 18px;
+          }
         }
       `}</style>
 
@@ -686,39 +783,69 @@ export default function Header() {
               })}
             </nav>
 
-            <div className="filmwave-header-account-wrap" ref={menuRef}>
-              <button
-                type="button"
-                onClick={() => setMenuOpen((prev) => !prev)}
-                className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
-                aria-label="Open user menu"
-                aria-expanded={menuOpen}
-              >
-                <span
-                  className="filmwave-header-avatar"
-                  style={{
-                    backgroundColor:
-                      avatarImage && !avatarImageFailed ? undefined : "#808080",
-                  }}
+            {isLoaded && (
+              <div className="filmwave-header-right-actions">
+                <a
+                  href="mailto:hello@filmwave.io"
+                  className="filmwave-header-utility-link"
                 >
-                  {avatarImage && !avatarImageFailed ? (
-                    <img
-                      src={avatarImage}
-                      alt="Profile"
-                      onError={() => setAvatarImageFailed(true)}
-                    />
-                  ) : (
-                    initials
-                  )}
-                </span>
-              </button>
+                  Need Enterprise?
+                </a>
 
-              {menuOpen && (
-                <div className="filmwave-header-menu-wrap">
-                  <UserMenu onClose={() => setMenuOpen(false)} />
-                </div>
-              )}
-            </div>
+                {user ? (
+                  <>
+                    <Link href="/account" className="filmwave-header-utility-link">
+                      My Account
+                    </Link>
+
+                    <div className="filmwave-header-account-wrap" ref={menuRef}>
+                      <button
+                        type="button"
+                        onClick={() => setMenuOpen((prev) => !prev)}
+                        className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
+                        aria-label="Open user menu"
+                        aria-expanded={menuOpen}
+                      >
+                        <span
+                          className="filmwave-header-avatar"
+                          style={{
+                            backgroundColor:
+                              avatarImage && !avatarImageFailed
+                                ? undefined
+                                : "#808080",
+                          }}
+                        >
+                          {avatarImage && !avatarImageFailed ? (
+                            <img
+                              src={avatarImage}
+                              alt="Profile"
+                              onError={() => setAvatarImageFailed(true)}
+                            />
+                          ) : (
+                            initials
+                          )}
+                        </span>
+                      </button>
+
+                      {menuOpen && (
+                        <div className="filmwave-header-menu-wrap">
+                          <UserMenu onClose={() => setMenuOpen(false)} />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/sign-in" className="filmwave-header-utility-link">
+                      Login
+                    </Link>
+                    <Link href="/sign-up" className="filmwave-header-create-account">
+                      Create Free Account
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
           </>
         }
       />
