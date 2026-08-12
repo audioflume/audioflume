@@ -1,6 +1,5 @@
 "use client";
 
-import { MusicListShell } from "@filmwave/shared";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,7 +15,6 @@ import {
 
 import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
-import SongCard from "@/components/SongCard";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -34,7 +32,6 @@ import CuratedJumpBackIn from "../curated-playlists/CuratedJumpBackIn";
 
 import "../music/music-library-redesign.css";
 
-const NEW_SONG_COUNT = 10;
 const READY_TO_CUT_SONG_COUNT = 12;
 const HERO_BACKGROUND_IMAGE =
   "https://images.filmwave.io/images/discover/b7cb4a48-bd82-44d1-b02e-c104dac45339-gigapixel-low%20resolution%20v2-2x.jpeg";
@@ -451,52 +448,6 @@ function DiscoverPlaylistShelf({
   );
 }
 
-function DiscoverSongs({
-  songs,
-  loading,
-}: {
-  songs: ReturnType<typeof useSongs>["songs"];
-  loading: boolean;
-}) {
-  if (!loading && songs.length === 0) return null;
-
-  return (
-    <section className="discover-section discover-song-section">
-      <div className="discover-section-header">
-        <SectionTitle>Newly Added Tracks</SectionTitle>
-
-        <Link
-          href="/music"
-          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-        >
-          Explore music library
-        </Link>
-      </div>
-
-      <MusicListShell title={null}>
-        {loading
-          ? Array.from({ length: 6 }).map((_, index) => (
-              <div
-                key={index}
-                className="discover-song-skeleton discover-card-skeleton"
-                aria-hidden="true"
-              />
-            ))
-          : songs.map((song) => <SongCard key={song.id} song={song} />)}
-      </MusicListShell>
-
-      <div className="mt-5 flex justify-center">
-        <Link
-          href="/music"
-          className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--bg-elevated)] px-10 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
-        >
-          Explore music library
-        </Link>
-      </div>
-    </section>
-  );
-}
-
 function DiscoverProductionStyleCard({
   playlist,
 }: {
@@ -822,7 +773,6 @@ export default function DiscoverPage() {
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
   );
-  const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
   const readyToCutSongs = playableSongs.slice(0, READY_TO_CUT_SONG_COUNT);
   const playerVisible = Boolean(currentSong);
 
@@ -844,7 +794,6 @@ export default function DiscoverPage() {
           playlists={curatedPlaylists}
           loading={playlistsLoading}
         />
-        <DiscoverSongs songs={recentSongs} loading={songsLoading} />
         <DiscoverProductionStyles
           playlists={productionBlocks}
           loading={playlistsLoading}

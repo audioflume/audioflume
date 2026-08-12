@@ -179,10 +179,22 @@ body:has(.discover-page-root) .discover-content {
   padding: 0 var(--discover-editorial-gutter);
 }
 
-body:has(.discover-page-root) .discover-content > .discover-section:not(.discover-mood-section) {
+body:has(.discover-page-root)
+  .discover-content
+  > .discover-section:not(.discover-mood-section):not(.discover-production-section):not(.discover-staff-favorites-section):not(.discover-ready-to-cut-section) {
   width: 100%;
   margin-right: 0;
   margin-left: 0;
+}
+
+body:has(.discover-page-root) .discover-content > .discover-production-section,
+body:has(.discover-page-root) .discover-content > .discover-staff-favorites-section,
+body:has(.discover-page-root) .discover-content > .discover-ready-to-cut-section {
+  width: calc(
+    100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+  );
+  margin-right: 0;
+  margin-left: calc(50% - 50vw + var(--filmwave-page-gutter));
 }
 
 body:has(.discover-page-root) .discover-mood-section {
