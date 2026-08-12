@@ -277,6 +277,7 @@
 
 body:has(.filmwave-music-player) .audioflume-home-statement {
   min-height: calc(100svh - 72px);
+  padding-bottom: clamp(42px, 4.6vw, 70px);
 }
 
 .audioflume-home-statement-copy h2 {
