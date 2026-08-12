@@ -429,8 +429,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-category-filter-pill:hover,
 .discover-category-filter-pill:focus-visible {
-  border-color: rgba(255, 255, 255, 0.3);
-  color: #fff;
+  border-color: transparent;
+  background: #fff;
+  color: #111;
 }
 
 .discover-category-filter-pill.is-selected {
@@ -538,8 +539,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-filter-pill:focus-visible {
-  border-color: var(--border-strong);
-  color: var(--text-primary);
+  border-color: transparent;
+  background: #0d0d0d;
+  color: #fff;
 }
 
 :where(html.light, html[data-theme="light"])
