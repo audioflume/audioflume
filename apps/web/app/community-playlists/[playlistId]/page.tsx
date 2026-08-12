@@ -122,7 +122,7 @@ function storeRecentPlaylist(playlistId: number) {
     ...getStoredRecentPlaylistIds().filter(
       (storedPlaylistId) => storedPlaylistId !== playlistId,
     ),
-  ].slice(0, 5);
+  ].slice(0, 10);
 
   try {
     window.localStorage.setItem(
