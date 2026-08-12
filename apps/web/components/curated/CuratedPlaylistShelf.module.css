@@ -45,6 +45,61 @@
   padding-left: var(--filmwave-page-gutter);
 }
 
+.portalShell {
+  width: var(--filmwave-curated-shelf-card-width);
+  min-width: 0;
+  flex: 0 0 var(--filmwave-curated-shelf-card-width);
+}
+
+.portalCard {
+  position: relative;
+  display: flex;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  align-items: flex-end;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--filmwave-neutral-surface, var(--bg-secondary));
+  color: var(--text-primary);
+  text-decoration: none;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.portalCard:hover,
+.portalCard:focus-visible {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  outline: none;
+}
+
+.portalLabel {
+  max-width: calc(100% - 48px);
+  font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(16px, 1.35vw, 20px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.portalArrow {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
 @media (max-width: 900px) {
   .shelf {
     --filmwave-curated-shelf-card-width: calc(
