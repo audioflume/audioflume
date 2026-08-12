@@ -52,6 +52,12 @@
 }
 
 .portalCard {
+  --curated-card-arrow-circle-background: transparent;
+  --curated-card-arrow-circle-border: #111;
+  --curated-card-arrow-icon: #111;
+  --curated-card-arrow-hover-background: transparent;
+  --curated-card-arrow-hover-border: #111;
+  --curated-card-arrow-hover-icon: #111;
   position: relative;
   display: flex;
   width: 100%;
@@ -60,23 +66,8 @@
   padding: 20px;
   overflow: hidden;
   border-radius: 7px;
-  background: linear-gradient(
-    135deg,
-    color-mix(
-        in srgb,
-        var(--filmwave-neutral-surface, var(--bg-secondary)) 98%,
-        var(--text-primary) 2%
-      )
-      0%,
-    var(--filmwave-neutral-surface, var(--bg-secondary)) 48%,
-    color-mix(
-        in srgb,
-        var(--filmwave-neutral-surface, var(--bg-secondary)) 90%,
-        var(--text-primary) 10%
-      )
-      100%
-  );
-  color: var(--text-primary);
+  background: linear-gradient(45deg, #b6b6b6 0%, #f4f4f4 100%);
+  color: #111;
   text-decoration: none;
 }
 
