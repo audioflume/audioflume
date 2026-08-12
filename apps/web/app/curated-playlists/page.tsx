@@ -364,9 +364,6 @@ export default function CuratedPlaylistsPage() {
             aria-labelledby="curated-page-heading"
           >
             <div>
-              <span className="audioflume-editorial-eyebrow">
-                Human Curated Playlists
-              </span>
               <h1
                 id="curated-page-heading"
                 className="audioflume-editorial-display max-w-[660px]"
