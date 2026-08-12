@@ -275,9 +275,14 @@
     clamp(64px, 6.5vw, 102px);
 }
 
-body:has(.filmwave-music-player) .audioflume-home-statement {
-  min-height: calc(100svh - 72px);
-  padding-bottom: clamp(42px, 4.6vw, 70px);
+@media (min-width: 821px) {
+  body:has(.filmwave-music-player) .audioflume-home-statement {
+    box-sizing: border-box;
+    height: calc(100dvh - 72px);
+    min-height: calc(100dvh - 72px);
+    padding-top: var(--filmwave-header-height, 75px);
+    padding-bottom: 0;
+  }
 }
 
 .audioflume-home-statement-copy h2 {
