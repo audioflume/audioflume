@@ -28,6 +28,7 @@ import "./music-library-web-layout.css";
 import "../../../packages/shared/styles/header-search-shell.css";
 import "./music-filter-rail-order.css";
 import "../../../packages/shared/styles/music-shared-controls.css";
+import "../../../packages/shared/styles/filter-pill-interactions.css";
 
 const robotoMono = Roboto_Mono({
   subsets: ["latin"],
