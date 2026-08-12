@@ -40,7 +40,7 @@
   margin-left: auto;
 }
 
-/* Shared quick-filter button source for Music and Discover quick filters. */
+/* Shared quick-filter button source for Music and other web quick filters. */
 .fw-quick-chip,
 .filmwave-quick-filter-button {
   box-sizing: border-box !important;
@@ -66,10 +66,15 @@
     color 140ms ease;
 }
 
-.fw-quick-chip:not(.is-selected):not([aria-pressed="true"]):hover,
-.fw-quick-chip:not(.is-selected):not([aria-pressed="true"]):focus-visible,
-.filmwave-quick-filter-button:not(.is-selected):not([aria-pressed="true"]):hover,
-.filmwave-quick-filter-button:not(.is-selected):not([aria-pressed="true"]):focus-visible,
+.fw-quick-chip:hover,
+.filmwave-quick-filter-button:hover {
+  background: var(--bg-control-hover);
+  color: var(--text-primary);
+}
+
+/* Shared inverse hover source for Music filter-column pills and Discover mood pills. */
+.fw-filter-panel .fw-filter-detail .fw-filter-chip:not(.is-selected):not([aria-pressed="true"]):hover,
+.fw-filter-panel .fw-filter-detail .fw-filter-chip:not(.is-selected):not([aria-pressed="true"]):focus-visible,
 .discover-category-filter-pill:not(.is-selected):not([aria-pressed="true"]):hover,
 .discover-category-filter-pill:not(.is-selected):not([aria-pressed="true"]):focus-visible {
   border-color: transparent;
@@ -78,13 +83,9 @@
 }
 
 :where(html.light, html[data-theme="light"])
-  .fw-quick-chip:not(.is-selected):not([aria-pressed="true"]):hover,
+  .fw-filter-panel .fw-filter-detail .fw-filter-chip:not(.is-selected):not([aria-pressed="true"]):hover,
 :where(html.light, html[data-theme="light"])
-  .fw-quick-chip:not(.is-selected):not([aria-pressed="true"]):focus-visible,
-:where(html.light, html[data-theme="light"])
-  .filmwave-quick-filter-button:not(.is-selected):not([aria-pressed="true"]):hover,
-:where(html.light, html[data-theme="light"])
-  .filmwave-quick-filter-button:not(.is-selected):not([aria-pressed="true"]):focus-visible,
+  .fw-filter-panel .fw-filter-detail .fw-filter-chip:not(.is-selected):not([aria-pressed="true"]):focus-visible,
 :where(html.light, html[data-theme="light"])
   .discover-category-filter-pill:not(.is-selected):not([aria-pressed="true"]):hover,
 :where(html.light, html[data-theme="light"])
