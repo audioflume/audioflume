@@ -239,11 +239,23 @@ body:has(.discover-page-root) .discover-section-header {
 
 body:has(.discover-page-root) .discover-section-header a,
 body:has(.discover-page-root) .discover-section-header p {
-  color: var(--text-secondary) !important;
   font-family: var(--font-roboto-mono-filmwave), monospace !important;
   font-size: clamp(9px, 0.65vw, 11px) !important;
   font-weight: 400 !important;
   text-transform: uppercase;
+}
+
+body:has(.discover-page-root) .discover-section-header a {
+  color: var(--text-muted) !important;
+  transition: color 150ms ease;
+}
+
+body:has(.discover-page-root) .discover-section-header a:hover {
+  color: var(--text-primary) !important;
+}
+
+body:has(.discover-page-root) .discover-section-header p {
+  color: var(--text-secondary) !important;
 }
 
 body:has(.discover-page-root) .discover-reference-outro-mount {
