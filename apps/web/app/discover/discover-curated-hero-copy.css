@@ -409,14 +409,14 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 .discover-category-filter-pill {
   box-sizing: border-box;
   display: inline-flex;
-  height: 32px;
-  min-height: 32px;
+  height: 32px !important;
+  min-height: 32px !important;
   align-items: center;
   justify-content: center;
   padding: 0 10px;
   cursor: pointer;
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: 999px !important;
   background: var(--filmwave-neutral-surface);
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -641,7 +641,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   }
 
   .discover-category-filter-pill {
-    min-height: 32px;
+    min-height: 32px !important;
     padding-right: 10px;
     padding-left: 10px;
     font-size: 11px;
