@@ -79,18 +79,22 @@ export default function DiscoverCuratedHeroCopy({
     );
   }
 
-  function toggleFilterOption(filter: DiscoverFilterKey, option: string) {
-    setSelectedFilters((current) => {
-      const currentValues = current[filter];
-      const nextValues = currentValues.includes(option)
-        ? currentValues.filter((value) => value !== option)
-        : [...currentValues, option];
+  function handleMoodFilterClick(option: string) {
+    if (userId) {
+      const storageKey = `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${userId}`;
+      const storedFilters = readStoredFilters(storageKey);
 
-      return {
-        ...current,
-        [filter]: nextValues,
-      };
-    });
+      window.sessionStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          ...storedFilters,
+          search: "",
+          selectedMoods: [option],
+        }),
+      );
+    }
+
+    router.push("/music");
   }
 
   return (
@@ -416,21 +420,16 @@ export default function DiscoverCuratedHeroCopy({
               role="group"
               aria-label="Scene Mood filters"
             >
-              {MOOD_OPTIONS.map((option) => {
-                const isSelected = selectedFilters.mood.includes(option);
-
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    className={`discover-category-filter-pill${isSelected ? " is-selected" : ""}`}
-                    aria-pressed={isSelected}
-                    onClick={() => toggleFilterOption("mood", option)}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
+              {MOOD_OPTIONS.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className="discover-category-filter-pill"
+                  onClick={() => handleMoodFilterClick(option)}
+                >
+                  {option}
+                </button>
+              ))}
             </div>
           </div>
         </div>
