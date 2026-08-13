@@ -204,14 +204,14 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) .curated-feature-filter-pill {
     display: inline-flex;
     min-width: 0;
-    height: 45px;
+    height: 32px;
     align-items: center;
     justify-content: center;
     gap: 6px;
     overflow: hidden;
     cursor: pointer;
     border: 1px solid var(--filmwave-browse-filter-border-color);
-    border-radius: 7px;
+    border-radius: 999px;
     background: transparent;
     color: var(--text-primary);
     padding: 0 10px;
