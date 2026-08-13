@@ -75,6 +75,13 @@
   overflow: hidden;
   border-radius: 7px;
   background: var(--bg-secondary);
+  filter: grayscale(1);
+  transition: filter 300ms ease;
+}
+
+.card:hover .image,
+.card:focus-within .image {
+  filter: grayscale(0);
 }
 
 .media {
