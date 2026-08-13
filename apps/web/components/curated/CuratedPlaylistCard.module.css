@@ -73,7 +73,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 7px;
+  border-radius: 0;
   background: var(--bg-secondary);
   filter: grayscale(1);
   transition: filter 300ms ease;
