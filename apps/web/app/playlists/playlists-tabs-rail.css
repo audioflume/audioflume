@@ -394,6 +394,10 @@ section.curated-playlists-page-layer section.mt-10 h2 {
   letter-spacing: -.025em !important;
 }
 
+.playlists-page .playlist-gallery-art {
+  border-radius: 0 !important;
+}
+
 .playlists-page .playlist-gallery-art::before,
 .playlists-page .playlist-gallery-art::after,
 .playlists-page .playlist-gallery-art-layer {
@@ -410,6 +414,7 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 }
 
 .playlists-page .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image) {
+  border-radius: 0 !important;
   box-shadow: none !important;
 }
 
