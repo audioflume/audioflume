@@ -77,14 +77,12 @@
 
 .audioflume-home-hero-media {
   position: relative;
-  width: calc(
-    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-  );
-  max-width: var(--filmwave-editorial-max-width);
+  width: 100%;
+  max-width: none;
   height: clamp(350px, 40vw, 560px);
-  margin: 0 auto;
+  margin: 0;
   overflow: hidden;
-  border-radius: 7px;
+  border-radius: 0;
   background: url("https://images.filmwave.io/images/home/kyle-loftus-FtQE89f3EXA-unsplash.jpg") center center / cover no-repeat;
   isolation: isolate;
 }
