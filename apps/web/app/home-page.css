@@ -307,7 +307,7 @@
 .audioflume-home-collage-item {
   position: absolute;
   overflow: hidden;
-  border-radius: 7px;
+  border-radius: 0;
   background: var(--bg-secondary);
 }
 
@@ -392,7 +392,7 @@
   width: 86%;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  border-radius: 7px;
+  border-radius: 0;
   background: var(--bg-secondary);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
 }
