@@ -42,7 +42,7 @@ body:has(.filmwave-music-player) .fw-song-list {
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
-  --filmwave-side-filter-divider-color: color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent);
+  --filmwave-side-filter-divider-color: var(--filmwave-border-color);
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail {
@@ -161,7 +161,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
+  border: 1px solid var(--filmwave-border-color) !important;
   border-radius: 0 !important;
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
@@ -186,7 +186,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 .fw-toolbar-header-actions .fw-music-header-action.is-active,
 .fw-toolbar-header-actions .filmwave-music-sort-button:hover,
 .fw-toolbar-header-actions .filmwave-music-sort-button.is-open {
-  border-color: var(--border-hover) !important;
+  border-color: var(--filmwave-border-color) !important;
   background: var(--bg-hover) !important;
   background-color: var(--bg-hover) !important;
   color: var(--text-primary) !important;
@@ -245,7 +245,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   width: auto !important;
   height: 42px !important;
   margin-right: 0 !important;
-  border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
+  border: 1px solid var(--filmwave-border-color) !important;
   border-radius: 0 !important;
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
