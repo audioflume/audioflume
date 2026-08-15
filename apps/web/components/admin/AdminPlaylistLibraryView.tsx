@@ -483,46 +483,6 @@ export default function AdminPlaylistLibraryView({
   return (
     <>
       <section>
-        <div className="mb-5 flex items-end justify-between gap-6">
-          <div>
-            <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
-              All Playlists
-            </h2>
-            <p className="mt-1 text-xs text-[var(--text-secondary)]">
-              {masterPlaylists.length} playlist{masterPlaylists.length === 1 ? "" : "s"} · Master library
-            </p>
-          </div>
-
-          <Link
-            href="/admin/playlist-manager/new"
-            className={primaryPillButtonClass}
-          >
-            <PlusIcon size={13} />
-            <span>New Playlist</span>
-          </Link>
-        </div>
-
-        {masterPlaylists.length === 0 ? (
-          <div className="flex min-h-[180px] items-center justify-center border border-[var(--border)] text-sm text-[var(--text-secondary)]">
-            No playlists yet.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {masterPlaylists.map((playlist) => (
-              <MasterPlaylistCard
-                key={playlist.id}
-                playlist={playlist}
-                openMenuId={openMenuId}
-                setOpenMenuId={setOpenMenuId}
-                deletingId={deletingId}
-                onDeletePlaylist={onDeletePlaylist}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="mt-16 border-t border-[var(--border)] pt-10">
         <div className="mb-8">
           <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
             Curated Shelves
@@ -636,6 +596,46 @@ export default function AdminPlaylistLibraryView({
             },
           )}
         </div>
+      </section>
+
+      <section className="mt-16 border-t border-[var(--border)] pt-10">
+        <div className="mb-5 flex items-end justify-between gap-6">
+          <div>
+            <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
+              All Playlists
+            </h2>
+            <p className="mt-1 text-xs text-[var(--text-secondary)]">
+              {masterPlaylists.length} playlist{masterPlaylists.length === 1 ? "" : "s"} · Master library
+            </p>
+          </div>
+
+          <Link
+            href="/admin/playlist-manager/new"
+            className={primaryPillButtonClass}
+          >
+            <PlusIcon size={13} />
+            <span>New Playlist</span>
+          </Link>
+        </div>
+
+        {masterPlaylists.length === 0 ? (
+          <div className="flex min-h-[180px] items-center justify-center border border-[var(--border)] text-sm text-[var(--text-secondary)]">
+            No playlists yet.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            {masterPlaylists.map((playlist) => (
+              <MasterPlaylistCard
+                key={playlist.id}
+                playlist={playlist}
+                openMenuId={openMenuId}
+                setOpenMenuId={setOpenMenuId}
+                deletingId={deletingId}
+                onDeletePlaylist={onDeletePlaylist}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {pickerShelf && (
