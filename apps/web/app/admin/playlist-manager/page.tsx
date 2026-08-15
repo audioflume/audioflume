@@ -101,7 +101,7 @@ export default function PlaylistManagerPage() {
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
       contentAreaBottomPadding={false}
     >
-      <div className="mb-7 flex items-center justify-between gap-4">
+      <div className="mb-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           {(["playlists", "curated", "discover"] as ManagerTab[]).map((tab) => (
             <button
