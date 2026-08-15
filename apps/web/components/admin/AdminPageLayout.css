@@ -59,8 +59,94 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   color: var(--filmwave-black);
 }
 
+/* Song Upload follows the Music Library / Playlist Manager admin language. */
+.admin-song-upload-content-page .admin-song-form-card {
+  border-radius: 10px;
+  background: var(--bg-primary);
+}
+
+.admin-song-upload-content-page .admin-song-form-card-header {
+  min-height: 52px;
+  padding: 0 20px;
+  background: var(--filmwave-neutral-surface);
+}
+
+.admin-song-upload-content-page .admin-song-form-kicker {
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.admin-song-upload-content-page .admin-song-form-icon-btn {
+  border-radius: 7px;
+}
+
+.admin-song-upload-content-page .admin-song-form-icon-btn:hover,
+.admin-song-upload-content-page .admin-song-form-icon-btn.is-open {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.admin-song-upload-content-page .admin-song-file-row {
+  grid-template-columns: 145px minmax(0, 1fr) auto;
+  padding: 14px 20px;
+}
+
+.admin-song-upload-content-page
+  .admin-song-form-card
+  > [class~="p-4"] {
+  padding: 20px;
+}
+
+.admin-song-upload-content-page form :is(
+  input:not([type="file"]),
+  select,
+  textarea
+),
+.admin-song-upload-content-page form :is(
+  [class~="rounded-md"],
+  [class~="rounded-lg"]
+) {
+  border-radius: 7px;
+}
+
+.admin-song-upload-content-page form label[class~="h-9"] {
+  height: 40px;
+  border-radius: 7px;
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row
+  > div:nth-child(2)
+  > div[class~="h-9"] {
+  height: 40px;
+  border-radius: 7px;
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row
+  button[class~="rounded-full"] {
+  height: 28px;
+  border-radius: 7px;
+  font-weight: 500;
+}
+
+.admin-song-upload-content-page
+  form
+  > aside
+  > .admin-song-form-card:last-child
+  > div:last-child
+  > button {
+  height: 44px;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /* Source-owned admin page corner system */
-.filmwave-admin-content-page :is(
+.filmwave-admin-content-page:not(.admin-song-upload-content-page) :is(
   [class~="rounded"],
   [class~="rounded-sm"],
   [class~="rounded-md"],
@@ -73,9 +159,11 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   [class~="rounded-[14px]"],
   [class~="rounded-[18px]"]
 ),
-main:has(.admin-song-form-card) .admin-song-form-card,
-main:has(.admin-song-form-card) .admin-song-form-icon-btn,
-main:has(.admin-song-form-card) form :is(
+main:has(.admin-song-form-card):not(.admin-song-upload-content-page)
+  .admin-song-form-card,
+main:has(.admin-song-form-card):not(.admin-song-upload-content-page)
+  .admin-song-form-icon-btn,
+main:has(.admin-song-form-card):not(.admin-song-upload-content-page) form :is(
   [class~="rounded"],
   [class~="rounded-sm"],
   [class~="rounded-md"],
