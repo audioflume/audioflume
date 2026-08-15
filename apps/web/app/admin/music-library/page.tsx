@@ -14,10 +14,7 @@ import UploadIcon from "@/components/icons/UploadIcon";
 import XIcon from "@/components/icons/XIcon";
 import AdminSongRow from "@/components/admin/AdminSongRow";
 import Toast from "@/components/Toast";
-import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-} from "@/components/uiClasses";
+import { primaryPillButtonClass } from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import { songHasIssue } from "@/lib/songHealth";
 
@@ -59,7 +56,7 @@ const STATUS_BACKGROUNDS = {
 function StatusIcon({ status }: { status: HealthStatus }) {
   return (
     <div
-      className="flex h-7 w-7 items-center justify-center rounded-md"
+      className="flex h-8 w-8 items-center justify-center rounded-full"
       style={{
         backgroundColor: STATUS_BACKGROUNDS[status],
         color: STATUS_COLORS[status],
@@ -74,7 +71,7 @@ function StatusIcon({ status }: { status: HealthStatus }) {
 
 function HealthIconSkeleton() {
   return (
-    <div className="h-7 w-7 animate-pulse rounded-md bg-[var(--bg-tertiary)]" />
+    <div className="h-8 w-8 animate-pulse rounded-full bg-[var(--bg-tertiary)]" />
   );
 }
 
@@ -572,16 +569,6 @@ export default function AdminMusicLibraryPage() {
         .admin-song-select-input:checked + .admin-song-select-box svg {
           opacity: 1;
         }
-
-        .admin-batch-delete-btn {
-          background: var(--danger) !important;
-          color: var(--danger-contrast) !important;
-        }
-
-        .admin-batch-delete-btn:hover {
-          background: var(--danger-hover, var(--danger)) !important;
-          color: var(--danger-contrast) !important;
-        }
       `}</style>
 
       <div
@@ -608,13 +595,13 @@ export default function AdminMusicLibraryPage() {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search"
-                className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
+                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
               />
               {search && (
                 <button
                   type="button"
                   onClick={() => setSearch("")}
-                  className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center bg-transparent text-[var(--text-primary)]"
+                  className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center bg-transparent text-[var(--text-primary)]"
                   aria-label="Clear search"
                 >
                   <XIcon size={12} />
@@ -628,7 +615,7 @@ export default function AdminMusicLibraryPage() {
                   type="button"
                   onClick={handleBatchDelete}
                   disabled={isBatchDeleting}
-                  className={`admin-batch-delete-btn ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-xs font-semibold text-[var(--danger-contrast)] transition-colors hover:bg-[var(--danger-hover)] disabled:opacity-50"
                 >
                   <TrashIcon />
                   {isBatchDeleting
@@ -642,7 +629,7 @@ export default function AdminMusicLibraryPage() {
                   type="button"
                   onClick={clearSelection}
                   disabled={isBatchDeleting}
-                  className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+                  className="inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -650,7 +637,7 @@ export default function AdminMusicLibraryPage() {
                 <button
                   type="button"
                   onClick={() => setFiltersOpen((open) => !open)}
-                  className={`flex h-10 cursor-pointer items-center gap-2 rounded-[7px] border px-4 text-xs font-medium transition-colors ${
+                  className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-xs font-medium transition-colors ${
                     filtersOpen || activeFilterCount > 0
                       ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                       : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -683,10 +670,10 @@ export default function AdminMusicLibraryPage() {
                   )}
 
                   <div>
-                    <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                    <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
                       Library Health
                     </div>
-                    <div className="mt-1 text-xs text-[var(--text-secondary)]">
+                    <div className="mt-1.5 text-xs text-[var(--text-secondary)]">
                       {healthLabel}
                     </div>
                   </div>
@@ -708,7 +695,7 @@ export default function AdminMusicLibraryPage() {
                         key={filter.key}
                         type="button"
                         onClick={() => setIssueFilter(filter.key)}
-                        className={`flex h-8 cursor-pointer items-center gap-2 rounded-full px-3 text-xs font-medium transition ${
+                        className={`flex h-8 items-center gap-2 rounded-full px-3 text-xs font-medium transition ${
                           active
                             ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
                             : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -738,8 +725,8 @@ export default function AdminMusicLibraryPage() {
 
           <div className="mx-5 overflow-hidden rounded-[7px] border border-[var(--border)]">
             <div className="overflow-x-auto overflow-y-hidden">
-              <div className="min-w-[1200px]">
-                <div className="grid h-[42px] grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+              <div className="min-w-[920px]">
+                <div className="grid h-[42px] grid-cols-[28px_60px_minmax(140px,1.2fr)_minmax(110px,0.9fr)_120px_64px_70px_96px_56px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-primary)]">
                   <div className="flex items-center">
                     <label
                       className="admin-song-select-wrap is-visible"
@@ -775,7 +762,7 @@ export default function AdminMusicLibraryPage() {
                     {Array.from({ length: SONGS_PER_PAGE }, (_, index) => (
                       <div
                         key={index}
-                        className="grid min-h-[72px] grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px] items-center gap-3 px-6"
+                        className="grid min-h-[72px] grid-cols-[28px_60px_minmax(140px,1.2fr)_minmax(110px,0.9fr)_120px_64px_70px_96px_56px] items-center gap-3 px-6"
                         style={{
                           borderBottom:
                             index === SONGS_PER_PAGE - 1
@@ -840,6 +827,7 @@ export default function AdminMusicLibraryPage() {
                         statusDisplay="published"
                         size="large"
                         showAddedDate
+                        colorOnlyActions
                       />
                     ))}
                   </div>
@@ -859,7 +847,7 @@ export default function AdminMusicLibraryPage() {
                   type="button"
                   onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
                   disabled={currentPage === 1}
-                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] text-lg leading-none text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-35"
+                  className="flex h-9 w-9 items-center justify-center rounded-[7px] border border-[var(--border)] text-lg leading-none text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-35"
                   aria-label="Previous page"
                 >
                   ‹
@@ -871,7 +859,7 @@ export default function AdminMusicLibraryPage() {
                       key={item}
                       type="button"
                       onClick={() => setCurrentPage(item)}
-                      className={`flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-[7px] border px-2 text-xs font-medium transition-colors ${
+                      className={`flex h-9 min-w-9 items-center justify-center rounded-[7px] border px-2 text-xs font-medium transition-colors ${
                         item === currentPage
                           ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                           : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -896,7 +884,7 @@ export default function AdminMusicLibraryPage() {
                     setCurrentPage((page) => Math.min(totalPages, page + 1))
                   }
                   disabled={currentPage === totalPages}
-                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] text-lg leading-none text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-35"
+                  className="flex h-9 w-9 items-center justify-center rounded-[7px] border border-[var(--border)] text-lg leading-none text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-35"
                   aria-label="Next page"
                 >
                   ›
