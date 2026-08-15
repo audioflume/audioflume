@@ -1,5 +1,7 @@
-import AdminSongForm from '@/components/admin/AdminSongForm'
+import AdminEditPageStyles from '@/components/admin/AdminEditPageStyles'
 import AdminSongAiGeneratedFieldInjector from '@/components/admin/AdminSongAiGeneratedFieldInjector'
+import AdminSongEditPresentationInjector from '@/components/admin/AdminSongEditPresentationInjector'
+import AdminSongForm from '@/components/admin/AdminSongForm'
 import AdminSongFormEditPointsLinkInjector from '@/components/admin/AdminSongFormEditPointsLinkInjector'
 import AdminSongRegionFieldInjector from '@/components/admin/AdminSongRegionFieldInjector'
 
@@ -16,6 +18,8 @@ export default async function EditSongPage({
       <AdminSongAiGeneratedFieldInjector songId={id} />
       <AdminSongRegionFieldInjector songId={id} />
       <AdminSongFormEditPointsLinkInjector songId={id} />
+      <AdminSongEditPresentationInjector />
+      <AdminEditPageStyles />
     </>
   )
 }
