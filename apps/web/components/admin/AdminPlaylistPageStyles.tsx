@@ -3,13 +3,13 @@ export default function AdminPlaylistPageStyles() {
     <style>{`
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form {
-        gap: 16px;
+        gap: 24px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > aside {
-        gap: 16px;
+        gap: 24px;
       }
 
       @media (min-width: 1280px) {
@@ -69,6 +69,14 @@ export default function AdminPlaylistPageStyles() {
         > section
         > div:last-child {
         gap: 12px;
+      }
+
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        form
+        > section
+        > div:last-child
+        > div.grid.gap-3 {
+        padding-top: 12px;
       }
 
       /* Keep playlist name and kicker labels accessible but visually hidden. */
@@ -260,7 +268,7 @@ export default function AdminPlaylistPageStyles() {
         > section
         .flex.flex-wrap.gap-3.pt-2 {
         gap: 8px;
-        padding-top: 4px;
+        padding-top: 12px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -321,7 +329,7 @@ export default function AdminPlaylistPageStyles() {
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         + section {
-        margin-top: 16px;
+        margin-top: 24px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
