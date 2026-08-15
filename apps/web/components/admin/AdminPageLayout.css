@@ -410,7 +410,8 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   [data-ai-generated-field-embedded]
   > div
   > label:last-child
-  > span {
+  > input:checked
+  + span {
   border-color: var(--text-primary);
   background: var(--text-primary);
   color: var(--bg-primary);
