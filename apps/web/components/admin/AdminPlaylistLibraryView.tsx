@@ -481,8 +481,8 @@ export default function AdminPlaylistLibraryView({
 
   return (
     <>
-      <section>
-        <div className="mb-8">
+      <section className="rounded-[14px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] p-4 sm:p-5">
+        <div className="mb-6">
           <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
             Curated Shelves
           </h2>
@@ -492,12 +492,12 @@ export default function AdminPlaylistLibraryView({
         </div>
 
         {shelfError && (
-          <div className="mb-6 border border-[var(--border)] p-4 text-xs text-[var(--danger)]">
+          <div className="mb-4 border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-xs text-[var(--danger)]">
             {shelfError}
           </div>
         )}
 
-        <div className="grid gap-12">
+        <div className="grid gap-3">
           {(["popular", "trending"] as CuratedPlaylistShelfKey[]).map(
             (shelfKey, shelfIndex) => {
               const title = CURATED_PLAYLIST_SHELF_LABELS[shelfKey];
@@ -505,8 +505,8 @@ export default function AdminPlaylistLibraryView({
               const renderNewlyAddedAfterPopular = shelfIndex === 0;
 
               return (
-                <div key={shelfKey} className="grid gap-12">
-                  <section>
+                <div key={shelfKey} className="grid gap-3">
+                  <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
                     <div className="mb-4 flex items-end justify-between gap-4">
                       <div>
                         <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
@@ -569,7 +569,7 @@ export default function AdminPlaylistLibraryView({
                   </section>
 
                   {renderNewlyAddedAfterPopular && (
-                    <section>
+                    <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
                       <div className="mb-4 flex items-end justify-between gap-4">
                         <div>
                           <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
