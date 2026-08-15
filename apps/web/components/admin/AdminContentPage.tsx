@@ -13,6 +13,7 @@ type AdminContentPageProps = {
   children: ReactNode;
   contentClassName?: string;
   contentAreaClassName?: string;
+  contentAreaBottomPadding?: boolean;
   contentStyle?: CSSProperties;
 };
 
@@ -27,6 +28,7 @@ export default function AdminContentPage({
   children,
   contentClassName = "",
   contentAreaClassName = "",
+  contentAreaBottomPadding = true,
   contentStyle,
 }: AdminContentPageProps) {
   const hidePageIntro = label === "Playlist Manager" || label === "Music Library";
@@ -36,7 +38,7 @@ export default function AdminContentPage({
       <AdminSidebar />
 
       <section
-        className={`min-h-screen px-5 pt-[88px] pb-20 md:px-8 xl:px-10 ${contentAreaClassName}`}
+        className={`min-h-screen px-5 pt-[88px] ${contentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-8 xl:px-10 ${contentAreaClassName}`}
       >
         <div
           className={`mx-auto max-w-[1180px] ${contentClassName}`}
