@@ -22,22 +22,17 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import AdminContentPage from "@/components/admin/AdminContentPage";
-import AdminPlaylistGroupManager from "@/components/admin/AdminPlaylistGroupManager";
+import AdminPlaylistLibraryView from "@/components/admin/AdminPlaylistLibraryView";
 import DropdownShell from "@/components/DropdownShell";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import EditIcon from "@/components/icons/EditIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
-import PlusIcon from "@/components/icons/PlusIcon";
 import {
   iconButtonActiveClass,
-  primaryPillButtonClass,
   smallIconButtonClass,
 } from "@/components/uiClasses";
-import type {
-  CuratedPlaylist,
-  CuratedPlaylistGroup,
-} from "@/lib/curatedPlaylists";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import { DISCOVER_SECTION_OPTIONS } from "@/lib/curatedPlaylists";
 
 const COLLAPSED_STORAGE_KEY = "filmwave-playlist-manager-collapsed";
@@ -86,7 +81,6 @@ function SortablePlaylistRow({
   onDelete,
   editHref,
   editLabel = "Edit Playlist",
-  sortable = true,
 }: {
   playlist: CuratedPlaylist;
   isLastInGroup: boolean;
@@ -96,7 +90,6 @@ function SortablePlaylistRow({
   onDelete: (playlist: CuratedPlaylist) => void;
   editHref: string;
   editLabel?: string;
-  sortable?: boolean;
 }) {
   const {
     attributes,
@@ -105,7 +98,7 @@ function SortablePlaylistRow({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: playlist.id, disabled: !sortable });
+  } = useSortable({ id: playlist.id });
 
   return (
     <div
@@ -120,19 +113,15 @@ function SortablePlaylistRow({
       }}
       className="group flex items-center bg-[var(--bg-secondary)] transition hover:bg-[var(--bg-hover)]"
     >
-      {sortable ? (
-        <button
-          type="button"
-          className="flex h-full cursor-grab items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40 active:cursor-grabbing"
-          aria-label="Drag to reorder"
-          {...attributes}
-          {...listeners}
-        >
-          <DragIconSmall />
-        </button>
-      ) : (
-        <div className="w-9 shrink-0" aria-hidden="true" />
-      )}
+      <button
+        type="button"
+        className="flex h-full cursor-grab items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40 active:cursor-grabbing"
+        aria-label="Drag to reorder"
+        {...attributes}
+        {...listeners}
+      >
+        <DragIconSmall />
+      </button>
 
       <Link href={editHref} className="flex flex-1 items-center gap-3 py-2.5">
         <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary)]">
@@ -279,8 +268,8 @@ function getDiscoverGroupName(playlist: CuratedPlaylist): string | null {
   return null;
 }
 
-function getEditHref(playlist: CuratedPlaylist, activeTab: ManagerTab): string {
-  if (activeTab === "discover" && playlist.discover_section) {
+function getEditHref(playlist: CuratedPlaylist) {
+  if (playlist.discover_section) {
     return `/admin/playlist-manager/discover/${playlist.id}/edit`;
   }
 
@@ -294,7 +283,6 @@ export default function PlaylistManagerPage() {
 
   const [activeTab, setActiveTab] = useState<ManagerTab>(queryTab);
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
-  const [groups, setGroups] = useState<CuratedPlaylistGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
@@ -320,31 +308,15 @@ export default function PlaylistManagerPage() {
         setLoading(true);
         setError("");
 
-        const [playlistRes, groupRes] = await Promise.all([
-          fetch("/api/admin/curated-playlists"),
-          fetch("/api/admin/curated-playlist-groups"),
-        ]);
+        const res = await fetch("/api/admin/curated-playlists");
+        const data = await res.json();
 
-        const [playlistData, groupData] = await Promise.all([
-          playlistRes.json(),
-          groupRes.json(),
-        ]);
-
-        if (!playlistRes.ok) {
-          throw new Error(playlistData?.error || "Failed to load playlists");
-        }
-
-        if (!groupRes.ok) {
-          throw new Error(groupData?.error || "Failed to load groups");
+        if (!res.ok) {
+          throw new Error(data?.error || "Failed to load playlists");
         }
 
         if (!cancelled) {
-          setPlaylists(Array.isArray(playlistData) ? playlistData : []);
-          setGroups(
-            Array.isArray(groupData)
-              ? [...groupData].sort((a, b) => a.position - b.position)
-              : [],
-          );
+          setPlaylists(Array.isArray(data) ? data : []);
         }
       } catch (err) {
         if (!cancelled) {
@@ -375,70 +347,39 @@ export default function PlaylistManagerPage() {
     });
   }
 
-  const playlistsByGroup = useMemo(() => {
+  const discoverPlaylistsByGroup = useMemo(() => {
     const map = new Map<string, CuratedPlaylist[]>();
-
-    if (activeTab === "discover") {
-      for (const name of DISCOVER_GROUPS) map.set(name, []);
-
-      for (const playlist of playlists) {
-        const key = getDiscoverGroupName(playlist);
-        if (key) map.get(key)?.push(playlist);
-      }
-
-      for (const [name, groupPlaylists] of map) {
-        if (name === DISCOVER_CURATED_GROUP) {
-          groupPlaylists.sort(
-            (a, b) => a.discover_position - b.discover_position,
-          );
-          continue;
-        }
-
-        const sectionOrder = getDiscoverOptionsForGroup(name).map(
-          (option) => option.value,
-        );
-        groupPlaylists.sort(
-          (a, b) =>
-            sectionOrder.indexOf(
-              a.discover_section as (typeof sectionOrder)[number],
-            ) -
-            sectionOrder.indexOf(
-              b.discover_section as (typeof sectionOrder)[number],
-            ),
-        );
-      }
-
-      return map;
-    }
-
-    for (const group of groups) map.set(group.name, []);
+    for (const name of DISCOVER_GROUPS) map.set(name, []);
 
     for (const playlist of playlists) {
-      if (playlist.discover_section) continue;
-
-      const key = playlist.playlist_group;
-
-      if (!map.has(key)) map.set(key, []);
-
-      map.get(key)!.push(playlist);
+      const key = getDiscoverGroupName(playlist);
+      if (key) map.get(key)?.push(playlist);
     }
 
-    for (const groupPlaylists of map.values()) {
-      groupPlaylists.sort((a, b) => a.position - b.position);
+    for (const [name, groupPlaylists] of map) {
+      if (name === DISCOVER_CURATED_GROUP) {
+        groupPlaylists.sort(
+          (a, b) => a.discover_position - b.discover_position,
+        );
+        continue;
+      }
+
+      const sectionOrder = getDiscoverOptionsForGroup(name).map(
+        (option) => option.value,
+      );
+      groupPlaylists.sort(
+        (a, b) =>
+          sectionOrder.indexOf(
+            a.discover_section as (typeof sectionOrder)[number],
+          ) -
+          sectionOrder.indexOf(
+            b.discover_section as (typeof sectionOrder)[number],
+          ),
+      );
     }
 
     return map;
-  }, [activeTab, playlists, groups]);
-
-  const orderedGroupNames = useMemo(
-    () =>
-      activeTab === "discover"
-        ? DISCOVER_GROUPS
-        : [...playlistsByGroup.keys()].filter(
-            (name) => (playlistsByGroup.get(name)?.length ?? 0) > 0,
-          ),
-    [activeTab, playlistsByGroup],
-  );
+  }, [playlists]);
 
   const activePlaylist = useMemo(
     () =>
@@ -454,14 +395,13 @@ export default function PlaylistManagerPage() {
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-
     setActiveId(null);
 
     if (!over || active.id === over.id) return;
 
     let groupName: string | null = null;
 
-    for (const [name, groupPlaylists] of playlistsByGroup) {
+    for (const [name, groupPlaylists] of discoverPlaylistsByGroup) {
       if (groupPlaylists.some((playlist) => playlist.id === active.id)) {
         groupName = name;
         break;
@@ -470,7 +410,7 @@ export default function PlaylistManagerPage() {
 
     if (!groupName) return;
 
-    const groupPlaylists = playlistsByGroup.get(groupName) ?? [];
+    const groupPlaylists = discoverPlaylistsByGroup.get(groupName) ?? [];
     const oldIndex = groupPlaylists.findIndex(
       (playlist) => playlist.id === active.id,
     );
@@ -482,7 +422,7 @@ export default function PlaylistManagerPage() {
 
     const reordered = arrayMove(groupPlaylists, oldIndex, newIndex);
 
-    if (activeTab === "discover" && groupName !== DISCOVER_CURATED_GROUP) {
+    if (groupName !== DISCOVER_CURATED_GROUP) {
       const occupiedSections = groupPlaylists
         .map((playlist) => playlist.discover_section)
         .filter((section): section is string => Boolean(section));
@@ -522,11 +462,7 @@ export default function PlaylistManagerPage() {
           (reorderedPlaylist) => reorderedPlaylist.id === playlist.id,
         );
 
-        if (idx === -1) return playlist;
-
-        return activeTab === "discover"
-          ? { ...playlist, discover_position: idx }
-          : { ...playlist, position: idx };
+        return idx === -1 ? playlist : { ...playlist, discover_position: idx };
       }),
     );
 
@@ -534,7 +470,7 @@ export default function PlaylistManagerPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        mode: activeTab,
+        mode: "discover",
         updates: reordered.map((playlist, index) => ({
           id: playlist.id,
           position: index,
@@ -553,7 +489,6 @@ export default function PlaylistManagerPage() {
       const res = await fetch(`/api/admin/curated-playlists/${playlist.id}`, {
         method: "DELETE",
       });
-
       const data = await res.json();
 
       if (!res.ok) throw new Error(data?.error || "Failed to delete playlist");
@@ -568,26 +503,20 @@ export default function PlaylistManagerPage() {
     }
   }
 
-  const totalPlaylists =
-    activeTab === "discover"
-      ? playlists.filter((playlist) => getDiscoverGroupName(playlist)).length
-      : playlists.filter((playlist) => !playlist.discover_section).length;
+  const masterPlaylists = playlists.filter(
+    (playlist) => !playlist.discover_section,
+  );
+  const totalDiscoverPlaylists = playlists.filter((playlist) =>
+    getDiscoverGroupName(playlist),
+  ).length;
 
   return (
     <AdminContentPage
       label="Playlist Manager"
       title="Playlist Manager"
-      description="Manage curated playlists and the content blocks on Discover."
-      headerAction={
-        activeTab === "playlists" ? (
-          <Link href="/admin/playlist-manager/new" className={primaryPillButtonClass}>
-            <PlusIcon size={13} />
-            <span>New Playlist</span>
-          </Link>
-        ) : undefined
-      }
+      description="Manage the playlist library, curated shelves, and Discover content."
     >
-      <div className="mb-4 inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] p-1">
+      <div className="mb-7 inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] p-1">
         {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
           <button
             key={tab}
@@ -604,87 +533,71 @@ export default function PlaylistManagerPage() {
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-          <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
-            <div>
-              <h2 className="text-sm font-medium text-[var(--text-primary)]">
-                {activeTab === "discover"
-                  ? "Discover Content"
-                  : "Curated Playlists"}
-              </h2>
-              <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
-                {loading
-                  ? "Loading..."
-                  : `${totalPlaylists} item${totalPlaylists === 1 ? "" : "s"}`}
-              </p>
+      {activeTab === "playlists" ? (
+        <AdminPlaylistLibraryView
+          playlists={masterPlaylists}
+          loading={loading}
+          error={error}
+          deletingId={deletingId}
+          onDeletePlaylist={deletePlaylist}
+        />
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+            <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
+              <div>
+                <h2 className="text-sm font-medium text-[var(--text-primary)]">
+                  Discover Content
+                </h2>
+                <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
+                  {loading
+                    ? "Loading..."
+                    : `${totalDiscoverPlaylists} item${totalDiscoverPlaylists === 1 ? "" : "s"}`}
+                </p>
+              </div>
             </div>
 
-            {activeTab === "playlists" && (
-              <Link
-                href="/admin/playlist-manager/new"
-                className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-              >
-                + New
-              </Link>
-            )}
-          </div>
-
-          {loading && (
-            <div>
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="flex h-[52px] animate-pulse items-center gap-3 px-4"
-                  style={{
-                    borderBottom:
-                      index < 5 ? "1px solid var(--border-subtle)" : "none",
-                  }}
-                >
-                  <div className="h-8 w-8 shrink-0 rounded-none bg-[var(--bg-tertiary)]" />
-                  <div className="flex-1">
-                    <div className="h-2 w-[45%] rounded bg-[var(--bg-tertiary)]" />
-                    <div className="mt-1.5 h-2 w-[30%] rounded bg-[var(--bg-tertiary)]" />
+            {loading && (
+              <div>
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="flex h-[52px] animate-pulse items-center gap-3 px-4"
+                    style={{
+                      borderBottom:
+                        index < 5 ? "1px solid var(--border-subtle)" : "none",
+                    }}
+                  >
+                    <div className="h-8 w-8 shrink-0 rounded-none bg-[var(--bg-tertiary)]" />
+                    <div className="flex-1">
+                      <div className="h-2 w-[45%] rounded bg-[var(--bg-tertiary)]" />
+                      <div className="mt-1.5 h-2 w-[30%] rounded bg-[var(--bg-tertiary)]" />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {!loading && error && (
-            <div className="p-4 text-sm text-[var(--danger)]">{error}</div>
-          )}
-
-          {!loading &&
-            !error &&
-            activeTab === "playlists" &&
-            totalPlaylists === 0 && (
-              <div className="flex min-h-[140px] items-center justify-center px-4 text-sm text-[var(--text-secondary)]">
-                No playlists yet.
+                ))}
               </div>
             )}
 
-          {!loading &&
-            !error &&
-            (activeTab === "discover" || totalPlaylists > 0) && (
+            {!loading && error && (
+              <div className="p-4 text-sm text-[var(--danger)]">{error}</div>
+            )}
+
+            {!loading && !error && (
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
               >
-                {orderedGroupNames.map((groupName, groupIndex) => {
-                  const groupPlaylists = playlistsByGroup.get(groupName) ?? [];
-                  const discoverOptions =
-                    activeTab === "discover"
-                      ? getDiscoverOptionsForGroup(groupName)
-                      : [];
+                {DISCOVER_GROUPS.map((groupName, groupIndex) => {
+                  const groupPlaylists =
+                    discoverPlaylistsByGroup.get(groupName) ?? [];
+                  const discoverOptions = getDiscoverOptionsForGroup(groupName);
                   const isDiscoverFixedGroup = discoverOptions.length > 0;
                   const groupItemCount = isDiscoverFixedGroup
                     ? discoverOptions.length
                     : groupPlaylists.length;
-                  const isLastGroup =
-                    groupIndex === orderedGroupNames.length - 1;
+                  const isLastGroup = groupIndex === DISCOVER_GROUPS.length - 1;
                   const isCollapsed = collapsedGroups.has(groupName);
 
                   return (
@@ -730,8 +643,7 @@ export default function PlaylistManagerPage() {
                           >
                             {discoverOptions.map((option, index) => {
                               const playlist = groupPlaylists.find(
-                                (item) =>
-                                  item.discover_section === option.value,
+                                (item) => item.discover_section === option.value,
                               );
                               const isLastRow =
                                 index === discoverOptions.length - 1 &&
@@ -746,7 +658,7 @@ export default function PlaylistManagerPage() {
                                   setOpenDropdownId={setOpenDropdownId}
                                   deletingId={deletingId}
                                   onDelete={deletePlaylist}
-                                  editHref={getEditHref(playlist, activeTab)}
+                                  editHref={getEditHref(playlist)}
                                   editLabel="Edit Discover Block"
                                 />
                               ) : (
@@ -793,13 +705,7 @@ export default function PlaylistManagerPage() {
                                 setOpenDropdownId={setOpenDropdownId}
                                 deletingId={deletingId}
                                 onDelete={deletePlaylist}
-                                editHref={getEditHref(playlist, activeTab)}
-                                editLabel={
-                                  activeTab === "discover" &&
-                                  playlist.discover_section
-                                    ? "Edit Discover Block"
-                                    : "Edit Playlist"
-                                }
+                                editHref={getEditHref(playlist)}
                               />
                             ))}
                           </SortableContext>
@@ -815,16 +721,8 @@ export default function PlaylistManagerPage() {
                 </DragOverlay>
               </DndContext>
             )}
-        </div>
+          </div>
 
-        {activeTab === "playlists" ? (
-          <AdminPlaylistGroupManager
-            embedded
-            onGroupsReordered={(reordered) =>
-              setGroups([...reordered].sort((a, b) => a.position - b.position))
-            }
-          />
-        ) : (
           <aside className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-xl font-medium tracking-[-0.05em]">
               Discover sections
@@ -843,8 +741,8 @@ export default function PlaylistManagerPage() {
               </div>
             </div>
           </aside>
-        )}
-      </div>
+        </div>
+      )}
     </AdminContentPage>
   );
 }
