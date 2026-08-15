@@ -133,6 +133,7 @@ export default function AdminSongRow({
   statusDisplay = "health",
   size = "default",
   showAddedDate = false,
+  colorOnlyActions = false,
 }: {
   song: Song;
   isLast: boolean;
@@ -144,6 +145,7 @@ export default function AdminSongRow({
   statusDisplay?: "health" | "published";
   size?: "default" | "large";
   showAddedDate?: boolean;
+  colorOnlyActions?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAnalyzingEditPoints, setIsAnalyzingEditPoints] = useState(false);
@@ -166,6 +168,9 @@ export default function AdminSongRow({
   const onlyAutoEditPoints = songHasOnlyAutoEditPoints(rowSong);
   const showPublishedStatus = statusDisplay === "published";
   const largeRow = size === "large";
+  const actionButtonClass = `${smallIconButtonClass}${
+    colorOnlyActions ? " filmwave-icon-button-color-only" : ""
+  }`;
 
   useEffect(() => {
     setLocalEditPoints(song.editPoints);
@@ -219,7 +224,7 @@ export default function AdminSongRow({
     ? showPublishedStatus
       ? showAddedDate
         ? largeRow
-          ? "grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px]"
+          ? "grid-cols-[28px_60px_minmax(140px,1.2fr)_minmax(110px,0.9fr)_120px_64px_70px_96px_56px]"
           : "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px]"
         : largeRow
           ? "grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]"
@@ -393,7 +398,7 @@ export default function AdminSongRow({
       <div className="flex items-center justify-end gap-1 pointer-events-auto" data-admin-song-menu>
         <Link
           href={`/admin/songs/${song.id}/edit`}
-          className={`admin-song-edit-btn ${smallIconButtonClass}`}
+          className={`admin-song-edit-btn ${actionButtonClass}`}
           aria-label={`Edit ${song.title}`}
           onClick={(e) => e.stopPropagation()}
         >
@@ -421,7 +426,7 @@ export default function AdminSongRow({
           trigger={({ open }) => (
             <button
               type="button"
-              className={`admin-song-menu-btn ${smallIconButtonClass} ${
+              className={`admin-song-menu-btn ${actionButtonClass} ${
                 open ? `is-open ${iconButtonActiveClass}` : ""
               }`}
               aria-label="Song options"
