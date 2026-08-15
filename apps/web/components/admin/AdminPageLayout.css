@@ -539,7 +539,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > .admin-song-form-card:last-child
   > div:last-child
   > button {
-  height: 44px;
+  height: 40px;
   border-radius: 7px;
   font-size: 14px;
   font-weight: 500;
