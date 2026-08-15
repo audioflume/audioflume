@@ -15,6 +15,9 @@ export default function AdminPlaylistPageStyles() {
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > aside {
+        align-self: start;
+        align-content: start;
+        grid-auto-rows: max-content;
         gap: 16px;
       }
 
