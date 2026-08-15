@@ -301,7 +301,7 @@ export default function AdminDiscoverLibraryView({
                   disabled={savingSection}
                 >
                   <PlusIcon size={12} />
-                  <span>Add Playlist</span>
+                  <span>Add</span>
                 </button>
               }
             >
