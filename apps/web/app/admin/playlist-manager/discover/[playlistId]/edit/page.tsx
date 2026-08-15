@@ -6,15 +6,15 @@ import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverPlaylistForm from "@/components/admin/AdminDiscoverPlaylistForm";
 import { secondaryPillButtonClass } from "@/components/uiClasses";
 
-export default function EditDiscoverBlockPage() {
+export default function EditDiscoverContentPage() {
   const params = useParams();
   const playlistId = String(params.playlistId || "");
 
   return (
     <AdminContentPage
       label="Playlist Manager"
-      title="Edit Discover Block"
-      description="Update the content, image, and button for this fixed Discover slot."
+      title="Edit Discover Content"
+      description="Update this reusable Discover item. Section placement is managed from Playlist Manager."
       headerAction={(
         <Link href="/admin/playlist-manager?tab=discover" className={secondaryPillButtonClass}>
           Back to Manager

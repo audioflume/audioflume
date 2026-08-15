@@ -10,6 +10,7 @@ import type {
   CuratedPlaylist,
   CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
+import { DISCOVER_LIBRARY_SECTION } from "@/lib/discoverAdmin";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   DEFAULT_DISCOVER_BUTTON_TEXT,
@@ -31,6 +32,8 @@ const DEFAULT_DISCOVER_SECTION: string =
   DISCOVER_SECTION_OPTIONS[0]?.value ?? "discover_block_1";
 
 function getSafeDiscoverSection(section?: string | null) {
+  if (section === DISCOVER_LIBRARY_SECTION) return section;
+
   if (
     section &&
     DISCOVER_SECTION_OPTIONS.some((option) => option.value === section)
@@ -86,9 +89,9 @@ export default function AdminDiscoverPlaylistForm({
         const playlistData = (await playlistRes.json()) as CuratedPlaylist;
         const songsData = await songsRes.json();
 
-        if (!playlistRes.ok) throw new Error("Failed to load Discover block");
+        if (!playlistRes.ok) throw new Error("Failed to load Discover content");
         if (!songsRes.ok)
-          throw new Error("Failed to load Discover block songs");
+          throw new Error("Failed to load Discover content songs");
 
         if (!cancelled) {
           setName(playlistData.name);
@@ -111,7 +114,7 @@ export default function AdminDiscoverPlaylistForm({
           setToastMessage(
             err instanceof Error
               ? err.message
-              : "Failed to load Discover block",
+              : "Failed to load Discover content",
           );
         }
       } finally {
@@ -170,10 +173,10 @@ export default function AdminDiscoverPlaylistForm({
       const data = await res.json();
 
       if (!res.ok)
-        throw new Error(data?.error || "Failed to save Discover block");
+        throw new Error(data?.error || "Failed to save Discover content");
 
       setToastMessage(
-        mode === "edit" ? "Discover block updated" : "Discover block created",
+        mode === "edit" ? "Discover content updated" : "Discover content created",
       );
 
       if (mode === "create") {
@@ -181,7 +184,7 @@ export default function AdminDiscoverPlaylistForm({
       }
     } catch (err) {
       setToastMessage(
-        err instanceof Error ? err.message : "Failed to save Discover block",
+        err instanceof Error ? err.message : "Failed to save Discover content",
       );
     } finally {
       setSaving(false);
@@ -228,11 +231,11 @@ export default function AdminDiscoverPlaylistForm({
         <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-5">
             <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
-              Discover block details
+              Discover content details
             </h2>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Manage the title, copy, artwork, and button used on the Discover
-              page.
+              Manage the title, copy, artwork, and button for this reusable
+              Discover content.
             </p>
           </div>
 
@@ -267,7 +270,7 @@ export default function AdminDiscoverPlaylistForm({
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Describe what this Discover block is for."
+                  placeholder="Describe what this Discover content is for."
                 />
               </label>
 
@@ -283,7 +286,7 @@ export default function AdminDiscoverPlaylistForm({
                     Show white pill button
                   </span>
                   <span className="mt-1 block text-xs text-[var(--text-muted)]">
-                    Controls the hero-style CTA button for this Discover block.
+                    Controls the hero-style CTA button for this Discover content.
                   </span>
                 </span>
               </label>
@@ -309,7 +312,7 @@ export default function AdminDiscoverPlaylistForm({
                     ? "Saving..."
                     : mode === "edit"
                       ? "Save changes"
-                      : "Create Discover block"}
+                      : "Create Discover content"}
                 </button>
                 <button
                   type="button"
@@ -355,7 +358,7 @@ export default function AdminDiscoverPlaylistForm({
                   {kicker || "Kicker text"}
                 </div>
                 <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-3xl font-medium leading-none tracking-[-0.055em]">
-                  {name || "Discover block title"}
+                  {name || "Discover content title"}
                 </div>
                 {description && (
                   <p className="mt-3 line-clamp-3 text-xs leading-5 text-white/68">
@@ -381,7 +384,7 @@ export default function AdminDiscoverPlaylistForm({
                 Songs
               </h2>
               <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                Songs linked to this Discover block. Add via the admin music
+                Songs linked to this Discover content. Add via the admin music
                 player.
               </p>
             </div>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
+import { DISCOVER_LIBRARY_SECTION } from "@/lib/discoverAdmin";
 import { supabaseServer } from "@/lib/supabaseServer";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
@@ -16,6 +17,8 @@ function cleanString(value: unknown) {
 
 function cleanDiscoverSection(value: unknown) {
   const section = cleanString(value);
+  if (section === DISCOVER_LIBRARY_SECTION) return section;
+
   return DISCOVER_SECTION_OPTIONS.some((option) => option.value === section)
     ? section
     : null;

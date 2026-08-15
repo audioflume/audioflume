@@ -1,34 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverPlaylistForm from "@/components/admin/AdminDiscoverPlaylistForm";
 import { secondaryPillButtonClass } from "@/components/uiClasses";
-import { DISCOVER_SECTION_OPTIONS } from "@/lib/curatedPlaylists";
+import { DISCOVER_LIBRARY_SECTION } from "@/lib/discoverAdmin";
 
-function getLockedDiscoverSection(section: string | null) {
-  if (
-    section &&
-    DISCOVER_SECTION_OPTIONS.some((option) => option.value === section)
-  ) {
-    return section;
-  }
-
-  return undefined;
-}
-
-export default function NewDiscoverBlockPage() {
-  const searchParams = useSearchParams();
-  const lockedDiscoverSection = getLockedDiscoverSection(
-    searchParams.get("section"),
-  );
-
+export default function NewDiscoverContentPage() {
   return (
     <AdminContentPage
       label="Playlist Manager"
-      title="Edit Discover Block"
-      description="Update the content, image, and button for this fixed Discover slot."
+      title="New Discover Content"
+      description="Create reusable Discover content, then assign it to a section from Playlist Manager."
       headerAction={(
         <Link href="/admin/playlist-manager?tab=discover" className={secondaryPillButtonClass}>
           Back to Manager
@@ -37,7 +20,7 @@ export default function NewDiscoverBlockPage() {
     >
       <AdminDiscoverPlaylistForm
         mode="create"
-        lockedDiscoverSection={lockedDiscoverSection}
+        lockedDiscoverSection={DISCOVER_LIBRARY_SECTION}
       />
     </AdminContentPage>
   );

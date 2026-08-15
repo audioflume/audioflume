@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
+import { DISCOVER_LIBRARY_SECTION } from "@/lib/discoverAdmin";
 import { supabaseServer } from "@/lib/supabaseServer";
 import {
   DISCOVER_SECTION_OPTIONS,
@@ -8,11 +9,21 @@ import {
 
 type PositionUpdate = { id: number; position: number };
 type SectionUpdate = { id: number; section: string };
-type ReorderMode = "playlist" | "discover" | "discover-sections";
+type DiscoverMembershipUpdate = {
+  id: number;
+  visible: boolean;
+  position: number;
+};
+type ReorderMode =
+  | "playlist"
+  | "discover"
+  | "discover-sections"
+  | "discover-membership";
 
-const DISCOVER_SECTION_VALUES = new Set(
-  DISCOVER_SECTION_OPTIONS.map((option) => option.value),
-);
+const DISCOVER_SECTION_VALUES = new Set<string>([
+  ...DISCOVER_SECTION_OPTIONS.map((option) => option.value),
+  DISCOVER_LIBRARY_SECTION,
+]);
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
@@ -25,9 +36,11 @@ export async function POST(req: Request) {
     const mode: ReorderMode =
       body.mode === "discover-sections"
         ? "discover-sections"
-        : body.mode === "discover"
-          ? "discover"
-          : "playlist";
+        : body.mode === "discover-membership"
+          ? "discover-membership"
+          : body.mode === "discover"
+            ? "discover"
+            : "playlist";
 
     if (mode === "discover-sections") {
       const updates: SectionUpdate[] = body.updates;
@@ -38,9 +51,7 @@ export async function POST(req: Request) {
         updates.some(
           ({ id, section }) =>
             !Number.isFinite(Number(id)) ||
-            !DISCOVER_SECTION_VALUES.has(
-              section as (typeof DISCOVER_SECTION_OPTIONS)[number]["value"],
-            ),
+            !DISCOVER_SECTION_VALUES.has(String(section || "")),
         )
       ) {
         return NextResponse.json(
@@ -58,7 +69,46 @@ export async function POST(req: Request) {
         ),
       );
 
-      const failed = results.find((r) => r.error);
+      const failed = results.find((result) => result.error);
+      if (failed?.error) throw failed.error;
+
+      return NextResponse.json({ success: true });
+    }
+
+    if (mode === "discover-membership") {
+      const updates: DiscoverMembershipUpdate[] = body.updates;
+
+      if (
+        !Array.isArray(updates) ||
+        updates.length === 0 ||
+        updates.some(
+          ({ id, visible, position }) =>
+            !Number.isFinite(Number(id)) ||
+            typeof visible !== "boolean" ||
+            !Number.isFinite(Number(position)) ||
+            Number(position) < 0,
+        )
+      ) {
+        return NextResponse.json(
+          { error: "Invalid updates format" },
+          { status: 400 },
+        );
+      }
+
+      const results = await Promise.all(
+        updates.map(({ id, visible, position }) =>
+          supabaseServer
+            .from("curated_playlists")
+            .update({
+              show_on_discover: visible,
+              discover_position: Number(position),
+            })
+            .eq("id", id)
+            .is("discover_section", null),
+        ),
+      );
+
+      const failed = results.find((result) => result.error);
       if (failed?.error) throw failed.error;
 
       return NextResponse.json({ success: true });
@@ -80,7 +130,7 @@ export async function POST(req: Request) {
       ),
     );
 
-    const failed = results.find((r) => r.error);
+    const failed = results.find((result) => result.error);
     if (failed?.error) throw failed.error;
 
     return NextResponse.json({ success: true });
