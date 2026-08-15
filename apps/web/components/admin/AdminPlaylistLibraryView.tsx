@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   DndContext,
@@ -15,20 +13,20 @@ import {
   SortableContext,
   arrayMove,
   rectSortingStrategy,
-  useSortable,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import AdminPlaylistShelfPickerModal from "@/components/admin/AdminPlaylistShelfPickerModal";
-import DropdownShell from "@/components/DropdownShell";
-import Toast from "@/components/Toast";
-import DragIconSmall from "@/components/icons/DragIconSmall";
-import MoreIcon from "@/components/icons/MoreIcon";
-import PlusIcon from "@/components/icons/PlusIcon";
-import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-} from "@/components/uiClasses";
+  PLAYLIST_MANAGER_GRID_CLASS,
+  PlaylistManagerCollapsibleSection,
+  PlaylistManagerLibrarySection,
+  PlaylistManagerLoadingGrid,
+  PlaylistManagerSortableCard,
+  PlaylistManagerStaticCard,
+  sortPlaylistNewestFirst,
+} from "@/components/admin/AdminPlaylistManagerShared";
+import Toast from "@/components/Toast";
+import PlusIcon from "@/components/icons/PlusIcon";
+import { secondaryPillButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import {
   CURATED_PLAYLIST_SHELF_LABELS,
@@ -51,213 +49,6 @@ const EMPTY_SHELF_IDS: ShelfIds = {
   popular: [],
   trending: [],
 };
-
-function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
-  const aTime = a.created_at ? Date.parse(a.created_at) : 0;
-  const bTime = b.created_at ? Date.parse(b.created_at) : 0;
-
-  if (aTime !== bTime) return bTime - aTime;
-  return b.id - a.id;
-}
-
-function PlaylistArtwork({
-  playlist,
-  sizes,
-}: {
-  playlist: CuratedPlaylist;
-  sizes: string;
-}) {
-  return playlist.cover_image_url ? (
-    <Image
-      src={playlist.cover_image_url}
-      alt={playlist.name}
-      fill
-      sizes={sizes}
-      className="object-cover"
-      unoptimized
-    />
-  ) : (
-    <span className="absolute inset-0 flex items-center justify-center text-[var(--text-muted)]">
-      <PlaylistIcon size={18} />
-    </span>
-  );
-}
-
-function MasterPlaylistCard({
-  playlist,
-  openMenuId,
-  setOpenMenuId,
-  deletingId,
-  onDeletePlaylist,
-}: {
-  playlist: CuratedPlaylist;
-  openMenuId: number | null;
-  setOpenMenuId: (id: number | null) => void;
-  deletingId: number | null;
-  onDeletePlaylist: (playlist: CuratedPlaylist) => void | Promise<void>;
-}) {
-  const editHref = `/admin/playlist-manager/${playlist.id}/edit`;
-  const menuOpen = openMenuId === playlist.id;
-
-  return (
-    <article className="group min-w-0">
-      <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]">
-        <Link href={editHref} className="absolute inset-0 block">
-          <PlaylistArtwork
-            playlist={playlist}
-            sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
-          />
-        </Link>
-      </div>
-
-      <div className="mt-2.5 flex min-w-0 items-start gap-3">
-        <Link href={editHref} className="min-w-0 flex-1">
-          <h3 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-            {playlist.name}
-          </h3>
-          <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
-            {playlist.song_count || 0} songs
-          </p>
-        </Link>
-
-        <DropdownShell
-          open={menuOpen}
-          onOpenChange={(open) => setOpenMenuId(open ? playlist.id : null)}
-          placement="bottom-end"
-          trigger={() => (
-            <button
-              type="button"
-              className={`flex h-7 w-7 shrink-0 items-center justify-center bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--filmwave-black)] ${
-                menuOpen ? "text-[var(--filmwave-black)]" : ""
-              }`}
-              aria-label={`Manage ${playlist.name}`}
-            >
-              <MoreIcon size={14} />
-            </button>
-          )}
-        >
-          <Link href={editHref} onClick={() => setOpenMenuId(null)}>
-            Edit Playlist
-          </Link>
-          <button
-            type="button"
-            className="danger-hover"
-            disabled={deletingId === playlist.id}
-            onClick={() => {
-              setOpenMenuId(null);
-              void onDeletePlaylist(playlist);
-            }}
-          >
-            {deletingId === playlist.id ? "Deleting..." : "Delete Playlist"}
-          </button>
-        </DropdownShell>
-      </div>
-    </article>
-  );
-}
-
-function SortableShelfPlaylistCard({
-  playlist,
-  onRemove,
-}: {
-  playlist: CuratedPlaylist;
-  onRemove: (playlistId: number) => void;
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: playlist.id });
-
-  return (
-    <article
-      ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.45 : 1,
-        zIndex: isDragging ? 2 : "auto",
-      }}
-      className="group relative min-w-0"
-    >
-      <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]">
-        <Link
-          href={`/admin/playlist-manager/${playlist.id}/edit`}
-          className="absolute inset-0 block"
-        >
-          <PlaylistArtwork
-            playlist={playlist}
-            sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
-          />
-        </Link>
-
-        <button
-          type="button"
-          className="absolute left-2 top-2 z-10 flex h-8 w-8 cursor-grab items-center justify-center text-white opacity-0 transition group-hover:opacity-100 active:cursor-grabbing"
-          aria-label={`Drag ${playlist.name} to reorder`}
-          {...attributes}
-          {...listeners}
-        >
-          <span className="inline-flex scale-x-[1.45]">
-            <DragIconSmall />
-          </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onRemove(playlist.id)}
-          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] group-hover:opacity-100"
-          aria-label={`Remove ${playlist.name} from shelf`}
-          title="Remove from shelf"
-        >
-          ×
-        </button>
-      </div>
-
-      <Link
-        href={`/admin/playlist-manager/${playlist.id}/edit`}
-        className="mt-2.5 block min-w-0"
-      >
-        <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-          {playlist.name}
-        </h4>
-        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
-          {playlist.song_count || 0} songs
-        </p>
-      </Link>
-    </article>
-  );
-}
-
-function AutomaticShelfPlaylistCard({ playlist }: { playlist: CuratedPlaylist }) {
-  return (
-    <article className="min-w-0">
-      <Link
-        href={`/admin/playlist-manager/${playlist.id}/edit`}
-        className="relative block aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]"
-      >
-        <PlaylistArtwork
-          playlist={playlist}
-          sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
-        />
-      </Link>
-      <Link
-        href={`/admin/playlist-manager/${playlist.id}/edit`}
-        className="mt-2.5 block min-w-0"
-      >
-        <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-          {playlist.name}
-        </h4>
-        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
-          {playlist.song_count || 0} songs
-        </p>
-      </Link>
-    </article>
-  );
-}
 
 export default function AdminPlaylistLibraryView({
   playlists,
@@ -340,12 +131,12 @@ export default function AdminPlaylistLibraryView({
   );
 
   const masterPlaylists = useMemo(
-    () => [...playlists].sort(sortNewestFirst),
+    () => [...playlists].sort(sortPlaylistNewestFirst),
     [playlists],
   );
 
   const newlyAdded = useMemo(
-    () => [...playlists].sort(sortNewestFirst).slice(0, 10),
+    () => [...playlists].sort(sortPlaylistNewestFirst).slice(0, 10),
     [playlists],
   );
 
@@ -479,15 +270,10 @@ export default function AdminPlaylistLibraryView({
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <div key={index} className="animate-pulse">
-            <div className="aspect-[16/9] bg-[var(--bg-tertiary)]" />
-            <div className="mt-3 h-3 w-2/3 bg-[var(--bg-tertiary)]" />
-            <div className="mt-2 h-2 w-1/3 bg-[var(--bg-tertiary)]" />
-          </div>
-        ))}
-      </div>
+      <PlaylistManagerLoadingGrid
+        count={8}
+        className="grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+      />
     );
   }
 
@@ -513,169 +299,87 @@ export default function AdminPlaylistLibraryView({
 
             return (
               <div key={shelfKey} className="grid gap-3">
-                <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
-                  <div className="flex items-end justify-between gap-4">
-                    <div>
-                      <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-                        {title}
-                      </h3>
-                      <p className="mt-1 text-[11px] text-[var(--text-muted)]">
-                        {shelvesLoading
-                          ? "Loading..."
-                          : `${items.length} playlist${items.length === 1 ? "" : "s"}`}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setPickerShelf(shelfKey)}
-                        className={secondaryPillButtonClass}
-                        disabled={shelvesLoading}
-                      >
-                        <PlusIcon size={12} />
-                        <span>Add</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => toggleSection(shelfKey)}
-                        className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
-                        aria-label={shelfCollapsed ? `Expand ${title}` : `Collapse ${title}`}
-                        aria-expanded={!shelfCollapsed}
-                        title={shelfCollapsed ? `Expand ${title}` : `Collapse ${title}`}
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          aria-hidden="true"
-                          className={`h-4 w-4 transition-transform duration-300 ${
-                            shelfCollapsed ? "" : "rotate-180"
-                          }`}
-                        >
-                          <path d="m6 9 6 6 6-6" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
-                      shelfCollapsed
-                        ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
-                        : "mt-4 grid-rows-[1fr] opacity-100"
-                    }`}
-                    aria-hidden={shelfCollapsed}
-                  >
-                    <div className="min-h-0 overflow-hidden">
-                      {items.length === 0 ? (
-                        <button
-                          type="button"
-                          onClick={() => setPickerShelf(shelfKey)}
-                          className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
-                        >
-                          Add playlists from All Playlists
-                        </button>
-                      ) : (
-                        <DndContext
-                          sensors={sensors}
-                          collisionDetection={closestCenter}
-                          onDragEnd={(event) => void reorderShelf(shelfKey, event)}
-                        >
-                          <SortableContext
-                            items={items.map((playlist) => playlist.id)}
-                            strategy={rectSortingStrategy}
-                          >
-                            <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                              {items.map((playlist) => (
-                                <SortableShelfPlaylistCard
-                                  key={playlist.id}
-                                  playlist={playlist}
-                                  onRemove={(playlistId) => {
-                                    const confirmed = window.confirm(
-                                      `Remove "${playlist.name}" from ${title}?`,
-                                    );
-                                    if (!confirmed) return;
-                                    void removeFromShelf(shelfKey, playlistId);
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          </SortableContext>
-                        </DndContext>
-                      )}
-                    </div>
-                  </div>
-                </section>
-
-                {renderNewlyAddedAfterPopular && (
-                  <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
-                    <div className="flex items-end justify-between gap-4">
-                      <div>
-                        <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-                          Newly Added
-                        </h3>
-                        <p className="mt-1 text-[11px] text-[var(--text-muted)]">
-                          {newlyAdded.length} playlist{newlyAdded.length === 1 ? "" : "s"} · Automatic
-                        </p>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => toggleSection("newlyAdded")}
-                        className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
-                        aria-label={
-                          collapsedSections.newlyAdded
-                            ? "Expand Newly Added"
-                            : "Collapse Newly Added"
-                        }
-                        aria-expanded={!collapsedSections.newlyAdded}
-                        title={
-                          collapsedSections.newlyAdded
-                            ? "Expand Newly Added"
-                            : "Collapse Newly Added"
-                        }
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          aria-hidden="true"
-                          className={`h-4 w-4 transition-transform duration-300 ${
-                            collapsedSections.newlyAdded ? "" : "rotate-180"
-                          }`}
-                        >
-                          <path d="m6 9 6 6 6-6" />
-                        </svg>
-                      </button>
-                    </div>
-
-                    <div
-                      className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
-                        collapsedSections.newlyAdded
-                          ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
-                          : "mt-4 grid-rows-[1fr] opacity-100"
-                      }`}
-                      aria-hidden={collapsedSections.newlyAdded}
+                <PlaylistManagerCollapsibleSection
+                  title={title}
+                  subtitle={
+                    shelvesLoading
+                      ? "Loading..."
+                      : `${items.length} playlist${items.length === 1 ? "" : "s"}`
+                  }
+                  collapsed={shelfCollapsed}
+                  onToggle={() => toggleSection(shelfKey)}
+                  actions={
+                    <button
+                      type="button"
+                      onClick={() => setPickerShelf(shelfKey)}
+                      className={secondaryPillButtonClass}
+                      disabled={shelvesLoading}
                     >
-                      <div className="min-h-0 overflow-hidden">
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                          {newlyAdded.map((playlist) => (
-                            <AutomaticShelfPlaylistCard
+                      <PlusIcon size={12} />
+                      <span>Add</span>
+                    </button>
+                  }
+                >
+                  {items.length === 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => setPickerShelf(shelfKey)}
+                      className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
+                    >
+                      Add playlists from All Playlists
+                    </button>
+                  ) : (
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={(event) => void reorderShelf(shelfKey, event)}
+                    >
+                      <SortableContext
+                        items={items.map((playlist) => playlist.id)}
+                        strategy={rectSortingStrategy}
+                      >
+                        <div className={PLAYLIST_MANAGER_GRID_CLASS}>
+                          {items.map((playlist) => (
+                            <PlaylistManagerSortableCard
                               key={playlist.id}
                               playlist={playlist}
+                              editHref={`/admin/playlist-manager/${playlist.id}/edit`}
+                              meta={`${playlist.song_count || 0} songs`}
+                              removeAriaLabel={`Remove ${playlist.name} from shelf`}
+                              removeTitle="Remove from shelf"
+                              onRemove={() => {
+                                const confirmed = window.confirm(
+                                  `Remove "${playlist.name}" from ${title}?`,
+                                );
+                                if (!confirmed) return;
+                                void removeFromShelf(shelfKey, playlist.id);
+                              }}
                             />
                           ))}
                         </div>
-                      </div>
+                      </SortableContext>
+                    </DndContext>
+                  )}
+                </PlaylistManagerCollapsibleSection>
+
+                {renderNewlyAddedAfterPopular && (
+                  <PlaylistManagerCollapsibleSection
+                    title="Newly Added"
+                    subtitle={`${newlyAdded.length} playlist${newlyAdded.length === 1 ? "" : "s"} · Automatic`}
+                    collapsed={collapsedSections.newlyAdded}
+                    onToggle={() => toggleSection("newlyAdded")}
+                  >
+                    <div className={PLAYLIST_MANAGER_GRID_CLASS}>
+                      {newlyAdded.map((playlist) => (
+                        <PlaylistManagerStaticCard
+                          key={playlist.id}
+                          playlist={playlist}
+                          editHref={`/admin/playlist-manager/${playlist.id}/edit`}
+                          meta={`${playlist.song_count || 0} songs`}
+                        />
+                      ))}
                     </div>
-                  </section>
+                  </PlaylistManagerCollapsibleSection>
                 )}
               </div>
             );
@@ -683,45 +387,24 @@ export default function AdminPlaylistLibraryView({
         )}
       </div>
 
-      <section className="mt-0">
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <div>
-            <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-              All Playlists
-            </h3>
-            <p className="mt-1 text-[11px] text-[var(--text-muted)]">
-              {masterPlaylists.length} playlist{masterPlaylists.length === 1 ? "" : "s"} · Master library
-            </p>
-          </div>
-
-          <Link
-            href="/admin/playlist-manager/new"
-            className={primaryPillButtonClass}
-          >
-            <PlusIcon size={13} />
-            <span>New Playlist</span>
-          </Link>
-        </div>
-
-        {masterPlaylists.length === 0 ? (
-          <div className="flex min-h-[180px] items-center justify-center border border-[var(--border)] text-sm text-[var(--text-secondary)]">
-            No playlists yet.
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-            {masterPlaylists.map((playlist) => (
-              <MasterPlaylistCard
-                key={playlist.id}
-                playlist={playlist}
-                openMenuId={openMenuId}
-                setOpenMenuId={setOpenMenuId}
-                deletingId={deletingId}
-                onDeletePlaylist={onDeletePlaylist}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+      <PlaylistManagerLibrarySection
+        title="All Playlists"
+        subtitle={`${masterPlaylists.length} playlist${masterPlaylists.length === 1 ? "" : "s"} · Master library`}
+        createHref="/admin/playlist-manager/new"
+        createLabel="New Playlist"
+        playlists={masterPlaylists}
+        emptyMessage="No playlists yet."
+        getEditHref={(playlist) =>
+          `/admin/playlist-manager/${playlist.id}/edit`
+        }
+        getMeta={(playlist) => `${playlist.song_count || 0} songs`}
+        editLabel="Edit Playlist"
+        deleteLabel="Delete Playlist"
+        openMenuId={openMenuId}
+        setOpenMenuId={setOpenMenuId}
+        deletingId={deletingId}
+        onDeletePlaylist={onDeletePlaylist}
+      />
 
       {pickerShelf && (
         <AdminPlaylistShelfPickerModal
