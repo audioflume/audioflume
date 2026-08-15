@@ -3,13 +3,13 @@ export default function AdminPlaylistPageStyles() {
     <style>{`
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form {
-        gap: 16px;
+        gap: 12px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         .admin-playlist-main-stack {
         align-self: start;
-        gap: 16px;
+        gap: 12px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -18,7 +18,7 @@ export default function AdminPlaylistPageStyles() {
         align-self: start;
         align-content: start;
         grid-auto-rows: max-content;
-        gap: 16px;
+        gap: 12px;
       }
 
       @media (min-width: 1280px) {
@@ -74,7 +74,7 @@ export default function AdminPlaylistPageStyles() {
         letter-spacing: -0.03em;
       }
 
-      /* Match Song Info's 16px spacing between playlist fields. */
+      /* Use the original Browse Filters 8px rhythm between playlist fields. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         .admin-playlist-fields,
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -82,7 +82,7 @@ export default function AdminPlaylistPageStyles() {
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         .admin-playlist-shelf-card
         > div.grid {
-        gap: 16px;
+        gap: 8px;
       }
 
       /* Keep playlist name and kicker labels accessible but visually hidden. */
@@ -249,7 +249,7 @@ export default function AdminPlaylistPageStyles() {
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         + section {
-        margin-top: 16px;
+        margin-top: 12px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
