@@ -66,42 +66,24 @@ export default function AdminPlaylistPageStyles() {
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
-        h2
-        + p,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        h3
-        + p,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        + section
-        h2
-        + p {
-        margin-top: 4px;
-        color: var(--text-secondary);
-        font-size: 12px;
-        line-height: 18px;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
         > section
         > div:last-child {
         gap: 12px;
       }
 
+      /* Keep playlist name and kicker labels accessible but visually hidden. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > section
         > div:last-child
         > label.grid {
-        gap: 6px;
+        gap: 0;
         color: var(--text-primary);
         font-family: var(--font-aktiv-grotesk), sans-serif;
-        font-size: 11px;
+        font-size: 0;
         font-weight: 500;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
+        line-height: 0;
+        letter-spacing: 0;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -118,6 +100,7 @@ export default function AdminPlaylistPageStyles() {
         border-radius: 7px;
         font-family: inherit;
         font-size: 12px;
+        line-height: normal;
         text-transform: none;
         letter-spacing: normal;
       }
@@ -131,79 +114,32 @@ export default function AdminPlaylistPageStyles() {
         border-color: var(--border);
       }
 
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl {
-        gap: 12px;
-        border-radius: 10px;
-        background: var(--bg-primary);
-        padding: 16px;
-      }
-
+      /* Preserve the original pre-pill browse filter card/grid layout.
+         Only the checkbox itself adopts the Music Library selection treatment. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > section
         > div:last-child
         > div.grid.gap-3.rounded-xl
-        > div:first-child
-        > div:first-child {
-        color: var(--text-primary);
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 24px;
-        letter-spacing: -0.03em;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        > div:first-child
-        > p {
-        margin-top: 4px;
-        font-size: 12px;
-        line-height: 18px;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        > div[class*="grid-cols"] {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label:has(> input[type="checkbox"]) {
-        display: inline-flex;
-        width: auto;
-        min-height: 28px;
+        label
+        > input[type="checkbox"] {
+        position: relative;
+        display: grid;
+        width: 16px;
+        height: 16px;
+        flex: 0 0 16px;
+        appearance: none;
+        place-content: center;
+        opacity: 1;
+        pointer-events: auto;
         cursor: pointer;
-        align-items: center;
-        justify-content: center;
-        gap: 0;
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        background: transparent;
-        padding: 0 10px;
-        color: var(--text-secondary);
-        font-size: 11px;
-        font-weight: 500;
-        line-height: 1;
-        white-space: nowrap;
+        border: 1.5px solid var(--border);
+        border-radius: 4px;
+        background: var(--bg-secondary);
+        color: var(--bg-primary);
         transition:
-          background 150ms ease,
           border-color 150ms ease,
+          background 150ms ease,
           color 150ms ease;
       }
 
@@ -212,9 +148,9 @@ export default function AdminPlaylistPageStyles() {
         > section
         > div:last-child
         > div.grid.gap-3.rounded-xl
-        label:has(> input[type="checkbox"]):hover {
-        background: var(--bg-hover);
-        color: var(--text-primary);
+        label:hover
+        > input[type="checkbox"] {
+        border-color: var(--text-secondary);
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -222,7 +158,25 @@ export default function AdminPlaylistPageStyles() {
         > section
         > div:last-child
         > div.grid.gap-3.rounded-xl
-        label:has(> input[type="checkbox"]:checked) {
+        label
+        > input[type="checkbox"]::after {
+        content: "";
+        width: 11px;
+        height: 11px;
+        opacity: 0;
+        background: var(--bg-primary);
+        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5L9.5 17L19 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5L9.5 17L19 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+        transition: opacity 150ms ease;
+      }
+
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        form
+        > section
+        > div:last-child
+        > div.grid.gap-3.rounded-xl
+        label
+        > input[type="checkbox"]:checked {
         border-color: var(--text-primary);
         background: var(--text-primary);
         color: var(--bg-primary);
@@ -234,20 +188,37 @@ export default function AdminPlaylistPageStyles() {
         > div:last-child
         > div.grid.gap-3.rounded-xl
         label
-        > input[type="checkbox"] {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
+        > input[type="checkbox"]:checked::after {
+        opacity: 1;
       }
 
+      /* Remove descriptive copy beneath playlist section/filter headings. */
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        form
+        > section
+        > div:first-child
+        > p,
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > section
         > div:last-child
         > div.grid.gap-3.rounded-xl
-        > div[class~="border-t"] {
-        gap: 10px;
-        padding-top: 12px;
+        > div:first-child
+        > p,
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        form
+        > section
+        > div:last-child
+        > div.grid.gap-3.rounded-xl
+        > div[class~="border-t"]
+        > div:first-child
+        > p,
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        form
+        + section
+        h2
+        + p {
+        display: none;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -428,163 +399,6 @@ export default function AdminPlaylistPageStyles() {
           [class~="rounded-lg"]
         ) {
         border-radius: 7px;
-      }
-
-      /* Remove descriptive copy beneath playlist section headings. */
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:first-child
-        > p,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        > div:first-child
-        > p,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        > div[class~="border-t"]
-        > div:first-child
-        > p,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        + section
-        h2
-        + p {
-        display: none;
-      }
-
-      /* Keep field names accessible but remove the visible labels. */
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > label.grid {
-        gap: 0;
-        font-size: 0;
-        line-height: 0;
-        letter-spacing: 0;
-      }
-
-      /* Match Music Library selection checkboxes for browse filters/shelves. */
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label:has(> input[type="checkbox"]) {
-        display: inline-flex;
-        width: auto;
-        min-height: 22px;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 8px;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        padding: 0;
-        color: var(--text-secondary);
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 18px;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label:has(> input[type="checkbox"]):hover,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label:has(> input[type="checkbox"]:checked) {
-        border: 0;
-        background: transparent;
-        color: var(--text-primary);
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label
-        > input[type="checkbox"] {
-        position: relative;
-        display: grid;
-        width: 16px;
-        height: 16px;
-        flex: 0 0 16px;
-        appearance: none;
-        place-content: center;
-        opacity: 1;
-        pointer-events: auto;
-        cursor: pointer;
-        border: 1.5px solid var(--border);
-        border-radius: 4px;
-        background: var(--bg-secondary);
-        color: var(--bg-primary);
-        transition:
-          border-color 150ms ease,
-          background 150ms ease,
-          color 150ms ease;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label:hover
-        > input[type="checkbox"] {
-        border-color: var(--text-secondary);
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label
-        > input[type="checkbox"]::after {
-        content: "";
-        width: 11px;
-        height: 11px;
-        opacity: 0;
-        background: var(--bg-primary);
-        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5L9.5 17L19 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5L9.5 17L19 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-        transition: opacity 150ms ease;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label
-        > input[type="checkbox"]:checked {
-        border-color: var(--text-primary);
-        background: var(--text-primary);
-        color: var(--bg-primary);
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        label
-        > input[type="checkbox"]:checked::after {
-        opacity: 1;
       }
     `}</style>
   );
