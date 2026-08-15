@@ -21,6 +21,7 @@ type ModalShellProps = {
   contentClassName?: string;
   footerClassName?: string;
   headerContent?: ReactNode;
+  inputCorners?: "square" | "rounded";
 };
 
 export default function ModalShell({
@@ -38,6 +39,7 @@ export default function ModalShell({
   contentClassName = "",
   footerClassName = "",
   headerContent,
+  inputCorners = "square",
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -54,6 +56,10 @@ export default function ModalShell({
     : `min(${maxHeight}, calc(100vh - 64px))`;
 
   const defaultBodyClassName = footer ? "px-5 pb-2" : "px-5 pb-5";
+  const inputCornerClassName =
+    inputCorners === "rounded"
+      ? "[&_input:not([type=file])]:rounded-[7px]"
+      : "[&_input:not([type=file])]:rounded-none";
 
   const modal = (
     <div
@@ -98,7 +104,7 @@ export default function ModalShell({
         <div
           className={`min-h-0 flex-1 ${bodyClassName ?? defaultBodyClassName} ${
             bodyScroll ? "overflow-y-auto" : "overflow-hidden"
-          } [&_label]:text-[var(--text-secondary)] [&_input:not([type=file])]:rounded-none [&_input:not([type=file])]:border-[var(--border)] [&_input:not([type=file])]:bg-[var(--filmwave-menu-bg)] [&_input:not([type=file])]:outline-none [&_input:not([type=file])]:focus:border-[var(--border)] [&_textarea]:rounded-none [&_textarea]:border-[var(--border)] [&_textarea]:bg-[var(--filmwave-menu-bg)] [&_textarea]:outline-none [&_textarea]:focus:border-[var(--border)]`}
+          } [&_label]:text-[var(--text-secondary)] ${inputCornerClassName} [&_input:not([type=file])]:border-[var(--border)] [&_input:not([type=file])]:bg-[var(--filmwave-menu-bg)] [&_input:not([type=file])]:outline-none [&_input:not([type=file])]:focus:border-[var(--border)] [&_textarea]:rounded-none [&_textarea]:border-[var(--border)] [&_textarea]:bg-[var(--filmwave-menu-bg)] [&_textarea]:outline-none [&_textarea]:focus:border-[var(--border)]`}
         >
           {children}
         </div>
