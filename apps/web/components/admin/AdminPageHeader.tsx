@@ -17,7 +17,7 @@ export default function AdminPageHeader({
     <div
       className={`flex min-h-12 items-center justify-between gap-4 ${
         compact
-          ? "mb-2"
+          ? "mb-3"
           : "mb-8 border-b border-[var(--border)] pb-4"
       }`}
     >
