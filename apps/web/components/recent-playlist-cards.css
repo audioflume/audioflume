@@ -6,17 +6,17 @@
 
 .recent-playlist-card-list.is-hero {
   --bg-hover: var(--filmwave-neutral-surface);
-  --bg-elevated: rgba(245, 248, 255, 0.1);
-  --text-primary: #ffffff;
+  --bg-elevated: var(--filmwave-neutral-surface);
+  --text-primary: var(--filmwave-white);
   --text-muted: rgba(255, 255, 255, 0.3);
 }
 
 :where(html.light, html[data-theme="light"])
   .recent-playlist-card-list.is-hero {
-  --bg-hover: var(--bg-hover-strong);
-  --bg-elevated: var(--bg-control);
-  --text-primary: #111111;
-  --text-muted: rgba(17, 17, 17, 0.42);
+  --bg-hover: var(--filmwave-neutral-surface);
+  --bg-elevated: var(--filmwave-neutral-surface);
+  --text-primary: var(--filmwave-black);
+  --text-muted: color-mix(in srgb, var(--filmwave-black) 42%, transparent);
 }
 
 .recent-playlist-card-list.is-sidebar {
