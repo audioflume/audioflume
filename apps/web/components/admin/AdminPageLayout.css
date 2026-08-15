@@ -11,6 +11,15 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   padding-top: 88px !important;
 }
 
+/* Frontend-matched cover hover */
+.filmwave-admin-content-page .admin-cover-hover img {
+  transition: transform 500ms ease;
+}
+
+.filmwave-admin-content-page .admin-cover-hover:not(:disabled):hover img {
+  transform: scale(1.025);
+}
+
 /* Source-owned admin page corner system */
 .filmwave-admin-content-page :is(
   [class~="rounded"],
