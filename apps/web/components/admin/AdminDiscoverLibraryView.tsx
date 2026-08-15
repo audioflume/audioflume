@@ -283,6 +283,13 @@ export default function AdminDiscoverLibraryView({
   const [savingSection, setSavingSection] = useState(false);
   const [openLibraryMenu, setOpenLibraryMenu] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
+  const [collapsedSections, setCollapsedSections] = useState<
+    Record<DiscoverSectionShelfKey, boolean>
+  >({
+    discover_moods: false,
+    discover_curated: false,
+    discover_production: false,
+  });
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -366,6 +373,13 @@ export default function AdminDiscoverLibraryView({
     return sectionState[sectionKey]
       .map((item) => playlistById.get(item.playlist_id))
       .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
+  }
+
+  function toggleSection(sectionKey: DiscoverSectionShelfKey) {
+    setCollapsedSections((current) => ({
+      ...current,
+      [sectionKey]: !current[sectionKey],
+    }));
   }
 
   async function addToSection(
@@ -516,13 +530,16 @@ export default function AdminDiscoverLibraryView({
         {DISCOVER_SECTION_SHELF_KEYS.map((sectionKey) => {
           const sectionLabel = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
           const sectionPlaylists = getSectionPlaylists(sectionKey);
+          const sectionCollapsed = collapsedSections[sectionKey];
 
           return (
             <section
               key={sectionKey}
               className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5"
             >
-              <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
+              <div
+                className={`${sectionCollapsed ? "" : "mb-4"} flex flex-wrap items-end justify-between gap-4`}
+              >
                 <div>
                   <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                     {sectionLabel}
@@ -551,38 +568,70 @@ export default function AdminDiscoverLibraryView({
                     <PlusIcon size={12} />
                     <span>Add Discover Content</span>
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleSection(sectionKey)}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+                    aria-label={
+                      sectionCollapsed
+                        ? `Expand ${sectionLabel}`
+                        : `Collapse ${sectionLabel}`
+                    }
+                    aria-expanded={!sectionCollapsed}
+                    title={
+                      sectionCollapsed
+                        ? `Expand ${sectionLabel}`
+                        : `Collapse ${sectionLabel}`
+                    }
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      className={`h-4 w-4 transition-transform duration-300 ${
+                        sectionCollapsed ? "" : "rotate-180"
+                      }`}
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
                 </div>
               </div>
 
-              {sectionPlaylists.length === 0 ? (
-                <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-                  Add a playlist or Discover content to this section.
-                </div>
-              ) : (
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragEnd={(event) => void reorderSection(sectionKey, event)}
-                >
-                  <SortableContext
-                    items={sectionPlaylists.map((playlist) => playlist.id)}
-                    strategy={rectSortingStrategy}
+              {!sectionCollapsed &&
+                (sectionPlaylists.length === 0 ? (
+                  <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+                    Add a playlist or Discover content to this section.
+                  </div>
+                ) : (
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={(event) => void reorderSection(sectionKey, event)}
                   >
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                      {sectionPlaylists.map((playlist) => (
-                        <SortableDiscoverSectionCard
-                          key={playlist.id}
-                          playlist={playlist}
-                          sectionLabel={sectionLabel}
-                          onRemove={(item) =>
-                            void removeFromSection(sectionKey, item)
-                          }
-                        />
-                      ))}
-                    </div>
-                  </SortableContext>
-                </DndContext>
-              )}
+                    <SortableContext
+                      items={sectionPlaylists.map((playlist) => playlist.id)}
+                      strategy={rectSortingStrategy}
+                    >
+                      <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
+                        {sectionPlaylists.map((playlist) => (
+                          <SortableDiscoverSectionCard
+                            key={playlist.id}
+                            playlist={playlist}
+                            sectionLabel={sectionLabel}
+                            onRemove={(item) =>
+                              void removeFromSection(sectionKey, item)
+                            }
+                          />
+                        ))}
+                      </div>
+                    </SortableContext>
+                  </DndContext>
+                ))}
             </section>
           );
         })}
