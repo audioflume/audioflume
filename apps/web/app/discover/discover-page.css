@@ -3,13 +3,13 @@ body:has(.discover-page-root) {
   --discover-editorial-gutter: var(--discover-page-gutter);
   --discover-shelf-gutter: 50px;
   --discover-section-gap: clamp(64px, 6vw, 96px);
-  background: #000;
+  background: var(--filmwave-black);
 }
 
 body:has(.discover-page-root) .discover-page-root,
 body:has(.discover-page-root) .discover-content {
-  background: #000;
-  color: #fff;
+  background: var(--filmwave-black);
+  color: var(--filmwave-white);
 }
 
 body:has(.discover-page-root) .discover-hero {
@@ -61,7 +61,7 @@ body:has(.discover-page-root) .discover-hero-content h1 {
   grid-column: 1;
   grid-row: 1;
   margin: 0;
-  color: #fff;
+  color: var(--filmwave-white);
   font-size: 0;
   font-weight: 400;
   line-height: 1;
@@ -101,7 +101,7 @@ body:has(.discover-page-root) .discover-hero-values > div:last-child {
 
 body:has(.discover-page-root) .discover-hero-values strong,
 body:has(.discover-page-root) .discover-hero-values span {
-  color: #fff;
+  color: var(--filmwave-white);
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-weight: 400;
   letter-spacing: 0;
@@ -156,7 +156,7 @@ body:has(.discover-page-root) .discover-hero-search {
   max-height: 50px !important;
   justify-self: center;
   border: 0 !important;
-  background: #fff !important;
+  background: var(--filmwave-white) !important;
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16) !important;
 }
 
