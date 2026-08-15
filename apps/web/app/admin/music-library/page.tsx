@@ -28,9 +28,6 @@ type IssueFilterKey =
 
 type HealthStatus = "success" | "warning" | "error";
 type IssueSeverity = "success" | "warning" | "error" | "neutral";
-type PaginationItem = number | "ellipsis-left" | "ellipsis-right";
-
-const SONGS_PER_PAGE = 10;
 
 const VALID_ISSUE_FILTERS: IssueFilterKey[] = [
   "all",
@@ -95,37 +92,6 @@ function getInitialIssueFilter(issueParam: string | null): IssueFilterKey {
   return "all";
 }
 
-function getPaginationItems(currentPage: number, totalPages: number) {
-  if (totalPages <= 7) {
-    return Array.from({ length: totalPages }, (_, index) => index + 1);
-  }
-
-  const items: PaginationItem[] = [1];
-  let start = Math.max(2, currentPage - 1);
-  let end = Math.min(totalPages - 1, currentPage + 1);
-
-  if (currentPage <= 4) {
-    start = 2;
-    end = 5;
-  }
-
-  if (currentPage >= totalPages - 3) {
-    start = totalPages - 4;
-    end = totalPages - 1;
-  }
-
-  if (start > 2) items.push("ellipsis-left");
-
-  for (let page = start; page <= end; page += 1) {
-    items.push(page);
-  }
-
-  if (end < totalPages - 1) items.push("ellipsis-right");
-
-  items.push(totalPages);
-  return items;
-}
-
 export default function AdminMusicLibraryPage() {
   const searchParams = useSearchParams();
   const issueParam = searchParams.get("issue");
@@ -135,7 +101,6 @@ export default function AdminMusicLibraryPage() {
     getInitialIssueFilter(issueParam),
   );
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [songs, setSongs] = useState<Song[]>([]);
   const [songsLoading, setSongsLoading] = useState(true);
   const [songsError, setSongsError] = useState("");
@@ -288,40 +253,16 @@ export default function AdminMusicLibraryPage() {
     return [...filteredSongs].reverse();
   }, [filteredSongs]);
 
-  const totalPages = Math.max(1, Math.ceil(visibleSongs.length / SONGS_PER_PAGE));
-  const pageStartIndex = (currentPage - 1) * SONGS_PER_PAGE;
-  const paginatedSongs = useMemo(
-    () => visibleSongs.slice(pageStartIndex, pageStartIndex + SONGS_PER_PAGE),
-    [visibleSongs, pageStartIndex],
-  );
-  const pageSongIds = useMemo(
-    () => paginatedSongs.map((song) => song.id),
-    [paginatedSongs],
-  );
-  const paginationItems = useMemo(
-    () => getPaginationItems(currentPage, totalPages),
-    [currentPage, totalPages],
-  );
-  const firstVisibleSongNumber =
-    visibleSongs.length === 0 ? 0 : pageStartIndex + 1;
-  const lastVisibleSongNumber = Math.min(
-    pageStartIndex + SONGS_PER_PAGE,
-    visibleSongs.length,
+  const visibleSongIds = useMemo(
+    () => visibleSongs.map((song) => song.id),
+    [visibleSongs],
   );
 
   const selectedCount = selectedSongIds.length;
   const selectionMode = selectedCount > 0;
   const allFilteredSelected =
-    pageSongIds.length > 0 &&
-    pageSongIds.every((songId) => selectedSongIds.includes(songId));
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, issueFilter]);
-
-  useEffect(() => {
-    setCurrentPage((page) => Math.min(page, totalPages));
-  }, [totalPages]);
+    visibleSongIds.length > 0 &&
+    visibleSongIds.every((songId) => selectedSongIds.includes(songId));
 
   useEffect(() => {
     setSelectedSongIds((currentIds) =>
@@ -391,13 +332,13 @@ export default function AdminMusicLibraryPage() {
   const toggleSelectAllFiltered = (checked: boolean) => {
     if (checked) {
       setSelectedSongIds((currentIds) =>
-        Array.from(new Set([...currentIds, ...pageSongIds])),
+        Array.from(new Set([...currentIds, ...visibleSongIds])),
       );
       return;
     }
 
     setSelectedSongIds((currentIds) =>
-      currentIds.filter((songId) => !pageSongIds.includes(songId)),
+      currentIds.filter((songId) => !visibleSongIds.includes(songId)),
     );
   };
 
@@ -541,7 +482,7 @@ export default function AdminMusicLibraryPage() {
         .admin-song-select-box {
           width: 16px;
           height: 16px;
-          border-radius: 6px;
+          border-radius: 4px;
           border: 1px solid var(--border);
           background: var(--bg-secondary);
           color: var(--bg-primary);
@@ -587,7 +528,16 @@ export default function AdminMusicLibraryPage() {
         </div>
 
         <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-          <div className="flex flex-col gap-3 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="px-5 pt-5">
+            <div className="text-base font-medium text-[var(--text-primary)]">
+              Music Library
+            </div>
+            <div className="mt-1 text-xs text-[var(--text-secondary)]">
+              {songs.length} song{songs.length === 1 ? "" : "s"}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 px-5 pb-5 pt-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="relative w-full max-w-[500px]">
               <input
                 type="text"
@@ -723,10 +673,10 @@ export default function AdminMusicLibraryPage() {
             </div>
           )}
 
-          <div className="mx-5 overflow-hidden rounded-[7px] border border-[var(--border)]">
+          <div className="mx-5 mb-5 overflow-hidden rounded-[7px] border border-[var(--border)]">
             <div className="overflow-x-auto overflow-y-hidden">
               <div className="min-w-[920px]">
-                <div className="grid h-[42px] grid-cols-[28px_60px_minmax(140px,1.2fr)_minmax(110px,0.9fr)_120px_64px_70px_96px_56px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-primary)]">
+                <div className="grid h-[42px] grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-primary)]">
                   <div className="flex items-center">
                     <label
                       className="admin-song-select-wrap is-visible"
@@ -759,19 +709,19 @@ export default function AdminMusicLibraryPage() {
 
                 {showSkeleton && (
                   <div className="grid gap-0">
-                    {Array.from({ length: SONGS_PER_PAGE }, (_, index) => (
+                    {Array.from({ length: 10 }, (_, index) => (
                       <div
                         key={index}
-                        className="grid min-h-[72px] grid-cols-[28px_60px_minmax(140px,1.2fr)_minmax(110px,0.9fr)_120px_64px_70px_96px_56px] items-center gap-3 px-6"
+                        className="grid min-h-[72px] grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px] items-center gap-3 px-6"
                         style={{
                           borderBottom:
-                            index === SONGS_PER_PAGE - 1
+                            index === 9
                               ? "none"
                               : "1px solid var(--border-subtle)",
                         }}
                       >
                         <div className="flex items-center">
-                          <div className="h-4 w-4 rounded-[6px] bg-[var(--bg-tertiary)]" />
+                          <div className="h-4 w-4 rounded-[4px] bg-[var(--bg-tertiary)]" />
                         </div>
 
                         <div className="h-[52px] w-[52px] bg-[var(--bg-tertiary)]" />
@@ -813,13 +763,13 @@ export default function AdminMusicLibraryPage() {
                   </div>
                 )}
 
-                {!songsError && !showSkeleton && paginatedSongs.length > 0 && (
+                {!songsError && !showSkeleton && visibleSongs.length > 0 && (
                   <div className="admin-song-row-group">
-                    {paginatedSongs.map((song, index) => (
+                    {visibleSongs.map((song, index) => (
                       <AdminSongRow
                         key={song.id}
                         song={song}
-                        isLast={index === paginatedSongs.length - 1}
+                        isLast={index === visibleSongs.length - 1}
                         selected={selectedSongIds.includes(song.id)}
                         selectionMode={selectionMode}
                         onSelectedChange={handleSelectedChange}
@@ -834,63 +784,6 @@ export default function AdminMusicLibraryPage() {
                 )}
               </div>
             </div>
-          </div>
-
-          <div className="flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-xs text-[var(--text-secondary)]">
-              Showing {firstVisibleSongNumber}–{lastVisibleSongNumber} of {visibleSongs.length} song{visibleSongs.length === 1 ? "" : "s"}
-            </div>
-
-            {totalPages > 1 && (
-              <nav aria-label="Music Library pagination" className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-                  disabled={currentPage === 1}
-                  className="flex h-9 w-9 items-center justify-center rounded-[7px] border border-[var(--border)] text-lg leading-none text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-35"
-                  aria-label="Previous page"
-                >
-                  ‹
-                </button>
-
-                {paginationItems.map((item) =>
-                  typeof item === "number" ? (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => setCurrentPage(item)}
-                      className={`flex h-9 min-w-9 items-center justify-center rounded-[7px] border px-2 text-xs font-medium transition-colors ${
-                        item === currentPage
-                          ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                          : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                      }`}
-                      aria-current={item === currentPage ? "page" : undefined}
-                    >
-                      {item}
-                    </button>
-                  ) : (
-                    <span
-                      key={item}
-                      className="flex h-9 min-w-6 items-center justify-center text-xs text-[var(--text-muted)]"
-                    >
-                      …
-                    </span>
-                  ),
-                )}
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setCurrentPage((page) => Math.min(totalPages, page + 1))
-                  }
-                  disabled={currentPage === totalPages}
-                  className="flex h-9 w-9 items-center justify-center rounded-[7px] border border-[var(--border)] text-lg leading-none text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-35"
-                  aria-label="Next page"
-                >
-                  ›
-                </button>
-              </nav>
-            )}
           </div>
         </section>
       </div>
