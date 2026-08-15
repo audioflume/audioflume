@@ -4,6 +4,7 @@ import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import Footer from "@/components/Footer";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AlertIcon from "@/components/icons/AlertIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
@@ -428,12 +429,9 @@ export default function AdminMusicLibraryPage() {
       label="Music Library"
       title="Music Library"
       description="Search and manage uploaded songs."
-      headerAction={(
-        <Link href="/admin/songs/new" className={primaryPillButtonClass}>
-          <UploadIcon size={13} />
-          <span>Upload Song</span>
-        </Link>
-      )}
+      compactHeader
+      contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
+      contentAreaBottomPadding={false}
     >
       <style>{`
         .admin-song-menu-btn,
@@ -534,54 +532,74 @@ export default function AdminMusicLibraryPage() {
           paddingBottom: playerVisible ? "104px" : "32px",
         }}
       >
-        <div className="mb-4 rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4">
-          {selectionMode ? (
-            <div className="flex h-12 items-center gap-3">
-              <div className="text-sm font-medium text-[var(--text-primary)]">
-                {selectedCount} song{selectedCount === 1 ? "" : "s"} selected
-              </div>
-
-              <button
-                type="button"
-                onClick={handleBatchDelete}
-                disabled={isBatchDeleting}
-                className={`admin-batch-delete-btn ml-auto ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
-              >
-                <TrashIcon />
-                {isBatchDeleting
-                  ? "Deleting..."
-                  : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
-              </button>
-
-              <button
-                type="button"
-                onClick={clearSelection}
-                disabled={isBatchDeleting}
-                className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
-              >
-                Cancel
-              </button>
+        <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+          <div className="flex items-start justify-between gap-4 px-5 pb-4 pt-5">
+            <div>
+              <h2 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                Music Library
+              </h2>
+              <p className="mt-1 text-xs text-[var(--text-muted)]">
+                {songsLoading
+                  ? "Loading songs..."
+                  : `${songs.length} song${songs.length === 1 ? "" : "s"} · Master library`}
+              </p>
             </div>
-          ) : (
-            <div className="flex h-12 items-center gap-2">
-              <SearchIcon
-                size={16}
-                className="shrink-0 text-[var(--text-muted)]"
-              />
 
-              <input
-                type="text"
-                placeholder="Search Music Library"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-transparent text-sm font-[300] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
-              />
+            <Link href="/admin/songs/new" className={primaryPillButtonClass}>
+              <UploadIcon size={13} />
+              <span>Upload Song</span>
+            </Link>
+          </div>
+
+          <div className="px-5 pb-4">
+            <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4">
+              {selectionMode ? (
+                <div className="flex h-12 items-center gap-3">
+                  <div className="text-sm font-medium text-[var(--text-primary)]">
+                    {selectedCount} song{selectedCount === 1 ? "" : "s"} selected
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleBatchDelete}
+                    disabled={isBatchDeleting}
+                    className={`admin-batch-delete-btn ml-auto ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+                  >
+                    <TrashIcon />
+                    {isBatchDeleting
+                      ? "Deleting..."
+                      : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={clearSelection}
+                    disabled={isBatchDeleting}
+                    className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div className="flex h-12 items-center gap-2">
+                  <SearchIcon
+                    size={16}
+                    className="shrink-0 text-[var(--text-muted)]"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Search Music Library"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full bg-transparent text-sm font-[300] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
 
-        <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-          <div className="flex flex-col gap-3 border-b border-[var(--border)] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 border-y border-[var(--border)] px-5 py-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-3">
               {songsLoading ? (
                 <HealthIconSkeleton />
@@ -748,8 +766,10 @@ export default function AdminMusicLibraryPage() {
               )}
             </div>
           </div>
-        </div>
+        </section>
       </div>
+
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
 
       <Toast
         message={toastMessage}
