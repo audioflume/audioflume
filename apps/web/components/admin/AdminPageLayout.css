@@ -109,8 +109,16 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 .admin-song-upload-content-page .admin-song-file-row {
   grid-template-columns: 145px minmax(0, 1fr) auto;
+  align-items: start;
   border-top: 0;
   padding: 2px var(--admin-song-card-x);
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row
+  > div:first-child {
+  align-self: start;
+  padding-top: 11px;
 }
 
 .admin-song-upload-content-page
@@ -311,6 +319,14 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
     > .admin-song-form-card-header
     + div {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-song-upload-content-page
+    .admin-song-file-row
+    > div:first-child {
+    padding-top: 0;
   }
 }
 
