@@ -318,9 +318,13 @@ export default function AdminSongUploadPresentationInjector() {
       }
 
       .admin-song-upload-content-page .admin-song-upload-file-action {
+        display: inline-flex;
         height: 40px;
         min-width: 104px;
         cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
         border: 1px solid var(--border);
         border-radius: 7px;
         background: var(--bg-secondary);
@@ -330,7 +334,7 @@ export default function AdminSongUploadPresentationInjector() {
         font-size: 14px;
         font-weight: 500;
         line-height: 1;
-        transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+        transition: color 150ms ease, background 150ms ease;
       }
 
       .admin-song-upload-content-page .admin-song-upload-file-action:hover,
@@ -338,8 +342,12 @@ export default function AdminSongUploadPresentationInjector() {
         color: var(--text-primary);
       }
 
-      .admin-song-upload-content-page .admin-song-upload-file-action.has-file {
-        border-color: var(--text-primary);
+      .admin-song-upload-content-page .admin-song-upload-file-action.has-file::after {
+        content: "✓";
+        color: var(--status-success, #48b571);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1;
       }
 
       .admin-song-upload-content-page
@@ -347,6 +355,7 @@ export default function AdminSongUploadPresentationInjector() {
         > .admin-song-form-card-header {
         min-height: 0;
         border-bottom: 1px solid var(--border-subtle);
+        border-radius: 9px 9px 0 0;
         padding: 18px 20px 14px;
       }
 
@@ -383,10 +392,11 @@ export default function AdminSongUploadPresentationInjector() {
         .admin-song-file-row
         > div:first-child
         > div:first-child {
-        color: var(--text-secondary);
+        color: var(--text-primary);
+        font-family: var(--font-aktiv-grotesk), sans-serif;
         font-size: 11px;
         font-weight: 500;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.02em;
         line-height: 1;
         text-transform: uppercase;
       }
@@ -512,6 +522,12 @@ export default function AdminSongUploadPresentationInjector() {
 
       .admin-song-upload-content-page .admin-song-upload-stem-list .admin-song-stem-file-remove {
         padding: 0;
+      }
+
+      @media (min-width: 1280px) {
+        .admin-song-upload-content-page form > aside {
+          margin-top: 56px;
+        }
       }
 
       @media (max-width: 720px) {
