@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import XIcon from "@/components/icons/XIcon";
 import { modalPrimaryButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
@@ -111,13 +112,26 @@ export default function AdminPlaylistShelfPickerModal({
       }
     >
       <div className="pb-4">
-        <input
-          type="search"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder={resolvedSearchPlaceholder}
-          className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            role="searchbox"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder={resolvedSearchPlaceholder}
+            className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center bg-transparent text-[var(--text-primary)]"
+              aria-label="Clear search"
+            >
+              <XIcon size={12} />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] py-3">
