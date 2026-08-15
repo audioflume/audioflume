@@ -103,7 +103,7 @@ html[data-theme="light"]
   align-items: center;
   justify-content: center;
   background: var(--media-overlay-strong);
-  color: #111111;
+  color: var(--filmwave-black);
   opacity: 0;
   transition: opacity 140ms ease;
 }
@@ -133,8 +133,8 @@ html[data-theme="light"]
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: #fff;
-  color: #000;
+  background: var(--filmwave-white);
+  color: var(--filmwave-black);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
