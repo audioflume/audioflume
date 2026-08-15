@@ -9,6 +9,7 @@ type AdminContentPageProps = {
   description?: string;
   headerAction?: ReactNode;
   titleAction?: ReactNode;
+  compactHeader?: boolean;
   children: ReactNode;
   contentClassName?: string;
   contentStyle?: CSSProperties;
@@ -21,6 +22,7 @@ export default function AdminContentPage({
   description,
   headerAction,
   titleAction,
+  compactHeader = false,
   children,
   contentClassName = "",
   contentStyle,
@@ -36,7 +38,12 @@ export default function AdminContentPage({
           className={`mx-auto max-w-[1180px] ${contentClassName}`}
           style={contentStyle}
         >
-          <AdminPageHeader section={section} label={label} action={headerAction} />
+          <AdminPageHeader
+            section={section}
+            label={label}
+            action={headerAction}
+            compact={compactHeader}
+          />
 
           {!hidePageIntro ? (
             <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
