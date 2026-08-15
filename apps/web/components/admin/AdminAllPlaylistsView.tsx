@@ -7,6 +7,7 @@ import DropdownShell from "@/components/DropdownShell";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import TrashIcon from "@/components/icons/TrashIcon";
 import { primaryPillButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
@@ -114,7 +115,10 @@ function PlaylistCard({
               void onDeletePlaylist(playlist);
             }}
           >
-            {deletingId === playlist.id ? "Deleting..." : "Delete Playlist"}
+            <span>
+              {deletingId === playlist.id ? "Deleting..." : "Delete Playlist"}
+            </span>
+            <TrashIcon size={13} />
           </button>
         </DropdownShell>
       </div>
