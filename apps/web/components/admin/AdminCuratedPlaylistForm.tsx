@@ -558,47 +558,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               slug={nameSlug}
             />
           </div>
-
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-            <h3 className="font-[family-name:var(--font-aktiv-grotesk)] text-xl font-medium tracking-[-0.05em]">
-              Card preview
-            </h3>
-            <div className="relative mt-4 min-h-[260px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
-              {coverVideoUrl ? (
-                <video
-                  src={coverVideoUrl}
-                  poster={coverImageUrl || undefined}
-                  className="absolute inset-0 h-full w-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  aria-label={name || "Playlist video preview"}
-                />
-              ) : (
-                coverImageUrl && (
-                  <Image
-                    src={coverImageUrl}
-                    alt={name || "Playlist preview"}
-                    fill
-                    sizes="360px"
-                    className="object-cover"
-                    unoptimized
-                  />
-                )
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="relative z-10 flex min-h-[260px] flex-col justify-end p-4 text-white">
-                <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55">
-                  {kicker || "Kicker text"}
-                </div>
-                <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-3xl font-medium leading-none tracking-[-0.055em]">
-                  {name || "Playlist name"}
-                </div>
-              </div>
-            </div>
-          </div>
         </aside>
       </form>
 
