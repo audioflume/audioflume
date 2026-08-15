@@ -15,6 +15,7 @@ import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
 import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
 import "./globals.css";
+import "./interaction-defaults.css";
 import "./music-library-web-refinements.css";
 import "./discover/discover-page.css";
 import "../components/admin/AdminPageLayout.css";
