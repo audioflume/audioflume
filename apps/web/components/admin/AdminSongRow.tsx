@@ -224,7 +224,7 @@ export default function AdminSongRow({
     ? showPublishedStatus
       ? showAddedDate
         ? largeRow
-          ? "grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,0.9fr)_160px_64px_70px_96px_56px]"
+          ? "grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px]"
           : "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px]"
         : largeRow
           ? "grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]"
