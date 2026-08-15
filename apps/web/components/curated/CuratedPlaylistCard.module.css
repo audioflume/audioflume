@@ -47,7 +47,7 @@
   right: 25.5px;
   width: 13px;
   height: 13px;
-  background: #fff;
+  background: var(--filmwave-white);
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   -webkit-mask-position: center;
   -webkit-mask-repeat: no-repeat;
@@ -60,12 +60,12 @@
 
 .card:hover .imageLink::before,
 .card:focus-within .imageLink::before {
-  background: #fff;
+  background: var(--filmwave-white);
 }
 
 .card:hover .imageLink::after,
 .card:focus-within .imageLink::after {
-  background: #000;
+  background: var(--filmwave-black);
 }
 
 .image {
