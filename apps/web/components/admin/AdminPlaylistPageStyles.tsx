@@ -115,12 +115,12 @@ export default function AdminPlaylistPageStyles() {
       }
 
       /* Preserve the original pre-pill browse filter card/grid layout.
-         Only the checkbox itself adopts the Music Library selection treatment. */
+         The checkbox treatment matches Music Library exactly. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > section
         > div:last-child
-        > div.grid.gap-3.rounded-xl
+        > div.grid.gap-3
         label
         > input[type="checkbox"] {
         position: relative;
@@ -147,7 +147,7 @@ export default function AdminPlaylistPageStyles() {
         form
         > section
         > div:last-child
-        > div.grid.gap-3.rounded-xl
+        > div.grid.gap-3
         label:hover
         > input[type="checkbox"] {
         border-color: var(--text-secondary);
@@ -157,7 +157,7 @@ export default function AdminPlaylistPageStyles() {
         form
         > section
         > div:last-child
-        > div.grid.gap-3.rounded-xl
+        > div.grid.gap-3
         label
         > input[type="checkbox"]::after {
         content: "";
@@ -174,7 +174,7 @@ export default function AdminPlaylistPageStyles() {
         form
         > section
         > div:last-child
-        > div.grid.gap-3.rounded-xl
+        > div.grid.gap-3
         label
         > input[type="checkbox"]:checked {
         border-color: var(--text-primary);
@@ -186,7 +186,7 @@ export default function AdminPlaylistPageStyles() {
         form
         > section
         > div:last-child
-        > div.grid.gap-3.rounded-xl
+        > div.grid.gap-3
         label
         > input[type="checkbox"]:checked::after {
         opacity: 1;
@@ -202,15 +202,7 @@ export default function AdminPlaylistPageStyles() {
         form
         > section
         > div:last-child
-        > div.grid.gap-3.rounded-xl
-        > div:first-child
-        > p,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3.rounded-xl
-        > div[class~="border-t"]
+        > div.grid.gap-3
         > div:first-child
         > p,
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -226,7 +218,7 @@ export default function AdminPlaylistPageStyles() {
         > section
         > div:last-child
         > label.flex:has(> input[type="checkbox"]) {
-        border-radius: 10px;
+        border-radius: 7px;
         background: var(--bg-primary);
         padding: 12px;
       }
