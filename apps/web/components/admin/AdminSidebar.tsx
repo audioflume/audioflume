@@ -108,10 +108,10 @@ function AdminNavLink({ label, href, status }: AdminNavItem) {
   return (
     <Link
       href={href}
-      className={`group flex h-7 items-center justify-between gap-3 px-2.5 text-[13px] font-medium transition ${
+      className={`group flex h-[38px] items-center justify-between gap-3 pl-3 pr-2 text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
         active
-          ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
-          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+          ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
       }`}
     >
       <span className="truncate">{label}</span>
@@ -131,15 +131,19 @@ function PrimaryNavLink({ label, href, icon }: PrimaryNavItem) {
   return (
     <Link
       href={href}
-      className={`group flex h-8 items-center gap-2.5 px-2.5 text-[13px] font-medium transition ${
+      className={`group flex h-[38px] items-center gap-2.5 pl-3 pr-2 text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
         active
-          ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
-          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+          ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
       }`}
     >
-      <span className={`flex h-4 w-4 items-center justify-center transition ${
-        active ? "text-[var(--text-primary)]" : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
-      }`}>
+      <span
+        className={`flex h-4 w-4 items-center justify-center transition-colors ${
+          active
+            ? "text-[var(--text-primary)]"
+            : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)] group-focus-visible:text-[var(--text-primary)]"
+        }`}
+      >
         <PrimaryIcon icon={icon} />
       </span>
       <span className="truncate">{label}</span>
@@ -147,13 +151,26 @@ function PrimaryNavLink({ label, href, icon }: PrimaryNavItem) {
   );
 }
 
+function AdminSectionHeading({ children }: { children: string }) {
+  return (
+    <div className="mb-[17px] px-3 font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
+      {children}
+    </div>
+  );
+}
+
 function AdminNavSection({ title, links }: AdminNavGroup) {
   return (
     <div className="shrink-0">
-      <div className="mb-2 px-2.5 text-[11px] font-medium text-[var(--text-muted)]">{title}</div>
-      <div className="space-y-[2px]">
+      <AdminSectionHeading>{title}</AdminSectionHeading>
+      <div>
         {links.map((link) => (
-          <AdminNavLink key={link.href} label={link.label} href={link.href} status={link.status} />
+          <AdminNavLink
+            key={link.href}
+            label={link.label}
+            href={link.href}
+            status={link.status}
+          />
         ))}
       </div>
     </div>
@@ -188,7 +205,12 @@ function SystemStatusConsole({
             </div>
             <span
               className="shrink-0 text-[9px]"
-              style={{ color: status.tone === "success" ? "var(--text-primary)" : STATUS_COLORS[status.tone] }}
+              style={{
+                color:
+                  status.tone === "success"
+                    ? "var(--text-primary)"
+                    : STATUS_COLORS[status.tone],
+              }}
             >
               {status.value}
             </span>
@@ -207,7 +229,9 @@ export default function AdminSidebar() {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
 
-  const [consoleStatuses, setConsoleStatuses] = useState<ConsoleStatus[]>(DEFAULT_CONSOLE_STATUSES);
+  const [consoleStatuses, setConsoleStatuses] = useState<ConsoleStatus[]>(
+    DEFAULT_CONSOLE_STATUSES,
+  );
   const [systemHealthLoading, setSystemHealthLoading] = useState(true);
   const [lastChecked, setLastChecked] = useState("pending");
 
@@ -222,7 +246,11 @@ export default function AdminSidebar() {
         setLastChecked("just now");
       } catch {
         setConsoleStatuses(
-          DEFAULT_CONSOLE_STATUSES.map((s) => ({ ...s, value: "ERROR", tone: "error" as StatusTone })),
+          DEFAULT_CONSOLE_STATUSES.map((s) => ({
+            ...s,
+            value: "ERROR",
+            tone: "error" as StatusTone,
+          })),
         );
         setLastChecked("failed");
       } finally {
@@ -234,26 +262,36 @@ export default function AdminSidebar() {
 
   return (
     <aside
-      className="fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col"
+      className="fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] bg-[var(--bg-primary)] md:flex md:flex-col"
       style={{ top: "56px", bottom: playerVisible ? "64px" : "0px" }}
     >
-      <div className="flex flex-1 flex-col overflow-y-auto px-5 pt-6 pb-6">
-        <div className="border-b border-[var(--border)] pb-5">
-          <div className="mb-2 px-2.5 text-[11px] font-medium text-[var(--text-muted)]">Admin</div>
-          <div className="space-y-[2px]">
+      <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-[34px]">
+        <div className="border-b border-[var(--border)] pb-8">
+          <AdminSectionHeading>Admin</AdminSectionHeading>
+          <div>
             {primaryLinks.map((link) => (
-              <PrimaryNavLink key={link.href} label={link.label} href={link.href} icon={link.icon} status={link.status} />
+              <PrimaryNavLink
+                key={link.href}
+                label={link.label}
+                href={link.href}
+                icon={link.icon}
+                status={link.status}
+              />
             ))}
           </div>
         </div>
 
-        <div className="mt-5 grid gap-5">
+        <div className="mt-8 grid gap-8">
           {navGroups.map((section) => (
-            <AdminNavSection key={section.title} title={section.title} links={section.links} />
+            <AdminNavSection
+              key={section.title}
+              title={section.title}
+              links={section.links}
+            />
           ))}
         </div>
 
-        <div className="mt-auto pt-6">
+        <div className="mt-auto pt-8">
           <SystemStatusConsole
             statuses={consoleStatuses}
             loading={systemHealthLoading}
