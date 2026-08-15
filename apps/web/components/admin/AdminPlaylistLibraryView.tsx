@@ -18,7 +18,6 @@ import AdminPlaylistShelfPickerModal from "@/components/admin/AdminPlaylistShelf
 import {
   PLAYLIST_MANAGER_GRID_CLASS,
   PlaylistManagerCollapsibleSection,
-  PlaylistManagerLibrarySection,
   PlaylistManagerLoadingGrid,
   PlaylistManagerSortableCard,
   PlaylistManagerStaticCard,
@@ -38,8 +37,6 @@ type Props = {
   playlists: CuratedPlaylist[];
   loading: boolean;
   error: string;
-  deletingId: number | null;
-  onDeletePlaylist: (playlist: CuratedPlaylist) => void | Promise<void>;
 };
 
 type ShelfIds = Record<CuratedPlaylistShelfKey, number[]>;
@@ -54,8 +51,6 @@ export default function AdminPlaylistLibraryView({
   playlists,
   loading,
   error,
-  deletingId,
-  onDeletePlaylist,
 }: Props) {
   const [shelfIds, setShelfIds] = useState<ShelfIds>(EMPTY_SHELF_IDS);
   const [shelvesLoading, setShelvesLoading] = useState(true);
@@ -64,7 +59,6 @@ export default function AdminPlaylistLibraryView({
     useState<CuratedPlaylistShelfKey | null>(null);
   const [addingShelf, setAddingShelf] =
     useState<CuratedPlaylistShelfKey | null>(null);
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
   const [collapsedSections, setCollapsedSections] = useState<
     Record<CollapsiblePlaylistSection, boolean>
@@ -127,11 +121,6 @@ export default function AdminPlaylistLibraryView({
 
   const playlistById = useMemo(
     () => new Map(playlists.map((playlist) => [playlist.id, playlist])),
-    [playlists],
-  );
-
-  const masterPlaylists = useMemo(
-    () => [...playlists].sort(sortPlaylistNewestFirst),
     [playlists],
   );
 
@@ -387,30 +376,11 @@ export default function AdminPlaylistLibraryView({
         )}
       </div>
 
-      <PlaylistManagerLibrarySection
-        title="All Playlists"
-        subtitle={`${masterPlaylists.length} playlist${masterPlaylists.length === 1 ? "" : "s"} · Master library`}
-        createHref="/admin/playlist-manager/new"
-        createLabel="New Playlist"
-        playlists={masterPlaylists}
-        emptyMessage="No playlists yet."
-        getEditHref={(playlist) =>
-          `/admin/playlist-manager/${playlist.id}/edit`
-        }
-        getMeta={(playlist) => `${playlist.song_count || 0} songs`}
-        editLabel="Edit Playlist"
-        deleteLabel="Delete Playlist"
-        openMenuId={openMenuId}
-        setOpenMenuId={setOpenMenuId}
-        deletingId={deletingId}
-        onDeletePlaylist={onDeletePlaylist}
-      />
-
       {pickerShelf && (
         <AdminPlaylistShelfPickerModal
           isOpen
           title={CURATED_PLAYLIST_SHELF_LABELS[pickerShelf]}
-          playlists={masterPlaylists}
+          playlists={playlists}
           existingIds={shelfIds[pickerShelf]}
           saving={addingShelf === pickerShelf}
           onClose={() => setPickerShelf(null)}
