@@ -663,7 +663,7 @@ export default function AdminMusicLibraryPage() {
             <div className="overflow-x-auto overflow-y-hidden">
               <div className="admin-music-library-song-list min-w-[920px]">
                 {showSkeleton && (
-                  <div className="grid gap-0">
+                  <div className="grid gap-0 border-t border-[var(--border-subtle)]">
                     {Array.from({ length: 10 }, (_, index) => (
                       <div
                         key={index}
@@ -719,7 +719,7 @@ export default function AdminMusicLibraryPage() {
                 )}
 
                 {!songsError && !showSkeleton && visibleSongs.length > 0 && (
-                  <div className="admin-song-row-group">
+                  <div className="admin-song-row-group border-t border-[var(--border-subtle)]">
                     {visibleSongs.map((song, index) => (
                       <AdminSongRow
                         key={song.id}
