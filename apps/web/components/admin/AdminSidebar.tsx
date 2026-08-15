@@ -163,7 +163,7 @@ function AdminNavSection({ title, links }: AdminNavGroup) {
   return (
     <div className="shrink-0">
       <AdminSectionHeading>{title}</AdminSectionHeading>
-      <div>
+      <div className="flex flex-col gap-px">
         {links.map((link) => (
           <AdminNavLink
             key={link.href}
@@ -268,7 +268,7 @@ export default function AdminSidebar() {
       <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
         <div className="border-b border-[var(--border)] pb-8">
           <AdminSectionHeading>Admin</AdminSectionHeading>
-          <div>
+          <div className="flex flex-col gap-px">
             {primaryLinks.map((link) => (
               <PrimaryNavLink
                 key={link.href}
