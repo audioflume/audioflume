@@ -333,8 +333,19 @@ export default function AdminAddToPlaylistModal({
                       : "hover:bg-[var(--bg-hover)]"
                   }`}
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-primary)] text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">
-                    <PlaylistIcon size={13} />
+                  <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-none bg-[var(--bg-primary)] text-[var(--text-muted)] transition group-hover:text-[var(--text-primary)]">
+                    {playlist.cover_image_url ? (
+                      <Image
+                        src={playlist.cover_image_url}
+                        alt={playlist.name}
+                        fill
+                        sizes="36px"
+                        className="object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <PlaylistIcon size={13} />
+                    )}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
