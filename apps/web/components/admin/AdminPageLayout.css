@@ -410,8 +410,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   [data-ai-generated-field-embedded]
   > div
   > label:last-child
-  > input:checked
-  + span {
+  > span {
   border-color: var(--text-primary);
   background: var(--text-primary);
   color: var(--bg-primary);
@@ -546,7 +545,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 /* Source-owned admin page corner system */
-.filmwave-admin-content-page:not(.admin-song-upload-content-page) :is(
+.filmwave-admin-content-page:not(.admin-song-upload-content-page):not(.admin-song-edit-content-page) :is(
   [class~="rounded"],
   [class~="rounded-sm"],
   [class~="rounded-md"],
@@ -559,11 +558,11 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   [class~="rounded-[14px]"],
   [class~="rounded-[18px]"]
 ),
-main:has(.admin-song-form-card):not(.admin-song-upload-content-page)
+main:has(.admin-song-form-card):not(.admin-song-upload-content-page):not(.admin-song-edit-content-page)
   .admin-song-form-card,
-main:has(.admin-song-form-card):not(.admin-song-upload-content-page)
+main:has(.admin-song-form-card):not(.admin-song-upload-content-page):not(.admin-song-edit-content-page)
   .admin-song-form-icon-btn,
-main:has(.admin-song-form-card):not(.admin-song-upload-content-page) form :is(
+main:has(.admin-song-form-card):not(.admin-song-upload-content-page):not(.admin-song-edit-content-page) form :is(
   [class~="rounded"],
   [class~="rounded-sm"],
   [class~="rounded-md"],
