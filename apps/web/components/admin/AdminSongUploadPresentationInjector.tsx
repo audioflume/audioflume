@@ -343,19 +343,16 @@ export default function AdminSongUploadPresentationInjector() {
       }
 
       .admin-song-upload-content-page .admin-song-upload-file-action.has-file::after {
-        content: "✓";
+        content: "";
         display: inline-flex;
         width: 18px;
         height: 18px;
         flex: 0 0 18px;
-        align-items: center;
-        justify-content: center;
         border-radius: 999px;
-        background: var(--status-success, #48b571);
-        color: var(--status-contrast, #ffffff);
-        font-size: 10px;
-        font-weight: 700;
-        line-height: 1;
+        background-color: var(--status-success-soft, rgba(72, 181, 113, 0.12));
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 12.5L9.5 17L19 7' stroke='%2348b571' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-position: center;
+        background-repeat: no-repeat;
       }
 
       .admin-song-upload-content-page
