@@ -195,20 +195,20 @@
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option:hover,
 .fw-music-content-column .fw-filter-detail .fw-filter-option:focus-visible {
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  border-color: var(--filmwave-border-color) !important;
   border-radius: 999px !important;
   background: var(--filmwave-neutral-surface) !important;
-  color: #fff !important;
+  color: var(--filmwave-white) !important;
 }
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option.is-selected,
 .fw-music-content-column
   .fw-filter-detail
   .fw-filter-option[aria-pressed="true"] {
-  border-color: #fff !important;
+  border-color: var(--filmwave-border-color) !important;
   border-radius: 999px !important;
-  background: #fff !important;
-  color: #111 !important;
+  background: var(--filmwave-white) !important;
+  color: var(--filmwave-black) !important;
   font-weight: 400 !important;
 }
 
@@ -292,7 +292,7 @@
   .fw-music-content-column
   .fw-filter-detail
   .fw-filter-option:focus-visible {
-  border-color: var(--border-strong) !important;
+  border-color: var(--filmwave-border-color) !important;
   border-radius: 999px !important;
   color: var(--text-primary) !important;
 }
@@ -305,10 +305,10 @@
   .fw-music-content-column
   .fw-filter-detail
   .fw-filter-option[aria-pressed="true"] {
-  border-color: var(--text-primary) !important;
+  border-color: var(--filmwave-border-color) !important;
   border-radius: 999px !important;
-  background: var(--text-primary) !important;
-  color: var(--bg-primary) !important;
+  background: var(--filmwave-black) !important;
+  color: var(--filmwave-white) !important;
 }
 
 /* ─── Music library alignment rail ────────────────────────── */
@@ -380,7 +380,7 @@
 .filmwave-app-header,
 .desktop-header,
 .desktop-app-header {
-  border-bottom-color: color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
+  border-bottom-color: var(--filmwave-border-color) !important;
 }
 
 .fw-music-page-shell,
