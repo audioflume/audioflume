@@ -25,6 +25,8 @@ export default function AdminContentPage({
   contentClassName = "",
   contentStyle,
 }: AdminContentPageProps) {
+  const hidePageIntro = label === "Playlist Manager" || label === "Music Library";
+
   return (
     <main className="filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AdminSidebar />
@@ -36,25 +38,27 @@ export default function AdminContentPage({
         >
           <AdminPageHeader section={section} label={label} action={headerAction} />
 
-          <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
-            <div className="min-w-0">
-              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-                {title}
-              </h1>
+          {!hidePageIntro ? (
+            <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+                  {title}
+                </h1>
 
-              {description ? (
-                <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
-                  {description}
-                </p>
-              ) : null}
+                {description ? (
+                  <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
+                    {description}
+                  </p>
+                ) : null}
+              </div>
+
+              {titleAction ? (
+                <div className="flex h-8 shrink-0 items-center">{titleAction}</div>
+              ) : (
+                <div aria-hidden="true" className="hidden h-8 w-0 shrink-0 md:block" />
+              )}
             </div>
-
-            {titleAction ? (
-              <div className="flex h-8 shrink-0 items-center">{titleAction}</div>
-            ) : (
-              <div aria-hidden="true" className="hidden h-8 w-0 shrink-0 md:block" />
-            )}
-          </div>
+          ) : null}
 
           {children}
         </div>
