@@ -353,7 +353,7 @@ export default function CuratedPlaylistsPage() {
       .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
     const newlyAdded = [...searchablePlaylists]
       .sort(sortNewestFirst)
-      .slice(0, 8);
+      .slice(0, 10);
     const trending = manualShelfIds.trending
       .map((id) => searchableById.get(id))
       .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
