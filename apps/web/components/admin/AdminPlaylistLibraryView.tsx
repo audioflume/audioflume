@@ -481,7 +481,7 @@ export default function AdminPlaylistLibraryView({
 
   return (
     <>
-      <section className="rounded-[14px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] p-4 sm:p-5">
+      <section className="overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] p-4 sm:p-5">
         <div className="mb-6">
           <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
             Curated Shelves
@@ -555,7 +555,7 @@ export default function AdminPlaylistLibraryView({
                                 playlist={playlist}
                                 onRemove={(playlistId) => {
                                   const confirmed = window.confirm(
-                                    `Remove "${playlist.name}" from ${title}?`,
+                                    `Remove \"${playlist.name}\" from ${title}?`,
                                   );
                                   if (!confirmed) return;
                                   void removeFromShelf(shelfKey, playlistId);
@@ -601,7 +601,7 @@ export default function AdminPlaylistLibraryView({
         </div>
       </section>
 
-      <section className="mt-16 border-t border-[var(--border)] pt-10">
+      <section className="mt-16">
         <div className="mb-5 flex items-end justify-between gap-6">
           <div>
             <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
