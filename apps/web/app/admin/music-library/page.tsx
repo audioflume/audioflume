@@ -483,7 +483,7 @@ export default function AdminMusicLibraryPage() {
           width: 16px;
           height: 16px;
           border-radius: 4px;
-          border: 1px solid var(--border);
+          border: 1.5px solid var(--border);
           background: var(--bg-secondary);
           color: var(--bg-primary);
           display: flex;
@@ -517,7 +517,16 @@ export default function AdminMusicLibraryPage() {
           paddingBottom: playerVisible ? "104px" : "32px",
         }}
       >
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex items-end justify-between gap-4">
+          <div>
+            <div className="text-base font-medium text-[var(--text-primary)]">
+              Music Library
+            </div>
+            <div className="mt-1 text-xs text-[var(--text-secondary)]">
+              {songs.length} song{songs.length === 1 ? "" : "s"}
+            </div>
+          </div>
+
           <Link
             href="/admin/songs/new"
             className="inline-flex h-11 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-sm font-medium text-[var(--bg-primary)] transition"
@@ -528,16 +537,7 @@ export default function AdminMusicLibraryPage() {
         </div>
 
         <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-          <div className="px-5 pt-5">
-            <div className="text-base font-medium text-[var(--text-primary)]">
-              Music Library
-            </div>
-            <div className="mt-1 text-xs text-[var(--text-secondary)]">
-              {songs.length} song{songs.length === 1 ? "" : "s"}
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 px-5 pb-5 pt-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="relative w-full max-w-[500px]">
               <input
                 type="text"
@@ -676,7 +676,7 @@ export default function AdminMusicLibraryPage() {
           <div className="mx-5 mb-5 overflow-hidden rounded-[7px] border border-[var(--border)]">
             <div className="overflow-x-auto overflow-y-hidden">
               <div className="min-w-[920px]">
-                <div className="grid h-[42px] grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-primary)]">
+                <div className="grid h-[52px] grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px] items-center gap-3 border-b border-[var(--border)] bg-[var(--filmwave-neutral-surface)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-primary)]">
                   <div className="flex items-center">
                     <label
                       className="admin-song-select-wrap is-visible"
