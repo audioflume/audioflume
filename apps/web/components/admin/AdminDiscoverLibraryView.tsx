@@ -150,7 +150,9 @@ function SortableDiscoverSectionCard({
           {...attributes}
           {...listeners}
         >
-          <DragIconSmall />
+          <span className="inline-flex scale-x-[1.45]">
+            <DragIconSmall />
+          </span>
         </button>
 
         <button
@@ -512,11 +514,7 @@ export default function AdminDiscoverLibraryView({
   return (
     <>
       <section className="overflow-hidden rounded-[20px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] p-4 sm:p-5">
-        <div
-          className={`flex items-start justify-between gap-6 ${
-            sectionsCollapsed ? "" : "mb-6"
-          }`}
-        >
+        <div className="flex items-start justify-between gap-6">
           <div>
             <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
               Discover Sections
@@ -542,7 +540,7 @@ export default function AdminDiscoverLibraryView({
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden="true"
-              className={`h-4 w-4 transition-transform ${
+              className={`h-4 w-4 transition-transform duration-300 ${
                 sectionsCollapsed ? "" : "rotate-180"
               }`}
             >
@@ -551,83 +549,92 @@ export default function AdminDiscoverLibraryView({
           </button>
         </div>
 
-        {!sectionsCollapsed && (
-          <div className="grid gap-3">
-            {DISCOVER_SECTION_SHELF_KEYS.map((sectionKey) => {
-              const sectionLabel = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
-              const sectionPlaylists = getSectionPlaylists(sectionKey);
+        <div
+          className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
+            sectionsCollapsed
+              ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
+              : "mt-6 grid-rows-[1fr] opacity-100"
+          }`}
+          aria-hidden={sectionsCollapsed}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div className="grid gap-3">
+              {DISCOVER_SECTION_SHELF_KEYS.map((sectionKey) => {
+                const sectionLabel = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
+                const sectionPlaylists = getSectionPlaylists(sectionKey);
 
-              return (
-                <section
-                  key={sectionKey}
-                  className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5"
-                >
-                  <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
-                    <div>
-                      <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-                        {sectionLabel}
-                      </h3>
-                      <p className="mt-1 text-[11px] text-[var(--text-muted)]">
-                        {sectionPlaylists.length} item{sectionPlaylists.length === 1 ? "" : "s"}
-                      </p>
+                return (
+                  <section
+                    key={sectionKey}
+                    className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5"
+                  >
+                    <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
+                      <div>
+                        <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                          {sectionLabel}
+                        </h3>
+                        <p className="mt-1 text-[11px] text-[var(--text-muted)]">
+                          {sectionPlaylists.length} item{sectionPlaylists.length === 1 ? "" : "s"}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setPicker({ sectionKey, source: "playlist" })}
+                          className={secondaryPillButtonClass}
+                          disabled={savingSection}
+                        >
+                          <PlusIcon size={12} />
+                          <span>Add Playlist</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPicker({ sectionKey, source: "discover" })}
+                          className={secondaryPillButtonClass}
+                          disabled={savingSection}
+                        >
+                          <PlusIcon size={12} />
+                          <span>Add Discover Content</span>
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setPicker({ sectionKey, source: "playlist" })}
-                        className={secondaryPillButtonClass}
-                        disabled={savingSection}
+                    {sectionPlaylists.length === 0 ? (
+                      <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+                        Add a playlist or Discover content to this section.
+                      </div>
+                    ) : (
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={(event) => void reorderSection(sectionKey, event)}
                       >
-                        <PlusIcon size={12} />
-                        <span>Add Playlist</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPicker({ sectionKey, source: "discover" })}
-                        className={secondaryPillButtonClass}
-                        disabled={savingSection}
-                      >
-                        <PlusIcon size={12} />
-                        <span>Add Discover Content</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {sectionPlaylists.length === 0 ? (
-                    <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-                      Add a playlist or Discover content to this section.
-                    </div>
-                  ) : (
-                    <DndContext
-                      sensors={sensors}
-                      collisionDetection={closestCenter}
-                      onDragEnd={(event) => void reorderSection(sectionKey, event)}
-                    >
-                      <SortableContext
-                        items={sectionPlaylists.map((playlist) => playlist.id)}
-                        strategy={rectSortingStrategy}
-                      >
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                          {sectionPlaylists.map((playlist) => (
-                            <SortableDiscoverSectionCard
-                              key={playlist.id}
-                              playlist={playlist}
-                              sectionLabel={sectionLabel}
-                              onRemove={(item) =>
-                                void removeFromSection(sectionKey, item)
-                              }
-                            />
-                          ))}
-                        </div>
-                      </SortableContext>
-                    </DndContext>
-                  )}
-                </section>
-              );
-            })}
+                        <SortableContext
+                          items={sectionPlaylists.map((playlist) => playlist.id)}
+                          strategy={rectSortingStrategy}
+                        >
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
+                            {sectionPlaylists.map((playlist) => (
+                              <SortableDiscoverSectionCard
+                                key={playlist.id}
+                                playlist={playlist}
+                                sectionLabel={sectionLabel}
+                                onRemove={(item) =>
+                                  void removeFromSection(sectionKey, item)
+                                }
+                              />
+                            ))}
+                          </div>
+                        </SortableContext>
+                      </DndContext>
+                    )}
+                  </section>
+                );
+              })}
+            </div>
           </div>
-        )}
+        </div>
       </section>
 
       <section className="mt-16">
