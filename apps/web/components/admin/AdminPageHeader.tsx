@@ -4,15 +4,23 @@ type AdminPageHeaderProps = {
   section?: string;
   label: string;
   action?: ReactNode;
+  compact?: boolean;
 };
 
 export default function AdminPageHeader({
   section = "Admin",
   label,
   action,
+  compact = false,
 }: AdminPageHeaderProps) {
   return (
-    <div className="mb-8 flex min-h-12 items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
+    <div
+      className={`flex min-h-12 items-center justify-between gap-4 ${
+        compact
+          ? "mb-0"
+          : "mb-8 border-b border-[var(--border)] pb-4"
+      }`}
+    >
       <div className="text-xs text-[var(--text-muted)]">
         {section} / <span className="text-[var(--text-primary)]">{label}</span>
       </div>
