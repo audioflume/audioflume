@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import Footer from "@/components/Footer";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
@@ -71,6 +72,9 @@ export default function AdminContentPage({
     isSongEdit ||
     isPlaylistCreate ||
     isPlaylistEdit;
+  const showStandardFooter = isSongUpload || isSongEdit;
+  const resolvedContentAreaBottomPadding =
+    contentAreaBottomPadding && !showStandardFooter;
   const resolvedContentAreaClassName = usesAdminCanvas
     ? contentAreaClassName
         .replace("bg-[var(--filmwave-neutral-surface)]", "")
@@ -90,7 +94,7 @@ export default function AdminContentPage({
       <AdminSidebar />
 
       <section
-        className={`min-h-screen px-5 pt-[88px] ${contentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-8 xl:px-10 ${
+        className={`min-h-screen px-5 pt-[88px] ${resolvedContentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-8 xl:px-10 ${
           usesAdminCanvas ? "bg-[var(--filmwave-admin-canvas)]" : ""
         } ${resolvedContentAreaClassName}`}
       >
@@ -137,6 +141,10 @@ export default function AdminContentPage({
           ) : null}
 
           {children}
+
+          {showStandardFooter ? (
+            <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+          ) : null}
         </div>
       </section>
     </main>
