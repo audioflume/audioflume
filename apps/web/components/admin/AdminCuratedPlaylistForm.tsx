@@ -433,7 +433,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 />
               </label>
 
-              <div className="grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
+              <div className="grid gap-3">
                 <div>
                   <div className="text-sm font-medium text-[var(--text-primary)]">
                     Browse filters
