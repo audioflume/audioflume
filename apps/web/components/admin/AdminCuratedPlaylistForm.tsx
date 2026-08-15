@@ -31,11 +31,7 @@ import type {
   CuratedPlaylist,
   CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
-import {
-  CURATED_BROWSE_FILTERS,
-  CURATED_PLAYLIST_GROUPS,
-  DEFAULT_CURATED_PLAYLIST_GROUP,
-} from "@/lib/curatedPlaylists";
+import { CURATED_BROWSE_FILTERS } from "@/lib/curatedPlaylists";
 import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
@@ -147,9 +143,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [coverVideoUrl, setCoverVideoUrl] = useState("");
   const [coverVideoTouched, setCoverVideoTouched] = useState(false);
-  const [playlistGroup, setPlaylistGroup] = useState(
-    DEFAULT_CURATED_PLAYLIST_GROUP,
-  );
   const [browseTags, setBrowseTags] = useState<CuratedBrowseTag[]>([]);
   const [browseSubcategories, setBrowseSubcategories] = useState<
     CuratedBrowseSubcategory[]
@@ -198,9 +191,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           setCoverImageUrl(playlistData.cover_image_url || "");
           setCoverVideoUrl(playlistData.cover_video_url || "");
           setCoverVideoTouched(false);
-          setPlaylistGroup(
-            playlistData.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP,
-          );
           setBrowseTags(playlistData.browse_tags || []);
           setBrowseSubcategories(playlistData.browse_subcategories || []);
           setShowOnCuratedFeature(
@@ -284,7 +274,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         name,
         kicker,
         cover_image_url: coverImageUrl,
-        playlist_group: playlistGroup,
         browse_tags: browseTags,
         browse_subcategories: browseSubcategories,
         show_on_curated_feature: showOnCuratedFeature,
@@ -445,21 +434,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Human stories"
                 />
-              </label>
-
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Playlist group
-                <select
-                  value={playlistGroup}
-                  onChange={(e) => setPlaylistGroup(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                >
-                  {CURATED_PLAYLIST_GROUPS.map((group) => (
-                    <option key={group} value={group}>
-                      {group}
-                    </option>
-                  ))}
-                </select>
               </label>
 
               <div className="grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
@@ -652,9 +626,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 </div>
                 <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-3xl font-medium leading-none tracking-[-0.055em]">
                   {name || "Playlist name"}
-                </div>
-                <div className="mt-3 text-[11px] font-medium text-white/58">
-                  {playlistGroup}
                 </div>
               </div>
             </div>
