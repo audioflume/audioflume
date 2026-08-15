@@ -9,6 +9,10 @@ export default function AdminEditPageStyles() {
         --admin-song-content-gap: 12px;
       }
 
+      .admin-song-edit-content-page .admin-song-edit-song-info {
+        --admin-song-content-gap: 8px;
+      }
+
       .filmwave-admin-content-page.admin-song-edit-content-page .admin-song-form-card {
         overflow: hidden;
         border: 1px solid var(--border);
@@ -426,7 +430,7 @@ export default function AdminEditPageStyles() {
         > .admin-song-form-card:last-child
         > div:last-child
         > button {
-        height: 44px;
+        height: 40px;
         border-radius: 7px;
         font-size: 14px;
         font-weight: 500;
