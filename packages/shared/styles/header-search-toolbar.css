@@ -59,20 +59,20 @@
 }
 
 .fw-toolbar-filters.is-open {
-  border-color: rgba(255, 255, 255, 0.9) !important;
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  color: #111111 !important;
+  border-color: var(--filmwave-border-color) !important;
+  background: var(--filmwave-white) !important;
+  background-color: var(--filmwave-white) !important;
+  color: var(--filmwave-black) !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
 
 html.light .fw-toolbar-filters.is-open,
 html[data-theme="light"] .fw-toolbar-filters.is-open {
-  border-color: #111111 !important;
-  background: #111111 !important;
-  background-color: #111111 !important;
-  color: #ffffff !important;
+  border-color: var(--filmwave-border-color) !important;
+  background: var(--filmwave-black) !important;
+  background-color: var(--filmwave-black) !important;
+  color: var(--filmwave-white) !important;
 }
 
 .fw-toolbar-filters.is-open .fw-toolbar-filters-label,
@@ -135,10 +135,10 @@ html[data-theme="light"] .fw-toolbar-filters.is-open {
 .fw-toolbar-filters.is-done,
 .fw-filter-done {
   gap: 0 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  color: #111111 !important;
+  border: 1px solid var(--filmwave-border-color) !important;
+  background: var(--filmwave-white) !important;
+  background-color: var(--filmwave-white) !important;
+  color: var(--filmwave-black) !important;
 }
 
 .fw-filter-done {
@@ -153,10 +153,10 @@ html.light .fw-toolbar-filters.is-done,
 html.light .fw-filter-done,
 html[data-theme="light"] .fw-toolbar-filters.is-done,
 html[data-theme="light"] .fw-filter-done {
-  border-color: #111111 !important;
-  background: #111111 !important;
-  background-color: #111111 !important;
-  color: #ffffff !important;
+  border-color: var(--filmwave-border-color) !important;
+  background: var(--filmwave-black) !important;
+  background-color: var(--filmwave-black) !important;
+  color: var(--filmwave-white) !important;
 }
 
 html.light .fw-filter-done,
@@ -685,7 +685,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   width: 14px !important;
   height: 100% !important;
   margin-left: 0 !important;
-  color: #111111 !important;
+  color: var(--filmwave-black) !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -702,7 +702,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   border-radius: 0 !important;
   background: transparent !important;
   background-color: transparent !important;
-  color: #111111 !important;
+  color: var(--filmwave-black) !important;
   transition: none !important;
 }
 
@@ -719,7 +719,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-sticky
   .filmwave-search-pill-input {
   padding-left: 6px !important;
-  color: #111111 !important;
+  color: var(--filmwave-black) !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
