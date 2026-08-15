@@ -79,7 +79,7 @@ export default function PlaylistManagerPage() {
   }
 
   async function deletePlaylist(playlist: CuratedPlaylist) {
-    const confirmed = window.confirm(`Delete \"${playlist.name}\"?`);
+    const confirmed = window.confirm(`Delete "${playlist.name}"?`);
     if (!confirmed) return;
 
     try {
