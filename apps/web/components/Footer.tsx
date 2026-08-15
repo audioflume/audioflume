@@ -38,6 +38,7 @@ const footerHeadingClass =
 type FooterProps = {
   className?: string;
   playerPadding?: boolean;
+  showTopBorder?: boolean;
 };
 
 function InstagramIcon() {
@@ -66,6 +67,7 @@ function YouTubeIcon() {
 export default function Footer({
   className = "",
   playerPadding = true,
+  showTopBorder = true,
 }: FooterProps) {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
@@ -150,7 +152,7 @@ export default function Footer({
             : "8px",
         }}
       >
-        <div className="border-t border-[var(--border-subtle)] px-0 pb-14 pt-14">
+        <div className={`${showTopBorder ? "border-t border-[var(--border-subtle)]" : ""} px-0 pb-14 pt-14`}>
           <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-[0.9fr_0.8fr_0.8fr_1.45fr_0.9fr] lg:gap-x-14">
             <div className="flex flex-col gap-5">
               <h2 className={footerHeadingClass}>Company</h2>
