@@ -676,7 +676,7 @@ export default function AdminMusicLibraryPage() {
           <div className="mx-5 mb-5 overflow-hidden rounded-[7px] border border-[var(--border)]">
             <div className="overflow-x-auto overflow-y-hidden">
               <div className="min-w-[920px]">
-                <div className="grid h-[52px] grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px] items-center gap-3 border-b border-[var(--border)] bg-[var(--filmwave-neutral-surface)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-primary)]">
+                <div className="grid h-[52px] grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px] items-center gap-3 border-b border-[var(--border)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-primary)]">
                   <div className="flex items-center">
                     <label
                       className="admin-song-select-wrap is-visible"
