@@ -220,7 +220,7 @@ export default function DiscoverCuratedHeroCopy({
               margin-top: clamp(38px, 3.5vw, 52px);
               border: 0;
               border-radius: 28px;
-              background: #fff;
+              background: var(--filmwave-white);
               box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
               pointer-events: auto;
             }
@@ -232,7 +232,7 @@ export default function DiscoverCuratedHeroCopy({
               border: 0;
               outline: 0;
               background: transparent;
-              color: #111;
+              color: var(--filmwave-black);
               padding: 0 12px 0 30px;
               font-family: var(--font-aktiv-grotesk), sans-serif;
               font-size: clamp(14px, 0.9vw, 17px);
@@ -240,7 +240,7 @@ export default function DiscoverCuratedHeroCopy({
             }
 
             .discover-home-search input::placeholder {
-              color: rgba(17, 17, 17, 0.55);
+              color: color-mix(in srgb, var(--filmwave-black) 55%, transparent);
               opacity: 1;
             }
 
@@ -256,8 +256,8 @@ export default function DiscoverCuratedHeroCopy({
               cursor: pointer;
               border: 0;
               border-radius: 999px;
-              background: #f2f2f2;
-              color: rgba(17, 17, 17, 0.62);
+              background: var(--filmwave-neutral-surface);
+              color: color-mix(in srgb, var(--filmwave-black) 62%, transparent);
               font-family: var(--font-aktiv-grotesk), sans-serif;
               font-size: 22px;
               line-height: 1;
@@ -269,8 +269,12 @@ export default function DiscoverCuratedHeroCopy({
 
             .discover-home-search button:hover,
             .discover-home-search button:focus-visible {
-              background: #e4e4e4;
-              color: #111;
+              background: color-mix(
+                in srgb,
+                var(--filmwave-neutral-surface) 92%,
+                var(--filmwave-black) 8%
+              );
+              color: var(--filmwave-black);
               transform: translateX(1px);
             }
 
@@ -286,7 +290,7 @@ export default function DiscoverCuratedHeroCopy({
 
             :where(html:not(.light):not([data-theme="light"]))
               .discover-home-search input {
-              color: #fff;
+              color: var(--filmwave-white);
             }
 
             :where(html:not(.light):not([data-theme="light"]))
@@ -305,7 +309,7 @@ export default function DiscoverCuratedHeroCopy({
             :where(html:not(.light):not([data-theme="light"]))
               .discover-home-search button:focus-visible {
               background: var(--discover-search-arrow-background-hover);
-              color: #fff;
+              color: var(--filmwave-white);
             }
 
             :where(html:not(.light):not([data-theme="light"]))
