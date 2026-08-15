@@ -38,6 +38,100 @@ function fileKey(file: File) {
   return `${file.name}:${file.size}:${file.lastModified}`;
 }
 
+function getChooseButton(row: HTMLElement | undefined) {
+  if (!row) return null;
+
+  return Array.from(row.querySelectorAll<HTMLButtonElement>("button")).find(
+    (button) => button.textContent?.trim().toLowerCase() === "choose",
+  );
+}
+
+function getFileInput(row: HTMLElement | undefined) {
+  return row?.querySelector<HTMLInputElement>('input[type="file"]') ?? null;
+}
+
+function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
+  filesSection.classList.add("admin-song-upload-files-bin");
+
+  const rows = Array.from(
+    filesSection.querySelectorAll<HTMLElement>(".admin-song-file-row"),
+  );
+
+  const labels = ["Audio", "Cover", "Stems"];
+  const actionLabels = ["Choose Audio", "Choose Cover", "Choose Stems"];
+
+  rows.forEach((row, index) => {
+    row.classList.add("admin-song-upload-bin-row");
+
+    const label = row.querySelector<HTMLElement>(
+      ":scope > div:first-child > div:first-child",
+    );
+    if (label && labels[index] && label.textContent?.trim() !== labels[index]) {
+      label.textContent = labels[index];
+    }
+
+    const input = getFileInput(row);
+    row.classList.toggle("has-file", Boolean(input?.files?.length));
+  });
+
+  let actions = filesSection.querySelector<HTMLElement>(
+    ":scope > .admin-song-upload-file-actions",
+  );
+
+  if (!actions) {
+    actions = document.createElement("div");
+    actions.className = "admin-song-upload-file-actions";
+    filesSection.prepend(actions);
+  }
+
+  actionLabels.forEach((label, index) => {
+    let action = actions?.querySelector<HTMLButtonElement>(
+      `[data-admin-song-file-action="${index}"]`,
+    );
+
+    if (!action) {
+      action = document.createElement("button");
+      action.type = "button";
+      action.dataset.adminSongFileAction = String(index);
+      action.className = "admin-song-upload-file-action";
+      action.textContent = label;
+      actions?.appendChild(action);
+    }
+
+    const input = getFileInput(rows[index]);
+    action.classList.toggle("has-file", Boolean(input?.files?.length));
+    action.onclick = () => {
+      const currentPage = document.querySelector(
+        ".admin-song-upload-content-page",
+      );
+      if (!currentPage) return;
+
+      const currentSection =
+        getSectionByTitle(currentPage, "uploaded files") ||
+        getSectionByTitle(currentPage, "upload files") ||
+        getSectionByTitle(currentPage, "files");
+      if (!currentSection) return;
+
+      const currentRows = Array.from(
+        currentSection.querySelectorAll<HTMLElement>(".admin-song-file-row"),
+      );
+      getChooseButton(currentRows[index])?.click();
+    };
+  });
+
+  const stems = getStemRow(page);
+  const stemContent = stems?.children.item(1);
+  if (stemContent instanceof HTMLElement) {
+    const stemList = Array.from(stemContent.children).find(
+      (child): child is HTMLElement =>
+        child instanceof HTMLElement &&
+        child.classList.contains("mt-2") &&
+        child.classList.contains("grid"),
+    );
+    stemList?.classList.add("admin-song-upload-stem-list");
+  }
+}
+
 export default function AdminSongUploadPresentationInjector() {
   useEffect(() => {
     let frameId: number | null = null;
@@ -66,6 +160,8 @@ export default function AdminSongUploadPresentationInjector() {
       );
 
       if (!fileList || accumulatedStemFiles.length === 0) return;
+
+      fileList.classList.add("admin-song-upload-stem-list");
 
       const renderedItems = Array.from(fileList.children).filter(
         (child): child is HTMLElement => child instanceof HTMLElement,
@@ -114,13 +210,18 @@ export default function AdminSongUploadPresentationInjector() {
 
       const filesSection =
         getSectionByTitle(page, "files") ||
-        getSectionByTitle(page, "upload files");
+        getSectionByTitle(page, "upload files") ||
+        getSectionByTitle(page, "uploaded files");
       const filesTitle = filesSection?.querySelector<HTMLElement>(
         ".admin-song-form-kicker",
       );
 
-      if (filesTitle && filesTitle.textContent?.trim() !== "Upload Files") {
-        filesTitle.textContent = "Upload Files";
+      if (filesTitle && filesTitle.textContent?.trim() !== "Uploaded Files") {
+        filesTitle.textContent = "Uploaded Files";
+      }
+
+      if (filesSection) {
+        syncFileBinPresentation(filesSection, page);
       }
 
       const songInfoSection = getSectionByTitle(page, "song info");
@@ -198,5 +299,239 @@ export default function AdminSongUploadPresentationInjector() {
     };
   }, []);
 
-  return null;
+  return (
+    <style>{`
+      .admin-song-upload-content-page .admin-song-upload-files-bin {
+        position: relative;
+        overflow: visible !important;
+        margin-top: 56px;
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-file-actions {
+        position: absolute;
+        top: -56px;
+        left: 0;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-file-action {
+        height: 40px;
+        min-width: 104px;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        background: var(--bg-secondary);
+        padding: 0 20px;
+        color: var(--text-secondary);
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-file-action:hover,
+      .admin-song-upload-content-page .admin-song-upload-file-action.has-file {
+        color: var(--text-primary);
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-file-action.has-file {
+        border-color: var(--text-primary);
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        > .admin-song-form-card-header {
+        min-height: 0;
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 18px 20px 14px;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row {
+        display: grid !important;
+        min-height: 58px;
+        grid-template-columns: 92px minmax(0, 1fr) auto !important;
+        align-items: center !important;
+        gap: 16px !important;
+        border-top: 1px solid var(--border-subtle) !important;
+        padding: 10px 20px !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:first-child {
+        border-top: 0 !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row
+        > div:first-child {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        padding: 0 !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row
+        > div:first-child
+        > div:first-child {
+        color: var(--text-secondary);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row
+        > div:nth-child(2) {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        min-width: 0;
+        margin-right: 0 !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row
+        > div:nth-child(2)
+        > div[class~="h-9"] {
+        height: auto !important;
+        min-height: 0;
+        gap: 0;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        padding: 0 !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row
+        > div:nth-child(2)
+        > div[class~="h-9"]
+        > button {
+        display: none !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row
+        > div:nth-child(2)
+        > div[class~="h-9"]
+        > span {
+        font-size: 12px;
+        line-height: 18px;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row.has-file
+        > div:nth-child(2)
+        > div[class~="h-9"]
+        > span {
+        color: var(--text-primary);
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:first-child
+        > div:last-child {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        height: auto !important;
+        align-self: center !important;
+        justify-self: end !important;
+        margin: 0 !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:first-child:has(> div:last-child > button)
+        > div:nth-child(2)
+        > div[class~="h-9"] {
+        padding-right: 0 !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2):has(img)
+        > div:nth-child(2) {
+        margin-right: 0 !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:last-child {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        justify-self: end !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(3)
+        > div:last-child {
+        display: none !important;
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-stem-list {
+        overflow: hidden;
+        gap: 0 !important;
+        border: 1px solid var(--border-subtle);
+        border-radius: 7px;
+        background: var(--bg-secondary);
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-stem-list > * {
+        min-height: 34px;
+        border-top: 1px solid var(--border-subtle);
+        padding: 8px 10px;
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-stem-list > *:first-child {
+        border-top: 0;
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-stem-list .admin-song-stem-file-item {
+        gap: 12px;
+        color: var(--text-primary);
+      }
+
+      .admin-song-upload-content-page .admin-song-upload-stem-list .admin-song-stem-file-remove {
+        padding: 0;
+      }
+
+      @media (max-width: 720px) {
+        .admin-song-upload-content-page .admin-song-upload-files-bin {
+          margin-top: 104px;
+        }
+
+        .admin-song-upload-content-page .admin-song-upload-file-actions {
+          top: -104px;
+          flex-wrap: wrap;
+        }
+
+        .admin-song-upload-content-page
+          .admin-song-upload-files-bin
+          .admin-song-file-row {
+          grid-template-columns: 72px minmax(0, 1fr) auto !important;
+          gap: 10px !important;
+          padding: 10px 14px !important;
+        }
+      }
+    `}</style>
+  );
 }
