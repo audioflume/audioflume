@@ -162,6 +162,13 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page
+  .admin-song-file-row:first-child
+  > div:last-child
+  > button:hover {
+  color: var(--danger);
+}
+
+.admin-song-upload-content-page
   .admin-song-file-row:first-child:has(> div:last-child > button)
   > div:nth-child(2)
   > div[class~="h-9"] {
@@ -178,7 +185,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 .admin-song-upload-content-page
   .admin-song-file-row:nth-child(2):has(img)
   > div:nth-child(2) {
-  margin-right: 40px;
+  margin-right: 44px;
 }
 
 .admin-song-upload-content-page
@@ -187,12 +194,20 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   grid-column: 2;
   grid-row: 1;
   position: relative;
-  width: 36px;
+  width: 40px;
   height: 40px;
   align-items: center;
   align-self: start;
   justify-self: end;
   margin: 0;
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:nth-child(2)
+  > div:last-child
+  > div {
+  width: 40px;
+  height: 40px;
 }
 
 .admin-song-upload-content-page
@@ -244,6 +259,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 .admin-song-upload-content-page .admin-song-stem-file-item {
   display: flex;
+  width: 100%;
   max-width: 100%;
   align-items: center;
   gap: 8px;
@@ -258,6 +274,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 .admin-song-upload-content-page .admin-song-stem-file-remove {
   flex: 0 0 auto;
+  margin-left: auto;
   cursor: pointer;
   border: 0;
   background: transparent;
