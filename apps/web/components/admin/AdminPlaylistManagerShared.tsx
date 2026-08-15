@@ -256,7 +256,7 @@ export function PlaylistManagerCollapsibleSection({
   return (
     <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
       <div
-        className={`${wrapHeader ? "flex flex-wrap" : "flex"} items-end justify-between gap-4`}
+        className={`${wrapHeader ? "flex flex-wrap" : "flex"} items-center justify-between gap-4`}
       >
         <div>
           <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
