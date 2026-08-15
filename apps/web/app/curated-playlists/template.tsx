@@ -160,7 +160,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     left: 9.5px;
     width: 13px;
     height: 13px;
-    background: #fff;
+    background: var(--filmwave-white);
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     -webkit-mask-position: center;
     -webkit-mask-repeat: no-repeat;
@@ -178,7 +178,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-feature-hero:focus-within
     .curated-feature-hero-open {
-    background: #fff !important;
+    background: var(--filmwave-white) !important;
   }
 
   body:has(.curated-playlists-page-root)
@@ -187,7 +187,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root)
     .curated-feature-hero:focus-within
     .curated-feature-hero-open::after {
-    background: #000;
+    background: var(--filmwave-black);
   }
 
   body:has(.curated-playlists-page-root) .curated-feature-filters {
@@ -227,7 +227,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
 
   body:has(.curated-playlists-page-root) .curated-feature-filter-pill:hover,
   body:has(.curated-playlists-page-root) .curated-feature-filter-pill:focus-visible {
-    border-color: var(--text-muted);
+    border-color: var(--filmwave-border-color);
     background: var(--bg-secondary);
     outline: none;
   }
