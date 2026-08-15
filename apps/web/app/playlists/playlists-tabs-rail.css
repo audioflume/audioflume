@@ -50,7 +50,7 @@ body .playlists-tabs-row {
   height: 42px !important;
   align-items: center !important;
   gap: 12px !important;
-  border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
+  border: 1px solid var(--filmwave-border-color) !important;
   border-radius: 0 !important;
   background: var(--bg-primary) !important;
   padding: 0 14px !important;
