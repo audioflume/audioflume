@@ -394,6 +394,41 @@ export default function AdminPlaylistPageStyles() {
         ) {
         border-radius: 7px;
       }
+
+      /* Playlist create/edit opt into the rounded admin corner system. */
+      main.filmwave-admin-content-page:is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ) :is(
+          [class~="rounded-xl"],
+          [class~="rounded-2xl"],
+          [class~="rounded-[14px]"],
+          [class~="rounded-[18px]"]
+        ) {
+        border-radius: 10px;
+      }
+
+      main.filmwave-admin-content-page:is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ) :is(
+          [class~="rounded-md"],
+          [class~="rounded-lg"]
+        ) {
+        border-radius: 7px;
+      }
     `}</style>
   );
 }
