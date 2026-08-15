@@ -544,7 +544,7 @@ export default function AdminMusicLibraryPage() {
         .admin-song-select-box {
           width: 16px;
           height: 16px;
-          border-radius: 4px;
+          border-radius: 6px;
           border: 1px solid var(--border);
           background: var(--bg-secondary);
           color: var(--bg-primary);
@@ -601,24 +601,43 @@ export default function AdminMusicLibraryPage() {
 
         <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
           <div className="flex flex-col gap-3 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
-            {selectionMode ? (
-              <div className="flex h-10 w-full items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3">
-                <div className="text-sm font-medium text-[var(--text-primary)]">
-                  {selectedCount} song{selectedCount === 1 ? "" : "s"} selected
-                </div>
+            <div className="relative w-full max-w-[500px]">
+              <input
+                type="text"
+                role="searchbox"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search"
+                className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
+              />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center bg-transparent text-[var(--text-primary)]"
+                  aria-label="Clear search"
+                >
+                  <XIcon size={12} />
+                </button>
+              )}
+            </div>
 
+            <div className="flex items-center gap-2">
+              {selectionMode && (
                 <button
                   type="button"
                   onClick={handleBatchDelete}
                   disabled={isBatchDeleting}
-                  className={`admin-batch-delete-btn ml-auto ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+                  className={`admin-batch-delete-btn ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
                 >
                   <TrashIcon />
                   {isBatchDeleting
                     ? "Deleting..."
                     : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
                 </button>
+              )}
 
+              {selectionMode ? (
                 <button
                   type="button"
                   onClick={clearSelection}
@@ -627,47 +646,30 @@ export default function AdminMusicLibraryPage() {
                 >
                   Cancel
                 </button>
-              </div>
-            ) : (
-              <>
-                <div className="relative w-full max-w-[500px]">
-                  <input
-                    type="text"
-                    role="searchbox"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search"
-                    className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
-                  />
-                  {search && (
-                    <button
-                      type="button"
-                      onClick={() => setSearch("")}
-                      className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center bg-transparent text-[var(--text-primary)]"
-                      aria-label="Clear search"
-                    >
-                      <XIcon size={12} />
-                    </button>
-                  )}
-                </div>
-
+              ) : (
                 <button
                   type="button"
                   onClick={() => setFiltersOpen((open) => !open)}
                   className={`flex h-10 cursor-pointer items-center gap-2 rounded-[7px] border px-4 text-xs font-medium transition-colors ${
                     filtersOpen || activeFilterCount > 0
-                      ? "border-[var(--text-primary)] text-[var(--text-primary)]"
-                      : "border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                      ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                      : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   }`}
                   aria-expanded={filtersOpen}
                 >
                   <span>Filters</span>
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--bg-tertiary)] px-1.5 text-[10px] text-[var(--text-secondary)]">
+                  <span
+                    className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] ${
+                      filtersOpen || activeFilterCount > 0
+                        ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                        : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
+                    }`}
+                  >
                     {activeFilterCount}
                   </span>
                 </button>
-              </>
-            )}
+              )}
+            </div>
           </div>
 
           {filtersOpen && !selectionMode && (
@@ -736,8 +738,8 @@ export default function AdminMusicLibraryPage() {
 
           <div className="mx-5 overflow-hidden rounded-[7px] border border-[var(--border)]">
             <div className="overflow-x-auto overflow-y-hidden">
-              <div className="min-w-[1080px]">
-                <div className="grid h-[42px] grid-cols-[28px_56px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+              <div className="min-w-[1200px]">
+                <div className="grid h-[42px] grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                   <div className="flex items-center">
                     <label
                       className="admin-song-select-wrap is-visible"
@@ -764,6 +766,7 @@ export default function AdminMusicLibraryPage() {
                   <div>Status</div>
                   <div>Key</div>
                   <div>BPM</div>
+                  <div>Added</div>
                   <div>Actions</div>
                 </div>
 
@@ -772,7 +775,7 @@ export default function AdminMusicLibraryPage() {
                     {Array.from({ length: SONGS_PER_PAGE }, (_, index) => (
                       <div
                         key={index}
-                        className="grid min-h-[60px] grid-cols-[28px_56px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px] items-center gap-3 px-6"
+                        className="grid min-h-[72px] grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px] items-center gap-3 px-6"
                         style={{
                           borderBottom:
                             index === SONGS_PER_PAGE - 1
@@ -781,15 +784,16 @@ export default function AdminMusicLibraryPage() {
                         }}
                       >
                         <div className="flex items-center">
-                          <div className="h-4 w-4 rounded-[4px] bg-[var(--bg-tertiary)]" />
+                          <div className="h-4 w-4 rounded-[6px] bg-[var(--bg-tertiary)]" />
                         </div>
 
-                        <div className="h-10 w-10 bg-[var(--bg-tertiary)]" />
+                        <div className="h-[52px] w-[52px] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[60%] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[50%] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[68px] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
+                        <div className="h-2 w-[72px] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[18px] bg-[var(--bg-tertiary)]" />
                       </div>
                     ))}
@@ -835,6 +839,7 @@ export default function AdminMusicLibraryPage() {
                         onDeleted={handleSongDeleted}
                         statusDisplay="published"
                         size="large"
+                        showAddedDate
                       />
                     ))}
                   </div>
