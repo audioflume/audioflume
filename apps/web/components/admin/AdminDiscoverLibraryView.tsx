@@ -537,9 +537,7 @@ export default function AdminDiscoverLibraryView({
               key={sectionKey}
               className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5"
             >
-              <div
-                className={`${sectionCollapsed ? "" : "mb-4"} flex flex-wrap items-end justify-between gap-4`}
-              >
+              <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
                   <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                     {sectionLabel}
@@ -602,36 +600,46 @@ export default function AdminDiscoverLibraryView({
                 </div>
               </div>
 
-              {!sectionCollapsed &&
-                (sectionPlaylists.length === 0 ? (
-                  <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-                    Add a playlist or Discover content to this section.
-                  </div>
-                ) : (
-                  <DndContext
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragEnd={(event) => void reorderSection(sectionKey, event)}
-                  >
-                    <SortableContext
-                      items={sectionPlaylists.map((playlist) => playlist.id)}
-                      strategy={rectSortingStrategy}
+              <div
+                className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
+                  sectionCollapsed
+                    ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
+                    : "mt-4 grid-rows-[1fr] opacity-100"
+                }`}
+                aria-hidden={sectionCollapsed}
+              >
+                <div className="min-h-0 overflow-hidden">
+                  {sectionPlaylists.length === 0 ? (
+                    <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+                      Add a playlist or Discover content to this section.
+                    </div>
+                  ) : (
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={(event) => void reorderSection(sectionKey, event)}
                     >
-                      <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                        {sectionPlaylists.map((playlist) => (
-                          <SortableDiscoverSectionCard
-                            key={playlist.id}
-                            playlist={playlist}
-                            sectionLabel={sectionLabel}
-                            onRemove={(item) =>
-                              void removeFromSection(sectionKey, item)
-                            }
-                          />
-                        ))}
-                      </div>
-                    </SortableContext>
-                  </DndContext>
-                ))}
+                      <SortableContext
+                        items={sectionPlaylists.map((playlist) => playlist.id)}
+                        strategy={rectSortingStrategy}
+                      >
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
+                          {sectionPlaylists.map((playlist) => (
+                            <SortableDiscoverSectionCard
+                              key={playlist.id}
+                              playlist={playlist}
+                              sectionLabel={sectionLabel}
+                              onRemove={(item) =>
+                                void removeFromSection(sectionKey, item)
+                              }
+                            />
+                          ))}
+                        </div>
+                      </SortableContext>
+                    </DndContext>
+                  )}
+                </div>
+              </div>
             </section>
           );
         })}
