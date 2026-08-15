@@ -84,7 +84,7 @@ export default function PlaylistManagerPage() {
   }
 
   async function deletePlaylist(playlist: CuratedPlaylist) {
-    const confirmed = window.confirm(`Delete "${playlist.name}"?`);
+    const confirmed = window.confirm(`Delete \"${playlist.name}\"?`);
     if (!confirmed) return;
 
     try {
@@ -127,10 +127,10 @@ export default function PlaylistManagerPage() {
             key={tab}
             type="button"
             onClick={() => setActiveTab(tab)}
-            className={`h-11 min-w-[104px] rounded-[7px] border px-5 text-sm font-medium capitalize transition ${
+            className={`h-11 min-w-[104px] cursor-pointer rounded-[7px] border px-5 text-sm font-medium capitalize transition ${
               activeTab === tab
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             }`}
           >
             {tab === "playlists"
