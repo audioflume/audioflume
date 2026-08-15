@@ -4,12 +4,12 @@
 
 :where(:root) {
   --filmwave-player-action-icon-color: var(--filmwave-sidebar-icon-color, #8f8f8f);
-  --filmwave-player-action-icon-color-active: var(--filmwave-sidebar-icon-color-active, #ffffff);
+  --filmwave-player-action-icon-color-active: var(--filmwave-sidebar-icon-color-active, var(--filmwave-white));
 }
 
 :where(html.light, html[data-theme="light"]) {
   --filmwave-player-action-icon-color: var(--filmwave-sidebar-icon-color, #969696);
-  --filmwave-player-action-icon-color-active: var(--filmwave-sidebar-icon-color-active, #111111);
+  --filmwave-player-action-icon-color-active: var(--filmwave-sidebar-icon-color-active, var(--filmwave-black));
 }
 
 .filmwave-song-card.is-current .filmwave-song-play-overlay,
@@ -82,8 +82,8 @@
 .discover-category-filter-pill:not(.is-selected):not([aria-pressed="true"]):hover,
 .discover-category-filter-pill:not(.is-selected):not([aria-pressed="true"]):focus-visible {
   border-color: transparent !important;
-  background: #ffffff !important;
-  color: #111111 !important;
+  background: var(--filmwave-white) !important;
+  color: var(--filmwave-black) !important;
 }
 
 :where(html.light, html[data-theme="light"])
@@ -99,15 +99,15 @@
 :where(html.light, html[data-theme="light"])
   .discover-category-filter-pill:not(.is-selected):not([aria-pressed="true"]):focus-visible {
   border-color: transparent !important;
-  background: #0d0d0d !important;
-  color: #ffffff !important;
+  background: var(--filmwave-black) !important;
+  color: var(--filmwave-white) !important;
 }
 
 .fw-quick-chip:is(.is-active, .is-selected, [aria-pressed="true"], [data-active="true"]),
 .filmwave-quick-filter-button:is(.is-active, .is-selected, [aria-pressed="true"], [data-active="true"]) {
-  border-color: #000000;
-  background: #000000;
-  color: #ffffff;
+  border-color: var(--filmwave-black);
+  background: var(--filmwave-black);
+  color: var(--filmwave-white);
   font-weight: 400 !important;
 }
 
@@ -203,13 +203,13 @@
 
 .filmwave-music-player {
   --filmwave-player-icon-color-opaque: #8f8f8f;
-  --filmwave-player-icon-color-active-opaque: #ffffff;
+  --filmwave-player-icon-color-active-opaque: var(--filmwave-white);
 }
 
 html.light .filmwave-music-player,
 html[data-theme="light"] .filmwave-music-player {
   --filmwave-player-icon-color-opaque: #969696;
-  --filmwave-player-icon-color-active-opaque: #111111;
+  --filmwave-player-icon-color-active-opaque: var(--filmwave-black);
 }
 
 .filmwave-music-player .filmwave-icon-button,
