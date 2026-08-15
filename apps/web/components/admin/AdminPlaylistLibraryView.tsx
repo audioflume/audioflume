@@ -514,9 +514,7 @@ export default function AdminPlaylistLibraryView({
             return (
               <div key={shelfKey} className="grid gap-3">
                 <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
-                  <div
-                    className={`${shelfCollapsed ? "" : "mb-4"} flex items-end justify-between gap-4`}
-                  >
+                  <div className="flex items-end justify-between gap-4">
                     <div>
                       <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                         {title}
@@ -564,50 +562,58 @@ export default function AdminPlaylistLibraryView({
                     </div>
                   </div>
 
-                  {!shelfCollapsed &&
-                    (items.length === 0 ? (
-                      <button
-                        type="button"
-                        onClick={() => setPickerShelf(shelfKey)}
-                        className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
-                      >
-                        Add playlists from All Playlists
-                      </button>
-                    ) : (
-                      <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragEnd={(event) => void reorderShelf(shelfKey, event)}
-                      >
-                        <SortableContext
-                          items={items.map((playlist) => playlist.id)}
-                          strategy={rectSortingStrategy}
+                  <div
+                    className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
+                      shelfCollapsed
+                        ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
+                        : "mt-4 grid-rows-[1fr] opacity-100"
+                    }`}
+                    aria-hidden={shelfCollapsed}
+                  >
+                    <div className="min-h-0 overflow-hidden">
+                      {items.length === 0 ? (
+                        <button
+                          type="button"
+                          onClick={() => setPickerShelf(shelfKey)}
+                          className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
                         >
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                            {items.map((playlist) => (
-                              <SortableShelfPlaylistCard
-                                key={playlist.id}
-                                playlist={playlist}
-                                onRemove={(playlistId) => {
-                                  const confirmed = window.confirm(
-                                    `Remove "${playlist.name}" from ${title}?`,
-                                  );
-                                  if (!confirmed) return;
-                                  void removeFromShelf(shelfKey, playlistId);
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </SortableContext>
-                      </DndContext>
-                    ))}
+                          Add playlists from All Playlists
+                        </button>
+                      ) : (
+                        <DndContext
+                          sensors={sensors}
+                          collisionDetection={closestCenter}
+                          onDragEnd={(event) => void reorderShelf(shelfKey, event)}
+                        >
+                          <SortableContext
+                            items={items.map((playlist) => playlist.id)}
+                            strategy={rectSortingStrategy}
+                          >
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
+                              {items.map((playlist) => (
+                                <SortableShelfPlaylistCard
+                                  key={playlist.id}
+                                  playlist={playlist}
+                                  onRemove={(playlistId) => {
+                                    const confirmed = window.confirm(
+                                      `Remove "${playlist.name}" from ${title}?`,
+                                    );
+                                    if (!confirmed) return;
+                                    void removeFromShelf(shelfKey, playlistId);
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </SortableContext>
+                        </DndContext>
+                      )}
+                    </div>
+                  </div>
                 </section>
 
                 {renderNewlyAddedAfterPopular && (
                   <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
-                    <div
-                      className={`${collapsedSections.newlyAdded ? "" : "mb-4"} flex items-end justify-between gap-4`}
-                    >
+                    <div className="flex items-end justify-between gap-4">
                       <div>
                         <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                           Newly Added
@@ -650,16 +656,25 @@ export default function AdminPlaylistLibraryView({
                       </button>
                     </div>
 
-                    {!collapsedSections.newlyAdded && (
-                      <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                        {newlyAdded.map((playlist) => (
-                          <AutomaticShelfPlaylistCard
-                            key={playlist.id}
-                            playlist={playlist}
-                          />
-                        ))}
+                    <div
+                      className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
+                        collapsedSections.newlyAdded
+                          ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
+                          : "mt-4 grid-rows-[1fr] opacity-100"
+                      }`}
+                      aria-hidden={collapsedSections.newlyAdded}
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
+                          {newlyAdded.map((playlist) => (
+                            <AutomaticShelfPlaylistCard
+                              key={playlist.id}
+                              playlist={playlist}
+                            />
+                          ))}
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </section>
                 )}
               </div>
