@@ -17,8 +17,22 @@ type AdminContentPageProps = {
   contentStyle?: CSSProperties;
 };
 
+const SIDEBAR_SECTION_BY_LABEL: Record<string, string> = {
+  Dashboard: "Admin",
+  Engagement: "Admin",
+  "Song Upload": "Upload",
+  "Upload Song": "Upload",
+  "Upload Queue": "Upload",
+  "Music Library": "Database",
+  "Playlist Manager": "Database",
+  "Cue Points": "Database",
+  "Edit Song": "Database",
+  "Storage Health": "System",
+  Settings: "System",
+};
+
 export default function AdminContentPage({
-  section = "Admin",
+  section,
   label,
   title,
   description,
@@ -32,6 +46,7 @@ export default function AdminContentPage({
   contentStyle,
 }: AdminContentPageProps) {
   const hidePageIntro = label === "Playlist Manager" || label === "Music Library";
+  const resolvedSection = section ?? SIDEBAR_SECTION_BY_LABEL[label] ?? "Admin";
 
   return (
     <main className="filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
@@ -45,7 +60,7 @@ export default function AdminContentPage({
           style={contentStyle}
         >
           <AdminPageHeader
-            section={section}
+            section={resolvedSection}
             label={label}
             action={headerAction}
             compact={compactHeader}
