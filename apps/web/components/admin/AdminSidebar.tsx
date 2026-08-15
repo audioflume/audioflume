@@ -265,7 +265,7 @@ export default function AdminSidebar() {
       className="fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] bg-[var(--bg-primary)] md:flex md:flex-col"
       style={{ top: "56px", bottom: playerVisible ? "64px" : "0px" }}
     >
-      <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-[34px]">
+      <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
         <div className="border-b border-[var(--border)] pb-8">
           <AdminSectionHeading>Admin</AdminSectionHeading>
           <div>
