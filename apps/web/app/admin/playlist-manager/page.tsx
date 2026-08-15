@@ -113,6 +113,7 @@ export default function PlaylistManagerPage() {
       label="Playlist Manager"
       title="Playlist Manager"
       description="Manage the playlist library, curated shelves, and Discover content."
+      compactHeader
     >
       <div className="mb-7 flex items-center gap-2">
         {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
@@ -132,13 +133,15 @@ export default function PlaylistManagerPage() {
       </div>
 
       {activeTab === "playlists" ? (
-        <AdminPlaylistLibraryView
-          playlists={masterPlaylists}
-          loading={loading}
-          error={error}
-          deletingId={deletingId}
-          onDeletePlaylist={deletePlaylist}
-        />
+        <div className="grid gap-4 rounded-[20px] bg-[var(--filmwave-neutral-surface)] p-3 sm:p-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
+          <AdminPlaylistLibraryView
+            playlists={masterPlaylists}
+            loading={loading}
+            error={error}
+            deletingId={deletingId}
+            onDeletePlaylist={deletePlaylist}
+          />
+        </div>
       ) : (
         <AdminDiscoverLibraryView
           playlists={playlists}
