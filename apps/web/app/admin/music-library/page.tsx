@@ -491,10 +491,10 @@ export default function AdminMusicLibraryPage() {
         }
 
         .admin-music-library-song-list .admin-song-row {
-          grid-template-columns: 28px 60px minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) 64px 76px 96px 40px;
+          grid-template-columns: 22px 60px minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) 64px 76px 96px 40px;
           column-gap: 16px;
-          padding-left: 0;
-          padding-right: 0;
+          padding-left: 20px;
+          padding-right: 20px;
         }
       `}</style>
 
@@ -659,7 +659,7 @@ export default function AdminMusicLibraryPage() {
             </div>
           )}
 
-          <div className="mx-5 mb-5 overflow-hidden">
+          <div className="mb-5 overflow-hidden">
             <div className="overflow-x-auto overflow-y-hidden">
               <div className="admin-music-library-song-list min-w-[920px]">
                 {showSkeleton && (
@@ -667,7 +667,7 @@ export default function AdminMusicLibraryPage() {
                     {Array.from({ length: 10 }, (_, index) => (
                       <div
                         key={index}
-                        className="grid min-h-[72px] grid-cols-[28px_60px_minmax(120px,1fr)_minmax(120px,1fr)_minmax(120px,1fr)_64px_76px_96px_40px] items-center gap-4"
+                        className="grid min-h-[72px] grid-cols-[22px_60px_minmax(120px,1fr)_minmax(120px,1fr)_minmax(120px,1fr)_64px_76px_96px_40px] items-center gap-4 px-5"
                         style={{
                           borderBottom:
                             index === 9
