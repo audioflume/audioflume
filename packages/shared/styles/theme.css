@@ -6,7 +6,8 @@
   /* Canonical Filmwave color sources. */
   --filmwave-black: #111111;
   --filmwave-white: #ffffff;
-  --filmwave-neutral-surface: #0d0d0d;
+  --filmwave-neutral-surface: #1a1a1a;
+  --filmwave-admin-canvas: #0d0d0d;
   --filmwave-border-color: color-mix(
     in srgb,
     var(--filmwave-white) 10%,
@@ -131,6 +132,7 @@
   color-scheme: light;
 
   --filmwave-neutral-surface: #f2f2f2;
+  --filmwave-admin-canvas: #f2f2f2;
   --filmwave-border-color: color-mix(
     in srgb,
     var(--filmwave-black) 9%,
