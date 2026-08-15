@@ -468,7 +468,7 @@ export default function ProjectsPage() {
         .projects-status-pill:hover, .projects-status-pill.is-open { background: var(--bg-hover); border-color: var(--border-hover); color: var(--text-primary); }
         .projects-status-dropdown { min-width: 150px; }
         .projects-status-dropdown button.is-active { background: var(--filmwave-menu-hover); color: var(--filmwave-menu-text); }
-        .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
+        .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid var(--filmwave-border-color); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
         .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; font-style: italic; }
         .projects-search input::placeholder { color: var(--text-muted); }
         .projects-search-clear { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
