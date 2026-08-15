@@ -469,14 +469,8 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                     key={`${filter.value}-subcategories`}
                     className="grid gap-2 pt-3"
                   >
-                    <div>
-                      <div className="text-xs font-medium text-[var(--text-primary)]">
-                        {filter.label} shelves
-                      </div>
-                      <p className="mt-1 text-[11px] text-[var(--text-muted)]">
-                        Assign this playlist to every shelf where it should
-                        appear when {filter.label} is selected.
-                      </p>
+                    <div className="text-xs font-medium text-[var(--text-primary)]">
+                      {filter.label} shelves
                     </div>
                     <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                       {filter.subcategories.map((subcategory) => (
