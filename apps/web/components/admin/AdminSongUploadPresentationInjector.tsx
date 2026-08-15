@@ -107,9 +107,9 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
       if (!currentPage) return;
 
       const currentSection =
-        getSectionByTitle(currentPage, "uploaded files") ||
+        getSectionByTitle(currentPage, "files") ||
         getSectionByTitle(currentPage, "upload files") ||
-        getSectionByTitle(currentPage, "files");
+        getSectionByTitle(currentPage, "uploaded files");
       if (!currentSection) return;
 
       const currentRows = Array.from(
@@ -216,8 +216,8 @@ export default function AdminSongUploadPresentationInjector() {
         ".admin-song-form-kicker",
       );
 
-      if (filesTitle && filesTitle.textContent?.trim() !== "Uploaded Files") {
-        filesTitle.textContent = "Uploaded Files";
+      if (filesTitle && filesTitle.textContent?.trim() !== "Files") {
+        filesTitle.textContent = "Files";
       }
 
       if (filesSection) {
