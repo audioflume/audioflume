@@ -194,8 +194,8 @@
     color 150ms ease !important;
 }
 
-.fw-music-content-column .fw-filter-detail .fw-filter-option:hover,
-.fw-music-content-column .fw-filter-detail .fw-filter-option:focus-visible {
+html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-selected):not([aria-pressed="true"]):hover,
+html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-selected):not([aria-pressed="true"]):focus-visible {
   border-color: var(--border) !important;
   border-radius: 999px !important;
   background: var(--bg-hover) !important;
