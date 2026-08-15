@@ -200,14 +200,21 @@ export default function AdminSongRow({
     };
   }, [song.id]);
 
-  const artworkColumn = largeRow ? "56px" : "48px";
   const gridColumnsClass = showSelectionColumn
     ? showPublishedStatus
-      ? `grid-cols-[28px_${artworkColumn}_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]`
-      : `grid-cols-[28px_${artworkColumn}_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]`
+      ? largeRow
+        ? "grid-cols-[28px_56px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]"
+        : "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]"
+      : largeRow
+        ? "grid-cols-[28px_56px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]"
+        : "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]"
     : showPublishedStatus
-      ? `grid-cols-[${artworkColumn}_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_64px]`
-      : `grid-cols-[${artworkColumn}_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]`;
+      ? largeRow
+        ? "grid-cols-[56px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_64px]"
+        : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_64px]"
+      : largeRow
+        ? "grid-cols-[56px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]"
+        : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]";
 
   const handlePlayClick = () => {
     if (!song.audioUrl || isAnalyzingEditPoints) return;
