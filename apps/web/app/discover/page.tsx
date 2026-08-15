@@ -27,6 +27,7 @@ import WaveformIcon from "@/components/icons/WaveformIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import type { DiscoverSectionShelfState } from "@/lib/discoverSections";
 import type { Song } from "@/lib/types";
 import CuratedJumpBackIn from "../curated-playlists/CuratedJumpBackIn";
 
@@ -706,68 +707,86 @@ export default function DiscoverPage() {
   const { songs, loading: songsLoading } = useSongs();
   const { currentSong, setQueue } = usePlayer();
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
+  const [discoverSections, setDiscoverSections] =
+    useState<DiscoverSectionShelfState>({
+      discover_moods: [],
+      discover_curated: [],
+      discover_production: [],
+    });
   const [playlistsLoading, setPlaylistsLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
 
-    fetch("/api/curated-playlists")
-      .then((response) => response.json())
-      .then((data) => {
-        if (!cancelled && Array.isArray(data)) {
-          setPlaylists(data as CuratedPlaylist[]);
+    async function loadDiscover() {
+      try {
+        const [playlistRes, sectionRes] = await Promise.all([
+          fetch("/api/curated-playlists"),
+          fetch("/api/discover-sections"),
+        ]);
+        const playlistData = await playlistRes.json();
+        const sectionData = await sectionRes.json();
+
+        if (!playlistRes.ok || !Array.isArray(playlistData)) {
+          throw new Error("Failed to load playlists");
         }
-      })
-      .catch(() => {
-        if (!cancelled) setPlaylists([]);
-      })
-      .finally(() => {
+        if (!sectionRes.ok) {
+          throw new Error("Failed to load Discover sections");
+        }
+
+        if (!cancelled) {
+          setPlaylists(playlistData as CuratedPlaylist[]);
+          setDiscoverSections(sectionData as DiscoverSectionShelfState);
+        }
+      } catch {
+        if (!cancelled) {
+          setPlaylists([]);
+          setDiscoverSections({
+            discover_moods: [],
+            discover_curated: [],
+            discover_production: [],
+          });
+        }
+      } finally {
         if (!cancelled) setPlaylistsLoading(false);
-      });
+      }
+    }
+
+    void loadDiscover();
 
     return () => {
       cancelled = true;
     };
   }, []);
 
+  const playlistById = useMemo(
+    () => new Map(playlists.map((playlist) => [playlist.id, playlist] as const)),
+    [playlists],
+  );
+
   const discoverBlocks = useMemo(
     () =>
-      playlists
-        .filter((playlist) =>
-          playlist.discover_section?.startsWith("discover_block_"),
-        )
-        .sort((a, b) =>
-          (a.discover_section ?? "").localeCompare(b.discover_section ?? ""),
-        ),
-    [playlists],
+      discoverSections.discover_moods
+        .map((item) => playlistById.get(item.playlist_id))
+        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
+    [discoverSections.discover_moods, playlistById],
+  );
+
+  const curatedPlaylists = useMemo(
+    () =>
+      discoverSections.discover_curated
+        .map((item) => playlistById.get(item.playlist_id))
+        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
+    [discoverSections.discover_curated, playlistById],
   );
 
   const productionBlocks = useMemo(
     () =>
-      playlists
-        .filter((playlist) =>
-          playlist.discover_section?.startsWith("production_style_"),
-        )
-        .sort((a, b) =>
-          (a.discover_section ?? "").localeCompare(b.discover_section ?? ""),
-        ),
-    [playlists],
+      discoverSections.discover_production
+        .map((item) => playlistById.get(item.playlist_id))
+        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
+    [discoverSections.discover_production, playlistById],
   );
-
-  const curatedPlaylists = useMemo(() => {
-    const selected = playlists
-      .filter(
-        (playlist) => playlist.show_on_discover && !playlist.discover_section,
-      )
-      .sort((a, b) => a.discover_position - b.discover_position);
-
-    if (selected.length > 0) return selected;
-
-    return playlists
-      .filter((playlist) => Boolean(playlist.cover_image_url))
-      .sort((a, b) => a.position - b.position)
-      .slice(0, 10);
-  }, [playlists]);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
