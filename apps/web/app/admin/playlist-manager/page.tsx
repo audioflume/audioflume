@@ -132,7 +132,7 @@ export default function PlaylistManagerPage() {
         </Link>
       </div>
 
-      <div className="grid gap-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
+      <div className="grid gap-3 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
         {activeTab === "playlists" ? (
           <AdminAllPlaylistsView
             playlists={playlists}
