@@ -344,8 +344,16 @@ export default function AdminSongUploadPresentationInjector() {
 
       .admin-song-upload-content-page .admin-song-upload-file-action.has-file::after {
         content: "✓";
-        color: var(--status-success, #48b571);
-        font-size: 13px;
+        display: inline-flex;
+        width: 18px;
+        height: 18px;
+        flex: 0 0 18px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: var(--status-success, #48b571);
+        color: var(--status-contrast, #ffffff);
+        font-size: 10px;
         font-weight: 700;
         line-height: 1;
       }
