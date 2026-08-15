@@ -18,8 +18,8 @@ export default async function EditSongPage({
       <AdminSongAiGeneratedFieldInjector songId={id} />
       <AdminSongRegionFieldInjector songId={id} />
       <AdminSongFormEditPointsLinkInjector songId={id} />
-      <AdminSongEditPresentationInjector />
       <AdminEditPageStyles />
+      <AdminSongEditPresentationInjector />
     </>
   )
 }
