@@ -201,7 +201,9 @@ function SortableShelfPlaylistCard({
           {...attributes}
           {...listeners}
         >
-          <DragIconSmall />
+          <span className="inline-flex scale-x-[1.45]">
+            <DragIconSmall />
+          </span>
         </button>
 
         <button
@@ -337,7 +339,7 @@ export default function AdminPlaylistLibraryView({
   );
 
   const newlyAdded = useMemo(
-    () => [...playlists].sort(sortNewestFirst).slice(0, 8),
+    () => [...playlists].sort(sortNewestFirst).slice(0, 10),
     [playlists],
   );
 
@@ -483,11 +485,7 @@ export default function AdminPlaylistLibraryView({
   return (
     <>
       <section className="overflow-hidden rounded-[20px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] p-4 sm:p-5">
-        <div
-          className={`flex items-start justify-between gap-6 ${
-            shelvesCollapsed ? "" : "mb-6"
-          }`}
-        >
+        <div className="flex items-start justify-between gap-6">
           <div>
             <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
               Curated Shelves
@@ -513,7 +511,7 @@ export default function AdminPlaylistLibraryView({
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden="true"
-              className={`h-4 w-4 transition-transform ${
+              className={`h-4 w-4 transition-transform duration-300 ${
                 shelvesCollapsed ? "" : "rotate-180"
               }`}
             >
@@ -522,8 +520,15 @@ export default function AdminPlaylistLibraryView({
           </button>
         </div>
 
-        {!shelvesCollapsed && (
-          <>
+        <div
+          className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
+            shelvesCollapsed
+              ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
+              : "mt-6 grid-rows-[1fr] opacity-100"
+          }`}
+          aria-hidden={shelvesCollapsed}
+        >
+          <div className="min-h-0 overflow-hidden">
             {shelfError && (
               <div className="mb-4 border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-xs text-[var(--danger)]">
                 {shelfError}
@@ -613,7 +618,7 @@ export default function AdminPlaylistLibraryView({
                               </p>
                             </div>
                             <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                              Newest 8
+                              Newest 10
                             </span>
                           </div>
 
@@ -632,8 +637,8 @@ export default function AdminPlaylistLibraryView({
                 },
               )}
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </section>
 
       <section className="mt-16">
