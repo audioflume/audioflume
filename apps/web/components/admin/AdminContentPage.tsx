@@ -45,15 +45,30 @@ export default function AdminContentPage({
   contentAreaBottomPadding = true,
   contentStyle,
 }: AdminContentPageProps) {
-  const hidePageIntro = label === "Playlist Manager" || label === "Music Library";
-  const resolvedSection = section ?? SIDEBAR_SECTION_BY_LABEL[label] ?? "Admin";
+  const resolvedLabel =
+    label === "Song Editor"
+      ? title === "Edit Song"
+        ? "Edit Song"
+        : "Song Upload"
+      : label;
+  const hidePageIntro =
+    resolvedLabel === "Playlist Manager" || resolvedLabel === "Music Library";
+  const resolvedSection =
+    section ?? SIDEBAR_SECTION_BY_LABEL[resolvedLabel] ?? "Admin";
+  const isSongUpload = resolvedLabel === "Song Upload";
 
   return (
-    <main className="filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+    <main
+      className={`filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
+        isSongUpload ? "admin-song-upload-content-page" : ""
+      }`}
+    >
       <AdminSidebar />
 
       <section
-        className={`min-h-screen px-5 pt-[88px] ${contentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-8 xl:px-10 ${contentAreaClassName}`}
+        className={`min-h-screen px-5 pt-[88px] ${contentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-8 xl:px-10 ${
+          isSongUpload ? "bg-[var(--filmwave-neutral-surface)]" : ""
+        } ${contentAreaClassName}`}
       >
         <div
           className={`mx-auto max-w-[1180px] ${contentClassName}`}
@@ -61,20 +76,36 @@ export default function AdminContentPage({
         >
           <AdminPageHeader
             section={resolvedSection}
-            label={label}
+            label={resolvedLabel}
             action={headerAction}
-            compact={compactHeader}
+            compact={compactHeader || isSongUpload}
           />
 
           {!hidePageIntro ? (
-            <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
+            <div
+              className={`${
+                isSongUpload ? "mb-4 min-h-0" : "mb-8 min-h-[58px]"
+              } flex items-end justify-between gap-4`}
+            >
               <div className="min-w-0">
-                <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-                  {title}
+                <h1
+                  className={
+                    isSongUpload
+                      ? "text-base font-medium text-[var(--text-primary)]"
+                      : "font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]"
+                  }
+                >
+                  {isSongUpload ? resolvedLabel : title}
                 </h1>
 
                 {description ? (
-                  <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
+                  <p
+                    className={
+                      isSongUpload
+                        ? "mt-1 text-xs leading-5 text-[var(--text-secondary)]"
+                        : "mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]"
+                    }
+                  >
                     {description}
                   </p>
                 ) : null}
@@ -83,7 +114,10 @@ export default function AdminContentPage({
               {titleAction ? (
                 <div className="flex h-8 shrink-0 items-center">{titleAction}</div>
               ) : (
-                <div aria-hidden="true" className="hidden h-8 w-0 shrink-0 md:block" />
+                <div
+                  aria-hidden="true"
+                  className="hidden h-8 w-0 shrink-0 md:block"
+                />
               )}
             </div>
           ) : null}
