@@ -139,7 +139,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           min-height: 42px;
           align-items: center;
           gap: 12px;
-          border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent);
+          border: 1px solid var(--filmwave-border-color);
           border-radius: 0;
           background: var(--bg-primary);
           padding: 0 14px;
