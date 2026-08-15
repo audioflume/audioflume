@@ -145,9 +145,9 @@ export default function DiscoverHeaderScrollState() {
         }
 
         .discover-hero-search {
-          --text-primary: #111;
-          --text-muted: rgba(17, 17, 17, 0.42);
-          --border: rgba(17, 17, 17, 0.09);
+          --text-primary: var(--filmwave-black);
+          --text-muted: color-mix(in srgb, var(--filmwave-black) 42%, transparent);
+          --border: var(--filmwave-border-color);
           --fw-header-search-row-height: 58px;
           --fw-header-search-field-height: 58px;
           --fw-header-search-transform: none;
@@ -158,8 +158,8 @@ export default function DiscoverHeaderScrollState() {
           max-height: 58px !important;
           grid-template-columns: minmax(0, 1fr) !important;
           border: 1px solid rgba(255, 255, 255, 0.7) !important;
-          background: #fff !important;
-          background-color: #fff !important;
+          background: var(--filmwave-white) !important;
+          background-color: var(--filmwave-white) !important;
           box-shadow: 0 16px 45px rgba(0, 0, 0, 0.18) !important;
           padding: 0 !important;
         }
@@ -192,8 +192,8 @@ export default function DiscoverHeaderScrollState() {
           align-self: center !important;
           cursor: pointer;
           border: 0;
-          background: #191919;
-          color: #fff;
+          background: var(--filmwave-black);
+          color: var(--filmwave-white);
           font-family: inherit;
           font-size: 12px;
           font-weight: 500;
@@ -208,12 +208,13 @@ export default function DiscoverHeaderScrollState() {
         html[data-theme="light"]
           .discover-hero-search
           .discover-hero-search-submit {
-          background: #e4e4e4;
+          background: var(--filmwave-neutral-surface);
+          color: var(--filmwave-black);
         }
 
         .discover-hero-search .discover-hero-search-submit:hover {
-          background: #fff;
-          color: #0d0d0d;
+          background: var(--filmwave-white);
+          color: var(--filmwave-black);
         }
 
         body:has(.discover-page-root)
