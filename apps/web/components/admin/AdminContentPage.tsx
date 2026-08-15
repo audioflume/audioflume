@@ -56,6 +56,15 @@ export default function AdminContentPage({
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
     isSongUpload;
+  const usesAdminCanvas =
+    resolvedLabel === "Playlist Manager" ||
+    resolvedLabel === "Music Library" ||
+    isSongUpload;
+  const resolvedContentAreaClassName = usesAdminCanvas
+    ? contentAreaClassName
+        .replace("bg-[var(--filmwave-neutral-surface)]", "")
+        .trim()
+    : contentAreaClassName;
   const resolvedSection =
     section ?? SIDEBAR_SECTION_BY_LABEL[resolvedLabel] ?? "Admin";
 
@@ -69,8 +78,8 @@ export default function AdminContentPage({
 
       <section
         className={`min-h-screen px-5 pt-[88px] ${contentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-8 xl:px-10 ${
-          isSongUpload ? "bg-[var(--filmwave-neutral-surface)]" : ""
-        } ${contentAreaClassName}`}
+          usesAdminCanvas ? "bg-[var(--filmwave-admin-canvas)]" : ""
+        } ${resolvedContentAreaClassName}`}
       >
         <div
           className={`mx-auto max-w-[1180px] ${contentClassName}`}
