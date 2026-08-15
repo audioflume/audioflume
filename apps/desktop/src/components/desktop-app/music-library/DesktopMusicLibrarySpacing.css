@@ -38,7 +38,7 @@
 .desktop-music-page .desktop-song-sync-button.is-synced:hover {
   cursor: grab;
   background: var(--bg-hover-strong) !important;
-  color: var(--text-primary-inverse, #ffffff) !important;
+  color: var(--text-primary-inverse, var(--filmwave-white)) !important;
   opacity: 1;
 }
 
@@ -62,11 +62,11 @@
 }
 
 .desktop-music-page .desktop-song-play-overlay {
-  color: #111111 !important;
+  color: var(--filmwave-black) !important;
 }
 
 .desktop-music-page .desktop-song-play-overlay::before {
-  background: #ffffff !important;
+  background: var(--filmwave-white) !important;
 }
 
 html[data-theme="light"] .desktop-music-page .filmwave-search-filter-sticky,
@@ -127,5 +127,5 @@ html[data-theme="light"] .desktop-music-page .desktop-shuffle-button.is-active {
 
 html[data-theme="light"] .desktop-music-page .desktop-song-play-overlay {
   background: var(--media-overlay-strong);
-  color: #111111 !important;
+  color: var(--filmwave-black) !important;
 }
