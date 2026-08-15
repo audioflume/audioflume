@@ -248,12 +248,6 @@ export default function AdminPlaylistPageStyles() {
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
-        + section {
-        margin-top: 12px;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
         + section
         .grid.gap-2 {
         gap: 6px;
