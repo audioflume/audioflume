@@ -47,6 +47,7 @@ export const CURATED_BROWSE_FILTERS = [
       { value: "genre:background", label: "Background" },
       { value: "genre:tech-innovation", label: "Tech & Innovation" },
       { value: "genre:advertising", label: "Advertising" },
+      { value: "genre:brand-lifestyle", label: "Brand & Lifestyle" },
     ],
   },
   {
