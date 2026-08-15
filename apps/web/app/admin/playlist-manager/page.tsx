@@ -142,8 +142,8 @@ export default function PlaylistManagerPage() {
         ))}
       </div>
 
-      {activeTab === "playlists" ? (
-        <div className="grid gap-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
+      <div className="grid gap-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
+        {activeTab === "playlists" ? (
           <AdminAllPlaylistsView
             playlists={masterPlaylists}
             loading={loading}
@@ -151,9 +151,7 @@ export default function PlaylistManagerPage() {
             deletingId={deletingId}
             onDeletePlaylist={deletePlaylist}
           />
-        </div>
-      ) : activeTab === "curated" ? (
-        <div className="grid gap-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
+        ) : activeTab === "curated" ? (
           <AdminPlaylistLibraryView
             playlists={masterPlaylists}
             loading={loading}
@@ -161,9 +159,7 @@ export default function PlaylistManagerPage() {
             deletingId={deletingId}
             onDeletePlaylist={deletePlaylist}
           />
-        </div>
-      ) : (
-        <div className="grid gap-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
+        ) : (
           <AdminDiscoverLibraryView
             playlists={playlists}
             loading={loading}
@@ -172,8 +168,8 @@ export default function PlaylistManagerPage() {
             onDeletePlaylist={deletePlaylist}
             onUpdatePlaylists={updatePlaylists}
           />
-        </div>
-      )}
+        )}
+      </div>
     </AdminContentPage>
   );
 }
