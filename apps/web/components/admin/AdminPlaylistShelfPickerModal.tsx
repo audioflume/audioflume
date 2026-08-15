@@ -119,7 +119,7 @@ export default function AdminPlaylistShelfPickerModal({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder={resolvedSearchPlaceholder}
-            className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
+            className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
           />
           {search && (
             <button
