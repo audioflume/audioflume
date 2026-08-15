@@ -418,7 +418,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Docu beds"
+                  placeholder="Playlist Name"
                   required
                 />
               </label>
@@ -429,7 +429,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   value={kicker}
                   onChange={(e) => setKicker(e.target.value)}
                   className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Human stories"
+                  placeholder="Kicker Text"
                 />
               </label>
 
