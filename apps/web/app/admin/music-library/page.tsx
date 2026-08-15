@@ -589,7 +589,7 @@ export default function AdminMusicLibraryPage() {
                   onClick={() => setFiltersOpen((open) => !open)}
                   className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-xs font-medium transition-colors ${
                     filtersOpen || activeFilterCount > 0
-                      ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                      ? "border-[var(--border)] bg-[var(--bg-hover)] text-[var(--text-primary)]"
                       : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   }`}
                   aria-expanded={filtersOpen}
