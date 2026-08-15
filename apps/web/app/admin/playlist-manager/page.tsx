@@ -79,7 +79,7 @@ export default function PlaylistManagerPage() {
   }
 
   async function deletePlaylist(playlist: CuratedPlaylist) {
-    const confirmed = window.confirm(`Delete "${playlist.name}"?`);
+    const confirmed = window.confirm(`Delete \"${playlist.name}\"?`);
     if (!confirmed) return;
 
     try {
@@ -114,16 +114,16 @@ export default function PlaylistManagerPage() {
       title="Playlist Manager"
       description="Manage the playlist library, curated shelves, and Discover content."
     >
-      <div className="mb-7 inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] p-1">
+      <div className="mb-7 flex items-center gap-2">
         {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
           <button
             key={tab}
             type="button"
             onClick={() => setActiveTab(tab)}
-            className={`h-9 rounded-full px-4 text-xs font-medium capitalize transition ${
+            className={`h-9 rounded-[14px] border px-4 text-xs font-medium capitalize transition ${
               activeTab === tab
-                ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
             }`}
           >
             {tab === "playlists" ? "Playlists" : "Discover"}
