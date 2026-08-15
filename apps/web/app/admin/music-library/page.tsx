@@ -517,19 +517,31 @@ export default function AdminMusicLibraryPage() {
           paddingBottom: playerVisible ? "104px" : "32px",
         }}
       >
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <div>
-            <div className="text-base font-medium text-[var(--text-primary)]">
-              Music Library
-            </div>
-            <div className="mt-1 text-xs text-[var(--text-secondary)]">
-              {songs.length} song{songs.length === 1 ? "" : "s"}
-            </div>
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <div className="relative w-full max-w-[500px]">
+            <input
+              type="text"
+              role="searchbox"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search"
+              className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center bg-transparent text-[var(--text-primary)]"
+                aria-label="Clear search"
+              >
+                <XIcon size={12} />
+              </button>
+            )}
           </div>
 
           <Link
             href="/admin/songs/new"
-            className="inline-flex h-11 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-sm font-medium text-[var(--bg-primary)] transition"
+            className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-sm font-medium text-[var(--bg-primary)] transition"
           >
             <UploadIcon size={13} />
             <span>Upload Song</span>
@@ -538,74 +550,80 @@ export default function AdminMusicLibraryPage() {
 
         <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
           <div className="flex flex-col gap-3 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="relative w-full max-w-[500px]">
-              <input
-                type="text"
-                role="searchbox"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search"
-                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
-              />
-              {search && (
-                <button
-                  type="button"
-                  onClick={() => setSearch("")}
-                  className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center bg-transparent text-[var(--text-primary)]"
-                  aria-label="Clear search"
-                >
-                  <XIcon size={12} />
-                </button>
-              )}
+            <div className="flex items-center gap-3">
+              <label
+                className="admin-song-select-wrap is-visible"
+                aria-label="Select all visible songs"
+              >
+                <input
+                  type="checkbox"
+                  checked={allFilteredSelected}
+                  onChange={(e) => toggleSelectAllFiltered(e.target.checked)}
+                  className="admin-song-select-input"
+                />
+
+                <span className="admin-song-select-box">
+                  <CheckIcon size={11} strokeWidth={3} />
+                </span>
+              </label>
+
+              <div className="flex items-center gap-2">
+                {selectionMode && (
+                  <button
+                    type="button"
+                    onClick={handleBatchDelete}
+                    disabled={isBatchDeleting}
+                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-xs font-semibold text-[var(--danger-contrast)] transition-colors hover:bg-[var(--danger-hover)] disabled:opacity-50"
+                  >
+                    <TrashIcon />
+                    {isBatchDeleting
+                      ? "Deleting..."
+                      : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
+                  </button>
+                )}
+
+                {selectionMode ? (
+                  <button
+                    type="button"
+                    onClick={clearSelection}
+                    disabled={isBatchDeleting}
+                    className="inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setFiltersOpen((open) => !open)}
+                    className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-xs font-medium transition-colors ${
+                      filtersOpen || activeFilterCount > 0
+                        ? "border-[var(--border)] bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                        : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    }`}
+                    aria-expanded={filtersOpen}
+                  >
+                    <span>Filters</span>
+                    <span
+                      className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] ${
+                        filtersOpen || activeFilterCount > 0
+                          ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                          : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
+                      }`}
+                    >
+                      {activeFilterCount}
+                    </span>
+                  </button>
+                )}
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              {selectionMode && (
-                <button
-                  type="button"
-                  onClick={handleBatchDelete}
-                  disabled={isBatchDeleting}
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-xs font-semibold text-[var(--danger-contrast)] transition-colors hover:bg-[var(--danger-hover)] disabled:opacity-50"
-                >
-                  <TrashIcon />
-                  {isBatchDeleting
-                    ? "Deleting..."
-                    : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
-                </button>
-              )}
-
-              {selectionMode ? (
-                <button
-                  type="button"
-                  onClick={clearSelection}
-                  disabled={isBatchDeleting}
-                  className="inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setFiltersOpen((open) => !open)}
-                  className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-xs font-medium transition-colors ${
-                    filtersOpen || activeFilterCount > 0
-                      ? "border-[var(--border)] bg-[var(--bg-hover)] text-[var(--text-primary)]"
-                      : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                  }`}
-                  aria-expanded={filtersOpen}
-                >
-                  <span>Filters</span>
-                  <span
-                    className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] ${
-                      filtersOpen || activeFilterCount > 0
-                        ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
-                        : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
-                    }`}
-                  >
-                    {activeFilterCount}
-                  </span>
-                </button>
-              )}
+            <div className="text-right">
+              <div className="text-base font-medium text-[var(--text-primary)]">
+                Music Library
+              </div>
+              <div className="mt-1 text-xs text-[var(--text-secondary)]">
+                {songs.length} song{songs.length === 1 ? "" : "s"}
+              </div>
             </div>
           </div>
 
@@ -673,40 +691,9 @@ export default function AdminMusicLibraryPage() {
             </div>
           )}
 
-          <div className="mx-5 mb-5 overflow-hidden rounded-[7px] border border-[var(--border)]">
+          <div className="mx-5 mb-5 overflow-hidden">
             <div className="overflow-x-auto overflow-y-hidden">
               <div className="min-w-[920px]">
-                <div className="grid h-[52px] grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px] items-center gap-3 border-b border-[var(--border)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-primary)]">
-                  <div className="flex items-center">
-                    <label
-                      className="admin-song-select-wrap is-visible"
-                      aria-label="Select all visible songs"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={allFilteredSelected}
-                        onChange={(e) =>
-                          toggleSelectAllFiltered(e.target.checked)
-                        }
-                        className="admin-song-select-input"
-                      />
-
-                      <span className="admin-song-select-box">
-                        <CheckIcon size={11} strokeWidth={3} />
-                      </span>
-                    </label>
-                  </div>
-
-                  <div />
-                  <div>Song</div>
-                  <div>Artist</div>
-                  <div>Status</div>
-                  <div>Key</div>
-                  <div>BPM</div>
-                  <div>Added</div>
-                  <div>Actions</div>
-                </div>
-
                 {showSkeleton && (
                   <div className="grid gap-0">
                     {Array.from({ length: 10 }, (_, index) => (
