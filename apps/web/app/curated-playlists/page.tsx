@@ -10,6 +10,7 @@ import {
   type CuratedBrowseTag,
   type CuratedPlaylist,
 } from "@/lib/curatedPlaylists";
+import type { CuratedPlaylistShelfState } from "@/lib/curatedPlaylistShelves";
 import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
 
 type GroupMeta = {
@@ -23,6 +24,25 @@ type CuratedShelfGroup = {
   description: string | null;
   playlists: CuratedPlaylist[];
 };
+
+type ManualShelfIds = {
+  popular: number[];
+  trending: number[];
+};
+
+const SPECIAL_SHELF_GROUPS = new Set([
+  "Popular Right Now",
+  "Newly Added",
+  "Trending Playlists",
+]);
+
+function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
+  const aTime = a.created_at ? Date.parse(a.created_at) : 0;
+  const bTime = b.created_at ? Date.parse(b.created_at) : 0;
+
+  if (aTime !== bTime) return bTime - aTime;
+  return b.id - a.id;
+}
 
 function SkeletonBlock({ className = "" }: { className?: string }) {
   return <span className={`curated-playlist-skeleton-block ${className}`} />;
@@ -197,6 +217,8 @@ function CuratedPlaylistsLoadingSkeleton() {
 export default function CuratedPlaylistsPage() {
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [groups, setGroups] = useState<GroupMeta[]>([]);
+  const [manualShelfIds, setManualShelfIds] =
+    useState<ManualShelfIds | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeBrowseFilter, setActiveBrowseFilter] =
@@ -211,9 +233,10 @@ export default function CuratedPlaylistsPage() {
         setLoading(true);
         setError("");
 
-        const [playlistRes, groupRes] = await Promise.all([
+        const [playlistRes, groupRes, shelfRes] = await Promise.all([
           fetch("/api/curated-playlists"),
           fetch("/api/curated-playlist-groups").catch(() => null),
+          fetch("/api/curated-playlist-shelves").catch(() => null),
         ]);
 
         const playlistData = await playlistRes.json();
@@ -223,12 +246,21 @@ export default function CuratedPlaylistsPage() {
         }
 
         let groupData: GroupMeta[] = [];
+        let shelfData: CuratedPlaylistShelfState | null = null;
 
         if (groupRes?.ok) {
           try {
             groupData = await groupRes.json();
           } catch {
             groupData = [];
+          }
+        }
+
+        if (shelfRes?.ok) {
+          try {
+            shelfData = await shelfRes.json();
+          } catch {
+            shelfData = null;
           }
         }
 
@@ -242,6 +274,18 @@ export default function CuratedPlaylistsPage() {
             Array.isArray(groupData)
               ? [...groupData].sort((a, b) => a.position - b.position)
               : [],
+          );
+          setManualShelfIds(
+            shelfData
+              ? {
+                  popular: Array.isArray(shelfData.popular)
+                    ? shelfData.popular.map((item) => Number(item.playlist_id))
+                    : [],
+                  trending: Array.isArray(shelfData.trending)
+                    ? shelfData.trending.map((item) => Number(item.playlist_id))
+                    : [],
+                }
+              : null,
           );
         }
       } catch (err) {
@@ -326,10 +370,36 @@ export default function CuratedPlaylistsPage() {
 
     const playlistMap = new Map<string, CuratedPlaylist[]>();
 
-    for (const playlist of searchablePlaylists) {
-      const key = playlist.playlist_group || "Editor Picks";
-      if (!playlistMap.has(key)) playlistMap.set(key, []);
-      playlistMap.get(key)!.push(playlist);
+    if (manualShelfIds) {
+      for (const playlist of searchablePlaylists) {
+        const key = playlist.playlist_group || "Editor Picks";
+        if (SPECIAL_SHELF_GROUPS.has(key)) continue;
+        if (!playlistMap.has(key)) playlistMap.set(key, []);
+        playlistMap.get(key)!.push(playlist);
+      }
+
+      const searchableById = new Map(
+        searchablePlaylists.map((playlist) => [playlist.id, playlist]),
+      );
+      const popular = manualShelfIds.popular
+        .map((id) => searchableById.get(id))
+        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
+      const newlyAdded = [...searchablePlaylists]
+        .sort(sortNewestFirst)
+        .slice(0, 8);
+      const trending = manualShelfIds.trending
+        .map((id) => searchableById.get(id))
+        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
+
+      if (popular.length > 0) playlistMap.set("Popular Right Now", popular);
+      if (newlyAdded.length > 0) playlistMap.set("Newly Added", newlyAdded);
+      if (trending.length > 0) playlistMap.set("Trending Playlists", trending);
+    } else {
+      for (const playlist of searchablePlaylists) {
+        const key = playlist.playlist_group || "Editor Picks";
+        if (!playlistMap.has(key)) playlistMap.set(key, []);
+        playlistMap.get(key)!.push(playlist);
+      }
     }
 
     const orderedGroupNames =
@@ -346,12 +416,20 @@ export default function CuratedPlaylistsPage() {
         name,
         description:
           groups.find((group) => group.name === name)?.description ?? null,
-        playlists: (playlistMap.get(name) ?? []).sort(
-          (a, b) => a.position - b.position,
-        ),
+        playlists: SPECIAL_SHELF_GROUPS.has(name)
+          ? playlistMap.get(name) ?? []
+          : (playlistMap.get(name) ?? []).sort(
+              (a, b) => a.position - b.position,
+            ),
       }))
       .filter((group) => group.playlists.length > 0);
-  }, [activeBrowseFilter, groups, playlists, searchQuery]);
+  }, [
+    activeBrowseFilter,
+    groups,
+    manualShelfIds,
+    playlists,
+    searchQuery,
+  ]);
 
   const hasActiveSearch = searchQuery.trim().length > 0;
 
