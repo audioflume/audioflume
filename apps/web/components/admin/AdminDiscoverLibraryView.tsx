@@ -18,9 +18,7 @@ import AdminPlaylistShelfPickerModal from "@/components/admin/AdminPlaylistShelf
 import {
   PLAYLIST_MANAGER_GRID_CLASS,
   PlaylistManagerCollapsibleSection,
-  PlaylistManagerLibrarySection,
   PlaylistManagerSortableCard,
-  sortPlaylistNewestFirst,
 } from "@/components/admin/AdminPlaylistManagerShared";
 import Toast from "@/components/Toast";
 import PlusIcon from "@/components/icons/PlusIcon";
@@ -33,23 +31,10 @@ import {
   type DiscoverSectionShelfState,
 } from "@/lib/discoverSections";
 
-type PlaylistUpdate = {
-  id: number;
-  changes: Partial<CuratedPlaylist>;
-};
-
 type Props = {
   playlists: CuratedPlaylist[];
   loading: boolean;
   error: string;
-  deletingId: number | null;
-  onDeletePlaylist: (playlist: CuratedPlaylist) => void | Promise<void>;
-  onUpdatePlaylists?: (updates: PlaylistUpdate[]) => void;
-};
-
-type PickerState = {
-  sectionKey: DiscoverSectionShelfKey;
-  source: "playlist" | "discover";
 };
 
 function emptySectionState(): DiscoverSectionShelfState {
@@ -58,16 +43,6 @@ function emptySectionState(): DiscoverSectionShelfState {
     discover_curated: [],
     discover_production: [],
   };
-}
-
-function isDiscoverContent(playlist: CuratedPlaylist) {
-  return Boolean(playlist.discover_section);
-}
-
-function getEditHref(playlist: CuratedPlaylist) {
-  return isDiscoverContent(playlist)
-    ? `/admin/playlist-manager/discover/${playlist.id}/edit`
-    : `/admin/playlist-manager/${playlist.id}/edit`;
 }
 
 async function fetchSectionState() {
@@ -81,16 +56,14 @@ export default function AdminDiscoverLibraryView({
   playlists,
   loading,
   error,
-  deletingId,
-  onDeletePlaylist,
 }: Props) {
   const [sectionState, setSectionState] =
     useState<DiscoverSectionShelfState>(emptySectionState);
   const [sectionsLoading, setSectionsLoading] = useState(true);
   const [sectionError, setSectionError] = useState("");
-  const [picker, setPicker] = useState<PickerState | null>(null);
+  const [pickerSection, setPickerSection] =
+    useState<DiscoverSectionShelfKey | null>(null);
   const [savingSection, setSavingSection] = useState(false);
-  const [openLibraryMenu, setOpenLibraryMenu] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
   const [collapsedSections, setCollapsedSections] = useState<
     Record<DiscoverSectionShelfKey, boolean>
@@ -143,40 +116,10 @@ export default function AdminDiscoverLibraryView({
     return () => window.clearTimeout(timeout);
   }, [toastMessage]);
 
-  const masterPlaylists = useMemo(
-    () => playlists.filter((playlist) => !playlist.discover_section),
-    [playlists],
-  );
-
-  const discoverContent = useMemo(
-    () => playlists.filter((playlist) => Boolean(playlist.discover_section)),
-    [playlists],
-  );
-
-  const allDiscoverContent = useMemo(
-    () => [...discoverContent].sort(sortPlaylistNewestFirst),
-    [discoverContent],
-  );
-
   const playlistById = useMemo(
     () => new Map(playlists.map((playlist) => [playlist.id, playlist] as const)),
     [playlists],
   );
-
-  const placementsById = useMemo(() => {
-    const placements = new Map<number, string[]>();
-
-    for (const key of DISCOVER_SECTION_SHELF_KEYS) {
-      const label = DISCOVER_SECTION_SHELF_LABELS[key];
-      for (const item of sectionState[key]) {
-        const labels = placements.get(item.playlist_id) || [];
-        labels.push(label);
-        placements.set(item.playlist_id, labels);
-      }
-    }
-
-    return placements;
-  }, [sectionState]);
 
   function getSectionPlaylists(sectionKey: DiscoverSectionShelfKey) {
     return sectionState[sectionKey]
@@ -211,11 +154,11 @@ export default function AdminDiscoverLibraryView({
       if (!res.ok) throw new Error(data?.error || "Failed to add to Discover section");
 
       await refreshSections();
-      setPicker(null);
+      setPickerSection(null);
       setToastMessage(
         playlistIds.length === 1
           ? `Added to ${DISCOVER_SECTION_SHELF_LABELS[sectionKey]}`
-          : `Added ${playlistIds.length} items to ${DISCOVER_SECTION_SHELF_LABELS[sectionKey]}`,
+          : `Added ${playlistIds.length} playlists to ${DISCOVER_SECTION_SHELF_LABELS[sectionKey]}`,
       );
     } catch (err) {
       setToastMessage(
@@ -345,37 +288,26 @@ export default function AdminDiscoverLibraryView({
             <PlaylistManagerCollapsibleSection
               key={sectionKey}
               title={sectionLabel}
-              subtitle={`${sectionPlaylists.length} item${sectionPlaylists.length === 1 ? "" : "s"}`}
+              subtitle={`${sectionPlaylists.length} playlist${sectionPlaylists.length === 1 ? "" : "s"}`}
               collapsed={sectionCollapsed}
               onToggle={() => toggleSection(sectionKey)}
               wrapHeader
               wrapActions
               actions={
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setPicker({ sectionKey, source: "playlist" })}
-                    className={secondaryPillButtonClass}
-                    disabled={savingSection}
-                  >
-                    <PlusIcon size={12} />
-                    <span>Add Playlist</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPicker({ sectionKey, source: "discover" })}
-                    className={secondaryPillButtonClass}
-                    disabled={savingSection}
-                  >
-                    <PlusIcon size={12} />
-                    <span>Add Discover Content</span>
-                  </button>
-                </>
+                <button
+                  type="button"
+                  onClick={() => setPickerSection(sectionKey)}
+                  className={secondaryPillButtonClass}
+                  disabled={savingSection}
+                >
+                  <PlusIcon size={12} />
+                  <span>Add Playlist</span>
+                </button>
               }
             >
               {sectionPlaylists.length === 0 ? (
                 <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-                  Add a playlist or Discover content to this section.
+                  Add a playlist to this section.
                 </div>
               ) : (
                 <DndContext
@@ -392,12 +324,8 @@ export default function AdminDiscoverLibraryView({
                         <PlaylistManagerSortableCard
                           key={playlist.id}
                           playlist={playlist}
-                          editHref={getEditHref(playlist)}
-                          meta={
-                            isDiscoverContent(playlist)
-                              ? "Discover Content"
-                              : `${playlist.song_count || 0} songs · Playlist`
-                          }
+                          editHref={`/admin/playlist-manager/${playlist.id}/edit`}
+                          meta={`${playlist.song_count || 0} songs`}
                           removeAriaLabel={`Remove ${playlist.name} from ${sectionLabel}`}
                           removeTitle={`Remove from ${sectionLabel}`}
                           onRemove={() =>
@@ -414,53 +342,15 @@ export default function AdminDiscoverLibraryView({
         })}
       </div>
 
-      <PlaylistManagerLibrarySection
-        title="All Discover Content"
-        subtitle={`${allDiscoverContent.length} item${allDiscoverContent.length === 1 ? "" : "s"} · Master library`}
-        createHref="/admin/playlist-manager/discover/new"
-        createLabel="New Discover Content"
-        playlists={allDiscoverContent}
-        emptyMessage="No Discover content yet."
-        getEditHref={getEditHref}
-        getMeta={(playlist) => {
-          const placementLabels = placementsById.get(playlist.id) || [];
-          const placement =
-            placementLabels.length === 0
-              ? "Not added to a Discover section"
-              : placementLabels.length === 1
-                ? placementLabels[0]
-                : `${placementLabels.length} Discover sections`;
-          return `${playlist.song_count || 0} songs · ${placement}`;
-        }}
-        editLabel="Edit Content"
-        deleteLabel="Delete Content"
-        openMenuId={openLibraryMenu}
-        setOpenMenuId={setOpenLibraryMenu}
-        deletingId={deletingId}
-        onDeletePlaylist={onDeletePlaylist}
-      />
-
-      {picker && (
+      {pickerSection && (
         <AdminPlaylistShelfPickerModal
           isOpen
-          title={DISCOVER_SECTION_SHELF_LABELS[picker.sectionKey]}
-          playlists={picker.source === "playlist" ? masterPlaylists : discoverContent}
-          existingIds={sectionState[picker.sectionKey].map((item) => item.playlist_id)}
+          title={DISCOVER_SECTION_SHELF_LABELS[pickerSection]}
+          playlists={playlists}
+          existingIds={sectionState[pickerSection].map((item) => item.playlist_id)}
           saving={savingSection}
-          itemLabel={picker.source === "playlist" ? "Playlist" : "Discover Content"}
-          itemLabelPlural={picker.source === "playlist" ? "Playlists" : "Discover Items"}
-          searchPlaceholder={
-            picker.source === "playlist"
-              ? "Search playlists"
-              : "Search Discover content"
-          }
-          emptyMessage={
-            picker.source === "playlist"
-              ? "No playlists match your search."
-              : "No Discover content matches your search."
-          }
-          onClose={() => setPicker(null)}
-          onAdd={(playlistIds) => addToSection(picker.sectionKey, playlistIds)}
+          onClose={() => setPickerSection(null)}
+          onAdd={(playlistIds) => addToSection(pickerSection, playlistIds)}
         />
       )}
 
