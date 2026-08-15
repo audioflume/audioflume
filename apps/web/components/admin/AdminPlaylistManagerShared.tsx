@@ -8,9 +8,7 @@ import { CSS } from "@dnd-kit/utilities";
 import DropdownShell from "@/components/DropdownShell";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import MoreIcon from "@/components/icons/MoreIcon";
-import PlusIcon from "@/components/icons/PlusIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-import { primaryPillButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 export const PLAYLIST_MANAGER_GRID_CLASS =
@@ -316,8 +314,6 @@ export function PlaylistManagerCollapsibleSection({
 type LibrarySectionProps = {
   title: string;
   subtitle: string;
-  createHref: string;
-  createLabel: string;
   playlists: CuratedPlaylist[];
   emptyMessage: string;
   getEditHref: (playlist: CuratedPlaylist) => string;
@@ -333,8 +329,6 @@ type LibrarySectionProps = {
 export function PlaylistManagerLibrarySection({
   title,
   subtitle,
-  createHref,
-  createLabel,
   playlists,
   emptyMessage,
   getEditHref,
@@ -357,11 +351,6 @@ export function PlaylistManagerLibrarySection({
             {subtitle}
           </p>
         </div>
-
-        <Link href={createHref} className={primaryPillButtonClass}>
-          <PlusIcon size={13} />
-          <span>{createLabel}</span>
-        </Link>
       </div>
 
       {playlists.length === 0 ? (
