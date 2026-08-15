@@ -467,7 +467,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 ).map((filter) => (
                   <div
                     key={`${filter.value}-subcategories`}
-                    className="grid gap-2 border-t border-[var(--border)] pt-3"
+                    className="grid gap-2 pt-3"
                   >
                     <div>
                       <div className="text-xs font-medium text-[var(--text-primary)]">
@@ -512,10 +512,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 <span>
                   <span className="block font-medium text-[var(--text-primary)]">
                     Feature on Curated Playlists
-                  </span>
-                  <span className="mt-1 block text-xs text-[var(--text-muted)]">
-                    Adds this playlist to the featured banner on the Curated
-                    Playlists page.
                   </span>
                 </span>
               </label>
