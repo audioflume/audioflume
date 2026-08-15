@@ -129,6 +129,52 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page
+  .admin-song-file-row:nth-child(2)
+  > div:last-child {
+  position: relative;
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:nth-child(2)
+  > div:last-child
+  > button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 10;
+  display: flex;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:nth-child(2)
+  > div:last-child
+  > button::before {
+  content: "×";
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:nth-child(2)
+  > div:last-child
+  > button:hover {
+  background: color-mix(in srgb, var(--bg-primary) 90%, var(--danger) 10%);
+  color: var(--danger);
+}
+
+.admin-song-upload-content-page
   .admin-song-form-card
   > [class~="p-4"] {
   padding: var(--admin-song-title-gap) var(--admin-song-card-x)
