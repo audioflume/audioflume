@@ -481,7 +481,7 @@ export default function AdminPlaylistLibraryView({
 
   return (
     <>
-      <section className="overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] p-4 sm:p-5">
+      <section className="overflow-hidden rounded-[20px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] p-4 sm:p-5">
         <div className="mb-6">
           <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
             Curated Shelves
