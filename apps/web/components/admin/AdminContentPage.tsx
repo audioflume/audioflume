@@ -25,6 +25,7 @@ const SIDEBAR_SECTION_BY_LABEL: Record<string, string> = {
   "Upload Queue": "Upload",
   "Music Library": "Database",
   "Playlist Manager": "Database",
+  "Create Playlist": "Database",
   "Cue Points": "Database",
   "Edit Song": "Database",
   "Edit Playlist": "Database",
@@ -54,18 +55,21 @@ export default function AdminContentPage({
       : label;
   const isSongUpload = resolvedLabel === "Song Upload";
   const isSongEdit = resolvedLabel === "Edit Song";
+  const isPlaylistCreate = resolvedLabel === "Create Playlist";
   const isPlaylistEdit = resolvedLabel === "Edit Playlist";
   const hidePageIntro =
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
     isSongUpload ||
     isSongEdit ||
+    isPlaylistCreate ||
     isPlaylistEdit;
   const usesAdminCanvas =
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
     isSongUpload ||
     isSongEdit ||
+    isPlaylistCreate ||
     isPlaylistEdit;
   const resolvedContentAreaClassName = usesAdminCanvas
     ? contentAreaClassName
@@ -80,8 +84,8 @@ export default function AdminContentPage({
       className={`filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
         isSongUpload ? "admin-song-upload-content-page" : ""
       } ${isSongEdit ? "admin-song-edit-content-page" : ""} ${
-        isPlaylistEdit ? "admin-playlist-edit-content-page" : ""
-      }`}
+        isPlaylistCreate ? "admin-playlist-create-content-page" : ""
+      } ${isPlaylistEdit ? "admin-playlist-edit-content-page" : ""}`}
     >
       <AdminSidebar />
 
@@ -98,7 +102,13 @@ export default function AdminContentPage({
             section={resolvedSection}
             label={resolvedLabel}
             action={headerAction}
-            compact={compactHeader || isSongUpload || isSongEdit || isPlaylistEdit}
+            compact={
+              compactHeader ||
+              isSongUpload ||
+              isSongEdit ||
+              isPlaylistCreate ||
+              isPlaylistEdit
+            }
           />
 
           {!hidePageIntro ? (
