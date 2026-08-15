@@ -492,11 +492,9 @@ export default function AdminPlaylistLibraryView({
             <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
               Curated Shelves
             </h2>
-            {!shelvesCollapsed && (
-              <p className="mt-1 max-w-[620px] text-xs leading-5 text-[var(--text-secondary)]">
-                Arrange playlists from the master library into the shelves shown on the curated experience. Removing a card here never deletes the playlist.
-              </p>
-            )}
+            <p className="mt-1 max-w-[620px] text-xs leading-5 text-[var(--text-secondary)]">
+              Arrange playlists from the master library into the shelves shown on the curated experience. Removing a card here never deletes the playlist.
+            </p>
           </div>
 
           <button
