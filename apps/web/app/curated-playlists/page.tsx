@@ -13,12 +13,6 @@ import {
 import type { CuratedPlaylistShelfState } from "@/lib/curatedPlaylistShelves";
 import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
 
-type GroupMeta = {
-  name: string;
-  position: number;
-  description: string | null;
-};
-
 type CuratedShelfGroup = {
   name: string;
   description: string | null;
@@ -29,12 +23,6 @@ type ManualShelfIds = {
   popular: number[];
   trending: number[];
 };
-
-const SPECIAL_SHELF_GROUPS = new Set([
-  "Popular Right Now",
-  "Newly Added",
-  "Trending Playlists",
-]);
 
 function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
   const aTime = a.created_at ? Date.parse(a.created_at) : 0;
@@ -216,9 +204,10 @@ function CuratedPlaylistsLoadingSkeleton() {
 
 export default function CuratedPlaylistsPage() {
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
-  const [groups, setGroups] = useState<GroupMeta[]>([]);
-  const [manualShelfIds, setManualShelfIds] =
-    useState<ManualShelfIds | null>(null);
+  const [manualShelfIds, setManualShelfIds] = useState<ManualShelfIds>({
+    popular: [],
+    trending: [],
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeBrowseFilter, setActiveBrowseFilter] =
@@ -233,9 +222,8 @@ export default function CuratedPlaylistsPage() {
         setLoading(true);
         setError("");
 
-        const [playlistRes, groupRes, shelfRes] = await Promise.all([
+        const [playlistRes, shelfRes] = await Promise.all([
           fetch("/api/curated-playlists"),
-          fetch("/api/curated-playlist-groups").catch(() => null),
           fetch("/api/curated-playlist-shelves").catch(() => null),
         ]);
 
@@ -245,16 +233,7 @@ export default function CuratedPlaylistsPage() {
           throw new Error(playlistData?.error || "Failed to load playlists");
         }
 
-        let groupData: GroupMeta[] = [];
         let shelfData: CuratedPlaylistShelfState | null = null;
-
-        if (groupRes?.ok) {
-          try {
-            groupData = await groupRes.json();
-          } catch {
-            groupData = [];
-          }
-        }
 
         if (shelfRes?.ok) {
           try {
@@ -270,23 +249,14 @@ export default function CuratedPlaylistsPage() {
 
         if (!cancelled) {
           setPlaylists(visiblePlaylists);
-          setGroups(
-            Array.isArray(groupData)
-              ? [...groupData].sort((a, b) => a.position - b.position)
+          setManualShelfIds({
+            popular: Array.isArray(shelfData?.popular)
+              ? shelfData.popular.map((item) => Number(item.playlist_id))
               : [],
-          );
-          setManualShelfIds(
-            shelfData
-              ? {
-                  popular: Array.isArray(shelfData.popular)
-                    ? shelfData.popular.map((item) => Number(item.playlist_id))
-                    : [],
-                  trending: Array.isArray(shelfData.trending)
-                    ? shelfData.trending.map((item) => Number(item.playlist_id))
-                    : [],
-                }
-              : null,
-          );
+            trending: Array.isArray(shelfData?.trending)
+              ? shelfData.trending.map((item) => Number(item.playlist_id))
+              : [],
+          });
         }
       } catch (err) {
         if (!cancelled) {
@@ -301,7 +271,7 @@ export default function CuratedPlaylistsPage() {
       }
     }
 
-    load();
+    void load();
 
     return () => {
       cancelled = true;
@@ -312,12 +282,7 @@ export default function CuratedPlaylistsPage() {
     const normalizedSearchQuery = searchQuery.trim().toLowerCase();
     const searchablePlaylists = normalizedSearchQuery
       ? playlists.filter((playlist) =>
-          [
-            playlist.name,
-            playlist.description,
-            playlist.kicker,
-            playlist.playlist_group,
-          ].some((value) =>
+          [playlist.name, playlist.description, playlist.kicker].some((value) =>
             String(value || "")
               .toLowerCase()
               .includes(normalizedSearchQuery),
@@ -368,68 +333,57 @@ export default function CuratedPlaylistsPage() {
       return subcategoryGroups;
     }
 
-    const playlistMap = new Map<string, CuratedPlaylist[]>();
-
-    if (manualShelfIds) {
-      for (const playlist of searchablePlaylists) {
-        const key = playlist.playlist_group || "Editor Picks";
-        if (SPECIAL_SHELF_GROUPS.has(key)) continue;
-        if (!playlistMap.has(key)) playlistMap.set(key, []);
-        playlistMap.get(key)!.push(playlist);
-      }
-
-      const searchableById = new Map(
-        searchablePlaylists.map((playlist) => [playlist.id, playlist]),
-      );
-      const popular = manualShelfIds.popular
-        .map((id) => searchableById.get(id))
-        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
-      const newlyAdded = [...searchablePlaylists]
-        .sort(sortNewestFirst)
-        .slice(0, 8);
-      const trending = manualShelfIds.trending
-        .map((id) => searchableById.get(id))
-        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
-
-      if (popular.length > 0) playlistMap.set("Popular Right Now", popular);
-      if (newlyAdded.length > 0) playlistMap.set("Newly Added", newlyAdded);
-      if (trending.length > 0) playlistMap.set("Trending Playlists", trending);
-    } else {
-      for (const playlist of searchablePlaylists) {
-        const key = playlist.playlist_group || "Editor Picks";
-        if (!playlistMap.has(key)) playlistMap.set(key, []);
-        playlistMap.get(key)!.push(playlist);
-      }
+    if (normalizedSearchQuery) {
+      return searchablePlaylists.length > 0
+        ? [
+            {
+              name: "Search Results",
+              description: null,
+              playlists: [...searchablePlaylists].sort(sortNewestFirst),
+            },
+          ]
+        : [];
     }
 
-    const orderedGroupNames =
-      groups.length > 0
-        ? groups.map((group) => group.name).filter((name) => playlistMap.has(name))
-        : [...playlistMap.keys()];
+    const searchableById = new Map(
+      searchablePlaylists.map((playlist) => [playlist.id, playlist]),
+    );
+    const popular = manualShelfIds.popular
+      .map((id) => searchableById.get(id))
+      .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
+    const newlyAdded = [...searchablePlaylists]
+      .sort(sortNewestFirst)
+      .slice(0, 8);
+    const trending = manualShelfIds.trending
+      .map((id) => searchableById.get(id))
+      .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
 
-    for (const key of playlistMap.keys()) {
-      if (!orderedGroupNames.includes(key)) orderedGroupNames.push(key);
+    const groups: CuratedShelfGroup[] = [];
+
+    if (popular.length > 0) {
+      groups.push({
+        name: "Popular Right Now",
+        description: null,
+        playlists: popular,
+      });
+    }
+    if (newlyAdded.length > 0) {
+      groups.push({
+        name: "Newly Added",
+        description: null,
+        playlists: newlyAdded,
+      });
+    }
+    if (trending.length > 0) {
+      groups.push({
+        name: "Trending Playlists",
+        description: null,
+        playlists: trending,
+      });
     }
 
-    return orderedGroupNames
-      .map((name) => ({
-        name,
-        description:
-          groups.find((group) => group.name === name)?.description ?? null,
-        playlists: SPECIAL_SHELF_GROUPS.has(name)
-          ? playlistMap.get(name) ?? []
-          : (playlistMap.get(name) ?? []).sort(
-              (a, b) => a.position - b.position,
-            ),
-      }))
-      .filter((group) => group.playlists.length > 0);
-  }, [
-    activeBrowseFilter,
-    groups,
-    manualShelfIds,
-    playlists,
-    searchQuery,
-  ]);
+    return groups;
+  }, [activeBrowseFilter, manualShelfIds, playlists, searchQuery]);
 
   const hasActiveSearch = searchQuery.trim().length > 0;
 
