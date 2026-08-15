@@ -134,7 +134,7 @@ export default function PlaylistManagerPage() {
             }`}
           >
             {tab === "playlists"
-              ? "Playlists"
+              ? "All Playlists"
               : tab === "curated"
                 ? "Curated"
                 : "Discover"}
