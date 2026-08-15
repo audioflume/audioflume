@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   DndContext,
@@ -15,20 +13,18 @@ import {
   SortableContext,
   arrayMove,
   rectSortingStrategy,
-  useSortable,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import AdminPlaylistShelfPickerModal from "@/components/admin/AdminPlaylistShelfPickerModal";
-import DropdownShell from "@/components/DropdownShell";
-import Toast from "@/components/Toast";
-import DragIconSmall from "@/components/icons/DragIconSmall";
-import MoreIcon from "@/components/icons/MoreIcon";
-import PlusIcon from "@/components/icons/PlusIcon";
-import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-} from "@/components/uiClasses";
+  PLAYLIST_MANAGER_GRID_CLASS,
+  PlaylistManagerCollapsibleSection,
+  PlaylistManagerLibrarySection,
+  PlaylistManagerSortableCard,
+  sortPlaylistNewestFirst,
+} from "@/components/admin/AdminPlaylistManagerShared";
+import Toast from "@/components/Toast";
+import PlusIcon from "@/components/icons/PlusIcon";
+import { secondaryPillButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import {
   DISCOVER_SECTION_SHELF_KEYS,
@@ -64,14 +60,6 @@ function emptySectionState(): DiscoverSectionShelfState {
   };
 }
 
-function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
-  const aTime = a.created_at ? Date.parse(a.created_at) : 0;
-  const bTime = b.created_at ? Date.parse(b.created_at) : 0;
-
-  if (aTime !== bTime) return bTime - aTime;
-  return b.id - a.id;
-}
-
 function isDiscoverContent(playlist: CuratedPlaylist) {
   return Boolean(playlist.discover_section);
 }
@@ -80,185 +68,6 @@ function getEditHref(playlist: CuratedPlaylist) {
   return isDiscoverContent(playlist)
     ? `/admin/playlist-manager/discover/${playlist.id}/edit`
     : `/admin/playlist-manager/${playlist.id}/edit`;
-}
-
-function PlaylistArtwork({
-  playlist,
-  sizes,
-}: {
-  playlist: CuratedPlaylist;
-  sizes: string;
-}) {
-  return playlist.cover_image_url ? (
-    <Image
-      src={playlist.cover_image_url}
-      alt={playlist.name}
-      fill
-      sizes={sizes}
-      className="object-cover"
-      unoptimized
-    />
-  ) : (
-    <span className="absolute inset-0 flex items-center justify-center text-[var(--text-muted)]">
-      <PlaylistIcon size={18} />
-    </span>
-  );
-}
-
-function SortableDiscoverSectionCard({
-  playlist,
-  sectionLabel,
-  onRemove,
-}: {
-  playlist: CuratedPlaylist;
-  sectionLabel: string;
-  onRemove: (playlist: CuratedPlaylist) => void;
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: playlist.id });
-  const editHref = getEditHref(playlist);
-
-  return (
-    <article
-      ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.45 : 1,
-        zIndex: isDragging ? 2 : "auto",
-      }}
-      className="group relative min-w-0"
-    >
-      <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]">
-        <Link href={editHref} className="absolute inset-0 block">
-          <PlaylistArtwork
-            playlist={playlist}
-            sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
-          />
-        </Link>
-
-        <button
-          type="button"
-          className="absolute left-2 top-2 z-10 flex h-8 w-8 cursor-grab items-center justify-center bg-transparent text-white opacity-0 transition group-hover:opacity-100 active:cursor-grabbing"
-          aria-label={`Drag ${playlist.name} to reorder`}
-          {...attributes}
-          {...listeners}
-        >
-          <span className="inline-flex scale-x-[1.45]">
-            <DragIconSmall />
-          </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onRemove(playlist)}
-          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] group-hover:opacity-100"
-          aria-label={`Remove ${playlist.name} from ${sectionLabel}`}
-          title={`Remove from ${sectionLabel}`}
-        >
-          ×
-        </button>
-      </div>
-
-      <Link href={editHref} className="mt-2.5 block min-w-0">
-        <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-          {playlist.name}
-        </h4>
-        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
-          {isDiscoverContent(playlist)
-            ? "Discover Content"
-            : `${playlist.song_count || 0} songs · Playlist`}
-        </p>
-      </Link>
-    </article>
-  );
-}
-
-function DiscoverContentCard({
-  playlist,
-  placementLabels,
-  menuOpen,
-  setMenuOpen,
-  deletingId,
-  onDeletePlaylist,
-}: {
-  playlist: CuratedPlaylist;
-  placementLabels: string[];
-  menuOpen: boolean;
-  setMenuOpen: (open: boolean) => void;
-  deletingId: number | null;
-  onDeletePlaylist: (playlist: CuratedPlaylist) => void | Promise<void>;
-}) {
-  const editHref = getEditHref(playlist);
-  const placement =
-    placementLabels.length === 0
-      ? "Not added to a Discover section"
-      : placementLabels.length === 1
-        ? placementLabels[0]
-        : `${placementLabels.length} Discover sections`;
-
-  return (
-    <article className="min-w-0">
-      <Link
-        href={editHref}
-        className="relative block aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]"
-      >
-        <PlaylistArtwork
-          playlist={playlist}
-          sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
-        />
-      </Link>
-
-      <div className="mt-2.5 flex min-w-0 items-start gap-3">
-        <Link href={editHref} className="min-w-0 flex-1">
-          <h3 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-            {playlist.name}
-          </h3>
-          <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
-            {playlist.song_count || 0} songs · {placement}
-          </p>
-        </Link>
-
-        <DropdownShell
-          open={menuOpen}
-          onOpenChange={setMenuOpen}
-          placement="bottom-end"
-          trigger={() => (
-            <button
-              type="button"
-              className={`flex h-7 w-7 shrink-0 items-center justify-center bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--filmwave-black)] ${
-                menuOpen ? "text-[var(--filmwave-black)]" : ""
-              }`}
-              aria-label={`Manage ${playlist.name}`}
-            >
-              <MoreIcon size={14} />
-            </button>
-          )}
-        >
-          <Link href={editHref} onClick={() => setMenuOpen(false)}>
-            Edit Content
-          </Link>
-          <button
-            type="button"
-            className="danger-hover"
-            disabled={deletingId === playlist.id}
-            onClick={() => {
-              setMenuOpen(false);
-              void onDeletePlaylist(playlist);
-            }}
-          >
-            {deletingId === playlist.id ? "Deleting..." : "Delete Content"}
-          </button>
-        </DropdownShell>
-      </div>
-    </article>
-  );
 }
 
 async function fetchSectionState() {
@@ -345,7 +154,7 @@ export default function AdminDiscoverLibraryView({
   );
 
   const allDiscoverContent = useMemo(
-    () => [...discoverContent].sort(sortNewestFirst),
+    () => [...discoverContent].sort(sortPlaylistNewestFirst),
     [discoverContent],
   );
 
@@ -533,21 +342,16 @@ export default function AdminDiscoverLibraryView({
           const sectionCollapsed = collapsedSections[sectionKey];
 
           return (
-            <section
+            <PlaylistManagerCollapsibleSection
               key={sectionKey}
-              className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5"
-            >
-              <div className="flex flex-wrap items-end justify-between gap-4">
-                <div>
-                  <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-                    {sectionLabel}
-                  </h3>
-                  <p className="mt-1 text-[11px] text-[var(--text-muted)]">
-                    {sectionPlaylists.length} item{sectionPlaylists.length === 1 ? "" : "s"}
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
+              title={sectionLabel}
+              subtitle={`${sectionPlaylists.length} item${sectionPlaylists.length === 1 ? "" : "s"}`}
+              collapsed={sectionCollapsed}
+              onToggle={() => toggleSection(sectionKey)}
+              wrapHeader
+              wrapActions
+              actions={
+                <>
                   <button
                     type="button"
                     onClick={() => setPicker({ sectionKey, source: "playlist" })}
@@ -566,127 +370,75 @@ export default function AdminDiscoverLibraryView({
                     <PlusIcon size={12} />
                     <span>Add Discover Content</span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => toggleSection(sectionKey)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
-                    aria-label={
-                      sectionCollapsed
-                        ? `Expand ${sectionLabel}`
-                        : `Collapse ${sectionLabel}`
-                    }
-                    aria-expanded={!sectionCollapsed}
-                    title={
-                      sectionCollapsed
-                        ? `Expand ${sectionLabel}`
-                        : `Collapse ${sectionLabel}`
-                    }
+                </>
+              }
+            >
+              {sectionPlaylists.length === 0 ? (
+                <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+                  Add a playlist or Discover content to this section.
+                </div>
+              ) : (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={(event) => void reorderSection(sectionKey, event)}
+                >
+                  <SortableContext
+                    items={sectionPlaylists.map((playlist) => playlist.id)}
+                    strategy={rectSortingStrategy}
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                      className={`h-4 w-4 transition-transform duration-300 ${
-                        sectionCollapsed ? "" : "rotate-180"
-                      }`}
-                    >
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div
-                className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
-                  sectionCollapsed
-                    ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
-                    : "mt-4 grid-rows-[1fr] opacity-100"
-                }`}
-                aria-hidden={sectionCollapsed}
-              >
-                <div className="min-h-0 overflow-hidden">
-                  {sectionPlaylists.length === 0 ? (
-                    <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-                      Add a playlist or Discover content to this section.
+                    <div className={PLAYLIST_MANAGER_GRID_CLASS}>
+                      {sectionPlaylists.map((playlist) => (
+                        <PlaylistManagerSortableCard
+                          key={playlist.id}
+                          playlist={playlist}
+                          editHref={getEditHref(playlist)}
+                          meta={
+                            isDiscoverContent(playlist)
+                              ? "Discover Content"
+                              : `${playlist.song_count || 0} songs · Playlist`
+                          }
+                          removeAriaLabel={`Remove ${playlist.name} from ${sectionLabel}`}
+                          removeTitle={`Remove from ${sectionLabel}`}
+                          onRemove={() =>
+                            void removeFromSection(sectionKey, playlist)
+                          }
+                        />
+                      ))}
                     </div>
-                  ) : (
-                    <DndContext
-                      sensors={sensors}
-                      collisionDetection={closestCenter}
-                      onDragEnd={(event) => void reorderSection(sectionKey, event)}
-                    >
-                      <SortableContext
-                        items={sectionPlaylists.map((playlist) => playlist.id)}
-                        strategy={rectSortingStrategy}
-                      >
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                          {sectionPlaylists.map((playlist) => (
-                            <SortableDiscoverSectionCard
-                              key={playlist.id}
-                              playlist={playlist}
-                              sectionLabel={sectionLabel}
-                              onRemove={(item) =>
-                                void removeFromSection(sectionKey, item)
-                              }
-                            />
-                          ))}
-                        </div>
-                      </SortableContext>
-                    </DndContext>
-                  )}
-                </div>
-              </div>
-            </section>
+                  </SortableContext>
+                </DndContext>
+              )}
+            </PlaylistManagerCollapsibleSection>
           );
         })}
       </div>
 
-      <section className="mt-0">
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <div>
-            <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-              All Discover Content
-            </h3>
-            <p className="mt-1 text-[11px] text-[var(--text-muted)]">
-              {allDiscoverContent.length} item{allDiscoverContent.length === 1 ? "" : "s"} · Master library
-            </p>
-          </div>
-
-          <Link
-            href="/admin/playlist-manager/discover/new"
-            className={primaryPillButtonClass}
-          >
-            <PlusIcon size={13} />
-            <span>New Discover Content</span>
-          </Link>
-        </div>
-
-        {allDiscoverContent.length === 0 ? (
-          <div className="flex min-h-[180px] items-center justify-center border border-[var(--border)] text-sm text-[var(--text-secondary)]">
-            No Discover content yet.
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-            {allDiscoverContent.map((playlist) => (
-              <DiscoverContentCard
-                key={playlist.id}
-                playlist={playlist}
-                placementLabels={placementsById.get(playlist.id) || []}
-                menuOpen={openLibraryMenu === playlist.id}
-                setMenuOpen={(open) =>
-                  setOpenLibraryMenu(open ? playlist.id : null)
-                }
-                deletingId={deletingId}
-                onDeletePlaylist={onDeletePlaylist}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+      <PlaylistManagerLibrarySection
+        title="All Discover Content"
+        subtitle={`${allDiscoverContent.length} item${allDiscoverContent.length === 1 ? "" : "s"} · Master library`}
+        createHref="/admin/playlist-manager/discover/new"
+        createLabel="New Discover Content"
+        playlists={allDiscoverContent}
+        emptyMessage="No Discover content yet."
+        getEditHref={getEditHref}
+        getMeta={(playlist) => {
+          const placementLabels = placementsById.get(playlist.id) || [];
+          const placement =
+            placementLabels.length === 0
+              ? "Not added to a Discover section"
+              : placementLabels.length === 1
+                ? placementLabels[0]
+                : `${placementLabels.length} Discover sections`;
+          return `${playlist.song_count || 0} songs · ${placement}`;
+        }}
+        editLabel="Edit Content"
+        deleteLabel="Delete Content"
+        openMenuId={openLibraryMenu}
+        setOpenMenuId={setOpenLibraryMenu}
+        deletingId={deletingId}
+        onDeletePlaylist={onDeletePlaylist}
+      />
 
       {picker && (
         <AdminPlaylistShelfPickerModal
