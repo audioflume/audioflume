@@ -152,7 +152,7 @@ export default function AdminPlaylistShelfPickerModal({
                   type="button"
                   onClick={() => togglePlaylist(playlist.id)}
                   disabled={alreadyAdded || saving}
-                  className={`group flex min-h-[60px] w-full items-center gap-3 p-2 text-left transition-colors ${
+                  className={`admin-cover-hover group flex min-h-[60px] w-full items-center gap-3 p-2 text-left transition-colors ${
                     alreadyAdded || selected
                       ? "bg-[var(--bg-primary)]"
                       : "cursor-pointer hover:bg-[var(--bg-hover)]"
