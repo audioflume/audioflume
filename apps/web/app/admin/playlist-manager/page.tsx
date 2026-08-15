@@ -10,11 +10,6 @@ import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 type ManagerTab = "playlists" | "curated" | "discover";
 
-type PlaylistUpdate = {
-  id: number;
-  changes: Partial<CuratedPlaylist>;
-};
-
 export default function PlaylistManagerPage() {
   const searchParams = useSearchParams();
   const queryTab: ManagerTab =
@@ -68,21 +63,6 @@ export default function PlaylistManagerPage() {
     };
   }, []);
 
-  function updatePlaylists(updates: PlaylistUpdate[]) {
-    if (updates.length === 0) return;
-
-    const updateMap = new Map(
-      updates.map((update) => [update.id, update.changes] as const),
-    );
-
-    setPlaylists((current) =>
-      current.map((playlist) => {
-        const changes = updateMap.get(playlist.id);
-        return changes ? { ...playlist, ...changes } : playlist;
-      }),
-    );
-  }
-
   async function deletePlaylist(playlist: CuratedPlaylist) {
     const confirmed = window.confirm(`Delete "${playlist.name}"?`);
     if (!confirmed) return;
@@ -108,10 +88,6 @@ export default function PlaylistManagerPage() {
       setDeletingId(null);
     }
   }
-
-  const masterPlaylists = playlists.filter(
-    (playlist) => !playlist.discover_section,
-  );
 
   return (
     <AdminContentPage
@@ -145,7 +121,7 @@ export default function PlaylistManagerPage() {
       <div className="grid gap-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
         {activeTab === "playlists" ? (
           <AdminAllPlaylistsView
-            playlists={masterPlaylists}
+            playlists={playlists}
             loading={loading}
             error={error}
             deletingId={deletingId}
@@ -153,20 +129,15 @@ export default function PlaylistManagerPage() {
           />
         ) : activeTab === "curated" ? (
           <AdminPlaylistLibraryView
-            playlists={masterPlaylists}
+            playlists={playlists}
             loading={loading}
             error={error}
-            deletingId={deletingId}
-            onDeletePlaylist={deletePlaylist}
           />
         ) : (
           <AdminDiscoverLibraryView
             playlists={playlists}
             loading={loading}
             error={error}
-            deletingId={deletingId}
-            onDeletePlaylist={deletePlaylist}
-            onUpdatePlaylists={updatePlaylists}
           />
         )}
       </div>
