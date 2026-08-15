@@ -179,6 +179,15 @@ export default function AdminSongEditPresentationInjector() {
 
   return (
     <style>{`
+      .admin-song-edit-content-page form {
+        gap: 12px;
+      }
+
+      .admin-song-edit-content-page form > div:first-child,
+      .admin-song-edit-content-page form > aside {
+        gap: 12px;
+      }
+
       .admin-song-edit-content-page .admin-song-edit-files-bin {
         position: relative;
         overflow: visible !important;
