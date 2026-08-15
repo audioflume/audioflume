@@ -14,6 +14,10 @@ type Props = {
   playlists: CuratedPlaylist[];
   existingIds: readonly number[];
   saving?: boolean;
+  itemLabel?: string;
+  itemLabelPlural?: string;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
   onClose: () => void;
   onAdd: (playlistIds: number[]) => void | Promise<void>;
 };
@@ -24,6 +28,10 @@ export default function AdminPlaylistShelfPickerModal({
   playlists,
   existingIds,
   saving = false,
+  itemLabel = "Playlist",
+  itemLabelPlural,
+  searchPlaceholder,
+  emptyMessage,
   onClose,
   onAdd,
 }: Props) {
@@ -43,7 +51,7 @@ export default function AdminPlaylistShelfPickerModal({
     return [...playlists]
       .filter((playlist) => {
         if (!query) return true;
-        return [playlist.name, playlist.kicker, playlist.playlist_group].some(
+        return [playlist.name, playlist.kicker, playlist.description].some(
           (value) => String(value || "").toLowerCase().includes(query),
         );
       })
@@ -69,13 +77,18 @@ export default function AdminPlaylistShelfPickerModal({
   }
 
   const selectedCount = selectedIds.size;
+  const pluralLabel = itemLabelPlural || `${itemLabel}s`;
+  const resolvedSearchPlaceholder =
+    searchPlaceholder || `Search ${pluralLabel.toLowerCase()}`;
+  const resolvedEmptyMessage =
+    emptyMessage || `No ${pluralLabel.toLowerCase()} match your search.`;
 
   return (
     <ModalShell
       isOpen={isOpen}
       title={`Add to ${title}`}
       onClose={onClose}
-      closeLabel={`Close ${title} playlist picker`}
+      closeLabel={`Close ${title} ${itemLabel.toLowerCase()} picker`}
       maxWidth="max-w-[540px]"
       maxHeight="560px"
       bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
@@ -91,8 +104,8 @@ export default function AdminPlaylistShelfPickerModal({
           {saving
             ? "Adding..."
             : selectedCount === 1
-              ? "Add Playlist"
-              : `Add ${selectedCount} Playlists`}
+              ? `Add ${itemLabel}`
+              : `Add ${selectedCount} ${pluralLabel}`}
         </button>
       }
     >
@@ -101,7 +114,7 @@ export default function AdminPlaylistShelfPickerModal({
           type="search"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search playlists"
+          placeholder={resolvedSearchPlaceholder}
           className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
         />
       </div>
@@ -109,7 +122,7 @@ export default function AdminPlaylistShelfPickerModal({
       <div className="-mx-5 min-h-0 flex-1 overflow-y-auto bg-[var(--bg-tertiary)] p-3">
         {displayedPlaylists.length === 0 ? (
           <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
-            No playlists match your search.
+            {resolvedEmptyMessage}
           </div>
         ) : (
           <div className="grid gap-1">
