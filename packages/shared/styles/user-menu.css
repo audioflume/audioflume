@@ -9,9 +9,9 @@
 /* tokens */
 :root {
   --filmwave-menu-bg: #1d1d1d;
-  --filmwave-menu-border: rgba(255, 255, 255, 0.08);
+  --filmwave-menu-border: var(--filmwave-border-color);
   --filmwave-menu-hover: rgba(255, 255, 255, 0.07);
-  --filmwave-menu-sep: rgba(255, 255, 255, 0.07);
+  --filmwave-menu-sep: var(--filmwave-border-color);
   --filmwave-menu-text: #f0f0f0;
   --filmwave-menu-text-muted: #8a8a8a;
   --filmwave-menu-muted: #8a8a8a;
@@ -24,11 +24,11 @@
 }
 
 html[data-theme="light"] {
-  --filmwave-menu-bg: #ffffff;
-  --filmwave-menu-border: rgba(0, 0, 0, 0.08);
+  --filmwave-menu-bg: var(--filmwave-white);
+  --filmwave-menu-border: var(--filmwave-border-color);
   --filmwave-menu-hover: rgba(0, 0, 0, 0.05);
-  --filmwave-menu-sep: rgba(0, 0, 0, 0.07);
-  --filmwave-menu-text: #111111;
+  --filmwave-menu-sep: var(--filmwave-border-color);
+  --filmwave-menu-text: var(--filmwave-black);
   --filmwave-menu-text-muted: #7a7a7a;
   --filmwave-menu-muted: #7a7a7a;
   --filmwave-menu-shadow:
@@ -55,7 +55,7 @@ html[data-theme="light"] {
   justify-content: center;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--accent, #c8f55a), #5ad6c8);
-  color: #111111;
+  color: var(--filmwave-black);
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
