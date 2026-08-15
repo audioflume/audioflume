@@ -20,6 +20,45 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   transform: scale(1.025);
 }
 
+/* Frontend-matched admin song cover play state */
+.admin-song-row
+  button[aria-label="Play song"]:not(:disabled)
+  > span:last-child,
+.admin-song-row
+  button[aria-label="Pause song"]:not(:disabled)
+  > span:last-child {
+  background: transparent !important;
+  color: var(--filmwave-black) !important;
+}
+
+.admin-song-row
+  button[aria-label="Play song"]:not(:disabled)
+  > span:last-child::before,
+.admin-song-row
+  button[aria-label="Pause song"]:not(:disabled)
+  > span:last-child::before {
+  content: "";
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--filmwave-white);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.admin-song-row
+  button[aria-label="Play song"]:not(:disabled)
+  > span:last-child
+  > svg,
+.admin-song-row
+  button[aria-label="Pause song"]:not(:disabled)
+  > span:last-child
+  > svg {
+  position: relative;
+  z-index: 1;
+  color: var(--filmwave-black);
+}
+
 /* Source-owned admin page corner system */
 .filmwave-admin-content-page :is(
   [class~="rounded"],
