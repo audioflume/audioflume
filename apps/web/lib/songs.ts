@@ -144,6 +144,7 @@ export function normalizeSongRow(row: any): Song {
     editPoints: String(row.edit_points || emptyEditPoints()),
     downloadCount: Number(row.download_count || 0),
     sizeBytes,
+    createdAt: row.created_at ? String(row.created_at) : undefined,
   };
 }
 
