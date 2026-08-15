@@ -253,16 +253,8 @@ export default function AdminMusicLibraryPage() {
     return [...filteredSongs].reverse();
   }, [filteredSongs]);
 
-  const visibleSongIds = useMemo(
-    () => visibleSongs.map((song) => song.id),
-    [visibleSongs],
-  );
-
   const selectedCount = selectedSongIds.length;
   const selectionMode = selectedCount > 0;
-  const allFilteredSelected =
-    visibleSongIds.length > 0 &&
-    visibleSongIds.every((songId) => selectedSongIds.includes(songId));
 
   useEffect(() => {
     setSelectedSongIds((currentIds) =>
@@ -327,19 +319,6 @@ export default function AdminMusicLibraryPage() {
 
       return currentIds.filter((id) => id !== songId);
     });
-  };
-
-  const toggleSelectAllFiltered = (checked: boolean) => {
-    if (checked) {
-      setSelectedSongIds((currentIds) =>
-        Array.from(new Set([...currentIds, ...visibleSongIds])),
-      );
-      return;
-    }
-
-    setSelectedSongIds((currentIds) =>
-      currentIds.filter((songId) => !visibleSongIds.includes(songId)),
-    );
   };
 
   const clearSelection = () => {
@@ -550,80 +529,62 @@ export default function AdminMusicLibraryPage() {
 
         <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
           <div className="flex flex-col gap-3 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-3">
-              <label
-                className="admin-song-select-wrap is-visible"
-                aria-label="Select all visible songs"
-              >
-                <input
-                  type="checkbox"
-                  checked={allFilteredSelected}
-                  onChange={(e) => toggleSelectAllFiltered(e.target.checked)}
-                  className="admin-song-select-input"
-                />
-
-                <span className="admin-song-select-box">
-                  <CheckIcon size={11} strokeWidth={3} />
-                </span>
-              </label>
-
-              <div className="flex items-center gap-2">
-                {selectionMode && (
-                  <button
-                    type="button"
-                    onClick={handleBatchDelete}
-                    disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-xs font-semibold text-[var(--danger-contrast)] transition-colors hover:bg-[var(--danger-hover)] disabled:opacity-50"
-                  >
-                    <TrashIcon />
-                    {isBatchDeleting
-                      ? "Deleting..."
-                      : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
-                  </button>
-                )}
-
-                {selectionMode ? (
-                  <button
-                    type="button"
-                    onClick={clearSelection}
-                    disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
-                  >
-                    Cancel
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setFiltersOpen((open) => !open)}
-                    className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-xs font-medium transition-colors ${
-                      filtersOpen || activeFilterCount > 0
-                        ? "border-[var(--border)] bg-[var(--bg-hover)] text-[var(--text-primary)]"
-                        : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                    }`}
-                    aria-expanded={filtersOpen}
-                  >
-                    <span>Filters</span>
-                    <span
-                      className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] ${
-                        filtersOpen || activeFilterCount > 0
-                          ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
-                          : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
-                      }`}
-                    >
-                      {activeFilterCount}
-                    </span>
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="text-right">
+            <div>
               <div className="text-base font-medium text-[var(--text-primary)]">
                 Music Library
               </div>
               <div className="mt-1 text-xs text-[var(--text-secondary)]">
                 {songs.length} song{songs.length === 1 ? "" : "s"}
               </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {selectionMode && (
+                <button
+                  type="button"
+                  onClick={handleBatchDelete}
+                  disabled={isBatchDeleting}
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-xs font-semibold text-[var(--danger-contrast)] transition-colors hover:bg-[var(--danger-hover)] disabled:opacity-50"
+                >
+                  <TrashIcon />
+                  {isBatchDeleting
+                    ? "Deleting..."
+                    : `Delete ${selectedCount} song${selectedCount === 1 ? "" : "s"}`}
+                </button>
+              )}
+
+              {selectionMode ? (
+                <button
+                  type="button"
+                  onClick={clearSelection}
+                  disabled={isBatchDeleting}
+                  className="inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setFiltersOpen((open) => !open)}
+                  className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-xs font-medium transition-colors ${
+                    filtersOpen || activeFilterCount > 0
+                      ? "border-[var(--border)] bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                      : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  }`}
+                  aria-expanded={filtersOpen}
+                >
+                  <span>Filters</span>
+                  <span
+                    className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] ${
+                      filtersOpen || activeFilterCount > 0
+                        ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                        : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
+                    }`}
+                  >
+                    {activeFilterCount}
+                  </span>
+                </button>
+              )}
             </div>
           </div>
 
