@@ -239,6 +239,9 @@ export default function AdminSongUploadPresentationInjector() {
         if (artistInput) artistInput.placeholder = "Artist";
       }
 
+      const waveformSection = getSectionByTitle(page, "waveform peaks");
+      waveformSection?.classList.add("admin-song-upload-waveform");
+
       const tagsSection = getSectionByTitle(page, "tags");
       tagsSection?.classList.add("admin-song-upload-tags-card");
 
@@ -301,8 +304,25 @@ export default function AdminSongUploadPresentationInjector() {
 
   return (
     <style>{`
+      .admin-song-upload-content-page form {
+        gap: 12px;
+      }
+
+      .admin-song-upload-content-page form > div:first-child,
+      .admin-song-upload-content-page form > aside {
+        gap: 12px;
+      }
+
       .admin-song-upload-content-page .admin-song-upload-song-info {
         --admin-song-content-gap: 8px;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-waveform
+        > .admin-song-form-card-header
+        + div
+        > p {
+        display: none;
       }
 
       .admin-song-upload-content-page .admin-song-upload-files-bin {
