@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Footer from "@/components/Footer";
 import AdminAllPlaylistsView from "@/components/admin/AdminAllPlaylistsView";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
@@ -141,6 +142,8 @@ export default function PlaylistManagerPage() {
           />
         )}
       </div>
+
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
     </AdminContentPage>
   );
 }
