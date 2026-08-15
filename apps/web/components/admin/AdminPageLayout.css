@@ -103,13 +103,21 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 .admin-song-upload-content-page .admin-song-file-row {
   grid-template-columns: 145px minmax(0, 1fr) auto;
   border-top: 0;
-  padding: 8px 20px;
+  padding: 4px 20px;
+}
+
+.admin-song-upload-content-page .admin-song-file-row:first-child {
+  padding-top: 12px;
+}
+
+.admin-song-upload-content-page .admin-song-file-row:last-child {
+  padding-bottom: 12px;
 }
 
 .admin-song-upload-content-page
   .admin-song-form-card
   > [class~="p-4"] {
-  padding: 20px;
+  padding: 12px 20px 20px;
 }
 
 .admin-song-upload-content-page form :is(
@@ -141,6 +149,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > div:nth-child(2)
   > div[class~="h-9"] {
   height: 40px;
+  padding-left: 6px;
   border-radius: 7px;
 }
 
@@ -156,9 +165,23 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   .admin-song-upload-song-info
   > .admin-song-form-card-header
   + div
-  > div:nth-child(-n + 5)
-  > label {
+  > div:nth-child(-n + 6)
+  > label,
+.admin-song-upload-content-page
+  .admin-song-upload-song-info
+  [data-ai-generated-field-embedded]
+  > div
+  > label:first-child {
   display: none;
+}
+
+@media (min-width: 1280px) {
+  .admin-song-upload-content-page
+    .admin-song-upload-song-info
+    > .admin-song-form-card-header
+    + div {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 .admin-song-upload-content-page .admin-song-upload-tags-card {
@@ -201,6 +224,16 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   border-radius: 10px;
   background: var(--bg-primary);
   padding: 20px;
+}
+
+.admin-song-upload-content-page
+  .admin-song-upload-tags-card
+  :is(
+    > .admin-song-form-card-header + div > div:not([class*="md:grid-cols-2"]),
+    > .admin-song-form-card-header + div > div[class*="md:grid-cols-2"] > div
+  )
+  > div:first-child {
+  margin-bottom: 12px;
 }
 
 .admin-song-upload-content-page
