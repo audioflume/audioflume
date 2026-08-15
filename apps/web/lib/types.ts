@@ -19,7 +19,9 @@ export type EditPointRange = FilmwaveEditPointRange;
 
 export type EditPoints = FilmwaveEditPoints;
 
-export type Song = FilmwaveSong;
+export type Song = FilmwaveSong & {
+  createdAt?: string;
+};
 
 export type Playlist = FilmwavePlaylist & {
   primary_category: string | null;
