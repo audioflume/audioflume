@@ -91,8 +91,9 @@ export default function AdminPlaylistShelfPickerModal({
       closeLabel={`Close ${title} ${itemLabel.toLowerCase()} picker`}
       maxWidth="max-w-[540px]"
       maxHeight="560px"
+      centerTitle
       bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-      contentClassName="h-[560px] max-h-[calc(100vh-64px)]"
+      contentClassName="h-[560px] max-h-[calc(100vh-64px)] [&>div:first-of-type>h2]:!text-base [&>div:first-of-type>h2]:!font-medium [&>div:first-of-type>h2]:!tracking-[-0.03em]"
       footerClassName="justify-end bg-[var(--bg-tertiary)]"
       footer={
         <button
@@ -119,7 +120,7 @@ export default function AdminPlaylistShelfPickerModal({
         />
       </div>
 
-      <div className="-mx-5 min-h-0 flex-1 overflow-y-auto bg-[var(--bg-tertiary)] p-3">
+      <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] p-3">
         {displayedPlaylists.length === 0 ? (
           <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
             {resolvedEmptyMessage}
