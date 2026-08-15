@@ -9,9 +9,9 @@ import AdminContentPage from "@/components/admin/AdminContentPage";
 import AlertIcon from "@/components/icons/AlertIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
 import FailedIcon from "@/components/icons/FailedIcon";
-import SearchIcon from "@/components/icons/SearchIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
+import XIcon from "@/components/icons/XIcon";
 import AdminSongRow from "@/components/admin/AdminSongRow";
 import Toast from "@/components/Toast";
 import {
@@ -495,20 +495,16 @@ export default function AdminMusicLibraryPage() {
       contentAreaBottomPadding={false}
     >
       <style>{`
-        .admin-song-menu-btn,
+        .admin-song-menu-btn {
+          opacity: 1;
+        }
+
         .admin-song-edit-btn {
           opacity: 0;
         }
 
-        .admin-song-menu-btn:hover,
-        .admin-song-menu-btn.is-open,
-        .admin-song-edit-btn:hover {
-          opacity: 1;
-        }
-
-        .admin-song-row:hover .admin-song-menu-btn,
-        .admin-song-row:hover .admin-song-edit-btn,
-        .admin-song-menu-btn.is-open {
+        .admin-song-edit-btn:hover,
+        .admin-song-row:hover .admin-song-edit-btn {
           opacity: 1;
         }
 
@@ -593,26 +589,18 @@ export default function AdminMusicLibraryPage() {
           paddingBottom: playerVisible ? "104px" : "32px",
         }}
       >
+        <div className="mb-4 flex justify-end">
+          <Link
+            href="/admin/songs/new"
+            className="inline-flex h-11 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-sm font-medium text-[var(--bg-primary)] transition"
+          >
+            <UploadIcon size={13} />
+            <span>Upload Song</span>
+          </Link>
+        </div>
+
         <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-          <div className="flex items-start justify-between gap-4 px-5 pb-4 pt-5">
-            <div>
-              <h2 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-                Music Library
-              </h2>
-              <p className="mt-1 text-xs text-[var(--text-muted)]">
-                {songsLoading
-                  ? "Loading songs..."
-                  : `${songs.length} song${songs.length === 1 ? "" : "s"} · Master library`}
-              </p>
-            </div>
-
-            <Link href="/admin/songs/new" className={primaryPillButtonClass}>
-              <UploadIcon size={13} />
-              <span>Upload Song</span>
-            </Link>
-          </div>
-
-          <div className="flex flex-col gap-3 px-5 pb-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
             {selectionMode ? (
               <div className="flex h-10 w-full items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3">
                 <div className="text-sm font-medium text-[var(--text-primary)]">
@@ -642,18 +630,25 @@ export default function AdminMusicLibraryPage() {
               </div>
             ) : (
               <>
-                <div className="flex h-10 w-full max-w-[500px] items-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 transition-colors focus-within:border-[var(--text-muted)]">
-                  <SearchIcon
-                    size={15}
-                    className="shrink-0 text-[var(--text-muted)]"
-                  />
+                <div className="relative w-full max-w-[500px]">
                   <input
                     type="text"
-                    placeholder="Search songs by title, artist, key, or tags..."
+                    role="searchbox"
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="w-full bg-transparent text-sm font-[300] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Search"
+                    className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
                   />
+                  {search && (
+                    <button
+                      type="button"
+                      onClick={() => setSearch("")}
+                      className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center bg-transparent text-[var(--text-primary)]"
+                      aria-label="Clear search"
+                    >
+                      <XIcon size={12} />
+                    </button>
+                  )}
                 </div>
 
                 <button
@@ -742,7 +737,7 @@ export default function AdminMusicLibraryPage() {
           <div className="mx-5 overflow-hidden rounded-[7px] border border-[var(--border)]">
             <div className="overflow-x-auto overflow-y-hidden">
               <div className="min-w-[1080px]">
-                <div className="grid h-[42px] grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_120px_80px_80px_72px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                <div className="grid h-[42px] grid-cols-[28px_56px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px] items-center gap-3 border-b border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                   <div className="flex items-center">
                     <label
                       className="admin-song-select-wrap is-visible"
@@ -766,7 +761,6 @@ export default function AdminMusicLibraryPage() {
                   <div />
                   <div>Song</div>
                   <div>Artist</div>
-                  <div />
                   <div>Status</div>
                   <div>Key</div>
                   <div>BPM</div>
@@ -778,7 +772,7 @@ export default function AdminMusicLibraryPage() {
                     {Array.from({ length: SONGS_PER_PAGE }, (_, index) => (
                       <div
                         key={index}
-                        className="grid min-h-[46px] grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_120px_80px_80px_72px] items-center gap-3 px-6"
+                        className="grid min-h-[60px] grid-cols-[28px_56px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px] items-center gap-3 px-6"
                         style={{
                           borderBottom:
                             index === SONGS_PER_PAGE - 1
@@ -790,14 +784,13 @@ export default function AdminMusicLibraryPage() {
                           <div className="h-4 w-4 rounded-[4px] bg-[var(--bg-tertiary)]" />
                         </div>
 
-                        <div className="h-8 w-8 bg-[var(--bg-tertiary)]" />
+                        <div className="h-10 w-10 bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[60%] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[50%] bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-2 rounded-full bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-[78px] bg-[var(--bg-tertiary)]" />
+                        <div className="h-2 w-[68px] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
                         <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
-                        <div className="h-2 w-[50px] bg-[var(--bg-tertiary)]" />
+                        <div className="h-2 w-[18px] bg-[var(--bg-tertiary)]" />
                       </div>
                     ))}
                   </div>
@@ -840,6 +833,8 @@ export default function AdminMusicLibraryPage() {
                         selectionMode={selectionMode}
                         onSelectedChange={handleSelectedChange}
                         onDeleted={handleSongDeleted}
+                        statusDisplay="published"
+                        size="large"
                       />
                     ))}
                   </div>
