@@ -26,10 +26,8 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import {
-  iconButtonActiveClass,
   primaryPillButtonClass,
   secondaryPillButtonClass,
-  smallIconButtonClass,
 } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import {
@@ -98,6 +96,7 @@ function MasterPlaylistCard({
   onDeletePlaylist: (playlist: CuratedPlaylist) => void | Promise<void>;
 }) {
   const editHref = `/admin/playlist-manager/${playlist.id}/edit`;
+  const menuOpen = openMenuId === playlist.id;
 
   return (
     <article className="group min-w-0">
@@ -108,51 +107,51 @@ function MasterPlaylistCard({
             sizes="(min-width: 1536px) 25vw, (min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
           />
         </Link>
-
-        <div className="absolute right-3 top-3 z-10">
-          <DropdownShell
-            open={openMenuId === playlist.id}
-            onOpenChange={(open) => setOpenMenuId(open ? playlist.id : null)}
-            placement="bottom-end"
-            trigger={({ open }) => (
-              <button
-                type="button"
-                className={`${smallIconButtonClass} bg-[var(--bg-primary)] ${
-                  open ? iconButtonActiveClass : ""
-                }`}
-                aria-label={`Manage ${playlist.name}`}
-              >
-                <MoreIcon size={14} />
-              </button>
-            )}
-          >
-            <Link href={editHref} onClick={() => setOpenMenuId(null)}>
-              Edit Playlist
-            </Link>
-            <button
-              type="button"
-              className="danger-hover"
-              disabled={deletingId === playlist.id}
-              onClick={() => {
-                setOpenMenuId(null);
-                void onDeletePlaylist(playlist);
-              }}
-            >
-              {deletingId === playlist.id ? "Deleting..." : "Delete Playlist"}
-            </button>
-          </DropdownShell>
-        </div>
       </div>
 
-      <Link href={editHref} className="mt-3 block min-w-0">
-        <h3 className="truncate text-[14px] font-medium tracking-[-0.025em] text-[var(--text-primary)]">
-          {playlist.name}
-        </h3>
-        <p className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
-          {playlist.song_count || 0} songs
-          {playlist.kicker ? ` · ${playlist.kicker}` : ""}
-        </p>
-      </Link>
+      <div className="mt-3 flex min-w-0 items-start gap-3">
+        <Link href={editHref} className="min-w-0 flex-1">
+          <h3 className="truncate text-[14px] font-medium tracking-[-0.025em] text-[var(--text-primary)]">
+            {playlist.name}
+          </h3>
+          <p className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+            {playlist.song_count || 0} songs
+            {playlist.kicker ? ` · ${playlist.kicker}` : ""}
+          </p>
+        </Link>
+
+        <DropdownShell
+          open={menuOpen}
+          onOpenChange={(open) => setOpenMenuId(open ? playlist.id : null)}
+          placement="bottom-end"
+          trigger={() => (
+            <button
+              type="button"
+              className={`flex h-7 w-7 shrink-0 items-center justify-center bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--filmwave-black)] ${
+                menuOpen ? "text-[var(--filmwave-black)]" : ""
+              }`}
+              aria-label={`Manage ${playlist.name}`}
+            >
+              <MoreIcon size={14} />
+            </button>
+          )}
+        >
+          <Link href={editHref} onClick={() => setOpenMenuId(null)}>
+            Edit Playlist
+          </Link>
+          <button
+            type="button"
+            className="danger-hover"
+            disabled={deletingId === playlist.id}
+            onClick={() => {
+              setOpenMenuId(null);
+              void onDeletePlaylist(playlist);
+            }}
+          >
+            {deletingId === playlist.id ? "Deleting..." : "Delete Playlist"}
+          </button>
+        </DropdownShell>
+      </div>
     </article>
   );
 }
