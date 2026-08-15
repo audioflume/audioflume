@@ -301,10 +301,8 @@ export default function AdminSongUploadPresentationInjector() {
 
   return (
     <style>{`
-      .admin-song-upload-content-page
-        .admin-song-upload-song-info
-        > .admin-song-form-card-header + div {
-        gap: 8px;
+      .admin-song-upload-content-page .admin-song-upload-song-info {
+        --admin-song-content-gap: 8px;
       }
 
       .admin-song-upload-content-page .admin-song-upload-files-bin {
