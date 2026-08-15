@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { flatIconButtonClass, modalTitleClass } from "@/components/uiClasses";
 
@@ -91,19 +92,7 @@ export default function ModalShell({
           className={`absolute right-4 top-4 z-10 ${flatIconButtonClass}`}
           aria-label={closeLabel}
         >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            aria-hidden="true"
-          >
-            <line x1="6" y1="6" x2="18" y2="18" />
-            <line x1="18" y1="6" x2="6" y2="18" />
-          </svg>
+          <XIcon size={18} />
         </button>
 
         <div
