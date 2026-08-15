@@ -60,7 +60,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   align-items: center !important;
   width: 100% !important;
   height: 42px !important;
-  border: 1px solid color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
+  border: 1px solid var(--filmwave-border-color) !important;
   border-radius: 0 !important;
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
