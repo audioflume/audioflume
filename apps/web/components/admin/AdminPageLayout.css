@@ -140,6 +140,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   .admin-song-file-row:nth-child(2)
   > div:last-child {
   position: relative;
+  margin-left: -8px;
   margin-right: 12px;
 }
 
