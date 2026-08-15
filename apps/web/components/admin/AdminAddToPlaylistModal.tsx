@@ -327,7 +327,7 @@ export default function AdminAddToPlaylistModal({
                   type="button"
                   onClick={() => togglePlaylist(playlist.id)}
                   disabled={selectedLoading}
-                  className={`group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
+                  className={`admin-cover-hover group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
                     isSelected
                       ? "bg-[var(--bg-primary)] hover:bg-[var(--bg-primary)]"
                       : "hover:bg-[var(--bg-hover)]"
