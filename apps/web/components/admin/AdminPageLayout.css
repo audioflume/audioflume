@@ -228,10 +228,21 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 .admin-song-upload-content-page
   .admin-song-upload-tags-card
-  :is(
-    > .admin-song-form-card-header + div > div:not([class*="md:grid-cols-2"]),
-    > .admin-song-form-card-header + div > div[class*="md:grid-cols-2"] > div
-  )
+  > .admin-song-form-card-header
+  + div
+  > div:not([class*="md:grid-cols-2"]):not([data-region-field-embedded])
+  > div:first-child,
+.admin-song-upload-content-page
+  .admin-song-upload-tags-card
+  > .admin-song-form-card-header
+  + div
+  > div[class*="md:grid-cols-2"]
+  > div
+  > div:first-child,
+.admin-song-upload-content-page
+  .admin-song-upload-tags-card
+  [data-region-field-embedded]
+  > div
   > div:first-child {
   margin-bottom: 12px;
 }
