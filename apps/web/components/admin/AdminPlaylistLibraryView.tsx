@@ -104,19 +104,18 @@ function MasterPlaylistCard({
         <Link href={editHref} className="absolute inset-0 block">
           <PlaylistArtwork
             playlist={playlist}
-            sizes="(min-width: 1536px) 25vw, (min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
           />
         </Link>
       </div>
 
-      <div className="mt-3 flex min-w-0 items-start gap-3">
+      <div className="mt-2.5 flex min-w-0 items-start gap-3">
         <Link href={editHref} className="min-w-0 flex-1">
-          <h3 className="truncate text-[14px] font-medium tracking-[-0.025em] text-[var(--text-primary)]">
+          <h3 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
             {playlist.name}
           </h3>
-          <p className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+          <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
             {playlist.song_count || 0} songs
-            {playlist.kicker ? ` · ${playlist.kicker}` : ""}
           </p>
         </Link>
 
@@ -593,12 +592,12 @@ export default function AdminPlaylistLibraryView({
       </div>
 
       <section className="mt-0">
-        <div className="mb-5 flex items-end justify-between gap-6">
+        <div className="mb-4 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
+            <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
               All Playlists
-            </h2>
-            <p className="mt-1 text-xs text-[var(--text-secondary)]">
+            </h3>
+            <p className="mt-1 text-[11px] text-[var(--text-muted)]">
               {masterPlaylists.length} playlist{masterPlaylists.length === 1 ? "" : "s"} · Master library
             </p>
           </div>
@@ -617,7 +616,7 @@ export default function AdminPlaylistLibraryView({
             No playlists yet.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
             {masterPlaylists.map((playlist) => (
               <MasterPlaylistCard
                 key={playlist.id}
