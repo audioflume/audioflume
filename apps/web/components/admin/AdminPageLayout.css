@@ -25,7 +25,6 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   [class~="rounded-[14px]"],
   [class~="rounded-[18px]"]
 ),
-.filmwave-admin-content-page .admin-song-select-box,
 main:has(.admin-song-form-card) .admin-song-form-card,
 main:has(.admin-song-form-card) .admin-song-form-icon-btn,
 main:has(.admin-song-form-card) form :is(
