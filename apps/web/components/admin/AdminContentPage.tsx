@@ -51,11 +51,13 @@ export default function AdminContentPage({
         ? "Edit Song"
         : "Song Upload"
       : label;
+  const isSongUpload = resolvedLabel === "Song Upload";
   const hidePageIntro =
-    resolvedLabel === "Playlist Manager" || resolvedLabel === "Music Library";
+    resolvedLabel === "Playlist Manager" ||
+    resolvedLabel === "Music Library" ||
+    isSongUpload;
   const resolvedSection =
     section ?? SIDEBAR_SECTION_BY_LABEL[resolvedLabel] ?? "Admin";
-  const isSongUpload = resolvedLabel === "Song Upload";
 
   return (
     <main
@@ -82,30 +84,14 @@ export default function AdminContentPage({
           />
 
           {!hidePageIntro ? (
-            <div
-              className={`${
-                isSongUpload ? "mb-4 min-h-0" : "mb-8 min-h-[58px]"
-              } flex items-end justify-between gap-4`}
-            >
+            <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
               <div className="min-w-0">
-                <h1
-                  className={
-                    isSongUpload
-                      ? "text-base font-medium text-[var(--text-primary)]"
-                      : "font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]"
-                  }
-                >
-                  {isSongUpload ? resolvedLabel : title}
+                <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+                  {title}
                 </h1>
 
                 {description ? (
-                  <p
-                    className={
-                      isSongUpload
-                        ? "mt-1 text-xs leading-5 text-[var(--text-secondary)]"
-                        : "mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]"
-                    }
-                  >
+                  <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
                     {description}
                   </p>
                 ) : null}
