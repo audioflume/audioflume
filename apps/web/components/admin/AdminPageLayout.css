@@ -60,6 +60,13 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 /* Song Upload follows the Music Library / Playlist Manager admin language. */
+.admin-song-upload-content-page {
+  --admin-song-card-x: 20px;
+  --admin-song-card-bottom: 20px;
+  --admin-song-title-gap: 12px;
+  --admin-song-content-gap: 12px;
+}
+
 .admin-song-upload-content-page .admin-song-form-card {
   border-radius: 10px;
   background: var(--bg-primary);
@@ -67,7 +74,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 .admin-song-upload-content-page .admin-song-form-card-header {
   min-height: 0;
-  padding: 20px 20px 0;
+  padding: 20px var(--admin-song-card-x) 0;
   border-bottom: 0;
   background: var(--bg-primary);
 }
@@ -103,21 +110,29 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 .admin-song-upload-content-page .admin-song-file-row {
   grid-template-columns: 145px minmax(0, 1fr) auto;
   border-top: 0;
-  padding: 4px 20px;
+  padding: 2px var(--admin-song-card-x);
 }
 
 .admin-song-upload-content-page .admin-song-file-row:first-child {
-  padding-top: 12px;
+  padding-top: var(--admin-song-title-gap);
 }
 
 .admin-song-upload-content-page .admin-song-file-row:last-child {
-  padding-bottom: 12px;
+  padding-bottom: var(--admin-song-card-bottom);
 }
 
 .admin-song-upload-content-page
   .admin-song-form-card
   > [class~="p-4"] {
-  padding: 12px 20px 20px;
+  padding: var(--admin-song-title-gap) var(--admin-song-card-x)
+    var(--admin-song-card-bottom);
+}
+
+.admin-song-upload-content-page
+  .admin-song-form-card
+  > .admin-song-form-card-header
+  + [class*="grid"] {
+  gap: var(--admin-song-content-gap);
 }
 
 .admin-song-upload-content-page form :is(
@@ -166,7 +181,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > .admin-song-form-card-header
   + div
   > div:nth-child(-n + 6)
-  > label,
+  > label:first-child,
 .admin-song-upload-content-page
   .admin-song-upload-song-info
   [data-ai-generated-field-embedded]
@@ -223,7 +238,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--bg-primary);
-  padding: 20px;
+  padding: 20px var(--admin-song-card-x) var(--admin-song-card-bottom);
 }
 
 .admin-song-upload-content-page
@@ -244,7 +259,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   [data-region-field-embedded]
   > div
   > div:first-child {
-  margin-bottom: 12px;
+  margin-bottom: var(--admin-song-title-gap);
 }
 
 .admin-song-upload-content-page
