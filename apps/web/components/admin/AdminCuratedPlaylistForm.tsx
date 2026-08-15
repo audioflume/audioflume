@@ -496,20 +496,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 ))}
               </div>
 
-              <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
-                <input
-                  type="checkbox"
-                  checked={showOnCuratedFeature}
-                  onChange={(e) => setShowOnCuratedFeature(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 accent-[var(--text-primary)]"
-                />
-                <span>
-                  <span className="block font-medium text-[var(--text-primary)]">
-                    Feature on Curated Playlists
-                  </span>
-                </span>
-              </label>
-
               <div className="flex flex-wrap gap-3 pt-2">
                 <button
                   type="submit"
