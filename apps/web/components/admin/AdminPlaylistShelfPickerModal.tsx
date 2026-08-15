@@ -163,10 +163,38 @@ export default function AdminPlaylistShelfPickerModal({
         </div>
       </div>
 
-      <div className="relative min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 overflow-hidden rounded-[10px] bg-[var(--bg-primary)]">
+        {displayedPlaylists.length > 0 && (
+          <nav
+            aria-label={`${itemLabel} alphabet navigation`}
+            className="flex h-full w-7 shrink-0 flex-col items-center justify-between py-3"
+          >
+            {ALPHABET.map((letter) => {
+              const available = availableLetters.has(letter);
+
+              return (
+                <button
+                  key={letter}
+                  type="button"
+                  onClick={() => scrollToLetter(letter)}
+                  disabled={!available}
+                  className={`flex w-full flex-1 items-center justify-center text-[10px] font-medium leading-none transition-colors ${
+                    available
+                      ? "cursor-pointer text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                      : "cursor-default text-[var(--text-muted)] opacity-25"
+                  }`}
+                  aria-label={`Jump to ${letter}`}
+                >
+                  {letter}
+                </button>
+              );
+            })}
+          </nav>
+        )}
+
         <div
           ref={listRef}
-          className="h-full overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] py-3"
+          className="h-full min-w-0 flex-1 overflow-y-auto py-3"
         >
           {displayedPlaylists.length === 0 ? (
             <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
@@ -186,7 +214,7 @@ export default function AdminPlaylistShelfPickerModal({
                     data-alpha-letter={/^[A-Z]$/.test(alphaLetter) ? alphaLetter : undefined}
                     onClick={() => togglePlaylist(playlist.id)}
                     disabled={alreadyAdded || saving}
-                    className={`group flex min-h-[60px] w-full items-center gap-3 p-2 pr-8 text-left transition-colors ${
+                    className={`group flex min-h-[60px] w-full items-center gap-3 p-2 text-left transition-colors ${
                       alreadyAdded || selected
                         ? "bg-[var(--bg-primary)]"
                         : "cursor-pointer hover:bg-[var(--bg-hover)]"
@@ -229,34 +257,6 @@ export default function AdminPlaylistShelfPickerModal({
             </div>
           )}
         </div>
-
-        {displayedPlaylists.length > 0 && (
-          <nav
-            aria-label={`${itemLabel} alphabet navigation`}
-            className="absolute right-1 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center bg-[var(--bg-primary)] py-1"
-          >
-            {ALPHABET.map((letter) => {
-              const available = availableLetters.has(letter);
-
-              return (
-                <button
-                  key={letter}
-                  type="button"
-                  onClick={() => scrollToLetter(letter)}
-                  disabled={!available}
-                  className={`flex h-[10px] w-4 items-center justify-center text-[8px] font-medium leading-none transition-colors ${
-                    available
-                      ? "cursor-pointer text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                      : "cursor-default text-[var(--text-muted)] opacity-25"
-                  }`}
-                  aria-label={`Jump to ${letter}`}
-                >
-                  {letter}
-                </button>
-              );
-            })}
-          </nav>
-        )}
       </div>
     </ModalShell>
   );
