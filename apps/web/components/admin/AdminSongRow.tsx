@@ -94,6 +94,19 @@ function PublishedStatusChip() {
   );
 }
 
+function formatAddedDate(value?: string) {
+  if (!value) return "—";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
+
 function createGeneratedEditPoints(saved: number) {
   if (saved <= 0) return '{"markers":[],"ranges":[]}';
 
@@ -119,6 +132,7 @@ export default function AdminSongRow({
   showSelectionColumn = true,
   statusDisplay = "health",
   size = "default",
+  showAddedDate = false,
 }: {
   song: Song;
   isLast: boolean;
@@ -129,6 +143,7 @@ export default function AdminSongRow({
   showSelectionColumn?: boolean;
   statusDisplay?: "health" | "published";
   size?: "default" | "large";
+  showAddedDate?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAnalyzingEditPoints, setIsAnalyzingEditPoints] = useState(false);
@@ -202,18 +217,26 @@ export default function AdminSongRow({
 
   const gridColumnsClass = showSelectionColumn
     ? showPublishedStatus
-      ? largeRow
-        ? "grid-cols-[28px_56px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]"
-        : "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]"
+      ? showAddedDate
+        ? largeRow
+          ? "grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px]"
+          : "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_112px_72px]"
+        : largeRow
+          ? "grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]"
+          : "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]"
       : largeRow
-        ? "grid-cols-[28px_56px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]"
+        ? "grid-cols-[28px_68px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]"
         : "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]"
     : showPublishedStatus
-      ? largeRow
-        ? "grid-cols-[56px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_64px]"
-        : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_64px]"
+      ? showAddedDate
+        ? largeRow
+          ? "grid-cols-[68px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_112px_64px]"
+          : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_112px_64px]"
+        : largeRow
+          ? "grid-cols-[68px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_64px]"
+          : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_64px]"
       : largeRow
-        ? "grid-cols-[56px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]"
+        ? "grid-cols-[68px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]"
         : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]";
 
   const handlePlayClick = () => {
@@ -244,7 +267,7 @@ export default function AdminSongRow({
     <div
       data-admin-song-id={song.id}
       onClick={handleRowClick}
-      className={`admin-song-row group/admin-song-row grid ${largeRow ? "min-h-[60px]" : "min-h-[46px]"} cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs transition ${
+      className={`admin-song-row group/admin-song-row grid ${largeRow ? "min-h-[72px]" : "min-h-[46px]"} cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs transition ${
         rowHealth === "error" ? "is-error" : ""
       } ${rowHealth === "warning" ? "is-warning" : ""} ${
         isAnalyzingEditPoints ? "pointer-events-none opacity-45" : ""
@@ -289,7 +312,7 @@ export default function AdminSongRow({
             handlePlayClick();
           }}
           disabled={!song.audioUrl || isAnalyzingEditPoints}
-          className={`relative ${largeRow ? "h-10 w-10" : "h-8 w-8"} cursor-pointer overflow-hidden rounded-none bg-[var(--bg-tertiary)] disabled:cursor-default`}
+          className={`relative ${largeRow ? "h-[52px] w-[52px]" : "h-8 w-8"} cursor-pointer overflow-hidden rounded-none bg-[var(--bg-tertiary)] disabled:cursor-default`}
           aria-label={rowIsPlaying ? "Pause song" : "Play song"}
         >
           {song.coverArt && (
@@ -360,6 +383,12 @@ export default function AdminSongRow({
       <div className="text-[var(--text-secondary)]">
         {song.bpm ? `${song.bpm} BPM` : "—"}
       </div>
+
+      {showAddedDate && (
+        <div className="text-[var(--text-secondary)]">
+          {formatAddedDate(song.createdAt)}
+        </div>
+      )}
 
       <div className="flex items-center justify-end gap-1 pointer-events-auto" data-admin-song-menu>
         <Link
