@@ -97,6 +97,7 @@ export default function PlaylistManagerPage() {
       description="Manage the playlist library, curated shelves, and Discover content."
       compactHeader
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
+      contentAreaBottomPadding={false}
     >
       <div className="mb-7 flex items-center gap-2">
         {(["playlists", "curated", "discover"] as ManagerTab[]).map((tab) => (
