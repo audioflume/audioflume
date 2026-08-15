@@ -208,7 +208,7 @@ function SortableShelfPlaylistCard({
         <button
           type="button"
           onClick={() => onRemove(playlist.id)}
-          className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--text-primary)] group-hover:opacity-100"
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--text-primary)] group-hover:opacity-100"
           aria-label={`Remove ${playlist.name} from shelf`}
           title="Remove from shelf"
         >
@@ -570,9 +570,6 @@ export default function AdminPlaylistLibraryView({
                           {newlyAdded.length} playlist{newlyAdded.length === 1 ? "" : "s"} · Automatic
                         </p>
                       </div>
-                      <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                        Newest 10
-                      </span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
