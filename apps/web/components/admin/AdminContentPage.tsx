@@ -27,6 +27,7 @@ const SIDEBAR_SECTION_BY_LABEL: Record<string, string> = {
   "Playlist Manager": "Database",
   "Cue Points": "Database",
   "Edit Song": "Database",
+  "Edit Playlist": "Database",
   "Storage Health": "System",
   Settings: "System",
 };
@@ -52,14 +53,20 @@ export default function AdminContentPage({
         : "Song Upload"
       : label;
   const isSongUpload = resolvedLabel === "Song Upload";
+  const isSongEdit = resolvedLabel === "Edit Song";
+  const isPlaylistEdit = resolvedLabel === "Edit Playlist";
   const hidePageIntro =
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
-    isSongUpload;
+    isSongUpload ||
+    isSongEdit ||
+    isPlaylistEdit;
   const usesAdminCanvas =
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
-    isSongUpload;
+    isSongUpload ||
+    isSongEdit ||
+    isPlaylistEdit;
   const resolvedContentAreaClassName = usesAdminCanvas
     ? contentAreaClassName
         .replace("bg-[var(--filmwave-neutral-surface)]", "")
@@ -72,6 +79,8 @@ export default function AdminContentPage({
     <main
       className={`filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
         isSongUpload ? "admin-song-upload-content-page" : ""
+      } ${isSongEdit ? "admin-song-edit-content-page" : ""} ${
+        isPlaylistEdit ? "admin-playlist-edit-content-page" : ""
       }`}
     >
       <AdminSidebar />
@@ -89,7 +98,7 @@ export default function AdminContentPage({
             section={resolvedSection}
             label={resolvedLabel}
             action={headerAction}
-            compact={compactHeader || isSongUpload}
+            compact={compactHeader || isSongUpload || isSongEdit || isPlaylistEdit}
           />
 
           {!hidePageIntro ? (
