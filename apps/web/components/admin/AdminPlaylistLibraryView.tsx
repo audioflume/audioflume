@@ -45,6 +45,7 @@ type Props = {
 };
 
 type ShelfIds = Record<CuratedPlaylistShelfKey, number[]>;
+type CollapsiblePlaylistSection = CuratedPlaylistShelfKey | "newlyAdded";
 
 const EMPTY_SHELF_IDS: ShelfIds = {
   popular: [],
@@ -274,6 +275,13 @@ export default function AdminPlaylistLibraryView({
     useState<CuratedPlaylistShelfKey | null>(null);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
+  const [collapsedSections, setCollapsedSections] = useState<
+    Record<CollapsiblePlaylistSection, boolean>
+  >({
+    popular: false,
+    newlyAdded: false,
+    trending: false,
+  });
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -352,6 +360,13 @@ export default function AdminPlaylistLibraryView({
     }),
     [playlistById, shelfIds],
   );
+
+  function toggleSection(section: CollapsiblePlaylistSection) {
+    setCollapsedSections((current) => ({
+      ...current,
+      [section]: !current[section],
+    }));
+  }
 
   async function addToShelf(
     shelfKey: CuratedPlaylistShelfKey,
@@ -494,11 +509,14 @@ export default function AdminPlaylistLibraryView({
             const title = CURATED_PLAYLIST_SHELF_LABELS[shelfKey];
             const items = shelfPlaylists[shelfKey];
             const renderNewlyAddedAfterPopular = shelfIndex === 0;
+            const shelfCollapsed = collapsedSections[shelfKey];
 
             return (
               <div key={shelfKey} className="grid gap-3">
                 <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
-                  <div className="mb-4 flex items-end justify-between gap-4">
+                  <div
+                    className={`${shelfCollapsed ? "" : "mb-4"} flex items-end justify-between gap-4`}
+                  >
                     <div>
                       <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                         {title}
@@ -510,58 +528,86 @@ export default function AdminPlaylistLibraryView({
                       </p>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setPickerShelf(shelfKey)}
-                      className={secondaryPillButtonClass}
-                      disabled={shelvesLoading}
-                    >
-                      <PlusIcon size={12} />
-                      <span>Add</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setPickerShelf(shelfKey)}
+                        className={secondaryPillButtonClass}
+                        disabled={shelvesLoading}
+                      >
+                        <PlusIcon size={12} />
+                        <span>Add</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleSection(shelfKey)}
+                        className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+                        aria-label={shelfCollapsed ? `Expand ${title}` : `Collapse ${title}`}
+                        aria-expanded={!shelfCollapsed}
+                        title={shelfCollapsed ? `Expand ${title}` : `Collapse ${title}`}
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                          className={`h-4 w-4 transition-transform duration-300 ${
+                            shelfCollapsed ? "" : "rotate-180"
+                          }`}
+                        >
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
 
-                  {items.length === 0 ? (
-                    <button
-                      type="button"
-                      onClick={() => setPickerShelf(shelfKey)}
-                      className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
-                    >
-                      Add playlists from All Playlists
-                    </button>
-                  ) : (
-                    <DndContext
-                      sensors={sensors}
-                      collisionDetection={closestCenter}
-                      onDragEnd={(event) => void reorderShelf(shelfKey, event)}
-                    >
-                      <SortableContext
-                        items={items.map((playlist) => playlist.id)}
-                        strategy={rectSortingStrategy}
+                  {!shelfCollapsed &&
+                    (items.length === 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => setPickerShelf(shelfKey)}
+                        className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                          {items.map((playlist) => (
-                            <SortableShelfPlaylistCard
-                              key={playlist.id}
-                              playlist={playlist}
-                              onRemove={(playlistId) => {
-                                const confirmed = window.confirm(
-                                  `Remove "${playlist.name}" from ${title}?`,
-                                );
-                                if (!confirmed) return;
-                                void removeFromShelf(shelfKey, playlistId);
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </SortableContext>
-                    </DndContext>
-                  )}
+                        Add playlists from All Playlists
+                      </button>
+                    ) : (
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={(event) => void reorderShelf(shelfKey, event)}
+                      >
+                        <SortableContext
+                          items={items.map((playlist) => playlist.id)}
+                          strategy={rectSortingStrategy}
+                        >
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
+                            {items.map((playlist) => (
+                              <SortableShelfPlaylistCard
+                                key={playlist.id}
+                                playlist={playlist}
+                                onRemove={(playlistId) => {
+                                  const confirmed = window.confirm(
+                                    `Remove "${playlist.name}" from ${title}?`,
+                                  );
+                                  if (!confirmed) return;
+                                  void removeFromShelf(shelfKey, playlistId);
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </SortableContext>
+                      </DndContext>
+                    ))}
                 </section>
 
                 {renderNewlyAddedAfterPopular && (
                   <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
-                    <div className="mb-4 flex items-end justify-between gap-4">
+                    <div
+                      className={`${collapsedSections.newlyAdded ? "" : "mb-4"} flex items-end justify-between gap-4`}
+                    >
                       <div>
                         <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                           Newly Added
@@ -570,16 +616,50 @@ export default function AdminPlaylistLibraryView({
                           {newlyAdded.length} playlist{newlyAdded.length === 1 ? "" : "s"} · Automatic
                         </p>
                       </div>
+
+                      <button
+                        type="button"
+                        onClick={() => toggleSection("newlyAdded")}
+                        className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+                        aria-label={
+                          collapsedSections.newlyAdded
+                            ? "Expand Newly Added"
+                            : "Collapse Newly Added"
+                        }
+                        aria-expanded={!collapsedSections.newlyAdded}
+                        title={
+                          collapsedSections.newlyAdded
+                            ? "Expand Newly Added"
+                            : "Collapse Newly Added"
+                        }
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                          className={`h-4 w-4 transition-transform duration-300 ${
+                            collapsedSections.newlyAdded ? "" : "rotate-180"
+                          }`}
+                        >
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
+                      </button>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                      {newlyAdded.map((playlist) => (
-                        <AutomaticShelfPlaylistCard
-                          key={playlist.id}
-                          playlist={playlist}
-                        />
-                      ))}
-                    </div>
+                    {!collapsedSections.newlyAdded && (
+                      <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
+                        {newlyAdded.map((playlist) => (
+                          <AutomaticShelfPlaylistCard
+                            key={playlist.id}
+                            playlist={playlist}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </section>
                 )}
               </div>
