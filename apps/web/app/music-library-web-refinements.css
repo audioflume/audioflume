@@ -169,22 +169,23 @@
   box-sizing: border-box !important;
   display: inline-flex !important;
   width: auto !important;
-  min-height: 22px !important;
+  height: 28px !important;
+  min-height: 28px !important;
   flex: 0 0 auto !important;
   align-self: flex-start !important;
   justify-content: center !important;
   gap: 0 !important;
   break-inside: auto !important;
   -webkit-column-break-inside: auto !important;
-  border: 1px solid transparent !important;
+  border: 1px solid var(--border) !important;
   border-radius: 999px !important;
-  background: var(--filmwave-neutral-surface) !important;
-  padding: 2px 10px !important;
-  color: rgba(255, 255, 255, 0.82) !important;
-  font-family: var(--font-aktiv-grotesk), sans-serif !important;
-  font-size: 12px !important;
-  font-weight: 400 !important;
-  line-height: 1.15 !important;
+  background: transparent !important;
+  padding: 0 10px !important;
+  color: var(--text-secondary) !important;
+  font-family: inherit !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
   text-align: center !important;
   white-space: nowrap !important;
   transition:
@@ -195,21 +196,21 @@
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option:hover,
 .fw-music-content-column .fw-filter-detail .fw-filter-option:focus-visible {
-  border-color: var(--filmwave-border-color) !important;
+  border-color: var(--border) !important;
   border-radius: 999px !important;
-  background: var(--filmwave-neutral-surface) !important;
-  color: var(--filmwave-white) !important;
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
 }
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option.is-selected,
 .fw-music-content-column
   .fw-filter-detail
   .fw-filter-option[aria-pressed="true"] {
-  border-color: var(--filmwave-border-color) !important;
+  border-color: var(--text-primary) !important;
   border-radius: 999px !important;
-  background: var(--filmwave-white) !important;
-  color: var(--filmwave-black) !important;
-  font-weight: 400 !important;
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+  font-weight: 500 !important;
 }
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option:focus-visible {
@@ -274,41 +275,6 @@
   -webkit-mask-size: contain;
   mask-size: contain;
   pointer-events: none;
-}
-
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  .fw-filter-detail
-  .fw-filter-option {
-  border-color: transparent !important;
-  color: var(--text-secondary) !important;
-}
-
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  .fw-filter-detail
-  .fw-filter-option:hover,
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  .fw-filter-detail
-  .fw-filter-option:focus-visible {
-  border-color: var(--filmwave-border-color) !important;
-  border-radius: 999px !important;
-  color: var(--text-primary) !important;
-}
-
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  .fw-filter-detail
-  .fw-filter-option.is-selected,
-:where(html.light, html[data-theme="light"])
-  .fw-music-content-column
-  .fw-filter-detail
-  .fw-filter-option[aria-pressed="true"] {
-  border-color: var(--filmwave-border-color) !important;
-  border-radius: 999px !important;
-  background: var(--filmwave-black) !important;
-  color: var(--filmwave-white) !important;
 }
 
 /* ─── Music library alignment rail ────────────────────────── */
