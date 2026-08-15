@@ -397,55 +397,48 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         onSubmit={handleSubmit}
         className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]"
       >
-        <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-          <div className="mb-5">
+        <div className="admin-playlist-main-stack grid min-w-0 gap-4">
+          <section className="admin-playlist-section-card admin-playlist-details-card">
             <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
               Playlist details
             </h2>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Add the public metadata and cover media used on Curated Playlists
-              cards and rows.
-            </p>
-          </div>
 
-          {loading ? (
-            <div className="h-72 animate-pulse rounded-xl bg-[var(--bg-tertiary)]" />
-          ) : (
-            <div className="grid gap-4">
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Playlist name
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Playlist Name"
-                  required
-                />
-              </label>
+            {loading ? (
+              <div className="h-28 animate-pulse rounded-xl bg-[var(--bg-tertiary)]" />
+            ) : (
+              <div className="admin-playlist-fields grid gap-4">
+                <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+                  Playlist name
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                    placeholder="Playlist Name"
+                    required
+                  />
+                </label>
 
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                Kicker text
-                <input
-                  value={kicker}
-                  onChange={(e) => setKicker(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                  placeholder="Kicker Text"
-                />
-              </label>
+                <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+                  Kicker text
+                  <input
+                    value={kicker}
+                    onChange={(e) => setKicker(e.target.value)}
+                    className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                    placeholder="Kicker Text"
+                  />
+                </label>
+              </div>
+            )}
+          </section>
 
-              <div className="grid gap-3">
-                <div>
-                  <div className="text-sm font-medium text-[var(--text-primary)]">
-                    Browse filters
-                  </div>
-                  <p className="mt-1 text-xs text-[var(--text-muted)]">
-                    Choose every filter this playlist should appear under. Each
-                    selected filter reveals the shelf categories used after
-                    filtering.
-                  </p>
-                </div>
+          {!loading && (
+            <>
+              <section className="admin-playlist-section-card admin-playlist-browse-card">
+                <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
+                  Browse filters
+                </h2>
 
-                <div className="grid gap-2 sm:grid-cols-2">
+                <div className="admin-playlist-browse-grid grid gap-2 sm:grid-cols-2">
                   {CURATED_BROWSE_FILTERS.map((filter) => (
                     <label
                       key={filter.value}
@@ -461,42 +454,42 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                     </label>
                   ))}
                 </div>
+              </section>
 
-                {CURATED_BROWSE_FILTERS.filter((filter) =>
-                  browseTags.includes(filter.value),
-                ).map((filter) => (
-                  <div
-                    key={`${filter.value}-subcategories`}
-                    className="grid gap-2 pt-3"
-                  >
-                    <div className="text-xs font-medium text-[var(--text-primary)]">
-                      {filter.label} shelves
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                      {filter.subcategories.map((subcategory) => (
-                        <label
-                          key={subcategory.value}
-                          className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-secondary)]"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={browseSubcategories.includes(
-                              subcategory.value,
-                            )}
-                            onChange={() =>
-                              toggleBrowseSubcategory(subcategory.value)
-                            }
-                            className="h-3.5 w-3.5 accent-[var(--text-primary)]"
-                          />
-                          <span>{subcategory.label}</span>
-                        </label>
-                      ))}
-                    </div>
+              {CURATED_BROWSE_FILTERS.filter((filter) =>
+                browseTags.includes(filter.value),
+              ).map((filter) => (
+                <section
+                  key={`${filter.value}-subcategories`}
+                  className="admin-playlist-section-card admin-playlist-shelf-card"
+                >
+                  <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
+                    {filter.label} shelves
+                  </h2>
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                    {filter.subcategories.map((subcategory) => (
+                      <label
+                        key={subcategory.value}
+                        className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-secondary)]"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={browseSubcategories.includes(
+                            subcategory.value,
+                          )}
+                          onChange={() =>
+                            toggleBrowseSubcategory(subcategory.value)
+                          }
+                          className="h-3.5 w-3.5 accent-[var(--text-primary)]"
+                        />
+                        <span>{subcategory.label}</span>
+                      </label>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </section>
+              ))}
 
-              <div className="flex flex-wrap gap-3 pt-2">
+              <div className="admin-playlist-actions flex flex-wrap gap-3 pt-2">
                 <button
                   type="submit"
                   className={primaryPillButtonClass}
@@ -516,9 +509,9 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   Back to manager
                 </button>
               </div>
-            </div>
+            </>
           )}
-        </section>
+        </div>
 
         <aside className="grid gap-6">
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
