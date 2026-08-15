@@ -38,8 +38,6 @@ export default function AdminAllPlaylistsView({
     <PlaylistManagerLibrarySection
       title="All Playlists"
       subtitle={`${masterPlaylists.length} playlist${masterPlaylists.length === 1 ? "" : "s"} · Master library`}
-      createHref="/admin/playlist-manager/new"
-      createLabel="New Playlist"
       playlists={masterPlaylists}
       emptyMessage="No playlists yet."
       getEditHref={(playlist) =>
