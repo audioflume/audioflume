@@ -547,10 +547,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
                 Songs
               </h2>
-              <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                Add songs from the admin music player dropdown. Drag to reorder
-                or remove songs here while editing.
-              </p>
             </div>
             <span className="text-xs font-medium text-[var(--text-muted)]">
               {songs.length} songs
@@ -558,7 +554,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           </div>
 
           {songs.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm text-[var(--text-secondary)]">
+            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm font-normal leading-5 text-[var(--text-secondary)]">
               No songs yet. Open a song in the admin music player and choose Add
               to Playlist.
             </div>
