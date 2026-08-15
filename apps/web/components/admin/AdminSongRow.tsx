@@ -80,6 +80,20 @@ function StatusChip({ issues }: { issues: string[] }) {
   );
 }
 
+function PublishedStatusChip() {
+  return (
+    <span
+      className="inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-medium uppercase tracking-[0.04em]"
+      style={{
+        backgroundColor: "var(--status-success-soft, rgba(72, 181, 113, 0.12))",
+        color: "var(--status-success, #48b571)",
+      }}
+    >
+      Published
+    </span>
+  );
+}
+
 function createGeneratedEditPoints(saved: number) {
   if (saved <= 0) return '{"markers":[],"ranges":[]}';
 
@@ -103,6 +117,8 @@ export default function AdminSongRow({
   onSelectedChange,
   onDeleted,
   showSelectionColumn = true,
+  statusDisplay = "health",
+  size = "default",
 }: {
   song: Song;
   isLast: boolean;
@@ -111,6 +127,8 @@ export default function AdminSongRow({
   onSelectedChange: (songId: string, checked: boolean) => void;
   onDeleted?: (songId: string) => void;
   showSelectionColumn?: boolean;
+  statusDisplay?: "health" | "published";
+  size?: "default" | "large";
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAnalyzingEditPoints, setIsAnalyzingEditPoints] = useState(false);
@@ -131,6 +149,8 @@ export default function AdminSongRow({
   const issues = getSongIssues(rowSong).map((issue) => issue.label);
   const rowHealth = getSongHealthStatus(rowSong);
   const onlyAutoEditPoints = songHasOnlyAutoEditPoints(rowSong);
+  const showPublishedStatus = statusDisplay === "published";
+  const largeRow = size === "large";
 
   useEffect(() => {
     setLocalEditPoints(song.editPoints);
@@ -180,9 +200,14 @@ export default function AdminSongRow({
     };
   }, [song.id]);
 
+  const artworkColumn = largeRow ? "56px" : "48px";
   const gridColumnsClass = showSelectionColumn
-    ? "grid-cols-[28px_48px_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]"
-    : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]";
+    ? showPublishedStatus
+      ? `grid-cols-[28px_${artworkColumn}_minmax(180px,1.5fr)_minmax(130px,1fr)_160px_80px_80px_72px]`
+      : `grid-cols-[28px_${artworkColumn}_minmax(180px,1.5fr)_minmax(130px,1fr)_24px_160px_80px_80px_72px]`
+    : showPublishedStatus
+      ? `grid-cols-[${artworkColumn}_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_64px]`
+      : `grid-cols-[${artworkColumn}_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px]`;
 
   const handlePlayClick = () => {
     if (!song.audioUrl || isAnalyzingEditPoints) return;
@@ -212,7 +237,7 @@ export default function AdminSongRow({
     <div
       data-admin-song-id={song.id}
       onClick={handleRowClick}
-      className={`admin-song-row group/admin-song-row grid min-h-[46px] cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs transition ${
+      className={`admin-song-row group/admin-song-row grid ${largeRow ? "min-h-[60px]" : "min-h-[46px]"} cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs transition ${
         rowHealth === "error" ? "is-error" : ""
       } ${rowHealth === "warning" ? "is-warning" : ""} ${
         isAnalyzingEditPoints ? "pointer-events-none opacity-45" : ""
@@ -257,7 +282,7 @@ export default function AdminSongRow({
             handlePlayClick();
           }}
           disabled={!song.audioUrl || isAnalyzingEditPoints}
-          className="relative h-8 w-8 cursor-pointer overflow-hidden rounded-none bg-[var(--bg-tertiary)] disabled:cursor-default"
+          className={`relative ${largeRow ? "h-10 w-10" : "h-8 w-8"} cursor-pointer overflow-hidden rounded-none bg-[var(--bg-tertiary)] disabled:cursor-default`}
           aria-label={rowIsPlaying ? "Pause song" : "Play song"}
         >
           {song.coverArt && (
@@ -304,15 +329,19 @@ export default function AdminSongRow({
         {song.artist}
       </div>
 
-      <div className="flex items-center">
-        <StatusDot health={rowHealth} />
-      </div>
+      {!showPublishedStatus && (
+        <div className="flex items-center">
+          <StatusDot health={rowHealth} />
+        </div>
+      )}
 
       <div className="flex min-w-0 items-center gap-1.5">
         {isAnalyzingEditPoints ? (
           <span className="inline-flex h-6 items-center rounded-full bg-[var(--bg-tertiary)] px-2.5 text-[11px] font-medium text-[var(--text-secondary)]">
             Analyzing
           </span>
+        ) : showPublishedStatus ? (
+          <PublishedStatusChip />
         ) : (
           <StatusChip issues={issues} />
         )}
