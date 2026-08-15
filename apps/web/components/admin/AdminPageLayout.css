@@ -12,11 +12,11 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 /* Frontend-matched cover hover */
-.filmwave-admin-content-page .admin-cover-hover img {
+.admin-cover-hover img {
   transition: transform 500ms ease;
 }
 
-.filmwave-admin-content-page .admin-cover-hover:not(:disabled):hover img {
+.admin-cover-hover:not(:disabled):hover img {
   transform: scale(1.025);
 }
 
