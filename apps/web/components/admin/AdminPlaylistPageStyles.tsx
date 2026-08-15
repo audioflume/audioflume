@@ -7,7 +7,11 @@ export default function AdminPlaylistPageStyles() {
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        .admin-playlist-main-stack,
+        .admin-playlist-main-stack {
+        align-self: start;
+        gap: 16px;
+      }
+
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > aside {
