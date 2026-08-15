@@ -113,6 +113,13 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   padding: 2px var(--admin-song-card-x);
 }
 
+.admin-song-upload-content-page
+  .admin-song-file-row
+  > div:first-child
+  > div:nth-child(2) {
+  display: none;
+}
+
 .admin-song-upload-content-page .admin-song-file-row:first-child {
   padding-top: var(--admin-song-title-gap);
 }
