@@ -1,4 +1,8 @@
 /* Admin dashboard */
+.filmwave-admin-content-page {
+  --admin-sidebar-width: 276px;
+}
+
 main[class*="md:ml-[var(--admin-sidebar-width)]"] {
   padding-top: 0 !important;
 }
