@@ -74,7 +74,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   cursor: pointer;
   border: 0;
   background: transparent;
-  color: #fff;
+  color: var(--filmwave-white);
   line-height: 0;
   opacity: 0.62;
   transition: opacity 0.15s ease;
@@ -100,7 +100,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   height: 50px;
   grid-template-columns: 50px minmax(0, 1fr) 142px;
   margin-top: clamp(38px, 3.5vw, 52px);
-  background: #fff;
+  background: var(--filmwave-white);
   box-shadow: none;
   pointer-events: auto;
 }
@@ -125,7 +125,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   border: 0;
   outline: 0;
   background: transparent;
-  color: #111;
+  color: var(--filmwave-black);
   padding: 0 20px 0 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 14px;
@@ -140,8 +140,8 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   gap: 7px;
   cursor: pointer;
   border: 0;
-  background: #111;
-  color: #fff;
+  background: var(--filmwave-black);
+  color: var(--filmwave-white);
   margin-right: 7px;
   padding: 0 16px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -162,7 +162,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(40px, 6vw, 92px);
   margin-top: clamp(28px, 3vw, 40px);
-  color: #fff;
+  color: var(--filmwave-white);
   pointer-events: none;
 }
 
@@ -228,7 +228,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   width: 100%;
   flex-direction: column;
   align-items: center;
-  color: #fff;
+  color: var(--filmwave-white);
   pointer-events: auto;
 }
 
@@ -251,7 +251,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   border: 0;
   outline: 0;
   background: transparent;
-  color: #fff;
+  color: var(--filmwave-white);
   padding: 0 12px 0 30px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(14px, 0.9vw, 17px);
@@ -275,7 +275,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   cursor: pointer;
   border: 0;
   border-radius: 999px;
-  background: #191919;
+  background: var(--filmwave-neutral-surface);
   color: rgba(255, 255, 255, 0.62);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 22px;
@@ -288,8 +288,12 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
 .discover-category-search button:hover,
 .discover-category-search button:focus-visible {
-  background: #242424;
-  color: #fff;
+  background: color-mix(
+    in srgb,
+    var(--filmwave-neutral-surface) 88%,
+    var(--filmwave-white) 12%
+  );
+  color: var(--filmwave-white);
   transform: translateX(1px);
 }
 
@@ -309,7 +313,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 .discover-category-browser h2 {
   width: min(calc(100% - 40px), 420px);
   margin: 0;
-  color: #fff;
+  color: var(--filmwave-white);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(17px, 1.15vw, 22px);
   font-weight: 500;
@@ -352,13 +356,13 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 .discover-category-filter-button:hover,
 .discover-category-filter-button:focus-visible,
 .discover-category-filter-button.has-selection {
-  border-color: rgba(255, 255, 255, 0.42);
+  border-color: var(--filmwave-border-color);
 }
 
 .discover-category-filter-button.is-open {
-  border-color: #fff;
-  background: #fff;
-  color: #111;
+  border-color: var(--filmwave-border-color);
+  background: var(--filmwave-white);
+  color: var(--filmwave-black);
 }
 
 .discover-category-filter-button:focus-visible {
@@ -428,9 +432,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 }
 
 .discover-category-filter-pill.is-selected {
-  border-color: #fff;
-  background: #fff;
-  color: #111;
+  border-color: var(--filmwave-border-color);
+  background: var(--filmwave-white);
+  color: var(--filmwave-black);
 }
 
 .discover-category-filter-pill:focus-visible {
@@ -447,7 +451,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-search {
-  background: var(--bg-hover-strong);
+  background: var(--filmwave-neutral-surface);
   box-shadow: none;
 }
 
@@ -466,8 +470,8 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-search button {
-  background: #e4e4e4;
-  color: rgba(13, 13, 13, 0.62);
+  background: var(--filmwave-neutral-surface);
+  color: color-mix(in srgb, var(--filmwave-black) 62%, transparent);
 }
 
 :where(html.light, html[data-theme="light"])
@@ -476,14 +480,18 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-search button:focus-visible {
-  background: #d9d9d9;
-  color: #0d0d0d;
+  background: color-mix(
+    in srgb,
+    var(--filmwave-neutral-surface) 88%,
+    var(--filmwave-black) 12%
+  );
+  color: var(--filmwave-black);
 }
 
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-search button:focus-visible {
-  outline-color: var(--border-strong);
+  outline-color: var(--filmwave-border-color);
 }
 
 :where(html.light, html[data-theme="light"])
@@ -495,7 +503,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-filter-button {
-  border-color: var(--filmwave-browse-filter-border-color);
+  border-color: var(--filmwave-border-color);
   color: var(--text-primary);
 }
 
@@ -508,15 +516,15 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-filter-button.has-selection {
-  border-color: var(--border-hover);
+  border-color: var(--filmwave-border-color);
 }
 
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-filter-button.is-open {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  border-color: var(--filmwave-border-color);
+  background: var(--filmwave-black);
+  color: var(--filmwave-white);
 }
 
 :where(html.light, html[data-theme="light"])
@@ -529,9 +537,9 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 :where(html.light, html[data-theme="light"])
   body:has(.discover-page-root)
   .discover-category-filter-pill.is-selected {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  border-color: var(--filmwave-border-color);
+  background: var(--filmwave-black);
+  color: var(--filmwave-white);
 }
 
 @media (max-width: 980px) {
