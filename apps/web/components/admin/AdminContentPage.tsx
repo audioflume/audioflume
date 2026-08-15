@@ -12,6 +12,7 @@ type AdminContentPageProps = {
   compactHeader?: boolean;
   children: ReactNode;
   contentClassName?: string;
+  contentAreaClassName?: string;
   contentStyle?: CSSProperties;
 };
 
@@ -25,6 +26,7 @@ export default function AdminContentPage({
   compactHeader = false,
   children,
   contentClassName = "",
+  contentAreaClassName = "",
   contentStyle,
 }: AdminContentPageProps) {
   const hidePageIntro = label === "Playlist Manager" || label === "Music Library";
@@ -33,7 +35,9 @@ export default function AdminContentPage({
     <main className="filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AdminSidebar />
 
-      <section className="min-h-screen px-5 pt-[88px] pb-20 md:px-8 xl:px-10">
+      <section
+        className={`min-h-screen px-5 pt-[88px] pb-20 md:px-8 xl:px-10 ${contentAreaClassName}`}
+      >
         <div
           className={`mx-auto max-w-[1180px] ${contentClassName}`}
           style={contentStyle}
