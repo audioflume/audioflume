@@ -2,12 +2,13 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import AdminAllPlaylistsView from "@/components/admin/AdminAllPlaylistsView";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
 import AdminPlaylistLibraryView from "@/components/admin/AdminPlaylistLibraryView";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
-type ManagerTab = "playlists" | "discover";
+type ManagerTab = "playlists" | "curated" | "discover";
 
 type PlaylistUpdate = {
   id: number;
@@ -17,7 +18,11 @@ type PlaylistUpdate = {
 export default function PlaylistManagerPage() {
   const searchParams = useSearchParams();
   const queryTab: ManagerTab =
-    searchParams.get("tab") === "discover" ? "discover" : "playlists";
+    searchParams.get("tab") === "discover"
+      ? "discover"
+      : searchParams.get("tab") === "curated"
+        ? "curated"
+        : "playlists";
 
   const [activeTab, setActiveTab] = useState<ManagerTab>(queryTab);
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
@@ -117,7 +122,7 @@ export default function PlaylistManagerPage() {
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
     >
       <div className="mb-7 flex items-center gap-2">
-        {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
+        {(["playlists", "curated", "discover"] as ManagerTab[]).map((tab) => (
           <button
             key={tab}
             type="button"
@@ -128,12 +133,26 @@ export default function PlaylistManagerPage() {
                 : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
             }`}
           >
-            {tab === "playlists" ? "Playlists" : "Discover"}
+            {tab === "playlists"
+              ? "Playlists"
+              : tab === "curated"
+                ? "Curated"
+                : "Discover"}
           </button>
         ))}
       </div>
 
       {activeTab === "playlists" ? (
+        <div className="grid gap-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
+          <AdminAllPlaylistsView
+            playlists={masterPlaylists}
+            loading={loading}
+            error={error}
+            deletingId={deletingId}
+            onDeletePlaylist={deletePlaylist}
+          />
+        </div>
+      ) : activeTab === "curated" ? (
         <div className="grid gap-4 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
           <AdminPlaylistLibraryView
             playlists={masterPlaylists}
