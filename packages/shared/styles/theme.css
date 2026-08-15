@@ -3,11 +3,21 @@
 :where(:root) {
   color-scheme: dark;
 
-  --bg-primary: #000000;
-  --bg-secondary: #000000;
-  --bg-tertiary: #1a1b1c;
+  /* Canonical Filmwave color sources. */
+  --filmwave-black: #070707;
+  --filmwave-white: #ffffff;
+  --filmwave-neutral-surface: #0d0d0d;
+  --filmwave-border-color: color-mix(
+    in srgb,
+    var(--filmwave-white) 10%,
+    transparent
+  );
+
+  --bg-primary: var(--filmwave-black);
+  --bg-secondary: var(--filmwave-black);
+  --bg-tertiary: var(--filmwave-neutral-surface);
   --bg-tertiary-hover: #232426;
-  --bg-panel: #1a1b1c;
+  --bg-panel: var(--filmwave-neutral-surface);
   --bg-panel-2: #242528;
   --bg-card: rgba(245, 248, 255, 0.055);
   --bg-elevated: rgba(245, 248, 255, 0.1);
@@ -17,23 +27,34 @@
   --bg-control-hover: rgba(245, 248, 255, 0.15);
   --bg-hover: rgba(245, 248, 255, 0.055);
   --bg-hover-strong: rgba(245, 248, 255, 0.105);
-  --filmwave-neutral-surface: #151515;
-  --filmwave-chrome-surface: var(--bg-tertiary);
+  --filmwave-chrome-surface: var(--filmwave-neutral-surface);
   --filmwave-square-icon-hover-bg: var(--bg-hover-strong);
   --icon-button-hover: rgba(245, 248, 255, 0.18);
 
-  --divider: rgba(255, 255, 255, 0.1);
-  --border: rgba(255, 255, 255, 0.1);
-  --border-subtle: rgba(255, 255, 255, 0.03);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-hover: rgba(255, 255, 255, 0.2);
-  --filmwave-browse-filter-border-color: var(--border);
+  --divider: var(--filmwave-border-color);
+  --border: var(--filmwave-border-color);
+  --border-subtle: var(--filmwave-border-color);
+  --border-strong: var(--filmwave-border-color);
+  --border-hover: var(--filmwave-border-color);
+  --filmwave-browse-filter-border-color: var(--filmwave-border-color);
 
-  --text-primary: #ffffff;
+  --text-primary: var(--filmwave-white);
   --text-secondary: #808080;
-  --text-muted: rgba(255, 255, 255, 0.3);
-  --text-subtle: rgba(255, 255, 255, 0.4);
-  --icon-color: rgba(255, 255, 255, 0.4);
+  --text-muted: color-mix(
+    in srgb,
+    var(--filmwave-white) 30%,
+    transparent
+  );
+  --text-subtle: color-mix(
+    in srgb,
+    var(--filmwave-white) 40%,
+    transparent
+  );
+  --icon-color: color-mix(
+    in srgb,
+    var(--filmwave-white) 40%,
+    transparent
+  );
 
   /* Canonical Filmwave page construction. */
   --filmwave-page-gutter: 50px;
@@ -54,8 +75,8 @@
   /* Canonical Filmwave interface styling. */
   --filmwave-ui-radius-control: 0px;
   --filmwave-ui-radius-panel: 0px;
-  --filmwave-ui-border-color: var(--border);
-  --filmwave-ui-divider-color: var(--border);
+  --filmwave-ui-border-color: var(--filmwave-border-color);
+  --filmwave-ui-divider-color: var(--filmwave-border-color);
   --filmwave-ui-control-background: var(--bg-secondary);
   --filmwave-ui-control-hover-background: var(--bg-hover);
   --filmwave-ui-control-text: var(--text-secondary);
@@ -66,10 +87,18 @@
   --filmwave-ui-title-letter-spacing: -0.045em;
   --filmwave-ui-title-line-height: 1.1;
 
-  --waveform-color: rgba(255, 255, 255, 0.3);
-  --waveform-progress: #ffffff;
+  --waveform-color: color-mix(
+    in srgb,
+    var(--filmwave-white) 30%,
+    transparent
+  );
+  --waveform-progress: var(--filmwave-white);
 
-  --cue-point-marker: rgba(255, 255, 255, 0.72);
+  --cue-point-marker: color-mix(
+    in srgb,
+    var(--filmwave-white) 72%,
+    transparent
+  );
   --cue-marker-color: var(--accent);
   --cue-marker-width: 1.5px;
   --cue-marker-width-active: 2px;
@@ -84,11 +113,11 @@
 
   --accent: #c0e326;
   --accent-2: #fb8f61;
-  --accent-contrast: #111111;
-  --accent-2-contrast: #ffffff;
+  --accent-contrast: var(--filmwave-black);
+  --accent-2-contrast: var(--filmwave-white);
   --danger: #ff5d57;
   --danger-hover: rgba(255, 93, 87, 0.1);
-  --danger-contrast: #ffffff;
+  --danger-contrast: var(--filmwave-white);
   --success: #7ed957;
   --warning: #ffd166;
 
@@ -101,11 +130,18 @@
 :where(html.light, html[data-theme="light"]) {
   color-scheme: light;
 
-  --bg-primary: #ffffff;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f2f2f0;
+  --filmwave-neutral-surface: #f2f2f2;
+  --filmwave-border-color: color-mix(
+    in srgb,
+    var(--filmwave-black) 9%,
+    transparent
+  );
+
+  --bg-primary: var(--filmwave-white);
+  --bg-secondary: var(--filmwave-white);
+  --bg-tertiary: var(--filmwave-neutral-surface);
   --bg-tertiary-hover: #e8e8e4;
-  --bg-panel: #f2f2f0;
+  --bg-panel: var(--filmwave-neutral-surface);
   --bg-panel-2: #e9e9e6;
   --bg-card: rgba(17, 17, 17, 0.035);
   --bg-elevated: rgba(17, 17, 17, 0.07);
@@ -115,29 +151,60 @@
   --bg-control-hover: rgba(17, 17, 17, 0.12);
   --bg-hover: rgba(17, 17, 17, 0.045);
   --bg-hover-strong: rgba(17, 17, 17, 0.075);
-  --filmwave-neutral-surface: #f2f2f2;
-  --filmwave-chrome-surface: #f5f5f5;
+  --filmwave-chrome-surface: var(--filmwave-neutral-surface);
   --icon-button-hover: rgba(17, 17, 17, 0.12);
 
-  --divider: rgba(17, 17, 17, 0.075);
-  --border: rgba(17, 17, 17, 0.09);
-  --border-subtle: rgba(17, 17, 17, 0.055);
-  --border-strong: rgba(17, 17, 17, 0.16);
-  --border-hover: rgba(17, 17, 17, 0.18);
-  --filmwave-browse-filter-border-color: var(--border-strong);
+  --divider: var(--filmwave-border-color);
+  --border: var(--filmwave-border-color);
+  --border-subtle: var(--filmwave-border-color);
+  --border-strong: var(--filmwave-border-color);
+  --border-hover: var(--filmwave-border-color);
+  --filmwave-browse-filter-border-color: var(--filmwave-border-color);
 
-  --text-primary: #111111;
-  --text-secondary: rgba(17, 17, 17, 0.62);
-  --text-muted: rgba(17, 17, 17, 0.42);
-  --text-subtle: rgba(17, 17, 17, 0.48);
-  --icon-color: rgba(17, 17, 17, 0.46);
+  --text-primary: var(--filmwave-black);
+  --text-secondary: color-mix(
+    in srgb,
+    var(--filmwave-black) 62%,
+    transparent
+  );
+  --text-muted: color-mix(
+    in srgb,
+    var(--filmwave-black) 42%,
+    transparent
+  );
+  --text-subtle: color-mix(
+    in srgb,
+    var(--filmwave-black) 48%,
+    transparent
+  );
+  --icon-color: color-mix(
+    in srgb,
+    var(--filmwave-black) 46%,
+    transparent
+  );
 
-  --waveform-color: rgba(17, 17, 17, 0.28);
-  --waveform-progress: #111111;
+  --waveform-color: color-mix(
+    in srgb,
+    var(--filmwave-black) 28%,
+    transparent
+  );
+  --waveform-progress: var(--filmwave-black);
 
-  --cue-point-marker: rgba(17, 17, 17, 0.55);
-  --cue-point-range: rgba(17, 17, 17, 0.08);
-  --cue-point-range-strong: rgba(17, 17, 17, 0.13);
+  --cue-point-marker: color-mix(
+    in srgb,
+    var(--filmwave-black) 55%,
+    transparent
+  );
+  --cue-point-range: color-mix(
+    in srgb,
+    var(--filmwave-black) 8%,
+    transparent
+  );
+  --cue-point-range-strong: color-mix(
+    in srgb,
+    var(--filmwave-black) 13%,
+    transparent
+  );
 
   --shadow-ui: 0 18px 55px rgba(0, 0, 0, 0.12);
   --media-overlay-strong: rgba(255, 255, 255, 0.62);
