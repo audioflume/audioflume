@@ -132,6 +132,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   .admin-song-file-row:nth-child(2)
   > div:last-child {
   position: relative;
+  margin-right: 12px;
 }
 
 .admin-song-upload-content-page
@@ -148,12 +149,13 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--bg-primary);
   color: var(--text-secondary);
   font-size: 0;
   line-height: 1;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .admin-song-upload-content-page
@@ -241,6 +243,66 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > div
   > label:first-child {
   display: none;
+}
+
+/* Match Music Library checkbox treatment for Instrumental and Made with AI. */
+.admin-song-upload-content-page
+  .admin-song-upload-song-info
+  > .admin-song-form-card-header
+  + div
+  > div:nth-child(6)
+  > label:last-child
+  > span,
+.admin-song-upload-content-page
+  .admin-song-upload-song-info
+  [data-ai-generated-field-embedded]
+  > div
+  > label:last-child
+  > span {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--bg-primary);
+  transition: border 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.admin-song-upload-content-page
+  .admin-song-upload-song-info
+  > .admin-song-form-card-header
+  + div
+  > div:nth-child(6)
+  > label:last-child:hover
+  > span,
+.admin-song-upload-content-page
+  .admin-song-upload-song-info
+  [data-ai-generated-field-embedded]
+  > div
+  > label:last-child:hover
+  > span {
+  border-color: var(--text-secondary);
+}
+
+.admin-song-upload-content-page
+  .admin-song-upload-song-info
+  > .admin-song-form-card-header
+  + div
+  > div:nth-child(6)
+  > label:last-child
+  > input:checked
+  + span,
+.admin-song-upload-content-page
+  .admin-song-upload-song-info
+  [data-ai-generated-field-embedded]
+  > div
+  > label:last-child
+  > input:checked
+  + span {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 @media (min-width: 1280px) {
