@@ -1,280 +1,18 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import {
-  DndContext,
-  DragOverlay,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type DragStartEvent,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  arrayMove,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useEffect, useState } from "react";
 import AdminContentPage from "@/components/admin/AdminContentPage";
+import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
 import AdminPlaylistLibraryView from "@/components/admin/AdminPlaylistLibraryView";
-import DropdownShell from "@/components/DropdownShell";
-import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
-import DragIconSmall from "@/components/icons/DragIconSmall";
-import EditIcon from "@/components/icons/EditIcon";
-import MoreIcon from "@/components/icons/MoreIcon";
-import {
-  iconButtonActiveClass,
-  smallIconButtonClass,
-} from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
-import { DISCOVER_SECTION_OPTIONS } from "@/lib/curatedPlaylists";
-
-const COLLAPSED_STORAGE_KEY = "filmwave-playlist-manager-collapsed";
-
-function loadCollapsed(): Set<string> {
-  try {
-    const raw = localStorage.getItem(COLLAPSED_STORAGE_KEY);
-    if (!raw) return new Set();
-
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return new Set<string>(parsed);
-  } catch {}
-
-  return new Set();
-}
-
-function saveCollapsed(collapsed: Set<string>) {
-  try {
-    localStorage.setItem(COLLAPSED_STORAGE_KEY, JSON.stringify([...collapsed]));
-  } catch {}
-}
-
-function getDiscoverSectionValueFromGroupName(groupName: string) {
-  return (
-    DISCOVER_SECTION_OPTIONS.find((option) => option.label === groupName)
-      ?.value ?? null
-  );
-}
-
-function getDiscoverCreateHref(groupName: string) {
-  const section = getDiscoverSectionValueFromGroupName(groupName);
-
-  return section
-    ? `/admin/playlist-manager/discover/new?section=${encodeURIComponent(
-        section,
-      )}`
-    : "/admin/playlist-manager/discover/new";
-}
-
-function SortablePlaylistRow({
-  playlist,
-  isLastInGroup,
-  openDropdownId,
-  setOpenDropdownId,
-  deletingId,
-  onDelete,
-  editHref,
-  editLabel = "Edit Playlist",
-}: {
-  playlist: CuratedPlaylist;
-  isLastInGroup: boolean;
-  openDropdownId: number | null;
-  setOpenDropdownId: (id: number | null) => void;
-  deletingId: number | null;
-  onDelete: (playlist: CuratedPlaylist) => void;
-  editHref: string;
-  editLabel?: string;
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: playlist.id });
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.3 : 1,
-        borderBottom: isLastInGroup ? "none" : "1px solid var(--border-subtle)",
-        position: "relative",
-        zIndex: isDragging ? 1 : "auto",
-      }}
-      className="group flex items-center bg-[var(--bg-secondary)] transition hover:bg-[var(--bg-hover)]"
-    >
-      <button
-        type="button"
-        className="flex h-full cursor-grab items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40 active:cursor-grabbing"
-        aria-label="Drag to reorder"
-        {...attributes}
-        {...listeners}
-      >
-        <DragIconSmall />
-      </button>
-
-      <Link href={editHref} className="flex flex-1 items-center gap-3 py-2.5">
-        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary)]">
-          {playlist.cover_image_url && (
-            <Image
-              src={playlist.cover_image_url}
-              alt={playlist.name}
-              fill
-              sizes="32px"
-              className="object-cover"
-              unoptimized
-            />
-          )}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-            {playlist.name}
-          </div>
-          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
-            {playlist.song_count || 0} songs
-          </div>
-        </div>
-      </Link>
-
-      <div className="flex shrink-0 items-center gap-1 pr-2">
-        <Link
-          href={editHref}
-          className={smallIconButtonClass}
-          title={editLabel}
-        >
-          <EditIcon size={14} />
-        </Link>
-
-        <DropdownShell
-          open={openDropdownId === playlist.id}
-          onOpenChange={(open) => setOpenDropdownId(open ? playlist.id : null)}
-          placement="bottom-end"
-          trigger={({ open }) => (
-            <button
-              type="button"
-              className={`${smallIconButtonClass} ${
-                open ? iconButtonActiveClass : ""
-              }`}
-              aria-label="More options"
-            >
-              <MoreIcon size={14} />
-            </button>
-          )}
-        >
-          <Link href={editHref} onClick={() => setOpenDropdownId(null)}>
-            {editLabel}
-          </Link>
-          <button
-            type="button"
-            className="danger-hover"
-            disabled={deletingId === playlist.id}
-            onClick={() => {
-              setOpenDropdownId(null);
-              onDelete(playlist);
-            }}
-          >
-            {deletingId === playlist.id ? "Deleting..." : "Delete"}
-          </button>
-        </DropdownShell>
-      </div>
-    </div>
-  );
-}
-
-function DragOverlayRow({ playlist }: { playlist: CuratedPlaylist }) {
-  return (
-    <div className="flex items-center rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] shadow-xl">
-      <div className="flex items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40">
-        <DragIconSmall />
-      </div>
-
-      <div className="flex flex-1 items-center gap-3 py-2.5 pr-4">
-        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary)]">
-          {playlist.cover_image_url && (
-            <Image
-              src={playlist.cover_image_url}
-              alt={playlist.name}
-              fill
-              sizes="32px"
-              className="object-cover"
-              unoptimized
-            />
-          )}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-            {playlist.name}
-          </div>
-          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
-            {playlist.song_count || 0} songs
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 type ManagerTab = "playlists" | "discover";
 
-const DISCOVER_MOODS_GROUP = "Explore these moods";
-const DISCOVER_PRODUCTION_GROUP = "Production Styles";
-const DISCOVER_CURATED_GROUP = "Curated Playlists";
-const DISCOVER_FIXED_GROUPS = [
-  { name: DISCOVER_MOODS_GROUP, category: "Main Blocks" },
-  { name: DISCOVER_PRODUCTION_GROUP, category: "Production Style Blocks" },
-] as const;
-const DISCOVER_GROUPS = [
-  ...DISCOVER_FIXED_GROUPS.map((group) => group.name),
-  DISCOVER_CURATED_GROUP,
-];
-
-function getDiscoverOptionsForGroup(groupName: string) {
-  const group = DISCOVER_FIXED_GROUPS.find((item) => item.name === groupName);
-  if (!group) return [];
-
-  return DISCOVER_SECTION_OPTIONS.filter(
-    (option) => option.category === group.category,
-  );
-}
-
-function getDiscoverGroupName(playlist: CuratedPlaylist): string | null {
-  if (playlist.discover_section) {
-    const option = DISCOVER_SECTION_OPTIONS.find(
-      (item) => item.value === playlist.discover_section,
-    );
-    if (!option) return null;
-
-    return (
-      DISCOVER_FIXED_GROUPS.find(
-        (group) => group.category === option.category,
-      )?.name ?? null
-    );
-  }
-
-  if (playlist.show_on_discover) return DISCOVER_CURATED_GROUP;
-
-  return null;
-}
-
-function getEditHref(playlist: CuratedPlaylist) {
-  if (playlist.discover_section) {
-    return `/admin/playlist-manager/discover/${playlist.id}/edit`;
-  }
-
-  return `/admin/playlist-manager/${playlist.id}/edit`;
-}
+type PlaylistUpdate = {
+  id: number;
+  changes: Partial<CuratedPlaylist>;
+};
 
 export default function PlaylistManagerPage() {
   const searchParams = useSearchParams();
@@ -285,16 +23,7 @@ export default function PlaylistManagerPage() {
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
-  const [activeId, setActiveId] = useState<number | null>(null);
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(() =>
-    loadCollapsed(),
-  );
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-  );
 
   useEffect(() => {
     setActiveTab(queryTab);
@@ -334,149 +63,19 @@ export default function PlaylistManagerPage() {
     };
   }, []);
 
-  function toggleGroup(groupName: string) {
-    setCollapsedGroups((prev) => {
-      const next = new Set(prev);
+  function updatePlaylists(updates: PlaylistUpdate[]) {
+    if (updates.length === 0) return;
 
-      if (next.has(groupName)) next.delete(groupName);
-      else next.add(groupName);
-
-      saveCollapsed(next);
-
-      return next;
-    });
-  }
-
-  const discoverPlaylistsByGroup = useMemo(() => {
-    const map = new Map<string, CuratedPlaylist[]>();
-    for (const name of DISCOVER_GROUPS) map.set(name, []);
-
-    for (const playlist of playlists) {
-      const key = getDiscoverGroupName(playlist);
-      if (key) map.get(key)?.push(playlist);
-    }
-
-    for (const [name, groupPlaylists] of map) {
-      if (name === DISCOVER_CURATED_GROUP) {
-        groupPlaylists.sort(
-          (a, b) => a.discover_position - b.discover_position,
-        );
-        continue;
-      }
-
-      const sectionOrder = getDiscoverOptionsForGroup(name).map(
-        (option) => option.value,
-      );
-      groupPlaylists.sort(
-        (a, b) =>
-          sectionOrder.indexOf(
-            a.discover_section as (typeof sectionOrder)[number],
-          ) -
-          sectionOrder.indexOf(
-            b.discover_section as (typeof sectionOrder)[number],
-          ),
-      );
-    }
-
-    return map;
-  }, [playlists]);
-
-  const activePlaylist = useMemo(
-    () =>
-      activeId
-        ? (playlists.find((playlist) => playlist.id === activeId) ?? null)
-        : null,
-    [activeId, playlists],
-  );
-
-  function handleDragStart(event: DragStartEvent) {
-    setActiveId(event.active.id as number);
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    setActiveId(null);
-
-    if (!over || active.id === over.id) return;
-
-    let groupName: string | null = null;
-
-    for (const [name, groupPlaylists] of discoverPlaylistsByGroup) {
-      if (groupPlaylists.some((playlist) => playlist.id === active.id)) {
-        groupName = name;
-        break;
-      }
-    }
-
-    if (!groupName) return;
-
-    const groupPlaylists = discoverPlaylistsByGroup.get(groupName) ?? [];
-    const oldIndex = groupPlaylists.findIndex(
-      (playlist) => playlist.id === active.id,
-    );
-    const newIndex = groupPlaylists.findIndex(
-      (playlist) => playlist.id === over.id,
+    const updateMap = new Map(
+      updates.map((update) => [update.id, update.changes] as const),
     );
 
-    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-
-    const reordered = arrayMove(groupPlaylists, oldIndex, newIndex);
-
-    if (groupName !== DISCOVER_CURATED_GROUP) {
-      const occupiedSections = groupPlaylists
-        .map((playlist) => playlist.discover_section)
-        .filter((section): section is string => Boolean(section));
-
-      if (occupiedSections.length !== reordered.length) return;
-
-      const sectionUpdates = reordered.map((playlist, index) => ({
-        id: playlist.id,
-        section: occupiedSections[index],
-      }));
-      const sectionById = new Map(
-        sectionUpdates.map(({ id, section }) => [id, section]),
-      );
-
-      setPlaylists((prev) =>
-        prev.map((playlist) => {
-          const section = sectionById.get(playlist.id);
-          return section ? { ...playlist, discover_section: section } : playlist;
-        }),
-      );
-
-      fetch("/api/admin/curated-playlists/reorder", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mode: "discover-sections",
-          updates: sectionUpdates,
-        }),
-      }).catch(console.error);
-
-      return;
-    }
-
-    setPlaylists((prev) =>
-      prev.map((playlist) => {
-        const idx = reordered.findIndex(
-          (reorderedPlaylist) => reorderedPlaylist.id === playlist.id,
-        );
-
-        return idx === -1 ? playlist : { ...playlist, discover_position: idx };
+    setPlaylists((current) =>
+      current.map((playlist) => {
+        const changes = updateMap.get(playlist.id);
+        return changes ? { ...playlist, ...changes } : playlist;
       }),
     );
-
-    fetch("/api/admin/curated-playlists/reorder", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        mode: "discover",
-        updates: reordered.map((playlist, index) => ({
-          id: playlist.id,
-          position: index,
-        })),
-      }),
-    }).catch(console.error);
   }
 
   async function deletePlaylist(playlist: CuratedPlaylist) {
@@ -493,7 +92,9 @@ export default function PlaylistManagerPage() {
 
       if (!res.ok) throw new Error(data?.error || "Failed to delete playlist");
 
-      setPlaylists((prev) => prev.filter((item) => item.id !== playlist.id));
+      setPlaylists((current) =>
+        current.filter((item) => item.id !== playlist.id),
+      );
     } catch (err) {
       window.alert(
         err instanceof Error ? err.message : "Failed to delete playlist",
@@ -506,9 +107,6 @@ export default function PlaylistManagerPage() {
   const masterPlaylists = playlists.filter(
     (playlist) => !playlist.discover_section,
   );
-  const totalDiscoverPlaylists = playlists.filter((playlist) =>
-    getDiscoverGroupName(playlist),
-  ).length;
 
   return (
     <AdminContentPage
@@ -542,206 +140,14 @@ export default function PlaylistManagerPage() {
           onDeletePlaylist={deletePlaylist}
         />
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
-          <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-            <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
-              <div>
-                <h2 className="text-sm font-medium text-[var(--text-primary)]">
-                  Discover Content
-                </h2>
-                <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
-                  {loading
-                    ? "Loading..."
-                    : `${totalDiscoverPlaylists} item${totalDiscoverPlaylists === 1 ? "" : "s"}`}
-                </p>
-              </div>
-            </div>
-
-            {loading && (
-              <div>
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="flex h-[52px] animate-pulse items-center gap-3 px-4"
-                    style={{
-                      borderBottom:
-                        index < 5 ? "1px solid var(--border-subtle)" : "none",
-                    }}
-                  >
-                    <div className="h-8 w-8 shrink-0 rounded-none bg-[var(--bg-tertiary)]" />
-                    <div className="flex-1">
-                      <div className="h-2 w-[45%] rounded bg-[var(--bg-tertiary)]" />
-                      <div className="mt-1.5 h-2 w-[30%] rounded bg-[var(--bg-tertiary)]" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {!loading && error && (
-              <div className="p-4 text-sm text-[var(--danger)]">{error}</div>
-            )}
-
-            {!loading && !error && (
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-              >
-                {DISCOVER_GROUPS.map((groupName, groupIndex) => {
-                  const groupPlaylists =
-                    discoverPlaylistsByGroup.get(groupName) ?? [];
-                  const discoverOptions = getDiscoverOptionsForGroup(groupName);
-                  const isDiscoverFixedGroup = discoverOptions.length > 0;
-                  const groupItemCount = isDiscoverFixedGroup
-                    ? discoverOptions.length
-                    : groupPlaylists.length;
-                  const isLastGroup = groupIndex === DISCOVER_GROUPS.length - 1;
-                  const isCollapsed = collapsedGroups.has(groupName);
-
-                  return (
-                    <div key={groupName}>
-                      <button
-                        type="button"
-                        onClick={() => toggleGroup(groupName)}
-                        className="flex h-8 w-full cursor-pointer items-center px-4 text-left transition hover:brightness-95"
-                        style={{
-                          borderTop:
-                            groupIndex > 0
-                              ? "1px solid var(--border)"
-                              : undefined,
-                          borderBottom: isCollapsed
-                            ? "none"
-                            : "1px solid var(--border-subtle)",
-                          background: "var(--bg-tertiary)",
-                        }}
-                      >
-                        <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                          {groupName}
-                        </span>
-                        <span className="ml-2 text-[11px] text-[var(--text-muted)] opacity-60">
-                          {groupItemCount}
-                        </span>
-                        <span className="ml-auto text-[var(--text-muted)] opacity-50">
-                          <ChevronDownIcon
-                            size={13}
-                            className={`transition-transform duration-150 ${
-                              isCollapsed ? "-rotate-90" : ""
-                            }`}
-                          />
-                        </span>
-                      </button>
-
-                      {!isCollapsed &&
-                        (isDiscoverFixedGroup ? (
-                          <SortableContext
-                            items={groupPlaylists.map(
-                              (playlist) => playlist.id,
-                            )}
-                            strategy={verticalListSortingStrategy}
-                          >
-                            {discoverOptions.map((option, index) => {
-                              const playlist = groupPlaylists.find(
-                                (item) => item.discover_section === option.value,
-                              );
-                              const isLastRow =
-                                index === discoverOptions.length - 1 &&
-                                isLastGroup;
-
-                              return playlist ? (
-                                <SortablePlaylistRow
-                                  key={playlist.id}
-                                  playlist={playlist}
-                                  isLastInGroup={isLastRow}
-                                  openDropdownId={openDropdownId}
-                                  setOpenDropdownId={setOpenDropdownId}
-                                  deletingId={deletingId}
-                                  onDelete={deletePlaylist}
-                                  editHref={getEditHref(playlist)}
-                                  editLabel="Edit Discover Block"
-                                />
-                              ) : (
-                                <div
-                                  key={option.value}
-                                  className="flex min-h-[52px] items-center justify-between gap-4 px-4 py-3 text-xs text-[var(--text-muted)]"
-                                  style={{
-                                    borderBottom: isLastRow
-                                      ? "none"
-                                      : "1px solid var(--border-subtle)",
-                                  }}
-                                >
-                                  <span>{option.label}: No item assigned.</span>
-                                  <Link
-                                    href={getDiscoverCreateHref(option.label)}
-                                    className="font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-                                  >
-                                    Edit block
-                                  </Link>
-                                </div>
-                              );
-                            })}
-                          </SortableContext>
-                        ) : groupPlaylists.length === 0 ? (
-                          <div className="flex min-h-[52px] items-center justify-between gap-4 px-4 py-3 text-xs text-[var(--text-muted)]">
-                            <span>No item assigned.</span>
-                          </div>
-                        ) : (
-                          <SortableContext
-                            items={groupPlaylists.map(
-                              (playlist) => playlist.id,
-                            )}
-                            strategy={verticalListSortingStrategy}
-                          >
-                            {groupPlaylists.map((playlist, index) => (
-                              <SortablePlaylistRow
-                                key={playlist.id}
-                                playlist={playlist}
-                                isLastInGroup={
-                                  index === groupPlaylists.length - 1 &&
-                                  isLastGroup
-                                }
-                                openDropdownId={openDropdownId}
-                                setOpenDropdownId={setOpenDropdownId}
-                                deletingId={deletingId}
-                                onDelete={deletePlaylist}
-                                editHref={getEditHref(playlist)}
-                              />
-                            ))}
-                          </SortableContext>
-                        ))}
-                    </div>
-                  );
-                })}
-
-                <DragOverlay dropAnimation={null}>
-                  {activePlaylist ? (
-                    <DragOverlayRow playlist={activePlaylist} />
-                  ) : null}
-                </DragOverlay>
-              </DndContext>
-            )}
-          </div>
-
-          <aside className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-            <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-xl font-medium tracking-[-0.05em]">
-              Discover sections
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-              Discover uses 8 fixed content slots organized into two groups: 4
-              Explore these moods cards and 4 Production Styles cards. Edit each
-              slot from its group in the Discover Content list. Use the checkbox
-              on a curated playlist to add it to the shelf.
-            </p>
-            <div className="mt-4 grid gap-1.5 text-[11px] text-[var(--text-muted)]">
-              <div>{DISCOVER_MOODS_GROUP} (4 fixed blocks)</div>
-              <div>{DISCOVER_PRODUCTION_GROUP} (4 fixed blocks)</div>
-              <div className="mt-1">
-                {DISCOVER_CURATED_GROUP} (checkbox-driven)
-              </div>
-            </div>
-          </aside>
-        </div>
+        <AdminDiscoverLibraryView
+          playlists={playlists}
+          loading={loading}
+          error={error}
+          deletingId={deletingId}
+          onDeletePlaylist={deletePlaylist}
+          onUpdatePlaylists={updatePlaylists}
+        />
       )}
     </AdminContentPage>
   );
