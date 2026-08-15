@@ -11,9 +11,19 @@ function getSectionByTitle(page: Element, title: string) {
   });
 }
 
+function isStemInput(input: HTMLInputElement) {
+  if (input.type !== "file" || !input.multiple) return false;
+
+  const row = input.closest(".admin-song-file-row");
+  const label = row?.querySelector<HTMLElement>(":scope > div:first-child > div:first-child");
+
+  return label?.textContent?.trim().toLowerCase() === "stems";
+}
+
 export default function AdminSongUploadPresentationInjector() {
   useEffect(() => {
     let frameId: number | null = null;
+    let accumulatedStemFiles: File[] = [];
 
     const applyPresentationHooks = () => {
       frameId = null;
@@ -55,16 +65,48 @@ export default function AdminSongUploadPresentationInjector() {
       frameId = window.requestAnimationFrame(applyPresentationHooks);
     };
 
+    const handleStemSelection = (event: Event) => {
+      const input = event.target;
+
+      if (!(input instanceof HTMLInputElement) || !isStemInput(input)) return;
+      if (!input.closest(".admin-song-upload-content-page")) return;
+
+      const incomingFiles = Array.from(input.files ?? []);
+      if (incomingFiles.length === 0) return;
+
+      const row = input.closest(".admin-song-file-row");
+      if (row?.textContent?.includes("No file chosen")) {
+        accumulatedStemFiles = [];
+      }
+
+      const seen = new Set<string>();
+      const mergedFiles = [...accumulatedStemFiles, ...incomingFiles].filter(
+        (file) => {
+          const key = `${file.name}:${file.size}:${file.lastModified}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        },
+      );
+
+      const transfer = new DataTransfer();
+      mergedFiles.forEach((file) => transfer.items.add(file));
+      input.files = transfer.files;
+      accumulatedStemFiles = mergedFiles;
+    };
+
     const observer = new MutationObserver(scheduleApply);
     observer.observe(document.body, {
       childList: true,
       subtree: true,
     });
 
+    document.addEventListener("change", handleStemSelection, true);
     scheduleApply();
 
     return () => {
       observer.disconnect();
+      document.removeEventListener("change", handleStemSelection, true);
       if (frameId !== null) window.cancelAnimationFrame(frameId);
     };
   }, []);
