@@ -113,7 +113,7 @@ export default function AdminSongActionsDropdown({
 
   const deleteSong = async () => {
     const confirmed = window.confirm(
-      `Delete "${songTitle}"? This will remove the song from Airtable and delete its uploaded files from Cloudflare.`,
+      `Permanently delete "${songTitle}"?\n\nThis will remove the song and its uploaded audio, cover art, and stems. This cannot be undone.`,
     );
 
     if (!confirmed) return;
