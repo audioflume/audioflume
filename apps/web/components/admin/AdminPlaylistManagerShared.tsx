@@ -73,7 +73,7 @@ function PlaylistManagerLibraryCard({
   onDeletePlaylist,
 }: LibraryCardProps) {
   return (
-    <article className="group min-w-0">
+    <article className="admin-cover-hover group min-w-0">
       <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]">
         <Link href={editHref} className="absolute inset-0 block">
           <PlaylistManagerArtwork playlist={playlist} />
@@ -161,7 +161,7 @@ export function PlaylistManagerSortableCard({
         opacity: isDragging ? 0.45 : 1,
         zIndex: isDragging ? 2 : "auto",
       }}
-      className="group relative min-w-0"
+      className="admin-cover-hover group relative min-w-0"
     >
       <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]">
         <Link href={editHref} className="absolute inset-0 block">
@@ -213,7 +213,7 @@ export function PlaylistManagerStaticCard({
   meta: string;
 }) {
   return (
-    <article className="min-w-0">
+    <article className="admin-cover-hover min-w-0">
       <Link
         href={editHref}
         className="relative block aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]"
