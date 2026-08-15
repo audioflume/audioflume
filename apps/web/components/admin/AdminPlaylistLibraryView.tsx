@@ -197,7 +197,7 @@ function SortableShelfPlaylistCard({
 
         <button
           type="button"
-          className="absolute left-2 top-2 z-10 flex h-8 w-8 cursor-grab items-center justify-center bg-[var(--bg-primary)] text-[var(--text-secondary)] opacity-0 transition group-hover:opacity-100 active:cursor-grabbing"
+          className="absolute left-2 top-2 z-10 flex h-8 w-8 cursor-grab items-center justify-center text-white opacity-0 transition group-hover:opacity-100 active:cursor-grabbing"
           aria-label={`Drag ${playlist.name} to reorder`}
           {...attributes}
           {...listeners}
@@ -554,9 +554,13 @@ export default function AdminPlaylistLibraryView({
                               <SortableShelfPlaylistCard
                                 key={playlist.id}
                                 playlist={playlist}
-                                onRemove={(playlistId) =>
-                                  void removeFromShelf(shelfKey, playlistId)
-                                }
+                                onRemove={(playlistId) => {
+                                  const confirmed = window.confirm(
+                                    `Remove "${playlist.name}" from ${title}?`,
+                                  );
+                                  if (!confirmed) return;
+                                  void removeFromShelf(shelfKey, playlistId);
+                                }}
                               />
                             ))}
                           </div>
