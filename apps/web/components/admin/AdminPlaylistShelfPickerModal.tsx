@@ -129,13 +129,13 @@ export default function AdminPlaylistShelfPickerModal({
                       : "cursor-pointer hover:bg-[var(--bg-hover)]"
                   } disabled:cursor-default`}
                 >
-                  <span className="relative flex h-11 w-[66px] shrink-0 items-center justify-center overflow-hidden bg-[var(--bg-primary)] text-[var(--text-muted)]">
+                  <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden bg-[var(--bg-primary)] text-[var(--text-muted)]">
                     {playlist.cover_image_url ? (
                       <Image
                         src={playlist.cover_image_url}
                         alt={playlist.name}
                         fill
-                        sizes="66px"
+                        sizes="36px"
                         className="object-cover"
                         unoptimized
                       />
