@@ -148,7 +148,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
     CuratedBrowseSubcategory[]
   >([]);
   const [showOnCuratedFeature, setShowOnCuratedFeature] = useState(false);
-  const [showOnDiscover, setShowOnDiscover] = useState(false);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
   const [activeSongRowId, setActiveSongRowId] = useState<number | null>(null);
   const [loading, setLoading] = useState(mode === "edit");
@@ -196,7 +195,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           setShowOnCuratedFeature(
             Boolean(playlistData.show_on_curated_feature),
           );
-          setShowOnDiscover(Boolean(playlistData.show_on_discover));
           setSongs(Array.isArray(songsData) ? songsData : []);
         }
       } catch (err) {
@@ -277,7 +275,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         browse_tags: browseTags,
         browse_subcategories: browseSubcategories,
         show_on_curated_feature: showOnCuratedFeature,
-        show_on_discover: showOnDiscover,
       };
 
       if (coverVideoUrl || coverVideoTouched) {
@@ -519,24 +516,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   <span className="mt-1 block text-xs text-[var(--text-muted)]">
                     Adds this playlist to the featured banner on the Curated
                     Playlists page.
-                  </span>
-                </span>
-              </label>
-
-              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
-                <input
-                  type="checkbox"
-                  checked={showOnDiscover}
-                  onChange={(e) => setShowOnDiscover(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 accent-[var(--text-primary)]"
-                />
-                <span>
-                  <span className="block font-medium text-[var(--text-primary)]">
-                    Show in Discover curated playlists
-                  </span>
-                  <span className="mt-1 block text-xs text-[var(--text-muted)]">
-                    Adds this playlist to the Curated Playlists shelf on the
-                    main Discover page.
                   </span>
                 </span>
               </label>
