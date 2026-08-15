@@ -8,8 +8,7 @@
   min-width: var(--fw-header-search-row-min-width, 0) !important;
   flex: var(--fw-header-search-row-flex, 0 1 auto) !important;
   align-items: center !important;
-  border: 1px solid
-    color-mix(in srgb, var(--filmwave-header-border-color) 50%, transparent) !important;
+  border: 1px solid var(--filmwave-border-color) !important;
   border-radius: 0 !important;
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
