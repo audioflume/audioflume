@@ -1,23 +1,18 @@
 "use client";
 
-import Link from "next/link";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminCuratedPlaylistForm from "@/components/admin/AdminCuratedPlaylistForm";
-import { secondaryPillButtonClass } from "@/components/uiClasses";
+import AdminPlaylistPageStyles from "@/components/admin/AdminPlaylistPageStyles";
 
 export default function NewPlaylistPage() {
   return (
     <AdminContentPage
-      label="Playlist Manager"
+      label="Create Playlist"
       title="Create Playlist"
       description="Add a new curated playlist with cover image or video and group assignment."
-      headerAction={(
-        <Link href="/admin/playlist-manager" className={secondaryPillButtonClass}>
-          Back to Manager
-        </Link>
-      )}
     >
       <AdminCuratedPlaylistForm mode="create" />
+      <AdminPlaylistPageStyles />
     </AdminContentPage>
   );
 }
