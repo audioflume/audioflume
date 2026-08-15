@@ -74,6 +74,17 @@ export default function AdminPlaylistPageStyles() {
         letter-spacing: -0.03em;
       }
 
+      /* Match Song Info's 16px spacing between playlist fields. */
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        .admin-playlist-fields,
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        .admin-playlist-browse-grid,
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        .admin-playlist-shelf-card
+        > div.grid {
+        gap: 16px;
+      }
+
       /* Keep playlist name and kicker labels accessible but visually hidden. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         .admin-playlist-details-card
