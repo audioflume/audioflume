@@ -1,15 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import XIcon from "@/components/icons/XIcon";
 import { modalPrimaryButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
-
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 type Props = {
   isOpen: boolean;
@@ -40,7 +38,6 @@ export default function AdminPlaylistShelfPickerModal({
 }: Props) {
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -64,16 +61,6 @@ export default function AdminPlaylistShelfPickerModal({
       );
   }, [playlists, search]);
 
-  const availableLetters = useMemo(
-    () =>
-      new Set(
-        displayedPlaylists
-          .map((playlist) => playlist.name.trim().charAt(0).toUpperCase())
-          .filter((letter) => /^[A-Z]$/.test(letter)),
-      ),
-    [displayedPlaylists],
-  );
-
   function togglePlaylist(playlistId: number) {
     if (existingIdSet.has(playlistId) || saving) return;
 
@@ -82,22 +69,6 @@ export default function AdminPlaylistShelfPickerModal({
       if (next.has(playlistId)) next.delete(playlistId);
       else next.add(playlistId);
       return next;
-    });
-  }
-
-  function scrollToLetter(letter: string) {
-    const list = listRef.current;
-    if (!list) return;
-
-    const target = list.querySelector<HTMLElement>(
-      `[data-alpha-letter="${letter}"]`,
-    );
-    const firstItem = list.querySelector<HTMLElement>("[data-alpha-letter]");
-    if (!target || !firstItem) return;
-
-    list.scrollTo({
-      top: target.offsetTop - firstItem.offsetTop,
-      behavior: "smooth",
     });
   }
 
@@ -163,100 +134,65 @@ export default function AdminPlaylistShelfPickerModal({
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 overflow-hidden rounded-[10px] bg-[var(--bg-primary)]">
-        {displayedPlaylists.length > 0 && (
-          <nav
-            aria-label={`${itemLabel} alphabet navigation`}
-            className="flex h-full w-7 shrink-0 flex-col items-center justify-between py-3"
-          >
-            {ALPHABET.map((letter) => {
-              const available = availableLetters.has(letter);
+      <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] py-3">
+        {displayedPlaylists.length === 0 ? (
+          <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+            {resolvedEmptyMessage}
+          </div>
+        ) : (
+          <div className="grid gap-1">
+            {displayedPlaylists.map((playlist) => {
+              const alreadyAdded = existingIdSet.has(playlist.id);
+              const selected = selectedIds.has(playlist.id);
 
               return (
                 <button
-                  key={letter}
+                  key={playlist.id}
                   type="button"
-                  onClick={() => scrollToLetter(letter)}
-                  disabled={!available}
-                  className={`flex w-full flex-1 items-center justify-center text-[10px] font-medium leading-none transition-colors ${
-                    available
-                      ? "cursor-pointer text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                      : "cursor-default text-[var(--text-muted)] opacity-25"
-                  }`}
-                  aria-label={`Jump to ${letter}`}
+                  onClick={() => togglePlaylist(playlist.id)}
+                  disabled={alreadyAdded || saving}
+                  className={`group flex min-h-[60px] w-full items-center gap-3 p-2 text-left transition-colors ${
+                    alreadyAdded || selected
+                      ? "bg-[var(--bg-primary)]"
+                      : "cursor-pointer hover:bg-[var(--bg-hover)]"
+                  } disabled:cursor-default`}
                 >
-                  {letter}
+                  <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden bg-[var(--bg-primary)] text-[var(--text-muted)]">
+                    {playlist.cover_image_url ? (
+                      <Image
+                        src={playlist.cover_image_url}
+                        alt={playlist.name}
+                        fill
+                        sizes="36px"
+                        className="object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <PlaylistIcon size={14} />
+                    )}
+                  </span>
+
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                      {playlist.name}
+                    </span>
+                    <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                      {alreadyAdded
+                        ? "Already added"
+                        : `${playlist.song_count || 0} songs`}
+                    </span>
+                  </span>
+
+                  {(alreadyAdded || selected) && (
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-primary)]">
+                      <CheckIcon size={16} />
+                    </span>
+                  )}
                 </button>
               );
             })}
-          </nav>
+          </div>
         )}
-
-        <div
-          ref={listRef}
-          className="h-full min-w-0 flex-1 overflow-y-auto py-3"
-        >
-          {displayedPlaylists.length === 0 ? (
-            <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
-              {resolvedEmptyMessage}
-            </div>
-          ) : (
-            <div className="grid gap-1">
-              {displayedPlaylists.map((playlist) => {
-                const alreadyAdded = existingIdSet.has(playlist.id);
-                const selected = selectedIds.has(playlist.id);
-                const alphaLetter = playlist.name.trim().charAt(0).toUpperCase();
-
-                return (
-                  <button
-                    key={playlist.id}
-                    type="button"
-                    data-alpha-letter={/^[A-Z]$/.test(alphaLetter) ? alphaLetter : undefined}
-                    onClick={() => togglePlaylist(playlist.id)}
-                    disabled={alreadyAdded || saving}
-                    className={`group flex min-h-[60px] w-full items-center gap-3 p-2 text-left transition-colors ${
-                      alreadyAdded || selected
-                        ? "bg-[var(--bg-primary)]"
-                        : "cursor-pointer hover:bg-[var(--bg-hover)]"
-                    } disabled:cursor-default`}
-                  >
-                    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden bg-[var(--bg-primary)] text-[var(--text-muted)]">
-                      {playlist.cover_image_url ? (
-                        <Image
-                          src={playlist.cover_image_url}
-                          alt={playlist.name}
-                          fill
-                          sizes="36px"
-                          className="object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        <PlaylistIcon size={14} />
-                      )}
-                    </span>
-
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-                        {playlist.name}
-                      </span>
-                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                        {alreadyAdded
-                          ? "Already added"
-                          : `${playlist.song_count || 0} songs`}
-                      </span>
-                    </span>
-
-                    {(alreadyAdded || selected) && (
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-primary)]">
-                        <CheckIcon size={16} />
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
       </div>
     </ModalShell>
   );
