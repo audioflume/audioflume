@@ -51,7 +51,9 @@ export default function AdminSongUploadPresentationInjector() {
 
     const renderStemFileActions = (page: Element) => {
       const row = getStemRow(page);
-      const input = row?.querySelector<HTMLInputElement>('input[type="file"][multiple]');
+      const input = row?.querySelector<HTMLInputElement>(
+        'input[type="file"][multiple]',
+      );
       const content = row?.children.item(1);
 
       if (!row || !input || !(content instanceof HTMLElement)) return;
@@ -65,39 +67,43 @@ export default function AdminSongUploadPresentationInjector() {
 
       if (!fileList || accumulatedStemFiles.length === 0) return;
 
-      const signature = accumulatedStemFiles.map(fileKey).join("|");
-      if (fileList.dataset.adminStemSignature === signature) return;
+      const renderedItems = Array.from(fileList.children).filter(
+        (child): child is HTMLElement => child instanceof HTMLElement,
+      );
+      const visibleCount = Math.min(accumulatedStemFiles.length, 3);
 
-      fileList.dataset.adminStemSignature = signature;
-      fileList.replaceChildren(
-        ...accumulatedStemFiles.map((file, index) => {
-          const item = document.createElement("div");
-          item.className = "admin-song-stem-file-item";
+      for (let index = 0; index < visibleCount; index++) {
+        const item = renderedItems[index];
+        const file = accumulatedStemFiles[index];
 
-          const name = document.createElement("span");
-          name.className = "admin-song-stem-file-name";
-          name.textContent = file.name;
+        if (!item || !file) continue;
 
-          const remove = document.createElement("button");
+        item.classList.add("admin-song-stem-file-item");
+
+        let remove = item.querySelector<HTMLButtonElement>(
+          ":scope > .admin-song-stem-file-remove",
+        );
+
+        if (!remove) {
+          remove = document.createElement("button");
           remove.type = "button";
           remove.className = "admin-song-stem-file-remove";
           remove.textContent = "Remove";
-          remove.setAttribute("aria-label", `Remove ${file.name}`);
-          remove.addEventListener("click", () => {
-            accumulatedStemFiles = accumulatedStemFiles.filter(
-              (_, fileIndex) => fileIndex !== index,
-            );
+          item.appendChild(remove);
+        }
 
-            input.dataset.adminStemReplaceSelection = "true";
-            syncStemInput(input, accumulatedStemFiles);
-            input.dispatchEvent(new Event("change", { bubbles: true }));
-            delete input.dataset.adminStemReplaceSelection;
-          });
+        remove.setAttribute("aria-label", `Remove ${file.name}`);
+        remove.onclick = () => {
+          accumulatedStemFiles = accumulatedStemFiles.filter(
+            (_, fileIndex) => fileIndex !== index,
+          );
 
-          item.append(name, remove);
-          return item;
-        }),
-      );
+          input.dataset.adminStemReplaceSelection = "true";
+          syncStemInput(input, accumulatedStemFiles);
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+          delete input.dataset.adminStemReplaceSelection;
+        };
+      }
     };
 
     const applyPresentationHooks = () => {
@@ -107,7 +113,8 @@ export default function AdminSongUploadPresentationInjector() {
       if (!page) return;
 
       const filesSection =
-        getSectionByTitle(page, "files") || getSectionByTitle(page, "upload files");
+        getSectionByTitle(page, "files") ||
+        getSectionByTitle(page, "upload files");
       const filesTitle = filesSection?.querySelector<HTMLElement>(
         ".admin-song-form-kicker",
       );
