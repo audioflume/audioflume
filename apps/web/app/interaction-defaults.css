@@ -1,0 +1,11 @@
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+.filmwave-icon-button-color-only {
+  --filmwave-square-icon-hover-bg: transparent;
+}
