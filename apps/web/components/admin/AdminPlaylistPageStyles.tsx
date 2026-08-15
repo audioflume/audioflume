@@ -3,13 +3,15 @@ export default function AdminPlaylistPageStyles() {
     <style>{`
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form {
-        gap: 24px;
+        gap: 16px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        .admin-playlist-main-stack,
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > aside {
-        gap: 24px;
+        gap: 16px;
       }
 
       @media (min-width: 1280px) {
@@ -20,8 +22,7 @@ export default function AdminPlaylistPageStyles() {
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section,
+        .admin-playlist-section-card,
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         > aside
@@ -36,9 +37,11 @@ export default function AdminPlaylistPageStyles() {
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:first-child,
+        .admin-playlist-section-card
+        > h2 {
+        margin-bottom: 12px;
+      }
+
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         + section
@@ -64,26 +67,10 @@ export default function AdminPlaylistPageStyles() {
         letter-spacing: -0.03em;
       }
 
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child {
-        gap: 12px;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3 {
-        padding-top: 12px;
-      }
-
       /* Keep playlist name and kicker labels accessible but visually hidden. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
+        .admin-playlist-details-card
+        .admin-playlist-fields
         > label.grid {
         gap: 0;
         color: var(--text-primary);
@@ -95,9 +82,8 @@ export default function AdminPlaylistPageStyles() {
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
+        .admin-playlist-details-card
+        .admin-playlist-fields
         > label.grid
         > input,
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -114,21 +100,16 @@ export default function AdminPlaylistPageStyles() {
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
+        .admin-playlist-details-card
+        .admin-playlist-fields
         > label.grid
         > input:focus {
         border-color: var(--border);
       }
 
-      /* Preserve the original pre-pill browse filter card/grid layout.
-         The checkbox treatment matches Music Library exactly. */
+      /* Match the Music Library checkbox treatment in browse and shelf cards. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3
+        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
         label
         > input[type="checkbox"] {
         position: relative;
@@ -152,20 +133,14 @@ export default function AdminPlaylistPageStyles() {
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3
+        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
         label:hover
         > input[type="checkbox"] {
         border-color: var(--text-secondary);
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3
+        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
         label
         > input[type="checkbox"]::after {
         content: "";
@@ -179,10 +154,7 @@ export default function AdminPlaylistPageStyles() {
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3
+        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
         label
         > input[type="checkbox"]:checked {
         border-color: var(--text-primary);
@@ -191,90 +163,20 @@ export default function AdminPlaylistPageStyles() {
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3
+        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
         label
         > input[type="checkbox"]:checked::after {
         opacity: 1;
       }
 
-      /* Remove descriptive copy beneath playlist section/filter headings. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:first-child
-        > p,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > div.grid.gap-3
-        > div:first-child
-        > p,
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        + section
-        h2
-        + p {
-        display: none;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > label.flex:has(> input[type="checkbox"]) {
-        border-radius: 7px;
-        background: var(--bg-primary);
-        padding: 12px;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > label.flex
-        > input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-        flex: 0 0 16px;
-        appearance: none;
-        margin-top: 1px;
-        border: 1.5px solid var(--border);
-        border-radius: 4px;
-        background: var(--bg-secondary);
-        transition:
-          border-color 150ms ease,
-          background 150ms ease;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        > div:last-child
-        > label.flex
-        > input[type="checkbox"]:checked {
-        border-color: var(--text-primary);
-        background-color: var(--text-primary);
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 12.5L9.5 17L19 7' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-        background-position: center;
-        background-repeat: no-repeat;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        .flex.flex-wrap.gap-3.pt-2 {
+        .admin-playlist-actions {
         gap: 8px;
-        padding-top: 12px;
+        padding-top: 0;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        form
-        > section
-        .flex.flex-wrap.gap-3.pt-2
+        .admin-playlist-actions
         > button {
         height: 40px;
         min-height: 40px;
@@ -329,7 +231,7 @@ export default function AdminPlaylistPageStyles() {
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         + section {
-        margin-top: 24px;
+        margin-top: 16px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
