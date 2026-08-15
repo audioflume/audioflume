@@ -555,7 +555,7 @@ export default function AdminPlaylistLibraryView({
                                 playlist={playlist}
                                 onRemove={(playlistId) => {
                                   const confirmed = window.confirm(
-                                    `Remove \"${playlist.name}\" from ${title}?`,
+                                    `Remove "${playlist.name}" from ${title}?`,
                                   );
                                   if (!confirmed) return;
                                   void removeFromShelf(shelfKey, playlistId);
