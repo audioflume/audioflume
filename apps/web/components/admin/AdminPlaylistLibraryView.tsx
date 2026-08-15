@@ -25,7 +25,6 @@ import DragIconSmall from "@/components/icons/DragIconSmall";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-import TrashIcon from "@/components/icons/TrashIcon";
 import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
@@ -149,10 +148,7 @@ function MasterPlaylistCard({
               void onDeletePlaylist(playlist);
             }}
           >
-            <span>
-              {deletingId === playlist.id ? "Deleting..." : "Delete Playlist"}
-            </span>
-            <TrashIcon size={13} />
+            {deletingId === playlist.id ? "Deleting..." : "Delete Playlist"}
           </button>
         </DropdownShell>
       </div>
@@ -213,7 +209,7 @@ function SortableShelfPlaylistCard({
         <button
           type="button"
           onClick={() => onRemove(playlist.id)}
-          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--text-primary)] group-hover:opacity-100"
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] group-hover:opacity-100"
           aria-label={`Remove ${playlist.name} from shelf`}
           title="Remove from shelf"
         >
