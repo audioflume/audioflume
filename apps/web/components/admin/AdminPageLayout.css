@@ -108,10 +108,15 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page .admin-song-file-row {
-  grid-template-columns: 145px minmax(0, 1fr) auto;
+  grid-template-columns: 145px minmax(0, 1fr);
   align-items: start;
   border-top: 0;
   padding: 2px var(--admin-song-card-x);
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:nth-child(2):has(img) {
+  grid-template-columns: 145px minmax(0, 1fr) auto;
 }
 
 .admin-song-upload-content-page
@@ -134,6 +139,31 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 .admin-song-upload-content-page .admin-song-file-row:last-child {
   padding-bottom: var(--admin-song-card-bottom);
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:first-child
+  > div:last-child {
+  grid-column: 2;
+  grid-row: 1;
+  z-index: 2;
+  height: 40px;
+  align-items: center;
+  justify-self: end;
+  margin-right: 12px;
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:first-child
+  > div:nth-child(2)
+  > div[class~="h-9"] {
+  padding-right: 72px;
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:nth-child(2):not(:has(img))
+  > div:last-child {
+  display: none;
 }
 
 .admin-song-upload-content-page
@@ -182,6 +212,41 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > div:last-child
   > button:hover {
   background: color-mix(in srgb, var(--bg-primary) 90%, var(--danger) 10%);
+  color: var(--danger);
+}
+
+.admin-song-upload-content-page
+  .admin-song-file-row:nth-child(3)
+  > div:last-child {
+  display: none;
+}
+
+.admin-song-upload-content-page .admin-song-stem-file-item {
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-song-upload-content-page .admin-song-stem-file-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-song-upload-content-page .admin-song-stem-file-remove {
+  flex: 0 0 auto;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.admin-song-upload-content-page .admin-song-stem-file-remove:hover {
   color: var(--danger);
 }
 
@@ -324,10 +389,33 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 @media (max-width: 900px) {
+  .admin-song-upload-content-page .admin-song-file-row,
+  .admin-song-upload-content-page
+    .admin-song-file-row:nth-child(2):has(img) {
+    grid-template-columns: 1fr;
+  }
+
   .admin-song-upload-content-page
     .admin-song-file-row
     > div:first-child {
     padding-top: 0;
+  }
+
+  .admin-song-upload-content-page
+    .admin-song-file-row:first-child
+    > div:last-child {
+    position: static;
+    grid-column: 1;
+    grid-row: auto;
+    height: auto;
+    margin-right: 0;
+  }
+
+  .admin-song-upload-content-page
+    .admin-song-file-row:first-child
+    > div:nth-child(2)
+    > div[class~="h-9"] {
+    padding-right: 6px;
   }
 }
 
