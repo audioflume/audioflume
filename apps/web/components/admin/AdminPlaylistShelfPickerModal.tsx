@@ -93,8 +93,8 @@ export default function AdminPlaylistShelfPickerModal({
       maxHeight="560px"
       centerTitle
       bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-      contentClassName="h-[560px] max-h-[calc(100vh-64px)] [&>div:first-of-type>h2]:!text-base [&>div:first-of-type>h2]:!font-medium [&>div:first-of-type>h2]:!tracking-[-0.03em]"
-      footerClassName="justify-end bg-[var(--bg-tertiary)]"
+      contentClassName="h-[560px] max-h-[calc(100vh-64px)] !rounded-[10px] [&>div:first-of-type>h2]:!text-base [&>div:first-of-type>h2]:!font-medium [&>div:first-of-type>h2]:!tracking-[-0.03em]"
+      footerClassName="justify-end bg-[var(--bg-primary)]"
       footer={
         <button
           type="button"
