@@ -158,7 +158,7 @@ function SortableDiscoverSectionCard({
         <button
           type="button"
           onClick={() => onRemove(playlist)}
-          className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--text-primary)] group-hover:opacity-100"
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--text-primary)] group-hover:opacity-100"
           aria-label={`Remove ${playlist.name} from ${sectionLabel}`}
           title={`Remove from ${sectionLabel}`}
         >
@@ -211,16 +211,16 @@ function DiscoverContentCard({
       >
         <PlaylistArtwork
           playlist={playlist}
-          sizes="(min-width: 1536px) 25vw, (min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+          sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
         />
       </Link>
 
-      <div className="mt-3 flex min-w-0 items-start gap-3">
+      <div className="mt-2.5 flex min-w-0 items-start gap-3">
         <Link href={editHref} className="min-w-0 flex-1">
-          <h3 className="truncate text-[14px] font-medium tracking-[-0.025em] text-[var(--text-primary)]">
+          <h3 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
             {playlist.name}
           </h3>
-          <p className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+          <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
             {playlist.song_count || 0} songs · {placement}
           </p>
         </Link>
@@ -283,7 +283,6 @@ export default function AdminDiscoverLibraryView({
   const [savingSection, setSavingSection] = useState(false);
   const [openLibraryMenu, setOpenLibraryMenu] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
-  const [sectionsCollapsed, setSectionsCollapsed] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -513,137 +512,89 @@ export default function AdminDiscoverLibraryView({
 
   return (
     <>
-      <section className="overflow-hidden rounded-[20px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] p-4 sm:p-5">
-        <div className="flex items-start justify-between gap-6">
-          <div>
-            <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
-              Discover Sections
-            </h2>
-            <p className="mt-1 max-w-[680px] text-xs leading-5 text-[var(--text-secondary)]">
-              Build each Discover section from regular playlists, reusable Discover content, or a mix of both.
-            </p>
-          </div>
+      <div className="grid gap-3">
+        {DISCOVER_SECTION_SHELF_KEYS.map((sectionKey) => {
+          const sectionLabel = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
+          const sectionPlaylists = getSectionPlaylists(sectionKey);
 
-          <button
-            type="button"
-            onClick={() => setSectionsCollapsed((current) => !current)}
-            className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
-            aria-label={sectionsCollapsed ? "Expand Discover sections" : "Collapse Discover sections"}
-            aria-expanded={!sectionsCollapsed}
-            title={sectionsCollapsed ? "Expand Discover sections" : "Collapse Discover sections"}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-              className={`h-4 w-4 transition-transform duration-300 ${
-                sectionsCollapsed ? "" : "rotate-180"
-              }`}
+          return (
+            <section
+              key={sectionKey}
+              className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5"
             >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </button>
-        </div>
+              <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                    {sectionLabel}
+                  </h3>
+                  <p className="mt-1 text-[11px] text-[var(--text-muted)]">
+                    {sectionPlaylists.length} item{sectionPlaylists.length === 1 ? "" : "s"}
+                  </p>
+                </div>
 
-        <div
-          className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
-            sectionsCollapsed
-              ? "mt-0 grid-rows-[0fr] opacity-0 pointer-events-none"
-              : "mt-6 grid-rows-[1fr] opacity-100"
-          }`}
-          aria-hidden={sectionsCollapsed}
-        >
-          <div className="min-h-0 overflow-hidden">
-            <div className="grid gap-3">
-              {DISCOVER_SECTION_SHELF_KEYS.map((sectionKey) => {
-                const sectionLabel = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
-                const sectionPlaylists = getSectionPlaylists(sectionKey);
-
-                return (
-                  <section
-                    key={sectionKey}
-                    className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5"
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPicker({ sectionKey, source: "playlist" })}
+                    className={secondaryPillButtonClass}
+                    disabled={savingSection}
                   >
-                    <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
-                      <div>
-                        <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-                          {sectionLabel}
-                        </h3>
-                        <p className="mt-1 text-[11px] text-[var(--text-muted)]">
-                          {sectionPlaylists.length} item{sectionPlaylists.length === 1 ? "" : "s"}
-                        </p>
-                      </div>
+                    <PlusIcon size={12} />
+                    <span>Add Playlist</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPicker({ sectionKey, source: "discover" })}
+                    className={secondaryPillButtonClass}
+                    disabled={savingSection}
+                  >
+                    <PlusIcon size={12} />
+                    <span>Add Discover Content</span>
+                  </button>
+                </div>
+              </div>
 
-                      <div className="flex flex-wrap items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setPicker({ sectionKey, source: "playlist" })}
-                          className={secondaryPillButtonClass}
-                          disabled={savingSection}
-                        >
-                          <PlusIcon size={12} />
-                          <span>Add Playlist</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setPicker({ sectionKey, source: "discover" })}
-                          className={secondaryPillButtonClass}
-                          disabled={savingSection}
-                        >
-                          <PlusIcon size={12} />
-                          <span>Add Discover Content</span>
-                        </button>
-                      </div>
+              {sectionPlaylists.length === 0 ? (
+                <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+                  Add a playlist or Discover content to this section.
+                </div>
+              ) : (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={(event) => void reorderSection(sectionKey, event)}
+                >
+                  <SortableContext
+                    items={sectionPlaylists.map((playlist) => playlist.id)}
+                    strategy={rectSortingStrategy}
+                  >
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
+                      {sectionPlaylists.map((playlist) => (
+                        <SortableDiscoverSectionCard
+                          key={playlist.id}
+                          playlist={playlist}
+                          sectionLabel={sectionLabel}
+                          onRemove={(item) =>
+                            void removeFromSection(sectionKey, item)
+                          }
+                        />
+                      ))}
                     </div>
+                  </SortableContext>
+                </DndContext>
+              )}
+            </section>
+          );
+        })}
+      </div>
 
-                    {sectionPlaylists.length === 0 ? (
-                      <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-                        Add a playlist or Discover content to this section.
-                      </div>
-                    ) : (
-                      <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragEnd={(event) => void reorderSection(sectionKey, event)}
-                      >
-                        <SortableContext
-                          items={sectionPlaylists.map((playlist) => playlist.id)}
-                          strategy={rectSortingStrategy}
-                        >
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
-                            {sectionPlaylists.map((playlist) => (
-                              <SortableDiscoverSectionCard
-                                key={playlist.id}
-                                playlist={playlist}
-                                sectionLabel={sectionLabel}
-                                onRemove={(item) =>
-                                  void removeFromSection(sectionKey, item)
-                                }
-                              />
-                            ))}
-                          </div>
-                        </SortableContext>
-                      </DndContext>
-                    )}
-                  </section>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-16">
-        <div className="mb-5 flex items-end justify-between gap-6">
+      <section className="mt-0">
+        <div className="mb-4 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
+            <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
               All Discover Content
-            </h2>
-            <p className="mt-1 text-xs text-[var(--text-secondary)]">
+            </h3>
+            <p className="mt-1 text-[11px] text-[var(--text-muted)]">
               {allDiscoverContent.length} item{allDiscoverContent.length === 1 ? "" : "s"} · Master library
             </p>
           </div>
@@ -662,7 +613,7 @@ export default function AdminDiscoverLibraryView({
             No Discover content yet.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 xl:grid-cols-5">
             {allDiscoverContent.map((playlist) => (
               <DiscoverContentCard
                 key={playlist.id}
