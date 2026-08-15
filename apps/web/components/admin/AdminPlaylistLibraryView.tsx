@@ -283,7 +283,7 @@ export default function AdminPlaylistLibraryView({
           (shelfKey, shelfIndex) => {
             const title = CURATED_PLAYLIST_SHELF_LABELS[shelfKey];
             const items = shelfPlaylists[shelfKey];
-            const renderNewlyAddedAfterPopular = shelfIndex === 0;
+            const renderNewlyAddedAfterTrending = shelfIndex === 1;
             const shelfCollapsed = collapsedSections[shelfKey];
 
             return (
@@ -351,7 +351,7 @@ export default function AdminPlaylistLibraryView({
                   )}
                 </PlaylistManagerCollapsibleSection>
 
-                {renderNewlyAddedAfterPopular && (
+                {renderNewlyAddedAfterTrending && (
                   <PlaylistManagerCollapsibleSection
                     title="Newly Added"
                     subtitle={`${newlyAdded.length} playlist${newlyAdded.length === 1 ? "" : "s"} · Automatic`}
