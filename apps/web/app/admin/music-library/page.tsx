@@ -489,6 +489,13 @@ export default function AdminMusicLibraryPage() {
         .admin-song-select-input:checked + .admin-song-select-box svg {
           opacity: 1;
         }
+
+        .admin-music-library-song-list .admin-song-row {
+          grid-template-columns: 28px 60px minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) 64px 76px 96px 40px;
+          column-gap: 16px;
+          padding-left: 0;
+          padding-right: 0;
+        }
       `}</style>
 
       <div
@@ -654,13 +661,13 @@ export default function AdminMusicLibraryPage() {
 
           <div className="mx-5 mb-5 overflow-hidden">
             <div className="overflow-x-auto overflow-y-hidden">
-              <div className="min-w-[920px]">
+              <div className="admin-music-library-song-list min-w-[920px]">
                 {showSkeleton && (
                   <div className="grid gap-0">
                     {Array.from({ length: 10 }, (_, index) => (
                       <div
                         key={index}
-                        className="grid min-h-[72px] grid-cols-[28px_60px_minmax(115px,1fr)_minmax(110px,1fr)_160px_64px_70px_96px_56px] items-center gap-3 px-6"
+                        className="grid min-h-[72px] grid-cols-[28px_60px_minmax(120px,1fr)_minmax(120px,1fr)_minmax(120px,1fr)_64px_76px_96px_40px] items-center gap-4"
                         style={{
                           borderBottom:
                             index === 9
