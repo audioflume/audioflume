@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminCuratedPlaylistForm from "@/components/admin/AdminCuratedPlaylistForm";
-import AdminEditPageStyles from "@/components/admin/AdminEditPageStyles";
+import AdminPlaylistPageStyles from "@/components/admin/AdminPlaylistPageStyles";
 
 export default function EditPlaylistPage() {
   const params = useParams();
@@ -16,7 +16,7 @@ export default function EditPlaylistPage() {
       description="Update metadata, cover image or video, group, or song list."
     >
       <AdminCuratedPlaylistForm mode="edit" playlistId={playlistId} />
-      <AdminEditPageStyles />
+      <AdminPlaylistPageStyles />
     </AdminContentPage>
   );
 }
