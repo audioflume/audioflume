@@ -521,11 +521,9 @@ export default function AdminDiscoverLibraryView({
             <h2 className="text-[22px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
               Discover Sections
             </h2>
-            {!sectionsCollapsed && (
-              <p className="mt-1 max-w-[680px] text-xs leading-5 text-[var(--text-secondary)]">
-                Build each Discover section from regular playlists, reusable Discover content, or a mix of both.
-              </p>
-            )}
+            <p className="mt-1 max-w-[680px] text-xs leading-5 text-[var(--text-secondary)]">
+              Build each Discover section from regular playlists, reusable Discover content, or a mix of both.
+            </p>
           </div>
 
           <button
