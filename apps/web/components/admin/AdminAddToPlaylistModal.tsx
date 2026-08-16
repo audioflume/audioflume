@@ -279,15 +279,6 @@ export default function AdminAddToPlaylistModal({
           </button>
         }
       >
-        <div className="pb-4">
-          <AdminSearchBar
-            value={search}
-            onChange={setSearch}
-            placeholder="Search playlists"
-            variant="modal"
-          />
-        </div>
-
         <div className="flex flex-shrink-0 items-center justify-center pb-4 text-center">
           <div className="flex min-w-0 items-center justify-center gap-2">
             <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
@@ -297,6 +288,15 @@ export default function AdminAddToPlaylistModal({
               {song.title} by {song.artist}
             </span>
           </div>
+        </div>
+
+        <div className="pb-4">
+          <AdminSearchBar
+            value={search}
+            onChange={setSearch}
+            placeholder="Search playlists"
+            variant="modal"
+          />
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] py-3">
