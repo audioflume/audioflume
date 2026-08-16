@@ -170,15 +170,13 @@ export default function AdminContentPage({
           border-radius: var(--admin-top-control-radius) !important;
         }
 
-        /* Files use contained fields instead of full-width divider rows. */
+        /* Files use one compact three-column summary row inside the standard card. */
         main.filmwave-admin-content-page:is(
             .admin-song-upload-content-page,
             .admin-song-edit-content-page
           )
           :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin) {
-          display: grid !important;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 8px !important;
+          display: block !important;
           padding: 20px !important;
         }
 
@@ -188,11 +186,23 @@ export default function AdminContentPage({
           )
           :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
           > .admin-song-form-card-header {
-          grid-column: 1 / -1;
           min-height: 0 !important;
-          margin: 0 0 4px !important;
+          margin: 0 0 12px !important;
           border: 0 !important;
           border-radius: 0 !important;
+          padding: 0 !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          > .admin-song-form-card-header
+          + div {
+          display: grid !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 8px !important;
           padding: 0 !important;
         }
 
@@ -204,13 +214,13 @@ export default function AdminContentPage({
           .admin-song-file-row {
           display: grid !important;
           min-width: 0;
-          min-height: 68px;
+          min-height: 64px;
           grid-template-columns: minmax(0, 1fr) auto !important;
-          grid-template-rows: auto auto;
+          grid-template-rows: auto auto !important;
           align-content: center !important;
           align-items: center !important;
           gap: 5px 8px !important;
-          border: 1px solid var(--border) !important;
+          border: 0 !important;
           border-radius: 7px !important;
           background: var(--bg-secondary);
           padding: 12px !important;
@@ -278,8 +288,10 @@ export default function AdminContentPage({
               .admin-song-upload-content-page,
               .admin-song-edit-content-page
             )
-            :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin) {
-            grid-template-columns: 1fr;
+            :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+            > .admin-song-form-card-header
+            + div {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>
