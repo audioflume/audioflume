@@ -88,16 +88,21 @@ export default function AdminBrowseFilterSubcategoryGroup({
   }, [currentSubcategoryIds, newValue, taxonomy.subcategories]);
 
   useEffect(() => {
-    if (!newDropdownOpen) return;
+    if (!newFieldOpen) return;
 
     function handleOutsideClick(event: MouseEvent) {
       if (newCategoryRef.current?.contains(event.target as Node)) return;
+
       setNewDropdownOpen(false);
+
+      if (!newValue.trim() && selectedExistingId === null) {
+        setNewFieldOpen(false);
+      }
     }
 
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, [newDropdownOpen]);
+  }, [newFieldOpen, newValue, selectedExistingId]);
 
   function resetEditState() {
     setLabelDrafts({});
