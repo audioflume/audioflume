@@ -10,7 +10,7 @@ export default function VolumeIcon({
   muted = false,
 }: VolumeIconProps) {
   const strokeColor = "var(--filmwave-player-action-icon-color, currentColor)";
-  const strokeWidth = 1.9;
+  const strokeWidth = 2;
   const strokeStyle = { strokeWidth };
 
   return (
