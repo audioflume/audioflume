@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Footer from "@/components/Footer";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import CuePointManager from "@/components/admin/CuePointManager";
-import { secondaryPillButtonClass } from "@/components/uiClasses";
 import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -68,9 +68,13 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
       <AdminContentPage
         label="Cue Points"
         title="Not authorized"
-        description="You do not have access to this admin page."
+        compactHeader
+        contentAreaBottomPadding={false}
       >
-        <div />
+        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
+          You do not have access to this admin page.
+        </section>
+        <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
       </AdminContentPage>
     );
   }
@@ -116,17 +120,21 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
     <AdminContentPage
       label="Cue Points"
       title="Cue Points"
-      description="Review, drag, and fine-tune generated cue points."
-      headerAction={(
-        <Link href={`/admin/songs/${id}/edit`} className={secondaryPillButtonClass}>
+      compactHeader
+      contentAreaBottomPadding={false}
+    >
+      <div className="mb-4 flex items-center gap-2">
+        <Link
+          href={`/admin/songs/${id}/edit`}
+          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-sm font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+        >
           Edit Details
         </Link>
-      )}
-      contentClassName="max-w-none"
-    >
-      <section className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="flex items-center gap-4 border-b border-[var(--border)] p-4">
-          <div className="h-14 w-14 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
+      </div>
+
+      <div className="grid gap-3">
+        <section className="flex min-h-[80px] items-center gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
+          <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-[7px] bg-[var(--bg-secondary)]">
             {typedSong.cover_url ? (
               <img
                 src={typedSong.cover_url}
@@ -137,7 +145,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
           </div>
 
           <div className="min-w-0">
-            <h2 className="truncate text-base font-medium text-[var(--text-primary)]">
+            <h2 className="truncate font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
               {typedSong.title || "Untitled Song"}
             </h2>
             <p className="mt-1 truncate text-xs text-[var(--text-secondary)]">
@@ -145,23 +153,23 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
             </p>
           </div>
 
-          <div className="ml-auto hidden items-center gap-2 text-xs text-[var(--text-secondary)] md:flex">
+          <div className="ml-auto hidden items-center gap-5 text-xs text-[var(--text-secondary)] md:flex">
             {typedSong.key ? <span>{typedSong.key}</span> : null}
             {typedSong.bpm ? <span>{typedSong.bpm} BPM</span> : null}
             {duration > 0 ? <span>{formatTime(duration)}</span> : null}
           </div>
-        </div>
+        </section>
 
-        <div className="p-4">
-          <CuePointManager
-            songId={id}
-            audioUrl={typedSong.audio_url}
-            waveformPeaks={typedSong.waveform_peaks || "[]"}
-            duration={duration}
-            markers={markers}
-          />
-        </div>
-      </section>
+        <CuePointManager
+          songId={id}
+          audioUrl={typedSong.audio_url}
+          waveformPeaks={typedSong.waveform_peaks || "[]"}
+          duration={duration}
+          markers={markers}
+        />
+      </div>
+
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
     </AdminContentPage>
   );
 }
