@@ -455,6 +455,20 @@ export default function AdminSongUploadPresentationInjector() {
 
       if (filesSection) {
         syncFileBinPresentation(filesSection, page);
+
+        const audioRow = filesSection.querySelector<HTMLElement>(
+          ".admin-song-upload-audio-row",
+        );
+        const audioStatus = audioRow?.querySelector<HTMLElement>(
+          ":scope > div:nth-child(2) > div.mt-2.flex.items-start.gap-2",
+        );
+        const audioStatusText = audioStatus?.textContent?.trim().toLowerCase() || "";
+
+        if (audioStatus) {
+          audioStatus.hidden =
+            audioStatusText.startsWith("generated ") ||
+            audioStatusText.startsWith("re-generated ");
+        }
       }
 
       const songInfoSection = getSectionByTitle(page, "song info");
@@ -642,7 +656,7 @@ export default function AdminSongUploadPresentationInjector() {
 
         .admin-song-upload-content-page
           .admin-song-upload-files-bin
-          .admin-song-file-row.has-file:not(.admin-song-upload-cover-source) {
+          .admin-song-upload-stems-row.has-file {
           padding-top: 16px !important;
           padding-bottom: 16px !important;
         }
@@ -961,7 +975,7 @@ export default function AdminSongUploadPresentationInjector() {
 
           .admin-song-upload-content-page
             .admin-song-upload-files-bin
-            .admin-song-file-row.has-file:not(.admin-song-upload-cover-source) {
+            .admin-song-upload-stems-row.has-file {
             padding-top: 16px !important;
             padding-bottom: 16px !important;
           }
