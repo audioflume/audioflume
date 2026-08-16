@@ -94,7 +94,12 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
     }
 
     const input = getFileInput(row);
-    row.classList.toggle("has-file", Boolean(input?.files?.length));
+    const hasFile = Boolean(input?.files?.length);
+    row.classList.toggle("has-file", hasFile);
+
+    if (index === 2) {
+      row.classList.toggle("admin-song-upload-extra-padding", hasFile);
+    }
   });
 
   const coverRow = rows[1];
@@ -483,6 +488,11 @@ export default function AdminSongUploadPresentationInjector() {
         );
         const audioStatusText = audioStatus?.textContent?.trim().toLowerCase() || "";
 
+        audioRow?.classList.toggle(
+          "admin-song-upload-extra-padding",
+          Boolean(audioRow.querySelector(".animate-spin")),
+        );
+
         if (audioStatus) {
           audioStatus.hidden =
             audioStatusText.startsWith("generated ") ||
@@ -550,6 +560,10 @@ export default function AdminSongUploadPresentationInjector() {
       );
 
       syncStemInput(input, accumulatedStemFiles);
+      row?.classList.toggle(
+        "admin-song-upload-extra-padding",
+        accumulatedStemFiles.length > 0,
+      );
     };
 
     const observer = new MutationObserver(scheduleApply);
@@ -675,10 +689,7 @@ export default function AdminSongUploadPresentationInjector() {
 
         .admin-song-upload-content-page
           .admin-song-upload-files-bin
-          .admin-song-upload-audio-row:has(.animate-spin),
-        .admin-song-upload-content-page
-          .admin-song-upload-files-bin
-          .admin-song-upload-stems-row.has-file {
+          .admin-song-file-row.admin-song-upload-extra-padding:not(.admin-song-upload-cover-source) {
           padding-top: 16px !important;
           padding-bottom: 16px !important;
         }
@@ -1003,10 +1014,7 @@ export default function AdminSongUploadPresentationInjector() {
 
           .admin-song-upload-content-page
             .admin-song-upload-files-bin
-            .admin-song-upload-audio-row:has(.animate-spin),
-          .admin-song-upload-content-page
-            .admin-song-upload-files-bin
-            .admin-song-upload-stems-row.has-file {
+            .admin-song-file-row.admin-song-upload-extra-padding:not(.admin-song-upload-cover-source) {
             padding-top: 16px !important;
             padding-bottom: 16px !important;
           }
