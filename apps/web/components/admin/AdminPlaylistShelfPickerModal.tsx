@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import ModalShell from "@/components/ModalShell";
+import AdminModalShell from "@/components/admin/AdminModalShell";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
@@ -85,18 +85,11 @@ export default function AdminPlaylistShelfPickerModal({
     emptyMessage || `No ${pluralLabel.toLowerCase()} match your search.`;
 
   return (
-    <ModalShell
+    <AdminModalShell
       isOpen={isOpen}
       title={`Add to ${title}`}
       onClose={onClose}
       closeLabel={`Close ${title} ${itemLabel.toLowerCase()} picker`}
-      maxWidth="max-w-[540px]"
-      maxHeight="560px"
-      centerTitle
-      inputCorners="rounded"
-      bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-      contentClassName="h-[560px] max-h-[calc(100vh-64px)] !rounded-[10px] [&>div:first-of-type>h2]:!text-base [&>div:first-of-type>h2]:!font-medium [&>div:first-of-type>h2]:!tracking-[-0.03em]"
-      footerClassName="justify-end bg-[var(--bg-primary)]"
       footer={
         <button
           type="button"
@@ -181,6 +174,6 @@ export default function AdminPlaylistShelfPickerModal({
           </div>
         )}
       </div>
-    </ModalShell>
+    </AdminModalShell>
   );
 }
