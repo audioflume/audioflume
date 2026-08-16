@@ -14,7 +14,6 @@ import FailedIcon from "@/components/icons/FailedIcon";
 import FolderIcon from "@/components/icons/FolderIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
-import WaveformIcon from "@/components/icons/WaveformIcon";
 import { songHasIssue } from "@/lib/songHealth";
 
 type StatusTone = "success" | "warning" | "error";
@@ -29,7 +28,7 @@ type SystemHealthItem = {
 type QuickAction = {
   label: string;
   href: string;
-  icon: "upload" | "music" | "waveform" | "folder";
+  icon: "upload" | "music" | "folder";
 };
 
 type LibraryStats = {
@@ -88,11 +87,6 @@ const quickActions: QuickAction[] = [
     label: "Music Library",
     href: "/admin/music-library",
     icon: "music",
-  },
-  {
-    label: "Cue Points",
-    href: "/admin/edit-points",
-    icon: "waveform",
   },
   {
     label: "Playlist Manager",
@@ -157,7 +151,6 @@ function CardHeader({
 function ActionIcon({ icon }: { icon: QuickAction["icon"] }) {
   if (icon === "upload") return <UploadIcon size={13} />;
   if (icon === "music") return <MusicIcon size={13} />;
-  if (icon === "waveform") return <WaveformIcon size={13} />;
   return <FolderIcon size={13} />;
 }
 
