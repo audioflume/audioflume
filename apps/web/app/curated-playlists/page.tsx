@@ -5,13 +5,20 @@ import { useEffect, useMemo, useState } from "react";
 
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import {
-  CURATED_BROWSE_FILTERS,
-  type CuratedBrowseTag,
-  type CuratedPlaylist,
+import type {
+  CuratedBrowseTag,
+  CuratedPlaylist,
 } from "@/lib/curatedPlaylists";
+import type {
+  CuratedBrowseAssignment,
+  CuratedBrowseTaxonomy,
+} from "@/lib/curatedBrowseTaxonomy";
 import type { CuratedPlaylistShelfState } from "@/lib/curatedPlaylistShelves";
 import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
+
+type CuratedPlaylistWithBrowseAssignments = CuratedPlaylist & {
+  browse_assignments: CuratedBrowseAssignment[];
+};
 
 type CuratedShelfGroup = {
   name: string;
@@ -203,7 +210,9 @@ function CuratedPlaylistsLoadingSkeleton() {
 }
 
 export default function CuratedPlaylistsPage() {
-  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
+  const [playlists, setPlaylists] = useState<CuratedPlaylistWithBrowseAssignments[]>([]);
+  const [browseTaxonomy, setBrowseTaxonomy] =
+    useState<CuratedBrowseTaxonomy | null>(null);
   const [manualShelfIds, setManualShelfIds] = useState<ManualShelfIds>({
     popular: [],
     trending: [],
@@ -222,15 +231,24 @@ export default function CuratedPlaylistsPage() {
         setLoading(true);
         setError("");
 
-        const [playlistRes, shelfRes] = await Promise.all([
+        const [playlistRes, shelfRes, taxonomyRes] = await Promise.all([
           fetch("/api/curated-playlists"),
           fetch("/api/curated-playlist-shelves").catch(() => null),
+          fetch("/api/curated-browse-taxonomy"),
         ]);
 
         const playlistData = await playlistRes.json();
+        const taxonomyData = (await taxonomyRes.json()) as CuratedBrowseTaxonomy & {
+          error?: string;
+        };
 
         if (!playlistRes.ok) {
           throw new Error(playlistData?.error || "Failed to load playlists");
+        }
+        if (!taxonomyRes.ok) {
+          throw new Error(
+            taxonomyData?.error || "Failed to load browse subcategories",
+          );
         }
 
         let shelfData: CuratedPlaylistShelfState | null = null;
@@ -243,12 +261,14 @@ export default function CuratedPlaylistsPage() {
           }
         }
 
-        const visiblePlaylists: CuratedPlaylist[] = Array.isArray(playlistData)
-          ? playlistData.filter((playlist) => !playlist.discover_section)
-          : [];
+        const visiblePlaylists: CuratedPlaylistWithBrowseAssignments[] =
+          Array.isArray(playlistData)
+            ? playlistData.filter((playlist) => !playlist.discover_section)
+            : [];
 
         if (!cancelled) {
           setPlaylists(visiblePlaylists);
+          setBrowseTaxonomy(taxonomyData);
           setManualShelfIds({
             popular: Array.isArray(shelfData?.popular)
               ? shelfData.popular.map((item) => Number(item.playlist_id))
@@ -291,7 +311,7 @@ export default function CuratedPlaylistsPage() {
       : playlists;
 
     if (activeBrowseFilter) {
-      const activeFilter = CURATED_BROWSE_FILTERS.find(
+      const activeFilter = browseTaxonomy?.filters.find(
         (filter) => filter.value === activeBrowseFilter,
       );
 
@@ -307,7 +327,11 @@ export default function CuratedPlaylistsPage() {
           description: null,
           playlists: filteredPlaylists
             .filter((playlist) =>
-              playlist.browse_subcategories.includes(subcategory.value),
+              (playlist.browse_assignments ?? []).some(
+                (assignment) =>
+                  assignment.browse_filter === activeBrowseFilter &&
+                  assignment.subcategory_id === subcategory.id,
+              ),
             )
             .sort((a, b) => a.position - b.position),
         }))
@@ -316,8 +340,8 @@ export default function CuratedPlaylistsPage() {
       const uncategorizedPlaylists = filteredPlaylists
         .filter(
           (playlist) =>
-            !activeFilter.subcategories.some((subcategory) =>
-              playlist.browse_subcategories.includes(subcategory.value),
+            !(playlist.browse_assignments ?? []).some(
+              (assignment) => assignment.browse_filter === activeBrowseFilter,
             ),
         )
         .sort((a, b) => a.position - b.position);
@@ -383,7 +407,7 @@ export default function CuratedPlaylistsPage() {
     }
 
     return groups;
-  }, [activeBrowseFilter, manualShelfIds, playlists, searchQuery]);
+  }, [activeBrowseFilter, browseTaxonomy, manualShelfIds, playlists, searchQuery]);
 
   const hasActiveSearch = searchQuery.trim().length > 0;
 
