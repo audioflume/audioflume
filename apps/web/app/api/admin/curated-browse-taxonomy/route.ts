@@ -40,6 +40,18 @@ function cleanId(value: unknown) {
   return Number.isInteger(id) && id > 0 ? id : null;
 }
 
+function cleanIds(value: unknown): number[] {
+  if (!Array.isArray(value)) return [];
+
+  return [
+    ...new Set(
+      value
+        .map((id) => cleanId(id))
+        .filter((id): id is number => id !== null),
+    ),
+  ];
+}
+
 export async function POST(req: Request) {
   const admin = await requireAdmin();
   if (!admin.isAdmin) {
@@ -225,9 +237,11 @@ export async function DELETE(req: Request) {
 
   try {
     const body = await req.json();
-    const id = cleanId(body.id);
+    const ids = cleanIds(body.ids);
+    const singleId = cleanId(body.id);
+    const subcategoryIds = ids.length > 0 ? ids : singleId ? [singleId] : [];
 
-    if (!id) {
+    if (subcategoryIds.length === 0) {
       return NextResponse.json(
         { error: "Missing subcategory id" },
         { status: 400 },
@@ -237,11 +251,11 @@ export async function DELETE(req: Request) {
     const { error } = await supabaseServer
       .from("curated_browse_subcategories")
       .delete()
-      .eq("id", id);
+      .in("id", subcategoryIds);
 
     if (error) throw error;
 
-    return NextResponse.json({ success: true, id });
+    return NextResponse.json({ success: true, ids: subcategoryIds });
   } catch (err) {
     console.error("Curated browse subcategory delete failed:", err);
     return NextResponse.json(
