@@ -352,6 +352,17 @@ export default function AdminBrowseFilterSubcategoryGroup({
             </button>
           )}
 
+          {mode === "edit" && deleteIds.length > 0 && (
+            <button
+              type="button"
+              onClick={() => void deleteSelected()}
+              disabled={saving}
+              className="text-[11px] font-normal text-[var(--danger)] transition disabled:opacity-40"
+            >
+              {saving ? "Deleting..." : "Delete"}
+            </button>
+          )}
+
           {mode === "edit" && (
             <button
               type="button"
@@ -363,17 +374,6 @@ export default function AdminBrowseFilterSubcategoryGroup({
               className="text-[11px] font-normal text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
             >
               Cancel
-            </button>
-          )}
-
-          {mode === "edit" && deleteIds.length > 0 && (
-            <button
-              type="button"
-              onClick={() => void deleteSelected()}
-              disabled={saving}
-              className="text-[11px] font-normal text-[var(--danger)] transition disabled:opacity-40"
-            >
-              {saving ? "Deleting..." : "Delete"}
             </button>
           )}
 
