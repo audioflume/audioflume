@@ -299,11 +299,11 @@ export default function AdminAddToPlaylistModal({
           />
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] p-3">
+        <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] py-3">
           {(loading || selectedLoading) && (
             <div className="grid gap-1">
               {Array.from({ length: playlists.length || 6 }).map((_, index) => (
-                <div key={index} className="flex min-h-[60px] items-center justify-between gap-3 p-2">
+                <div key={index} className="flex min-h-[60px] items-center justify-between gap-3 px-3 py-2">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 bg-[var(--bg-tertiary)]" />
                     <div className="h-3 w-32 bg-[var(--bg-tertiary)]" />
@@ -343,7 +343,7 @@ export default function AdminAddToPlaylistModal({
                     type="button"
                     onClick={() => togglePlaylist(playlist.id)}
                     disabled={selectedLoading}
-                    className={`admin-cover-hover group flex min-h-[60px] w-full items-center gap-3 p-2 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
+                    className={`admin-cover-hover group flex min-h-[60px] w-full items-center gap-3 px-3 py-2 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
                       isSelected
                         ? "bg-[var(--bg-primary)]"
                         : "cursor-pointer hover:bg-[var(--bg-hover)]"
