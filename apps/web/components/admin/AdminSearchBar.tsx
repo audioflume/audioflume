@@ -25,7 +25,7 @@ export default function AdminSearchBar({
   return (
     <div className={`relative${className ? ` ${className}` : ""}`}>
       <span
-        className="pointer-events-none absolute left-[10px] top-1/2 flex h-[13px] w-[13px] -translate-y-1/2 items-center justify-center text-[var(--text-muted)]"
+        className="pointer-events-none absolute left-3 top-1/2 flex h-[13px] w-[13px] -translate-y-1/2 items-center justify-center text-[var(--text-muted)]"
         aria-hidden="true"
       >
         <SearchIcon size={13} />
