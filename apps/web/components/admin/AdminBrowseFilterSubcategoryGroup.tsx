@@ -342,27 +342,28 @@ export default function AdminBrowseFilterSubcategoryGroup({
 
         <div className="flex shrink-0 items-center gap-3">
           {mode === "edit" && editTouched && (
-            <>
-              <button
-                type="button"
-                onClick={() => void saveEdits()}
-                disabled={saving}
-                className="text-[11px] font-normal text-[var(--text-primary)] transition disabled:opacity-40"
-              >
-                {saving ? "Saving..." : "Save"}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  resetEditState();
-                  setMode(null);
-                }}
-                disabled={saving}
-                className="text-[11px] font-normal text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
-              >
-                Cancel
-              </button>
-            </>
+            <button
+              type="button"
+              onClick={() => void saveEdits()}
+              disabled={saving}
+              className="text-[11px] font-normal text-[var(--text-primary)] transition disabled:opacity-40"
+            >
+              {saving ? "Saving..." : "Save"}
+            </button>
+          )}
+
+          {mode === "edit" && (
+            <button
+              type="button"
+              onClick={() => {
+                resetEditState();
+                setMode(null);
+              }}
+              disabled={saving}
+              className="text-[11px] font-normal text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
+            >
+              Cancel
+            </button>
           )}
 
           {mode === "edit" && deleteIds.length > 0 && (
