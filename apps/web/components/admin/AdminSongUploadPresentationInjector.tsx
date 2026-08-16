@@ -133,7 +133,7 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
       action.type = "button";
       action.dataset.adminSongFileAction = String(rowIndex);
       action.className = "admin-song-upload-file-action";
-      action.textContent = label;
+      action.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7.5 8.5L12 4L16.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>${label}</span>`;
       actions?.appendChild(action);
     }
 
@@ -635,7 +635,7 @@ export default function AdminSongUploadPresentationInjector() {
           cursor: pointer;
           align-items: center;
           justify-content: center;
-          gap: 7px;
+          gap: 8px;
           border: 1px solid var(--border);
           border-radius: 7px;
           background: var(--bg-secondary);
