@@ -299,7 +299,7 @@ export default function AdminAddToPlaylistModal({
           />
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] py-3">
+        <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] p-3">
           {(loading || selectedLoading) && (
             <div className="grid gap-1">
               {Array.from({ length: playlists.length || 6 }).map((_, index) => (
