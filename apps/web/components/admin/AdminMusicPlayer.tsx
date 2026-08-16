@@ -1,11 +1,20 @@
 "use client";
 
-import { DropdownShell } from "@filmwave/shared";
+import {
+  DropdownShell,
+  buildWaveformBars,
+  createWaveformCanvasDrawCache,
+  drawWaveformBarsToCanvas,
+  parseWaveformPeaks,
+  type WaveformCanvasDrawCache,
+  type WaveformColors,
+} from "@filmwave/shared";
 import Image from "next/image";
 import Link from "next/link";
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -13,18 +22,19 @@ import {
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 import FailedIcon from "@/components/icons/FailedIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
-import NextTrackIcon from "@/components/icons/NextTrackIcon";
-import PlayerPauseIcon from "@/components/icons/PlayerPauseIcon";
-import PlayerPlayIcon from "@/components/icons/PlayerPlayIcon";
-import PreviousTrackIcon from "@/components/icons/PreviousTrackIcon";
+import VolumeIcon from "@/components/icons/VolumeIcon";
 import Toast from "@/components/Toast";
 import AdminAddToPlaylistModal from "@/components/admin/AdminAddToPlaylistModal";
 import { iconButtonClass } from "@/components/uiClasses";
 
-const WAVEFORM_HIDE_WIDTH = 80;
 const BAR_WIDTH = 2;
 const BAR_GAP = 1;
-const BAR_TOTAL = BAR_WIDTH + BAR_GAP;
+
+const WAVEFORM_MIN_WIDTH = 780;
+const FULL_COMPACT_TIME_MIN_WIDTH = 620;
+const COMPACT_TIME_MIN_WIDTH = 500;
+const KEY_MIN_WIDTH = 560;
+const BPM_MIN_WIDTH = 700;
 
 function formatTime(seconds: number) {
   if (!seconds || !isFinite(seconds)) return "0:00";
@@ -33,36 +43,53 @@ function formatTime(seconds: number) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
-function normalizePeaks(peaks: number[]) {
-  let maxVal = 0;
-  for (let i = 0; i < peaks.length; i++) {
-    const value = Math.abs(Number(peaks[i]) || 0);
-    if (value > maxVal) maxVal = value;
-  }
-  if (maxVal <= 0) return peaks.map(() => 0);
-  return peaks.map((peak) => Math.abs(Number(peak) || 0) / maxVal);
+function clampNumber(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
 }
 
-function buildWaveformBars(peaks: number[], width: number) {
-  if (!peaks.length || width <= 0) return [];
-  const barCount = Math.max(1, Math.floor(width / BAR_TOTAL));
-  const normalizedPeaks = normalizePeaks(peaks);
-  const samplesPerBar = normalizedPeaks.length / barCount;
-  return Array.from({ length: barCount }, (_, index) => {
-    const start = Math.floor(index * samplesPerBar);
-    const end = Math.min(normalizedPeaks.length, Math.floor((index + 1) * samplesPerBar));
-    let barPeak = 0;
-    for (let i = start; i < end; i++) {
-      if (normalizedPeaks[i] > barPeak) barPeak = normalizedPeaks[i];
-    }
-    return Math.max(2, Math.min(20, barPeak * 20));
-  });
+function getWaveformColors(): WaveformColors {
+  const styles = getComputedStyle(document.documentElement);
+
+  return {
+    progressColor: styles.getPropertyValue("--waveform-progress").trim(),
+    inactiveColor: styles.getPropertyValue("--waveform-color").trim(),
+  };
 }
+
+const PrevIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="19,20 9,12 19,4" />
+    <rect x="5" y="4" width="2" height="16" />
+  </svg>
+);
+
+const NextIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="5,4 15,12 5,20" />
+    <rect x="17" y="4" width="2" height="16" />
+  </svg>
+);
+
+const PlayIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="5,3 19,12 5,21" />
+  </svg>
+);
+
+const PauseIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <rect x="6" y="4" width="4" height="16" />
+    <rect x="14" y="4" width="4" height="16" />
+  </svg>
+);
 
 export default function AdminMusicPlayer() {
   const {
     currentSong,
     isPlaying,
+    remotePlayingInAnotherTab,
+    volume,
+    setVolume,
     togglePlayPause,
     navigateTrack,
     seekTo,
@@ -70,137 +97,192 @@ export default function AdminMusicPlayer() {
   } = usePlayer();
   const { currentTime, duration } = usePlayerProgress();
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  // Canvas-based waveform — eliminates 260+ div reconciliation on every progress tick
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const playerRef = useRef<HTMLDivElement>(null);
+  const waveformRef = useRef<HTMLDivElement>(null);
+  const playerCanvasRef = useRef<HTMLCanvasElement>(null);
   const waveformBarsRef = useRef<number[]>([]);
   const waveformProgressRef = useRef(0);
+  const playerCanvasAnimationFrameRef = useRef<number | null>(null);
+  const playerCanvasDrawCacheRef = useRef<WaveformCanvasDrawCache>(
+    createWaveformCanvasDrawCache(),
+  );
 
+  const [playerWidth, setPlayerWidth] = useState(0);
   const [waveformWidth, setWaveformWidth] = useState(0);
+  const [volumeOpen, setVolumeOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
+
+  const showWaveform = playerWidth >= WAVEFORM_MIN_WIDTH;
+  const showFullCompactTime = playerWidth >= FULL_COMPACT_TIME_MIN_WIDTH;
+  const showCompactTime =
+    !showWaveform && playerWidth >= COMPACT_TIME_MIN_WIDTH;
+  const showKey = playerWidth >= KEY_MIN_WIDTH;
+  const showBpm = playerWidth >= BPM_MIN_WIDTH;
+  const showRightMeta = showKey || showBpm;
+
+  const compressionProgress = clampNumber((playerWidth - 780) / 520, 0, 1);
+  const mainGap = 22 + compressionProgress * 24;
+  const controlsToProgressGap = 18 + compressionProgress * 18;
+  const metaGap = 24 + compressionProgress * 30;
+  const progressToMetaGap = 22 + compressionProgress * 24;
+  const metaToActionsGap = 18 + compressionProgress * 18;
+  const songInfoWidth = clampNumber(
+    150 + ((playerWidth - 620) / 580) * 50,
+    150,
+    200,
+  );
+  const waveformMaxWidth = 390 + compressionProgress * 260;
+  const progressGroupMaxWidth = waveformMaxWidth + 112;
 
   const progress =
     duration > 0 && isFinite(duration)
       ? Math.max(0, Math.min(1, currentTime / duration))
       : 0;
 
-  const isWaveformCompact = waveformWidth <= WAVEFORM_HIDE_WIDTH;
-
-  const peaks = useMemo(() => {
-    if (!currentSong) return [];
-    try {
-      const parsed = JSON.parse(currentSong.waveformPeaks);
-      return Array.isArray(parsed)
-        ? parsed.map((value) => {
-            const n = Number(value);
-            return Number.isFinite(n) ? n : 0;
-          })
-        : [];
-    } catch {
-      return [];
-    }
-  }, [currentSong]);
+  const peaks = useMemo(
+    () => (currentSong ? parseWaveformPeaks(currentSong.waveformPeaks) : []),
+    [currentSong?.id, currentSong?.waveformPeaks],
+  );
 
   const waveformBars = useMemo(
     () => buildWaveformBars(peaks, waveformWidth),
     [peaks, waveformWidth],
   );
 
-  // Stable canvas draw — reads from refs so it can be called from MutationObserver
-  // without becoming stale between renders.
-  const drawCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
+  const drawPlayerCanvas = useCallback((forceResize = false) => {
+    const canvas = playerCanvasRef.current;
     const bars = waveformBarsRef.current;
-    const prog = waveformProgressRef.current;
+    const currentProgress = waveformProgressRef.current;
 
-    if (!canvas || !bars.length || isWaveformCompact) return;
+    if (!canvas || !bars.length) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const w = canvas.clientWidth;
-    const h = canvas.clientHeight || 24;
+    drawWaveformBarsToCanvas({
+      canvas,
+      bars,
+      progress: currentProgress,
+      cache: playerCanvasDrawCacheRef.current,
+      colors: getWaveformColors(),
+      forceResize,
+      options: { barWidth: BAR_WIDTH, barGap: BAR_GAP },
+    });
+  }, []);
 
-    if (w < 4) return;
+  const schedulePlayerCanvasDraw = useCallback(
+    (forceResize = false) => {
+      if (playerCanvasAnimationFrameRef.current != null) return;
 
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
+      playerCanvasAnimationFrameRef.current = window.requestAnimationFrame(
+        () => {
+          playerCanvasAnimationFrameRef.current = null;
+          drawPlayerCanvas(forceResize);
+        },
+      );
+    },
+    [drawPlayerCanvas],
+  );
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, w, h);
-
-    // Read CSS variables fresh every draw so dark/light mode always renders correctly
-    const styles = getComputedStyle(document.documentElement);
-    const progressColor = styles.getPropertyValue("--waveform-progress").trim();
-    const inactiveColor = styles.getPropertyValue("--waveform-color").trim();
-
-    const midY = h / 2;
-    const progressBars = Math.floor(bars.length * prog);
-
-    for (let i = 0; i < bars.length; i++) {
-      const x = i * BAR_TOTAL;
-      ctx.fillStyle = i < progressBars ? progressColor : inactiveColor;
-      ctx.fillRect(x, midY - bars[i] / 2, BAR_WIDTH, bars[i]);
-    }
-  }, [isWaveformCompact]);
-
-  // Sync refs and redraw on progress or waveform data change
-  useEffect(() => {
+  useLayoutEffect(() => {
     waveformBarsRef.current = waveformBars;
     waveformProgressRef.current = progress;
-    drawCanvas();
-  }, [waveformBars, progress, drawCanvas]);
+    schedulePlayerCanvasDraw();
+  }, [waveformBars, progress, schedulePlayerCanvasDraw]);
 
-  // Redraw when theme changes (class toggled on <html> by ThemeContext)
   useEffect(() => {
-    const observer = new MutationObserver(drawCanvas);
+    const observer = new MutationObserver(() => {
+      schedulePlayerCanvasDraw(true);
+    });
     observer.observe(document.documentElement, { attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, [drawCanvas]);
+    return () => {
+      observer.disconnect();
+      if (playerCanvasAnimationFrameRef.current != null) {
+        window.cancelAnimationFrame(playerCanvasAnimationFrameRef.current);
+        playerCanvasAnimationFrameRef.current = null;
+      }
+    };
+  }, [schedulePlayerCanvasDraw]);
+
+  const gridTemplateColumns = [
+    `${songInfoWidth}px`,
+    "auto",
+    showWaveform
+      ? `minmax(192px, ${progressGroupMaxWidth}px)`
+      : showCompactTime
+        ? "auto"
+        : "",
+    showRightMeta ? "auto" : "",
+    "auto",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const player = playerRef.current;
+    if (!player) return;
 
     const updateWidth = () => {
-      setWaveformWidth(Math.floor(container.getBoundingClientRect().width));
+      setPlayerWidth(Math.floor(player.getBoundingClientRect().width));
     };
 
     updateWidth();
 
     const resizeObserver = new ResizeObserver(updateWidth);
-    resizeObserver.observe(container);
+    resizeObserver.observe(player);
     window.addEventListener("resize", updateWidth);
 
-    const t1 = window.setTimeout(updateWidth, 0);
-    const t2 = window.setTimeout(updateWidth, 100);
-    const t3 = window.setTimeout(updateWidth, 300);
+    const timeout = window.setTimeout(updateWidth, 50);
 
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener("resize", updateWidth);
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-      window.clearTimeout(t3);
+      window.clearTimeout(timeout);
     };
   }, [currentSong?.id]);
 
+  useEffect(() => {
+    if (!showWaveform) {
+      setWaveformWidth(0);
+      return;
+    }
+
+    const waveform = waveformRef.current;
+    if (!waveform) return;
+
+    const updateWidth = () => {
+      setWaveformWidth(Math.floor(waveform.getBoundingClientRect().width));
+      schedulePlayerCanvasDraw(true);
+    };
+
+    updateWidth();
+
+    const resizeObserver = new ResizeObserver(updateWidth);
+    resizeObserver.observe(waveform);
+    window.addEventListener("resize", updateWidth);
+
+    const timeout = window.setTimeout(updateWidth, 50);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateWidth);
+      window.clearTimeout(timeout);
+    };
+  }, [currentSong?.id, showWaveform, schedulePlayerCanvasDraw]);
+
   if (!currentSong) return null;
 
-  const handleWaveformClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isWaveformCompact) return;
-    const rect = e.currentTarget.getBoundingClientRect();
+  const handleWaveformClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
     if (!rect.width) return;
-    const nextProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
 
-    // Update canvas immediately for instant visual feedback before the seek resolves
+    const nextProgress = Math.max(
+      0,
+      Math.min(1, (event.clientX - rect.left) / rect.width),
+    );
+
     waveformProgressRef.current = nextProgress;
-    drawCanvas();
-
     seekTo(currentSong, nextProgress, isPlaying);
+    schedulePlayerCanvasDraw();
   };
 
   const showToast = (message: string) => {
@@ -216,111 +298,183 @@ export default function AdminMusicPlayer() {
   };
 
   const handleClosePlayer = () => {
+    setVolumeOpen(false);
     setMoreOpen(false);
     closePlayer();
   };
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-[45] flex h-[72px] items-center border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4">
-        <div className="flex w-[clamp(185px,22vw,320px)] flex-shrink-0 items-center gap-3">
+      <div
+        ref={playerRef}
+        className="filmwave-music-player grid h-[72px] items-center justify-between px-4"
+        style={{ gridTemplateColumns, columnGap: `${mainGap}px` }}
+      >
+        <div className="filmwave-player-song">
           {currentSong.coverArt ? (
-            <div className="relative h-10 w-10 flex-shrink-0">
+            <div className="filmwave-player-cover">
               <Image
                 src={currentSong.coverArt}
                 alt={currentSong.title}
                 fill
                 sizes="40px"
-                className="rounded object-cover"
+                className="object-cover"
               />
             </div>
           ) : (
-            <div className="h-10 w-10 flex-shrink-0 rounded bg-[var(--bg-hover)]" />
+            <div className="filmwave-player-cover" />
           )}
 
-          <div className="min-w-0">
-            <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+          <div className="filmwave-player-song-copy">
+            <div title={currentSong.title} className="filmwave-player-title">
               {currentSong.title}
             </div>
-            <div className="truncate text-xs text-[var(--text-subtle)]">
-              {currentSong.artist}
+            <div
+              title={
+                remotePlayingInAnotherTab
+                  ? "Playing in another tab"
+                  : currentSong.artist
+              }
+              className="flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--text-subtle)]"
+            >
+              {remotePlayingInAnotherTab ? (
+                <>
+                  <span className="relative flex h-1.5 w-1.5 flex-shrink-0">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--text-muted)] opacity-40" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--text-muted)]" />
+                  </span>
+                  <span className="truncate text-[var(--text-muted)]">
+                    Playing in another tab
+                  </span>
+                </>
+              ) : (
+                <span className="truncate">{currentSong.artist}</span>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="mx-[clamp(12px,2vw,24px)] flex min-w-0 flex-1 items-center justify-center gap-[clamp(12px,2vw,24px)]">
+        <div className="filmwave-player-controls">
           <button
             type="button"
             onClick={() => navigateTrack("prev")}
-            className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
             aria-label="Previous song"
           >
-            <PreviousTrackIcon />
+            <PrevIcon />
           </button>
 
           <button
             type="button"
             onClick={() => togglePlayPause(currentSong)}
-            className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
             aria-label={isPlaying ? "Pause song" : "Play song"}
           >
-            {isPlaying ? <PlayerPauseIcon /> : <PlayerPlayIcon />}
+            {isPlaying ? <PauseIcon /> : <PlayIcon />}
           </button>
 
           <button
             type="button"
             onClick={() => navigateTrack("next")}
-            className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
             aria-label="Next song"
           >
-            <NextTrackIcon />
+            <NextIcon />
           </button>
-
-          <div className="flex min-w-0 flex-1 items-center justify-center">
-            {/* Compact time display (narrow screens) */}
-            <div className="flex h-[24px] w-[86px] flex-shrink-0 items-center justify-center whitespace-nowrap text-xs text-[var(--icon-color)] min-[791px]:hidden">
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </div>
-
-            {/* Waveform + timestamps (wide screens) */}
-            <div className="hidden min-w-0 flex-1 items-center gap-4 min-[791px]:flex">
-              <span className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]`}>
-                {formatTime(currentTime)}
-              </span>
-
-              <div
-                ref={containerRef}
-                data-player-waveform-slot
-                className="relative flex h-[24px] min-w-0 max-w-[500px] flex-1 cursor-pointer items-center"
-                onClick={handleWaveformClick}
-              >
-                {isWaveformCompact ? (
-                  <div className="absolute inset-0 flex items-center justify-center whitespace-nowrap text-xs text-[var(--icon-color)]">
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </div>
-                ) : (
-                  // Canvas waveform — redraws imperatively on progress/theme change.
-                  // Replaces 260+ div elements that re-evaluated color on every tick.
-                  <canvas
-                    ref={canvasRef}
-                    className="h-full w-full"
-                    style={{ display: "block" }}
-                  />
-                )}
-              </div>
-
-              <span className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-xs text-[var(--icon-color)]`}>
-                {formatTime(duration)}
-              </span>
-            </div>
-          </div>
         </div>
 
-        <div className="ml-auto flex flex-shrink-0 items-center">
-          <div className="mr-[clamp(16px,4vw,40px)] flex items-center gap-[clamp(24px,5vw,40px)] text-xs text-[var(--text-secondary)] max-[600px]:hidden">
-            <span>{currentSong.key}</span>
-            <span className="max-[645px]:hidden">{currentSong.bpm} BPM</span>
+        {(showWaveform || showCompactTime) && (
+          <div
+            className="relative z-10 flex min-w-0 items-center justify-center overflow-visible"
+            style={{
+              marginLeft: `${controlsToProgressGap - mainGap}px`,
+              marginRight: `${progressToMetaGap - mainGap}px`,
+            }}
+          >
+            {showWaveform ? (
+              <div className="flex w-full min-w-0 items-center gap-4 overflow-visible">
+                <span className="w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]">
+                  {formatTime(currentTime)}
+                </span>
+
+                <div
+                  ref={waveformRef}
+                  data-player-waveform-slot
+                  className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-visible"
+                  onClick={handleWaveformClick}
+                >
+                  <canvas
+                    ref={playerCanvasRef}
+                    className="relative z-10 h-full w-full"
+                    style={{ display: "block" }}
+                  />
+                </div>
+
+                <span className="w-10 flex-shrink-0 text-xs text-[var(--icon-color)]">
+                  {formatTime(duration)}
+                </span>
+              </div>
+            ) : (
+              <div className="whitespace-nowrap text-xs text-[var(--icon-color)]">
+                {showFullCompactTime
+                  ? `${formatTime(currentTime)} / ${formatTime(duration)}`
+                  : formatTime(currentTime)}
+              </div>
+            )}
           </div>
+        )}
+
+        {showRightMeta && (
+          <div className="filmwave-player-meta" style={{ gap: `${metaGap}px` }}>
+            {showKey && (
+              <span className="whitespace-nowrap">
+                {currentSong.key || "—"}
+              </span>
+            )}
+            {showBpm && (
+              <span className="whitespace-nowrap">
+                {currentSong.bpm ? `${currentSong.bpm} BPM` : "—"}
+              </span>
+            )}
+          </div>
+        )}
+
+        <div
+          className="filmwave-player-actions"
+          style={{ marginLeft: `${metaToActionsGap - mainGap}px` }}
+        >
+          <DropdownShell
+            open={volumeOpen}
+            onOpenChange={setVolumeOpen}
+            placement="top"
+            offsetAmount={8}
+            flippedOffsetAmount={8}
+            collisionPadding={{
+              top: 72,
+              right: 16,
+              bottom: 58,
+              left: 16,
+            }}
+            className="filmwave-player-volume-popover"
+            trigger={({ open }) => (
+              <button
+                type="button"
+                aria-label="Volume"
+                aria-expanded={open}
+                className={`${iconButtonClass} filmwave-player-volume-button ${open ? "is-open" : ""}`}
+              >
+                <VolumeIcon muted={volume === 0} />
+              </button>
+            )}
+          >
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              aria-label="Player volume"
+              className="filmwave-player-volume-slider"
+              onChange={(event) => setVolume(Number(event.currentTarget.value))}
+            />
+          </DropdownShell>
 
           <DropdownShell
             open={moreOpen}
