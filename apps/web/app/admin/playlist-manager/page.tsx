@@ -5,14 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import AdminAllPlaylistsView from "@/components/admin/AdminAllPlaylistsView";
-import AdminBrowseTaxonomyView from "@/components/admin/AdminBrowseTaxonomyView";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
 import AdminPlaylistLibraryView from "@/components/admin/AdminPlaylistLibraryView";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
-type ManagerTab = "playlists" | "curated" | "discover" | "browse";
+type ManagerTab = "playlists" | "curated" | "discover";
 
 export default function PlaylistManagerPage() {
   const searchParams = useSearchParams();
@@ -21,9 +20,7 @@ export default function PlaylistManagerPage() {
       ? "discover"
       : searchParams.get("tab") === "curated"
         ? "curated"
-        : searchParams.get("tab") === "browse"
-          ? "browse"
-          : "playlists";
+        : "playlists";
 
   const [activeTab, setActiveTab] = useState<ManagerTab>(queryTab);
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
@@ -106,28 +103,24 @@ export default function PlaylistManagerPage() {
     >
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          {(["playlists", "curated", "discover", "browse"] as ManagerTab[]).map(
-            (tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`h-10 min-w-[104px] cursor-pointer rounded-[7px] border px-5 text-sm font-medium transition ${
-                  activeTab === tab
-                    ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                    : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                }`}
-              >
-                {tab === "playlists"
-                  ? "All Playlists"
-                  : tab === "curated"
-                    ? "Curated"
-                    : tab === "discover"
-                      ? "Discover"
-                      : "Browse Setup"}
-              </button>
-            ),
-          )}
+          {(["playlists", "curated", "discover"] as ManagerTab[]).map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`h-10 min-w-[104px] cursor-pointer rounded-[7px] border px-5 text-sm font-medium transition ${
+                activeTab === tab
+                  ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
+                  : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              }`}
+            >
+              {tab === "playlists"
+                ? "All Playlists"
+                : tab === "curated"
+                  ? "Curated"
+                  : "Discover"}
+            </button>
+          ))}
         </div>
 
         <Link
@@ -154,14 +147,12 @@ export default function PlaylistManagerPage() {
             loading={loading}
             error={error}
           />
-        ) : activeTab === "discover" ? (
+        ) : (
           <AdminDiscoverLibraryView
             playlists={playlists}
             loading={loading}
             error={error}
           />
-        ) : (
-          <AdminBrowseTaxonomyView />
         )}
       </div>
 
