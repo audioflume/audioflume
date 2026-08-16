@@ -358,16 +358,22 @@ export default function AdminPlaylistLibraryView({
                     collapsed={collapsedSections.newlyAdded}
                     onToggle={() => toggleSection("newlyAdded")}
                   >
-                    <div className={PLAYLIST_MANAGER_GRID_CLASS}>
-                      {newlyAdded.map((playlist) => (
-                        <PlaylistManagerStaticCard
-                          key={playlist.id}
-                          playlist={playlist}
-                          editHref={`/admin/playlist-manager/${playlist.id}/edit`}
-                          meta={`${playlist.song_count || 0} songs`}
-                        />
-                      ))}
-                    </div>
+                    {newlyAdded.length === 0 ? (
+                      <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)]">
+                        No playlists yet.
+                      </div>
+                    ) : (
+                      <div className={PLAYLIST_MANAGER_GRID_CLASS}>
+                        {newlyAdded.map((playlist) => (
+                          <PlaylistManagerStaticCard
+                            key={playlist.id}
+                            playlist={playlist}
+                            editHref={`/admin/playlist-manager/${playlist.id}/edit`}
+                            meta={`${playlist.song_count || 0} songs`}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </PlaylistManagerCollapsibleSection>
                 )}
               </div>
