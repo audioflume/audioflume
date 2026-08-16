@@ -836,10 +836,11 @@ export default function MusicPlayer() {
             <a
               href={currentSong.audioUrl}
               download
-              aria-label="Download song"
-              className={iconButtonClass}
+              aria-label="License song"
+              className="inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-[7px] bg-black px-3 text-[11px] font-medium leading-none text-white transition-colors hover:bg-neutral-800"
             >
-              <DownloadIcon />
+              <span>License</span>
+              <DownloadIcon size={13} />
             </a>
           )}
         </div>
