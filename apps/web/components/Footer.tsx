@@ -75,6 +75,8 @@ export default function Footer({
   const [musicTarget, setMusicTarget] = useState<HTMLElement | null>(null);
   const playerVisible = Boolean(currentSong);
   const isMusicPage = pathname === "/music";
+  const isAdminPage = pathname.startsWith("/admin");
+  const shouldUsePlayerPadding = playerPadding || isAdminPage;
   const isProjectDetailPage = /^\/projects\/[^/]+/.test(pathname);
   const isPlaylistDetailPage = /^\/playlists\/[^/]+/.test(pathname);
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
@@ -145,7 +147,7 @@ export default function Footer({
         style={{
           paddingRight: removePageGutter ? "0px" : undefined,
           paddingLeft: removePageGutter ? "0px" : undefined,
-          paddingBottom: playerPadding
+          paddingBottom: shouldUsePlayerPadding
             ? playerVisible
               ? "calc(72px + 8px)"
               : "8px"
