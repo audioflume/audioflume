@@ -408,7 +408,7 @@ export default function AdminSongUploadPresentationInjector() {
 
         accumulatedStemFiles.forEach((file) => {
           const item = document.createElement("div");
-          item.className = "truncate";
+          item.className = "admin-song-stem-file-item truncate";
           item.textContent = file.name;
           fragment.appendChild(item);
         });
@@ -955,7 +955,7 @@ export default function AdminSongUploadPresentationInjector() {
         .admin-song-upload-content-page .admin-song-upload-stem-list > * {
           min-height: 34px;
           border-top: 1px solid var(--border-subtle);
-          padding: 8px 10px;
+          padding: 8px 10px !important;
         }
 
         .admin-song-upload-content-page .admin-song-upload-stem-list > *:first-child {
@@ -963,11 +963,17 @@ export default function AdminSongUploadPresentationInjector() {
         }
 
         .admin-song-upload-content-page .admin-song-upload-stem-list .admin-song-stem-file-item {
+          display: flex;
+          min-height: 34px;
+          align-items: center;
+          justify-content: space-between;
           gap: 12px;
+          padding: 8px 10px !important;
           color: var(--text-primary);
         }
 
         .admin-song-upload-content-page .admin-song-upload-stem-list .admin-song-stem-file-remove {
+          flex: 0 0 auto;
           padding: 0;
         }
 
