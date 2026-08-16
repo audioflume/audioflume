@@ -1,11 +1,11 @@
 "use client";
 
+import { DropdownShell } from "@filmwave/shared";
 import Image from "next/image";
 import Link from "next/link";
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -19,7 +19,7 @@ import PlayerPlayIcon from "@/components/icons/PlayerPlayIcon";
 import PreviousTrackIcon from "@/components/icons/PreviousTrackIcon";
 import Toast from "@/components/Toast";
 import AdminAddToPlaylistModal from "@/components/admin/AdminAddToPlaylistModal";
-import { iconButtonActiveClass, iconButtonClass } from "@/components/uiClasses";
+import { iconButtonClass } from "@/components/uiClasses";
 
 const WAVEFORM_HIDE_WIDTH = 80;
 const BAR_WIDTH = 2;
@@ -31,10 +31,6 @@ function formatTime(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.floor(seconds % 60);
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
-function clampNumber(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
 }
 
 function normalizePeaks(peaks: number[]) {
@@ -54,7 +50,10 @@ function buildWaveformBars(peaks: number[], width: number) {
   const samplesPerBar = normalizedPeaks.length / barCount;
   return Array.from({ length: barCount }, (_, index) => {
     const start = Math.floor(index * samplesPerBar);
-    const end = Math.min(normalizedPeaks.length, Math.floor((index + 1) * samplesPerBar));
+    const end = Math.min(
+      normalizedPeaks.length,
+      Math.floor((index + 1) * samplesPerBar),
+    );
     let barPeak = 0;
     for (let i = start; i < end; i++) {
       if (normalizedPeaks[i] > barPeak) barPeak = normalizedPeaks[i];
@@ -79,14 +78,11 @@ export default function AdminMusicPlayer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const waveformBarsRef = useRef<number[]>([]);
   const waveformProgressRef = useRef(0);
-  const moreButtonRef = useRef<HTMLButtonElement>(null);
-  const moreMenuRef = useRef<HTMLDivElement>(null);
 
   const [waveformWidth, setWaveformWidth] = useState(0);
   const [moreOpen, setMoreOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
-  const [moreMenuPosition, setMoreMenuPosition] = useState({ top: 0, left: 0 });
 
   const progress =
     duration > 0 && isFinite(duration)
@@ -168,23 +164,6 @@ export default function AdminMusicPlayer() {
     return () => observer.disconnect();
   }, [drawCanvas]);
 
-  const updateMoreMenuPosition = useCallback(() => {
-    const trigger = moreButtonRef.current;
-    const menu = moreMenuRef.current;
-    if (!trigger || !menu) return;
-    const triggerRect = trigger.getBoundingClientRect();
-    const menuRect = menu.getBoundingClientRect();
-    const viewportPadding = 16;
-    const playerGap = 6;
-    const left = clampNumber(
-      triggerRect.right - menuRect.width,
-      viewportPadding,
-      window.innerWidth - menuRect.width - viewportPadding,
-    );
-    const top = Math.max(viewportPadding, triggerRect.top - menuRect.height - playerGap);
-    setMoreMenuPosition({ top, left });
-  }, []);
-
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -212,49 +191,16 @@ export default function AdminMusicPlayer() {
     };
   }, [currentSong?.id]);
 
-  useLayoutEffect(() => {
-    if (!moreOpen) return;
-    updateMoreMenuPosition();
-    const frame = window.requestAnimationFrame(updateMoreMenuPosition);
-    return () => window.cancelAnimationFrame(frame);
-  }, [moreOpen, updateMoreMenuPosition]);
-
-  useEffect(() => {
-    if (!moreOpen) return;
-    const handlePositionUpdate = () => updateMoreMenuPosition();
-    window.addEventListener("resize", handlePositionUpdate);
-    window.addEventListener("scroll", handlePositionUpdate, true);
-    return () => {
-      window.removeEventListener("resize", handlePositionUpdate);
-      window.removeEventListener("scroll", handlePositionUpdate, true);
-    };
-  }, [moreOpen, updateMoreMenuPosition]);
-
-  useEffect(() => {
-    if (!moreOpen) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (moreButtonRef.current?.contains(target) || moreMenuRef.current?.contains(target)) return;
-      setMoreOpen(false);
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMoreOpen(false);
-    };
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [moreOpen]);
-
   if (!currentSong) return null;
 
   const handleWaveformClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isWaveformCompact) return;
     const rect = e.currentTarget.getBoundingClientRect();
     if (!rect.width) return;
-    const nextProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const nextProgress = Math.max(
+      0,
+      Math.min(1, (e.clientX - rect.left) / rect.width),
+    );
 
     // Update canvas immediately for instant visual feedback before the seek resolves
     waveformProgressRef.current = nextProgress;
@@ -282,74 +228,6 @@ export default function AdminMusicPlayer() {
 
   return (
     <>
-      <style>{`
-        .music-player-more-menu {
-          z-index: 95;
-          width: 230px;
-          overflow: hidden;
-          border-radius: 14px;
-          border: 1px solid var(--border);
-          background: color-mix(in srgb, var(--bg-primary) 94%, transparent);
-          box-shadow: var(--shadow-ui);
-          backdrop-filter: blur(18px);
-          padding: 6px;
-          color: var(--text-primary);
-        }
-
-        .light .music-player-more-menu {
-          background: color-mix(in srgb, var(--bg-primary) 98%, transparent);
-        }
-
-        .music-player-more-menu button,
-        .music-player-more-menu a {
-          display: flex;
-          min-height: 38px;
-          width: 100%;
-          cursor: pointer;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-          border-radius: 9px;
-          padding: 0 12px;
-          text-align: left;
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--text-secondary);
-          transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
-          text-decoration: none;
-        }
-
-        .music-player-more-menu button:hover,
-        .music-player-more-menu a:hover {
-          background: var(--bg-hover-strong);
-          color: var(--text-primary);
-        }
-
-        .music-player-more-menu button:disabled {
-          cursor: default;
-          opacity: 0.45;
-        }
-
-        .music-player-more-menu button:disabled:hover {
-          background: transparent;
-          color: var(--text-secondary);
-        }
-
-        .music-player-more-menu-divider {
-          height: 1px;
-          margin: 6px 4px;
-          background: var(--border-subtle);
-        }
-
-        .music-player-more-menu-close {
-          color: var(--danger) !important;
-        }
-
-        .music-player-more-menu-close:hover {
-          color: var(--danger) !important;
-        }
-      `}</style>
-
       <div className="fixed bottom-0 left-0 right-0 z-[45] flex h-[72px] items-center border-t border-[var(--border)] bg-[var(--bg-secondary)] px-4">
         <div className="flex w-[clamp(185px,22vw,320px)] flex-shrink-0 items-center gap-3">
           {currentSong.coverArt ? (
@@ -412,7 +290,9 @@ export default function AdminMusicPlayer() {
 
             {/* Waveform + timestamps (wide screens) */}
             <div className="hidden min-w-0 flex-1 items-center gap-4 min-[791px]:flex">
-              <span className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]`}>
+              <span
+                className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]`}
+              >
                 {formatTime(currentTime)}
               </span>
 
@@ -437,7 +317,9 @@ export default function AdminMusicPlayer() {
                 )}
               </div>
 
-              <span className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-xs text-[var(--icon-color)]`}>
+              <span
+                className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-xs text-[var(--icon-color)]`}
+              >
                 {formatTime(duration)}
               </span>
             </div>
@@ -450,54 +332,83 @@ export default function AdminMusicPlayer() {
             <span className="max-[645px]:hidden">{currentSong.bpm} BPM</span>
           </div>
 
-          <button
-            ref={moreButtonRef}
-            type="button"
-            onClick={(e) => { e.stopPropagation(); setMoreOpen((open) => !open); }}
-            className={`${iconButtonClass} ${moreOpen ? iconButtonActiveClass : ""}`}
-            aria-label="Song options"
-            aria-expanded={moreOpen}
+          <DropdownShell
+            open={moreOpen}
+            onOpenChange={setMoreOpen}
+            placement="top-end"
+            offsetAmount={8}
+            collisionPadding={{
+              top: 72,
+              right: 16,
+              bottom: 58,
+              left: 16,
+            }}
+            trigger={({ open }) => (
+              <button
+                type="button"
+                aria-label="Song options"
+                aria-expanded={open}
+                className={`${iconButtonClass} ${
+                  open
+                    ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)]"
+                    : ""
+                }`}
+              >
+                <MoreIcon />
+              </button>
+            )}
           >
-            <MoreIcon />
-          </button>
+            <Link
+              href={`/admin/songs/${currentSong.id}/edit`}
+              onClick={() => setMoreOpen(false)}
+            >
+              <span>Edit Details</span>
+            </Link>
+
+            {currentSong.audioUrl ? (
+              <a
+                href={currentSong.audioUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setMoreOpen(false)}
+              >
+                <span>Open Audio</span>
+              </a>
+            ) : (
+              <button type="button" disabled>
+                <span>Open Audio</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={copyAudioUrl}
+              disabled={!currentSong.audioUrl}
+            >
+              <span>Copy Audio URL</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setMoreOpen(false);
+                setPlaylistModalOpen(true);
+              }}
+            >
+              <span>Add to Playlist</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleClosePlayer}
+              className="danger-hover"
+            >
+              <span>Close Player</span>
+              <FailedIcon size={13} strokeWidth={2.4} />
+            </button>
+          </DropdownShell>
         </div>
       </div>
-
-      {moreOpen && (
-        <div
-          ref={moreMenuRef}
-          className="music-player-more-menu fixed"
-          style={{ top: `${moreMenuPosition.top}px`, left: `${moreMenuPosition.left}px` }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Link href={`/admin/songs/${currentSong.id}/edit`} onClick={() => setMoreOpen(false)}>
-            <span>Edit Details</span>
-          </Link>
-
-          {currentSong.audioUrl ? (
-            <a href={currentSong.audioUrl} target="_blank" rel="noreferrer" onClick={() => setMoreOpen(false)}>
-              <span>Open Audio</span>
-            </a>
-          ) : (
-            <button type="button" disabled><span>Open Audio</span></button>
-          )}
-
-          <button type="button" onClick={copyAudioUrl} disabled={!currentSong.audioUrl}>
-            <span>Copy Audio URL</span>
-          </button>
-
-          <button type="button" onClick={() => { setMoreOpen(false); setPlaylistModalOpen(true); }}>
-            <span>Add to Playlist</span>
-          </button>
-
-          <div className="music-player-more-menu-divider" />
-
-          <button type="button" onClick={handleClosePlayer} className="music-player-more-menu-close">
-            <span>Close Player</span>
-            <FailedIcon size={13} strokeWidth={2.4} />
-          </button>
-        </div>
-      )}
 
       <AdminAddToPlaylistModal
         isOpen={playlistModalOpen}
