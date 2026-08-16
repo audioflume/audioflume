@@ -17,7 +17,7 @@ import type { CuratedPlaylistShelfState } from "@/lib/curatedPlaylistShelves";
 import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
 
 type CuratedPlaylistWithBrowseAssignments = CuratedPlaylist & {
-  browse_assignments: CuratedBrowseAssignment[];
+  browse_assignments?: CuratedBrowseAssignment[];
 };
 
 type CuratedShelfGroup = {
