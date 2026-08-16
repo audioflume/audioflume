@@ -140,12 +140,100 @@ export async function PATCH(req: Request) {
     const id = cleanId(body.id);
     const label = cleanLabel(body.label);
     const browseFilters = cleanBrowseFilters(body.browse_filters);
+    const mergeIntoId = cleanId(body.merge_into_id);
 
     if (!id || !label) {
       return NextResponse.json(
         { error: "Missing subcategory details" },
         { status: 400 },
       );
+    }
+
+    if (mergeIntoId && mergeIntoId !== id) {
+      const { data: mergeRows, error: mergeRowsError } = await supabaseServer
+        .from("curated_browse_subcategories")
+        .select("id, slug, label, position")
+        .in("id", [id, mergeIntoId]);
+
+      if (mergeRowsError) throw mergeRowsError;
+
+      const source = (mergeRows ?? []).find((row) => Number(row.id) === id);
+      const target = (mergeRows ?? []).find(
+        (row) => Number(row.id) === mergeIntoId,
+      );
+
+      if (!source || !target) {
+        return NextResponse.json(
+          { error: "Browse subcategory not found" },
+          { status: 404 },
+        );
+      }
+
+      const { data: sourceMappings, error: sourceMappingsError } =
+        await supabaseServer
+          .from("curated_browse_filter_subcategories")
+          .select("browse_filter, position")
+          .eq("subcategory_id", id);
+
+      if (sourceMappingsError) throw sourceMappingsError;
+
+      if ((sourceMappings ?? []).length > 0) {
+        const { error: mergeMappingsError } = await supabaseServer
+          .from("curated_browse_filter_subcategories")
+          .upsert(
+            (sourceMappings ?? []).map((mapping) => ({
+              browse_filter: mapping.browse_filter,
+              subcategory_id: mergeIntoId,
+              position: Number(mapping.position || 0),
+            })),
+            {
+              onConflict: "browse_filter,subcategory_id",
+              ignoreDuplicates: true,
+            },
+          );
+
+        if (mergeMappingsError) throw mergeMappingsError;
+      }
+
+      const { data: sourceAssignments, error: sourceAssignmentsError } =
+        await supabaseServer
+          .from("curated_playlist_browse_assignments")
+          .select("curated_playlist_id, browse_filter")
+          .eq("subcategory_id", id);
+
+      if (sourceAssignmentsError) throw sourceAssignmentsError;
+
+      if ((sourceAssignments ?? []).length > 0) {
+        const { error: mergeAssignmentsError } = await supabaseServer
+          .from("curated_playlist_browse_assignments")
+          .upsert(
+            (sourceAssignments ?? []).map((assignment) => ({
+              curated_playlist_id: assignment.curated_playlist_id,
+              browse_filter: assignment.browse_filter,
+              subcategory_id: mergeIntoId,
+            })),
+            {
+              onConflict:
+                "curated_playlist_id,browse_filter,subcategory_id",
+              ignoreDuplicates: true,
+            },
+          );
+
+        if (mergeAssignmentsError) throw mergeAssignmentsError;
+      }
+
+      const { error: deleteSourceError } = await supabaseServer
+        .from("curated_browse_subcategories")
+        .delete()
+        .eq("id", id);
+
+      if (deleteSourceError) throw deleteSourceError;
+
+      return NextResponse.json({
+        ...target,
+        merged_from_id: id,
+        merged_into_id: mergeIntoId,
+      });
     }
 
     const { data: subcategory, error: updateError } = await supabaseServer
