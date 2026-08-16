@@ -13,24 +13,40 @@ import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 type ManagerTab = "playlists" | "curated" | "discover";
 
+const PLAYLIST_MANAGER_TAB_STORAGE_KEY = "audioflume-admin-playlist-manager-tab";
+
+function isManagerTab(value: string | null): value is ManagerTab {
+  return value === "playlists" || value === "curated" || value === "discover";
+}
+
 export default function PlaylistManagerPage() {
   const searchParams = useSearchParams();
-  const queryTab: ManagerTab =
-    searchParams.get("tab") === "discover"
-      ? "discover"
-      : searchParams.get("tab") === "curated"
-        ? "curated"
-        : "playlists";
+  const tabParam = searchParams.get("tab");
+  const queryTab: ManagerTab | null = isManagerTab(tabParam) ? tabParam : null;
 
-  const [activeTab, setActiveTab] = useState<ManagerTab>(queryTab);
+  const [activeTab, setActiveTab] = useState<ManagerTab>(queryTab ?? "playlists");
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
-    setActiveTab(queryTab);
+    if (queryTab) {
+      setActiveTab(queryTab);
+      window.localStorage.setItem(PLAYLIST_MANAGER_TAB_STORAGE_KEY, queryTab);
+      return;
+    }
+
+    const storedTab = window.localStorage.getItem(PLAYLIST_MANAGER_TAB_STORAGE_KEY);
+    if (isManagerTab(storedTab)) {
+      setActiveTab(storedTab);
+    }
   }, [queryTab]);
+
+  const selectTab = (tab: ManagerTab) => {
+    setActiveTab(tab);
+    window.localStorage.setItem(PLAYLIST_MANAGER_TAB_STORAGE_KEY, tab);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -107,7 +123,7 @@ export default function PlaylistManagerPage() {
             <button
               key={tab}
               type="button"
-              onClick={() => setActiveTab(tab)}
+              onClick={() => selectTab(tab)}
               className={`h-10 min-w-[104px] cursor-pointer rounded-[7px] border px-5 text-[12px] font-normal transition ${
                 activeTab === tab
                   ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
