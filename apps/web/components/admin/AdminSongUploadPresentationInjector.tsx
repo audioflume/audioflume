@@ -131,7 +131,7 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
     {
       label: "Choose Stems",
       rowIndex: 2,
-      icon: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="8" cy="6" r="2" fill="var(--bg-secondary)" stroke="currentColor" stroke-width="1.9"/><circle cx="15" cy="12" r="2" fill="var(--bg-secondary)" stroke="currentColor" stroke-width="1.9"/><circle cx="11" cy="18" r="2" fill="var(--bg-secondary)" stroke="currentColor" stroke-width="1.9"/></svg>`,
+      icon: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="5" cy="6" r="1.25" fill="currentColor"/><circle cx="5" cy="12" r="1.25" fill="currentColor"/><circle cx="5" cy="18" r="1.25" fill="currentColor"/><path d="M9 6H20M9 12H20M9 18H20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>`,
     },
   ];
 
