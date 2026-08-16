@@ -53,6 +53,7 @@ export default function CuratedFeatureFilters({
         activeFilter={activeFilter}
         onFilterChange={onFilterChange}
         className="curated-page-browse-filters"
+        pillStyle={{ height: "65px", borderRadius: "7px" }}
       />
     </div>
   );
