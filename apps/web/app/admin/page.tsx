@@ -252,14 +252,14 @@ function RecentSongsCard({
       />
 
       <div className="mb-5 overflow-hidden">
-        <div className="overflow-x-auto overflow-y-hidden">
-          <div className="admin-dashboard-song-list min-w-[920px]">
+        <div className="overflow-x-auto overflow-y-hidden lg:overflow-x-visible">
+          <div className="admin-dashboard-song-list min-w-[680px] lg:min-w-0">
             {songsLoading && (
               <div className="grid gap-0 border-t border-[var(--border-subtle)]">
                 {Array.from({ length: 6 }, (_, index) => (
                   <div
                     key={index}
-                    className="grid min-h-[72px] grid-cols-[68px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_112px_64px] items-center gap-4 px-5"
+                    className="grid min-h-[72px] grid-cols-[68px_minmax(0,1.4fr)_minmax(0,1fr)_minmax(104px,140px)_48px_64px_56px] items-center gap-3 px-5"
                     style={{
                       borderBottom:
                         index === 5
@@ -273,7 +273,6 @@ function RecentSongsCard({
                     <div className="h-6 w-[72px] rounded-full bg-[var(--bg-tertiary)]" />
                     <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
                     <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
-                    <div className="h-2 w-[72px] bg-[var(--bg-tertiary)]" />
                     <div className="h-2 w-[18px] bg-[var(--bg-tertiary)]" />
                   </div>
                 ))}
@@ -300,7 +299,6 @@ function RecentSongsCard({
                     onDeleted={onDeleted}
                     statusDisplay="published"
                     size="large"
-                    showAddedDate
                     colorOnlyActions
                   />
                 ))}
@@ -480,8 +478,8 @@ export default function AdminDashboardPage() {
         }
 
         .admin-dashboard-song-list .admin-song-row {
-          grid-template-columns: 68px minmax(160px, 1.4fr) minmax(120px, 1fr) minmax(152px, 180px) 64px 76px 112px 64px;
-          column-gap: 16px;
+          grid-template-columns: 68px minmax(0, 1.4fr) minmax(0, 1fr) minmax(104px, 140px) 48px 64px 56px;
+          column-gap: 12px;
           padding-left: 20px;
           padding-right: 20px;
         }
