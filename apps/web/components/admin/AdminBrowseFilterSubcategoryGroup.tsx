@@ -1,12 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import DropdownShell from "@/components/DropdownShell";
-import MoreIcon from "@/components/icons/MoreIcon";
-import {
-  iconButtonActiveClass,
-  smallIconButtonClass,
-} from "@/components/uiClasses";
+import { useMemo, useState } from "react";
+import EditIcon from "@/components/icons/EditIcon";
+import { smallIconButtonClass } from "@/components/uiClasses";
 import type {
   CuratedBrowseSubcategoryRecord,
   CuratedBrowseTaxonomy,
@@ -14,7 +10,7 @@ import type {
 } from "@/lib/curatedBrowseTaxonomy";
 import type { CuratedBrowseTag } from "@/lib/curatedPlaylists";
 
-type GroupMode = "edit" | "delete" | null;
+type GroupMode = "edit" | null;
 
 type Props = {
   filter: CuratedBrowseTaxonomyFilter;
@@ -67,7 +63,6 @@ export default function AdminBrowseFilterSubcategoryGroup({
   onToast,
 }: Props) {
   const [mode, setMode] = useState<GroupMode>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [labelDrafts, setLabelDrafts] = useState<Record<number, string>>({});
   const [newFieldOpen, setNewFieldOpen] = useState(false);
   const [newValue, setNewValue] = useState("");
@@ -75,16 +70,6 @@ export default function AdminBrowseFilterSubcategoryGroup({
   const [newDropdownOpen, setNewDropdownOpen] = useState(false);
   const [deleteIds, setDeleteIds] = useState<number[]>([]);
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (mode !== "edit") return;
-
-    const nextDrafts: Record<number, string> = {};
-    for (const subcategory of filter.subcategories) {
-      nextDrafts[subcategory.id] = subcategory.label;
-    }
-    setLabelDrafts(nextDrafts);
-  }, [filter.subcategories, mode]);
 
   const currentSubcategoryIds = useMemo(
     () => new Set(filter.subcategories.map((subcategory) => subcategory.id)),
@@ -96,9 +81,10 @@ export default function AdminBrowseFilterSubcategoryGroup({
 
     return taxonomy.subcategories.filter(
       (subcategory) =>
-        !query || subcategory.label.toLowerCase().includes(query),
+        !currentSubcategoryIds.has(subcategory.id) &&
+        (!query || subcategory.label.toLowerCase().includes(query)),
     );
-  }, [newValue, taxonomy.subcategories]);
+  }, [currentSubcategoryIds, newValue, taxonomy.subcategories]);
 
   function resetEditState() {
     setLabelDrafts({});
@@ -106,6 +92,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
     setNewValue("");
     setSelectedExistingId(null);
     setNewDropdownOpen(false);
+    setDeleteIds([]);
   }
 
   function enterEditMode() {
@@ -116,14 +103,6 @@ export default function AdminBrowseFilterSubcategoryGroup({
     setLabelDrafts(nextDrafts);
     setDeleteIds([]);
     setMode("edit");
-    setMenuOpen(false);
-  }
-
-  function enterDeleteMode() {
-    resetEditState();
-    setDeleteIds([]);
-    setMode((current) => (current === "delete" ? null : "delete"));
-    setMenuOpen(false);
   }
 
   async function refreshTaxonomy() {
@@ -246,9 +225,13 @@ export default function AdminBrowseFilterSubcategoryGroup({
       }
 
       onDeletedSubcategories(deleteIds);
+      setLabelDrafts((current) => {
+        const next = { ...current };
+        for (const id of deleteIds) delete next[id];
+        return next;
+      });
       await refreshTaxonomy();
       setDeleteIds([]);
-      setMode(null);
       onToast(names.length === 1 ? "Category deleted" : "Categories deleted");
     } catch (err) {
       onToast(
@@ -268,7 +251,6 @@ export default function AdminBrowseFilterSubcategoryGroup({
   }
 
   function selectExisting(subcategory: CuratedBrowseSubcategoryRecord) {
-    if (currentSubcategoryIds.has(subcategory.id)) return;
     setNewValue(subcategory.label);
     setSelectedExistingId(subcategory.id);
     setNewDropdownOpen(false);
@@ -288,7 +270,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 type="button"
                 onClick={() => void saveEdits()}
                 disabled={saving}
-                className="text-sm font-medium text-[var(--text-primary)] transition disabled:opacity-40"
+                className="text-[11px] font-medium text-[var(--text-primary)] transition disabled:opacity-40"
               >
                 {saving ? "Saving..." : "Save"}
               </button>
@@ -299,63 +281,46 @@ export default function AdminBrowseFilterSubcategoryGroup({
                   setMode(null);
                 }}
                 disabled={saving}
-                className="text-sm font-medium text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
+                className="text-[11px] font-medium text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
               >
                 Cancel
               </button>
+              {deleteIds.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => void deleteSelected()}
+                  disabled={saving}
+                  className="text-[11px] font-medium text-[var(--danger)] transition disabled:opacity-40"
+                >
+                  {saving ? "Deleting..." : "Delete"}
+                </button>
+              )}
             </>
           )}
 
-          {mode === "delete" && deleteIds.length > 0 && (
-            <button
-              type="button"
-              onClick={() => void deleteSelected()}
-              disabled={saving}
-              className="text-sm font-medium text-[var(--danger)] transition disabled:opacity-40"
-            >
-              {saving ? "Deleting..." : "Delete"}
-            </button>
-          )}
-
-          <DropdownShell
-            open={menuOpen}
-            onOpenChange={setMenuOpen}
-            placement="bottom-end"
-            trigger={({ open }) => (
-              <button
-                type="button"
-                className={`${smallIconButtonClass} ${
-                  open ? iconButtonActiveClass : ""
-                } ${
-                  mode || open
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-100 focus:opacity-100"
-                }`}
-                aria-label={`More options for ${filter.label} shelves`}
-                disabled={saving}
-              >
-                <MoreIcon size={14} />
-              </button>
-            )}
+          <button
+            type="button"
+            onClick={() => {
+              if (mode !== "edit") enterEditMode();
+            }}
+            className={`${smallIconButtonClass} ${
+              mode === "edit"
+                ? "opacity-100"
+                : "opacity-0 group-hover:opacity-100 focus:opacity-100"
+            }`}
+            aria-label={`Edit ${filter.label} shelves`}
+            aria-pressed={mode === "edit"}
+            disabled={saving}
           >
-            <button type="button" onClick={enterEditMode}>
-              Edit
-            </button>
-            <button
-              type="button"
-              className="danger-hover"
-              onClick={enterDeleteMode}
-            >
-              Delete
-            </button>
-          </DropdownShell>
+            <EditIcon size={14} />
+          </button>
         </div>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
         {filter.subcategories.map((subcategory) => {
           const checked =
-            mode === "delete"
+            mode === "edit"
               ? deleteIds.includes(subcategory.id)
               : selectedIds.includes(subcategory.id);
 
@@ -368,7 +333,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 type="checkbox"
                 checked={checked}
                 onChange={() =>
-                  mode === "delete"
+                  mode === "edit"
                     ? toggleDeleteId(subcategory.id)
                     : onToggleAssignment(subcategory.id)
                 }
@@ -393,11 +358,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               ) : (
                 <button
                   type="button"
-                  onClick={() =>
-                    mode === "delete"
-                      ? toggleDeleteId(subcategory.id)
-                      : onToggleAssignment(subcategory.id)
-                  }
+                  onClick={() => onToggleAssignment(subcategory.id)}
                   className="min-w-0 flex-1 truncate text-left"
                 >
                   {subcategory.label}
@@ -421,8 +382,8 @@ export default function AdminBrowseFilterSubcategoryGroup({
         )}
 
         {mode === "edit" && newFieldOpen && (
-          <div className="relative min-h-10">
-            <div className="flex h-full min-h-10 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
+          <div className="relative min-h-10 min-w-[140px]">
+            <div className="flex h-full min-h-10 min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
               <input
                 value={newValue}
                 onChange={(event) => {
@@ -434,7 +395,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 onKeyDown={(event) => {
                   if (event.key === "Enter") event.preventDefault();
                 }}
-                className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)]"
+                className="w-full min-w-0 flex-1 bg-transparent px-2.5 py-2 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)]"
                 placeholder="Category Name"
                 aria-label={`New category for ${filter.label}`}
                 autoFocus
@@ -442,7 +403,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               <button
                 type="button"
                 onClick={() => setNewDropdownOpen((current) => !current)}
-                className="flex h-full min-h-10 w-10 shrink-0 items-center justify-center text-[var(--text-muted)]"
+                className="flex h-full min-h-10 w-7 shrink-0 items-center justify-center text-[var(--text-muted)]"
                 aria-label="Show existing categories"
               >
                 <ChevronDownIcon />
@@ -451,22 +412,17 @@ export default function AdminBrowseFilterSubcategoryGroup({
 
             {newDropdownOpen && availableExisting.length > 0 && (
               <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
-                {availableExisting.map((subcategory) => {
-                  const alreadyAdded = currentSubcategoryIds.has(subcategory.id);
-
-                  return (
-                    <button
-                      key={subcategory.id}
-                      type="button"
-                      disabled={alreadyAdded}
-                      onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => selectExisting(subcategory)}
-                      className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]"
-                    >
-                      {subcategory.label}
-                    </button>
-                  );
-                })}
+                {availableExisting.map((subcategory) => (
+                  <button
+                    key={subcategory.id}
+                    type="button"
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => selectExisting(subcategory)}
+                    className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  >
+                    {subcategory.label}
+                  </button>
+                ))}
               </div>
             )}
           </div>
