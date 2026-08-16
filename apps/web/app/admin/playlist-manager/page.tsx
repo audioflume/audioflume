@@ -108,7 +108,7 @@ export default function PlaylistManagerPage() {
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`h-10 min-w-[104px] cursor-pointer rounded-[7px] border px-5 text-[12.5px] font-normal transition ${
+              className={`h-10 min-w-[104px] cursor-pointer rounded-[7px] border px-5 text-[12px] font-normal transition ${
                 activeTab === tab
                   ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                   : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -125,7 +125,7 @@ export default function PlaylistManagerPage() {
 
         <Link
           href="/admin/playlist-manager/new"
-          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12.5px] font-normal text-[var(--bg-primary)] transition"
+          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
         >
           <PlusIcon size={13} />
           <span>New Playlist</span>

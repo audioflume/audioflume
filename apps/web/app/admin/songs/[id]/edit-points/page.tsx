@@ -126,7 +126,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
       <div className="mb-4 flex items-center gap-2">
         <Link
           href={`/admin/songs/${id}/edit`}
-          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12.5px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           Edit Details
         </Link>

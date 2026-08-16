@@ -432,7 +432,7 @@ export default function AdminEditPageStyles() {
         > button {
         height: 40px;
         border-radius: 7px;
-        font-size: 12.5px;
+        font-size: 12px;
         font-weight: 400;
       }
 
@@ -696,7 +696,7 @@ export default function AdminEditPageStyles() {
         border-radius: 7px;
         padding-right: 18px;
         padding-left: 18px;
-        font-size: 12.5px;
+        font-size: 12px;
         font-weight: 400;
       }
 

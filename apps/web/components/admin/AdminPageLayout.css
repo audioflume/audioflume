@@ -575,7 +575,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > button {
   height: 40px;
   border-radius: 7px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 400;
 }
 

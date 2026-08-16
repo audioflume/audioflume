@@ -211,7 +211,7 @@ export default function CuePointManager({
           border-radius: 7px !important;
           padding-left: 12px !important;
           padding-right: 12px !important;
-          font-size: 12.5px;
+          font-size: 12px;
           font-weight: 400;
         }
 

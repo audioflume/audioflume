@@ -179,45 +179,53 @@ function StatusIcon({ tone }: { tone: StatusTone }) {
 
 function AdminHero({
   stats,
+  healthTone,
   statuses,
   songsLoading,
 }: {
   stats: LibraryStats;
+  healthTone: StatusTone;
   statuses: SystemHealthItem[];
   songsLoading: boolean;
 }) {
-  const systemReadyCount = statuses.filter(
-    (status) => status.tone === "success",
-  ).length;
+  const completeChecks = [
+    stats.missingCoverArt === 0,
+    stats.missingSongInfo === 0,
+    stats.missingWaveformPeaks === 0,
+    stats.missingTags === 0,
+    stats.missingEditPoints === 0,
+  ].filter(Boolean).length;
+  const progress = songsLoading ? 0 : Math.round((completeChecks / 5) * 100);
+  const systemReadyCount = statuses.filter((status) => status.tone === "success").length;
 
   return (
-    <section className="relative mb-3 min-h-[210px] overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-      <img
-        src={ADMIN_HERO_IMAGE}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/32 to-black/10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/5" />
+    <section className="mb-4">
+      <div className="group relative min-h-[255px] overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+        <img
+          src={ADMIN_HERO_IMAGE}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
+        <div className="relative z-10 flex min-h-[255px] flex-col justify-between p-5 md:p-6">
+          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
+            <span className="truncate">Audioflume admin</span>
+          </div>
 
-      <div className="relative z-10 flex min-h-[210px] flex-col justify-between p-5 sm:p-6">
-        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-white/65">
-          Audioflume Admin
-        </div>
-
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="max-w-[420px] font-[family-name:var(--font-aktiv-grotesk)] text-[28px] font-medium leading-[0.98] tracking-[-0.05em] text-white sm:text-[34px]">
-            Catalogue, curation,
-            <br />
-            and delivery.
-          </h2>
-
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-white/70">
-            <span>{songsLoading ? "Library loading" : `${stats.totalSongs} songs`}</span>
-            <span className="hidden h-3 w-px bg-white/25 sm:block" />
-            <span>
+          <div className="grid gap-2 sm:grid-cols-3">
+            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+              {songsLoading ? "Scanning library" : `${stats.totalSongs} songs scanned`}
+            </div>
+            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+              Library health · {songsLoading ? "—" : `${progress}%`}
+            </div>
+            <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: STATUS_COLORS[healthTone] }}
+              />
               {systemReadyCount} / {statuses.length} systems ready
-            </span>
+            </div>
           </div>
         </div>
       </div>
@@ -493,18 +501,12 @@ export default function AdminDashboardPage() {
         }
       `}</style>
 
-      <AdminHero
-        stats={stats}
-        statuses={systemStatuses}
-        songsLoading={songsLoading}
-      />
-
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {quickActions.map((action, index) => (
           <Link
             key={action.href}
             href={action.href}
-            className={`inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border px-5 text-[12.5px] font-normal transition ${
+            className={`inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border px-5 text-[12px] font-normal transition ${
               index === 0
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -515,6 +517,13 @@ export default function AdminDashboardPage() {
           </Link>
         ))}
       </div>
+
+      <AdminHero
+        stats={stats}
+        healthTone={healthTone}
+        statuses={systemStatuses}
+        songsLoading={songsLoading}
+      />
 
       <div className="grid gap-3">
         <DashboardCard>
