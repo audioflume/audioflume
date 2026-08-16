@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
 import { DISCOVER_LIBRARY_SECTION } from "@/lib/discoverAdmin";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { normalizeCuratedBrowseAssignments } from "@/lib/curatedBrowseTaxonomy";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   DISCOVER_SECTION_OPTIONS,
@@ -35,21 +36,38 @@ export async function GET() {
   }
 
   try {
-    const { data, error } = await supabaseServer
-      .from("curated_playlists")
-      .select("*, curated_playlist_songs(count)")
-      .order("playlist_group", { ascending: true })
-      .order("position", { ascending: true });
+    const [playlistsResult, assignmentsResult] = await Promise.all([
+      supabaseServer
+        .from("curated_playlists")
+        .select("*, curated_playlist_songs(count)")
+        .order("playlist_group", { ascending: true })
+        .order("position", { ascending: true }),
+      supabaseServer
+        .from("curated_playlist_browse_assignments")
+        .select("curated_playlist_id, browse_filter, subcategory_id"),
+    ]);
 
-    if (error) throw error;
+    if (playlistsResult.error) throw playlistsResult.error;
+    if (assignmentsResult.error) throw assignmentsResult.error;
+
+    const assignmentsByPlaylist = new Map<number, unknown[]>();
+    for (const assignment of assignmentsResult.data ?? []) {
+      const playlistId = Number(assignment.curated_playlist_id);
+      const current = assignmentsByPlaylist.get(playlistId) ?? [];
+      current.push(assignment);
+      assignmentsByPlaylist.set(playlistId, current);
+    }
 
     return NextResponse.json(
-      (data ?? []).map((row) =>
-        normalizeCuratedPlaylist({
+      (playlistsResult.data ?? []).map((row) => ({
+        ...normalizeCuratedPlaylist({
           ...row,
           song_count: row.curated_playlist_songs?.[0]?.count ?? 0,
         }),
-      ),
+        browse_assignments: normalizeCuratedBrowseAssignments(
+          assignmentsByPlaylist.get(Number(row.id)) ?? [],
+        ),
+      })),
     );
   } catch (err) {
     console.error("Admin curated playlists fetch failed:", err);
@@ -76,6 +94,10 @@ export async function POST(req: Request) {
     const browseTags = normalizeCuratedBrowseTags(body.browse_tags);
     const browseSubcategories = normalizeCuratedBrowseSubcategories(
       body.browse_subcategories,
+      browseTags,
+    );
+    const browseAssignments = normalizeCuratedBrowseAssignments(
+      body.browse_assignments,
       browseTags,
     );
     const description = cleanString(body.description);
@@ -147,7 +169,27 @@ export async function POST(req: Request) {
 
     if (error) throw error;
 
-    return NextResponse.json(normalizeCuratedPlaylist(data));
+    if (browseAssignments.length > 0) {
+      const { error: assignmentsError } = await supabaseServer
+        .from("curated_playlist_browse_assignments")
+        .insert(
+          browseAssignments.map((assignment) => ({
+            curated_playlist_id: data.id,
+            browse_filter: assignment.browse_filter,
+            subcategory_id: assignment.subcategory_id,
+          })),
+        );
+
+      if (assignmentsError) {
+        await supabaseServer.from("curated_playlists").delete().eq("id", data.id);
+        throw assignmentsError;
+      }
+    }
+
+    return NextResponse.json({
+      ...normalizeCuratedPlaylist(data),
+      browse_assignments: browseAssignments,
+    });
   } catch (err) {
     console.error("Admin curated playlist create failed:", err);
     return NextResponse.json(
