@@ -54,11 +54,13 @@ export default function AdminContentPage({
         ? "Edit Song"
         : "Song Upload"
       : label;
+  const isDashboard = resolvedLabel === "Dashboard";
   const isSongUpload = resolvedLabel === "Song Upload";
   const isSongEdit = resolvedLabel === "Edit Song";
   const isPlaylistCreate = resolvedLabel === "Create Playlist";
   const isPlaylistEdit = resolvedLabel === "Edit Playlist";
   const hidePageIntro =
+    isDashboard ||
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
     isSongUpload ||
@@ -66,6 +68,7 @@ export default function AdminContentPage({
     isPlaylistCreate ||
     isPlaylistEdit;
   const usesAdminCanvas =
+    isDashboard ||
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
     isSongUpload ||
@@ -86,10 +89,12 @@ export default function AdminContentPage({
   return (
     <main
       className={`filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
-        isSongUpload ? "admin-song-upload-content-page" : ""
-      } ${isSongEdit ? "admin-song-edit-content-page" : ""} ${
-        isPlaylistCreate ? "admin-playlist-create-content-page" : ""
-      } ${isPlaylistEdit ? "admin-playlist-edit-content-page" : ""}`}
+        isDashboard ? "admin-dashboard-content-page" : ""
+      } ${isSongUpload ? "admin-song-upload-content-page" : ""} ${
+        isSongEdit ? "admin-song-edit-content-page" : ""
+      } ${isPlaylistCreate ? "admin-playlist-create-content-page" : ""} ${
+        isPlaylistEdit ? "admin-playlist-edit-content-page" : ""
+      }`}
     >
       <AdminSidebar />
 
@@ -376,6 +381,7 @@ export default function AdminContentPage({
             action={headerAction}
             compact={
               compactHeader ||
+              isDashboard ||
               isSongUpload ||
               isSongEdit ||
               isPlaylistCreate ||
