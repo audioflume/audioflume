@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import EditIcon from "@/components/icons/EditIcon";
 import type {
   CuratedBrowseSubcategoryRecord,
@@ -70,6 +70,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
   const [deleteIds, setDeleteIds] = useState<number[]>([]);
   const [editTouched, setEditTouched] = useState(false);
   const [saving, setSaving] = useState(false);
+  const newCategoryRef = useRef<HTMLDivElement>(null);
 
   const currentSubcategoryIds = useMemo(
     () => new Set(filter.subcategories.map((subcategory) => subcategory.id)),
@@ -85,6 +86,18 @@ export default function AdminBrowseFilterSubcategoryGroup({
         (!query || subcategory.label.toLowerCase().includes(query)),
     );
   }, [currentSubcategoryIds, newValue, taxonomy.subcategories]);
+
+  useEffect(() => {
+    if (!newDropdownOpen) return;
+
+    function handleOutsideClick(event: MouseEvent) {
+      if (newCategoryRef.current?.contains(event.target as Node)) return;
+      setNewDropdownOpen(false);
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [newDropdownOpen]);
 
   function resetEditState() {
     setLabelDrafts({});
@@ -329,7 +342,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 type="button"
                 onClick={() => void saveEdits()}
                 disabled={saving}
-                className="text-[11px] font-medium text-[var(--text-primary)] transition disabled:opacity-40"
+                className="text-[11px] font-normal text-[var(--text-primary)] transition disabled:opacity-40"
               >
                 {saving ? "Saving..." : "Save"}
               </button>
@@ -340,7 +353,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                   setMode(null);
                 }}
                 disabled={saving}
-                className="text-[11px] font-medium text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
+                className="text-[11px] font-normal text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
               >
                 Cancel
               </button>
@@ -352,7 +365,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               type="button"
               onClick={() => void deleteSelected()}
               disabled={saving}
-              className="text-[11px] font-medium text-[var(--danger)] transition disabled:opacity-40"
+              className="text-[11px] font-normal text-[var(--danger)] transition disabled:opacity-40"
             >
               {saving ? "Deleting..." : "Delete"}
             </button>
@@ -441,7 +454,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
         )}
 
         {mode === "edit" && newFieldOpen && (
-          <div className="relative min-h-10 min-w-[140px]">
+          <div ref={newCategoryRef} className="relative min-h-10 min-w-[140px]">
             <div className="flex h-full min-h-10 min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
               <input
                 value={newValue}
