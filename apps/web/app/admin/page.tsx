@@ -204,7 +204,7 @@ function AdminHero({
         <img
           src={ADMIN_HERO_IMAGE}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+          className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
         <div className="relative z-10 flex min-h-[255px] flex-col justify-between p-5 md:p-6">
