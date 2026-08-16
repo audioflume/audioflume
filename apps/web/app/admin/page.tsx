@@ -99,9 +99,15 @@ const quickActions: QuickAction[] = [
 ];
 
 const STATUS_COLORS = {
-  success: "var(--status-success)",
-  warning: "var(--status-warning)",
-  error: "var(--status-error)",
+  success: "var(--status-success, #48b571)",
+  warning: "var(--status-warning, #d9a441)",
+  error: "var(--status-error, #dc584f)",
+};
+
+const STATUS_BACKGROUNDS = {
+  success: "var(--status-success-soft, rgba(72, 181, 113, 0.12))",
+  warning: "var(--status-warning-soft, rgba(217, 164, 65, 0.12))",
+  error: "var(--status-error-soft, rgba(220, 88, 79, 0.12))",
 };
 
 function getIsAdmin(
@@ -162,16 +168,17 @@ function ActionIcon({ icon }: { icon: QuickAction["icon"] }) {
 }
 
 function StatusIcon({ tone }: { tone: StatusTone }) {
-  const color = STATUS_COLORS[tone];
-
   return (
     <div
-      className="flex h-5 w-5 items-center justify-center rounded-full"
-      style={{ backgroundColor: `${color}1f`, color }}
+      className="flex h-[18px] w-[18px] flex-[0_0_18px] items-center justify-center rounded-full"
+      style={{
+        backgroundColor: STATUS_BACKGROUNDS[tone],
+        color: STATUS_COLORS[tone],
+      }}
     >
-      {tone === "success" && <CheckIcon size={12} />}
-      {tone === "warning" && <AlertIcon />}
-      {tone === "error" && <FailedIcon />}
+      {tone === "success" && <CheckIcon size={13} strokeWidth={2.6} />}
+      {tone === "warning" && <AlertIcon size={11} />}
+      {tone === "error" && <FailedIcon size={11} strokeWidth={2.6} />}
     </div>
   );
 }
@@ -244,51 +251,62 @@ function RecentSongsCard({
         }
       />
 
-      <div className="admin-dashboard-song-list overflow-x-auto overflow-y-hidden">
-        <div className="min-w-[790px]">
-          {songsLoading && (
-            <div className="grid gap-0">
-              {Array.from({ length: 6 }, (_, index) => (
-                <div
-                  key={index}
-                  className="grid min-h-[46px] grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_24px_minmax(152px,180px)_64px_76px_64px] items-center gap-3 px-5"
-                  style={{
-                    borderBottom:
-                      index === 5 ? "none" : "1px solid var(--border-subtle)",
-                  }}
-                >
-                  <div className="h-8 w-8 bg-[var(--bg-tertiary)]" />
-                  <div className="h-2 w-[60%] bg-[var(--bg-tertiary)]" />
-                  <div className="h-2 w-[50%] bg-[var(--bg-tertiary)]" />
-                  <div className="h-2 w-2 rounded-full bg-[var(--bg-tertiary)]" />
-                  <div className="h-6 w-[72px] rounded-full bg-[var(--bg-tertiary)]" />
-                  <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
-                  <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
-                  <div className="h-2 w-[18px] bg-[var(--bg-tertiary)]" />
-                </div>
-              ))}
-            </div>
-          )}
+      <div className="mb-5 overflow-hidden">
+        <div className="overflow-x-auto overflow-y-hidden">
+          <div className="admin-dashboard-song-list min-w-[920px]">
+            {songsLoading && (
+              <div className="grid gap-0 border-t border-[var(--border-subtle)]">
+                {Array.from({ length: 6 }, (_, index) => (
+                  <div
+                    key={index}
+                    className="grid min-h-[72px] grid-cols-[68px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(152px,180px)_64px_76px_112px_64px] items-center gap-4 px-5"
+                    style={{
+                      borderBottom:
+                        index === 5
+                          ? "none"
+                          : "1px solid var(--border-subtle)",
+                    }}
+                  >
+                    <div className="h-[52px] w-[52px] bg-[var(--bg-tertiary)]" />
+                    <div className="h-2 w-[60%] bg-[var(--bg-tertiary)]" />
+                    <div className="h-2 w-[50%] bg-[var(--bg-tertiary)]" />
+                    <div className="h-6 w-[72px] rounded-full bg-[var(--bg-tertiary)]" />
+                    <div className="h-2 w-[32px] bg-[var(--bg-tertiary)]" />
+                    <div className="h-2 w-[42px] bg-[var(--bg-tertiary)]" />
+                    <div className="h-2 w-[72px] bg-[var(--bg-tertiary)]" />
+                    <div className="h-2 w-[18px] bg-[var(--bg-tertiary)]" />
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {!songsLoading && songs.length === 0 && (
-            <div className="flex min-h-[120px] items-center justify-center px-5 text-xs text-[var(--text-secondary)]">
-              No songs uploaded yet.
-            </div>
-          )}
+            {!songsLoading && songs.length === 0 && (
+              <div className="flex min-h-[180px] items-center justify-center border-t border-[var(--border-subtle)] px-8 text-xs text-[var(--text-secondary)]">
+                No songs uploaded yet.
+              </div>
+            )}
 
-          {!songsLoading &&
-            songs.map((song, index) => (
-              <AdminSongRow
-                key={song.id}
-                song={song}
-                isLast={index === songs.length - 1}
-                selected={false}
-                selectionMode={false}
-                showSelectionColumn={false}
-                onSelectedChange={() => {}}
-                onDeleted={onDeleted}
-              />
-            ))}
+            {!songsLoading && songs.length > 0 && (
+              <div className="admin-song-row-group border-t border-[var(--border-subtle)]">
+                {songs.map((song, index) => (
+                  <AdminSongRow
+                    key={song.id}
+                    song={song}
+                    isLast={index === songs.length - 1}
+                    selected={false}
+                    selectionMode={false}
+                    showSelectionColumn={false}
+                    onSelectedChange={() => {}}
+                    onDeleted={onDeleted}
+                    statusDisplay="published"
+                    size="large"
+                    showAddedDate
+                    colorOnlyActions
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </DashboardCard>
@@ -432,7 +450,38 @@ export default function AdminDashboardPage() {
       contentAreaBottomPadding={false}
     >
       <style>{`
+        .admin-dashboard-song-list .admin-song-menu-btn {
+          opacity: 1;
+        }
+
+        .admin-dashboard-song-list .admin-song-edit-btn {
+          opacity: 0;
+        }
+
+        .admin-dashboard-song-list .admin-song-edit-btn:hover,
+        .admin-dashboard-song-list .admin-song-row:hover .admin-song-edit-btn {
+          opacity: 1;
+        }
+
+        .admin-dashboard-song-list .admin-song-row.is-error {
+          background: var(--status-error-faint);
+        }
+
+        .admin-dashboard-song-list .admin-song-row.is-warning {
+          background: var(--status-warning-faint);
+        }
+
+        .admin-dashboard-song-list .admin-song-row.is-error:hover {
+          background: var(--status-error-hover);
+        }
+
+        .admin-dashboard-song-list .admin-song-row.is-warning:hover {
+          background: var(--status-warning-hover);
+        }
+
         .admin-dashboard-song-list .admin-song-row {
+          grid-template-columns: 68px minmax(160px, 1.4fr) minmax(120px, 1fr) minmax(152px, 180px) 64px 76px 112px 64px;
+          column-gap: 16px;
           padding-left: 20px;
           padding-right: 20px;
         }
