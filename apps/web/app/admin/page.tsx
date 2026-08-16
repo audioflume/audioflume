@@ -136,25 +136,16 @@ function DashboardCard({ children }: { children: ReactNode }) {
 
 function CardHeader({
   title,
-  description,
   action,
 }: {
   title: string;
-  description?: string;
   action?: ReactNode;
 }) {
   return (
     <div className="flex items-start justify-between gap-4 px-5 pb-3 pt-5">
-      <div className="min-w-0">
-        <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-          {title}
-        </h2>
-        {description ? (
-          <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
-            {description}
-          </p>
-        ) : null}
-      </div>
+      <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+        {title}
+      </h2>
       {action ? <div className="shrink-0">{action}</div> : null}
     </div>
   );
@@ -207,26 +198,6 @@ function OverviewMetric({
   );
 }
 
-function HealthRow({
-  label,
-  count,
-  href,
-}: {
-  label: string;
-  count: number;
-  href: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-    >
-      <span>{label}</span>
-      <span className="font-medium text-[var(--text-primary)]">{count}</span>
-    </Link>
-  );
-}
-
 function RecentSongsCard({
   songs,
   songsLoading,
@@ -240,7 +211,6 @@ function RecentSongsCard({
     <DashboardCard>
       <CardHeader
         title="Recent Songs"
-        description="The 10 most recently added songs in the library."
         action={
           <Link
             href="/admin/music-library"
@@ -325,7 +295,6 @@ export default function AdminDashboardPage() {
   const [systemStatuses, setSystemStatuses] = useState<SystemHealthItem[]>(
     DEFAULT_SYSTEM_STATUSES,
   );
-  const [systemHealthLoading, setSystemHealthLoading] = useState(true);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -351,7 +320,6 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const fetchSystemHealth = async () => {
       try {
-        setSystemHealthLoading(true);
         const res = await fetch("/api/admin/system-health", {
           cache: "no-store",
         });
@@ -360,8 +328,6 @@ export default function AdminDashboardPage() {
         setSystemStatuses(data.statuses || DEFAULT_SYSTEM_STATUSES);
       } catch {
         setSystemStatuses(SYSTEM_HEALTH_FAILED_STATUSES);
-      } finally {
-        setSystemHealthLoading(false);
       }
     };
 
@@ -395,15 +361,6 @@ export default function AdminDashboardPage() {
         : "success";
 
   const recentSongs = useMemo(() => [...songs].reverse().slice(0, 10), [songs]);
-  const systemReadyCount = systemStatuses.filter(
-    (status) => status.tone === "success",
-  ).length;
-  const issueCount =
-    stats.missingCoverArt +
-    stats.missingSongInfo +
-    stats.missingWaveformPeaks +
-    stats.missingTags +
-    stats.missingEditPoints;
 
   if (!isLoaded) {
     return (
@@ -506,11 +463,6 @@ export default function AdminDashboardPage() {
         <DashboardCard>
           <CardHeader
             title="Library Overview"
-            description={
-              songsLoading
-                ? "Scanning library content."
-                : `${stats.totalSongs} songs · ${issueCount} outstanding library issues`
-            }
             action={<StatusIcon tone={healthTone} />}
           />
 
@@ -561,54 +513,7 @@ export default function AdminDashboardPage() {
 
           <div className="grid content-start gap-3">
             <DashboardCard>
-              <CardHeader
-                title="Library Health"
-                description={
-                  songsLoading
-                    ? "Checking library."
-                    : issueCount === 0
-                      ? "No missing library content."
-                      : `${issueCount} items need attention.`
-                }
-              />
-              <div className="grid gap-2 px-5 pb-5">
-                <HealthRow
-                  label="Missing cover art"
-                  count={stats.missingCoverArt}
-                  href="/admin/music-library?issue=coverArt"
-                />
-                <HealthRow
-                  label="Missing song info"
-                  count={stats.missingSongInfo}
-                  href="/admin/music-library?issue=songInfo"
-                />
-                <HealthRow
-                  label="Missing waveform peaks"
-                  count={stats.missingWaveformPeaks}
-                  href="/admin/music-library?issue=peakData"
-                />
-                <HealthRow
-                  label="Missing tags"
-                  count={stats.missingTags}
-                  href="/admin/music-library?issue=tags"
-                />
-                <HealthRow
-                  label="Missing cue points"
-                  count={stats.missingEditPoints}
-                  href="/admin/music-library?issue=editPoints"
-                />
-              </div>
-            </DashboardCard>
-
-            <DashboardCard>
-              <CardHeader
-                title="System Status"
-                description={
-                  systemHealthLoading
-                    ? "Checking connected services."
-                    : `${systemReadyCount} of ${systemStatuses.length} systems ready.`
-                }
-              />
+              <CardHeader title="System Status" />
               <div className="grid gap-2 px-5 pb-5">
                 {systemStatuses.map((status) => (
                   <div
