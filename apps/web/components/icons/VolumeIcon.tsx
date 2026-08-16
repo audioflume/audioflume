@@ -1,3 +1,7 @@
+"use client";
+
+import { usePlayer } from "@/context/PlayerContext";
+
 type VolumeIconProps = {
   className?: string;
   size?: number;
@@ -9,9 +13,12 @@ export default function VolumeIcon({
   size = 17,
   muted = false,
 }: VolumeIconProps) {
+  const { volume } = usePlayer();
   const strokeColor = "var(--filmwave-player-action-icon-color, currentColor)";
   const strokeWidth = 2;
   const strokeStyle = { strokeWidth };
+  const isMuted = muted || volume === 0;
+  const showOuterWave = volume >= 0.5;
 
   return (
     <svg
@@ -34,7 +41,7 @@ export default function VolumeIcon({
         style={strokeStyle}
       />
 
-      {muted ? (
+      {isMuted ? (
         <>
           <path
             d="M16 9L21 15"
@@ -63,14 +70,16 @@ export default function VolumeIcon({
             vectorEffect="non-scaling-stroke"
             style={strokeStyle}
           />
-          <path
-            d="M18.5 6.5C21.5 9.5 21.5 14.5 18.5 17.5"
-            stroke={strokeColor}
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            style={strokeStyle}
-          />
+          {showOuterWave ? (
+            <path
+              d="M18.5 6.5C21.5 9.5 21.5 14.5 18.5 17.5"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              style={strokeStyle}
+            />
+          ) : null}
         </>
       )}
     </svg>
