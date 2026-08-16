@@ -26,15 +26,15 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import AdminVideoUpload from "@/components/admin/AdminVideoUpload";
 import type {
-  CuratedBrowseSubcategory,
   CuratedBrowseTag,
   CuratedPlaylist,
   CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
-import {
-  CURATED_BROWSE_FILTERS,
-  normalizeCuratedBrowseSubcategories,
-} from "@/lib/curatedPlaylists";
+import { CURATED_BROWSE_FILTERS } from "@/lib/curatedPlaylists";
+import type {
+  CuratedBrowseAssignment,
+  CuratedBrowseTaxonomy,
+} from "@/lib/curatedBrowseTaxonomy";
 import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
@@ -45,6 +45,12 @@ type Props = {
   mode: "create" | "edit";
   playlistId?: string;
 };
+
+type PlaylistWithBrowseAssignments = CuratedPlaylist & {
+  browse_assignments?: CuratedBrowseAssignment[];
+};
+
+type BrowseAssignmentState = Partial<Record<CuratedBrowseTag, number[]>>;
 
 function SortableSongRow({
   song,
@@ -147,9 +153,10 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const [coverVideoUrl, setCoverVideoUrl] = useState("");
   const [coverVideoTouched, setCoverVideoTouched] = useState(false);
   const [browseTags, setBrowseTags] = useState<CuratedBrowseTag[]>([]);
-  const [browseSubcategories, setBrowseSubcategories] = useState<
-    CuratedBrowseSubcategory[]
-  >([]);
+  const [browseAssignments, setBrowseAssignments] =
+    useState<BrowseAssignmentState>({});
+  const [browseTaxonomy, setBrowseTaxonomy] =
+    useState<CuratedBrowseTaxonomy | null>(null);
   const [showOnCuratedFeature, setShowOnCuratedFeature] = useState(false);
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
   const [activeSongRowId, setActiveSongRowId] = useState<number | null>(null);
@@ -168,6 +175,39 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
     : null;
 
   useEffect(() => {
+    let cancelled = false;
+
+    async function loadBrowseTaxonomy() {
+      try {
+        const res = await fetch("/api/curated-browse-taxonomy");
+        const data = (await res.json()) as CuratedBrowseTaxonomy & {
+          error?: string;
+        };
+
+        if (!res.ok) {
+          throw new Error(data?.error || "Failed to load browse subcategories");
+        }
+
+        if (!cancelled) setBrowseTaxonomy(data);
+      } catch (err) {
+        if (!cancelled) {
+          setToastMessage(
+            err instanceof Error
+              ? err.message
+              : "Failed to load browse subcategories",
+          );
+        }
+      }
+    }
+
+    void loadBrowseTaxonomy();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
     if (mode !== "edit" || !playlistId) return;
 
     let cancelled = false;
@@ -180,20 +220,32 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           fetch(`/api/curated-playlists/${playlistId}`),
           fetch(`/api/admin/curated-playlists/${playlistId}/songs`),
         ]);
-        const playlistData = (await playlistRes.json()) as CuratedPlaylist;
+        const playlistData =
+          (await playlistRes.json()) as PlaylistWithBrowseAssignments;
         const songsData = await songsRes.json();
 
         if (!playlistRes.ok) throw new Error("Failed to load playlist");
         if (!songsRes.ok) throw new Error("Failed to load playlist songs");
 
         if (!cancelled) {
+          const nextBrowseAssignments: BrowseAssignmentState = {};
+          for (const assignment of playlistData.browse_assignments ?? []) {
+            const current = nextBrowseAssignments[assignment.browse_filter] ?? [];
+            if (!current.includes(assignment.subcategory_id)) {
+              nextBrowseAssignments[assignment.browse_filter] = [
+                ...current,
+                assignment.subcategory_id,
+              ];
+            }
+          }
+
           setName(playlistData.name);
           setKicker(playlistData.kicker);
           setCoverImageUrl(playlistData.cover_image_url || "");
           setCoverVideoUrl(playlistData.cover_video_url || "");
           setCoverVideoTouched(false);
           setBrowseTags(playlistData.browse_tags || []);
-          setBrowseSubcategories(playlistData.browse_subcategories || []);
+          setBrowseAssignments(nextBrowseAssignments);
           setShowOnCuratedFeature(
             Boolean(playlistData.show_on_curated_feature),
           );
@@ -229,11 +281,12 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
     const isSelected = browseTags.includes(tag);
 
     if (isSelected) {
-      const nextBrowseTags = browseTags.filter((value) => value !== tag);
-      setBrowseTags(nextBrowseTags);
-      setBrowseSubcategories((current) =>
-        normalizeCuratedBrowseSubcategories(current, nextBrowseTags),
-      );
+      setBrowseTags((current) => current.filter((value) => value !== tag));
+      setBrowseAssignments((current) => {
+        const next = { ...current };
+        delete next[tag];
+        return next;
+      });
       return;
     }
 
@@ -242,12 +295,19 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
     );
   }
 
-  function toggleBrowseSubcategory(subcategory: CuratedBrowseSubcategory) {
-    setBrowseSubcategories((current) =>
-      current.includes(subcategory)
-        ? current.filter((value) => value !== subcategory)
-        : [...current, subcategory],
-    );
+  function toggleBrowseSubcategory(
+    browseFilter: CuratedBrowseTag,
+    subcategoryId: number,
+  ) {
+    setBrowseAssignments((current) => {
+      const selected = current[browseFilter] ?? [];
+      return {
+        ...current,
+        [browseFilter]: selected.includes(subcategoryId)
+          ? selected.filter((id) => id !== subcategoryId)
+          : [...selected, subcategoryId],
+      };
+    });
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -264,12 +324,17 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           : "/api/admin/curated-playlists";
 
       const method = mode === "edit" ? "PATCH" : "POST";
-      const payload: Record<string, string | boolean | string[]> = {
+      const payload: Record<string, unknown> = {
         name,
         kicker,
         cover_image_url: coverImageUrl,
         browse_tags: browseTags,
-        browse_subcategories: browseSubcategories,
+        browse_assignments: browseTags.flatMap((browseFilter) =>
+          (browseAssignments[browseFilter] ?? []).map((subcategoryId) => ({
+            browse_filter: browseFilter,
+            subcategory_id: subcategoryId,
+          })),
+        ),
         show_on_curated_feature: showOnCuratedFeature,
       };
 
@@ -452,38 +517,41 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 </div>
               </section>
 
-              {CURATED_BROWSE_FILTERS.filter((filter) =>
-                browseTags.includes(filter.value),
-              ).map((filter) => (
-                <section
-                  key={`${filter.value}-subcategories`}
-                  className="admin-playlist-section-card admin-playlist-shelf-card"
-                >
-                  <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
-                    {filter.label} shelves
-                  </h2>
-                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                    {filter.subcategories.map((subcategory) => (
-                      <label
-                        key={subcategory.value}
-                        className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-secondary)]"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={browseSubcategories.includes(
-                            subcategory.value,
-                          )}
-                          onChange={() =>
-                            toggleBrowseSubcategory(subcategory.value)
-                          }
-                          className="h-3.5 w-3.5 accent-[var(--text-primary)]"
-                        />
-                        <span>{subcategory.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </section>
-              ))}
+              {(browseTaxonomy?.filters ?? [])
+                .filter((filter) => browseTags.includes(filter.value))
+                .map((filter) => (
+                  <section
+                    key={`${filter.value}-subcategories`}
+                    className="admin-playlist-section-card admin-playlist-shelf-card"
+                  >
+                    <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
+                      {filter.label} shelves
+                    </h2>
+                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                      {filter.subcategories.map((subcategory) => (
+                        <label
+                          key={subcategory.id}
+                          className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-secondary)]"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={(
+                              browseAssignments[filter.value] ?? []
+                            ).includes(subcategory.id)}
+                            onChange={() =>
+                              toggleBrowseSubcategory(
+                                filter.value,
+                                subcategory.id,
+                              )
+                            }
+                            className="h-3.5 w-3.5 accent-[var(--text-primary)]"
+                          />
+                          <span>{subcategory.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </section>
+                ))}
 
               <div className="admin-playlist-actions flex flex-wrap gap-3 pt-2">
                 <button
