@@ -85,6 +85,15 @@ export default function AdminPlaylistPageStyles() {
         gap: 8px;
       }
 
+      /* Browse and shelf fields use the same 40px control height as other admin fields. */
+      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
+        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
+        label {
+        min-height: 40px;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
       /* Keep playlist name and kicker labels accessible but visually hidden. */
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         .admin-playlist-details-card
