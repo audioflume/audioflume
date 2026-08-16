@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Toast from "@/components/Toast";
 import AdminModalShell from "@/components/admin/AdminModalShell";
+import AdminSearchBar from "@/components/admin/AdminSearchBar";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import { modalPrimaryButtonClass } from "@/components/uiClasses";
@@ -61,6 +62,7 @@ export default function AdminAddToPlaylistModal({
   const [recentPlaylistIds, setRecentPlaylistIds] = useState<number[]>(() =>
     readRecentPlaylistIds(),
   );
+  const [search, setSearch] = useState("");
   const [initialSelectedIds, setInitialSelectedIds] = useState<Set<number>>(new Set());
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [selectedLoading, setSelectedLoading] = useState(false);
@@ -89,6 +91,7 @@ export default function AdminAddToPlaylistModal({
   useEffect(() => {
     if (!isOpen) return;
 
+    setSearch("");
     const timeout = window.setTimeout(() => {
       refetchPlaylists();
     }, 0);
@@ -147,15 +150,22 @@ export default function AdminAddToPlaylistModal({
   }, [isOpen, song]);
 
   const displayedPlaylists = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    const filteredPlaylists = playlists.filter((playlist) => {
+      if (!query) return true;
+      return [playlist.name, playlist.kicker, playlist.description].some(
+        (value) => String(value || "").toLowerCase().includes(query),
+      );
+    });
     const recentIdSet = new Set(recentPlaylistIds);
-    const recent = playlists
+    const recent = filteredPlaylists
       .filter((playlist) => recentIdSet.has(playlist.id))
       .sort((a, b) => recentPlaylistIds.indexOf(a.id) - recentPlaylistIds.indexOf(b.id));
-    const remaining = playlists
+    const remaining = filteredPlaylists
       .filter((playlist) => !recentIdSet.has(playlist.id))
       .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
     return [...recent, ...remaining];
-  }, [playlists, recentPlaylistIds]);
+  }, [playlists, recentPlaylistIds, search]);
 
   const hasChanges = useMemo(() => {
     if (initialSelectedIds.size !== selectedIds.size) return true;
@@ -269,6 +279,15 @@ export default function AdminAddToPlaylistModal({
           </button>
         }
       >
+        <div className="pb-4">
+          <AdminSearchBar
+            value={search}
+            onChange={setSearch}
+            placeholder="Search playlists"
+            variant="modal"
+          />
+        </div>
+
         <div className="flex flex-shrink-0 items-center justify-center pb-4 text-center">
           <div className="flex min-w-0 items-center justify-center gap-2">
             <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
@@ -308,7 +327,9 @@ export default function AdminAddToPlaylistModal({
 
           {!loading && !selectedLoading && !displayedError && displayedPlaylists.length === 0 && (
             <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
-              No curated playlists yet. Create one in Playlist Manager.
+              {search.trim()
+                ? "No curated playlists match your search."
+                : "No curated playlists yet. Create one in Playlist Manager."}
             </div>
           )}
 
