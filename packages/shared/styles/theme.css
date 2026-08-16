@@ -10,7 +10,7 @@
   --filmwave-admin-canvas: #0d0d0d;
   --filmwave-border-color: color-mix(
     in srgb,
-    var(--filmwave-white) 10%,
+    var(--filmwave-white) 5%,
     transparent
   );
 
