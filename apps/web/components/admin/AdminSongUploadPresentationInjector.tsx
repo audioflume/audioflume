@@ -399,10 +399,29 @@ export default function AdminSongUploadPresentationInjector() {
       const renderedItems = Array.from(fileList.children).filter(
         (child): child is HTMLElement => child instanceof HTMLElement,
       );
-      const visibleCount = Math.min(accumulatedStemFiles.length, 3);
+      const needsFullList =
+        renderedItems.length !== accumulatedStemFiles.length ||
+        renderedItems.some((item) => item.textContent?.trim().startsWith("+"));
 
-      for (let index = 0; index < visibleCount; index++) {
-        const item = renderedItems[index];
+      if (needsFullList) {
+        const fragment = document.createDocumentFragment();
+
+        accumulatedStemFiles.forEach((file) => {
+          const item = document.createElement("div");
+          item.className = "truncate";
+          item.textContent = file.name;
+          fragment.appendChild(item);
+        });
+
+        fileList.replaceChildren(fragment);
+      }
+
+      const visibleItems = Array.from(fileList.children).filter(
+        (child): child is HTMLElement => child instanceof HTMLElement,
+      );
+
+      for (let index = 0; index < accumulatedStemFiles.length; index++) {
+        const item = visibleItems[index];
         const file = accumulatedStemFiles[index];
 
         if (!item || !file) continue;
