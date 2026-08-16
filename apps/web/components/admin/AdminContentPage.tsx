@@ -55,12 +55,14 @@ export default function AdminContentPage({
         : "Song Upload"
       : label;
   const isDashboard = resolvedLabel === "Dashboard";
+  const isCuePoints = resolvedLabel === "Cue Points";
   const isSongUpload = resolvedLabel === "Song Upload";
   const isSongEdit = resolvedLabel === "Edit Song";
   const isPlaylistCreate = resolvedLabel === "Create Playlist";
   const isPlaylistEdit = resolvedLabel === "Edit Playlist";
   const hidePageIntro =
     isDashboard ||
+    isCuePoints ||
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
     isSongUpload ||
@@ -69,6 +71,7 @@ export default function AdminContentPage({
     isPlaylistEdit;
   const usesAdminCanvas =
     isDashboard ||
+    isCuePoints ||
     resolvedLabel === "Playlist Manager" ||
     resolvedLabel === "Music Library" ||
     isSongUpload ||
@@ -382,6 +385,7 @@ export default function AdminContentPage({
             compact={
               compactHeader ||
               isDashboard ||
+              isCuePoints ||
               isSongUpload ||
               isSongEdit ||
               isPlaylistCreate ||
