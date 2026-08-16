@@ -656,7 +656,10 @@ export default function AdminSongUploadPresentationInjector() {
 
         .admin-song-upload-content-page
           .admin-song-upload-files-bin
-          .admin-song-file-row.has-file:not(.admin-song-upload-cover-source) {
+          .admin-song-upload-audio-row:has(.animate-spin),
+        .admin-song-upload-content-page
+          .admin-song-upload-files-bin
+          .admin-song-upload-stems-row.has-file {
           padding-top: 16px !important;
           padding-bottom: 16px !important;
         }
@@ -975,7 +978,10 @@ export default function AdminSongUploadPresentationInjector() {
 
           .admin-song-upload-content-page
             .admin-song-upload-files-bin
-            .admin-song-file-row.has-file:not(.admin-song-upload-cover-source) {
+            .admin-song-upload-audio-row:has(.animate-spin),
+          .admin-song-upload-content-page
+            .admin-song-upload-files-bin
+            .admin-song-upload-stems-row.has-file {
             padding-top: 16px !important;
             padding-bottom: 16px !important;
           }
