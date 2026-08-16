@@ -41,6 +41,9 @@ type LibraryStats = {
   missingEditPoints: number;
 };
 
+const ADMIN_HERO_IMAGE =
+  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80";
+
 const DEFAULT_SYSTEM_STATUSES: SystemHealthItem[] = [
   {
     key: "supabase",
@@ -171,6 +174,54 @@ function StatusIcon({ tone }: { tone: StatusTone }) {
       {tone === "warning" && <AlertIcon size={11} />}
       {tone === "error" && <FailedIcon size={11} strokeWidth={2.6} />}
     </div>
+  );
+}
+
+function AdminHero({
+  stats,
+  statuses,
+  songsLoading,
+}: {
+  stats: LibraryStats;
+  statuses: SystemHealthItem[];
+  songsLoading: boolean;
+}) {
+  const systemReadyCount = statuses.filter(
+    (status) => status.tone === "success",
+  ).length;
+
+  return (
+    <section className="relative mb-3 min-h-[210px] overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+      <img
+        src={ADMIN_HERO_IMAGE}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/32 to-black/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/5" />
+
+      <div className="relative z-10 flex min-h-[210px] flex-col justify-between p-5 sm:p-6">
+        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-white/65">
+          Audioflume Admin
+        </div>
+
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="max-w-[420px] font-[family-name:var(--font-aktiv-grotesk)] text-[28px] font-medium leading-[0.98] tracking-[-0.05em] text-white sm:text-[34px]">
+            Catalogue, curation,
+            <br />
+            and delivery.
+          </h2>
+
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-white/70">
+            <span>{songsLoading ? "Library loading" : `${stats.totalSongs} songs`}</span>
+            <span className="hidden h-3 w-px bg-white/25 sm:block" />
+            <span>
+              {systemReadyCount} / {statuses.length} systems ready
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -441,6 +492,12 @@ export default function AdminDashboardPage() {
           padding-right: 20px;
         }
       `}</style>
+
+      <AdminHero
+        stats={stats}
+        statuses={systemStatuses}
+        songsLoading={songsLoading}
+      />
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {quickActions.map((action, index) => (
