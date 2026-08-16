@@ -170,7 +170,7 @@ export default function AdminContentPage({
           border-radius: var(--admin-top-control-radius) !important;
         }
 
-        /* Files return to stacked field rows, with each label inside its field. */
+        /* Files use stacked field rows, with each label inside its field. */
         main.filmwave-admin-content-page:is(
             .admin-song-upload-content-page,
             .admin-song-edit-content-page
@@ -212,6 +212,7 @@ export default function AdminContentPage({
           )
           :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
           .admin-song-file-row {
+          position: relative;
           display: grid !important;
           min-width: 0;
           min-height: 40px;
@@ -236,6 +237,21 @@ export default function AdminContentPage({
           grid-row: 1 !important;
           align-self: center !important;
           padding: 0 !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row
+          > div:first-child
+          > div:first-child {
+          font-size: 12px !important;
+          font-weight: 500 !important;
+          line-height: 18px !important;
+          letter-spacing: normal !important;
+          text-transform: none !important;
         }
 
         main.filmwave-admin-content-page:is(
@@ -305,6 +321,31 @@ export default function AdminContentPage({
           align-self: center !important;
           justify-self: end !important;
           margin: 0 !important;
+        }
+
+        /* Keep the cover thumbnail outside the bordered Cover field, as before. */
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row:nth-child(2):has(img) {
+          margin-right: 52px !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row:nth-child(2):has(img)
+          > div:last-child:not(:nth-child(2)) {
+          position: absolute !important;
+          top: 50% !important;
+          right: -52px !important;
+          width: 40px !important;
+          height: 40px !important;
+          transform: translateY(-50%);
         }
 
         @media (max-width: 640px) {
