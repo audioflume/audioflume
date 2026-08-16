@@ -97,6 +97,11 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
     row.classList.toggle("has-file", Boolean(input?.files?.length));
   });
 
+  const coverRow = rows[1];
+  if (coverRow) {
+    coverRow.hidden = true;
+  }
+
   let actions = filesSection.querySelector<HTMLElement>(
     ":scope > .admin-song-upload-file-actions",
   );
@@ -107,12 +112,9 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
     filesSection.prepend(actions);
   }
 
-  actions
-    .querySelector('[data-admin-song-file-action="1"]')
-    ?.remove();
-
   const actionDefinitions = [
     { label: "Choose Audio", rowIndex: 0 },
+    { label: "Choose Cover Art", rowIndex: 1 },
     { label: "Choose Stems", rowIndex: 2 },
   ];
 
@@ -145,7 +147,14 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
       if (!currentSection) return;
 
       const currentRows = getFileRows(currentSection);
-      getChooseButton(currentRows[rowIndex])?.click();
+      const currentRow = currentRows[rowIndex];
+
+      if (rowIndex === 1) {
+        getFileInput(currentRow)?.click();
+        return;
+      }
+
+      getChooseButton(currentRow)?.click();
     };
   });
 
@@ -188,6 +197,7 @@ function SongCoverUploadCard() {
       if (!filesSection || !coverRow) return;
 
       coverRow.classList.add("admin-song-upload-cover-source");
+      coverRow.hidden = true;
 
       const nextInput = coverRow.querySelector<HTMLInputElement>(
         'input[type="file"][accept*="image"]',
