@@ -43,6 +43,10 @@ export default function AdminPlaylistPageStyles() {
         padding: 20px;
       }
 
+      .admin-playlist-edit-content-page form + section {
+        margin-top: 48px;
+      }
+
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         .admin-playlist-section-card
         > h2 {
