@@ -57,7 +57,7 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
     filesSection.querySelectorAll<HTMLElement>(".admin-song-file-row"),
   );
 
-  const labels = ["Audio", "Cover", "Stems"];
+  const labels = ["Audio", "Cover Art", "Stems"];
   const actionLabels = ["Choose Audio", "Choose Cover", "Choose Stems"];
 
   rows.forEach((row, index) => {
@@ -327,8 +327,18 @@ export default function AdminSongUploadPresentationInjector() {
 
       .admin-song-upload-content-page .admin-song-upload-files-bin {
         position: relative;
+        display: grid;
         overflow: visible !important;
         margin-top: 56px;
+        border: 0;
+        background: transparent;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        > .admin-song-form-card-header
+        + div {
+        display: contents;
       }
 
       .admin-song-upload-content-page .admin-song-upload-file-actions {
@@ -361,6 +371,11 @@ export default function AdminSongUploadPresentationInjector() {
         transition: color 150ms ease, background 150ms ease;
       }
 
+      .admin-song-upload-content-page
+        .admin-song-upload-file-action[data-admin-song-file-action="1"] {
+        display: none;
+      }
+
       .admin-song-upload-content-page .admin-song-upload-file-action:hover,
       .admin-song-upload-content-page .admin-song-upload-file-action.has-file {
         color: var(--text-primary);
@@ -382,9 +397,12 @@ export default function AdminSongUploadPresentationInjector() {
       .admin-song-upload-content-page
         .admin-song-upload-files-bin
         > .admin-song-form-card-header {
+        order: 1;
         min-height: 0;
-        border-bottom: 1px solid var(--border-subtle);
-        border-radius: 9px 9px 0 0;
+        border: 1px solid var(--border);
+        border-bottom: 0;
+        border-radius: 10px 10px 0 0;
+        background: var(--bg-primary);
         padding: 18px 20px 14px;
       }
 
@@ -396,14 +414,25 @@ export default function AdminSongUploadPresentationInjector() {
         grid-template-columns: 92px minmax(0, 1fr) auto !important;
         align-items: center !important;
         gap: 16px !important;
-        border-top: 1px solid var(--border-subtle) !important;
+        background: var(--bg-primary);
         padding: 10px 20px !important;
       }
 
       .admin-song-upload-content-page
         .admin-song-upload-files-bin
         .admin-song-file-row:first-child {
-        border-top: 0 !important;
+        order: 2;
+        border: 1px solid var(--border) !important;
+        border-bottom: 0 !important;
+        border-radius: 0;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(3) {
+        order: 3;
+        border: 1px solid var(--border) !important;
+        border-radius: 0 0 10px 10px;
       }
 
       .admin-song-upload-content-page
@@ -504,26 +533,183 @@ export default function AdminSongUploadPresentationInjector() {
 
       .admin-song-upload-content-page
         .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(3)
+        > div:last-child {
+        display: none !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2) {
+        order: 4;
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr) !important;
+        align-items: start !important;
+        gap: 14px !important;
+        margin-top: 12px;
+        border: 1px solid var(--border) !important;
+        border-radius: 10px;
+        background: var(--bg-primary);
+        padding: 20px !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2):has(img) {
+        grid-template-columns: 160px minmax(0, 1fr) !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:first-child {
+        grid-column: 1 / -1 !important;
+        grid-row: 1 !important;
+        align-self: start !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:first-child
+        > div:first-child {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 24px;
+        letter-spacing: -0.03em;
+        text-transform: none;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:nth-child(2) {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        min-width: 0;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
         .admin-song-file-row:nth-child(2):has(img)
         > div:nth-child(2) {
-        margin-right: 0 !important;
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:nth-child(2)
+        > div[class~="h-9"] {
+        box-sizing: border-box;
+        display: flex !important;
+        height: 160px !important;
+        min-height: 160px !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px !important;
+        border: 1px dashed var(--border) !important;
+        border-radius: 10px !important;
+        background: var(--bg-secondary) !important;
+        padding: 18px !important;
+        text-align: center;
+        transition: border-color 150ms ease, background 150ms ease;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:nth-child(2)
+        > div[class~="h-9"]:hover {
+        border-color: var(--text-secondary) !important;
+        background: var(--bg-hover) !important;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:nth-child(2)
+        > div[class~="h-9"]
+        > button {
+        display: inline-flex !important;
+        height: 32px;
+        min-height: 32px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        padding: 0 14px;
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:nth-child(2)
+        > div[class~="h-9"]
+        > span {
+        max-width: 100%;
+        color: var(--text-secondary);
+        font-size: 11px;
+        line-height: 16px;
+        text-align: center;
       }
 
       .admin-song-upload-content-page
         .admin-song-upload-files-bin
         .admin-song-file-row:nth-child(2)
         > div:last-child {
-        grid-column: 3 !important;
-        grid-row: 1 !important;
-        align-self: center !important;
-        justify-self: end !important;
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+        position: relative !important;
+        display: block;
+        width: 160px !important;
+        height: 160px !important;
+        align-self: start !important;
+        justify-self: start !important;
+        margin: 0 !important;
       }
 
       .admin-song-upload-content-page
         .admin-song-upload-files-bin
-        .admin-song-file-row:nth-child(3)
-        > div:last-child {
-        display: none !important;
+        .admin-song-file-row:nth-child(2)
+        > div:last-child
+        > div {
+        width: 160px !important;
+        height: 160px !important;
+        overflow: hidden;
+        border-radius: 10px !important;
+        background: var(--bg-secondary);
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:last-child
+        > button {
+        position: absolute !important;
+        top: 8px !important;
+        right: 8px !important;
+        z-index: 10;
+        display: flex;
+        width: 28px !important;
+        height: 28px !important;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 7px !important;
+        background: var(--media-overlay-control);
+        color: var(--media-overlay-contrast);
+      }
+
+      .admin-song-upload-content-page
+        .admin-song-upload-files-bin
+        .admin-song-file-row:nth-child(2)
+        > div:last-child
+        > button:hover {
+        background: var(--media-overlay-control-hover);
+        color: var(--media-overlay-contrast);
       }
 
       .admin-song-upload-content-page .admin-song-upload-stem-list {
@@ -571,10 +757,36 @@ export default function AdminSongUploadPresentationInjector() {
 
         .admin-song-upload-content-page
           .admin-song-upload-files-bin
-          .admin-song-file-row {
+          .admin-song-file-row:not(:nth-child(2)) {
           grid-template-columns: 72px minmax(0, 1fr) auto !important;
           gap: 10px !important;
           padding: 10px 14px !important;
+        }
+
+        .admin-song-upload-content-page
+          .admin-song-upload-files-bin
+          .admin-song-file-row:nth-child(2),
+        .admin-song-upload-content-page
+          .admin-song-upload-files-bin
+          .admin-song-file-row:nth-child(2):has(img) {
+          grid-template-columns: minmax(0, 1fr) !important;
+          padding: 16px !important;
+        }
+
+        .admin-song-upload-content-page
+          .admin-song-upload-files-bin
+          .admin-song-file-row:nth-child(2):has(img)
+          > div:last-child {
+          grid-column: 1 !important;
+          grid-row: 2 !important;
+        }
+
+        .admin-song-upload-content-page
+          .admin-song-upload-files-bin
+          .admin-song-file-row:nth-child(2):has(img)
+          > div:nth-child(2) {
+          grid-column: 1 !important;
+          grid-row: 3 !important;
         }
       }
     `}</style>
