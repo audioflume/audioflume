@@ -1,5 +1,6 @@
 "use client";
 
+import SearchIcon from "@/components/icons/SearchIcon";
 import XIcon from "@/components/icons/XIcon";
 
 type AdminSearchBarProps = {
@@ -23,13 +24,19 @@ export default function AdminSearchBar({
 
   return (
     <div className={`relative${className ? ` ${className}` : ""}`}>
+      <span
+        className="pointer-events-none absolute left-3 top-1/2 flex h-[13px] w-[13px] -translate-y-1/2 items-center justify-center text-[var(--text-muted)]"
+        aria-hidden="true"
+      >
+        <SearchIcon size={13} />
+      </span>
       <input
         type="text"
         role="searchbox"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className={`h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]${
+        className={`h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] pl-9 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]${
           modalVariant ? " focus:border-[var(--text-muted)]" : ""
         }`}
       />
