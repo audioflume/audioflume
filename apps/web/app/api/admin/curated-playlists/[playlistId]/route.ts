@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
 import { DISCOVER_LIBRARY_SECTION } from "@/lib/discoverAdmin";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { normalizeCuratedBrowseAssignments } from "@/lib/curatedBrowseTaxonomy";
 import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   DEFAULT_DISCOVER_BUTTON_TEXT,
@@ -89,6 +90,13 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
+    const submittedBrowseAssignments = hasField(body, "browse_assignments")
+      ? normalizeCuratedBrowseAssignments(
+          body.browse_assignments,
+          submittedBrowseTags,
+        )
+      : undefined;
+
     if (hasField(body, "cover_video_url")) {
       updates.cover_video_url = cleanString(body.cover_video_url) || null;
     }
@@ -116,7 +124,33 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     if (error) throw error;
 
-    return NextResponse.json(normalizeCuratedPlaylist(data));
+    if (submittedBrowseAssignments) {
+      const { error: deleteAssignmentsError } = await supabaseServer
+        .from("curated_playlist_browse_assignments")
+        .delete()
+        .eq("curated_playlist_id", playlistId);
+
+      if (deleteAssignmentsError) throw deleteAssignmentsError;
+
+      if (submittedBrowseAssignments.length > 0) {
+        const { error: insertAssignmentsError } = await supabaseServer
+          .from("curated_playlist_browse_assignments")
+          .insert(
+            submittedBrowseAssignments.map((assignment) => ({
+              curated_playlist_id: Number(playlistId),
+              browse_filter: assignment.browse_filter,
+              subcategory_id: assignment.subcategory_id,
+            })),
+          );
+
+        if (insertAssignmentsError) throw insertAssignmentsError;
+      }
+    }
+
+    return NextResponse.json({
+      ...normalizeCuratedPlaylist(data),
+      browse_assignments: submittedBrowseAssignments ?? [],
+    });
   } catch (err) {
     console.error("Admin curated playlist update failed:", err);
 
