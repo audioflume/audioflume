@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 import AdminContentPage from "@/components/admin/AdminContentPage";
+import AlertIcon from "@/components/icons/AlertIcon";
+import CheckIcon from "@/components/icons/CheckIcon";
+import FailedIcon from "@/components/icons/FailedIcon";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
-import { primaryPillButtonClass, secondaryPillButtonClass } from "@/components/uiClasses";
 
 type BatchAnalyzeResult = {
   songId: string;
@@ -33,6 +36,18 @@ type BatchAnalyzeResponse = {
 
 const RECENT_ANALYSIS_STORAGE_KEY = "filmwave-recent-edit-point-analysis";
 
+const STATUS_COLORS = {
+  saved: "var(--status-success, #48b571)",
+  skipped: "var(--status-warning, #d9a441)",
+  failed: "var(--status-error, #dc584f)",
+};
+
+const STATUS_BACKGROUNDS = {
+  saved: "var(--status-success-soft, rgba(72, 181, 113, 0.12))",
+  skipped: "var(--status-warning-soft, rgba(217, 164, 65, 0.12))",
+  failed: "var(--status-error-soft, rgba(220, 88, 79, 0.12))",
+};
+
 function getRecentAnalysisLabel(value?: string) {
   if (!value) return "Recent run";
 
@@ -57,6 +72,40 @@ function summarizeResults(results: BatchAnalyzeResult[], totalMissing: number) {
     results,
     completedAt: new Date().toISOString(),
   };
+}
+
+function ResultStatus({ status }: { status: BatchAnalyzeResult["status"] }) {
+  return (
+    <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
+      <span
+        className="flex h-[18px] w-[18px] flex-[0_0_18px] items-center justify-center rounded-full"
+        style={{
+          backgroundColor: STATUS_BACKGROUNDS[status],
+          color: STATUS_COLORS[status],
+        }}
+      >
+        {status === "saved" && <CheckIcon size={13} strokeWidth={2.6} />}
+        {status === "skipped" && <AlertIcon size={11} />}
+        {status === "failed" && <FailedIcon size={11} strokeWidth={2.6} />}
+      </span>
+      <span className="capitalize">{status}</span>
+    </div>
+  );
+}
+
+function SummaryRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: number | string;
+}) {
+  return (
+    <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)]">
+      <span>{label}</span>
+      <span className="font-medium text-[var(--text-primary)]">{value}</span>
+    </div>
+  );
 }
 
 export default function AdminEditPointsPage() {
@@ -173,101 +222,116 @@ export default function AdminEditPointsPage() {
     <AdminContentPage
       label="Cue Points"
       title="Cue Points"
-      description="Batch analyze missing cue points and review analyzer results before building frontend cue-point filters."
-      headerAction={(
-        <Link href="/admin/music-library?issue=editPoints" className={secondaryPillButtonClass}>
+      compactHeader
+      contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
+      contentAreaBottomPadding={false}
+    >
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={analyzeMissingEditPoints}
+          disabled={isAnalyzing}
+          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-sm font-medium text-[var(--bg-primary)] transition disabled:cursor-default disabled:opacity-50"
+        >
+          {isAnalyzing && (
+            <LoadingSpinner size={13} stroke={11} color="currentColor" />
+          )}
+          {isAnalyzing ? "Analyzing..." : "Analyze Missing Cue Points"}
+        </button>
+
+        <Link
+          href="/admin/music-library?issue=editPoints"
+          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-sm font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+        >
           View Missing
         </Link>
-      )}
-    >
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-          <div className="border-b border-[var(--border)] px-5 py-4">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-              Batch Analyzer
+      </div>
+
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="grid content-start gap-3">
+          <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+            <div className="flex items-center justify-between gap-4 px-5 pb-3 pt-5">
+              <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                Batch Analyzer
+              </h2>
+              {isAnalyzing ? (
+                <span className="text-xs font-medium text-[var(--text-secondary)]">
+                  {progressPercent}%
+                </span>
+              ) : null}
             </div>
-            <h2 className="mt-2 text-lg font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-              Analyze songs missing cue points
-            </h2>
-            <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
-              This only targets songs that still have no saved cue-point rows. Corrected songs are left alone.
-            </p>
-          </div>
 
-          <div className="px-5 py-5">
-            <button
-              type="button"
-              onClick={analyzeMissingEditPoints}
-              disabled={isAnalyzing}
-              className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
-            >
-              {isAnalyzing && (
-                <LoadingSpinner
-                  size={13}
-                  stroke={11}
-                  color="currentColor"
-                />
-              )}
-              {isAnalyzing ? "Analyzing..." : "Analyze Missing Cue Points"}
-            </button>
-
-            {isAnalyzing && (
-              <div className="mt-4">
-                <div className="mb-2 flex items-center justify-between gap-3 text-xs text-[var(--text-secondary)]">
-                  <span className="truncate">
-                    {currentSongTitle ? `Analyzing ${currentSongTitle}` : "Preparing analyzer..."}
-                  </span>
-                  <span className="shrink-0 font-mono">
-                    {completedCount}/{totalToAnalyze || "—"} · {progressPercent}%
-                  </span>
-                </div>
-                <div className="h-2 w-full overflow-hidden rounded-full border border-[var(--border)] bg-[var(--bg-tertiary)]">
-                  <div
-                    className="h-full rounded-full bg-[var(--text-primary)] opacity-60 transition-[width] duration-300 ease-out"
-                    style={{ width: `${Math.max(2, progressPercent)}%` }}
-                  />
-                </div>
+            <div className="px-5 pb-5">
+              <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs">
+                <span className="min-w-0 truncate text-[var(--text-secondary)]">
+                  {isAnalyzing
+                    ? currentSongTitle
+                      ? `Analyzing ${currentSongTitle}`
+                      : "Preparing analyzer..."
+                    : result
+                      ? "Last batch complete"
+                      : "Ready to analyze missing cue points"}
+                </span>
+                <span className="shrink-0 text-[var(--text-muted)]">
+                  {isAnalyzing
+                    ? `${completedCount}/${totalToAnalyze || "—"}`
+                    : result
+                      ? getRecentAnalysisLabel(result.completedAt)
+                      : "Ready"}
+                </span>
               </div>
-            )}
 
-            {analysisStartedAt && isAnalyzing && (
-              <p className="mt-2 text-xs text-[var(--text-secondary)]">
-                Analyzer is running. Keep this page open until the batch completes.
-              </p>
-            )}
-
-            {result && (
-              <div className="mt-5 overflow-hidden rounded-xl border border-[var(--border)]">
-                <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3">
-                  <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                    Recently Analyzed
-                  </div>
-                  <div className="font-mono text-[11px] text-[var(--text-muted)]">
-                    {getRecentAnalysisLabel(result.completedAt)}
+              {isAnalyzing && (
+                <div className="mt-2">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--bg-tertiary)]">
+                    <div
+                      className="h-full rounded-full bg-[var(--text-primary)] opacity-60 transition-[width] duration-300 ease-out"
+                      style={{ width: `${Math.max(2, progressPercent)}%` }}
+                    />
                   </div>
                 </div>
+              )}
 
-                <div className="grid grid-cols-[minmax(0,1fr)_96px_80px_110px] border-b border-[var(--border)] bg-[var(--bg-primary)] px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                  <div>Song</div>
-                  <div>Status</div>
-                  <div>Saved</div>
-                  <div>Review</div>
+              {analysisStartedAt && isAnalyzing && (
+                <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
+                  Keep this page open until the batch completes.
+                </p>
+              )}
+            </div>
+          </section>
+
+          {result && (
+            <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+              <div className="flex items-center justify-between gap-4 px-5 pb-3 pt-5">
+                <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                  Recently Analyzed
+                </h2>
+                <span className="text-xs text-[var(--text-muted)]">
+                  {getRecentAnalysisLabel(result.completedAt)}
+                </span>
+              </div>
+
+              {result.results.length === 0 ? (
+                <div className="flex min-h-[120px] items-center justify-center border-t border-[var(--border-subtle)] px-5 text-xs text-[var(--text-secondary)]">
+                  No songs are missing cue points.
                 </div>
-
-                {result.results.length === 0 ? (
-                  <div className="px-4 py-6 text-sm text-[var(--text-secondary)]">
-                    No songs are missing cue points.
-                  </div>
-                ) : (
-                  result.results.map((item) => (
+              ) : (
+                <div className="border-t border-[var(--border-subtle)]">
+                  {result.results.map((item, index) => (
                     <div
                       key={item.songId}
-                      className="grid grid-cols-[minmax(0,1fr)_96px_80px_110px] items-center border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
+                      className="grid min-h-[58px] grid-cols-[minmax(0,1fr)_110px_58px_92px] items-center gap-3 px-5 text-xs"
+                      style={{
+                        borderBottom:
+                          index === result.results.length - 1
+                            ? "none"
+                            : "1px solid var(--border-subtle)",
+                      }}
                     >
                       <div className="min-w-0">
                         <Link
                           href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
-                          className="truncate font-medium text-[var(--text-primary)] transition hover:text-[var(--text-secondary)]"
+                          className="block truncate font-medium text-[var(--text-primary)] transition hover:text-[var(--text-secondary)]"
                         >
                           {item.title || "Untitled song"}
                         </Link>
@@ -278,70 +342,43 @@ export default function AdminEditPointsPage() {
                         )}
                       </div>
 
-                      <div className="capitalize text-[var(--text-secondary)]">
-                        {item.status}
-                      </div>
+                      <ResultStatus status={item.status} />
 
-                      <div className="font-mono text-[var(--text-secondary)]">
+                      <div className="text-[var(--text-secondary)]">
                         {item.saved ?? "—"}
                       </div>
 
                       <Link
                         href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
-                        className="inline-flex h-7 w-fit items-center rounded-full border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                        className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                       >
-                        Cue Points
+                        Review
                       </Link>
                     </div>
-                  ))
-                )}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+        </div>
+
+        <section className="h-fit overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+          <div className="px-5 pb-3 pt-5">
+            <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+              Run Summary
+            </h2>
+          </div>
+
+          <div className="grid gap-2 px-5 pb-5">
+            <SummaryRow label="Missing" value={result?.totalMissing ?? "—"} />
+            <SummaryRow label="Analyzed" value={result?.analyzed ?? "—"} />
+            <SummaryRow label="Skipped" value={result?.skipped ?? "—"} />
+            <SummaryRow label="Failed" value={result?.failed ?? "—"} />
           </div>
         </section>
-
-        <aside className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-            Current Step
-          </div>
-          <h2 className="mt-2 text-base font-medium text-[var(--text-primary)]">
-            Fill the catalog
-          </h2>
-          <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
-            Auto-generated cue points are useful, but they should still be reviewed. Songs with only auto cue points now show an Auto indicator in the admin library.
-          </p>
-
-          {result && (
-            <div className="mt-5 grid grid-cols-2 gap-2 text-xs">
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                <div className="text-[var(--text-muted)]">Missing</div>
-                <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
-                  {result.totalMissing}
-                </div>
-              </div>
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                <div className="text-[var(--text-muted)]">Analyzed</div>
-                <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
-                  {result.analyzed}
-                </div>
-              </div>
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                <div className="text-[var(--text-muted)]">Skipped</div>
-                <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
-                  {result.skipped}
-                </div>
-              </div>
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                <div className="text-[var(--text-muted)]">Failed</div>
-                <div className="mt-1 font-mono text-lg text-[var(--text-primary)]">
-                  {result.failed}
-                </div>
-              </div>
-            </div>
-          )}
-        </aside>
       </div>
 
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
       <Toast message={toastMessage} />
     </AdminContentPage>
   );
